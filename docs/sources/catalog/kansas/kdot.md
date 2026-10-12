@@ -21,11 +21,9 @@ related:
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/roads-rail-trade-routes/README.md
   - docs/domains/settlements-infrastructure/README.md
   - docs/domains/hazards/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/standards/wzdx.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/kansas/
@@ -64,6 +62,9 @@ notes:
     (current conditions, NOT life-safety); work-zone permits/authorizations
     are `source_role: regulatory`. The three roles MUST be preserved
     separately in their respective descriptors. See §2 and §4.
+owning_root: docs/
+responsibility: "Documentation for Kansas Department of Transportation (KDOT); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Department of Transportation (KDOT)
@@ -227,7 +228,7 @@ flowchart TB
 
 See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative `SourceDescriptor`s (per surface). **Do not duplicate descriptor fields here.**
 
-For the source-family-level reading (Kansas authorities, parallel-anchor rule, non-API sources tolerance, per-agency-watcher pattern), see the sibling family README [`./README.md`](./README.md). For the WZDx standard reference (PROPOSED standards doc), see [`docs/standards/wzdx.md`](../../../standards/wzdx.md).
+For the source-family-level reading (Kansas authorities, parallel-anchor rule, non-API sources tolerance, per-agency-watcher pattern), see the sibling family README [`./README.md`](./README.md). For the WZDx standard reference (PROPOSED standards doc), see `docs/standards/wzdx.md` (not present).
 
 > [!IMPORTANT]
 > Product pages **cite** authority; they do not **own** it. The descriptors are the source of truth for each KDOT surface's endpoint, cadence, rights, sensitivity bindings, and citation. The schema (per ADR-0001 default home `schemas/contracts/v1/source/source_descriptor.schema.json`) is the source of truth for descriptor shape.
@@ -451,8 +452,8 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 
 - [`contracts/`](../../../../contracts/) — object families. KDOT records most plausibly land in PROPOSED `RoadSegment` (CONFIRMED term per DOM-ROADS), `RoadEvent`, `WorkZone`, `Asset` (bridge/sign/signal), `PlanningArtifact`, `TransitFeed` (NEEDS VERIFICATION — corpus does not enumerate all by name).
 - [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — `SourceDescriptor` machine shape per ADR-0001.
-- [`schemas/contracts/v1/roads/`](../../../../schemas/contracts/v1/roads/) — PROPOSED home for road-event / work-zone schemas (NEEDS VERIFICATION).
-- [`schemas/contracts/v1/wzdx/`](../../../../schemas/contracts/v1/wzdx/) — PROPOSED home for the WZDx-aligned derivative schema per `KFM-P12-PROG-0005` (NEEDS VERIFICATION).
+- `schemas/contracts/v1/roads/` (not present) — PROPOSED home for road-event / work-zone schemas (NEEDS VERIFICATION).
+- `schemas/contracts/v1/wzdx/` (not present) — PROPOSED home for the WZDx-aligned derivative schema per `KFM-P12-PROG-0005` (NEEDS VERIFICATION).
 
 [Back to top](#quick-jump)
 
@@ -461,9 +462,9 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 ## 14. Related connectors and pipelines
 
 - [`connectors/kansas/`](../../../../connectors/kansas/) — **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** family lane per Directory Rules v1.2 §7.3.
-- [`connectors/kansas/kdot/`](../../../../connectors/kansas/kdot/) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kdot/`; see §12). Sub-surface adapters (`kanplan/`, `kandrive/`, `kansas-gis/`, `workzones/`) PROPOSED but unresolved — see OPEN-KDOT-03.
+- `connectors/kansas/kdot/` (not present) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kdot/`; see §12). Sub-surface adapters (`kanplan/`, `kandrive/`, `kansas-gis/`, `workzones/`) PROPOSED but unresolved — see OPEN-KDOT-03.
 - Pipelines: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
-- Pipeline specs: [`pipeline_specs/roads-rail-trade-routes/`](../../../../pipeline_specs/roads-rail-trade-routes/), [`pipeline_specs/hazards/`](../../../../pipeline_specs/hazards/), [`pipeline_specs/settlements-infrastructure/`](../../../../pipeline_specs/settlements-infrastructure/) (PROPOSED — confirm per surface).
+- Pipeline specs: `pipeline_specs/roads-rail-trade-routes/` (not present), [`pipeline_specs/hazards/`](../../../../pipeline_specs/hazards/), [`pipeline_specs/settlements-infrastructure/`](../../../../pipeline_specs/settlements-infrastructure/) (PROPOSED — confirm per surface).
 - Related blueprints: **`KFM-P12-PROG-0005`** (KDOT KanDrive + WZDx normalization lane) and **`KFM-P13-PROG-0016`** (KanDrive + WZDx event-normalization lane / map surface).
 - Federal sibling: WZDx feeds (separately listed in DOM-ROADS); KFM may also ingest WZDx directly from the federal aggregator alongside the KDOT-derived normalization.
 
@@ -505,7 +506,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## 17. Verification backlog
 
-Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-open-questions) applies. Product-specific items below.
+Inheritance: every family-level OPEN item from [`./README.md`](./README.md) applies. Product-specific items below.
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
@@ -709,6 +710,6 @@ For traceability into the KFM Idea Index spine, this brief draws on the followin
 
 ### Footer
 
-> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`./ksgs.md`](./ksgs.md) (sibling Kansas geology authority) · [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) (sibling regulatory source — parallel mixed-role pattern) · [`./kdwp.md`](./kdwp.md) (sibling Kansas authority) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [WZDx standard](../../../standards/wzdx.md) · [Roads/Rail/Trade Routes domain](../../../domains/roads-rail-trade-routes/README.md) · [Hazards domain](../../../domains/hazards/README.md) · [Settlements/Infrastructure domain](../../../domains/settlements-infrastructure/README.md)
+> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`./ksgs.md`](./ksgs.md) (sibling Kansas geology authority) · [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) (sibling regulatory source — parallel mixed-role pattern) · [`./kdwp.md`](./kdwp.md) (sibling Kansas authority) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · WZDx standard (not present) · Roads/Rail/Trade Routes domain (not present) · [Hazards domain](../../../domains/hazards/README.md) · [Settlements/Infrastructure domain](../../../domains/settlements-infrastructure/README.md)
 > **Last updated:** 2026-05-21 *(Claude Code product-page revision; v0.1 → v0.2)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release. Family lane `connectors/kansas/` is CONFIRMED §7.3 at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`. Per-institution adapter `connectors/kansas/kdot/` is **PROPOSED** (corrected from v0.1's incorrect top-level `connectors/kdot/`).
 > [⬆ Back to top](#kansas-department-of-transportation-kdot)

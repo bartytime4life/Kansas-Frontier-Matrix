@@ -47,8 +47,8 @@ Shared geometry helpers for KFM geology and natural-resource objects, with exact
 - [Validation and quality gates](#validation-and-quality-gates)
 - [Development rules](#development-rules)
 - [Definition of done](#definition-of-done)
-- [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Verification checklist
+- Rollback
 
 ---
 

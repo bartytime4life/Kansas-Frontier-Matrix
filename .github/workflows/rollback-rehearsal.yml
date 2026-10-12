@@ -1,0 +1,61 @@
+name: rollback-rehearsal
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/rollback-rehearsal.yml"
+      - "tools/release/rollback_apply.py"
+      - "tests/release/test_synthetic_rollback_rehearsal.py"
+      - "fixtures/release/rollback_rehearsal/**"
+      - "docs/runbooks/rollback-rehearsal.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/rollback-rehearsal.yml"
+      - "tools/release/rollback_apply.py"
+      - "tests/release/test_synthetic_rollback_rehearsal.py"
+      - "fixtures/release/rollback_rehearsal/**"
+      - "docs/runbooks/rollback-rehearsal.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rollback-rehearsal-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  synthetic-rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Prove deterministic synthetic rollback semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+
+      - name: Confirm the helper remains synthetic-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("tools/release/rollback_apply.py").read_text(encoding="utf-8")
+          assert "greenfield placeholder" not in text
+          assert ".kfm-synthetic-rollback-rehearsal" in text
+          assert "NON_SYNTHETIC_INPUT_DENIED" in text
+          assert "public_state_mutated\": False" in text
+          print("CONFIRMED: helper is constrained to marker-protected synthetic workspaces.")
+          PY

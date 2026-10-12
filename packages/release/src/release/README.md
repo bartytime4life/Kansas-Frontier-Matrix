@@ -97,7 +97,7 @@ The prior module tree, `from release...` examples, exports, and `READY`/`SIGNED`
 | Namespace/package | Present, `0.0.0`, empty/comment-only code | No installability or behavior |
 | `ReleaseManifest` | Rich draft contract; PROPOSED id-only permissive schema | No release closure |
 | `PromotionDecision` | PROPOSED closed eleven-field schema; validator/test | Shape only, not authorization |
-| `RollbackCard` | Rich draft contract; thin schema | Declared validator absent; other validator placeholder |
+| `RollbackCard` | Rich draft contract; closed proposed candidate schema | Canonical no-network validator and compatibility delegate prove bounded shape/local consistency only |
 | `CorrectionNotice` | Draft contract; thin schema | Validator absent; placement conflicted |
 | Signing | Draft standard | Keys/trust roots unproved |
 | Release dry run | Explicit holds | No candidate or release emitted |
@@ -143,7 +143,7 @@ Its PROPOSED schema is closed, requires eleven fields, and uses `APPROVE | DENY 
 
 ### `RollbackCard`
 
-The schema is thin; its declared validator is absent, while a different validator raises `NotImplementedError`. Do not claim rollback validation or execute alias movement, invalidation, restoration, or notice publication.
+The proposed schema is closed and has a canonical no-network validator at `tools/validators/release/validate_rollback_card.py`. The historical top-level entrypoint delegates to it with deterministic compatibility coverage. A pass proves candidate shape and local consistency only; do not claim operational rollback readiness or execute alias movement, invalidation, restoration, or notice publication.
 
 ### `CorrectionNotice`
 
@@ -264,7 +264,7 @@ Graduation sequence:
 | Parent README reconciliation | NEEDS VERIFICATION |
 | ReleaseManifest hardening/validator | NEEDS VERIFICATION |
 | PromotionDecision policy/review/runtime wiring | NEEDS VERIFICATION |
-| RollbackCard validator/fixtures | NEEDS VERIFICATION |
+| RollbackCard validator/fixtures | CONFIRMED bounded proposed candidate profile |
 | CorrectionNotice family/validator | CONFLICTED / NEEDS VERIFICATION |
 | Accepted A–G vocabulary | CONFLICTED / NEEDS VERIFICATION |
 | Canonicalization, verifier, trust roots, revocation | NEEDS VERIFICATION / UNKNOWN |
@@ -296,7 +296,7 @@ If package behavior emitted incorrect candidate metadata: stop consumers; identi
 | Namespace/package | Empty init, placeholder core, `0.0.0` | No behavior/installability |
 | ReleaseManifest | Rich meaning, thin schema | No production closure |
 | PromotionDecision | Concrete proposed shape/test | No authorization |
-| RollbackCard | Rich meaning, thin schema | Validator incomplete |
+| RollbackCard | Rich meaning, closed proposed candidate schema | Bounded validator and compatibility coverage; no execution authority |
 | CorrectionNotice | Rich meaning, thin schema | Placement/validator unresolved |
 | Signing/ADR | Draft/proposed | No production authority |
 | Release dry run | Explicit holds | No release emitted |

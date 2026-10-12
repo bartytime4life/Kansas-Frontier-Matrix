@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-domains-fauna-release-index
 title: Fauna Domain — Release Index
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: TODO Fauna domain steward + Docs steward + Release authority
 created: 2026-05-16
-updated: 2026-06-02
+updated: 2026-08-01
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -40,9 +40,9 @@ notes:
 ![rollback: required](https://img.shields.io/badge/rollback-required-blueviolet)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blueviolet)
 ![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026--06--02](https://img.shields.io/badge/updated-2026--06--02-informational)
+![last updated: 2026--08--01](https://img.shields.io/badge/updated-2026--08--01-informational)
 
-**Status:** `draft` · **Owners:** `TODO Fauna domain steward + Docs steward + Release authority` · **Last updated:** `2026-06-02` · **`CONTRACT_VERSION = "3.0.0"`**
+**Status:** `draft` · **Owners:** `TODO Fauna domain steward + Docs steward + Release authority` · **Last updated:** `2026-08-01` · **`CONTRACT_VERSION = "3.0.0"`**
 
 ---
 
@@ -76,7 +76,7 @@ The Fauna Release Index is the **human-facing register** that answers four quest
 4. **What is the correction and rollback target for each release?**
 
 > [!IMPORTANT]
-> This file **indexes** Fauna releases. It is **not** the canonical release decision (that lives in `release/manifests/<release_id>.json`), and it is **not** the published artifact (those live in `data/published/layers/fauna/<release_id>/`). The trust membrane forbids treating this index as the authority. See [Directory Rules §9.2][dr-9-2] for the `release/` ↔ `data/published/` split. [DIRRULES §9.1, §9.2]
+> This file **indexes** Fauna releases. It is **not** the canonical release decision (that lives in `release/manifests/<release_id>.json`), and it is **not** the published artifact (those live in `data/published/layers/fauna/<release_id>/`). The trust membrane forbids treating this index as the authority. See [Directory Rules §11.5][dr-11-5] for the `release/` ↔ `data/published/` split. [DIRRULES §11.3, §11.5]
 
 ### 1.1 Out of scope
 
@@ -84,7 +84,7 @@ This document does **not**:
 
 - Define `ReleaseManifest` field shape — see `schemas/contracts/v1/release/` and `contracts/release/release_manifest.md`. *(PROPOSED paths; verify with mounted-repo evidence.)*
 - Decide rights, sensitivity, or geoprivacy outcomes — those are policy. See `policy/domains/fauna/` and the Fauna sensitivity ladder.
-- Publish or promote a release — promotion is a **governed state transition**, not a file move (see [Lifecycle Law][doctrine-lifecycle]). [DIRRULES §9.1]
+- Publish or promote a release — promotion is a **governed state transition**, not a file move (see [Lifecycle Law][doctrine-lifecycle]). [DIRRULES §11.2, DIR-DATA-004]
 - Replace the Fauna domain README — see [`README.md`](./README.md).
 
 [⬆ Back to top](#fauna-domain--release-index)
@@ -123,14 +123,18 @@ This document does **not**:
 | The release decision | `release/manifests/<release_id>.json` — **not** this file |
 | The PMTiles / GeoJSON / Parquet output | `data/published/layers/fauna/<release_id>/` — **not** `release/` |
 | The EvidenceBundle | `data/proofs/evidence_bundle/<id>.json` — **not** `data/receipts/` |
-| The rollback decision | `release/rollback_cards/<id>.json` *(see note below on `data/rollback/`)* |
+| The rollback decision | `release/rollback_cards/<id>.json` |
 | A correction notice | `release/correction_notices/` — **not** an in-place edit of any prior artifact |
 
 > [!NOTE]
-> **The release ↔ published split is doctrinal.** `data/published/` owns the **artifacts**; `release/` owns the **decisions**. Mixing them — e.g. release manifests in `artifacts/` — is one of the named drift patterns (Directory Rules §13.2 / §13.5). [DIRRULES §13.2, §13.5]
+> **The release ↔ published split is doctrinal.** `data/published/` owns the **artifacts**; `release/` owns the **decisions**. Mixing them — e.g. release manifests in `artifacts/` — is a named nonconforming pattern. [DIRRULES §11.5, DIR-RELEASE-006; §15.2]
 
 > [!WARNING]
-> **`release/rollback_cards/` vs `data/rollback/` is not crisply settled in doctrine.** Directory Rules §9.1 shows a canonical `data/rollback/<domain>/<release_id>/` lifecycle sibling, while `release/rollback_cards/` appears in release-decision contexts. This index treats the **rollback *decision*** as living in `release/rollback_cards/` and **alias-revert / cache-invalidation receipts** as living in `data/rollback/` — but that allocation is **this index's PROPOSED interpretation**, not a frozen rule. Tracked as OQ-FAUNA-REL-08. [DIRRULES §9.1]
+> **The adopted v2 allocation is explicit.** A rollback **decision** lives under
+> `release/rollback_cards/`; executed rollback and cache-invalidation process
+> records live under `data/receipts/rollback/`. Generic `data/rollback/` is a
+> deprecated ambiguous authority lane whose existing objects require
+> classification before migration. [DIRRULES §11.5, DIR-RELEASE-003/004]
 
 [⬆ Back to top](#fauna-domain--release-index)
 
@@ -179,7 +183,7 @@ The Fauna domain consumes the project-wide release vocabulary; it does **not** d
 
 ## 4. Fauna release lifecycle
 
-**CONFIRMED doctrine:** the Fauna domain follows the canonical KFM lifecycle. Promotion is a **governed state transition**, not a file move — bypassing validators, policy gates, EvidenceBundle creation, catalog closure, or release-decision recording is a violation regardless of where the bytes ended up. [DIRRULES §9.1]
+**CONFIRMED doctrine:** the Fauna domain follows the canonical KFM lifecycle. Promotion is a **governed state transition**, not a file move — bypassing validators, policy gates, EvidenceBundle creation, catalog closure, or release-decision recording is a violation regardless of where the bytes ended up. [DIRRULES §11.2–§11.5]
 
 ```mermaid
 flowchart LR
@@ -213,7 +217,7 @@ flowchart LR
     class QUAR deny
 ```
 
-*Diagram reflects [Directory Rules §9.1][dr-9-1] (lifecycle phases), [§9.2][dr-9-2] (release decisions), and the Atlas v1.1 §24.6 Pipeline Gate Reference. State labels are CONFIRMED doctrine names; the gate identifiers (G1–G8) in §6 are **PROPOSED labels** and may be renamed by an ADR.*
+*Diagram reflects [Directory Rules §11.3][dr-11-3] (lifecycle phases), [§11.5][dr-11-5] (release decisions), and the Atlas v1.1 §24.6 Pipeline Gate Reference. State labels are CONFIRMED doctrine names; the gate identifiers (G1–G8) in §6 are **PROPOSED labels** and may be renamed by an ADR.*
 
 [⬆ Back to top](#fauna-domain--release-index)
 
@@ -432,7 +436,7 @@ Use this procedure when a Fauna release reaches a state worth indexing. The PR d
 
 ## 13. Open questions & verification backlog
 
-These items are surfaced for ADR resolution or `docs/registers/VERIFICATION_BACKLOG.md` tracking. None of them block index drafting; all of them block any specific claim of repo-state maturity. They remain `NEEDS VERIFICATION` / `OPEN` before this index is promoted from `draft` to `published`.
+These items are surfaced for ADR resolution or `docs/registers/VERIFICATION_BACKLOG.md` tracking. Unresolved items do not block index drafting, but they do block any specific claim of repo-state maturity. OQ-FAUNA-REL-08 remains in the table as resolved lineage; the others retain their displayed posture before this index can move beyond `draft`.
 
 | ID | Item | Status | What would settle it |
 |---|---|---|---|
@@ -443,7 +447,7 @@ These items are surfaced for ADR resolution or `docs/registers/VERIFICATION_BACK
 | OQ-FAUNA-REL-05 | Taxonomic resolver implementation and TaxonCrosswalk version pinning | **NEEDS VERIFICATION** | Mounted-repo schema, validator, and fixture coverage |
 | OQ-FAUNA-REL-06 | Restricted/public Occurrence split mechanism and tile field allowlist | **NEEDS VERIFICATION** | `policy/domains/fauna/` rules; `tests/domains/fauna/` cases |
 | OQ-FAUNA-REL-07 | Geoprivacy transform vocabulary and RedactionReceipt schema | **PROPOSED** | ADR enumerating transform types (`suppress`, `generalize_to_grid`, `watershed`, `county`, `buffer`, `delayed_publication`, `steward_only`) |
-| OQ-FAUNA-REL-08 | Rollback-decision home: `release/rollback_cards/` vs `data/rollback/` allocation (this index's interpretation, §2.3) | **PROPOSED** | ADR or per-root README reconciling §9.1 `data/rollback/` with release-side rollback cards |
+| OQ-FAUNA-REL-08 | Rollback-decision home and executed-process-record allocation (§2.3) | **RESOLVED** | Adopted Directory Rules v2 §11.5, `DIR-RELEASE-003/004`: decisions in `release/rollback_cards/`, process records in `data/receipts/rollback/`, generic `data/rollback/` deprecated |
 | OQ-FAUNA-REL-09 | Separation-of-duties enforcement maturity for sensitive Fauna releases | **PROPOSED** | Tooling-enforced author ≠ release-authority rule; review console (ADR-S-09) |
 | OQ-FAUNA-REL-10 | Index location — is `docs/domains/fauna/RELEASE_INDEX.md` the right home, or should a register live under `docs/registers/` for cross-domain release indexing? | **PROPOSED** | ADR; or a `docs/registers/RELEASE_REGISTER.md` that links to per-domain indices |
 | OQ-FAUNA-REL-11 | Rollback propagation surface — tiles, graph projections, Focus Mode caches, Story Nodes, AI envelopes | **OPEN** | Rollback drill specification; propagation manifest |
@@ -461,6 +465,7 @@ These items are surfaced for ADR resolution or `docs/registers/VERIFICATION_BACK
 
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
+| Rebound Directory Rules reference definitions from superseded v1 §9.1/§9.2 anchors to adopted v2 §11.3/§11.5 anchors, reconciled the now-explicit rollback allocation, and bumped doc `version` v1.1 → v1.2 and `updated` 2026-06-02 → 2026-08-01 | correction | Bounded reference-style validation exposed three stale fragment uses after Directory Rules v2 adoption; `DIR-RELEASE-003/004` resolves OQ-FAUNA-REL-08 |
 | Pinned `CONTRACT_VERSION = "3.0.0"` (meta block, badge, status line, footer) | housekeeping | Doctrine-adjacent doc requirement |
 | Sharpened §3 to name **three** distinct vocabularies (`release_state`, `review_state`, `correction_state`) rather than implying one | reconciliation | Corpus shows ClaimRecord `review_state`/`correction_state` are separate fields from `ReleaseManifest.release_state` |
 | Added explicit `data/rollback/` vs `release/rollback_cards/` note (§2.3) and tracked as OQ-FAUNA-REL-08 | clarification | Directory Rules §9.1 shows both; allocation not frozen |
@@ -511,12 +516,12 @@ This index is done enough to enter the repository when:
 
 ---
 
-[dr-9-1]: ../../doctrine/directory-rules.md#91-data--the-lifecycle-invariant
-[dr-9-2]: ../../doctrine/directory-rules.md#92-release--release-decisions
+[dr-11-3]: ../../doctrine/directory-rules.md#113-lifecycle-and-accountability-contracts
+[dr-11-5]: ../../doctrine/directory-rules.md#115-release-decision-plane
 [doctrine-lifecycle]: ../../doctrine/lifecycle-law.md
 
 ---
 
-**Status:** `draft` · **Last updated:** `2026-06-02` · **Doc id:** `kfm://doc/docs-domains-fauna-release-index` · **`CONTRACT_VERSION = "3.0.0"`**
+**Status:** `draft` · **Last updated:** `2026-08-01` · **Doc id:** `kfm://doc/docs-domains-fauna-release-index` · **`CONTRACT_VERSION = "3.0.0"`**
 
 [⬆ Back to top](#fauna-domain--release-index)

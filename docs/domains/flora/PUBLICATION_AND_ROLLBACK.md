@@ -8,9 +8,12 @@ owners: Domain steward (Flora); Release authority; Docs steward
 created: 2026-06-03
 updated: 2026-06-03
 policy_label: public
-related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/flora/CANONICAL_PATHS.md, docs/domains/flora/CROSS_LANE_RELATIONS.md, policy/sensitivity/flora/, release/]
+related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/flora/CANONICAL_PATHS.md, policy/sensitivity/flora/, release/]
 tags: [kfm]
 notes: [Doctrine-adjacent; pins CONTRACT_VERSION = "3.0.0". Flora-lane publication, correction, stale-state, and rollback contract. All repo-state claims PROPOSED until mounted-repo verification.]
+owning_root: docs/
+responsibility: "Documentation for Flora — Publication & Rollback; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Publication & Rollback
@@ -438,7 +441,7 @@ This document is done enough to enter the repository when:
 
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority
-- [`docs/domains/flora/CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) — Flora cross-lane joins *(PROPOSED)*
+- `docs/domains/flora/CROSS_LANE_RELATIONS.md` (not present) — Flora cross-lane joins *(PROPOSED)*
 - [`docs/domains/flora/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Flora path inventory *(PROPOSED)*
 - `policy/sensitivity/flora/` — Flora sensitivity policy entries *(PROPOSED / TODO)*
 - `release/` — release decisions, manifests, rollback cards *(PROPOSED)*

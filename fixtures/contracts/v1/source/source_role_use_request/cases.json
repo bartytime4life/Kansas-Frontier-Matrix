@@ -1,0 +1,332 @@
+{
+  "profile": "kfm.source-role-use.fixture-cases.v1",
+  "cases": [
+    {
+      "name": "pass_internal_map",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "pass_public_map",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/exposure",
+          "value": "PUBLIC"
+        },
+        {
+          "op": "set",
+          "path": "/use/consumer_surface",
+          "value": "MAP"
+        },
+        {
+          "op": "set",
+          "path": "/use/support_refs",
+          "value": {
+            "evidence_refs": [
+              "kfm:evidence-bundle:wbd-huc12-example"
+            ],
+            "policy_decision_refs": [
+              "kfm:policy-decision:wbd-public-example"
+            ],
+            "review_refs": [
+              "kfm:review:wbd-source-example"
+            ],
+            "release_manifest_refs": [
+              "kfm:release-manifest:wbd-huc12-example"
+            ],
+            "correction_refs": [
+              "kfm:correction-channel:wbd-huc12-example"
+            ],
+            "rollback_refs": [
+              "kfm:rollback:wbd-huc12-example"
+            ]
+          }
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "restrict_steward_sensitive",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/descriptor/rights/rights_status",
+          "value": "verified_restricted"
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/sensitivity_default",
+          "value": "restricted"
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/public_release/allowed",
+          "value": false
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/public_release/requires_review",
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": "/use/exposure",
+          "value": "STEWARD"
+        }
+      ],
+      "expected_outcome": "RESTRICT",
+      "expected_findings": [
+        "SOURCE_ROLE_VALIDATOR_RESTRICT"
+      ]
+    },
+    {
+      "name": "abstain_context_only",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/descriptor/source_role",
+          "value": "corroborating_context"
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/authority_rank",
+          "value": "contextual"
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/admissibility_limits/allowed_claim_roles",
+          "value": [
+            "observation"
+          ]
+        },
+        {
+          "op": "set",
+          "path": "/descriptor/admissibility_limits/confidence_posture",
+          "value": "context_only"
+        },
+        {
+          "op": "set",
+          "path": "/use/propagated_source_role",
+          "value": "corroborating_context"
+        },
+        {
+          "op": "set",
+          "path": "/use/propagated_authority_rank",
+          "value": "contextual"
+        },
+        {
+          "op": "set",
+          "path": "/use/requested_claim_roles",
+          "value": [
+            "observation"
+          ]
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        "SOURCE_ROLE_VALIDATOR_ABSTAIN"
+      ]
+    },
+    {
+      "name": "hold_role_change_with_lineage",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/propagated_source_role",
+          "value": "observation"
+        },
+        {
+          "op": "set",
+          "path": "/use/propagated_authority_rank",
+          "value": "corroborating"
+        },
+        {
+          "op": "set",
+          "path": "/use/role_change",
+          "value": {
+            "kind": "CORRECTION",
+            "lineage_refs": [
+              "kfm:correction:source-role-example"
+            ]
+          }
+        }
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        "SOURCE_ROLE_VALIDATOR_HOLD"
+      ]
+    },
+    {
+      "name": "hold_public_missing_support",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/exposure",
+          "value": "PUBLIC"
+        },
+        {
+          "op": "set",
+          "path": "/use/consumer_surface",
+          "value": "API"
+        }
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        "ROLE_EVIDENCE_GAP",
+        "ROLE_POLICY_OR_REVIEW_GAP",
+        "ROLE_RELEASE_REFERENCE_MISSING"
+      ]
+    },
+    {
+      "name": "deny_ai_inferred",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/role_origin",
+          "value": "AI_INFERRED"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_ROLE_AI_INFERRED_DENIED"
+      ]
+    },
+    {
+      "name": "deny_collapse_without_lineage",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/propagated_source_role",
+          "value": "observation"
+        },
+        {
+          "op": "set",
+          "path": "/use/propagated_authority_rank",
+          "value": "corroborating"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ROLE_LINEAGE_MISSING",
+        "SOURCE_ROLE_COLLAPSE_DENIED"
+      ]
+    },
+    {
+      "name": "deny_claim_incompatible",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/requested_claim_roles",
+          "value": [
+            "legal_status"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CLAIM_ROLE_INCOMPATIBLE"
+      ]
+    },
+    {
+      "name": "deny_public_surface_leakage",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/descriptor/public_release/allowed",
+          "value": false
+        },
+        {
+          "op": "set",
+          "path": "/use/exposure",
+          "value": "PUBLIC"
+        },
+        {
+          "op": "set",
+          "path": "/use/support_refs",
+          "value": {
+            "evidence_refs": [
+              "kfm:evidence-bundle:wbd-huc12-example"
+            ],
+            "policy_decision_refs": [
+              "kfm:policy-decision:wbd-public-example"
+            ],
+            "review_refs": [
+              "kfm:review:wbd-source-example"
+            ],
+            "release_manifest_refs": [
+              "kfm:release-manifest:wbd-huc12-example"
+            ],
+            "correction_refs": [
+              "kfm:correction-channel:wbd-huc12-example"
+            ],
+            "rollback_refs": [
+              "kfm:rollback:wbd-huc12-example"
+            ]
+          }
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_SURFACE_LEAKAGE_DENIED"
+      ]
+    },
+    {
+      "name": "deny_source_role_overclaim",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/authority_claims/claim_truth",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_ROLE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "error_request_id_drift",
+      "mutations": [],
+      "recompute_request_id": false,
+      "request_id_override": "kfm:source-role-use:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "REQUEST_ID_MISMATCH"
+      ]
+    },
+    {
+      "name": "error_noncanonical_claim_roles",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/use/requested_claim_roles",
+          "value": [
+            "range_context",
+            "map_display"
+          ]
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "CANONICAL_ORDER_REQUIRED"
+      ]
+    },
+    {
+      "name": "error_closed_schema",
+      "mutations": [
+        {
+          "op": "set",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "REQUEST_SCHEMA_INVALID"
+      ]
+    }
+  ]
+}

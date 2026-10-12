@@ -1,0 +1,114 @@
+{
+  "receipt_id": "genrec-topology-execution-context-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py",
+    "tools/validators/directory_governance/README.md",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:91d05eb2756af925626c2caf31b43ee16d57a0adc9b59086a557dffb762d36b4",
+    "tools/validators/directory_governance/README.md": "sha256:e3afa3f0aea21a95d13040986ecae38285f88ca5449101b5e0e51e669b9843e1",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "sha256:f48a98c697cee85ddc25e65b3cc7915b1b877d112e103d1fee7376db7ede1309"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container",
+      "file_search"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:e14b39353cabfbab719c35e85442e10a20e328f1585755b52975d928c89c5cca",
+      "sha256:9d4c7d928b5b9695b1f9d7faf2be25259954546529e30ee1b83b47e20413f35c"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/Makefile",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/tools/validators/directory_governance/render_repository_topology_diagnostics.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/tools/validators/directory_governance/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4476"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "CONFIRMED",
+    "tools/validators/directory_governance/README.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "editable-input-byte-identity",
+      "outcome": "PASS",
+      "reason": "Local copies of the original diagnostic script and README exactly match Git blob IDs 66ccb2e9f3a1a989230982bf453197650df60a78 and b5307849a40cd71c442ff996e3e3e1f95f604980; candidate edits derive from those bytes. Earlier inconsistent source/log responses were not used as correction authority."
+    },
+    {
+      "gate": "context-regression-and-process-fixtures",
+      "outcome": "PASS",
+      "reason": "22 standard-library unittest methods pass, with real temporary Git repositories and an explicit synthetic validator double. Includes deterministic replay, index/file/run changes, sensitive-input omission, symlinks/FIFO/bounds, unavailable/changed context, and process exits 0/1/2. This is not native topology conformance."
+    },
+    {
+      "gate": "non-regression-and-discrimination",
+      "outcome": "PASS",
+      "reason": "AST comparison proves every pre-existing diagnostic function unchanged. Only four context helpers, imports/constants and the CLI entry point are added. The new test suite rejects the original renderer. Existing Makefile CLI invocation and test filename pattern enroll this code without workflow changes."
+    },
+    {
+      "gate": "sparse-hygiene-and-artifact-digests",
+      "outcome": "PASS",
+      "reason": "Python syntax parses, JSON parses, artifact keys and complete SHA-256 values match authored bytes, and the sparse-projection diff has no whitespace errors. No baseline, rule, schema, source register, workflow or Makefile is changed."
+    },
+    {
+      "gate": "underlying-topology-attribution",
+      "outcome": "FAIL",
+      "reason": "Underlying topology findings remain UNRESOLVED/NON_COMPARABLE: fetched log identities conflict with pinned implementation reads. No alleged finding is waived, removed, rebaselined or claimed fixed."
+    },
+    {
+      "gate": "native-complete-checkout-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "A full local checkout was unavailable because GitHub DNS resolution failed. Existing complete topology suites, native receipt validation and hosted CI are not claimed run at emission. Independent review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "existing-diagnostic-lane",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f443b458111d3d6c877cb491a5ff776eeb487de/tools/validators/directory_governance/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T19:34:38Z",
+  "emitter": "ChatGPT KFM topology diagnostic-binding continuation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "CONFIRMED labels cover candidate bytes and bounded tests only. Base was re-pinned from be6e398d33237d55b1d1a8dc4bf4cbd93413fd93 to 5f443b458111d3d6c877cb491a5ff776eeb487de; the intervening Explorer temporal paths are disjoint. Prior PR #4476 is already merged and is not duplicated. Existing tools/validators/directory_governance owns diagnostic logic and adjacent explanation, tests/validators/directory_governance owns test proof, data/receipts/generated owns this authoring record under accepted ADR-0029. Runtime context lines are not a new receipt/proof family, signed attestation, authenticated runner record, loaded-code proof or atomic filesystem snapshot. They preserve the ratchet exit even when attribution is unavailable. Before/after hashes cover named on-disk inputs and staged-index listing only; original findings and trusted-base enforcement remain unchanged. Rollback the four-file delivery together while retaining historical receipts and unrelated main changes. No readiness, approval, merge, settings change, source admission/activation, release, deployment, promotion or publication is authorized by this record."
+}

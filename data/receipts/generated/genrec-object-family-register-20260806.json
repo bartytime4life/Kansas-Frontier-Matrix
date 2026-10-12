@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-object-family-register-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    "control_plane/object_family_register.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/README.md",
+    "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/bad_root.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/duplicate_family_ids.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/maturity_mismatch.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unknown_field.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_entries.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_paths.yaml",
+    "fixtures/contracts/v1/governance/object_family_register/valid/minimal.yaml",
+    "schemas/contracts/v1/governance/object_family_register.schema.json",
+    "tests/validators/test_validate_object_family_register.py",
+    "tools/validators/control_plane/README.md",
+    "tools/validators/control_plane/validate_object_family_register.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:a3ebf0211e77b213f89373c537eb8b256112c148b8c13a5b5fa96c98324c90fd",
+    "control_plane/object_family_register.yaml": "sha256:dd474c338d3f6597e2c5e8960d3071828f857cb822c09b030c10055cf7459f36",
+    "fixtures/contracts/v1/governance/object_family_register/README.md": "sha256:3d86d3ed78641c38854da18db8ed5e790839e25c7075cff91e2e7cb4a38bf2c0",
+    "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json": "sha256:6b325e7b6261c55fea29624f88ae1bb782e7931ec19ca290b6bfd7189aea9f73",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/bad_root.yaml": "sha256:9da5c78ff5188024ac99a8bb3b5670e536beb7d3e63fdf6b3bdc2cc4b009c371",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/duplicate_family_ids.yaml": "sha256:f9eaca58bb3907386487ab5f2f9c0e8c47b39f0ae75ab1e5e7aff71e9bbdbaa8",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/maturity_mismatch.yaml": "sha256:a20e5ca5d64dd17afa25552de3fac19c724447a2d5fc1d00e57f79e7f99e7a79",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unknown_field.yaml": "sha256:29a12613ac47830823b78237df80a815a831651a695cb1c9ee61424e630e905c",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_entries.yaml": "sha256:e76f3e6a5ff72f58b7ffab02de89541eab327d6db6e94899dab7dfe33648891c",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_paths.yaml": "sha256:14951e7a43079a72ec9ad09ea0c52648c7a18dc5ed29580a61b45a2afd223289",
+    "fixtures/contracts/v1/governance/object_family_register/valid/minimal.yaml": "sha256:64a2561a93216e09f2a1b499ca004fb1a99155fcd617d5e07eb5380aec911918",
+    "schemas/contracts/v1/governance/object_family_register.schema.json": "sha256:df38c90ae5a9704d6a658f53f899c374e6c392342cf4c575a9aad4f3da35d1d8",
+    "tests/validators/test_validate_object_family_register.py": "sha256:0e212e7dfa1423db4c27c561b050d9824f3b31561c61a50bc931931aa01ef879",
+    "tools/validators/control_plane/README.md": "sha256:ae4652f305c46e7907105db7cb5b7b9b992dc5733624ab68b3c1f0a60e9cf738",
+    "tools/validators/control_plane/validate_object_family_register.py": "sha256:590bf2d268a84eb3fa5387239b3da723ed3c280f17543fdc5da4c081cdab23d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:bbaa542e07c1d9348c5094590a46b948713578f9b4eb4cabba9748920b2b646e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-12-26.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-12-26.pdf#governance-family-manifests-and-inventory",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@5f6b6209b38e86da550827475c6c4587ba07a48e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5f6b6209b38e86da550827475c6c4587ba07a48e",
+      "repo:control_plane/object_family_register.yaml@5f6b6209b38e86da550827475c6c4587ba07a48e",
+      "repo:docs/registers/OBJECT_FAMILY.md@5f6b6209b38e86da550827475c6c4587ba07a48e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED",
+    "control_plane/object_family_register.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/bad_root.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/duplicate_family_ids.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/maturity_mismatch.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unknown_field.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_entries.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/invalid/unsorted_paths.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/object_family_register/valid/minimal.yaml": "PROPOSED",
+    "schemas/contracts/v1/governance/object_family_register.schema.json": "PROPOSED",
+    "tests/validators/test_validate_object_family_register.py": "PROPOSED",
+    "tools/validators/control_plane/README.md": "PROPOSED",
+    "tools/validators/control_plane/validate_object_family_register.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "document-idea-assay",
+      "outcome": "PASS",
+      "reason": "The source packet proposes machine-readable governance-family manifests and derived inventories instead of hand-maintained path lists."
+    },
+    {
+      "gate": "repository-gap-assay",
+      "outcome": "PASS",
+      "reason": "The existing object_family_register.yaml was an empty navigational register while current contracts, schemas, fixtures, validators, tests, and workflows already existed."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing control_plane register is updated in place; machine shape, fixtures, validator, tests, workflow, and authoring provenance remain in their accepted responsibility roots."
+    },
+    {
+      "gate": "schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The object-family register schema passed Draft 2020-12 meta-validation locally."
+    },
+    {
+      "gate": "focused-no-network-unittest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic tests passed for shape, fixture polarity, path projection, missing paths, duplicate keys, non-finite numbers, CLI behavior, and non-echoing diagnostics."
+    },
+    {
+      "gate": "fixture-profile",
+      "outcome": "PASS",
+      "reason": "One valid and six invalid synthetic registers produced the reviewed exact results."
+    },
+    {
+      "gate": "static-integrity",
+      "outcome": "PASS",
+      "reason": "Python compiled, JSON-compatible YAML and JSON parsed, workflow YAML parsed, and final artifact hashes were computed from authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted workflow results do not exist until the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt grants no merge, object-family authority, policy, promotion, release, deployment, or publication authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:governance-family-manifest-pattern",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-12-26.pdf#governance-family-manifests-and-inventory"
+    },
+    {
+      "id": "repo:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5f6b6209b38e86da550827475c6c4587ba07a48e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T21:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Populates the existing navigational object-family register with an explicitly partial initial projection of six observed runtime families and adds deterministic structural validation. Maturity labels describe declared repository surfaces only and do not claim runtime correctness, object-family authority, policy approval, release, deployment, or publication."
+}

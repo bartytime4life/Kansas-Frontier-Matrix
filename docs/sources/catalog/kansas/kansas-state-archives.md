@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-kansas-kansas-state-archives
 title: Kansas State Archives — Source-Family Brief
 type: standard
-version: v0.2
+version: v0.3
 status: draft
 owners: <TODO: source steward + archives domain liaison>
 created: 2026-05-13
-updated: 2026-05-21
+updated: 2026-09-20
 policy_label: public
 related:
   - docs/sources/catalog/kansas/README.md
@@ -28,11 +28,11 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/oai-pmh.md
-  - docs/standards/iiif.md
+  - docs/standards/IIIF.md
   - docs/standards/snac-eac-cpf.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/kansas/
   - data/registry/sources/
@@ -72,6 +72,16 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas State Archives — Source-Family Brief
+
+## Current intake restriction — 2026-09-20
+
+**MANUAL_ONLY / NEEDS_SCRAPING_AGREEMENT / AUTOMATED_INTAKE_HELD.** The owner-selected restriction applies to Kansas State Archives proper and archive-collection discovery represented by this umbrella profile. Use human browsing and individually selected records only. Do not schedule pulls, crawl browse pages, bulk-download records or media, or treat Archive-It availability as collection or redistribution permission.
+
+Before any automated acquisition, obtain and record a written scraping or data-access agreement covering allowed collections and fields, endpoints, rates, quotas, identification, caching, redistribution, attribution, retention, withdrawal, and correction. Then separately review a State Archives-specific `SourceDescriptor`, stable identifiers, collection- and item-level rights, provenance, cultural and archaeological sensitivity, negative fixtures, EvidenceBundle linkage, and release. **Public bulk API availability is NOT VERIFIED.**
+
+Kansas State Archives proper (`SRC-CAND-KS-STATE-ARCHIVES`) and Kansas Memory (`SRC-CAND-KSMEM`) share an institutional steward but retain distinct candidate IDs, descriptors, access mechanics, rights decisions, and provenance chains. The matching Kansas Memory restriction is recorded in [`./kansas-memory.md`](./kansas-memory.md); neither record authorizes automation for the other. KHRI and other KSHS surfaces retain their own per-surface admission decisions.
+
+No scheduler, scraper, adapter, source admission, lifecycle promotion, release, or publication is authorized by this documentation update. Rollback requires an explicit revised intake decision and must retain this restriction as decision history.
 
 > Source-family doctrine and admission posture for the **Kansas State Historical Society (KSHS)** archival surfaces — the Kansas State Archives proper, **Kansas Memory**, the **Kansas Historic Resources Inventory (KHRI)**, and adjacent KSHS publication surfaces — as a **Kansas-first** authority for the KFM evidence chain.
 
@@ -536,10 +546,10 @@ A first-PR posture for this family follows the **Atmosphere lane pattern** (Unif
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC namespace and provenance
 - [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard (TODO: create if absent)
-- [`../../../standards/iiif.md`](../../../standards/iiif.md) — IIIF v3 reference (TODO: create if absent)
+- [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — canonical IIIF consumption and historic-overlay guidance
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference (TODO: create if absent)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — KFM Authority Ladder register
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home authority
+- [`../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home authority
 - Pass-10 Idea Index — **`C10-07`** Archives Stack (CONFIRMED); **`C7-10`** Kansas-First Domain Authorities (CONFIRMED); **`C7-06`** SNAC + EAC-CPF (CONFIRMED)
 - Pass-23/32 Consolidated Atlas — **`KFM-P18-PROG-0033`** Kansas Memory source descriptor; **`KFM-P17-PROG-0011`** Kansas historical provenance source object
 

@@ -2,13 +2,17 @@
 doc_id: kfm://doc/sources-catalog-noaa
 title: National Oceanic and Atmospheric Administration Source Catalog Profile
 type: source_catalog_profile
-version: v0.1
+version: v0.2
 status: draft
 owners: <PLACEHOLDER — Source steward · Docs steward · Catalog profile owner>
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-10-12
 policy_label: public
+owning_root: docs/
+responsibility: Agency-level NOAA source-use profile (access handles, descriptor baseline, identity/crosswalk, EvidenceBundle mapping, refresh and staleness rules); not the NOAA family catalog entry, source admission, policy, release, or publication authority.
+truth_posture: PROPOSED guidance for governed NOAA source use; external access points and product facts NEED VERIFICATION at each refresh; DENY source admission, activation, or publication from this profile's presence.
 related:
+  - docs/sources/catalog/noaa/README.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/CROSSWALKS.md
   - docs/sources/catalog/IDENTITY.md
@@ -19,18 +23,22 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/governance/separation-of-duties.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
   - schemas/contracts/v1/source/
 tags: [kfm, sources, catalog, noaa, nws, ncei, weather, climate, radar, nexrad, storm-events, climate-normals, atlas-14, warnings, forecasts, nowcoast, digital-coast, hazards]
 notes:
   - "v0.1 — Initial NOAA source catalog profile for governed KFM ingestion, evidence use, and public-release boundaries."
   - "This profile describes source use. It does not authorize direct public-client reads from NOAA, NWS, NCEI, nowCOAST, or other NOAA systems."
   - "Weather, warning, forecast, radar, and hazard feeds require strict time-awareness and stale-data suppression."
-] -->
+  - "2026-09-20: appended the 1991–2020 U.S. Climate Normals AWS intake-candidate section (updated date was not bumped at the time)."
+  - "2026-10-12 (v0.2): resolved the KFM-TOPO-016 duplicate doc_id shared with docs/sources/catalog/noaa/README.md by classifying the two as distinct documents (this agency-level source profile vs the NOAA family catalog entry); this file keeps kfm://doc/sources-catalog-noaa and the family README took kfm://doc/sources-catalog-noaa-family-readme, matching the nrcs precedent. Also repaired the meta-block closing marker, added owning_root/responsibility/truth_posture, and repointed the missing docs/governance/separation-of-duties.md related entry to ADR-0024."
+[/KFM_META_BLOCK_V2] -->
 
-National Oceanic and Atmospheric Administration Source Catalog Profile
+# National Oceanic and Atmospheric Administration Source Catalog Profile
 
 Path: docs/sources/catalog/noaa.md
+
+> **Document role.** This flat file is the agency-level NOAA **source-use profile**: access handles, source-descriptor baseline, identity and crosswalk policy, EvidenceBundle mapping, public API/tile policy, and refresh/staleness rules. The NOAA **family catalog entry** (source-role posture, domains served, receipts, open questions) and the per-product pages live under [`noaa/`](./noaa/README.md). The two are separate documents with separate doc_ids; neither admits, activates, or publishes a NOAA source.
 
 1. Purpose
 
@@ -925,3 +933,38 @@ If any term is missing, the record is not publishable.
 This profile is intentionally conservative. It does not reduce the value of NOAA data. It protects KFM from making legal, regulatory, emergency, engineering, insurance, access, operational, ecological, cultural, private-loss, or public-safety claims that the source does not support.
 
 NOAA data should enter KFM as evidence-bearing source material, not as sovereign runtime truth. KFM outputs must remain governed, cited, reviewable, time-aware, reversible, safety-gated, and policy-safe.
+
+## 1991–2020 U.S. Climate Normals — AWS intake candidate
+
+**Checkpoint: 2026-09-20. Status: CANDIDATE; not source activation or climate-layer release.**
+
+The [AWS registry](https://registry.opendata.aws/noaa-climate-normals/) identifies the public bucket `s3://noaa-normals-pds/` in `us-east-1`, accessible without an AWS account. [NCEI product documentation](https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals) describes station CSV bulk downloads and the 1991–2020 normal period, with v1.0.1 corrections to 23 sites in 2023. These statements establish discovery and product context; they do not establish the revision of any particular S3 object.
+
+### Bounded first slice
+
+PROPOSED: Kansas monthly station temperature and precipitation normals for 1991–2020. Keep annual, daily, hourly, supplemental 2006–2020, prior normals, and gridded products separate. Select Kansas using the pinned station inventory and reviewed geography rules, not station-name matching. Station normals are long-term statistics, not current observations, forecasts, or county-wide measurements.
+
+Prefer immutable, receipt-backed bulk pulls over county-page scraping. Cloud-hosted does not mean COG, GeoParquet, or another cloud-optimized encoding. The bucket listing was not retrievable through this session's web tool; exact prefixes, keys, schema, completeness, object bytes, and mirror parity remain NEEDS VERIFICATION. CDO access is a separate route: verify dataset IDs, supported normal period, authentication, quotas, and paging before claiming equivalent 1991–2020 coverage or enabling fallback.
+
+### Acquisition and validation contract — PROPOSED
+
+- Reuse the existing source-contract home after checking the executable schema and registry. This profile is human guidance, not a machine SourceDescriptor or activation record.
+- Pin product, edition/revision, normal period, station inventory, exact object keys, retrieval time, upstream Last-Modified/ETag and VersionId when available, byte length, and computed SHA-256. ETag alone is not a content digest.
+- Bound list pages, object count, per-object and aggregate bytes, timeout, retries, and concurrency. Follow S3 continuation tokens to completion; repeated tokens, exhaustion, partial downloads, or changing objects must produce an incomplete/HOLD receipt, never a complete inventory.
+- Preserve source units, scaling, precision, station coordinates and documented datum, quality/completeness flags, missing sentinels, and nulls. Never convert missing precipitation into zero. Reject duplicate station/period/variable keys, wrong periods, invalid coordinates, unexpected schema, nonfinite values, and unexplained unit changes.
+- Preserve raw bytes through RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED. Pin deterministic transformation and selection versions; retain both prior and corrected artifacts with supersession and rollback lineage.
+- Validate an explicitly identified small station fixture and negative cases: wrong baseline, missing value, unit mismatch, duplicate key, truncated list/download, changed object, and absent rights/release references. Parser and end-to-end tests remain NOT_RUN.
+
+### Rights, sensitivity, and presentation
+
+The AWS entry permits public reuse, requests NOAA attribution, prohibits implied NOAA endorsement, and requires modified products not be represented as unaltered NOAA data. Preserve this source statement and retrieval evidence in the intake review; it is not automatic KFM rights acceptance.
+
+Review station-location precision and joins before release; do not enrich with private contributor, property-owner, or sensitive-facility identities. Show points initially. Interpolation or county aggregation needs its own method, uncertainty, provenance, and review.
+
+The Explorer candidate uses `SRC-CAND-NOAA-NORMALS-1991-2020` and intentionally has no live layer/feature binding. Future release must supply EvidenceRef -> EvidenceBundle, source and artifact identities, period, variable, units, QC/missingness, correction status, attribution, policy/review/release references, and tested rollback. Public clients consume governed released carriers only.
+
+### Placement, validation, and recovery
+
+Owning root: `docs/`, existing NOAA human source profile, under Directory Rules v2 §9.1 as adopted by ADR-0029. No new root, schema home, frozen catalog mutation, or topology-baseline change. The application candidate belongs in the existing Explorer source-discovery module; it does not create a competing source authority.
+
+External documentation checked; object acquisition, executable descriptor, parser/schema binding, Kansas fixture, independent review, source admission, and climate-layer release remain open. Revert the candidate and this section to withdraw discovery guidance; preserve any later acquisition receipts rather than deleting evidence.

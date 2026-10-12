@@ -1,17 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
-  "title": "Runtime Response Envelope",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
-  "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "title": "Focus Runtime Response Envelope compatibility alias",
+  "description": "PROPOSED compatibility alias to the canonical runtime response envelope schema. This path does not define a second machine shape.",
+  "$ref": "https://schemas.kfm.local/contracts/v1/runtime/runtime_response_envelope.schema.json",
   "x-kfm": {
     "status": "PROPOSED",
     "path": "schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+    "role": "compatibility-alias",
+    "canonical_schema": "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
     "source_docs": [
       "docs/domains/hazards/API_CONTRACTS.md"
     ],
-    "contract_doc": null
+    "contract_doc": "contracts/runtime/runtime_response_envelope.md"
   }
 }

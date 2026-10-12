@@ -1,0 +1,51 @@
+{
+  "object_type": "RollbackCard",
+  "schema_version": "1.0.0",
+  "id": "rollback:fixture:mrts-05",
+  "version": "1.0.0",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "disposition": "ROLLBACK_CANDIDATE",
+  "trigger": {
+    "reason_code": "VALIDATION_FAILURE",
+    "detected_at": "2026-08-22T01:00:00Z"
+  },
+  "affected_release_ref": "release:fixture-proof-pack-20260805",
+  "target": {
+    "mode": "PRIOR_RELEASE",
+    "release_ref": "release:fixture-proof-pack-20260804"
+  },
+  "evidence_bundle_refs": [
+    "evidence-bundle:fixture:mrts-05"
+  ],
+  "policy_decision_refs": [
+    "policy-decision:fixture:mrts-05:allow"
+  ],
+  "review_record_refs": [],
+  "correction_notice_ref": "correction-notice:fixture:mrts-05",
+  "invalidations": [
+    "API_CACHE",
+    "CATALOG",
+    "TILES"
+  ],
+  "restoration": {
+    "restore_release_ref": "release:fixture-proof-pack-20260804",
+    "public_notice_required": false,
+    "validation_required": true
+  },
+  "timing": {
+    "decided_at": "2026-08-22T01:05:00Z",
+    "effective_at": "2026-08-22T01:10:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "rollback_executed": false,
+    "public_state_mutated": false,
+    "release_ref": null
+  }
+}

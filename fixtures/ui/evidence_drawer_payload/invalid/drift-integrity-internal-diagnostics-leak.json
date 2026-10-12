@@ -1,0 +1,30 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:internal-diagnostics-leak",
+  "outcome": "ABSTAIN",
+  "reason_code": "MISSING_EVIDENCE",
+  "title": "Artifact support is incomplete",
+  "summary": "The required synthetic artifact sidecar is not available.",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "No artifact-integrity claim is shown without the required sidecar."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  },
+  "internal_diagnostics": {
+    "raw_path": "data/quarantine/private/source-sidecar.json",
+    "expected_hash": "sha256:PRIVATE_CANARY",
+    "stack_trace": "PRIVATE_STACK_CANARY_3d08c4"
+  }
+}

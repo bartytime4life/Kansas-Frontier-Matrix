@@ -2,12 +2,15 @@
 doc_id: kfm://contract/domains/archaeology/three-d-documentation
 title: contracts/domains/archaeology/three_d_documentation.md — ThreeDDocumentation Contract
 type: contract
-version: v0.2
-status: draft
+version: v0.3.0
+status: proposed-inactive; fixture-only; no-network; non-authoritative
 owners: OWNER_TBD — Archaeology steward · Documentation steward · 3D/photogrammetry steward · Contract steward · Evidence steward · Schema steward · Policy steward · Review steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-21
+updated: 2026-08-11
+owning_root: contracts/
 policy_label: public; contracts; domains; archaeology; three-d-documentation; semantic-contract; documentation; media; sensitive-lane
+responsibility: Define Archaeology-domain 3D documentation meaning and one inactive fixture profile for acquisition, processing, scale, georeference, interpretation, representation, asset-lineage, and governance paradata without creating asset, evidence, policy, review, release, or publication authority.
+truth_posture: "CONFIRMED semantic owner, closed fixture profile, local validator, synthetic fixture outcomes, and source-card traceability; PROPOSED inactive machine contract; UNKNOWN real asset and reference validity; NEEDS VERIFICATION archaeology, cultural, evidence, policy, review, release, and hosted-CI acceptance"
 tags: [kfm, contracts, archaeology, three-d, 3d-documentation, photogrammetry, scan, model, media, evidence, review, policy, sensitivity, lifecycle, governance]
 related:
   - ./README.md
@@ -39,12 +42,16 @@ related:
   - ../../../docs/domains/archaeology/ARCHITECTURE.md
   - ../../../docs/domains/archaeology/DATA_LIFECYCLE.md
   - ../../../schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json
+  - ../../../fixtures/contracts/v1/domains/archaeology/three_d_documentation/cases.json
+  - ../../../tools/validators/domains/archaeology/validate_three_d_documentation.py
+  - ../../../tests/validators/domains/archaeology/test_validate_three_d_documentation.py
+  - ../../../docs/intake/exploratory/pass-18-three-d-documentation-paradata-source-map.md
   - ../../../policy/sensitivity/archaeology/
   - ../../../data/proofs/
   - ../../../release/
 notes:
   - "Expanded from a planned-file scaffold into the object-level ThreeDDocumentation semantic contract."
-  - "The paired schema is currently a PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "The paired schema now defines one closed PROPOSED_INACTIVE fixture profile for acquisition, processing, scale, georeference, interpretation, asset-lineage, and governance paradata."
   - "OBJECT_MAP.md maps ThreeDDocumentation to three_d_documentation.md and three_d_documentation.schema.json as NEEDS VERIFICATION."
   - "This contract defines 3D-documentation meaning; it does not authorize public model release, site confirmation, media publication, evidence proof, policy approval, review approval, or release approval."
 [/KFM_META_BLOCK_V2] -->
@@ -56,12 +63,12 @@ notes:
 > Semantic contract for `ThreeDDocumentation`, the Archaeology-domain object representing governed 3D documentation such as photogrammetry sets, scan captures, derived meshes, point-cloud documentation, model records, scene documentation, or 3D evidence carriers. It records documentation meaning and lineage without making source media, models, geometry, site confirmation, public release, or proof authoritative by itself.
 
 <p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
+  <img alt="Status: proposed inactive" src="https://img.shields.io/badge/status-proposed--inactive-yellow">
   <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
   <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8a6d3b">
   <img alt="Family: documentation" src="https://img.shields.io/badge/family-documentation-blue">
   <img alt="Sensitivity: controlled" src="https://img.shields.io/badge/sensitivity-controlled-red">
-  <img alt="Schema: scaffold" src="https://img.shields.io/badge/schema-scaffold-orange">
+  <img alt="Schema: fixture profile" src="https://img.shields.io/badge/schema-fixture--profile-orange">
 </p>
 
 `contracts/domains/archaeology/three_d_documentation.md`
@@ -75,11 +82,11 @@ notes:
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / semantic contract  
+> **Status:** `proposed-inactive` / fixture-only semantic contract profile
 > **Owner:** `OWNER_TBD`  
 > **Contract path:** `contracts/domains/archaeology/three_d_documentation.md`  
 > **Schema path:** `schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json`  
-> **Truth posture:** `CONFIRMED` target path, current update, paired scaffold schema, object-map row, adjacent remote-sensing contract pattern, and uploaded authoring guidance. Validator behavior, fixtures, policy behavior, source registry behavior, evidence-bundle implementation, review workflow, release workflow, API behavior, UI behavior, asset pipeline behavior, and runtime behavior remain `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` target path, closed schema shape, deterministic local validator, synthetic fixture outcomes, source-card traceability, and current repository placement. Actual assets, source rights, evidence resolution, interpretation, policy, review, release, API/UI behavior, asset-pipeline behavior, hosted CI, and runtime behavior remain `NEEDS VERIFICATION`.
 
 > [!CAUTION]
 > This contract defines object meaning only. It does **not** authorize public model release, source-media publication, site confirmation, fieldwork approval, review approval, policy approval, proof closure, public geometry, or release of controlled archaeology documentation records.
@@ -142,7 +149,7 @@ Adjacent roots and object families:
 | `./provenience_context.md`, `./stratigraphic_unit.md`, `./artifact_record.md`, `./sample.md`, `./collection_repository_record.md` | Context, recovery, collection, and analytical families that may be documented in 3D. |
 | `./cultural_review.md`, `./steward_review.md` | Review objects required before consequential interpretation or exposure. |
 | `./sensitivity_transform.md`, `./publication_transform_receipt.md` | Transform and receipt objects required before public-safe derivatives can be treated as released. |
-| `../../../schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json` | Current scaffold schema. |
+| `../../../schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json` | Closed, fixture-only candidate shape; not an accepted production schema or authority record. |
 | `../../../policy/sensitivity/archaeology/` | Policy gate home; behavior not verified here. |
 | `../../../data/proofs/` | EvidenceBundle/proof support. |
 | `../../../release/` | Release, correction, supersession, and rollback authority. |
@@ -177,15 +184,15 @@ Current schema evidence:
 | Schema fact | Status |
 |---|---|
 | Schema file exists | `CONFIRMED` |
-| Schema title is `Three D Documentation` | `CONFIRMED` |
-| Schema status is `PROPOSED` | `CONFIRMED` |
-| Schema properties are empty | `CONFIRMED` |
-| `additionalProperties` is `true` | `CONFIRMED` |
-| Schema `source_doc` points to the planned-files ledger | `CONFIRMED` |
-| Schema `contract_doc` points to this contract | `CONFIRMED` |
-| Validator implementation | `UNKNOWN / NOT FOUND IN THIS TASK` |
+| Schema title is `ThreeDDocumentation` | `CONFIRMED` |
+| Schema status is `PROPOSED_INACTIVE` | `CONFIRMED` |
+| Root and nested objects are closed | `CONFIRMED` |
+| Acquisition, processing, scale, georeference, interpretation, asset, and governance paradata are shaped | `CONFIRMED` |
+| Synthetic `PASS`, `ABSTAIN`, `DENY`, and `ERROR` fixtures exist | `CONFIRMED` |
+| Deterministic fixture validator and focused tests exist | `CONFIRMED` |
+| Real asset, reference, evidence, policy, review, release, or runtime validation | `NEEDS VERIFICATION / NOT PERFORMED` |
 
-This contract therefore defines semantic expectations for future schema and validator work. It does not claim that machine validation currently enforces those expectations.
+The machine profile enforces only bounded declaration coherence over synthetic references. A local `PASS` does not authenticate a referenced object, establish an interpretation, or authorize release.
 
 ---
 
@@ -223,7 +230,7 @@ This contract therefore defines semantic expectations for future schema and vali
 
 ## Recommended fields
 
-The current schema does not require these fields. They are `PROPOSED` semantic requirements for future schema/validator work:
+The fixture profile implements a bounded subset of these fields. The wider vocabulary remains `PROPOSED` pending steward review:
 
 | Field | Meaning |
 |---|---|
@@ -299,10 +306,19 @@ The contract defines the meaning of a 3D-documentation object. It does not repla
 
 ## Validation
 
-Before relying on this contract, verify:
+The packet can be replayed locally without network access:
 
-- schema fields beyond scaffold status;
-- validator implementation and fixture coverage;
+```bash
+python -m unittest tests.validators.domains.archaeology.test_validate_three_d_documentation -v
+python tools/validators/domains/archaeology/validate_three_d_documentation.py --fixtures
+```
+
+The exact 21-case matrix covers two coherent declarations, incomplete and error states, asset-role collapse, processing-lineage gaps, interpretation and 2.5D disclosure, scale/georeference closure, public-safe assets, sensitivity, governance/release closure, deterministic identity, canonical references, and fixed-false authority claims.
+
+Before relying on this contract beyond the fixture profile, verify:
+
+- production vocabulary and migration from the fixture profile;
+- hosted CI and human review of validator/fixture coverage;
 - canonical 3D-documentation ID and deterministic identity rules;
 - boundary between ThreeDDocumentation, DomainObservation, RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, CandidateFeature, SiteComponent, ArchaeologicalSite, ArtifactRecord, Sample, ProvenienceContext, and StratigraphicUnit;
 - source-asset vs derived-asset vs public-safe-derivative rules;
@@ -323,7 +339,8 @@ Before relying on this contract, verify:
 | Source | Status | Supports | Limits |
 |---|---|---|---|
 | Prior `three_d_documentation.md` scaffold | `CONFIRMED` | Target file existed as a planned-file scaffold. | Scaffold did not define authoritative semantics. |
-| `three_d_documentation.schema.json` | `CONFIRMED scaffold` | Schema exists, is `PROPOSED`, has empty properties, allows additional properties, and points to this contract. | Does not enforce full 3D-documentation semantics. |
+| Pass 18 card `KFM-P18-INV-410` and `Archaeological 3D GIS.pdf` | `CONFIRMED source support` | Acquisition methods, processing choices, scaling, georeferencing, and interpretive steps are reviewable paradata rather than hidden model state. | Source support is not KFM implementation or archaeological authority. |
+| `three_d_documentation.schema.json` | `CONFIRMED candidate implementation` | Closed fixture shape exists for the bounded paradata subset. | Does not validate assets, external references, truth, policy, review, or release. |
 | `OBJECT_MAP.md` | `CONFIRMED current map` | Maps `ThreeDDocumentation` to `three_d_documentation.md` and `three_d_documentation.schema.json` with status `NEEDS VERIFICATION`; identifies cross-cutting evidence, policy, review, release, rollback, and correction dependencies. | Does not prove validator, fixture, policy, review, asset-pipeline, or release behavior. |
 | `remote_sensing_anomaly.md` | `CONFIRMED adjacent contract` | Provides adjacent sensing-object pattern and confirms remote-sensing/asset carriers do not become proof or release authority by themselves. | Does not define ThreeDDocumentation schema enforcement. |
 | Uploaded authoring prompt v2 | `CONFIRMED user-supplied guidance` | Requires evidence-grounded, implementation-honest Markdown with verification and rollback posture. | Authoring guidance, not implementation proof. |
@@ -334,7 +351,7 @@ Before relying on this contract, verify:
 
 Rollback is required if this contract is used to claim schema completeness, validator coverage, asset-pipeline behavior, policy enforcement, review completion, release execution, API/UI behavior, capture authorization, rights clearance, custody proof, evidence proof, object confirmation, site confirmation, public model release, public disclosure permission, or implementation maturity not verified in this task.
 
-Rollback target: prior scaffold blob SHA `b4fd7b973bf853ae63db0b75794f5b9808a59763`.
+Rollback is one feature-commit revert. No asset, source, evidence, policy, review, release, correction, rollback, deployment, or public state requires operational restoration.
 
 ---
 
@@ -344,9 +361,9 @@ Rollback target: prior scaffold blob SHA `b4fd7b973bf853ae63db0b75794f5b9808a597
 - [ ] 3D-documentation vocabulary is reviewed by the Archaeology steward, documentation steward, 3D/photogrammetry steward, evidence steward, policy steward, and release steward.
 - [ ] Boundary between `ThreeDDocumentation`, `DomainObservation`, `RemoteSensingAnomaly`, `LiDARCandidate`, `GeophysicsObservation`, `CandidateFeature`, `SiteComponent`, `ArchaeologicalSite`, `ArtifactRecord`, `Sample`, `ProvenienceContext`, and `StratigraphicUnit` is accepted.
 - [ ] Source-asset, derived-asset, internal documentation, public-safe derivative, and release-asset states are modeled without collapsing lifecycle boundaries.
-- [ ] Paired JSON Schema is expanded from scaffold status.
-- [ ] Valid and invalid fixtures cover internal, restricted, quarantined, rejected, superseded, equivalent, reprocessed, corrected, release-candidate, public-safe derivative, and rollback states.
-- [ ] Validator enforces required subject, source asset, derived asset, capture, processing, rights, evidence, review, sensitivity, policy, transform, lineage, and visibility fields.
+- [x] Paired JSON Schema is expanded from scaffold status as a closed, inactive fixture profile.
+- [x] Synthetic valid and invalid fixtures cover the bounded acquisition, processing, spatial-reference, interpretation, asset-lineage, public-candidate, and authority boundaries.
+- [x] Deterministic validator enforces the bounded paradata profile without network or asset access.
 - [ ] Fixtures avoid unsafe media, model, geometry, context, collection, custody, or interpretation detail where references or redacted summaries are safer.
 - [ ] EvidenceBundle, PolicyDecision, ReviewRecord, SensitivityTransform, PublicationTransformReceipt, ReleaseManifest, CorrectionNotice, and RollbackCard references are validated where required.
 - [ ] API/UI surfaces prove they cannot treat 3D documentation as proof, object confirmation, site confirmation, or public model release permission.

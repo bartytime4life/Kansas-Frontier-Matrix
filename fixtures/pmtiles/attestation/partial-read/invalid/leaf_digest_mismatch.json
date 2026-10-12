@@ -1,0 +1,11 @@
+{
+  "case_id": "partial-read-leaf-digest-mismatch",
+  "expected": {
+    "issue_codes": [
+      "PARTIAL_LEAF_DIGEST_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "leaf_digest_mismatch"
+}

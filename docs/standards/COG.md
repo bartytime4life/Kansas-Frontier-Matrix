@@ -1,46 +1,103 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standard-cog
-title: Cloud Optimized GeoTIFF (COG) — KFM Standards Conformance
+title: Cloud Optimized GeoTIFF (COG) — Repository Boundary, Conformance, and Release Readiness
 type: standard
-version: v1
-status: draft
-owners: <docs-steward> + <map-shell-owner>
+version: v2.0-draft
+status: "draft; repository-grounded; upstream-currentness-refreshed; mixed-maturity; no-adoption; no-conformance-proof; no-release"
+owners:
+  - "@bartytime4life — verified GitHub review route through CODEOWNERS"
+  - "NEEDS VERIFICATION — accountable raster, evidence, policy, release, and operations stewards"
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-08-18
 policy_label: public
+owning_root: docs/
+current_path: docs/standards/COG.md
+responsibility: "Explain the boundary between the OGC Cloud Optimized GeoTIFF standard, KFM raster-carrier guidance, current repository validation surfaces, and governed release without becoming a machine schema, policy decision, conformance certificate, artifact store, release decision, or publication proof."
+truth_posture: "CONFIRMED current path, standards-lane placement, OGC COG 1.0 currentness, checked-in inactive metadata and byte-range profiles, and proposal state of ADR-0023 / PROPOSED production, catalog, serving, cryptographic, and release profiles / UNKNOWN real COG payload inventory, current consumers, deployed Range/CORS behavior, signer trust, and production release state / NEEDS VERIFICATION accountable stewardship and end-to-end binary, semantic, serving, correction, and rollback proof."
+evidence_snapshot: "main@7ac9f151aacc03b03fd486a64b348743b7325a51; prior target 2b81264c46c5ac5d3e14f9b9c6efc887fea5687f; standards README a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b; Directory Rules fd49a0b83e55cef52c1124281f093e263526898d; CODEOWNERS dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61; carrier-readiness contract/schema/validator/tests/workflow 17055a680b83a4f83834735e88aeb0569322845b/b6ebec77a6e09c50b89594c4032bd40ec238f6be/63e4cfac4838d0095b7f05fc6a3507ebe180fd8b/49b8ff390aee4b0d3381ec2d087238ce0c725ccc/f5791e0988166dbcdd5d781c690073e8d3b10389; byte-range contract/schema/validator/tests/workflow 6469d1ec57666233bd111c55fc7b0a6d6f2cb11b/a8af408bb19640517fa228568447b9d981e0244b/62fb6750adcc5da12ab6528536d3b51e98fe1945/e15874b03ba6e873d3d51be04e9c8a5b2cb45ebc/0619d6731b1150c076288abcdc6a255c8164b42e; KFMGeoManifest c7993b8bf8fbcbf01f0947a99a14d81509e89370; MapReleaseManifest e2a70bdd659cf432901ee9d5544b8e1418c23e60; ADR-0023 93576e7419e5723b5d7556cb811dc740dfc40a04."
+external_currentness: "Checked 2026-08-18 against OGC Cloud Optimized GeoTIFF Standard 1.0 (OGC 21-026), GDAL COG driver documentation, and rio-cogeo creation/validation documentation."
 related:
+  - docs/standards/README.md
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
-  - docs/architecture/map-shell.md
-  - docs/architecture/governed-api.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
+  - docs/standards/PMTILES.md
+  - docs/standards/GEOPARQUET.md
   - docs/doctrine/directory-rules.md
-tags: [kfm, standard, raster, cog, geotiff, map]
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0002-contracts-vs-schemas-split.md
+  - docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - contracts/release/geospatial_carrier_readiness.md
+  - schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json
+  - tools/validators/release/validate_geospatial_carrier_readiness.py
+  - tests/release/test_geospatial_carrier_readiness.py
+  - contracts/evidence/cog_byte_range_integrity_manifest.md
+  - schemas/contracts/v1/evidence/cog_byte_range_integrity_manifest.schema.json
+  - tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py
+  - tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py
+  - contracts/evidence/kfm_geo_manifest.md
+  - contracts/release/map_release_manifest.md
+tags:
+  - kfm
+  - standards
+  - cog
+  - cloud-optimized-geotiff
+  - geotiff
+  - raster
+  - range-requests
+  - integrity
+  - evidence
+  - release
 notes:
-  - Standards doc; all KFM repo-state claims are PROPOSED until mounted-repo verification.
-  - Path home authority: Directory Rules §6.1 (docs/standards/).
+  - "This same-path revision preserves the stable document identity and legacy section anchors."
+  - "The checked-in COG readiness and byte-range profiles are PROPOSED_INACTIVE and do not validate a real TIFF/COG payload."
+  - "ADR-0023 remains proposed; no signature, promotion, release, deployment, or publication authority is created."
 [/KFM_META_BLOCK_V2] -->
 
-# Cloud Optimized GeoTIFF (COG)
+<a id="top"></a>
+<a id="cloud-optimized-geotiff-cog"></a>
 
-How KFM produces, catalogs, validates, signs, and releases COG raster artifacts under the trust membrane — and what the standard itself requires.
+# Cloud Optimized GeoTIFF (COG) — KFM Standards Boundary
 
-![Doc type](https://img.shields.io/badge/doc-standard-blue) ![Status](https://img.shields.io/badge/status-draft-orange) ![Standard](https://img.shields.io/badge/OGC-21--026%20v1.0-green) ![Lifecycle](https://img.shields.io/badge/lane-docs%2Fstandards-lightgrey) ![Implementation](https://img.shields.io/badge/impl-PROPOSED-yellow)
+> **Operating rule.** A COG is a raster carrier. File conformance, pixel meaning, source authority, evidence, rights, sensitivity, review, release, serving, correction, and rollback remain separate responsibilities.
 
-| Field | Value |
+![status](https://img.shields.io/badge/status-v2.0--draft-yellow)
+![evidence](https://img.shields.io/badge/evidence-repository--grounded-success)
+![external](https://img.shields.io/badge/OGC%20COG-1.0-blue)
+![implementation](https://img.shields.io/badge/implementation-mixed--maturity-orange)
+![binary conformance](https://img.shields.io/badge/binary%20conformance-not%20verified-critical)
+![release authority](https://img.shields.io/badge/release%20authority-none-critical)
+
+> [!IMPORTANT]
+> **Human-readable guidance only.** This page explains an external standard and the current KFM repository boundary. Contracts define meaning, schemas define shape, policy decides admissibility, validators establish only their declared checks, and governed release records decide release. This page owns none of those decisions.
+
+> [!CAUTION]
+> **Current executable profiles do not prove COG conformance.** The repository has an inactive metadata-readiness profile and an inactive synthetic byte-range-integrity profile. Neither opens a real TIFF, evaluates OGC conformance classes, interprets pixels, or proves live HTTP Range behavior.
+
+> [!WARNING]
+> **Cryptographic release binding remains on hold.** ADR-0023 is still `proposed`. A digest match, fixture pass, checked-in workflow, or manifest-shaped record does not prove signer identity, policy approval, review, promotion, release, deployment, publication, or public-use authority.
+
+| Field | Current state |
 |---|---|
-| **Status** | `draft` |
-| **Owners** | `<docs-steward>` + `<map-shell-owner>` *(placeholder — verify against CODEOWNERS)* |
-| **Last reviewed** | 2026-05-13 |
-| **Authority** | External standard; KFM conformance posture is doctrine, implementation maturity is `PROPOSED` |
-| **Path home** | `docs/standards/COG.md` per Directory Rules §6.1 |
+| **Document identity** | `kfm://doc/standard-cog` |
+| **Path** | `docs/standards/COG.md` |
+| **Directory result** | **PLACE** — same-path standards guidance under the accepted `docs/` responsibility root |
+| **Review route** | `@bartytime4life` through current CODEOWNERS; stewardship and independent review remain **NEEDS VERIFICATION** |
+| **External baseline** | OGC Cloud Optimized GeoTIFF Standard **1.0**, OGC 21-026 |
+| **KFM adoption state** | No accepted KFM-wide COG production or release profile was verified |
+| **Repository maturity** | Inactive metadata preflight + inactive synthetic byte-range integrity + fixture-first manifest/release declarations |
+| **Missing proof** | Real TIFF/COG binary conformance, semantic raster parity, live serving, authenticated evidence/policy/review, cryptographic release, correction, and rollback |
+| **Last currentness check** | 2026-08-18 |
 
 ---
 
 ## Quick jump
 
+- [0. Current repository status and authority](#0-current-repository-status-and-authority)
 - [1. Scope](#1-scope)
 - [2. What COG is (external standard)](#2-what-cog-is-external-standard)
 - [3. KFM posture on COG](#3-kfm-posture-on-cog)
@@ -55,454 +112,1133 @@ How KFM produces, catalogs, validates, signs, and releases COG raster artifacts 
 - [12. Related docs](#12-related-docs)
 - [Appendix A — Example COG STAC Item shape (PROPOSED)](#appendix-a--example-cog-stac-item-shape-proposed)
 - [Appendix B — Validation command snippets](#appendix-b--validation-command-snippets)
+- [Appendix C — v1 preservation and correction ledger](#appendix-c--v1-preservation-and-correction-ledger)
 
 ---
+
+<a id="0-current-repository-status-and-authority"></a>
+
+## 0. Current repository status and authority
+
+### 0.1 Evidence boundary
+
+This revision was checked against current repository bytes at the evidence snapshot recorded in the metadata block. The statements below distinguish path presence, machine shape, executable behavior, and release authority.
+
+| Surface | CONFIRMED current state | What it does **not** establish |
+|---|---|---|
+| `docs/standards/COG.md` | Existing standards-lane document, modernized in place | External conformance, KFM adoption, runtime behavior, or release |
+| `docs/standards/README.md` | Defines this lane as human-readable standards and interoperability guidance | Machine authority or standards certification |
+| `contracts/release/geospatial_carrier_readiness.md` and companions | `PROPOSED_INACTIVE` metadata-only COG/MVT/GeoParquet readiness profile | TIFF parsing, COG binary validation, source resolution, policy, or release |
+| `contracts/evidence/cog_byte_range_integrity_manifest.md` and companions | `PROPOSED_INACTIVE` whole-file and explicit-range SHA-256 profile over a synthetic 65-byte payload | TIFF/COG structure, overview layout, HTTP Range, pixel meaning, or cryptographic trust |
+| `contracts/evidence/kfm_geo_manifest.md` and companions | Fixture-first geospatial-candidate metadata and optional exact local byte binding | Carrier-format conformance, evidence closure, rights, policy, signing, or release |
+| `contracts/release/map_release_manifest.md` and companions | Fixture-first map-release closure declarations, including COG Range/CORS declarations | Live artifact fetch, header verification, authenticated review, cache mutation, or release |
+| ADR-0023 | Proposed design for signed PMTiles/COG release binding | Accepted decision, signer profile, trust root, or release gate |
+| OGC COG 1.0 | Current external OGC standard verified from the issuer | Automatic KFM profile adoption or implementation |
+
+### 0.2 Current executable COG-related profiles
+
+#### Metadata readiness
+
+`GeospatialCarrierReadinessCheck` inspects declared metadata only. Its COG lane checks:
+
+- `.tif` or `.tiff` naming;
+- `image/tiff`;
+- internal-tiling declaration;
+- square, power-of-two block declarations within the profile bounds;
+- an overview declaration for profile-defined larger rasters;
+- compression from the profile's enumerated set;
+- explicit CRS and nodata policy;
+- declared Range-read support; and
+- canonical STAC `raster` and `projection` declarations.
+
+Its outcomes are `READY`, `HOLD`, or `ERROR`. `READY` means **eligible for a stronger validation layer**, not COG-conformant, policy-safe, or releasable.
+
+#### Byte-range integrity candidate
+
+`COGByteRangeIntegrityManifestCandidate` checks:
+
+- whole-payload SHA-256;
+- canonical, contiguous, non-overlapping full coverage;
+- exact SHA-256 for each declared range;
+- declared range roles;
+- freshness and boundary-state consistency; and
+- finite `PASS`, `ABSTAIN`, `DENY`, or `ERROR` outcomes.
+
+The bundled payload is deliberately not a TIFF. Range roles are fixture labels, not parser-derived TIFF sections.
+
+### 0.3 Maturity ladder
+
+| Level | Capability | Current posture |
+|---:|---|---|
+| 0 | Human standards boundary | **CONFIRMED — this document** |
+| 1 | Metadata-only readiness | **CONFIRMED checked in / PROPOSED_INACTIVE** |
+| 2 | Synthetic whole-file and explicit-range integrity | **CONFIRMED checked in / PROPOSED_INACTIVE** |
+| 3 | Real TIFF/BigTIFF parser + OGC conformance-class validation | **NOT VERIFIED / NEEDS IMPLEMENTATION** |
+| 4 | Source-to-COG semantic parity, including masks and overviews | **NOT VERIFIED / NEEDS IMPLEMENTATION** |
+| 5 | Catalog, evidence, rights, sensitivity, policy, and review resolution | **PARTIAL fixture declarations; no authenticated closure verified** |
+| 6 | Local or deployed HTTP Range/CORS serving proof | **UNKNOWN / NEEDS VERIFICATION** |
+| 7 | Cryptographic release, correction, withdrawal, and rollback drill | **HOLD / NEEDS DECISION AND PROOF** |
+
+### 0.4 Authority map
+
+| Question | Owning surface |
+|---|---|
+| What does COG 1.0 require? | OGC 21-026 and its normative conformance tests |
+| What guidance does KFM present to humans? | This page and the standards-lane README |
+| What does a KFM object mean? | The applicable contract under `contracts/` |
+| What fields are machine-valid? | The applicable JSON Schema under `schemas/contracts/v1/` |
+| What is admissible or public-safe? | `policy/` plus accountable review |
+| What did a validator actually check? | Validator code, fixture corpus, tests, workflow, and exact run evidence |
+| What bytes exist? | Artifact storage plus digest/length records |
+| What may be released? | Governed release objects and accountable release decision |
+| What may be served to a client? | Released artifact references and governed delivery configuration |
+| What may a user or AI claim? | Resolvable evidence plus policy/review/release state |
+
+No row substitutes for another.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-**Purpose.** Define KFM's conformance posture toward the Cloud Optimized GeoTIFF (COG) format: where COG artifacts live in the lifecycle, what they must carry, how they are validated, how they are released, and what they MUST NOT be used as a substitute for.
+### 1.1 Purpose
 
-**In scope.**
+This document:
 
-- COG as a delivery and analysis-adjacent raster carrier inside KFM.
-- Required STAC, manifest, validation, and release-state bindings.
-- Production parameters (CRS, blocks, overviews, nodata, compression).
-- Anti-patterns specific to raster carriers.
+1. tracks the external OGC COG 1.0 baseline;
+2. explains COG's role as a KFM downstream raster carrier;
+3. reconciles current repository validation and manifest surfaces;
+4. separates file conformance from serving, evidence, policy, review, and release;
+5. gives dataset-aware production and validation guidance; and
+6. records the smallest remaining proof gaps without converting them into implementation facts.
 
-**Out of scope.**
+### 1.2 In scope
 
-- The full GeoTIFF specification body. KFM defers to OGC for that.
-- Non-raster carriers — see `docs/standards/PMTILES.md`, `docs/standards/GEOPARQUET.md` *(PROPOSED neighbors; existence NEEDS VERIFICATION)*.
-- Domain-specific source authority (e.g., soil, hydrology). COG is **never** the root truth source — see §3.
+- TIFF/BigTIFF organization relevant to COG.
+- Reduced-resolution subfiles, internal tiling, GeoTIFF keys, and HTTP Range delivery.
+- Raster semantic preservation: CRS, transform, resolution, bands, units, scale/offset, nodata, masks, and resampling.
+- Deterministic build records and exact-byte integrity.
+- Catalog references and current KFM manifest/readiness profiles.
+- Rights, sensitivity, public delivery, correction, withdrawal, and rollback boundaries.
+- Fixture-first and future binary-aware validation.
+
+### 1.3 Out of scope
+
+- Reproducing the OGC, TIFF, BigTIFF, GeoTIFF, HTTP, or STAC specifications.
+- Adopting a KFM-wide block size, compression, overview, CRS, or resampling profile.
+- Selecting or activating a raster source.
+- Defining domain truth for soil, hydrology, geology, atmosphere, agriculture, habitat, or another lane.
+- Creating a canonical `COGValidationReport` object family.
+- Accepting ADR-0023 or choosing a signing/trust-root profile.
+- Proving a current COG payload inventory, deployed endpoint, CDN, browser plugin, API route, or release.
+- Publishing or authorizing public use.
 
 > [!IMPORTANT]
-> Per Directory Rules §6.1, this file's home is `docs/standards/`. Topic does not justify a root folder; responsibility does. Do not create `cog/` at repo root.
+> This is a same-path documentation correction. It creates no new COG root, schema home, contract home, policy home, evidence store, release lane, or public route.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="2-what-cog-is-external-standard"></a>
 
 ## 2. What COG is (external standard)
 
-A Cloud Optimized GeoTIFF is a regular GeoTIFF whose internal layout is organized so HTTP clients can fetch desired subregions and subresolutions on the fly using HTTP range requests.  The two structural elements that distinguish a COG from a plain GeoTIFF are internal tiling and embedded overviews;  all COG files are valid GeoTIFF files, but not all GeoTIFF files are valid COG files. 
+### 2.1 Standard identity
 
-**EXTERNAL — standard status.** Cloud Optimized GeoTIFF is an official OGC Standard; the Open Geospatial Consortium published version 1.0 in July 2023, and Version 1.0 is backward-compatible with the OGC GeoTIFF Standard of September 2019 as well as the original GeoTIFF 1.0 specification of 1995.  The specification repository is maintained at opengeospatial/CloudOptimizedGeoTIFF (OGC 21-026),  with community context at cogeo.org.
+The current issuer page lists **OGC Cloud Optimized GeoTIFF Standard 1.0**, document **21-026**, as an OGC Implementation Standard. It was published in July 2023.
 
-**EXTERNAL — internal layout.** A COG places metadata of the full resolution imagery at the beginning of the file, followed by overview metadata, and finally the imagery itself; to make it friendly with streaming and progressive rendering, the recommendation is to start with the smallest overview and finish with the full resolution level. 
+COG uses existing mechanisms rather than inventing a new raster encoding:
 
-**EXTERNAL — tooling.** The GDAL `COG` driver writes layouts with overviews until the maximum dimension of the smallest overview level is lower than 512 pixels, with TIFF section layout optimized to minimize the number of GET requests needed by a reader doing random read access.  The `rio-cogeo` plugin facilitates creation and validation of COGs and enforces internal overviews and internal tiles (default profiles have 512x512 internal tiles). 
+- TIFF or BigTIFF;
+- GeoTIFF keys for georeferencing;
+- tiled image organization;
+- reduced-resolution subfiles, commonly called overviews; and
+- HTTP byte-range requests for partial retrieval.
+
+A COG-aware client can inspect TIFF metadata and request only the resolution levels and spatial blocks it needs.
+
+### 2.2 Conformance classes
+
+OGC COG 1.0 separates file and server concerns.
+
+| Conformance class | Target | Purpose |
+|---|---|---|
+| GeoTIFF Tiles | TIFF encoder | Tiled TIFF/BigTIFF organization |
+| GeoTIFF Overviews | TIFF encoder | Reduced-resolution subfiles |
+| GeoTIFF Keys | GeoTIFF encoder | Geospatial metadata |
+| Optimized GeoTIFF | TIFF encoder | Additional ordering and optimization rules for web visualization |
+| HTTP Range | Web server | Partial byte retrieval |
+
+The standard permits implementations to claim one or more applicable classes. KFM must record which class set a future validator asserts rather than using a vague boolean called `is_cog`.
+
+### 2.3 File conformance and serving conformance are different
+
+A file can have an optimized TIFF layout while a host fails to support correct byte ranges. A server can support ranges while hosting a nonconforming TIFF. A complete public delivery claim therefore needs at least two independent proofs:
+
+1. **file-side proof** — the bytes satisfy the declared OGC file conformance classes; and
+2. **server-side proof** — the deployed endpoint satisfies the declared HTTP Range behavior.
+
+Neither proof establishes source authority, pixel correctness, rights, sensitivity, or release.
+
+### 2.4 Media type
+
+OGC recommends a COG-aware TIFF media type profile such as:
+
+```text
+image/tiff; application=geotiff; profile=cloud-optimized
+```
+
+A future KFM serving profile must reconcile that recommendation with deployed client, object-store, CDN, and browser behavior. The current inactive metadata preflight accepts plain `image/tiff`; this is profile evidence, not a universal media-type decision.
+
+### 2.5 Tooling references
+
+- GDAL's built-in `COG` driver can create COGs and can generate or preserve overviews and masks as part of the copy process.
+- `rio-cogeo` provides COG creation, inspection, and validation commands. Its default profiles commonly use 512 × 512 internal blocks, but that is a tool profile, not an OGC universal constant.
+- Tool output is evidence only when the exact tool version, configuration, input, output, and invocation are recorded and the result is bound to the tested bytes.
 
 > [!NOTE]
-> The above is **EXTERNAL** background. It informs KFM's posture but does not establish KFM-specific behavior. KFM-specific rules are §§3–10.
+> External tooling can help implement a KFM validator. It does not become repository authority merely because this page names it.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="3-kfm-posture-on-cog"></a>
 
 ## 3. KFM posture on COG
 
-KFM treats COG as a **downstream raster carrier** — a format, not an authority. The position is consistent across the KFM corpus.
+### 3.1 Carrier, not truth
 
-**CONFIRMED doctrine (project sources):**
+A COG can carry released raster values efficiently. It cannot, by itself, establish:
 
-- **COG is a derived artifact, not a source authority.** KFM treats source systems (e.g., gSSURGO/gNATSGO, SoilGrids, 3DEP, LANDFIRE, HLS) as the ingest sources, with COGs as downstream streamable artifacts (`SRC-061 pp.123–127`, `ML-061-105`). A COG map layer **cannot** stand in for the underlying source's authority.
-- **Bytes ≠ proof.** Artifact metadata — not the raster bytes — controls origin, process, and promotion (`ML-061-003`). Checksums answer byte integrity but not who produced an artifact or which pipeline and inputs produced it (`ML-061-002`).
-- **Cite-or-abstain.** A consequential claim about pixel values, change, or anomaly resolves through an `EvidenceBundle` and `PolicyDecision`, not through a rendered COG layer alone.
-- **Trust membrane.** Public clients consume COGs through the governed API and a `TileArtifactManifest` / `MapReleaseManifest` chain — never directly from `data/raw/`, `data/work/`, `data/quarantine/`, or canonical/internal stores.
+- who had authority to publish the source;
+- whether the transform preserved scientific meaning;
+- whether rights and sensitivity permit exposure;
+- whether a pixel supports a consequential claim;
+- whether the artifact passed accountable review;
+- whether the endpoint is current or withdrawn; or
+- whether a rollback target exists.
 
-| KFM property | What it means for COGs |
+`EvidenceRef → EvidenceBundle`, source role, temporal scope, policy, review, and release state remain outside the TIFF bytes.
+
+### 3.2 Trust rules
+
+| Rule | COG consequence |
 |---|---|
-| **Downstream carrier** | A COG is a streamable representation of validated raster data; it does not, by itself, prove what the pixels mean. |
-| **Versioned, immutable** | Each release of a raster is a new digest-addressed COG; in-place updates are forbidden (see §10). |
-| **Manifest-bound** | Every public COG MUST be referenced by a `TileArtifactManifest` (PROPOSED) tied to a release decision. |
-| **Cataloged** | Every COG MUST appear as a STAC Item with the Raster and Projection extensions, and (where N-D) the Datacube extension. |
-| **Signed and attested** | Each release SHOULD bind COG digests to a Cosign signature and SLSA/in-toto provenance attestation. |
-| **Rollback-aware** | Release decisions carry a `rollback_target` so a prior digest can be restored without bypassing governance. |
+| Cite or abstain | A map or AI claim cannot cite rendered pixels alone when evidence is required |
+| Public clients use governed interfaces | Clients receive released artifact references or governed API responses, never RAW/WORK/QUARANTINE/internal-store paths |
+| Derived artifacts remain derived | A COG does not overwrite or become the canonical source record |
+| Promotion is a state transition | Copying a `.tif` into a public folder is not release |
+| Rights and sensitivity fail closed | Unknown or restricted posture leads to hold, transformation, staged access, abstention, or denial |
+| Deterministic identity where practical | Build profile, source digests, toolchain, output digest, and lineage are recorded |
+| Corrections are visible | Superseded, withdrawn, stale, or rolled-back COG references remain traceable |
+| Watchers do not publish | A source watcher may emit a candidate and receipt, not a public COG release |
 
-> [!CAUTION]
-> A rendered COG layer is **not** evidence. Pixel values without `EvidenceRef → EvidenceBundle` resolution must abstain on consequential claims. Style filters cannot stand in for redaction, generalization, or sensitivity policy.
+### 3.3 Identity layers
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+Do not collapse these identities:
+
+| Identity | Example responsibility |
+|---|---|
+| Source identity | Native dataset/product/version and source authority |
+| Retrieval identity | Exact captured bytes or immutable external reference |
+| Transform identity | Build specification, tool versions, options, and input digests |
+| Artifact identity | Exact COG byte length and digest |
+| Catalog identity | STAC/DCAT/PROV record identity |
+| Release identity | Governed release or map-release record |
+| Delivery identity | Versioned endpoint, object reference, or immutable URL |
+| Claim identity | Evidence-bound statement carried by the raster or UI |
+
+A change at one layer may require a new record without silently replacing the others.
+
+### 3.4 Public delivery is not necessarily an API byte proxy
+
+The trust membrane does not require every COG byte to pass through one application server. A public client may receive a versioned, released, policy-safe object URL from a governed interface and then use Range requests directly. The requirements are:
+
+- the public reference is release-bound and immutable;
+- the host exposes only approved bytes;
+- rights and sensitivity have been evaluated;
+- CORS/Range/cache behavior is appropriate for the consumer;
+- stale, withdrawal, correction, and rollback changes propagate; and
+- the UI does not treat the carrier as evidence authority.
+
+The current deployed pattern remains **UNKNOWN** until runtime and serving evidence is inspected.
+
+### 3.5 Sensitive and harmful precision
+
+Raster sensitivity can arise from:
+
+- rare-species habitat or occurrence inference;
+- archaeology or cultural sites;
+- critical infrastructure;
+- private land, wells, or facilities;
+- living-person or household inference;
+- proprietary agricultural or industrial operations; and
+- source terms that restrict redistribution or derivative publication.
+
+Public safety must be achieved before COG generation or through a governed, receipted transform. A browser style filter, opacity change, or hidden layer toggle is not redaction.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="4-lifecycle-placement"></a>
 
 ## 4. Lifecycle placement
 
-The KFM lifecycle invariant **`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`** governs COG placement. Promotion is a **governed state transition, not a file move** (Directory Rules §0, §9.1).
+The governing lifecycle is:
 
-| Phase | Where COG-related bytes / records sit (PROPOSED paths) | Notes |
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+COG can appear at several stages, but its meaning changes by state.
+
+| Stage | COG-related state | Required boundary |
 |---|---|---|
-| **RAW** | `data/raw/<domain>/<source_id>/<run_id>/` | As-delivered source rasters (e.g., GeoTIFF, IMG, NetCDF granules). Never a public surface. |
-| **WORK** | `data/work/<domain>/<run_id>/` | Intermediate transforms, candidate COGs awaiting validation. |
-| **QUARANTINE** | `data/quarantine/<domain>/<reason>/<run_id>/` | Rights, sensitivity, validation, or COG-layout failures land here with a reason code. |
-| **PROCESSED** | `data/processed/<domain>/<dataset_id>/<version>/` | Validated COGs that have passed transform checks but are not yet public. |
-| **CATALOG / TRIPLET** | `data/catalog/stac/...`, `data/catalog/dcat/...`, `data/catalog/prov/...` | STAC Items with Raster/Projection extensions; DCAT distributions; PROV run records. |
-| **PUBLISHED** | `data/published/layers/...` (or governed-API-served path) | Released, policy-allowed, rollback-capable. Public clients reach this **only** through the governed API. |
-| **Proofs** | `data/proofs/evidence_bundle/`, `data/proofs/validation_report/` | `COGValidationReport`, citation validations, evidence bundles. |
-| **Receipts** | `data/receipts/pipeline/`, `data/receipts/release/` | `RunReceipt`, `RepresentationReceipt`, signing records. |
-| **Release decision** | `release/manifests/`, `release/rollback_cards/` | `MapReleaseManifest`, `TileArtifactManifest` references, rollback targets. |
-| **Rollback alias-revert** | `data/rollback/<domain>/<release_id>/` | Data-plane receipts for alias revert. |
+| **RAW** | Source-delivered TIFF/GeoTIFF or another raster format | Preserve source identity and bytes; no public exposure |
+| **WORK** | Candidate COG, benchmark output, or transform experiment | Mutable work is allowed; clearly non-release |
+| **QUARANTINE** | Failed, unsafe, rights-unclear, semantically divergent, or over-precise candidate | Stable reason code, review path, and no public route |
+| **PROCESSED** | Binary- and semantic-validated raster candidate | Still not public merely because checks passed |
+| **CATALOG / TRIPLET** | STAC/DCAT/PROV projections and relationships | Catalog discoverability does not equal release |
+| **PUBLISHED** | Governed immutable artifact reference tied to release state | Evidence, rights, sensitivity, review, correction, and rollback appropriate to consequence |
+| **STALE / SUPERSEDED / WITHDRAWN / ROLLED BACK** | Historical public artifact state | Preserve lineage; stop current presentation; propagate cache and client state |
 
-All paths above are **PROPOSED** per Directory Rules §0 — they reflect the canonical tree in Directory Rules §6 and §9.1 but require mounted-repo verification before being asserted as repo facts.
+### 4.1 Logical home versus physical bytes
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+Directory governance assigns responsibility, not necessarily the storage medium. A repository path may hold a small fixture or manifest while production bytes live in an object store. The governed record must make the logical owner, physical locator, digest, access class, retention, and release state explicit.
+
+This page does not prescribe a new domain child-path grammar. Dataset packets must use the current `data/` and `release/` root contracts and record any compatibility or migration requirement.
+
+### 4.2 Promotion gate
+
+A candidate cannot move to `PUBLISHED` based only on:
+
+- a valid file extension;
+- a successful metadata preflight;
+- a range-manifest fixture pass;
+- a matching SHA-256;
+- a catalog item;
+- a pull request or merge;
+- a signature-shaped object; or
+- a green documentation workflow.
+
+Promotion requires the independently governed closure appropriate to the release.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="5-release-flow-diagram"></a>
 
 ## 5. Release flow (diagram)
 
 ```mermaid
 flowchart LR
-  src[Upstream source<br/>e.g. 3DEP, gNATSGO, HLS] --> raw[("RAW<br/>data/raw/")]
-  raw --> work[("WORK<br/>data/work/")]
-  work -->|"COG build:<br/>tiling, overviews,<br/>nodata, compression"| candidate[Candidate COG]
-  candidate --> validate{{"Validate<br/>(rio-cogeo, gdalinfo,<br/>stac-validator)"}}
-  validate -->|fail| quarantine[("QUARANTINE<br/>+ reason code")]
-  validate -->|pass| processed[("PROCESSED<br/>data/processed/")]
-  processed --> catalog[("CATALOG<br/>STAC Item +<br/>Raster/Projection ext.")]
-  catalog --> policy{{"Policy gate<br/>rights / sensitivity /<br/>provenance / signature"}}
-  policy -->|deny / hold| hold[HOLD or DENY<br/>structured outcome]
-  policy -->|allow| release[("Release decision<br/>MapReleaseManifest +<br/>TileArtifactManifest +<br/>rollback_target")]
-  release --> published[("PUBLISHED<br/>OCI digest, Cosign,<br/>SBOM, PROV")]
-  published --> gapi[(Governed API)]
-  gapi -. Range / CORS .-> client[Public client<br/>MapLibre, etc.]
-  evidence[(EvidenceBundle)] --- catalog
-  evidence --- gapi
+    S["Admitted source + SourceDescriptor"] --> R["RAW capture"]
+    R --> W["WORK transform"]
+    W --> B["Candidate COG bytes<br/>+ build record"]
+    B --> F{"Binary OGC<br/>conformance"}
+    F -- fail --> Q["QUARANTINE<br/>reason + review"]
+    F -- pass --> P{"Semantic parity<br/>CRS · bands · units · mask · overviews"}
+    P -- fail --> Q
+    P -- pass --> M["Metadata readiness<br/>inactive current profile"]
+    M --> I["Whole-file / range integrity<br/>inactive current profile"]
+    I --> C["Catalog candidates<br/>STAC · DCAT · PROV"]
+    C --> E{"Evidence · rights · sensitivity<br/>policy · review"}
+    E -- abstain / hold / deny / error --> H["Finite non-release outcome"]
+    E -- supported --> G{"Promotion and release<br/>proof + correction + rollback"}
+    G -- held --> H
+    G -- authorized --> U["Immutable PUBLISHED reference"]
+    U --> V{"Serving proof<br/>Range · CORS · cache"}
+    V -- fail --> H
+    V -- pass --> X["Governed client<br/>MapLibre · API · export · AI context"]
+
+    K["Correction / withdrawal / rollback"] -. updates .-> U
+    K -. propagates .-> X
 ```
 
-> [!NOTE]
-> Diagram is the **doctrinal** flow. Specific stage names, file homes, and tool identities are PROPOSED until mounted-repo verification confirms which validators, manifest writers, and release tools are wired together. The shape — admission → validation → catalog → policy → release → governed API — is `CONFIRMED` doctrine.
+### 5.1 Diagram truth posture
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+- The lifecycle, trust, and release separations are **CONFIRMED doctrine**.
+- Metadata readiness and synthetic range integrity are **CONFIRMED checked in but inactive**.
+- Binary conformance, semantic parity, authenticated closure, deployed serving, and operational correction/rollback are **NEEDS VERIFICATION or NEEDS IMPLEMENTATION**.
+- The diagram does not assert that one current pipeline wires every node together.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="6-required-metadata-and-stac-bindings"></a>
 
 ## 6. Required metadata and STAC bindings
 
-Every published COG MUST appear as a STAC Item with sufficient catalog metadata that downstream clients can verify shape, projection, value semantics, and provenance without opening the raster.
+### 6.1 Raster semantics that must stay visible
 
-### 6.1 STAC extensions required on COG Items
+A usable COG record needs enough metadata to reconstruct what the bytes mean.
 
-`CONFIRMED` doctrine (`ML-061-099`, `ML-063-020`): STAC Items for COGs include the **Raster**, **Projection**, and (where applicable) **Datacube** extensions. The source guides name `raster:bands`, `proj:epsg`, `proj:shape`, `transform`, `statistics`, and explicit asset roles.
+| Area | Minimum information |
+|---|---|
+| Identity | artifact ID/ref, exact digest, byte length, immutable/versioned locator |
+| Source | source descriptor, source product/version, source role, retrieval/capture reference |
+| Time | observation/valid/source/retrieval/processing/release times where material |
+| Space | CRS, axis order, transform, extent/bbox, width, height, resolution |
+| Bands | count, names, data types, units, scale, offset, wavelength or category meaning where relevant |
+| Missingness | nodata value, internal mask/alpha posture, valid-data footprint |
+| Build | toolchain, versions, options, block layout, overview levels, resampling, compression, BigTIFF posture |
+| Quality | binary conformance result, semantic parity result, known limitations, uncertainty |
+| Governance | rights, sensitivity, policy/review references, evidence references, correction/rollback lineage |
+| Delivery | media type, Range/CORS/cache declarations and later measured serving evidence |
 
-| STAC field / extension | Why KFM requires it | Source basis |
+A catalog summary cannot replace the exact transform/build record.
+
+### 6.2 Current inactive metadata profile
+
+The checked-in COG metadata lane requires these declared groups:
+
+```text
+artifact:
+  artifact_ref
+  digest
+  media_type
+  file_name
+  immutable
+
+bindings:
+  source_descriptor_ref
+  run_receipt_ref
+  stac_item_ref
+
+carrier:
+  width
+  height
+  internal_tiling
+  block_width
+  block_height
+  overview_count
+  compression
+  crs
+  nodata_policy
+  range_read_supported
+  stac_extensions
+
+governance:
+  all authority and public-use effects fixed false
+  release_ref fixed null
+```
+
+These fields are a readiness declaration. The validator does not resolve the references or inspect the TIFF.
+
+### 6.3 STAC boundary
+
+STAC is a catalog projection, not the artifact, evidence bundle, policy decision, or release record.
+
+The current inactive readiness profile checks only that the declarations include `raster` and `projection`. It does **not**:
+
+- fetch or validate the referenced STAC Item;
+- verify extension URIs or versions;
+- validate fields inside Raster or Projection;
+- prove STAC-to-COG byte binding;
+- resolve `SourceDescriptor` or `RunReceipt`; or
+- establish KFM STAC profile adoption.
+
+The external stable STAC core is newer than the version currently described in the sibling KFM STAC page. Reconciliation belongs in the STAC profile and its consumers, not as a silent adoption inside this COG document.
+
+### 6.4 Datacube is conditional
+
+A COG may represent one slice of a multidimensional product, but not every COG is a datacube. Datacube metadata is appropriate only when the dataset model and accepted profile require dimensions such as time, vertical level, or variable. Do not require a Datacube extension universally.
+
+### 6.5 Catalog binding checks for a future production profile
+
+A stronger production validator should verify:
+
+1. the catalog asset locator resolves to the exact digest-bound COG;
+2. media type and asset roles match the carrier;
+3. CRS, shape, transform, bbox, bands, units, nodata/mask, and temporal scope agree with parser-derived values;
+4. source and transform lineage resolve;
+5. rights and sensitivity are not weakened in the projection;
+6. catalog correction/supersession state matches release state; and
+7. no floating alias is treated as canonical identity.
+
+### 6.6 Object-family composition
+
+| Object or surface | Current role | Boundary |
 |---|---|---|
-| `raster:bands` | Per-band semantics: dtype, nodata, units, scale, offset, statistics. | `ML-061-099`, `ML-063-020` |
-| `proj:epsg`, `proj:shape`, `proj:transform` | Pin the COG's CRS, raster shape, and affine transform. | `ML-061-099` |
-| `datacube:*` (N-D only) | Required when the raster represents a datacube dimension (time, band). | `ML-063-020` |
-| `assets.<role>.roles` | Asset roles (`data`, `overview`, `thumbnail`, `metadata`) — `ML-062-030` aligns STAC asset roles with `TileArtifactManifest`. | `ML-062-030` |
-| `assets.<role>.href` | MAY be an `oci://<digest>` reference where OCI distribution is in use (`ML-061-076`). | `ML-061-076` |
-| `assets.<role>.file:checksum` / `contentDigest` | Binds catalog record to exact bytes (`ML-063-029`). | `ML-063-029` |
-| `properties.processing:lineage`, `links[rel=derived_from]` | Records upstream sources and pipeline lineage. | `ML-059-030` |
-| `kfm:evidence_ref` (or equivalent custom link) | EXTERNAL note: STAC core has no formal `EvidenceRef` field; KFM uses links with custom `rel` values to preserve lineage in a STAC-compatible way. | KFM doctrine + STAC link patterns |
-| `kfm:rights_status`, `kfm:sensitivity`, `kfm:policy_label` | Required for policy gate evaluation before release. | KFM doctrine (cite-or-abstain, trust membrane) |
+| `GeospatialCarrierReadinessCheck` | Metadata preflight | No bytes, evidence, policy, or release |
+| `COGByteRangeIntegrityManifestCandidate` | Synthetic SHA-256 range coherence | No TIFF parsing or HTTP proof |
+| `KFMGeoManifest` | Candidate carrier metadata and optional local byte binding | No format conformance or release |
+| STAC/DCAT/PROV records | Discoverability and provenance projections | No release authority |
+| `EvidenceRef` / `EvidenceBundle` | Claim support | Not replaced by COG |
+| `PolicyDecision` and review records | Admissibility and accountability | Not inferred from metadata |
+| `MapReleaseManifest` | Map-release composition | Fixture-first; no live release |
+| `ReleaseManifest` / promotion record | Governed state transition | Separate from file validation |
+| Correction, withdrawal, rollback records | Post-release control | Separate from immutable artifact bytes |
 
-### 6.2 KFM object families touching a published COG
-
-| Object family | Role for a COG | Status |
-|---|---|---|
-| `SourceDescriptor` | Pins the upstream source, role, rights, cadence. | `CONFIRMED` doctrine |
-| `LayerManifest` | Binds layer ID, source refs, style refs, evidence refs, policy labels, release state. | `CONFIRMED` doctrine / `PROPOSED` implementation |
-| `TileArtifactManifest` | Describes the COG artifact (digest, byte ranges, range/CORS expectations, source refs, attestation refs). | `CONFIRMED` doctrine / `PROPOSED` implementation |
-| `COGValidationReport` | Captures `rio-cogeo` / `gdalinfo` / `stac-validator` outputs as a proof object. | `PROPOSED` |
-| `RasterAssetManifest`, `COGArtifactManifest` | Raster-specific manifests named in v1.7/v1.8 packets. | `PROPOSED` |
-| `MapReleaseManifest` | Records the published artifact set, digests, policy posture, rollback target. | `CONFIRMED` doctrine / `PROPOSED` implementation |
-| `EvidenceBundle` / `EvidenceRef` | Resolvable support for any consequential claim on the raster. | `CONFIRMED` doctrine |
-| `PolicyDecision` | Rights / sensitivity / release gate result. | `CONFIRMED` doctrine |
-| `RunReceipt` | Execution record (inputs, outputs, hashes, tool versions). | `CONFIRMED` doctrine |
-| `RollbackCard` | Decision artifact for reverting to a prior digest. | `CONFIRMED` doctrine |
-
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="7-production-rules"></a>
 
 ## 7. Production rules
 
-Production parameters that are doctrine in KFM, tied to `CONFIRMED` source evidence.
+The rules below are a **PROPOSED production profile framework**. Dataset-specific values must be justified by data semantics, access patterns, toolchain evidence, and benchmarks. They are not a hidden KFM-wide default.
 
-### 7.1 CRS separation
+### 7.1 Start with a build specification
 
-`CONFIRMED` doctrine (`ML-061-096`): keep **analysis CRS** and **web-delivery CRS** distinct, both recorded in the manifest.
+Before writing bytes, record:
 
-- Analysis copies MAY use `EPSG:5070` (CONUS Albers) when equal-area work is needed.
-- Web-delivery COGs typically use `EPSG:4326` or `EPSG:3857` to match the MapLibre / web tile pipeline.
-- The manifest MUST record which copy is which; mixing analysis and display projections without manifest fields is the documented failure mode.
+- source artifact digests;
+- intended OGC conformance classes;
+- target CRS and transformation;
+- width, height, resolution, and extent;
+- band ordering, types, units, scale, and offset;
+- nodata or mask strategy;
+- internal block dimensions;
+- overview levels and resampling method;
+- compression and quality parameters;
+- BigTIFF behavior;
+- tool and library versions;
+- deterministic or tolerated variable metadata;
+- resource limits; and
+- expected output and semantic checks.
 
-### 7.2 Tile blocks, overviews, compression
+A build specification is not a release decision.
 
-`CONFIRMED` doctrine (`ML-061-097`, `ML-063-015`):
+### 7.2 CRS and grid
 
-- **Internal tiling required.** Striped layouts are not COG-compliant for KFM purposes.
-- **Overview pyramids required.** Build overviews until the smallest level fits within a single tile read; common practice is the GDAL `COG` driver default (down to `< 512 px`, per the EXTERNAL GDAL behavior above).
-- **Block size.** `512 × 512` is the project default for soil and similar raster families; tune by family with a recorded rationale.
-- **Compression.** `ZSTD` is the project default for predictable delivery; `DEFLATE` and `LZW` are acceptable where compatibility constraints apply. `JPEG` is acceptable only for visual quicklook assets.
+There is no universal requirement to rewrite every public COG to EPSG:4326 or EPSG:3857.
 
-### 7.3 Nodata propagation
+Choose the CRS/grid according to:
 
-`CONFIRMED` doctrine (`ML-061-098`): **nodata must stay consistent through overviews.** The documented failure mode is false raster values appearing at overview zoom levels. Build pipelines MUST propagate nodata correctly and validators MUST refuse a COG whose overviews encode nodata inconsistently.
+- source fidelity;
+- analysis requirements;
+- client support;
+- distortion and area/length consequences;
+- reprojection cost;
+- alignment with related rasters;
+- tile/read behavior; and
+- public-safety transforms.
 
-### 7.4 Immutable release artifacts
+If an analysis copy and a delivery copy differ, each is a separate artifact with separate identity and transform lineage.
 
-`CONFIRMED` doctrine (`ML-063-019`): **never update a COG in place.** Updates produce new immutable artifacts, addressed by a new digest. The prior digest remains rollback-targetable. In-place mutation can break COG layout invariants and breaks the digest-to-bytes contract that release governance depends on.
+### 7.3 Internal blocks
 
-### 7.5 Quicklooks and first paint
+For the common optimized profile, use tiled organization. Block dimensions should be:
 
-`CONFIRMED` doctrine (`ML-061-100`): a published raster product MAY include a small PMTiles overview or PNG/JPEG quicklook as a separate `thumbnail` / `overview` asset role for first paint. These quicklooks are subject to the same release governance — they are **not** a substitute for the underlying COG, and they are **not** evidence.
+- supported by the chosen toolchain;
+- recorded in the build specification;
+- appropriate to data type, compression, read window, and hosting;
+- tested against representative workloads; and
+- validated from the actual TIFF structure.
 
-### 7.6 Range-capable hosting
+The inactive repository preflight accepts square power-of-two declarations from 128 through 1024. That range is not an adopted production mandate. `512 × 512` is a common GDAL/rio-cogeo profile, not a universal rule.
 
-`CONFIRMED` doctrine (`ML-061-101`, `ML-063-015`): object storage hosting published COGs MUST support HTTP byte-range requests and immutable cache headers for versioned paths. Tile load budgets, resource timing, and cache invalidation records belong in the release manifest.
+### 7.4 Reduced-resolution subfiles
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+Overview requirements depend on the claimed OGC class and use case. For interactive visualization, provide sufficient reduced-resolution subfiles to avoid reading full-resolution blocks for small-scale views.
+
+The overview plan must record:
+
+- level/decimation sequence;
+- resampling method;
+- nodata/mask handling;
+- category/color-table handling;
+- whether overviews are internal; and
+- semantic validation at each level.
+
+The inactive metadata profile holds rasters larger than 512 pixels in either dimension when `overview_count` is zero. That is a profile rule, not the complete OGC conformance algorithm.
+
+### 7.5 Resampling
+
+Select resampling by data meaning.
+
+| Data class | Typical candidate approach | Review burden |
+|---|---|---|
+| Categorical/class codes | Nearest or mode, depending accepted semantics | Prove categories are not invented or blended |
+| Continuous measurements | Average, bilinear, cubic, or another documented method | Bound bias and extrema changes |
+| Counts or totals | Sum/aggregate-aware method where supported | Preserve conservation assumptions |
+| Masks/validity | Mask-aware nearest or conservative rule | Prevent false valid pixels |
+| Elevation/terrain | Dataset-specific continuous method | Check edge artifacts and vertical meaning |
+| Probabilities/uncertainty | Domain-approved aggregation | Preserve range and interpretation |
+
+This table is guidance, not an adopted domain policy.
+
+### 7.6 Compression
+
+The current inactive schema enumerates `DEFLATE`, `ZSTD`, `LZW`, and `JPEG`. A production choice must consider:
+
+- lossless versus lossy semantics;
+- numeric type and dynamic range;
+- client/GDAL compatibility;
+- decode cost;
+- storage and request cost;
+- predictor and interleave settings;
+- masks/alpha;
+- reproducibility; and
+- benchmark evidence.
+
+Do not use lossy JPEG for scientific or categorical values unless the release explicitly treats the asset as a visual derivative and the loss is accepted and disclosed.
+
+### 7.7 Nodata, masks, scale, and offset
+
+Nodata and masks must remain coherent across full resolution and overviews. Validate:
+
+- source nodata versus output nodata;
+- internal mask and alpha behavior;
+- scale/offset application;
+- NaN and sentinel handling;
+- valid-data footprint;
+- edge pixels introduced by reprojection; and
+- overview-level missingness.
+
+A visually plausible raster can still be semantically wrong.
+
+### 7.8 Determinism and reproducibility
+
+Record exact inputs, options, environment, and tool versions. Prefer byte-identical rebuilds where practical, but do not claim cross-version byte determinism without evidence. When byte identity is not achievable, distinguish:
+
+- deterministic build specification;
+- semantic-equivalence criteria;
+- expected variable metadata; and
+- exact output digest for each run.
+
+Never overwrite a relied-on artifact to conceal nondeterminism.
+
+### 7.9 Immutable release
+
+A release-facing COG should be immutable and digest-bound. Corrections produce a new artifact and new release/correction lineage. Human-friendly aliases may move only through governed release or correction processes and must not replace immutable identity.
+
+### 7.10 Safe parsing and resource bounds
+
+A future binary validator and build adapter must treat TIFF input as untrusted:
+
+- deny symlinks and unexpected external sidecars unless explicitly admitted;
+- bound file size, dimensions, bands, IFD count, nesting, temporary storage, memory, CPU, and wall time;
+- isolate parser/tool subprocesses where appropriate;
+- disable unneeded network and directory scanning;
+- reject duplicate or conflicting metadata;
+- prevent path traversal and output overwrite;
+- capture bounded diagnostics without leaking protected locators; and
+- retain failed candidates in quarantine with reason codes.
+
+### 7.11 Quicklooks and derivatives
+
+A thumbnail, PNG/JPEG quicklook, PMTiles raster preview, hillshade, colorized product, or browser-derived rendering is a separate artifact. It needs its own identity, source link, transform record, rights/sensitivity posture, and release state. It cannot stand in for the original values.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="8-validation-gates"></a>
 
 ## 8. Validation gates
 
-A COG promotion from `WORK` to `PROCESSED` MUST be gated by a deterministic `COGValidationReport`. A release decision (`CATALOG → PUBLISHED`) MUST additionally check catalog completeness, policy posture, signatures, and rollback target.
+### 8.1 Separate proof layers
 
-`CONFIRMED` doctrine (`ML-061-102`, `ML-062-031`, `ML-063-015`): COG validation uses **`gdalinfo`**, **`rio-cogeo`**, and **`stac-validator`**. The same three tools recur across the source ledger; their EXTERNAL behavior is summarized in §2.
+| Gate | Evidence needed | Current state |
+|---|---|---|
+| A. Parser and file safety | Bounded local open; reject unsafe structures | **NEEDS IMPLEMENTATION** |
+| B. OGC file conformance | Declared COG conformance classes and normative checks | **NEEDS IMPLEMENTATION** |
+| C. Semantic raster parity | Source/output CRS, grid, bands, values, masks, overviews, metadata | **NEEDS IMPLEMENTATION** |
+| D. Metadata readiness | Current inactive profile | **CHECKED IN** |
+| E. Exact-byte and range integrity | Current inactive synthetic profile; future parser-derived ranges | **PARTIAL** |
+| F. Catalog binding | Parser-derived values match STAC/DCAT/PROV | **NEEDS IMPLEMENTATION** |
+| G. Evidence, rights, sensitivity, policy, review | Resolved authoritative records | **UNKNOWN / NOT PERFORMED BY COG VALIDATORS** |
+| H. Release closure | Promotion/release/correction/rollback records | **Fixture declarations only** |
+| I. Serving behavior | Range, CORS, media type, cache, denial, withdrawal | **UNKNOWN / NEEDS MEASURED PROOF** |
+| J. Client behavior | No full-download regression, bounded memory, correct negative states | **UNKNOWN / NEEDS MEASURED PROOF** |
 
-### 8.1 Required checks before `PROCESSED`
+No later gate may retroactively make an earlier failed gate pass.
 
-- [ ] `rio-cogeo validate <file>` returns valid.
-- [ ] `gdalinfo` reports internal tiling and an overview pyramid consistent with project defaults.
-- [ ] CRS, transform, and nodata match the recorded values in the candidate STAC Item.
-- [ ] Per-band statistics computed and recorded (`raster:bands.statistics`).
-- [ ] Byte-range / Range header probe succeeds against the staging host.
+### 8.2 Binary conformance
 
-### 8.2 Required checks before `PUBLISHED`
+A future repository-native binary validator should:
 
-- [ ] STAC Item validates against `stac-validator` with the **Raster**, **Projection**, (and **Datacube** where applicable) extension IDs present in `stac_extensions`.
-- [ ] DCAT distribution mirror records `contentDigest` / integrity (`ML-063-029`).
-- [ ] `MapReleaseManifest` references the COG by **digest, not tag** (`ML-061-070`, `ML-063-030`).
-- [ ] Cosign signature on the artifact digest verifies; SBOM and PROV referrers are present (`ML-061-072`, `ML-061-075`, `ML-064-005`).
-- [ ] `PolicyDecision = allow` for rights, sensitivity, source-role, and release state.
-- [ ] `EvidenceRef` resolves to an `EvidenceBundle` for any consequential claim attached to the layer.
-- [ ] `rollback_target` is set to a known prior release where one exists.
-- [ ] CORS, immutable cache headers, and Range support verified on the public host.
+1. parse exact local fixture bytes;
+2. declare the OGC conformance classes being tested;
+3. apply normative or clearly mapped tests;
+4. record tool/library versions;
+5. report deterministic finding codes;
+6. distinguish warnings from failures;
+7. preserve a machine-readable result;
+8. bind the result to the exact digest and byte length; and
+9. include real valid and invalid TIFF/BigTIFF fixtures.
 
-> [!WARNING]
-> Failing closed is the default. Missing signatures, unresolved provenance, stale source state, sensitive geometry without redaction, or incomplete citation support produce **DENY** or **ABSTAIN**, never silent promotion.
+Calling `rio cogeo validate` can be one adapter, but KFM must still record its profile, version, invocation, output normalization, and limitations.
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+### 8.3 Semantic parity
+
+Binary conformance does not prove correct data transformation. Compare the source and candidate at the level appropriate to the product:
+
+- CRS, transform, dimensions, resolution, and extent;
+- band count/order/type;
+- units, scale, offset, color table, and metadata;
+- nodata, mask, valid footprint, and edge behavior;
+- representative or exhaustive decoded values;
+- category/count conservation where applicable;
+- overview values under the declared resampling rule;
+- statistics and tolerances; and
+- uncertainty or known loss.
+
+Tolerances must be domain-owned and explicit.
+
+### 8.4 Range integrity
+
+The current range candidate proves coherent declared ranges over local bytes. A stronger COG-aware implementation should derive ranges from parsed TIFF structures rather than trusting labels. Candidate roles could include header/IFD, tile-offset and byte-count tables, reduced-resolution data, masks, and full-resolution blocks, but the final vocabulary requires a reviewed profile.
+
+Do not infer a Bao/BLAKE3/Merkle profile from the present SHA-256 fixture. Hash-profile selection is a separate decision.
+
+### 8.5 Serving validation
+
+For a versioned public or release-candidate endpoint, measure:
+
+- `HEAD` or safe metadata behavior as supported;
+- `Accept-Ranges: bytes` where used;
+- valid `206 Partial Content`;
+- correct `Content-Range`;
+- correct returned bytes and length;
+- invalid/unsatisfiable range behavior;
+- media type/profile;
+- CORS for approved browser clients;
+- cache validators and immutable cache posture;
+- denial of unapproved paths;
+- no redirect to mutable or internal locations; and
+- withdrawal/correction/cache propagation.
+
+A local deterministic server fixture should precede any live endpoint test. External-network checks belong in separately governed scheduled/manual verification.
+
+### 8.6 Current finite outcomes
+
+Do not collapse the two current profiles into one vocabulary.
+
+| Profile | Outcomes | Meaning of positive state |
+|---|---|---|
+| Geospatial carrier readiness | `READY`, `HOLD`, `ERROR` | Declared metadata is eligible for stronger validation |
+| COG byte-range integrity candidate | `PASS`, `ABSTAIN`, `DENY`, `ERROR` | Local synthetic bytes/ranges are coherent under the candidate profile |
+
+A future conformance result should choose a reviewed finite grammar and publish a crosswalk rather than silently reusing one.
+
+### 8.7 Fail-closed conditions
+
+Examples that must not promote:
+
+- malformed or unsafe TIFF;
+- profile mismatch or unsupported conformance claim;
+- missing or inconsistent overviews for the declared use/profile;
+- CRS, transform, band, nodata, mask, or value drift beyond tolerance;
+- placeholder or mismatched digest;
+- unresolvable source, evidence, policy, review, or rollback references;
+- unknown or denied rights/sensitivity for public exposure;
+- missing or false Range/CORS claims;
+- signature shape without cryptographic verification;
+- stale, superseded, withdrawn, or rolled-back release presented as current; or
+- operational validator failure.
+
+Choose `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` according to the owning contract. Do not convert uncertainty to `ALLOW`.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="9-release-surface-and-trust-artifacts"></a>
 
 ## 9. Release surface and trust artifacts
 
-`CONFIRMED` doctrine across SRC-061 / SRC-063 / SRC-064: a published KFM COG is not a file on a CDN — it is an artifact bound to a release decision, a catalog record, a provenance chain, and a rollback target.
+### 9.1 Release composition
+
+A release-facing COG participates in a graph of distinct objects:
 
 ```text
-Published COG
-├── COG bytes              ← digest-addressed (sha256), immutable
-├── STAC Item              ← Raster + Projection (+ Datacube) extensions, file:checksum
-├── DCAT distribution      ← contentDigest, integrity, license, accessURL
-├── PROV record            ← run-level lineage (kfm_prov_id, kfm_run_id)
-├── Cosign signature       ← signs the DIGEST, not a tag
-├── DSSE / SLSA attestation← inputs, git commit, seeds, telemetry
-├── SBOM (KFM dataProfile) ← artifact type, generator, CRS, bbox, schema, checksums
-├── TileArtifactManifest   ← media type, tile_format, zoom, byte ranges, range/CORS
-├── MapReleaseManifest     ← contents, digests, rights, sensitivity, release_state
-├── rollback_target        ← prior release digest, restore plan
-└── RunReceipt             ← inputs, outputs, hashes, tool versions, timestamps
+admitted source / captured bytes
+        |
+        v
+transform specification + run/transform receipt
+        |
+        v
+exact COG bytes ---- binary result ---- semantic-parity result
+        |                    |                    |
+        +--------------------+--------------------+
+                             |
+                 candidate artifact manifest
+                             |
+             STAC / DCAT / PROV catalog projections
+                             |
+          EvidenceBundle + rights/sensitivity + policy + review
+                             |
+          promotion/release decision + correction/rollback
+                             |
+          immutable released reference + serving verification
+                             |
+              governed client and trust-visible UI
 ```
 
-`PROPOSED` placements (path forms shown for orientation; verification belongs in a per-root README and mounted-repo inspection):
+The carrier is one node, not the release.
 
-- COG bytes → `data/published/layers/<domain>/<dataset_id>/<version>/<asset>.tif` *or* OCI registry by digest (`ML-061-069`, `ML-064-003`).
-- STAC Item → `data/catalog/stac/<domain>/<dataset_id>/<version>.json`.
-- DCAT distribution → `data/catalog/dcat/<domain>/<dataset_id>/<version>.jsonld`.
-- PROV record → `data/catalog/prov/<run_id>.jsonld`.
-- `MapReleaseManifest` → `release/manifests/<release_id>.json`.
-- Rollback decision → `release/rollback_cards/<release_id>.json`.
+### 9.2 Current manifest boundaries
 
-### 9.1 OCI distribution (where used)
+#### KFMGeoManifest
 
-`CONFIRMED` doctrine (`ML-061-069` to `ML-061-076`, `ML-063-028` to `ML-063-030`, `ML-064-002` to `ML-064-005`):
+The fixture-first profile can bind candidate metadata and optional exact local bytes. Its governance constants prevent release authority. It explicitly does not prove carrier-format conformance.
 
-- COGs MAY be distributed as OCI artifacts via ORAS; the **digest** is canonical, the tag is convenience.
-- Catalog records (STAC, DCAT) reference the immutable digest in `accessURL` / `href` (`ML-061-076`, `ML-061-077`, `ML-064-004`).
-- Cosign signs the digest; SBOM and PROV attach as OCI referrers next to the artifact (`ML-061-072`, `ML-061-073`, `ML-064-005`).
-- Mutable tags MUST NOT appear in a `MapReleaseManifest` as sole identity (`ML-063-030`, `ML-063-039`).
+#### MapReleaseManifest
 
-### 9.2 Governed API and the trust membrane
+The fixture-first profile can represent candidate, held, published, stale, superseded, withdrawn, and rolled-back map-release states. It requires declared Range/CORS support for COG entries in a synthetic `PUBLISHED` fixture, but it does not fetch bytes, verify headers, authenticate records, alter caches, or release anything.
 
-`CONFIRMED` doctrine: public clients (MapLibre shell, mobile, AI surfaces) reach published COGs **only** through the governed API and only via released `LayerManifest` / `TileArtifactManifest` references. The browser MUST NOT load `data/raw/`, `data/work/`, `data/quarantine/`, candidate, canonical, or internal store paths. MapLibre `addSource` for a governed raster waits on sidecar / signature / `spec_hash` / `tile_format` checks where the layer is governed.
+#### ADR-0023
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+ADR-0023 proposes cryptographic binding for PMTiles/COG releases. It remains proposed. The following remain unresolved or unproved as an accepted end-to-end profile:
+
+- signature envelope and algorithm;
+- signer identity and trust roots;
+- key custody, rotation, revocation, and compromise handling;
+- offline verification;
+- transparency or registry service;
+- subject/digest binding;
+- policy and promotion integration;
+- public-client verification;
+- correction, withdrawal, and rollback behavior; and
+- separation of author, reviewer, signer, and releaser.
+
+### 9.3 Digest is necessary but insufficient
+
+SHA-256 can identify exact bytes under the current profiles. It does not prove:
+
+- that the bytes are a valid COG;
+- that the raster values are correct;
+- that the source was authorized;
+- that rights permit redistribution;
+- that sensitive precision is safe;
+- that a reviewer approved release;
+- that a signature is trusted; or
+- that the endpoint is current.
+
+### 9.4 Public endpoint requirements
+
+A released COG endpoint should be:
+
+- immutable or versioned by a stable release reference;
+- bound to exact bytes;
+- exposed only after rights/sensitivity/policy/review closure;
+- Range-capable for the declared profile;
+- CORS-capable where approved browser access requires it;
+- served with appropriate media type and cache controls;
+- observable without leaking protected source locators;
+- revocable through correction/withdrawal processes;
+- protected from alias bypass; and
+- traceable to a rollback target.
+
+A URL alone is not a release record.
+
+### 9.5 Client and UI behavior
+
+A governed client should:
+
+1. resolve the released artifact or layer reference;
+2. display source, time, release, stale/correction, and limitation state;
+3. avoid direct internal-store URLs;
+4. avoid consequential interpretation without EvidenceBundle support;
+5. surface `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` distinctly;
+6. prevent style-only hiding from masquerading as redaction;
+7. handle withdrawn or rolled-back artifacts;
+8. preserve citation and release identifiers in exports; and
+9. record bounded runtime diagnostics when required.
+
+The current MapLibre/browser COG consumer and deployed verification behavior remain **UNKNOWN** in this revision.
+
+### 9.6 Correction, withdrawal, and rollback
+
+Because released bytes are immutable:
+
+- a correction creates a successor artifact and correction record;
+- a withdrawal stops current public presentation while preserving lineage;
+- rollback repoints governed release/alias state to an approved prior artifact;
+- caches, catalogs, search, maps, exports, and AI contexts must be updated;
+- historical records remain auditable; and
+- the reason and effective time are visible.
+
+Deleting or overwriting the prior COG is not rollback.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="10-anti-patterns"></a>
 
 ## 10. Anti-patterns
 
-<details>
-<summary><b>Failure modes specific to COG carriers (click to expand)</b></summary>
-
-| Anti-pattern | Why it fails | Reference |
+| Anti-pattern | Why it fails | Safer posture |
 |---|---|---|
-| **COG as source authority** | A rendered COG layer used to make a soil, hydrology, or remote-sensing claim without `EvidenceBundle` resolution. COG is a downstream carrier, not the root truth source. | `ML-061-105` |
-| **Checksum as publication proof** | Treating SHA-256 alone as license to publish. Checksums prove byte integrity, not origin or process. | `ML-061-002` |
-| **In-place COG update** | Overwriting a COG on the published host breaks layout invariants and the digest-to-bytes contract. | `ML-063-019` |
-| **Mutable tag as release identity** | Putting a registry tag (not a digest) in `MapReleaseManifest`. Tags move; release identity must not. | `ML-061-070`, `ML-063-030` |
-| **Sensitive geometry hidden only by style** | Style filters do not redact. Generalization / redaction MUST happen before public tile generation, with transform reasons recorded. | KFM trust law |
-| **Public route reads canonical store** | `apps/explorer-web/` reading `data/processed/` or `data/published/` directly without the governed API. Trust membrane violation. | Directory Rules §13.5 |
-| **Watcher publishes** | A watcher writing a COG to `data/catalog/` or `data/published/`. Watchers emit receipts and candidates only. | Directory Rules §13.5 |
-| **Lifecycle skip** | A pipeline writing directly to `data/published/` from `data/raw/`. All phases run; promotion is governed. | Directory Rules §13.5 |
-| **Quicklook as evidence** | Treating a `thumbnail` / `overview` PNG as proof of pixel values. Quicklooks are first-paint, not evidence. | `ML-061-100` |
-| **Inconsistent nodata in overviews** | False raster values appearing at overview zooms because nodata was not propagated. | `ML-061-098` |
-| **Mixed analysis / display CRS without manifest fields** | A COG that doesn't declare which copy is analysis vs. delivery. | `ML-061-096` |
-| **DEM as proof of buildings / vegetation / power lines** | Using elevation surface to assert above-surface features. DEM is elevation, not above-ground inventory. | `ML-063` notes; v1.8 packet |
-| **Treating MLT, 3D tiles, or vector tile equivalents as substitutes for COG** | They serve different evidence burdens; the choice is by access and analytic burden, not preference. | v1.8 tile strategy chapter |
+| Calling a `.tif` a COG by filename | Extension is not structural proof | Parse and test exact bytes |
+| Calling metadata `READY` a conformance pass | Current preflight reads declarations only | Run a binary-aware profile |
+| Calling the 65-byte fixture a COG | The fixture is deliberately not TIFF | Keep it as parser-independent range logic |
+| Calling declared Range support a serving test | No endpoint was measured | Run deterministic local and governed deployed probes |
+| Treating a checksum as evidence or release | Digest proves only exact-byte identity | Resolve evidence, policy, review, and release separately |
+| Treating a catalog Item as publication | Catalog closure and release are different | Require governed release state |
+| Treating a signature-shaped object as trusted | Shape is not cryptography or signer authority | Verify accepted profile, trust root, and revocation |
+| Universal `512 × 512`, ZSTD, or web CRS rule | Tool defaults and dataset needs differ | Use dataset-specific build/benchmark profile |
+| Lossy compression for scientific values without disclosure | Pixel values change | Use lossless or classify as visual derivative |
+| Wrong overview resampling | Categories, totals, masks, or extrema become misleading | Use domain-approved method and parity tests |
+| Inconsistent nodata/mask across overviews | False values appear at small scales | Validate missingness at every level |
+| In-place mutation or floating `latest` as identity | Breaks digest, replay, correction, and rollback | Create immutable successor and governed alias update |
+| Browser style as redaction | Hidden bytes remain retrievable | Transform before publication with receipt |
+| Public client reads RAW/WORK/QUARANTINE/internal store | Bypasses trust membrane | Resolve released artifact through governed interface |
+| Watcher writes PUBLISHED | Discovery is not approval | Emit candidate, receipt, and review task |
+| Binary conformance used as scientific validation | Format and meaning are different | Add source-to-output semantic parity |
+| Quicklook, hillshade, or colorized derivative used as source truth | It is another representation | Bind to source and disclose transform |
+| Hiding stale/withdrawn state | Users see obsolete truth | Propagate finite state and correction lineage |
+| Silent full-file browser download | Defeats COG access goals and budgets | Measure range behavior and client request pattern |
+| Unbounded TIFF parsing | Enables resource exhaustion or parser abuse | Isolate and bound the validator |
 
-</details>
-
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="11-open-questions--needs-verification"></a>
 
 ## 11. Open questions / NEEDS VERIFICATION
 
-These items are not resolved by this document and SHOULD land in `docs/registers/VERIFICATION_BACKLOG.md`:
+### P0 — authority and safe release blockers
 
-- **NEEDS VERIFICATION** — Does the current repo have a `COGValidationReport` schema under `schemas/contracts/v1/` (or wherever ADR-0001 places schemas)? If not, this becomes a backlog ADR.
-- **NEEDS VERIFICATION** — Are `RasterAssetManifest` and `COGArtifactManifest` (named in the v1.7 / v1.8 packets) treated as one object family or two? Default per the source ledger reads as parallel candidates; an ADR would resolve.
-- **NEEDS VERIFICATION** — Which OCI registry (if any) is the canonical home for KFM COG artifacts, and what is the retention policy?
-- **NEEDS VERIFICATION** — Is `Cosign` the project's chosen signer, or is another signer in scope? Project sources name Cosign; mounted-repo evidence is required to confirm.
-- **OPEN** — Whether the **Datacube** STAC extension is enabled for any current KFM raster family, or only proposed for future N-D products (PM2.5 fusion, NDVI time series).
-- **OPEN** — How `rio-cogeo`'s `--use-cog-driver` (GDAL `COG` driver mode) interacts with the project's chosen block size defaults across raster families.
-- **OPEN** — Whether KFM mints a one-to-one PMTiles "raster preview" companion for every published COG, or only for selected families (soil, NDVI alerts).
-- **OPEN** — Whether MLT / 3D tile carriers will share a release manifest schema with COGs or have separate manifest homes.
+| ID | Question or gap | Closure evidence |
+|---|---|---|
+| COG-P0-01 | What exact KFM COG profile, if any, is adopted? | Accepted decision naming OGC classes and KFM additions |
+| COG-P0-02 | What is the canonical binary validator/toolchain? | Pinned adapter, real valid/invalid fixtures, deterministic results |
+| COG-P0-03 | How are source-to-COG semantic tolerances governed per domain? | Domain-reviewed parity contract and fixtures |
+| COG-P0-04 | What rights/sensitivity review is required before raster publication? | Accepted policy plus reviewed public-safe transforms |
+| COG-P0-05 | Will ADR-0023 be accepted, revised, or held? | Maintainer decision and cryptographic profile |
+| COG-P0-06 | Who is accountable for COG profile, security, policy, and release review? | Verified assignments and review route |
+| COG-P0-07 | What objects are authoritative for artifact, evidence, proof, release, correction, and rollback? | Accepted object-family map with no parallel authority |
 
-> [!TIP]
-> When repo evidence becomes available, prefer updating this doc inline (and re-labeling claims from `PROPOSED` to `CONFIRMED`) over creating a new sibling doc. The standards lane is for conformance posture, not a graveyard of versions.
+### P1 — first proof slice
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+| ID | Question or gap | Closure evidence |
+|---|---|---|
+| COG-P1-01 | Can one small real synthetic COG prove OGC file conformance? | Versioned fixture + binary validator + negative cases |
+| COG-P1-02 | Can source and COG decoded values be compared deterministically? | Semantic parity fixture and tolerance report |
+| COG-P1-03 | Can a local static server prove Range/CORS/media/cache behavior without network? | Hermetic serving fixture and tests |
+| COG-P1-04 | Can parser-derived byte ranges feed the existing range-integrity candidate? | Adapter contract and exact-range fixture |
+| COG-P1-05 | Can one STAC Item be validated against the adopted KFM STAC profile and exact COG bytes? | Catalog fixture, extension validation, digest parity |
+| COG-P1-06 | Can a synthetic map release exercise correction/withdrawal/rollback propagation? | Release/correction/rollback drill with cache/client assertions |
+
+### P2 — operational maturity
+
+| ID | Question or gap | Closure evidence |
+|---|---|---|
+| COG-P2-01 | Which datasets, consumers, and COG-like payloads currently exist? | Commit/release-pinned inventory |
+| COG-P2-02 | What block/overview/compression profiles perform best per dataset class? | Reproducible benchmark matrix |
+| COG-P2-03 | How are BigTIFF, masks, external metadata, and multi-band products handled? | Profile extensions and interoperability tests |
+| COG-P2-04 | Does the public MapLibre path use a direct COG plugin, a tile service, or both? | Current code/config/runtime evidence |
+| COG-P2-05 | What SLOs and budgets apply to Range count, bytes, latency, memory, and first paint? | Accepted performance envelope and telemetry |
+| COG-P2-06 | How are endpoint withdrawal and cache invalidation verified? | Operational runbook and drill |
+| COG-P2-07 | How are toolchain CVEs and malicious TIFF risks managed? | Threat model, dependency policy, sandbox tests |
+
+### P3 — convergence and documentation
+
+- Reconcile the sibling STAC page's tracked version with the current upstream stable version.
+- Decide whether a named `COGValidationReport` object is needed or whether a generic validation envelope with a COG profile is sufficient.
+- Decide whether COG-specific build semantics belong in a shared raster contract or dataset-specific pipeline specifications.
+- Add this standards page to focused workflow path filters only if maintainers want documentation changes to trigger those profiles; do not create CI solely for a badge.
+- Record any real COG source/product profile in a source or dataset packet rather than expanding this page into a source registry.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="12-related-docs"></a>
 
 ## 12. Related docs
 
-Internal — link targets are PROPOSED neighbors and NEEDS VERIFICATION until inspected on the mounted repo:
+### Repository guidance and decisions
 
-- `docs/doctrine/directory-rules.md` — placement law (this file lives in `docs/standards/` per §6.1).
-- `docs/doctrine/trust-membrane.md` — the public-path discipline that COG release must respect.
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant.
-- `docs/architecture/map-shell.md` — how MapLibre consumes governed raster sources.
-- `docs/architecture/governed-api.md` — the only public path for COG delivery.
-- `docs/standards/STAC.md` — STAC profile, including Raster / Projection / Datacube extensions. *(PROPOSED neighbor)*
-- `docs/standards/DCAT.md` — DCAT distribution mirror for non-spatiotemporal cataloging. *(PROPOSED neighbor)*
-- `docs/standards/PROV.md` — provenance binding for run records. *(PROPOSED neighbor)*
-- `docs/standards/PMTILES.md`, `docs/standards/GEOPARQUET.md` — sister carrier docs. *(PROPOSED neighbors)*
-- `docs/adr/ADR-0001-schema-home.md` — schema home convention referenced for `COGValidationReport` placement.
+- [`docs/standards/README.md`](./README.md) — standards-lane boundary.
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — accepted placement authority through ADR-0029.
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle doctrine.
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — governed public-path boundary.
+- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — authority separation.
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — canonical machine-schema home.
+- [`docs/adr/ADR-0002-contracts-vs-schemas-split.md`](../adr/ADR-0002-contracts-vs-schemas-split.md) — meaning versus shape.
+- [`docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md`](../adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md) — proposed cryptographic release decision.
+- [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption.
 
-External (EXTERNAL — consulted under `<external_research>` triggers; see Section 2 of the notes):
+### Current executable-profile surfaces
 
-- OGC Cloud Optimized GeoTIFF Standard (OGC 21-026, v1.0, July 2023).
-- cogeo.org — community specification and tool catalog.
-- GDAL `COG` driver documentation.
-- `rio-cogeo` (cogeotiff/rio-cogeo) — creation and validation plugin.
-- NASA ESDIS ESDS-RFC-049 — COG file format adoption.
+- [`contracts/release/geospatial_carrier_readiness.md`](../../contracts/release/geospatial_carrier_readiness.md)
+- [`schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json`](../../schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json)
+- [`tools/validators/release/validate_geospatial_carrier_readiness.py`](../../tools/validators/release/validate_geospatial_carrier_readiness.py)
+- [`tests/release/test_geospatial_carrier_readiness.py`](../../tests/release/test_geospatial_carrier_readiness.py)
+- [`.github/workflows/geospatial-carrier-readiness.yml`](../../.github/workflows/geospatial-carrier-readiness.yml)
+- [`contracts/evidence/cog_byte_range_integrity_manifest.md`](../../contracts/evidence/cog_byte_range_integrity_manifest.md)
+- [`schemas/contracts/v1/evidence/cog_byte_range_integrity_manifest.schema.json`](../../schemas/contracts/v1/evidence/cog_byte_range_integrity_manifest.schema.json)
+- [`tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py`](../../tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py)
+- [`tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py`](../../tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py)
+- [`.github/workflows/cog-byte-range-integrity-manifest.yml`](../../.github/workflows/cog-byte-range-integrity-manifest.yml)
+- [`contracts/evidence/kfm_geo_manifest.md`](../../contracts/evidence/kfm_geo_manifest.md)
+- [`contracts/release/map_release_manifest.md`](../../contracts/release/map_release_manifest.md)
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+### Sibling standards
+
+- [`STAC.md`](./STAC.md)
+- [`DCAT.md`](./DCAT.md)
+- [`PROV.md`](./PROV.md)
+- [`PMTILES.md`](./PMTILES.md)
+- [`GEOPARQUET.md`](./GEOPARQUET.md)
+- [`CANONICALIZATION.md`](./CANONICALIZATION.md)
+
+### External primary references
+
+- [OGC Cloud Optimized GeoTIFF Standard overview](https://www.ogc.org/standards/ogc-cloud-optimized-geotiff/)
+- [OGC Cloud Optimized GeoTIFF Standard 1.0, OGC 21-026](https://docs.ogc.org/is/21-026/21-026.html)
+- [GDAL COG driver](https://gdal.org/en/stable/drivers/raster/cog.html)
+- [rio-cogeo documentation](https://cogeotiff.github.io/rio-cogeo/)
+- [rio-cogeo CLI and validation](https://cogeotiff.github.io/rio-cogeo/CLI/)
+- [HTTP Semantics RFC 9110 — Range Requests](https://www.rfc-editor.org/rfc/rfc9110#name-range-requests)
+
+External sources establish upstream facts only. They do not prove a KFM implementation or adopt a tool/profile.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="appendix-a--example-cog-stac-item-shape-proposed"></a>
 
 ## Appendix A — Example COG STAC Item shape (PROPOSED)
 
-<details>
-<summary><b>Illustrative STAC Item (not a fixture; field set is PROPOSED)</b></summary>
+The legacy appendix anchor is preserved. The following is **illustrative pseudodata**, not a KFM-adopted STAC profile, not a schema-validity claim, and not a release record. Placeholder extension URIs intentionally prevent copy/paste adoption without profile review.
 
 ```json
 {
-  "stac_version": "1.0.0",
-  "stac_extensions": [
-    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/projection/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
-  ],
   "type": "Feature",
-  "id": "kfm-<domain>-<dataset_id>-<version>",
-  "geometry": { "type": "Polygon", "coordinates": [[...]] },
-  "bbox": [-102.05, 36.99, -94.59, 40.0],
+  "stac_version": "<KFM-adopted-STAC-version>",
+  "stac_extensions": [
+    "<KFM-approved-projection-extension-URI>",
+    "<KFM-approved-raster-or-common-bands-profile-URI>",
+    "<KFM-approved-file-integrity-extension-URI>"
+  ],
+  "id": "synthetic-cog-item",
+  "collection": "synthetic-raster-collection",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": []
+  },
+  "bbox": [-101.0, 37.0, -94.0, 40.0],
   "properties": {
-    "datetime": "2026-05-13T00:00:00Z",
-    "proj:epsg": 5070,
-    "proj:shape": [10000, 10000],
-    "proj:transform": [30, 0, -100, 0, -30, 40, 0, 0, 1],
-    "processing:lineage": "PROPOSED — record pipeline ID and software versions",
-    "kfm:rights_status": "open",
-    "kfm:sensitivity": "public",
-    "kfm:policy_label": "public",
-    "kfm:evidence_ref": "kfm://evidence/<sha256>"
+    "datetime": "2026-01-01T00:00:00Z",
+    "kfm:source_descriptor_ref": "source-descriptor:synthetic",
+    "kfm:run_receipt_ref": "run-receipt:synthetic",
+    "kfm:evidence_refs": ["evidence-ref:synthetic"],
+    "kfm:rights_state": "NEEDS_VERIFICATION",
+    "kfm:sensitivity_state": "NEEDS_VERIFICATION",
+    "kfm:release_state": "NOT_RELEASED"
   },
   "assets": {
     "data": {
-      "href": "oci://<registry>/<repo>@sha256:<digest>",
+      "href": "artifact://sha256/<digest>",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"],
-      "file:checksum": "1220<sha256-multihash>",
-      "raster:bands": [
-        {
-          "data_type": "float32",
-          "nodata": -9999,
-          "unit": "<units>",
-          "statistics": { "minimum": 0.0, "maximum": 1.0, "mean": 0.42 }
-        }
-      ]
-    },
-    "thumbnail": {
-      "href": "<governed path to PNG/JPEG quicklook>",
-      "type": "image/png",
-      "roles": ["thumbnail"]
+      "title": "Synthetic COG candidate"
     }
   },
-  "links": [
-    { "rel": "self", "href": "<governed path>" },
-    { "rel": "derived_from", "href": "<upstream source STAC Item>" },
-    { "rel": "was_generated_by", "href": "<PROV run record>" },
-    { "rel": "license", "href": "<license URL>" }
-  ]
+  "links": []
 }
 ```
 
-</details>
+Before a real record is admissible, the adopted STAC profile must define exact versions, fields, extension URIs, checksum grammar, KFM namespace, evidence links, and release-state relationship.
 
-> [!NOTE]
-> This is **illustrative** — not a working fixture. Field names taken from KFM doctrine and standard STAC extensions. Replace placeholder digests, paths, and identifiers before promoting to a fixture.
-
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="appendix-b--validation-command-snippets"></a>
 
 ## Appendix B — Validation command snippets
 
-<details>
-<summary><b>Common validation invocations (illustrative)</b></summary>
+### B.1 Current repository metadata profile
 
 ```bash
-# 1) COG layout — rio-cogeo
-#    Confirms internal tiling, overviews, and required tag layout.
-rio cogeo validate path/to/asset.tif
+KFM_NO_NETWORK=1 \
+python -m pytest -q tests/release/test_geospatial_carrier_readiness.py
 
-# 2) GDAL metadata — gdalinfo
-#    Read CRS, transform, block size, overviews, nodata, statistics.
-gdalinfo -stats path/to/asset.tif
-
-# 3) STAC Item — stac-validator
-#    Confirms required core fields and any listed extension schemas.
-stac-validator path/to/item.json --extensions
-
-# 4) Range-request probe (illustrative — staging host)
-#    Confirms the host supports byte-range fetches.
-curl -I -H "Range: bytes=0-1023" https://<staging-host>/path/to/asset.tif
+KFM_NO_NETWORK=1 \
+python tools/validators/release/validate_geospatial_carrier_readiness.py --cases
 ```
 
-</details>
+**Proves:** exact fixture polarity and metadata-only logic.
 
-> [!NOTE]
-> Commands above are illustrative. The canonical wiring of these checks into KFM CI (validators, fixtures, fail-closed gates) is **NEEDS VERIFICATION** until the mounted repo is inspected.
+**Does not prove:** TIFF/COG bytes, STAC resolution, policy, release, or serving.
 
-[⬆ Back to top](#cloud-optimized-geotiff-cog)
+### B.2 Current repository synthetic range profile
+
+```bash
+KFM_NO_NETWORK=1 \
+python -m unittest \
+  tests.validators.evidence.test_validate_cog_byte_range_integrity_manifest \
+  --verbose
+
+KFM_NO_NETWORK=1 \
+python tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py \
+  --fixtures
+```
+
+**Proves:** exact local fixture byte/range coherence under the candidate SHA-256 profile.
+
+**Does not prove:** TIFF structure, parser-derived ranges, HTTP Range, or public use.
+
+### B.3 External binary-tool examples — not current KFM wiring
+
+```bash
+# Example creation; exact options require a reviewed KFM build profile.
+gdal_translate -of COG input.tif output.tif
+
+# Example third-party validation; pin the toolchain before relying on output.
+rio cogeo validate --strict output.tif
+```
+
+These examples are external-tool entry points. A KFM adapter must pin versions, configuration, environment, limits, result normalization, fixture bytes, and digest binding. Do not run them against untrusted or remote content outside the governed source and sandbox boundary.
+
+### B.4 Future hermetic serving probe
+
+A future repository test should start a loopback-only static server over a real synthetic COG and assert exact `206`, `Content-Range`, bytes, media type, CORS, cache, invalid-range, and withdrawal behavior. This command does not yet exist and must not be invented here.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
 
-**Related docs:** [STAC](STAC.md) · [DCAT](DCAT.md) · [PROV](PROV.md) · [Map shell](../architecture/map-shell.md) · [Governed API](../architecture/governed-api.md) · [Directory Rules](../doctrine/directory-rules.md)
+<a id="appendix-c--v1-preservation-and-correction-ledger"></a>
 
-**Last updated:** 2026-05-13 · **Version:** v1 (draft) · [⬆ Back to top](#cloud-optimized-geotiff-cog)
+## Appendix C — v1 preservation and correction ledger
+
+| v1 material | v2 disposition |
+|---|---|
+| COG is a downstream carrier, not source authority | **RETAINED and strengthened** |
+| Lifecycle and trust-membrane framing | **RETAINED and made repository-grounded** |
+| OGC 21-026 v1.0 status | **RETAINED and currentness-refreshed** |
+| Internal tiling, overviews, GeoTIFF, Range concepts | **RETAINED with conformance-class precision** |
+| 512 blocks, ZSTD default, web CRS default | **NARROWED** from universal doctrine to dataset/tool profile choices |
+| Every COG requires Datacube | **CORRECTED** to conditional use |
+| Every public byte must transit the governed API | **CORRECTED** to governed release/reference; direct released Range access may be allowed |
+| `COGValidationReport` treated as required existing family | **CORRECTED** to unadopted design question |
+| `gdalinfo` / `rio-cogeo` / `stac-validator` described as wired KFM gates | **CORRECTED** to external candidate tools; no repository binary adapter verified |
+| Signatures, Cosign, SLSA, OCI described as current release rules | **CORRECTED** to proposed ADR-0023/HOLD posture |
+| Speculative path tree presented as current placement | **REPLACED** with responsibility and verified-surface maps |
+| Static STAC 1.0.0 example | **REPLACED** with version-neutral, explicitly non-adoptive pseudodata |
+| Anti-patterns and rollback discipline | **RETAINED and expanded** |
+| Legacy section and appendix anchors | **PRESERVED** |
+
+### Definition of done for this documentation revision
+
+- [x] Stable document identity retained.
+- [x] Existing path retained.
+- [x] Legacy section and appendix anchors retained.
+- [x] Current repository profiles distinguished from proposals.
+- [x] External standard facts refreshed from primary issuers.
+- [x] Metadata, binary, semantic, serving, evidence, policy, review, and release proof separated.
+- [x] Unsupported universal production defaults removed.
+- [x] ADR-0023 proposal state preserved.
+- [x] No source, schema, contract, policy, workflow, data, release, runtime, or public state changed.
+
+<p align="right"><a href="#top">Back to top</a></p>

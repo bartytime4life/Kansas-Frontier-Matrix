@@ -1,0 +1,118 @@
+{
+  "receipt_id": "genrec-geoparquet-2-rc-pyarrow-carrier-crs-correction-95e539808e9cc117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/experiments/geoparquet/generate_pyarrow_25_carriers.py"
+  ],
+  "artifact_hashes": {
+    "tools/experiments/geoparquet/generate_pyarrow_25_carriers.py": "sha256:e121296f0ed761f3c050132e06a2962b50d1bdbc5e3f3dd8a67a9da57e7ce754"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:95e539808e9cc11720481146cd14a71d320649e8c7c893d5cac13bc29481bbeb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write and hosted exact-head evidence",
+      "deterministic Python AST, JSON, and SHA-256 validation",
+      "official PROJ PROJJSON specification evidence"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:repo:bartytime4life/Kansas-Frontier-Matrix@12466fcf0196af9917a26b0dc5251f56e742f506",
+      "github:issue:bartytime4life/Kansas-Frontier-Matrix#2907",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3079@22146ba8ba749a7e02707a42c958ba1dd233292c",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3156@641aec8571e7c9c0bcd831809f31e71c71f2aa6a",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3173@415ca30119151345ab8841718a17ba86ac2f700f",
+      "github:actions:run:32387029048",
+      "github:actions:artifact:9413335518",
+      "github:actions:run:32419108852",
+      "github:actions:artifact:9425021789",
+      "repo:tools/experiments/geoparquet/generate_pyarrow_25_carriers.py@12466fcf0196af9917a26b0dc5251f56e742f506",
+      "https://proj.org/en/stable/specifications/projjson.html",
+      "https://github.com/OSGeo/PROJ/blob/master/data/sql/geodetic_datum.sql"
+    ]
+  },
+  "truth_labels": {
+    "tools/experiments/geoparquet/generate_pyarrow_25_carriers.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Issue #2907, merged carrier lineage, current main@12466fcf0196af9917a26b0dc5251f56e742f506, and open GeoParquet pull requests were rechecked; no overlapping open carrier correction was found."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The original PyArrow and GDAL authoring receipts remain unchanged. This successor receipt binds only the corrected generator bytes."
+    },
+    {
+      "gate": "retained-1.1-only-correction",
+      "outcome": "PASS",
+      "reason": "Only the GeoParquet 1.1 metadata path receives the complete CRS object and correction identity v2. The 2.0-RC carrier retains its prior inline CRS object and correction identity v1, with an explicit generation-time guard."
+    },
+    {
+      "gate": "projjson-structural-completeness",
+      "outcome": "PASS",
+      "reason": "The retained 1.1 OGC:CRS84 object now includes the WGS 84 datum ensemble, ellipsoid, longitude/latitude coordinate system, world extent, and OGC identifier required for a complete parseable geographic CRS."
+    },
+    {
+      "gate": "source-python-syntax",
+      "outcome": "PASS",
+      "reason": "The exact corrected generator bytes parse as Python source."
+    },
+    {
+      "gate": "predecessor-carrier-binding",
+      "outcome": "PASS",
+      "reason": "Artifact 9413335518 binds the predecessor 1.1 carrier to sha256:ea1b26acfbe8281b177bd17726a9fa9419d09392a43219a5679ba4199183cf0e and the unchanged 2.0-RC carrier to sha256:19d362d70502e054db2e905e30324e53e786cdc99fa5a17e6659e7bab6a0cf21."
+    },
+    {
+      "gate": "exact-pyarrow-to-gdal-rerun",
+      "outcome": "SKIPPED",
+      "reason": "The existing hosted PyArrow 25.0.0 producer to GDAL 3.13.2 consumer workflow must run on the exact pull-request head before new carrier digests or a PARTIAL consumer result are claimed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending. This correction creates no adoption, migration, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md"
+  ],
+  "citations": [
+    {
+      "id": "PROJ-PROJJSON-specification",
+      "validated": true,
+      "evidence_ref": "https://proj.org/en/stable/specifications/projjson.html"
+    },
+    {
+      "id": "KFM-Issue-2907",
+      "validated": true,
+      "evidence_ref": "github:issue:bartytime4life/Kansas-Frontier-Matrix#2907"
+    },
+    {
+      "id": "KFM-merged-PR-3173-exact-head",
+      "validated": true,
+      "evidence_ref": "github:pull/3173@415ca30119151345ab8841718a17ba86ac2f700f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T18:18:07.008Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT GitHub connector",
+  "notes": "Successor authoring receipt for the smallest retained GeoParquet 1.1 fixture correction. It does not rewrite predecessor receipts or change the 1.1.0 default. Exact-head carrier generation, the unchanged 2.0-RC digest check, and the pinned GDAL 3.13.2 read edge remain to be recorded after hosted execution. Broader engines, pruning, adoption, migration, release, deployment, publication, and repository settings remain out of scope."
+}

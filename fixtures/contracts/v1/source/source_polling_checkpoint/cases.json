@@ -1,0 +1,279 @@
+{
+  "object_type": "SourcePollingCheckpointFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "same": {
+      "object_type": "SourcePollingCheckpoint",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-polling-checkpoint.fixture.v1",
+      "checked_at": "2026-08-08T23:00:00Z",
+      "source_id": "usgs.waterdata",
+      "source_descriptor_ref": "kfm://source/usgs.waterdata",
+      "endpoint_ref": "kfm:source-endpoint:usgs.waterdata.daily",
+      "prior_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "current_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "retrieval_outcome": "NOT_MODIFIED",
+      "candidate_fetch_ref": null,
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "fetch_executed": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      }
+    },
+    "modified": {
+      "object_type": "SourcePollingCheckpoint",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-polling-checkpoint.fixture.v1",
+      "checked_at": "2026-08-08T23:00:00Z",
+      "source_id": "usgs.waterdata",
+      "source_descriptor_ref": "kfm://source/usgs.waterdata",
+      "endpoint_ref": "kfm:source-endpoint:usgs.waterdata.daily",
+      "prior_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "current_state": {
+        "etag": "etag-v2",
+        "last_modified": "2026-08-02T00:00:00Z",
+        "content_length": 120,
+        "representation_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "retrieval_outcome": "MODIFIED",
+      "candidate_fetch_ref": "kfm:fetch-candidate:usgs.waterdata.20260808",
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "fetch_executed": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      }
+    },
+    "unavailable": {
+      "object_type": "SourcePollingCheckpoint",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-polling-checkpoint.fixture.v1",
+      "checked_at": "2026-08-08T23:00:00Z",
+      "source_id": "usgs.waterdata",
+      "source_descriptor_ref": "kfm://source/usgs.waterdata",
+      "endpoint_ref": "kfm:source-endpoint:usgs.waterdata.daily",
+      "prior_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "current_state": {
+        "etag": null,
+        "last_modified": null,
+        "content_length": null,
+        "representation_digest": null
+      },
+      "retrieval_outcome": "UNAVAILABLE",
+      "candidate_fetch_ref": null,
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "fetch_executed": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      }
+    },
+    "unknown": {
+      "object_type": "SourcePollingCheckpoint",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-polling-checkpoint.fixture.v1",
+      "checked_at": "2026-08-08T23:00:00Z",
+      "source_id": "usgs.waterdata",
+      "source_descriptor_ref": "kfm://source/usgs.waterdata",
+      "endpoint_ref": "kfm:source-endpoint:usgs.waterdata.daily",
+      "prior_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "current_state": {
+        "etag": null,
+        "last_modified": null,
+        "content_length": null,
+        "representation_digest": null
+      },
+      "retrieval_outcome": "UNKNOWN",
+      "candidate_fetch_ref": null,
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "fetch_executed": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      }
+    },
+    "error": {
+      "object_type": "SourcePollingCheckpoint",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source-polling-checkpoint.fixture.v1",
+      "checked_at": "2026-08-08T23:00:00Z",
+      "source_id": "usgs.waterdata",
+      "source_descriptor_ref": "kfm://source/usgs.waterdata",
+      "endpoint_ref": "kfm:source-endpoint:usgs.waterdata.daily",
+      "prior_state": {
+        "etag": "etag-v1",
+        "last_modified": "2026-08-01T00:00:00Z",
+        "content_length": 100,
+        "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "current_state": {
+        "etag": null,
+        "last_modified": null,
+        "content_length": null,
+        "representation_digest": null
+      },
+      "retrieval_outcome": "ERROR",
+      "candidate_fetch_ref": null,
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activated": false,
+        "fetch_executed": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "not-modified-pass",
+      "base": "same",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "modified-pass",
+      "base": "modified",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "unavailable-abstain",
+      "base": "unavailable",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "SOURCE_UNAVAILABLE", "path": "/decision"}]
+    },
+    {
+      "case_id": "unknown-abstain",
+      "base": "unknown",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "SOURCE_STATE_UNKNOWN", "path": "/decision"}]
+    },
+    {
+      "case_id": "error-outcome",
+      "base": "error",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "POLLING_ERROR", "path": "/decision"}]
+    },
+    {
+      "case_id": "changed-without-candidate",
+      "base": "modified",
+      "mutations": [{"op": "replace", "path": "/candidate_fetch_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_FETCH_CANDIDATE_REQUIRED", "path": "/candidate_fetch_ref"}]
+    },
+    {
+      "case_id": "unchanged-with-candidate",
+      "base": "same",
+      "mutations": [{"op": "replace", "path": "/candidate_fetch_ref", "value": "kfm:fetch-candidate:unexpected"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_FETCH_CANDIDATE_FORBIDDEN", "path": "/candidate_fetch_ref"}]
+    },
+    {
+      "case_id": "source-ref-mismatch",
+      "base": "same",
+      "mutations": [{"op": "replace", "path": "/source_descriptor_ref", "value": "kfm://source/wrong.source"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_SOURCE_REF_MISMATCH", "path": "/source_descriptor_ref"}]
+    },
+    {
+      "case_id": "modified-unproven",
+      "base": "modified",
+      "mutations": [{"op": "replace", "path": "/current_state", "value": {"etag": "etag-v1", "last_modified": "2026-08-01T00:00:00Z", "content_length": 100, "representation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_MODIFIED_UNPROVEN", "path": "/current_state"}]
+    },
+    {
+      "case_id": "not-modified-no-validators",
+      "base": "same",
+      "mutations": [
+        {"op": "replace", "path": "/prior_state", "value": {"etag": null, "last_modified": null, "content_length": null, "representation_digest": null}},
+        {"op": "replace", "path": "/current_state", "value": {"etag": null, "last_modified": null, "content_length": null, "representation_digest": null}}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_NOT_MODIFIED_UNPROVEN", "path": "/current_state"}]
+    },
+    {
+      "case_id": "decision-mismatch",
+      "base": "same",
+      "decision_override": "FETCH_CANDIDATE",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "POLL_DECISION_MISMATCH", "path": "/decision"},
+        {"code": "POLL_FETCH_CANDIDATE_REQUIRED", "path": "/candidate_fetch_ref"}
+      ]
+    },
+    {
+      "case_id": "reason-mismatch",
+      "base": "same",
+      "reason_codes_override": ["SOURCE_STATE_UNKNOWN"],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_REASON_CODES_MISMATCH", "path": "/reason_codes"}]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "same",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    },
+    {
+      "case_id": "checkpoint-id-mismatch",
+      "base": "same",
+      "checkpoint_id_override": "kfm:source-polling-checkpoint:111111111111111111111111",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_ID_MISMATCH", "path": "/checkpoint_id"}]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "same",
+      "mutations": [{"op": "replace", "path": "/governance/network_attempted", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "POLL_SCHEMA_INVALID", "path": "/governance/network_attempted"}]
+    }
+  ]
+}

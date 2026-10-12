@@ -1,0 +1,40 @@
+{
+  "id": "kfm:hydrology:aquifer-observation:synthetic-002",
+  "version": "v0.3",
+  "spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "object_type": "AquiferObservation",
+  "source_descriptor_ref": "source:synthetic-groundwater-observations:v1",
+  "source_record_ref": "synthetic:groundwater-reading:002",
+  "source_role": "observed",
+  "parameter": {
+    "code": "HYDRAULIC_HEAD",
+    "name": "hydraulic head"
+  },
+  "measurement": {
+    "source_value": 1375.2,
+    "unit": "ft",
+    "basis": {
+      "reference_type": "elevation_above_vertical_datum",
+      "reference_ref": "synthetic:datum:navd88",
+      "method_ref": "synthetic:method:pressure-transducer"
+    },
+    "qualifier": "synthetic test value",
+    "status": "provisional",
+    "no_data": false
+  },
+  "observed_time": "2026-02-01T12:00:00Z",
+  "spatial_context": {
+    "site_ref": "synthetic:monitoring-site:002",
+    "geometry_role": "exact_internal"
+  },
+  "aquifer_context_link_refs": [
+    "kfm:hydrology:aquifer-context-link:synthetic-002"
+  ],
+  "evidence_refs": [
+    "evidence:synthetic-groundwater-reading:002"
+  ],
+  "quality_flags": [
+    "synthetic_fixture",
+    "provisional"
+  ]
+}

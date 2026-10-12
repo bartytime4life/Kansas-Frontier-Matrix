@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-pass18-map-service-protocol-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-service-protocol-assessment.yml",
+    "contracts/source/map_service_protocol_assessment.md",
+    "docs/intake/exploratory/pass-18-map-service-protocol-assessment-source-map.md",
+    "fixtures/contracts/v1/source/map_service_protocol_assessment/cases.json",
+    "schemas/contracts/v1/source/map_service_protocol_assessment.schema.json",
+    "tests/validators/test_validate_map_service_protocol_assessment.py",
+    "tools/validators/source/validate_map_service_protocol_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-service-protocol-assessment.yml": "sha256:979c90d9092ec34b3caa790d87895d1aa312c4584988bc9c4362c9f6423fd7ef",
+    "contracts/source/map_service_protocol_assessment.md": "sha256:edfd89ce1ee24639df6443fdef2390f416507cb95481d0a16d2ab7ba7cc96201",
+    "docs/intake/exploratory/pass-18-map-service-protocol-assessment-source-map.md": "sha256:c7f55306403d839197b5142a5dd8be8c605272768f8e992641cb1b1a80ddfef8",
+    "fixtures/contracts/v1/source/map_service_protocol_assessment/cases.json": "sha256:a1ef023809b169048412f4061543117da5bb20d0e9efb9336b2fcb6575756926",
+    "schemas/contracts/v1/source/map_service_protocol_assessment.schema.json": "sha256:9d744eb0f76ef404e4d85e4904ca121712728dbef68ff25b34e5f6216850a2a5",
+    "tests/validators/test_validate_map_service_protocol_assessment.py": "sha256:a597ccd9ff6766aab45085281771f8bd91ceb5d1ea9cf384fc8bbb4c51ae11dd",
+    "tools/validators/source/validate_map_service_protocol_assessment.py": "sha256:5238dfbfe06c831aaa40ba6b6715ac51a746dc4de8e2ca96593db8bda606b0a1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:edfd89ce1ee24639df6443fdef2390f416507cb95481d0a16d2ab7ba7cc96201",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:5dedca74aefd81e9b7eb17259e6db6bf10a762d9b0bc0078cedac01f472518cc",
+      "sha256:bb5692576ac116a6374ab624e2733b87743272fc75941fbf3c57adc0298e79f4",
+      "sha256:1a6ee57f5f1c611a6183a97fc678d12b462d9eb7dad230619fccf5334bcd75b9",
+      "sha256:1907fdf395e626000a79827fde7049ddd41b10d7c2cdfe91af3a41a1d3265db1",
+      "sha256:26af080ec301c48405373aeb327a42cb856561f477059e95f02d96915ab5a54a"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; cards KFM-P18-INV-073 and KFM-P18-INV-180 were text-located and their three pages were visually verified"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#cards=KFM-P18-INV-073,KFM-P18-INV-180;physical-pages=436-438",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/schemas/contracts/v1/data/layer_manifest.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/tools/validators/maplibre/validate_source_metadata.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/source/source_rights_currentness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/source/source_health_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-service-protocol-assessment.yml": "CONFIRMED",
+    "contracts/source/map_service_protocol_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-map-service-protocol-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/map_service_protocol_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/map_service_protocol_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_map_service_protocol_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_map_service_protocol_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical pages 436-438 containing cards KFM-P18-INV-073 and KFM-P18-INV-180 were rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic map-service protocol assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-five exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-source-map-regression",
+      "outcome": "PASS",
+      "reason": "Thirty-two source-rights, source-health, LayerManifest, and MapLibre source-metadata tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-map-service-protocol-cards",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#cards=KFM-P18-INV-073,KFM-P18-INV-180;physical-pages=436-438"
+    },
+    {
+      "id": "adjacent-source-descriptor-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "adjacent-layer-manifest-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/schemas/contracts/v1/data/layer_manifest.schema.json"
+    },
+    {
+      "id": "adjacent-maplibre-source-metadata-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/tools/validators/maplibre/validate_source_metadata.py"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:43:04Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, no-network, fixture-only assessment that keeps PMTiles, XYZ, WMTS, and WMS protocol declarations distinct. It contacts no endpoint, inspects no artifact bytes, resolves no reference, decides no rights or evidence posture, activates no source, mutates no cache or layer, changes no registry, release, deployment, or public state, and grants no publication or public-use authority."
+}

@@ -2,19 +2,22 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.4
-status: draft; shared-ci-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed
+version: v0.7
+status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed; generated-receipt-validator-confirmed; review-record-candidate-validator-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-07-29
+updated: 2026-09-25
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; neither is domain truth, dependency admission, or release authority
+truth_posture: cite-or-abstain; implementation claims require current repo evidence; ci_readiness.py is a confirmed bounded placeholder-readiness checker; e2e_readiness.py is a confirmed bounded static readiness-and-hold checker; dependencies/pnpm_audit_readiness.py is a confirmed no-network readiness and audit-result classifier; validate_generated_receipt.py is a confirmed bounded repository-artifact provenance checker; validate_review_record.py is a confirmed fixture-only ReviewRecord candidate validator; none is domain truth, governed review, end-to-end proof, dependency admission, merge approval, or release authority
 related:
   - ci_readiness.py
+  - e2e_readiness.py
   - dependencies/README.md
   - dependencies/pnpm_audit_readiness.py
+  - validate_generated_receipt.py
+  - validate_review_record.py
   - _common/README.md
   - domains/README.md
   - source/README.md
@@ -55,9 +58,16 @@ related:
   - ../../fixtures/
   - ../../tests/
   - ../../tests/validators/test_ci_readiness.py
+  - ../../tests/validators/test_e2e_readiness.py
+  - ../../tests/e2e/README.md
+  - ../../.github/workflows/e2e-smoke.yml
   - ../../tests/validators/test_pnpm_audit_readiness.py
+  - ../../tests/validators/test_validate_generated_receipt.py
   - ../../.github/workflows/dependency-scan.yml
 notes:
+  - "v0.7 indexes the bounded fixture-only ReviewRecord candidate validator and preserves live identity, authority, policy, governed-record, review, and release holds."
+  - "v0.6 adds the bounded no-network GENERATED_RECEIPT duplicate-free finite-JSON, parser/schema-budget, cross-field, local-path, SHA-256-prefix, and optional declared-review-claim validator with focused tests and synthetic fixture wiring."
+  - "v0.5 adds a standard-library E2E readiness validator and focused synthetic tests; it recognizes the implemented Explorer baseline while preserving the composed browser/API E2E hold."
   - "v0.4 records the focused locked-pnpm audit preflight and finite PASS/REGRESSION/ERROR classifier; the registry audit remains point-in-time and non-authoritative."
   - "v0.3 confirms one standard-library placeholder-readiness checker and its focused unit tests; it does not establish domain validation, registry wiring, generated reports, receipt emission, runtime behavior, or release authority."
   - "Validators are fail-closed checkers. They do not define domain meaning, create canonical schemas, admit sources, create EvidenceBundles, decide policy, approve release, publish artifacts, or authorize public API/UI/map/AI surfaces."
@@ -107,10 +117,14 @@ A validator may check that evidence exists, policy was evaluated, release refere
 |---|---|---|
 | `tools/validators/README.md` | **CONFIRMED README** | This file replaces the previous two-line parent stub. |
 | `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
+| `tools/validators/e2e_readiness.py` | **CONFIRMED bounded executable checker** | Statically reconciles the locked Explorer baseline, adjacent UI/API workflow markers, root holds, and exact five-file E2E placeholder inventory; it emits an explicit hold and never starts services or executes discovered application code. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
+| `tools/validators/validate_generated_receipt.py` | **CONFIRMED bounded executable checker** | Validates duplicate-free finite JSON under parser/schema budgets, `GENERATED_RECEIPT` shape, exact artifact maps, canonical local paths, supported SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, plus an optional declared review/override claim. It does not authenticate those references or claims and cannot grant truth, policy, review, mutation, merge, release, or publication authority. |
+| `tools/validators/validate_promotion_gate.py` | **CONFIRMED bounded compatibility entry point** | Routes to the no-network A-G declared-closure validator, emits `PASS`, `DENY`, `ABSTAIN`, or `ERROR`, and never creates a PromotionDecision, release, or publication. |
+| `tools/validators/validate_review_record.py` | **CONFIRMED bounded fixture-only candidate validator** | Checks synthetic Gate G projections for canonical identity/time, issuance no later than review, a supplied authority interval covering evaluation, an empty approving-review obligations list, declared valid-until and supersession markers, separation, scope, subject, and hash binding; it performs no registry lookup and creates no governed ReviewRecord or release authority. |
 | `tools/validators/domains/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Parent index for per-domain validator lanes. |
 | `tools/validators/policy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Policy validator routing; not the policy authority root. |
-| `tools/validators/release/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Release validator routing; not release governance or publication authority. |
+| `tools/validators/release/README.md` | **CONFIRMED README / mixed executable maturity** | Release validator routing; the adjacent promotion-gate thin slice is executable, while broader release validation remains incomplete. |
 | `tools/validators/source/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Source-admission and source-registry validation routing; not the source registry. |
 | `tools/validators/sensitivity/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Sensitivity posture checks; not tier, policy, redaction, or release authority. |
 | Domain validators, registry wiring, other CLI/package entrypoints, CI integration, report outputs, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | The narrow readiness checker does not establish these broader surfaces. |
@@ -135,6 +149,41 @@ python tools/validators/ci_readiness.py \
   --test-root tests/domains/example \
   --validator-root tools/validators/domains/example
 ```
+
+[Back to top](#top)
+
+---
+
+## E2E readiness hold checker
+
+`e2e_readiness.py` is a Python 3.11-compatible, standard-library-only checker
+for the current composed-E2E boundary. It reads a fixed set of repository-owned
+manifests, workflows, API boundary files, and the exact `tests/e2e/`
+inventory. It records that the two monorepo Explorer apps are retired while
+requiring the root workspace holds and the absence of a repository-owned
+composed E2E command.
+
+The checker fails closed when a required file is missing, unsafe, unreadable,
+too large, or malformed; when the locked package/workflow markers drift; when
+the placeholder inventory changes; or when an E2E script, Make target,
+Playwright configuration, or E2E-named implementation file surfaces. Its
+diagnostics contain bounded paths and reason codes, never input contents. It
+does not install packages, import application code, start services, request the
+network, inspect secrets, execute a browser journey, or grant evidence, policy,
+release, deployment, or publication status.
+
+```bash
+python tools/validators/e2e_readiness.py
+
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_e2e_readiness.py' \
+  --verbose
+```
+
+A zero exit means only that the retired-app and absent-composed-E2E
+boundary still matches the reviewed snapshot. It deliberately prints
+`WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`.
 
 [Back to top](#top)
 
@@ -172,8 +221,9 @@ The folders below are routing lanes, indexes, or validator-local documentation. 
 | [`sensitive_geometry/`](sensitive_geometry/README.md) | Exact-location denial, public-safe geometry, reconstruction risk, redaction/aggregation receipt checks. | Does not store sensitive geometry or define hidden thresholds. |
 | [`sensitive_location_allow/`](sensitive_location_allow/README.md) | Allow-exception packet checks after deny-by-default sensitive-location posture. | Does not make policy decisions or publish sensitive locations. |
 | [`evidence/`](evidence/README.md) | EvidenceRef/EvidenceBundle/proof closure and citation checks. | Evidence/proof authority remains in `data/proofs/` and accepted evidence homes. |
+| [`evidence_resolver/`](evidence_resolver/README.md) | Internal v1alpha1 EvidenceRef-to-bundle candidate checks over explicit synthetic inputs. | A local `RESOLVED` result is not live evidence closure, policy, review, release, or public authority. |
 | [`lifecycle/`](lifecycle/README.md) | Lifecycle boundary, transition, quarantine, promotion, correction, and rollback checks. | Does not move files or decide promotion. |
-| [`promotion_gate/`](promotion_gate/README.md) | Promotion gate checks at governed publication transitions. | Promotion decisions remain governed records, not validator output alone. |
+| [`promotion_gate/`](promotion_gate/README.md) | Implemented bounded declared-closure checks at governed publication transitions. | A pass is only `APPROVE_READY`; promotion decisions remain governed records. |
 | [`release/`](release/README.md) | ReleaseManifest, PromotionDecision, rollback/correction/withdrawal, artifact-integrity, and public-surface readiness checks. | Release records and publication authority remain in `release/`. |
 | [`dependencies/`](dependencies/README.md) | Package-manager, workspace, lockfile-importer, competing-lockfile, and structured audit-result checks. | Manifests and lockfiles remain root coordination records; advisory data, dependency admission, exceptions, and release decisions remain outside validators. |
 | [`smoke/`](smoke/README.md) | Fast import/CLI/registry/fixture/side-effect health checks. | Smoke pass is not correctness, policy, evidence, or release proof. |
@@ -313,13 +363,19 @@ Future implementation should remain modular and reversible:
 tools/validators/
 ├── README.md
 ├── ci_readiness.py                  # confirmed placeholder-readiness checker
+├── e2e_readiness.py                 # confirmed static E2E readiness-hold checker
+├── validate_generated_receipt.py    # confirmed repository-artifact provenance checker
+├── validate_promotion_gate.py       # confirmed compatibility entry point
+├── validate_review_record.py       # confirmed fixture-only ReviewRecord candidate validator
 ├── _common/                         # shared validator utilities, if verified
 ├── domains/                         # per-domain validator lanes
 ├── policy/                          # policy-facing validation routing
 ├── source/                          # source-admission validation routing
 ├── sensitivity/                     # sensitivity posture validation routing
 ├── evidence/                         # evidence/proof reference validation routing
+├── evidence_resolver/                # bounded internal candidate-profile CLI
 ├── lifecycle/                        # lifecycle transition validation routing
+├── promotion_gate/                   # confirmed bounded promotion-readiness validator
 ├── release/                          # release-readiness validation routing
 ├── smoke/                            # shallow health checks
 └── <specialized-lane>/               # narrow validator routes with clear authority boundaries
@@ -342,6 +398,7 @@ This README is complete for documentation purposes when:
 - [x] It marks executable behavior, registry wiring, schemas, fixtures, tests, policy bundles, report destinations, receipt emission, release integration, runtime behavior, and CI wiring as **NEEDS VERIFICATION**.
 - [x] It includes finite parent-level outcomes and denies validator overclaim.
 - [x] It records the bounded `ci_readiness.py` CLI/import API, exact placeholder shapes, fail-closed path posture, tests, and authority limits.
+- [x] It records the bounded `e2e_readiness.py` static contract, focused tests, explicit hold output, and no-execution authority limit.
 
 Future implementation is not complete until:
 
@@ -361,5 +418,7 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-08-03 | Indexed the bounded fixture-only ReviewRecord candidate validator and its canonical identity, review-time issuance, supplied interval, empty approving-review obligations, explicit supersession-marker, and no-authority boundary. | **CONFIRMED bounded candidate validator** |
+| 2026-07-31 | Added the standard-library E2E readiness-hold checker, focused synthetic/current-tree tests, and workflow integration that recognizes the implemented Explorer baseline without claiming a composed suite. | **CONFIRMED bounded checker and explicit hold** |
 | 2026-07-29 | Added the standard-library placeholder-readiness checker, focused tests including unexpected test/validator-source denial, bounded behavior/authority documentation, and same-batch integration into eleven domain readiness workflows: ten root-scanning CLI calls and one Hydrology classifier import for its mixed-root inventory. | **CONFIRMED bounded checker and workflow integration** |
 | 2026-07-08 | Expanded parent validators README from two-line stub into governed validator-root index. | **CONFIRMED README / implementation NEEDS VERIFICATION** |

@@ -48,6 +48,19 @@ notes:
 
 `connectors/census/src/census/`
 
+
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve_acs(url)`:** accepts only the exact URL `acs_api.acs_url` would emit (`key=` is refused).
+> - **`fetch.retrieve_tiger(file_name)`:** accepts only packages in the committed source-reference manifest. The URL must be `https://www2.census.gov/geo/tiger/TIGER<vintage>/<PRODUCT>/<file>`, the byte budget is the manifest length, and the manifest SHA-256 is the transport's expected digest, so a byte mismatch is an `INTEGRITY_MISMATCH` episode.
+> - Both run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`census.acs-api`, `census.tiger-line`) and profiles.
+> - **`admit.admit()`:** selects the product from the episode's own source identity. Unknown or mismatched sources are refused. It routes as follows:
+>   - an ACS table becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES` or with the table's own reasons when they apply;
+>   - a TIGER package keeps the route the inspector assigned;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/census/tests/test_fetch_admit.py`.
+
 ## Quick jumps
 
 [Status](#status) · [Scope](#scope) · [Package fit](#package-fit) · [Allowed code](#allowed-code) · [Forbidden code](#forbidden-code) · [Admission contract](#admission-contract) · [Product-family discipline](#product-family-discipline) · [Time-geography-and-uncertainty](#time-geography-and-uncertainty) · [I/O boundary](#io-boundary) · [Validation](#validation) · [Rollback](#rollback) · [Definition of done](#definition-of-done)

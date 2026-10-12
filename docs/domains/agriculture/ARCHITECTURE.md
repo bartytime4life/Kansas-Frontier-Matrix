@@ -17,9 +17,9 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
   - docs/domains/agriculture/sublanes/README.md
@@ -29,6 +29,9 @@ notes:
   - Pinned to CONTRACT_VERSION = "3.0.0".
   - Single-file ARCHITECTURE.md pattern (PROPOSED canonical); reconciles with prior flora/architecture/README.md divergence (NEEDS VERIFICATION).
   - All repo paths PROPOSED until mounted-repo inspection.
+owning_root: docs/
+responsibility: "Documentation for Kansas Frontier Matrix — Agriculture Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -48,12 +51,12 @@ notes:
 **Status:** `draft` · **Version:** `v1 (draft)` · **Owners:** *TODO* · **Updated:** 2026-05-26 · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
-> **Architecture vs API contract.** This document is the **architectural contract** for the Agriculture bounded context (responsibility, identity, lifecycle, trust posture). It does **not** specify the wire-level API or envelope schemas — those live in [`api-contracts.md`](./api-contracts.md). Where the two documents touch (outcome grammar, audience class, aggregation receipt), this doc cites the API contract rather than re-stating it. `[CONFIRMED relationship; PROPOSED paths.]`
+> **Architecture vs API contract.** This document is the **architectural contract** for the Agriculture bounded context (responsibility, identity, lifecycle, trust posture). It does **not** specify the wire-level API or envelope schemas — those live in [`api-contracts.md`](API_CONTRACTS.md). Where the two documents touch (outcome grammar, audience class, aggregation receipt), this doc cites the API contract rather than re-stating it. `[CONFIRMED relationship; PROPOSED paths.]`
 
 > [!NOTE]
 > **Sibling orientation.** This doc orbits five sibling docs created in this corpus session:
 > [`README.md`](./README.md) (landing) ·
-> [`api-contracts.md`](./api-contracts.md) (wire contract) ·
+> [`api-contracts.md`](API_CONTRACTS.md) (wire contract) ·
 > [`policy/README.md`](./policy/README.md) (sensitivity / release / review) ·
 > [`runbooks/README.md`](./runbooks/README.md) (operational procedures) ·
 > [`sublanes/README.md`](./sublanes/README.md) (five-axis sublane decomposition).
@@ -94,7 +97,7 @@ The Agriculture bounded context governs **agricultural aggregate observations, s
 | Soil-crop suitability, drought and pest stress indicators, supply-chain nodes, agricultural-economy observations. | Water observations, hydrograph, NFHL zones → **Hydrology**. |
 | Aggregation receipts for county/HUC/grid-level publication. | Ownership, title, parcels, living-person privacy → **People/Land**. |
 | Source-role anti-collapse rules specific to CDL/NASS/SSURGO/mesonet/satellite. | Critical-infrastructure deny lane → **Settlements/Infrastructure**. |
-| Cross-lane edges to Soil, Hydrology, Atmosphere, People/Land, Hazards, Frontier Matrix. | Specific wire-level DTOs and envelope schemas → [`api-contracts.md`](./api-contracts.md). |
+| Cross-lane edges to Soil, Hydrology, Atmosphere, People/Land, Hazards, Frontier Matrix. | Specific wire-level DTOs and envelope schemas → [`api-contracts.md`](API_CONTRACTS.md). |
 
 `[CONFIRMED scope — Atlas §9.B; DOM-AG; ENCY.]`
 
@@ -117,7 +120,7 @@ This document derives its authority from the layers below, **in order**. A lower
 5. [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md) — finite policy outcomes.
 6. [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md) — cite-or-abstain.
 7. [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) — AI is interpretive, never root truth.
-8. [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow.
+8. [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow.
 9. KFM Atlas chapters: §9 (Agriculture), §20.x (Master atlases), §24.x (extended master atlases including source-role anti-collapse, sensitivity tiers, capability matrix). `[CONFIRMED references; documents PROPOSED at the listed paths.]`
 
 ### 2.2 RFC 2119 conformance
@@ -272,7 +275,7 @@ The Agriculture bounded context **explicitly does not own**:
 ### 4.3 Ubiquitous language (Agriculture-scoped)
 
 > [!NOTE]
-> Each term below is `CONFIRMED` as Agriculture vocabulary; **field realization** (the exact schema-level field name) is `PROPOSED` and resolves at [`api-contracts.md`](./api-contracts.md) §5.
+> Each term below is `CONFIRMED` as Agriculture vocabulary; **field realization** (the exact schema-level field name) is `PROPOSED` and resolves at [`api-contracts.md`](API_CONTRACTS.md) §5.
 
 | Term | Definition (Agriculture-scoped) | Citation |
 |---|---|---|
@@ -414,7 +417,7 @@ flowchart LR
 
 ## 8. Trust-membrane placement
 
-Every public Agriculture response MUST cross the trust membrane exactly once, via `apps/governed-api/` (PROPOSED home). The membrane shapes the response into a finite `RuntimeResponseEnvelope` per [`api-contracts.md`](./api-contracts.md) §4.
+Every public Agriculture response MUST cross the trust membrane exactly once, via `apps/governed-api/` (PROPOSED home). The membrane shapes the response into a finite `RuntimeResponseEnvelope` per [`api-contracts.md`](API_CONTRACTS.md) §4.
 
 ```mermaid
 flowchart LR
@@ -639,7 +642,7 @@ AI **MUST NOT**:
 | Companion | Role | Path |
 |---|---|---|
 | Agriculture landing page | Domain orientation | [`README.md`](./README.md) |
-| Wire-level interface contract | DTO / envelope schema specification | [`api-contracts.md`](./api-contracts.md) |
+| Wire-level interface contract | DTO / envelope schema specification | [`api-contracts.md`](API_CONTRACTS.md) |
 | Policy aspect index | Sensitivity / release / review rules | [`policy/README.md`](./policy/README.md) |
 | Runbooks aspect index | Operational procedures | [`runbooks/README.md`](./runbooks/README.md) |
 | Sublane decomposition | 5-axis sublane index | [`sublanes/README.md`](./sublanes/README.md) |
@@ -666,7 +669,7 @@ AI **MUST NOT**:
 | **OQ-AG-ARCH-04** | Whether `data/registry/sources/agriculture/` exists; if not, whether to create it or share with `data/registry/sources/`. | Source steward | Directory Rules §6 inspection. |
 | **OQ-AG-ARCH-05** | Whether `AggregationReceipt` is a shared receipt class (cross-cutting) or an Agriculture-specific class. | Contract / schema steward | ADR-S-03. |
 | **OQ-AG-ARCH-06** | Whether `classmap_version` pinning is enforced at WORK (admission) or at PROCESSED (validation). | Architecture steward + Build owner | ADR; align with KFM-P25-PROG-0005. |
-| **OQ-AG-ARCH-07** | Audience-class enforcement — middleware in `apps/governed-api/`, schema-level (envelope `audience_class` field), or both? | API owner + Architecture steward | ADR; aligns with [`api-contracts.md`](./api-contracts.md) OQ-AG-API-08. |
+| **OQ-AG-ARCH-07** | Audience-class enforcement — middleware in `apps/governed-api/`, schema-level (envelope `audience_class` field), or both? | API owner + Architecture steward | ADR; aligns with [`api-contracts.md`](API_CONTRACTS.md) OQ-AG-API-08. |
 | **OQ-AG-ARCH-08** | Whether the `docs/runbooks/agriculture/` subfolder pattern is canonical (Pattern A) or whether flat-with-domain-prefix (Pattern B) wins. | Docs steward | Directory Rules OPEN-DR-02; ADR. |
 | **OQ-AG-ARCH-09** | Are pest stress observations Agriculture-owned across the entire surface, or do Fauna observations of disease/mortality cross the line? | Agriculture domain steward + Fauna steward | Cross-lane edge reconciliation per Atlas §24.4.5 / §24.4.7. |
 | **OQ-AG-ARCH-10** | k-anonymity threshold values for county / HUC / grid public release. | Sensitivity reviewer + Policy steward | ADR; aligns with `api-contracts.md` OQ-AG-API-12. |
@@ -718,7 +721,7 @@ AI **MUST NOT**:
 
 | Change | Type (§37) | Reason |
 |---|---|---|
-| Initial creation of `docs/domains/agriculture/ARCHITECTURE.md`. | new | Establish architectural contract for the Agriculture bounded context, distinct from the wire-level [`api-contracts.md`](./api-contracts.md). |
+| Initial creation of `docs/domains/agriculture/ARCHITECTURE.md`. | new | Establish architectural contract for the Agriculture bounded context, distinct from the wire-level [`api-contracts.md`](API_CONTRACTS.md). |
 | Adopted single-file `ARCHITECTURE.md` pattern (PROPOSED canonical) rather than `architecture/README.md` folder pattern. | new | Reconcile divergence with prior flora `architecture/README.md` (OQ-AG-ARCH-01). Decision pending ADR. |
 | Authority stack pinned to `CONTRACT_VERSION = "3.0.0"`; nine-layer stack named in §2.1. | new | Operating contract §1 + §5 conformance. |
 | Adopted Atlas §9 A–N skeleton, re-organized as architectural sections rather than dossier sections. | new | Make the doc usable as an architectural contract while preserving traceability to Atlas. |
@@ -743,7 +746,7 @@ A repository implementation of this document conforms when **all** of the follow
 - [ ] `docs/domains/agriculture/ARCHITECTURE.md` exists at its agreed home (pending OQ-AG-ARCH-01).
 - [ ] KFM Meta Block v2 present and `contract_version: "3.0.0"` pinned.
 - [ ] All five sibling docs cross-reference this document.
-- [ ] [`api-contracts.md`](./api-contracts.md) cross-references this doc as the architectural contract.
+- [ ] [`api-contracts.md`](API_CONTRACTS.md) cross-references this doc as the architectural contract.
 - [ ] All twelve object-family schemas authored under `schemas/contracts/v1/domains/agriculture/`.
 - [ ] `AggregationReceipt` schema present at its agreed home (ADR-S-03).
 - [ ] `apps/governed-api/` (or its ADR-equivalent) exists and enforces audience-class boundaries.
@@ -781,12 +784,12 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 19.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md)
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md)
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md)
 - [`docs/domains/agriculture/policy/README.md`](./policy/README.md)
 - [`docs/domains/agriculture/runbooks/README.md`](./runbooks/README.md)
 - [`docs/domains/agriculture/sublanes/README.md`](./sublanes/README.md)

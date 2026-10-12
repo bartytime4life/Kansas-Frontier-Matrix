@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-nrcs-soil-data-access
 title: NRCS Soil Data Access (SDA)
 type: product-page
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for `nrcs`>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/sources/catalog/nrcs/README.md
@@ -18,8 +18,12 @@ related:
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, nrcs, soil, sda, ssurgo]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "PROPOSED product-page scaffold; sibling-link presence verified in a Claude Code session, not in a mounted repo."
   - "Path `docs/sources/catalog/nrcs/SOIL-DATA-ACCESS.md` is PROPOSED; Directory Rules treat `docs/sources/` as a documentation lane and `data/registry/sources/` as the authoritative source-descriptor home."
+owning_root: docs/
+responsibility: "Documentation for NRCS Soil Data Access (SDA); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -124,7 +128,7 @@ The shape below describes the **PROPOSED** lifecycle for an SDA-derived product 
 flowchart LR
     A[USDA NRCS<br/>Soil Data Access<br/>SDA endpoint]:::ext
     A -->|HEAD / ETag / Last-Modified<br/><i>conditional polling</i>| W[Watcher<br/>connectors/nrcs/<br/><b>PROPOSED</b>]
-    W -->|EventRunReceipt + delta_manifest| RAW[(data/raw/soil/<br/><b>PROPOSED</b>)]
+    W -->|EventRunReceipt + delta_manifest| RAW[("RAW: source-first capture<br/><b>placement HOLD</b>")]
     RAW -->|extract · normalize| WORK[(data/work/soil/<br/><b>PROPOSED</b>)]
     WORK -->|validate · join MUKEY| PROC[(data/processed/soil/<br/><b>PROPOSED</b>)]
     PROC -->|STAC + DCAT + PROV-O| CAT[(data/catalog/stac · dcat · prov/<br/><b>PROPOSED</b>)]
@@ -428,7 +432,7 @@ elif status == 200:
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules v1.2
 - [`../../../standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(NEEDS VERIFICATION of path)*
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — KFM provenance profile *(NEEDS VERIFICATION of path; PROV.md vs PROVENANCE.md naming under ADR review per Directory Rules §13.5 v1.1)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
 
 > [!NOTE]
 > All sibling paths in this section are **PROPOSED** until verified against mounted-repo evidence. Anchor breakage risk is **moderate** if `docs/sources/catalog/` is restructured by ADR before this draft is published.

@@ -1,4 +1,12 @@
-# packages/evidence-resolver pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-evidence-resolver"
 version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/evidence_resolver"]

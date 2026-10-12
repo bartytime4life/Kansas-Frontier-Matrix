@@ -15,6 +15,9 @@ notes: ["README-like source-tree entrypoint for the Roads / Rail / Trade Routes 
 
 # Roads / Rail / Trade Source Tree
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/roads_rail_trade/identity.py`, `src/roads_rail_trade/layers.py` and `src/roads_rail_trade/observations.py` were removed from `packages/domains/roads-rail-trade/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 Source-code staging area for the Roads, Rail, and Trade Routes package, keeping transport implementation helpers under the `packages/` responsibility root and away from policy, schema, source-registry, lifecycle-data, proof, receipt, release, API, and UI authority.
 
 <p>
@@ -228,7 +231,7 @@ Potential future modules, all **PROPOSED** until package metadata and repo conve
 | Proposed module | Purpose | Notes |
 | --- | --- | --- |
 | `outcomes.py` | Finite outcome wrappers and reason-code carriers | Must align with repo-wide outcome vocabulary. |
-| `identity.py` | Deterministic transport object IDs | Must not own registry or canonical truth. |
+| `identity.py` (removed 2026-09-29) | Deterministic transport object IDs | Must not own registry or canonical truth. |
 | `sources.py` | Source-role and source-limit helpers | Must not own source registry or rights register. |
 | `time.py` | Temporal normalization and interval helpers | Must keep material time dimensions separate. |
 | `geometry.py` | Geometry-role, CRS, scale, linear reference, and support helpers | Must separate internal and public geometry. |

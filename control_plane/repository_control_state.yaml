@@ -2,11 +2,11 @@
   "schema_version": "2.0.0",
   "state_id": "kfm-repository-control-main",
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
-  "projection_status": "CONFIRMED",
+  "projection_status": "SUPERSEDED",
   "base": {
     "default_branch": "main",
-    "current_main_sha": "0b7257653abd355a041a80e6f4e5f83da3f80720",
-    "observed_at": "2026-07-29T18:10:20Z",
+    "current_main_sha": "c0a6449c377e839e5b03c67f726829dc625a8c3a",
+    "observed_at": "2026-08-03T16:39:56Z",
     "open_pull_requests": []
   },
   "claim": {
@@ -79,5 +79,5 @@
       "state_digest"
     ]
   },
-  "state_digest": "f871db0fa5ab77762bab72d0b5ac72e414ce918d96205dfe3288fadd9eb89278"
+  "state_digest": "ab25ada4f8d2c5ee6d3d86bb798b2cb75f59f61f9da126be7f799d6011cc6b0c"
 }

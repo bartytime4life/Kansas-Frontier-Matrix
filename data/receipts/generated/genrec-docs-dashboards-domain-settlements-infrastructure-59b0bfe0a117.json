@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-docs-dashboards-domain-settlements-infrastructure-59b0bfe0a117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/settlements-infrastructure.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/settlements-infrastructure.md": "sha256:59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "local deterministic Markdown validation",
+      "Draft 2020-12 JSON Schema validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272",
+      "sha256:23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af"
+    ],
+    "attached_docs": [
+      "Pasted text(20260821-161458).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/dashboards/domain/settlements-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/dashboards/DASHBOARD_CATALOG.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/dashboards/domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/domains/settlements-infrastructure/DENY_BY_DEFAULT.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/apps/explorer-web/src/features/domains/settlements_infrastructure/EvidenceDrawer.tsx",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/apps/explorer-web/src/features/domains/settlements_infrastructure/layers.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/contracts/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/tools/validators/domains/settlements-infrastructure/validate_schema.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/tests/domains/settlements-infrastructure/test_restricted_geometry_no_leak.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/policy/domains/settlements-infrastructure/deny_unpublished.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/policy/domains/settlements-infrastructure/infrastructure_interior_redaction.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/.github/workflows/domain-settlements-infrastructure.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/data/registry/sources/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/data/proofs/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/release/candidates/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/settlements-infrastructure.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main at 5cf8f6eac5f7015f29d4b0547caffad903b269a4; read the complete unchanged target and current v0.5 Dashboard Catalog; exact open-PR searches found no overlapping Settlements/Infrastructure dashboard modernization."
+    },
+    {
+      "gate": "same-path-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The tracked specification remains under docs/dashboards/domain/. The only new path is the established generated-authoring receipt lane; no root, schema, contract, policy, source, registry, proof, release, lifecycle, public-path, or repository-setting authority changes."
+    },
+    {
+      "gate": "complete-target-and-material-no-loss-review",
+      "outcome": "PASS",
+      "reason": "The complete prior v0.1 specification was reviewed. Its document identity, path, creation date, draft/specification posture, sensitive-domain boundary, Atlas lineage, correction/rollback emphasis, and open-question intent were preserved or narrowed while unsupported implementation and threshold claims were removed."
+    },
+    {
+      "gate": "current-implementation-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "Inspected current domain docs, contracts, schema lanes, shared EvidenceBundle projection and focused validator/test/workflow, Explorer placeholders, policy/validator/test scaffolds, source registry, and explicit semantic-validation/proof/release holds. The revised document separates those facts from proposed metrics and unknown runtime behavior."
+    },
+    {
+      "gate": "current-main-base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced to 5cf8f6eac5f7015f29d4b0547caffad903b269a4 through merged PR #3206. That merge left the Settlements/Infrastructure target blob unchanged and changed only adjacent People/DNA/Land catalog/receipt material. The exact #3206 catalog patch was applied before the one-row Settlements/Infrastructure reconciliation; no unrelated bytes were lost."
+    },
+    {
+      "gate": "dashboard-catalog-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the exact catalog delta merged by PR #3206, then updated only the existing Settlements/Infrastructure row so its evidence basis, placeholder Explorer state, unresolved route/telemetry, and unverified reviewer identities match the modernized specification."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "Both Markdown artifacts parse; each has one H1, intact KFM metadata, ordered headings, balanced fences, no trailing whitespace, and a final newline. The shared catalog delta is one row only."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All repository-relative targets in the specification were resolved against the pinned repository tree; same-document anchors were checked locally. No external network request was required."
+    },
+    {
+      "gate": "sensitivity-and-rights-content-review",
+      "outcome": "PASS",
+      "reason": "The authored bytes contain no exact sensitive locations, restricted infrastructure payloads, dependency topology, exposure-aiding thresholds, credentials, private review notes, living-person data, or operational vulnerability detail. The specification fails closed and omits protected reasoning."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Target SHA-256 59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272; catalog SHA-256 23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af. Artifact paths, hashes, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "PASS",
+      "reason": "The receipt validates against schemas/contracts/v1/receipts/generated_receipt.schema.json using the available local jsonschema implementation; cross-field and artifact hash closure were recomputed."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created. Their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not approval, sensitivity review, release authority, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "attached-implementation-prompt",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(20260821-161458).txt"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4"
+    },
+    {
+      "id": "complete-base-dashboard-specification",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/dashboards/domain/settlements-infrastructure.md"
+    },
+    {
+      "id": "current-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/dashboards/DASHBOARD_CATALOG.md"
+    },
+    {
+      "id": "current-domain-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/domains/settlements-infrastructure/README.md"
+    },
+    {
+      "id": "current-explorer-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/apps/explorer-web/src/features/domains/settlements_infrastructure/EvidenceDrawer.tsx"
+    },
+    {
+      "id": "current-evidence-bundle-projection",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json"
+    },
+    {
+      "id": "current-domain-readiness-holds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/.github/workflows/domain-settlements-infrastructure.yml"
+    },
+    {
+      "id": "accepted-directory-rules-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T16:38:17Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Modernizes the existing Settlements / Infrastructure dashboard specification and reconciles its single Dashboard Catalog row against current repository evidence. The parent domain-dashboard README already links the target and remains semantically valid. No app/runtime implementation, source activation, contract/schema/policy change, lifecycle mutation, proof, release, deployment, publication, merge, or repository-setting change is performed. The receipt is non-authoritative process memory; human review remains pending."
+}

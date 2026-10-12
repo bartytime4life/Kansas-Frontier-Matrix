@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/object_identity_kind_assessment.schema.json",
+  "title": "ObjectIdentityKindAssessmentCandidate",
+  "description": "Fixture-only entity, value-object, derived-artifact, or unresolved identity-kind declaration without identifier, register, schema, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "object_family_ref",
+    "semantic_contract_ref",
+    "semantic_contract_digest",
+    "register_binding",
+    "declaration",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ObjectIdentityKindAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.object-identity-kind-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-464"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "object_family_ref": {"$ref": "#/$defs/ref"},
+    "semantic_contract_ref": {"$ref": "#/$defs/ref"},
+    "semantic_contract_digest": {"$ref": "#/$defs/sha256"},
+    "register_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "ref", "digest"],
+      "properties": {
+        "state": {"enum": ["RESOLVED", "UNRESOLVED", "NOT_REGISTERED"]},
+        "ref": {"$ref": "#/$defs/nullable_ref"},
+        "digest": {"$ref": "#/$defs/nullable_sha256"}
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity_kind",
+        "identity_basis",
+        "durable_identity_required",
+        "lifecycle_continuity_required",
+        "attribute_equality_defines_equivalence",
+        "content_digest_defines_equivalence",
+        "review_state",
+        "review_record_refs",
+        "rationale_summary"
+      ],
+      "properties": {
+        "identity_kind": {"enum": ["ENTITY", "VALUE_OBJECT", "DERIVED_ARTIFACT", "UNRESOLVED"]},
+        "identity_basis": {"enum": ["DURABLE_IDENTITY", "STRUCTURAL_VALUE", "CONTENT_ADDRESS", "UNRESOLVED"]},
+        "durable_identity_required": {"type": "boolean"},
+        "lifecycle_continuity_required": {"type": "boolean"},
+        "attribute_equality_defines_equivalence": {"type": "boolean"},
+        "content_digest_defines_equivalence": {"type": "boolean"},
+        "review_state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "rationale_summary": {
+          "anyOf": [
+            {"type": "string", "minLength": 24, "maxLength": 1024, "pattern": "^[^\\r\\n]+$"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_IDENTIFIER_CREATION_OR_ASSIGNMENT",
+        "NO_SCHEMA_REGISTER_OR_OBJECT_MUTATION",
+        "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+        "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identifier_authority",
+        "schema_authority",
+        "register_write_authority",
+        "object_mutation_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "identifier_authority": {"const": false},
+        "schema_authority": {"const": false},
+        "register_write_authority": {"const": false},
+        "object_mutation_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+  }
+}

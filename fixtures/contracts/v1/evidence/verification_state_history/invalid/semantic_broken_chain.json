@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:broken-chain",
+  "subject_ref": "kfm://synthetic/evidence/item-301",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:78f3aa473572afa3c1800b580349f4fa15519f82d28e9d77a35d118c727bab21",
+  "events": [
+    {
+      "event_id": "evt:301",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-01T00:00:00Z",
+      "recorded_at": "2026-01-01T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-301"
+      ]
+    },
+    {
+      "event_id": "evt:302",
+      "event_type": "REVOKED",
+      "state": "REVOKED",
+      "effective_at": "2026-01-10T00:00:00Z",
+      "recorded_at": "2026-01-11T00:00:00Z",
+      "reason_code": "VERIFICATION_REVOKED",
+      "basis_refs": [
+        "kfm://synthetic/evidence/revocation-basis-301"
+      ],
+      "relates_to_event_id": "evt:missing",
+      "revocation_ref": "kfm://synthetic/correction/revocation-301"
+    }
+  ]
+}

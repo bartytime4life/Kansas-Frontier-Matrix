@@ -3,7 +3,7 @@ doc_id: kfm://data/work/soil/readme
 name: Soil Work README
 path: data/work/soil/README.md
 type: data-work-domain-lane-readme
-version: v0.1.0
+version: v0.1.1
 status: draft
 owners:
   - <data-steward>
@@ -23,7 +23,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -95,6 +95,7 @@ notes:
   - "Soil RAW, QUARANTINE, and PROCESSED READMEs confirm adjacent lifecycle lanes and soil-specific support-type, source-role, map-unit, component, horizon, pedon, observation, interpretation, and sensitivity boundaries."
   - "WORK material is not Soil truth, not processed truth, not catalog truth, not proof, not receipt authority, not policy authority, not release authority, and not public material."
   - "README presence does not prove work payloads, run manifests, validators, receipts, CI checks, policy enforcement, source descriptors, review completion, or release readiness."
+  - "2026-10-11 (v0.1.1): RAW references aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane) and the catalog node to subtype-first data/catalog/ (Directory Rules §12.3); documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -165,7 +166,7 @@ Therefore this README treats `data/work/soil/` as **CONFIRMED path presence / DR
 
 | Responsibility | Correct home | Boundary |
 |---|---|---|
-| Soil RAW source captures | [`../../raw/soil/`](../../raw/soil/README.md) | Immutable source-edge material; not work scratch. |
+| Soil RAW reference lane | [`../../raw/soil/`](../../raw/soil/README.md) | Compatibility/reference lane only; immutable captures are source-first (physical placement HOLD); not work scratch. |
 | Soil WORK candidates and intermediates | `data/work/soil/` | This lane. Internal only. |
 | Soil quarantine holds | [`../../quarantine/soil/`](../../quarantine/soil/README.md) | Rights/sensitivity/source-role/support-type/validation unresolved material. |
 | Soil processed artifacts | [`../../processed/soil/`](../../processed/soil/README.md) | Validated normalized outputs; downstream of WORK. |
@@ -201,7 +202,7 @@ All accepted material should preserve enough context to inspect source lineage, 
 
 | Do not place here | Correct home |
 |---|---|
-| Immutable Soil source captures, source-native payloads, source query snapshots, source-head records, or raw response mirrors | `data/raw/soil/` |
+| Immutable Soil source captures, source-native payloads, source query snapshots, source-head records, or raw response mirrors | The accepted source-first RAW home (physical placement HOLD; `data/raw/soil/` is a compatibility/reference lane) |
 | Rights-unclear, sensitivity-unclear, source-role-unclear, support-type-unclear, geometry-risk, unit/depth-unresolved, validation-failed, proprietary, or review-blocked material requiring hold | `data/quarantine/soil/` |
 | Validated normalized Soil datasets ready for catalog/triplet promotion | `data/processed/soil/` |
 | Soil catalog records, STAC/DCAT/PROV/domain catalog entries, catalog matrices, or catalog indexes | `data/catalog/` |
@@ -239,14 +240,14 @@ All accepted material should preserve enough context to inspect source lineage, 
 
 ```mermaid
 flowchart LR
-    RAW[data/raw/soil] --> TRIAGE{Admission / triage}
+    RAW["RAW: source-first capture (placement HOLD)"] --> TRIAGE{Admission / triage}
     TRIAGE --> WORK[data/work/soil]
     TRIAGE --> QUAR[data/quarantine/soil]
     QUAR -->|resolved with review| WORK
     WORK --> VALIDATE[normalization / QA / validation]
     VALIDATE -->|fails rights, support, sensitivity, or validation| QUAR
     VALIDATE --> PROC[data/processed/soil]
-    PROC --> CAT[data/catalog/domain/soil]
+    PROC --> CAT["data/catalog/ (subtype-first projections)"]
     PROC --> TRIP[data/triplets/.../soil]
     CAT --> PUB[data/published/.../soil]
     TRIP --> PUB

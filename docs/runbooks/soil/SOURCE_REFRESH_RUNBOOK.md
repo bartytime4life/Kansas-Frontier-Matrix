@@ -2,18 +2,24 @@
 doc_id: kfm://doc/runbook/soil/source-refresh
 title: Soil Domain — Source Refresh Runbook
 type: standard
-version: v1.0-draft
+version: v1.0.1-draft
+prior_version: v1.0-draft
 status: draft
 owners: Soil domain steward + Sources steward + Docs steward
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Operational procedure for refreshing Soil sources through the governed lifecycle; not evidence, policy, release, or publication authority.
+truth_posture: CONFIRMED lifecycle doctrine, gates, and accepted DIR-SOURCE-001 source-first capture identity / HOLD exact physical source-first RAW placement / PROPOSED implementation paths, commands, and tooling / NEEDS VERIFICATION repo state
 related:
   - docs/runbooks/README.md
   - docs/domains/soil/README.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
+  - data/raw/soil/README.md
   - docs/standards/SMART_SYNC.md
   - control_plane/source_authority_register.yaml
   - schemas/contracts/v1/domains/soil/
@@ -23,6 +29,7 @@ notes:
   - PROPOSED canonical home; verify against mounted repo before merge.
   - All specific repo paths are PROPOSED until verified.
   - External soil-data facts (SSURGO/Mesonet/SMAP/SoilGrids etc.) are sourced from KFM project knowledge, which itself cites publisher documentation.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 # 🪨 Soil Domain — Source Refresh Runbook
@@ -37,16 +44,16 @@ notes:
 ![Lifecycle: RAW → PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-purple)
 ![Policy: deny-by-default on sensitive joins](https://img.shields.io/badge/policy-deny--by--default-critical)
 ![Validation: layered gates A–G](https://img.shields.io/badge/validation-gates%20A%E2%80%93G-green)
-![Last updated: 2026-05-12](https://img.shields.io/badge/updated-2026--05--12-lightgrey)
+![Last updated: 2026-10-11](https://img.shields.io/badge/updated-2026--10--11-lightgrey)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` — pending mounted-repo verification and steward review |
 | **Doc type** | KFM standard runbook (operational procedure) |
 | **Owners** | Soil domain steward · Sources steward · Docs steward |
-| **Last updated** | 2026-05-12 |
+| **Last updated** | 2026-10-11 |
 | **Lifecycle target** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Truth posture** | CONFIRMED doctrine / PROPOSED implementation paths / NEEDS VERIFICATION repo state |
+| **Truth posture** | CONFIRMED doctrine / HOLD physical source-first RAW placement / PROPOSED implementation paths / NEEDS VERIFICATION repo state |
 
 > [!IMPORTANT]
 > This runbook is **CONFIRMED doctrine** for the procedure shape and gates, and **PROPOSED implementation** for every specific file path, package name, validator filename, watcher filename, route, branch, and CI workflow it references. No path here may be cited as repo fact until verified against mounted-repo evidence.
@@ -92,7 +99,7 @@ notes:
 ### 2.1 In scope
 
 - Discovery of material change in admitted soil sources.
-- Conditional fetch and admission into `data/raw/soil/<source_id>/<run_id>/`.
+- Conditional fetch and admission into RAW under one registered, source-first `source_id` (`DIR-SOURCE-001`); the physical RAW home is **HOLD** pending an accepted placement decision, and the legacy `data/raw/soil/` lane is a compatibility/reference documentation lane that must not receive payloads.
 - Normalization into `data/processed/soil/<dataset_id>/<version>/`.
 - Catalog closure (STAC / DCAT / PROV) and EvidenceBundle production.
 - Tile/raster build (GeoParquet → PMTiles for vectors; COG for rasters).
@@ -184,7 +191,7 @@ KFM's refresh model is **detect → propose → review → release**, not **dete
 ```mermaid
 flowchart LR
   A["📡 Watcher<br/>(conditional GET<br/>ETag · Last-Modified · digest)"] -->|material change| B["🪪 Pre-RAW<br/>event_envelope<br/>prefilter_output<br/>event_run_receipt"]
-  B --> C["📥 RAW<br/>data/raw/soil/&lt;source_id&gt;/&lt;run_id&gt;"]
+  B --> C["📥 RAW<br/>source-first capture; placement HOLD"]
   C --> D["🔧 WORK / QUARANTINE<br/>normalize · validate · classify defects"]
   D --> E["✅ PROCESSED<br/>GeoParquet · COG · normalized tables"]
   E --> F["🗂 CATALOG / TRIPLET<br/>STAC · DCAT · PROV · EvidenceBundle"]
@@ -296,11 +303,14 @@ Expected outputs:
 
 ### 7.3 RAW admission (if material change)
 
+> [!WARNING]
+> The exact RAW target is **HOLD**: accepted `DIR-SOURCE-001` makes capture identity source-first (one registered `source_id` in `data/registry/sources/`, no duplicated RAW bytes across domains), but no physical source-first placement has been accepted. `<accepted-source-first-raw-home>` is a placeholder, not a real path. The legacy `data/raw/soil/` lane is compatibility/reference documentation and **must not** receive payloads. Do not run admission against a guessed path; stop until an accepted placement decision exists.
+
 ```bash
 kfm-tools ingest admit \
   --lane soil \
   --source <id> \
-  --target data/raw/soil/<source_id>/<run_id>/ \
+  --target <accepted-source-first-raw-home>/<source_id>/<run_id>/ \
   --immutable \
   --emit RunReceipt,SourceDescriptor-ref
 ```
@@ -310,11 +320,14 @@ kfm-tools ingest admit \
 
 ### 7.4 Normalization (RAW → WORK / QUARANTINE)
 
+> [!NOTE]
+> `--inputs` reads the source-first RAW capture admitted in §7.3; its exact path is **HOLD** (placeholder below). Never read payloads from the legacy `data/raw/soil/` compatibility/reference lane.
+
 ```bash
 kfm-tools transform run \
   --lane soil \
   --pipeline normalize \
-  --inputs data/raw/soil/<source_id>/<run_id>/ \
+  --inputs <accepted-source-first-raw-home>/<source_id>/<run_id>/ \
   --target data/work/soil/<run_id>/ \
   --emit TransformReceipt,ValidationReport,PolicyDecision
 ```
@@ -575,6 +588,7 @@ kfm-tools watcher run --lane soil --source ssurgo --dry-run --fixtures tests/fix
 | SSURGO provenance & consistency for county aggregates | NEEDS VERIFICATION | Document map-unit derivation; define defensible aggregation. |
 | MLT vs MVT/PMTiles parity for soil layers | NEEDS VERIFICATION | Treat MLT as pilot; do not change default tile format. |
 | 3D / Cesium overlays of soil profile data | DEFERRED | Conditional on 2D release maturity. |
+| Physical source-first RAW home for soil captures (`DIR-SOURCE-001`) and disposition of the legacy `data/raw/soil/` compatibility/reference lane | HOLD | Wait for an accepted placement decision; until then §7.3 / §7.4 targets stay placeholders and no payload is written to `data/raw/soil/`. |
 
 [⬆ Back to top](#-quick-jump)
 
@@ -668,13 +682,15 @@ KFM separates **stale** from **wrong**. Both have visible markers and traceable 
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — source descriptor fields & rights posture (PROPOSED)
 - `docs/standards/SMART_SYNC.md` — conditional GET, manifest checksum, debounce / coalesce (PROPOSED)
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant
-- `docs/doctrine/directory-rules.md` — placement authority
+- `docs/doctrine/directory-rules.md` — placement authority (§12.3 source identity: `DIR-SOURCE-001`…`004`)
+- `data/raw/README.md` — RAW root contract; source-first capture identity, physical placement HOLD
+- `data/raw/soil/README.md` — Soil RAW compatibility/reference lane; no payloads
 - `docs/doctrine/trust-membrane.md` — public surfaces consume governed APIs, not raw
-- `docs/architecture/governed-api.md` — release-only public surface (PROPOSED)
+- `docs/architecture/governed-api/README.md` — release-only public surface (PROPOSED)
 - `control_plane/source_authority_register.yaml` — admitted source ledger
 - `schemas/contracts/v1/domains/soil/` — soil object shape (PROPOSED home)
 - `policy/domains/soil/` — soil policy bundle (PROPOSED home)
 
 ---
 
-<sub>**Last updated:** 2026-05-12 · **Doc id:** `kfm://doc/runbook/soil/source-refresh` · **Status:** draft · **Owners:** Soil domain steward · Sources steward · Docs steward · [⬆ Back to top](#-quick-jump)</sub>
+<sub>**Last updated:** 2026-10-11 · **Doc id:** `kfm://doc/runbook/soil/source-refresh` · **Status:** draft · **Owners:** Soil domain steward · Sources steward · Docs steward · [⬆ Back to top](#-quick-jump)</sub>

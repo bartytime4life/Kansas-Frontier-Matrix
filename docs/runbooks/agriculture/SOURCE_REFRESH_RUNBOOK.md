@@ -1,651 +1,939 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/agriculture/source-refresh
-title: Agriculture Source Refresh Runbook
-type: standard
-version: v0.1
-status: draft
-owners: <Agriculture domain steward> + <Source/connector steward> + <Docs steward>
+title: Agriculture — Source Refresh Runbook
+type: runbook; operational-procedure; domain-lane; non-authoritative
+version: v0.2
+status: draft; repository-grounded; cdl-fixture-comparator-present; live-source-refresh-held; source-authority-register-empty; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Agriculture, source, connector, rights/sensitivity, evidence, policy, lifecycle, release, and independent-review stewards"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+updated: 2026-08-23
+policy_label: public-review; agriculture; source-refresh; fail-closed; no-live-activation; no-publication-authority
+current_path: docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: >
+  Provide the repository-grounded human procedure for evaluating Agriculture
+  source-change signals and, only after separate source admission and connector
+  commissioning, handing a refresh into the governed lifecycle without granting
+  source, evidence, policy, review, release, deployment, or publication authority.
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational documentation
+canonical_relationship: same-path update; no new or parallel authority
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 2c010b36609bf2ceb94e5a2d61fa62493e6f298f
+  prior_blob: f213ef17f4880b3850b48e62168c5c959351e055
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  cdl_watcher_blob: d308b8f292eac1a29b47ba69e0f588936f6a8775
+  agriculture_workflow_blob: d89d5db8861812f7b0a1024ae37a23ed5bd61354
+  inspected_surfaces:
+    - docs/runbooks/README.md
+    - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+    - docs/doctrine/directory-rules.md
+    - docs/domains/agriculture/DOMAIN.md
+    - docs/domains/agriculture/SOURCE_REGISTRY.md
+    - docs/sources/catalog/usda/usda-nass-cdl.md
+    - control_plane/source_authority_register.yaml
+    - contracts/source/source_descriptor.md
+    - contracts/source/ingest_receipt.md
+    - schemas/contracts/v1/source/source_descriptor.schema.json
+    - data/registry/sources/agriculture/README.md
+    - data/registry/sources/agriculture/nass_quickstats.yaml
+    - connectors/nass/README.md
+    - connectors/usda-nass/README.md
+    - tools/ingest/cdl_watch/README.md
+    - tools/ingest/cdl_watch/cdl_watch.py
+    - tests/ingest/cdl_watch/test_cdl_watch.py
+    - .github/workflows/domain-agriculture.yml
+    - docs/runbooks/agriculture/NO_NETWORK_TEST_RUNBOOK.md
+    - docs/runbooks/agriculture/ROLLBACK_RUNBOOK.md
 related:
-  - docs/domains/agriculture/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/runbooks/ui_VALIDATION.md
-  - docs/runbooks/ui_ROLLBACK.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - control_plane/source_authority_register.yaml
-tags: [kfm, runbook, agriculture, sources, lifecycle, governance]
+  - ../README.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../domains/agriculture/DOMAIN.md
+  - ../../domains/agriculture/DATA_LIFECYCLE.md
+  - ../../domains/agriculture/SOURCES.md
+  - ../../domains/agriculture/SENSITIVITY.md
+  - ../../sources/catalog/usda/usda-nass-cdl.md
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../contracts/source/source_descriptor.md
+  - ../../../contracts/source/ingest_receipt.md
+  - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../data/registry/sources/agriculture/README.md
+  - ../../../connectors/nass/README.md
+  - ../../../tools/ingest/cdl_watch/README.md
+  - ../../../tests/ingest/cdl_watch/test_cdl_watch.py
+  - ../../../.github/workflows/domain-agriculture.yml
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+tags: [kfm, agriculture, runbook, source-refresh, source-admission, watcher, cdl, lifecycle, governance, fail-closed]
 notes:
-  - "Path PROPOSED: docs/runbooks/ relative to repo root; subdomain segment NEEDS VERIFICATION against current convention (visible neighbours use flat names such as ui_LOCAL_DEV.md). See §10."
-  - "All cadence numbers PROPOSED placeholders; per-source values live in control_plane/source_authority_register.yaml once verified."
+  - "v0.2 replaces no-mounted-repository assumptions, speculative live-refresh steps, illustrative receipt shapes, and unverified path trees with current repository evidence and a bounded executable procedure."
+  - "The central source-authority register is PROPOSED, projection-only, implementation_status ABSENT, and empty; it cannot currently authorize or select a live Agriculture refresh."
+  - "The synthetic CDL sidecar comparator is the only confirmed source-refresh-adjacent executable slice inspected for Agriculture; it performs no network access and emits review signals, not receipts, evidence, lifecycle transitions, or publication."
+  - "This document changes no source descriptor, registry entry, connector, fixture, test, contract, schema, policy, validator, workflow, receipt, proof, lifecycle object, release record, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="agriculture-source-refresh-runbook"></a>
 
 # Agriculture Source Refresh Runbook
 
-> Operational procedure for refreshing Agriculture-domain external sources through the **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED** lifecycle, fail-closed, with public-safe aggregation by default.
+> **Evaluate Agriculture source-change signals through repository-grounded, fail-closed procedures; do not treat a watcher report, source placeholder, successful test, or refreshed upstream file as admission, evidence, promotion, release, or publication.**
 
-[![Status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![Type: runbook](https://img.shields.io/badge/type-runbook-blue)](#)
-[![Domain: agriculture](https://img.shields.io/badge/domain-agriculture-green)](#)
-[![Policy: public-safe aggregate](https://img.shields.io/badge/policy-public--safe%20aggregate-yellow)](#)
-[![Lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-lightgrey)](#)
-[![Truth: doctrine CONFIRMED · impl PROPOSED](https://img.shields.io/badge/truth-doctrine%20CONFIRMED%20%C2%B7%20impl%20PROPOSED-informational)](#)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-state)
+[![CDL fixture comparator: present](https://img.shields.io/badge/CDL%20fixture%20comparator-present-1f883d?style=flat-square)](#current-repository-state)
+[![Live Agriculture refresh: HOLD](https://img.shields.io/badge/live%20Agriculture%20refresh-HOLD-d4a72c?style=flat-square)](#current-repository-state)
+[![Source authority register: empty](https://img.shields.io/badge/source%20authority%20register-empty-critical?style=flat-square)](#current-repository-state)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-non-effects)
 
-| Field | Value |
-|---|---|
-| **Status** | `draft` — first issue; gates not yet wired in mounted repo (NEEDS VERIFICATION) |
-| **Owners** | Agriculture domain steward · Source/connector steward · Docs steward *(placeholder; confirm in CODEOWNERS)* |
-| **Last updated** | 2026-05-13 |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Truth posture** | Cite-or-abstain; promotion is a governed state transition, not a file move |
+> [!IMPORTANT]
+> **Current implementation is bounded.** The repository contains a deterministic, fixture-only USDA NASS Cropland Data Layer sidecar comparator and an all-pull-request Agriculture workflow that runs its no-network proof. The central source-authority register is projection-only and has `entries: []`; the inspected NASS connector and Agriculture registry records remain conflicted or placeholder-only. A live Agriculture source refresh is therefore `HOLD`, not an executable current procedure.
 
----
+> [!CAUTION]
+> `NO_MATERIAL_CHANGE` and `PROPOSED_WORK_RECORD` are watcher outcomes. Neither is an `IngestReceipt`, `EvidenceBundle`, `PolicyDecision`, promotion decision, release approval, source activation, deployment, or publication.
 
-## 📑 Contents
+> [!WARNING]
+> Exact field, farm, operator, owner, parcel, well, facility, storage, livestock, chemical, insurance, compliance, or other private or harmful-precision detail fails closed by default. Do not use real sensitive records to make a refresh test convenient.
 
-1. [Purpose & Scope](#1-purpose--scope)
-2. [Repo Fit](#2-repo-fit)
-3. [Inputs](#3-inputs)
-4. [Exclusions](#4-exclusions)
-5. [Source Families in Scope](#5-source-families-in-scope)
-6. [Lifecycle Flow](#6-lifecycle-flow)
-7. [Refresh Cadence & Triggers](#7-refresh-cadence--triggers)
-8. [Preconditions](#8-preconditions)
-9. [Procedure](#9-procedure)
-10. [Fail-Closed Conditions](#10-fail-closed-conditions)
-11. [Receipts Emitted](#11-receipts-emitted)
-12. [Validation](#12-validation)
-13. [Rollback](#13-rollback)
-14. [Stale-State Handling](#14-stale-state-handling)
-15. [Task Checklist](#15-task-checklist)
-16. [FAQ](#16-faq)
-17. [Related Docs](#17-related-docs)
-18. [Appendix](#18-appendix)
+**Quick navigation:** [Purpose](#1-purpose--scope) · [Placement](#2-repo-fit) · [State](#current-repository-state) · [Authority](#authority-and-non-effects) · [Inputs](#3-inputs) · [Exclusions](#4-exclusions) · [Sources](#5-source-families-in-scope) · [Flow](#6-lifecycle-flow) · [Triggers](#7-refresh-cadence--triggers) · [Preconditions](#8-preconditions) · [Procedure](#9-procedure) · [Failures](#10-fail-closed-conditions) · [Records](#11-receipts-emitted) · [Validation](#12-validation) · [Rollback](#13-rollback) · [Stale state](#14-stale-state-handling) · [Checklist](#15-task-checklist) · [FAQ](#16-faq) · [Related](#17-related-docs) · [Evidence](#18-appendix)
 
 ---
+
+<a id="1-purpose--scope"></a>
 
 ## 1. Purpose & Scope
 
-**CONFIRMED doctrine.** Agriculture represents crops, fields, soils, irrigation, yields, conservation practices, and the agricultural economy in **public-safe aggregate or permissioned form**, and **must not** publish private farm operations, field-level sensitive details, or source-rights-limited data without review. This runbook is the operational expression of those rules at the *source refresh* boundary — the recurring step that re-admits external evidence, re-validates it, and either holds or promotes the resulting derivatives.
+This runbook defines the **human operating procedure** for Agriculture source-refresh work at the maturity currently proved by the repository.
 
-The runbook covers a single, recurring transaction: **bringing one or more Agriculture source families forward by one cadence step**, with all governance artifacts that a release-quality refresh requires. It is the same loop whether triggered by schedule, watcher, manual operator request, or rollback-and-replay.
+It answers five bounded questions:
 
-> [!IMPORTANT]
-> This runbook does **not** decide whether a source *should* be admitted. Admission is decided by `policy/`, `contracts/source/`, and the source authority register. This runbook describes **how** an already-admitted source is refreshed safely.
+1. Is the request a source-discovery, source-admission, source-change-detection, source-ingest, lifecycle-promotion, or release task?
+2. Which Agriculture source-refresh-adjacent behavior is currently executable?
+3. Which exact conditions keep live source access on `HOLD`?
+4. How should a CDL watcher result be validated and handed off without upgrading its authority?
+5. Which separate objects, reviewers, and systems would be required before a live refresh could enter the governed lifecycle?
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+The current executable path is intentionally narrow:
+
+```text
+synthetic prior/current CDL sidecars
+  -> no-network validation
+  -> deterministic comparator
+  -> finite review signal
+  -> human review or bounded follow-up
+  -/> live source access, RAW admission, evidence, policy, promotion, release, or publication
+```
+
+The future governed lifecycle remains:
+
+```text
+SOURCE ADMISSION
+  -> RAW
+  -> WORK / QUARANTINE
+  -> PROCESSED
+  -> CATALOG / TRIPLETS / PROOFS
+  -> RELEASE DECISION
+  -> PUBLISHED public-safe carrier
+  -> CORRECTION / WITHDRAWAL / ROLLBACK
+```
+
+That future path is doctrine and design pressure. It is not established as an operational Agriculture source-refresh path by the evidence inspected for this revision.
+
+### In scope
+
+- Running or reviewing the bounded CDL fixture comparator.
+- Interpreting its finite outcomes without treating them as source or release authority.
+- Classifying source-refresh requests before any live network access.
+- Recording current blockers for a live source profile.
+- Preserving Agriculture source-role, rights, sensitivity, time, geography, evidence, lifecycle, correction, and rollback boundaries.
+- Handing eligible follow-up work to the owning source, connector, registry, pipeline, policy, evidence, or release authority.
+
+### Non-goals
+
+- Selecting, admitting, activating, credentialing, polling, or scheduling a live source.
+- Resolving the NASS connector-path conflict inside this runbook.
+- Defining a new `SourceDescriptor`, `IngestReceipt`, `RunReceipt`, watcher-report, policy, evidence, release, correction, or rollback schema.
+- Fetching live CDL, NASS QuickStats, Crop Progress, SSURGO, Kansas Mesonet, SCAN, USCRN, SMAP, HLS, or another source.
+- Writing source bytes to lifecycle roots or altering a source registry record.
+- Treating documentation, fixture tests, generated authoring receipts, or workflow presence as scientific validation or public fitness.
+- Promoting, releasing, deploying, publishing, merging, approving, or changing repository settings.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-repo-fit"></a>
 
 ## 2. Repo Fit
 
-| Aspect | Value | Truth label |
-|---|---|---|
-| **This file** | `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` | PROPOSED — see §10 placement note |
-| **Responsibility root** | `docs/` (human-facing control plane) | CONFIRMED rule |
-| **Owning domain segment** | `agriculture` | CONFIRMED domain |
-| **Upstream doctrine** | `docs/doctrine/lifecycle-law.md` · `docs/doctrine/truth-posture.md` · `docs/doctrine/trust-membrane.md` · `docs/doctrine/directory-rules.md` | CONFIRMED rule / PROPOSED presence |
-| **Upstream contracts** | `contracts/source/` · `contracts/evidence/` · `contracts/runtime/` · `contracts/release/` · `contracts/domains/agriculture/` | PROPOSED |
-| **Upstream schemas** | `schemas/contracts/v1/source/` · `schemas/contracts/v1/receipts/` · `schemas/contracts/v1/release/` · `schemas/contracts/v1/domains/agriculture/` | PROPOSED |
-| **Upstream policy** | `policy/domains/agriculture/` · `policy/sensitivity/` · `policy/publication/` | PROPOSED |
-| **Upstream pipelines** | `pipelines/domains/agriculture/` · `pipeline_specs/agriculture/` · `connectors/<source>/` | PROPOSED |
-| **Source register** | `control_plane/source_authority_register.yaml` · `data/registry/sources/agriculture/` | PROPOSED |
-| **Downstream lifecycle data** | `data/raw/agriculture/<source_id>/<run_id>/` → `data/work/agriculture/<run_id>/` → `data/quarantine/agriculture/<reason>/<run_id>/` → `data/processed/agriculture/<dataset_id>/<version>/` → `data/catalog/domain/agriculture/` → `data/published/layers/agriculture/` | PROPOSED — paths match Directory Rules §9.1 |
-| **Downstream proofs & receipts** | `data/receipts/ingest/` · `data/receipts/validation/` · `data/receipts/ai/` · `data/receipts/release/` · `data/proofs/evidence_bundle/` · `data/proofs/validation_report/` | PROPOSED |
-| **Release artifacts** | `release/candidates/agriculture/` · `release/manifests/` · `data/rollback/agriculture/<release_id>/` | PROPOSED |
-| **Sibling runbooks** | `docs/runbooks/ui_LOCAL_DEV.md` · `ui_VALIDATION.md` · `ui_ROLLBACK.md` · `governed_ai_*` | PROPOSED — names visible in domain dossiers; presence NEEDS VERIFICATION |
+**Placement outcome: `PLACE` — CONFIRMED for this same-path update.**
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). The parent [`docs/runbooks/` index](../README.md) identifies this subtree as the operational-procedure lane under the human-readable `docs/` responsibility root. This file remains at its existing Agriculture-domain path.
+
+| Property | Current result |
+|---|---|
+| Path | `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` |
+| Owning root | `docs/` — human-facing operational procedure |
+| Domain segment | Agriculture |
+| Path state | Existing tracked path; same-path modernization |
+| Structural effect | None; no create, move, rename, split, mirror, or delete |
+| Review route | `@bartytime4life` through the repository default CODEOWNERS route |
+| Accountable source/release stewardship | `NEEDS VERIFICATION` |
+| Source activation effect | None |
+| Release/publication effect | None |
+
+This file may point to source descriptors, registry records, connectors, watcher tools, tests, workflows, receipts, proofs, policy, release objects, and correction paths. It cannot replace or authorize any of them.
+
+<a id="current-repository-state"></a>
+
+### 2.1 Current repository state
+
+The following observations are pinned to `main@2c010b36609bf2ceb94e5a2d61fa62493e6f298f`.
+
+| Surface | CONFIRMED current evidence | Bounded conclusion |
+|---|---|---|
+| Central source-authority register | `control_plane/source_authority_register.yaml` is `PROPOSED`, `projection_only`, `implementation_status: ABSENT`, `completeness: empty`, with `entries: []` | It cannot currently select, admit, activate, or authorize a live Agriculture source refresh |
+| `SourceDescriptor` contract | Lowercase contract and paired schema exist; both remain draft / `PROPOSED`, and the contract records unresolved singular-versus-plural schema-path lineage | Meaning and shape are documented, but canonical migration and live registry use remain unresolved |
+| Agriculture source-registry lane | `data/registry/sources/agriculture/README.md` exists with multiple small source-named YAML files | The lane exists, but file presence is not admission or activation |
+| NASS QuickStats registry record | `nass_quickstats.yaml` contains only `status: PROPOSED`, a path, one source-doc pointer, and a placeholder note | Not a complete `SourceDescriptor`; not refresh authority |
+| NASS connector placement | `connectors/nass/`, `connectors/usda-nass/`, and `connectors/usda/nass/` coexist in repository documentation | Placement is `CONFLICTED`; do not choose a live implementation path here |
+| NASS connector implementation | Inspected coordination README reports placeholder records, placeholder pipeline spec, and documentation-only tests; no executable live connector established | Live NASS refresh remains `HOLD` |
+| CDL source product page | Repository page records a bounded synthetic comparator and keeps live access, cadence, rights, descriptor, thresholds, receipts, and publication proposed or unverified | Product documentation does not activate CDL |
+| CDL watcher helper | `tools/ingest/cdl_watch/cdl_watch.py` implements the no-network `kfm-cdl-watch-fixture-v1` comparator | One bounded source-change-detection proof is executable |
+| CDL watcher tests | `tests/ingest/cdl_watch/test_cdl_watch.py` and synthetic sidecar fixtures are present | Fixture behavior is testable; live source behavior is not proved |
+| Agriculture workflow | `.github/workflows/domain-agriculture.yml` runs the CDL watcher proof with `KFM_NO_NETWORK=1` and `contents: read` | The workflow proves the bounded helper only and explicitly holds broader validation, proof, and release work |
+| `IngestReceipt` family | Contract, paired schema, no-network validator, fixtures, and connector-gate prerequisite wiring exist | Candidate shape and validation exist; no connector-emitted Agriculture receipt instance was verified |
+| Agriculture rollback | Shared `RollbackCard` candidate validation exists; the Agriculture drill remains documentation-only and held | Production recovery readiness is not established |
+| Deployment and public operation | No deployment, source activation, public release, or operational cadence is proved by the inspected surfaces | `UNKNOWN` / `NEEDS VERIFICATION` |
+
+### What changed from v0.1
+
+The prior runbook correctly preserved the lifecycle, watcher non-publisher, public-safe aggregation, source-role, evidence, correction, and rollback rules. It also treated the connected repository as unavailable and filled gaps with speculative live-refresh steps, proposed path trees, cadence examples, and an illustrative `RunReceipt` shape.
+
+This revision therefore:
+
+- preserves the strong trust and lifecycle boundaries;
+- confirms the existing path instead of calling it proposed;
+- replaces no-mounted-repository language with current pinned evidence;
+- narrows the executable procedure to the implemented CDL fixture comparator;
+- makes the empty central authority register and NASS connector conflict explicit blockers;
+- points to current contracts and schemas instead of restating competing machine shapes;
+- keeps future live refresh as a graduated, separately commissioned capability;
+- separates source detection, admission, ingest, validation, evidence, promotion, release, and publication.
+
+<a id="authority-and-non-effects"></a>
+
+### 2.2 Authority and non-effects
+
+| Concern | Owning authority | This runbook may do | This runbook must not do |
+|---|---|---|---|
+| Source identity, role, rights, cadence, access, citation | `SourceDescriptor` and governed source registry | Require and inspect references | Invent, approve, or activate a source |
+| Connector source access | `connectors/` plus accepted placement and activation | Point to a reviewed entry point | Select a conflicted connector home or use credentials |
+| Watcher comparison | `tools/ingest/cdl_watch/` for the bounded CDL profile | Explain exact fixture-only execution and outcomes | Treat a report as ingest, evidence, or release |
+| Machine shape | `schemas/` | Link the current schema | Redefine fields or enums in Markdown |
+| Object meaning | `contracts/` | Link semantic contracts | Create authority by repeating contract prose |
+| Allow, deny, hold, restrict, redact | `policy/` plus required review | Explain fail-closed response | Substitute a checklist for a policy decision |
+| Source capture and lifecycle state | Governed connector, pipeline, and `data/` lanes | Describe the required handoff | Write or promote lifecycle state by documentation |
+| Evidence and proof | EvidenceRef, EvidenceBundle, receipts, proofs, and validators | Require closure before consequential claims | Manufacture evidence from a watcher report |
+| Promotion, release, correction, rollback | `release/` and linked decisions/records | Route to dedicated procedures | Approve, execute, or imply publication |
+| This document | `docs/` operational guidance | Record current procedure and limits | Act as source, policy, release, or publication authority |
+
+[Back to top](#top)
 
 ---
+
+<a id="3-inputs"></a>
 
 ## 3. Inputs
 
-A source refresh consumes these inputs. Anything missing from this list is a precondition failure (see §8).
+### 3.1 Current bounded CDL comparator inputs
 
-- **Source candidate set.** One or more `source_id` values from `control_plane/source_authority_register.yaml`, scoped to the Agriculture lane.
-- **SourceDescriptor (current).** For each source: identity, role, authority, rights, sensitivity, cadence, last admission hash, citation.
-- **Conditional-fetch validators (where available).** Stored ETag, Last-Modified, or manifest SHA-256 from the prior admission.
-- **Geography version.** The current `GeographyVersion` (county, HUC, grid) used by aggregation receipts.
-- **Policy bundle (current).** Sensitivity, rights, aggregation-threshold, public-safe-publication rules.
-- **Schema version (current).** The active version of every domain object schema the refresh produces.
-- **Fixture set.** Valid and invalid no-network fixtures for the source family. CI must pass these before any live fetch.
-- **Operator identity.** The actor running the refresh, recorded in every emitted RunReceipt.
+| Input | Current requirement |
+|---|---|
+| Repository revision | Exact commit or feature-branch head under review |
+| Working directory | Repository root |
+| Python | `3.11`, matching the inspected Agriculture workflow |
+| Network posture | `KFM_NO_NETWORK=1`; repository-code execution receives no live source access |
+| Bytecode posture | `PYTHONDONTWRITEBYTECODE=1` for the workflow-equivalent proof |
+| Prior/current sidecars | Local synthetic JSON fixtures under `tests/ingest/cdl_watch/fixtures/` |
+| Source reference | Fixed fixture reference `fixture://source/usda-nass-cdl` |
+| Geography sentinel | Fixed non-real county FIPS `99999` |
+| Materiality inputs | Caller-supplied integer thresholds that agree across the compared pair |
+| Credentials | None; do not expose ambient provider credentials to the helper |
+| Output | Standard output or an explicit create-only path outside repository roots |
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+The comparator validates a deliberately narrow fixture profile. It does not accept arbitrary source records, real county claims, live URLs, or production payloads.
+
+### 3.2 Inputs required before a future live refresh
+
+A live Agriculture refresh must remain `HOLD` until all of these can be resolved from current owning evidence:
+
+- an admitted, non-placeholder `SourceDescriptor` with stable identity and explicit source role;
+- an active entry in the governed source-authority or source-registry surface;
+- verified rights, attribution, redistribution, sensitivity, access, cadence, and staleness posture;
+- a resolved canonical connector path and substantive connector implementation;
+- a bounded endpoint profile and credential strategy outside the repository;
+- deterministic positive and negative fixtures plus no-network tests;
+- explicit RAW-versus-QUARANTINE output handling;
+- validated `IngestReceipt` emission and persistence;
+- source-specific schema, temporal, geography, integrity, and source-role checks;
+- downstream policy, evidence, catalog, review, release, correction, and rollback closure appropriate to the intended use;
+- named accountable stewards and separation of duties where policy-significant.
+
+No Markdown table can satisfy these inputs by assertion.
+
+[Back to top](#top)
 
 ---
+
+<a id="4-exclusions"></a>
 
 ## 4. Exclusions
 
-> [!WARNING]
-> A refresh that produces **any** of the artifacts below **MUST fail closed** rather than publish.
+The following are stop conditions for the current procedure.
 
-- **Field-level or operator-identifying outputs** for any public surface. Public products aggregate to county / HUC / grid thresholds; field polygons may be sensitive and stay restricted by default.
-- **Private farm operations data**, proprietary yields, pesticide records, or owner identities, regardless of source.
-- **Source-rights-limited data** for which redistribution class, license terms, or attribution requirements are unknown or unresolved.
-- **Emergency-warning or life-safety claims.** Agriculture is not an alert authority; drought, frost, smoke, or pest content stays contextual with redirection to official sources.
-- **Automated publish to public surfaces** without governed promotion. No connector, watcher, or refresh job has a direct write path to `data/published/` or `release/manifests/`. Publication is a separate, signed step.
-- **Inferences presented as observations.** Modeled, derived, candidate, or AI-summarized values must carry the matching source-role and receipt (`ModelRunReceipt`, `AIReceipt`) and never be relabeled as observed evidence.
+| Forbidden input or action | Why it fails | Required response |
+|---|---|---|
+| Live HTTP, DNS, socket, STAC, API, or source requests during the bounded comparator proof | Exceeds the fixture-only implementation and breaks deterministic isolation | Stop; classify as a separately commissioned live-source profile |
+| Real farm, operator, owner, parcel, field, well, facility, storage, livestock, chemical, insurance, or compliance identifiers | Creates privacy, rights, economic, safety, or harmful-precision risk | Remove; replace with synthetic public-safe fixtures |
+| Exact sensitive geometry | Client styling is not a security boundary | Generalize, redact, or synthesize before fixture admission |
+| Credentials, tokens, cookies, signed URLs, or private endpoints | Secrets and restricted access do not belong in the repository or runbook output | Stop; use an approved external secret and access control plane only after authorization |
+| Source named only by a placeholder YAML file | Placeholder presence is not admission | Return `HOLD` and require a complete reviewed descriptor |
+| Connector selected from the current NASS path conflict | Would create parallel or accidental authority | Return `HOLD` pending an accepted placement/migration decision |
+| Aggregate, classified, modeled, or inferred support relabeled as direct field observation | Source-role collapse | Fail closed; preserve the actual role and support scale |
+| Watcher output written into `data/raw/`, `data/receipts/`, `data/proofs/`, `data/catalog/`, `data/published/`, or `release/` | The bounded helper owns none of those states | Stop; the helper intentionally denies repository-root output |
+| Automatic lifecycle promotion or public release | Detection is not admission or publication | Stop and route through separately governed lifecycle/release machinery |
+| Deleting or rewriting prior reports to hide a failed comparison | Breaks auditability and correction lineage | Preserve the result and issue a transparent correction or superseding run |
+| Emergency-warning or life-safety presentation | KFM is not an alert authority | Deny the use; redirect to the appropriate official source |
 
-Where the refresh genuinely needs to handle excluded categories (e.g. a steward-only restricted view), it is routed through the **restricted lane**, never the public lane.
-
-[↑ Back to top](#agriculture-source-refresh-runbook)
+[Back to top](#top)
 
 ---
+
+<a id="5-source-families-in-scope"></a>
 
 ## 5. Source Families in Scope
 
-**CONFIRMED source families** for Agriculture (from domain doctrine). **PROPOSED** implementation: connectors, cadence numbers, and rights resolution NEEDS VERIFICATION per source.
+The Agriculture corpus and repository documentation name several source families. The table below records their **current repository posture**, not an operational activation list.
 
-| Source family | Typical role | Rights / sensitivity posture | Cadence character | Status |
-|---|---|---|---|---|
-| USDA NASS CDL | authority / observation | public terms; verify per release | annual (crop-year) | CONFIRMED family · PROPOSED connector |
-| USDA NASS QuickStats | authority / observation | public terms; verify rate limits and attribution | scheduled releases | CONFIRMED family · PROPOSED connector |
-| NRCS conservation practice data | authority / observation | rights NEEDS VERIFICATION; can carry sensitive joins | source-vintage | CONFIRMED family · PROPOSED connector |
-| SSURGO / Soil Data Access | authority / context | public terms; vintage-sensitive | versioned, infrequent | CONFIRMED family · PROPOSED connector |
-| gSSURGO (gridded) | authority / context | public terms; vintage-sensitive | versioned | CONFIRMED family · PROPOSED connector |
-| Kansas Mesonet (soil moisture / weather) | observation | data-usage policy posted; written consent may be required for ingest | hourly / sub-hourly | CONFIRMED family · PROPOSED connector |
-| NRCS SCAN | observation | rights NEEDS VERIFICATION | hourly | CONFIRMED family · PROPOSED connector |
-| NOAA USCRN | observation | public terms; verify | hourly | CONFIRMED family · PROPOSED connector |
-| NASA SMAP (e.g. SPL4SMGP) | observation / model | public terms; cite product version | ~3-hourly granules | CONFIRMED family · PROPOSED connector |
-| NASA HLS / HLS-VI | observation | public terms; cite product version | revisit-cadence specific | CONFIRMED family · PROPOSED connector |
-| Crop insurance / market / economy sources | context / observation | rights vary; treat as restricted until cleared | varies | CONFIRMED family · PROPOSED connector |
-| Local extension sources | context | rights vary; steward review | varies | CONFIRMED family · PROPOSED connector |
+| Source family | Support role that must remain visible | Current repository posture | Refresh disposition |
+|---|---|---|---|
+| USDA NASS Cropland Data Layer | Annual classified/model-derived land-cover support; never direct proof of an operator's field activity | Product page plus implemented synthetic sidecar comparator; live descriptor, rights, endpoint, cadence, canonical thresholds, ingest receipts, and release remain unproved | Fixture comparator only; live refresh `HOLD` |
+| USDA NASS QuickStats / Crop Progress | Aggregate statistical or administrative support; never parcel, field, or operator truth | Placeholder registry records, placeholder pipeline specification, documentation-only tests, and conflicted connector placement | `HOLD` |
+| SSURGO / Soil Data Access | Soil survey support owned by the Soil/source lane; Agriculture consumes it through explicit cross-domain references | Agriculture documentation names it; no Agriculture live refresh profile was verified | Route to owning Soil/source authority; Agriculture refresh `HOLD` |
+| gSSURGO | Gridded derivative/aggregate soil support; must not masquerade as direct observation | Small Agriculture registry placeholder observed; no active descriptor or connector proved | `HOLD` |
+| Kansas Mesonet / SCAN / USCRN | Station-supported observations at declared locations, depths, variables, and times; aggregation remains derived | Documentation and small registry placeholders exist; no live Agriculture source activation proved | `HOLD` |
+| NASA SMAP / HLS | Retrieval, classification, index, or model-derived remote-sensing support with run/version/uncertainty requirements | Registry placeholders and bounded downstream validator/computation slices exist; those slices do not prove source refresh | `HOLD` for source refresh |
+| Conservation-practice, crop-insurance, market, economy, and extension sources | Administrative, aggregate, contextual, or restricted support depending on the specific source | Candidate families in documentation; no complete admitted source profile verified | `HOLD` until source-specific review |
 
-> [!NOTE]
-> The authoritative, machine-readable form of this table lives in `control_plane/source_authority_register.yaml`. This Markdown table is a **navigational** view; if the two ever conflict, the register wins and a `docs/registers/DRIFT_REGISTER.md` entry should be opened.
+> [!IMPORTANT]
+> A downstream NDVI, readiness, materiality, or connectivity validator does not activate HLS or another source. A registry filename does not admit a source. A product page does not prove rights or current endpoint behavior.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+[Back to top](#top)
 
 ---
+
+<a id="6-lifecycle-flow"></a>
 
 ## 6. Lifecycle Flow
 
-The refresh runs the same lifecycle every cycle. Each gate has required artifacts; missing artifacts **MUST** stall the cycle at the prior phase rather than silently promote.
+### 6.1 Current bounded flow
 
 ```mermaid
 flowchart LR
-    A([Trigger<br/>schedule · watcher · operator]) --> B{Conditional fetch<br/>HEAD / ETag / Last-Modified}
-    B -- 304 / no change --> Z[Emit no-change RunReceipt<br/>exit]
-    B -- 200 / new bytes --> C[RAW<br/>data/raw/agriculture/.../]
-    C --> D[WORK<br/>normalize schema · geometry · time · identity]
-    D -->|rights · sensitivity · validation · source-role · evidence defect| Q[QUARANTINE<br/>with reason + receipt]
-    D --> E[PROCESSED<br/>validated normalized objects<br/>EvidenceRef · ValidationReport · digest closure]
-    E --> F[CATALOG / TRIPLET<br/>EvidenceBundle · CatalogMatrix · graph projection]
-    F --> G{Public lane?}
-    G -- "Yes (county/HUC aggregate)" --> H[AggregationReceipt + RedactionReceipt as needed]
-    G -- "No (steward-only / restricted)" --> I[Restricted surface only]
-    H --> J[CATALOG release candidate]
-    I --> J
-    J --> K{All promotion gates pass?}
-    K -- No --> L[HOLD<br/>no public surface change]
-    K -- Yes --> M[PUBLISHED<br/>ReleaseManifest · rollback target · correction path]
-    M --> N[Emit release-cycle RunReceipt]
+    A["Synthetic prior sidecar"] --> C["CDL fixture comparator"]
+    B["Synthetic current sidecar"] --> C
+    C --> D{"Finite outcome"}
+    D -->|NO_MATERIAL_CHANGE| E["Review record / no follow-up"]
+    D -->|PROPOSED_WORK_RECORD| F["Bounded human follow-up"]
+    D -->|STALE / DRIFT / ABSTAIN / ERROR| G["HOLD and diagnose"]
+    E -. no authority .-> H["No source, lifecycle, or public mutation"]
+    F -. no authority .-> H
+    G -. no authority .-> H
 ```
 
-**Doctrine source:** lifecycle invariant and gate requirements are CONFIRMED in KFM doctrine; **PROPOSED** implementation per Agriculture lane. Specific gate orchestration and CI wiring NEEDS VERIFICATION against a mounted repo.
+This flow is `CONFIRMED` for the inspected fixture profile. The comparator performs no source fetch, source admission, lifecycle write, receipt persistence, policy evaluation, evidence assembly, promotion, release, deployment, or publication.
 
-### 6.1 Gate matrix
+### 6.2 Future governed live-refresh flow
 
-| Gate (transition) | Required artifacts | Fail-closed outcome |
-|---|---|---|
-| Admission (— → RAW) | `SourceDescriptor`; payload hash or reference | Candidate logged; not admitted |
-| Normalization (RAW → WORK / QUARANTINE) | `TransformReceipt`; working `ValidationReport`; `PolicyDecision`; QUARANTINE reason for failures | Quarantine with reason; never silently promotes |
-| Validation (WORK → PROCESSED) | `ValidationReport` pass; `RedactionReceipt` if sensitivity applies; `AggregationReceipt` if applies | Stays in WORK; structured FAIL |
-| Catalog closure (PROCESSED → CATALOG / TRIPLET) | `CatalogMatrix` entry; `EvidenceBundle`; graph/triplet projections where applicable | HOLD at PROCESSED; structured FAIL; no public edge |
-| Release (CATALOG / TRIPLET → PUBLISHED) | `ReleaseManifest`; rollback target; correction path; `ReviewRecord` if required | HOLD at CATALOG; no public surface change |
-| Correction (PUBLISHED → PUBLISHED′) | `CorrectionNotice`; superseding release; derivative invalidation record | Withdraw or restrict prior surface; never silently mutate |
+```mermaid
+flowchart LR
+    A["Admitted SourceDescriptor"] --> B["Reviewed connector profile"]
+    B --> C{"Capture result"}
+    C -->|safe capture| D["RAW + validated IngestReceipt"]
+    C -->|unknown / restricted / invalid| Q["QUARANTINE + reason"]
+    D --> E["WORK validation and transforms"]
+    E --> F["PROCESSED"]
+    F --> G["CATALOG / TRIPLETS / PROOFS"]
+    G --> H{"Policy + review + release decision"}
+    H -->|approved| I["PUBLISHED public-safe carrier"]
+    H -->|not closed| J["HOLD / DENY / ABSTAIN"]
+    I --> K["Correction / withdrawal / rollback path"]
+```
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+This future flow is `PROPOSED` for Agriculture source refresh and remains on `HOLD`. Each box belongs to a separate authority surface; no single connector, watcher, workflow, or document owns the whole path.
+
+### 6.3 Gate ownership and current maturity
+
+| Boundary | Owning surface | Current Agriculture evidence | Current result |
+|---|---|---|---|
+| Candidate source -> admitted source | SourceDescriptor, source registry, rights/sensitivity review | Central register empty; Agriculture records include placeholders | `HOLD` |
+| Admitted source -> RAW / QUARANTINE | Resolved connector and source-ingest profile | NASS placement conflicted; no live connector established | `HOLD` |
+| RAW / QUARANTINE -> WORK / PROCESSED | Pipeline, contracts, schemas, validators, policy | Broader Agriculture validation explicitly held | `HOLD` |
+| PROCESSED -> CATALOG / TRIPLETS / PROOFS | Catalog, evidence, receipt, and proof authorities | No end-to-end Agriculture source-refresh closure verified | `HOLD` |
+| Catalog candidate -> release | Review, policy, release, correction, rollback | Agriculture rollback drill held; production release unproved | `HOLD` |
+| Source sidecar -> review signal | CDL fixture comparator | Bounded implementation and tests present | `CONFIRMED` |
+
+[Back to top](#top)
 
 ---
+
+<a id="7-refresh-cadence--triggers"></a>
 
 ## 7. Refresh Cadence & Triggers
 
-Cadence is **per-source**, declared in the `SourceDescriptor.cadence` field, and enforced by the source authority register. The runbook itself does not pick the cadence — it executes against the declared cadence.
+### Current cadence
 
-| Trigger type | Description | Notes |
+No operationally authoritative Agriculture source-refresh cadence can be derived from the current central register because it is empty. The bounded CDL comparator is invoked manually or by repository CI against local fixtures; that is a test/review cadence, not an upstream source polling schedule.
+
+### Future trigger classes
+
+A commissioned live profile may support a publisher release, scheduled check, read-only watcher signal, or authorized operator replay only after the owning `SourceDescriptor` and connector profile define the trigger and constraints.
+
+| Trigger | Permitted current action | Prohibited inference |
 |---|---|---|
-| **Scheduled** | Cron-style cadence from `SourceDescriptor` (`PROPOSED`: hourly for station data; daily for satellite; per-release for SSURGO / CDL / QuickStats) | Concrete numbers belong in the source register, not here |
-| **Watcher** | Conditional HEAD/ETag/Last-Modified or manifest-SHA change detection; a watcher opens a PR or emits a delta, it does **not** publish | Doctrine: watcher-as-non-publisher |
-| **Operator** | Manual run requested by a steward (e.g. backfill, smoke test, post-incident replay) | Records actor in every receipt |
-| **Rollback replay** | Refresh re-run against a prior release’s rollback target to restore the prior safe state | See §13 |
+| Pull request or push runs `domain-agriculture` | Execute the bounded CDL no-network proof | Source is active or current |
+| Human compares approved synthetic CDL sidecars | Produce a deterministic watcher report | Upstream CDL changed |
+| Product documentation names an annual/hourly/revisit cadence | Record proposal or verification need | Schedule live access |
+| Placeholder registry file exists | Inspect as planning evidence | Treat as an admitted descriptor |
+| Future watcher detects publisher-supported metadata or digest change | Propose review work after the profile is commissioned | Fetch, ingest, promote, or publish automatically |
 
-> [!TIP]
-> Use **conditional GETs** by default. Send `If-None-Match` with the stored ETag (or `If-Modified-Since` with Last-Modified); on `304 Not Modified` emit a no-change RunReceipt and exit. This is the cheapest, most auditable form of "no work today" and keeps the receipt ledger honest about cadence.
+A future connector may use publisher-supported version identifiers, checksums, ETags, `Last-Modified`, manifests, or another source-specific signal. The specific method must be verified for that source and recorded in the admitted descriptor/profile. This runbook does not impose one HTTP pattern on every provider.
 
-### 7.1 Debounce and persistence
-
-- Apply a **debounce window** to bursty upstreams so a brief flurry of changes coalesces into one delta.
-- Apply **persistence rules** for anomaly-style sources (e.g. a satellite anomaly should require ≥2 independent observations in a rolling window before promoting a status change).
-- Concrete window numbers are **PROPOSED** and live in `docs/standards/DEBOUNCE_WINDOWS.md` (PROPOSED) or `control_plane/source_authority_register.yaml`.
-
-[↑ Back to top](#agriculture-source-refresh-runbook)
+[Back to top](#top)
 
 ---
+
+<a id="8-preconditions"></a>
 
 ## 8. Preconditions
 
-The cycle **MUST** abort before any live fetch if any of the following is missing or stale:
+### 8.1 Bounded CDL comparator preconditions
 
-1. `SourceDescriptor` for every targeted `source_id` is present, current, and not in a superseded state.
-2. Rights status is `cleared` (or equivalent) **or** the run is explicitly bound to the restricted lane.
-3. Sensitivity class is recorded and consistent with policy; field-level sensitive data is routed to the restricted lane only.
-4. Schema versions for source, evidence, receipt, release, and domain object families are pinned.
-5. Geography version is pinned and current.
-6. Policy bundle version is pinned and current.
-7. No-network fixtures pass (valid + invalid) for the source family.
-8. Disk, network, and rate-limit budgets are respected (politeness constraints per provider).
-9. Operator identity and reason for run are recorded.
-10. Rollback target for any currently published Agriculture release is reachable.
+Before executing the current proof, confirm:
 
-> [!CAUTION]
-> A precondition failure is not "skip and continue." It is a structured fail-closed: emit an error envelope with `reason_code`, halt the cycle, and require steward review before re-running.
+1. The exact repository revision is recorded.
+2. The target files are the tracked synthetic sidecar fixtures, not copied real data.
+3. `profile_id` is the implemented fixture profile.
+4. `source_descriptor_ref` is the fixed fixture reference.
+5. `county_fips` is the fixed non-real sentinel.
+6. Prior and current threshold profiles agree.
+7. No ambient credentials or unrelated secrets are exposed.
+8. Repository-code execution has no network access.
+9. Output is standard output or an approved external temporary path.
+10. The reviewer understands that the report is not a receipt, policy decision, or lifecycle transition.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+### 8.2 Live source-refresh preconditions
+
+The live path must stop before network access unless all items below are proved from current owning surfaces:
+
+- [ ] Complete admitted `SourceDescriptor`, not a placeholder.
+- [ ] Active registry/authority entry for the exact source and use.
+- [ ] Resolved connector path and reviewed implementation.
+- [ ] Verified rights, attribution, redistribution, access, rate-limit, retention, and sensitivity posture.
+- [ ] Stable source role and prohibited-role rules.
+- [ ] Source-specific temporal, geography, integrity, freshness, and correction semantics.
+- [ ] Positive, negative, stale, malformed, denied, and no-network fixtures.
+- [ ] Bounded live profile with credential isolation and no public/release side effects.
+- [ ] RAW/QUARANTINE-only connector output and validated `IngestReceipt` handling.
+- [ ] Downstream validation, policy, evidence, catalog, review, release, correction, and rollback dependencies identified.
+- [ ] Named accountable stewards and required independent review.
+- [ ] Rehearsal and rollback evidence at the exact candidate revision.
+
+At the evidence snapshot for this runbook, these preconditions are not closed. The correct live outcome is `HOLD`.
+
+[Back to top](#top)
 
 ---
+
+<a id="9-procedure"></a>
 
 ## 9. Procedure
 
-The procedure below is the **PROPOSED** canonical sequence. Concrete CLI invocations, scripts, and CI job names are intentionally omitted — they belong to the connector and pipeline lanes once verified against a mounted repo. This runbook governs the *order* and the *receipts*, not the keystrokes.
+### 9.1 Freeze the request and exact revision
 
-### 9.1 Plan
+Record:
 
-1. Identify the `source_id` set in scope.
-2. Pull the current `SourceDescriptor`, validators, schema versions, policy version, and geography version.
-3. Confirm preconditions (§8). Abort on any failure.
-4. Record `run_id`, `operator`, `reason`, and the input snapshot in an `event_envelope` (pre-RAW).
+- repository and exact commit or branch head;
+- requested source family and intended use;
+- whether the request is discovery, admission, detection, ingest, lifecycle, release, correction, or rollback work;
+- intended data precision and exposure;
+- actor and review route;
+- writable paths, if any;
+- rollback or abandonment boundary.
 
-### 9.2 Conditional fetch (HEAD probe)
+Do not begin with a URL or connector name. Begin with the authority question.
 
-1. For each source, issue a `HEAD` (or equivalent metadata probe) and compare `ETag` / `Last-Modified` / manifest SHA against the prior stored values.
-2. On **no change**: emit a `RunReceipt` with `outcome: NO_CHANGE`, do **not** write to RAW, exit.
-3. On **change** or missing validators with verified content drift: proceed to admission.
+### 9.2 Resolve source authority before execution
 
-### 9.3 Admission to RAW
+Inspect the central register and the exact per-source record.
 
-1. Fetch the new payload (or reference).
-2. Hash the payload and pin it under source identity in `data/raw/agriculture/<source_id>/<run_id>/`.
-3. Emit an `ingest` `RunReceipt` recording URL, validators, hash, time, operator, and `spec_hash`.
+| Observation | Procedure result |
+|---|---|
+| No central or per-source entry | `HOLD` — source is not operationally selectable |
+| Placeholder-only YAML | `HOLD` — create/review a complete descriptor in the owning source-registry task |
+| Descriptor exists but rights, sensitivity, role, cadence, or access is unresolved | `HOLD` or `DENY`, according to owning policy/review |
+| Connector home is conflicted | `HOLD` pending accepted placement and migration |
+| Complete admitted source plus commissioned connector/profile | Continue only within that separately reviewed profile |
 
-### 9.4 Normalize to WORK or QUARANTINE
+For the current repository snapshot, no live Agriculture source passes this step through the central register.
 
-1. Run schema, geometry, time, identity, evidence, rights, and policy normalizers.
-2. On any defect (rights ambiguity, sensitivity conflict, geometry invalidity, temporal inconsistency, source-role mismatch, evidence gap), move the working set to `data/quarantine/agriculture/<reason>/<run_id>/` with a quarantine `RunReceipt` carrying the reason code.
-3. On clean normalization, retain in `data/work/agriculture/<run_id>/`, emit a `TransformReceipt` and a working `ValidationReport`.
+### 9.3 Run the bounded CDL proof
 
-### 9.5 Validate to PROCESSED
+From the repository root:
 
-1. Run validators (deterministic, fixture-tied).
-2. Apply `RedactionReceipt` for any sensitive fields entering a public-eligible derivative.
-3. Apply `AggregationReceipt` for any county / HUC / grid roll-up that will appear publicly.
-4. On pass, write normalized objects to `data/processed/agriculture/<dataset_id>/<version>/`, emit a `ValidationReport` and update digest closure.
-5. On fail, **stay in WORK** with a structured FAIL outcome; do **not** create a PROCESSED entry.
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest tests.ingest.cdl_watch.test_cdl_watch --verbose
+```
 
-### 9.6 Close to CATALOG / TRIPLET
+Run one deterministic no-change example:
 
-1. Resolve every `EvidenceRef` to a complete `EvidenceBundle`. Unresolved refs → HOLD.
-2. Emit `CatalogMatrix` entry and graph/triplet projections where applicable.
-3. Confirm digest closure across catalog, proof, and processed sides.
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/ingest/cdl_watch/cdl_watch.py \
+    --prior tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json \
+    --current tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json \
+    --dry-run
+```
 
-### 9.7 Promote to PUBLISHED (separate, signed step)
+The CLI prints compact JSON to standard output when `--output` is omitted. Do not redirect it into lifecycle, receipt, proof, catalog, published, or release roots.
 
-1. Confirm `ReviewRecord` exists where the sensitive lane or policy requires it.
-2. Emit a `ReleaseManifest` listing contents, digests, evidence refs, rollback target, and correction path.
-3. Sign the manifest per release-signing policy.
-4. Activate public surfaces only after the signed manifest exists; the public path consumes governed APIs and released payloads only — never RAW, WORK, QUARANTINE, candidate, or canonical stores directly.
-5. Emit a release `RunReceipt`.
+### 9.4 Interpret the comparator outcome
 
-### 9.8 Close out
+| Outcome | Meaning in the implemented fixture profile | Required handoff |
+|---|---|---|
+| `NO_MATERIAL_CHANGE` | Valid local comparison found no review-worthy histogram change under the supplied profile | Record bounded PASS/no-follow-up; no source or lifecycle mutation |
+| `PROPOSED_WORK_RECORD` | Valid local comparison reached a supplied materiality threshold | Open or update bounded review work; confirm source authority and policy separately |
+| `STALE_INPUT` | Current year or time metadata regressed | `HOLD`; inspect ordering and fixture provenance |
+| `CLASSMAP_DRIFT` | Classification semantics differ or cannot be compared safely | `HOLD`; require semantic review before interpretation |
+| `GEOMETRY_DRIFT` | County geometry hash changed | `HOLD`; do not call the difference crop change |
+| `ABSTAIN` | Available inputs do not support a safe decision | Preserve uncertainty; narrow scope or improve evidence |
+| `ERROR` | The helper could not safely complete | Treat as failure; diagnose without weakening guards |
 
-1. Update `data/registry/sources/agriculture/` with the new admission state.
-2. Update freshness markers in the source register.
-3. Append the cycle’s receipts to the cycle log.
-4. Open any drift entries or verification backlog items the cycle surfaced.
+The report carries `publication: false` and `promotion_required: true`. Those flags are constraints, not suggestions.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+### 9.5 Create the reviewer handoff
+
+A useful handoff records:
+
+- exact repository head;
+- exact prior/current fixture paths and hashes when available;
+- comparator profile and output status;
+- reason codes and materiality inputs;
+- whether the run wrote any file;
+- confirmation that network and credentials were absent;
+- what the result proves;
+- what remains unproved;
+- the smallest separate follow-up, if one is justified.
+
+Do not call the watcher report a receipt unless an accepted owning contract, validator, persistence route, and workflow explicitly adopt it as one.
+
+### 9.6 Graduate a future live profile separately
+
+A future implementation PR must close one source-specific review boundary rather than activating the entire Agriculture roster. The smallest coherent graduation sequence is:
+
+1. resolve source and connector identity;
+2. add or repair one complete descriptor and rights/sensitivity review;
+3. implement a read-only, bounded connector profile;
+4. add synthetic positive/negative/no-network fixtures;
+5. prove RAW-or-QUARANTINE-only behavior;
+6. emit and validate one `IngestReceipt` candidate;
+7. add source-specific drift, stale, error, and replay tests;
+8. wire least-privilege CI without release or publication side effects;
+9. rehearse and record limitations;
+10. leave promotion, release, deployment, and publication for their owning transitions.
+
+Until such a source-specific slice lands and is reviewed, this subsection is `PROPOSED` and non-executable.
+
+### 9.7 Close out
+
+For the current bounded procedure:
+
+- preserve the report or CI evidence needed for review;
+- leave source registries and lifecycle roots unchanged;
+- create no release or correction object;
+- record follow-up only when the finite outcome and current evidence justify it;
+- keep the live source-refresh posture on `HOLD`.
+
+[Back to top](#top)
 
 ---
+
+<a id="10-fail-closed-conditions"></a>
 
 ## 10. Fail-Closed Conditions
 
-> [!IMPORTANT]
-> Every condition below is a **fail-closed**: cycle halts at the prior phase, structured outcome is emitted, public surfaces are unchanged. Silence is a violation; the absence of a successful receipt does not imply success.
-
-| Condition | Phase | Outcome |
+| Condition | Finite posture | Reason |
 |---|---|---|
-| Missing or stale `SourceDescriptor` | Preconditions | `ERROR` |
-| Rights unknown / unresolved | Preconditions / WORK | `QUARANTINE` (rights) |
-| Sensitivity unresolved | Preconditions / WORK | `QUARANTINE` (sensitivity) |
-| Schema or geography version drift | Preconditions | `ERROR` until rebound |
-| Conditional-fetch validators absent and content drift unverifiable | Fetch | `ABSTAIN` or `QUARANTINE` |
-| Geometry invalid / topology breaks | WORK | `QUARANTINE` (geometry) |
-| Temporal logic broken (e.g. observed > release) | WORK | `QUARANTINE` (temporal) |
-| Source-role mismatch (e.g. modeled value marked observed) | WORK | `QUARANTINE` (source-role) |
-| Evidence gap (`EvidenceRef` unresolved) | PROCESSED → CATALOG | `HOLD` at PROCESSED |
-| Aggregation threshold violated (would expose field-level) | PROCESSED / aggregation | `DENY` for public lane |
-| Public field-level claim attempted | Any | `DENY` |
-| Missing `ReviewRecord` where required | Release | `HOLD` at CATALOG |
-| Missing rollback target | Release | `HOLD` at CATALOG |
-| Unsigned `ReleaseManifest` | Release | `DENY` |
-| KFM presented as alert / life-safety authority | Any | `DENY` |
-| Direct browser/public access to RAW/WORK/QUARANTINE/canonical stores | Any | `DENY` (trust-membrane invariant) |
+| Central source-authority register empty | `HOLD` | No operational source selection or authority projection exists |
+| Source record is placeholder-only | `HOLD` | File presence is not admission |
+| Source/connector identity is conflicted | `HOLD` | Avoid parallel implementation and accidental authority |
+| Rights or attribution unresolved | `DENY` public use or `HOLD` review | Unknown rights fail closed |
+| Sensitivity or harmful precision unresolved | `DENY` / `QUARANTINE` | Public safety and privacy outrank convenience |
+| Source role would be upgraded or collapsed | `HOLD` / `DENY` | Classified, aggregate, modeled, regulatory, contextual, and observed support are not interchangeable |
+| Comparator receives real source data or a non-fixture source reference | `ERROR` | The implemented profile is fixture-only |
+| Comparator receives stale current input | `STALE_INPUT` | Time ordering is unsafe |
+| Classmap changes | `CLASSMAP_DRIFT` | Histogram comparison cannot preserve meaning |
+| Geometry hash changes | `GEOMETRY_DRIFT` | Geometry drift can mimic crop drift |
+| Network access occurs in the bounded proof | `ERROR` | Violates the no-network contract |
+| Helper attempts repository-root output | `ERROR` | Watcher report cannot write lifecycle or authority state |
+| Evidence is insufficient for a consequential claim | `ABSTAIN` / `HOLD` | Cite-or-abstain |
+| `PROPOSED_WORK_RECORD` is treated as approval | `DENY` | Detection is not policy, review, or release |
+| Direct public access to RAW, WORK, QUARANTINE, internal registry, or model state | `DENY` | Trust-membrane violation |
+| Required correction or rollback path is missing for a public candidate | `HOLD` | Public state must remain correctable and reversible |
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+A failed or held run must remain visible. Do not weaken a fixture, threshold guard, source-role boundary, rights check, or sensitivity rule to produce a green result.
+
+[Back to top](#top)
 
 ---
 
-## 11. Receipts Emitted
+<a id="11-receipts-emitted"></a>
 
-A refresh cycle emits **structured receipts** at every consequential step. If a consequential step has no receipt, the step did not happen in the governed sense.
+## 11. Records, Receipts, Proofs, and Decisions
 
-| Receipt | When emitted | Required fields (PROPOSED shape) |
-|---|---|---|
-| `SourceDescriptor` (refreshed) | Admission | `source_id`, `source_role`, `authority`, `rights`, `sensitivity`, `cadence`, ingest hash, time, citation |
-| `RunReceipt` (no-change) | Conditional fetch with 304 | `run_id`, `inputs`, validators, `outcome: NO_CHANGE`, `spec_hash`, time, operator |
-| `RunReceipt` (ingest) | RAW admission | `run_id`, source URL, ETag, Last-Modified, payload hash, `spec_hash`, time, operator |
-| `TransformReceipt` | Geometry / projection / generalization in WORK | input hash, output hash, transform, parameters, tolerance, time, actor |
-| `ValidationReport` | WORK validation; PROCESSED → CATALOG closure | validator id, target, passes, failures, deterministic inputs, time |
-| `PolicyDecision` | Every governed gate | policy id, target, decision, reason code, time, evidence refs |
-| `RedactionReceipt` | Sensitive fields entering public derivative | policy ref, redaction method, kept / removed fields, geometry transform, reviewer |
-| `AggregationReceipt` | County / HUC / grid roll-up for public surface | geometry scope, time scope, method, input source refs, suppression rule, output unit |
-| `ModelRunReceipt` | Modeled outputs (suitability, anomaly, etc.) | model id, version, inputs, parameters, run time, uncertainty ref, validation ref |
-| `EvidenceBundle` | CATALOG / TRIPLET closure | bundle id, included refs, source roles, time scopes, integrity hashes |
-| `CatalogMatrix` entry | CATALOG closure | scope, time, sources, digests, links to evidence bundle |
-| `ReviewRecord` | Sensitive lane / policy requires it | reviewer, role, decision, evidence refs, policy ref, time |
-| `ReleaseManifest` | PUBLISHED transition | release id, contents, digests, evidence refs, rollback target, time, signature |
-| `CorrectionNotice` | Post-publication correction | defect class, affected release, superseding release, derivative invalidation set |
-| `RollbackCard` | Rollback execution (see §13) | prior release manifest, artifact digests, cache invalidation, replay steps |
-| `AIReceipt` | If any AI-assisted summarization or steward note was produced | prompt scope, evidence refs, policy ref, outcome (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`), reason code, model id, time |
+The prior runbook listed an illustrative receipt catalog and embedded a proposed `RunReceipt` JSON shape. Current repository evidence is stronger and more precise: several object-family contracts, schemas, validators, and fixtures exist, but Agriculture source-refresh integration remains incomplete. This runbook now links those authorities instead of redefining them.
+
+| Object or record | Current repository evidence | What it proves | What it does not prove |
+|---|---|---|---|
+| `SourceDescriptor` | Draft semantic contract plus paired proposed schema; canonical path lineage remains partly conflicted | Intended source-admission meaning and machine surface | Active source, truth, rights approval, or release |
+| Agriculture registry placeholder | Small YAML files such as `nass_quickstats.yaml` | A named planning slot exists | Complete descriptor, activation, connector readiness, or cadence |
+| CDL watcher report | Deterministic fixture-only JSON report from `cdl_watch.py` | Comparator behavior and review signal | Ingest, receipt persistence, evidence, policy, lifecycle, or publication |
+| `IngestReceipt` | Draft contract, paired schema, no-network validator, fixtures, and connector-gate prerequisite wiring | Candidate capture-record shape and bounded validation | Connector-emitted Agriculture receipt or governed persistence |
+| `ValidationReport` / `PolicyDecision` | Shared object families elsewhere in the repository | Separate validation and policy concepts | That a particular Agriculture source passed them |
+| `EvidenceRef` / `EvidenceBundle` | Shared evidence families | Required support path for consequential claims | Closure for a watcher report or live Agriculture refresh |
+| Promotion/release objects | Separate release responsibility surfaces | State-transition and release concepts | Approval, signing, deployment, or publication for Agriculture |
+| `CorrectionNotice` / `RollbackCard` | Shared correction/rollback families; RollbackCard candidate validator exists | Candidate correction and recovery structure | Executed Agriculture rollback or production readiness |
+| Generated authoring receipt | Repository generation record for a source-code or documentation artifact | Bytes/generation lineage named by that receipt | Runtime ingest, source truth, policy, proof, or release authority |
 
 > [!NOTE]
-> Receipt **schema homes** are `schemas/contracts/v1/receipts/` (PROPOSED, per Directory Rules §7.4). **Actual file presence NEEDS VERIFICATION** against a mounted repo.
+> A receipt records that a process ran or an artifact was produced. A proof supports closure. A policy result constrains use. A review records human disposition. A release object changes release state when authorized. Keep these families distinct.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+[Back to top](#top)
 
 ---
+
+<a id="12-validation"></a>
 
 ## 12. Validation
 
-The cycle is only considered successful when validators pass. The validator set for Agriculture (PROPOSED, doctrine-grounded):
+### 12.1 Current executable validation
 
-- Schema validation for `SourceDescriptor`, domain object families, receipts, `EvidenceBundle`, `ReleaseManifest`.
-- Source descriptor completeness (role, rights, sensitivity, cadence, citation).
-- Rights validation (license / redistribution class resolved).
-- Sensitivity validation (no public field-level, no private operator data).
-- Evidence closure (`EvidenceRef` → `EvidenceBundle` resolves).
-- Temporal logic (observed / valid / retrieval / release / correction times distinct where material).
-- Geometry validity (no self-intersection; CRS pinned; topology preserved through transforms).
-- Public-safe redaction / generalization tests for any public-bound derivative.
-- Aggregation-threshold tests (county / HUC / grid suppression rules honored).
-- Policy deny tests (e.g. field-level NASS claim → `DENY`).
-- Citation validation (AI / summarized output cites valid evidence; no uncited public claim).
-- Catalog closure tests.
-- Release manifest validation (digests match, rollback target reachable).
-- Rollback drill (a periodic restore-to-prior-release dry run).
-- No-network fixtures (the cycle’s validators run deterministically without live providers).
-- Non-regression for prior lineage (a refreshed source must not silently drop or rewrite prior released claims).
+The all-pull-request Agriculture workflow executes the fixture-only CDL watcher test with networking denied. The same focused command is shown in [§9.3](#93-run-the-bounded-cdl-proof).
 
-**Fixture homes** (PROPOSED): `fixtures/domains/agriculture/` and `tests/domains/agriculture/`. **Presence NEEDS VERIFICATION.**
+The implemented test surface should continue to cover:
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+- valid no-change comparison;
+- relative and absolute materiality thresholds;
+- below-threshold behavior;
+- stale input;
+- classmap drift;
+- geometry drift;
+- malformed or missing fields;
+- fixture-only identity and geography guards;
+- deterministic profile hashing;
+- repository-output denial;
+- no-network behavior;
+- finite reason codes and non-publication flags.
+
+### 12.2 What a passing result proves
+
+A passing focused test proves that the inspected code and synthetic fixtures satisfy the bounded comparator profile at that exact revision.
+
+It does **not** prove:
+
+- a live CDL endpoint, release, checksum, ETag, cadence, rights posture, or descriptor;
+- NASS connector placement or activation;
+- Agriculture source-registry completeness;
+- scientific accuracy or crop truth;
+- source ingest, RAW admission, receipt persistence, pipeline processing, evidence closure, policy approval, release, deployment, or publication;
+- readiness of other Agriculture source families;
+- broad Agriculture validation, which the workflow explicitly holds.
+
+### 12.3 Runbook and pull-request validation
+
+For a change to this runbook, verify:
+
+- one H1 and preserved top/stable anchors;
+- ordered headings and working quick-navigation fragments;
+- balanced fenced blocks and valid GitHub alerts;
+- repository-relative links resolve at the pinned revision;
+- commands match the current watcher README, tests, and workflow;
+- claims distinguish current executable behavior from proposed live behavior;
+- no owner, cadence, endpoint, source status, release state, or operational maturity is invented;
+- the full diff changes only the intended path unless a required dependency is proved;
+- workflow preflight shows no automatic release, deployment, promotion, publication, secret exposure, or settings mutation from the docs-only change;
+- hosted CI is evaluated at the exact pull-request head.
+
+[Back to top](#top)
 
 ---
+
+<a id="13-rollback"></a>
 
 ## 13. Rollback
 
-> [!IMPORTANT]
-> Rollback is a **publication requirement**, not an emergency exception. Every Agriculture release that this runbook publishes **MUST** have a reachable rollback target before it is treated as safely published.
+### 13.1 Roll back this documentation change
 
-### 13.1 When to roll back
+Before merge, close or abandon the draft pull request; `main` remains unchanged. After merge, use a transparent revert or forward-fix pull request against the actual merged commit. Do not rewrite shared history.
 
-- A defect class is detected post-publication: evidence gap, source-role drift, rights change, sensitivity exposure, geometry / temporal error, policy or schema drift, validation regression, rendering / API defect, or AI-output defect.
-- A correction would not be sufficient on its own (e.g. the wrong derivative was promoted, not merely a fixable claim).
+### 13.2 Roll back a bounded watcher result
 
-### 13.2 Rollback procedure
+The comparator mutates no repository or lifecycle state when used as documented. A mistaken or obsolete result is corrected by:
 
-1. Identify the affected `release_id` and the prior safe `ReleaseManifest`.
-2. Verify the prior release’s digests and manifest signature.
-3. Disable or withdraw affected public surfaces through the **same** governed release path that promoted them. **No hidden file copies.**
-4. Invalidate derived caches (tile, PMTiles, payload, vector index) per the manifest’s cache-invalidation record.
-5. Restore or republish the rollback target through the governed release path.
-6. Preserve all original receipts. Emit a `RollbackCard` and a follow-up `CorrectionNotice` that names the defect class and the superseding release.
-7. Mark stale or withdrawn UI state with the appropriate badge (see §14).
+1. preserving the original report and exact inputs;
+2. identifying the defect in fixtures, comparator code, profile, or interpretation;
+3. producing a corrected run at a new exact revision;
+4. linking the corrected result to the superseded result in the reviewer handoff;
+5. avoiding any claim that deletion makes the prior run disappear.
 
-### 13.3 Rollback-and-replay
+### 13.3 Roll back a future live refresh
 
-When the underlying source itself was the defect (e.g. a poisoned upstream release), re-run the full refresh procedure (§9) against the rollback target inputs, with the operator identity and reason recorded as `rollback_replay`.
+No current Agriculture live-refresh execution path or production rollback readiness is established by this runbook. A future source-specific profile must use the dedicated [Agriculture rollback runbook](./ROLLBACK_RUNBOOK.md) and the owning release/correction machinery. An older source or release is not automatically safe: rights, sensitivity, source role, evidence, policy, consumers, and correction obligations must be re-evaluated.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+If public reliance exists, a Git revert alone is not a complete correction. Preserve withdrawal, correction, cache/index invalidation, supersession, and audit history as required by the owning release path.
+
+[Back to top](#top)
 
 ---
+
+<a id="14-stale-state-handling"></a>
 
 ## 14. Stale-State Handling
 
-**CONFIRMED doctrine.** KFM separates *stale* from *wrong*. A stale claim is one whose evidence, source freshness, dependent data, or context has aged past its declared tolerance. The Agriculture refresh runbook must surface staleness rather than silently refresh past it.
+KFM separates stale, wrong, changed, unsupported, and unverified states.
 
-| Marker | Trigger | UI signal | Required action |
-|---|---|---|---|
-| Source freshness expired | `SourceDescriptor.cadence` passed without a new admission | Stale source badge in Evidence Drawer | Re-admit or supersede; otherwise mark dependent claims stale |
-| Schema version drift | Object schema upgraded past the published claim’s version | Schema-drift badge; link migration ADR if any | Migrate, re-validate, re-release; or mark stale |
-| Geography version drift | `GeographyVersion` replaced; claim still bound to prior | Geography-version banner | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| Time-scope outside support | Claim’s temporal scope falls outside current data support | Time-out-of-support indicator | Mark stale; do **not** refresh silently |
-| Model version superseded | `ModelRunReceipt` references an older model | Model-version badge | Re-run, supersede, or mark stale |
-| Review aged out | `ReviewRecord` older than the sensitive-lane review tolerance | Review-aged badge | Trigger steward review; potentially downgrade tier |
-| Rights status changed | `SourceDescriptor` rights field updated | Rights-changed badge | Re-evaluate tier; potentially downgrade; emit `CorrectionNotice` |
-| Policy version changed | Referenced policy superseded | Policy-version badge | Re-run gate; potentially supersede release |
+| State | Meaning in this runbook | Required response |
+|---|---|---|
+| `STALE_INPUT` | Current fixture time/year/source metadata regresses behind prior input | Stop comparison and inspect provenance/order |
+| Source freshness unknown | No admitted descriptor/register entry provides an enforceable freshness posture | Keep live refresh on `HOLD`; do not invent cadence |
+| Product documentation aged | Page or proposal names an old cadence, endpoint, role, or source posture | Verify against current source authority before use |
+| Descriptor superseded or conflicted | More than one source/connector/schema home appears authoritative | Resolve through governance/migration; do not choose by convenience |
+| Published claim stale | Existing released support has aged beyond its governed tolerance | Surface stale state through owning API/UI and re-evaluate release; do not silently overwrite |
+| Source materially changed | A commissioned watcher/source profile proves a change | Propose governed work; do not auto-ingest or publish |
+| Source wrong or withdrawn | Authority, rights, or evidence is corrected or revoked | Quarantine/withdraw/correct through owning lifecycle and release authorities |
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+At the current snapshot, the empty central register means Agriculture source freshness is not operationally enforceable from that projection. That is a blocker, not permission to use document-level cadence guesses.
+
+[Back to top](#top)
 
 ---
+
+<a id="15-task-checklist"></a>
 
 ## 15. Task Checklist
 
-A condensed checklist a steward can scan before declaring a cycle complete.
+### Current bounded CDL comparison
 
-- [ ] All preconditions satisfied (§8)
-- [ ] Conditional fetch attempted; validators stored or no-change receipt emitted
-- [ ] RAW write hashed and pinned under source identity
-- [ ] Normalization receipts emitted (`TransformReceipt`, working `ValidationReport`)
-- [ ] Quarantine entries (if any) carry an explicit reason code
-- [ ] `PolicyDecision` emitted at each gate
-- [ ] `RedactionReceipt` and `AggregationReceipt` applied where required for any public-bound derivative
-- [ ] `EvidenceRef` → `EvidenceBundle` resolution verified
-- [ ] `CatalogMatrix` entry written; digest closure passes
-- [ ] `ReviewRecord` exists where required
-- [ ] `ReleaseManifest` exists, is signed, and lists a reachable rollback target
-- [ ] Cycle receipts appended to the receipt ledger
-- [ ] Stale-state markers refreshed for dependent published claims
-- [ ] No public field-level or operator-identifying surface introduced
-- [ ] No KFM-as-alert-authority surface introduced
-- [ ] Drift / verification backlog updated for anything the cycle could not resolve
+- [ ] Record exact repository head.
+- [ ] Confirm the request is fixture comparison, not live refresh.
+- [ ] Confirm synthetic sidecars and fixed fixture identifiers.
+- [ ] Deny network and remove ambient credentials.
+- [ ] Run the focused unit test.
+- [ ] Run or inspect the dry-run comparison.
+- [ ] Record finite outcome and reason codes.
+- [ ] Confirm `publication: false` and `promotion_required: true`.
+- [ ] Confirm no repository/lifecycle file was written.
+- [ ] State what passed and what remains unproved.
+- [ ] Create only the smallest evidence-backed follow-up.
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+### Future live source profile
+
+- [ ] Complete/admit one source descriptor.
+- [ ] Populate or resolve the owning source-authority/registry entry.
+- [ ] Resolve connector path and implementation ownership.
+- [ ] Verify rights, sensitivity, access, cadence, source role, and citation.
+- [ ] Add deterministic fixtures and no-network negative tests.
+- [ ] Prove RAW/QUARANTINE-only connector output.
+- [ ] Emit and validate an `IngestReceipt` candidate.
+- [ ] Prove source-specific stale, malformed, denied, and replay behavior.
+- [ ] Wire least-privilege CI with no release/publication side effects.
+- [ ] Rehearse correction and rollback.
+- [ ] Keep promotion, release, deployment, and publication separate.
+
+Unchecked live-profile items mean `HOLD`.
+
+[Back to top](#top)
 
 ---
+
+<a id="16-faq"></a>
 
 ## 16. FAQ
 
 <details>
-<summary><strong>Can the connector publish straight to a public surface if the source is "trusted"?</strong></summary>
+<summary><strong>Can this runbook be used to fetch a live Agriculture source today?</strong></summary>
 
-No. Trust does not bypass the trust membrane. Publication is a governed state transition with its own gates, signatures, rollback target, and correction path. A trusted source produces high-quality inputs; it does **not** earn the right to skip validation, redaction, aggregation, review, or signed release.
-
-</details>
-
-<details>
-<summary><strong>What happens to field-level data we admit from a source that publishes it?</strong></summary>
-
-Admission is allowed where rights and sensitivity permit; **publication** of field-level data on a public surface is denied by default. The data may serve restricted, steward-only views, modeled aggregates, or county / HUC / grid roll-ups via an `AggregationReceipt`, but the public lane stays aggregated.
+No. The central authority register is empty, the inspected NASS implementation is placeholder-only and placement-conflicted, and no complete admitted live Agriculture source profile was verified. The current executable procedure is the synthetic CDL comparator only.
 
 </details>
 
 <details>
-<summary><strong>The upstream changed schema mid-cycle. What do we do?</strong></summary>
+<summary><strong>Does <code>PROPOSED_WORK_RECORD</code> activate a source or approve an ingest?</strong></summary>
 
-Treat it as schema version drift. Quarantine the working set with reason `schema_drift`, open an ADR or migration note, re-run with the new schema version pinned. Do not silently coerce shape.
-
-</details>
-
-<details>
-<summary><strong>An automated watcher detected a change. Can it merge a refresh by itself?</strong></summary>
-
-No. **Watcher-as-non-publisher** is a doctrine invariant. A watcher opens a PR or emits a delta; merging and publishing remain governed by review and signed release. The watcher’s receipt is part of the trail, not the decision.
+No. It means the local fixture comparison reached a caller-supplied materiality threshold and warrants review. Source admission, rights, policy, ingest, evidence, promotion, and release remain separate.
 
 </details>
 
 <details>
-<summary><strong>Where do receipts live on disk?</strong></summary>
+<summary><strong>Do the HLS/NDVI Agriculture validators prove HLS source refresh?</strong></summary>
 
-Under `data/receipts/` (PROPOSED), partitioned by family: `ingest/`, `validation/`, `pipeline/`, `ai/`, `release/`. Proofs (evidence bundles, validation reports, citation validation) live under `data/proofs/`. Both are siblings of `data/raw/` and the rest of the lifecycle phases. Per Directory Rules, receipts and proofs **emit alongside** lifecycle directories; they do not replace them.
+No. They prove their named deterministic downstream contracts or validators at an exact revision. They do not prove live HLS access, source admission, source identity, rights, cadence, connector behavior, or ingest receipts.
 
 </details>
 
 <details>
-<summary><strong>Is this runbook also the runbook for rollback and validation?</strong></summary>
+<summary><strong>Where is the authoritative Agriculture refresh cadence?</strong></summary>
 
-No. This runbook *invokes* validation and rollback steps. The detailed validation runbook and rollback runbook live separately (see Related Docs §17). When their guidance conflicts with anything here, the dedicated runbook wins for its specialty; this runbook wins for the cycle ordering.
+A commissioned cadence belongs in the admitted source descriptor and owning registry/profile. The current central register has no entries, so this runbook must not invent operational intervals from product prose.
 
 </details>
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+<details>
+<summary><strong>Which NASS connector path should new implementation use?</strong></summary>
+
+None should be chosen by this runbook. The repository currently documents three candidates and no accepted placement decision was verified. Resolve that conflict through a governed placement/migration decision before adding implementation.
+
+</details>
+
+<details>
+<summary><strong>Is the CDL watcher report an IngestReceipt?</strong></summary>
+
+No. The helper documentation explicitly describes the report as a review signal. `IngestReceipt` has its own contract, schema, validator, fixtures, and lifecycle meaning.
+
+</details>
+
+<details>
+<summary><strong>Can public Agriculture products include exact field or operator detail when the upstream source exposes it?</strong></summary>
+
+Not by default. Upstream visibility does not resolve KFM rights, sensitivity, purpose, minimization, aggregation, review, or release obligations. Exact or identifying detail fails closed unless a separate governed restricted/public-safe decision proves otherwise.
+
+</details>
+
+<details>
+<summary><strong>Can a green workflow publish the detected change?</strong></summary>
+
+No. The inspected Agriculture workflow is read-only and explicitly denies source admission, proof, release, and publication authority. CI success and publication are different states.
+
+</details>
+
+[Back to top](#top)
 
 ---
+
+<a id="17-related-docs"></a>
 
 ## 17. Related Docs
 
-- `docs/domains/agriculture/README.md` — Agriculture domain page *(PROPOSED)*
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — SourceDescriptor field standard *(PROPOSED)*
-- `docs/runbooks/ui_VALIDATION.md` — UI / contract / e2e validation runbook *(PROPOSED)*
-- `docs/runbooks/ui_ROLLBACK.md` — UI rollback and feature-flag runbook *(PROPOSED)*
-- `docs/runbooks/governed_ai_VALIDATION.md` — Focus Mode evidence / citation / policy validation runbook *(PROPOSED)*
-- `docs/doctrine/directory-rules.md` — Canonical placement rules
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant *(PROPOSED)*
-- `docs/doctrine/trust-membrane.md` — Trust-membrane boundary *(PROPOSED)*
-- `docs/doctrine/truth-posture.md` — Cite-or-abstain posture *(PROPOSED)*
-- `docs/standards/SMART_SYNC.md` — Conditional-fetch and watcher pattern *(PROPOSED)*
-- `docs/standards/DEBOUNCE_WINDOWS.md` — Debounce / coalesce window numbers *(PROPOSED)*
-- `docs/registers/DRIFT_REGISTER.md` — Drift entries *(PROPOSED)*
-- `docs/registers/VERIFICATION_BACKLOG.md` — Open verification items *(PROPOSED)*
-- `control_plane/source_authority_register.yaml` — Per-source authority and cadence *(PROPOSED)*
-- `contracts/source/` · `contracts/evidence/` · `contracts/release/` *(PROPOSED)*
-- `schemas/contracts/v1/source/` · `schemas/contracts/v1/receipts/` · `schemas/contracts/v1/release/` *(PROPOSED)*
+### Procedure and governance
 
-[↑ Back to top](#agriculture-source-refresh-runbook)
+- [`docs/runbooks/README.md`](../README.md) — runbook responsibility and authority boundary.
+- [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption.
+- [`Directory Rules v2`](../../doctrine/directory-rules.md) — responsibility-root placement law.
+- [`Agriculture no-network runbook`](./NO_NETWORK_TEST_RUNBOOK.md) — exact bounded test procedures and broader validation holds.
+- [`Agriculture promotion runbook`](./PROMOTION_RUNBOOK.md) — promotion preparation; documentation is not approval.
+- [`Agriculture rollback runbook`](./ROLLBACK_RUNBOOK.md) — correction, withdrawal, and rollback procedure.
+
+### Agriculture and source boundaries
+
+- [`Agriculture domain definition`](../../domains/agriculture/DOMAIN.md) — bounded context and source-role-sensitive domain language.
+- [`Agriculture data lifecycle`](../../domains/agriculture/DATA_LIFECYCLE.md) — domain lifecycle guidance.
+- [`Agriculture sources`](../../domains/agriculture/SOURCES.md) — source-family planning and anti-collapse guidance.
+- [`Agriculture sensitivity`](../../domains/agriculture/SENSITIVITY.md) — private, restricted, and public-safe posture.
+- [`USDA NASS CDL product page`](../../sources/catalog/usda/usda-nass-cdl.md) — product documentation and current fixture-only watcher posture.
+
+### Machine and implementation surfaces
+
+- [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) — current empty projection-only register.
+- [`SourceDescriptor` contract](../../../contracts/source/source_descriptor.md) — source-admission semantics.
+- [`IngestReceipt` contract](../../../contracts/source/ingest_receipt.md) — source-capture receipt semantics.
+- [`SourceDescriptor` schema](../../../schemas/contracts/v1/source/source_descriptor.schema.json) — inspected paired shape; status remains proposed.
+- [`Agriculture source-registry lane`](../../../data/registry/sources/agriculture/README.md) — registry responsibility boundary.
+- [`NASS connector coordination lane`](../../../connectors/nass/README.md) — current placement conflict and placeholder maturity.
+- [`CDL watcher helper`](../../../tools/ingest/cdl_watch/README.md) — bounded executable profile and commands.
+- [`CDL watcher tests`](../../../tests/ingest/cdl_watch/test_cdl_watch.py) — focused fixture-only proof.
+- [`Agriculture workflow`](../../../.github/workflows/domain-agriculture.yml) — read-only CI and explicit broader holds.
+
+[Back to top](#top)
 
 ---
+
+<a id="18-appendix"></a>
 
 ## 18. Appendix
 
-<details>
-<summary><strong>A. PROPOSED data-path conventions for this runbook</strong></summary>
+### 18.1 Evidence ledger
 
-```text
-data/
-├── raw/agriculture/<source_id>/<run_id>/
-├── work/agriculture/<run_id>/
-├── quarantine/agriculture/<reason>/<run_id>/
-├── processed/agriculture/<dataset_id>/<version>/
-├── catalog/
-│   ├── domain/agriculture/
-│   ├── stac/                # if applicable
-│   ├── dcat/                # if applicable
-│   └── prov/                # if applicable
-├── triplets/
-│   ├── graph_deltas/
-│   └── exports/
-├── receipts/
-│   ├── ingest/
-│   ├── validation/
-│   ├── pipeline/
-│   ├── ai/
-│   └── release/
-├── proofs/
-│   ├── evidence_bundle/
-│   ├── proof_pack/
-│   ├── validation_report/
-│   └── citation_validation/
-├── published/
-│   └── layers/agriculture/
-├── rollback/agriculture/<release_id>/
-└── registry/
-    └── sources/agriculture/
-```
+| Evidence | Object at pinned base | Supported conclusion |
+|---|---|---|
+| Target runbook | `f213ef17f4880b3850b48e62168c5c959351e055` | v0.1 contained strong doctrine but stale no-repo and speculative implementation claims |
+| Accepted Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` | Existing path belongs under the operational `docs/runbooks/` responsibility lane |
+| Central authority register | `32729857bc8eb5001acb37b8ee8e60bcb6e0dc50` | Projection-only, implementation absent, empty entries, no source activation effect |
+| `SourceDescriptor` contract | `b57ae5ccc042c1423b75c168438800384c9b6713` | Rich proposed source-admission semantics exist; schema path lineage remains unresolved |
+| NASS QuickStats placeholder | `7e2d31a23f5a4bc5e5a30b62b5cc814359a05566` | Named source record is a placeholder, not a descriptor or activation decision |
+| NASS coordination README | `90409b72098571c5e793959ecd1bea83f115fa21` | Connector placement conflict and placeholder-only maturity are documented |
+| CDL watcher implementation | `d308b8f292eac1a29b47ba69e0f588936f6a8775` | Fixture-only, no-network comparator exists and denies authority/publication effects |
+| CDL watcher README | `f6899f9a6dd23704fe96502806e7c06691195263` | Finite outcomes, commands, report boundary, and live-watcher hold are documented |
+| Agriculture workflow | `d89d5db8861812f7b0a1024ae37a23ed5bd61354` | Focused CDL proof runs read-only; broader validation/proof/release remain held |
+| `IngestReceipt` contract | `8e76dc10aa23de967501bd32479f83788339a39b` | Shared candidate contract/validation exists; live Agriculture receipt integration remains unproved |
 
-> All paths above are **PROPOSED** and follow Directory Rules §9.1. Presence and exact segment names **NEED VERIFICATION** against a mounted repo.
+### 18.2 Material change ledger
 
-</details>
+| Prior material | Disposition | v0.2 treatment |
+|---|---|---|
+| Lifecycle invariant | `KEEP / CLARIFY` | Retained; current and future flows separated |
+| Watcher-as-non-publisher | `KEEP / ENRICH` | Bound directly to the implemented CDL comparator and workflow |
+| Public-safe aggregation and sensitive-detail denial | `KEEP / ENRICH` | Retained with broader Agriculture risk examples and explicit fixture rules |
+| Source-family roster | `CLARIFY` | Recast as candidate/current repository posture, not active refresh inventory |
+| Cadence examples | `REMOVE_WITH_EVIDENCE` | Removed as operational instructions because the central register is empty |
+| Live conditional-fetch procedure | `RELOCATE / HOLD` | Kept as future source-specific profile requirements, not current commands |
+| Speculative path tree | `REMOVE_WITH_EVIDENCE` | Replaced by verified responsibility links and current path evidence |
+| Illustrative `RunReceipt` JSON | `REMOVE_WITH_EVIDENCE` | Replaced by links to current contract/schema authority surfaces |
+| Receipt/proof/release catalog | `CLARIFY / CONSOLIDATE` | Current object-family maturity and non-equivalence made explicit |
+| Rollback and stale-state rules | `KEEP / REPAIR` | Bound to current dedicated runbook and held operational maturity |
+| No-mounted-repository caveats | `REPAIR` | Replaced by exact repository, commit, blob, workflow, tool, and placeholder evidence |
 
-<details>
-<summary><strong>B. PROPOSED minimal RunReceipt shape (no-change cycle)</strong></summary>
+### 18.3 Open verification backlog
 
-```json
-{
-  "schema_version": "v1",
-  "receipt_kind": "RunReceipt",
-  "run_id": "<uuid>",
-  "operator": "<actor>",
-  "reason": "scheduled_refresh",
-  "source_id": "<source_id>",
-  "inputs": {
-    "source_url": "<url>",
-    "prev_etag": "<etag>",
-    "prev_last_modified": "<rfc1123>"
-  },
-  "outcome": "NO_CHANGE",
-  "policy_decision": {
-    "policy_id": "<id>",
-    "decision": "ALLOW"
-  },
-  "spec_hash": "<sha256 of canonicalized spec>",
-  "time": "2026-05-13T00:00:00Z"
-}
-```
+- `NEEDS VERIFICATION`: accountable Agriculture, source, connector, rights, sensitivity, evidence, policy, lifecycle, release, and independent-review stewards.
+- `HOLD`: populate or replace the empty central source-authority projection with governed, non-activating records before relying on it operationally.
+- `CONFLICTED`: settle `connectors/nass/` versus `connectors/usda-nass/` versus `connectors/usda/nass/` through an accepted placement/migration decision.
+- `NEEDS VERIFICATION`: settle singular/plural SourceDescriptor schema-path migration and validator discovery without creating another authority home.
+- `HOLD`: replace placeholder Agriculture source files with one complete reviewed descriptor at a time.
+- `HOLD`: implement one bounded source-specific connector and `IngestReceipt` integration before calling live refresh executable.
+- `NEEDS VERIFICATION`: source-specific rights, endpoint terms, access controls, cadence, stale-state, correction, and replay behavior.
+- `HOLD`: prove end-to-end source -> RAW/QUARANTINE -> validation -> evidence/catalog -> release/correction/rollback for one public-safe Agriculture slice.
+- `UNKNOWN`: deployment, source activation, operational monitoring, signer custody, public alias behavior, and production rollback readiness.
 
-> Shape is **PROPOSED**. Authoritative shape lives in `schemas/contracts/v1/receipts/run_receipt.schema.json` once verified.
+### 18.4 Last reviewed
 
-</details>
+| Field | Value |
+|---|---|
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Base | `main@2c010b36609bf2ceb94e5a2d61fa62493e6f298f` |
+| Prior target blob | `f213ef17f4880b3850b48e62168c5c959351e055` |
+| Review date | 2026-08-23 |
+| Current executable maturity | CDL fixture comparator only |
+| Live source-refresh maturity | `HOLD` |
+| Publication effect | None |
+| Rollback for this document | Abandon draft PR before merge or transparently revert/forward-fix after merge |
 
-<details>
-<summary><strong>C. Public-safe aggregation reminder</strong></summary>
-
-When a cycle emits any public-bound derivative, the `AggregationReceipt` **MUST** record:
-
-- `geometry_scope` — e.g. county FIPS, HUC level, grid cell size
-- `time_scope` — crop year, growing season, decadal mean, etc.
-- `aggregation_method` — sum, mean, median, count, suppression rule
-- `input_source_refs` — every `SourceDescriptor` that contributed
-- `suppression_rule` — k-anonymity / cell-suppression rule applied
-- `output_unit` — the unit and (where applicable) the unit-conversion receipt
-
-Field polygons and operator identities must not survive aggregation into the public derivative.
-
-</details>
-
-<details>
-<summary><strong>D. Doctrine references behind this runbook</strong></summary>
-
-- **Agriculture mission and boundary** — public-safe aggregate or permissioned form; no private operations, field-level sensitive details, or rights-limited data without review. (Agriculture domain doctrine.)
-- **Canonical object families** — `CropObservation`, `FieldCandidate`, `CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`, `SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`, `DroughtStressIndicator`, `PestStressIndicator`, `AggregationReceipt`. (Agriculture domain doctrine.)
-- **Lifecycle invariant** — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED; promotion is a governed state transition, not a file move. (Lifecycle law.)
-- **Receipts catalog** — `SourceDescriptor`, `TransformReceipt`, `RedactionReceipt`, `AggregationReceipt`, `ModelRunReceipt`, `AIReceipt`, `ReviewRecord`, `PolicyDecision`, `ValidationReport`, `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`. (Master receipt catalog.)
-- **Trust membrane** — public UI and normal clients use governed APIs and released payloads only; no browser path to RAW, WORK, QUARANTINE, canonical stores, graph stores, object stores, vector indexes, model runtimes, unpublished candidates, or credentials.
-- **Stale vs wrong** — stale-state markers and supersession lineage govern aged claims. (Stale-state doctrine.)
-- **Watcher-as-non-publisher** — watchers detect change and open PRs; they do not publish.
-
-</details>
-
-[↑ Back to top](#agriculture-source-refresh-runbook)
-
----
-
-**Related docs:** [Agriculture domain README](../../domains/agriculture/README.md) · [SourceDescriptor standard](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) · [UI validation runbook](../ui_VALIDATION.md) · [UI rollback runbook](../ui_ROLLBACK.md) · [Directory Rules](../../doctrine/directory-rules.md)
-
-**Last updated:** 2026-05-13 · **Status:** draft · **Owners:** Agriculture domain steward · Source/connector steward · Docs steward *(placeholder)*
-
-[↑ Back to top](#agriculture-source-refresh-runbook)
+[Back to top](#top)

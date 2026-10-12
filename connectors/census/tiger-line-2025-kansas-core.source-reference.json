@@ -1,0 +1,3337 @@
+{
+  "object_type": "TigerLineSourceReferenceManifest",
+  "schema_version": "1.0.0",
+  "manifest_id": "kfm://connector/census/tiger-line/source-reference/2025/kansas-core",
+  "status": "PROPOSED_INACTIVE",
+  "source": {
+    "publisher": "U.S. Census Bureau",
+    "product": "2025 TIGER/Line Shapefiles",
+    "vintage": 2025,
+    "media_type": "application/zip",
+    "landing_page": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+    "archive_root": "https://www2.census.gov/geo/tiger/TIGER2025/"
+  },
+  "scope": {
+    "label": "Kansas core candidate",
+    "state_fips": "20",
+    "state_abbreviation": "KS",
+    "county_count": 105,
+    "source_role": "CANDIDATE_REFERENCE_GEOMETRY_PACKAGES",
+    "package_selection_status": "CANDIDATE_NOT_APPROVED",
+    "rights_posture": "NEEDS_REVIEW",
+    "sensitivity_posture": "NEEDS_REVIEW",
+    "crs_topology_status": "NOT_INSPECTED",
+    "notes": [
+      "This inventory is not an accepted TIGER/Line feature-class allow-list.",
+      "Road, rail, and water packages remain non-authoritative domain inputs.",
+      "TIGER/Line is not demographic, cadastral, or legal-boundary authority."
+    ]
+  },
+  "capture": {
+    "retrieved_at_start": "2026-09-12T22:19:44Z",
+    "retrieved_at_end": "2026-09-12T22:24:30Z",
+    "operator_source_manifest_sha256": "bfb69f7630e6df94495d82507cf9a47c5eb5bd320667fff78f7acc0ef8af577d",
+    "operator_delivery_index_sha256": "04624ea690e65280833ca6e44c01b8da66b8d60a4ff3405215dd3c5f03de410a",
+    "source_zip_integrity": "326_OF_326_PASS",
+    "operator_handoff_readback": "VERIFIED",
+    "intact_package_count": 325,
+    "segmented_source_package_count": 1,
+    "segment_count": 6,
+    "private_locator_committed": false
+  },
+  "inventory": {
+    "package_count": 326,
+    "total_bytes": 991516458,
+    "product_counts": {
+      "AREAWATER": 105,
+      "BG": 1,
+      "COUNTY": 1,
+      "COUSUB": 1,
+      "LINEARWATER": 105,
+      "PLACE": 1,
+      "PRIMARYROADS": 1,
+      "PRISECROADS": 1,
+      "RAILS": 1,
+      "ROADS": 105,
+      "STATE": 1,
+      "TABBLOCK20": 1,
+      "TRACT": 1,
+      "ZCTA520": 1
+    },
+    "package_index_sha256": "sha256:711f30103c647c76241f6450e3c9ad71abc5d4efbdeed591b975c1bb9cda7fbe",
+    "packages": [
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20001_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20001_areawater.zip",
+        "byte_length": 964414,
+        "sha256": "8243e86ee77ad3c3f8d8bcde4c5e54715f5d3f9648c5a3428812c45161f0d9ec",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20003_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20003_areawater.zip",
+        "byte_length": 993183,
+        "sha256": "8009fef1bcd90c6be21257e69c5f44195bb8018a71539210fdc6a3b46129c4d8",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20005_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20005_areawater.zip",
+        "byte_length": 68504,
+        "sha256": "03d12c88c36673c5910056f1137832a51880921c8a50e726c1610bac08a1b6dd",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20007_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20007_areawater.zip",
+        "byte_length": 61338,
+        "sha256": "d79c60f2c30bff63eeb1f110b696eb4cc411fafef88591c92bda56aa18646567",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20009_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20009_areawater.zip",
+        "byte_length": 127405,
+        "sha256": "ffadcf6a6e9acaf70f7b1f5301e0f0e46beb3e47b42887f8789acafb5a1d5064",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20011_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20011_areawater.zip",
+        "byte_length": 586021,
+        "sha256": "b249a3e79c3ec9c3fbea591f6783ce953bf9bcca0d03d819219427df58327c85",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20013_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20013_areawater.zip",
+        "byte_length": 67842,
+        "sha256": "73356b0de250ad7863ad962fc17495193272822352941d74078bb6bd68e15a9c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20015_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20015_areawater.zip",
+        "byte_length": 278609,
+        "sha256": "9548957cc29f1d7d6cd4a632d2137df37dfd905e99566da0f36dc7a32e201c8a",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20017_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20017_areawater.zip",
+        "byte_length": 570481,
+        "sha256": "8a2e16368b8abf07257cca9f38a31d19c5cbbc02cc488290867c29930c79a0d8",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20019_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20019_areawater.zip",
+        "byte_length": 1020889,
+        "sha256": "e821c5c1ed325ffef3469a4cc544e535b49bae49d767189892c46b5e79298b44",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20021_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20021_areawater.zip",
+        "byte_length": 111519,
+        "sha256": "27895b0089167500b249e94ff87c4a5a2a98f855c10ccd185639f7cbb86af374",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20023_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20023_areawater.zip",
+        "byte_length": 44800,
+        "sha256": "2d7945a713a2ffd229d93977bd3b9d89854a1caa9c49c87129fd4281aa69a88e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20025_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20025_areawater.zip",
+        "byte_length": 44079,
+        "sha256": "002a3fc977eb58705faf01f7d87b346b6b94f1917f20721683d31b4e3ee4fac5",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20027_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20027_areawater.zip",
+        "byte_length": 609019,
+        "sha256": "d2ecd067ca8491ca9cb94c872fae601bb57affec3013e62d2fdbca56456a18c1",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20029_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20029_areawater.zip",
+        "byte_length": 57325,
+        "sha256": "da723cea91bd66a9bdfa8668ee7e1cfa3412a8e59299fe955ebafb59061cedcf",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20031_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20031_areawater.zip",
+        "byte_length": 1194970,
+        "sha256": "d32e337a66302ba659a38f05fd5ee004a44930f0f64cb7f332dc2f2f3cdfe365",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20033_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20033_areawater.zip",
+        "byte_length": 28030,
+        "sha256": "49acdd4156dbd4005e042351ba80833b73edd2f33d0409a6bab14384c4ad2cba",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20035_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20035_areawater.zip",
+        "byte_length": 125581,
+        "sha256": "de2e630a6852f153fa32d6f7f12e835e3cb838ab8a4aedc4b29c7475caa06e95",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20037_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20037_areawater.zip",
+        "byte_length": 1054460,
+        "sha256": "f424171806abb7c4208f650c2f018cdb9a4913704c0bdfd0a17f28a04f393a6f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20039_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20039_areawater.zip",
+        "byte_length": 25304,
+        "sha256": "10e682902a310b189512c770b43eb5a77fd71b82b49fbdfb6914275b1e178443",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20041_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20041_areawater.zip",
+        "byte_length": 537904,
+        "sha256": "3a5f3000114334cb2db4a502a5b6ce55496caf9fa6a11a1f7e5c5b2b34e95826",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20043_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20043_areawater.zip",
+        "byte_length": 56174,
+        "sha256": "a03d1b00a00e1d65fb57e49dc23aa1e60acaeeb1a4ca36c88ea1caf12bbce652",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20045_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20045_areawater.zip",
+        "byte_length": 588743,
+        "sha256": "7db5df5c5b12a6102d56912bce7d4bae9e47f3a9ecb65c0eda23afe920da4d67",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20047_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20047_areawater.zip",
+        "byte_length": 15880,
+        "sha256": "e3cb9fafcd658ee9b5f3460a6d8be089ef0ca66fcb933efd064f8448677cad9c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:19:57Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20049_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20049_areawater.zip",
+        "byte_length": 843100,
+        "sha256": "9209590564a4f8c7d3c11b0145caa6e1670d985ad4964e765e5e5fbf3e998aa1",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20051_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20051_areawater.zip",
+        "byte_length": 20256,
+        "sha256": "c43b5982314b37a975a5b8e721c51493385383d5f2f393006d7a506022f7e1a2",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20053_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20053_areawater.zip",
+        "byte_length": 82438,
+        "sha256": "e3e2e48bace8af5f4f66b28cc46158ea1c3207f7d4f220c9dc86bbca4ba9a8d3",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20055_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20055_areawater.zip",
+        "byte_length": 52792,
+        "sha256": "52f95c2db1581c4c87e2f9c76aa476cb9db5ee4908c5fe6bfde4e12602689f88",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20057_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20057_areawater.zip",
+        "byte_length": 38255,
+        "sha256": "ccb09f99d7a9d3bb2196b8d61c0b428e0c95e4d1db2568993395bbce0b584f0e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20059_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20059_areawater.zip",
+        "byte_length": 984860,
+        "sha256": "a677ac54ba469ff42c56ac463c12139c8cacb398b7af37e0e53a6a3191d3198b",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20061_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20061_areawater.zip",
+        "byte_length": 609253,
+        "sha256": "8407da541eeb57e89c2d3f1e1aa41ef843c8ee5446a734bc08f84b94bb3cf3e7",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20063_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20063_areawater.zip",
+        "byte_length": 18793,
+        "sha256": "63e1187146f663887f79a5063bf57493b81285acd2498d4cd04eeb32839ee4f0",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20065_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20065_areawater.zip",
+        "byte_length": 29484,
+        "sha256": "c9d7318db7578958285a9e61c169ed15456edae78ea615048335dca1929e4e6b",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20067_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20067_areawater.zip",
+        "byte_length": 26765,
+        "sha256": "75c1eff35ace03d120a507575a9de52604f8d5eb0802b1afa3df7036c406b8c2",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20069_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20069_areawater.zip",
+        "byte_length": 36208,
+        "sha256": "5d9e22c5b824f813cd2eeee35d21e684e5a9c084011277d0a421b7b04ea94cc8",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20071_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20071_areawater.zip",
+        "byte_length": 13956,
+        "sha256": "027122279d75dd74ef48591be8fe168a278557667d360979a21f8fd5241dae06",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20073_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20073_areawater.zip",
+        "byte_length": 397297,
+        "sha256": "1eb654949fa77b82f379ae91c98c651dc18fefd9761f0533ab7ff8b3e86d1e3c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20075_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20075_areawater.zip",
+        "byte_length": 25080,
+        "sha256": "76c74d26034e595031e7b7ab1fff9fea84d9062d9de750bcbaf449199e60ae6f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20077_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20077_areawater.zip",
+        "byte_length": 37641,
+        "sha256": "8cd55a46fc402aeae3131ff14fb65d4ed0db1fdb3b7395b969573c56c30deef2",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20079_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20079_areawater.zip",
+        "byte_length": 42252,
+        "sha256": "32ecd353363e4f0b4cd7a44ea1fd51731637881d4795da9f51720f2bc487bc95",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20081_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20081_areawater.zip",
+        "byte_length": 38489,
+        "sha256": "adfa36064f4f59553ad48676e40aaca938aa59138b684f0492a3b0b133cc1c90",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20083_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20083_areawater.zip",
+        "byte_length": 23477,
+        "sha256": "022b4a7689131d91cacb950a053f22cac73b2bc382b8e3b9e2cba0a169a5945c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20085_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20085_areawater.zip",
+        "byte_length": 53748,
+        "sha256": "5b06f204d626d14fb21573c9c4be621ae2b566798c17128fe824b565949ec95a",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20087_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20087_areawater.zip",
+        "byte_length": 934992,
+        "sha256": "0e5483b65e7bafd9f45ad8d7cbb94aa421d03e07093636beec965a22aaeeaba0",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20089_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20089_areawater.zip",
+        "byte_length": 343645,
+        "sha256": "88c5087ef51c50c6b6bf1d5b5b166d27fed623c20a7ee5929ab5943db59434f6",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20091_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20091_areawater.zip",
+        "byte_length": 561288,
+        "sha256": "aea9fa46e1dd9d549d694f2dcbd0a731a25b91bbe58a77bf1e852949808ba2e1",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20093_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20093_areawater.zip",
+        "byte_length": 21601,
+        "sha256": "411587ae08a1aa2649b43d40159d1775f3cc54d0f63814041fcc7e171391843d",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20095_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20095_areawater.zip",
+        "byte_length": 39681,
+        "sha256": "dc45dfbc6a8813d10813b4762cceaa4d3d32072e0df81370d9c6e0e565112037",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:15Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20097_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20097_areawater.zip",
+        "byte_length": 17783,
+        "sha256": "12e376b7861d474a65573fc99c3625a5011dff36c30b3a3c95365c739085a416",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20099_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20099_areawater.zip",
+        "byte_length": 843693,
+        "sha256": "77dace5d3bda9f94e4806dc129c7e2cde0217e1b8a523970fbb5c3ac834bd150",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20101_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20101_areawater.zip",
+        "byte_length": 19009,
+        "sha256": "7b4a3754dffeb9f93f5f29a62611ce2e4b710023436b9a7ce73674ae44d23261",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20103_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20103_areawater.zip",
+        "byte_length": 95077,
+        "sha256": "695710148cfad4d339a1a60f91cc259a1a8ef110e95e876380744c705570b62c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20105_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20105_areawater.zip",
+        "byte_length": 32022,
+        "sha256": "0e7e55fe0851477f1f85c0c3db499e11285c0b52dd0638d1d9eb4035068ff9d5",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20107_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20107_areawater.zip",
+        "byte_length": 1073987,
+        "sha256": "50fd74b2804f0d5d65d6c368b1e992891591a677acb8aa66985dea021c7325db",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20109_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20109_areawater.zip",
+        "byte_length": 22714,
+        "sha256": "f01261bdd824168fa3ee0f7291910d40f524cded52419c302ef5e2c8b592ff0e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20111_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20111_areawater.zip",
+        "byte_length": 1310563,
+        "sha256": "2c29a54e3c6825f2c0685e0d811a2f999fcb2ad8f95777ef9a296e134e158e61",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20113_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20113_areawater.zip",
+        "byte_length": 341155,
+        "sha256": "aafdc865f6a6b9b8cd4a8f24ef141c6a43516d985a563529cf9d50b7c5d7e9ca",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:27Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20115_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20115_areawater.zip",
+        "byte_length": 497637,
+        "sha256": "c9e39baba9294c74c35bf9ff2a455a8ea609f2624beb502e6c5eee50931ab0e1",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20117_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20117_areawater.zip",
+        "byte_length": 846109,
+        "sha256": "e3dc585275e79ac229381de8c1ee5fdcbc37de840c9005fd07e54aa34e6f955e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20119_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20119_areawater.zip",
+        "byte_length": 45939,
+        "sha256": "d85bed4b0d135d33a328e633e4ce205f2f0255fe96c80f58e9e1caf056267dba",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20121_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20121_areawater.zip",
+        "byte_length": 1122930,
+        "sha256": "5d7f8f8d964a3079a5b36a8d57c3fd519ef5a95a73f8bafeb20b1b04dd6b0a1e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20123_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20123_areawater.zip",
+        "byte_length": 114978,
+        "sha256": "8fe3b0fd8c1e04b65a2ac2c6216362039106a58838c80545660e52f6fdf2141e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20125_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20125_areawater.zip",
+        "byte_length": 517171,
+        "sha256": "1f79d9716f672bd2f6f317ad839c9f2686372cbf7623f6358be9e5405b9f6cd7",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20127_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20127_areawater.zip",
+        "byte_length": 772102,
+        "sha256": "ca9f0823d9d83ef20afcd6b0bd4c145612b98f2a967930f7f49fa51940bcf02a",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:28Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20129_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20129_areawater.zip",
+        "byte_length": 31977,
+        "sha256": "ff324e63a5dfd57f9c6edaa5d29c8400c6bf9c8d25fcc9de6dbfc1bcc5ea75c0",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20131_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20131_areawater.zip",
+        "byte_length": 410537,
+        "sha256": "7c2670f062db4d2ce11f2d356fe23b5fb3780efd6c5fd6ca3d49a6456ebe1671",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20133_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20133_areawater.zip",
+        "byte_length": 126224,
+        "sha256": "060c00314937afd9e98b9b83d1885995fda6d8e14b9b70ae402495bfffbd87ce",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20135_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20135_areawater.zip",
+        "byte_length": 19960,
+        "sha256": "9505b08f6d2023dea5096bf4ab7d8bf22abcf28a1518f9bae00f8aea00892fa0",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20137_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20137_areawater.zip",
+        "byte_length": 25324,
+        "sha256": "bc65a0d7dec3c2732f0dfeeb0fd05cafaa9a784e96aeafed7fd098e6a3dd684c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20139_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20139_areawater.zip",
+        "byte_length": 259144,
+        "sha256": "4a485b9984a4f14d4f3ac9fc7878d2e62ff89e62bc007d52f02bd8c045d860af",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20141_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20141_areawater.zip",
+        "byte_length": 46459,
+        "sha256": "b38657a4f1fc1318aaf73e267792c39216dac3130873e15ae85f573ac3946164",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20143_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20143_areawater.zip",
+        "byte_length": 38724,
+        "sha256": "a3c03e786e49b33b3bcdc1a5d0a8d8a55e7c892341fe96f4bf6acf79c079f675",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:34Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20145_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20145_areawater.zip",
+        "byte_length": 24412,
+        "sha256": "47010cb50ace7377320722bf3dba3cf6f4ae86085f8c83a4a72eca84d961ba11",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20147_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20147_areawater.zip",
+        "byte_length": 80534,
+        "sha256": "c838dbe19b6a7b5c0f0639d3ce45acf5fa1ec5733c822ae833cbbbf7a55978ca",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20149_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20149_areawater.zip",
+        "byte_length": 886196,
+        "sha256": "cd87b6d24136dba0a41c9e37cb69f87c826b20bee9cd19a0c572c4838cd6f370",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20151_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20151_areawater.zip",
+        "byte_length": 39916,
+        "sha256": "ab42de2b3b9cde5cd80afedc48b19e6e3a25722c0ad4db517b8c545da2a431e5",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20153_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20153_areawater.zip",
+        "byte_length": 25041,
+        "sha256": "c32b84236eb08e3f9adf8857ece640954fec4cb6d3f6f6be1074c2dbdb9b3102",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20155_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20155_areawater.zip",
+        "byte_length": 166834,
+        "sha256": "b27adccbeac153e021ed93662c2fe6324dfb3621cb851b2beeba1d1a3a7e1ebe",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20157_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20157_areawater.zip",
+        "byte_length": 388010,
+        "sha256": "f19aacbbb80654d729fb0bf1bf0f05bf63cdee2c86a301662a21dfa0ac8e9ceb",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20159_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20159_areawater.zip",
+        "byte_length": 50959,
+        "sha256": "6f08b19480818d035204e03445444bb23c5f84c171fffae6e831698faf88a515",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:39Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20161_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20161_areawater.zip",
+        "byte_length": 223637,
+        "sha256": "b68c6901b836c2834727bfbed1bce9c519cad5032f29c7cfc7b2a24b9af4a562",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20163_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20163_areawater.zip",
+        "byte_length": 49510,
+        "sha256": "362aa8d88102013a0289539ddd98b9b527983e776d79bf44f011a280f65ecabc",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20165_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20165_areawater.zip",
+        "byte_length": 18968,
+        "sha256": "98851ac7bc48e546179769702ede72600ffae8c6863747e2bbb393a69774991f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20167_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20167_areawater.zip",
+        "byte_length": 88435,
+        "sha256": "2dc2421bb203695125536ff9fd55a65faefd8389da6bdfc2df942c03fac6081f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20169_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20169_areawater.zip",
+        "byte_length": 77356,
+        "sha256": "92487cf0fa92fbbfa8f43a00756413ee9d2ee5e926f262c62c2d00e339882b41",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20171_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20171_areawater.zip",
+        "byte_length": 36514,
+        "sha256": "7985b86d6663472e6fe1aef65c74ef0c850228bd3252154fd5c99e28b90b347c",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20173_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20173_areawater.zip",
+        "byte_length": 259569,
+        "sha256": "768dafd3b11b86bdc718eaa6cecb50d4a12891cf1eb9b694ecd5300a9a62c365",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20175_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20175_areawater.zip",
+        "byte_length": 20475,
+        "sha256": "0d95930d1ee42294ff32524c6154c7cc3875bf1439f671fd6763164e4ff1a685",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:46Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20177_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20177_areawater.zip",
+        "byte_length": 1060025,
+        "sha256": "7f406195a9ba6b1759ce270af2c8d413b474b58bd6ac1c7fab35325b0dcab1df",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20179_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20179_areawater.zip",
+        "byte_length": 29980,
+        "sha256": "1d07cd665cf0a6b6f97c9fd49a6249021b00b0f7b20ce4104373b444ec7c496f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20181_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20181_areawater.zip",
+        "byte_length": 23979,
+        "sha256": "d39c4126ea224bc99a16b494ce75abd7448cabf41326fd4f29f1e0a6dd2b04d8",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20183_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20183_areawater.zip",
+        "byte_length": 114654,
+        "sha256": "901934fc7aa3db31e6c453f696706dcd47c4431d8a9f98b87f68d419314998ec",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20185_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20185_areawater.zip",
+        "byte_length": 85184,
+        "sha256": "64da939f58aa760ea82cae3522c668e6f44b20fbaba826d7c0590ed56cf429c3",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20187_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20187_areawater.zip",
+        "byte_length": 18126,
+        "sha256": "81814f5fb741fe8eb27ae2a339f3c66315b6adbe63c369b57f645ce8eae6aa32",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20189_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20189_areawater.zip",
+        "byte_length": 14361,
+        "sha256": "3d5e3d3024b7bfd52cca48ae58d90b180c464089bb13485c488f4c6fadb37459",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20191_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20191_areawater.zip",
+        "byte_length": 61762,
+        "sha256": "4dc8f512b0a83e1fae0acc38cfa43257075bd98848ec21e23a43839c277cb8bc",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20193_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20193_areawater.zip",
+        "byte_length": 41068,
+        "sha256": "b62d2f94c5310742680e3deba505a7e65a109f4c37f8e2cb46781216a00a5c0e",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20195_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20195_areawater.zip",
+        "byte_length": 32803,
+        "sha256": "76881f80a491b12ad4424922f4b174b5c0fe06b93acb8652e8ca266c96239254",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20197_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20197_areawater.zip",
+        "byte_length": 932751,
+        "sha256": "c9cb1026016374b8622fffe999884861b099f8b160a90b6dadf85a344ec19231",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20199_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20199_areawater.zip",
+        "byte_length": 17459,
+        "sha256": "2737bdf4c93154275aa0c65438a74bdacdd13c26111d2e45f9f30ae981530a64",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20201_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20201_areawater.zip",
+        "byte_length": 729283,
+        "sha256": "1ead52436e7cf0d13d505d1b05526932e35c5600ec9b776f032f2475c555473d",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20203_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20203_areawater.zip",
+        "byte_length": 21403,
+        "sha256": "e523501cd3395e2be9cbc71a6b1f5b51ab3b2198d97f05d0b0bb7ccafcb64a43",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20205_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20205_areawater.zip",
+        "byte_length": 819073,
+        "sha256": "f0ec843c32561b1f76f2457ef9671a8112c264cf3f28e7f5bac99383f11329f8",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20207_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20207_areawater.zip",
+        "byte_length": 923009,
+        "sha256": "18e7a074644059a1633a54b567ae72df5da62435f1419732af0469af6869cd1f",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:20:58Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "AREAWATER",
+        "file_name": "tl_2025_20209_areawater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/AREAWATER/tl_2025_20209_areawater.zip",
+        "byte_length": 63436,
+        "sha256": "4154b11de7bdca5b347426487ed626e1704c2197b4e0c07c17b6187e3a721842",
+        "source_last_modified_at": "2025-09-22T23:46:00Z",
+        "retrieved_at": "2026-09-12T22:21:04Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "BG",
+        "file_name": "tl_2025_20_bg.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/BG/tl_2025_20_bg.zip",
+        "byte_length": 5710381,
+        "sha256": "afe336c71290a864e6ce8aae7d912d1bbc61e6fd6ffccc199dd22099a5c50eb8",
+        "source_last_modified_at": "2025-09-22T23:51:14Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "COUNTY",
+        "file_name": "tl_2025_us_county.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+        "byte_length": 83989800,
+        "sha256": "9c6e9d9076abce2670d1de255de3710c35ecca00a7005d88e012dec52d95f763",
+        "source_last_modified_at": "2025-09-23T02:15:55Z",
+        "retrieved_at": "2026-09-12T22:21:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "COUSUB",
+        "file_name": "tl_2025_20_cousub.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/COUSUB/tl_2025_20_cousub.zip",
+        "byte_length": 5401600,
+        "sha256": "adbc765d2a014a6fd9f1f7448c7adf7a02afa0b1ecf1eca85a6c36925089c5f1",
+        "source_last_modified_at": "2025-09-22T23:51:18Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20001_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20001_linearwater.zip",
+        "byte_length": 1501329,
+        "sha256": "1794a1b912ae67b278cc2d7ed32d890ac989940db35b8b80605a7506bae58092",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20003_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20003_linearwater.zip",
+        "byte_length": 1653512,
+        "sha256": "e212a7971cc209c8d456a3640aea2d7bee0c053b24ad377d1849c8ba9be299b2",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20005_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20005_linearwater.zip",
+        "byte_length": 649842,
+        "sha256": "037fceeddccd38272daf65f52c3fcbe8b41e35b41556fed0c4ac9f9a29455831",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20007_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20007_linearwater.zip",
+        "byte_length": 734141,
+        "sha256": "77a67ee0ec28b3c91b1cebf027586c466e1f0b373bc5610c06a48c958c570e9a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20009_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20009_linearwater.zip",
+        "byte_length": 899094,
+        "sha256": "020fb03d760474a8a7c6a89fc4ff67f556464aeafb357bc013e01b40f478ea02",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20011_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20011_linearwater.zip",
+        "byte_length": 1641169,
+        "sha256": "413aa18e93a339f5b1d58624ca3dff3f15a5beca0099fb06cfab71aa63bb851d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20013_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20013_linearwater.zip",
+        "byte_length": 1002428,
+        "sha256": "d7221f5f82f4d39dd39dfbc78484039f6235859e638c8592581dab411e493014",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20015_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20015_linearwater.zip",
+        "byte_length": 2323993,
+        "sha256": "1213e4e43dac874b031228312e1d9ba26e6c9f790603aebfce6acce82cc032e5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20017_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20017_linearwater.zip",
+        "byte_length": 2599439,
+        "sha256": "b9a534244f71a6f495eda3d801821756f9ac2b0e011fb7636c97fd6c92fd0eb7",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20019_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20019_linearwater.zip",
+        "byte_length": 1800101,
+        "sha256": "dbb7754f6c3ab7aded197c0d0f243d2f44dea0155ba536589fe2004f4d6cedfb",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20021_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20021_linearwater.zip",
+        "byte_length": 465166,
+        "sha256": "16bebd547b58cc03b9cf331e23f6687bb0fc7491283211aa4f6f271090f2faa5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20023_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20023_linearwater.zip",
+        "byte_length": 356126,
+        "sha256": "52fad9762ac3454677f56c43eadee01a2718721dc45d0f0c66ef11f0bb23a4aa",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:11Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20025_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20025_linearwater.zip",
+        "byte_length": 558980,
+        "sha256": "9c15a80387cbee4738cd6188d7a8637f9a26a72ccbd69ed0cfba362ec924c28a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20027_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20027_linearwater.zip",
+        "byte_length": 1762484,
+        "sha256": "b3b20a1130ed1b73434ed1fea137c7377bcd109bfcc78333888cd366296ef09b",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20029_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20029_linearwater.zip",
+        "byte_length": 1427853,
+        "sha256": "dba0e1df659a2ff1903f26eb86ce6a01dc03bf497da3d5f3c906eda6d19c4413",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20031_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20031_linearwater.zip",
+        "byte_length": 2251227,
+        "sha256": "c24f78ccffc7c0e737c659a99015b051dae060e8cb4d15e739db4097e56cf6f2",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20033_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20033_linearwater.zip",
+        "byte_length": 485945,
+        "sha256": "67637c5c4cdbc8d15bbb48adb7aef2cc57fdf856178e3ae1e8563050fa2f51a3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20035_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20035_linearwater.zip",
+        "byte_length": 2132345,
+        "sha256": "d910c70323d50ebf5e5635b41c1c0559a71ee492a9481ad2ac66a2d4d6c40119",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20037_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20037_linearwater.zip",
+        "byte_length": 1141103,
+        "sha256": "019eba240fb982f86ef91f91f8aa09cf39e538d2714cc757e0b60ff7962e41cf",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20039_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20039_linearwater.zip",
+        "byte_length": 520705,
+        "sha256": "6d87093dae0962d3016e6d84abe487c4e3f90cd10f6cfab490d800892e8b357a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20041_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20041_linearwater.zip",
+        "byte_length": 2195363,
+        "sha256": "3b7582f81ce5d5623f99d0fc3ce99fad40f6d5cdd8135b38343e3bfb4624c2d1",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:24Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20043_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20043_linearwater.zip",
+        "byte_length": 391173,
+        "sha256": "6a68dc38a41f507306adc5b3edebafb0b3b6ce6800862358b2e314b83d01fc91",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20045_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20045_linearwater.zip",
+        "byte_length": 913927,
+        "sha256": "4557375e5615741a01acaa16cfae6a9843936d734a7d21616b583ba212fd46d7",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20047_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20047_linearwater.zip",
+        "byte_length": 147242,
+        "sha256": "a5e2bf8fb08ec133b6f65825c70076e184937f4e5fc318554b2acb6a37aaf6df",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20049_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20049_linearwater.zip",
+        "byte_length": 1726806,
+        "sha256": "50bd89c53de6b7f4dca0d2d399b6ce00af1f813c162090eea001e437bf846515",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:24Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20051_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20051_linearwater.zip",
+        "byte_length": 510918,
+        "sha256": "a5a543d5757c3d6211623cfe3d3e8febf558cfd3d9ba76927b60cb4d52ae919a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20053_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20053_linearwater.zip",
+        "byte_length": 613785,
+        "sha256": "d677df20cc7e9c76ac37ecc2459843c3b6fc98492a8d84914a282d22096d3706",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:24Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20055_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20055_linearwater.zip",
+        "byte_length": 642601,
+        "sha256": "a45949d86beebd3bed0e99574c8ffd6c2a48808007c4167101390bf2195d2005",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20057_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20057_linearwater.zip",
+        "byte_length": 588099,
+        "sha256": "61765d1dc286e0ff259511b33a93b9dbfb3ff98012d6f1d8e0772dd960430421",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20059_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20059_linearwater.zip",
+        "byte_length": 1858566,
+        "sha256": "2b408899938a9e5e41c355ad133d2a2214e7ad3c76712792626c93fb8d90d393",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:30Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20061_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20061_linearwater.zip",
+        "byte_length": 1347066,
+        "sha256": "4a2677431eda624372ae07353d3e9efb0a39f3559ed7d2fb9b4a602f6ec555cc",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:30Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20063_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20063_linearwater.zip",
+        "byte_length": 1166155,
+        "sha256": "eebf7c7d7199dfb3147955dabfaecc32f09a63bfd408e23206a5e4bcce7f9f8e",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:30Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20065_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20065_linearwater.zip",
+        "byte_length": 1174207,
+        "sha256": "a89690304e50c47acf68af80dec436a84539f3cab9e8e355c2bcd6831650c568",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:30Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20067_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20067_linearwater.zip",
+        "byte_length": 86224,
+        "sha256": "76293b24e596ef151100ac31ab6a3c6eb38ed4af389e805d12db604904b33e2f",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20069_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20069_linearwater.zip",
+        "byte_length": 215842,
+        "sha256": "b0403729804601ca393066f2162c04dc867e5cbb149af8e5ceff08c6c6be4cc2",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20071_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20071_linearwater.zip",
+        "byte_length": 87728,
+        "sha256": "352f55aa8c84620901f0cd5f3148541b5d0f5c5fce0a4bfbf232eb95acb4bcb3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20073_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20073_linearwater.zip",
+        "byte_length": 2171120,
+        "sha256": "aef3783cfd4a1613219f10ccd48f6a324c26fdd848a1b8ecfe0b8dc18c2e5d37",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20075_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20075_linearwater.zip",
+        "byte_length": 240984,
+        "sha256": "2dc6dd16dcc40855cd6898579d47aeb32db9e4c5fe5c129a017e435f53e49e9a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20077_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20077_linearwater.zip",
+        "byte_length": 428752,
+        "sha256": "f5f008571236954882ea6e020619ef24c178cb0529280a1ab1c804fb1b85cc4c",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20079_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20079_linearwater.zip",
+        "byte_length": 686710,
+        "sha256": "23828b1d07788ada80bfc6425f50efe38c5614a9632f31de5aaf6794ad774ecb",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20081_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20081_linearwater.zip",
+        "byte_length": 45695,
+        "sha256": "57bb35bf99f84903e74082702a7e70dd79a31bc5b09643bb39de05207f5947eb",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20083_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20083_linearwater.zip",
+        "byte_length": 588461,
+        "sha256": "86b945faf5f7b652d46a9cdb479ebfe0fbf2ffc8b672d536a6cea5d7abca2a08",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20085_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20085_linearwater.zip",
+        "byte_length": 1213665,
+        "sha256": "61ad398676f36505204c1f77a274e1415f90dc124fbda3222cf7d3e1fef5825d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20087_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20087_linearwater.zip",
+        "byte_length": 1189597,
+        "sha256": "469362138f0639d5f1b4c8a4333684974ea4f7b7238c84bb504f7fbe10a3500d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20089_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20089_linearwater.zip",
+        "byte_length": 1732610,
+        "sha256": "b003830ceed947fdc3a2a3c5bff96de9a9d74ed451bdeaa5f01ff10898d211e0",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20091_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20091_linearwater.zip",
+        "byte_length": 956044,
+        "sha256": "ede40a4d8cfd7495d2594bf72ac34897f24c758f053a192cd5cdf52272ef4c17",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20093_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20093_linearwater.zip",
+        "byte_length": 153513,
+        "sha256": "eca7852233e82c6b0f3be719a85f60ac5bea4c1baab249f0b74e2e79eb8acb23",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20095_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20095_linearwater.zip",
+        "byte_length": 582630,
+        "sha256": "17ecb922757f0eca136c3d392a2961a5bf8709497e558703f03b4747038b3ebc",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20097_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20097_linearwater.zip",
+        "byte_length": 362281,
+        "sha256": "7850e005f3adb0299b211b263d9b58e7c29b86a60acf503b22798a2aea4cc2c4",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20099_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20099_linearwater.zip",
+        "byte_length": 1314394,
+        "sha256": "0282cea241338943fff559ce3f64da065c1ddd517297de987ae9330257edcf9d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20101_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20101_linearwater.zip",
+        "byte_length": 272464,
+        "sha256": "d5ffe2dbf0b1c3ae400cab709b2ee56bb72b24fd7eba53cb61f66f74669fbca8",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20103_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20103_linearwater.zip",
+        "byte_length": 351452,
+        "sha256": "4079e4fe805138159d3b128705322e0d237823128f29734b49cf134f03eb7762",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:42Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20105_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20105_linearwater.zip",
+        "byte_length": 549421,
+        "sha256": "7bb20874cedf1ac8af528418da13c357cf79a5cc3f36d836b0d39751d37a75a5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20107_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20107_linearwater.zip",
+        "byte_length": 1751221,
+        "sha256": "33b7f025006cef92c29d72fa0c7bce556c081763b8a5ce4bbf8b30a03dee4ae5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20109_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20109_linearwater.zip",
+        "byte_length": 411794,
+        "sha256": "0e5abd8abf95e8934b7f974bdc8bef8d30a91d07656fa219eb414e1a250125ac",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20111_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20111_linearwater.zip",
+        "byte_length": 2469855,
+        "sha256": "b8cac54150e1c62b7a7258b6fd79ffc6e7c66cd892232d37b4247475a8378ac3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20113_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20113_linearwater.zip",
+        "byte_length": 1431934,
+        "sha256": "413bb635c2dd00e2cfe782057baa98485d69ff610beac3f21b1deddb495804ba",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20115_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20115_linearwater.zip",
+        "byte_length": 2725798,
+        "sha256": "118cbf0fe7ec716a1b7d154f43d5078b4eab98545389fae2c424a737c6cd5d73",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20117_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20117_linearwater.zip",
+        "byte_length": 2371767,
+        "sha256": "80638a7853f60696bf1df9201f3437cbc73422afafb8bf5c7515f1b8230a740f",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20119_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20119_linearwater.zip",
+        "byte_length": 448949,
+        "sha256": "b334b42d336b0d50f3c156ecd594715bdfeab0d21b9994920c989dfcfe57fc2a",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:49Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20121_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20121_linearwater.zip",
+        "byte_length": 1578946,
+        "sha256": "95cce4c33ccf22f1c7a2e8fcd868f0f704f3d89b3b58e05eedae1c3a9f085533",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20123_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20123_linearwater.zip",
+        "byte_length": 1597128,
+        "sha256": "a3758778cb7997b575597c77f088fe0b565abedb163d7cc529e6536cdc198897",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20125_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20125_linearwater.zip",
+        "byte_length": 830947,
+        "sha256": "5801143fe8cee1ecd251c4e7e80875a290509b18e3d535528d89cd6bb1153f4d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20127_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20127_linearwater.zip",
+        "byte_length": 2345152,
+        "sha256": "1d4509131d37748b0969707ac8b8fc2b7501205e87a6966b0333bf32289c47ff",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20129_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20129_linearwater.zip",
+        "byte_length": 174767,
+        "sha256": "45281f3e901d23a379209200bb703199cb6e45b890912026d572e8b588612433",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20131_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20131_linearwater.zip",
+        "byte_length": 1175306,
+        "sha256": "0ced55dbccf1a7ad41f9e48d96058c76487d10d13b340ffaf1e6dd60dade9524",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20133_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20133_linearwater.zip",
+        "byte_length": 1029902,
+        "sha256": "afed4a5cb12536e3bbf97884156623821ef10ae0d3ab529d380a0d737d48c441",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20135_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20135_linearwater.zip",
+        "byte_length": 860537,
+        "sha256": "60ee99184442ff6d24bc588f9058602315fbab6c6dad5eb0972bfda28a64fa8b",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:21:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20137_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20137_linearwater.zip",
+        "byte_length": 506219,
+        "sha256": "f9f0776c34310f1b86fcc82223bd1a12aefd27b5eb42ea3f6b59de1b57a2d4df",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20139_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20139_linearwater.zip",
+        "byte_length": 1432011,
+        "sha256": "1b296478ec89c0f95305403dd9b6d37db891276df1ebdd9e921047a7d4e32136",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20141_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20141_linearwater.zip",
+        "byte_length": 668858,
+        "sha256": "3f448d6546a493405184901959a9e0eda649ebfef251f53d1ef1eca9177ca87b",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20143_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20143_linearwater.zip",
+        "byte_length": 1631519,
+        "sha256": "54d65852c53bd7e06e8f4e5f78be9826535f8f03058d0dd8399fdc4d3e72e5a1",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20145_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20145_linearwater.zip",
+        "byte_length": 446887,
+        "sha256": "1d0c28a08f6a04bd04a8cbc7891a9c6178b129bc9bdeb6b85120603944bdbab1",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20147_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20147_linearwater.zip",
+        "byte_length": 718989,
+        "sha256": "e48633e0a500e7516594e023000aba97bb8838428037fded8bded69d439b7ada",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20149_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20149_linearwater.zip",
+        "byte_length": 2867938,
+        "sha256": "1ed5194698b3c71c911ae760309d561c16805e5c88a0a9099a900095eb25edd3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:06Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20151_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20151_linearwater.zip",
+        "byte_length": 712058,
+        "sha256": "5044d895e7d4205b6e9edc910493b661816b874d7af7d02d03b480932ebff3e6",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:05Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20153_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20153_linearwater.zip",
+        "byte_length": 534400,
+        "sha256": "f6a504aa9edbf5c9fc3ba13de995302f9cbd37c53f55d768457670bb4dec5dbd",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20155_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20155_linearwater.zip",
+        "byte_length": 1568776,
+        "sha256": "de2c8eb3aed74f7f81a84663b7890e851a83e2237864b26c6a7fff7ecdfdf201",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20157_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20157_linearwater.zip",
+        "byte_length": 1771745,
+        "sha256": "64fac6ce0e66de57e6216e2de77a537de8f777f890714ea18cb1105896132852",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20159_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20159_linearwater.zip",
+        "byte_length": 448051,
+        "sha256": "572e86a63c2211a0d2381a0d931c159494b85d939f6187f66584d04fd5c9baf3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20161_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20161_linearwater.zip",
+        "byte_length": 1230998,
+        "sha256": "f170347f096dd11a8d229768009b1e7efecbc86ef7069e73f1269f2688d2cc76",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20163_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20163_linearwater.zip",
+        "byte_length": 575088,
+        "sha256": "a5c23b4592bf898c086717a861e0ae9f862c46c2ed3d42b2c11150d69fc00982",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20165_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20165_linearwater.zip",
+        "byte_length": 620634,
+        "sha256": "d7ccc8a6bfbb08aff81f4eaff7f87d83a2d10dc524eeac5c5cf75ffbb2184808",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20167_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20167_linearwater.zip",
+        "byte_length": 1887424,
+        "sha256": "b2884ebeaf8d2be77e185bd40a2b35508275c75a36cfca03e3d606117a3e4acf",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:14Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20169_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20169_linearwater.zip",
+        "byte_length": 1341794,
+        "sha256": "424f5f6ff291af455a76004903f15cd6fa5429029d03dd3f5ed894554f1d264d",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:22Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20171_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20171_linearwater.zip",
+        "byte_length": 105250,
+        "sha256": "0924e3bfd5051880c3dbdb447b2a425f55225ad003967c5f33b40196aa172ed5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20173_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20173_linearwater.zip",
+        "byte_length": 563602,
+        "sha256": "ef34fadb75d89514e01ca885bee197c31c291cd57baedca7b4f7629043c1c35e",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20175_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20175_linearwater.zip",
+        "byte_length": 93170,
+        "sha256": "ac7c2113421007e72e45cb4161ed16a746d87c9e486f01deed9594258d5027f2",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:22Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20177_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20177_linearwater.zip",
+        "byte_length": 2353847,
+        "sha256": "4d1d220442c043fb05cf3f6fae64e95451c2af094a7a59664ed80869770cd453",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:22Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20179_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20179_linearwater.zip",
+        "byte_length": 420392,
+        "sha256": "9980087264bb44b45aa7c16a492bdcea5c020a6582cd0673e91368147ca3e902",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:22Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20181_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20181_linearwater.zip",
+        "byte_length": 293966,
+        "sha256": "40f56414fa5e2c03e92bb0c741728a0bd7aa24cbe4f1e86b4803c05921fa8e06",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20183_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20183_linearwater.zip",
+        "byte_length": 779150,
+        "sha256": "b33decdf4f8df73d2a117b2a3413e6c338348b7fcf256b41c7e346a4ddb815d3",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:22Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20185_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20185_linearwater.zip",
+        "byte_length": 179732,
+        "sha256": "3e52e09b2749b6c9c317fa55886b87be24c423085c0585292422c1020e39a3c1",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20187_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20187_linearwater.zip",
+        "byte_length": 66243,
+        "sha256": "3f8aae70bdacdadb1bd4245d0fd3db1ce297690de8a0b8e35c45a2c03502b795",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20189_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20189_linearwater.zip",
+        "byte_length": 23103,
+        "sha256": "822ca748afa6634d09bbb7adad6a080e804a4d850631fd966533f40d602cadd5",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20191_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20191_linearwater.zip",
+        "byte_length": 755210,
+        "sha256": "50924dc61aaae3b1ccb4e05a26f5ec038ecfac88e706362167b415261d58019f",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20193_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20193_linearwater.zip",
+        "byte_length": 353964,
+        "sha256": "f55269aca50c9cdf421ac0cc63faf3c51bb9ae3f6b77fe36e8d24df936b47c99",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20195_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20195_linearwater.zip",
+        "byte_length": 690041,
+        "sha256": "e9f122bb530c446402302742e4849b0b030354c38766e7abaf34d8d03b721b67",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20197_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20197_linearwater.zip",
+        "byte_length": 2724856,
+        "sha256": "9afeba5406c56012876203dafb5cb766e29541f06452ab2d73cad97b156a039e",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20199_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20199_linearwater.zip",
+        "byte_length": 430241,
+        "sha256": "828e1b667b433d18cdf427e399095e03a494bf77c2c899597ebdb91369090c54",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20201_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20201_linearwater.zip",
+        "byte_length": 2838481,
+        "sha256": "cbf90ede18df9322511cfe755910f04fbde5eb415d40d9040af5541e6e740711",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20203_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20203_linearwater.zip",
+        "byte_length": 97785,
+        "sha256": "0f4027bf7fb3b4554c195df453f3d6efdd989ba4b20c382a54ba7535b1eb75fe",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20205_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20205_linearwater.zip",
+        "byte_length": 1328160,
+        "sha256": "681f044e5118588bf274b679f6e50741b2059b84b887fca783639cb0af0240dd",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20207_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20207_linearwater.zip",
+        "byte_length": 1866862,
+        "sha256": "e58d11695b8df71dbbc28b351aee30d30f444bf1d1f3c97f7ab34e4b5fb62178",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "LINEARWATER",
+        "file_name": "tl_2025_20209_linearwater.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/LINEARWATER/tl_2025_20209_linearwater.zip",
+        "byte_length": 101994,
+        "sha256": "cd41bd1f4c4ee1aa829541f542e2021c87a140b35c42e88e1bca5de016411688",
+        "source_last_modified_at": "2025-09-22T23:48:54Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "PLACE",
+        "file_name": "tl_2025_20_place.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_20_place.zip",
+        "byte_length": 1675287,
+        "sha256": "0cdaf30d567ebbb8f75421200a6e3345728313cffd791567cce308fdac047583",
+        "source_last_modified_at": "2025-09-22T23:49:09Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "PRIMARYROADS",
+        "file_name": "tl_2025_us_primaryroads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/PRIMARYROADS/tl_2025_us_primaryroads.zip",
+        "byte_length": 38379400,
+        "sha256": "400453e97b9e6693dfecb7362ce7a6cf260d27050f7d84d2a024ba0710b94c07",
+        "source_last_modified_at": "2025-09-23T02:15:56Z",
+        "retrieved_at": "2026-09-12T22:22:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "PRISECROADS",
+        "file_name": "tl_2025_20_prisecroads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/PRISECROADS/tl_2025_20_prisecroads.zip",
+        "byte_length": 3050767,
+        "sha256": "e227b9f9cab383420e26efc90b0c093ff41a010ca1fa0a07e41938da201bd800",
+        "source_last_modified_at": "2025-09-22T23:49:11Z",
+        "retrieved_at": "2026-09-12T22:22:36Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "RAILS",
+        "file_name": "tl_2025_us_rails.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/RAILS/tl_2025_us_rails.zip",
+        "byte_length": 34200737,
+        "sha256": "e969ffd49f119655ac478035b7f206fb861b70c4dddb926f8cac911182e7a113",
+        "source_last_modified_at": "2025-09-23T02:15:56Z",
+        "retrieved_at": "2026-09-12T22:22:44Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20001_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20001_roads.zip",
+        "byte_length": 394339,
+        "sha256": "7e321cf36d0eebe4126869378d3c9c7dc0df48436f2bff471df3b0b49db1e1e4",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20003_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20003_roads.zip",
+        "byte_length": 400291,
+        "sha256": "60dee4383a461131758e9844bd12df9130b479714a8aa29f319967c25901d9cb",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20005_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20005_roads.zip",
+        "byte_length": 292564,
+        "sha256": "89670268b936a3b66bceedbcd2217057de9c4c6dcb91b0a568b80eeabed4f138",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20007_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20007_roads.zip",
+        "byte_length": 543179,
+        "sha256": "7d5b56450ee729672b2fbdb1a46ea76e464a130f08bda52559d032bdeeb36cb2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20009_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20009_roads.zip",
+        "byte_length": 236191,
+        "sha256": "746dd5062cb1b38396c1cfde1168e2ddcff3f5dcb298e65ec0c8a5a54e665c59",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20011_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20011_roads.zip",
+        "byte_length": 496128,
+        "sha256": "ed1120329210e8d667cad264ff08ca01541454b59b23a2a9b0fa2b13b0d8b9fd",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20013_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20013_roads.zip",
+        "byte_length": 251692,
+        "sha256": "2827b52b65e87013cde0abea9b240e1e14a2884bae9e55b49e9b46b23ecdb322",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20015_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20015_roads.zip",
+        "byte_length": 886946,
+        "sha256": "c579e65ccd882503ae13422aec94253600eaf473a835471ab54e4c033496c7df",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20017_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20017_roads.zip",
+        "byte_length": 327642,
+        "sha256": "0025014468e0735ac4f5ce42d0e4521d8ae65012acb293938baf416abf1fa033",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20019_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20019_roads.zip",
+        "byte_length": 346967,
+        "sha256": "40d388120bacb499080cfecb404881cd6c9f62d37649d2de7eb958566d0cc8de",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20021_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20021_roads.zip",
+        "byte_length": 467387,
+        "sha256": "a1cf7cd5019c73ce39e873fab7cecf3d9f4e3c2d86f07679b2dbae0541d85e21",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20023_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20023_roads.zip",
+        "byte_length": 355403,
+        "sha256": "73fbfdac62eecb905b81c893417e84969158ea64e5c561d28f8c767d5821c8d1",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20025_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20025_roads.zip",
+        "byte_length": 468270,
+        "sha256": "5f8897c3444412fd7acf139c2264eba93bdc10e85a9535fc41fea9cd38813731",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20027_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20027_roads.zip",
+        "byte_length": 379257,
+        "sha256": "abde9aac670e2d63118b79ffea4dce3701c10ce801319c6419e566146a537efc",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20029_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20029_roads.zip",
+        "byte_length": 402978,
+        "sha256": "0f50b1f4ee932b1bc1879515cd50896523334b8486617191ef622df7711da89b",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:52Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20031_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20031_roads.zip",
+        "byte_length": 522713,
+        "sha256": "3f963867d6f68669c35c7fefc3e5f4eed7bcaae1a580dcc1f8e677200824e53a",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20033_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20033_roads.zip",
+        "byte_length": 293916,
+        "sha256": "c17403f94b586acf610707bad7af455d1ce4dcfe21927c55b523d829dc63658e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20035_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20035_roads.zip",
+        "byte_length": 768962,
+        "sha256": "69874eff6b0eaa940bbc072c74ae1df52e4d825a0bceb255e186cf0100ef1469",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20037_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20037_roads.zip",
+        "byte_length": 526759,
+        "sha256": "2688b48b824779f58f9a42a512082ac08f957b1a4d3bcecec3002ad802b5fc5b",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20039_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20039_roads.zip",
+        "byte_length": 352303,
+        "sha256": "41bef31794ee756ad7ad27a66b89ef5263550a66ad85ada15a12d8f5853f5ba1",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20041_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20041_roads.zip",
+        "byte_length": 661988,
+        "sha256": "9c78778b5abde6e97599d76b1e93b71ba4b08be5f4efc79b8eec636242128a4f",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20043_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20043_roads.zip",
+        "byte_length": 312409,
+        "sha256": "fcacc91c0561a2c7ceb28855f3e1e2b85c62ab1fbec5cb072830d3bd8208bc27",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20045_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20045_roads.zip",
+        "byte_length": 721549,
+        "sha256": "6d127427c6b2c8c34ae7bf9b44960d67789c9bb8c0f4d88aabf6579182337095",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:22:59Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20047_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20047_roads.zip",
+        "byte_length": 223934,
+        "sha256": "ec567e61608347b6f66eba41dedcfdc3bc262d655028f6374d1fa09e6d05c0fd",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20049_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20049_roads.zip",
+        "byte_length": 301179,
+        "sha256": "941a9257f7292d732f85554ef0e14e687ab4fbed66bfafed053a0f329c5b6e27",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20051_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20051_roads.zip",
+        "byte_length": 816249,
+        "sha256": "45ec3a81960d8c4c2aa40e6df4eddbc9832ccae14515ba5ea6a65a378ebdc90d",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20053_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20053_roads.zip",
+        "byte_length": 458785,
+        "sha256": "063cfb96a2420906b360bde189a1a291329372f59a1870561993dcee1eec3fa3",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20055_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20055_roads.zip",
+        "byte_length": 449145,
+        "sha256": "1ab50737bde1a9e53b1b9dd479b58130c3c8eaecfe5440094dbfa52079884684",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20057_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20057_roads.zip",
+        "byte_length": 532334,
+        "sha256": "fa94f75147faf3ff3844fe61ca70593409bce9baa9de4678efccfbbafbc458cf",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20059_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20059_roads.zip",
+        "byte_length": 643780,
+        "sha256": "fe9b2030dc0fa54e28b5cf6d0d7d5d8fbb1ae2eb6f94c217048b255a5e706231",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20061_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20061_roads.zip",
+        "byte_length": 515981,
+        "sha256": "7664dff9d469b2dbe862f72a528849ae1cd56135b32094701f4726a17d7bd8ba",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:07Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20063_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20063_roads.zip",
+        "byte_length": 262585,
+        "sha256": "582e61dce26dd1126cf022ff7a74aaeec23526d2936aa9301dcb46cab48683fd",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20065_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20065_roads.zip",
+        "byte_length": 273903,
+        "sha256": "527093845d63ef1cf0d50816c7a4b4ff2b56c317bbf7b087e7b4e65e562ba08a",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20067_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20067_roads.zip",
+        "byte_length": 220677,
+        "sha256": "240707d91b5c36736b6eecb00e94d9edf5c476811ec13754c62673d8670d8ef1",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20069_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20069_roads.zip",
+        "byte_length": 320402,
+        "sha256": "b1e4ee4e513f2e4a1410f3e1f725febe91a66b39dcff0f3ea5495cad0df4b4e8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20071_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20071_roads.zip",
+        "byte_length": 132517,
+        "sha256": "8c83f435ed1c9361ab30699d2755beedec2942e69b23927008f1bdfe7c345664",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20073_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20073_roads.zip",
+        "byte_length": 807307,
+        "sha256": "206a8b5753f896519e2257f5fad88a53bf1c866a5698bc2dc5a66c43b8a5655d",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20075_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20075_roads.zip",
+        "byte_length": 220017,
+        "sha256": "661fd0759db05bcec8b3c8ba05251fa6629884642bc9b684bd74ee8267a32a88",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20077_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20077_roads.zip",
+        "byte_length": 297179,
+        "sha256": "71db4e7bbfb7d2e71908deb1bd6a68a55d65042c4124803e765b9274f3b662a0",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:16Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20079_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20079_roads.zip",
+        "byte_length": 485633,
+        "sha256": "65f7e9e45df89bbda5b4ae4f7fccaa456365f02452124d8feb2b4df4a6bc64f8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20081_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20081_roads.zip",
+        "byte_length": 217431,
+        "sha256": "f4cfb5b2ee21f6e417c108660690289ec45abedd7903d3dd8530248a11bc2521",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20083_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20083_roads.zip",
+        "byte_length": 255516,
+        "sha256": "d186e86a88909c1ec61f7053fbf383ca2f0b647a2b55b97aff8df4040609b2a2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20085_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20085_roads.zip",
+        "byte_length": 319135,
+        "sha256": "4897a2196716c273118b63178efff4a79dc8e35633eba7dbd0ba933fc04b9754",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20087_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20087_roads.zip",
+        "byte_length": 702270,
+        "sha256": "ca7028a63764b986c4d29b4b62f8d73ed1be52b6cc807062d590911c40292e99",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20089_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20089_roads.zip",
+        "byte_length": 427246,
+        "sha256": "9d15602905c89edcb2650ed0a21976d7777190b9d9a2819ff2d5d20b1f1a47c0",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20091_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20091_roads.zip",
+        "byte_length": 2769383,
+        "sha256": "32cbde41555a330b8174c3f41737ad20c64dd44ac0fc5b0fca2e27e2d25681e1",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20093_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20093_roads.zip",
+        "byte_length": 424159,
+        "sha256": "288db75a47d690c16e10cf925ed07263800e1f72e0cbded9736767ca10e2280e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:23Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20095_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20095_roads.zip",
+        "byte_length": 406845,
+        "sha256": "e168bb337e7792fc2918aa0e85228760b21ebcbb80b20c16ec863b08d6a7b46e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20097_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20097_roads.zip",
+        "byte_length": 314284,
+        "sha256": "9c48bbd94b36362166a1f46829944056afab497313215cf71386582e0f730f4e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20099_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20099_roads.zip",
+        "byte_length": 578267,
+        "sha256": "7d9e2ff8fbadd94951fe0e6b65c605c60ef7c9609f16f755847bc749bbec367d",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20101_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20101_roads.zip",
+        "byte_length": 249337,
+        "sha256": "ff89873595000c331c0701ce2fa40da23d6e2abcc9f158e5377e18d13e5e2958",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20103_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20103_roads.zip",
+        "byte_length": 784248,
+        "sha256": "2b3c8c543cd50ba32b4b2469969047e81188a19c2fe2724b97e0212470be1403",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20105_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20105_roads.zip",
+        "byte_length": 346687,
+        "sha256": "4e47e2a22f26c14d757e2a5408bfbae120e21b2dbef9c1b53ebf2b32dfdc847e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20107_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20107_roads.zip",
+        "byte_length": 632652,
+        "sha256": "0a152e33df583c142e5bbbd5303530f4517c91d404496a99312afafb9488efd8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20109_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20109_roads.zip",
+        "byte_length": 219861,
+        "sha256": "a35f26105d96cd270f232ecefd2929bb92a10150116c92c09655794ba12541b2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:29Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20111_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20111_roads.zip",
+        "byte_length": 641912,
+        "sha256": "eb316a4e2745c20ffd25ce31632317a91bced87427bd0037dda0f08e1baed357",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20113_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20113_roads.zip",
+        "byte_length": 580719,
+        "sha256": "267a02cefbfa4038cf236d9e7e448daa04c1a1b83bdfed5556dbb7e12e8c493e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20115_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20115_roads.zip",
+        "byte_length": 598353,
+        "sha256": "69553a40e8cfb35ec03ce29202e5fc5b3352ed5b9b305a781301bac4d26d0ad7",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20117_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20117_roads.zip",
+        "byte_length": 548833,
+        "sha256": "adb8d366fae5365be2423d6cbce72210a13734c9c24ea18559b9514a2927a47c",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20119_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20119_roads.zip",
+        "byte_length": 355754,
+        "sha256": "190c783409a16fb39ca3afcb7610df3c011a3f9bb8aedbd7ce16928a7a5cb17f",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20121_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20121_roads.zip",
+        "byte_length": 776845,
+        "sha256": "ed3f3acd59c1f7510588313366e14048ce741f0f54f08f73408366dcd196afef",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20123_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20123_roads.zip",
+        "byte_length": 319944,
+        "sha256": "b0deb72cbc6ccdf460b8969097b530c8cd8f9b2be56e619ab848f0eebaa0d41e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20125_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20125_roads.zip",
+        "byte_length": 753911,
+        "sha256": "0895f08745a22661ca726e640314097f519d5b07e781af48ddef0ac58e96d524",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:37Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20127_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20127_roads.zip",
+        "byte_length": 398136,
+        "sha256": "63714c99b17d17214df8aa862be7cf572ab0b467ec5cafcfda5b359e5bd512df",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20129_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20129_roads.zip",
+        "byte_length": 291170,
+        "sha256": "c963749681bc0fd0ad009a62b38d21b8f1b9edee3ec97155454c7c400b2ea812",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20131_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20131_roads.zip",
+        "byte_length": 444272,
+        "sha256": "f2a7a1b00111a87763f1d36281cb814ba56d80fc85d36232310f8bcd2af21ec4",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20133_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20133_roads.zip",
+        "byte_length": 262464,
+        "sha256": "0a078c72564a03ecf3b403e4cdc1f3f802fe1a97addc548a1f69a0332bf14c0f",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20135_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20135_roads.zip",
+        "byte_length": 337654,
+        "sha256": "30aab466525c35e44fccae30fef94a09ec2940e606d3b5cabc0adb67daad5f69",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20137_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20137_roads.zip",
+        "byte_length": 392815,
+        "sha256": "a08f9079611ce4ab00fd006ce131241cd22148c8878522efa66b74b82138f8e5",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20139_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20139_roads.zip",
+        "byte_length": 425225,
+        "sha256": "85d9f02e289ede789920efd46628a8c1de5bd23bb283c4afe1c7fc5bcaa7d3d5",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20141_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20141_roads.zip",
+        "byte_length": 406396,
+        "sha256": "1684e6be943e76f514ce71704542afba048793368aac8bd5eeb5eadae73a1cf9",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:43Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20143_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20143_roads.zip",
+        "byte_length": 247295,
+        "sha256": "81232762a13fd6129f41e2ba89b1bf9f8ca5067e565acba06bb7fa460567c0b6",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20145_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20145_roads.zip",
+        "byte_length": 292746,
+        "sha256": "6002be7c3219894cbe1d2143944763e4f0d6651bf921c44efbf2e0cb8493b02f",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20147_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20147_roads.zip",
+        "byte_length": 524487,
+        "sha256": "5a376341a6a1130196568269481fe67877b3c0fb201f2ef1c418fefabb91b044",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20149_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20149_roads.zip",
+        "byte_length": 812153,
+        "sha256": "889b9c369ee15987a3a5c35bda8eefae3820578bde77feab2e9bf4c4f8baa2c7",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20151_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20151_roads.zip",
+        "byte_length": 319122,
+        "sha256": "cf7d32787981c9002a66f99896b3443f39444330572b04112b82338d5068037e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20153_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20153_roads.zip",
+        "byte_length": 354504,
+        "sha256": "f23fbb00023df9d88f7daa68fdacbc56c9e0c5bed7d8c57c99be03052a44ae78",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20155_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20155_roads.zip",
+        "byte_length": 1359563,
+        "sha256": "6dfc1b3d3e4f93296048be4ff422878753d0232dbbeef9d3383d2e4b7c898cd5",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20157_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20157_roads.zip",
+        "byte_length": 359908,
+        "sha256": "42b68f0f46be5b54be815f12dd47baad3266657b03f1f40045d2ff9b2945c18d",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:50Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20159_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20159_roads.zip",
+        "byte_length": 329484,
+        "sha256": "a60ae585f066126da59643833974a2ddaac9f7f69dac0656533c922bd41eafb2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20161_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20161_roads.zip",
+        "byte_length": 760013,
+        "sha256": "461060f759529423cd8412b38f7984d74126051aeee222aa1f58a59a1544f7a8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20163_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20163_roads.zip",
+        "byte_length": 402639,
+        "sha256": "50f45a9392509162b4afdc70cf35dd299dd15b7b56f423075e417732ee050984",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20165_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20165_roads.zip",
+        "byte_length": 345171,
+        "sha256": "9f74033cc59eca5f7d7a95f1419963ee9540e5a57a71ea25a56e7dced2df57f6",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20167_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20167_roads.zip",
+        "byte_length": 420765,
+        "sha256": "70138564cea6f0a82b889fbc46483ca8525c12c9833882cd985dd9ff2d787bf1",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20169_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20169_roads.zip",
+        "byte_length": 539158,
+        "sha256": "54f807fd59de3695e23fa1d0c944fff6f6edceb61cd26138a1227e63af5bcc15",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20171_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20171_roads.zip",
+        "byte_length": 266758,
+        "sha256": "387ea8d7f9347112d4f6d1219ff98d0f708ed4a88fe715acbbcdafa18fea6e66",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20173_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20173_roads.zip",
+        "byte_length": 2288146,
+        "sha256": "cfce0a6341a7c9b952e4eddb9852fc3c1a6a43271426234b0ca1af39b16b47f2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:23:56Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20175_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20175_roads.zip",
+        "byte_length": 346520,
+        "sha256": "074c7704f984fb0395b01671c6cc4bfc7b8864a9394fd6bbfcfc6fc06a07a17e",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20177_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20177_roads.zip",
+        "byte_length": 958571,
+        "sha256": "08d67e1b49a3a06ab30ecf1b961e8022a962453c6a097723ee81bf8405df8dd2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20179_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20179_roads.zip",
+        "byte_length": 322560,
+        "sha256": "6da5c3c97e9997b1de5be0f659f3a29bc07e3b82a8b9f4def5d454e173bc06e0",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20181_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20181_roads.zip",
+        "byte_length": 285358,
+        "sha256": "c2f9ed97cd0353661f76f06de4753de31509fc6ccce4b925becfc45b2d4604df",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20183_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20183_roads.zip",
+        "byte_length": 359138,
+        "sha256": "b07f1f9034bba482c3a61f3440524312a0cacf47fcc554537313a55795aebec8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20185_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20185_roads.zip",
+        "byte_length": 342009,
+        "sha256": "567a232e6e8c59e1dfb8cd47ddb976e3db38369bcdcd35fed12a2ac4bead6e62",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20187_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20187_roads.zip",
+        "byte_length": 198741,
+        "sha256": "64165a9b2fb70e1c5a7a31790473ec2298fced3ad468484f96527d86a9cdc70d",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20189_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20189_roads.zip",
+        "byte_length": 161396,
+        "sha256": "22c374ccee4fdcc7012b14855e30a0e8b60f2ad541d895d2176dedf901f006cc",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:02Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20191_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20191_roads.zip",
+        "byte_length": 732240,
+        "sha256": "22b5b36e837500efecd2234a96e8b81591940d9f5fc07a3ec1a9408b5233dc6f",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20193_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20193_roads.zip",
+        "byte_length": 325150,
+        "sha256": "1c6192365acba32e73f60d37c6ba8ebbb0ec573f1d436cb603a70dc7f91cb9f9",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20195_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20195_roads.zip",
+        "byte_length": 412393,
+        "sha256": "5c0142b39b6a3a0a5d7dcd842c77c21d6e04be6e5046345c74c43560cb136c2c",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20197_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20197_roads.zip",
+        "byte_length": 511262,
+        "sha256": "51bf60679860b02260471023c360b67db206dfc8bfdee23a6c916fc518eeaeb8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20199_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20199_roads.zip",
+        "byte_length": 176099,
+        "sha256": "120111a27488b3cc925a64d6a37f37088d6c947fed5d7fc54b6b3c32b03e4f43",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20201_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20201_roads.zip",
+        "byte_length": 459147,
+        "sha256": "1cce371f3cdba66fda645cc1bf856aa8fb783fd444e9c879074eed088d3bdbd6",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20203_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20203_roads.zip",
+        "byte_length": 198973,
+        "sha256": "85a250f1215032a6c5dbb87304e9f939befbb90de81d9552d84ec6e667b08ba8",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20205_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20205_roads.zip",
+        "byte_length": 417730,
+        "sha256": "337a584d2c49ed149dcccdd75a53ab0151f3ad99c2416e26c7857d1bf75dd742",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:09Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20207_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20207_roads.zip",
+        "byte_length": 206441,
+        "sha256": "d734c82861b31e49e13ada69380f905f6d8b5c54b83c21965b2221a6302b6ee7",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ROADS",
+        "file_name": "tl_2025_20209_roads.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ROADS/tl_2025_20209_roads.zip",
+        "byte_length": 995424,
+        "sha256": "b71bc0ab4e757bcb0dbef7e77120a26db03885980c6f16b2a2215d2824d8bbc2",
+        "source_last_modified_at": "2025-09-22T23:49:21Z",
+        "retrieved_at": "2026-09-12T22:24:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "STATE",
+        "file_name": "tl_2025_us_state.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/STATE/tl_2025_us_state.zip",
+        "byte_length": 9956072,
+        "sha256": "59a220888a8d9be8117c4fcd38f542bd02d81abf0d198c78113595ad540dd957",
+        "source_last_modified_at": "2025-09-23T02:15:56Z",
+        "retrieved_at": "2026-09-12T22:24:18Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "TABBLOCK20",
+        "file_name": "tl_2025_20_tabblock20.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/TABBLOCK20/tl_2025_20_tabblock20.zip",
+        "byte_length": 87085083,
+        "sha256": "6918090dbf97807881c3285d14d9b6c62ce41c636d7f6fb33214788e19068036",
+        "source_last_modified_at": "2025-09-22T23:49:54Z",
+        "retrieved_at": "2026-09-12T22:24:21Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "TRACT",
+        "file_name": "tl_2025_20_tract.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/TRACT/tl_2025_20_tract.zip",
+        "byte_length": 3154996,
+        "sha256": "22162d33027f098ba8baac4b0d38212b0bdb8ad944f5d622b7bd7363c125ae1c",
+        "source_last_modified_at": "2025-09-22T23:51:05Z",
+        "retrieved_at": "2026-09-12T22:24:17Z",
+        "operator_zip_integrity": "PASS"
+      },
+      {
+        "product": "ZCTA520",
+        "file_name": "tl_2025_us_zcta520.zip",
+        "source_url": "https://www2.census.gov/geo/tiger/TIGER2025/ZCTA520/tl_2025_us_zcta520.zip",
+        "byte_length": 529118424,
+        "sha256": "e87129634eefe8719ef06ce4cfdf6588520be2e359360e590aaae90e4afb1911",
+        "source_last_modified_at": "2025-09-23T02:16:01Z",
+        "retrieved_at": "2026-09-12T22:24:30Z",
+        "operator_zip_integrity": "PASS"
+      }
+    ]
+  },
+  "governance": {
+    "source_descriptor_registered": false,
+    "source_activated": false,
+    "feature_class_allow_list_approved": false,
+    "raw_admission_authorized": false,
+    "rights_review_completed": false,
+    "sensitivity_review_completed": false,
+    "evidence_bundle_emitted": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "map_runtime_binding_allowed": false
+  }
+}

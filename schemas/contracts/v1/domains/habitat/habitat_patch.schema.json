@@ -3,12 +3,34 @@
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/habitat/habitat_patch.schema.json",
   "title": "Habitat Patch",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/habitat/habitat_patch.schema.json. Fields are to be defined by the owning domain steward.",
+  "description": "PROPOSED HabitatPatch schema. It declares only the two optional connectivity reference arrays that tools/validators/domains/habitat/validate_habitat_patch.py already enforces; that validator additionally requires sorted order and denies lifecycle-private prefixes. Identity, geometry, source-role, evidence, sensitivity, and release fields remain for the owning domain steward to define (see contracts/domains/habitat/habitat_patch.md), so other members stay open.",
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/habitat/MISSING_OR_PLANNED_FILES.md",
-    "contract_doc": "contracts/domains/habitat/habitat_patch.md"
+    "contract_doc": "contracts/domains/habitat/habitat_patch.md",
+    "validator": "tools/validators/domains/habitat/validate_habitat_patch.py"
   },
-  "properties": {},
+  "properties": {
+    "connectivity_edge_refs": {
+      "type": "array",
+      "description": "Optional references to ConnectivityEdge objects. References are not resolved.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._~:/#?=&%+@-]{0,319}$"
+      }
+    },
+    "corridor_refs": {
+      "type": "array",
+      "description": "Optional references to Corridor objects. References are not resolved.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._~:/#?=&%+@-]{0,319}$"
+      }
+    }
+  },
   "additionalProperties": true
 }

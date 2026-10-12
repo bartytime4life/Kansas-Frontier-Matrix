@@ -1,0 +1,91 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T15:41:53.188713+00:00",
+  "owning_root": "data/",
+  "responsibility": "Source identity and bounded delivery evidence; no data admission, release or browser acceptance.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "behavior": "A fresh Underground cutaway fits the Kansas statewide selector after compact layout. Explicit local area application and in-panel map position retain their existing behavior.",
+  "site": {
+    "project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+    "base_version": 172,
+    "base_source_commit": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+    "version": 173,
+    "source_commit": "e2e7ba5de69f14ac9d91587a8680b8fd40a4d4d4",
+    "saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_767eff4c29208191aa89b405ea2bb0a0",
+    "deployment_id": "appgdep_6ac666c5c3588191998e5eb604128478",
+    "deployment_status": "succeeded",
+    "url": "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site",
+    "audience": "owner-private, one allowed user, no groups or external visitors",
+    "archive_gzip_sha256": "0747b7ea0de826f4c558044f614f0c61b9c5e22c2d23b949b60c845d04b82f0b",
+    "platform_canonical_tar_sha256": "e3e9da5f9f14d6a3094aacbea4d5e034a906d5e0ad5ce27ac3f1f6325c91ac9f",
+    "platform_file_count": 382
+  },
+  "repository": {
+    "branch": "agent/site-area-underlay-20261007",
+    "predecessor_commit": "ad9cb95801a12f7879a68ad969b7330f2572f28f",
+    "pull_request": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4915",
+    "pull_request_state": "OPEN_DRAFT_UNMERGED",
+    "destination": "apps/site/source",
+    "mirrored_source_files": 708,
+    "missing_or_different": 0,
+    "path_and_content_inventory_sha256": "72e7ee69df20eb84b804e76116646d545584bb0110fcd5ecef2f39973b683780",
+    "changed_files": {
+      "app/underground-panel.tsx": {
+        "repository_predecessor_sha256": "fee5ce6c838fc13417704a1317d4e34cba2286fc9c7b41b623c464d0d8cb721e",
+        "site_and_repository_sha256": "1c71d9a90ab5396a58429effbb6e5e2d9682458afed363fe5b1f42ef91e1da1a"
+      },
+      "docs/underground-explorer.md": {
+        "repository_predecessor_sha256": "b110089b5082c0e36251a174bd88cb39da7027002d856fb29d692046a203972a",
+        "site_and_repository_sha256": "314be896930e827bef2cb7cb23f00cba9e5f7679d9d7a48755e735118d0893cb"
+      },
+      "tests/subsurface-slice.test.mjs": {
+        "repository_predecessor_sha256": "324e5fb362be262ae57b24c02072e8b72cee76281a3658ff0a1f4e79fb02090e",
+        "site_and_repository_sha256": "6b8da5b2fde7775587784f6fb5c74086c373285dbdbfe4405f60e901311e8298"
+      }
+    },
+    "historical_mirror_hold": "MIRROR_REVIEW_REQUIRED; not waived"
+  },
+  "validation": {
+    "production_build": "PASS",
+    "typescript": "PASS",
+    "focused_node_tests": {
+      "pass": 30,
+      "fail": 0,
+      "skipped": 0,
+      "files": [
+        "tests/area-underlay.test.mjs",
+        "tests/subsurface-slice.test.mjs",
+        "tests/cutaway-locator.test.mjs"
+      ]
+    },
+    "full_suite": "NOT_RERUN_FOR_THREE_PATH_NAVIGATION_DELTA",
+    "browser_visual_touch_device_webgl_and_full_keyboard": "UNVERIFIED"
+  },
+  "local": {
+    "alias": "/home/bartytime/Projects/KFM-Explorer-Site-current",
+    "checkout": "/home/bartytime/Projects/KFM-Explorer-Site-v173",
+    "source_commit": "e2e7ba5de69f14ac9d91587a8680b8fd40a4d4d4",
+    "tracked_files_match_source": 708,
+    "dist_files_match_source": 382,
+    "dist_inventory_sha256": "96f8479ff7ed7e1a818f5749872d30be8560af81edd3c84d932958b424192986",
+    "service": "kfm-explorer-local.service active",
+    "http_origin": "http://127.0.0.1:4173",
+    "http_root_status": 200,
+    "physical_state": "/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state",
+    "sqlite_stores_observed": 8,
+    "prior_v172_checkout_retained": true,
+    "data_store_migration": false
+  },
+  "source_boundaries": [
+    "No new dataset or rights decision",
+    "No source admission or activation",
+    "Statewide map is navigation context, not a statewide cutaway claim",
+    "Aquifer source period remains 2022-2024",
+    "No continuous geology or common depth datum"
+  ],
+  "rollback": "Redeploy saved private v172 and point the local alias to retained v172 checkout, restarting the Explorer service; preserve later writes in the separate physical v109 data store."
+}

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-normalize-fauna-readme
 title: Fauna Shared-Normalization Adapter README
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners:
   - <pipeline-owner>
@@ -13,12 +13,13 @@ owners:
   - <policy-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-07-20
+updated: 2026-07-31
 policy_label: public-with-fauna-normalization-geoprivacy-and-receipt-gates
 path: pipelines/normalize/fauna/README.md
 related:
   - docs/architecture/directory-rules.md
   - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/registers/DRIFT_REGISTER.md
   - pipelines/README.md
   - pipelines/normalize/README.md
@@ -42,7 +43,8 @@ related:
   - .github/workflows/domain-fauna.yml
 tags: [kfm, pipelines, normalize, fauna, adapter, occurrence, monitoring, geoprivacy, receipt, evidence, policy, governance]
 notes:
-  - "v0.2 is grounded in bartytime4life/Kansas-Frontier-Matrix main@0b9307b94c67920e3451e1d40b80d287e7364ee7."
+  - "v0.3 reverified this boundary against bartytime4life/Kansas-Frontier-Matrix main@b0822dc76dabb0f41b7a4952bc876ba718d12697."
+  - "Accepted ADR-0029 makes docs/doctrine/directory-rules.md the sole writable human Directory Rules authority; docs/architecture/directory-rules.md remains read-only compatibility."
   - "The target README exists, but no executable sibling, adapter-specific test lane, fixture lane, active normalize spec, parser, or runtime consumer was verified for this path."
   - "The current path is PROPOSED / CONFLICTED as a long-term executable home: shared normalization belongs in pipelines/normalize/, while domain-owned Fauna behavior belongs in pipelines/domains/fauna/."
   - "This documentation-only revision does not move the path, activate a source or spec, create executable behavior, approve a geoprivacy transform, or authorize release."
@@ -136,8 +138,8 @@ Directory Rules map executable pipeline logic to `pipelines/`, declarative inten
 | Where is current Fauna pipeline ownership documented? | `pipelines/domains/fauna/README.md`. | CONFIRMED documentation |
 | May this lane publish or decide policy/geoprivacy? | No. Those responsibilities remain outside this directory. | CONFIRMED governance boundary |
 
-> [!WARNING]
-> The repository contains multiple Directory Rules artifacts with overlapping authority claims. [`docs/architecture/directory-rules.md`](../../../docs/architecture/directory-rules.md), [`docs/architecture/DIRECTORY_RULES.md`](../../../docs/architecture/DIRECTORY_RULES.md), and [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) remain an authority/supersession concern. Their shared placement law supports `pipelines/` for executable logic and `pipelines/domains/fauna/` for domain ownership, but the controlling Directory Rules edition still needs governance resolution.
+> [!NOTE]
+> Directory Rules authority is `CONFIRMED`: accepted [`ADR-0029`](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [`docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) as the sole writable human authority. The lowercase [`docs/architecture/directory-rules.md`](../../../docs/architecture/directory-rules.md) path is read-only compatibility, and the case-variant `docs/architecture/DIRECTORY_RULES.md` path is not tracked. This resolves the controlling edition, not the separate shared-versus-domain placement question for this Fauna child; that sublane decision remains `NEEDS VERIFICATION`.
 
 This revision preserves the existing path and does not create, move, rename, or delete another authority surface.
 
@@ -459,7 +461,7 @@ This documentation revision is complete when:
 - verified Fauna spec, contract, schema, policy, lifecycle, receipt, proof, test, fixture, and workflow boundaries are linked accurately;
 - source-role, taxonomy, knowledge-character, sensitivity, geoprivacy, evidence, lifecycle, release, correction, and rollback controls are preserved;
 - links, anchors, Markdown structure, line endings, and the final newline pass review;
-- the remote branch and draft pull request contain only this README change.
+- the remote branch and draft pull request contain only this README change and its one required canonical generated receipt.
 
 ### Future executable adapter
 
@@ -474,7 +476,7 @@ An executable adapter is not done until placement, ownership, accepted contracts
 | ID | Question | Status |
 |---|---|---|
 | `PIPE-NORM-FAUNA-001` | Should this path remain a thin adapter boundary, migrate under `pipelines/domains/fauna/`, or be retired after callers use shared helpers directly? | NEEDS VERIFICATION / ADR or migration decision |
-| `PIPE-NORM-FAUNA-002` | Which Directory Rules artifact controls placement and supersedes the duplicate copies? | CONFLICTED / NEEDS VERIFICATION |
+| `PIPE-NORM-FAUNA-002` | Which Directory Rules artifact controls placement? | CONFIRMED — accepted ADR-0029 adopts `docs/doctrine/directory-rules.md`; the lowercase architecture path is read-only compatibility. |
 | `PIPE-NORM-FAUNA-003` | Does any executable sibling or runtime consumer currently use this path? | UNKNOWN |
 | `PIPE-NORM-FAUNA-004` | Which accepted schema and emitter own Fauna adapter or normalization receipts? | NEEDS VERIFICATION |
 | `PIPE-NORM-FAUNA-005` | Which accepted test and fixture lanes own adapter-specific cases? | NEEDS VERIFICATION |
@@ -490,12 +492,12 @@ An executable adapter is not done until placement, ownership, accepted contracts
 
 ## 16. Evidence ledger
 
-Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at `main@0b9307b94c67920e3451e1d40b80d287e7364ee7`, inspected through authenticated GitHub file reads on 2026-07-20.
+Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at `main@b0822dc76dabb0f41b7a4952bc876ba718d12697`, inspected through the tracked local tree and authenticated GitHub reads on 2026-07-31.
 
 | Evidence | Observation used here | Limit |
 |---|---|---|
 | This README, parent normalize README, and pipelines root README | Existing path; `pipelines/` owns executable logic; `pipelines/normalize/` describes shared helpers. | Documentation does not prove executable implementation. |
-| Directory Rules copies and drift register | Executable logic belongs under `pipelines/`; domain logic follows a responsibility-root domain lane; authority copies conflict. | No accepted ADR resolving the duplicate Directory Rules authority was verified. |
+| Accepted `ADR-0029`, adopted Directory Rules, compatibility copy, and drift register | `docs/doctrine/directory-rules.md` is the sole writable human authority; executable logic belongs under `pipelines/`; domain logic follows a responsibility-root domain lane. | The accepted document-authority decision does not settle this exact Fauna child's long-term sublane placement or authorize a move. |
 | `pipelines/domains/fauna/README.md` | Documents the primary Fauna executable boundary and fail-closed gates. | Concrete pipeline behavior remains unverified. |
 | `pipeline_specs/fauna/README.md` | Declarative Fauna boundary; current refresh profile is documented as a placeholder. | No active normalize spec, parser, consumer, or activation record was verified. |
 | Fauna contract/schema/policy READMEs | Separate meaning, machine shape, and admissibility homes exist. | Schema ADR is proposed; policy lanes include scaffold content. |
@@ -535,6 +537,13 @@ No strong v0.1 trust, sensitivity, provenance, or non-publication control was in
 ---
 
 ## 18. Changelog
+
+### v0.3 — 2026-07-31
+
+- Reverified the boundary against current `main` and accepted ADR-0029.
+- Replaced the obsolete Directory Rules authority conflict with the adopted sole-writer and read-only compatibility posture.
+- Removed the untracked case-variant link and closed `PIPE-NORM-FAUNA-002` without changing the unresolved Fauna sublane decision.
+- Corrected the documentation acceptance boundary to include the one required canonical generated receipt.
 
 ### v0.2 — 2026-07-20
 

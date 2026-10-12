@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-identity-steward-plus-contract-steward-plus-schema-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-10-12
 policy_label: repository-facing; identity-validator-routing-index; deterministic-identity; identity-token; spec-hash; canonicalization; provenance-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: broad Identity validator routing index for checking governed identity carriers, identity_token references, spec_hash references, canonicalization posture, deterministic id posture, cross-record identity references, evidence/proof/release linkage, source-role and object-family identity boundaries, correction and rollback identity continuity, and public-surface identity leakage while deferring identity meaning, schemas, policy decisions, evidence records, receipts, lifecycle data, and release authority to their owning roots
@@ -19,7 +19,7 @@ related:
   - ../freshness/README.md
   - ../fauna/README.md
   - ../genealogy/README.md
-  - ../../../docs/standards/canonicalization.md
+  - ../../../docs/standards/CANONICALIZATION.md
   - ../../../docs/standards/SCHEMA-ORG.md
   - ../../../docs/architecture/contract-schema-policy-split.md
   - ../../../contracts/common/identity_token.md
@@ -36,6 +36,7 @@ related:
   - ../../../data/receipts/
   - ../../../release/
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "This README replaces an empty file at tools/validators/identity/README.md. It does not confirm executable validator code."
   - "IdentityToken is a reference/identity carrier, not an authorization credential, security token, secret, login token, consent token, or proof of identity by itself."
   - "SpecHash is an integrity/reference carrier, not proof of correctness, admissibility, release, policy approval, or evidence closure."
@@ -79,7 +80,7 @@ The answer should be a deterministic validation result or routing decision. This
 | `tools/validators/identity/README.md` | **CONFIRMED README** | This README replaces the previous empty file. |
 | `contracts/common/identity_token.md` | **CONFIRMED contract / validator NEEDS VERIFICATION** | Defines `identity_token` as a compact typed reference for governed KFM entities and explicitly not a credential or proof of identity by itself. |
 | `contracts/common/spec_hash.md` | **CONFIRMED contract / validator placeholder behavior NEEDS VERIFICATION** | Defines `spec_hash` as an integrity/reference carrier and not proof of correctness, admissibility, policy approval, evidence closure, or release. |
-| `docs/standards/canonicalization.md` | **CONFIRMED standard / implementation NEEDS VERIFICATION** | Defines canonicalization for artifacts whose identity is a `spec_hash` and warns canonicalization is about bytes, not semantics. |
+| `docs/standards/CANONICALIZATION.md` | **CONFIRMED standard / implementation NEEDS VERIFICATION** | Defines canonicalization for artifacts whose identity is a `spec_hash` and warns canonicalization is about bytes, not semantics. |
 | `contracts/data/validation_report.md` | **CONFIRMED contract / validator path NEEDS VERIFICATION** | Defines `ValidationReport` as a validation result and review-support object, not proof closure or release approval by itself. |
 | Executables, registry wiring, schema bindings, fixtures, policy bundles, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README does not claim a runnable validator, test suite, receipt path, runtime route, or CI check exists. |
 
@@ -95,7 +96,7 @@ The answer should be a deterministic validation result or routing decision. This
 | Shared validator plumbing | `tools/validators/_common/` | Common runner/helper code if accepted. |
 | Identity meaning | `contracts/common/identity_token.md`, domain contracts, source/evidence/release contracts | Validator checks conformance; contracts define meaning. |
 | Identity machine shape | `schemas/contracts/v1/common/identity_token.schema.json`, `schemas/contracts/v1/common/spec_hash.schema.json`, accepted schemas | Validator reads schemas; schemas define machine shape. |
-| Canonicalization/hash standard | `docs/standards/canonicalization.md`, `contracts/common/spec_hash.md` | Validator checks reproducibility; standard/contract define posture. |
+| Canonicalization/hash standard | `docs/standards/CANONICALIZATION.md`, `contracts/common/spec_hash.md` | Validator checks reproducibility; standard/contract define posture. |
 | Validation result meaning | `contracts/data/validation_report.md` | Validator may emit or reference reports only through accepted report/proof/receipt lanes. |
 | Policy | `policy/common/`, domain policy roots, release policy roots | Validator reports policy gaps; does not decide policy. |
 | Evidence/proofs | `contracts/evidence/`, `data/proofs/` | Validator checks references; does not create evidence truth. |

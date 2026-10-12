@@ -1,0 +1,219 @@
+{
+  "object_type": "AttestedComputeBoundaryAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.governance.attested-compute-boundary-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "AttestedComputeBoundaryAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.governance.attested-compute-boundary-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_map_ref": "docs/intake/exploratory/new-ideas-5-19-26-source-map.md",
+    "observed_at": "2026-08-10T20:00:00Z",
+    "assessment_ref": "kfm:attested-compute-boundary:synthetic:001",
+    "assessment_state": "COMPLETE",
+    "problem": {
+      "residual_state": "DEFINED",
+      "statement": "Synthetic review needs a declaration boundary that existing controls do not express as one inspectable packet.",
+      "affected_owner_refs": [
+        "kfm:owner-role:architecture",
+        "kfm:owner-role:privacy",
+        "kfm:owner-role:security"
+      ],
+      "unsolved_by_existing_controls": ["HUMAN_REVIEW", "POLICY", "RECEIPT"]
+    },
+    "existing_controls": {
+      "quarantine": "REVIEWED_SUFFICIENT",
+      "policy": "REVIEWED_INSUFFICIENT",
+      "receipt": "REVIEWED_INSUFFICIENT",
+      "human_review": "REVIEWED_INSUFFICIENT"
+    },
+    "execution_request": "SYNTHETIC_SIMULATION",
+    "boundary_declarations": {
+      "workload_identity": {"ref": "kfm:boundary:synthetic:workload-identity", "resolution": "RESOLVED"},
+      "input_authority": {"ref": "kfm:boundary:synthetic:input-authority", "resolution": "RESOLVED"},
+      "attestation_evidence": {"ref": "kfm:boundary:synthetic:attestation-evidence", "resolution": "RESOLVED"},
+      "execution_receipt": {"ref": "kfm:boundary:synthetic:execution-receipt", "resolution": "RESOLVED"},
+      "policy_obligations": {"ref": "kfm:boundary:synthetic:policy-obligations", "resolution": "RESOLVED"},
+      "disclosure_review": {"ref": "kfm:boundary:synthetic:disclosure-review", "resolution": "RESOLVED"},
+      "output_transform": {"ref": "kfm:boundary:synthetic:output-transform", "resolution": "RESOLVED"},
+      "evidence_and_reviewer_decision": {"ref": "kfm:boundary:synthetic:evidence-reviewer-decision", "resolution": "RESOLVED"},
+      "release_approval": {"ref": "kfm:boundary:synthetic:release-approval", "resolution": "RESOLVED"},
+      "rollback": {"ref": "kfm:boundary:synthetic:rollback", "resolution": "RESOLVED"}
+    },
+    "attestation_claim": {
+      "state": "SYNTHETIC_ONLY",
+      "verifier_profile_ref": "kfm:verifier-profile:synthetic-declaration-only",
+      "trust_root_ref": null,
+      "claimed_support": "A synthetic declaration can bind one workload-identity claim to an inspectable fixture profile.",
+      "unsupported_authorities": [
+        "CONSENT_VALIDITY",
+        "DISCLOSURE_SAFETY",
+        "EVIDENCE_SUFFICIENCY",
+        "PURPOSE_AUTHORITY",
+        "RELEASE_FITNESS",
+        "REVIEW_APPROVAL",
+        "SOURCE_ADMISSIBILITY"
+      ]
+    },
+    "decision": {
+      "posture": "SIMULATED_ASSESSMENT",
+      "reason_codes": ["SYNTHETIC_BOUNDARY_COMPLETE"],
+      "simulation_assessment_allowed": true,
+      "real_tee_authorized": false
+    },
+    "safeguards": {
+      "data_mode": "NO_DATA_SYNTHETIC_ONLY",
+      "network_allowed": false,
+      "credentials_allowed": false,
+      "external_verification_allowed": false,
+      "simulation_plan_ref": "kfm:fixture-plan:synthetic:attested-compute-boundary"
+    },
+    "correction_and_rollback": {
+      "invalidation_action": "VOID_ASSESSMENT_AND_REVIEW_DEPENDENTS",
+      "dependent_outputs_release_allowed": false,
+      "rollback_ref": "kfm:rollback:synthetic:attested-compute-boundary"
+    },
+    "authority_claims": {
+      "real_sensitive_input_use": false,
+      "credential_use": false,
+      "cloud_or_tee_selection": false,
+      "key_enrollment": false,
+      "external_attestation_verification": false,
+      "compute_execution": false,
+      "output_release": false,
+      "deployment": false,
+      "publication": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_simulated_assessment",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_no_tre_existing_controls_sufficient",
+      "patch": {
+        "problem": {"residual_state": "NONE", "statement": null, "affected_owner_refs": [], "unsolved_by_existing_controls": []},
+        "existing_controls": {
+          "quarantine": "REVIEWED_SUFFICIENT",
+          "policy": "REVIEWED_SUFFICIENT",
+          "receipt": "REVIEWED_SUFFICIENT",
+          "human_review": "REVIEWED_SUFFICIENT"
+        },
+        "execution_request": "NONE",
+        "boundary_declarations": {
+          "workload_identity": {"resolution": "NOT_REQUIRED"},
+          "input_authority": {"resolution": "NOT_REQUIRED"},
+          "attestation_evidence": {"resolution": "NOT_REQUIRED"},
+          "execution_receipt": {"resolution": "NOT_REQUIRED"},
+          "policy_obligations": {"resolution": "NOT_REQUIRED"},
+          "disclosure_review": {"resolution": "NOT_REQUIRED"},
+          "output_transform": {"resolution": "NOT_REQUIRED"},
+          "evidence_and_reviewer_decision": {"resolution": "NOT_REQUIRED"},
+          "release_approval": {"resolution": "NOT_REQUIRED"},
+          "rollback": {"resolution": "NOT_REQUIRED"}
+        },
+        "attestation_claim": {"state": "ABSENT", "verifier_profile_ref": null, "trust_root_ref": null, "claimed_support": null, "unsupported_authorities": []},
+        "safeguards": {"simulation_plan_ref": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_real_tee_deferred",
+      "patch": {"execution_request": "REAL_TEE"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REAL_TEE_DEFERRED"]}
+    },
+    {
+      "name": "abstain_control_review_incomplete",
+      "patch": {
+        "problem": {"unsolved_by_existing_controls": ["POLICY", "RECEIPT"]},
+        "existing_controls": {"human_review": "NOT_REVIEWED"}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["CONTROL_REVIEW_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_residual_problem_unresolved",
+      "patch": {"problem": {"residual_state": "UNRESOLVED", "statement": null, "unsolved_by_existing_controls": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RESIDUAL_PROBLEM_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_boundary_component_unresolved",
+      "patch": {"boundary_declarations": {"workload_identity": {"resolution": "UNRESOLVED"}}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["BOUNDARY_COMPONENT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_synthetic_attestation_boundary_incomplete",
+      "patch": {"attestation_claim": {"state": "ABSENT", "verifier_profile_ref": null, "trust_root_ref": null, "claimed_support": null, "unsupported_authorities": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ATTESTATION_BOUNDARY_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_simulation_plan_incomplete",
+      "patch": {"safeguards": {"simulation_plan_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SIMULATION_PLAN_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_unverified_external_attestation",
+      "patch": {
+        "attestation_claim": {
+          "state": "UNVERIFIED_EXTERNAL",
+          "verifier_profile_ref": "kfm:verifier-profile:unverified-external-claim",
+          "trust_root_ref": "kfm:trust-root:unverified-reference"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["UNVERIFIED_ATTESTATION_DENIED"]}
+    },
+    {
+      "name": "error_assessment_state",
+      "patch": {"assessment_state": "ERROR"},
+      "expected": {"outcome": "ERROR", "codes": ["ASSESSMENT_ERROR"]}
+    },
+    {
+      "name": "deny_decision_mismatch",
+      "patch": {},
+      "decision_override": {
+        "posture": "NO_TRE",
+        "reason_codes": ["EXISTING_CONTROLS_SUFFICIENT"],
+        "simulation_assessment_allowed": false,
+        "real_tee_authorized": false
+      },
+      "expected": {"outcome": "DENY", "codes": ["DECISION_MISMATCH"]}
+    },
+    {
+      "name": "deny_problem_control_mapping_mismatch",
+      "patch": {"problem": {"unsolved_by_existing_controls": ["POLICY"]}},
+      "expected": {"outcome": "DENY", "codes": ["EXISTING_CONTROL_MAPPING_MISMATCH"]}
+    },
+    {
+      "name": "deny_defined_problem_without_affected_owner",
+      "patch": {"problem": {"affected_owner_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["AFFECTED_OWNER_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_attestation_declaration_incoherent",
+      "patch": {"attestation_claim": {"trust_root_ref": "kfm:trust-root:not-allowed-for-synthetic"}},
+      "expected": {"outcome": "DENY", "codes": ["ATTESTATION_DECLARATION_INCOHERENT"]}
+    },
+    {
+      "name": "deny_attestation_unsupported_authorities_incomplete",
+      "patch": {"attestation_claim": {"unsupported_authorities": ["SOURCE_ADMISSIBILITY"]}},
+      "expected": {"outcome": "DENY", "codes": ["ATTESTATION_DECLARATION_INCOHERENT"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"real_sensitive_input": "MUST_NOT_BE_ACCEPTED"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_authority_overclaim",
+      "patch": {"authority_claims": {"compute_execution": true}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

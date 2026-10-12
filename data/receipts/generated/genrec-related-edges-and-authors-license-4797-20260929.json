@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-related-edges-and-authors-license-4797-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "AUTHORS.md",
+    "docs/domains/atmosphere/IDENTITY_MODEL.md",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md",
+    "docs/domains/fauna/CROSS_LANE_RELATIONS.md",
+    "docs/domains/flora/MAP_UI_CONTRACTS.md",
+    "docs/domains/geology/VERIFICATION_BACKLOG.md",
+    "docs/domains/habitat/ARCHITECTURE.md",
+    "docs/domains/hazards/EXPANSION_PLAN.md",
+    "docs/domains/hydrology/DATA_LIFECYCLE.md",
+    "docs/domains/hydrology/EXPANSION_BACKLOG.md",
+    "docs/domains/hydrology/EXPANSION_PLAN.md",
+    "docs/domains/hydrology/FILE_SYSTEM_PLAN.md",
+    "docs/domains/people-dna-land/EXPANSION_BACKLOG.md",
+    "docs/domains/people-dna-land/FILE_SYSTEM_PLAN.md",
+    "docs/domains/roads-rail-trade/DATA_LIFECYCLE.md",
+    "docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md",
+    "docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md",
+    "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md",
+    "docs/domains/roads-rail-trade/IDENTITY_MODEL.md",
+    "docs/domains/roads-rail-trade/README.md",
+    "docs/sources/catalog/gbif/README.md"
+  ],
+  "artifact_hashes": {
+    "AUTHORS.md": "sha256:c02a37bdfead67b11f146326a3b2635ec4a648ed53f93068d46ab5432fd58ab4",
+    "docs/domains/atmosphere/IDENTITY_MODEL.md": "sha256:29a9e77be6de15f46a17f96da31db5113130bcdf0373993c74657896cc849443",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md": "sha256:343f7b00a674f06b35f6f71f125c0eeace6ffaac7b04a662432397f12ecdcacb",
+    "docs/domains/fauna/CROSS_LANE_RELATIONS.md": "sha256:0b54066220647dbeeb272b0e1e9962982069acf039e13a5bc2b93dc226367b17",
+    "docs/domains/flora/MAP_UI_CONTRACTS.md": "sha256:f1c6095ce6d852bdd47a7a7a2ef5284d408364956f527318ecc48a823f0b8862",
+    "docs/domains/geology/VERIFICATION_BACKLOG.md": "sha256:fc5479804bcd9aec37b54af94456431fec1ecb4092e78c99f0d2b6cf86530598",
+    "docs/domains/habitat/ARCHITECTURE.md": "sha256:2bb30c4b4a21eb44570fbab39a61750ce32562458ef05f80fbe384d308618dd0",
+    "docs/domains/hazards/EXPANSION_PLAN.md": "sha256:551e58beb51234fbe9c3b98a3944f2ff6f802d53d02bf855294d4894e20c2cba",
+    "docs/domains/hydrology/DATA_LIFECYCLE.md": "sha256:36d0ede368cf2268636387f0c8dcb11ce59c128246ef2bfc0df5324ee1ebc540",
+    "docs/domains/hydrology/EXPANSION_BACKLOG.md": "sha256:a0892895d77251481a0f0a388efde1172f99c26d2c6f8cb2d64c707add1be1fb",
+    "docs/domains/hydrology/EXPANSION_PLAN.md": "sha256:4bff2faafa782ced5e6010bdfb51f554527f243e7e2a8f1dd7ae0ce8a2b986fe",
+    "docs/domains/hydrology/FILE_SYSTEM_PLAN.md": "sha256:b5e2ac0c46f0ca8db8b04428453ddb6838446b7c65d16741e94625d04ff0e04f",
+    "docs/domains/people-dna-land/EXPANSION_BACKLOG.md": "sha256:f1d61e3374760c3a236142c80b27eeec9fdfb45dca591ea2924c02e14bd37711",
+    "docs/domains/people-dna-land/FILE_SYSTEM_PLAN.md": "sha256:20d1d7bb3b4cede360d172702be07e12831a48cfe09f532e4acc2a99c350fbb0",
+    "docs/domains/roads-rail-trade/DATA_LIFECYCLE.md": "sha256:d444ac1828ce48f0b1ee54407db913b70feb9cd3881c811af89d869f783c0095",
+    "docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md": "sha256:9fd8024bab74976340353b1bc056d6ac4152277de0e4355cafac2094fcde0a15",
+    "docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md": "sha256:6f8ccae796fb715586cf91cf9b93a933a27815d8614195238c1a6a92a6a41b08",
+    "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md": "sha256:91aa2c0eb6e34598295d9316bd57fd8345fc8d6c7cdc1e089a03064d623ede0a",
+    "docs/domains/roads-rail-trade/IDENTITY_MODEL.md": "sha256:981ea044daec3e0c37bec230dcd127ea1ab720fb08b7ae787e4fb4ce31c8640b",
+    "docs/domains/roads-rail-trade/README.md": "sha256:696d2058a09d3e38453665f66f9fe944b31226afa9ddcf22ef6165c53adafddb",
+    "docs/sources/catalog/gbif/README.md": "sha256:1538d2824aa46dfc7a48d954f225f908626fce76fb9a716708127028dd9cb83b"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:0b024c0541057608ca31add42d40ba849e4073a0fa655bebd46b549e2f6f42b6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4797#discussion_r4135640848",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4797#discussion_r4135640837"
+    ]
+  },
+  "truth_labels": {
+    "AUTHORS.md": "CONFIRMED",
+    "docs/domains/atmosphere/IDENTITY_MODEL.md": "CONFIRMED",
+    "docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md": "CONFIRMED",
+    "docs/domains/fauna/CROSS_LANE_RELATIONS.md": "CONFIRMED",
+    "docs/domains/flora/MAP_UI_CONTRACTS.md": "CONFIRMED",
+    "docs/domains/geology/VERIFICATION_BACKLOG.md": "CONFIRMED",
+    "docs/domains/habitat/ARCHITECTURE.md": "CONFIRMED",
+    "docs/domains/hazards/EXPANSION_PLAN.md": "CONFIRMED",
+    "docs/domains/hydrology/DATA_LIFECYCLE.md": "CONFIRMED",
+    "docs/domains/hydrology/EXPANSION_BACKLOG.md": "CONFIRMED",
+    "docs/domains/hydrology/EXPANSION_PLAN.md": "CONFIRMED",
+    "docs/domains/hydrology/FILE_SYSTEM_PLAN.md": "CONFIRMED",
+    "docs/domains/people-dna-land/EXPANSION_BACKLOG.md": "CONFIRMED",
+    "docs/domains/people-dna-land/FILE_SYSTEM_PLAN.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/DATA_LIFECYCLE.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/HISTORIC_ROUTES.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/IDENTITY_MODEL.md": "CONFIRMED",
+    "docs/domains/roads-rail-trade/README.md": "CONFIRMED",
+    "docs/sources/catalog/gbif/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "No valid relation lost",
+      "outcome": "PASS",
+      "reason": "For every file in docs batch 1, each base-version relation entry that resolves after stripping its trailing '# annotation' (existing path, known doc_id, or redirected doctrine file) is present in the current block; zero files lose a valid edge."
+    },
+    {
+      "gate": "Diff-scoped docs checks",
+      "outcome": "PASS",
+      "reason": "check_links, check_meta_blocks, and check_document_graph with --git-diff against the merge base report no FAIL findings; the document graph reports warnings only."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T16:09:02Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4797
+  },
+  "notes": "Relation entries with trailing '# annotation' comments are kept with the annotation stripped, because the document-graph parser treats the comment as part of the path. Comment-only lines inside relation lists are preserved."
+}

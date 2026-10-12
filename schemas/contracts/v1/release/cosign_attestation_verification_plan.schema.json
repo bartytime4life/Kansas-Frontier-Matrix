@@ -1,0 +1,396 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/cosign_attestation_verification_plan.schema.json",
+  "title": "CosignAttestationVerificationPlan",
+  "description": "Fixture-first, no-network preflight for a future Cosign verify-blob-attestation invocation. Shape validity does not perform cryptographic verification or authorize promotion, release, deployment, publication, or public use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "plan_id",
+    "security_baseline",
+    "tool",
+    "subject",
+    "predicate",
+    "bundle",
+    "trust",
+    "invocation",
+    "expected_runtime",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "CosignAttestationVerificationPlan"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm.release.cosign-attestation-verification.v1"
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^cosign-attestation-plan:[a-f0-9]{24}$"
+    },
+    "security_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "advisory_ids",
+        "minimum_v2",
+        "minimum_v3",
+        "strict_claim_validation_required"
+      ],
+      "properties": {
+        "advisory_ids": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "minimum_v2": {
+          "type": "string",
+          "pattern": "^2\\.[0-9]+\\.[0-9]+$"
+        },
+        "minimum_v3": {
+          "type": "string",
+          "pattern": "^3\\.[0-9]+\\.[0-9]+$"
+        },
+        "strict_claim_validation_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "binary_digest",
+        "immutable_source_ref"
+      ],
+      "properties": {
+        "name": {
+          "const": "cosign"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "binary_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "immutable_source_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_ref",
+        "digest",
+        "media_type"
+      ],
+      "properties": {
+        "artifact_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 720,
+          "pattern": "^(?:kfm://|urn:)[^\\s@]+@sha256:[a-f0-9]{64}$"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$"
+        }
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predicate_type",
+        "check_claims"
+      ],
+      "properties": {
+        "predicate_type": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 8,
+          "maxLength": 512
+        },
+        "check_claims": {
+          "type": "boolean"
+        }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "digest",
+        "format",
+        "subject_digest",
+        "rekor_inclusion_required",
+        "signed_entry_timestamp_required",
+        "offline_verification_material_embedded"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "format": {
+          "const": "sigstore-bundle"
+        },
+        "subject_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "rekor_inclusion_required": {
+          "type": "boolean"
+        },
+        "signed_entry_timestamp_required": {
+          "type": "boolean"
+        },
+        "offline_verification_material_embedded": {
+          "type": "boolean"
+        }
+      }
+    },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "certificate_identity",
+        "certificate_oidc_issuer",
+        "public_key_ref"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "KEYLESS",
+            "KEYED"
+          ]
+        },
+        "certificate_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "certificate_oidc_issuer": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri",
+              "minLength": 8,
+              "maxLength": 512
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "public_key_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "bundle_ref_argument",
+        "subject_digest_argument",
+        "predicate_type_argument",
+        "explicit_inputs_only",
+        "implicit_discovery",
+        "network_access",
+        "allow_http_registry",
+        "allow_insecure_registry"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "bundle_ref_argument": {
+          "$ref": "#/$defs/ref"
+        },
+        "subject_digest_argument": {
+          "$ref": "#/$defs/sha256"
+        },
+        "predicate_type_argument": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 8,
+          "maxLength": 512
+        },
+        "explicit_inputs_only": {
+          "type": "boolean"
+        },
+        "implicit_discovery": {
+          "type": "boolean"
+        },
+        "network_access": {
+          "enum": [
+            "DENIED",
+            "ALLOWED"
+          ]
+        },
+        "allow_http_registry": {
+          "type": "boolean"
+        },
+        "allow_insecure_registry": {
+          "type": "boolean"
+        }
+      }
+    },
+    "expected_runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finite_outcomes",
+        "verified_requires_exit_code_zero",
+        "stdout_is_not_authority",
+        "stderr_is_not_authority"
+      ],
+      "properties": {
+        "finite_outcomes": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "VERIFIED",
+              "DENIED",
+              "ERROR"
+            ]
+          }
+        },
+        "verified_requires_exit_code_zero": {
+          "type": "boolean"
+        },
+        "stdout_is_not_authority": {
+          "type": "boolean"
+        },
+        "stderr_is_not_authority": {
+          "type": "boolean"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cryptographic_verification_performed",
+        "authority_created",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "review_authenticated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "runtime_result_ref"
+      ],
+      "properties": {
+        "cryptographic_verification_performed": {
+          "type": "boolean"
+        },
+        "authority_created": {
+          "type": "boolean"
+        },
+        "evidence_closure_claimed": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "review_authenticated": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "runtime_result_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 720,
+      "pattern": "\\S"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/release/cosign_attestation_verification_plan.md",
+    "fixtures_root": "fixtures/contracts/v1/release/cosign_attestation_verification_plan/",
+    "validator": "tools/validators/release/validate_cosign_attestation_verification_plan.py",
+    "tests": "tests/release/test_cosign_attestation_verification_plan.py",
+    "authority": "fixture_only_invocation_preflight",
+    "non_effects": [
+      "does_not_run_cosign",
+      "does_not_verify_a_signature_or_attestation",
+      "does_not_resolve_evidence_or_policy",
+      "does_not_authorize_promotion_release_or_publication"
+    ]
+  }
+}

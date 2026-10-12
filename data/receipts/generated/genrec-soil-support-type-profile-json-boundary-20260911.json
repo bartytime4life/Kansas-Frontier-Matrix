@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec-soil-support-type-profile-json-boundary-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/domains/soil/support_type_profile.md",
+    "tests/validators/domains/soil/support_type/test_support_type_profile.py",
+    "tools/validators/domains/soil/support_type/validate_support_type_profile.py"
+  ],
+  "artifact_hashes": {
+    "contracts/domains/soil/support_type_profile.md": "sha256:29d7910191f5efd1e137420a55f83d24bf26fbf947af251e975e16e5b90fb3ea",
+    "tests/validators/domains/soil/support_type/test_support_type_profile.py": "sha256:f3e979737155568d3fc9b0eb0d3ce14b3bb8533eef83b8b0f8dc7596f80f6b88",
+    "tools/validators/domains/soil/support_type/validate_support_type_profile.py": "sha256:534db931ea0b31841b60d2ce8822dd5fcad0de92141b7ffc52e4208d40cbe3fa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; model revision not exposed"
+  },
+  "prompt_or_contract": "sha256:528b37b7d5b831cea26ce11bd07a561989f43b0dde243445bab6999abdba1d70",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file search",
+      "official documentation web reads",
+      "local Python and Git validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea"
+    ],
+    "evidence_refs": [
+      "repo:contracts/domains/soil/support_type_profile.md@6e13dc136ab358deef4df272284fc734070205f0",
+      "repo:tests/validators/domains/soil/support_type/test_support_type_profile.py@6e13dc136ab358deef4df272284fc734070205f0",
+      "repo:tools/validators/domains/soil/support_type/validate_support_type_profile.py@6e13dc136ab358deef4df272284fc734070205f0",
+      "repo:docs/doctrine/directory-rules.md@664e46697d4d237870f5a482904bb9acd8f11b20",
+      "https://docs.python.org/3.13/library/json.html",
+      "https://python-jsonschema.readthedocs.io/en/stable/referencing/"
+    ]
+  },
+  "truth_labels": {
+    "contracts/domains/soil/support_type_profile.md": "PROPOSED",
+    "tests/validators/domains/soil/support_type/test_support_type_profile.py": "CONFIRMED",
+    "tools/validators/domains/soil/support_type/validate_support_type_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-suite",
+      "outcome": "PASS",
+      "reason": "All 25 existing tests passed before this change in the exact-blob subset of remote 6e13dc136ab358deef4df272284fc734070205f0."
+    },
+    {
+      "gate": "regression-discrimination",
+      "outcome": "PASS",
+      "reason": "The 37-test augmented suite fails against the unchanged predecessor validator (7 failures, 15 errors including subtests) and passes against the repair. Reproduced duplicate/nonfinite schema acceptance, schema/parser exceptions, oversized-input misclassification, and mocked external-reference retrieval."
+    },
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "python -m unittest discover --start-directory tests/validators/domains/soil/support_type --pattern test_support_type_profile.py --verbose: 37 passed, 12 added tests. Python 3.13.5; jsonschema 4.26.0; referencing 0.37.0. No dependency install or manifest changes."
+    },
+    {
+      "gate": "finite-cli-and-default-fixtures",
+      "outcome": "PASS",
+      "reason": "Default fixture CLI remains PASS. Three real subprocess inputs (large integer, excessive nesting, oversized bytes) each return exit 1 / JSON ERROR with empty stderr. External HTTP/file/relative ref and dynamicRef controls assert zero urlopen/socket calls."
+    },
+    {
+      "gate": "integrity-and-hygiene",
+      "outcome": "PASS",
+      "reason": "Exact predecessor blobs; unchanged profile, two support schemas and nine fixtures; Python 3.11 grammar; git diff --check; receipt schema fba21ed27ebccf1362fe397fe0c3ebd85e072685 and exact SHA-256 artifact bindings checked locally."
+    },
+    {
+      "gate": "hosted-and-python-3.11-runtime",
+      "outcome": "SKIPPED",
+      "reason": "No hosted CI or Python 3.11 runtime execution. Grammar compatibility is not runtime proof."
+    },
+    {
+      "gate": "native-receipt-and-repository-wide-validation",
+      "outcome": "SKIPPED",
+      "reason": "Full native generated-receipt helper closure, aggregate repository checks and browser/runtime tests were not run. Sandbox DNS prevented Git clone; a verified file subset was used."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Review remains pending; no PR lifecycle, merge, settings, source admission, release, deployment or publication authority follows."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repository:soil-profile-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/soil/support_type_profile.md@6e13dc136ab358deef4df272284fc734070205f0"
+    },
+    {
+      "id": "source:soil-preservation",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf#page=20"
+    },
+    {
+      "id": "reference:jsonschema-registry",
+      "validated": true,
+      "evidence_ref": "https://python-jsonschema.readthedocs.io/en/stable/referencing/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T15:55:17Z",
+  "emitter": "ChatGPT repository authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Continuation on the existing agent/soil-support-fixture-integrity-20260911 branch. Ownership stays in tools/, tests/, contracts/ and data/receipts/generated/. No new schema/profile/source/workflow/fixture/dependency or application behavior. This receipt binds current authored bytes; genrec-soil-support-type-profile-execution-20260911.json is retained unchanged as predecessor evidence for exact commit 6e13dc136ab358deef4df272284fc734070205f0, not proof of these new bytes. A 1 MiB read cap is not an atomic filesystem snapshot, full special-file isolation or CPU/memory security proof. Only in-document schema resources resolve; cross-document composition stays outside this profile. Revert code/tests/contract together or prefer a forward correction; preserve receipts as history. No full-repository or source-truth claim."
+}

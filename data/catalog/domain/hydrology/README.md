@@ -291,7 +291,7 @@ The [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrolog
 | `build-proof-hydrology` | Confirms proof guidance and rejects premature proof payloads; no proof implementation target is accepted | Explicit skip/hold — no accepted proof producer |
 | `publish-dry-run-hydrology` | Confirms candidate/release guides and rejects premature candidate records; no release dry-run target is accepted | Explicit skip/hold — release dry run is not established |
 
-The [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) applies the same fail-closed posture to the proposed end-to-end slice. The [domain test](../../../../tests/domains/hydrology/test_hydrology_smoke.py) is now a deterministic but deliberately narrow alias-shape check; the [proof-slice test](../../../../tests/e2e/test_hydrology_proof_slice.py) remains a placeholder. Neither establishes semantic Hydrology assurance or evidence closure.
+The [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) applies the same fail-closed posture to the proposed end-to-end slice. The [domain test](../../../../tests/domains/hydrology/test_hydrology_smoke.py) is now a deterministic but deliberately narrow alias-shape check; the [proof-slice test](../../../../tests/e2e/test_hydrology_proof_slice.py) runs the synthetic no-network proof slice. Neither establishes real-source Hydrology assurance, evidence closure over admitted sources, or catalog closure.
 
 The following are denied shortcuts:
 
@@ -318,7 +318,7 @@ This ledger records what the inspected repository surfaces support and what they
 | [ADR-0009](../../../../docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md) | **DRAFT / PROPOSED** | Hydrology proof-lane target and explicit current holds | Accepted proof-bearing status |
 | [ADR-0026](../../../../docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md) | **DRAFT / PROPOSED** | WBD HUC12 graduation target and descriptor-topology conflict | Accepted WBD graduation |
 | [Hydrology readiness workflow](../../../../.github/workflows/domain-hydrology.yml) | **CONFIRMED bounded executable check plus denial gates** | EvidenceBundle alias shape/polarity, process-level network denial, placeholder detection, and explicit broader validation/proof/release holds | EvidenceRef resolution, EvidenceBundle closure, semantic Hydrology assurance, proof, catalog closure, or release |
-| [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) | **CONFIRMED executable denial gate** | Proof-slice scope and fail-closed hold behavior | Produced proof or catalog closure |
+| [Hydrology proof-slice workflow](../../../../.github/workflows/hydrology-proof-slice.yml) | **CONFIRMED bounded executable slice** | Synthetic no-network proof slice with finite outcomes and deterministic replay | Real-source proof or catalog closure |
 | [`HUCUnit` schema](../../../../schemas/contracts/v1/domains/hydrology/huc_unit.schema.json) | **PROPOSED scaffold** | Schema path and stated status | Constrained HUCUnit shape |
 | [`CatalogMatrix` contract](../../../../contracts/data/catalog_matrix.md) | **SUBSTANTIVE CONTRACT** | Intended catalog closure semantics | Executable validation |
 | [`CatalogMatrix` schema](../../../../schemas/contracts/v1/data/catalog_matrix.schema.json) | **PROPOSED / permissive** | Candidate machine-shape surface | Complete closure constraints |
@@ -343,7 +343,7 @@ No source in this ledger is used beyond the claim scope it directly supports.
 - [x] Confirm source-role separation for observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic records.
 - [x] Confirm NFHL regulatory-context-only posture and observed-flood evidence separation.
 - [x] Confirm that the inspected HUCUnit and CatalogMatrix schemas are proposed/permissive.
-- [x] Confirm that the bounded domain EvidenceBundle alias-shape test executes while the proof-slice test remains a placeholder.
+- [x] Confirm that the bounded domain EvidenceBundle alias-shape test executes and that the proof-slice test runs the synthetic proof slice.
 - [x] Confirm that the current workflow executes the bounded shape/polarity slice and retains broader validation, proof, and release holds.
 - [x] Confirm that proof, receipt, release-candidate, published, and rollback READMEs are guides rather than closure evidence.
 - [x] Confirm that no release or public Hydrology artifact is established by the inspected evidence.

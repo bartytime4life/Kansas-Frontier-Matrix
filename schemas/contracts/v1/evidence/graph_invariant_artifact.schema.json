@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/graph_invariant_artifact.schema.json",
+  "title": "GraphInvariantArtifactCandidate",
+  "description": "Fixture-only before/after graph invariant comparison with no graph, migration, evidence, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "artifact_id", "spec_hash", "migration_declaration_ref", "before", "after", "comparison", "controls", "non_effects"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "GraphInvariantArtifactCandidate"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "artifact_id": {"type": "string", "pattern": "^kfm:graph-invariant-artifact:[a-f0-9]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "migration_declaration_ref": {"type": "string", "pattern": "^kfm:graph-migration-declaration:[a-f0-9]{24}$"},
+    "before": {"$ref": "#/$defs/snapshot"},
+    "after": {"$ref": "#/$defs/snapshot"},
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_count_deltas", "relationship_count_deltas", "constraint_regressions", "changed_queries", "changed_gds_procedures", "classification"],
+      "properties": {
+        "node_count_deltas": {"$ref": "#/$defs/deltas"},
+        "relationship_count_deltas": {"$ref": "#/$defs/deltas"},
+        "constraint_regressions": {"$ref": "#/$defs/names"},
+        "changed_queries": {"$ref": "#/$defs/names"},
+        "changed_gds_procedures": {"$ref": "#/$defs/names"},
+        "classification": {"enum": ["NO_DRIFT", "REVIEW_REQUIRED"]}
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "live_graph_queried", "migration_executed", "evidence_sufficiency_claimed", "policy_evaluated", "review_approved", "promotion_eligible", "release_authorized", "publication_authorized"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "live_graph_queried": {"const": false},
+        "migration_executed": {"const": false},
+        "evidence_sufficiency_claimed": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_eligible": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": ["NO_EVIDENCE_ADMISSION", "NO_GRAPH_ACCESS", "NO_MIGRATION_EXECUTION", "NO_POLICY_DECISION", "NO_PROMOTION", "NO_PUBLICATION", "NO_RELEASE", "NO_REVIEW_APPROVAL"]
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "name": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$"},
+    "names": {"type": "array", "maxItems": 128, "uniqueItems": true, "items": {"$ref": "#/$defs/name"}},
+    "count": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "count"],
+      "properties": {"name": {"$ref": "#/$defs/name"}, "count": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}}
+    },
+    "counts": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/count"}},
+    "delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "delta"],
+      "properties": {"name": {"$ref": "#/$defs/name"}, "delta": {"type": "integer", "minimum": -9007199254740991, "maximum": 9007199254740991}}
+    },
+    "deltas": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/delta"}},
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status", "detail_hash"],
+      "properties": {"name": {"$ref": "#/$defs/name"}, "status": {"enum": ["SATISFIED", "VIOLATED", "UNKNOWN"]}, "detail_hash": {"$ref": "#/$defs/sha256"}}
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["query_id", "parameters_hash", "result_hash", "row_count"],
+      "properties": {
+        "query_id": {"$ref": "#/$defs/name"},
+        "parameters_hash": {"$ref": "#/$defs/sha256"},
+        "result_hash": {"$ref": "#/$defs/sha256"},
+        "row_count": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}
+      }
+    },
+    "gds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["procedure_id", "config_hash", "result_hash", "status"],
+      "properties": {
+        "procedure_id": {"$ref": "#/$defs/name"},
+        "config_hash": {"$ref": "#/$defs/sha256"},
+        "result_hash": {"$ref": "#/$defs/sha256"},
+        "status": {"enum": ["COMPLETE", "FAILED", "NOT_RUN"]}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["captured_at", "node_counts", "relationship_counts", "constraints", "representative_queries", "gds_procedures"],
+      "properties": {
+        "captured_at": {"type": "string", "format": "date-time"},
+        "node_counts": {"$ref": "#/$defs/counts"},
+        "relationship_counts": {"$ref": "#/$defs/counts"},
+        "constraints": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/constraint"}},
+        "representative_queries": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/query"}},
+        "gds_procedures": {"type": "array", "minItems": 1, "maxItems": 128, "items": {"$ref": "#/$defs/gds"}}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_card": "KFM-P31-PROG-0003",
+    "contract_doc": "contracts/evidence/graph_invariant_artifact.md",
+    "fixture_root": "fixtures/contracts/v1/evidence/graph_invariant_artifact/",
+    "authority": "bounded synthetic graph-invariant comparison only"
+  }
+}

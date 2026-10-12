@@ -1,0 +1,78 @@
+{
+  "cases": [
+    {
+      "input": "input/gbif_big_bluestem.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "NORMALIZED",
+      "findings": [],
+      "expected_candidate": "expected/gbif_big_bluestem.candidate.json"
+    },
+    {
+      "input": "input/idigbio_milkweed.json",
+      "source_profile": "IDIGBIO_DWC",
+      "source_id": "idigbio",
+      "outcome": "NORMALIZED",
+      "findings": [],
+      "expected_candidate": "expected/idigbio_milkweed.candidate.json"
+    },
+    {
+      "input": "input/gbif_no_coordinate.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "NORMALIZED",
+      "findings": [],
+      "expected_candidate": "expected/gbif_no_coordinate.candidate.json"
+    },
+    {
+      "input": "invalid/missing_source_record_id.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "ABSTAIN",
+      "findings": [
+        "SOURCE_RECORD_ID_MISSING"
+      ],
+      "expected_candidate": null
+    },
+    {
+      "input": "invalid/missing_scientific_name.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "ABSTAIN",
+      "findings": [
+        "SCIENTIFIC_NAME_MISSING"
+      ],
+      "expected_candidate": null
+    },
+    {
+      "input": "invalid/partial_coordinate.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "ERROR",
+      "findings": [
+        "COORDINATE_PAIR_INCOMPLETE"
+      ],
+      "expected_candidate": null
+    },
+    {
+      "input": "invalid/out_of_range_coordinate.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "ERROR",
+      "findings": [
+        "COORDINATE_OUT_OF_RANGE"
+      ],
+      "expected_candidate": null
+    },
+    {
+      "input": "invalid/negative_uncertainty.json",
+      "source_profile": "GBIF_DWC",
+      "source_id": "gbif",
+      "outcome": "ERROR",
+      "findings": [
+        "UNCERTAINTY_NEGATIVE"
+      ],
+      "expected_candidate": null
+    }
+  ]
+}

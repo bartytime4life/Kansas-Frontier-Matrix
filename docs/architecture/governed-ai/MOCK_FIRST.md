@@ -1,428 +1,698 @@
-# Mock-First Discipline
-
-> **The first useful slice of the Governed AI subsystem must run on contract-valid mocks before any live model provider, real source endpoint, or production binding is admitted. Mocks prove the trust membrane and the finite-outcome grammar; live providers come later, behind the same governed interface.**
-
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![authority: doctrine](https://img.shields.io/badge/authority-doctrine-blue)
-![path: PROPOSED](https://img.shields.io/badge/path-PROPOSED-lightgrey)
-![lifecycle: RAW%E2%86%92...%E2%86%92PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92...%E2%86%92PUBLISHED-informational)
-![policy: deny--by--default](https://img.shields.io/badge/policy-deny--by--default-critical)
-![updated: 2026-05-14](https://img.shields.io/badge/updated-2026--05--14-brightgreen)
-
-| Status | Owners | Last reviewed |
-|---|---|---|
-| `draft` — PROPOSED path, PROPOSED placement | Docs steward · Governed AI subsystem owner · API owner | `2026-05-14` |
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governed-ai-mock-first
-title: Mock-First Discipline
-type: standard
-version: v1
-status: draft
-owners: docs-steward, governed-ai-subsystem-owner, api-owner, security-steward
+title: Governed AI — Mock-First Discipline and Current Proof Boundary
+type: architecture-standard
+version: v2.0.0-draft
+status: draft; repository-grounded; bounded-mock-proof; focus-runtime-hold; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent governed-AI, Governed API, runtime, evidence, policy, citation, security, privacy, contracts, schemas, validation, accessibility, correction, and release stewardship"
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-20
 policy_label: public
+owning_root: docs/
+current_path: docs/architecture/governed-ai/MOCK_FIRST.md
+responsibility: >-
+  Explain the current deterministic mock proof, distinguish fixture selection and
+  candidate construction from semantic governed-AI orchestration, define the
+  evidence required before a live provider may be admitted, and keep mocks,
+  receipts, tests, documentation, and generated language outside truth and
+  publication authority.
+truth_posture: >-
+  CONFIRMED current tracked path, accepted Directory Rules placement, closed
+  four-outcome RuntimeResponseEnvelope shape, positive and negative envelope
+  fixtures, deterministic no-I/O MockAdapter selector, focused standard-library
+  proof tests, RuntimeResponseEnvelope candidate builder, AIReceipt candidate
+  builder, MockAdapter-to-AIReceipt candidate projection, mock-first environment
+  example, and hosted workflow boundaries / PROPOSED end-to-end mock Focus
+  orchestration, final Focus request and response profiles, machine-visible mock
+  provenance beyond the current fixture and receipt boundaries, policy and
+  citation composition, durable receipt emission, client integration, and live
+  provider admission / UNKNOWN deployed Focus runtime, provider endpoint,
+  operational policy, evidence-resolution service, citation service, receipt
+  store, public AI route, correction propagation, and release use / NEEDS
+  VERIFICATION independent review and hosted exact-head validation.
+repository: bartytime4life/Kansas-Frontier-Matrix
+base_commit: 3295d5faf38c521e8cc5f4544dc9920a7b17efc1
+target_prior_blob: 742cb7092f8e877b874b8ba1f0d13e4a3c55c54d
+codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+adapter_architecture_blob: d38351198939b63a57e583cb404a0daf379fa3a4
+ai_receipts_architecture_blob: 721bf4647f49a510a597d7b3c4d305bc70fa3097
+adapter_adr_blob: 5c45cbaf0aae510638088913757634ea978c9ec3
+mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+mock_adapter_test_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
+runtime_response_contract_blob: 5060aaaa30fea37b6eeea6e1428b9effa6a163bd
+runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+runtime_response_validator_blob: 44ce7d51038a9adf9fcbdb18108cc27da8381e33
+runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
+mock_receipt_projection_blob: 6b77074f1b47c575abd00fff989ff7d0795bedb1
+mock_receipt_projection_test_blob: 6ac251c7ea2a17ec2c7bd326880d582cc012e6b4
+focus_mock_workflow_blob: fbd56c7cda991ff8f3b804cc0c278e62daaa7abf
+ai_receipt_workflow_blob: 1192926b29a6007b78887ade1058e8e2c6ce8023
+focus_request_schema_blob: a2f298f014fa299bdec03afbf14ba9937aa95ef8
+focus_response_schema_blob: fd109e4a3c859115d4ad138e9303cf8c5bdd8873
+governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
+inspection_boundary: >-
+  Current-session GitHub reads covered the complete prior target, current main,
+  accepted Directory Rules and CODEOWNERS, adjacent governed-AI architecture,
+  proposed adapter ADR, runtime adapter lanes and implementations, the closed
+  RuntimeResponseEnvelope contract/schema/fixtures/validator/builder and focused
+  proof tests, AIReceipt contract/schema/validator/builders, the MockAdapter
+  receipt projection and tests, Focus request/response scaffolds, the Focus mock
+  and AIReceipt workflows, Focus fixture documentation, the governed API route
+  registry and AI source README, the mock environment example, and placeholder
+  worker/provider files. No mounted checkout, dependency installation, local
+  repository-native suite, model daemon, provider endpoint, credential, live
+  evidence resolver, policy evaluator, citation service, receipt store, deployed
+  client, correction flow, rollback execution, release environment, or
+  publication path was exercised.
 related:
-  - docs/architecture/governed-ai/README.md
-  - docs/architecture/governed-ai/BOUNDARIES.md
-  - docs/architecture/governed-ai/STATE_OWNERSHIP.md
-  - docs/architecture/governed-ai/ROUTE_MAP.md
-  - docs/architecture/governed-ai/FOCUS_FLOW.md
-  - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/runbooks/governed_ai_LOCAL_DEV.md
-  - docs/runbooks/governed_ai_VALIDATION.md
-  - docs/runbooks/governed_ai_ROLLBACK.md
-  - contracts/OBJECT_MAP.md
-  - directory-rules.md
-tags: [kfm, governed-ai, doctrine, mocks, fixtures, finite-outcomes]
+  - README.md
+  - ADAPTER_CONTRACT.md
+  - AI_RECEIPTS.md
+  - BOUNDARIES.md
+  - FOCUS_FLOW.md
+  - CONTINUITY_NOTES.md
+  - OLLAMA_INTEGRATION.md
+  - ROUTE_MAP.md
+  - ../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../../runtime/model_adapters/README.md
+  - ../../../runtime/model_adapters/MockAdapter.py
+  - ../../../runtime/model_adapters/OllamaAdapter.py
+  - ../../../runtime/model_adapters/mock/README.md
+  - ../../../runtime/mock/README.md
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/runtime/ai_receipt.md
+  - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - ../../../schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - ../../../schemas/contracts/v1/focus/focus_request.schema.json
+  - ../../../schemas/contracts/v1/focus/focus_response.schema.json
+  - ../../../fixtures/contracts/v1/runtime/runtime_response_envelope/README.md
+  - ../../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py
+  - ../../../tests/runtime_proof/test_envelope_finite_outcomes.py
+  - ../../../tools/validators/validate_runtime_response_envelope.py
+  - ../../../tools/validators/validate_ai_receipt.py
+  - ../../../packages/envelopes/src/envelopes/runtime_response.py
+  - ../../../packages/envelopes/src/envelopes/ai_receipt.py
+  - ../../../packages/envelopes/src/envelopes/mock_adapter_receipt.py
+  - ../../../tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py
+  - ../../../.github/workflows/focus-mock-test.yml
+  - ../../../.github/workflows/ai-receipt.yml
+  - ../../../apps/governed-api/src/governed_api/routes/registry.py
+  - ../../../apps/governed-api/src/ai/README.md
+  - ../../../tests/fixtures/focus/README.md
+  - ../../../.env.example
+tags: [kfm, architecture, governed-ai, mock-first, mock-adapter, deterministic, no-io, finite-outcomes, runtime-response-envelope, ai-receipt, focus-hold, cite-or-abstain, non-publication]
 notes:
-  - Path PROPOSED; repository not mounted this session.
-  - Operationalizes UIAI-GAI MockAdapter recommendation in a single place.
+  - "v2.0.0-draft replaces proposal-only and no-repository language with a current repository evidence checkpoint."
+  - "The executable MockAdapter is a deterministic selector of prevalidated complete synthetic envelopes, not a model emulator, semantic outcome engine, or production adapter."
+  - "The current closed RuntimeResponseEnvelope schema has no mock_marker property; this page does not invent one or create a parallel payload shape."
+  - "The mock Focus workflow proves envelope shape and selector behavior while explicitly holding end-to-end Focus runtime readiness."
+  - "This same-path revision changes documentation and its generated authoring receipt only."
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+<a id="mock-first-discipline"></a>
+
+# Mock-First Discipline
+
+> **Operating boundary.** KFM proves deterministic contracts, finite outcomes, safe negative behavior, and provider-neutral handoffs with synthetic inputs before any live model is admitted. A mock can prove a boundary. It cannot prove evidence, policy, citation validity, runtime composition, release, or public truth.
+
+[![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#0-status--authority)
+[![MockAdapter](https://img.shields.io/badge/MockAdapter-bounded%20selector-2da44e?style=flat-square)](#5-current-mockadapter-boundary)
+[![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0969da?style=flat-square)](#6-finite-outcome-coverage)
+[![Focus](https://img.shields.io/badge/mock%20Focus-runtime%20HOLD-d4a72c?style=flat-square)](#8-current-focus-readiness-hold)
+[![provider](https://img.shields.io/badge/live%20provider-none%20admitted-6e7781?style=flat-square)](#7-graduation-criteria-mocks--live)
+[![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#11-rollback)
+
+> [!IMPORTANT]
+> **This page is explanatory architecture, not implementation, contract, schema, policy, evidence, receipt, release, or publication authority.** Current repository proof is deliberately narrow: a closed finite envelope profile, fixture polarity, a deterministic no-I/O selector, local candidate builders, and bounded tests. The semantic governed-AI flow remains incomplete.
+
+> [!CAUTION]
+> **The current `MockAdapter` does not call or imitate a model.** It receives a caller-supplied matrix of already validated synthetic envelopes, requires all four finite outcomes, and returns isolated copies. It does not parse a request, choose an outcome from evidence, resolve evidence, evaluate policy, validate citations, emit a receipt, or construct a public response.
+
+> [!WARNING]
+> **Do not add an ad hoc `mock_marker` to `RuntimeResponseEnvelope`.** Its current schema is closed with `additionalProperties: false` and contains no mock-marker field. Mock provenance is currently established by fixture identity, scenario identity, the bounded test harness, workflow context, and—where an AIReceipt candidate is built—`adapter: mock` plus `model_ref: fixture-only`. A new payload field requires explicit contract/schema evolution.
+
+**Quick navigation:** [Status](#0-status--authority) · [Why mock-first](#1-why-mock-first) · [Vocabulary](#2-glossary) · [Invariants](#3-mock-first-invariants) · [Sequence](#4-the-increment-sequence) · [Fixtures](#5-mock-fixture-rules) · [Outcomes](#6-finite-outcome-coverage) · [Graduation](#7-graduation-criteria-mocks--live) · [Focus HOLD](#8-current-focus-readiness-hold) · [Anti-patterns](#8-anti-patterns) · [Routing](#9-proposed-file-homes) · [Validation](#10-validation) · [Rollback](#11-rollback) · [Open work](#13-open-verification-register) · [Evidence](#14-evidence-ledger) · [Related](#12-related-docs) · [Mock identity](#appendix-a--mock-marker-shape-sketch) · [No-loss ledger](#appendix-b--no-loss-modernization-ledger)
+
 ---
 
-## Contents
-
-- [0. Status & Authority](#0-status--authority)
-- [1. Why Mock-First](#1-why-mock-first)
-- [2. Glossary](#2-glossary)
-- [3. Mock-First Invariants](#3-mock-first-invariants)
-- [4. The Increment Sequence](#4-the-increment-sequence)
-- [5. Mock Fixture Rules](#5-mock-fixture-rules)
-- [6. Finite-Outcome Coverage](#6-finite-outcome-coverage)
-- [7. Graduation Criteria (mocks → live)](#7-graduation-criteria-mocks--live)
-- [8. Anti-Patterns](#8-anti-patterns)
-- [9. PROPOSED File Homes](#9-proposed-file-homes)
-- [10. Validation](#10-validation)
-- [11. Rollback](#11-rollback)
-- [12. Related Docs](#12-related-docs)
-- [Appendix A — Mock-marker shape (sketch)](#appendix-a--mock-marker-shape-sketch)
-
----
+<a id="0-status--authority"></a>
 
 ## 0. Status & Authority
 
-| Field | Value |
+| Question | Current evidence-backed answer |
 |---|---|
-| **Document type** | Subsystem doctrine — Governed AI |
-| **Authority of this doctrine** | `CONFIRMED` derivation from UIAI-GAI, IMPL-PIPE §20, and the Whole-UI + Governed AI Expansion Report |
-| **Authority of any specific path quoted here** | `PROPOSED` until verified against mounted-repo evidence (per Directory Rules §0) |
-| **Proposed canonical home** | `docs/architecture/governed-ai/MOCK_FIRST.md` |
-| **Sibling docs (PROPOSED)** | `README.md`, `STATE_OWNERSHIP.md`, `ROUTE_MAP.md`, `BOUNDARIES.md`, `CONTINUITY_NOTES.md`, `FOCUS_FLOW.md` |
-| **Schema-home convention** | `schemas/contracts/v1/<…>` (default per ADR-0001; see `directory-rules.md` §7.4) |
-| **Lifecycle invariant referenced** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
-| **Supersedes** | none |
-| **ADRs that may bear on this doc** | `ADR-focus-model-adapter-boundary` (PROPOSED); `ADR-ui-schema-home` (PROPOSED) |
+| Is this a tracked architecture document? | **CONFIRMED.** The target exists at `docs/architecture/governed-ai/MOCK_FIRST.md`. |
+| Is the same-path placement valid? | **CONFIRMED.** Accepted ADR-0029 adopts Directory Rules v2; this existing human architecture explanation receives `PLACE` under `docs/`. |
+| Is this page a semantic or machine contract? | **No.** Semantic meaning remains under `contracts/`; machine shape remains under `schemas/`; this page explains boundaries and maturity. |
+| Does executable mock code exist? | **CONFIRMED, bounded.** `runtime/model_adapters/MockAdapter.py` selects deep-copied prevalidated synthetic envelopes and requires coverage of all four outcomes. |
+| Does executable finite-envelope proof exist? | **CONFIRMED, bounded.** The closed schema, valid and invalid fixtures, validator, candidate builder, standard-library tests, and hosted workflow surfaces exist. |
+| Does AIReceipt candidate compatibility exist? | **CONFIRMED, bounded.** A helper projects a prevalidated mock outcome into the current nine-field AIReceipt candidate with fixed mock identity; callers supply digests and authority-bearing refs. |
+| Does a full mock Focus runtime exist? | **No verified implementation.** The workflow explicitly records `WORKFLOW_HOLD`; request/response schemas and policy remain scaffolds; no operational Focus fixtures or native command are present. |
+| Does an AI/Focus Governed API route exist? | **No verified route.** The inspected registry exposes bootstrap, layers, and evidence only. |
+| Is a live provider admitted? | **No.** `OllamaAdapter.py` is a one-line placeholder, and no provider endpoint or approved model profile was established. |
+| Does this revision release or publish anything? | **No.** Documentation plus authoring provenance only. |
 
-> [!IMPORTANT]
-> This file is a **doctrine page**, not an implementation contract. Path, sibling doc, schema home, and route names cited here are `PROPOSED` until the live repo is mounted. Treat anything that looks repo-shaped as a placeholder for verification, not as a claim of current state.
+### Placement and authority split
+
+| Responsibility | Owning surface | This page may do |
+|---|---|---|
+| Human architecture explanation | `docs/architecture/governed-ai/` | Explain evidence, boundaries, maturity, HOLDs, graduation, and rollback. |
+| Adapter/runtime execution | `runtime/`, accepted packages, and deployable apps | Cite observed behavior and tests; never invent execution. |
+| Semantic meaning | `contracts/` | Summarize and link; never silently redefine. |
+| Machine shape | `schemas/` | Report current fields and closure; never create a second shape. |
+| Fixtures and tests | `fixtures/`, `tests/` | Describe current proof and missing coverage. |
+| Admissibility | `policy/` | State required gates; never claim a policy decision ran. |
+| Receipts and proofs | governed `data/` families | Require accountable references without treating them as truth. |
+| Public route and UI | `apps/governed-api/`, `apps/explorer-web/` | Record verified composition only. |
+| Release, correction, rollback | their distinct governed families | Keep mock success outside release authority. |
+
+[Back to top](#top)
 
 ---
+
+<a id="1-why-mock-first"></a>
 
 ## 1. Why Mock-First
 
-KFM's Governed AI subsystem mediates a small but high-stakes question: *can a language model surface an answer over Kansas Frontier Matrix evidence without ever displacing the evidence?* The answer is yes — but only if the trust membrane, the finite-outcome grammar, and the citation contract are proven **before** a real model, real source connector, or real release ever touches the path.
+A live model introduces nondeterminism, provider behavior, network and credential exposure, version drift, cost, latency, cancellation, prompt-injection risk, and generated text. None of those concerns should be allowed to obscure whether KFM's own trust boundaries work.
 
-The project's standing recommendation (UIAI-GAI; IMPL-PIPE §20) is unambiguous:
+Mock-first therefore orders implementation so KFM can answer narrower questions first:
 
-> Begin with a **provider-neutral, evidence-subordinate runtime slice** using `MockAdapter`, policy precheck, citation validation, finite `RuntimeResponseEnvelope`, `AIReceipt`, `RunReceipt`, and source-coverage checks. Live providers are admitted only after this slice is proven.
+1. **Can the canonical response shape represent all legal outcomes?**
+2. **Do valid fixtures pass and invalid fixtures fail closed?**
+3. **Can a deterministic selector replay those outcomes without I/O or mutation?**
+4. **Can candidate builders preserve the current closed field sets without creating authority?**
+5. **Can an AIReceipt candidate bind explicit mock identity, digests, policy and citation refs, and outcome?**
+6. **Can the full request → evidence → policy → adapter → citation → receipt → envelope flow run deterministically before a provider is admitted?**
 
-Mock-first is how that recommendation becomes a working discipline:
-
-- It separates **adapter contracts** (stable) from **adapter implementations** (replaceable).
-- It forces every finite outcome — `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` — to be exercised under test before any live model emits one.
-- It keeps `RAW`, `WORK`, `QUARANTINE`, canonical stores, candidate data, and direct model clients **out of the browser** by construction, not by hope.
-- It makes the *next* PR cheap and reversible: a mock-only PR can be reverted without published artifacts, public claims, or correction notices.
+Current repository evidence answers questions 1–5 only in bounded ways. Question 6 remains on **HOLD**.
 
 > [!NOTE]
-> Mock-first is not a hostility toward live providers. It is the **order of operations** that lets a live provider be admitted later without rewriting the trust membrane underneath it.
+> Mock-first is not “pretend production.” It is **progressive proof**. Each layer proves only its own responsibility and leaves evidence, policy, citation, release, and publication authority with their owning objects and services.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-glossary"></a>
 
 ## 2. Glossary
 
-| Term | Meaning in this doc |
+| Term | Current meaning |
 |---|---|
-| `MockAdapter` | Deterministic implementation of `ModelAdapterPort` used in tests and local fixtures. Never emits public claims. `PROPOSED` home: `apps/governed-api/src/ai/MockAdapter.ts`. |
-| `ModelAdapterPort` | Provider-neutral interface for any AI model runtime behind the governed API. Live providers (Ollama, hosted) implement this same port. |
-| `mockGovernedApi` | Browser-side mock fixture adapter that returns contract-valid envelopes with a visible mock marker. `PROPOSED` home: `apps/explorer-web/src/api/mockGovernedApi.ts`. |
-| `mock_only` fixture | A contract-valid example payload, plainly marked, **never releasable** as public evidence. |
-| `mock marker` | A required, visible field on every mock payload that prevents confusion with released artifacts. See [Appendix A](#appendix-a--mock-marker-shape-sketch). |
-| `RuntimeResponseEnvelope` | Governed AI/API response wrapper carrying outcome, evidence context, citations, policy state, and validation result. |
-| `DecisionEnvelope` | Finite decision wrapper used by APIs, runtime surfaces, and UI/AI payloads. |
-| `EvidenceBundle` / `EvidenceRef` | Authoritative resolution target for any claim. `EvidenceRef` resolves to `EvidenceBundle`; AI never substitutes for it. |
-| Finite outcomes | The closed set `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` (validator variants add `PASS` / `FAIL`; promotion may add `HOLD`). |
-| Negative-state fixture | A fixture whose expected result is `ABSTAIN`, `DENY`, or `ERROR` — not `ANSWER`. |
-| Mock-first slice | Any PR that admits a new governed-AI capability with mocks alone, no live provider, no live source connector. |
+| `MockAdapter` | Deterministic Python selector at `runtime/model_adapters/MockAdapter.py`. It returns isolated copies from a prevalidated four-outcome scenario matrix. |
+| Scenario matrix | Caller-supplied mapping from synthetic scenario IDs to complete response envelopes. The adapter requires all four outcomes before construction succeeds. |
+| `RuntimeResponseEnvelope` | Current closed, schema-paired client-envelope profile with `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. `ANSWER` additionally requires evidence and precision disclosure. |
+| Runtime envelope fixture | Synthetic JSON under `fixtures/contracts/v1/runtime/runtime_response_envelope/`; valid and invalid lanes exercise machine shape and local semantics. |
+| `AIReceipt` candidate | Current closed nine-field accountability candidate. It is process-memory shape, not truth, policy, citation closure, or release approval. |
+| Mock receipt projection | Helper that copies a prevalidated mock envelope's outcome into an AIReceipt candidate and fixes `adapter` to `mock` and `model_ref` to `fixture-only`. |
+| Mock provenance | Evidence that an artifact or run is synthetic. Current mechanisms are fixture/scenario identity, test/workflow context, and explicit mock identity in the AIReceipt candidate—not an envelope `mock_marker` field. |
+| Mock Focus runtime | **PROPOSED / HOLD.** A deterministic end-to-end Focus request flow that performs the same orchestration boundaries a live provider would use without network or provider access. |
+| Live provider admission | A separately reviewed transition that allows a provider/model/profile behind the same governed interface after graduation gates close. |
+| Finite outcomes | The closed runtime set `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. Validator result vocabularies such as `PASS` and `FAIL` are separate. |
+
+[Back to top](#top)
 
 ---
+
+<a id="3-mock-first-invariants"></a>
 
 ## 3. Mock-First Invariants
 
-The following invariants are **non-negotiable** while this doctrine applies. Bending one requires an ADR per Directory Rules §2.4.
+1. **Evidence remains outside the mock.** Synthetic envelopes and generated text never become EvidenceBundles or source authority.
+2. **No direct browser-to-model path.** Browser and ordinary clients use governed interfaces; neither mock nor live modes authorize direct model access.
+3. **Closed shapes remain closed.** Tests and examples must not add convenience fields that the current schema forbids.
+4. **Fixture polarity is explicit.** Valid fixtures must pass; invalid fixtures must fail for known reasons.
+5. **All four runtime outcomes are first-class.** No test harness may treat missing or unknown outcomes as `ANSWER`.
+6. **The selector is deterministic and isolated.** Repeated responses are equal but not the same mutable object; caller changes do not mutate registered scenarios.
+7. **No I/O in the bounded selector.** Filesystem, network, clock, randomness, environment, secrets, dynamic execution, and provider calls remain outside `MockAdapter`.
+8. **Candidate construction is not orchestration.** Building a schema-shaped envelope or receipt does not prove evidence resolution, policy, citation validation, or release eligibility.
+9. **Mock provenance is reviewable without schema drift.** Use current fixture, scenario, workflow, and receipt identity; evolve contracts explicitly if stronger machine-visible provenance is required.
+10. **Sensitive examples remain synthetic and public-safe.** No exact rare-species, archaeology, infrastructure, living-person, genomic, private-land, or other protected material is needed to test denial behavior.
+11. **Mock success has no lifecycle effect.** Tests, fixtures, receipts, PRs, and green workflows do not promote material to `PUBLISHED`.
+12. **Provider admission is reversible and separate.** A provider can be disabled without changing the public envelope grammar or bypassing the mock proof path.
 
-1. **No live model in the first slice.** The first slice that exposes a Governed AI surface MUST use `MockAdapter` and `mockGovernedApi` only. Live providers (Ollama, hosted models, vendor APIs) are admitted only after the graduation gates in §7.
-2. **No direct model client from the browser, ever.** Mock or live, the browser MUST NOT call a model runtime, vector index, graph store, object store, canonical store, or `RAW` / `WORK` / `QUARANTINE` path. All access goes through the governed API.
-3. **Schema before behavior.** A surface SHOULD NOT acquire UI behavior until its DTOs (`DecisionEnvelope`, `RuntimeResponseEnvelope`, `EvidenceDrawerPayload`, `LayerDescriptor`, `FocusRequest`/`FocusResponse`) are schema-defined and validators reject malformed shapes.
-4. **Every fixture is contract-valid.** Mocks pass the same schema/contract gates as released artifacts. A mock that cannot validate is a broken mock, not a useful one.
-5. **Every fixture carries a visible mock marker.** Mocks MUST be plainly distinguishable from released evidence in code, in tests, and in any rendered UI surface. See [Appendix A](#appendix-a--mock-marker-shape-sketch).
-6. **Fixtures are not publication artifacts.** Mock payloads MUST NOT appear under `data/published/`, in `ReleaseManifest`, or in any `EvidenceBundle` consumed by a public surface. Their home is `tests/fixtures/<subsystem>/` (PROPOSED).
-7. **Every object family exercises positive and negative states.** Each fixture family SHOULD include at least one valid case, one invalid case, one denied case, one abstention case, and one rollback or correction case (per IMPL-PIPE fixture rule).
-8. **Every finite outcome is exercised before merge.** A Governed AI PR SHOULD NOT merge until `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` all render correctly from fixtures.
-9. **Feature flags off by default.** Mock-first PRs land with their route flag `off`; turning the route on is a separate, reviewable change.
-10. **Telemetry is safe by construction.** No raw evidence, prompt text, restricted geometry, credentials, or full `EvidenceBundle` copies appear in any telemetry payload — mock or live.
-
-> [!CAUTION]
-> If a proposal weakens any of these invariants, mark it `PROPOSED` and route it through an ADR. Quiet erosion is the failure mode this doctrine exists to prevent.
-
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
+
+<a id="4-the-increment-sequence"></a>
+<a id="5-current-mockadapter-boundary"></a>
 
 ## 4. The Increment Sequence
 
-KFM's governed-AI rollout is staged so each PR is reversible and proves a specific property before the next PR depends on it. The mock-first regime spans PR 1 through PR 5; live providers are admitted only at PR 6.
+The prior edition described a fixed six-PR rollout. Current repository evidence supports a more durable **graduation sequence**, not a fixed PR count.
 
 ```mermaid
 flowchart LR
-  PR1["PR 1<br/>Control plane<br/>+ schema wave"]
-  PR2["PR 2<br/>Mock governed<br/>API client"]
-  PR3["PR 3<br/>Shell +<br/>MapLibre adapter"]
-  PR4["PR 4<br/>Evidence Drawer<br/>+ Focus<br/>(finite outcomes)"]
-  PR5["PR 5<br/>Story + Review<br/>+ Export + Diagnostics"]
-  GATE{{"Mock-first<br/>gate cleared?"}}
-  PR6["PR 6<br/>Provider adapter<br/>+ live API binding"]
-
-  PR1 --> PR2 --> PR3 --> PR4 --> PR5 --> GATE
-  GATE -- "no" --> PR5
-  GATE -- "yes (see §7)" --> PR6
-
-  classDef mock fill:#eef6ff,stroke:#3b82f6,color:#0b1f44;
-  classDef gate fill:#fff7e6,stroke:#d97706,color:#3b2a07;
-  classDef live fill:#eafff0,stroke:#16a34a,color:#0b3d1f;
-  class PR1,PR2,PR3,PR4,PR5 mock;
-  class GATE gate;
-  class PR6 live;
+    A["Current bounded proof\nclosed envelope + fixtures"] --> B["Deterministic selector\nall four outcomes"]
+    B --> C["Candidate builders\nenvelope + AIReceipt"]
+    C --> D["Mock Focus orchestration\nPROPOSED / HOLD"]
+    D --> E["Governed API + client\nPROPOSED / HOLD"]
+    E --> F{"Graduation gates close?"}
+    F -- no --> D
+    F -- yes --> G["Provider/model/profile admission\nseparate reviewed transition"]
 ```
 
-| PR | Scope (PROPOSED) | Mock-first? | Reversibility | Validation |
-|---|---|:---:|---|---|
-| **PR 1** | Authority docs, `OBJECT_MAP`, core DTO schemas, fixtures, validators, ADRs | n/a (no runtime) | No runtime exposure; revert PR if homes are wrong | Schema + fixture validation |
-| **PR 2** | Typed `governedClient`, `responseValidators`, `mockGovernedApi`, fixtures with mock markers | ✅ | Feature flag off; no live endpoints | Contract + unit tests |
-| **PR 3** | Persistent shell, `MapRuntimePort`, `MapLibreAdapter`, `TimeState`, layer catalog from fixtures | ✅ | Feature flag off; rollback component tree | Typecheck · component · e2e smoke · a11y smoke |
-| **PR 4** | `EvidenceDrawer`, `FocusPanel`, `OutcomeRenderer` rendering `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` from mocks | ✅ | Kill switch for Focus; no live model provider | Negative-state tests · policy-fixture tests |
-| **PR 5** | `StoryManifest` player, read-only review console, compare/export/settings/diagnostics | ✅ | Routes feature-flagged | E2E smoke · docs propagation |
-| **PR 6** | Provider adapter + live API binding (admitted only after §7 gates) | ❌ | Adapter-level rollback to `MockAdapter` | Integration tests · policy gates · security review |
+| Increment | Current state | Proof gained | Still not proved |
+|---|---|---|---|
+| Closed response profile | **CONFIRMED / PROPOSED schema status** | Four legal outcomes, required fields, `ANSWER` evidence/precision constraints, negative-outcome precision denial. | Evidence resolution, policy, citation, release, client behavior. |
+| Fixture polarity and validator | **CONFIRMED bounded proof** | Valid and invalid cases can be checked deterministically. | Runtime invocation or public safety. |
+| `MockAdapter` selector | **CONFIRMED bounded proof** | Full four-outcome matrix, deterministic order, deep-copy isolation, safe unknown-scenario failure, no-I/O source boundary. | Request interpretation or semantic outcome choice. |
+| Envelope/receipt candidate builders | **CONFIRMED bounded proof** | Current closed field sets can be assembled from explicit caller inputs. | Authentic digests, authority-ref resolution, persistence, public response. |
+| MockAdapter → AIReceipt projection | **CONFIRMED bounded proof** | Mock identity and selected outcome can be carried into a candidate receipt. | Receipt emission, storage, signature, retention, correction, audit lookup. |
+| Mock Focus orchestration | **HOLD** | Would prove precheck/evidence/context/adapter/citation/postcheck/envelope composition. | Not currently implemented or executed. |
+| Governed client integration | **HOLD / UNKNOWN** | Would prove safe UI rendering and no direct provider path. | Not established by the inspected mock Focus surfaces. |
+| Live provider | **HOLD** | Would prove provider-specific translation behind the same seam. | No provider or model profile admitted. |
 
-> [!NOTE]
-> Sources for the table: KFM Whole-UI + Governed AI Expansion Report, §8.1 increment sequence and §28 "next smallest useful PR." Paths and component names remain `PROPOSED` until the repo is inspected.
+No implementation increment may convert a bounded proof into an end-to-end claim merely because the component tests are green.
 
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
+
+<a id="5-mock-fixture-rules"></a>
 
 ## 5. Mock Fixture Rules
 
-Every mock payload that participates in the Governed AI surface MUST satisfy all of the following.
+### 5.1 Current fixture families
 
-| Rule | Requirement | Why |
+| Fixture family | Current evidence | Role |
 |---|---|---|
-| **Contract-valid** | Validates against the corresponding `schemas/contracts/v1/<…>` schema. | A mock that bypasses validation hides bugs the live path would catch. |
-| **Mock marker** | Carries a visible, schema-required marker (e.g., `mock_marker: true`, `source_role: "mock_only"`, or an equivalent enum). | Prevents confusion with released artifacts in code, tests, and UI. |
-| **Not releasable** | MUST NOT appear in `data/published/`, `ReleaseManifest`, or any `EvidenceBundle` consumed by a public surface. | Mocks are evidence of *the system working*, not evidence of *the world*. |
-| **Negative states required** | Each family includes valid, invalid, denied, abstention, and (where relevant) rollback/correction fixtures. | Negative states are the cheapest places to find trust-membrane bugs. |
-| **Sensitive-lane public-safe** | Fixtures for archaeology, living-person, DNA, rare-species, infrastructure, or hazards lanes use transformed/redacted geometry — never real exact locations. | Sensitivity posture applies to fixtures as strictly as it does to released data. |
-| **No prompt or credential leakage** | Fixtures MUST NOT embed model prompts, secrets, source credentials, or internal store handles. | Telemetry-safety extends to anything checked into the repo. |
-| **Deterministic** | Given the same inputs, `MockAdapter` returns the same outputs. | Determinism is what makes the mock-first slice CI-stable. |
+| `fixtures/contracts/v1/runtime/runtime_response_envelope/valid/` | **CONFIRMED** four JSON fixtures | Complete schema-valid examples for the four finite outcomes. |
+| `fixtures/contracts/v1/runtime/runtime_response_envelope/invalid/` | **CONFIRMED** negative fixtures and expected-error sidecars | Fail-closed shape and local-semantic cases. |
+| `tests/fixtures/focus/` | **CONFIRMED README and `.gitkeep`; payload inventory absent** | Proposed unit-test fixture lane, not current executable Focus coverage. |
+| Static Hydrology Focus example | **CONFIRMED static expected-`ABSTAIN` walkthrough through the workflow inspection** | Documentation example only; not a runtime request. |
 
-> [!TIP]
-> When in doubt about a fixture, ask: *"If this leaked into a `ReleaseManifest`, would a steward catch it before publication?"* If the answer is "maybe," strengthen the mock marker.
+### 5.2 Rules for current and future fixtures
 
-[⬆ Back to top](#mock-first-discipline)
+| Rule | Required posture |
+|---|---|
+| Use the owning schema | A runtime envelope fixture must validate against the canonical runtime schema, not a convenience copy. |
+| Preserve valid/invalid separation | A file's location and expected-error sidecar must make polarity unambiguous. |
+| Keep synthetic identity explicit | Use stable fixture paths and scenario IDs; never present synthetic identifiers as source or release identities. |
+| Do not mutate closed payloads | Do not add `mock_marker`, test-only notes, prompts, or arbitrary metadata to the closed envelope or AIReceipt shape. |
+| Keep authority refs synthetic | Policy, citation, evidence, release, correction, and receipt refs must not impersonate production records. |
+| Deny real sensitive details | Test policy behavior with toy or generalized values, not real protected coordinates or personal data. |
+| Keep execution deterministic | No live network, provider, source, clock, randomness, environment-dependent outcome, or external secret. |
+| Test negative behavior as a first-class path | Missing evidence, invalid shape, unknown outcome, policy denial, citation failure, correction/withdrawal, and adapter failure need explicit expected outcomes before runtime graduation. |
+| Keep fixtures outside publication | Fixture presence under `fixtures/` or `tests/` never authorizes inclusion in a release manifest or public artifact. |
+
+### 5.3 Mock identity without schema drift
+
+Current mock provenance is distributed across the test boundary:
+
+```text
+fixture path
+  + stable scenario id
+  + test/workflow name
+  + source commit
+  + AIReceipt candidate adapter=mock
+  + AIReceipt candidate model_ref=fixture-only
+```
+
+That is enough for the current bounded proofs. A future public-facing mock/demo mode needs a reviewed wrapper, environment indicator, test manifest, or explicit contract evolution so users cannot confuse synthetic output with a governed response. Documentation prose or UI color alone is not sufficient authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="6-finite-outcome-coverage"></a>
 
 ## 6. Finite-Outcome Coverage
 
-The mock-first slice MUST exercise every finite outcome on every governed-AI-adjacent surface it ships. The matrix below is the **minimum** coverage; PRs MAY add additional fixtures.
-
-| Surface (PROPOSED route) | `ANSWER` | `ABSTAIN` | `DENY` | `ERROR` | Forbidden behavior |
+| Surface | `ANSWER` | `ABSTAIN` | `DENY` | `ERROR` | Current conclusion |
 |---|:---:|:---:|:---:|:---:|---|
-| Claim resolution (`/claims`) | ✅ | ✅ | ✅ | ✅ | Returning unreleased candidate as `ANSWER`; leaking internal store ids |
-| Focus Mode (`/focus`) | ✅ | ✅ | ✅ | ✅ | Direct model call from browser; uncited answer surfaced as `ANSWER` |
-| Evidence Drawer payload | ✅ | ✅ | ✅ | ✅ | Drawer rendered without payload schema validation |
-| Layer manifest (`/layers/{id}/manifest`) | ✅ | n/a | ✅ | ✅ | Serving `WORK` / `CATALOG` layers to public clients |
-| Review read-only console (`/review`) | ✅ | n/a | ✅ | ✅ | Approving release from a public/read-only path |
-| Export request (`/export`) | ✅ | n/a | ✅ | ✅ | Exporting without proof refs, release state, or correction lineage |
+| RuntimeResponseEnvelope valid fixtures | ✅ | ✅ | ✅ | ✅ | **CONFIRMED machine-shape coverage.** |
+| `MockAdapter` scenario selection | ✅ | ✅ | ✅ | ✅ | **CONFIRMED deterministic selector coverage.** |
+| MockAdapter → AIReceipt candidate projection | ✅ | ✅ | ✅ | ✅ | **CONFIRMED candidate compatibility.** |
+| Static Hydrology Focus walkthrough | — | ✅ | — | — | **CONFIRMED expected-`ABSTAIN` documentation example only.** |
+| Executable Focus request → response flow | HOLD | HOLD | HOLD | HOLD | No accepted deterministic Focus runtime, fixture suite, or command. |
+| Policy precheck/postcheck composition | HOLD | HOLD | HOLD | HOLD | Current Focus policy files remain scaffolds. |
+| EvidenceRef → EvidenceBundle resolution in Focus | HOLD | HOLD | HOLD | HOLD | No operational resolver composition established for this route. |
+| Citation validation in Focus | HOLD | HOLD | HOLD | HOLD | No executing citation service established for this route. |
+| Durable AIReceipt emission/persistence | HOLD | HOLD | HOLD | HOLD | Candidate builders exist; emitter/store is not established. |
+| Governed API AI/Focus route | — | — | — | — | Inspected route registry has no AI/Focus route. |
+| Live provider adapter | — | — | — | — | No provider/model/profile admitted. |
 
-Outcome semantics (per KFM Domains Culmination Atlas §24.3):
+A green `finite-envelope-shape` job means the **shape and selector proof** passed. It does not mean the Focus flow ran or that a client may render an answer.
 
-- **`ANSWER`** — Evidence sufficient, policy permits, release state allows, review state recorded.
-- **`ABSTAIN`** — Evidence insufficient, AI cannot cite, or evidence is stale with no released alternative.
-- **`DENY`** — Policy, rights, sensitivity, or release state forbids the answer. **Sensitive lanes default here.**
-- **`ERROR`** — Schema, contract, infrastructure, or query fault — never silent fallthrough to a different outcome.
-
-> [!WARNING]
-> Cancellation, timeout, stale evidence, restricted material, and invalid-citation states are rendered explicitly. They are **not** hidden as generic failures.
-
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
 
-## 7. Graduation Criteria (mocks → live)
+<a id="7-graduation-criteria-mocks--live"></a>
 
-A live provider adapter (Ollama, hosted model, or otherwise) is admitted **only** after every gate below clears. Until then, `MockAdapter` is the only adapter the governed API binds.
+## 7. Graduation Criteria — Mocks → Live
 
-- [ ] Repo mounted; `directory-rules.md` placement verified for all touched paths.
-- [ ] `OBJECT_MAP.md` crosswalk lists every Governed AI DTO and resolves to a `schemas/contracts/v1/<…>` home.
-- [ ] All six DTO schemas validate (positive and negative fixtures): `DecisionEnvelope`, `RuntimeResponseEnvelope`, `EvidenceDrawerPayload`, `LayerDescriptor`, `FocusRequest`, `FocusResponse`.
-- [ ] `mockGovernedApi` and `responseValidators` ship with visible mock markers and CI gates that fail closed on invalid fixtures.
-- [ ] All finite outcomes (`ANSWER` · `ABSTAIN` · `DENY` · `ERROR`) render correctly from fixtures in `EvidenceDrawer` and `FocusPanel`.
-- [ ] Boundary check passes: no direct browser call to `RAW` / `WORK` / `QUARANTINE`, canonical stores, vector indexes, model runtimes, or credentials.
-- [ ] `CitationValidator` (or equivalent) rejects every uncited or invalid-citation fixture.
-- [ ] `policyClient` precheck and postcheck reject every restricted, sensitive, or unreleased fixture.
-- [ ] `AIReceipt` and `RunReceipt` are emitted for every fixture run; receipts validate against their schemas.
-- [ ] Security review for the chosen provider completed; CORS / auth / network posture documented under `docs/runbooks/governed_ai_LOCAL_DEV.md` (PROPOSED).
-- [ ] `ADR-focus-model-adapter-boundary` (PROPOSED) accepted; rollback path documented in `docs/runbooks/governed_ai_ROLLBACK.md`.
+A live provider is **not** the next step merely because the bounded selector is complete. The following dependency-ordered gates must close first.
+
+| Gate | Required evidence before provider admission |
+|---|---|
+| 1. Request and response authority | Accepted or explicitly reviewed semantic contracts, one canonical machine shape per object, compatibility aliases documented, and no permissive placeholder used as production admission. |
+| 2. Deterministic Focus fixtures | Synthetic valid and exact-negative fixtures for all four outcomes, malformed requests, missing evidence, denied roles, citation failure, adapter failure, correction/withdrawal, and sensitive-data canaries. |
+| 3. No-network mock orchestration | One repository-owned command runs request admission, policy precheck, synthetic evidence resolution, bounded context assembly, mock adapter invocation, citation validation, postcheck, receipt candidate assembly, and final envelope validation without network or secrets. |
+| 4. Evidence and citation closure | `ANSWER` cannot occur unless its EvidenceRefs resolve to admissible synthetic bundles and citation validation supports every consequential claim span. |
+| 5. Policy closure | Precheck and postcheck have finite, tested allow/abstain/deny/error behavior; unknown rights, sensitivity, role, release, or source posture fails closed. |
+| 6. Receipt accountability | Canonical digest profile, AIReceipt emission semantics, storage/retention boundary, safe redaction, validator coverage, and correction linkage are reviewed. Candidate construction alone is insufficient. |
+| 7. Governed API composition | A reviewed server-side route validates input, owns orchestration, returns only a valid finite envelope, exposes no provider stream, and has safe diagnostics. |
+| 8. Client trust behavior | Explorer consumes the governed route only; all outcomes, obligations, stale/correction state, keyboard behavior, and safe negative copy are tested. |
+| 9. Security and privacy | Threat review covers prompt injection, context minimization, credentials, network egress, logs, telemetry, caches, rate limits, timeouts, cancellation, resource caps, and sensitive content. |
+| 10. Provider/model/profile decision | Provider, model identity, version/digest, configuration, terms, data handling, network scope, tool permissions, fallback, and disable path are explicitly reviewed; relevant ADR status is resolved. |
+| 11. Rollback and correction | Provider disable, route disable, fallback to held mock behavior, cache invalidation, receipt lineage, and public correction posture are rehearsed without rewriting history. |
+| 12. Validation and review | Focused and aggregate checks pass at the exact head; independent governed-AI, evidence, policy, citation, security, accessibility, correction, and release review is recorded. |
 
 > [!IMPORTANT]
-> The graduation gate is **the only path** from mocks to live. There is no "temporary" live-provider PR that skips it. If pressure builds to ship a live provider sooner, that pressure is a signal to fix the gate, not to bypass it.
+> Provider admission remains a separate reviewed transition. A provider must implement the same governed seam; it must not weaken the envelope, invent a fifth outcome, bypass evidence, or turn its own output into authority.
 
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
 
-## 8. Anti-Patterns
+<a id="8-current-focus-readiness-hold"></a>
 
-The patterns below have shown up in prior AI rollouts elsewhere and are out-of-bounds for the mock-first slice.
+## 8. Current Focus Readiness HOLD
+
+The `focus-mock-test` workflow intentionally separates two conclusions:
+
+1. `finite-envelope-shape` executes the repository-owned standard-library proofs for the envelope and `MockAdapter`;
+2. `mock-focus-flows` performs static readiness inspection and emits an explicit hold instead of pretending a runtime ran.
+
+### Evidence for the HOLD
+
+| Required surface | Current evidence | Consequence |
+|---|---|---|
+| Focus request schema | Empty permissive `PROPOSED` scaffold under `schemas/contracts/v1/focus/`. | No accepted closed request profile for runtime composition. |
+| Focus response schema | Empty permissive `PROPOSED` scaffold under `schemas/contracts/v1/focus/`. | No accepted closed response profile beyond the runtime-envelope compatibility path. |
+| Separate UI FocusRequest contract/schema | Proposed semantic contract plus permissive schema requiring only `id`. | Useful design input; not closed runtime admission. |
+| Focus fixture payloads | `tests/fixtures/focus/` contains documentation and `.gitkeep`, not executable payloads. | No full outcome fixture matrix for Focus. |
+| Focus policy | Exact scaffold files monitored by workflow. | No executing policy pre/postcheck proof. |
+| Native mock Focus command | Workflow confirms none exists in the Makefile. | No repository-native end-to-end command. |
+| Governed API route | Registry exposes bootstrap, layers, and evidence only. | No AI/Focus route proved. |
+| AI worker | One-line greenfield placeholder. | No worker execution. |
+| Live local adapter | `OllamaAdapter.py` is a one-line placeholder. | No live provider implementation. |
+
+This hold is healthy. It makes missing orchestration visible instead of turning static files into a runtime claim.
+
+[Back to top](#top)
+
+---
+
+<a id="8-anti-patterns"></a>
+
+## 9. Anti-Patterns
 
 | Anti-pattern | Why it fails | Correct posture |
 |---|---|---|
-| **Browser → model runtime direct call** | Bypasses policy, citation validation, evidence resolution, receipts. | Browser calls only the governed API; the API mediates the adapter. |
-| **"Just for demo"** live provider | Demos become production paths; the trust membrane is rebuilt under pressure. | Ship the demo on mocks; gate live providers behind §7. |
-| **Mock without a marker** | A mock that looks like released evidence eventually gets cited as released evidence. | Every mock carries a visible marker; CI rejects unmarked mocks. |
-| **Only happy-path fixtures** | `ABSTAIN` / `DENY` / `ERROR` paths ship untested and fail in front of users. | Every surface ships with negative-state fixtures before merge. |
-| **Schema-after-behavior** | UI hardens around an unstable shape; later schema work breaks the UI. | Schema and fixtures land in PR 1; UI consumes the validator boundary. |
-| **Fixture under `data/published/`** | A mock leaks into release inventory; `ReleaseManifest` and rollback drills become unreliable. | Fixtures live under `tests/fixtures/<subsystem>/`; `data/published/` is for released artifacts only. |
-| **Prompt or restricted geometry in telemetry** | Sensitivity posture breaks via the back door. | Telemetry is safe-by-construction; see `BOUNDARIES.md` (PROPOSED). |
-| **Mock graduating itself** | A long-lived mock becomes the de facto contract; live providers regress against it. | `MockAdapter` is for tests and local fixtures only; live providers implement the same port, not the mock. |
+| Treating `MockAdapter` as a model emulator | It selects complete prevalidated envelopes and performs no semantic reasoning. | Describe and test it as a deterministic fixture selector. |
+| Claiming “mock Focus works” because the workflow is green | The workflow explicitly holds mock Focus orchestration while separately proving envelope shape. | Report shape proof and runtime HOLD as two different facts. |
+| Adding `mock_marker` to a closed envelope | The schema forbids extra properties; an ad hoc field creates shape drift. | Use current test/fixture/receipt identity or evolve the contract deliberately. |
+| Building only `ANSWER` fixtures | Negative paths become untested and unsafe. | Require all finite outcomes and exact-negative cases before runtime graduation. |
+| Letting a mock select policy or evidence truth | Synthetic selection cannot authenticate authorities. | Supply explicit synthetic authority inputs and keep decisions in their owning layers. |
+| Treating an AIReceipt candidate as emitted process memory | A candidate builder does not persist, sign, retain, or authenticate refs. | Keep emission/store claims on HOLD until executable proof exists. |
+| Direct browser → provider traffic | Bypasses the governed API, policy, evidence, citation, receipt, and safe-error boundary. | Browser uses the governed API only. |
+| “Temporary” live provider before gates close | Temporary paths harden into public dependencies. | Complete deterministic orchestration and provider admission review first. |
+| Storing prompts, raw evidence, secrets, or protected details in fixtures/receipts | Creates security, privacy, rights, and sensitivity exposure. | Use minimized synthetic values and closed safe shapes. |
+| Treating test success as release approval | Tests prove bounded behavior, not rights, policy, review, release, or publication. | Preserve separate promotion and release decisions. |
+| Hardcoding implementation to a historical PR sequence | Repository maturity changes independently of old planning packets. | Use dependency and evidence gates, not ordinal PR folklore. |
 
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
 
-## 9. PROPOSED File Homes
+<a id="9-proposed-file-homes"></a>
 
-> [!NOTE]
-> Every path below is **PROPOSED** per Directory Rules §0 until the repository is mounted and inspected. Treat this table as the file-home decision frame, not as a description of the current tree.
+## 10. Responsibility Routing and Current Homes
+
+The earlier page presented a speculative tree. Current repository evidence supports the following ownership map.
+
+| Concern | Current or governing home | Status and boundary |
+|---|---|---|
+| This architecture explanation | `docs/architecture/governed-ai/MOCK_FIRST.md` | **CONFIRMED same-path `PLACE`.** |
+| Provider-neutral adapter architecture | `docs/architecture/governed-ai/ADAPTER_CONTRACT.md` | **CONFIRMED explanatory page; production seam remains proposed.** |
+| Bounded selector implementation | `runtime/model_adapters/MockAdapter.py` | **CONFIRMED executable selector.** |
+| Provider-neutral adapter lane | `runtime/model_adapters/` | **CONFIRMED canonical runtime lane.** |
+| Broad deterministic mock-runtime lane | `runtime/mock/` | **CONFIRMED documentation lane; executable runtime not established.** |
+| Mock-adapter child lane | `runtime/model_adapters/mock/` | **CONFIRMED README/index lane; responsibility split needs review before implementation.** |
+| Runtime envelope meaning | `contracts/runtime/runtime_response_envelope.md` | **CONFIRMED file; contract status proposed.** |
+| Runtime envelope shape | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | **CONFIRMED closed shape; status proposed.** |
+| Runtime envelope fixtures | `fixtures/contracts/v1/runtime/runtime_response_envelope/` | **CONFIRMED valid/invalid family.** |
+| Runtime envelope validator/tests | `tools/validators/`, `tests/runtime_proof/` | **CONFIRMED bounded proof.** |
+| Candidate construction | `packages/envelopes/` | **CONFIRMED bounded helpers; no authority created.** |
+| AIReceipt meaning/shape | `contracts/runtime/ai_receipt.md`, `schemas/contracts/v1/runtime/ai_receipt.schema.json` | **CONFIRMED files; profile status proposed.** |
+| AIReceipt fixtures/validator/tests | `fixtures/contracts/v1/runtime/ai_receipt/`, `tools/validators/`, `tests/` | **CONFIRMED bounded shape/local-consistency proof.** |
+| Focus request/response shapes | `schemas/contracts/v1/focus/` and related UI contract surfaces | **CONFIRMED scaffolds; final authority split and closed profiles unresolved.** |
+| Focus fixtures | `tests/fixtures/focus/` | **CONFIRMED documentation-only payload lane at the inspected snapshot.** |
+| Governed API orchestration | `apps/governed-api/` | **Correct deployable app root; AI route not established.** |
+| Explorer client | `apps/explorer-web/` | **Governed consumer only; mock Focus composition not established here.** |
+| Workflows | `.github/workflows/focus-mock-test.yml`, `.github/workflows/ai-receipt.yml` | **CONFIRMED bounded checks.** |
+| Receipt instances | governed `data/receipts/` lanes | **Documented family; operational mock receipt emission/store remains unknown.** |
+| Provider-specific runtime | reviewed adapter/runtime lane after admission | **HOLD.** `OllamaAdapter.py` is currently a placeholder. |
+| Release/correction/rollback | `release/` and accepted supporting object families | **Never owned by mocks or this page.** |
+
+### Lane-split HOLD
+
+`runtime/mock/` and `runtime/model_adapters/mock/` both describe mock concerns. Before adding an end-to-end mock runtime, maintainers should decide one dependency direction:
 
 ```text
-docs/architecture/governed-ai/
-├── README.md                     # subsystem overview (PROPOSED)
-├── MOCK_FIRST.md                 # this file (PROPOSED)
-├── STATE_OWNERSHIP.md            # state owners (PROPOSED)
-├── ROUTE_MAP.md                  # AI-adjacent route surfaces (PROPOSED)
-├── BOUNDARIES.md                 # browser/AI/RAW/telemetry boundaries (PROPOSED)
-├── FOCUS_FLOW.md                 # Focus request/response flow (PROPOSED)
-└── CONTINUITY_NOTES.md           # prior governed-AI lineage (PROPOSED)
+runtime/mock/                 owns scenario orchestration and failure injection
+runtime/model_adapters/mock/  owns adapter-specific cards or compatibility notes
 ```
 
-| Family | PROPOSED path | Role |
-|---|---|---|
-| Subsystem doctrine | `docs/architecture/governed-ai/MOCK_FIRST.md` | This doc. |
-| DTO schemas | `schemas/contracts/v1/runtime/{decision_envelope,runtime_response_envelope}.schema.json` · `schemas/contracts/v1/focus/{focus_request,focus_response,citation_validation_report}.schema.json` · `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Machine shape per ADR-0001. |
-| Mock client | `apps/explorer-web/src/api/mockGovernedApi.ts` · `apps/explorer-web/src/api/responseValidators.ts` | Browser-side mock fixture adapter + validator layer. |
-| Mock adapter | `apps/governed-api/src/ai/MockAdapter.ts` · `apps/governed-api/src/ai/ModelAdapterPort.ts` | Deterministic adapter behind the governed API. |
-| Citation validator | `apps/governed-api/src/ai/CitationValidator.ts` | Validates every Focus citation against `EvidenceBundle` refs. |
-| Policy client | `apps/governed-api/src/policy/policyClient.ts` | Policy pre/postcheck wrapper. |
-| Evidence resolver | `apps/governed-api/src/evidence/evidenceResolver.ts` | `EvidenceRef` → `EvidenceBundle` resolver boundary. |
-| Fixtures (UI) | `tests/fixtures/ui/evidence_drawer/{answer,abstain_missing_evidence,deny_restricted}.valid.json` | Drawer outcome fixtures with mock markers. |
-| Fixtures (Focus) | `tests/fixtures/focus/{answer,abstain,deny,error}.valid.json` | Focus outcome fixtures. |
-| Policy | `policy/focus/` · `policy/evidence/` | Gate logic for the mock-first slice. |
-| Receipts (docs) | `data/receipts/README.md` · `data/proofs/README.md` | Where emitted receipts/proofs are described; receipts live under `data/receipts/`. |
-| Runbooks | `docs/runbooks/governed_ai_LOCAL_DEV.md` · `governed_ai_VALIDATION.md` · `governed_ai_ROLLBACK.md` | Operational runbooks for the slice. |
-| ADRs | `docs/adr/ADR-focus-model-adapter-boundary.md` · `ADR-ui-schema-home.md` | Adapter and schema-home decisions. |
+or adopt another reviewed split. Do not implement the same selector, scenario registry, policy simulator, or receipt helper independently in both lanes.
 
-[⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)
 
 ---
 
-## 10. Validation
+<a id="10-validation"></a>
 
-A mock-first PR SHOULD clear at least the following checks before merge. Specific commands and workflow names are `PROPOSED` until the live repo and CI conventions are verified.
+## 11. Validation
 
-| Check | What it proves | Default status (this session) |
+### 11.1 Repository-owned focused commands
+
+Run from a mounted repository checkout with declared dependencies installed as required:
+
+```bash
+KFM_NO_NETWORK=1 python -m unittest \
+  tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose
+
+KFM_NO_NETWORK=1 python -m unittest \
+  tests.runtime_proof.test_envelope_finite_outcomes --verbose
+
+KFM_NO_NETWORK=1 python \
+  tools/validators/validate_runtime_response_envelope.py --fixtures
+
+KFM_NO_NETWORK=1 PYTHONPATH=packages/envelopes/src:. python -m pytest -q \
+  tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py
+
+KFM_NO_NETWORK=1 python \
+  tools/validators/validate_ai_receipt.py --fixtures
+```
+
+### 11.2 Hosted checks
+
+| Workflow/check | Current responsibility | A green result does not prove |
 |---|---|---|
-| Schema validation (`jsonschema` / `ajv` over `schemas/contracts/v1/<…>` + fixtures) | Every valid fixture passes; every invalid fixture fails. | `PROPOSED` |
-| Boundary scan (static import / grep) | No browser import of model runtime, vector DB, object store, canonical store, or internal DB. | `PROPOSED` |
-| Mock-marker scan | Every fixture under `tests/fixtures/<subsystem>/` carries the mock marker. | `PROPOSED` |
-| Finite-outcome render tests | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` render with citations, reasons, and obligations as appropriate. | `PROPOSED` |
-| Negative-state policy fixtures | Restricted, sensitive, unreleased, and uncited inputs return `DENY` (or `ABSTAIN` per §6). | `PROPOSED` |
-| Citation validation | Every Focus `ANSWER` fixture references resolvable `EvidenceRef` entries; uncited answers `ABSTAIN`. | `PROPOSED` |
-| Receipt emission | Every fixture run produces a schema-valid `AIReceipt` and `RunReceipt`. | `PROPOSED` |
-| Accessibility smoke | Drawer and Focus panels are keyboard-navigable; finite outcomes are announced. | `PROPOSED` |
-| Docs propagation | Every changed schema/route/policy has docs, fixtures, runbook updates. | `PROPOSED` |
+| `focus-mock-test / finite-envelope-shape` | Standard-library envelope and selector proof plus validator/fixture wiring. | Focus orchestration, evidence resolution, policy, citation validation, receipt persistence, provider operation, client rendering, release, or publication. |
+| `focus-mock-test / mock-focus-flows` | Static readiness inspection and explicit runtime HOLD. | That a Focus request executed. |
+| `ai-receipt` | AIReceipt fixture profile, local consistency, and generated-receipt integrity. | Authentic policy/citation refs, emitted runtime receipts, answer authorization, release, or publication. |
+| schema/contract/validator aggregate checks | Repository-wide shape and validator coverage in their declared scope. | End-to-end governed-AI operation. |
 
-[⬆ Back to top](#mock-first-discipline)
+### 11.3 Documentation-change validation
+
+For this page, reviewers should confirm:
+
+- metadata markers and fenced blocks are balanced;
+- there is one H1;
+- historical top-level fragments still resolve;
+- every relative link resolves at the reviewed ref;
+- no stale missing-state-ownership link, invented app-local adapter path, unsupported mock-provenance field claim, fixed PR-number requirement, or live-provider claim remains;
+- the generated authoring receipt binds final document bytes;
+- the exact PR diff contains only the document and its receipt;
+- hosted exact-head checks are reported separately from documentation correctness.
+
+[Back to top](#top)
 
 ---
 
-## 11. Rollback
+<a id="11-rollback"></a>
 
-| Failure mode | Rollback |
+## 12. Rollback
+
+### Documentation change
+
+Before merge, close the draft pull request or abandon the task branch. After an authorized merge, revert the documentation commit and its generated authoring receipt through the normal reviewed path.
+
+No data migration, schema rollback, policy rollback, runtime restart, model deactivation, source deactivation, cache purge, release withdrawal, public correction, or publication rollback is required for this documentation-only change.
+
+### Future implementation failure modes
+
+| Failure | Fail-closed response | Recovery target |
+|---|---|---|
+| Selector loses determinism or isolation | Fail focused tests; do not advance the runtime. | Restore last passing selector and scenario matrix. |
+| Envelope/schema drift | Reject fixtures and candidates; hold consumers. | Restore paired contract/schema/fixture/validator compatibility or migrate explicitly. |
+| Mock Focus orchestration fails | Return `ERROR` or remain disabled; no provider fallback. | Repair deterministic mock composition before provider work. |
+| Evidence or citation cannot close | `ABSTAIN`; never synthesize support. | Repair synthetic resolver/citation fixtures and tests. |
+| Policy is unknown or unavailable | `DENY`, `ABSTAIN`, or `ERROR` per accepted semantics; never allow by default. | Restore reviewed policy bundle and decision references. |
+| AIReceipt cannot be assembled or persisted when required | Fail closed; do not claim accountable completion. | Restore receipt candidate/emitter/store compatibility. |
+| Live provider regression | Disable provider and governed route; do not expose mock output as public truth. | Return to the last reviewed non-provider state and rerun gates. |
+| Sensitive-data fixture leak | Quarantine the change, remove exposed detail through a reviewed correction, and audit history/receipts. | Replace with synthetic/generalized canary data. |
+
+[Back to top](#top)
+
+---
+
+<a id="13-open-verification-register"></a>
+
+## 13. Open Verification Register
+
+| Item | Status | Closure evidence |
+|---|---|---|
+| Final Focus request/response semantic and machine authority | `NEEDS VERIFICATION` | Accepted responsibility split, closed schemas, compatibility plan, fixtures, validators, policy tests. |
+| `runtime/mock/` versus `runtime/model_adapters/mock/` implementation split | `NEEDS VERIFICATION` | Reviewed lane contract or ADR/migration note before duplicate execution surfaces appear. |
+| Machine-visible mock provenance | `PROPOSED / HOLD` | Decide wrapper, fixture manifest, receipt field use, or contract/schema evolution without mutating closed payloads ad hoc. |
+| Deterministic mock Focus runner | `UNKNOWN / HOLD` | Repository-owned no-network command and tests covering the full governed flow. |
+| Evidence resolver composition | `UNKNOWN / HOLD` | Synthetic authoritative snapshot interface, exact negative fixtures, and no-network tests. |
+| Focus policy precheck/postcheck | `UNKNOWN / HOLD` | Executable policy bundle, controlled vocabularies, fixtures, and fail-closed tests. |
+| Citation-validation service | `UNKNOWN / HOLD` | Structured citation contract, resolver, claim-span tests, and exact-negative cases. |
+| AIReceipt digest profile and emitter/store | `UNKNOWN / HOLD` | Canonicalization, digest calculation, durable emission, retention/access, correction, and lookup proof. |
+| Governed API AI/Focus route | `UNKNOWN / HOLD` | Registered route, input/output validation, safe errors, auth/policy/evidence composition, tests. |
+| Explorer rendering and accessibility | `UNKNOWN / HOLD` | All-outcome client tests, obligations, focus management, keyboard behavior, safe copy, no provider calls. |
+| Provider/model/profile admission | `HOLD` | Explicit review of identity, version/digest, terms, data handling, network/tool scope, security, rollback, and ADR status. |
+| Correction, withdrawal, and rollback propagation | `UNKNOWN / HOLD` | Synthetic end-to-end drill through receipt, envelope, cache, client, and release-facing controls. |
+| Independent stewardship | `NEEDS VERIFICATION` | Verified named reviewers and separation appropriate to risk. |
+| Adjacent documentation freshness | `NEEDS VERIFICATION` | Reconcile older README claims that still describe the Focus workflow or mock implementation as TODO-only/absent. |
+
+[Back to top](#top)
+
+---
+
+<a id="14-evidence-ledger"></a>
+
+## 14. Evidence Ledger
+
+| Evidence | Current observation | What it supports | What it does not support |
+|---|---|---|---|
+| `runtime/model_adapters/MockAdapter.py` | Deterministic no-I/O four-outcome selector. | Selector behavior and bounded errors. | Semantic request handling or model behavior. |
+| `test_mock_adapter_finite_outcomes.py` | Tests coverage, isolation, safe errors, and no-I/O source surface. | Executable bounded proof source. | Current hosted pass until exact-head CI reports it. |
+| RuntimeResponseEnvelope contract/schema | Closed four-outcome profile; `ANSWER` evidence/precision requirements. | Current machine grammar and semantic documentation. | Evidence resolution, policy, public safety, or accepted ADR. |
+| Runtime response fixtures/validator/tests | Valid and invalid polarity plus precision semantics. | Shape/local-semantic validation. | End-to-end runtime. |
+| Runtime response candidate builder | Local deterministic construction from explicit values. | Builder compatibility. | Authority or public response. |
+| AIReceipt contract/schema/validator/builder | Closed nine-field candidate and local consistency. | Accountability shape. | Authentic refs, emission, persistence, or approval. |
+| Mock receipt projection/tests | Fixed mock identity and all-outcome projection. | Candidate compatibility. | Digest calculation, receipt storage, or signing. |
+| `focus-mock-test.yml` | Shape proof plus explicit mock Focus HOLD. | Current workflow boundary. | Executed Focus request, policy, evidence, citation, or provider. |
+| `ai-receipt.yml` | Synthetic AIReceipt validation. | Bounded fixture profile. | Operational receipt stream. |
+| Focus request/response schemas | Open empty `PROPOSED` scaffolds. | Confirms unresolved Focus machine profiles. | Runtime admission. |
+| Focus fixture README | Proposed test plan; no payload inventory. | Backlog and safety expectations. | Executable coverage. |
+| Governed API registry | Bootstrap, layers, evidence routes. | Current registered route set inspected here. | AI/Focus route. |
+| `.env.example` | Mock runtime selected; loopback endpoints. | Safe local default example. | Loader, runtime, provider, or deployment activation. |
+| `OllamaAdapter.py` | One-line placeholder. | Provider HOLD. | Live local model integration. |
+
+[Back to top](#top)
+
+---
+
+<a id="12-related-docs"></a>
+
+## 15. Related Docs
+
+- [`README.md`](./README.md) — governed-AI subsystem architecture and current maturity.
+- [`ADAPTER_CONTRACT.md`](./ADAPTER_CONTRACT.md) — bounded selector versus proposed production adapter seam.
+- [`AI_RECEIPTS.md`](./AI_RECEIPTS.md) — current AIReceipt shape, builders, validation, and operational HOLDs.
+- [`BOUNDARIES.md`](./BOUNDARIES.md) — evidence, policy, browser, provider, and public-path boundaries.
+- [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) — target governed Focus flow and current implementation limits.
+- [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — continuity, lineage, correction, and replay boundaries.
+- [`OLLAMA_INTEGRATION.md`](./OLLAMA_INTEGRATION.md) — local-provider posture and admission requirements.
+- [`ROUTE_MAP.md`](./ROUTE_MAP.md) — governed-AI route-family architecture.
+- [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) — proposed adapter and finite-envelope decision.
+- [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption.
+- [`Directory Rules v2`](../../doctrine/directory-rules.md) — placement and authority-root doctrine adopted by ADR-0029.
+- [`runtime/model_adapters/README.md`](../../../runtime/model_adapters/README.md) — canonical provider-neutral adapter lane.
+- [`MockAdapter.py`](../../../runtime/model_adapters/MockAdapter.py) — bounded deterministic selector.
+- [`RuntimeResponseEnvelope contract`](../../../contracts/runtime/runtime_response_envelope.md) and [schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json).
+- [`AIReceipt contract`](../../../contracts/runtime/ai_receipt.md) and [schema](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json).
+- [`focus-mock-test.yml`](../../../.github/workflows/focus-mock-test.yml) — shape proof and explicit mock Focus HOLD.
+- [`ai-receipt.yml`](../../../.github/workflows/ai-receipt.yml) — bounded synthetic AIReceipt validation.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-a--mock-marker-shape-sketch"></a>
+
+## Appendix A — Mock-Marker Proposal Disposition
+
+The prior edition proposed adding a `mock_marker` object directly to every mock payload. That proposal is **not compatible with the current closed `RuntimeResponseEnvelope` or AIReceipt schemas** and is retired from this page as a current recommendation.
+
+### Current supported identity
+
+```text
+RuntimeResponseEnvelope fixture
+  identified by repository path + fixture hash + scenario id + source commit
+
+MockAdapter selection
+  identified by test/workflow context + deterministic scenario id
+
+AIReceipt candidate
+  adapter: mock
+  model_ref: fixture-only
+  explicit caller-supplied input/output digests and authority refs
+```
+
+### Future options — PROPOSED
+
+| Option | Tradeoff | Required governance |
+|---|---|---|
+| External fixture manifest | Keeps canonical envelopes unchanged and can bind paths, hashes, scenarios, and purposes. | Contract/schema/validator for the manifest plus test wiring. |
+| Test-harness wrapper | Can display a visible UI banner without changing the governed payload. | Strict non-production routing and client tests. |
+| AIReceipt-based provenance | Uses existing mock identity fields for AI-mediated candidate runs. | Canonical digest profile and real emission/storage semantics. |
+| New envelope provenance field | Makes mock status machine-visible in the payload. | Explicit RuntimeResponseEnvelope contract/schema version change, compatibility plan, fixtures, validators, and clients. |
+
+No option is adopted by this document. Until one is reviewed, do not fabricate a schema field or infer public safety from a badge.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-b--no-loss-modernization-ledger"></a>
+
+## Appendix B — No-Loss Modernization Ledger
+
+| Prior section or idea | Current disposition |
 |---|---|
-| Schema change breaks fixtures | Revert PR before any published schema depends on it; if already released, deprecate with a versioned successor. |
-| Mock client regression | Feature flag the route off; previous mock client remains in place; revert UI PR. |
-| Focus surface misbehavior | Disable Focus route via feature flag; leave Evidence Drawer and layer browsing intact; `MockAdapter` remains for tests only. |
-| Provider adapter (PR 6) regression | Swap binding back to `MockAdapter`; live route flag off; integration tests re-run in CI before re-enabling. |
-| Policy gate ambiguity | Revert policy bundle; gates fail closed while ambiguity persists. |
-| Docs drift | Update `docs/registers/DRIFT_REGISTER.md` and `docs/registers/VERIFICATION_BACKLOG.md`; do not silently delete prior doctrine. |
-
-> [!TIP]
-> Reversibility is a feature of mock-first, not a side effect. A mock-only PR has **no published artifacts to retract**, **no public claims to correct**, and **no release manifest to roll back** — only code and fixtures.
-
-[⬆ Back to top](#mock-first-discipline)
-
----
-
-## 12. Related Docs
-
-- `docs/architecture/governed-ai/README.md` — subsystem overview *(PROPOSED)*
-- `docs/architecture/governed-ai/STATE_OWNERSHIP.md` — Focus request, evidence retrieval, adapter, citation validation, response envelope state ownership *(PROPOSED)*
-- `docs/architecture/governed-ai/ROUTE_MAP.md` — Focus and AI-adjacent API surfaces *(PROPOSED)*
-- `docs/architecture/governed-ai/BOUNDARIES.md` — no direct model browser call · no `RAW` / `WORK` / `QUARANTINE` · no prompt telemetry leakage *(PROPOSED)*
-- `docs/architecture/governed-ai/FOCUS_FLOW.md` — Focus request/response flow *(PROPOSED)*
-- `docs/architecture/governed-ai/CONTINUITY_NOTES.md` — prior governed-AI lineage *(PROPOSED)*
-- `docs/runbooks/governed_ai_LOCAL_DEV.md` — local setup and mock fixture runbook *(PROPOSED)*
-- `docs/runbooks/governed_ai_VALIDATION.md` — validation, accessibility, contract, e2e smoke *(PROPOSED)*
-- `docs/runbooks/governed_ai_ROLLBACK.md` — rollback steps *(PROPOSED)*
-- `contracts/OBJECT_MAP.md` — DTO ↔ schema ↔ fixture ↔ policy crosswalk *(PROPOSED)*
-- `directory-rules.md` — placement law (CONFIRMED doctrine in project knowledge)
+| Mock-first purpose | Preserved and grounded in current evidence. |
+| Status and authority | Replaced proposal-only/no-repo wording with pinned current repository state and Directory Rules `PLACE`. |
+| Glossary | Preserved with current object and path meanings. |
+| Ten mock-first invariants | Preserved where supported; corrected mock marker, feature-flag, fixture-home, and receipt-emission overclaims. |
+| Fixed PR 1–6 sequence | Replaced with dependency-ordered graduation increments; historical ordinal plan is not current implementation authority. |
+| Mock fixture rules | Preserved with current fixture families and closed-schema discipline. |
+| Finite-outcome matrix | Preserved and expanded to separate shape/selector/receipt-candidate proof from Focus runtime HOLD. |
+| Graduation checklist | Preserved and expanded into twelve evidence gates. |
+| Anti-patterns | Preserved and grounded in current repository boundaries. |
+| Proposed file homes | Replaced with verified responsibility routing and explicit unresolved lane split. |
+| Validation | Replaced speculative commands with current repository-owned tests, validators, and workflow boundaries. |
+| Rollback | Preserved; separated documentation rollback from future runtime recovery. |
+| Related docs | Removed the missing state-ownership and unverified runbook/object-map links; retained verified paths. |
+| `mock_marker` JSON sketch | Retired as incompatible with current closed schemas; replaced with supported identity and explicit future options. |
+| “Every fixture run emits AIReceipt and RunReceipt” | Corrected: candidate builders/projection exist; operational emission and persistence remain on HOLD. |
+| Browser mock client and app-local TypeScript adapter paths | Removed as unsupported current-path claims. |
+| Live provider admission | Preserved as a separate governed transition after evidence gates close. |
 
 ---
 
-## Appendix A — Mock-marker shape (sketch)
+**Last reviewed:** 2026-08-20
+**Document version:** `v2.0.0-draft`
+**Status:** repository-grounded architecture draft
+**Runtime effect:** none
+**Release/publication effect:** none
 
-> [!NOTE]
-> The shape below is **illustrative**. It is `PROPOSED` and `NEEDS VERIFICATION` against the eventual `schemas/contracts/v1/<…>` definitions. Field names, casing, and required-vs-optional posture are subject to ADR.
-
-<details>
-<summary>Show illustrative mock-marker shape</summary>
-
-```json
-{
-  "object_type": "EvidenceDrawerPayload",
-  "schema_version": "v1",
-  "mock_marker": {
-    "is_mock": true,
-    "fixture_id": "ui/evidence_drawer/answer.valid.json",
-    "fixture_purpose": "renders ANSWER outcome with cited evidence",
-    "not_releasable": true,
-    "created_by": "mockGovernedApi",
-    "spec_hash": "sha256:PLACEHOLDER"
-  },
-  "outcome": "ANSWER",
-  "evidence_refs": [
-    "kfm://evidence/PLACEHOLDER-1",
-    "kfm://evidence/PLACEHOLDER-2"
-  ],
-  "policy_decision_ref": "kfm://policy/PLACEHOLDER",
-  "citation_validation_ref": "kfm://citation/PLACEHOLDER"
-}
-```
-
-```json
-{
-  "object_type": "RuntimeResponseEnvelope",
-  "schema_version": "v1",
-  "mock_marker": {
-    "is_mock": true,
-    "fixture_id": "focus/abstain.valid.json",
-    "fixture_purpose": "renders ABSTAIN when evidence is insufficient",
-    "not_releasable": true,
-    "created_by": "MockAdapter"
-  },
-  "outcome": "ABSTAIN",
-  "reasons": ["insufficient_evidence_for_claim"],
-  "ai_receipt_ref": "kfm://receipt/PLACEHOLDER",
-  "policy_decision": {
-    "decision": "ALLOW",
-    "obligations": []
-  }
-}
-```
-
-**Marker contract (illustrative):**
-
-- `mock_marker` is a required object on every fixture payload, not a free-text field.
-- `is_mock: true` MUST be present and MUST trip a UI banner / dev console warning when rendered.
-- `not_releasable: true` is enforced by a release-manifest validator — any artifact in `data/published/` containing `mock_marker` fails closed.
-- `fixture_id` resolves to a file under `tests/fixtures/<subsystem>/` (PROPOSED).
-
-</details>
-
----
-
-> Last updated: `2026-05-14` · Status: `draft` · Path: `PROPOSED` · [⬆ Back to top](#mock-first-discipline)
+[Back to top](#top)

@@ -68,7 +68,7 @@ related:
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/trust-membrane.md
   - ../../docs/doctrine/lifecycle-law.md
-  - ../../docs/architecture/governed-api.md
+  - ../../docs/architecture/governed-api/README.md
   - ../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../.github/CODEOWNERS
   - ../../.github/workflows/api-test.yml
@@ -491,7 +491,7 @@ High-impact changes include any modification that can reinterpret a finite outco
 |---|---|---|
 | [`packages/`](../README.md) | Canonical shared-library root. | Parent package admission, maturity, dependency, compatibility, and distribution contract. |
 | [`apps/governed-api/`](../../apps/governed-api/README.md) | Executable dynamic trust membrane. | The only normal dynamic public path; future client helpers call this boundary. |
-| [`apps/explorer-web/`](../../apps/explorer-web/README.md) | Public/semi-public map-first client. | Candidate consumer; imports remain unverified. |
+| `apps/explorer-web/` (retired) | Public/semi-public map-first client. | Candidate consumer; imports remain unverified. |
 | [`apps/review-console/`](../../apps/review-console/README.md) | Role-gated review client. | Candidate consumer; authorization remains server-side. |
 | [`contracts/runtime/`](../../contracts/runtime/README.md) | Runtime object-family meaning. | Defines envelope semantics that package code must preserve. |
 | [`schemas/contracts/v1/runtime/`](../../schemas/contracts/v1/runtime/README.md) | Runtime machine shapes. | Canonical source for generated or hand-written package types. |

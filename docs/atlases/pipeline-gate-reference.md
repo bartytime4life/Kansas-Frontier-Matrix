@@ -1,12 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/atlases/pipeline-gate-reference
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Navigate the RAW-to-PUBLISHED gate sequence anchored in Atlas v1.1 §24.6; a navigation aid, not gate or promotion authority.
+truth_posture: PROPOSED carrier; Atlas §24.6 is the anchor; pre-RAW gate CONFLICTED; owners and related links NEEDS VERIFICATION
 title: Pipeline Gate Reference (RAW → PUBLISHED)
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-10-12
 policy_label: public
 related:
   - docs/atlases/receipt-catalog.md

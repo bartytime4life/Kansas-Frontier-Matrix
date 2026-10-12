@@ -21,6 +21,9 @@ notes:
   - "PROPOSED scaffold; sibling-link presence verified in a prior Claude Code session, not in this session."
   - "Atlas references: KFM-P1-PROG-0023 (MetaBlock v2 CARE fields), KFM-P5-PROG-0005 (ConsentSidecar), KFM-P5-PROG-0007 (ConsentDecision render gate), KFM-P7-PROG-0004 (Obligations object); Pass-10 C15-01 / C15-02 / C15-03 / C15-04, C6-07, C6-08."
   - "Original draft referenced ADR-0010 for deny-by-default; not located in the doctrine corpus this session — relabeled NEEDS VERIFICATION and pointed at ADR-S-05 (sensitivity tier scheme) in the doctrine synthesis ADR backlog."
+owning_root: docs/
+responsibility: "Documentation for Source catalog CARE compliance; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source catalog CARE compliance
@@ -312,10 +315,10 @@ If a topic the reader needs is on the **not-authority** list above, follow the *
 - [`docs/sources/catalog/IDENTITY.md`](./IDENTITY.md) — Collection-id rules (related to namespace pin OPEN-CARE-01) *(PROPOSED)*
 - [`policy/sensitivity/`](../../../policy/sensitivity/) — **authoritative CARE and sensitivity rules**
 - [`policy/consent/`](../../../policy/consent/) — **authoritative consent gate (OPA render package)**
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority
-- [`docs/standards/STAC.md`](../../../standards/STAC.md) — STAC profile (where `kfm:care` lives on Items / Collections) *(PROPOSED)*
-- [`docs/standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
-- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — where structural drift is logged
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority
+- [`docs/standards/STAC.md`](../../standards/STAC.md) — STAC profile (where `kfm:care` lives on Items / Collections) *(PROPOSED)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
+- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where structural drift is logged
 
 ---
 

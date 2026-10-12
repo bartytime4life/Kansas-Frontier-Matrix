@@ -107,7 +107,7 @@ It does **not** activate a source, admit a payload, resolve rights or sensitivit
 |---|---|
 | `data/registry/` responsibility root | **Canonical** for append-only source, layer, dataset, rights, and sensitivity records under current [Directory Rules](../../../docs/architecture/directory-rules.md). |
 | This Agriculture directory | **CONFIRMED nested domain registry parent**; its existence does not choose the canonical source-descriptor topology. |
-| Direct non-README files | **CONFIRMED scaffolds**; four YAML files have `entries: []`, two JSONL files are zero bytes, and `.gitkeep` is empty. |
+| Direct non-README files | **CONFIRMED scaffolds**; four YAML files have `entries: []` and two JSONL files are zero bytes. |
 | `sources/` child | **CONFLICTED compatibility view** with independent descriptor writes denied pending an accepted topology decision and migration. |
 | Contracts, schemas, policy, evidence, and release | Remain authoritative in their own responsibility roots; this README may link to them but cannot replace them. |
 | Public or publication authority | **None.** Ordinary clients must use governed APIs and released artifacts, never this directory directly. |
@@ -121,7 +121,7 @@ Current Directory Rules `4 permits `data/registry/<domain>/` or `data/registry/s
 | Claim | State | Evidence boundary |
 |---|---:|---|
 | Target path and stable document identity | **CONFIRMED** | `data/registry/agriculture/README.md` at the pinned base |
-| Parent directory inventory | **CONFIRMED** | Eight direct files plus the `sources/` directory |
+| Parent directory inventory | **CONFIRMED** | Seven direct files plus the `sources/` directory |
 | Root-level machine records | **CONFIRMED empty scaffolds** | Four `entries: []` YAML files and two zero-byte JSONL files |
 | Domain-first source child | **CONFIRMED compatibility view** | Child README plus four `PROPOSED` greenfield YAML templates |
 | Source-template readiness | **PROPOSED / not activation-eligible** | Core role, authority, rights, sensitivity, cadence, access, and citation values remain `TBD`; the child README records detailed schema gaps |
@@ -200,7 +200,6 @@ The following is the **CONFIRMED current direct-child tree** at the evidence com
 
 ```text
 data/registry/agriculture/
-├── .gitkeep                       # empty placeholder
 ├── README.md                      # this boundary document
 ├── file_register.yaml             # greenfield template; entries: []
 ├── missing_or_planned_files.yaml  # entries: []
@@ -213,7 +212,6 @@ data/registry/agriculture/
 
 | Direct child | Current content | Safe conclusion |
 |---|---|---|
-| `.gitkeep` | Zero bytes | No authority or implementation claim |
 | `file_register.yaml` | Comment plus `entries: []` | Empty greenfield scaffold |
 | `missing_or_planned_files.yaml` | Comment plus `entries: []` | Empty planning scaffold |
 | `preservation_matrix.yaml` | Comment plus `entries: []` | Empty preservation scaffold |

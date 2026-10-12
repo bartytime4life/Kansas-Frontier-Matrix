@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/observation_fitness_assessment.schema.json",
+  "title": "ObservationFitnessAssessment",
+  "description": "Fixture-first assessment of whether one retained observation is fit for one declared analysis use under explicit quality, confounder, persistence, and correction context.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "assessment_id", "observation",
+    "declared_use", "context_snapshot", "decision", "correction_lineage",
+    "evaluated_at", "governance", "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "ObservationFitnessAssessment"},
+    "schema_version": {"const": "0.1.0"},
+    "profile": {"const": "kfm.evidence.observation-fitness.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:observation-fitness:[a-f0-9]{64}$"},
+    "observation": {"$ref": "#/$defs/observation"},
+    "declared_use": {"$ref": "#/$defs/declared_use"},
+    "context_snapshot": {"$ref": "#/$defs/context_snapshot"},
+    "decision": {"$ref": "#/$defs/decision"},
+    "correction_lineage": {"$ref": "#/$defs/correction_lineage"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "refs": {
+      "type": "array", "minItems": 1, "maxItems": 40, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_ref", "source_role", "observed_at", "method_profile_id",
+        "method_profile_version", "quality_state", "quality_mask_refs",
+        "quality_evidence_refs", "evidence_bundle_refs"
+      ],
+      "properties": {
+        "observation_ref": {"$ref": "#/$defs/ref"},
+        "source_role": {"enum": ["OBSERVED", "REGULATORY", "MODELED", "AGGREGATE", "ADMINISTRATIVE", "CANDIDATE", "SYNTHETIC"]},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "method_profile_id": {"$ref": "#/$defs/code"},
+        "method_profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "quality_state": {"enum": ["PASS", "FAIL", "UNKNOWN", "STALE"]},
+        "quality_mask_refs": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "quality_evidence_refs": {"$ref": "#/$defs/refs"},
+        "evidence_bundle_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "declared_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["use_case_id", "analysis_profile_id", "analysis_profile_version", "spatial_support_ref", "interval_start", "interval_end"],
+      "properties": {
+        "use_case_id": {"$ref": "#/$defs/code"},
+        "analysis_profile_id": {"$ref": "#/$defs/code"},
+        "analysis_profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "spatial_support_ref": {"$ref": "#/$defs/ref"},
+        "interval_start": {"type": "string", "format": "date-time"},
+        "interval_end": {"type": "string", "format": "date-time"}
+      }
+    },
+    "confounder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "state", "mask_ref", "evidence_refs"],
+      "properties": {
+        "code": {"enum": ["CLOUD", "SMOKE", "HAZE", "SHADOW", "SNOW", "SENSOR_FAULT", "MAINTENANCE", "METHOD_DISCONTINUITY", "OTHER"]},
+        "state": {"enum": ["PRESENT", "ABSENT", "UNKNOWN"]},
+        "mask_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evidence_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "persistence_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "observation_count", "evidence_refs"],
+      "properties": {
+        "state": {"enum": ["SUPPORTED", "UNSUPPORTED", "UNKNOWN"]},
+        "observation_count": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "evidence_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "context_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_ref", "captured_at", "confounders", "persistence_support"],
+      "properties": {
+        "snapshot_ref": {"$ref": "#/$defs/ref"},
+        "captured_at": {"type": "string", "format": "date-time"},
+        "confounders": {"type": "array", "minItems": 1, "maxItems": 20, "items": {"$ref": "#/$defs/confounder"}},
+        "persistence_support": {"$ref": "#/$defs/persistence_support"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "handling", "reason_codes", "obligations", "retained_evidence_refs"],
+      "properties": {
+        "state": {"enum": ["FIT", "CONDITIONALLY_FIT", "EXCLUDED", "UNKNOWN"]},
+        "handling": {"enum": ["INCLUDE", "INCLUDE_WITH_QUALIFICATION", "RETAIN_AND_EXCLUDE", "ABSTAIN"]},
+        "reason_codes": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "obligations": {"type": "array", "minItems": 2, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "retained_evidence_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "correction_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "supersedes_assessment_ref", "corrected_mask_refs", "reinterpretation_required"],
+      "properties": {
+        "state": {"enum": ["ORIGINAL", "CORRECTED"]},
+        "supersedes_assessment_ref": {"$ref": "#/$defs/nullable_ref"},
+        "corrected_mask_refs": {"type": "array", "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+        "reinterpretation_required": {"type": "boolean"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "no_network", "lifecycle_write", "evidence_deletion_authority", "truth_authority", "analysis_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "no_network": {"const": true},
+        "lifecycle_write": {"const": false},
+        "evidence_deletion_authority": {"const": false},
+        "truth_authority": {"const": false},
+        "analysis_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

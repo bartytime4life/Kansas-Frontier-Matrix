@@ -1,540 +1,706 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbook/geology/source-refresh
-title: Geology Source Refresh Runbook
-type: standard
-version: v1
-status: draft
-
+doc_id: kfm://doc/runbooks/geology/source-refresh-runbook
+title: Geology and Natural Resources Source Refresh Inspection Runbook
+type: runbook
+subtype: domain-source-refresh-inspection
+version: v0.2
+status: draft; repository-grounded; documentation-only; inspection-and-handoff-only; source-inactive-by-default; fail-closed; non-authoritative; non-activation; non-review; non-promotion; non-release; non-deployment; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable source, connector, Geology, Natural Resources, rights, sensitivity, evidence, policy, validation, review, release, correction, rollback, security, and operations stewards"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-25
+policy_label: public-review; geology; natural-resources; source-refresh-inspection; operational-documentation; rights-aware; sensitive-location-aware; fail-closed; no-publication-authority
+current_path: docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: >-
+  Explain how to inspect an already-authorized Geology source-head signal, classify bounded
+  no-change or material-change evidence, and prepare a non-authoritative handoff without
+  admitting or activating a source, fetching live bytes, performing review, crossing a lifecycle
+  boundary, promoting, releasing, deploying, or publishing.
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational documentation
+canonical_relationship: >-
+  Existing direct child of docs/runbooks/geology/; reconciled in place under the lane README;
+  no new path, alias, mirror, migration, connector, watcher, or sibling authority.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0f9e4f6f7730994899773451e835e513dc4c6c15
+  target_prior_blob: e0a6d4e39f01bc957fe4bc66b6b918a376503b18
+  lane_readme_blob: 62d96d10a9ca0831b9847fb325cd2604c97ba1c1
+  source_descriptor_contract_blob: b57ae5ccc042c1423b75c168438800384c9b6713
+  source_descriptor_schema_blob: 42da54b28a527850cce88ad89f68921c101fc56b
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  subtype_source_registry_blob: 0bb2d794e3179186abfa371a3c99532f50d2c571
+  domain_first_source_compatibility_blob: c19b8bcd1f8e89b65a65b2144df647dd98fe0674
+  m118_source_descriptor_blob: 4f60685cbf397ad31415546fd32b07824654f7e9
+  aem_domain_first_record_blob: 4e69fb735bdfea6dd212d6ebe8ffd76b6f6de12a
+  connector_compatibility_index_blob: 9575bec2c30a5f7a7a227ed4a48d548a00be83d1
+  m118_validation_workflow_blob: 205d8d488429d9bcb6054c1bae4a6e3876a63ce2
+  production_material_change_contract_blob: 1f591a778ae1da037b27ca82d83b05b45fab4155
+  production_material_change_schema_blob: 56b0de0c6421aeab8b547e2ca2f12698376d0a92
+  production_material_change_validator_blob: f3ba5b007a3b0b92a3e643792befeb934cb0c546
+  production_material_change_test_blob: 779ff37af46ac591df8f69dd602cf23faf4c78b1
+  geology_policy_blob: 71e4a939510712346c3b80e62c47d1770e799c03
+  geology_workflow_blob: 79b6066c9dede603df328d66601fe757ae68c5b3
 related:
-  - kfm://doc/doctrine/directory-rules
-  - kfm://doc/domain/geology
-  - kfm://doc/runbook/governed_ai_ROLLBACK
-  - kfm://doc/architecture/trust-membrane
-tags: [kfm, geology, runbook, source-refresh, watcher, lifecycle, evidence-first]
+  - ./README.md
+  - ./BEDROCK_REVIEW.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../../domains/geology/README.md
+  - ../../domains/geology/SOURCES.md
+  - ../../domains/geology/SOURCE_REGISTRY.md
+  - ../../domains/geology/SOURCE_ROLE_MATRIX.md
+  - ../../domains/geology/SENSITIVITY.md
+  - ../../../contracts/source/source_descriptor.md
+  - ../../../schemas/contracts/v1/sources/source_descriptor.schema.json
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/geology/README.md
+  - ../../../data/registry/geology/sources/README.md
+  - ../../../data/registry/sources/geology/kgs-m118-surficial-geology.source.json
+  - ../../../connectors/geology/README.md
+  - ../../../contracts/domains/geology/production_material_change.md
+  - ../../../schemas/contracts/v1/domains/geology/production_material_change.schema.json
+  - ../../../tools/validators/domains/geology/validate_production_material_change.py
+  - ../../../tests/domains/geology/test_production_material_change.py
+  - ../../../.github/workflows/kgs-m118-source-descriptor.yml
+  - ../../../.github/workflows/domain-geology.yml
+tags: [kfm, geology, natural-resources, runbook, source-refresh, inspection, source-head, material-change, no-network, rights, sensitivity, evidence, fail-closed]
 notes:
-  - All routes, workflow paths, validator entry points, and CI job names are PROPOSED until verified against mounted-repo evidence.
-  - Cadence and rights status per Geology source family are NEEDS VERIFICATION.
+  - "This revision removes illustrative live watcher commands, proposal-era path alternatives, and implied refresh side effects."
+  - "The accepted source-registry topology is subtype-first under data/registry/sources/, while domain-first Geology YAML records remain present beneath a compatibility lane that prohibits independent writes; that recorded-state conflict must not be resolved by this runbook."
+  - "The machine source-authority projection is PROPOSED, projection-only, implementation-absent, empty, and non-activating."
+  - "The KGS M-118 SourceDescriptor is proposed and inactive, rights remain unresolved, and its connector activation state is disabled; its workflow validates declarations only with no network."
+  - "The production material-change profile is a bounded no-network comparison of version-pinned KGS oil-and-gas metadata; it does not fetch source bytes or generalize to every Geology source family."
+  - "This document creates no source descriptor, activation, fetch, source-head observation, receipt, evidence, policy decision, review, candidate, lifecycle transition, promotion, release, deployment, or public state."
 [/KFM_META_BLOCK_V2] -->
 
-# Geology Source Refresh Runbook
+<a id="top"></a>
 
-> Governed procedure for re-admitting, validating, and (when justified) republishing Geology and Natural Resources sources without bypassing evidence, policy, release, correction, or rollback controls.
+# Geology and Natural Resources Source Refresh Inspection Runbook
 
-![status: draft](https://img.shields.io/badge/status-draft-blue)
-![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-success)
-![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
-![sensitivity: public-safe default](https://img.shields.io/badge/sensitivity-public--safe%20default-yellow)
-<!-- TODO: replace with verified Shields.io endpoints once repo CI is mounted -->
+> **Use this runbook to inspect a source-head signal that an already-authorized source operation produced, classify the bounded evidence, and prepare a non-authoritative handoff.** This runbook is not a watcher, connector, scheduler, source-admission decision, fetch command, reviewer, lifecycle writer, or publisher.
 
-| Field | Value |
-|---|---|
-| **Owners** | Geology domain steward; Source-watcher steward; Docs steward <!-- NEEDS VERIFICATION --> |
-| **Audience** | Domain stewards, source-watcher operators, release reviewers, on-call docs steward |
-| **Status** | draft (doctrine CONFIRMED; implementation PROPOSED) |
-| **Lifecycle invariant** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
-
-| **Last reviewed** | 2026-05-12 |
-
----
-
-## Quick jump
-
-- [1. Scope and intent](#1-scope-and-intent)
-- [2. Repo fit and authority basis](#2-repo-fit-and-authority-basis)
-- [3. Inputs that trigger this runbook](#3-inputs-that-trigger-this-runbook)
-- [4. Exclusions](#4-exclusions)
-- [5. Geology source family register](#5-geology-source-family-register)
-- [6. Refresh decision flow](#6-refresh-decision-flow)
-- [7. Pre-refresh checklist](#7-pre-refresh-checklist)
-- [8. Refresh procedure](#8-refresh-procedure)
-- [9. No-change path](#9-no-change-path-304--no-op-receipt)
-- [10. Material-change path](#10-material-change-path-reviewed-pr-not-direct-publish)
-- [11. Sensitivity, rights, and public-safe guardrails](#11-sensitivity-rights-and-public-safe-guardrails-geology-specific)
-- [12. Validation gates](#12-validation-gates)
-- [13. Rollback and reversal](#13-rollback-and-reversal)
-- [14. Stale-state handling](#14-stale-state-handling)
-- [15. Failure modes and anti-patterns](#15-failure-modes-and-anti-patterns)
-- [16. Related docs](#16-related-docs)
-- [17. Appendix](#17-appendix)
-
----
-
-## 1. Scope and intent
-
-This runbook tells a domain steward or source-watcher operator how to **detect, validate, and act on a possible change to a Geology and Natural Resources source** — Kansas Geological Survey (KGS) data and maps, KGS surficial geology, USGS NGMDB / GeMS, KGS oil and gas wells and production, KCC oil and gas regulatory data, KGS/KDHE WWC5 and water-well program, KGS LAS digital well logs and well tops, USGS MRDS, and 3DEP terrain context — **without bypassing the KFM trust membrane**.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-posture)
+[![Source authority: empty](https://img.shields.io/badge/source%20authority-empty-b42318?style=flat-square)](#current-repository-posture)
+[![M118: proposed inactive](https://img.shields.io/badge/M--118-proposed%20inactive-d4a72c?style=flat-square)](#current-repository-posture)
+[![Connector topology: conflicted](https://img.shields.io/badge/connectors-CONFLICTED-d4a72c?style=flat-square)](#current-repository-posture)
+[![Authority: inspection only](https://img.shields.io/badge/authority-inspection%20only-0969da?style=flat-square)](#authority-and-negative-authority)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-b42318?style=flat-square)](#authority-and-negative-authority)
 
 > [!IMPORTANT]
-> **CONFIRMED doctrine.** Watchers and refresh procedures **propose** new evidence and **detect material change**; they do **not** publish. A material change opens a reviewed PR or review packet; publication requires the full promotion gate chain (`SourceDescriptor` → schema validation → policy → `EvidenceBundle` closure → `PromotionDecision` → `ReleaseManifest` with a named `rollback target`). [DIRRULES, DOM-GEOL, ENCY]
-
-The runbook applies to Geology specifically because the domain has lane-specific sensitivity, source-role, and rights constraints — particularly around exact borehole, well-log, sample, sensitive resource, and private-well locations, which default to restricted or generalized public geometry. [DOM-GEOL §I]
-
-> [!NOTE]
-> Throughout this document, **CONFIRMED** means doctrine grounded in attached project sources; **PROPOSED** means design or path placement not yet verified in a mounted repo; **NEEDS VERIFICATION** means checkable but not yet checked. Memory is not evidence.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 2. Repo fit and authority basis
-
-| Aspect | Where | Status |
-|---|---|---|
-| **Responsibility root** | `docs/` — human-facing control plane (doctrine, runbooks, registers) | CONFIRMED rule |
-| **Domain segment** | `geology/` as a **segment under a responsibility root**, never as a repo-root folder | CONFIRMED rule [DIRRULES §3] |
-| **Proposed path** | `docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md` | PROPOSED — placement consistent with §3 and §12 of Directory Rules; concrete on-disk presence not verified |
-| **Alternate path under existing prefix convention** | `docs/runbooks/geology_SOURCE_REFRESH.md` (mirrors the `ui_LOCAL_DEV.md` / `governed_ai_ROLLBACK.md` form seen in the Whole-UI + Governed AI report) | PROPOSED — pick one and record in PR description, per `directory-rules.md` Step 5 |
-| **Companion runbooks** | `docs/runbooks/geology/VALIDATION_RUNBOOK.md`, `docs/runbooks/geology/ROLLBACK_RUNBOOK.md` | PROPOSED — not yet authored |
-
-**Directory Rules basis (cited per §4 Step 5):** Step 1 — primary responsibility is "Explains something to humans" → `docs/`. Step 2 — N/A (not under `data/`). Step 3 — Geology is a **domain segment**, not a root. Step 4 — `docs/runbooks/` already exists in the Whole-UI plan as a sibling of `docs/architecture/`, `docs/adr/`, and `docs/domains/`. Step 5 — cite §3 and §12 of Directory Rules in the PR.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 3. Inputs that trigger this runbook
-
-A Geology source refresh cycle begins from one or more of the following inputs:
-
-- A **dynamic source watcher** signal (conditional GET with `If-None-Match` / `If-Modified-Since`; ArcGIS `editingInfo` change; `ETag` / `Last-Modified` change; checksum or `spec_hash` change) — CONFIRMED watcher doctrine; concrete watcher entry-point paths PROPOSED.
-- A **SourceDescriptor cadence expiry** marker recorded in the source register, raising a stale-source badge in the Evidence Drawer for affected Geology layers. [Stale-state markers — CONFIRMED]
-- A **steward-initiated re-admission** when rights, sensitivity, source role, or interpretation version changes (e.g., a new KGS surficial geology map vintage, a corrected USGS NGMDB record, a re-vintaged USGS MRDS extract).
-- A **CorrectionNotice** that names a Geology `EvidenceBundle` or downstream derivative for re-evaluation.
-- A **schema or policy version drift** that requires re-binding existing Geology release candidates to a new schema or policy version.
-
-> [!TIP]
-> A watcher detection is **necessary but not sufficient** to start the runbook. If the watcher cannot record a `RunReceipt` with `source_url`, `etag` / `last_modified`, `spec_hash`, `artifacts`, and a signed provider identity, treat the trigger as **inadmissible** and quarantine it. [CONFIRMED — RunReceipt schema fields; SRC-063 evidence]
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 4. Exclusions
-
-This runbook **does not** cover:
-
-| Out of scope | Belongs in |
-|---|---|
-| Initial admission of a never-before-seen Geology source family | `docs/runbooks/geology/SOURCE_ONBOARDING_RUNBOOK.md` (PROPOSED — not yet authored) |
-| Schema or contract change for Geology objects (GeologicUnit, Borehole, etc.) | ADR in `docs/adr/`; schema home at `schemas/contracts/v1/domains/geology/` (PROPOSED per ADR-0001) |
-| Cross-domain refresh choreography (e.g., when a Geology hydrostratigraphy refresh forces a Hydrology re-bind) | `docs/architecture/cross-lane-relations.md` (PROPOSED) |
-| Emergency hazard alerting from extraction sites or fault structures | **Out of scope for KFM** — KFM does not replace official advisories or emergency alerting [DOM-HAZ, ENCY] |
-| AI-summary regeneration over refreshed Geology evidence | `docs/runbooks/governed_ai_VALIDATION.md` (PROPOSED) |
-| Tile re-baking after a material change | `docs/runbooks/tile_REBUILD_RUNBOOK.md` (PROPOSED) — invoked by §10 of this runbook, but the tile recipe lives there |
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 5. Geology source family register
-
-The following source families and their roles, rights, sensitivity, and cadence postures are **CONFIRMED in domain doctrine**; the per-source operational specifics (current endpoint URLs, current terms of use, last admitted vintage) are **NEEDS VERIFICATION** in a mounted source register.
-
-| Source family | Role(s) | Rights / sensitivity | Freshness posture | Watcher class (PROPOSED) |
-|---|---|---|---|---|
-| Kansas Geological Survey data and maps | authority / observation / context / model — as source role requires | Rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | source-vintage or cadence specific | `file` / `api` |
-| KGS surficial geology and geologic maps | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | source-vintage or cadence specific | `file` |
-| USGS NGMDB and GeMS | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | source-vintage or cadence specific | `stac` / `file` |
-| KGS oil and gas wells and production | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed; **private well locations restricted by default** | source-vintage or cadence specific | `api` / `file` |
-| KCC oil and gas regulatory data | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | source-vintage or cadence specific | `api` |
-| KGS / KDHE WWC5 and water-well program | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; **exact private water-well locations restricted by default** | source-vintage or cadence specific | `api` / `file` |
-| KGS LAS digital well logs and well tops | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; **borehole and well-log details require rights review** | source-vintage or cadence specific | `file` |
-| USGS MRDS | authority / observation / context / model | Rights and current terms **NEEDS VERIFICATION**; **exact mineral occurrence locations may require generalization** | source-vintage or cadence specific | `file` |
-| USGS 3DEP terrain (context) | context | Public; terrain context only, not a Geology authority | program cadence | `stac` |
-
-Source: [DOM-GEOL §D / kfm_encyclopedia §7.8 / Domains Atlas]. Per-source rights, endpoint, and cadence must be verified against a `data/registry/sources/geology/` entry **before** any refresh produces a public-touching artifact.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 6. Refresh decision flow
-
-```mermaid
-flowchart TD
-    A[Watcher fires<br/>or steward initiates] --> B{Trigger admissible?<br/>Receipt fields complete?}
-    B -- no --> Q[Quarantine trigger<br/>open verification entry]
-    B -- yes --> C[Conditional GET<br/>If-None-Match / If-Modified-Since]
-    C --> D{HTTP 304 or<br/>spec_hash unchanged?}
-    D -- yes --> E[No-op RunReceipt<br/>heartbeat only<br/>no cache invalidation]
-    D -- no --> F[Fetch and canonicalize<br/>compute new spec_hash]
-    F --> G{Sensitivity / rights<br/>still admissible?}
-    G -- no --> H[Quarantine<br/>steward review<br/>no public path]
-    G -- yes --> I[Run validators<br/>schema · source-role ·<br/>geometry · rights · temporal]
-    I --> J{All validators pass?}
-    J -- no --> H
-    J -- yes --> K[Build EvidenceBundle<br/>+ RunReceipt + PolicyDecision]
-    K --> L{Material change vs<br/>current release?}
-    L -- no --> M[Re-bind without<br/>republication<br/>emit no-op receipt]
-    L -- yes --> N[Open reviewed PR<br/>with promotion candidate]
-    N --> O[Steward review<br/>+ release reviewer]
-    O --> P[PromotionDecision<br/>+ new ReleaseManifest<br/>+ named rollback target]
-    P --> R[Publish through<br/>governed API]
-    R --> S[Cache invalidation receipt<br/>+ supersession lineage]
-
-    style Q fill:#fff3cd,stroke:#856404
-    style H fill:#f8d7da,stroke:#721c24
-    style E fill:#d4edda,stroke:#155724
-    style M fill:#d4edda,stroke:#155724
-    style S fill:#d1ecf1,stroke:#0c5460
-```
-
-> [!NOTE]
-> Diagram structure reflects CONFIRMED KFM doctrine (watcher-as-non-publisher, conditional-GET, no-change heartbeat, fail-closed quarantine, EvidenceBundle-before-release, named rollback target). Specific runner names, route paths, and PR-template fields are **PROPOSED** and require mounted-repo verification.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 7. Pre-refresh checklist
-
-Before running any step in §8, the operator confirms:
-
-- [ ] The source has a current `SourceDescriptor` in `data/registry/sources/geology/<source_id>/` (PROPOSED path) with **role**, **rights**, **sensitivity**, **cadence**, and **limitations** fields populated.
-- [ ] The source's authority role is one of `authority`, `observation`, `context`, or `model`, and is **not** silently mixed across roles within a single descriptor.
-- [ ] The source has a current `WatcherDescriptor` of type `stac`, `gtfs`, `tile`, `file`, or `api`, with a signed registry reference.
-- [ ] The current `ReleaseManifest` for any affected Geology layer names a valid `rollback target`.
-- [ ] No open `CorrectionNotice` blocks this source family.
-- [ ] The Geology domain steward is reachable and has not declared a refresh freeze.
+> **Current safe determination at `main@0f9e4f6f7730…`: `HOLD — NO ACTIVE GEOLOGY SOURCE REFRESH PATH ESTABLISHED`.** The machine source-authority projection has no entries, the inspected KGS M-118 record is proposed/inactive with unresolved rights and disabled connector activation, source/connector topology remains conflicted, and no general Geology watcher runtime is established.
 
 > [!CAUTION]
-> If any item above fails, **do not proceed to §8**. Open a verification entry in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED) and notify the Geology steward.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 8. Refresh procedure
-
-The procedure below is **PROPOSED** in operational detail and **CONFIRMED** in shape. Concrete commands are illustrative; the canonical entry point lives under `tools/ingest/watchers/` (PROPOSED) once verified.
-
-### 8.1 Step 1 — Conditional fetch
-
-Use a conditional GET against the source endpoint. Store the previous validator(s) in the receipt ledger so the request can be replayed for audit.
-
-```bash
-# Illustrative — PROPOSED watcher entry point and arguments
-# Replace with verified repo command after mounted-repo inspection.
-tools/ingest/watchers/geology_watcher \
-  --source-id <kgs|usgs_ngmdb|kgs_oilgas|kcc|wwc5|kgs_las|usgs_mrds> \
-  --conditional \
-  --emit-receipt
-```
-
-Outcomes:
-- **HTTP 304 / no-change** → §9.
-- **HTTP 200 / new bytes** → §8.2.
-- **Network / auth / unknown** → quarantine; record `RunReceipt` with `outcome = ERROR`; do not proceed.
-
-### 8.2 Step 2 — Canonicalize and hash
-
-Canonicalize the response (RFC 8785 / JCS for JSON, deterministic byte hash for binary) and compute the new `spec_hash`.
-
-> CONFIRMED doctrine: `spec_hash` is the canonical identity fingerprint; bundle and ref IDs derive deterministically from it. A mismatched or absent `spec_hash` at any gate is a fail-closed condition.
-
-### 8.3 Step 3 — Quarantine and validate
-
-Normalize schema, geometry, time, identity, evidence, rights, and policy. **Hold failures in quarantine; do not promote.**
-
-| Validator | What it checks | Failure outcome |
-|---|---|---|
-| Schema validation | `SourceDescriptor`, candidate Geology object schemas under `schemas/contracts/v1/domains/geology/` (PROPOSED) | quarantine |
-| Source-role validator | role is one of authority / observation / context / model; no silent mixing | quarantine |
-| Rights validator | rights/license status known and admissible | quarantine — fail closed on unknown rights |
-| Sensitivity validator | exact borehole, sample, well-log, private well, sensitive resource locations are restricted or generalized | quarantine |
-| Geometry validity | CRS declared; geometry valid; public-safe generalization receipt where required | quarantine |
-| Temporal logic | `source`, `observed`, `valid`, `retrieval`, `release`, `correction` times remain distinct where material | quarantine |
-| Evidence closure | every claim resolves to an `EvidenceBundle`; no orphan refs | quarantine — `ABSTAIN` |
-| Resource-class anti-collapse | `MineralOccurrence`, `ResourceDeposit`, `ResourceEstimate`, `ExtractionSite`, `ReclamationRecord` remain semantically distinct | quarantine |
-
-### 8.4 Step 4 — Materiality decision
-
-Compare new `spec_hash` and downstream derivatives against the current `ReleaseManifest`. A **material change** is one or more of:
-
-- new or removed `GeologicUnit` / `SurficialUnit` / `StructureFeature` geometry,
-- changed lithology / age / stratigraphic interval semantics,
-- changed source role or rights status,
-- changed sensitivity class,
-- changed interpretation version or uncertainty,
-- removed or added `Borehole` / `WellLog` references that affect publishable derivatives.
-
-A **non-material change** (e.g., publisher rebuild with stripped validators, unchanged canonical bytes) → §9.
-
-### 8.5 Step 5 — Build proof bundle
-
-Emit, in this order:
-
-1. `RunReceipt` (source URL, `etag`, `last_modified`, `spec_hash`, artifacts, provider, tool versions, signatures).
-2. `EvidenceBundle` updates for affected objects.
-3. `ValidationReport` summarizing the gates from §8.3.
-4. `PolicyDecision` with explicit outcome (`allow` / `deny` / `abstain` / `error`) and obligations.
-5. Candidate `LayerManifest`, `StyleManifest`, `TileArtifactManifest`, and a `MapReleaseManifest` candidate — for any visible layer.
-
-### 8.6 Step 6 — Open a reviewed PR
-
-A material-change refresh **MUST** route through a reviewed PR (or review packet equivalent). Watchers, automation, or AI summaries **MUST NOT** directly publish refreshed artifacts. See §10.
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 9. No-change path (304 / no-op receipt)
-
-When the conditional GET returns 304, or when the canonical `spec_hash` is unchanged:
-
-1. Emit a **no-op `RunReceipt`** as a heartbeat with `outcome = no_change`.
-2. **Do not** rebuild tiles. Do not invalidate caches. Do not emit new STAC, DCAT, or PROV entities for the unchanged content.
-3. Reset the stale-source badge cadence clock for affected Geology layers.
-
-> [!TIP]
-> The no-op receipt is part of the audit trail. Auditors should be able to see that the system observed and *elected not to act*. Missing no-op receipts make it impossible to distinguish "watcher fired and saw no change" from "watcher never fired."
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 10. Material-change path (reviewed PR, not direct publish)
-
-### 10.1 PR payload minimum
-
-A geology source-refresh PR opens against `main` (or the release branch under review) and **MUST** include:
-
-- the new `RunReceipt(s)`,
-- the new or updated `EvidenceBundle(s)`,
-- the `ValidationReport`,
-- the `PolicyDecision`,
-- candidate `LayerManifest` / `StyleManifest` / `TileArtifactManifest` deltas,
-- a candidate `MapReleaseManifest` with an explicit **rollback target** naming the prior `release_id`, `artifact_digests`, and `cache_keys`,
-- a one-paragraph **materiality narrative** explaining what changed and why it warrants public refresh,
-- any required **redaction / generalization receipts** for sensitive geometry.
-
-### 10.2 Reviewers required
-
-- Geology domain steward (semantic and uncertainty review).
-- Source-watcher steward (provenance, `spec_hash`, conditional-fetch correctness).
-- Release reviewer (separation of duty when maturity justifies it; CONFIRMED doctrine).
-- Policy reviewer if rights, sensitivity, or source role changed.
-
-### 10.3 Promotion gate sequence
-
-```mermaid
-flowchart LR
-    A[PR opened] --> B[Identity gate<br/>spec_hash + source HEAD]
-    B --> C[Schema + source-role gate]
-    C --> D[Rights + sensitivity gate]
-    D --> E[Geometry + temporal gate]
-    E --> F[Evidence closure gate]
-    F --> G[Catalog closure gate]
-    G --> H[PromotionDecision<br/>by release reviewer]
-    H --> I[ReleaseManifest<br/>+ rollback target]
-    I --> J[Publish via governed API]
-```
-
-Any gate failure routes the PR to **deny / abstain** with reasons recorded. No gate may be bypassed by automation or AI commentary. [CONFIRMED — Promotion Gates A–G doctrine; SRC-057 verify-attestation gate evidence]
-
-### 10.4 Cache and lineage
-
-On successful promotion:
-
-- Record a **cache invalidation receipt** naming what was invalidated and why.
-- Update **supersession lineage**: the prior `SourceDescriptor`, `EvidenceBundle`, and `ReleaseManifest` are retained with `superseded_by` links — never deleted.
-- Rollback by **shifting tile / artifact lineage pointers** to the prior set, not by deleting artifacts. [CONFIRMED — SRC-057 rollback pattern]
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 11. Sensitivity, rights, and public-safe guardrails (Geology-specific)
+> A source descriptor file, endpoint URL, schedule proposal, workflow dispatch button, manual download, changed upstream page, HTTP status, `etag`, timestamp, digest, material-change result, pull request, or green validation job is not source admission, activation, evidence closure, review, promotion, release, deployment, or publication.
 
 > [!WARNING]
-> **CONFIRMED domain doctrine.** Exact borehole, sample, sensitive resource, well-log, and private well locations default to **restricted or generalized** public geometry. `MineralOccurrence`, `ResourceDeposit`, `ResourceEstimate`, `ExtractionSite`, `ReclamationRecord`, permit, production, and reserve claims **MUST remain distinct** and **MUST NOT** be silently collapsed. [DOM-GEOL §I]
+> Never place credentials, private endpoints, exact or reverse-engineerable borehole/private-well/well-log/core/sample/geochemistry/sensitive-resource/operator/parcel/extraction-targetable coordinates, protected joins, redaction offsets, or source-native restricted payloads in an ordinary refresh packet, log, issue, pull request, screenshot, or generated summary.
 
-The runbook enforces this via fail-closed defaults at the validation gate (§8.3) and at the policy gate (§10.3 step D):
-
-- **Unknown rights** → DENY public release until source terms and redistribution class are recorded.
-- **Sensitive geometry** → default to redaction / generalization with an emitted `RedactionReceipt`; never publish exact geometry without a steward decision recorded as evidence.
-- **Resource-class collapse attempt** → DENY; surface the conflict to the Geology steward.
-- **Stale source past freshness cadence** → mark dependent claims stale; do not refresh silently into release.
-- **Rights change detected** → re-evaluate tier; potentially downgrade; emit `CorrectionNotice` if material.
-
-> [!NOTE]
-> Geology shares boundaries with **Hydrology** (hydrostratigraphy and aquifer context — relation only, not measurement), **Soil** (parent material and surficial context), **Hazards** (fault / landslide / subsidence context — Geology does not own risk), and **People / Land** (lease, parcel, operator relations cannot prove deposits). Cross-lane relations must preserve ownership, source role, sensitivity, and `EvidenceBundle` support. [DOM-GEOL §F]
-
-[Back to top](#geology-source-refresh-runbook)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-and-negative-authority) · [State](#current-repository-posture) · [Outcomes](#finite-procedure-outcomes) · [Triggers](#recognized-inspection-triggers) · [Preconditions](#preconditions-and-stop-conditions) · [Packet](#required-inspection-packet) · [Procedure](#procedure) · [No-change](#no-change-candidate-path) · [Material change](#material-change-candidate-path) · [Geology controls](#geology-specific-controls) · [Validation](#validation-and-command-boundary) · [Handoff](#handoff-boundary) · [Anti-patterns](#anti-patterns-to-refuse) · [Open work](#open-verification-register) · [Evidence](#evidence-basis) · [Rollback](#document-change-rollback)
 
 ---
 
-## 12. Validation gates
+## Purpose
 
-| Gate | Required check | Status |
+This runbook supports a narrow, evidence-preserving inspection:
+
+1. freeze the exact repository revision and the separately produced source-head signal;
+2. verify that source identity, source role, authority, rights, sensitivity, and connector path are already established by owning surfaces;
+3. compare immutable prior/current metadata without making a network request here;
+4. classify `NO_CHANGE`, material-change-review candidate, or a fail-closed outcome;
+5. record non-sensitive findings and immutable pointers; and
+6. hand the result to owning source, evidence, policy, review, lifecycle, correction, and release processes.
+
+It does not:
+
+- create, admit, activate, suspend, or withdraw a `SourceDescriptor`;
+- select a canonical source-registry or connector path;
+- schedule a watcher or perform a live fetch;
+- store RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED bytes;
+- canonicalize or hash source bytes that were not already supplied by an authorized producer;
+- create a `RunReceipt`, `EvidenceBundle`, `PolicyDecision`, review record, promotion candidate, release manifest, correction notice, withdrawal notice, or rollback card;
+- open or approve a reviewed lifecycle transition;
+- invalidate caches, rebuild tiles, change aliases, deploy, promote, release, or publish; or
+- certify the freshness, completeness, accuracy, geology, rights, safety, or public usability of a source.
+
+[Back to top](#top)
+
+---
+
+## Authority and negative authority
+
+This file inherits the [Geology runbook lane boundary](./README.md). It describes safe inspection and handoff. It does not own a source or an operation.
+
+| Concern | Owning surface | This runbook may do | This runbook must not do |
+|---|---|---|---|
+| Source identity and admission | canonical source registry, accepted authority/activation records | Require exact resolvable state | Mint, admit, activate, suspend, or withdraw |
+| Source access | one accepted source-first connector/runtime | Inspect an already-produced bounded signal | Choose a path, fetch, authenticate, or schedule |
+| Source role | source descriptor plus Geology doctrine/contracts | Check role preservation | Upgrade a role or convert context/model into observation |
+| Rights and sensitivity | accepted rights/sensitivity policy and review | Require finite state and obligations | Infer permission from public reachability |
+| Source payload lifecycle | governed `data/` lanes and writers | Reference immutable identities | Write, move, transform, or delete payloads |
+| Evidence and receipts | `data/receipts/`, `data/proofs/`, EvidenceBundle family | Require support pointers | Manufacture evidence or receipts |
+| Materiality | accepted contract/profile and accountable steward | Run a bounded existing validator | Generalize one profile to every source |
+| Policy and review | `policy/` and accountable reviewers | Prepare a handoff | Evaluate policy, request review, or claim approval |
+| Promotion/release | `release/` and owning operations | Identify downstream prerequisites | Promote, release, deploy, or publish |
+| Correction/rollback | release accountability families and owning operations | Preserve lineage requirements | Execute correction, invalidation, withdrawal, or rollback |
+
+A README cannot turn a proposed descriptor into an admitted source, an endpoint into permission, a change signal into evidence truth, or a materiality classification into a release decision.
+
+[Back to top](#top)
+
+---
+
+## Current repository posture
+
+The observations below are pinned to `main@0f9e4f6f7730994899773451e835e513dc4c6c15`.
+
+| Surface | Confirmed repository evidence | Bounded conclusion |
 |---|---|---|
-| Schema validation | `SourceDescriptor`, candidate Geology object schemas, `LayerManifest`, `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, `RunReceipt` all validate | PROPOSED — schema homes under `schemas/contracts/v1/...` per ADR-0001 (default) |
-| Source ledger completeness | Every public Geology layer `source_id` resolves to a ledgered `SourceDescriptor` with rights, sensitivity, authority role, cadence, limitations | PROPOSED |
-| Public-safe geometry | Exact borehole / sample / well-log / private-well / sensitive-resource location fixture fails before any public artifact emit | PROPOSED |
-| Resource-class anti-collapse | Negative fixture proving `MineralOccurrence` ≠ `ResourceEstimate` ≠ `ExtractionSite` at admission and at promotion | PROPOSED |
-| Borehole / well-log rights | Negative fixture proving rights-unknown borehole cannot publish | PROPOSED |
-| No public RAW path | Browser test confirms no `RAW` / `WORK` / `QUARANTINE` / candidate / canonical direct fetch | PROPOSED |
-| No unreleased tile load | Map shell refuses tile / style / sprite / glyph artifacts not listed in `MapReleaseManifest` | PROPOSED |
-| No-change regression | 304 / no-change response does not create new STAC / DCAT / PROV entities | PROPOSED |
-| Sensitive geometry deny | Exact sensitive geometry fixture fails before tile build or public release | PROPOSED |
-| Conditional-fetch + canonical-hash + receipt + policy | Receipt before any tile / catalog update | PROPOSED — pattern CONFIRMED (SRC-063) |
+| Accepted source topology | Directory Rules route machine source descriptors through `data/registry/sources/` | Subtype-first is the canonical write topology |
+| Domain-first compatibility lane | `data/registry/geology/sources/README.md` prohibits independent descriptor writes but sibling YAML records are present | Recorded bytes and declared write contract are `CONFLICTED`; do not update either by convenience |
+| Machine source authority | `PROPOSED`, `projection_only`, implementation `ABSENT`, completeness `empty`, `entries: []` | No active source authority is established by the projection |
+| KGS M-118 descriptor | Proposed/inactive; public release false; rights unresolved; file not downloaded/hashed; connector activation disabled | May be schema-validated as a candidate only; no live refresh |
+| GMD 3 AEM domain-first record | Proposed, disabled, noncanonical; product availability unknown; no endpoint or connector established | Announcement-bound planning/candidate evidence only |
+| Other domain-first KGS/USGS records | Several are proposal templates with unresolved trust-bearing fields | Not admitted or refreshable by this runbook |
+| Connector topology | KGS/KSGS product/family paths are mixed and conflicted; `connectors/geology/` is documentation-only | No general Geology connector/runtime path is established |
+| M-118 workflow | No-network validation of one proposed inactive descriptor and generated authoring receipt | Validates declarations only; no fetch, activation, or admission |
+| Production material-change profile | Deterministic no-network comparison of version-pinned KGS oil-and-gas metadata | Bounded `NO_CHANGE`, `REVIEW`, `HOLD`, or `ERROR`; no live KGS request |
+| Geology workflow | Runs four bounded no-network profiles and explicitly holds broader proof/release | Not a refresh, watcher, policy, review, release, or publisher |
+| Geology policy | Default-only scaffolds with unverified evaluator/consumer | Cannot authorize refresh or outward use |
 
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 13. Rollback and reversal
-
-Rollback **MUST** be available for every refresh that touches a `PUBLISHED` Geology layer.
-
-| Step | Action | Artifact |
-|---|---|---|
-| 1 | Identify the affected `release_id` and its prior `release_id` | `ReleaseManifest`, `rollback target` |
-| 2 | Verify the prior release's artifacts are still resolvable by digest | `TileArtifactManifest`, `LayerManifest` |
-| 3 | Shift lineage / catalog references back to the prior `tile_id` / `checksum` sets — **do not delete** the new artifacts | `rollback target` |
-| 4 | Emit a **rollback receipt** and update the supersession chain | `RunReceipt`, supersession entry |
-| 5 | Issue a `CorrectionNotice` if the reverted release had public impact | `CorrectionNotice` |
-| 6 | Update cache invalidation record with rollback context | cache invalidation receipt |
-| 7 | Notify the Geology steward and (if Focus Mode answers depended on the reverted evidence) the AI surface steward | runbook log |
-
-> [!IMPORTANT]
-> A rollback drill should be rehearsed against a dry-run release at least once per release window. [CONFIRMED — encyclopedia PR-10 rollback drill]
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 14. Stale-state handling
-
-KFM separates **stale** (evidence past its declared tolerance) from **wrong** (substance is incorrect). This runbook handles stale states without silently refreshing them into the public surface.
-
-| Marker | Triggered by | Required action |
-|---|---|---|
-| Source freshness expired | `SourceDescriptor` cadence passed without a new admission | Re-admit (run this runbook) or supersede; otherwise mark dependent Geology claims stale |
-| Schema version drift | Geology object schema upgraded past published claim | Migrate, re-validate, re-release; or mark stale |
-| Geography version drift | `GeographyVersion` replaced; published claim still bound to prior version | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| Rights status changed | Rights change in `SourceDescriptor` or rights-holder communication | Re-evaluate tier; possibly downgrade; emit `CorrectionNotice` if necessary |
-| Policy version changed | Policy referenced by `PolicyDecision` was superseded | Re-run gate; potentially supersede release |
-
-[CONFIRMED — Atlas v1.1 §24.8 stale-state markers]
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 15. Failure modes and anti-patterns
-
-> [!CAUTION]
-> Each of the following is a known KFM anti-pattern. Do not let urgency, fluency, or automation convenience override these.
-
-| Anti-pattern | Why it's wrong | Counter-rule |
-|---|---|---|
-| Watcher auto-publishes refreshed artifacts | Collapses generation and approval into one unreviewed path | Watchers open reviewed PRs only; promotion is a governed state transition, not a file move |
-| Direct browser fetch of refreshed canonical / RAW Geology data | Bypasses trust membrane | Standard clients read only governed APIs and released artifacts |
-| Silent `ResourceEstimate` / `ExtractionSite` / `MineralOccurrence` collapse | Erases evidence boundaries; produces false claims | Resource-class anti-collapse validator must fail closed |
-| Exact borehole / well-log / private-well location in a public-touching artifact | Privacy and rights breach | Default to restricted or generalized geometry with a `RedactionReceipt` |
-| No-op refresh that still triggers cache invalidation and STAC churn | Wastes review attention; produces false stale-source signals | 304 / no-change path emits heartbeat only |
-| AI text generated over unreleased Geology evidence | Generation substitutes for evidence; cite-or-abstain broken | Focus Mode reads only released `EvidenceBundles`; abstain otherwise |
-| Rollback by deleting the new artifacts | Loses lineage and audit trail | Rollback shifts lineage pointers; new artifacts retained as superseded |
-| Treating an attached PDF or prior plan as proof of current refresh behavior | Confuses planning evidence with implementation evidence | Path / behavior claims are PROPOSED until verified in the mounted repo |
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 16. Related docs
-
-- `docs/doctrine/directory-rules.md` — CONFIRMED placement authority.
-- `docs/domains/geology/README.md` — Geology domain README (PROPOSED — author or verify).
-- `docs/runbooks/geology/VALIDATION_RUNBOOK.md` — companion validation runbook (PROPOSED — not yet authored).
-- `docs/runbooks/geology/ROLLBACK_RUNBOOK.md` — companion rollback runbook (PROPOSED — not yet authored).
-- `docs/runbooks/governed_ai_VALIDATION.md` — Focus Mode evidence / citation / policy validation (PROPOSED — referenced from the Whole-UI report).
-- `docs/runbooks/governed_ai_ROLLBACK.md` — AI adapter rollback and kill switch (PROPOSED — referenced from the Whole-UI report).
-- `docs/architecture/trust-membrane.md` — trust-membrane doctrine (PROPOSED — verify exact filename).
-- `docs/adr/ADR-0001-schema-home.md` — schema-home decision record (PROPOSED — verify exact filename).
-- `docs/registers/DRIFT_REGISTER.md` — drift entries (PROPOSED).
-- `docs/registers/VERIFICATION_BACKLOG.md` — open verification items (PROPOSED).
-
-[Back to top](#geology-source-refresh-runbook)
-
----
-
-## 17. Appendix
-
-<details>
-<summary><strong>A. Geology canonical object families (CONFIRMED — DOM-GEOL §C)</strong></summary>
-
-`GeologicUnit`, `Lithology`, `StratigraphicInterval`, `GeologicAge`, `FaultStructure`, `Borehole`, `WellLog`, `CoreSample`, `GeophysicalObservation`, `GeochemistrySample`, `MineralOccurrence`, `ResourceDeposit`, `ExtractionSite`, `ReclamationRecord`, `CrossSection`, `HydrostratigraphicUnit`.
-
-Each carries source role, evidence, time, sensitivity, and release-state constraints. Identity is **PROPOSED** as: `source id + object role + temporal scope + normalized digest`.
-
-</details>
-
-<details>
-<summary><strong>B. RunReceipt fields (CONFIRMED shape — schema home PROPOSED)</strong></summary>
+### Current safe determination
 
 ```text
-RunReceipt
-├── run_id
-├── source_url
-├── source_head
-│     ├── etag
-│     ├── last_modified
-│     └── content_length
-├── spec_hash
-├── inputs
-├── outputs
-├── tool_versions
-├── actor (provider / runner identity)
-├── timestamps
-└── signatures
+procedure_disposition: HOLD
+reason: NO_ACTIVE_GEOLOGY_SOURCE_REFRESH_PATH
+source_fetch_performed: false
+lifecycle_effect: none
+public_effect: none
 ```
 
-Schema home (PROPOSED): `schemas/contracts/v1/proofs/run_receipt.schema.json`.
+This is a documentation conclusion for the pinned revision, not an activation or source-state record.
 
-</details>
-
-<details>
-<summary><strong>C. Illustrative no-network dry-run receipt</strong></summary>
-
-> The block below is **illustrative**, not sourced from a verified repo fixture. Do not treat it as a schema specimen.
-
-```json
-{
-  "kfm_spec_version": "vNext",
-  "run_id": "rr-geology-kgs-surficial-2026-05-12-001",
-  "policy_id": "geology.source.refresh.v1",
-  "source_url": "https://example.org/kgs/surficial.geojson",
-  "source_head": {
-    "etag": "\"abc123\"",
-    "last_modified": "2026-05-08T00:00:00Z",
-    "content_length": 1024000
-  },
-  "spec_hash": "<sha256>",
-  "outcome": "no_change",
-  "timestamp": "2026-05-12T00:00:00Z",
-  "evidence_refs": [],
-  "obligations": []
-}
-```
-
-</details>
-
-<details>
-<summary><strong>D. Open verification items</strong></summary>
-
-- **NEEDS VERIFICATION** — current endpoint URLs and terms-of-use for each Geology source family.
-- **NEEDS VERIFICATION** — cadence values per `SourceDescriptor` (KGS, USGS NGMDB, KGS oil & gas, KCC, WWC5, KGS LAS, USGS MRDS).
-- **NEEDS VERIFICATION** — whether the canonical Geology runbook path is `docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md` (subdirectory form) or `docs/runbooks/geology_SOURCE_REFRESH.md` (prefix form). Resolve and record per Directory Rules §4 Step 5.
-- **NEEDS VERIFICATION** — exact CI workflow filename for the Geology watcher + promotion path.
-- **NEEDS VERIFICATION** — whether `data/registry/sources/geology/` or `data/registry/geology/` is the live convention.
-- **PROPOSED** — companion runbooks `VALIDATION_RUNBOOK.md` and `ROLLBACK_RUNBOOK.md` under `docs/runbooks/geology/`.
-
-</details>
+[Back to top](#top)
 
 ---
 
-**Last updated:** 2026-05-12 · **Doctrine basis:** CONFIRMED · **Implementation basis:** PROPOSED · [Back to top](#geology-source-refresh-runbook)
+## Finite procedure outcomes
+
+This runbook does not create a canonical repository-wide enum. Use the selected contract/validator vocabulary for machine records. For human inspection, record one bounded disposition:
+
+| Disposition | Meaning | Permitted next step |
+|---|---|---|
+| `NO_CHANGE_CANDIDATE` | Authorized prior/current metadata appear unchanged under the named bounded profile | Hand off for owning receipt/audit handling; do not claim an emitted no-op receipt |
+| `MATERIAL_CHANGE_CANDIDATE` | A bounded comparison found declared dimensions that require accountable inspection | Hand off; do not create review, promotion, or release state |
+| `HOLD` | Authority, source identity, rights, sensitivity, baseline, connector, evidence, or required state is absent/conflicted | Preserve prior safe state |
+| `ABSTAIN` | Evidence cannot support a change/no-change conclusion | Obtain admissible evidence or narrow scope |
+| `RESTRICT` | Handling may continue only through approved restricted controls | Remove protected material from ordinary surfaces |
+| `DENY` | Requested access, comparison, storage, or exposure violates a governing rule | Stop and record non-sensitive reason |
+| `ERROR` | Inspection or validation could not produce a reliable result | Preserve inputs and diagnostics; no materiality claim |
+
+`NO_CHANGE_CANDIDATE` is not proof that a watcher ran, a source is current, a source-head observation is authentic, a receipt exists, or a public freshness badge may reset.
+
+`MATERIAL_CHANGE_CANDIDATE` is not an accepted change, review request, candidate admission, promotion request, release approval, cache invalidation instruction, or publication trigger.
+
+The repository's current `ProductionMaterialChange` profile uses `NO_CHANGE`, `REVIEW`, `HOLD`, and `ERROR`. Preserve those exact values when operating that profile; map them to this runbook's explanatory dispositions only in prose.
+
+[Back to top](#top)
+
+---
+
+## Recognized inspection triggers
+
+An inspection may begin only from a separately authorized, immutable signal such as:
+
+- a source-head record from an accepted connector run;
+- a steward-authorized comparison request bound to exact prior/current snapshots;
+- an accepted correction, supersession, withdrawal, rights, terms, or sensitivity notice;
+- a declared cadence/freshness review from the owning source record;
+- an exact manifest/digest mismatch reported by governed validation; or
+- an incident response request from the owning security/correction authority.
+
+The following do not authorize a fetch or refresh:
+
+- a README schedule or proposal;
+- an upstream URL being publicly reachable;
+- a browser observation;
+- a workflow dispatch button;
+- a cron expression in planning material;
+- a changed timestamp without content identity;
+- an issue, pull request, chat instruction, or generated summary lacking source authority; or
+- a proposed/disabled source descriptor.
+
+At the pinned revision, no inspected trigger clears the authority and runtime prerequisites for a general live Geology refresh.
+
+[Back to top](#top)
+
+---
+
+## Preconditions and stop conditions
+
+### Preconditions
+
+Before inspecting prior/current source-head material, require:
+
+- exact repository revision and worktree state;
+- canonical source ID and descriptor version;
+- accepted admission/activation record from the owning authority;
+- accepted source-first connector/runtime identity;
+- authenticated actor and authorized operation scope;
+- immutable prior and current source-head identities;
+- source role, authority scope, rights, terms, attribution, redistribution, access, and sensitivity state;
+- expected cadence/freshness semantics;
+- object/claim families permitted for the source;
+- bounded materiality profile and validator version;
+- protected-handling classification; and
+- correction, supersession, receipt, evidence, policy, review, lifecycle, and rollback destinations owned elsewhere.
+
+### Mandatory stop conditions
+
+Return a fail-closed outcome when:
+
+- the source appears only in proposal-era or disabled records;
+- the empty machine source-authority projection is being treated as activation;
+- accepted registry identity or activation state cannot be resolved;
+- canonical source-registry writer and compatibility/mirror state conflict;
+- connector path, package, product dispatch, credential mode, or runtime is unresolved;
+- the request requires this README to fetch or schedule live bytes;
+- prior or current source-head identity is mutable, missing, or unauthenticated;
+- rights, terms, attribution, redistribution, or access posture is unknown;
+- exact/reconstruction-sensitive content would enter an ordinary repository surface;
+- source role, object family, claim class, scale, time, geometry, depth, or uncertainty is collapsed;
+- no accepted materiality profile applies to the source family;
+- evidence, policy, reviewer authority, lifecycle writer, or rollback target is assumed rather than resolved;
+- the operation would overwrite history, silently replace a descriptor, or bypass correction/supersession lineage;
+- network access is attempted while the selected profile is no-network; or
+- validation cannot produce a deterministic finite result.
+
+### Safe pause behavior
+
+1. Do not fetch or retry through an unverified path.
+2. Preserve prior descriptor, source-head, lifecycle, and public state.
+3. Do not reset freshness indicators, invalidate caches, rebuild derivatives, or open a promotion path.
+4. Record only non-sensitive blocker codes and immutable pointers.
+5. Route protected material and secrets outside ordinary repository surfaces.
+6. Restart from an exact new revision only after owning authority resolves the blocker.
+
+[Back to top](#top)
+
+---
+
+## Required inspection packet
+
+### 1. Scope and identity
+
+- exact repository commit;
+- canonical source ID and descriptor version;
+- source family/product and domain consumers;
+- accepted connector/runtime identity;
+- authorized actor/operation reference;
+- prior/current source-head IDs and immutable digests;
+- materiality profile ID/version; and
+- public/lifecycle effect explicitly `none` during inspection.
+
+### 2. Authority, rights, and sensitivity
+
+- admission and activation state;
+- source role and authority limits;
+- publisher/steward identity;
+- rights/license/terms and verification time;
+- attribution and redistribution obligations;
+- access/auth class without secrets;
+- sensitivity floor and public-safe obligations; and
+- unresolved conflicts or restrictions.
+
+### 3. Prior/current metadata
+
+- source version/edition;
+- `etag`, `last_modified`, content length, and upstream version only when emitted by the authorized connector;
+- canonical content/manifest/footprint digest as applicable;
+- retrieval/observation time and method;
+- temporal coverage;
+- spatial/scale/CRS/depth/vertical context;
+- record count or declared inventory dimensions where meaningful;
+- source-role and support-type declarations; and
+- correction/supersession state.
+
+Metadata values are evidence inputs, not automatic proof of content identity or correctness.
+
+### 4. Comparison and findings
+
+- exact dimensions compared;
+- unchanged/changed/unknown values;
+- deterministic reason codes;
+- schema/semantic findings;
+- stale, regressing, missing-baseline, or rights-unknown findings;
+- evidence references;
+- procedure disposition; and
+- explicit statement that no source fetch or lifecycle mutation occurred here.
+
+### 5. Handoff pointers
+
+- owning source/connector steward;
+- evidence/receipt destination;
+- rights/sensitivity/policy authority;
+- accountable review route;
+- lifecycle/correction/rollback authorities;
+- open blockers and obligations; and
+- restricted-handling route when applicable.
+
+Do not embed source payloads, credentials, tokens, private endpoints, protected geometry, restricted attributes, or reversal-enabling transform detail.
+
+[Back to top](#top)
+
+---
+
+## Procedure
+
+### Step 0 — Freeze exact scope
+
+Record the repository revision, source ID, descriptor version, authorized signal identity, prior/current snapshot digests, comparison profile, and intended audience. If any is missing, return `HOLD` or `ERROR`.
+
+### Step 1 — Resolve canonical source state
+
+Resolve the source through the accepted subtype-first registry and its owning activation/authority records. Do not use the domain-first compatibility lane as an independent writer.
+
+At the pinned revision:
+
+- the source-authority projection is empty and implementation-absent;
+- the M-118 record is proposed/inactive with connector activation disabled;
+- the GMD 3 AEM record is proposed, disabled, and noncanonical; and
+- other domain-first templates leave trust-bearing fields unresolved.
+
+Those states stop a live refresh.
+
+### Step 2 — Resolve connector/runtime authority
+
+Confirm one source-first connector path, package identity, product dispatch, credential mode, tests, fixtures, activation decision, and read/write boundary. The documentation-only `connectors/geology/` lane cannot satisfy this requirement.
+
+If connector topology remains mixed or conflicted, return `HOLD`; do not choose a winner by path presence.
+
+### Step 3 — Verify rights and sensitivity before reading content
+
+Require current rights, terms, attribution, redistribution, access, and sensitivity decisions for the exact product/edition/API. Public reachability does not mean redistribution or public release is permitted.
+
+If rights are unknown or protected content would cross into an ordinary surface, return `HOLD`, `RESTRICT`, or `DENY`.
+
+### Step 4 — Accept only an already-produced authorized signal
+
+This runbook has no live-fetch command. Receive immutable prior/current source-head metadata from the owning authorized producer. Verify actor, operation, time, identity, digest algorithm, and canonicalization profile.
+
+Do not reconstruct a signal from browser observations, planning examples, or manual downloads.
+
+### Step 5 — Preserve source role and claim class
+
+Confirm that the comparison remains within the descriptor's admitted role and permitted claims. A changed production manifest is production-record evidence; it is not proof of a mineral occurrence, deposit, estimate, reserve, or physical geologic change.
+
+### Step 6 — Select one accepted bounded profile
+
+Name the exact contract/schema/validator. Do not apply the KGS oil-and-gas `ProductionMaterialChange` profile to M-118, AEM, boreholes, well logs, bedrock, surficial maps, MRDS, cross-sections, or other products without a separately accepted profile.
+
+If no profile applies, return `HOLD`.
+
+### Step 7 — Validate without network or mutation
+
+Run the selected validator against local immutable packet bytes. Record tool version, input digest, output, exit code, finite outcome, and findings. The validator must not contact a source or write lifecycle/public state.
+
+### Step 8 — Classify the procedure disposition
+
+Apply fail-closed precedence. Distinguish:
+
+- comparison evidence from source truth;
+- `NO_CHANGE` from watcher/receipt proof;
+- `REVIEW` from performed review;
+- `HOLD` from a negative substantive claim; and
+- `ERROR` from a materiality conclusion.
+
+### Step 9 — Prepare the handoff
+
+Prepare immutable pointers, findings, blockers, evidence references, rights/sensitivity state, and the explicit non-effects. Deliver to owning authorities only.
+
+### Step 10 — Stop
+
+Do not fetch, retry, write a receipt by imitation, mutate a source record, open a promotion candidate, invalidate caches, rebuild tiles, change public aliases, or cross any lifecycle boundary from this procedure.
+
+[Back to top](#top)
+
+---
+
+## No-change candidate path
+
+A `NO_CHANGE_CANDIDATE` requires:
+
+- accepted source/connector authority;
+- authenticated immutable prior/current signals;
+- the same source, product, role, profile, canonicalization, and comparison scope;
+- complete required dimensions;
+- no rights, sensitivity, correction, or stale-state blocker;
+- deterministic validation with no findings; and
+- a separately owned destination for any no-op receipt or audit record.
+
+This runbook does not emit the receipt. It records only that the bounded comparison is ready for owning handling.
+
+Do not:
+
+- reset a freshness badge or cadence clock;
+- claim the watcher ran successfully beyond the supplied signal;
+- rebuild tiles, catalogs, proofs, or evidence;
+- emit new STAC/DCAT/PROV entities;
+- invalidate caches;
+- change release state; or
+- publish a heartbeat.
+
+The current production material-change fixture proves only its synthetic/version-pinned metadata rules. It does not establish a live no-change event.
+
+[Back to top](#top)
+
+---
+
+## Material-change candidate path
+
+A `MATERIAL_CHANGE_CANDIDATE` means only that the selected bounded profile found declared differences that require accountable handling.
+
+Prepare:
+
+- exact source and prior/current identities;
+- changed dimensions and reason codes;
+- source-role and claim-class limits;
+- rights/sensitivity/correction state;
+- immutable evidence and validation pointers;
+- affected candidate/lifecycle scopes, without mutating them;
+- required source, Geology, evidence, policy, review, release, correction, and rollback roles;
+- open blockers and obligations; and
+- explicit `review_state: NOT_PERFORMED`, `transition_applied: false`, `public_effect: none`.
+
+Do not:
+
+- call `REVIEW` an approval or a requested review;
+- create a promotion candidate automatically;
+- infer new geologic truth from metadata change;
+- overwrite a descriptor or prior snapshot;
+- admit new bytes to RAW/WORK/PROCESSED;
+- rebuild public-safe geometry, tiles, catalogs, proofs, or AI indexes;
+- emit a `PromotionDecision` or `ReleaseManifest`; or
+- release, deploy, promote, or publish.
+
+Use the [promotion handoff runbook](./PROMOTION_RUNBOOK.md) only after an independently governed candidate dossier actually exists and all prerequisites resolve.
+
+[Back to top](#top)
+
+---
+
+## Geology-specific controls
+
+### Source-role anti-collapse
+
+Preserve:
+
+- official map artifact versus direct observation;
+- interpreted compilation versus measured sample;
+- borehole/well-log reference versus geologic unit;
+- regulatory/administrative record versus physical geology;
+- production record versus well observation;
+- geophysics/geochemistry measurement versus interpretation/model;
+- occurrence versus deposit versus estimate versus reserve;
+- permit/lease/operator context versus ownership or subsurface truth;
+- aggregate versus per-site record; and
+- announcement/planned campaign versus completed acquisition or released product.
+
+### Scale, time, depth, and representation
+
+Preserve map edition, scale, source vintage, valid/observation/retrieval/interpretation/correction times, CRS, geometry role, uncertainty, depth/elevation/interval, and vertical datum where applicable. A timestamp change alone is not materiality; an unchanged digest does not prove completeness.
+
+### Rights and public-safe precision
+
+Unknown rights fail closed. Public availability does not waive attribution, redistribution, commercial-use, sensitive-location, or public-safe representation requirements. Exact subsurface/resource detail and harmful joins require authorized restricted handling or a separately evidenced generalization/redaction path.
+
+### Cross-domain source identity
+
+Capture one source under one accepted identity even when Geology, Hydrology, Soil, Hazards, Agriculture, Infrastructure, Archaeology, or People/Land consume different projections. Do not create duplicate authorities or silently widen a source's claim role for another domain.
+
+### MapLibre and governed AI
+
+Public maps, Evidence Drawer, Focus Mode, search, dashboards, reports, exports, graphs, and AI surfaces consume only governed released carriers. They must not watch upstream sources, read registry records directly, or interpret this inspection packet as public truth.
+
+[Back to top](#top)
+
+---
+
+## Validation and command boundary
+
+### Documentation validation
+
+Verify:
+
+- valid UTF-8 and final newline;
+- exactly one opening and closing KFM metadata marker;
+- parseable metadata YAML;
+- balanced fenced code blocks;
+- internal heading-link coverage;
+- relative links resolve at the pinned revision;
+- no unresolved `TODO`, transient citation token, secret, endpoint credential, or sensitive coordinate;
+- evidence snapshot paths/blobs match the exact base; and
+- no statement implies source activation, review, promotion, release, deployment, or publication.
+
+### M-118 candidate declaration validation
+
+The current workflow validates one proposed inactive descriptor with no network:
+
+```bash
+python tools/validators/sources/validate_source_descriptor.py \
+  data/registry/sources/geology/kgs-m118-surficial-geology.source.json
+
+python -m pytest -q tests/schemas/test_kgs_m118_source_descriptor.py
+```
+
+A green result proves schema/declaration checks only. It does not resolve rights, download or hash M-118, activate a connector, admit source bytes, create evidence, or authorize use.
+
+### Production material-change validation
+
+The current bounded KGS oil-and-gas profile can validate its frozen packets:
+
+```bash
+python tools/validators/domains/geology/validate_production_material_change.py \
+  fixtures/contracts/v1/domains/geology/production_material_change/valid/material_change_review.json
+
+python -m pytest -q -p no:cacheprovider \
+  tests/domains/geology/test_production_material_change.py
+```
+
+The profile performs no network request and no source, lifecycle, promotion, or publication write. Its `REVIEW` outcome means material-change review is required; it does not mean review occurred.
+
+### No-network qualification
+
+`KFM_NO_NETWORK=1` plus in-process guards is a bounded application-level control, not an operating-system firewall, network namespace, proxy policy, or universal proof of zero egress. Use the exact qualification in [NO_NETWORK_TEST_RUNBOOK.md](./NO_NETWORK_TEST_RUNBOOK.md).
+
+[Back to top](#top)
+
+---
+
+## Handoff boundary
+
+### Minimum handoff record
+
+```yaml
+procedure: geology-source-refresh-inspection
+repository_revision: <40-hex commit>
+source_id: <canonical id or null>
+descriptor_version: <version or null>
+signal_ref: <immutable authorized source-head ref or null>
+comparison_profile: <exact profile id/version or null>
+procedure_disposition: <NO_CHANGE_CANDIDATE|MATERIAL_CHANGE_CANDIDATE|HOLD|ABSTAIN|RESTRICT|DENY|ERROR>
+reason_codes: []
+evidence_refs: []
+rights_state: <finite state>
+sensitivity_state: <finite state>
+source_fetch_performed: false
+review_state: NOT_PERFORMED
+transition_applied: false
+public_effect: none
+```
+
+This example is explanatory and not a canonical schema specimen.
+
+### Appropriate owning roles
+
+A future live path may require distinct source, connector, Geology semantics, rights, sensitivity, evidence/proof, policy, validation, security, review, lifecycle, release, correction/rollback, and operations roles. At the pinned revision, accountable assignments and independent review remain `NEEDS VERIFICATION`.
+
+Do not infer stewardship from file authorship, CODEOWNERS routing, a workflow actor, or a generated receipt.
+
+### Handoff non-effects
+
+Delivering the packet does not:
+
+- admit, activate, suspend, or withdraw a source;
+- perform or schedule a fetch;
+- create a receipt or EvidenceBundle;
+- request or complete review;
+- open a promotion candidate;
+- cross a lifecycle boundary;
+- change a descriptor, alias, cache, tile, catalog, deployment, or public carrier; or
+- release, deploy, promote, or publish.
+
+[Back to top](#top)
+
+---
+
+## Anti-patterns to refuse
+
+| Anti-pattern | Required response |
+|---|---|
+| Run an illustrative watcher command copied from planning prose | `DENY`; resolve accepted connector/runtime first |
+| Treat a proposed/disabled descriptor as active | `HOLD` |
+| Infer authority from the empty source-authority projection | `HOLD` |
+| Write independently to the domain-first compatibility lane | `DENY`; use accepted topology/migration authority |
+| Pick among conflicted KGS/KSGS connector paths by convenience | `HOLD` |
+| Treat HTTP 200/304, timestamp, or `etag` as sufficient content evidence | `ABSTAIN` or `HOLD` |
+| Treat `NO_CHANGE` as proof a watcher ran or source is current | `HOLD`; require authenticated signal/receipt authority |
+| Treat `REVIEW` as performed review or approval | `DENY`; preserve `review_state: NOT_PERFORMED` |
+| Apply the production material-change profile to another source family | `HOLD`; require an accepted profile |
+| Collapse production/permit/estimate/reserve or model/observation roles | `DENY` |
+| Put protected subsurface/resource detail in a public packet | `RESTRICT` or `DENY`; contain immediately |
+| Auto-open promotion, rebuild tiles, invalidate caches, or publish on change | `DENY`; hand off to owning governance |
+| Use AI output as a source-head, evidence, policy, or review object | `ABSTAIN` or `DENY` |
+
+[Back to top](#top)
+
+---
+
+## Open verification register
+
+- [ ] Establish accountable source, connector, Geology, rights, sensitivity, evidence, policy, review, lifecycle, release, correction, rollback, security, and operations ownership.
+- [ ] Reconcile the domain-first Geology YAML records with the accepted subtype-first source-registry topology through explicit migration, mirror, tombstone, or removal governance.
+- [ ] Populate or deliberately retire the empty machine source-authority projection through its owning process.
+- [ ] Resolve KGS/KSGS connector path, package, product-dispatch, credential, fixture, test, activation, correction, and rollback topology.
+- [ ] Resolve M-118 rights/terms, source-head content identity, admitted role, connector path, activation, evidence, policy, review, and release prerequisites without treating the descriptor candidate as permission.
+- [ ] Keep the GMD 3 AEM source disabled until official product identity, endpoint, rights, acquisition state, evidence, and cross-domain ownership are verified.
+- [ ] Establish accepted source-specific materiality profiles; do not generalize the production profile.
+- [ ] Establish authenticated source-head signals, canonicalization rules, immutable receipts, correction/supersession lineage, and replay/audit handling.
+- [ ] Establish active Geology policy evaluation and EvidenceBundle/proof closure before any downstream candidate path.
+- [ ] Establish restricted handling, public-safe representation, invalidation, rollback, and incident drills.
+- [ ] Verify downstream public consumers only after a separately governed release exists.
+
+Every open item is separate from this documentation change and remains held until its owning authority records exact-revision evidence.
+
+[Back to top](#top)
+
+---
+
+## Evidence basis
+
+| Evidence | Status | Supports | Limit |
+|---|---|---|---|
+| Geology runbook lane README at `main@0f9e4f6f7730…` | `CONFIRMED` | Direct-child placement and instruction-only boundary | Does not establish a refresh path |
+| Accepted Directory Rules and registry READMEs | `CONFIRMED` | Subtype-first canonical writer; domain-first compatibility restriction | Existing domain-first YAMLs create recorded-state conflict |
+| Machine source-authority projection | `CONFIRMED` empty/absent posture | No authority is established by its entries | Does not enumerate external/live authority |
+| M-118 descriptor and workflow | `CONFIRMED` proposed inactive candidate and no-network validation | Declaration/schema checks and explicit non-effects | No rights resolution, fetch, content hash, activation, or admission |
+| GMD 3 AEM record | `CONFIRMED` proposed/disabled/noncanonical | Announcement-bound planning identity and explicit unknown product state | No endpoint, acquisition evidence, or released product |
+| Connector compatibility documentation | `CONFIRMED` mixed/conflicted, README-heavy topology | No general Geology connector path is established | Differently named/runtime-only systems remain unknown |
+| Production material-change contract/schema/validator/tests | `CONFIRMED` bounded no-network profile | Version-pinned KGS production metadata comparison | Not a generic watcher or live source truth |
+| Geology policy and workflow | `CONFIRMED` default-only/held posture | Active policy and broader release maturity are unestablished | Green bounded tests do not activate or publish |
+| Live source operations, scheduler, credentials, production receipts, logs | `UNKNOWN` in this update | — | No operational claim is made |
+
+Proposal-era source-family tables, cadence values, watcher commands, automatic no-op receipt claims, and promotion flows are retained only as historical planning lineage outside current authority. Current repository evidence governs this procedure.
+
+[Back to top](#top)
+
+---
+
+## Document change rollback
+
+The prior proposal-era blob for this path is:
+
+```text
+e0a6d4e39f01bc957fe4bc66b6b918a376503b18
+```
+
+Revert the documentation commit or restore that blob in a reviewed follow-up if this reconciliation is incorrect. Reverting this Markdown performs no source activation/deactivation, fetch, receipt emission, lifecycle mutation, review, promotion, release, deployment, cache invalidation, rollback execution, or publication.
+
+After any correction, update the lane README's child maturity summary and evidence snapshot through a separate exact-revision documentation change if necessary.
+
+[Back to top](#top)

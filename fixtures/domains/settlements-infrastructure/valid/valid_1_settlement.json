@@ -1,0 +1,11 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-ghosttown-001",
+  "version": "v0",
+  "object_family": "Settlement",
+  "feature_role": "historic_place",
+  "normalized_name_key": "fictional_forks_ks",
+  "source_role": "historical",
+  "sensitivity_tier": "T1",
+  "public_geometry_policy": "GENERALIZED_POINT_ONLY",
+  "fixture_posture": "synthetic; valid; domain-level positive case"
+}

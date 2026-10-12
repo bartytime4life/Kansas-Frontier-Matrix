@@ -18,11 +18,11 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/doctrine/authority-ladder.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
@@ -36,6 +36,9 @@ notes:
   - Continuity register — explains and inventories; does not decide truth, rights, sensitivity, release, source authority, or review state.
   - Doctrine grounded in DOM-AG, ENCY, DIRRULES, MAP-MASTER, GAI; implementation maturity remains UNKNOWN absent mounted repo.
   - All path-shaped claims are PROPOSED until verified.
+owning_root: docs/
+responsibility: "Documentation for Agriculture Domain — Continuity Inventory; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -67,7 +70,7 @@ notes:
 > [!IMPORTANT]
 > **What this doc is — and what it is not.** This is the **continuity register** for the Agriculture domain: a navigable inventory of doctrine, source families, object families, lifecycle posture, and carry-forward state. It is the **bridge** between Agriculture doctrine and the four sibling implementation contracts:
 > - what an Agriculture object *means and how the bounded context is shaped* → [`ARCHITECTURE.md`](./ARCHITECTURE.md),
-> - the *wire-level envelope and DTO* for governed APIs → [`api-contracts.md`](./api-contracts.md),
+> - the *wire-level envelope and DTO* for governed APIs → [`api-contracts.md`](API_CONTRACTS.md),
 > - *where Agriculture files belong* in the monorepo → [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md),
 > - *publication, sensitivity, and review* decisions → [`policy/README.md`](./policy/README.md).
 > Reach for the right sibling doc when the question is not "what carries forward from prior KFM passes?".
@@ -155,7 +158,7 @@ This document MUST obey the doctrinal stack below, in order. A lower row cannot 
 | Finite policy outcomes; sensitive lanes default to `DENY` | [`policy-aware.md`](../../doctrine/policy-aware.md) | **CONFIRMED doctrine** |
 | Cite-or-abstain truth posture | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth; `AIReceipt` mandatory at Focus Mode | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| `CorrectionNotice` + `RollbackCard` lineage preserved | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| `CorrectionNotice` + `RollbackCard` lineage preserved | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Authority ladder for cross-document precedence | [`authority-ladder.md`](../../doctrine/authority-ladder.md) v1.1 | **CONFIRMED doctrine** |
 | Agriculture domain doctrine baseline | Atlas v1.1 §9 (Agriculture A–N); §24.1; §24.4.7; §24.5; §24.9; §24.13 (`[DOM-AG]`, `[ENCY]`) | **CONFIRMED doctrine** |
 
@@ -544,7 +547,7 @@ The full tier matrix lives at [`ARCHITECTURE.md`](./ARCHITECTURE.md) §11. The c
 ## 12 · API, contract, and schema surfaces
 
 > [!IMPORTANT]
-> **All surfaces in this section are PROPOSED.** Exact route names, DTO names, schema homes, and policy-bundle paths are subject to Directory Rules §4 placement and §2.4 ADR review. The wire-level interface contract lives in [`api-contracts.md`](./api-contracts.md). Routes MUST traverse the governed-API trust membrane — no direct reads of canonical stores from public clients. `[CONFIRMED — DIRRULES §7.1; trust-membrane.md; api-contracts.md.]`
+> **All surfaces in this section are PROPOSED.** Exact route names, DTO names, schema homes, and policy-bundle paths are subject to Directory Rules §4 placement and §2.4 ADR review. The wire-level interface contract lives in [`api-contracts.md`](API_CONTRACTS.md). Routes MUST traverse the governed-API trust membrane — no direct reads of canonical stores from public clients. `[CONFIRMED — DIRRULES §7.1; trust-membrane.md; api-contracts.md.]`
 
 | Endpoint / artifact (PROPOSED) | DTO / schema (PROPOSED) | Finite outcomes | Status |
 |---|---|---|---|
@@ -559,7 +562,7 @@ The full tier matrix lives at [`ARCHITECTURE.md`](./ARCHITECTURE.md) §11. The c
 ### 12.1 Outcome-grammar reconciliation
 
 > [!IMPORTANT]
-> Three outcome vocabularies coexist on Agriculture surfaces. Confusing them is a [`api-contracts.md`](./api-contracts.md) §4 violation:
+> Three outcome vocabularies coexist on Agriculture surfaces. Confusing them is a [`api-contracts.md`](API_CONTRACTS.md) §4 violation:
 > - **Runtime outcomes** (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` + optional `NARROWED` / `BOUNDED`) — what Focus Mode and governed API return.
 > - **Policy-gate outcomes** (`ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR`) — what `PolicyDecision` records. `HOLD` is gate-level, never runtime.
 > - **Workflow outcomes** (`ACCEPTED` / `DENY` / `ERROR`) — what correction-submit and similar intake workflows return.
@@ -792,7 +795,7 @@ These items block treating any of §12–§15 as implementation fact. Each item 
 | §9 (was §8) Viewing | Added §9.1 cross-cutting products subsection; added §9.2 forbidden viewing products table. | new | Atlas §9.G; §24.9.2 anti-patterns. |
 | §10 (was §9) Pipeline | Updated Mermaid diagram: added `classmap_version` admission note, `AggregationReceipt` at CAT, `PromotionDecision` + audience class at PUB, back-edges (`CorrectionNotice + RollbackCard`, `revoke_upstream`). Added AI-authored merge gate row. | new | Operating contract §34; trust-membrane.md §8. |
 | §11 (was §10) Sensitivity | Added top `[!CAUTION]` callout routing through operating contract §23.2. Added §11.1 tier matrix (extends Atlas §24.5.2). Renamed §11.2 to "CONFIRMED doctrine items" and added source-role fixity row. | new | Operating contract §23; Atlas §24.5. |
-| §12 (was §11) Surfaces | Added optional `NARROWED` / `BOUNDED` extension to runtime outcome rows. Added `HOLD` to review-decision row (was implicit). Added `GENERATED_RECEIPT.json` row (v2). Added §12.1 outcome-grammar reconciliation callout. Cross-referenced [`api-contracts.md`](./api-contracts.md) as the authoritative wire contract. | new | Operating contract §8 + §21.2; api-contracts.md §4. |
+| §12 (was §11) Surfaces | Added optional `NARROWED` / `BOUNDED` extension to runtime outcome rows. Added `HOLD` to review-decision row (was implicit). Added `GENERATED_RECEIPT.json` row (v2). Added §12.1 outcome-grammar reconciliation callout. Cross-referenced [`api-contracts.md`](API_CONTRACTS.md) as the authoritative wire contract. | new | Operating contract §8 + §21.2; api-contracts.md §4. |
 | §13 (was §12) Validators | Added eight v2-era validator rows: `classmap_version` pin, `AggregationReceipt` presence, audience-class enforcement, person-parcel DENY, source-role anti-collapse, `contract_version` pin, `GENERATED_RECEIPT` presence, revocation propagation. Split cross-cutting families into §13.1. | new | Operating contract §34 + §37; Atlas §24.1 + §24.9.2. |
 | §14 (was §13) AI behavior | Added `NARROWED` / `BOUNDED` row; added "frame as alert/instruction NEVER" row; added "cross-lane-join to operator/parcel NEVER" row; added AI-authored merge → `GENERATED_RECEIPT` row. Added WARNING callout on AI-text-as-evidence anti-pattern. Updated outcome list to include `NARROWED` / `BOUNDED`. | new | Operating contract §21.2 + §34; Atlas §24.9.2. |
 | §15 (was §14) Publication | Expanded required-support list from 7 to 10 items; added `PromotionDecision`, audience-class enforcement, `contract_version` pin. Added §15.1 correction-propagation cascade subsection. | new | Operating contract §34; trust-membrane.md §8. |
@@ -869,13 +872,13 @@ A repository implementation of this register conforms when **all** of the follow
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 21.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract.
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract.
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract.
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path-only crosswalk.
 - [`docs/domains/agriculture/policy/README.md`](./policy/README.md) — policy aspect index.
 - [`docs/domains/agriculture/runbooks/README.md`](./runbooks/README.md) — runbooks aspect index.

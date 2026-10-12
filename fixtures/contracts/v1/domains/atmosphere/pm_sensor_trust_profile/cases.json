@@ -1,0 +1,193 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "profile_id": "kfm:pm-sensor-trust:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "status": "PROPOSED_INACTIVE",
+    "sensor_ref": "fixture://sensor/synthetic-pm-001",
+    "observation_family": "PM2.5",
+    "evaluation_window": {
+      "started_at": "2026-01-01T00:00:00Z",
+      "ended_at": "2026-01-07T00:00:00Z",
+      "observation_count": 168,
+      "reference_count": 168
+    },
+    "metrics": {
+      "accuracy": {
+        "status": "MEASURED",
+        "normalized_value": 0.92,
+        "method_ref": "method://synthetic/accuracy-v1",
+        "evidence_refs": ["evidence://synthetic/reference-collocation"]
+      },
+      "stability": {
+        "status": "MEASURED",
+        "normalized_value": 0.88,
+        "method_ref": "method://synthetic/stability-v1",
+        "evidence_refs": ["evidence://synthetic/stability-window"]
+      },
+      "responsiveness": {
+        "status": "MEASURED",
+        "normalized_value": 0.84,
+        "method_ref": "method://synthetic/responsiveness-v1",
+        "evidence_refs": ["evidence://synthetic/responsiveness-window"]
+      },
+      "consensus_alignment": {
+        "status": "MEASURED",
+        "normalized_value": 0.79,
+        "method_ref": "method://synthetic/consensus-alignment-v1",
+        "evidence_refs": ["evidence://synthetic/consensus-window"]
+      }
+    },
+    "calibration": {
+      "calibration_version": "synthetic-calibration-v1",
+      "model_ref": "model://synthetic/pm-correction-v1",
+      "applied_at": "2026-01-01T00:00:00Z",
+      "transferability_state": "WITHIN_DECLARED_SCOPE",
+      "evidence_refs": [
+        "evidence://synthetic/calibration-window",
+        "evidence://synthetic/reference-collocation"
+      ]
+    },
+    "reference_anchor": {
+      "anchor_type": "COLLOCATION_SERIES",
+      "anchor_ref": "fixture://reference-monitor/synthetic-ref-001",
+      "evidence_refs": ["evidence://synthetic/reference-collocation"],
+      "authority_claimed": false,
+      "peer_consensus_substitute": false
+    },
+    "evidence_refs": [
+      "evidence://synthetic/calibration-window",
+      "evidence://synthetic/consensus-window",
+      "evidence://synthetic/reference-collocation",
+      "evidence://synthetic/responsiveness-window",
+      "evidence://synthetic/stability-window"
+    ],
+    "assessment": {
+      "outcome": "QUALIFIED_CONTEXT",
+      "reason_codes": ["BOUNDED_SYNTHETIC_CONTEXT_ONLY"],
+      "composite_score_produced": false
+    },
+    "controls": {
+      "fixture_only": true,
+      "live_sensor_evaluated": false,
+      "source_admitted": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_eligible": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_health_authority": false,
+      "reference_grade_equivalence_claimed": false
+    },
+    "non_effects": [
+      "NO_LIVE_SENSOR_EVALUATION",
+      "NO_POLICY_DECISION",
+      "NO_PROMOTION",
+      "NO_PUBLICATION",
+      "NO_PUBLIC_HEALTH_GUIDANCE",
+      "NO_REFERENCE_GRADE_EQUIVALENCE",
+      "NO_RELEASE",
+      "NO_SOURCE_ADMISSION"
+    ]
+  },
+  "cases": [
+    {
+      "id": "valid-qualified-context",
+      "patch": {},
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {
+      "id": "valid-unresolved-hold",
+      "patch": {
+        "evaluation_window": {"reference_count": 0},
+        "metrics": {
+          "accuracy": {"status": "UNRESOLVED", "normalized_value": null, "method_ref": null, "evidence_refs": []}
+        },
+        "calibration": {
+          "model_ref": null,
+          "applied_at": null,
+          "transferability_state": "UNRESOLVED",
+          "evidence_refs": ["evidence://synthetic/calibration-window"]
+        },
+        "reference_anchor": {
+          "anchor_type": "UNRESOLVED",
+          "anchor_ref": null,
+          "evidence_refs": []
+        },
+        "evidence_refs": [
+          "evidence://synthetic/calibration-window",
+          "evidence://synthetic/consensus-window",
+          "evidence://synthetic/responsiveness-window",
+          "evidence://synthetic/stability-window"
+        ],
+        "assessment": {"outcome": "HOLD", "reason_codes": ["REFERENCE_ANCHOR_UNRESOLVED"]}
+      },
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {
+      "id": "missing-accuracy-metric",
+      "patch": {"metrics": {"accuracy": null}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "peer-consensus-as-anchor",
+      "patch": {"reference_anchor": {"peer_consensus_substitute": true}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "measured-metric-without-evidence",
+      "patch": {"metrics": {"stability": {"evidence_refs": []}}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "evidence-closure-drift",
+      "patch": {
+        "evidence_refs": [
+          "evidence://synthetic/calibration-window",
+          "evidence://synthetic/consensus-window",
+          "evidence://synthetic/reference-collocation",
+          "evidence://synthetic/responsiveness-window"
+        ]
+      },
+      "expected": {"outcome": "FAIL", "findings": ["EVIDENCE_REF_CLOSURE_MISMATCH"]}
+    },
+    {
+      "id": "qualified-with-unresolved-metric",
+      "patch": {
+        "metrics": {
+          "accuracy": {"status": "UNRESOLVED", "normalized_value": null, "method_ref": null, "evidence_refs": []}
+        }
+      },
+      "expected": {"outcome": "FAIL", "findings": ["TRUST_POSTURE_OVERCLAIM"]}
+    },
+    {
+      "id": "measured-accuracy-with-unresolved-anchor",
+      "patch": {
+        "reference_anchor": {"anchor_type": "UNRESOLVED", "anchor_ref": null, "evidence_refs": []},
+        "assessment": {"outcome": "HOLD", "reason_codes": ["REFERENCE_ANCHOR_UNRESOLVED"]}
+      },
+      "expected": {"outcome": "FAIL", "findings": ["REFERENCE_ANCHOR_REQUIRED"]}
+    },
+    {
+      "id": "reference-grade-equivalence-overclaim",
+      "patch": {"controls": {"reference_grade_equivalence_claimed": true}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "promotion-overclaim",
+      "patch": {"controls": {"promotion_eligible": true}},
+      "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}
+    },
+    {
+      "id": "evaluation-window-reversed",
+      "patch": {"evaluation_window": {"started_at": "2026-01-08T00:00:00Z"}},
+      "expected": {"outcome": "FAIL", "findings": ["EVALUATION_TIME_ORDER_INVALID"]}
+    },
+    {
+      "id": "stale-spec-hash",
+      "patch": {"spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"},
+      "recompute_identity": false,
+      "expected": {"outcome": "FAIL", "findings": ["SPEC_HASH_MISMATCH"]}
+    }
+  ]
+}

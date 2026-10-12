@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/hms-fire-smoke.md
   - docs/sources/catalog/noaa/goes-abi-aod.md
   - docs/sources/catalog/noaa/hrrr-smoke.md
@@ -24,7 +22,7 @@ related:
   - docs/domains/atmosphere/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, viirs, firms, hotspot, active-fire, frp, hazards, atmosphere-air, observation, satellite, multi-platform]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -33,6 +31,9 @@ notes:
   - "Dominant anti-collapse: detection is not confirmation. A VIIRS fire pixel is a thermal-anomaly detection that meets algorithm thresholds, NOT a confirmation that a wildfire is burning at that location."
   - "Canonical cross-product join doctrine: per KFM-P13-PROG-0015 (CONFIRMED), VIIRS/FIRMS points join HMS plume buffers within 500m and 6hr."
   - "Multi-platform (S-NPP, NOAA-20, NOAA-21) and multi-latency (NRT ~3hr vs Standard finalized) admission requires per-platform / per-latency-class Items."
+owning_root: docs/
+responsibility: "Documentation for VIIRS Fire Hotspot; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # VIIRS Fire Hotspot
@@ -287,8 +288,8 @@ Per CONFIRMED **KFM-P13-PROG-0015** (quoted verbatim): *"Smoke pipelines should 
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation (pending distribution-authority resolution). |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling — canonical join partner** | [`hms-fire-smoke.md`](./hms-fire-smoke.md) | The 500m/6hr join from KFM-P13-PROG-0015 — VIIRS thermal detection points join HMS smoke polygons and HMS fire detections. |
 | **Sibling — forecast counterpart** | [`hrrr-smoke.md`](./hrrr-smoke.md) | VIIRS detections are observations; HRRR-Smoke predicts smoke transport. Verification products possible. |
 | **Sibling — satellite-retrieval comparator** | [`goes-abi-aod.md`](./goes-abi-aod.md) | GOES ABI AOD is `modeled` retrieval; VIIRS active-fire is `observation` (algorithm output). Different epistemic standing. |
@@ -363,7 +364,7 @@ PROPOSED — each descriptor should at minimum carry:
 - `source_role` — `observation` for Standard; `candidate` for NRT.
 - `role_authority` — **distribution authority is NASA FIRMS; platform authority is NOAA / NASA jointly**. Both surfaced in metadata. The `role_authority` field captures the **distribution authority** (NASA FIRMS); the platform/sensor authority lives in a separate metadata field (`platform_authority`).
 - `rights` — VIIRS active-fire products are generally distributed by NASA FIRMS under open terms; per-product attribution and any FIRMS API key requirements **NEEDS VERIFICATION**.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - `cadence` — sub-daily per platform (a few overpasses per location per day from each platform); NEEDS VERIFICATION.
 - `platform` — `s-npp` | `noaa-20` | `noaa-21` | etc.
 - `latency_class` — `nrt` | `standard`.
@@ -545,7 +546,7 @@ PROPOSED — VIIRS hotspots carry quality and uncertainty information that doctr
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -778,21 +779,21 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./hms-fire-smoke.md`](./hms-fire-smoke.md) — Canonical join partner per KFM-P13-PROG-0015 (500m/6hr).
 - [`./goes-abi-aod.md`](./goes-abi-aod.md) — Satellite-retrieval sibling (different epistemic standing — modeled retrieval vs detection observation).
 - [`./hrrr-smoke.md`](./hrrr-smoke.md) — Forecast sibling.
 - [`./storm-events.md`](./storm-events.md) — Historical event catalog sibling.
 - [`./nws-api.md`](./nws-api.md) — Operational counterpart; KFM-P13-PROG-0015 CAP join partner.
 - [`./noaa-uscrn.md`](./noaa-uscrn.md), [`./station-climate-products.md`](./station-climate-products.md) — Other NOAA-family slices.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Primary domain.
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Co-primary domain (smoke-source context).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile.
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `viirs-firms` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `WildfireDetection` schema once authored.

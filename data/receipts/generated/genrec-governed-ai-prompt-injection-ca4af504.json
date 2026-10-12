@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-governed-ai-prompt-injection-ca4af504",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-ai/PROMPT_INJECTION.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-ai/PROMPT_INJECTION.md": "sha256:ca4af504f8bd690936832e5a7f4d42b7feaa189dbdc6254aca77c17f93b7ce70"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20-session"
+  },
+  "prompt_or_contract": "sha256:93df472160045d96b21fdd4dc4bd31be318d5d17838f7bb51a903a865c142ac6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:93df472160045d96b21fdd4dc4bd31be318d5d17838f7bb51a903a865c142ac6"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@21cdb5ff7d630a39f70fc03d44b31b91eb63b1aa#docs/architecture/governed-ai/PROMPT_INJECTION.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@a55b18c5928c9147666c99d33c80b8fbbe181e66#docs/architecture/governed-ai/PROMPT_INJECTION.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix#pull/3163",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9cebd52e986d343ccb0e1ae4423bd689124d0801#docs/architecture/governed-ai/PROMPT_INJECTION.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@930c31a1da9940fb21f0e060a6b0db6500d706b5#docs/architecture/governed-ai/PROMPT_INJECTION.md",
+      "path:docs/architecture/governed-ai/PROMPT_INJECTION.md@blob:34c2708fffad69eee5c04b07c6326a57521b07e5",
+      "path:data/receipts/generated/genrec-governed-ai-readme-54265faaf3ac.json@blob:51502f07edd7e45585c024781a75a47288ecc34b",
+      "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@blob:fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "path:tools/validators/validate_generated_receipt.py@blob:f5cbcec72a4217190c5e88711cc70975688dd275"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-ai/PROMPT_INJECTION.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-pr-scope",
+      "outcome": "PASS",
+      "reason": "PR #3163 merged with docs/architecture/governed-ai/PROMPT_INJECTION.md as its only changed path."
+    },
+    {
+      "gate": "merged-document-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The merge-commit document is 36,628 bytes with Git blob 34c2708fffad69eee5c04b07c6326a57521b07e5 and SHA-256 ca4af504f8bd690936832e5a7f4d42b7feaa189dbdc6254aca77c17f93b7ce70."
+    },
+    {
+      "gate": "current-main-byte-equivalence",
+      "outcome": "PASS",
+      "reason": "Current main at 930c31a1da9940fb21f0e060a6b0db6500d706b5 resolves the target to the same Git blob and exact byte sequence as merge commit 9cebd52e986d343ccb0e1ae4423bd689124d0801."
+    },
+    {
+      "gate": "generated-receipt-gap",
+      "outcome": "PASS",
+      "reason": "Current-main code search for the exact artifact path and the generated-receipt directory inventory found no receipt binding this document before this forward correction."
+    },
+    {
+      "gate": "authoring-context-recovery",
+      "outcome": "PASS",
+      "reason": "The same-session governed-AI README receipt supplies the model identity, contract hash, attached contract name, and emitter identity used for this bounded forward provenance closure."
+    },
+    {
+      "gate": "generated-receipt-shape-and-integrity",
+      "outcome": "PASS",
+      "reason": "Receipt fields use GENERATED_RECEIPT contract version 3.0.0; artifact hash and truth-label keys exactly match artifact_paths, and the artifact SHA-256 binds the unchanged current-main bytes."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by receipt emission, commit, pull request, prior merge, or validation."
+    },
+    {
+      "gate": "runtime-release-and-publication-effects",
+      "outcome": "PASS",
+      "reason": "This follow-up adds authoring provenance only and changes no document, contract, schema, policy, runtime, workflow, release, deployment, publication, or repository setting."
+    }
+  ],
+  "policy_decisions": [
+    "receipt:FORWARD_PROVENANCE_CLOSURE:add one generated authoring receipt without modifying the bound document",
+    "authority:DRAFT_PR_ONLY:no merge, release, deployment, promotion, publication, or repository-setting action",
+    "integrity:EXACT_BYTES:bind the PR #3163 merged document and current-main-identical blob",
+    "review:PENDING:receipt validation does not authenticate or replace human approval"
+  ],
+  "citations": [
+    {
+      "id": "merged-pr-3163",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix#pull/3163"
+    },
+    {
+      "id": "merged-document-commit",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@9cebd52e986d343ccb0e1ae4423bd689124d0801#docs/architecture/governed-ai/PROMPT_INJECTION.md"
+    },
+    {
+      "id": "current-main-document",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@930c31a1da9940fb21f0e060a6b0db6500d706b5#docs/architecture/governed-ai/PROMPT_INJECTION.md"
+    },
+    {
+      "id": "same-session-authoring-context",
+      "validated": true,
+      "evidence_ref": "path:data/receipts/generated/genrec-governed-ai-readme-54265faaf3ac.json@blob:51502f07edd7e45585c024781a75a47288ecc34b"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@blob:fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+    },
+    {
+      "id": "generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "path:tools/validators/validate_generated_receipt.py@blob:f5cbcec72a4217190c5e88711cc70975688dd275"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T03:39:48Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 3163,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Forward provenance closure after PR #3163 merged without a matching generated authoring receipt. The original authoring model and contract identity are recovered from the same-session governed-AI README receipt present in the PR head lineage; human review remains pending and the receipt does not independently authenticate the original model invocation. The bound document is unchanged from merge commit 9cebd52e986d343ccb0e1ae4423bd689124d0801 through current main 930c31a1da9940fb21f0e060a6b0db6500d706b5. This receipt grants no truth, policy, review, merge, release, deployment, publication, or repository-setting authority."
+}

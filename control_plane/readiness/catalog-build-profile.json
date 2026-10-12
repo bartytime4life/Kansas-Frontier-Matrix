@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.water-catalog-build/v1",
+  "scope": "Validated water WORK candidate preview only",
+  "producer": "tools/catalog_builders/build_catalog.py",
+  "input_profile": "kfm.usgs-water-candidate/v1",
+  "selection": "Explicit single candidate path; no directory globbing or implicit latest selection",
+  "validation": "pipelines/domains/hydrology/validate.py",
+  "output": "New isolated file; no authoritative catalog writes",
+  "production_status": "HOLD",
+  "hold_reason": "Processed-input source admission and review are not yet recorded."
+}

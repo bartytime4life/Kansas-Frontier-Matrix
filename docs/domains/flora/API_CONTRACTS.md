@@ -13,7 +13,7 @@ related:
   - docs/domains/flora/README.md
   - docs/domains/flora/SOURCES.md
   - docs/domains/flora/SENSITIVITY.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/trust-membrane.md
   - docs/doctrine/ai-build-operating-contract.md
   - contracts/runtime/decision_envelope.md
@@ -30,6 +30,9 @@ notes:
   - Implementation-layer claims (routes, payload shapes, file paths) are PROPOSED until verified against a mounted repo and ADR-0001.
   - Source-role anti-collapse and the T4 default for sensitive flora locations are CONFIRMED doctrine.
   - Schema-home reconciled to Directory Rules ADR-0001 canonical pattern; Atlas Appendix D `schemas/contracts/v1/flora/` form is treated as lineage/CONFLICTED pending migration.
+owning_root: docs/
+responsibility: "Documentation for Flora — API Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Flora — API Contracts
@@ -73,7 +76,7 @@ notes:
 12. [Validators, tests, and fixtures](#12-validators-tests-and-fixtures)
 13. [Open questions register](#13-open-questions-register)
 14. [Open verification backlog](#14-open-verification-backlog)
-15. [Changelog](#15-changelog)
+15. Changelog
 16. [Definition of done](#16-definition-of-done)
 17. [Related docs](#17-related-docs)
 
@@ -510,7 +513,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain landing doc *(PROPOSED)*
 - [`docs/domains/flora/SOURCES.md`](./SOURCES.md) — Flora source families and source-role registry *(PROPOSED)*
 - [`docs/domains/flora/SENSITIVITY.md`](./SENSITIVITY.md) — Flora sensitivity tiers and redaction policy *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Trust membrane and governed-API doctrine *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Trust membrane and governed-API doctrine *(PROPOSED)*
 - [`docs/architecture/trust-membrane.md`](../../architecture/trust-membrane.md) — Trust-membrane reference *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement and lifecycle doctrine
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)

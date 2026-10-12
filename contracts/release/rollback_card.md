@@ -2,215 +2,212 @@
 doc_id: kfm://doc/contracts-release-rollback-card
 title: contracts/release/rollback_card.md — RollbackCard Contract
 type: contract
-version: v0.2
-status: draft; PROPOSED; schema-paired; thin-schema; rollback-target
-owners: OWNER_TBD — Release steward · Rollback steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Correction steward · Review steward · Docs steward
-created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
-policy_label: public; contracts; release; rollback-card; rollback-target; correction-aware; release-gated; reversible; fail-closed; no-erasure
-tags: [kfm, contracts, release, rollback-card, rollback, correction-notice, release-manifest, promotion-decision, reversibility, invalidation, restoration, fail-closed, no-silent-mutation]
+version: v1.0
+status: draft; PROPOSED; schema-paired; fixture-first; non-executing
+owners:
+  - "NEEDS VERIFICATION — release and rollback stewardship assignment"
+created: NEEDS VERIFICATION — file predates this convergence
+updated: 2026-08-15
+policy_label: public; contracts; release; rollback-card; correction-aware; reversible; fail-closed; no-erasure
+owning_root: contracts/
+responsibility: Define RollbackCard semantic meaning and invariants without executing rollback or creating release authority.
+truth_posture: cite-or-abstain
+schema: schemas/contracts/v1/release/rollback_card.schema.json
+schema_version: 1.0.0
+validator: tools/validators/release/validate_rollback_card.py
+fixtures: fixtures/release/rollback_card/
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  baseline: 7b0b31613f9623771dc893146826e053d1c248b5
+  prior_contract_blob: 72ab9e148491243cc8a374556350ab94c2557ab4
+  schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  workflow_blob: 24d1cf575528f70ace558de6cf93b70249ce1a0a
 related:
   - ./README.md
   - ./release_manifest.md
   - ./promotion_decision.md
   - ./withdrawal_notice.md
-  - ./map_release_manifest.md
-  - ./layer_manifest.md
   - ../correction/correction_notice.md
-  - ../policy/policy_decision.md
   - ../../schemas/contracts/v1/release/rollback_card.schema.json
-  - ../../policy/release/
-  - ../../policy/promotion/
-  - ../../release/
   - ../../fixtures/release/rollback_card/
   - ../../tools/validators/release/validate_rollback_card.py
-  - ../../docs/architecture/release-discipline.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../data/proofs/
-  - ../../data/receipts/
+  - ../../tests/validators/test_validate_rollback_card.py
+  - ../../docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
-  - "Expanded from greenfield scaffold at `contracts/release/rollback_card.md`."
-  - "Paired schema verified at `schemas/contracts/v1/release/rollback_card.schema.json`; schema status is PROPOSED."
-  - "The current schema is a greenfield placeholder: only `id` is required and `additionalProperties` is true."
-  - "This contract defines rollback-card semantic meaning only. It does not execute rollback, erase history, store release artifacts, write proofs/receipts, or authorize public surfaces."
-  - "Rollback target for this expansion is previous blob SHA `c5a92ae1b809b662d93d55bf2cf7c72cd68c58f0`."
+  - "This revision removes stale thin-schema claims and synchronizes the semantic contract with the existing closed 1.0.0 fixture-first schema and validator."
+  - "The schema, fixtures, validator, tests, workflow, and ADR remain separate authorities and are not accepted or promoted by this document."
+  - "A valid candidate proves shape and local consistency only; governance flags remain false and release_ref remains null."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # RollbackCard Contract
 
-> `RollbackCard` records the explicit target, rationale, required checks, invalidation path, and restoration posture for rolling a published KFM surface back to a prior safe state. It exists to make rollback auditable and reversible; it is not deletion, erasure, silent mutation, or proof that rollback has already executed.
+> `RollbackCard` records a proposed rollback, withdrawal, hold, or error disposition against an affected release. It identifies the intended target, support references, correction linkage, invalidation scope, restoration posture, timing, lineage, and explicit non-authority state. It is not proof that rollback was approved or executed.
 
-<p>
-  <img alt="Status: proposed" src="https://img.shields.io/badge/status-PROPOSED-yellow">
-  <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts-blue">
-  <img alt="Object: RollbackCard" src="https://img.shields.io/badge/object-RollbackCard-0a7ea4">
-  <img alt="Schema: thin" src="https://img.shields.io/badge/schema-thin__placeholder-orange">
-  <img alt="Posture: reversible" src="https://img.shields.io/badge/posture-reversible-green">
-  <img alt="Mutation: no silent edits" src="https://img.shields.io/badge/mutation-no__silent__edits-critical">
-</p>
-
-**Status:** draft / PROPOSED  
+**Status:** draft / **PROPOSED**  
 **Path:** `contracts/release/rollback_card.md`  
 **Paired schema:** `schemas/contracts/v1/release/rollback_card.schema.json`  
-**Schema maturity:** greenfield placeholder / thin / permissive  
-**Validator path named by schema:** `tools/validators/release/validate_rollback_card.py` — NEEDS VERIFICATION for implementation/wiring  
-**Policy authority:** `policy/release/`, not this contract  
-**Release artifact/process authority:** `release/`, not this contract  
-**Truth posture:** CONFIRMED schema pairing and thin field surface · CONFIRMED release doctrine treats rollback as post-PUBLISHED transition requiring RollbackCard, CorrectionNotice, ReleaseManifest reversion, and downstream invalidation · PROPOSED detailed fields until schema/fixtures/validator/policy/release integration are verified
+**Schema profile:** `RollbackCard` `1.0.0`, closed (`additionalProperties: false`), fixture-first  
+**Validator:** `tools/validators/release/validate_rollback_card.py` — implemented, no-network, candidate-only  
+**Current fixture inventory:** 3 valid candidates and 6 invalid candidates plus the expected-findings manifest  
+**Authority limit:** candidate shape and local consistency only; no review, policy decision, rollback execution, public mutation, release, or publication
 
 ## Quick jumps
 
-[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Target semantic field families](#target-semantic-field-families) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
+[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Finite vocabularies](#finite-vocabularies) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
 
 ---
 
 ## Purpose
 
-`RollbackCard` is the semantic object that makes a rollback target explicit before or during a rollback event.
+`RollbackCard` makes a candidate recovery transition inspectable before any operational mutation. It answers:
 
-It answers:
+- which release is affected;
+- whether the candidate proposes a prior release, withdrawal, hold, or error posture;
+- what evidence, policy, review, and correction records are referenced;
+- which caches, catalogs, tiles, indexes, AI caches, and downstream derivatives require invalidation;
+- what release, if any, should be restored;
+- when the issue was detected, decided, and expected to become effective;
+- how this card relates to earlier or later cards;
+- whether any authority or public mutation has occurred.
 
-- which published release, artifact, layer, claim, map surface, API response, catalog entry, or AI answer is affected;
-- why rollback is needed;
-- what prior release or state is the rollback target;
-- which artifacts, caches, indexes, layers, derivatives, and public surfaces must be invalidated or restored;
-- which evidence, policy, review, and correction records support the rollback;
-- what users or downstream systems should bind to after rollback.
-
-It does not answer:
-
-- whether rollback has executed — that requires release process records, receipts, proofs, logs, and validation;
-- whether the prior release is true — EvidenceBundle and release manifest support remain authoritative;
-- whether public notice has been issued — CorrectionNotice or withdrawal/correction process owns that surface;
-- whether erasure is allowed — rollback preserves audit history unless a separate legal/policy process governs removal.
+A card does not execute those actions. Operational rollback requires separate accountable decision, review, release, correction, execution, invalidation, and receipt surfaces.
 
 ---
 
 ## Meaning
 
-A `RollbackCard` is a rollback plan and target binding. It is created when a published or release-candidate state must be restored, reverted, superseded, held, or made safe after a release defect, rights change, sensitivity discovery, evidence contradiction, validation failure, source withdrawal, policy defect, security issue, or operational failure.
+A `RollbackCard` is an immutable candidate plan and target binding. It may represent:
 
-Rollback is not silent mutation. The old release remains inspectable unless a separate governed removal/withholding policy applies. A rollback points clients and downstream systems to a safer prior state, records what must be invalidated, and links to the correction/notice pathway that explains why public state changed.
+- `ROLLBACK_CANDIDATE` — restore a distinct prior release;
+- `WITHDRAWAL_CANDIDATE` — withdraw without selecting a prior release;
+- `HOLD` — stop or delay a transition pending resolution;
+- `ERROR` — record an invalid or failed recovery evaluation without mutating public state.
 
-A rollback card may be created before release as a required target, or after publication as the object used to execute/review rollback.
+Rollback is not deletion or silent mutation. Audit history remains inspectable unless a separate lawful and policy-governed removal process applies.
 
 ---
 
 ## Schema-paired field surface
 
-The paired schema is currently intentionally thin.
+Every schema-valid candidate contains all fields below. The semantic contract explains their meaning; the paired JSON Schema defines machine shape.
 
-| Field | Required | Schema-confirmed shape | Semantic role |
-|---|---:|---|---|
-| `id` | yes | string | Canonical rollback card identifier. |
-| `spec_hash` | no | string | Deterministic content/spec hash, if present. |
-| `version` | no | string | Rollback card/object version, if present. |
-
-Schema-confirmed posture:
-
-- `id` is the only required field.
-- `spec_hash` and `version` are optional.
-- `additionalProperties` is currently `true`.
-
-> [!WARNING]
-> The detailed rollback semantics below are **PROPOSED** until the schema is hardened. Current schema permissiveness means an instance may validate while still being rollback-incomplete by governance standards.
+| Field | Required | Semantic role |
+|---|---:|---|
+| `object_type` | yes | Constant `RollbackCard`. |
+| `schema_version` | yes | Constant `1.0.0`. |
+| `id` | yes | Stable card identifier matching `rollback:<scope>:...`. |
+| `version` | yes | Semantic version of the candidate. |
+| `spec_hash` | yes | Non-placeholder SHA-256 binding for the candidate profile. |
+| `disposition` | yes | Finite candidate outcome. |
+| `trigger` | yes | Safe reason code and timezone-aware detection time. |
+| `affected_release_ref` | yes | Release whose current use is under review. |
+| `target` | yes | Prior-release, withdrawal, or hold target. |
+| `evidence_bundle_refs` | yes | Canonical, sorted, unique evidence support references. |
+| `policy_decision_refs` | yes | Canonical, sorted, unique policy references. |
+| `review_record_refs` | yes | Canonical, sorted, unique review references. |
+| `correction_notice_ref` | yes | Correction/notice reference or `null` when public notice is not required. |
+| `invalidations` | yes | One or more bounded invalidation classes. |
+| `restoration` | yes | Intended restored release, notice requirement, and validation requirement. |
+| `timing` | yes | Decision and optional effective times. |
+| `lineage` | yes | `supersedes` and `superseded_by` references. |
+| `governance` | yes | Explicit non-authority flags and `release_ref: null`. |
 
 ---
 
-## Target semantic field families
+## Finite vocabularies
 
-A mature `RollbackCard` should eventually model these field families explicitly or by resolvable refs.
+### Disposition
 
-| Field family | Meaning | Required posture |
-|---|---|---|
-| Identity | rollback card id, version, spec hash, card digest, canonicalization profile. | Deterministic and citable. |
-| Trigger | defect, contradiction, rights change, sensitivity issue, validation failure, source withdrawal, security issue, policy failure. | Safe reason code; no sensitive payload leakage. |
-| Affected release | current release/manifest/artifact/layer/claim/API/map/AI surface refs. | Must resolve. |
-| Rollback target | prior release manifest, prior artifact set, prior layer version, prior catalog/triplet state, or null-withdrawn state. | Must resolve unless explicit emergency hold. |
-| Evidence | EvidenceRefs/EvidenceBundle refs supporting rollback need. | Must resolve for non-emergency rollback. |
-| Policy | PolicyDecision/PromotionDecision/release-policy refs. | Must record gate posture. |
-| Correction link | CorrectionNotice/stale-state/withdrawal/supersession refs. | Required for public-surface change. |
-| Invalidation | cache, CDN, tile, catalog, API, graph, vector index, search index, AI answer cache, downstream derivative invalidation list. | Must be explicit. |
-| Restoration | target state, release manifest, artifacts, routes, indexes, and public notices after rollback. | Must be testable. |
-| Review | reviewer, ticket, separation-of-duties state, emergency override if any. | Required for material rollback. |
-| Attestations | signing/build/validation/provenance refs for target and rollback action. | Digest-bound where applicable. |
-| Time | detected, decided, effective, executed, validated, public-noticed times. | Time kinds should be explicit. |
+`ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, or `ERROR`.
+
+### Trigger reason code
+
+`RELEASE_DEFECT`, `EVIDENCE_CONTRADICTION`, `RIGHTS_CHANGE`, `SENSITIVITY_DISCOVERY`, `VALIDATION_FAILURE`, `SOURCE_WITHDRAWAL`, `POLICY_FAILURE`, `SECURITY_ISSUE`, `OPERATIONAL_FAILURE`, `EMERGENCY_HOLD`, `INSUFFICIENT_EVIDENCE`, or `INPUT_INVALID`.
+
+### Target mode
+
+`PRIOR_RELEASE`, `WITHDRAWAL`, or `HOLD`.
+
+### Invalidation class
+
+`API_CACHE`, `CDN`, `TILES`, `CATALOG`, `TRIPLETS`, `SEARCH_INDEX`, `VECTOR_INDEX`, `AI_CACHE`, or `DOWNSTREAM_DERIVATIVES`.
 
 ---
 
 ## Field semantics
 
-### `id`
+### Identity and digest
 
-Canonical rollback card identifier.
+`id` identifies one candidate card and must not act as a mutable pointer. `version` records its semantic version. `spec_hash` binds the candidate's deterministic representation and must not use the all-zero placeholder digest.
 
-Requirements:
+### Trigger and affected release
 
-- stable enough to cite from release manifests, correction notices, promotion decisions, incident records, receipts, proofs, and public notices where allowed;
-- specific to a rollback target/action, not a mutable pointer to the newest rollback;
-- safe to expose publicly when release/correction policy allows.
+`trigger.reason_code` is a public-safe classification, not a place to expose secrets, private review text, exploit details, or protected locations. `trigger.detected_at` is timezone-aware. `affected_release_ref` must resolve through the release process before any operational action.
 
-PROPOSED convention:
+### Target and restoration
 
-```text
-rollback:<domain-or-surface>:<yyyy-mm-dd>:<sequence-or-hash>
-```
+For `ROLLBACK_CANDIDATE`, `target.mode` is `PRIOR_RELEASE`, `target.release_ref` is a distinct release, and `restoration.restore_release_ref` matches it. Withdrawal and hold dispositions use `null` release targets as defined by the validator. `restoration.validation_required` is always `true`.
 
-### `spec_hash`
+### Support references
 
-Deterministic hash claiming spec/content lineage for the rollback card.
+Evidence, policy, and review references remain separate arrays. Their presence does not prove resolution or approval. The validator requires non-empty evidence and policy references for a rollback candidate and canonical ordering for every populated reference or invalidation array.
 
-Current schema makes it optional. Mature rollback cards should include a digest or spec hash so reviewers can verify the rollback target was not changed after approval.
+### Correction and public notice
 
-### `version`
+When `restoration.public_notice_required` is `true`, `correction_notice_ref` is required. The CorrectionNotice surface explains the public change; the RollbackCard does not replace it.
 
-Rollback card version string.
+### Timing and lineage
 
-Current schema makes it optional. Mature rollback cards should include a version or equivalent lineage marker to support supersession, correction, emergency updates, and audit.
+Detection must not occur after decision; an effective time must not precede decision. A card cannot supersede itself or name itself as its superseding card.
+
+### Governance boundary
+
+The fixture-first profile deliberately requires all of these to remain false:
+
+- `authority_created`;
+- `policy_evaluated`;
+- `review_completed`;
+- `rollback_executed`;
+- `public_state_mutated`.
+
+`governance.release_ref` remains `null`. Any contrary claim fails validation with `GOVERNANCE_BOUNDARY_VIOLATION`.
 
 ---
 
 ## Invariants
 
-CONFIRMED by paired schema:
+The current schema and validator jointly enforce these bounded invariants:
 
-- `id` is required.
-- `spec_hash` is optional and string-shaped if present.
-- `version` is optional and string-shaped if present.
-- Additional properties are currently allowed.
+1. The object is closed and versioned as `RollbackCard` `1.0.0`.
+2. Required fields are present and use the finite vocabularies above.
+3. The spec hash is not the all-zero placeholder.
+4. Populated reference and invalidation arrays are sorted and unique.
+5. Disposition and target mode agree.
+6. A rollback candidate names a distinct prior release and supplies evidence and policy references.
+7. The restoration release matches the prior-release target.
+8. A required public notice has a correction reference.
+9. Detection, decision, and effective times are ordered.
+10. Lineage is not self-referential.
+11. Candidate validation cannot claim authority, completed policy/review, execution, public mutation, or release.
 
-PROPOSED semantic invariants:
-
-- Rollback is a governed transition, not deletion or silent mutation.
-- A rollback card must identify both the affected state and the rollback target, or explicitly mark emergency hold/withdrawal posture.
-- A rollback card must link to a CorrectionNotice or equivalent public-safe notice for post-PUBLISHED public changes.
-- The rollback target must be inspectable and verifiable before restoration.
-- Downstream derivatives, caches, indexes, tiles, API responses, map surfaces, and AI answer caches must be invalidated or explicitly marked not affected.
-- Evidence, policy, rights, sensitivity, review, and release context must resolve before non-emergency rollback completes.
-- Rollback must preserve audit history; erasure requires a separate governed legal/policy process.
-- A superseding rollback card must not silently mutate the prior card.
+These checks do **not** resolve references, authenticate actors, verify signatures, execute policy, confirm a prior release is safe, mutate an alias, invalidate a cache, issue a correction, execute rollback, release, or publish.
 
 ---
 
 ## Lifecycle role
 
-`RollbackCard` applies at release planning and post-publication repair points:
-
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+                                                                    |
+                                                                    v
+                                             candidate correction / withdrawal / rollback
 ```
 
-Expected use:
-
-| Lifecycle point | Role |
-|---|---|
-| CATALOG/TRIPLET → PUBLISHED | Required or referenced as rollback target before a material release. |
-| PUBLISHED defect discovered | Identifies affected release state and rollback target. |
-| PUBLISHED → prior release | Supplies rollback target/invalidation/restoration plan. |
-| PUBLISHED → PUBLISHED′ correction | Links to CorrectionNotice and superseding ReleaseManifest where rollback is partial or correction-based. |
-| PUBLISHED → withdrawn | Supports null/withheld target when no safe prior state exists. |
+`RollbackCard` belongs to release and recovery planning. Candidate instances and validated fixture examples remain distinct from accepted rollback decisions, executed rollback receipts, and public correction records.
 
 ---
 
@@ -218,69 +215,72 @@ Expected use:
 
 | Boundary | Rule |
 |---|---|
-| Contract vs schema | This contract defines meaning; schema defines machine shape. |
-| RollbackCard vs ReleaseManifest | RollbackCard identifies target/instructions; ReleaseManifest binds release contents. |
-| RollbackCard vs CorrectionNotice | CorrectionNotice explains public correction/supersession/withdrawal; RollbackCard records rollback target/action context. |
-| RollbackCard vs PromotionDecision | PromotionDecision may require rollback support; RollbackCard provides rollback target. |
-| RollbackCard vs proof/receipt | RollbackCard references receipts/proofs; it is not proof of execution. |
-| RollbackCard vs release artifacts | RollbackCard references artifacts; it does not store payloads. |
-| RollbackCard vs public API/UI/map/AI | Public surfaces consume governed, released state after rollback; they do not execute rollback. |
+| Contract vs schema | This file defines meaning; the schema defines machine shape. |
+| Contract vs validator | The validator proves bounded shape and local cross-field consistency. |
+| RollbackCard vs ReleaseManifest | The card names affected and target releases; the manifest binds released contents. |
+| RollbackCard vs CorrectionNotice | The notice explains public correction, withdrawal, or supersession. |
+| RollbackCard vs PromotionDecision | Promotion may require rollback support; the card does not authorize promotion. |
+| RollbackCard vs receipt/proof | A card may reference them; it is not proof of decision or execution. |
+| RollbackCard vs public clients | Public clients consume governed released state and never execute rollback. |
 
 ---
 
 ## Validation expectations
 
-NEEDS VERIFICATION in implementation:
+Repository-native focused checks:
 
-- harden schema beyond current `id`-only required surface;
-- decide required fields for production rollback cards;
-- validator existence and wiring for `tools/validators/release/validate_rollback_card.py`;
-- fixture coverage under `fixtures/release/rollback_card/`;
-- release policy behavior under `policy/release/`;
-- CorrectionNotice linkage and public-safe notice requirements;
-- release process storage under accepted release rollback homes;
-- receipt/proof emission for rollback decisions and execution;
-- cache/index/tile/API/map/AI invalidation tests;
-- emergency rollback and post-facto review rules.
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json \
+  --repo-root .
+make workflow-security
+```
+
+A green result proves only the scope named by each validator. Hosted execution, policy activation, reviewer authority, branch-protection coupling, and operational rollback remain `NEEDS VERIFICATION`.
 
 ---
 
 ## Fixtures
 
-Minimum fixture set PROPOSED:
+### Valid candidates
 
-| Fixture | Purpose |
-|---|---|
-| `valid_minimal_schema.json` | Confirms current schema permits `id` only. |
-| `valid_release_rollback.json` | Mature rollback with affected release, rollback target, evidence, policy, correction, invalidation, review. |
-| `valid_map_tile_rollback.json` | Rollback of PMTiles/COG/map layer artifacts. |
-| `valid_withdrawal_no_safe_prior.json` | Withdrawal/null target when no safe prior release exists. |
-| `valid_emergency_hold.json` | Emergency hold pending review with explicit follow-up. |
-| `invalid_missing_id.json` | Confirms current required field. |
-| `governance_invalid_missing_target.json` | Schema may pass; rollback governance should fail. |
-| `governance_invalid_missing_correction_notice.json` | Schema may pass; public-surface rollback should fail. |
-| `governance_invalid_missing_invalidation.json` | Schema may pass; downstream leakage risk. |
-| `governance_invalid_erasure_without_policy.json` | Ensures rollback is not silent erasure. |
+- `valid_hold.json`;
+- `valid_prior_release_candidate.json`;
+- `valid_withdrawal_candidate.json`.
 
-Fixtures must use synthetic or safe refs only.
+### Invalid candidates
+
+- `invalid_authority_claim.json`;
+- `invalid_missing_correction_notice.json`;
+- `invalid_missing_target_release.json`;
+- `invalid_same_release_target.json`;
+- `invalid_time_order.json`;
+- `invalid_zero_digest.json`.
+
+`invalid/expected_findings_manifest.json` binds each invalid fixture to its exact expected finding set.
 
 ---
 
 ## Open questions
 
-- Which fields should be required in the next rollback-card schema version?
-- Should `RollbackCard` always require `CorrectionNotice`, or only after PUBLISHED exposure?
-- Should emergency rollback allow temporary missing evidence/review with mandatory follow-up receipt?
-- Which release root stores rollback-card instances?
-- How should cache/CDN/tile/vector-index/AI-answer invalidation be represented?
-- Should rollback cards be signed or DSSE-wrapped like release manifests?
+- Which accepted actor and separation-of-duties model may approve or execute a RollbackCard?
+- Which policy profile resolves support references and authorizes emergency handling?
+- What accepted physical alias/profile, if any, will operational rollback mutate?
+- Which execution receipt records cache, tile, catalog, API, search, vector, and AI invalidation completion?
+- Should accepted rollback decisions and execution receipts be signed or DSSE-wrapped?
+- What public correction and status surfaces are required for each consequence class?
+
+Until those questions are resolved by accepted governance and implementation evidence, the candidate profile remains non-executing and non-publishing.
 
 ---
 
 ## Rollback
 
-Rollback is required if this contract is used to erase history, silently mutate published state, bypass release/correction/policy/evidence/review gates, store artifacts, claim rollback execution without receipts/proofs, or authorize public API/UI/map/AI exposure directly.
-
-Rollback target for this expansion: previous blob SHA `c5a92ae1b809b662d93d55bf2cf7c72cd68c58f0`.
+Revert this contract convergence and its paired workflow current-binding receipt if the document diverges from the existing schema/validator, overstates authority, breaks stable anchors, or causes repository-native checks to fail. Reverting this documentation packet does not alter schemas, candidate fixtures, release state, published data, caches, sources, or public surfaces.
 
 <p align="right"><a href="#top">Back to top</a></p>

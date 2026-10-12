@@ -6,10 +6,10 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · Test steward · Python/package steward · Source steward · Fauna steward · Flora steward · Biodiversity/taxonomy steward · Rights reviewer · Sensitivity/geoprivacy reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-12
+updated: 2026-09-26
 policy_label: public-doctrine; test-contract; repository-present; implementation-unverified; no-network-by-default; synthetic-fixtures; descriptor-and-activation-gated; product-explicit; rights-gated; geoprivacy-preserving; sensitivity-fail-closed; raw-quarantine-receipt-boundary; no-publication
 path: connectors/inaturalist/tests/README.md
-truth_posture: CONFIRMED test-lane README and package scaffold / PROPOSED suite layout, fixtures, markers, test APIs, and implementation sequence / CONFLICTED descriptor, registry, schema, and adjacent documentation details / UNKNOWN executable coverage, package installability, CI enforcement, live-source behavior, and runtime results
+truth_posture: CONFIRMED test-lane README and package scaffold / PROPOSED suite layout, fixtures, markers, test APIs, and implementation sequence / CONFLICTED descriptor, registry, schema, and adjacent documentation details / CONFIRMED synthetic observations_api suite (test_observations_api.py, inaturalist-observations-offline.yml) / UNKNOWN other executable coverage, package installability, CI enforcement, live-source behavior, and runtime results
 related:
   - ../../README.md
   - ../README.md
@@ -81,6 +81,16 @@ notes:
 
 ---
 
+
+> **Page retrieval and routing (2026-09-27, supersedes the placeholder statements above for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve()`:** runs one cursor-page GET through `connectors_core.transport.execute_retrieval`, with the caller's transport, clock and sleeper, under an `api.inaturalist.org` / `application/json` profile. It records the result with `connectors_core.retrieval_episode`. The URL's parameters must equal the planner's canonical values for exactly one scope (bbox or `place_id`), in any order, so both `page_url` and `next_page_url` output is accepted. Anything else raises `SOURCE_URL_SCOPE` before transport.
+> - **`admit.admit()`:** routes the page:
+>   - a parsed page becomes `RAW_CANDIDATE`, flagged `SENSITIVITY_NOT_EVALUATED` when it has records, plus `RECORD_QUARANTINE_CANDIDATES`, `GEOPRIVACY_RESTRICTED_PRESENT`, `LICENSE_OBLIGATIONS_PRESENT`, `NOT_RESEARCH_GRADE_PRESENT` and `CAPTIVE_OR_CULTIVATED_PRESENT` as they apply;
+>   - a page the parser rejects becomes `QUARANTINE_CANDIDATE`;
+>   - an uncaptured page becomes `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved, and also unless `sensitivity_floor` is `generalized`, `restricted` or `quarantine` (`connectors_core.descriptor_gate.sensitivity_floor_blockers`). The local `public` placeholder therefore cannot authorize a route.
+> - **Scope:** no network library, write, sensitivity evaluation, de-obscuring, or admission. Tests: `connectors/inaturalist/tests/test_fetch_admit.py`.
+
 ## Purpose
 
 This README turns the iNaturalist test lane from a broad aspiration into a reviewable test contract that can support small, reversible implementation PRs.
@@ -112,6 +122,9 @@ The lane does **not**:
 ---
 
 ## Current repository state
+
+> [!NOTE]
+> **2026-09-26:** `test_observations_api.py` is a standard-library synthetic suite for `../src/inaturalist/observations_api.py`: cursor URL planning and allowlist, geoprivacy precedence and unmodified obscured coordinates, rights/attribution/taxon quarantine routing, user-profile minimization, malformed-page and rate-limit rejection, cursor-walk reconciliation, and a no-socket guard. It runs in `.github/workflows/inaturalist-observations-offline.yml`. It is not live-source, activation, or sensitivity evidence.
 
 This snapshot is bounded to base commit `e7e3b18024f9eba9551ccc9627db8a4064961edc`, the direct paths inspected, and indexed searches performed in this update.
 

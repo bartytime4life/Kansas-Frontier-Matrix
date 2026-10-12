@@ -9,7 +9,6 @@ created: 2026-05-17
 updated: 2026-06-05
 policy_label: public
 related:
-  - ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
@@ -23,6 +22,9 @@ notes:
   # The life-safety boundary is doctrinal: KFM Hazards is NOT an emergency alert system.
   # v2 reconciles the source-role vocabulary to the canonical seven-class enum (Atlas 24.1)
   #   and surfaces the Atlas 24.13 crosswalk vs. Directory Rules 12 segment-form conflict.
+owning_root: docs/
+responsibility: "Documentation for Hazards — Missing or Planned Files; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards — Missing or Planned Files
@@ -89,7 +91,7 @@ This file enumerates what the lane is doctrinally expected to grow into, per **D
 Per **Directory Rules §12 — Domain Placement Law**, hazards is a **domain segment** inside each responsibility root, never a root folder itself. The segment form below (`contracts/domains/hazards/`, `policy/domains/hazards/`, `schemas/contracts/v1/domains/hazards/`, …) is the form §12 mandates verbatim. _(CONFIRMED: Directory Rules §12, which lists `contracts/domains/<domain>/`, `policy/domains/<domain>/`, and `schemas/contracts/v1/domains/<domain>/` as the canonical lane pattern.)_
 
 > [!WARNING]
-> **Crosswalk shorthand vs. Directory Rules segment form — CONFLICTED.** The Atlas v1.1 §24.13 crosswalk lists the hazards responsibility roots in **non-segment** shorthand: `schemas/contracts/v1/hazards/`, `contracts/hazards/`, and `policy/release/hazards/`. Directory Rules §12 requires the **`domains/` segment** form used throughout this file. Per the Atlas's own §24 authority rule ("the master tables in Chapter 24 are navigational, not authoritative … a Chapter 24 table that disagrees is treated as a drift entry"), **Directory Rules win**; this divergence is logged as a drift candidate (see [§10](#10-anti-pattern-watchlist) and the [DRIFT_REGISTER](docs/registers/DRIFT_REGISTER.md)). One exception is worth noting: the crosswalk's `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 ("Policy code under `release/`" → move to `policy/release/` or `policy/domains/<domain>/`); see [§5.4](#54-policydomainshazards).
+> **Crosswalk shorthand vs. Directory Rules segment form — CONFLICTED.** The Atlas v1.1 §24.13 crosswalk lists the hazards responsibility roots in **non-segment** shorthand: `schemas/contracts/v1/hazards/`, `contracts/hazards/`, and `policy/release/hazards/`. Directory Rules §12 requires the **`domains/` segment** form used throughout this file. Per the Atlas's own §24 authority rule ("the master tables in Chapter 24 are navigational, not authoritative … a Chapter 24 table that disagrees is treated as a drift entry"), **Directory Rules win**; this divergence is logged as a drift candidate (see [§10](#10-anti-pattern-watchlist) and the DRIFT_REGISTER (not present)). One exception is worth noting: the crosswalk's `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 ("Policy code under `release/`" → move to `policy/release/` or `policy/domains/<domain>/`); see [§5.4](#54-policydomainshazards).
 
 ```mermaid
 flowchart LR
@@ -443,7 +445,7 @@ Files that touch hazards but live **outside** the domain segment (per Directory 
 | `packages/ui/` (hazards components) | Shared UI; map shell components for hazards stay in the UI package, not under `packages/domains/hazards/` | **PROPOSED** |
 | `packages/maplibre-runtime/` (hazards style fragments) | Sole governed renderer adapter (Directory Rules §7.2.a, v1.3) | **PROPOSED** |
 | `tools/validators/<topic>/` (cross-domain) | Cross-domain validators (e.g., temporal-role) go to a non-domain topic segment | **PROPOSED** |
-| `docs/architecture/governed-api.md` | Where the hazards governed-API contract lives | **PROPOSED** |
+| `docs/architecture/governed-api/README.md` | Where the hazards governed-API contract lives | **PROPOSED** |
 | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | Source descriptors are repo-wide, not hazards-specific | **PROPOSED** |
 
 > [!NOTE]
@@ -603,7 +605,7 @@ This file is a **planning inventory**. It does not enforce, validate, or promote
 - `docs/registers/VERIFICATION_BACKLOG.md` — Repo-wide verification backlog.
 - `docs/registers/DRIFT_REGISTER.md` — Drift entries from this lane (incl. ADR-HAZ-08 crosswalk reconciliation).
 - `docs/adr/README.md` — ADR index; ADR-HAZ-* entries (planned) will land here.
-- `docs/architecture/governed-api.md` — Governed API surface where hazards routes live.
+- `docs/architecture/governed-api/README.md` — Governed API surface where hazards routes live.
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — Source-descriptor standard for connectors.
 - `docs/runbooks/` — Runbook home (hazards refresh runbook PROPOSED; subfolder vs. flat convention is ADR-class per §13.5 / §18 OPEN-DR-02).
 

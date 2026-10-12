@@ -15,7 +15,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — empty README existed before v0.1 expansion
-updated: 2026-07-04
+updated: 2026-10-12
 policy_label: public; schemas; contracts-v1; trade-routes; roads-rail-trade; compatibility-path; no-parallel-authority
 tags: [kfm, schemas, contracts, v1, trade-routes, roads-rail-trade, transport, route-claims, corridors, compatibility, no-parallel-authority]
 related:
@@ -23,16 +23,17 @@ related:
   - ../domains/roads-rail-trade/README.md
   - ../network/README.md
   - ../crossings/README.md
-  - ../../../docs/domains/roads-rail-trade/sublanes/trade_routes.md
+  - ../../../docs/domains/roads-rail-trade/sublanes/trade-routes.md
   - ../../../docs/domains/roads-rail-trade/README.md
   - ../../../contracts/domains/roads-rail-trade/
   - ../../../fixtures/
   - ../../../tests/
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Expanded from an empty file at schemas/contracts/v1/trade-routes/README.md."
   - "Current GitHub search did not surface schema files directly under schemas/contracts/v1/trade-routes/ beyond this README."
   - "schemas/contracts/v1/domains/roads-rail-trade/README.md is the inspected parent Roads/Rail/Trade domain schema lane."
-  - "docs/domains/roads-rail-trade/sublanes/trade_routes.md describes trade routes as a documentation sublane and says executable artifacts continue under parent responsibility roots."
+  - "docs/domains/roads-rail-trade/sublanes/trade-routes.md (canonical since the 2026-10-12 merge of its trade_routes.md twin) describes trade routes as a documentation sublane and says executable artifacts continue under parent responsibility roots."
   - "This flat path is a compatibility guardrail only and must not become a parallel canonical schema home without ADR or migration review."
 [/KFM_META_BLOCK_V2] -->
 
@@ -70,7 +71,7 @@ Current placement posture:
 ```text
 schemas/contracts/v1/trade-routes/                 # this flat compatibility guardrail
 schemas/contracts/v1/domains/roads-rail-trade/     # inspected parent Roads/Rail/Trade schema lane
-docs/domains/roads-rail-trade/sublanes/trade_routes.md  # trade-route documentation sublane
+docs/domains/roads-rail-trade/sublanes/trade-routes.md  # trade-route documentation sublane
 contracts/domains/roads-rail-trade/                # semantic meaning; not schema shape
 ```
 
@@ -103,7 +104,7 @@ docs/
 └── domains/
     └── roads-rail-trade/
         └── sublanes/
-            └── trade_routes.md                   # documentation sublane; not schema home
+            └── trade-routes.md                   # documentation sublane; not schema home
 
 contracts/
 └── domains/
@@ -124,7 +125,7 @@ release/
 | `schemas/contracts/v1/trade-routes/README.md` | **CONFIRMED present** | Empty file expanded by this README. |
 | `schemas/contracts/v1/trade-routes/*.schema.json` | **Not found in current search** | Do not create here without placement review. |
 | `schemas/contracts/v1/domains/roads-rail-trade/README.md` | **CONFIRMED parent schema lane** | Draft / PROPOSED / slug-conflicted schema index; concrete schema inventory remains **NEEDS VERIFICATION**. |
-| `docs/domains/roads-rail-trade/sublanes/trade_routes.md` | **CONFIRMED documentation sublane** | Describes trade-route and historic-corridor scope, but says sublanes do not split lifecycle/schema/policy homes. |
+| `docs/domains/roads-rail-trade/sublanes/trade-routes.md` | **CONFIRMED documentation sublane** | Describes trade-route and historic-corridor scope, but says sublanes do not split lifecycle/schema/policy homes. |
 
 ---
 

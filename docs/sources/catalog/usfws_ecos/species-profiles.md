@@ -10,8 +10,6 @@ updated: 2026-05-23
 policy_label: public
 related:
   - docs/sources/catalog/usfws_ecos/README.md
-  - docs/sources/catalog/usfws_ecos/IDENTITY.md
-  - docs/sources/catalog/usfws_ecos/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/usfws_ecos/critical-habitat.md
   - docs/sources/catalog/usfws_ecos/esa-listing-status.md
   - docs/sources/catalog/usfws_ecos/ipac-project-lists.md
@@ -22,8 +20,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/DCAT.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usfws_ecos/
-  - policy/sources/usfws_ecos/
   - policy/sensitivity/fauna/
   - schemas/contracts/v1/source/
   - schemas/contracts/v1/evidence/
@@ -40,6 +36,9 @@ notes:
   - "Copyright / quoting discipline applies even though USFWS works are public-domain per 17 U.S.C. §105. KFM's own quote-sparingly / prefer-paraphrase rules govern reproduction in KFM derivatives. See §9."
   - "Editorial-revision cadence (not Federal-Register-rule cadence). Detection requires content-hash diff, not rule-watcher. See §7."
   - "Reference graph (PDFs / FR rules / recovery plans / publications) is a first-class evidence shape for this product. See §8."
+owning_root: docs/
+responsibility: "Documentation for USFWS ECOS Species Profiles; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +63,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usfws_ecos`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **The Federal Register rule is the legal description; ECOS species profiles are explanatory; this page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/). Rights and sensitivity decisions live in [`policy/sources/usfws_ecos/`](../../../../policy/sources/usfws_ecos/) and [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **The Federal Register rule is the legal description; ECOS species profiles are explanatory; this page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usfws_ecos/` (not present). Rights and sensitivity decisions live in `policy/sources/usfws_ecos/` (not present) and [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Narrative content reproduction discipline.** USFWS materials are U.S. federal works not subject to U.S. copyright (per 17 U.S.C. §105), but **KFM's own quoting and paraphrasing discipline still applies** to every narrative fragment ingested from a species profile. Direct quotes are capped at fewer than 15 words and limited to one per source within a single response; longer reproductions must be paraphrased and attributed. Whole-paragraph copies and displacive summaries are denied at Gate C. AI/Focus-Mode answers about a species cite the profile and either quote sparingly or abstain — the cite-or-abstain rule applies to narrative as strictly as it applies to data. See [§9](#9-rights-and-sensitivity-pointer) and [§11](#11-validation-and-catalog-closure).
@@ -191,7 +190,7 @@ flowchart LR
 
 ## 3. Source authority
 
-See [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
+See `data/registry/sources/usfws_ecos/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
 
 Doctrinal anchors for this product:
 
@@ -372,7 +371,7 @@ Narrative-fragment records are extracted from the profile and stored as **conten
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 > [!NOTE]
 > **Default tier: T0 (Open) per fragment.** Profile narrative is public-administrative metadata. Direct-quote and link evidence default to T0 per the family-level mapping in the prior carrier work. The constraint that distinguishes this product from its siblings is **not sensitivity** but **reproduction discipline** — see below.
@@ -456,11 +455,11 @@ Profiles can carry references to sensitive species; joining profile narrative wi
 |---|---|---|
 | `SourceDescriptor` semantic contract | [`contracts/source/`](../../../../contracts/source/) | **PROPOSED**. |
 | `SourceDescriptor` machine schema | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED canonical home** per Directory Rules §7.4 / ADR-0001. |
-| `SpeciesProfileRecord` contract | [`contracts/data/fauna/`](../../../../contracts/data/fauna/) | **PROPOSED** — new object class introduced by this product. |
+| `SpeciesProfileRecord` contract | `contracts/data/fauna/` (not present) | **PROPOSED** — new object class introduced by this product. |
 | `SpeciesProfileRecord` schema | [`schemas/contracts/v1/fauna/`](../../../../schemas/contracts/v1/fauna/) | **PROPOSED**. |
 | `EvidenceBundle` / `EvidenceRef` schemas | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / `KFM-P26-PROG-0005`. The reference graph for this product is dense and exercises these schemas more than the other family products. |
-| `license_map.json` (controlled vocabulary) | [`policy/sources/usfws_ecos/license_map.json`](../../../../policy/sources/usfws_ecos/) | **PROPOSED** lane per `KFM-P26-PROG-0021`. |
-| Narrative-fragment store contract | [`contracts/data/governance/narrative_fragment/`](../../../../contracts/data/governance/) | **PROPOSED** — new contract supporting per-fragment hashing and attribution checks. |
+| `license_map.json` (controlled vocabulary) | `policy/sources/usfws_ecos/license_map.json` (not present) | **PROPOSED** lane per `KFM-P26-PROG-0021`. |
+| Narrative-fragment store contract | `contracts/data/governance/narrative_fragment/` (not present) | **PROPOSED** — new contract supporting per-fragment hashing and attribution checks. |
 | `CorrectionNotice` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 
@@ -490,7 +489,7 @@ Profiles can carry references to sensitive species; joining profile narrative wi
 
 ## 14. Example
 
-*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); a profile-specific JSON-LD example belongs at `_examples/species-profile-record-example.jsonld` (PROPOSED).*
+*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); a profile-specific JSON-LD example belongs at `_examples/species-profile-record-example.jsonld` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal SpeciesProfileRecord sketch (illustrative, JSON-LD)</b></summary>
@@ -564,7 +563,7 @@ Profiles can carry references to sensitive species; joining profile narrative wi
 | Q-3 | Should this product be registered in STAC via the Records extension, or stay DCAT-only? | **PROPOSED** | Default = DCAT-only; revisit if a STAC harvester adds the Records extension as a requirement. |
 | Q-4 | One Collection for all species profiles, or one per domain (Fauna / Flora)? | **PROPOSED** | Default = **one Collection** with `domain` as a per-record property. |
 | Q-5 | Confirm cadence — **editorial revision** only (content-hash watcher), with no fixed schedule? | **OPEN** | Resolve in `data/registry/sources/usfws_ecos/` descriptor + watcher config; material to **ADR-S-12**. |
-| Q-6 | Confirm rights status, CARE applicability, and the operative `license_map.json` versioning policy. | **OPEN** | Resolve in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) and in `policy/sources/usfws_ecos/license_map.json`. |
+| Q-6 | Confirm rights status, CARE applicability, and the operative `license_map.json` versioning policy. | **OPEN** | Resolve in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) and in `policy/sources/usfws_ecos/license_map.json`. |
 | Q-7 | **`license_map.json` ownership.** Is the license map per-family (`policy/sources/usfws_ecos/license_map.json`) or repo-wide (`policy/sources/license_map.json`)? `KFM-P26-PROG-0021` is silent on scope. | **OPEN** | Author the license-map placement ADR; default to per-family until repo-wide demand exists. |
 | Q-8 | **Quote-limit enforcement mechanics.** Is the per-response one-quote-per-source rule enforced at the catalog gate, the runtime response envelope, or both? | **PROPOSED — gating** | Enforce at both: catalog gate rejects published derivatives that exceed the cap; runtime envelope guard prevents accidental over-quotation in Focus Mode responses. |
 | Q-9 | **AI/Focus-Mode response posture for narrative content.** Should the default be to quote + cite, or to paraphrase + cite with no quotes? | **PROPOSED** | Default = **paraphrase + cite**, with sparing quotes only when exact wording is materially significant. AI cite-or-abstain remains binding. |

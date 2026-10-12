@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/doctrine/trust-membrane
 title: Trust Membrane
 type: standard
 subtype: doctrine
@@ -10,6 +10,9 @@ owners: <TODO: Docs steward + Architecture steward + Policy steward + AI surface
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Trust Membrane; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
@@ -18,17 +21,14 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/ai-as-assistant.md
   - docs/doctrine/authority-ladder.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/trust-posture.md
-  - docs/doctrine/truth-labels.md
-  - docs/doctrine/evidence-model.md
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/evidence-identity.md
   - docs/doctrine/map-first.md
-  - docs/architecture/release-and-publication.md
-  - docs/security/threat-model.md
-  - schemas/contracts/v1/release_manifest.schema.json
-  - schemas/contracts/v1/proof_pack.schema.json
-  - schemas/contracts/v1/evidence_bundle.schema.json
+  - docs/architecture/publication/README.md
+  - schemas/contracts/v1/release/release_manifest.schema.json
+  - schemas/contracts/v1/evidence/evidence_bundle.schema.json
   - control_plane/policy_gate_register.yaml
 tags: [kfm, doctrine, trust, membrane, governance, lifecycle, evidence, policy, contract-v3]
 notes:
@@ -40,7 +40,23 @@ notes:
   - v0 draft (2026-05-12) treated `STALE` as a fifth peer outcome; v1 reconciles to the canonical four-outcome model in `ai-build-operating-contract.md` §21.2. See §16 Changelog.
 [/KFM_META_BLOCK_V2] -->
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-trust-membrane-dark.svg" /><img src="../brand/readme/kfm-banner-trust-membrane.svg" alt="Doctrine banner: public clients never reach inside." width="100%" /></picture></a>
+</p>
+<sub>Illustration — no current trust, promotion or acceptance state is asserted.</sub>
+<!-- kfm-showcase:end -->
+
 # Trust Membrane
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#trust-membrane"><img src="https://img.shields.io/badge/doctrine-trust%20membrane-9a7a12?style=flat-square" alt="doctrine page" /></a>
+  <a href="#trust-membrane"><img src="https://img.shields.io/badge/read-~35%20min-6b6b6b?style=flat-square" alt="About 35 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 > **The boundary across which material in Kansas Frontier Matrix acquires trust the system is willing to defend — and a precise statement of what that trust does, and does not, warrant.**
 
@@ -63,6 +79,14 @@ notes:
 > `[PROPOSED — the doctrine-doc name `docs/doctrine/trust-membrane.md` as a sibling of `lifecycle-law.md` / `trust-posture.md`. See §13 OQ-TM-01 for the consolidation-vs-triangulation question.]`
 
 ---
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-trust-membrane-dark.svg" /><img src="../brand/readme/kfm-trust-membrane.svg" alt="The trust membrane: public clients and a Governed API on one side, internal stores on the other; a direct read is refused." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Contents
 
@@ -368,10 +392,10 @@ The Trust Membrane is one **view** of the boundary. Other doctrines own compleme
 | [`policy-aware.md`](./policy-aware.md) | Policy gate at publication; rights, sensitivity, access labels; finite policy outcomes. `[CONFIRMED sibling.]` | **Decides admission.** The publication gate is a Policy Aware decision; Trust Membrane records what its outcome warrants. |
 | [`ai-as-assistant.md`](./ai-as-assistant.md) | AI runtime placement inside the governance membrane; cite-or-abstain for AI; AI never decides truth, rights, sensitivity, release. `[CONFIRMED sibling.]` | **Restricts AI.** AI MAY *consume* warranted material; AI MUST NOT *issue* warranties. AI outputs are new claims that cite the membrane's warranties, never substitute for them. |
 | [`authority-ladder.md`](./authority-ladder.md) | Primary / Secondary / Tertiary source hierarchy; documentation authority. `[CONFIRMED sibling.]` | **Orthogonal.** Authority Ladder governs *what counts as authoritative documentation*; Trust Membrane governs *what crossing the boundary warrants*. They collaborate at the publication gate, grounding a `ReleaseManifest` from different angles. |
-| [`corrections-are-first-class.md`](./corrections-are-first-class.md) | `CorrectionNotice` as a first-class object; correction workflow. `[CONFIRMED sibling; filename verified against operating-contract pattern.]` | **Drives revocation.** A `CorrectionNotice` is the most common revocation trigger; Trust Membrane defines what revocation does to downstream warrants. |
+| [`corrections-are-first-class.md`](corrections-first-class.md) | `CorrectionNotice` as a first-class object; correction workflow. `[CONFIRMED sibling; filename verified against operating-contract pattern.]` | **Drives revocation.** A `CorrectionNotice` is the most common revocation trigger; Trust Membrane defines what revocation does to downstream warrants. |
 | [`derived-stays-derived.md`](./derived-stays-derived.md) | Derivation is monotonic; no later stage relabels material as `RAW`. `[CONFIRMED sibling.]` | **Constrains the gates.** The verification and catalog gates MUST NOT reach backward and re-classify warranted material as un-warranted; they MAY only **revoke**. |
-| [`trust-posture.md`](./trust-posture.md) | Runtime expression of trust posture; how `ABSTAIN` / `DENY` and the UI negative states surface on public and steward UIs. `[CONFIRMED sibling.]` | **Renders the outcomes.** Trust Membrane emits outcomes; Trust Posture renders them. |
-| [`truth-labels.md`](./truth-labels.md) | Truth label vocabulary (`CONFIRMED` / `INFERRED` / `PROPOSED` / `UNKNOWN` / `NEEDS VERIFICATION` / `CONFLICTED` / `LINEAGE` / `EXPLORATORY` / `EXTERNAL`). `[PROPOSED sibling; label set aligned to `ai-build-operating-contract.md` §8.]` | **Documentation vocabulary, distinct from runtime.** Truth labels describe *what we know about a document or claim*; trust outcomes describe *what the runtime is willing to do*. They MUST NOT be conflated. |
+| [`trust-posture.md`](truth-posture.md) | Runtime expression of trust posture; how `ABSTAIN` / `DENY` and the UI negative states surface on public and steward UIs. `[CONFIRMED sibling.]` | **Renders the outcomes.** Trust Membrane emits outcomes; Trust Posture renders them. |
+| [`truth-labels.md`](truth-posture.md) | Truth label vocabulary (`CONFIRMED` / `INFERRED` / `PROPOSED` / `UNKNOWN` / `NEEDS VERIFICATION` / `CONFLICTED` / `LINEAGE` / `EXPLORATORY` / `EXTERNAL`). `[PROPOSED sibling; label set aligned to `ai-build-operating-contract.md` §8.]` | **Documentation vocabulary, distinct from runtime.** Truth labels describe *what we know about a document or claim*; trust outcomes describe *what the runtime is willing to do*. They MUST NOT be conflated. |
 | [`map-first.md`](./map-first.md) | Public map surface; trust badges; Evidence Drawer. `[CONFIRMED sibling.]` | **Surfaces the warranty.** The map UI renders trust outcomes visibly per layer and per feature. |
 
 [⬆ Back to top](#trust-membrane)
@@ -575,24 +599,24 @@ Surface the conflict in an ADR and resolve it explicitly. Trust Membrane MUST NO
 - [`docs/doctrine/policy-aware.md`](./policy-aware.md) — policy gate and finite policy outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI containment and the `RuntimeResponseEnvelope`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — `CorrectionNotice` and the correction workflow. `[CONFIRMED sibling; filename pending OQ-TM-06.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — `CorrectionNotice` and the correction workflow. `[CONFIRMED sibling; filename pending OQ-TM-06.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — derivation is monotonic. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — runtime expression of trust posture. `[CONFIRMED sibling.]`
-- [`docs/doctrine/truth-labels.md`](./truth-labels.md) — truth label vocabulary, distinct from runtime outcomes. `[PROPOSED sibling.]`
-- [`docs/doctrine/evidence-model.md`](./evidence-model.md) — `EvidenceRef` / `EvidenceBundle` semantics. `[PROPOSED sibling.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — runtime expression of trust posture. `[CONFIRMED sibling.]`
+- [`docs/doctrine/truth-labels.md`](truth-posture.md) — truth label vocabulary, distinct from runtime outcomes. `[PROPOSED sibling.]`
+- [`docs/doctrine/evidence-model.md`](../architecture/evidence-identity.md) — `EvidenceRef` / `EvidenceBundle` semantics. `[PROPOSED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — public map surface, trust badges, Evidence Drawer. `[CONFIRMED sibling.]`
 
 **Architecture and security**
 
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — release / publication architecture. `[PROPOSED path.]`
-- [`docs/security/threat-model.md`](../security/threat-model.md) — threat model, including direct-model bypass. `[PROPOSED path.]`
+- [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) — release / publication architecture. `[PROPOSED path.]`
+- [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — threat model, including direct-model bypass. `[PROPOSED path.]`
 
 **Contracts and registers**
 
-- [`schemas/contracts/v1/release_manifest.schema.json`](../../schemas/contracts/v1/release_manifest.schema.json) — `ReleaseManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/proof_pack.schema.json`](../../schemas/contracts/v1/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence_bundle.schema.json) — `EvidenceBundle` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime_response_envelope.schema.json) — `RuntimeResponseEnvelope` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) — `ReleaseManifest` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/evidence/proof_pack.schema.json`](../../schemas/contracts/v1/evidence/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) — `EvidenceBundle` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) — `RuntimeResponseEnvelope` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — `GENERATED_RECEIPT` schema. `[PROPOSED path — operating contract §47.]`
 - [`control_plane/policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) — policy gate register. `[PROPOSED path.]`
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift register for membrane-related divergences. `[PROPOSED path.]`
@@ -706,8 +730,23 @@ Surface the conflict in an ADR and resolve it explicitly. Trust Membrane MUST NO
 
 ### Related docs (compact)
 
-[`ai-build-operating-contract.md`](./ai-build-operating-contract.md) · [`lifecycle-law.md`](./lifecycle-law.md) · [`evidence-first.md`](./evidence-first.md) · [`policy-aware.md`](./policy-aware.md) · [`ai-as-assistant.md`](./ai-as-assistant.md) · [`trust-posture.md`](./trust-posture.md) · [`corrections-are-first-class.md`](./corrections-are-first-class.md) · [`map-first.md`](./map-first.md)
+[`ai-build-operating-contract.md`](./ai-build-operating-contract.md) · [`lifecycle-law.md`](./lifecycle-law.md) · [`evidence-first.md`](./evidence-first.md) · [`policy-aware.md`](./policy-aware.md) · [`ai-as-assistant.md`](./ai-as-assistant.md) · [`trust-posture.md`](truth-posture.md) · [`corrections-are-first-class.md`](corrections-first-class.md) · [`map-first.md`](./map-first.md)
 
 **Last updated:** 2026-05-26 · **Version:** v1 (draft) · **Status:** awaiting review · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 
 [⬆ Back to top](#trust-membrane)
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

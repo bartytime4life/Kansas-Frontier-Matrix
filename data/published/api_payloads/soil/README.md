@@ -305,7 +305,7 @@ This lane reaches operational maturity only when current repository evidence con
 - [`../README.md`](../README.md) — parent Soil API-payload lane contract.
 - [`../../README.md`](../../README.md) — published API-payload responsibility boundary.
 - [`../../../proofs/soil/README.md`](../../../proofs/soil/README.md) — Soil proof-support boundary.
-- [`../../../proofs/validation_report/soil/README.md`](../../../proofs/validation_report/soil/README.md) — Soil validation-report boundary.
+- `../../../proofs/validation_report/soil/README.md` (not present) — Soil validation-report boundary.
 - [`../../../receipts/README.md`](../../../receipts/README.md) — receipt-family boundary.
 - [`../../../../release/README.md`](../../../../release/README.md) — release authority.
 - [`../../../../docs/domains/soil/ARCHITECTURE.md`](../../../../docs/domains/soil/ARCHITECTURE.md) — Soil architecture doctrine and lane boundaries.

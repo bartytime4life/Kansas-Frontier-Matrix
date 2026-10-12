@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/lincoln-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Lincoln County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Lincoln County Focus Mode Build Plan
 type: county-focus-mode-build-plan
 version: v0.1-proposed
@@ -9,22 +14,22 @@ county_name: Lincoln County
 county_slug: lincoln
 lane_slug: lincoln-county
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-10-12
 owners:
-  focus_mode_owner: NEEDS_VERIFICATION
-  evidence_steward: NEEDS_VERIFICATION
-  geology_post_rock_reviewer: NEEDS_VERIFICATION
-  fossil_collecting_access_reviewer: NEEDS_VERIFICATION
-  agriculture_disclosure_reviewer: NEEDS_VERIFICATION
-  reservoir_recreation_currentness_reviewer: NEEDS_VERIFICATION
-  transportation_reviewer: NEEDS_VERIFICATION
-  weather_public_safety_reviewer: NEEDS_VERIFICATION
-  privacy_property_reviewer: NEEDS_VERIFICATION
-  infrastructure_security_reviewer: NEEDS_VERIFICATION
-  rights_reviewer: NEEDS_VERIFICATION
-  correction_steward: NEEDS_VERIFICATION
-  rollback_owner: NEEDS_VERIFICATION
-  release_approver: NEEDS_VERIFICATION
+  - focus_mode_owner: NEEDS_VERIFICATION
+  - evidence_steward: NEEDS_VERIFICATION
+  - geology_post_rock_reviewer: NEEDS_VERIFICATION
+  - fossil_collecting_access_reviewer: NEEDS_VERIFICATION
+  - agriculture_disclosure_reviewer: NEEDS_VERIFICATION
+  - reservoir_recreation_currentness_reviewer: NEEDS_VERIFICATION
+  - transportation_reviewer: NEEDS_VERIFICATION
+  - weather_public_safety_reviewer: NEEDS_VERIFICATION
+  - privacy_property_reviewer: NEEDS_VERIFICATION
+  - infrastructure_security_reviewer: NEEDS_VERIFICATION
+  - rights_reviewer: NEEDS_VERIFICATION
+  - correction_steward: NEEDS_VERIFICATION
+  - rollback_owner: NEEDS_VERIFICATION
+  - release_approver: NEEDS_VERIFICATION
 unverified_repository_paths:
   canonical_human_plan_path: docs/focus-mode/counties/lincoln-county/build-plan.md  # PROPOSED / NEEDS_VERIFICATION
   contract_home: PROPOSED / NEEDS_VERIFICATION

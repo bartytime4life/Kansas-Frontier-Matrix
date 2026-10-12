@@ -5,7 +5,7 @@ doc_id: kfm://doc/schemas-contracts-v1-evidence-readme
 title: schemas/contracts/v1/evidence/ — Evidence Schema Family Index
 type: readme; schema-family-index; evidence-governance-boundary
 authority_class: schema-family-index
-version: v0.1
+version: v0.2
 status: draft; real-shape-family-present; duplicate-name-conflict-visible; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Evidence steward
@@ -17,14 +17,15 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — placeholder existed before v0.1 expansion
-updated: 2026-07-04
-policy_label: public; schemas; contracts-v1; evidence; evidence-ref; evidence-bundle; citation-validation; redaction-receipt; evidence-drawer; geo-manifest; spec-normalization; lifecycle-aware; release-gated; rollback-aware; no-parallel-authority
-tags: [kfm, schemas, contracts, v1, evidence, EvidenceRef, EvidenceBundle, CitationValidationReport, RedactionReceipt, EvidenceDrawerPayload, KFMGeoManifest, spec_hash, citation, provenance, receipts, validation]
+updated: 2026-08-02
+policy_label: public; schemas; contracts-v1; evidence; evidence-ref; evidence-bundle; verification-state; bitemporal-replay; citation-validation; redaction-receipt; evidence-drawer; geo-manifest; spec-normalization; lifecycle-aware; release-gated; rollback-aware; no-parallel-authority
+tags: [kfm, schemas, contracts, v1, evidence, EvidenceRef, EvidenceBundle, VerificationStateHistory, bitemporal, CitationValidationReport, RedactionReceipt, EvidenceDrawerPayload, KFMGeoManifest, spec_hash, citation, provenance, receipts, validation]
 related:
   - ../README.md
   - ../../README.md
   - ../../../README.md
   - ../../../../contracts/evidence/
+  - ../../../../contracts/evidence/verification_state_history.md
   - ../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../../../docs/doctrine/directory-rules.md
   - ../../../../docs/registers/DRIFT_REGISTER.md
@@ -39,6 +40,7 @@ notes:
   - "Current search surfaced evidence_bundle.schema.json and evidence-bundle.schema.json. Treat hyphen/underscore duplicate naming as NEEDS VERIFICATION until steward resolution."
   - "Opened evidence_bundle.schema.json and evidence_ref.schema.json contain meaningful draft 2020-12 shapes but are marked PROPOSED."
   - "Opened evidence-bundle.schema.json is a permissive scaffold with empty properties and additionalProperties true."
+  - "verification_state_history.schema.json is a closed bounded PROPOSED profile with synthetic positive, schema-negative, and semantic-negative fixtures plus executable replay tests."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -51,7 +53,7 @@ notes:
 ![maturity](https://img.shields.io/badge/maturity-PROPOSED-orange)
 ![publication](https://img.shields.io/badge/publication-release--gated-critical)
 
-> **Purpose.** `schemas/contracts/v1/evidence/` is the machine-checkable schema family for evidence references, evidence bundles, citation validation, evidence-facing UI payloads, redaction receipts, and evidence-related manifest shapes.
+> **Purpose.** `schemas/contracts/v1/evidence/` is the machine-checkable schema family for evidence references, evidence bundles, verification-state histories, citation validation, evidence-facing UI payloads, redaction receipts, and evidence-related manifest shapes.
 >
 > **One-line boundary.** This folder defines evidence object **shape**. It does not store evidence records, source payloads, proof objects, receipts, release decisions, public artifacts, or generated AI answers.
 
@@ -118,6 +120,7 @@ schemas/
             ├── README.md                              # this file
             ├── evidence_ref.schema.json               # EvidenceRef shape
             ├── evidence_bundle.schema.json            # EvidenceBundle shape; PROPOSED
+            ├── verification_state_history.schema.json # bounded bitemporal replay profile; PROPOSED
             ├── evidence-bundle.schema.json            # duplicate/legacy-style scaffold; NEEDS VERIFICATION
             ├── evidence-bundle.json                   # naming/status NEEDS VERIFICATION
             ├── citation_validation_report.schema.json
@@ -151,6 +154,7 @@ Current GitHub search surfaced the following files under `schemas/contracts/v1/e
 |---|---|---|
 | `evidence_ref.schema.json` | EvidenceRef shape with `ref`, `kind`, and optional `bundle_ref`. | **PROPOSED / meaningful draft shape** |
 | `evidence_bundle.schema.json` | EvidenceBundle shape with bundle ID, claim scope, evidence refs, source records, citations, rights, sensitivity, transforms, checksums, and spec hash. | **PROPOSED / meaningful draft shape** |
+| `verification_state_history.schema.json` | Closed profile for one append-ordered bitemporal verification-state chain. | **PROPOSED / executable synthetic fixture and replay coverage** |
 | `evidence-bundle.schema.json` | Hyphenated Evidence Bundle scaffold. | **PROPOSED scaffold / duplicate-name risk** |
 | `evidence-bundle.json` | Evidence bundle adjacent JSON file. | **NEEDS VERIFICATION** |
 | `citation_validation_report.schema.json` | Citation validation report shape. | **NEEDS VERIFICATION** |
@@ -279,6 +283,10 @@ find schemas/contracts/v1/evidence -maxdepth 1 -type f \
 find schemas/contracts/v1/evidence -name '*.schema.json' -print0 \
   | xargs -0 -I{} python -m json.tool {} >/dev/null
 
+# Validate and replay the bounded verification-history profile.
+KFM_NO_NETWORK=1 python tools/validators/validate_verification_state_history.py --fixtures
+KFM_NO_NETWORK=1 python -m pytest -q tests/schemas/test_verification_state_history.py
+
 # Run project validators when available.
 python tools/validate_all.py || true
 pytest tests/schemas tests/contract tests/evidence || true
@@ -324,4 +332,5 @@ Rollback for evidence schemas requires checking every downstream reference:
 - Keep this README as the evidence schema-family index, not as evidence truth.
 - Resolve duplicate naming before expanding EvidenceBundle consumers.
 - Do not treat a valid EvidenceBundle shape as sufficient proof for publication.
+- Do not treat an `ACTIVE` verification-history replay as evidence, policy, review, release, or answer authority.
 - Preserve cite-or-abstain: public truth requires evidence, source role, rights, sensitivity, policy, review, release, correction lineage, and rollback support.

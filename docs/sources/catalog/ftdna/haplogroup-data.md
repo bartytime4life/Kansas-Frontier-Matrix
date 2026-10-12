@@ -13,9 +13,6 @@ related:
   - docs/sources/catalog/ftdna/autosomal-raw-data.md
   - docs/sources/catalog/ftdna/dna-matches.md
   - docs/sources/catalog/ftdna/dna-segments.md
-  - docs/sources/catalog/ftdna/IDENTITY.md
-  - docs/sources/catalog/ftdna/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ftdna/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/SENSITIVITY_RUBRIC.md
@@ -27,6 +24,9 @@ notes:
   - "TIER POSTURE IS INFERRED, NOT CONFIRMED: The T2-default/T1-after-generalization rule is not a verbatim row in Atlas §24.5.2 (which directly addresses raw DNA segment data, living-person fields, person-parcel join). It is INFERRED from C9-03 doctrine that ancestry composition vectors are publishable derived data after k-anonymity, and from the consistent KFM redaction-receipt-plus-review-record pattern for sensitive tier transitions."
   - "Haplogroups are not named as a standalone object family in the People/DNA/Land glossary (Atlas §B); a `HaplogroupAssertion` family is PROPOSED here pending ADR."
   - "Type is `product-page` (not `standard`); this file carries the full presentation standard but is intentionally a scaffold, not steady-state."
+owning_root: docs/
+responsibility: "Documentation for FTDNA Y-DNA and mtDNA Haplogroups; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # FTDNA Y-DNA and mtDNA Haplogroups
@@ -92,7 +92,7 @@ This page describes the **FTDNA Y-DNA and mtDNA haplogroup product** — the lin
 **What this page is not.**
 
 - **Not a SourceDescriptor.** See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative descriptor.
-- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - **Not a schema.** See [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) per ADR-0001.
 - **Not an admission decision.** Admission requires a completed SourceDescriptor, rights resolution, sensitivity tagging, consent stack, generalization-rule selection, and reviewer sign-off.
 
@@ -284,7 +284,7 @@ Per Pass-10 `C4` (CONFIRMED doctrine), every promoted dataset must have a STAC I
 
 ## Collection identity
 
-- **PROPOSED Collection id pattern (reviewer lane):** `kfm-ftdna-haplogroups` (vendor-product slug; see [`./IDENTITY.md`](./IDENTITY.md) for the canonical pattern).
+- **PROPOSED Collection id pattern (reviewer lane):** `kfm-ftdna-haplogroups` (vendor-product slug; see `./IDENTITY.md` (not present) for the canonical pattern).
 - **PROPOSED Collection id pattern (aggregate lane):** `kfm-ftdna-haplogroups-agg`.
 - **PROPOSED namespace:** `kfm:` *(see OPEN-DSC-03 — the `kfm:` vs `ks-kfm:` choice remains open per `C4-01` open question, CONFIRMED).*
 - **PROPOSED Y-DNA vs mtDNA split:** *if* an ADR resolves OPEN-HG-04 in favor of two pages, two Collections would follow: `kfm-ftdna-y-haplogroups{,-agg}` and `kfm-ftdna-mt-haplogroups{,-agg}`.
@@ -369,7 +369,7 @@ PROPOSED — haplogroup data **has no inherent geographic geometry**, though hap
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 | Concern | Default for this product | Citation |
 |---|---|---|
@@ -424,7 +424,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 - [`contracts/source/`](../../../../contracts/source/) — semantic meaning for source-class objects (NEEDS VERIFICATION; Directory Rules §6.3, CONFIRMED authority).
 - [`contracts/people-dna-land/`](../../../../contracts/people-dna-land/) — domain contracts including the existing People/DNA/Land glossary (Person Assertion, NameAssertion, etc.); PROPOSED addition: `HaplogroupAssertion`. CONFIRMED authority of `contracts/`; file presence and HaplogroupAssertion entry NEEDS VERIFICATION.
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) — machine shape per ADR-0001 (NEEDS VERIFICATION).
-- [`schemas/contracts/v1/people-dna-land/haplogroup-assertion.schema.json`](../../../../schemas/contracts/v1/people-dna-land/haplogroup-assertion.schema.json) — **PROPOSED new schema**; presence NEEDS VERIFICATION; ADR required to add the object family.
+- `schemas/contracts/v1/people-dna-land/haplogroup-assertion.schema.json` (not present) — **PROPOSED new schema**; presence NEEDS VERIFICATION; ADR required to add the object family.
 - [`schemas/contracts/v1/receipts/`](../../../../schemas/contracts/v1/receipts/) — receipt schemas (RawCaptureReceipt, TransformReceipt, RedactionReceipt, AggregationReceipt, ReleaseManifest, ModelRunReceipt) — PROPOSED per Atlas §24.2.1.
 - [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) — PROPOSED per `KFM-P26-PROG-0004`.
 
@@ -434,7 +434,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 ## Related connectors and pipelines
 
-- [`connectors/ftdna/`](../../../../connectors/ftdna/) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
+- `connectors/ftdna/` (not present) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
   - **Posture:** PROPOSED quarantine-only intake. The connector MUST capture the vendor's reference-tree version and assignment-algorithm version into the run receipt before the payload reaches any non-quarantine lane.
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/) — lifecycle phase pipelines (Directory Rules §7.4, CONFIRMED).
 - [`pipeline_specs/people-dna-land/`](../../../../pipeline_specs/people-dna-land/) — declarative specs for the People/DNA/Land domain lane (Directory Rules §13.1, CONFIRMED).
@@ -447,7 +447,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 *Illustrative only — do not treat as authoritative. Field values are placeholders.*
 
-See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the canonical minimal shape. Two fragments below: the **reviewer-only T2** item with full sub-clade detail, and the **T1 cohort-aggregate** item — the recommended public publication form for this product.
+See `./_examples/stac-item-example.json` (not present) for the canonical minimal shape. Two fragments below: the **reviewer-only T2** item with full sub-clade detail, and the **T1 cohort-aggregate** item — the recommended public publication form for this product.
 
 <details>
 <summary><strong>Minimal STAC Item <code>properties</code> fragment — reviewer-only T2 (per-subject, full sub-clade, click to expand)</strong></summary>
@@ -567,9 +567,9 @@ See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) f
 - [`./autosomal-raw-data.md`](./autosomal-raw-data.md) — sibling product (autosomal raw genotype)
 - [`./dna-matches.md`](./dna-matches.md) — sibling product (kit-to-kit match list)
 - [`./dna-segments.md`](./dna-segments.md) — sibling product (IBD segment data)
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern and namespace doctrine
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — product-by-product rights and sensitivity map
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — canonical minimal STAC shape
+- `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map
+- `./_examples/stac-item-example.json` (not present) — canonical minimal STAC shape
 - [`../README.md`](../README.md) — catalog index
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric *(PROPOSED in corpus; not yet authored)*

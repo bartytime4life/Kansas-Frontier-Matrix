@@ -1,0 +1,112 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/noaa-ghcnd",
+  "descriptor_version": "1.0.0",
+  "title": "NOAA GHCN-Daily: Kansas first-order station pilot",
+  "description": "Admitted scope: daily precipitation (PRCP), maximum temperature (TMAX) and minimum temperature (TMIN) for four NWS/FAA first-order stations (USW00003928 Wichita, USW00013996 Topeka, USW00013985 Dodge City, USW00023065 Goodland), read from the NCEI by_station files by connectors/noaa/src/noaa/ghcnd_daily_capture.py. Pipeline records carry the short source_id noaa-ghcnd. Admitted by the repository owner on 2026-10-11. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": [
+    "atmosphere"
+  ],
+  "source_type": "official_government_dataset",
+  "source_role": "observation",
+  "authority_rank": "primary_authority",
+  "authority_notes": "NOAA NCEI compiles GHCN-Daily. The four stations are federally operated first-order (USW) stations. Volunteer networks in GHCN-Daily (CoCoRaHS US1*, cooperative USC*) are outside this scope. Values are not homogenized and NCEI revises the files daily.",
+  "publisher": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncei.noaa.gov/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); preliminary data subject to revision",
+    "attribution_required": true,
+    "attribution_text": "Menne et al. (2012), Global Historical Climatology Network - Daily (GHCN-Daily), Version 3, NOAA NCEI, doi:10.7289/V5D21VHZ. Values are preliminary and may be revised.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-10-11T19:00:00Z",
+    "verified_by": "@bartytime4life"
+  },
+  "sensitivity_default": "public",
+  "sensitivity_notes": "Public airport weather stations at published locations. No living-person, cultural or restricted-infrastructure content in the proposed scope.",
+  "cadence": {
+    "update_cadence": "daily",
+    "freshness_expectation": "NCEI rebuilds the by_station files daily; recent days are preliminary. The pilot treats a station as stale three days after its latest non-null value.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "GHCN-Daily by_station files",
+        "uri": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/by_station/",
+        "purpose": "download"
+      },
+      {
+        "label": "GHCN-Daily station list",
+        "uri": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt",
+        "purpose": "metadata"
+      },
+      {
+        "label": "GHCN-Daily readme",
+        "uri": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt",
+        "purpose": "documentation"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "Menne, M.J., et al. (2012): Global Historical Climatology Network - Daily (GHCN-Daily), Version 3, station {station_id}, {element}, NOAA National Centers for Environmental Information, doi:10.7289/V5D21VHZ, accessed {accessed_at}.",
+    "citation_guidance": "Cite the station, element and retrieval time, and the overview article Menne et al. (2012), J. Atmos. Oceanic Technol. 29, 897-910. State that values are preliminary."
+  },
+  "source_head": {
+    "observed_at": "2026-10-11T18:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "ghcnd v3 by_station",
+      "source_head_uri": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-version.txt"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "observation",
+      "observed_event",
+      "map_display",
+      "citation_support"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety"
+    ],
+    "limitations": "Admission covers only PRCP, TMAX and TMIN at the four listed USW stations. Values are daily totals or extremes for the station's observation day, not UTC instants, are preliminary and not homogenized, and may be revised by NCEI. A missing value stays missing and never counts as zero; any value with a quality flag is withheld. Not a forecast, warning, aviation or regulatory product.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Each package needs a kfm.weather-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0045: public sensitivity and this admitted license.",
+      "Every release keeps the NCEI citation and the preliminary-data notice."
+    ]
+  },
+  "review_state": "approved",
+  "release_state": "candidate",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2026-10-11T18:00:00Z",
+    "updated_at": "2026-10-11T19:00:00Z"
+  }
+}

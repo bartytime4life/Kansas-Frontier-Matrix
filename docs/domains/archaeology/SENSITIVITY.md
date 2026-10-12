@@ -15,28 +15,30 @@ policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md                 # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
   - docs/domains/archaeology/PUBLICATION_AND_POLICY.md
   - docs/domains/archaeology/RELEASE_INDEX.md
-  - docs/standards/SENSITIVITY_RUBRIC.md               # PROPOSED — Pass 10 C6-01 home
-  - docs/standards/REDACTION_DETERMINISM.md            # PROPOSED — Pass 10 C6-03 home
-  - docs/standards/DP_BUDGETS.md                       # PROPOSED — Pass 10 C6-05 home
-  - docs/standards/CONSENT_TOKENS.md                   # PROPOSED — Pass 10 C6-07 home
-  - docs/runbooks/archaeology/                         # PROPOSED — sovereignty review, rollback drill, parity tests
-  - policy/domains/archaeology/                        # PROPOSED — Rego bundle
-  - policy/sensitivity/archaeology/                    # PROPOSED — DENY lane
-  - policy/consent/archaeology/                        # PROPOSED — oral history / cultural
-  - policy/redaction/profiles.yaml                     # PROPOSED — Pass 10 C6-02 home
-  - schemas/contracts/v1/receipts/redaction_receipt.schema.json  # PROPOSED
+  - docs/standards/SENSITIVITY_RUBRIC.md
+  - docs/standards/REDACTION_DETERMINISM.md
+  - docs/standards/DP_BUDGETS.md
+  - docs/standards/CONSENT_TOKENS.md
+  - docs/runbooks/archaeology/
+  - policy/domains/archaeology/
+  - policy/sensitivity/archaeology/
+  - policy/redaction/profiles.yaml
+  - schemas/contracts/v1/receipts/redaction_receipt.schema.json
 tags: [kfm, domain, archaeology, sensitivity, redaction, CARE, sovereignty, doctrine]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites.
   - All repo-state and path claims are PROPOSED until repo is mounted.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, PUBLICATION_AND_POLICY.md, and RELEASE_INDEX.md.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Sensitivity; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
@@ -199,7 +201,7 @@ The mapping below is the **default**; a `ReviewRecord` may move a record to a mo
 > **The default is fail-closed.** A record without a `sensitivity_rank` is treated as **rank 5** until reviewed. A record with `rank ≥ 4` MUST NOT be admitted to RAW without a `SourceDescriptor` whose `rights_status` is `RESOLVED` and (where applicable) whose `sovereignty:tribal` label has been inherited per [§10](#10--sovereignty-label-inheritance).
 
 > [!WARNING]
-> **Tier transitions do not perform source-role upgrades.** A `CandidateFeature` released at T1 stays a candidate; its `source_role` is preserved across every transition. Role transitions are separate governed events with their own evidence and review. _See [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation)._
+> **Tier transitions do not perform source-role upgrades.** A `CandidateFeature` released at T1 stays a candidate; its `source_role` is preserved across every transition. Role transitions are separate governed events with their own evidence and review. _See [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation)._
 
 [Back to top ↑](#archaeology--sensitivity)
 
@@ -952,7 +954,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/CONSENT_TOKENS.md`](../../standards/CONSENT_TOKENS.md) — *(PROPOSED — link target)* C6-07 / C9-04 token standards.
 - [`docs/runbooks/archaeology/`](../../runbooks/archaeology/) — *(PROPOSED — link target)* sovereignty review, revocation drill, rollback drill, parity tests.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift register.
-- [`docs/registers/OVERRIDE_REGISTER.md`](../../registers/OVERRIDE_REGISTER.md) — *(PROPOSED — link target)* override register.
+- `docs/registers/OVERRIDE_REGISTER.md` (not present) — *(PROPOSED — link target)* override register.
 - Atlas v1.1 Ch. 15 §I, §L, §M, §N; §24.5 (tiers), §24.2 (receipts), §24.7 (reviewer roles), §24.8 (stale-state / supersession), §24.9 (anti-patterns), §24.10 (risks), §24.11 (governance health indicators).
 - KFM Components Pass 10 §C5-09 (tombstones), §C6 (sensitivity, redaction, geoprivacy: 0–5 rubric, named profiles, seeded jitter, grid generalization, DP for aggregates, k-anonymity, consent tokens, revocation), §C9-04 (GA4GH AAI / DUO).
 - Master MapLibre v2.1 — ML-061-158 (exact-coordinate prohibition), ML-061-159 (H3-r7 floor), ML-061-160 (CARE / sovereignty chips), ML-061-161 (generalization logs), ML-061-162 (sovereignty-aware Focus Mode v3), ML-061-163 (cluster surfaces as generalized cultural activity zones), ML-061-164 (Focus Mode CARE labels), ML-061-167 (anomaly / cluster ≠ precise site evidence).

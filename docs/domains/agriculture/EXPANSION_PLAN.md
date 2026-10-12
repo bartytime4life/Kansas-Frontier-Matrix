@@ -18,11 +18,11 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/DOMAIN.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - docs/domains/agriculture/CROSS_LANE.md
@@ -33,7 +33,7 @@ related:
   - docs/domains/agriculture/sublanes/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/soil/EXPANSION_PLAN.md
   - docs/domains/hydrology/EXPANSION_PLAN.md
   - docs/domains/atmosphere/EXPANSION_PLAN.md
@@ -43,6 +43,9 @@ notes:
   - Sequenced execution plan; companion to EXPANSION_BACKLOG.md (work register).
   - All file paths PROPOSED pending mounted-repo verification.
   - Source rights for NASS, SSURGO, Mesonet, SMAP, HLS remain NEEDS VERIFICATION.
+owning_root: docs/
+responsibility: "Documentation for Agriculture Domain — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -69,7 +72,7 @@ notes:
 > **What this doc is — and what it is not.** This is the **sequenced execution plan** for the Agriculture lane: ordered waves of work, each with explicit evidence, validators, and rollback. It does **not** decide:
 > - the *meaning* of an Agriculture term → [`DOMAIN.md`](./DOMAIN.md),
 > - the *physical architecture* → [`ARCHITECTURE.md`](./ARCHITECTURE.md),
-> - the *wire shape* of envelopes → [`api-contracts.md`](./api-contracts.md),
+> - the *wire shape* of envelopes → [`api-contracts.md`](API_CONTRACTS.md),
 > - the *placement* of files → [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md),
 > - the *lifecycle phases and gates* → [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md),
 > - the *per-edge cross-lane contracts* → [`CROSS_LANE.md`](./CROSS_LANE.md),
@@ -169,13 +172,13 @@ flowchart TD
 | Layer | Source | Status |
 |---|---|---|
 | Operating law for AI-authored or AI-touched repo work (`CONTRACT_VERSION = "3.0.0"`) | [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) | **CONFIRMED doctrine** |
-| Core invariants | [`lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`trust-membrane.md`](../../doctrine/trust-membrane.md) · [`evidence-first.md`](../../doctrine/evidence-first.md) · [`policy-aware.md`](../../doctrine/policy-aware.md) · [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) · [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| Core invariants | [`lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`trust-membrane.md`](../../doctrine/trust-membrane.md) · [`evidence-first.md`](../../doctrine/evidence-first.md) · [`policy-aware.md`](../../doctrine/policy-aware.md) · [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) · [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Directory Rules | [`directory-rules.md`](../../doctrine/directory-rules.md) §§3, 4, 12, 15 | **CONFIRMED doctrine** / **PROPOSED** specific paths |
 | Domain spine | Atlas v1.1 §9 (`[DOM-AG]`); ENCY §7.7 | **CONFIRMED doctrine** / **PROPOSED implementation** |
 | Unified plan | Unified Implementation Architecture Build Manual §30.12 (`[UNIFIED]`) | **CONFIRMED doctrine** / **PROPOSED implementation** |
 | Agriculture bounded-context authority | [`DOMAIN.md`](./DOMAIN.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture architectural authority | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | **CONFIRMED doctrine (this corpus)** |
-| Agriculture wire-level authority | [`api-contracts.md`](./api-contracts.md) | **CONFIRMED doctrine (this corpus)** |
+| Agriculture wire-level authority | [`api-contracts.md`](API_CONTRACTS.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture placement authority | [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture lifecycle authority | [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture cross-lane authority | [`CROSS_LANE.md`](./CROSS_LANE.md) | **CONFIRMED doctrine (this corpus)** |
@@ -463,7 +466,7 @@ Per-edge operational contracts (join keys, source-role discipline, sensitivity d
 
 ## 9 · API, contract, and schema surfaces
 
-All surfaces are governed; finite outcomes are **three distinct vocabularies** (do not conflate): runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` (+ optional `NARROWED` / `BOUNDED` *(v2)*); policy-gate `ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR`; workflow `ACCEPTED` / `DENY` / `ERROR`. Routes shown are **PROPOSED**; exact route names remain **UNKNOWN** without mounted-repo evidence. Full wire-level contract at [`api-contracts.md`](./api-contracts.md). `[CONFIRMED — ATLAS §9.J; api-contracts.md §3 + §4.]`
+All surfaces are governed; finite outcomes are **three distinct vocabularies** (do not conflate): runtime `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` (+ optional `NARROWED` / `BOUNDED` *(v2)*); policy-gate `ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR`; workflow `ACCEPTED` / `DENY` / `ERROR`. Routes shown are **PROPOSED**; exact route names remain **UNKNOWN** without mounted-repo evidence. Full wire-level contract at [`api-contracts.md`](API_CONTRACTS.md). `[CONFIRMED — ATLAS §9.J; api-contracts.md §3 + §4.]`
 
 | Surface | DTO / schema | Outcomes | Status |
 |---|---|---|---|
@@ -863,14 +866,14 @@ This plan conforms when **all** of the following hold:
 - [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 20.3 Agriculture sibling docs (the nine)
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/DOMAIN.md`](./DOMAIN.md) — bounded-context + ubiquitous-language + conceptual-model authority.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract.
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract.
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract.
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path-only crosswalk.
 - [`docs/domains/agriculture/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — carry-forward register.
 - [`docs/domains/agriculture/CROSS_LANE.md`](./CROSS_LANE.md) — per-edge cross-lane contracts.
@@ -891,7 +894,7 @@ This plan conforms when **all** of the following hold:
 
 ### 20.6 Registers and ADRs
 
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — verification items.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries.
 

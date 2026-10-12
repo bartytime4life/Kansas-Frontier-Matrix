@@ -1,0 +1,5 @@
+{
+  "id": "source:synthetic:bad-date",
+  "kind": "source",
+  "issued_at": "not-a-date"
+}

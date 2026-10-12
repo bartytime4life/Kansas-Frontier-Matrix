@@ -27,7 +27,7 @@ related:
   - ../../fixtures/contracts/v1/runtime/
   - ../../tools/validators/
   - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/architecture/governed-ai.md
+  - ../../docs/architecture/governed-ai/README.md
   - ../../docs/atlas/master-api-surface.md
 notes:
   - "Expanded from existing `contracts/runtime/README.md` stub."

@@ -15,8 +15,7 @@ related:
   - docs/doctrine/ai-build-operating-contract.md
   - policy/sensitivity/fauna/
   - policy/domains/fauna/
-  - schemas/contracts/v1/correction/redaction_receipt.schema.json
-  - contracts/governance/review_record.md
+  - contracts/governance/ReviewRecord.md
   - tests/domains/fauna/
   - fixtures/domains/fauna/
 tags: [kfm, domain, fauna, sensitivity, geoprivacy, deny-by-default, redaction]
@@ -26,6 +25,9 @@ notes:
   # Deliberately contains NO exact coordinates, identifiers, generalization radii, or fuzzing parameters — naming those could be an exposure aid.
   # Sensitive occurrence = T4 default (Atlas §24.5.2). Tier scheme T0–T4 is PROPOSED pending ADR-S-05 ratification.
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — Sensitivity & Geoprivacy; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -357,8 +359,8 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain handling; `CONTRACT_VERSION = "3.0.0"`
 - [`policy/sensitivity/fauna/`](../../../policy/sensitivity/fauna/) — **binding** Fauna sensitivity rules *(PROPOSED — authoritative)*
 - [`policy/domains/fauna/`](../../../policy/domains/fauna/) — Fauna admissibility policy *(PROPOSED)*
-- [`schemas/contracts/v1/correction/redaction_receipt.schema.json`](../../../schemas/contracts/v1/correction/redaction_receipt.schema.json) — RedactionReceipt shape *(PROPOSED)*
-- [`contracts/governance/review_record.md`](../../../contracts/governance/review_record.md) — ReviewRecord meaning *(PROPOSED)*
+- `schemas/contracts/v1/correction/redaction_receipt.schema.json` (not present) — RedactionReceipt shape *(PROPOSED)*
+- [`contracts/governance/review_record.md`](../../../contracts/governance/ReviewRecord.md) — ReviewRecord meaning *(PROPOSED)*
 - **Atlas references:** Atlas v1.1 §20.5 (Deny-by-Default Register), §24.2 (Receipt Catalog), §24.5 (Sensitivity / Rights Tiers T0–T4), §24.7 (Reviewer / Separation-of-Duties); Pass-10 C6 (sensitivity rubric, redaction profiles, geoprivacy)
 - **Operating Contract:** §23.1 (sensitive domain list), §23.2 (sensitive-domain decision matrix)
 

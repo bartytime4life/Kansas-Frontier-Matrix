@@ -1,0 +1,229 @@
+{
+  "receipt_id": "genrec-policy-layers-readme-5304efd0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/layers/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/layers/README.md": "sha256:5304efd0e7a852a7511b1284429a19fdc684a0e322aff2dce6505025b93c8e30"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:70776060ba09db04530ecbde5b70bc202746ad20756d135d8f0041093b40ef88",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:1b1936bf354503b3704c81c620cad6de5feb17d46bb204b4863e84240a6c7cda",
+      "sha256:cc4d2baa8cb9114f297a4f95d8202a49ffa364a89348b99171452eec50740c08",
+      "sha256:bb5692576ac116a6374ab624e2733b87743272fc75941fbf3c57adc0298e79f4",
+      "sha256:acc804e99fc7b79557a797fbbdfc46c50d6b75de9c27330558b81bc4f8cfcb05",
+      "sha256:e3857b30f4bea810cb7eed7b1ec95edbe16a09ab4eb5e4746d03cdc80c1c767e",
+      "sha256:dcc554b2c4af5f9a12d3aad3d3f020fd8b5ae94f12acef1c9517625347bf8c79",
+      "sha256:30cea5eb169f08724605ac30cbc1446b841cbd55369ea143fd75bc286403cc0b",
+      "sha256:12af87d9e2f5207da85a40fd21514c1a4908c6090dd0e69cc08d48a9a7f2f69b",
+      "sha256:d11e0bf223e2547aa7c830b309e2cdd301dd700549bbaaef7a50d56f63620e80",
+      "sha256:15b6152d1fa64efa9eea1b9e10fd7067984d9c512a34493ee12d2f3fd7ebec97",
+      "sha256:17a60d873b6a5d6b2170c4fa5448baf03071297dceb46a3efbca32f72fb7438f",
+      "sha256:5009897f341a6f4d9b0b0a43c6da80e5a9186e497a79f95515179ca3f72c0c59",
+      "sha256:b15c026c383dbee06b33ade4fe8b5215192ae574f50b8552eebcbc875c054744",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa",
+      "sha256:e3cd77acc0eba77e8e2a4868ae6ede9e65f2da03e5afefd3849bee606034223d",
+      "sha256:c621a03fc7873bcd60d353b45b882104540bfceb71177f26531875076f85d5c7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/layers/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/layers/released_only_for_public.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/data/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/runtime/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/runtime/deny_unpublished_public.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/domains/hazards/layer_manifest.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/rego/release_gate_v1.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/rego/release_gate_v1_test.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:docs/doctrine/directory-rules.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:control_plane/root_registry.yaml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:control_plane/policy_gate_register.yaml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:contracts/data/layer_manifest.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:schemas/contracts/v1/data/layer_manifest.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:fixtures/data/layer_manifest/expected_findings_manifest.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:tools/validators/data/validate_layer_manifest.py@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:tests/validators/test_validate_layer_manifest.py@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:.github/workflows/layer-manifest.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:contracts/runtime/layer_manifest_admission.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:fixtures/runtime/layer_manifest_admission/cases.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:apps/explorer-web/tests/layer-manifest-admission.test.ts@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:.github/workflows/layer-manifest-admission.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:apps/governed-api/src/governed_api/routes/layers.py@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:contracts/release/layer_manifest.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:release/manifests/layers/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:schemas/contracts/v1/runtime/layer_manifest.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:.github/workflows/policy-test.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:.github/CODEOWNERS@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:tools/validators/validate_generated_receipt.py@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    ]
+  },
+  "truth_labels": {
+    "policy/layers/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, exact two-file direct-child tree, exact-target open-pull-request overlap, planned branch name, accepted Directory Rules and ADR-0029, parent policy authority, machine root projection, empty proposed policy-gate register, and directly related layer contract, schema, candidate, runtime, release, route, workflow, CODEOWNERS, and PolicyDecision evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, two balanced language-tagged fence pairs, no diff whitespace errors, UTF-8-compatible text, a final newline, and one valid KFM_META_BLOCK_V2 envelope under the bounded repository profile."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 54 local README targets and fragments; no external URL was added or checked."
+    },
+    {
+      "gate": "layer-manifest-candidate-evidence",
+      "outcome": "PASS",
+      "reason": "All 13 Python unit tests passed, all 4 valid and 12 invalid fixture outcomes matched their reviewed polarity, and validator-registry plus release-dry-run selection checks passed in an isolated environment installed from the repository hash-locked project-test profile."
+    },
+    {
+      "gate": "runtime-admission-candidate-evidence",
+      "outcome": "PASS",
+      "reason": "All 3 focused runtime-admission tests passed and the Explorer production build completed after the complete sparse app was materialized. The local runtime was Node 24 with pnpm 11.16 and reported the repository's Node 22/pnpm 11.17 engine mismatch; exact hosted workflow parity remains pending."
+    },
+    {
+      "gate": "policy-readiness-static-guards",
+      "outcome": "PASS",
+      "reason": "Both repository policy-test readiness assertions passed. They confirm the one separately governed release-gate native test lane while explicitly holding the absent repository-wide bundle manifest, evaluator binding, executable policy runtime, and evaluated PolicyDecision matrix."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 bounded local-link validator tests and all 24 metadata-block validator tests passed with no network access."
+    },
+    {
+      "gate": "aggregate-repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "The exact unmodified base index fails the existing topology ratchet with three FAIL_NEW_DRIFT findings: KFM-TOPO-001 path-grammar:uppercase and KFM-TOPO-006 scope-alias:people and scope-alias:transport, plus four stale baseline fingerprints. This documentation-only change adds none of those paths or aliases and does not alter the baseline; repository-wide repair is outside this pull request."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, signed URLs, private endpoints, personal data, real protected locations, exact sensitive coordinates, restricted payloads, hidden thresholds, or actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy source, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consumer, decision, map source, release, deployment, cache, rollback execution, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no lane acceptance, policy activation, independent approval, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "layer-policy-lane-baseline-and-no-op-stub",
+      "validated": true,
+      "evidence_ref": "repo:policy/layers/released_only_for_public.rego@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "accepted-policy-root-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "layer-manifest-fixture-only-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/layer_manifest.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "layer-manifest-candidate-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/data/validate_layer_manifest.py@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "fixture-only-runtime-admission",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/layer_manifest_admission.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "governed-layers-route-abstain-stub",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/layers.py@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "closed-policy-decision-family-enum",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "empty-proposed-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T15:35:03Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the placeholder policy/layers boundary. The update records the exact no-op Rego posture; separates layer-policy source from LayerManifest meaning and shape, candidate validation, runtime admission, registries, map loading, decisions, release records, and publication; documents operation-specific inputs, security and sensitivity controls, activation requirements, contributor evidence, correction, and rollback; and surfaces unresolved data/runtime/release/domain policy ownership rather than declaring a winner. It changes no Rego rule, contract, schema, registry, fixture, validator, test, workflow, evaluator, consumer, map source, route, release, deployment, cache, rollback execution, publication, or public behavior. The inherited aggregate topology failures are recorded but not expanded. This receipt is provenance and process memory, not policy acceptance, evidence closure, independent review, release authority, or publication authority; authorized human review remains pending."
+}

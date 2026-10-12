@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/non_container_provenance_predicate_profile.schema.json",
+  "title": "NonContainerProvenancePredicateCandidate",
+  "description": "Fixture-only structural provenance candidate. Validation grants no signature, transparency, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_type", "profile_status", "execution_mode", "authority", "predicate_id", "predicate_type", "build_definition", "declared_inputs", "declared_outputs", "run_details", "verification", "governance", "permissions", "non_effects", "spec_hash"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "NonContainerProvenancePredicateCandidate"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "predicate_id": {"type": "string", "pattern": "^kfm:non-container-provenance-predicate:[0-9a-f]{24}$"},
+    "predicate_type": {"const": "https://kansasfrontiermatrix.org/provenance/non-container/v1"},
+    "build_definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["build_type", "pipeline_id", "pipeline_spec_hash", "git_repository_ref", "git_commit_sha", "parameters_digest"],
+      "properties": {
+        "build_type": {"type": "string", "minLength": 8, "maxLength": 160, "pattern": "^[a-z0-9._/-]+@v[1-9][0-9]*$"},
+        "pipeline_id": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "pipeline_spec_hash": {"$ref": "#/$defs/sha256"},
+        "git_repository_ref": {"type": "string", "pattern": "^fixture:git/[A-Za-z0-9._:/-]+$"},
+        "git_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "parameters_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "declared_inputs": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/artifactBinding"}},
+    "declared_outputs": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/artifactBinding"}},
+    "run_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["builder_id", "invocation_id", "run_receipt_ref", "started_on", "finished_on"],
+      "properties": {
+        "builder_id": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "invocation_id": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "run_receipt_ref": {"type": "string", "pattern": "^fixture:[A-Za-z0-9._:/-]+$"},
+        "started_on": {"type": "string", "format": "date-time"},
+        "finished_on": {"type": "string", "format": "date-time"}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["structural_validation_state", "signature_verification_state", "transparency_verification_state", "opa_trust_evaluation_state"],
+      "properties": {
+        "structural_validation_state": {"const": "NOT_RUN"},
+        "signature_verification_state": {"const": "NOT_RUN"},
+        "transparency_verification_state": {"const": "NOT_RUN"},
+        "opa_trust_evaluation_state": {"const": "NOT_RUN"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_refs", "evidence_refs", "policy_refs", "review_state", "evidence_admitted", "policy_trust_granted", "release_authorized", "publication_authorized"],
+      "properties": {
+        "authority_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "evidence_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "policy_refs": {"$ref": "#/$defs/nonEmptyRefs"},
+        "review_state": {"const": "PENDING"},
+        "evidence_admitted": {"const": false},
+        "policy_trust_granted": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network_access", "file_read", "file_mutation", "signer_access", "transparency_lookup", "policy_evaluation", "release", "publication"],
+      "properties": {
+        "network_access": {"const": false},
+        "file_read": {"const": false},
+        "file_mutation": {"const": false},
+        "signer_access": {"const": false},
+        "transparency_lookup": {"const": false},
+        "policy_evaluation": {"const": false},
+        "release": {"const": false},
+        "publication": {"const": false}
+      }
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "uniqueItems": true,
+      "items": {"enum": ["NO_ARTIFACT_READ", "NO_ARTIFACT_MUTATION", "NO_NETWORK_ACCESS", "NO_SIGNING", "NO_TRANSPARENCY_LOOKUP", "NO_POLICY_DECISION", "NO_EVIDENCE_ADMISSION", "NO_REVIEW_APPROVAL", "NO_LIFECYCLE_PROMOTION", "NO_RELEASE", "NO_PUBLICATION"]}
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "nonEmptyRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 300}, "uniqueItems": true},
+    "artifactBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "artifact_uri", "digest", "media_type", "role"],
+      "properties": {
+        "artifact_id": {"type": "string", "pattern": "^fixture:artifact/[A-Za-z0-9._/-]+$"},
+        "artifact_uri": {"type": "string", "pattern": "^fixture:artifact/[A-Za-z0-9._/-]+$"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "media_type": {"type": "string", "pattern": "^[a-z0-9.+-]+/[a-zA-Z0-9.+-]+$"},
+        "role": {"enum": ["SOURCE_INPUT", "CONFIG_INPUT", "DATA_OUTPUT", "METADATA_OUTPUT", "PROOF_CANDIDATE"]}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "source_cards": ["KFM-P30-PROG-0023", "KFM-P30-PROG-0024"],
+    "source_spec_hashes": ["sha256:cbeaae3de51ab5dd9da4d281780d4dd12f44a9a03d4ef54b526868b22dcddb55", "sha256:0a9b3201ff58e875d52e3944cc972735887f0ca25c6a730cd12cf9a1efbebc6b"]
+  }
+}

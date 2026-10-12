@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-evidence-drawer-payload-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "contracts/ui/evidence_drawer_payload.md",
+    "fixtures/ui/evidence_drawer_payload/README.md",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected-chain.json",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json",
+    "fixtures/ui/evidence_drawer_payload/valid/error-upstream.json",
+    "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+    "tests/validators/test_validate_evidence_drawer_payload.py",
+    "tools/validators/ui/README.md",
+    "tools/validators/ui/validate_evidence_drawer_payload.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:fbbf120b61d4e6078f0984439d1ec6cddc61a49aa99560dd038b90da45861a0e",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:8388d7eb21e594b11f3bf7159a28b3c51e6436c3c840b62da05cfefe6199b533",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:3e5214cdd8c5b19f86bd9436f511cc1f8133c8492d1d529a96a5b11ae02134cd",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts": "sha256:d54cfe48977ab9daf47be0a4c0c8a5a31478927b9b319331c1e8552ba6f2a37f",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts": "sha256:2b94d393ce96c4438895123142960d069a0d054f3c1766d5ddded618a635d673",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:59f31cc6a514205b8123eaba79f1fb31dabc3a6b8e496131aa0a68989cd40329",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4d76db601435321a389d3b4220e0dda5c16b8c99d1e269a85128a473beb6b1e8",
+    "fixtures/ui/evidence_drawer_payload/README.md": "sha256:70b00de24f60468f5cc8531696e2ef26368025df70017bcbd527f22be96e2a03",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.expected_code.txt": "sha256:699f0086172437cbad4662219ed17aa7d8c4b6b9e6219d36ed275d669c751ad4",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.json": "sha256:3661bf7c6b9b8c8ccf149b45907583376be1e9cac954fcea401837f05a2602c1",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.expected_code.txt": "sha256:59dd02c5ddfd39f1f772df4457626308c2d41fc091f4d1fa373d9ef3c61322ad",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.json": "sha256:96ec0afa61ea48fabd225794b75e3f8d3231e21fc7d212e267cf46f63457761f",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.expected_code.txt": "sha256:734c30198b4021342485e8078e0f82111538cfc4e74ce36caf1aa0eb0a5746d5",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.json": "sha256:4c48b37f6efc19f387ad37ab87071ea2c4ae1a2ee9c4e9d28b1be9f003fa770b",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.expected_code.txt": "sha256:9dd1f94e3241ddafee0597af2791405012da8e495c54075c86891dbb6686bafc",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.json": "sha256:f655e333809f55f920c02d6da6fb729830872feffad8f81d277b34d120f898c3",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.expected_code.txt": "sha256:a85ef302b65ab3db82b9777b654a7853e46cfbc74b731078721c9b0addd6de5e",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.json": "sha256:af8bcaabeaa3bc8df6ba9d3c9c3f5a609356d318c0ee3844d2e25dd7e048fbed",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.expected_code.txt": "sha256:8dfbba570e780c7bbc60387c5f9e98bad0d059a241d6c108d8f7063d1a993c8d",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.json": "sha256:3963d48717fa3d6f35781d1a72376f52609a792259e65362af05d2f11efd95bc",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.expected_code.txt": "sha256:8dfbba570e780c7bbc60387c5f9e98bad0d059a241d6c108d8f7063d1a993c8d",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.json": "sha256:6cb1689cd3f5407905e0fb192420519202bc9d752859c0f8eea2beee23fc621e",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.expected_code.txt": "sha256:aaad610089952c91f70e44f65acc3e4a0886a1b07cc681653d3341b643a840d1",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.json": "sha256:832f4886d4759e1d16f55f6210695a0ae9cdae81ae057f51575bf21fb39e0ef1",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json": "sha256:f30911852a52bc5e61554f8fabcf9e42a44442fac2465c8977a8f5e1f42d4c6a",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json": "sha256:8d950e04c42117508ec78a04c40abdc1e9e87f81fec02e3c0d257723f7e25d42",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected-chain.json": "sha256:477c485317f27fab480bef7479fdfbebbbd2b73f8187d69ee7ce7bb09a73e6af",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json": "sha256:f046396a895083a0d7ae2a4e213edeaf004dcf4c8002b013938f5718e962996b",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json": "sha256:4b35289f143b236a88798bca07f7817a6290d31843fad5d9394b76768669c95d",
+    "fixtures/ui/evidence_drawer_payload/valid/error-upstream.json": "sha256:a0fff4002827d183236069ad4e405b5bf4a22dcb3f9b33c441b9ef4590957682",
+    "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json": "sha256:f18bc6c844bcf745f37d404117f4b1bf43b2d61cf2130dfb2aedc72297170952",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:ab956ea87bc4576e8a5286a4fde69f3b971fa2baf54092ac284ed9ad093bdd9e",
+    "tools/validators/ui/README.md": "sha256:79370b4d6ffa784ca13875d63266239be497c011b0a2915c851a73da503a9f5b",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:28ca1cafdc1d70db82a17c3fcfbf1fbba035c9a6bc68e938edf953befde6d1fa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:c159b4992549a40af27801a29f0b1105554014080797056b723270a73d47ec22",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation",
+      "local TypeScript compiler"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d"
+    ],
+    "attached_docs": [
+      "New Ideas 4-23-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-23-26(2).pdf#correction-chain-negative-history-evidence-drawer"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "PROPOSED",
+    "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/README.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/answer-unbound-history.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/corrected-answer-without-history.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/correction-cycle.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/history-resolvable-current.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/negative-state-reason-mismatch.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected-chain.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/error-upstream.json": "PROPOSED",
+    "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "PROPOSED",
+    "tools/validators/ui/README.md": "PROPOSED",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "fixture-profile",
+      "outcome": "PASS",
+      "reason": "Six valid and eight invalid reusable fixtures passed exact deterministic polarity validation."
+    },
+    {
+      "gate": "validator-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused standard-library tests passed, including correction-chain, no-leak, no-network, and schema assertions."
+    },
+    {
+      "gate": "typescript-compile",
+      "outcome": "PASS",
+      "reason": "The modified Explorer adapter and Evidence Drawer feature compiled under strict local TypeScript settings."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The evidence-drawer-payload and ui-build workflows must run against the final pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:correction-chain-negative-history-evidence-drawer",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-23-26(2).pdf#correction-chain-negative-history-evidence-drawer"
+    },
+    {
+      "id": "repo:contracts-ui-evidence-drawer-payload",
+      "validated": true,
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@main:4c79e7c379ad2eae9f9dcf62e75d438d2dc976df"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T21:13:12Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first public-safe EvidenceDrawerPayload implementation. Existing test-local drawer fixtures are migrated to the reusable fixture root and their old paths are deleted. The receipt grants no evidence, policy, review, correction, release, deployment, publication, or public-use authority; the UI/evidence contract-home seam remains unresolved."
+}

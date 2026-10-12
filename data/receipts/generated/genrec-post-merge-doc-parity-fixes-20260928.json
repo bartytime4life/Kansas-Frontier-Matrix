@@ -1,0 +1,82 @@
+{
+  "receipt_id": "genrec-post-merge-doc-parity-fixes-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/repository-governance-parity.yml",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/repository-governance-parity.yml": "sha256:10e428d7d854948dc0875f41216e304edaf1b40b3fe7dc29dd944289ac87929e",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "sha256:64821118c57c1299bc27c7f58b1194375c2d736dcebe4dfd3a151f00fb8a79d8"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@1d79c5d112",
+      "GitHub Actions run 36441703464 job 108993567296 (docs-link-check)",
+      "GitHub Actions run 36441702988 job 108993564417 (validate-document-graph)",
+      "Codex review comment 4123689146 on #4783"
+    ]
+  },
+  "citations": [
+    {
+      "id": "docs-link-check failure on #4784",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/36441703464/job/108993567296",
+      "validated": true
+    },
+    {
+      "id": "Codex parity path-filter finding on #4783",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4783#discussion_r4123689146",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    ".github/workflows/repository-governance-parity.yml": "CONFIRMED",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "docs link check",
+      "outcome": "PASS",
+      "reason": "Reproduced 5 LOCAL_TARGET_MISSING on #4784's range; the changed range now passes."
+    },
+    {
+      "gate": "document graph",
+      "outcome": "PASS",
+      "reason": "Reproduced 5 RELATED_TARGET_MISSING on #4784's range; the changed range now passes."
+    },
+    {
+      "gate": "workflow security",
+      "outcome": "PASS",
+      "reason": "make workflow-security: 489 workflows, 0 new drift."
+    },
+    {
+      "gate": "fixture root contract",
+      "outcome": "FAIL",
+      "reason": "Inherited: identical FAIL_INVARIANT findings at e32729b1 before #4783 and on current main; not changed here."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T15:16:54Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  },
+  "notes": "Post-merge follow-up to #4783 and #4784: ADR-0006 references to files no longer in the tree become plain snapshot text, and the parity workflow now triggers on the receipt its make target replays."
+}

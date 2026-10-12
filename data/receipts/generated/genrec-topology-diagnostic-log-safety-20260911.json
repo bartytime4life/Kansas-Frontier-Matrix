@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-topology-diagnostic-log-safety-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/directory_governance/test_validate_output_security_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/directory_governance/test_validate_output_security_topology.py": "sha256:576743b9ea7e40c4ff80f60f7f579fe706ad79dcf58abf2253d6fb365b7bf007",
+    "tools/validators/directory_governance/README.md": "sha256:9d4c7d928b5b9695b1f9d7faf2be25259954546529e30ee1b83b47e20413f35c",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:e14b39353cabfbab719c35e85442e10a20e328f1585755b52975d928c89c5cca"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not independently exposed"
+  },
+  "prompt_or_contract": "sha256:8ba0727370176146d3e8703b355fe03b5684173006c0f9402602904761ca8d59",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "web",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f49e0e4b93908db33bfc709c0ae7fdfcfb05853f6f116a2d638a6bcea34d4f5a",
+      "sha256:1e9236d153630494dbd28002aec1f76ada1a6908d2839b447e5f813accd0b13d",
+      "sha256:d7f83c26be8fad273faabefe1e7b343453a0a47cca06b2035dd8c88add869619"
+    ],
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening (source-derived guidance, not current implementation evidence)"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/tests/validators/directory_governance/test_validate_output_security_topology.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/tools/validators/directory_governance/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/tools/validators/directory_governance/render_repository_topology_diagnostics.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34630394304",
+      "https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw/edit",
+      "https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/directory_governance/test_validate_output_security_topology.py": "PROPOSED",
+    "tools/validators/directory_governance/README.md": "PROPOSED",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source-projection",
+      "outcome": "PASS",
+      "reason": "Three original file byte streams match their retrieved Git blob SHAs; the receipt schema matches fba21ed27ebccf1362fe397fe0c3ebd85e072685. This is not a full checkout."
+    },
+    {
+      "gate": "diagnostic-log-safety-unit-projection",
+      "outcome": "PASS",
+      "reason": "Python 3.13.5: ten new tests passed. Exact diagnostic source and exact added test class executed with an explicitly isolated topology import interface; scan/load/evaluate are not executed. Main orchestration tests mock those calls."
+    },
+    {
+      "gate": "original-implementation-discrimination",
+      "outcome": "PASS",
+      "reason": "The same ten tests on the unchanged formatter produced 92 failing assertions/subtests across eight methods; two methods passed. This is expected negative-control evidence, not 92 separate tests."
+    },
+    {
+      "gate": "six-mutation-controls",
+      "outcome": "PASS",
+      "reason": "Detected omitted command escaping; raw subject, rule or fingerprint output; sorting after encoding; and forced-success exit. Candidate bytes were not modified by mutant runs."
+    },
+    {
+      "gate": "compatibility-and-syntax",
+      "outcome": "PASS",
+      "reason": "Original four scanner test methods remain AST-identical. Ordinary identifiers retain exact output. Python 3.11 grammar parses; the existing test_validate_*topology.py discovery glob selects the regression module."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hashes",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 with FormatChecker and exact artifact hash/map parity verified against the fetched schema. Pending review is not merge authorization."
+    },
+    {
+      "gate": "native-scanner-full-tests-and-receipt-helper",
+      "outcome": "SKIPPED",
+      "reason": "No complete checkout; Git transport DNS failed. The four unchanged scanner tests, repository scans, native receipt helper, full CI and Python 3.11 runtime were not run locally."
+    },
+    {
+      "gate": "hosted-exact-head-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring; prior CI and merged PRs are not transferred to this change."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "github-workflow-commands",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"
+    },
+    {
+      "id": "owasp-log-encoding",
+      "validated": true,
+      "evidence_ref": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#event-collection"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T18:17:29Z",
+  "emitter": "chatgpt-kfm-diagnostic-log-safety",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ea631e706d7ed47ce4ba179e20c29e25010b40d1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Base main@ea631e706d7ed47ce4ba179e20c29e25010b40d1. Display encoding only; no topology rule, baseline, source, dependency, workflow, permission, release or Site mutation. Output limits remain identity-count limits, not new per-token byte limits. Retrieved run/source taxonomy disagreed, so root-cause attribution remains UNRESOLVED/NON_COMPARABLE. An earlier normalized PR #4472 response conflicted with raw REST/Git commit data; raw REST subsequently identified merge c6e3a9eea6dcca12d1fa047b6a01d5c3dc31fd4c and the canonical main commit identified the following #4471 merge. This repair does not explain or close that discrepancy or incident #4024. No assertion of hosted exploitation or prevention beyond tested formatting. Rollback restores paired formatter/tests/docs; retain this receipt as lineage. Drive/Notion are coordination/design inputs, not runtime proof."
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "profile_state": "PROPOSED_INACTIVE",
+  "receipt_id": "kfm:github-issue-read:0d1a4348bf71484dac97fd0f",
+  "outcome": "FRESH",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "repository_id": 1059091169,
+  "default_branch": "main",
+  "default_branch_head_sha": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a",
+  "requested_issue_ids": [1647],
+  "issues": [
+    {"number": 1647, "state": "OPEN", "updated_at": "2026-08-07T20:00:00Z"}
+  ],
+  "retrieved_at": "2026-08-08T02:30:00Z",
+  "stale_at": "2026-08-08T02:35:00Z",
+  "rate_limit_remaining": 4998,
+  "rate_limit_reset_at": "2026-08-08T03:00:00Z",
+  "response_digest": "sha256:0d1a4348bf71484dac97fd0f57fcd915fdf62b0b80f4885cb42138e6275fc77a",
+  "repository_mutation_allowed": false,
+  "authority_created": false,
+  "evidence_created": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

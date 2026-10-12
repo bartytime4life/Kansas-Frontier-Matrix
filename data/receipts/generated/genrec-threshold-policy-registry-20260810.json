@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-threshold-policy-registry-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/threshold-policy-registry.yml",
+    "contracts/policy/threshold_policy_registry.md",
+    "docs/intake/exploratory/threshold-policy-registry-source-map.md",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/README.md",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.expected_error.txt",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.json",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.expected_error.txt",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.json",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/valid/valid_unresolved_slot.json",
+    "policy/README.md",
+    "policy/thresholds/README.md",
+    "policy/thresholds/registry.v1.json",
+    "schemas/contracts/v1/policy/threshold_policy_registry.schema.json",
+    "tests/validators/test_validate_threshold_policy_registry.py",
+    "tools/validators/policy/validate_threshold_policy_registry.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/threshold-policy-registry.yml": "sha256:e2d0c7b88357b425f6fe952848d5fbb8dcec6b3c5636956389c219da29d1c139",
+    "contracts/policy/threshold_policy_registry.md": "sha256:7cef15aa05438b8e8ef3b519ae24d86c2e4afe04471e179b9ab3c20bc3d93d99",
+    "docs/intake/exploratory/threshold-policy-registry-source-map.md": "sha256:5ee3dd34e56eed2d6910bf8ce63701a998c7e149d099fb7b853fae12d5ac4db3",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/README.md": "sha256:9381ee626eb4584100edfb1e7ebd845057f1576383be0ef35da6adcf0b21d795",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.expected_error.txt": "sha256:cc3965f95eb7e854bdc170f0e587275f5ebe2cf007c0b335d9f88f36c6e145a6",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.json": "sha256:36e02640d62e80a14f3b7fdbaad91b7442c03074e2f7aba07f82c36ab49b58a0",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.expected_error.txt": "sha256:8052ed3f93d732e1d7e2d52ee54e1424b1cc6c1e64463bf39f6b51a31142dcc5",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.json": "sha256:3437506643046d9f0b60fe1721c6e9a353f16c03c257bee9a85fbd4ece7b3788",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/valid/valid_unresolved_slot.json": "sha256:6340765d11a0214b6fcf7e2e1d92f5b39fc82f24592964a31139adf8e38b32ee",
+    "policy/README.md": "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+    "policy/thresholds/README.md": "sha256:eb24fa1177ee2231628992dbea68e7d46005838090b7e202be0d31bb798c5198",
+    "policy/thresholds/registry.v1.json": "sha256:5cc16462df18e6019e3d22730020a3338bc0558186b6db0c3b54d31e568bbdef",
+    "schemas/contracts/v1/policy/threshold_policy_registry.schema.json": "sha256:78e05a810e8e16a009c77274a3255756b20b6969ba3fb1cc16c6b7a4dc4c8092",
+    "tests/validators/test_validate_threshold_policy_registry.py": "sha256:f24e72f75ca82e54b007cf3c0d1466f218bb84024ae7c47b55f9665a01278f4a",
+    "tools/validators/policy/validate_threshold_policy_registry.py": "sha256:20b8936b81498cbc8a8217a86161b6cc02b2f8314ab1299aae62cb800d3af680"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:2ad8b42d73ab3896a6b6342c02125d4f22431537ef632a437cf7fd8086234563",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Google Drive: New Ideas 5-15-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008",
+      "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ",
+      "repo:docs/doctrine/directory-rules.md@8a671552785b773364f01d2e76d8ca6892a405ea",
+      "repo:policy/README.md@8a671552785b773364f01d2e76d8ca6892a405ea"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/threshold-policy-registry.yml": "CONFIRMED",
+    "contracts/policy/threshold_policy_registry.md": "PROPOSED",
+    "docs/intake/exploratory/threshold-policy-registry-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_active_binding.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/invalid/invalid_numeric_value.json": "CONFIRMED",
+    "fixtures/contracts/v1/policy/threshold_policy_registry/valid/valid_unresolved_slot.json": "CONFIRMED",
+    "policy/README.md": "PROPOSED",
+    "policy/thresholds/README.md": "PROPOSED",
+    "policy/thresholds/registry.v1.json": "PROPOSED",
+    "schemas/contracts/v1/policy/threshold_policy_registry.schema.json": "PROPOSED",
+    "tests/validators/test_validate_threshold_policy_registry.py": "CONFIRMED",
+    "tools/validators/policy/validate_threshold_policy_registry.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic tests passed for identity, unresolved-slot posture, schema and semantic negatives, fixture polarity, parser boundaries, no-network behavior, and CLI determinism."
+    },
+    {
+      "gate": "registry-and-fixture-validation",
+      "outcome": "PASS",
+      "reason": "The repository registry and valid fixture passed; both active-binding and numeric-value fixtures failed with the intended polarity."
+    },
+    {
+      "gate": "common-schema-harness",
+      "outcome": "PASS",
+      "reason": "The shared policy contract-fixture harness passed the new schema family."
+    },
+    {
+      "gate": "documentation-and-workflow-structure",
+      "outcome": "PASS",
+      "reason": "New metadata blocks and local links passed; the policy-root README retains its pre-existing block-placement warning but has no metadata failures; workflow YAML parsed with read-only contents permission."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "All threshold values, owners, bindings, and activation remain held for human review on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-exp008",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+    },
+    {
+      "id": "gdrive:new-ideas-5-15-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@8a671552785b773364f01d2e76d8ca6892a405ea"
+    },
+    {
+      "id": "repository:policy-root-contract",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@8a671552785b773364f01d2e76d8ca6892a405ea"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:19:45Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inactive, unresolved-only threshold-policy registry candidate. No operator, value, unit, effective date, consumer binding, policy evaluation, source activation, promotion, release, publication, notification, or public-use authority is created."
+}

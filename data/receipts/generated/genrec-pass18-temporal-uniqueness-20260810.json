@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-pass18-temporal-uniqueness-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-uniqueness-assessment.yml",
+    "contracts/common/temporal_uniqueness_assessment.md",
+    "docs/intake/exploratory/pass-18-temporal-uniqueness-source-map.md",
+    "fixtures/contracts/v1/common/temporal_uniqueness_assessment/cases.json",
+    "schemas/contracts/v1/common/temporal_uniqueness_assessment.schema.json",
+    "tests/validators/test_validate_temporal_uniqueness_assessment.py",
+    "tools/validators/validate_temporal_uniqueness_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-uniqueness-assessment.yml": "sha256:d661cbb63bf91b4794c6ada92cb675800ecaee55d5cb2779f72006d05196d03a",
+    "contracts/common/temporal_uniqueness_assessment.md": "sha256:17513766dd2c382fb5df60515f62553612acadde425b23636ec11c1d2f8ef277",
+    "docs/intake/exploratory/pass-18-temporal-uniqueness-source-map.md": "sha256:e1877b61d5dee1ce1fa756e4e87238cfc6ff316984ec7fde2e9ec54f2fae5ce1",
+    "fixtures/contracts/v1/common/temporal_uniqueness_assessment/cases.json": "sha256:75369b40e7f9ab1ab405862d7d1343ff26da809bff094020eb50ab6794515192",
+    "schemas/contracts/v1/common/temporal_uniqueness_assessment.schema.json": "sha256:386d124167da4382fa2f179c02a85c673bffa1c5f55100eb563fd4732c038380",
+    "tests/validators/test_validate_temporal_uniqueness_assessment.py": "sha256:7c2166ac9f22282467572be69f08a7d59da992082ec2e9732accd7e3feeaef6d",
+    "tools/validators/validate_temporal_uniqueness_assessment.py": "sha256:8b126d7afcdf8cb28815cab6f434006f1bba9209c8e9d10fb5b73e3deb3754d7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:17513766dd2c382fb5df60515f62553612acadde425b23636ec11c1d2f8ef277",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository, branch, and pull-request inspection",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:f9625ab788315b4e9b307659c9b4c75c344eb645dc39f9499ad850e378cf968e",
+      "sha256:207e5b09a5a5fbb82b7c13bfa7bc2093b822637fb3c8b00ea1b0792b3407463f",
+      "sha256:08409be104836d68caf5b3366351323ca1ab602619f1271bed6bd3a0872447d0",
+      "sha256:fdf5d22efff3a5611fe4da5f6f303260b797d47c2a5ddb15e559352988c1917d",
+      "sha256:c973448b6f24c519a6087e42ca36293cc7e79bd3ca4fb6dcd51cd1a93d59b601"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=119-120&printed-pages=116-117&card=KFM-P18-INV-392",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/period_boundary_predicate_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/temporal_authority_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/data/temporal_slice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/docs/sources/catalog/loc/chronicling-america.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-uniqueness-assessment.yml": "CONFIRMED",
+    "contracts/common/temporal_uniqueness_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-temporal-uniqueness-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/temporal_uniqueness_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/temporal_uniqueness_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_temporal_uniqueness_assessment.py": "CONFIRMED",
+    "tools/validators/validate_temporal_uniqueness_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Ten deterministic temporal uniqueness assessment tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Thirty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes across valid-time, transaction-time, bitemporal, boundary, pair-conflict, overlap-policy, lineage, review, and recommendation declarations."},
+    {"gate": "adjacent-contract-tests", "outcome": "PASS", "reason": "Fifty-one TemporalWindow, PeriodBoundaryPredicateDisclosure, TemporalAuthorityEnvelope, TemporalSlice, and TemporalSupportAcceptanceAssessment tests passed."},
+    {"gate": "documentation-meta-block-and-link-profiles", "outcome": "PASS"},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 425 schema/contract tests and 29 subtests passed on the rebased exact head."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-temporal-uniqueness-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=119-120&printed-pages=116-117&card=KFM-P18-INV-392"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/docs/doctrine/directory-rules.md"},
+    {"id": "temporal-window-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/temporal_window.md"},
+    {"id": "period-boundary-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/period_boundary_predicate_disclosure.md"},
+    {"id": "temporal-authority-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/common/temporal_authority_envelope.md"},
+    {"id": "temporal-slice-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/contracts/data/temporal_slice.md"},
+    {"id": "source-catalog-narrative-adjacent-note", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/590d3b77dcfd0792fbd183e0b2e1ca4c2d39a581/docs/sources/catalog/loc/chronicling-america.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T04:20:49Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only TemporalUniquenessAssessmentCandidate packet derived from supplied Pass 18 card KFM-P18-INV-392. It validates canonical identity-field references, opaque same-key digests, valid-time, transaction-time, bitemporal axes, inclusive interval boundaries, any-axis and all-axes pair-conflict rules, candidate overlap-denial, supersession, reviewed-parallel policies, deterministic state, and non-executing recommendations without reading raw key values, inspecting or mutating tables or records, executing constraints, denial, or quarantine, resolving evidence, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

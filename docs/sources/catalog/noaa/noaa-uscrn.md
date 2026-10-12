@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/goes-abi-aod.md
   - docs/sources/catalog/noaa/hms-fire-smoke.md
   - docs/sources/catalog/noaa/hrrr-smoke.md
@@ -20,7 +18,7 @@ related:
   - docs/domains/soil/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, uscrn, climate, reference-network, atmosphere-air, soil, observation, depth-aware]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -29,6 +27,9 @@ notes:
   - "Multi-domain: atmosphere-air (primary — temperature, precipitation, humidity, wind, solar radiation, surface temperature) + soil (secondary — multi-depth soil moisture and soil temperature). Adjacencies into agriculture and hydrology."
   - "Dominant anti-collapse stack: station ≠ area; depth N ≠ depth M; hourly ≠ daily; reference-grade ≠ regulatory determination; NOT life-safety."
   - "Anchored in KFM-P10-PROG-0019 (CONFIRMED): per-station STAC time-series Items, sensor-depth schema, timezone harmonization, quality flags."
+owning_root: docs/
+responsibility: "Documentation for NOAA U.S. Climate Reference Network; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA U.S. Climate Reference Network
@@ -202,8 +203,8 @@ USCRN is unusual in KFM's NOAA family: it is **upstream context** to most other 
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation; this product is one slice. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling** | [`goes-abi-aod.md`](./goes-abi-aod.md) | Satellite-retrieval sibling (USCRN is one of its validation targets). |
 | **Sibling** | [`hms-fire-smoke.md`](./hms-fire-smoke.md) | Analyst-augmented smoke sibling. |
 | **Sibling** | [`hrrr-smoke.md`](./hrrr-smoke.md) | Forecast sibling (USCRN is one of its verification references). |
@@ -272,7 +273,7 @@ PROPOSED — the descriptor(s) for this slice should at minimum carry:
 - `source_role` — `observation` by default (see [§ Source-role posture](#source-role-posture)); **never** `modeled`, `authority`, or `synthetic`.
 - `role_authority` — NOAA NCEI (the operational steward; NEEDS VERIFICATION).
 - `rights` — license, redistribution terms, attribution. USCRN is generally a U.S. government work in the public domain; per-product terms NEEDS VERIFICATION.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - `cadence` — multi-cadence: native sub-hourly (typically 5-minute), with hourly / daily / monthly summary products; NEEDS VERIFICATION against current NOAA documentation.
 - `station_metadata_ref` — per KFM-P10-PROG-0019, station metadata is a first-class admission requirement (siting, sensor types, sensor-depth schema, instrument history).
 - `ingest_hash` — content-addressable digest of the admitted feed.
@@ -446,7 +447,7 @@ PROPOSED — USCRN items carry NOAA-issued quality flags as first-class data. NE
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -664,12 +665,12 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./goes-abi-aod.md`](./goes-abi-aod.md) — Satellite-retrieval sibling (USCRN serves as a validation reference for AOD's retrieved meteorological context).
 - [`./hms-fire-smoke.md`](./hms-fire-smoke.md) — Analyst-augmented smoke sibling.
 - [`./hrrr-smoke.md`](./hrrr-smoke.md) — Forecast sibling (USCRN serves as a verification reference).
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Primary domain.
 - [`../../../domains/soil/README.md`](../../../domains/soil/README.md) — Co-primary domain.
@@ -677,7 +678,7 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 - [`../../../domains/hydrology/README.md`](../../../domains/hydrology/README.md) — Adjacency.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/uscrn` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `WeatherStation` / `WeatherObservation` schemas once authored.

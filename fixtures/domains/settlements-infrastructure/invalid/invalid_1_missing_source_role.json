@@ -1,0 +1,9 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-missing-role-001",
+  "version": "v0",
+  "object_family": "Settlement",
+  "feature_role": "historic_place",
+  "normalized_name_key": "fictional_forks_ks",
+  "source_role": null,
+  "fixture_posture": "synthetic; invalid; missing-source-role"
+}

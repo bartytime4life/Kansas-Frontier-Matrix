@@ -16,7 +16,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
   - schemas/contracts/v1/domains/flora/
   - contracts/domains/flora/
@@ -28,6 +28,9 @@ notes:
   - Implementation paths are PROPOSED until verified against mounted-repo evidence.
   - Schema home follows ADR-0001 (schemas/contracts/v1/...); Atlas Appendix D `schemas/contracts/v1/flora/` form is lineage/CONFLICTED pending migration.
   - Per-source rights/license terms are NEEDS VERIFICATION in the corpus; no external research was performed for this revision, so no external license fact is asserted as CONFIRMED.
+owning_root: docs/
+responsibility: "Documentation for Flora — Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Domain Architecture
@@ -147,7 +150,7 @@ These constraints are inherited from KFM core doctrine and apply to every Flora 
 | 2 | **Trust membrane** — public clients consume `apps/governed-api/`; never `data/{raw\|work\|quarantine\|processed\|catalog\|triplets}` directly. | Directory Rules §7.1, §13.5; `docs/doctrine/trust-membrane.md` *(PROPOSED home)* |
 | 3 | **Watcher-as-non-publisher** — workers emit receipts and candidate decisions only; they MUST NOT publish or mutate canonical truth. | Directory Rules §13.5, §7.4 |
 | 4 | **Cite-or-abstain** — claims that depend on evidence require `EvidenceBundle` support; missing or stale evidence ⇒ `ABSTAIN`. | `ai-build-operating-contract.md`; `docs/doctrine/truth-posture.md` *(PROPOSED home)* |
-| 5 | **EvidenceBundle outranks generated language** — AI surfaces never become the truth source. | `docs/architecture/governed-api.md` *(PROPOSED home)* |
+| 5 | **EvidenceBundle outranks generated language** — AI surfaces never become the truth source. | `docs/architecture/governed-api/README.md` *(PROPOSED home)* |
 | 6 | **Default-deny promotion** — unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state blocks public promotion. | ENCY §7.6; `policy/promotion/` *(PROPOSED home)* |
 | 7 | **Join-induced sensitivity** — a benign source (e.g. USDA PLANTS county checklist) can become sensitive once joined with GBIF, iNaturalist, or heritage occurrence data. Sensitivity is a property of the **product**, not only the inputs. | DOM-FLORA §D; Atlas §24.1 |
 | 8 | **Schema-home rule (ADR-0001)** — machine schemas live under `schemas/contracts/v1/...`. `contracts/` retains semantic Markdown only. | Directory Rules §6.4 |
@@ -663,8 +666,8 @@ Rollback drills are part of every flora release-readiness check.
 <summary><strong>Architecture (cross-cutting)</strong></summary>
 
 - [Domains index](../README.md) — *PROPOSED home*
-- [Flora — API Contracts](./api-contracts.md) — Flora governed-API contract surface *(PROPOSED)*
-- [Governed API](../../architecture/governed-api.md) — *PROPOSED home*
+- [Flora — API Contracts](API_CONTRACTS.md) — Flora governed-API contract surface *(PROPOSED)*
+- [Governed API](../../architecture/governed-api/README.md) — *PROPOSED home*
 - [Map shell](../../architecture/map-shell.md) — *PROPOSED home*
 - [Contract / schema / policy split](../../architecture/contract-schema-policy-split.md) — *PROPOSED home*
 
@@ -749,7 +752,7 @@ PROPOSED first-PR rules (parallel-lane discipline):
 
 <div align="center">
 
-**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Flora API Contracts](./api-contracts.md) · [Governed API](../../architecture/governed-api.md) · [Domains index](../README.md)
+**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Flora API Contracts](API_CONTRACTS.md) · [Governed API](../../architecture/governed-api/README.md) · [Domains index](../README.md)
 
 _Last updated: **2026-06-03** · Version: **v1.1** · Status: **draft** · CONTRACT_VERSION: **3.0.0** · Lane: **Flora** · Schema home: `schemas/contracts/v1/domains/flora/`_
 

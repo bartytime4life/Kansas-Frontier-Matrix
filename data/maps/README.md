@@ -186,7 +186,7 @@ Any broader role remains **PROPOSED** and requires an accepted placement decisio
 | Object meaning | [`contracts/`](../../contracts/) | `LayerManifest`, `LayerDescriptor`, `LayerCatalogItem`, and `MapReleaseManifest` meaning belongs there. |
 | Machine shape | [`schemas/`](../../schemas/) | Schemas own validation shape under an accepted home. |
 | Admissibility and exposure | [`policy/`](../../policy/README.md) and governed decisions | Policy decides allow, deny, restrict, generalize, redact, or abstain. |
-| Public map shell | [`apps/explorer-web/`](../../apps/explorer-web/README.md) when accepted and implemented | Downstream rendering only; not source or release authority. |
+| Public map shell | `apps/explorer-web/` (retired) when accepted and implemented | Downstream rendering only; not source or release authority. |
 | Dynamic trust-bearing API | [`apps/governed-api/`](../../apps/governed-api/README.md) | Public interactions resolve through the trust membrane. |
 | Renderer package | [`packages/maplibre/`](../../packages/maplibre/README.md) currently; package-home decision remains conflicted | Renderer code does not belong under data. |
 | Migration mechanics | [`migrations/data/`](../../migrations/data/README.md) | Own inventories, mappings, cutover records, and rollback instructions. |
@@ -614,7 +614,7 @@ Documentation authorship, implementation, validation, policy review, release app
 
 | Path | Responsibility |
 |---|---|
-| [`apps/explorer-web/`](../../apps/explorer-web/README.md) | Proposed canonical browser shell; implementation remains readiness-held. |
+| `apps/explorer-web/` (retired) | Proposed canonical browser shell; implementation remains readiness-held. |
 | [`apps/governed-api/`](../../apps/governed-api/README.md) | Dynamic trust membrane. |
 | [`packages/maplibre/`](../../packages/maplibre/README.md) | Current renderer-package scaffold; package-home decision remains conflicted. |
 | [`migrations/data/`](../../migrations/data/README.md) | Governed data-path migration mechanics. |

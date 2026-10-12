@@ -11,11 +11,11 @@ policy_label: public
 related:
   - ../README.md
   - ../../README.md
-  - ../../IDENTITY.md
-  - ../../PROFILES.md
-  - ../../RIGHTS-AND-SENSITIVITY-MAP.md
-  - ../../OPEN-QUESTIONS.md
-  - ../../_template/SOURCE_PRODUCT_TEMPLATE.md
+  - ../IDENTITY.md
+  - ../PROFILES.md
+  - ../RIGHTS-AND-SENSITIVITY-MAP.md
+  - ../OPEN-QUESTIONS.md
+  - ../_template/SOURCE_PRODUCT_TEMPLATE.md
   - ../../../doctrine/directory-rules.md
   - ../../../doctrine/authority-ladder.md
   - ../../../doctrine/truth-posture.md
@@ -27,9 +27,8 @@ related:
   - ../../../standards/PROV.md
   - ../../../standards/SENSITIVITY_RUBRIC.md
   - ../../../registers/VERIFICATION_BACKLOG.md
-  - ../../../adr/ADR-0001-schema-home.md
+  - ../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json
   - connectors/kansas/
   - data/registry/sources/
   - policy/sensitivity/
@@ -71,6 +70,9 @@ notes:
     Rights posture: the FHSM Herpetology Division publicly states a no-commercial
     no-redistribution license. KFM treats that restriction as the floor for all
     FHSM divisions until per-division terms are individually verified.
+owning_root: docs/
+responsibility: "Documentation for FHSU Sternberg Museum of Natural History — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -532,9 +534,9 @@ Per-asset integrity: `file:checksum` (per-file SHA-256, CONFIRMED per `C4-01` + 
 
 - [`../README.md`](../README.md) — `docs/sources/catalog/kansas/` family README (v0.2 confirms `connectors/kansas/` as §7.3 canonical; lists this product page)
 - [`../../README.md`](../../README.md) — `docs/sources/catalog/` index
-- [`../../IDENTITY.md`](../../IDENTITY.md) — Collection-id and namespace conventions
-- [`../../RIGHTS-AND-SENSITIVITY-MAP.md`](../../RIGHTS-AND-SENSITIVITY-MAP.md) — lane-wide rights/sensitivity matrix
-- [`../../OPEN-QUESTIONS.md`](../../OPEN-QUESTIONS.md) — lane-wide `OPEN-DSC-*` items
+- `../../IDENTITY.md` (not present) — Collection-id and namespace conventions
+- `../../RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — lane-wide rights/sensitivity matrix
+- `../../OPEN-QUESTIONS.md` (not present) — lane-wide `OPEN-DSC-*` items
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§6.1, §7.3, §11)
 - [`../../../doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — Kansas-first authority posture
 - [`../../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain rule and truth labels
@@ -545,7 +547,7 @@ Per-asset integrity: `file:checksum` (per-file SHA-256, CONFIRMED per `C4-01` + 
 - [`../../../standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata profile for source-level descriptions
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — provenance vocabulary for `SourceDescriptor` → `EvidenceBundle` lineage
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — C6-01 0–5 rubric (PROPOSED in corpus; not yet authored)
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home authority for the `SourceDescriptor` JSON Schema location
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home authority for the `SourceDescriptor` JSON Schema location
 - Pass-10 Idea Index — **`C10-06`** biodiversity stack card (doctrinal anchor for this entry); **`C7-10`** Kansas-First Domain Authorities
 - Pass-23/32 Consolidated Atlas — **§24.1.3** source-role descriptor fields; **§24.2.1** receipt family catalog; **`KFM-P17-PROG-0027`** sensitive species public geometry rule (NEEDS VERIFICATION per OQ-FHSM-09); **`KFM-P19-IDEA-0005`** (KDWP listing-status canonicity)
 

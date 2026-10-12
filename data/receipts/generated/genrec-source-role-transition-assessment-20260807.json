@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-source-role-transition-assessment-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-role-transition-assessment.yml",
+    "contracts/source/source_role_transition_assessment.md",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/aggregate_missing_receipt_marked_pass.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/modeled_as_observed_marked_pass.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/synthetic_missing_boundary_marked_pass.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/aggregate_with_receipt.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/candidate_promotion_hold.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/observed_passthrough.json",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/synthetic_with_boundary.json",
+    "schemas/contracts/v1/source/source_role_transition_assessment.schema.json",
+    "tests/source/test_source_role_transition_assessment.py",
+    "tools/validators/source_role/validate_source_role_transition_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-role-transition-assessment.yml": "sha256:df95c9cd83eccb445ebc543fa8f826f23146c02a7664475cc5c4cd713904ba4d",
+    "contracts/source/source_role_transition_assessment.md": "sha256:d9363617a6cd069c33b22ef5e79eee2a6a9c1a8378178e5925a126e17c184de0",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/aggregate_missing_receipt_marked_pass.json": "sha256:6c60d29ab082eb3daf4b3515f51aeef83e0e53707ff937b25e8ba38c926a57ed",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/modeled_as_observed_marked_pass.json": "sha256:9cb485eb0c51c4a3945e1d0aa9a59bf6277cf1ebf0357ada6f744280cded35d3",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/synthetic_missing_boundary_marked_pass.json": "sha256:48faaec237fcfbe351836f4c45ff73829a5b497d5c968525a52fde2fc81187b8",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/aggregate_with_receipt.json": "sha256:fdbb7d950574326b0e5772abf854cfd1e4f00404888aaf263c4b12c87497768f",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/candidate_promotion_hold.json": "sha256:643cfb47f7f2fe312b2dd24ea8ac9f50d5c4834b6ad5638630eb70245e7b7ece",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/observed_passthrough.json": "sha256:a32c814f315005a8881f6e891ac45b2754816009f58d1644d4bcb29aa914ad58",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/synthetic_with_boundary.json": "sha256:5192ceb2f67701d328d19796de5b9e9032c661dcf3605d5460ab83edcca3383f",
+    "schemas/contracts/v1/source/source_role_transition_assessment.schema.json": "sha256:279948b5a59b9606e61f7a0903675af541e4574892669792f55fc77e747187f0",
+    "tests/source/test_source_role_transition_assessment.py": "sha256:f034908c2fc943073db9a8a5e2e3a1c1d5dba4eaf57d073f5466c2b8fd9d557c",
+    "tools/validators/source_role/validate_source_role_transition_assessment.py": "sha256:374e72f54c60738613e14117d038126cf3d2d0cd77298afc29247b250d4d482e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:c4bc99a42b85cc0518237618cbc88204192daa9a447936269277cdf7f0fe1c8c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_13_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_15_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual(1).pdf",
+      "KFM_Components_Pass_18_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM Components Pass 13#proof-object-schema-wave",
+      "attachment:KFM Components Pass 15#source-role-and-trust-visible-payloads",
+      "attachment:KFM Components Pass 18#source-descriptor-and-spatial-semantics",
+      "repo:docs/domains/*/SOURCE_ROLE_MATRIX.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2",
+      "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-role-transition-assessment.yml": "PROPOSED",
+    "contracts/source/source_role_transition_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/aggregate_missing_receipt_marked_pass.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/modeled_as_observed_marked_pass.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/invalid/synthetic_missing_boundary_marked_pass.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/aggregate_with_receipt.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/candidate_promotion_hold.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/observed_passthrough.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_role_transition_assessment/valid/synthetic_with_boundary.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_role_transition_assessment.schema.json": "PROPOSED",
+    "tests/source/test_source_role_transition_assessment.py": "PROPOSED",
+    "tools/validators/source_role/validate_source_role_transition_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Four deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Four valid and three invalid source-role transition fixtures produced expected polarity."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed locally."
+    },
+    {
+      "gate": "live-source-activation",
+      "outcome": "SKIPPED",
+      "reason": "No source access or source activation is part of this profile."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human source, domain, evidence, and policy review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass-13-common-proof-grammar",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 13#proof-object-schema-wave"
+    },
+    {
+      "id": "attachment:pass-15-source-role-and-shell",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 15#source-role-and-trust-visible-payloads"
+    },
+    {
+      "id": "attachment:pass-18-spatial-semantics",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Components Pass 18#source-descriptor-and-spatial-semantics"
+    },
+    {
+      "id": "repo:domain-source-role-matrices",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/*/SOURCE_ROLE_MATRIX.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@21f7b698112e2964064a0dae5ec5e1fab90a87d2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T23:53:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first shared source-role anti-collapse transition assessment. Domain-specific matrices remain authoritative for lane semantics."
+}

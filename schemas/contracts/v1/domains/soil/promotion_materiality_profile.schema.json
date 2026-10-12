@@ -1,0 +1,144 @@
+{
+  "$defs": {
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/promotion_materiality_profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "kfm-canonical-json-v1"
+    },
+    "combination": {
+      "const": "ANY"
+    },
+    "digest_algorithm": {
+      "const": "sha256"
+    },
+    "domain": {
+      "const": "soil"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        },
+        "source_activated": {
+          "const": false
+        }
+      },
+      "required": [
+        "source_activated",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "type": "object"
+    },
+    "ignored_dimensions": {
+      "const": [
+        "retrieved_at"
+      ]
+    },
+    "object_type": {
+      "const": "SoilPromotionMaterialityProfile"
+    },
+    "profile_id": {
+      "const": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1"
+    },
+    "profile_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "substantive_dimensions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": {
+            "pattern": "^soil\\.hash\\.[a-z_]+$",
+            "type": "string"
+          },
+          "dimension_id": {
+            "enum": [
+              "content_spec_hash",
+              "source_descriptor_hash",
+              "schema_hash",
+              "validator_hash",
+              "policy_hash"
+            ]
+          },
+          "required": {
+            "const": true
+          }
+        },
+        "required": [
+          "dimension_id",
+          "criterion_id",
+          "required"
+        ],
+        "type": "object"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "status",
+    "profile_id",
+    "profile_version",
+    "spec_hash",
+    "domain",
+    "digest_algorithm",
+    "canonicalization_profile",
+    "combination",
+    "substantive_dimensions",
+    "ignored_dimensions",
+    "governance"
+  ],
+  "title": "SoilPromotionMaterialityProfile",
+  "type": "object",
+  "x-kfm": {
+    "authority": "domain_adapter_only",
+    "contract_doc": "contracts/domains/soil/promotion_materiality_profile.md",
+    "non_effects": [
+      "does_not_activate_source",
+      "does_not_evaluate_policy",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ],
+    "profile_instance": "pipeline_specs/soil/promotion_materiality_profile.v1.json",
+    "status": "PROPOSED_INACTIVE",
+    "validator": "tools/validators/domains/soil/validate_promotion_materiality.py"
+  }
+}

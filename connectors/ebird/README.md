@@ -36,6 +36,9 @@ notes:
 
 # eBird Connector
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ebird/admit.py` and `src/ebird/fetch.py` were removed from `connectors/ebird/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > Greenfield source-admission lane for eBird material entering the KFM Fauna lifecycle.
 
 <p>
@@ -74,8 +77,8 @@ The current package is a scaffold. The inspected files document no supported ins
 |---|---|---|
 | `pyproject.toml` | Declares `kfm-connector-ebird` at version `0.0.0`. | No build backend, dependencies, entry points, environment variables, or test configuration are declared. |
 | `src/ebird/__init__.py` | Empty file. | No public Python API or import behavior beyond an empty module. |
-| `src/ebird/fetch.py` | One-line greenfield placeholder. | No endpoint client, authentication, pagination, retry, timeout, rate-limit, or download behavior. |
-| `src/ebird/admit.py` | One-line greenfield placeholder. | No descriptor gate, validation, quarantine, receipt, or output-path enforcement. |
+| `src/ebird/fetch.py` (removed 2026-09-29) | One-line greenfield placeholder. | No endpoint client, authentication, pagination, retry, timeout, rate-limit, or download behavior. |
+| `src/ebird/admit.py` (removed 2026-09-29) | One-line greenfield placeholder. | No descriptor gate, validation, quarantine, receipt, or output-path enforcement. |
 | `src/ebird/descriptor.yaml` | Placeholder with `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. | It is not an accepted SourceDescriptor or activation decision. |
 | `tests/` | Contains a README contract only. | No connector-local test modules, fixtures, runner command, passing tests, or CI wiring. |
 | Generic boundary workflow | Pull requests touching `connectors/**` trigger `policy-boundary-guards`. | Its static test is not eBird behavior coverage and does not enforce the full RAW/QUARANTINE-only contract. |
@@ -95,9 +98,7 @@ connectors/ebird/
 │   └── ebird/
 │       ├── README.md
 │       ├── __init__.py
-│       ├── admit.py
-│       ├── descriptor.yaml
-│       └── fetch.py
+│       └── descriptor.yaml
 └── tests/
     └── README.md
 ```

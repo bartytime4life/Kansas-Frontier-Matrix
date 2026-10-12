@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-cross-lane-relations
 title: Archaeology — Cross-Lane Relations
 type: standard
 version: v1
 status: draft
 owners: <archaeology-domain-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, ai-build-operating-contract.md, directory-rules.md, policy/sensitivity/archaeology/]
+owning_root: docs/
+responsibility: Document draft Archaeology cross-lane relations while preserving ownership, source role, sensitivity, and EvidenceBundle support.
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED relation implementation unless current repository evidence is cited / NEEDS VERIFICATION validation, review, release, and publication
+related: [docs/domains/archaeology/README.md, docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, policy/sensitivity/archaeology/]
 tags: [kfm, archaeology, cross-lane, governance]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; repo paths PROPOSED, repo not mounted this session]
 [/KFM_META_BLOCK_V2] -->

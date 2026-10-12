@@ -35,7 +35,21 @@ notes:
 
 # BLM Connector
 
+> **Live Kansas PLSS candidate capture (2026-09-30):** `src/blm/live_capture.py` now fetches provider counts and all bounded GeoJSON pages for township, first division, or intersected division into a new external directory. `plss_cadnsdi.py` uses the current service fields: `STATEABBR='KS'` for township/intersected and `PLSSID LIKE 'KS%'` for sections, whose layer has no `STATEABBR`. HTTP-200 ArcGIS error bodies are rejected. The capture compares counts before/after, validates every page and geometry, records request URLs and SHA-256 hashes, and remains `UNRELEASED` pending source admission and review. The section service can repeat a `FRSTDIVID` under distinct `OBJECTID` records; both are preserved with `OBJECTID` as page identity. The earlier 2026-09-27 note below describes the previous two-layer fixture planner and is superseded for these facts. This executable slice does not prepare tiles or certify legal title.
+
 > Governed source-admission support for U.S. Bureau of Land Management source families. This lane may fetch, inspect, and stage BLM material; it does not establish land truth, legal title, public access, policy, proof, release, or publication authority.
+
+> [!NOTE]
+> **PLSS (CadNSDI) retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; other BLM products and activation are still open).**
+> - **`plss_cadnsdi.query_url(layer, offset=, count=)`:** plans one canonical, paged ArcGIS REST `query` GET on `BLM_Natl_PLSS_CadNSDI/MapServer` for Kansas features (`STATEABBR='KS'`) of the `township` or `first_division` layer. It fixes the parameter order, orders by `OBJECTID`, and returns GeoJSON in WGS84, at ≤1000 features per page.
+> - **`plss_cadnsdi.parse_page(...)`:** parses a *supplied* GeoJSON page into per-feature candidates with properties verbatim (number tokens kept exact, never via `float`), `source_role: REFERENCE_GEOMETRY_CANDIDATE` and `title_authority: False`. An open ring or geometry outside the Kansas extent makes the feature a quarantine candidate. A non-Kansas feature, an unordered or duplicate id, an ArcGIS error body, or any shape drift rejects the whole page. The service path, layer ids (`1`, `2`) and fields (`PLSSID`, `FRSTDIVID`, `STATEABBR`, `OBJECTID`) are **NEEDS VERIFICATION** against current BLM service metadata.
+> - **`fetch.retrieve(url)`:** accepts only the planner's exact URL (`application/geo+json` or `application/json`), runs through `connectors_core.transport` with caller-injected effects, and records under `blm.plss-cadnsdi`. Issuing the next page is the caller's decision.
+> - **`admit.admit()`:** re-applies the URL rule, then routes:
+>   - a parsed page becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES` or `MORE_PAGES` (the ArcGIS `exceededTransferLimit`, top-level or under the collection's `properties`, or a full page) when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. PLSS geometry is never parcel ownership, legal title, deed, or access authority.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/blm/tests/test_plss_cadnsdi.py`, `test_fetch_admit.py`, run by `.github/workflows/blm-connector-offline.yml`.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -46,6 +60,9 @@ notes:
 </p>
 
 `connectors/blm/`
+
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/blm/descriptor.yaml` now sets `role: administrative` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
 
 ## Quick jumps
 

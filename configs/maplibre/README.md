@@ -2,1587 +2,759 @@
 doc_id: kfm://doc/configs-maplibre-readme
 title: configs/maplibre/ — MapLibre Configuration, Drift, and Consumer-Binding Boundary
 type: readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — Config steward · Map steward · MapLibre adapter steward · Explorer Web steward · Governed API steward · Security steward · Policy steward · Release steward · Validation steward · Test steward · Docs steward
+version: v0.6
+status: draft; repository-grounded; bounded-config-lane; machine-contract-validated; runtime-HOLD; performance-HOLD; non-release; non-publication
+owners: OWNER_TBD — configuration and MapLibre specialist stewardship
+review_route: "@bartytime4life; repository routing is not independent approval"
 created: 2026-06-16
-updated: 2026-07-13
-policy_label: public; configs; maplibre; commit-safe; non-secret; non-authoritative; consumer-bound; renderer-downstream; released-artifacts-only; no-direct-publication; drift-visible
+updated: 2026-09-08
+policy_label: public-documentation; commit-safe; non-secret; non-authoritative
 current_path: configs/maplibre/README.md
-truth_posture: CONFIRMED recursive configs/maplibre inventory at the current base, existing perf-envelope payload under the canonical configs root, all executable repository references to the envelope, and migration of those references from the nonexistent singular config root / CONFLICTED schema home, current app path, trust-artifact output homes, and hermetic-network posture / PROPOSED broader config contract, precedence rules, validation matrix, and later implementation phases / UNKNOWN successful workflow runs, meaningful schema enforcement, deployment binding, release use, and owner assignments
+owning_root: configs/
+root_class: canonical
+readme_profile: BOUNDARY_COMPACT
+responsibility: explain shared non-secret MapLibre configuration inputs, their actual readers, and their validation limits
+truth_posture: CONFIRMED closed v1 machine schema, tracked-config validation, synthetic fixture polarity, focused tests, and CI binding; HOLD runtime performance and release claims; UNKNOWN operational readiness and general config loading
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 55a84f06216effd8e3ae5d51450bbf9f3d160417
-  prior_blob: 62061a1530f3bf3e26dc7c23526a3f3a9b0e7459
+  base_commit: b30210971c41073a9a2e36b5a0d7d451ef43d592
+  root_tree: 2e648bd3db2ee9891eec31c897cf71cff08f06bb
+  prior_readme_blob: 8b2b2662cd5ecb003bff98b8c983acece4129e99
+  payload_blob: 2833f99b5316df91e71c0f8913bb06d70917abcf
+  package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  perf_workflow_blob: 8e4c3b801fe6dbaac5e6645b054768859e84fa1e
+  method: current full checkout; bounded offline schema, fixture, test, workflow, and documentation checks
 related:
   - ../README.md
-  - ../examples/README.md
-  - ../../CONTRIBUTING.md
-  - ../../.github/CODEOWNERS
-  - ../../.github/PULL_REQUEST_TEMPLATE.md
-  - ../../.github/workflows/maplibre-perf-governance.yml
+  - ./perf-envelope.v1.json
   - ../../docs/doctrine/directory-rules.md
-  - ../../docs/doctrine/trust-membrane.md
-  - ../../docs/doctrine/lifecycle-law.md
-  - ../../docs/architecture/maplibre.md
-  - ../../docs/architecture/map-master.md
-  - ../../docs/architecture/maplibre-master.md
-  - ../../docs/architecture/maplibre-3d.md
-  - ../../docs/architecture/map-shell.md
-  - ../../docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
-  - ../../docs/architecture/ui/LAYERING.md
-  - ../../docs/architecture/identity-and-spec-hash.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
   - "../../docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
-  - ../../docs/quality/maplibre-perf-governance.md
-  - ../../docs/security/SECRETS.md
-  - ../../apps/explorer-web/src/features/map_runtime/README.md
-  - ../../packages/maplibre/README.md
-  - ../../packages/maplibre-runtime/README.md
+  - ../../packages/maplibre/package.json
   - ../../schemas/maplibre/perf-envelope.schema.json
-  - ../../schemas/contracts/v1/maplibre/
-  - ../../schemas/contracts/v1/3d/
-  - ../../policy/maplibre/
   - ../../tools/validators/maplibre/validate_perf_envelope.py
-  - ../../scripts/maplibre-smoke-perf.mjs
-  - ../../release/
-  - ../../data/published/
-tags: [kfm, configs, maplibre, renderer, defaults, templates, consumer-binding, map-runtime, styles, layers, tiles, performance, security, secrets, validation, release, rollback, governance]
+  - ../../.github/workflows/maplibre-perf-governance.yml
+  - ../../.github/workflows/schema-validation.yml
+  - ../../tests/fixtures/maplibre/perf-envelope/README.md
+  - ../../tests/maplibre/test_perf_envelope_contract.py
+  - ../../tests/maplibre/test_perf_governance_negative_paths.py
+  - ../../tests/maplibre/perf_fixture_builder.py
+  - ../../data/receipts/generated/README.md
 notes:
-  - "At the pinned base, recursive inspection confirmed configs/maplibre/README.md and configs/maplibre/perf-envelope.v1.json. Exact probes for viewer.example.yaml, style.example.json, layers.example.yaml, and validation.md returned Not Found."
-  - "At the pinned base, the MapLibre performance workflow and four scripts referenced singular config/maplibre/perf-envelope.v1.json even though the payload exists under the canonical plural configs root. This revision migrates every confirmed executable reference to configs/maplibre/perf-envelope.v1.json and does not create a singular compatibility root."
-  - "Static validation also found a pre-existing syntax error in maplibre-smoke-perf.mjs. This revision computes the serializable style before page.evaluate and passes it as data, preserving the intended scenario behavior while making the script parse."
-  - "The performance validator reads schemas/maplibre/perf-envelope.schema.json, which is an open permissive object scaffold, while MapLibre doctrine proposes schemas/contracts/v1/maplibre/ as the governed schema family. Final schema authority remains conflicted."
-  - "The performance workflow still watches apps/web/** and schemas/maplibre/**, while current app documentation uses apps/explorer-web/ and doctrine proposes schemas/contracts/v1/maplibre/. Those separate conflicts remain visible and deferred."
-  - "The smoke script loads MapLibre and glyph assets from public external URLs. Therefore current performance tooling is not proven hermetic or no-network, and endpoint/admission posture remains NEEDS VERIFICATION."
-  - "packages/maplibre/README.md exists as a bounded helper-package document. packages/maplibre-runtime/README.md, policy/maplibre/README.md, and schemas/contracts/v1/maplibre/README.md returned Not Found at named probes."
-  - "This revision updates this README, the MapLibre performance workflow, and four scripts. It does not change threshold values, schema authority, policy, package/app code, fixtures, lifecycle objects, release records, endpoints, secrets, or public behavior."
+  - "v0.5 consolidates repeated guidance while retaining the document identity and legacy heading anchors."
+  - "ADR-0006 and ADR-0007 are accepted architecture decisions, not proposed decisions or runtime-readiness proofs."
+  - "The tracked envelope now has closed identity, threshold, notes, type, and numerical machine-shape checks; this does not establish threshold authority or observed performance."
+  - "The legacy three-field scalar tests remain separate; the focused contract suite loads the real config, schema, validator, and fixture pack."
+  - "Literal ANSWER in a candidate builder is not evidence that its named validation command ran."
+  - "This slice changes no threshold value, runtime dependency, renderer, source, release, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # MapLibre Configuration, Drift, and Consumer-Binding Boundary
 
-> `configs/maplibre/` is the canonical-root sublane for commit-safe MapLibre defaults and templates. At the inspected repository state, it contains this README and one performance-envelope payload. That payload is a bounded input to named performance tooling; it is not a live viewer configuration, style manifest, layer registry, endpoint allowlist, policy decision, release manifest, or runtime authority.
+**This lane supplies shared, non-secret configuration inputs. It does not turn on a map.**
 
-**Document lifecycle:** `draft v0.3`
-**Observed lane maturity:** `CONFIRMED` README plus one JSON performance-envelope payload; executable path binding corrected in this revision
-**Owning responsibility root:** `configs/` — safe, non-secret configuration defaults and templates  
-**Authority:** configuration-boundary documentation only; no truth, schema, contract, policy, source, evidence, lifecycle, release, deployment, renderer, or publication authority  
-**Default posture:** commit-safe · non-secret · consumer-bound · versioned · explicit precedence · fail closed · renderer downstream · no public binding by presence alone
+Start with [the tracked performance envelope](./perf-envelope.v1.json) to inspect
+its declared thresholds, or the [consumer table](#consumer-binding-contract) to
+see which code actually reads it. The lane inherits the
+[`configs/` boundary](../README.md).
+
+| Question | Evidence-bounded answer |
+|---|---|
+| What is tracked here? | This README and `perf-envelope.v1.json`; no child directories at the recorded snapshot. |
+| Is MapLibre architecture accepted? | Yes: ADR-0006 owns the package seam; ADR-0007 selects the renderer family. |
+| Is a renderer version declared? | `packages/maplibre/package.json` declares exact `maplibre-gl` `6.6.0`. That is repository dependency state, not a latest-version or readiness claim. |
+| Are these thresholds fully enforced? | Their v1 configuration shape and basic numerical domains are enforced by a closed schema, synthetic fixture polarity, focused tests, and CI. No benchmark methodology or measured-result enforcement is established. |
+| Does this configure a running Explorer? | No general application loader, override model, or deployed binding was established by this review. |
+| Does a successful check permit release? | No. Runtime, performance, source admission, review, release, and publication remain separate gates. |
 
 > [!IMPORTANT]
-> A configuration file can influence renderer behavior, performance, network access, visual emphasis, and public exposure. That influence does **not** make configuration an authority surface. MapLibre may render only governed and released artifacts through accepted consumers; configuration cannot activate a source, admit a plugin, approve a style, release a layer, resolve evidence, override sensitivity, or publish a map.
+> **Configuration is an input, not permission.** A `public_safe` string, a layer
+> toggle, a manifest path, a generated `ANSWER`, or a green static check cannot
+> approve a source, plugin, sensitive geometry, release, or public endpoint.
 
-> [!CAUTION]
-> The pinned base contained a path conflict: the payload existed at `configs/maplibre/perf-envelope.v1.json`, while the workflow and four scripts read nonexistent singular `config/maplibre/`. This revision resolves that bounded consumer-path drift in favor of the canonical plural root and intentionally creates no alias or duplicate payload. Schema, app-filter, network, and trust-artifact conflicts remain unresolved.
+> [!NOTE]
+> The implementation base is pinned to
+> `b30210971c41073a9a2e36b5a0d7d451ef43d592`, inspected on 2026-09-08. Hosted
+> results remain separate from local source-defined checks. See
+> [evidence](#evidence-basis) and [validation](#validation) for limits.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current state](#current-repository-state) · [Repository fit](#repository-fit) · [Path migration](#config-versus-configs-path-migration) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Config classes](#configuration-classes) · [Consumer binding](#consumer-binding-contract) · [Precedence](#precedence-overrides-and-environments) · [Security](#secrets-endpoints-and-network-posture) · [Map trust](#map-trust-release-and-sensitive-geometry-boundaries) · [Styles](#styles-layers-tiles-sprites-and-glyphs) · [Plugins](#plugins-protocols-and-renderer-capabilities) · [Performance](#maplibre-performance-configuration-drift) · [Formats](#formats-naming-and-versioning) · [Validation](#validation) · [Negative cases](#required-negative-cases) · [Tests and CI](#tests-workflows-and-ci) · [Review](#review-burden) · [Change pattern](#safe-change-pattern) · [Implementation sequence](#smallest-safe-implementation-sequence) · [Definition of done](#definition-of-done) · [Evidence](#evidence-basis) · [Open decisions](#open-decisions-and-adr-triggers) · [Rollback](#rollback) · [Backlog](#verification-backlog)
-
----
+**Navigate:** [Inventory](#current-repository-state) ·
+[Readers](#consumer-binding-contract) · [Thresholds](#payload-and-consumer-path) ·
+[Checks](#validation) · [Next slice](#smallest-safe-implementation-sequence) ·
+[Rollback](#rollback)
 
 ## Purpose
 
-`configs/maplibre/` is intended to hold small, reviewable, non-secret configuration defaults and templates for a **named MapLibre consumer**.
-
-A mature file in this lane should help a maintainer answer:
-
-- which app, package, tool, validator, smoke harness, or review workflow consumes it;
-- whether it is a default, template, example, threshold declaration, or compatibility alias;
-- which semantic contract owns the meaning of its fields;
-- which machine schema validates its shape;
-- which policy decisions or release records constrain its use;
-- which values are safe defaults and which are placeholders;
-- how overrides are resolved;
-- whether network access is allowed, denied, or allowlisted;
-- how the file is versioned, deprecated, corrected, and rolled back;
-- which negative states must fail closed;
-- what evidence proves that the consumer actually reads it.
-
-The lane may eventually support safe configuration for:
-
-- local, development, test, or review-only viewport defaults;
-- accessibility-safe map interaction defaults;
-- bounded cache or performance thresholds;
-- debug and diagnostics toggles that are disabled by default;
-- named style, layer, legend, sprite, glyph, tile, PMTiles, COG, terrain, globe, or plugin **references**;
-- protocol and renderer-capability preferences that remain subordinate to plugin admission and release state;
-- synthetic fixture-server references for test-only consumers;
-- configuration migration aliases with explicit expiry and rollback;
-- deterministic performance-envelope declarations after path and schema authority are accepted.
-
-The lane must not become an alternate map application, renderer package, style registry, source registry, layer catalog, policy bundle, endpoint registry, secret store, release directory, artifact directory, or runtime database.
-
-A config file documents or supplies bounded inputs to a consumer. It does not prove that the consumer exists, imports the file, validates it, applies it, or exposes it safely.
-
-[Back to top](#top)
-
----
+Own small, reviewable, shared defaults or templates for a named MapLibre-related
+consumer. Explain what is configurable, who reads it, what validates it, what
+remains held, and how to reverse a change. This README is not a replacement map
+architecture, API contract, style catalog, source registry, or release manual.
 
 ## Authority level
 
-**Canonical configuration sublane / no independent map or publication authority.**
+**Canonical configuration root; bounded local responsibility; no independent
+renderer, evidence, policy, or publication authority.**
 
-| Concern | Status | Evidence-bounded determination |
-|---|---:|---|
-| Parent root | **CONFIRMED** | `configs/README.md` identifies `configs/` as the canonical root for safe, non-secret defaults and templates. |
-| Current path | **CONFIRMED** | `configs/maplibre/README.md` exists at the pinned base. |
-| Current payload inventory | **CONFIRMED RECURSIVE FINDING** | The lane contains this README and `perf-envelope.v1.json`; four conventional candidate files are absent at exact paths. |
-| Config consumer | **CONFIRMED BOUNDED TOOLING** | One workflow and four scripts reference the performance envelope after the canonical-path migration. No general app/runtime loader, merge order, or deployment use is established. |
-| MapLibre renderer doctrine | **CONFIRMED DOCUMENTED / IMPLEMENTATION MIXED** | Architecture documents establish the renderer-downstream posture; current runtime implementation remains only partly evidenced. |
-| Shared helper package | **README PRESENT / IMPLEMENTATION UNKNOWN** | `packages/maplibre/README.md` exists as a proposed bounded helper-package contract. |
-| Runtime package | **NOT FOUND AT NAMED PATH** | `packages/maplibre-runtime/README.md` was absent at the current probe. |
-| Explorer Web map runtime | **DOCUMENTED / RUNTIME NEEDS VERIFICATION** | The app-local map-runtime README exists and keeps the renderer behind a trust-preserving seam. |
-| Sole-renderer decision | **PROPOSED ADR** | ADR-0007 is present with status `PROPOSED`; this README does not promote it. |
-| Single-importer boundary | **PROPOSED ADR** | ADR-0006 documents a `MapLibreAdapter` seam; enforcement remains to be verified. |
-| MapLibre policy home | **NOT FOUND AT NAMED README** | `policy/maplibre/README.md` was absent at the named probe. |
-| Governed MapLibre schema family | **NOT FOUND AT NAMED README** | `schemas/contracts/v1/maplibre/README.md` was absent at the named probe. |
-| Legacy performance schema | **CONFIRMED PERMISSIVE SCAFFOLD** | `schemas/maplibre/perf-envelope.schema.json` accepts any object because `additionalProperties` is true and no fields are required. |
-| Performance workflow | **CONFIRMED PRESENT / PATH MIGRATED** | This revision makes the workflow watch and validate `configs/maplibre/perf-envelope.v1.json`. Successful runs and broader governance remain unverified. |
-| Release or publication authority | **NONE** | A config file cannot approve a style, layer, tile, plugin, release, or public exposure. |
+[Directory Rules](../../docs/doctrine/directory-rules.md), adopted by
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md),
+place genuinely shared non-secret profiles in `configs/`. One application's
+configuration normally stays with that application; executable admissibility
+rules belong to policy, and deployment configuration belongs to infrastructure.
+The adopted file's preserved internal draft label does not undo ADR-0029.
 
-A canonical config location grants placement responsibility. It does not establish field semantics, consumer behavior, policy, release, or renderer authority.
-
-[Back to top](#top)
-
----
+The parent README identifies `@bartytime4life` as the repository review route.
+Configuration, map, security, and release specialist assignments and independent
+approval remain **NEEDS VERIFICATION**. No owner or approval is created here.
 
 ## Current repository state
 
 ### Bounded snapshot
 
-Recursive repository inspection at base commit `55a84f06216effd8e3ae5d51450bbf9f3d160417` supports this lane snapshot:
+The pinned directory listing contains exactly:
 
 ```text
 configs/maplibre/
-├── README.md
-└── perf-envelope.v1.json                  # bounded performance thresholds
+├── README.md                 # configuration boundary and reader guidance
+└── perf-envelope.v1.json      # existing threshold declaration; not a release
 ```
 
-Exact probes returned `Not Found` for:
-
-```text
-configs/maplibre/viewer.example.yaml
-configs/maplibre/style.example.json
-configs/maplibre/layers.example.yaml
-configs/maplibre/validation.md
-```
-
-The mounted recursive tree confirms the tracked lane inventory at this base. Ignored workstation files, generated outputs, and other branches remain outside that claim.
+The payload is 487 bytes with Git blob
+`2833f99b5316df91e71c0f8913bb06d70917abcf`. No additional config, style, layer,
+probe-results file, or subdirectory is tracked **inside this lane** at the pin.
+This does not inventory ignored files, external stores, other branches, or apps.
 
 ### Adjacent MapLibre surfaces
 
-The following repository surfaces were directly inspected:
+The [package manifest](../../packages/maplibre/package.json) declares
+`@kfm/maplibre`, private version `0.0.0`, exact `maplibre-gl` `6.6.0`, and the
+root, `./adapter`, and `./vite-adapter` exports. This review verifies those
+**declarations**, not successful construction, browser rendering, or deployment.
 
-```text
-docs/architecture/maplibre.md
-docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
-docs/quality/maplibre-perf-governance.md
-apps/explorer-web/src/features/map_runtime/README.md
-packages/maplibre/README.md
-.github/workflows/maplibre-perf-governance.yml
-tools/validators/maplibre/validate_perf_envelope.py
-schemas/maplibre/perf-envelope.schema.json
-scripts/maplibre-smoke-perf.mjs
-```
-
-Named probes returned `Not Found` for:
-
-```text
-packages/maplibre-runtime/README.md
-policy/maplibre/README.md
-schemas/contracts/v1/maplibre/README.md
-config/maplibre/perf-envelope.v1.json
-```
-
-The singular path is absent. At the pinned base, the workflow and four scripts nevertheless referenced it. This revision migrates those references to the existing plural path.
-
-### Current maturity table
-
-| Surface | Confirmed state | Safe conclusion |
-|---|---|---|
-| `configs/maplibre/README.md` | Existing v0.2 boundary before this revision | Documentation existed but its inventory was stale. |
-| `configs/maplibre/perf-envelope.v1.json` | Present JSON payload | Threshold values exist; semantic adequacy, owner approval, and release authority are not implied. |
-| `configs/README.md` | v0.2 canonical config-root contract | Placement and non-secret posture are established; lane behavior is not. |
-| `packages/maplibre/README.md` | Bounded helper-package README | A helper boundary is documented; package code and APIs remain unverified. |
-| Explorer Web map-runtime README | Governed app-feature boundary | The intended consumer seam is documented; runtime loading remains unverified. |
-| Performance workflow | Executable YAML present | This revision aligns its config trigger, validation argument, and uploaded path with the plural payload. Successful runs remain unverified. |
-| Performance validator | Python entry point present | It validates against a legacy permissive schema and requires a caller-supplied path. |
-| Legacy perf schema | Open object | It does not provide meaningful field enforcement. |
-| Perf smoke script | Node/Playwright script present | This revision aligns its envelope path; it still performs external network loads. |
-| MapLibre policy bundle | Not found at named README path | No MapLibre-specific policy authority is established through that path. |
-| Governed MapLibre schema README | Not found at named path | Final schema family and contents remain unresolved. |
-| CI coverage for this config lane | Statically aligned | The workflow now watches `configs/maplibre/**`; required-check status and successful runs remain unverified. |
-| Deployment use | Unknown | No production, staging, local, test, or review binding is proven. |
-
-There is no supported general application quickstart for this lane. The performance payload has bounded script/workflow consumers, but the schema remains permissive and no deployment or public-runtime binding is established.
-
-[Back to top](#top)
-
----
+The [performance workflow](../../.github/workflows/maplibre-perf-governance.yml)
+expects readiness to remain `HOLD` with `RUNTIME_PROBES_PENDING`. That is a
+source-defined guard, not this revision's full readiness execution. Previously
+reported bounded browser results and the remaining twelve-probe matrix must be
+re-read at their exact heads; do not infer either universal readiness or that no
+browser test has ever run.
 
 ## Repository fit
 
-Directory Rules assign one primary responsibility to each root. `configs/maplibre/` must remain subordinate to the map, app, schema, policy, data, release, test, runtime, and infrastructure roots that own behavior and authority.
-
-| Responsibility | Owning surface | Relationship to this lane |
-|---|---|---|
-| Safe defaults and templates | `configs/maplibre/` | This lane after a consumer and validator are verified. |
-| Deployable Explorer Web behavior | `apps/explorer-web/` | Consumer implementation; config cannot replace app code. |
-| App-local map-runtime composition | `apps/explorer-web/src/features/map_runtime/` | Proposed consumer seam; config must not bypass it. |
-| Shared MapLibre adapter/helpers | `packages/maplibre/` | Reusable implementation; config supplies bounded inputs only. |
-| Runtime adapters or harnesses | Accepted `runtime/` or package/app surface | Runtime behavior does not belong under config. |
-| Map architecture and renderer doctrine | `docs/architecture/`, accepted ADRs | Defines boundaries; config references rather than restates authority. |
-| Semantic configuration contracts | `contracts/` | Owns field meaning where a stable object family exists. |
-| Machine configuration schemas | `schemas/contracts/v1/` after accepted placement | Owns shape and version rules. |
-| Renderer, layer, access, sensitivity, rights, plugin, and release policy | `policy/` | Config carries refs or safe defaults; it does not decide. |
-| Layer/style/tile/source registries | Governed registry and catalog roots | Config must not become a registry. |
-| Lifecycle artifacts | `data/` through governed transitions | Config is not RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` | Generated trust evidence is not config. |
-| Release, correction, supersession, withdrawal, rollback | `release/` | Config cannot authorize release or record rollback state. |
-| Test-local fixtures | `tests/fixtures/` under accepted lanes | Deterministic test carriers; not config defaults. |
-| Cross-cutting reusable fixtures | `fixtures/` | Shared synthetic corpora; not config. |
-| Generated QA/build output | `artifacts/` | Reports and temporary outputs; not trusted config or release state. |
-| Deployment secrets and exposure controls | External secret manager and `infra/` | Never commit real secret material here. |
+| Responsibility | Owning root or inspected surface |
+|---|---|
+| Shared non-secret configuration | `configs/`; this existing sublane |
+| App behavior and app-only configuration | `apps/`, with the relevant consumer |
+| Reusable browser-renderer dependency seam | `packages/maplibre/`, under accepted ADR-0006 |
+| Meaning / machine shape / admissibility | `contracts/` / `schemas/` / `policy/`, respectively |
+| Pipeline run definitions / deployment | `pipeline_specs/` / `infra/`, respectively |
+| Lifecycle, registries, receipts, proofs, released carriers | Their governed `data/` lanes |
+| Release, correction, withdrawal, rollback decisions | `release/`, not this config lane |
+| Synthetic inputs and verification | Existing responsibility-owning fixture, test, and validator lanes |
 
 ### Configuration is not a release artifact
 
-A MapLibre style JSON, source list, layer definition, tile endpoint, sprite URL, glyph URL, camera preset, or plugin list can materially affect what users see. When such a file is itself a released public artifact, its authoritative copy and release state belong in the governed artifact/release lifecycle, not in `configs/` merely because the file is parseable configuration.
-
-`configs/maplibre/` may contain safe defaults, templates, or references. It must not become the authoritative public style, manifest, tile index, plugin admission record, or release declaration.
-
-[Back to top](#top)
-
----
+A style, tile set, manifest, or scene intended for public delivery requires its
+own governed artifact identity and release state. Calling it JSON configuration
+does not relocate that authority into `configs/`. This lane may reference an
+approved object; it cannot approve or duplicate the authoritative object.
 
 ## `config/` versus `configs/` path migration
 
-### Confirmed base-state conflict
+### Current decision
 
-The canonical root documented by Directory Rules and `configs/README.md` is:
+Use the existing plural path `configs/maplibre/perf-envelope.v1.json` for the
+inspected tooling. This revision does not repeat the historical singular-path
+migration or create an alias.
 
-```text
-configs/
-```
+### Current consumers and guards
 
-At the pinned base, the MapLibre performance workflow and four scripts instead referred to:
+The workflow and the three candidate builders listed below name the plural path.
+The retired smoke harness does not read an envelope. Workflow filters for
+`apps/web/**`, `packages/maplibre-runtime/**`, and
+`schemas/contracts/v1/maplibre/**` are **drift guards**, not proof those paths are
+active consumers or permission to create them.
 
-```text
-config/maplibre/perf-envelope.v1.json
-```
+### Safe posture
 
-The base workflow also used these path filters:
-
-```text
-apps/web/**
-schemas/maplibre/**
-config/maplibre/**
-tests/fixtures/maplibre/**
-```
-
-Current repository documentation instead identifies or proposes:
-
-```text
-apps/explorer-web/
-schemas/contracts/v1/maplibre/
-configs/maplibre/
-```
-
-### Resolution in this revision
-
-The bounded migration updates every confirmed executable reference to:
-
-```text
-configs/maplibre/perf-envelope.v1.json
-```
-
-It also updates the workflow path filter to `configs/maplibre/**`. No singular root, duplicate payload, symlink, fallback search, or compatibility alias is created.
-
-### Why this matters
-
-The mismatch creates several failure modes:
-
-- a valid change under `configs/maplibre/**` may not trigger the MapLibre performance workflow;
-- a maintainer may create a second, singular config root to satisfy a script;
-- scripts and validators may read a path that does not exist;
-- two copies of the same performance envelope may drift;
-- schema validation may target a compatibility schema rather than the accepted schema family;
-- documentation may claim canonical placement while executable tooling uses another path;
-- rollback may restore one copy while a consumer reads the other;
-- branch protection may report a green unrelated workflow while the changed config was never evaluated.
-
-### Current safe posture
-
-- do not reintroduce singular `config/maplibre/` references;
-- do not create a duplicate payload, symlink, fallback search, or silent alias;
-- state only that the four named scripts and one workflow reference the plural payload;
-- do not infer a general app/runtime loader, deployment binding, or release authority;
-- keep the separate app-filter, schema-home, network, and trust-artifact conflicts visible.
+Do not add a second payload, silent singular-path fallback, or symlink merely to
+satisfy a stale reference. A bounded source inspection is not a repository-wide
+or external-consumer zero-reference proof.
 
 ### Migration decision requirements
 
-Any future path migration should identify:
-
-- canonical target;
-- all readers and writers;
-- schema path;
-- workflow path filters;
-- package/app consumers;
-- precedence and fallback behavior during migration;
-- deprecation period, if any;
-- compatibility tests;
-- rollback commit and file targets;
-- drift-register or ADR need;
-- owner and reviewer assignments.
-
-For the performance-envelope path, this revision follows the already documented canonical `configs/` root and existing tracked payload. It does not settle the remaining schema, app, network, or trust-artifact decisions.
-
-[Back to top](#top)
-
----
+A later migration must bind old/new paths and identities, readers/writers,
+contract/schema versions, explicit compatibility and expiry, workflow coverage,
+negative tests, review, and rollback. Follow the owning roots; do not create a
+parallel config, schema, or runtime home through this README.
 
 ## What belongs here
 
-This lane may contain only commit-safe MapLibre configuration defaults, templates, and tightly coupled documentation for a verified consumer.
-
-| Accepted material | Purpose | Required posture |
-|---|---|---|
-| `README.md` | Lane contract, inventory, drift, validation, and review guidance | Truth-labeled and current. |
-| Safe default YAML/TOML/JSON | Non-sensitive defaults for a named consumer | Consumer, version, precedence, schema, and rollback identified. |
-| Template files | Illustrate required fields with placeholders | No live binding, no secrets, no private endpoints. |
-| Local/dev/test config | Bound to an explicitly non-production consumer | Environment and override rules explicit; safe to commit. |
-| Performance threshold declaration | Defines reviewable limits for a named smoke/perf harness | Path and schema authority accepted; values bounded; release authority separate. |
-| Camera or accessibility defaults | Initial view, reduced motion, keyboard, or non-map fallback preferences | Must not hide denial, evidence, or sensitive state. |
-| Cache/resource defaults | Bounded cache, concurrency, memory, or timeout values | Resource ceilings and failure behavior documented. |
-| Diagnostics defaults | Logging level, debug overlays, safe health probes | Disabled or conservative by default; no sensitive payload logging. |
-| Style/layer reference templates | References IDs, manifests, or released artifact handles | No inline authority; release and policy refs required where material. |
-| Endpoint placeholders | Demonstrate endpoint slots for a named consumer | Public-safe placeholders; runtime authorization remains external. |
-| Migration notes | Explain field/path compatibility during a bounded transition | Time-bounded, test-backed, reversible, owner assigned. |
-| Validation notes | Explain verified commands and expected outcomes | Commands observed or labeled `PROPOSED`. |
-
-Every non-trivial payload should be understandable without relying on tribal knowledge or hidden loader behavior.
-
-[Back to top](#top)
-
----
+The existing threshold declaration and its boundary documentation belong here.
+Additional shared defaults, templates, examples, or conservative diagnostics
+settings require a named consumer, safe values, a declared class/version,
+validation, and a reversible review boundary. Camera, accessibility, cache, or
+released-asset reference settings are **possible future inputs**, not an
+inventory of implemented files.
 
 ## What does not belong here
 
-| Prohibited material | Why prohibited | Correct home or action |
-|---|---|---|
-| Real tokens, keys, passwords, cookies, signed URLs, credentials, private endpoints | Repository is not a secret store. | External secret manager / deployment system; rotate and follow incident response if committed. |
-| Production- or operator-specific live values | Creates accidental deployment binding. | Governed deployment controls outside this lane. |
-| Authoritative public style JSON | A released style is a governed artifact with integrity and rollback state. | Published artifact and `release/` surfaces. |
-| Layer or source registry | Configuration cannot activate or register layers/sources. | Governed registry/catalog roots. |
-| Tile, PMTiles, COG, MVT, MLT, raster, terrain, sprite, glyph, or 3D asset payloads | These are artifacts/data, not config defaults. | Governed data/artifact/release homes. |
-| `LayerManifest`, `StyleManifest`, `MapReleaseManifest`, plugin admission decision | Trust-bearing objects cannot live as convenient config. | Contracts/schemas for shape; lifecycle/release/policy homes for instances. |
-| SourceDescriptor or source authority record | Map config cannot establish source identity or admissibility. | Source registry/control-plane surfaces. |
-| Policy rules or allow/deny decisions | Config cannot authorize exposure or plugins. | `policy/`. |
-| Machine schemas | Config cannot define its own shape authority. | Accepted `schemas/contracts/v1/` home. |
-| Semantic contracts | Config cannot define stable object meaning. | `contracts/`. |
-| App or renderer code | Config lane is not implementation. | `apps/` or `packages/`. |
-| Runtime adapters, protocols, loaders, service definitions | Config lane cannot become runtime authority. | Accepted package/runtime/app homes. |
-| Deployment/network/access-control definitions | Config defaults cannot own operational exposure. | `infra/` and external deployment systems. |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data | Lifecycle data must remain phase-visible. | `data/` lifecycle roots. |
-| Receipts, proofs, validation reports, attestations | Trust evidence must remain separately auditable. | `data/receipts/`, `data/proofs/`, or governed QA lanes. |
-| Promotion decisions, correction notices, rollback cards | Config cannot approve or record release. | `release/`. |
-| Render screenshots, diff images, performance results | Generated QA output is not config. | `artifacts/` or governed evidence/proof homes. |
-| Test fixture corpora | Config defaults are not valid/invalid test authorities. | `fixtures/` or `tests/fixtures/`. |
-| Sensitive geometry or protected-location examples | Style/config redaction is not sufficient protection. | Transform upstream; use synthetic/public-safe fixtures. |
-| AI-generated guessed defaults | Fluency is not evidence of a safe or supported value. | Verify against consumer, contracts, policy, tests, and release posture. |
-
-[Back to top](#top)
-
----
+Do not store secrets, signed URLs, operator-specific endpoints, sensitive
+geometry, source payloads, tiles, screenshots, evidence objects, normative
+policies, schemas, renderer code, runtime services, release decisions, or public
+artifacts here. Keep process receipts and proofs in their separate owning lanes.
+A template must remain unmistakably non-live; a filename cannot confer authority.
 
 ## Configuration classes
 
-A file should declare which class it belongs to. Do not infer class from extension alone.
+The following is explanatory vocabulary, **not an implemented enum or schema**:
 
-| Class | Meaning | May be auto-loaded? | Production authority |
-|---|---|---:|---:|
-| `default` | Conservative values used when the consumer receives no explicit override | Only after loader and precedence are verified | No |
-| `template` | Placeholder-bearing starting point copied or rendered outside the repository | No | No |
-| `example` | Teaching artifact for a named consumer | No | No |
-| `local` | Safe local-development values | Only by explicit local profile | No |
-| `test` | Deterministic config for a test harness | Only by explicit test invocation | No |
-| `review` | Bounded values for PR preview or review app | Only by explicit review environment | No |
-| `threshold` | Declared validation or performance limits | Only by named validator/harness | No; validation does not publish |
-| `compatibility-alias` | Temporary old-to-new path or field mapping | Only during reviewed migration | No |
-| `released-reference` | References released artifact IDs/hashes without containing the artifact | Only through governed consumer | No; refs do not grant release |
-| `deployment-template` | Safe shape with placeholders for deployment binding | No direct deployment | No |
-
-A file that cannot be classified should fail review until its responsibility is clear.
+| Class | Meaning and loading boundary |
+|---|---|
+| Default | Conservative input read by a verified consumer, with explicit fallback rules. |
+| Template / example | Starting point or illustration; never implicitly auto-loaded. |
+| Local / test / review | Explicitly selected non-production input; still secret-free. |
+| Threshold | Declared limits for named verification tooling; validation is not release. |
+| Compatibility alias | Time-bounded reviewed mapping; not a second writable authority. |
+| Released reference / deployment template | Public-safe handles or placeholders only; no approval or live binding. |
 
 ### No hidden promotion
 
-Changing a class from `example` or `test` to `default`, or from `default` to a live deployment input, is a behavior change. It requires consumer, test, security, policy, release, and rollback review appropriate to the consequences.
-
-[Back to top](#top)
-
----
+Changing an example into a default, enabling automatic loading, or binding a
+local value to production is a behavior change. It needs the corresponding
+consumer, security, policy, test, and rollback review; it is not cosmetic editing.
 
 ## Consumer-binding contract
 
-No config should be accepted into this lane merely because it looks reasonable. It must bind to a verified or explicitly proposed consumer surface.
+### Minimum binding evidence
+
+A reader is confirmed by code that opens the file, not proximity or a matching
+name. The inspected set is deliberately bounded:
+
+| Source | What it actually does | What it does not establish |
+|---|---|---|
+| [Performance workflow](../../.github/workflows/maplibre-perf-governance.yml) | Checks the closed v1 schema/config inventories, exact identity/posture, five threshold keys, numeric domains, fixture classification, and companion wiring without installing dependencies. | Does not run the JSON Schema engine, browser, or measured-result gate; those remain separate. |
+| [Envelope validator](../../tools/validators/maplibre/validate_perf_envelope.py) | Runs the closed schema against explicit files or the nonempty positive/negative fixture lanes from any working directory. | Machine validity is not benchmark, policy, release, or publication authority. |
+| [Envelope contract tests](../../tests/maplibre/test_perf_envelope_contract.py) | Load the tracked config and schema; pin field inventories and fixture polarity; test numeric boundaries, strict parsing, CLI outcomes, and working-directory independence. | Do not launch MapLibre or measure a runtime. |
+| [Three budget-negative tests](../../tests/maplibre/test_perf_governance_negative_paths.py) | Exercise a separate [dataclass fixture](../../tests/maplibre/perf_fixture_builder.py). | Do **not** load `perf-envelope.v1.json` or test its five threshold fields. |
 
 ### Proposed metadata fields
 
-A future config or adjacent metadata record should make these values inspectable:
-
-```yaml
-config_id: "kfm://config/maplibre/<name>"
-config_version: "0.1.0"
-config_class: "default | template | example | local | test | review | threshold"
-status: "proposed | active | deprecated | retired"
-consumer:
-  path: "apps/explorer-web/... or packages/maplibre/..."
-  interface: "accepted loader or option object"
-  version: "consumer version or commit"
-schema_ref: "kfm://schema/..."
-contract_ref: "kfm://contract/..."
-policy_refs: []
-release_refs: []
-environment: "local | dev | test | review | production-template"
-network_posture: "deny | allowlist | governed-runtime"
-precedence_rank: 0
-override_sources: []
-owner: "OWNER_TBD"
-reviewers: []
-last_reviewed: "YYYY-MM-DD"
-deprecated_after: null
-replacement_ref: null
-rollback_ref: null
-```
-
-This shape is `PROPOSED`. It is not a current schema and must not be copied into production until contract and schema review accepts it.
-
-### Minimum binding evidence
-
-A config should not be called “used,” “active,” or “supported” without:
-
-- a consumer file or package manifest that names the config path or accepted config ID;
-- a loader or invocation that deterministically reads it;
-- a documented precedence order;
-- a parser and schema validator;
-- tests for missing, malformed, denied, stale, and override cases;
-- CI or release evidence that exercises the consumer path;
-- a rollback target;
-- owner and review assignment.
+A future contract should bind a stable config ID/version/class to the exact
+consumer interface, schema and semantic contract, environment, allowed override
+sources, network policy, relevant release references, owner/reviewer, deprecation,
+and rollback. No general metadata schema or effective-config object is introduced
+by this documentation update.
 
 ### Binding by convention is forbidden
 
-These do not prove a binding:
-
-- directory proximity;
-- matching filenames;
-- a README link;
-- a workflow path filter;
-- an environment variable with a similar name;
-- a script constant pointing to a missing path;
-- a passing unrelated workflow;
-- an AI-generated explanation;
-- a developer's memory.
-
-[Back to top](#top)
-
----
+A path filter, README link, environment-variable name, source constant, receipt
+hash, or unrelated green check is not proof of effective runtime loading. Claims
+of supported loading additionally need parser/validation behavior, precedence,
+negative tests, and the appropriate execution evidence.
 
 ## Precedence, overrides, and environments
 
-Configuration ambiguity is operational risk. A consumer must define one deterministic precedence model.
-
-A proposed precedence may look like:
-
-```text
-compiled safe fallback
-  < repository default
-  < explicit environment profile
-  < deployment binding
-  < command/request override allowed by policy
-```
-
-This ordering is illustrative, not repository fact.
-
 ### Required rules
 
-A mature consumer should document:
-
-- all allowed config sources;
-- exact merge order;
-- whether merges are shallow, deep, field-specific, or forbidden;
-- which fields are immutable;
-- which fields may be overridden only in local/test environments;
-- whether unknown fields fail or are ignored;
-- whether null deletes, resets, or is invalid;
-- environment-variable substitution behavior;
-- path resolution rules;
-- duplicate-key behavior;
-- version compatibility;
-- deprecation warnings;
-- rollback behavior.
+No general loader or precedence implementation was established in this scope.
+Before adding one, declare every input source and deterministic merge order;
+shallow/deep/field-specific behavior; duplicate/unknown keys; null semantics;
+immutable fields; substitutions; path resolution; version compatibility; and
+rejection behavior. Do not prescribe an imagined current loading sequence.
 
 ### Fail-closed defaults
 
-For trust-significant fields, missing or conflicting values should not silently choose the most permissive option.
-
-Examples include:
-
-- public layer visibility;
-- endpoint authorization;
-- plugin enablement;
-- external network access;
-- source/layer release state;
-- sensitive-geometry behavior;
-- evidence or citation controls;
-- telemetry payload detail;
-- debug panels exposing internal values;
-- unsigned or hash-mismatched artifacts.
+Missing or conflicting trust-significant values must not choose the most
+permissive result. Endpoint access, plugin enablement, public visibility,
+sensitivity, evidence, and release state remain governed outside config.
 
 ### Environment separation
 
-Local, test, review, staging, and production-template values must not be collapsed into one ambiguous file. Environment differences should be explicit, minimal, and reviewable.
-
-[Back to top](#top)
-
----
+Keep local, test, review, and deployment-template selection explicit. Actual
+operator values and secrets stay outside Git. The same parseable file must not
+silently become both a fixture and production configuration.
 
 ## Secrets, endpoints, and network posture
 
 ### Secret prohibition
 
-Never commit:
-
-- API keys;
-- OAuth tokens;
-- passwords;
-- cookies;
-- private keys;
-- client secrets;
-- signed URLs;
-- presigned object-store URLs;
-- private tile-service credentials;
-- internal-only hostnames;
-- VPN-only endpoints;
-- operator usernames or home paths;
-- production database or object-store handles;
-- restricted source identifiers;
-- sensitive query parameters.
-
-Use references-by-name or obvious placeholders when a template must demonstrate a binding.
+No keys, passwords, cookies, tokens, signed/presigned URLs, private hostnames,
+restricted identifiers, precise protected locations, or private filesystem paths.
+Use obvious placeholders or references-by-name only; even a file called `local`
+or `example` is subject to the repository's disclosure boundary.
 
 ### Endpoint rules
 
-A committed endpoint or endpoint template must state:
-
-- whether it is mock, local, public, review-only, or governed-runtime;
-- who owns it;
-- whether credentials are required;
-- whether it may receive location, identity, or evidence context;
-- expected transport and certificate posture;
-- timeout, retry, and circuit-breaker behavior;
-- allowed response content;
-- attribution and rights obligations;
-- whether the endpoint can redirect;
-- which policy or allowlist controls runtime access.
-
-Config presence does not allow a runtime to fetch an endpoint.
+A future endpoint binding needs a known owner, purpose, access class, allowed
+hosts/redirects, transport requirements, request/response limits, timeout/retry
+rules, attribution, and authorization. Merely recording a URL does not permit a
+fetch or transmission of location, identity, or evidence context.
 
 ### Current performance-script network finding
 
-The inspected performance smoke script embeds public external URLs for:
-
-- MapLibre CSS and JavaScript from `unpkg.com`;
-- glyphs from `demotiles.maplibre.org`.
-
-The script also uses a local HTTP fixture server.
-
-Therefore:
-
-- current performance execution is not proven hermetic or no-network;
-- supply-chain pinning, content integrity, redirect handling, offline fallback, and endpoint admission remain unresolved;
-- the script's URLs must not be adopted as general MapLibre defaults by copying them into this lane;
-- a future test config must state whether external access is forbidden, mocked, vendored, or explicitly admitted.
+The retired harness executes no browser or network acquisition. The workflow is
+no-network **after GitHub Action bootstrap**, not proof that bootstrap or all
+future browser work is offline. Future asset fetching requires separately
+reviewed dependencies, fixtures, network constraints, and rights.
 
 ### Logging and telemetry
 
-Config parsers and consumers must not log:
-
-- secrets or substituted secret values;
-- signed URLs;
-- full private endpoints;
-- raw feature properties;
-- exact sensitive coordinates;
-- EvidenceBundle payloads;
-- living-person or genomic data;
-- protected infrastructure details;
-- private filesystem paths.
-
-Log stable IDs, reason codes, config versions, hashes, and redacted diagnostics instead.
-
-[Back to top](#top)
-
----
+Log stable IDs, versions, digests, finite reason codes, and redacted diagnostics.
+Do not log substituted secrets, private endpoints, feature payloads, sensitive
+coordinates, EvidenceBundle contents, living-person/DNA information, or restricted
+infrastructure detail.
 
 ## Map trust, release, and sensitive-geometry boundaries
 
-MapLibre is downstream of KFM's trust membrane.
-
-A config file must not let a consumer:
-
-- read RAW, WORK, QUARANTINE, unpublished candidate, canonical/internal, graph, vector-index, or object-store paths directly;
-- add an unverified source because a URL is present;
-- render an unreleased layer because a toggle is true;
-- replace policy with a visibility flag;
-- hide a policy denial through opacity or style filtering;
-- infer source authority from layer order, color, prominence, or label;
-- claim evidence closure from popup properties;
-- bypass governed API envelopes;
-- substitute a map click for a verified claim;
-- publish a style, layer, tile, plugin, or scene by configuration merge;
-- override correction, supersession, withdrawal, stale, degraded, or rollback state.
+Preserve `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`.
+Promotion is a governed transition, never a config merge or layer toggle.
 
 ### Released-artifact references only
 
-Normal public consumers should receive released, integrity-bound references such as:
-
-- layer manifest reference;
-- style manifest reference;
-- tile artifact manifest reference;
-- map release manifest reference;
-- artifact digest or spec hash;
-- correction/supersession/rollback reference;
-- EvidenceRef or governed resolution handle;
-- policy decision reference.
-
-A config may point to those handles. It may not fabricate or approve them.
+Ordinary public clients use governed APIs and released, public-safe carriers;
+they do not read raw, candidate, internal, canonical, or direct model stores.
+Where consequential, references must resolve identity/digest, source role,
+space/time scope, EvidenceRef -> EvidenceBundle, rights, policy, review, release,
+correction, withdrawal, and rollback. Configuration cannot invent those records.
 
 ### Sensitive geometry
 
-Generalization, aggregation, jitter, omission, temporal delay, or denial must occur in governed upstream transformation and release flows. A MapLibre config or style filter is not an acceptable geoprivacy control because the underlying geometry may remain downloadable, queryable, inspectable, cached, or inferable.
+Generalization, aggregation, omission, delay, or denial occurs upstream under
+policy and review. Client-side opacity or style filtering is not geoprivacy:
+underlying geometry must not be delivered merely because it is hidden visually.
+Unclear rights, sovereignty, archaeology, rare species, infrastructure, private
+land, or living-person/DNA scope requires restrictive handling, not guessed defaults.
 
 ### Negative states must remain visible
 
-Consumers must preserve explicit states such as:
-
-```text
-UNAVAILABLE
-UNRELEASED
-STALE
-DEGRADED
-DENIED
-RESTRICTED
-ABSTAINED
-CONFLICT
-INVALID_CONFIG
-INVALID_MANIFEST
-UNVERIFIED_ARTIFACT
-ROLLBACK_MISMATCH
-ERROR
-```
-
-Exact accepted vocabularies remain subject to contract review. The invariant is that unsafe or unresolved state is not silently rendered as success.
-
-[Back to top](#top)
-
----
+Keep invalid config, denial, unavailability, stale/degraded state, evidence
+abstention, correction, withdrawal, and rollback mismatch visible. Use each
+consumer's actual finite vocabulary; this prose does not introduce a new enum.
+Maps, tiles, graphs, scenes, summaries, and AI remain carriers, not root truth.
 
 ## Styles, layers, tiles, sprites, and glyphs
 
 ### Style configuration
 
-A safe style config may define or reference:
-
-- initial basemap preference;
-- approved style ID or manifest ref;
-- safe color-scheme preference;
-- reduced-motion preference;
-- label-density preference within accepted bounds;
-- debug style only in explicit non-production profiles;
-- legend reference;
-- attribution requirement;
-- style version and compatibility range.
-
-It must not:
-
-- become the authoritative released style artifact;
-- omit required attribution;
-- inline restricted endpoints or credentials;
-- suppress policy, evidence, stale, correction, or rollback indicators;
-- implement sensitivity through client-side filtering alone;
-- change semantic truth by color or order without documented meaning;
-- load unsigned or hash-mismatched style assets.
+Preferences may reference approved styles, attribution, legends, or color/motion
+settings. They must not duplicate released style authority or hide trust status.
 
 ### Layer configuration
 
-A layer toggle or default visibility file may express preference only after the layer is admitted and released.
-
-It must preserve:
-
-- layer ID;
-- manifest/release refs;
-- source role;
-- time scope;
-- scale/zoom scope;
-- evidence and citation handles;
-- sensitivity transform state;
-- correction and rollback state;
-- unavailable/denied behavior.
-
-A `visible: true` default is not a publication decision.
+Visibility is a preference after admission and release, not permission. Preserve
+stable feature/layer identities, time and scale scope, source roles, evidence,
+rights, sensitivity transforms, correction, and rollback.
 
 ### Tile and raster references
 
-Config may carry a template or released reference for:
-
-- vector tiles;
-- raster tiles;
-- PMTiles;
-- COGs;
-- DEM/terrain;
-- MLT;
-- OGC API Tiles;
-- test fixture tiles.
-
-The consumer must verify the relevant manifest, digest, tiling scheme, bounds, zoom limits, format, attribution, release state, and policy before binding the source.
+PMTiles, COG, MVT/MLT, raster, terrain, and other source references remain proposed
+capabilities here. A consumer must validate the actual format, bounds, zoom,
+manifest/digest, policy, attribution, and released state before binding them.
 
 ### Sprites and glyphs
 
-Sprite and glyph URLs can create supply-chain, availability, attribution, privacy, and cross-origin risks. A mature config should pin or reference approved assets rather than relying on mutable public URLs.
+External asset locations require integrity, supply-chain, rights, availability,
+and request-disclosure review. Do not copy mutable demo URLs into shared defaults.
 
 ### Camera and viewport defaults
 
-Viewport defaults should be bounded and public-safe:
-
-- center;
-- zoom;
-- pitch;
-- bearing;
-- min/max zoom;
-- min/max pitch;
-- bounds;
-- projection;
-- animation duration;
-- reduced-motion behavior.
-
-They must not expose precise protected locations, override a denied layer's extent, or create a misleading geographic emphasis without review.
-
-[Back to top](#top)
-
----
+Any future center, bounds, zoom, pitch, bearing, projection, or animation setting
+must be finite, bounded, public-safe, and accessibility-aware. Do not expose a
+protected location or remove a non-map fallback through a camera preference.
 
 ## Plugins, protocols, and renderer capabilities
 
-Config may express a **preference** or reference for an accepted capability. It cannot admit a plugin or protocol.
-
-Examples include:
-
-- PMTiles protocol;
-- COG protocol;
-- vector-text protocols;
-- 3D Tiles;
-- glTF;
-- LiDAR/point-cloud support;
-- deck.gl interop;
-- terrain;
-- globe;
-- custom WebGL layers.
-
-Before enablement, a governed path should verify:
-
-- accepted renderer decision;
-- plugin/protocol identity;
-- exact version and integrity;
-- license and rights;
-- supply-chain attestation;
-- maintenance status;
-- browser compatibility;
-- resource limits;
-- data formats;
-- schema/manifest representation;
-- sensitivity and release implications;
-- fallback/negative state;
-- rollback and disable path.
-
-A boolean such as `enable_3d_tiles: true` cannot replace plugin admission.
+A plugin/protocol preference is not dependency admission. Enabling PMTiles, COG,
+terrain/globe, 3D Tiles, glTF, point clouds, deck.gl, or custom rendering needs its
+own exact dependency/rights/integrity, resource, compatibility, fallback, and
+rollback evidence. This README enables none of them.
 
 ### Renderer-boundary compatibility
 
-ADR-0006 proposes that only the MapLibre adapter imports MapLibre runtime packages. Config should bind to a KFM-shaped adapter interface, not leak raw `maplibre-gl` objects or events to arbitrary consumers.
+[ADR-0006](../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
+is **accepted**: `packages/maplibre/` owns the reusable acquisition seam and
+consumers use the KFM-shaped `MapRuntimePort` / `MapLibreAdapter` boundary.
+[ADR-0007](<../../docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>)
+is **accepted**: MapLibre GL JS is the sole normal production browser renderer
+family; subordinate integrations and any peer-renderer exception remain governed.
 
-ADR-0007 proposes MapLibre GL JS as the sole browser-side renderer. Because its status is `PROPOSED`, this README records the dependency but does not claim acceptance.
-
-[Back to top](#top)
-
----
+These decisions accepted architecture, not a specific version or operational
+readiness. Their historical dependency-free acceptance snapshots must not be
+mistaken for current package inventory: the inspected manifest now declares
+`6.6.0`. Conversely, that declaration does not prove that later admission,
+browser, release, or deployment obligations are closed.
 
 ## MapLibre performance configuration drift
 
-### Current observed workflow
+### Payload and consumer path
 
-`.github/workflows/maplibre-perf-governance.yml` is an executable workflow file with Node, Python, Playwright, validators, report builders, attestations, release-manifest builders, proof-pack builders, artifact uploads, and failure handling.
+The tracked envelope declares exactly these five values; this update changes none:
 
-At the pinned base, its MapLibre config contract incorrectly used:
+| Threshold key | Value | Current interpretation limit |
+|---|---:|---|
+| `avg_frame_ms` | 22 | Millisecond-labelled declaration; measurement methodology and enforced consumer are not established here. |
+| `p95_frame_ms` | 40 | Same limit; do not substitute the separate fixture's `frame_budget_ms`. |
+| `idle_ms` | 3000 | Named time budget; not a measured stable-idle result. |
+| `load_ms` | 4000 | Named time budget; not a measured page/tile load result. |
+| `render_pixel_delta_ratio` | 0.01 | Declared allowed changed-pixel fraction; no current consumer reads it. |
 
-```text
-config/maplibre/perf-envelope.v1.json
-```
+The legacy render-diff, proof-pack, and release-manifest builders that read or
+hashed this envelope were removed with the retired harness. A future comparison
+must require nonempty expected-scenario coverage before its result is interpreted.
 
-Four scripts and the workflow referenced that path even though the tracked payload existed under `configs/maplibre/`.
+### Current command-bearing workflow
 
-### Payload and consumer-path correction
+The performance workflow performs syntax checks, nine directly invoked scalar,
+retirement, and export tests, dependency-state checks, strict envelope inventory
+inspection, fixture classification, and readiness/placeholder guards. The
+dependency-capable schema workflow separately runs the envelope validator against
+the tracked config and both fixture polarities, then executes the focused contract
+tests. Browser, performance, render-diff, attestation, proof, release, correction,
+and rollback execution remain held.
 
-The tracked payload is:
+### Current holds
 
-```text
-configs/maplibre/perf-envelope.v1.json
-```
-
-This revision updates the workflow and all four confirmed script readers/writers to that path.
-
-Supported conclusions:
-
-- one committed threshold payload exists;
-- the named performance workflow and scripts now agree on its path;
-- the workflow path filter now includes the canonical MapLibre config lane;
-- the existing validator parses the payload against the current permissive schema;
-- no performance baseline or release eligibility can be inferred;
-- workflow presence is not proof of successful execution;
-- the committed threshold values and schema adequacy still require maintainer review.
-
-### Trigger mismatch
-
-At the pinned base, the workflow watched:
-
-```text
-config/maplibre/**
-```
-
-This revision changes that filter to:
-
-```text
-configs/maplibre/**
-```
-
-Static workflow inspection now confirms that a change to the canonical-root lane is in scope for this workflow. Branch-protection status and successful trigger execution remain `NEEDS VERIFICATION`.
-
-### App-path mismatch
-
-The workflow watches:
-
-```text
-apps/web/**
-```
-
-The inspected application documentation uses:
-
-```text
-apps/explorer-web/**
-```
-
-Whether `apps/web/` is a compatibility root, stale path, active app, or parallel shell remains `NEEDS VERIFICATION`.
-
-### Schema mismatch
-
-The validator reads:
-
-```text
-schemas/maplibre/perf-envelope.schema.json
-```
-
-The inspected schema is:
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "additionalProperties": true
-}
-```
-
-This validates only that the input is an object. It does not require:
-
-- object type;
-- schema version;
-- envelope ID/version;
-- scenarios;
-- metrics;
-- thresholds;
-- units;
-- browser/runtime version;
-- viewport;
-- device profile;
-- network posture;
-- evidence refs;
-- owner;
-- review state;
-- release state;
-- lifecycle;
-- rollback.
-
-MapLibre architecture documents instead propose a governed schema family under `schemas/contracts/v1/maplibre/`, whose named README was not found. Final schema placement and content remain conflicted.
-
-### Trust-artifact output mismatch
-
-The workflow writes and uploads material under:
-
-```text
-artifacts/perf/
-```
-
-The performance-governance document warns that trust-bearing receipts, proofs, and release manifests belong under their canonical `data/receipts/`, `data/proofs/`, and `release/` homes rather than being treated as authoritative merely because they were built in `artifacts/`.
-
-A workflow artifact upload may be a convenient transport or QA output. It is not automatically canonical evidence or release state.
+Threshold authority, benchmark methodology, deterministic baselines,
+expected-scenario coverage, output placement, and release-grade verification
+remain unresolved. Seven adjacent trust-output schemas and the aggregate
+performance verifiers remain placeholders. The candidate builders name outputs beneath
+`artifacts/perf/`; those **source-coded destinations** are not proof that files
+exist, and their trust-shaped content is not canonical receipt/proof/release state.
 
 ### Current safe conclusion
 
-The path, payload, and trigger now agree on the canonical plural config lane. The schema remains permissive, the smoke run remains network-dependent, the app filter remains conflicted, and QA/trust-shaped outputs remain under `artifacts/perf/`. Those gaps prevent a claim of fully governed performance enforcement.
-
-[Back to top](#top)
-
----
+`policy_posture: "public_safe"` and the envelope's publication-blocking note are
+claims in configuration, not authenticated policy or preventive enforcement.
+The proof builder's literal `ANSWER` is another declaration, not a validator run.
+Do not run these builders to manufacture closure or weaken a gate to make it green.
 
 ## Formats, naming, and versioning
 
 ### Supported format posture
 
-No payload format is currently established for this lane. Future files may use YAML, JSON, TOML, or another consumer-required format only when the parser and validation path are known.
-
-| Format | Appropriate use | Guardrails |
-|---|---|---|
-| JSON | Strict machine-consumed config and threshold declarations | Valid JSON; no comments; schema version required. |
-| YAML | Human-reviewed defaults/templates | Duplicate keys rejected; anchors/merges constrained; parser behavior pinned. |
-| TOML | Tool/package defaults where consumer uses TOML | Consumer and version named; no implicit environment secrets. |
-| `.env.example` | Variable names and obvious placeholders only | Prefer `configs/examples/`; never real values. |
-| Markdown | Lane docs and verified validation instructions | Not machine configuration. |
+JSON is the only machine payload format in the inspected lane. YAML/TOML defaults,
+viewer configs, or environment templates remain future choices for real consumers;
+no format is admitted simply because it is mentioned here.
 
 ### Proposed naming pattern
 
-Names should communicate class and version, for example:
-
-```text
-<consumer>.<purpose>.defaults.v1.yaml
-<consumer>.<purpose>.template.v1.yaml
-<consumer>.<purpose>.example.v1.json
-<consumer>.<purpose>.thresholds.v1.json
-```
-
-This is guidance, not accepted repository convention.
+Names should communicate consumer, purpose, class, and version. This is guidance,
+not a newly accepted filename grammar. Preserve the existing plural path until a
+reviewed migration changes it.
 
 ### Versioning
 
-A mature config should distinguish:
-
-- file format/schema version;
-- semantic config version;
-- consumer compatibility range;
-- artifact/release version refs;
-- upstream MapLibre/plugin version;
-- environment profile;
-- deprecation state.
-
-A filename such as `v1` is insufficient unless the file also declares or resolves its version semantics.
+Keep file/schema version, semantic configuration version, consumer compatibility,
+renderer dependency version, and release version distinct. A `v1` filename does
+not establish compatibility or permit a silent change of meaning.
 
 ### Deterministic identity
 
-Where config affects reproducible tests, generated artifacts, or release candidates, the consumer should record a canonical digest or spec hash over the resolved config and its relevant refs. Hashing does not authorize the config; it enables drift detection and replay.
-
-[Back to top](#top)
-
----
+Where replay matters, bind the final effective config and references to a digest.
+Identity enables inspection and rollback; it does not authenticate truth, rights,
+policy, review, or release. The generation receipt for this README is process
+provenance, not an effective runtime-config receipt.
 
 ## Validation
 
-Validation must be layered. Parsing alone is not enough.
+### Current evidence result
+
+Source reads establish the inventory and consumer table. Bounded local execution
+uses an exact-byte materialized subset, **not a complete Git checkout**. The
+small-source Git blobs are checked before execution. Full repository checks and
+browser/runtime tests are not implied by that subset.
+
+Read-only inspection from an actual checkout, with Git available:
+
+```bash
+REF=bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+
+git rev-parse --verify "${REF}^{commit}"
+git ls-tree --long "$REF" -- configs/maplibre/
+git show "${REF}:configs/maplibre/perf-envelope.v1.json"
+git show "${REF}:schemas/maplibre/perf-envelope.schema.json"
+```
+
+These commands inspect the pinned commit; they do not launch an application or
+prove loading. They were syntax-checked, not executed against a full checkout in
+this revision. A missing commit or Git error is not an empty inventory.
 
 ### Validation matrix
 
-| Layer | Required check | Failure posture |
-|---|---|---|
-| Path | File lives in the accepted config lane | Reject or migrate through review. |
-| Classification | Config class is explicit | Reject ambiguous payload. |
-| Syntax | Strict parser succeeds | `INVALID_CONFIG`. |
-| Duplicate keys | Duplicate/ambiguous fields rejected | Fail closed. |
-| Schema | Accepted versioned schema validates | Reject; permissive scaffold is insufficient. |
-| Contract | Field meaning matches accepted contract | Reject semantic drift. |
-| Consumer | Named consumer and interface exist | `UNBOUND_CONFIG`. |
-| Version | Consumer/config/schema versions are compatible | `INCOMPATIBLE_CONFIG`. |
-| Precedence | Merge and override behavior is deterministic | Reject ambiguous result. |
-| Secrets | No real secret or private endpoint is present | Block and invoke incident process if leaked. |
-| Network | Endpoint and external access posture is explicit | Deny unknown network access. |
-| Policy | Config cannot override deny/restrict/abstain obligations | Preserve governed outcome. |
-| Release | Referenced artifacts are released, current, and integrity-bound | Do not load unresolved artifact. |
-| Evidence | Evidence/citation refs are preserved where required | Abstain or show unsupported state. |
-| Sensitivity | No style-only geoprivacy or hidden precision | Deny or require upstream transform. |
-| Resources | Cache, concurrency, size, timeout, and plugin limits bounded | Reject unsafe values. |
-| Accessibility | Reduced motion, keyboard, focus, and non-map alternatives preserved | Block public-ready claim. |
-| Observability | Logs are redacted and reason-coded | Reject unsafe diagnostics. |
-| Determinism | Same resolved inputs produce same effective config | Fail replay proof. |
-| Rollback | Prior version and replacement path are explicit | Block activation. |
-| Trigger coverage | Relevant workflows watch the canonical path | Mark CI enforcement absent. |
+| Check | Evidence / interpretation |
+|---|---|
+| Exact target directory listing | Confirms two tracked files at the pin, not ignored/external content. |
+| JSON parsing and schema evaluation on the tracked payload | Confirms the current object passes the closed v1 machine schema; not threshold authority or observed performance. |
+| Contract counterexamples | Missing/wrong identity, unsupported version/domain/posture, unknown/missing fields, wrong types, non-positive timings, invalid ratios, and empty/duplicate notes reject deterministically. |
+| Three existing fixture-budget negative tests | Validate their separate dataclass fields; not the tracked envelope. |
+| Validator CLI probes | Confirm explicit-file and fixture modes, strict duplicate/non-finite parsing, finite missing-input exit, and execution outside the repository working directory. |
+| Retired harness invocation | Expected exit `3` / `WORKFLOW_HOLD`; not a performance pass. |
+| README and generated receipt | Check metadata, links, anchors, fenced examples, exact artifact hash, schema, and pending review. |
+| Full workflow, native aggregate validators, topology, browser, release | Not run for this source-subset revision; no success claimed. |
 
-### Validation result
-
-A validator should return a finite, structured outcome such as:
-
-```text
-PASS
-FAIL
-ABSTAIN
-DENY
-ERROR
-```
-
-Exact contract names remain proposed. A `PASS` means the validator's checks passed. It does not authorize release, plugin admission, source activation, or publication.
-
-For this revision, the existing validator returned `OK` for `configs/maplibre/perf-envelope.v1.json` under Python 3.12 with `jsonschema` 4.25.1. Because the referenced legacy schema accepts any object, that result confirms only path access, JSON parsing, and permissive schema compatibility; it does not establish a meaningful envelope contract.
+Record exact executed commands and outcomes in the review handoff and generation
+receipt. Do not rename `NOT_RUN`, skipped work, or an expected hold as readiness.
 
 ### Effective-config receipt
 
-A mature consumer may emit a non-authoritative audit record containing:
-
-- config ID/version;
-- config digest;
-- source files and precedence;
-- consumer version;
-- schema version;
-- allowed override sources;
-- network posture;
-- release/artifact refs;
-- redacted warnings;
-- finite result;
-- timestamp;
-- rollback ref.
-
-Placement and trust class for such a record require contract, data, and release review. It must not be invented as a local config sidecar.
-
-[Back to top](#top)
-
----
+A future consumer may record config/version/hash, resolved sources and precedence,
+consumer/schema versions, redacted reasons, outcome, and rollback linkage. Define
+its family and owning receipt lane before emission; do not put a trust object
+beside the config or pretend this proposed record already exists.
 
 ## Required negative cases
 
-Before a MapLibre config is treated as supported, tests should cover at least:
+The first two rows are implemented for the bounded v1 configuration machine
+contract. The remaining rows are future consumer/runtime acceptance requirements:
 
-| Case | Expected safe outcome |
+| Failure family | Required behavior |
 |---|---|
-| Missing config | Conservative fallback or explicit error; never permissive public load. |
-| Malformed JSON/YAML/TOML | `INVALID_CONFIG`. |
-| Duplicate YAML keys | Reject. |
-| Unknown field | Reject unless schema explicitly permits extension. |
-| Unsupported schema version | `INCOMPATIBLE_CONFIG`. |
-| Config/consumer version mismatch | Reject or explicit migration path. |
-| Two conflicting config sources | Deterministic conflict/error. |
-| Real secret detected | Block, redact, rotate, incident response. |
-| Private/signed endpoint committed | Block review. |
-| Redirect to unapproved host | Deny. |
-| External network unavailable | Deterministic offline/negative state. |
-| Unreleased style/layer/tile ref | Do not bind. |
-| Missing digest/spec hash | Do not treat artifact as verified. |
-| Hash mismatch | Deny load; surface integrity error. |
-| Withdrawn or rolled-back release | Remove/deny and surface state. |
-| Stale config | Warn, abstain, or block according to contract. |
-| Plugin enabled without admission | Deny. |
-| Plugin version mismatch | Deny or degrade explicitly. |
-| Style attempts sensitivity filtering | Reject; require upstream transform. |
-| Config points to RAW/WORK/QUARANTINE | Deny. |
-| Config points to canonical/internal store | Deny public consumer. |
-| Debug mode in production profile | Deny or force disabled. |
-| Excessive cache/concurrency/resource values | Reject bounded validation. |
-| Missing attribution | Reject public-ready state. |
-| Accessibility options disable required alternative | Block public-ready state. |
-| Telemetry includes sensitive properties | Redact and fail test. |
-| Workflow watches wrong config path | CI coverage marked failed/absent; fixed by migrating all readers and filters together. |
-| Validator uses permissive empty schema | Governance validation fails. |
-| Required config payload absent | Workflow fails finitely; no release claim. The tracked v1 payload is present at the inspected base. |
+| Missing, malformed, duplicate-key, unknown-field, or wrong-version config | **IMPLEMENTED:** deterministic rejection by the focused validator/tests. |
+| Wrong type, non-finite number, negative/zero/out-of-range budget | **IMPLEMENTED:** deterministic rejection with schema and strict-parser coverage. |
+| Conflicting sources, nulls, substitutions, or unsafe path resolution | Explicit precedence or error; no permissive guessing. |
+| Unapproved endpoint/redirect, secret, sensitive log, or unadmitted plugin | Deny and provide redacted diagnostics. |
+| Internal-store reference, unreleased/withdrawn asset, missing/mismatched digest | Do not bind the public source; retain a visible reason. |
+| Sensitive geometry hidden only by style, absent attribution, inaccessible fallback | Block the unsafe exposure; repair upstream or in the owning consumer. |
+| No scenarios, missing baseline, incompatible image dimensions, stale result | Fail coverage/integrity rather than infer performance success. |
 
-[Back to top](#top)
-
----
+Keep these tests distinct from the three already implemented fixture-budget tests.
+The latter are useful but are not substitutes for the table above.
 
 ## Tests, workflows, and CI
 
 ### Current state
 
-The repository contains one MapLibre performance payload, a performance workflow, and several scripts/validators. This revision aligns the workflow and four confirmed script references with the payload's canonical path.
-
-After this revision, the workflow:
-
-- watches `configs/maplibre/**`;
-- validates and uploads `configs/maplibre/perf-envelope.v1.json`;
-- uses `schemas/maplibre/` rather than an accepted `schemas/contracts/v1/maplibre/` family;
-- watches `apps/web/**` rather than the documented `apps/explorer-web/**` path;
-- uses external network resources in the smoke script;
-- writes QA/trust-shaped output under `artifacts/perf/`.
-
-The path correction is implementation evidence that the named consumers agree on the existing config. It is not evidence of a successful workflow run, meaningful schema enforcement, branch protection, or release approval.
+The inspected workflow triggers for path-scoped pull requests, qualifying pushes
+**to `main`**, and explicit dispatch. `configs/maplibre/**` is included. A task
+branch push alone is not proof this workflow ran. The job has read-only contents
+permission and no declared deployment, signing, OIDC, or artifact-upload step.
 
 ### Required test layers
 
-A mature configuration surface should have:
-
-1. **Parser tests** — valid and invalid syntax, duplicate keys, numeric bounds.
-2. **Schema tests** — required fields, versions, enums, closed objects, extension rules.
-3. **Consumer tests** — loader reads the expected path or config ID.
-4. **Precedence tests** — defaults, profiles, deployment bindings, and overrides resolve deterministically.
-5. **Security tests** — secret, private endpoint, redirect, and log-redaction cases.
-6. **Network tests** — deny-by-default/offline behavior and allowlist enforcement.
-7. **Map-boundary tests** — no RAW/canonical/internal URLs; no direct unverified `addSource`.
-8. **Release tests** — unreleased, stale, corrected, withdrawn, superseded, and rolled-back refs.
-9. **Sensitivity tests** — no style-filter geoprivacy; transformed artifacts only.
-10. **Plugin tests** — unknown/unadmitted/version-mismatched plugins fail closed.
-11. **Performance tests** — thresholds, units, scenarios, browser/runtime pins, deterministic metrics.
-12. **Accessibility tests** — reduced motion, keyboard, focus, non-map alternative.
-13. **Migration tests** — old path/field compatibility and deprecation.
-14. **Workflow-trigger tests** — canonical path changes run the required checks.
-15. **Root trust-spine tests** — public clients remain on governed released interfaces.
+An eventual config consumer needs parser/schema, loading/precedence, negative
+security/network, version/migration, and trust-boundary checks. Performance,
+accessibility, visual, and long-session claims additionally need their own actual
+fixtures, environments, commands, and results. This update installs nothing.
 
 ### CI claims
 
-Do not claim that a config is “CI validated” unless:
-
-- the relevant workflow watches its canonical path;
-- the job actually runs the parser/schema/consumer/security checks;
-- the required payload exists;
-- the workflow result is inspected;
-- generated evidence is distinguished from release authority;
-- branch protection or promotion gates actually require the check where material.
-
-A green workflow that did not trigger on the changed path is not validation.
-
-[Back to top](#top)
-
----
+Distinguish a source-defined check, a local subset result, an exact-head hosted
+result, and a synthetic merge result. Check name and successful execution do not
+prove server-side required-check enforcement or human approval. The performance
+workflow explicitly reports `WORKFLOW_HOLD` and `WORKFLOW_SKIPPED_EXPLICIT` for
+its unexecuted stages; successful preservation of that hold is not readiness.
 
 ## Review burden
 
-Review depends on consequence, not file size.
-
-| Change | Minimum review |
+| Change | Appropriate review |
 |---|---|
-| README wording only | Config steward or Docs steward. |
-| New example/template with no consumer | Config + security review; must remain non-active. |
-| Default used by local/test consumer | Consumer owner + config + test review. |
-| Endpoint or network posture | Security + consumer + policy review. |
-| Public layer/style default | Map + UI + policy + release review. |
-| Plugin/protocol configuration | MapLibre adapter + security/supply-chain + policy review. |
-| Sensitive-geometry-related config | Sensitivity/domain steward; likely upstream transformation review. |
-| Performance threshold change | Map/performance + validation + release-gate review. |
-| Config path migration | Config + all consumer owners + CI + docs; ADR/migration review if compatibility/authority changes. |
-| Schema/contract change | Schema + contract owners; config README update is insufficient. |
-| Production binding | Ops/infra/security and consumer owner; real values remain outside this lane. |
+| This documentation/provenance update | Configuration and documentation review; verify evidence and limits. |
+| Payload or effective loading | Consumer, configuration, contract/schema, and test review. |
+| Endpoint, telemetry, plugin, or dependency | Security/supply-chain and affected consumer review. |
+| Public style/layer or sensitive data | Map, domain/sensitivity, policy, and release review. |
+| Thresholds, benchmark, output family, migration | Performance/validation and the affected responsibility-root owners. |
 
 ### Separation of duties
 
-For high-impact public behavior:
-
-- the config author should not unilaterally approve release;
-- performance threshold authors should not be the sole release authority;
-- plugin admission should remain separate from config enablement;
-- sensitive-data transformation review should remain separate from style authorship;
-- correction and rollback approval should remain independently reviewable.
-
-[Back to top](#top)
-
----
+Repository routing is not an approval. Keep generation, validation, review,
+ready/merge decisions, source admission, release, and publication separate.
+Apply current contributor and PR-delivery controls before creating a review
+surface; documentation cannot clear an active delivery incident.
 
 ## Safe change pattern
 
-For any future file under `configs/maplibre/`:
-
-1. **Identify the consumer.**
-   - Confirm current app/package/tool path.
-   - Confirm the loader/interface and version.
-
-2. **Classify the file.**
-   - Default, template, example, local, test, review, threshold, or compatibility alias.
-
-3. **Confirm placement.**
-   - Check Directory Rules.
-   - Confirm it is configuration rather than schema, policy, artifact, registry, runtime, or release state.
-
-4. **Resolve path drift first.**
-   - Do not create parallel `config/` and `configs/` payloads.
-   - Inventory every reader, writer, workflow, script, validator, and doc.
-
-5. **Bind meaning and shape.**
-   - Reference accepted contract and schema.
-   - Do not rely on permissive empty schemas.
-
-6. **Set security posture.**
-   - Remove secrets/private endpoints.
-   - Define network and logging behavior.
-
-7. **Set trust posture.**
-   - Require released artifact refs.
-   - Preserve policy, evidence, correction, rollback, and sensitive-geometry state.
-
-8. **Define precedence and overrides.**
-   - Make merge order and immutable fields explicit.
-
-9. **Add negative-first tests.**
-   - Missing, malformed, denied, stale, unreleased, secret, network, plugin, rollback, and path-trigger cases.
-
-10. **Update CI.**
-    - Ensure the canonical path triggers the substantive checks.
-
-11. **Document migration and rollback.**
-    - Record prior path/version, deprecation period, and restore target.
-
-12. **Review the effective diff.**
-    - Confirm no generated artifacts, secrets, source data, release objects, or authority drift entered the lane.
-
-[Back to top](#top)
-
----
+Pin the target and authority; verify the named reader and overlapping work;
+classify the change; keep secrets and live effects out; update only direct
+dependencies; validate positive/negative paths; record actual failures and limits;
+then preserve a reviewable branch and explicit rollback. Re-pin before remote
+mutation. A proposed README or passing test does not authorize later transitions.
 
 ## Smallest safe implementation sequence
 
-This sequence is `PROPOSED`. It does not authorize implementation without review.
-
 ### Phase 0 — reconcile authority and paths
 
-1. Inventory `config/` and `configs/` recursively.
-2. Identify every `config/maplibre` and `configs/maplibre` reference.
-3. Decide the canonical performance-envelope home.
-4. Decide the accepted MapLibre schema family.
-5. Decide whether `packages/maplibre/` is the active adapter/runtime home.
-6. Record drift and migration/ADR needs.
-7. Assign owners.
+**Do not repeat resolved decisions.** Retain the plural payload and accepted
+`packages/maplibre/` boundary. Recheck current readers, workflow guards, and
+owners. No new runtime package or second config home is needed.
 
 ### Phase 1 — accept a config contract
 
-1. Define semantic config object meaning under `contracts/` if a stable object family is needed.
-2. Define a closed, versioned schema under the accepted schema root.
-3. Define config class, consumer binding, precedence, network, security, lifecycle refs, deprecation, and rollback fields.
-4. Add valid and invalid synthetic fixtures.
-5. Add parser/schema tests.
+**IMPLEMENTED in v0.6 for machine shape:** the existing five fields have closed
+names, types, positive timing domains, a unit-interval pixel ratio, strict
+identity/posture, and fail-closed missing/unknown-key behavior. Measurement
+methodology and threshold authority remain held.
 
 ### Phase 2 — implement one bounded consumer
 
-Choose one low-risk use case, such as a test-only performance threshold declaration.
-
-1. Implement one deterministic loader in the accepted consumer.
-2. Require explicit config path or config ID.
-3. Fail on missing/invalid/unsupported values.
-4. Record effective config hash in test output.
-5. Keep the consumer no-publication and test/review-only.
-6. Add negative tests.
+**IMPLEMENTED in v0.6:** the validator and focused tests load the actual schema,
+tracked payload, and synthetic positive/negative fixtures. They remain no-network
+and non-publishing; the separate dataclass fixture is not presented as coverage.
 
 ### Phase 3 — migrate workflow paths
 
-1. Update workflow filters to the canonical config path.
-2. Update script and validator arguments.
-3. Update app path filters to current repository roots.
-4. Migrate schema refs.
-5. Remove or deprecate singular compatibility refs through a reviewed plan.
-6. Test both intended success and old-path failure.
-7. Update docs and drift records.
+**IMPLEMENTED in v0.6 without a path move:** the performance workflow now
+classifies the new fixture lane and recognizes one closed envelope schema plus
+seven remaining placeholders. `schema-validation` executes the validator and
+focused tests. Unrelated guards, job names, and held stages are preserved.
 
 ### Phase 4 — make performance runs hermetic or explicitly admitted
 
-1. Vendor, pin, mock, or govern external runtime assets.
-2. Define browser/MapLibre/plugin versions.
-3. Define fixture-server behavior.
-4. Bound network access.
-5. Verify attribution and licenses.
-6. Emit deterministic, redacted results.
+Only after the contract/consumer slice: define deterministic expected scenarios,
+baselines, metrics, browser/toolchain, asset/network constraints, and independently
+reviewable results. Restore neither the retired CDN/global loader nor live source
+acquisition through configuration.
 
 ### Phase 5 — integrate trust and release gates
 
-1. Keep QA outputs separate from canonical receipts/proofs/releases.
-2. Bind config and result hashes to the appropriate run receipt.
-3. Validate correction and rollback references.
-4. Require independent promotion/release decision.
-5. Add root trust-spine tests.
-
-[Back to top](#top)
-
----
+Resolve candidate output-family placement, actual validator execution, identity
+and coverage, policy/review, correction, and rollback before using performance
+results for any release decision. This sequence proposes work; it activates none.
 
 ## Definition of done
 
-A mature `configs/maplibre/` lane should satisfy all applicable items.
-
 ### Ownership and placement
 
-- [x] `configs/maplibre/` is the canonical lane under Directory Rules and the parent README.
-- [x] Confirmed singular `config/maplibre/` executable references are migrated.
-- [x] No parallel active config payload exists in the inspected tree.
-- [ ] Owners and reviewers are assigned.
-- [ ] Drift/ADR/migration records exist where required.
+The existing lane and parent responsibility are verified. Specialist ownership
+and independent review remain open; no new authority or config path is created.
 
 ### Inventory
 
-- [x] Recursive tracked lane inventory is verified at the pinned base.
-- [ ] Every file has a config class.
-- [ ] Every file names a consumer.
-- [ ] Stale, orphaned, or duplicate files are removed or deprecated.
-- [ ] Generated output and trust objects are absent.
+The pinned two-file inventory is known. General loaders, external storage, and
+runtime consumers are not inferred from it.
 
 ### Contracts and schemas
 
-- [ ] Stable config meaning is defined where needed.
-- [ ] A closed, versioned schema validates each machine payload.
-- [ ] Legacy permissive schemas are migrated or explicitly scoped.
-- [ ] Unknown fields and unsupported versions fail deterministically.
-- [ ] Valid/invalid fixtures exist in their correct homes.
+The bounded v1 machine contract is closed and executable. Accepted benchmark
+semantics, threshold ownership, runtime measurement, and production release
+significance remain separate work.
 
 ### Consumer binding
 
-- [ ] Loader path and interface are verified.
-- [ ] Precedence and override behavior are explicit.
-- [ ] Effective config is deterministic.
-- [ ] Missing and conflicting config behavior is tested.
-- [ ] Consumer/version compatibility is enforced.
-- [ ] Config does not leak raw MapLibre objects across the accepted adapter boundary.
+Named readers and byte-hash references are distinguished; complete effective
+loading and override behavior remain unproved.
 
 ### Security
 
-- [ ] No secrets or private endpoints are committed.
-- [ ] Endpoint allowlist/network posture is explicit.
-- [ ] Redirect and external-asset behavior is tested.
-- [ ] Logs and telemetry are redacted.
-- [ ] Resource ceilings are enforced.
-- [ ] Supply-chain/version pins exist for plugins and external assets.
+No new endpoint, credential, sensitive geometry, or real source data is added.
+The upstream sensitivity and deny-by-default network requirements are retained.
 
 ### Trust and release
 
-- [ ] Public consumers use governed APIs and released artifact refs.
-- [ ] Config cannot activate sources/layers or admit plugins.
-- [ ] Config cannot override policy or sensitivity.
-- [ ] Style-only geoprivacy is rejected.
-- [ ] Evidence, citation, correction, supersession, withdrawal, and rollback refs remain visible.
-- [ ] No direct RAW/WORK/QUARANTINE/canonical/internal paths are accepted.
-- [ ] A config validation `PASS` is not treated as release approval.
+Configuration, evidence, policy, review, and release remain distinct. No generated
+record or successful check is promoted into authority by this text.
 
 ### Tests and CI
 
-- [ ] Parser, schema, consumer, precedence, security, network, trust, plugin, performance, accessibility, migration, and rollback tests exist as applicable.
-- [x] The MapLibre workflow path filter includes `configs/maplibre/**`.
-- [x] The required v1 payload exists before the workflow starts.
-- [ ] CI reports collection and substantive results.
-- [ ] External network behavior is hermetic or explicitly governed.
-- [ ] QA artifact uploads are not treated as canonical release state.
+The review packet records executed checks and their limits. Pending hosted or
+full-repository validation is not marked passed.
 
 ### Documentation and operations
 
-- [ ] Parent and sibling README files agree.
-- [ ] Supported commands are observed and documented.
-- [ ] Migration and rollback are concrete.
-- [ ] Deprecation dates and replacements are visible.
-- [ ] Operational failure and recovery paths are documented.
-- [ ] Last review dates are current.
-
-Until the remaining items are verified, the lane remains a bounded performance-config scaffold rather than a fully governed MapLibre configuration surface.
-
-[Back to top](#top)
-
----
+The README preserves its document ID, original heading anchors, canonical pointer,
+and rollback lineage. This does not graduate the lane to runtime, performance,
+release, or publication readiness.
 
 ## Evidence basis
 
-| Evidence | Status | Supports | Limits |
-|---|---:|---|---|
-| `configs/maplibre/README.md` prior blob `62061a1530f3bf3e26dc7c23526a3f3a9b0e7459` | **CONFIRMED** | Target existed as v0.2 config-boundary README. | Its bounded search missed the tracked performance payload. |
-| Recursive tracked-tree inspection at `55a84f062…` | **CONFIRMED** | The lane contains this README and `perf-envelope.v1.json`. | Does not reveal ignored files or other branches. |
-| Four exact candidate probes | **CONFIRMED NOT FOUND** | Suggested viewer/style/layer/validation files were absent at named paths. | Differently named files remain unknown. |
-| `configs/README.md` v0.2 | **CONFIRMED** | `configs/` owns safe non-secret defaults/templates. | Does not prove MapLibre lane consumption. |
-| `configs/examples/README.md` v0.2 | **CONFIRMED** | Establishes commit-safe example/secret/consumer-binding posture. | Example lane does not settle MapLibre defaults. |
-| Directory Rules v1.4 | **CONFIRMED DOCTRINE** | `configs/` placement, trust roots, lifecycle, and anti-drift posture. | Does not resolve current singular-path references. |
-| MapLibre architecture entry point | **CONFIRMED DOCUMENT** | Renderer-downstream, released-artifact, verify-before-add-source, sensitive-geometry, and renderer posture. | Several concrete enforcement paths remain proposed. |
-| ADR-0006 | **CONFIRMED DOCUMENT / PROPOSED ADR** | Single MapLibre adapter import boundary. | Acceptance and enforcement remain unverified. |
-| ADR-0007 | **CONFIRMED DOCUMENT / PROPOSED ADR** | Sole browser-renderer decision proposal. | Not accepted by this README. |
-| Explorer Web map-runtime README | **CONFIRMED DOCUMENT** | App-local map seam and governed API boundary. | Runtime files and config loading remain unverified. |
-| `packages/maplibre/README.md` | **CONFIRMED README** | Proposed helper/adapter package boundary. | Package implementation and active runtime role remain unknown. |
-| `packages/maplibre-runtime/README.md` probe | **CONFIRMED NOT FOUND** | Earlier runtime-package refs cannot be treated as current repo fact. | Another runtime home may exist. |
-| `.github/workflows/maplibre-perf-governance.yml` | **CONFIRMED EXECUTABLE YAML** | Current path filters, commands, artifacts, and permissions. | Does not prove successful runs or correct governance. |
-| `configs/maplibre/perf-envelope.v1.json` | **CONFIRMED** | Existing threshold payload under the canonical config root. | Does not prove threshold adequacy, approval, or release authority. |
-| `config/maplibre/perf-envelope.v1.json` probe | **CONFIRMED NOT FOUND** | Singular compatibility payload is absent. | This revision intentionally does not create it. |
-| `tools/validators/maplibre/validate_perf_envelope.py` | **CONFIRMED** | Validator points to legacy `schemas/maplibre/` schema. | Does not prove schema adequacy or workflow success. |
-| `schemas/maplibre/perf-envelope.schema.json` | **CONFIRMED PERMISSIVE SCAFFOLD** | Current legacy schema accepts any object. | Does not establish meaningful perf-envelope contract. |
-| `schemas/contracts/v1/maplibre/README.md` probe | **CONFIRMED NOT FOUND** | Named governed schema-family README is absent. | Individual schemas or different docs may exist. |
-| `policy/maplibre/README.md` probe | **CONFIRMED NOT FOUND** | Named MapLibre policy README is absent. | Other policy files or families may exist. |
-| Four MapLibre performance scripts | **CONFIRMED** | All pinned-base singular envelope references were inventoried and migrated to the plural path. | No browser/performance run was executed in this revision. |
-| Local static validation | **PASS WITH LIMITS** | Four scripts pass `node --check`; the existing envelope validator returns `OK` for the plural payload. | The full network-dependent browser run was not executed, and the legacy schema is permissive. |
-| MapLibre performance governance doc | **CONFIRMED DOCUMENT / PROPOSED FLOW** | Identifies proposed perf config and canonical trust-artifact separation. | Runtime and exact paths remain mixed. |
+All repository paths in this table were read at the snapshot above. The original
+README was read in full through bounded line ranges before consolidation.
+
+| Historical evidence | Exact Git blob | What it supports |
+|---|---|---|
+| Prior README | `9b24a8d51013e06401cce7a02f06941feecf37e7` | v0.4 baseline and retained navigation. |
+| Parent `configs/README.md` | `a800983eac7582a84e9dd82bc7d4baf04f552ad8` | Shared non-secret configuration responsibility. |
+| Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` | Adopted placement law; configuration ownership and compact boundary profile. |
+| ADR-0029 | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Accepted adoption of the exact Directory Rules bytes. |
+| ADR-0006 / ADR-0007 | `4bf4292dc05a85fd4cd829c491808b13894bc223` / `2482eea382fd97e68544bb04bc2e2ea1e1cedebe` | Accepted package seam / renderer-family decisions, not current execution proof. |
+| Package manifest | `f6d450af19c33011e159e123c8a07ca2bca6dfd3` | Exact dependency and export declarations; repairs the prior truncated blob reference. |
+| Envelope / schema baseline | `2833f99b5316df91e71c0f8913bb06d70917abcf` / `511e7f34ca84390fd5d000326ab33c46c3050fc4` | Pre-v0.6 values and former accept-any-object gap; the threshold values remain unchanged. |
+| Envelope validator baseline | `1f9e0f785a701da2a2b8f52bf73f4e97866d951d` | Pre-v0.6 schema-runner wrapper without fixture binding or cwd-independent paths. |
+| Performance workflow | `8e4c3b801fe6dbaac5e6645b054768859e84fa1e` | Shape check, nine direct tests, triggers, and explicit execution holds. |
+| Fixture helper / negative tests | `f5d42f75b671e0fa07767f52fdda9661d0d721ab` / `886543d63184ff5f7fc6f14b6944eb6000ff5a10` | Separate dataclass validation, not envelope loading. |
+| Retired harness | `ac2522686546b7428ad0cc5c8cd76860ab285998` | Finite exit-3 hold. |
+| Render-diff builder | `ee24890c0e06bd941e0f1ead919e9e7b9bc37460` | Ratio reader and discovered-scenario coverage limit. |
+| Proof / release-manifest builders | `8396c912a75c803baf8a92abe7a2f8cad582ba41` / `566731bd6ad1510ecd1e01e0275ffa04b3993a86` | Byte hashing and candidate-output limitations. |
+
+Drive's *Directory Rules* was consulted as lineage. Notion's *Close governed
+MapLibre runtime probe matrix* was consulted as coordination: it retains earlier
+bounded results and unresolved wider probes. Neither replaces current GitHub
+source, authenticates a browser run here, or overrides accepted decisions.
 
 ### Evidence limits
 
-This revision did not:
+This revision does not audit every consumer, import, package, schema, deployment,
+source, policy, or hosted run. It does not resolve EvidenceBundles, run a complete
+probe matrix, measure performance, or establish required-check enforcement.
+Code-defined destinations are not inventories of emitted objects.
 
-- execute any config loader;
-- run the performance workflow;
-- inspect historical workflow runs or logs;
-- import MapLibre;
-- launch Explorer Web;
-- inspect all package files;
-- inspect all schemas or policies;
-- verify deployment;
-- query a release registry;
-- resolve EvidenceBundles;
-- verify public map behavior.
-
-Future file names, metadata shapes, contracts, validators, test cases, and migration phases are `PROPOSED` unless explicitly labeled otherwise.
-
-[Back to top](#top)
-
----
+**No-loss record:** v0.6 preserves the existing document identity and heading
+anchors, implements the previously proposed machine-contract phases, and retains
+the runtime, evidence, policy, release, and publication boundaries. Prior content
+and the permissive-schema gap remain auditable at the recorded baseline blobs.
 
 ## Open decisions and ADR triggers
 
-| Decision | Current status | Trigger |
-|---|---:|---|
-| Canonical `config/` versus `configs/` path | **RESOLVED FOR CONFIRMED PERF CONSUMERS** | Reintroduction of a singular path, alias, or fallback. |
-| MapLibre performance-envelope home | **CONFIRMED AT `configs/maplibre/`** | Moving or duplicating the existing payload. |
-| Perf-envelope contract and schema | **PERMISSIVE LEGACY SCAFFOLD / NEEDS DESIGN** | Adding required fields, closed shape, versions, or consumers. |
-| Canonical MapLibre schema family | **NEEDS VERIFICATION** | Moving from `schemas/maplibre/` to `schemas/contracts/v1/maplibre/` or another accepted home. |
-| Current app path in workflow | **CONFLICTED** | Changing `apps/web/**` to `apps/explorer-web/**` or retaining compatibility. |
-| Active adapter/runtime package | **UNKNOWN** | Declaring `packages/maplibre/` or another path as the supported runtime seam. |
-| Sole-renderer status | **PROPOSED ADR** | Acceptance, supersession, or exception path. |
-| Plugin admission policy | **NOT ESTABLISHED AT NAMED PATH** | Enabling a plugin/protocol through config. |
-| Config loader and precedence | **ABSENT / UNKNOWN** | Introducing auto-loading, profile merging, or overrides. |
-| External network posture | **NOT HERMETIC / NEEDS VERIFICATION** | Running smoke/perf in protected CI or release gates. |
-| Performance thresholds | **PRESENT / ADEQUACY NEEDS VERIFICATION** | Changing values that can block or permit candidate progression. |
-| Trust-artifact output homes | **CONFLICTED** | Treating `artifacts/perf/` output as receipts, proofs, or release state. |
-| Workflow trigger coverage | **STATICALLY ALIGNED / RUNS UNKNOWN** | Claiming required-check enforcement or successful execution. |
-| Style/layer config versus released artifacts | **NEEDS VERIFICATION** | Adding style JSON, layer lists, endpoint lists, or public defaults. |
-| Endpoint allowlist and secrets binding | **UNKNOWN** | Adding any non-local endpoint or credential reference. |
-| Owner assignments | **OWNER_TBD** | Moving beyond documentation-only maturity. |
-
 ### ADR or migration discipline
 
-An ADR or formal migration record is appropriate when a change:
-
-- creates or changes a canonical path;
-- changes schema authority;
-- changes renderer strategy;
-- creates a stable cross-package config contract;
-- changes public map behavior;
-- enables new plugin/protocol families;
-- changes trust-artifact placement;
-- changes config precedence across apps/environments;
-- introduces compatibility aliases with material lifetime;
-- bends the renderer, trust membrane, lifecycle, or publication invariants.
+The bounded envelope machine contract and validator/workflow closure are now
+implemented. Benchmark semantics and threshold authority remain unresolved. New authority homes, package ownership,
+public access, policy, source admission, lifecycle semantics, or meaningful alias
+migrations require their own applicable decisions. This README makes none.
 
 ### No decision by convenience
 
-Do not settle an open decision because:
-
-- a workflow already spells one path;
-- a documentation example proposes another;
-- a file is missing and “needs to exist somewhere”;
-- a script passes when run locally;
-- a permissive schema returns success;
-- a public demo endpoint is convenient;
-- a config key seems harmless;
-- a style hides sensitive features;
-- an artifact upload exists;
-- a UI needs to render something;
-- an AI recommends a default.
-
-[Back to top](#top)
-
----
+Do not treat a schema, convenient endpoint, generated hash, existing
+filename, screenshot, or model recommendation as adoption. The correct next
+step is the bounded contract/consumer slice, not a second renderer or live map.
 
 ## Rollback
 
-This revision changes one Markdown file plus the static path references in one workflow and four scripts. It also repairs the smoke runner's pre-existing invalid interpolation by passing a precomputed style into the browser callback. Thresholds, schemas, policy, and release behavior do not change.
-
 ### Before merge
 
-Close or abandon the review branch or pull request. No deployment or release occurs from the draft branch.
+Keep the task branch unmerged or append a focused revert to that branch. Preserve
+the new [generated-work receipt](../../data/receipts/generated/README.md) as
+historical process memory rather than editing it to describe different bytes.
 
 ### After merge
 
-Restore the prior README through a reviewed commit using:
-
-```text
-base commit: 55a84f06216effd8e3ae5d51450bbf9f3d160417
-prior README blob: 62061a1530f3bf3e26dc7c23526a3f3a9b0e7459
-```
-
-or revert the commit that introduces this v0.3 revision. Reverting restores the stale singular-path consumers; if a rollback is needed after merge, follow it with a corrective commit rather than creating a duplicate `config/` root.
+After any separately authorized integration, restore only this README from prior
+blob `9b24a8d51013e06401cce7a02f06941feecf37e7` through reviewed history, or make a
+forward correction. Restoring v0.4 also restores its contradictory ADR language;
+a reviewed forward fix is often preferable. Do not force-reset shared history.
 
 ### Rollback triggers
 
-Correct or roll back this README if it:
-
-- claims a config payload exists when it does not;
-- claims a consumer binding without code or test evidence;
-- reintroduces singular `config/maplibre/` as an active or compatibility root;
-- treats a permissive schema as substantive validation;
-- claims successful MapLibre performance enforcement without workflow-run evidence;
-- treats `artifacts/perf/` as canonical proof or release state;
-- authorizes public endpoints, styles, layers, plugins, or tiles;
-- implies style filtering is sufficient sensitivity protection;
-- documents unverified commands as supported;
-- exposes secrets, private endpoints, or sensitive details;
-- conflicts materially with accepted Directory Rules, ADRs, app/package boundaries, or release controls.
+Correct unsupported reader, schema, value, runtime, ownership, or validation
+claims; broken anchors/links; introduced disclosure; or conflict with accepted
+placement and trust boundaries. Re-pin actual implementation before reversal.
 
 ### Documentation rollback is not operational rollback
 
-Reverting this README will not revert any later config payload, workflow, script, schema, package, app, policy, deployment, artifact, or release change. Every material implementation change requires its own rollback target.
-
-[Back to top](#top)
-
----
+The change affects this README and its authoring receipt only. Reverting prose
+does not revert configuration, workflows, dependencies, applications, deployments,
+policy, data, or release state. Those require their own bounded rollback records.
 
 ## Verification backlog
 
-| Item | Status | Needed evidence |
-|---|---:|---|
-| Recursively inventory `configs/maplibre/`. | **CONFIRMED AT PINNED BASE** | Re-run after tracked lane changes. |
-| Recursively inventory singular `config/maplibre/`. | **CONFIRMED ABSENT AT PINNED BASE** | Re-run if any singular reference reappears. |
-| Keep canonical config path aligned. | **CONFIRMED FOR PERF CONSUMERS** | Static reference scan and workflow review. |
-| Identify all performance-envelope readers/writers. | **CONFIRMED STATIC SET** | Four scripts and one workflow at the pinned base; runtime traces remain unverified. |
-| Confirm active app path. | **NEEDS VERIFICATION** | App manifests, build scripts, routes, deployment evidence. |
-| Confirm MapLibre adapter/runtime home. | **UNKNOWN** | Package inventory, imports, build/tests, ADR acceptance. |
-| Define performance-envelope contract. | **PAYLOAD PRESENT / CONTRACT PROPOSED** | Contract review and consumer requirements. |
-| Replace permissive legacy schema. | **NEEDS VERIFICATION** | Accepted closed schema, fixtures, validator, migration. |
-| Create or migrate performance envelope. | **NO-OP / PRESENT** | Threshold adequacy, owners, and tests still need review. |
-| Align workflow path filters. | **PASS (STATIC)** | Workflow now watches `configs/maplibre/**`; run evidence remains unknown. |
-| Align validator schema path. | **CONFLICTED** | Schema-home decision and validator patch. |
-| Verify workflow runs. | **UNKNOWN** | Actions runs, jobs, logs, artifacts, conclusions. |
-| Verify no-network/hermetic posture. | **NOT ESTABLISHED** | Vendored/mocked assets, allowlist, offline tests. |
-| Verify endpoint security and attribution. | **UNKNOWN** | Policy, licenses, pins, integrity, redirect tests. |
-| Verify config secret scanning. | **NEEDS VERIFICATION** | Workflow/config and test evidence. |
-| Define loader and precedence. | **ABSENT / UNKNOWN** | Consumer implementation and tests. |
-| Define config identity/version/hash posture. | **PROPOSED** | Contract/schema and replay tests. |
-| Define plugin/protocol config boundary. | **PROPOSED** | Accepted ADR, policy, contract, schema, package tests. |
-| Define released style/layer reference behavior. | **NEEDS VERIFICATION** | Manifest contracts, governed API, release tests. |
-| Verify sensitive-geometry safeguards. | **NEEDS VERIFICATION** | Upstream transform receipts and no-style-filter tests. |
-| Reconcile QA artifacts with canonical receipts/proofs/releases. | **CONFLICTED** | Data/release owner decision and workflow changes. |
-| Add canonical-path CI coverage. | **PATH FILTER PRESENT / ENFORCEMENT UNKNOWN** | Workflow-run and branch-protection evidence. |
-| Assign owners/CODEOWNERS. | **OWNER_TBD** | Reviewed repository ownership changes. |
-| Keep docs aligned after migration. | **ONGOING** | Parent/sibling docs and link checks. |
-
----
+| Item | State / first affected transition |
+|---|---|
+| Full five-field machine contract, numerical domains, and validator | **IMPLEMENTED LOCALLY**; exact-head hosted results and human review remain pending. |
+| All readers, effective loading, precedence, and overrides | **UNKNOWN** beyond the inspected set; blocks general runtime-config claims. |
+| Actual performance scenarios, baselines, metrics, and coverage | **HOLD** before benchmark or regression claims. |
+| Candidate trust-output homes and real command/result binding | **HOLD** before treating outputs as proof or release support. |
+| Wider browser/source/plugin/accessibility/long-session evidence | **NOT RUN HERE**; remains separate from this documentation task. |
+| Specialist stewardship, human review, and hosted exact-head results | **NEEDS VERIFICATION** before readiness or integration claims. |
+| External endpoints, rights, sensitive-data handling, and public serving | **NOT INSPECTED**; no activation or publication authority. |
 
 ## Maintainer checklist
 
-- [ ] Keep `configs/maplibre/` limited to commit-safe configuration defaults/templates.
-- [ ] Keep the plural path canonical and reject reintroduced singular references.
-- [ ] Never create duplicate active payloads to satisfy stale readers.
-- [ ] Name the consumer for every payload.
-- [ ] Define class, version, schema, contract, precedence, owner, and rollback.
-- [ ] Never commit real secrets, signed URLs, or private endpoints.
-- [ ] Keep external network access denied, mocked, vendored, or explicitly governed.
-- [ ] Keep MapLibre downstream of governed APIs and released artifacts.
-- [ ] Keep raw renderer objects behind the accepted adapter seam.
-- [ ] Keep config separate from schema, policy, registry, evidence, lifecycle, release, and artifact authority.
-- [ ] Reject style-only geoprivacy.
-- [ ] Preserve attribution, evidence, correction, supersession, withdrawal, and rollback refs.
-- [ ] Test missing, malformed, denied, stale, unreleased, secret, network, plugin, and rollback cases.
-- [ ] Ensure workflows watch the canonical path.
-- [ ] Do not treat permissive schema success as meaningful validation.
-- [ ] Do not treat performance `PASS` as release approval.
-- [ ] Keep QA uploads distinct from canonical receipts/proofs/releases.
-- [ ] Update this README when inventory, consumers, paths, schemas, or workflows change.
-- [ ] Use ADR/migration discipline for material path, precedence, renderer, schema, or authority changes.
+- Preserve the plural path, named consumer, exact version, and non-secret scope.
+- Separate architecture acceptance, dependency declarations, config checks, and runtime proof.
+- Check the actual envelope shape; do not substitute unrelated fixture fields.
+- Keep policy, evidence, release, correction, and rollback outside configuration authority.
+- Record exact checks, failures, gaps, and provenance; preserve current delivery controls.
 
 [Back to top](#top)

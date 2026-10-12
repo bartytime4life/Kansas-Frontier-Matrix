@@ -1,0 +1,8 @@
+{
+  "semantic_invalid_email_value.json": [
+    "OCCURRENCE_RETRIEVAL_QUERY_EMAIL_VALUE_DENIED"
+  ],
+  "semantic_invalid_secret_value.json": [
+    "OCCURRENCE_RETRIEVAL_QUERY_SECRET_VALUE_DENIED"
+  ]
+}

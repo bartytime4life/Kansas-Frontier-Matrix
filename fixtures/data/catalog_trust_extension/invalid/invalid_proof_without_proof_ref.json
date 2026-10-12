@@ -1,0 +1,21 @@
+{
+  "object_type": "CatalogTrustExtension",
+  "schema_version": "1.0.0",
+  "extension_id": "catalog-trust-extension:fixture:proof-no-ref",
+  "host_profile": "STAC_ITEM",
+  "host_record_ref": "fixture:catalog:stac:item-receipt",
+  "namespace": "kfm",
+  "hash_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:c51c334f30ab3555b892865b857807e4c0485cafdbb129bf34405479a7bf5d8d",
+  "kfm:run_receipt_ref": "fixture:run:stac-receipt",
+  "kfm:proof_ref": null,
+  "kfm:trust_class": "proof",
+  "kfm:source_role": "synthetic",
+  "governance": {
+    "catalog_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

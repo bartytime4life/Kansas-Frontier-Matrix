@@ -1,0 +1,15 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-null-scalars",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": null,
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/null-optional-scalars"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": null,
+  "lifecycle_state": "WORK",
+  "spec_hash": null
+}

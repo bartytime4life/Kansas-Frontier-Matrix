@@ -2,21 +2,21 @@
 doc_id: kfm://doc/runtime-model-adapters-readme
 title: runtime/model_adapters/ — Canonical Provider-Neutral Model Adapter Lane
 type: readme; directory-readme; canonical-runtime-lane; provider-neutral-adapter-boundary
-version: v1.1
-status: draft; canonical-lane-confirmed; implementation-mixed; NEEDS VERIFICATION
+version: v1.2
+status: draft; canonical-lane-confirmed; deterministic-mock-selector-executable; implementation-mixed; NEEDS VERIFICATION
 policy_label: public
 owners: OWNER_TBD — Runtime steward · Governed-AI steward · API steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Security steward · Test steward · Migration steward · Docs steward
 created: NEEDS VERIFICATION — greenfield stub was replaced by v1 on 2026-07-03
-updated: 2026-07-15
+updated: 2026-08-14
 current_path: runtime/model_adapters/README.md
 compatibility_path: runtime/adapters/
-truth_posture: CONFIRMED target README, runtime responsibility root, canonical provider-neutral adapter lane, compatibility adapters lane, descriptive AdapterContract note, mock child lane, adjacent mock/Ollama/envelope/AI lanes, canonical DecisionEnvelope contract and paired schema, AIReceipt and RuntimeResponseEnvelope contracts and paired schemas, runtime fixture-family index, and common schema fixture harness at the pinned evidence snapshot / CONFLICTED AdapterContract evidence note because it says canonical DecisionEnvelope was not confirmed while current repository evidence confirms contracts/runtime/decision_envelope.md and its paired schema / UNKNOWN executable adapter implementations, child inventory beyond inspected README surfaces, provider integrations, approved model inventory, adapter registry, policy enforcement, evidence resolution, citation validation, receipt persistence, network and tool permissions, public-client wiring, CI results, deployment, and release state / NEEDS VERIFICATION canonical FocusRequest contract and schema, canonical adapter semantic contract and schema, adapter-card identity scheme, provider admission process, validator wiring, CODEOWNERS enforcement, correction propagation, and runtime-specific tests
+truth_posture: CONFIRMED target README, runtime responsibility root, canonical provider-neutral adapter lane, compatibility adapters lane, descriptive AdapterContract note, bounded no-I/O MockAdapter fixture selector, four-outcome fixture matrix, standard-library adapter and envelope proof suites, canonical DecisionEnvelope contract and paired schema, AIReceipt and RuntimeResponseEnvelope contracts and paired schemas, runtime fixture-family index, and common schema fixture harness at the pinned evidence snapshot / CONFLICTED AdapterContract evidence note because it says canonical DecisionEnvelope was not confirmed while current repository evidence confirms contracts/runtime/decision_envelope.md and its paired schema / UNKNOWN semantic outcome selection, production or provider adapter implementations, provider integrations, approved model inventory, adapter registry, policy enforcement, evidence resolution, citation validation, receipt persistence, public-client wiring, deployment, and release state / NEEDS VERIFICATION canonical FocusRequest contract and schema, canonical adapter semantic contract and schema, adapter-card identity scheme, provider admission process, CODEOWNERS enforcement, correction propagation, and full runtime integration
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
-  base_commit: a8cf7411b3ba865495734fb0e9173a717585a488
-  prior_blob: ab3ad9b3be29a7cdbdc4d77e751c5e5b2134451e
+  base_commit: dd9ac61fae518f0b0947050fc1457e4fe199a589
+  prior_blob: 16456452e03884dabb24c670c41c9e359f679769
   prepared_under_prompt: KFM GitHub Repository Documentation Implementation Agent v3.1.0
 related:
   - ../README.md
@@ -45,6 +45,7 @@ notes:
   - "runtime/model_adapters is the confirmed canonical adapter documentation and handoff lane; runtime/adapters is compatibility and migration only."
   - "DecisionEnvelope is confirmed as a canonical snake_case semantic contract with a paired schema. FocusRequest and an adapter-contract schema remain unresolved at the checked paths."
   - "This README does not activate an adapter, approve a provider or model, define policy, grant network or tool access, close evidence, validate citations, prove receipt persistence, authorize public rendering, or publish KFM material."
+  - "v1.2 records the bounded MockAdapter fixture selector and its no-I/O finite-outcome proof; the selector does not implement a request contract or semantic runtime."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -85,11 +86,12 @@ notes:
 | `contracts/runtime/focus_request.md` | **UNKNOWN / absent at checked path** | Do not claim a canonical `FocusRequest` semantic contract from this README. |
 | `schemas/contracts/v1/runtime/adapter_contract.schema.json` | **UNKNOWN / absent at checked path** | Do not claim a canonical adapter-contract machine shape. |
 | `runtime/model_adapters/mock/` | **CONFIRMED README surface; implementation UNKNOWN** | Mock-first child lane is documented; executable mock adapter code is not established here. |
+| `runtime/model_adapters/MockAdapter.py` | **CONFIRMED bounded fixture selector** | Returns isolated copies of prevalidated synthetic envelopes, requires all four finite outcomes, and performs no provider, file, network, clock, or secret access. It does not implement a request contract or semantic outcome selection. |
 | `runtime/mock/`, `runtime/ollama/`, `runtime/envelopes/`, `runtime/AI/` | **CONFIRMED documentation surfaces** | Own broader mock runtime, local Ollama, envelope-helper, and governed-AI compatibility concerns. |
 | `AIReceipt` and `RuntimeResponseEnvelope` contracts/schemas | **CONFIRMED present; status PROPOSED** | Accountability and client-facing envelope shapes exist; presence does not prove runtime execution. |
-| Runtime fixtures and common schema harness | **CONFIRMED present; NOT RUN for this edit** | Fixture-family documentation and schema test discovery exist. No test or CI success is claimed here. |
+| Runtime fixtures and common schema harness | **CONFIRMED present; focused standard-library suites PASS locally** | The selector/envelope suites passed 13 tests against the four-outcome matrix; the broader pytest schema harness was not run locally. |
 | `policy/runtime/README.md` | **CONFIRMED stub** | No accepted runtime-policy implementation is established by the stub. |
-| Executable adapters, provider approvals, model approvals, network/tool permissions, evidence resolution, citation validation, receipt persistence, client enforcement, CI, deployment, release | **UNKNOWN** | Documentation and schema presence are not operational proof. |
+| Production/provider adapters, provider approvals, model approvals, network/tool permissions, evidence resolution, citation validation, receipt persistence, client enforcement, deployment, release | **UNKNOWN** | The bounded selector and tests are not operational runtime proof. |
 
 > [!WARNING]
 > `AdapterContract.md` contains an older evidence note saying canonical `DecisionEnvelope` was not confirmed in that authoring session. Current repository evidence confirms `contracts/runtime/decision_envelope.md` and its paired schema. Treat that sentence as stale documentation evidence, not current repository truth. Correct it in a separate scoped edit rather than silently importing it here.
@@ -581,9 +583,13 @@ find runtime/model_adapters -maxdepth 5 -type f | sort
 find runtime/adapters runtime/mock runtime/ollama runtime/envelopes runtime/AI -maxdepth 5 -type f 2>/dev/null | sort
 find contracts/runtime schemas/contracts/v1/runtime fixtures/contracts/v1/runtime -maxdepth 5 -type f | sort
 python -m pytest -q tests/schemas/test_common_contracts.py
+python -m unittest tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose
+python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
 ```
 
-The final command is grounded in a confirmed repository test file. It was **not run** during this API-only README edit. Do not report it as passing without execution evidence.
+Both standard-library commands passed locally on 2026-08-14 (13 tests total).
+Hosted exact-head execution and the broader pytest schema harness remain
+**NEEDS VERIFICATION**.
 
 ---
 
@@ -857,7 +863,8 @@ After merge, use a revert commit or revert PR. Do not reset or rewrite shared hi
 
 ### Runtime proof
 
-- [ ] Add or verify deterministic mock adapters and fixtures.
+- [x] Add a bounded deterministic selector over the existing four-outcome synthetic fixture matrix.
+- [ ] Bind an accepted request contract and semantic outcome-selection pipeline; the selector deliberately does neither.
 - [ ] Prove mode parity and reviewed mode-specific differences.
 - [ ] Verify evidence resolution and citation validation for `ANSWER`.
 - [ ] Verify `ABSTAIN`, `DENY`, and `ERROR` negative paths.
@@ -877,6 +884,7 @@ After merge, use a revert commit or revert PR. Do not reset or rewrite shared hi
 | [`runtime/adapters/README.md`](../adapters/) | CONFIRMED | Compatibility and migration status of the legacy adapter lane. | Does not prove child inventory or migration readiness. |
 | [`AdapterContract.md`](AdapterContract.md) | CONFIRMED descriptive note | `FocusRequest` → `DecisionEnvelope`, cite-or-abstain, provider-neutral obligations. | Not canonical contract authority; one older evidence note is stale against current repo evidence. |
 | [`mock/README.md`](mock/) | CONFIRMED README surface | Mock-first adapter child-lane boundary. | Does not prove executable mock adapters or tests. |
+| [`MockAdapter.py`](MockAdapter.py) and [`test_mock_adapter_finite_outcomes.py`](../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py) | CONFIRMED executable bounded proof | Deterministic fixture selection, four-outcome completeness, copy isolation, fail-closed lookup/configuration, and no-I/O imports. | Does not validate complete envelope shape, interpret requests, choose outcomes, resolve evidence, execute policy, validate citations, emit receipts, or start a runtime. |
 | [`runtime/mock/README.md`](../mock/) | CONFIRMED README surface | Broader deterministic mock-runtime boundary. | Does not prove implementation. |
 | [`runtime/ollama/README.md`](../ollama/) | CONFIRMED README surface | Local-only model-runtime boundary. | Does not prove installed models or adapter code. |
 | [`runtime/envelopes/README.md`](../envelopes/) | CONFIRMED README surface | Runtime envelope-helper boundary. | Not contract/schema authority. |
@@ -885,7 +893,7 @@ After merge, use a revert commit or revert PR. Do not reset or rewrite shared hi
 | [`schemas/contracts/v1/runtime/decision_envelope.schema.json`](../../schemas/contracts/v1/runtime/decision_envelope.schema.json) | CONFIRMED paired schema; PROPOSED status | Required fields, enums, closed additional properties. | Validator wiring and runtime use remain unverified. |
 | [`contracts/runtime/ai_receipt.md`](../../contracts/runtime/ai_receipt.md) and paired schema | CONFIRMED present; PROPOSED status | AI run accountability, digests, policy and citation references, finite outcome. | Does not establish truth or receipt persistence. |
 | [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md) and paired schema | CONFIRMED present; PROPOSED status | Governed client-facing finite response posture, evidence, policy, freshness, correction. | Does not prove API/client enforcement. |
-| [`fixtures/contracts/v1/runtime/README.md`](../../fixtures/contracts/v1/runtime/) | CONFIRMED | Runtime fixture-family organization and schema-harness expectations. | Tests were not run for this edit. |
+| [`fixtures/contracts/v1/runtime/README.md`](../../fixtures/contracts/v1/runtime/) | CONFIRMED | Runtime fixture-family organization and schema-harness expectations; focused selector/envelope suites passed locally. | Broader schema/validator execution remains separate. |
 | [`tests/schemas/test_common_contracts.py`](../../tests/schemas/test_common_contracts.py) | CONFIRMED test file | Discovers runtime schemas and matching valid/invalid fixtures. | Execution and CI status are not established here. |
 | [`policy/runtime/README.md`](../../policy/runtime/) | CONFIRMED stub | Confirms policy responsibility root exists. | Does not establish accepted runtime-policy rules. |
 | [`Directory Rules`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `runtime/` responsibility root and `model_adapters/` placement. | Does not prove executable implementation. |
@@ -897,10 +905,10 @@ After merge, use a revert commit or revert PR. Do not reset or rewrite shared hi
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-15 |
-| Review status | Draft v1.1 canonical-lane clarification |
-| Implementation status | Mixed / largely UNKNOWN beyond confirmed documentation, contracts, schemas, fixtures, and test discovery |
+| Last reviewed | 2026-08-14 |
+| Review status | Draft v1.2 bounded MockAdapter selector proof |
+| Implementation status | Partial: deterministic four-outcome fixture selection is executable; semantic/provider runtime remains UNKNOWN |
 | Next review trigger | Accepted adapter contract/request schema, first adapter card, mock/local/provider implementation, provider/model admission policy, validator wiring, test/CI result, receipt persistence, client integration, compatibility-lane migration, correction, incident, deactivation, or rollback |
-| Rollback target | Prior blob `ab3ad9b3be29a7cdbdc4d77e751c5e5b2134451e` |
+| Rollback target | Prior blob `16456452e03884dabb24c670c41c9e359f679769` |
 
 <p align="right"><a href="#top">Back to top</a></p>

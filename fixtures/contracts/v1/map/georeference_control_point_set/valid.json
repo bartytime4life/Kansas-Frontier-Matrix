@@ -1,0 +1,62 @@
+{
+  "control_point_count": 5,
+  "control_points": [
+    {
+      "id": "gcp-01",
+      "resource": [50, 50],
+      "target": [225, 262.5]
+    },
+    {
+      "id": "gcp-02",
+      "resource": [950, 50],
+      "target": [2025, 37.5]
+    },
+    {
+      "id": "gcp-03",
+      "resource": [950, 750],
+      "target": [2375, 1087.5]
+    },
+    {
+      "id": "gcp-04",
+      "resource": [50, 750],
+      "target": [575, 1312.5]
+    },
+    {
+      "id": "gcp-05",
+      "resource": [500, 400],
+      "target": [1300, 675]
+    }
+  ],
+  "decision": {
+    "outcome": "VALID",
+    "reasons": ["GEOREFERENCE_CONTROL_POINT_SET_VALID"]
+  },
+  "fixture_only": true,
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "release_ref": null
+  },
+  "network_access": "forbidden",
+  "object_type": "GeoreferenceControlPointSet",
+  "profile": "kfm.georeference.control-point-set.v1",
+  "resource_set_hash": "sha256:30d9ac02ce788cc1e5c74162ca432bd40b46d779564468547729342930f2db81",
+  "resource_space": {
+    "axis_order": ["x", "y"],
+    "height_px": 800,
+    "kind": "image_pixel",
+    "width_px": 1000
+  },
+  "schema_version": "1.0.0",
+  "set_id": "kfm:georeference-gcp-set:sha256:9d9da050628e5efe57737fa791116066a1bab4921e28a98d70ec7603730a174a",
+  "target_set_hash": "sha256:bc2a8f740578f6f1112e888126eef236fb0a81a594e95dad3f977037ed373ad5",
+  "target_space": {
+    "axis_order": ["X", "Y"],
+    "kind": "synthetic_planar",
+    "unit": "synthetic_meters"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-blm-plss-cadnsdi-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/blm-connector-offline.yml",
+    "connectors/blm/README.md",
+    "connectors/blm/pyproject.toml",
+    "connectors/blm/src/blm/README.md",
+    "connectors/blm/src/blm/admit.py",
+    "connectors/blm/src/blm/fetch.py",
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/README.md",
+    "connectors/blm/tests/test_fetch_admit.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/blm-connector-offline.yml": "sha256:abd2fb37657b7ba3425f25c81d69189973bbe4249e300725cf4a1ba6a1f7a2ca",
+    "connectors/blm/README.md": "sha256:44325ae56b1582e34f92787bb50d206e18b93a157ff9555342e14fa7e33f42f7",
+    "connectors/blm/pyproject.toml": "sha256:cdae9369c0358f61fd97839eeb1c171c8bb5f83a0b7f684928fb644dce23d64e",
+    "connectors/blm/src/blm/README.md": "sha256:cb7b32d60db073a9812f30d44e8791266b179a992c4b090ba7a1595f8c467dfb",
+    "connectors/blm/src/blm/admit.py": "sha256:0d5c5d3f8447c917da8eff2e248cacf4b1835c309d7120e4d4f98fb49301e24c",
+    "connectors/blm/src/blm/fetch.py": "sha256:d847bd2e775ded6d82b86a8b7c34113780cd2a546b8a4af87d43ffe8bec36404",
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:cd52050c8fbe5051faffd285a593473970cb85ecaf220ca2f8f27cc71291f5ff",
+    "connectors/blm/tests/README.md": "sha256:e9709bbc36d4d76c342d96245f7ca5e2844864504dfa601daf5ea023072dead0",
+    "connectors/blm/tests/test_fetch_admit.py": "sha256:1e57e89967fb4d40fa1fb2f527ce94d18048dcf5c77c7b20f09622670f8c8bdf",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:a89869fd490022707ddad66ee894b7355a09fa3617ed3a74e290d14acef8c888",
+    "tools/qa/scaffold_baseline.json": "sha256:38e9cf4931189952c1726f62fbd953a1738a8644fccfaf1dbfffa8e5c7f06775"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:96fa9ed04ca1d029dfb83198eb7bd700343580a2d860ace04558b2a4baa767e6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8359c422d8fc04068768769e07da3acdb1ee5ca3",
+      "connectors/blm/README.md",
+      "connectors/nrcs/src/nrcs/fetch.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/blm-connector-offline.yml": "PROPOSED",
+    "connectors/blm/README.md": "PROPOSED",
+    "connectors/blm/pyproject.toml": "CONFIRMED",
+    "connectors/blm/src/blm/README.md": "PROPOSED",
+    "connectors/blm/src/blm/admit.py": "CONFIRMED",
+    "connectors/blm/src/blm/fetch.py": "CONFIRMED",
+    "connectors/blm/src/blm/plss_cadnsdi.py": "PROPOSED",
+    "connectors/blm/tests/README.md": "PROPOSED",
+    "connectors/blm/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "PROPOSED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "BLM connector suites",
+      "outcome": "PASS",
+      "reason": "test_plss_cadnsdi (10) and test_fetch_admit (10) pass under the blm-connector-offline discover pattern."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "18 of 19 planner/parser/admission mutations caught (URL re-check, descriptor hold, canonical URL, state scope, ring closure, Kansas extent, id order, duplicate id, ArcGIS error body, page bound, full-page flag, more-pages flag, float/int token decoding, InvalidOperation, collection-properties truncation flag, bool OBJECTID, coordinate finiteness); the survivor is an equivalent mutant (unique layer ids). Field and number-token fuzzes raised only PlssInputError."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (157); all eight connector suites pass; scaffold_inventory --check at 1266 (5 BLM findings resolved); deny_test_runner PASS; connector gate scan PASS; non-publisher static test PASS; workflow-security PASS (488); docs-critical-structure 0 findings; ruff clean; committed-tree repository-topology keeps 4 inherited drift rules, with KFM-TOPO-009 reduced by one leaf (connectors/blm/tests) and nothing added."
+    },
+    {
+      "gate": "BLM service verification",
+      "outcome": "SKIPPED",
+      "reason": "BLM service metadata is not reachable through the session egress proxy; service path, layer ids and field names remain NEEDS VERIFICATION and the parser fails closed on drift."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8359c422d8fc04068768769e07da3acdb1ee5ca3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T15:06:43Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "New BLM PLSS (CadNSDI) planner/parser plus fetch/admit replacing placeholders. Survey reference geometry only (title_authority False); other BLM products, activation and descriptor remain open."
+}

@@ -2,16 +2,22 @@
 doc_id: kfm://doc/domains/soil/canonical-paths
 title: Canonical Paths — Soil Domain
 type: standard
-version: v1
+version: v1.2
+prior_version: v1.1
 status: draft
 owners: <soil domain steward; docs steward; sources steward — TODO confirm in CODEOWNERS>
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable restatement of Directory Rules placement law for Soil-lane paths; not evidence, policy, release, or publication authority.
+truth_posture: CONFIRMED Directory Rules placement doctrine and accepted DIR-SOURCE-001 source-first capture identity / HOLD exact physical source-first RAW placement / PROPOSED lane path application / NEEDS VERIFICATION repo presence of each path
 related:
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
+  - data/raw/soil/README.md
   - docs/domains/soil/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
@@ -20,6 +26,8 @@ notes:
   - "Doctrine grounded in directory-rules.md §§4, 5, 6, 7, 9, 12, 13; Domains Atlas v1.0 Ch. 5 [DOM-SOIL]; Atlas §24.13 crosswalk."
   - "Soil segment is `soil` consistently across Directory Rules §12 and Atlas §24.13 — no naming variance flagged."
   - "Specific repo presence of every path below is PROPOSED until verified against a mounted repository."
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
+  - "2026-10-11 (v1.2): catalog lane corrected to subtype-first data/catalog/domains/soil/ (Directory Rules §12.3; data/catalog/domain/soil/ is a migration candidate, HOLD) and rollback lane corrected to release/rollback_cards/ plus data/receipts/rollback/ (DIR-RELEASE-003; data/rollback/soil/ deprecated per DIR-RELEASE-004, HOLD); documentation only; no file moved."
 [/KFM_META_BLOCK_V2] -->
 
 # Canonical Paths — Soil Domain
@@ -28,12 +36,12 @@ notes:
 
 [![status: draft](https://img.shields.io/badge/status-draft-blue)](#status)
 [![doctrine: directory-rules §12](https://img.shields.io/badge/doctrine-directory--rules%20%C2%A712-informational)](../../doctrine/directory-rules.md)
-[![schema home: schemas%2Fcontracts%2Fv1](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2F-success)](../../adr/ADR-0001-schema-home.md)
+[![schema home: schemas%2Fcontracts%2Fv1](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2F-success)](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
 [![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%E2%86%92PROCESSED%E2%86%92CATALOG%E2%86%92PUBLISHED-orange)](../../doctrine/lifecycle-law.md)
 [![support-type separation: mandatory](https://img.shields.io/badge/support--type%20separation-mandatory-critical)](#9-sensitivity-rights-and-publication-posture)
 [![paths: PROPOSED until repo-verified](https://img.shields.io/badge/paths-PROPOSED%20until%20repo--verified-yellow)](#13-open-questions-and-verification-backlog)
 
-**Status:** draft · **Owners:** soil domain steward, docs steward, sources steward (TODO confirm) · **Last updated:** 2026-05-19
+**Status:** draft · **Version:** v1.2 · **Owners:** soil domain steward, docs steward, sources steward (TODO confirm) · **Last updated:** 2026-10-11
 
 ---
 
@@ -91,17 +99,20 @@ fixtures/domains/soil/
 packages/domains/soil/
 pipelines/domains/soil/
 pipeline_specs/soil/
-data/raw/soil/
+# RAW: source-first capture (registered source_id in data/registry/sources/); physical placement HOLD — DIR-SOURCE-001
+data/raw/soil/README.md                  # compatibility/reference lane; no payloads
 data/work/soil/
 data/quarantine/soil/
 data/processed/soil/
-data/catalog/domain/soil/
+data/catalog/domains/soil/               # subtype-first catalog projection (§12.3); not yet present — data/catalog/domain/soil/ is a migration candidate, disposition HOLD
 data/triplets/domain/soil/               # PROPOSED — verify segment shape against data/triplets/ subtree
 data/published/layers/soil/
 data/registry/sources/soil/
 data/registry/domains/soil/
-data/rollback/soil/
 release/candidates/soil/
+release/rollback_cards/                  # RollbackCard home only (DIR-RELEASE-003); no domain segment
+data/receipts/rollback/                  # executed rollback / cache-invalidation receipts (DIR-RELEASE-003); not yet present
+                                         # data/rollback/soil/ is deprecated (DIR-RELEASE-004); classify before migration, no bulk move — disposition HOLD
 ```
 
 > [!IMPORTANT]
@@ -134,7 +145,7 @@ flowchart LR
 
   subgraph L["data/ lifecycle — <code>data/&lt;phase&gt;/soil/</code>"]
     direction LR
-    R["RAW"]:::phase --> W["WORK / QUARANTINE"]:::phase --> P["PROCESSED"]:::phase --> CT["CATALOG / TRIPLET"]:::phase --> PU["PUBLISHED"]:::phase
+    R["RAW (source-first capture; placement HOLD)"]:::phase --> W["WORK / QUARANTINE"]:::phase --> P["PROCESSED"]:::phase --> CT["CATALOG / TRIPLET"]:::phase --> PU["PUBLISHED"]:::phase
   end
 
   subgraph M["release/ — release decisions"]
@@ -195,7 +206,7 @@ Each responsibility root below is **CONFIRMED** as a canonical or compatibility 
 | Authority class | Canonical ([DIRRULES] §5). Pairs with `schemas/` — `contracts/` is **meaning**, `schemas/` is **shape**. |
 | What belongs | Markdown definitions, semantic constraints, source-role notes, temporal-handling notes, cross-lane relation constraints. |
 | What does **not** belong | JSON Schema files (→ `schemas/contracts/v1/domains/soil/`); policy rules; tests. |
-| Naming variance | Atlas §24.13 crosswalk lists `contracts/soil/` (flat); Directory Rules §12 lists `contracts/domains/soil/` (segmented). Resolve per `docs/adr/ADR-0001-schema-home.md` and per-root README in `contracts/`. See [§11 OPEN-SOIL-01](#11-anti-patterns-specific-to-soil). |
+| Naming variance | Atlas §24.13 crosswalk lists `contracts/soil/` (flat); Directory Rules §12 lists `contracts/domains/soil/` (segmented). Resolve per `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` and per-root README in `contracts/`. See [§11 OPEN-SOIL-01](#11-anti-patterns-specific-to-soil). |
 
 ### 4.3 `schemas/contracts/v1/domains/soil/` — machine shape
 
@@ -253,12 +264,12 @@ Each responsibility root below is **CONFIRMED** as a canonical or compatibility 
 | Responsibility | Source-specific fetchers and admitters for soil sources, organized by **source organization**, not by domain. |
 | Authority class | Canonical ([DIRRULES] §7.3). |
 | Where soil source connectors live (PROPOSED) | `connectors/nrcs/` (SSURGO, gSSURGO, gNATSGO, SDA, SCAN), `connectors/kansas/` (Kansas Mesonet), `connectors/noaa/` (USCRN), `connectors/nasa/` (SMAP), `connectors/isric/` (SoilGrids). |
-| Connector output rule | Output **must** go to `data/raw/soil/<source_id>/<run_id>/` or `data/quarantine/soil/<reason>/<run_id>/`, with `SourceDescriptor`, checksums, and `IngestReceipt`. **Connectors must not publish.** |
+| Connector output rule | **CONFIRMED rule / HOLD path.** Output **must** go only to the accepted source-first RAW home (`<accepted-source-first-raw-home>/<source_id>/<run_id>/`; exact path **HOLD** — no placement decision is accepted under `DIR-SOURCE-001`) or to `data/quarantine/soil/<reason>/<run_id>/`, with `SourceDescriptor` (one registered `source_id` under `data/registry/sources/`), checksums, and `IngestReceipt`; never to `data/processed/`, `data/catalog/`, or `data/published/`. The legacy `data/raw/soil/` lane is a compatibility/reference documentation lane and **must not** receive payloads. **Connectors must not publish.** |
 | Drift risk | Topic-organized connector folders (`connectors/soil/`) instead of source-organized — flag as drift. |
 
 ### 4.9 `data/<phase>/soil/` — lifecycle data
 
-See [§5](#5-lifecycle-phases-for-soil-data) for the phase-by-phase breakdown.
+See [§5](#5-lifecycle-phases-for-soil-data) for the phase-by-phase breakdown. RAW is the exception to the `data/<phase>/soil/` pattern: capture identity is source-first under accepted `DIR-SOURCE-001` ([DIRRULES] §12.3), one capture may support several domains without duplicated RAW bytes, and physical source-first RAW placement is **HOLD**. [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) documents a compatibility/reference lane, not a payload destination.
 
 ### 4.10 `release/candidates/soil/` — release decisions
 
@@ -274,7 +285,7 @@ See [§5](#5-lifecycle-phases-for-soil-data) for the phase-by-phase breakdown.
 |---|---|
 | Responsibility | Public-trust path. `apps/governed-api/` returns `RuntimeResponseEnvelope` with finite outcomes (ANSWER, ABSTAIN, DENY, ERROR). |
 | `soil/` segment | **None.** Soil-specific behavior lives behind the governed API as routes/handlers, not as a domain-named app. |
-| Forbidden | Public clients reading `data/raw/soil/`, `data/work/soil/`, or `data/quarantine/soil/` directly; `apps/explorer-web/` reading `data/processed/soil/` instead of going through `apps/governed-api/` ([DIRRULES] §13.5 "Public route reads canonical store"). |
+| Forbidden | Public clients reading RAW (the source-first capture or the legacy `data/raw/soil/` lane), `data/work/soil/`, or `data/quarantine/soil/` directly; `apps/explorer-web/` reading `data/processed/soil/` instead of going through `apps/governed-api/` ([DIRRULES] §13.5 "Public route reads canonical store"). |
 
 [Back to top](#contents)
 
@@ -286,20 +297,20 @@ See [§5](#5-lifecycle-phases-for-soil-data) for the phase-by-phase breakdown.
 
 | Phase | `data/<phase>/soil/` shape (PROPOSED) | Allowed for Soil | Gate to advance | MUST NOT |
 |---|---|---|---|---|
-| `raw/` | `data/raw/soil/<source_id>/<run_id>/` | Immutable SSURGO export, SDA query payload, gSSURGO raster, Mesonet station pull, SMAP granule, SoilGrids COG — with retrieval metadata and checksums | `SourceDescriptor` exists | Public clients, AI context, UI layers, normalized records |
+| `raw/` | **HOLD** — source-first capture under one registered `source_id` (`DIR-SOURCE-001`); physical placement undecided. `data/raw/soil/` is a compatibility/reference lane, not a payload destination | Immutable SSURGO export, SDA query payload, gSSURGO raster, Mesonet station pull, SMAP granule, SoilGrids COG — with retrieval metadata and checksums | `SourceDescriptor` exists | Public clients, AI context, UI layers, normalized records |
 | `work/` | `data/work/soil/<run_id>/` | Normalized intermediates, candidate MUKEY/COKEY/CHKEY joins, candidate horizon depths, candidate moisture conversions | Validation + policy gate pass, or a quarantine reason is recorded | Public API/UI, release aliases |
 | `quarantine/` | `data/quarantine/soil/<reason>/<run_id>/` | Failed validation (unit drift, depth anomalies), unresolved rights/sensitivity (e.g., landowner-identifying joins), schema drift, support-type mixing | Remediation or denial | Promotion candidates without remediation |
 | `processed/` | `data/processed/soil/<dataset_id>/<version>/` | Validated canonical records: soil map units, components, horizons, soil-condition view rows, station series | `EvidenceRef`, `ValidationReport`, digest closure exist | Assumption of public/release status |
-| `catalog/` | `data/catalog/domain/soil/` and STAC/DCAT/PROV records under `data/catalog/{stac,dcat,prov}/` | Soil catalog entries; `EvidenceBundle`s; layer manifest entries | Catalog/proof closure passes | Uncited claims, unclosed identifiers |
+| `catalog/` | **CONFIRMED rule / HOLD migration.** Subtype-first projections ([DIRRULES] §12.3): `data/catalog/domains/soil/` (not yet present) and STAC/DCAT/PROV records under `data/catalog/{stac,dcat,prov}/`. The tracked `data/catalog/domain/soil/` README lane is a migration candidate; disposition HOLD | Soil catalog entries; `EvidenceBundle`s; layer manifest entries | Catalog/proof closure passes | Uncited claims, unclosed identifiers |
 | `triplets/` | `data/triplets/graph_deltas/` and `data/triplets/exports/` (no domain segment in the spine) | Relationship projections (e.g., `SoilMapUnit`-`HUC` joins) and graph-compatible triples | Catalog/proof closure passes | Canonical replacement semantics |
 | `published/` | `data/published/layers/soil/`, `data/published/api_payloads/...`, `data/published/pmtiles/soil/...` | Released public-safe artifacts: soil mapunit tiles, hydrologic-soil-group view, station-series payloads, suitability/interpretation layers, support-type-badged composites | `ReleaseManifest`, correction path, rollback target, review/policy state exist | Raw, work, quarantine, exact restricted geometry |
 | `receipts/` | `data/receipts/{ingest,validation,pipeline,ai,release}/` (no domain segment in the spine) | Process memory: run, validation, AI, ingest, release receipts that reference soil | Process-only; receipts are not proof of release | Proof of release by themselves |
 | `proofs/` | `data/proofs/{evidence_bundle,proof_pack,validation_report,citation_validation}/` (no domain segment in the spine) | `EvidenceBundle`s, ProofPacks, integrity bundles for soil claims | Used by promotion and release gates | Process-only receipts without release context |
-| `rollback/` | `data/rollback/soil/<release_id>/` | Rollback cards, alias revert receipts for soil releases | — | Deleting prior meanings |
+| `rollback/` | **CONFIRMED rule / HOLD migration.** `RollbackCard` only under `release/rollback_cards/`; executed rollback and cache-invalidation receipts under `data/receipts/rollback/` (`DIR-RELEASE-003`). The tracked `data/rollback/soil/` README lane is deprecated (`DIR-RELEASE-004`): classify before migration, no bulk move; disposition HOLD | Rollback cards (in `release/rollback_cards/`), executed rollback and alias-revert receipts (in `data/receipts/rollback/`) for soil releases | — | Deleting prior meanings; new rollback authority in `data/rollback/soil/` |
 | `registry/` | `data/registry/sources/soil/`, `data/registry/domains/soil/`, `data/registry/sensitivity/`, `data/registry/rights/`, `data/registry/crosswalks/` | Append-only source/layer/dataset/rights/sensitivity records, including MUKEY/COKEY/CHKEY crosswalks | — | Canonical domain truth (it is the registry of decisions, not the meaning surface) |
 
 > [!CAUTION]
-> **Lifecycle skip is a Directory Rules §13.5 anti-pattern.** A pipeline that writes directly to `data/published/layers/soil/` from `data/raw/soil/` violates the lifecycle invariant **regardless of which directory the bytes ended up in.** Every phase runs; promotion is a governed state transition.
+> **Lifecycle skip is a Directory Rules §13.5 anti-pattern.** A pipeline that writes directly to `data/published/layers/soil/` from RAW (the source-first capture or the legacy `data/raw/soil/` lane) violates the lifecycle invariant **regardless of which directory the bytes ended up in.** Every phase runs; promotion is a governed state transition.
 
 [Back to top](#contents)
 
@@ -433,17 +444,17 @@ The Directory Rules §13 anti-pattern register applies in full. The rows below a
 | **`soil/` at repo root** | `soil/` folder competing with responsibility roots, fragmenting lifecycle | Apply Domain Placement Law; migrate piece by piece into the lane pattern | [DIRRULES] §12, §13.4 |
 | **Support-type fusion in one published layer** | A "soil-condition" PMTiles layer mixing SSURGO, gNATSGO, Mesonet, and SMAP without per-pixel support-type badges | Split into support-type-labeled layer families; or carry per-feature support-type metadata; gate at the support-type-separation validator | [DOM-SOIL] Ch. 5.I |
 | **Resolution silent-resampling** | gNATSGO and SoilGrids reprojected into a 10 m SSURGO surface without tagging | Tag every derived value with source resolution and resampling method; expose tags in the catalog | Pass-10 C10-01 |
-| **Connector publishes** | An NRCS connector writing to `data/processed/soil/` or `data/published/layers/soil/` | Connector emits to `data/raw/soil/` or `data/quarantine/soil/`; pipelines promote | [DIRRULES] §13.5 |
-| **Watcher publishes** | An SSURGO/gSSURGO ETag poller writing to `data/catalog/domain/soil/` directly | Watcher-as-non-publisher invariant: workers emit receipts and candidate decisions only | [DIRRULES] §13.5 |
+| **Connector publishes** | An NRCS connector writing to `data/processed/soil/` or `data/published/layers/soil/` | Connector emits only to the accepted source-first RAW home (exact path HOLD) or `data/quarantine/soil/`, never to the legacy `data/raw/soil/` lane or processed/catalog/published; pipelines promote | [DIRRULES] §13.5 |
+| **Watcher publishes** | An SSURGO/gSSURGO ETag poller writing catalog records (any `data/catalog/` lane) or published artifacts directly | Watcher-as-non-publisher invariant: workers emit receipts and candidate decisions only | [DIRRULES] §13.5 |
 | **Schema mirror divergence** | `schemas/contracts/v1/domains/soil/` and a `contracts/soil/<x>.schema.json` evolving separately | One canonical, the other a mirror or frozen legacy; ADR if unclear | [DIRRULES] §13.1, ADR-0001 |
-| **Lifecycle skip** | A pipeline writing directly to `data/published/layers/soil/` from `data/raw/soil/` | All phases run; promotion is a governed state transition | [DIRRULES] §13.5 |
+| **Lifecycle skip** | A pipeline writing directly to `data/published/layers/soil/` from RAW (the source-first capture or the legacy `data/raw/soil/` lane) | All phases run; promotion is a governed state transition | [DIRRULES] §13.5 |
 | **Public route reads canonical store** | `apps/explorer-web/` reading `data/processed/soil/` instead of `apps/governed-api/` | Route reads MUST go through `apps/governed-api/` | [DIRRULES] §13.5, §7.1 |
 | **Topic-organized connectors** | `connectors/soil/` instead of `connectors/nrcs/`, `connectors/kansas/`, etc. | Connectors organize by source organization; soil sources spread across NRCS/Kansas/NOAA/NASA/ISRIC | [DIRRULES] §7.3 |
 
 ### Open questions specific to Soil
 
 - **OPEN-SOIL-01 — `soil/` flat vs. `domains/soil/` segmented under `schemas/`/`contracts/`.** Directory Rules §12 uses the segmented form `schemas/contracts/v1/domains/<domain>/` and `contracts/domains/<domain>/`. Atlas §24.13 crosswalk row 5 uses the flat form `schemas/contracts/v1/soil/` and `contracts/soil/`. Both shapes are doctrine-grounded in different KFM documents. Resolution: per-root README in `schemas/contracts/v1/` and `contracts/` (no ADR strictly required), or a one-line ADR to freeze the rule. Until resolved, this document presents both forms and labels every concrete path **NEEDS VERIFICATION**. Tracker: `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED entry).
-- **OPEN-SOIL-02 — `data/triplets/` shape for Soil.** Directory Rules §9.1 shows `data/triplets/{graph_deltas, exports}/` without a domain segment, while the lane-pattern table in §12 implies `data/catalog/domain/<domain>/` for catalog. The question: does soil-keyed triplet output go under `data/triplets/graph_deltas/soil/`, or stay under the non-domain-segmented spine? Resolution: per-root README in `data/triplets/` or one-line ADR. **NEEDS VERIFICATION**.
+- **OPEN-SOIL-02 — `data/triplets/` shape for Soil.** Directory Rules §9.1 shows `data/triplets/{graph_deltas, exports}/` without a domain segment, while catalog projections are subtype-first under §12.3 (`data/catalog/domains/<domain>/`; the older `data/catalog/domain/<domain>/` shape is a migration candidate). The question: does soil-keyed triplet output go under `data/triplets/graph_deltas/soil/`, or stay under the non-domain-segmented spine? Resolution: per-root README in `data/triplets/` or one-line ADR. **NEEDS VERIFICATION**.
 - **OPEN-SOIL-03 — `runbooks/soil/` subfolder convention.** Parallel to [DIRRULES] §18 OPEN-DR-02 for `docs/runbooks/<domain>/` generally. **NEEDS VERIFICATION**.
 
 [Back to top](#contents)
@@ -456,13 +467,13 @@ Adapt the Directory Rules §16 reviewer checklist for soil-shaped PRs. A reviewe
 
 - [ ] **Responsibility identified.** The file's primary responsibility maps to exactly one §4 Step 1 category.
 - [ ] **Right root.** The chosen root matches that responsibility (e.g., soil meaning → `contracts/`, soil shape → `schemas/`, soil admissibility → `policy/`).
-- [ ] **Lifecycle phase correct** (data only). Soil bytes go to the right `data/<phase>/soil/` and do not skip phases.
+- [ ] **Lifecycle phase correct** (data only). Soil bytes go to the right `data/<phase>/soil/` and do not skip phases; RAW captures follow source-first identity (`DIR-SOURCE-001`) and their physical placement is HOLD.
 - [ ] **Domain segment correct.** `soil/` appears as a segment, not as a root or under the wrong root's domain folder.
 - [ ] **Schema home.** Schema-bearing changes go to `schemas/contracts/v1/<...>/soil/` per ADR-0001 (or the flat `schemas/contracts/v1/soil/` per OPEN-SOIL-01 once resolved). Not to `jsonschema/` or alongside data files.
 - [ ] **Source role identity preserved.** Static survey, gridded derivative, station reading, satellite grid, pedon evidence, and interpretation do not collapse into a single surface.
 - [ ] **Support-type tag present.** Any published artifact carries its support-type badge.
 - [ ] **Source-resolution tag present** for gridded-derivative or composite layers (per-value where applicable).
-- [ ] **Connector output discipline.** New or modified connectors emit only to `data/raw/soil/...` or `data/quarantine/soil/...`.
+- [ ] **Connector output discipline.** New or modified connectors emit only to the accepted source-first RAW home (exact path HOLD; not the legacy `data/raw/soil/` compatibility/reference lane) or `data/quarantine/soil/...`; never to processed, catalog, or published.
 - [ ] **Public path discipline.** Soil routes go through `apps/governed-api/`, not directly to canonical stores.
 - [ ] **README present** for any new soil subfolder, meeting the [DIRRULES] §15 contract.
 - [ ] **Rule cited in PR description.** The PR names the Directory Rules section that justifies the placement.
@@ -483,6 +494,8 @@ Adapt the Directory Rules §16 reviewer checklist for soil-shaped PRs. A reviewe
 | OPEN-SOIL-06 | Whether `SourceActivationDecision` records exist for each source family in §7 | Mounted-repo inspection of `data/registry/sources/soil/` | NEEDS VERIFICATION |
 | OPEN-SOIL-07 | Whether the support-type-separation denial validator (Ch. 5.K) is implemented | Mounted-repo inspection of `tools/validators/domains/soil/` | NEEDS VERIFICATION |
 | OPEN-SOIL-08 | Whether soil-specific schema files exist under either segmented or flat form | Mounted-repo inspection | NEEDS VERIFICATION |
+| OPEN-SOIL-09 | Physical source-first RAW placement for Soil captures and disposition of the legacy `data/raw/soil/` compatibility/reference lane | Accepted placement decision under `DIR-SOURCE-001` ([DIRRULES] §12.3), plus migration and rollback plan; none accepted as of `main@9e8bf3e6` | HOLD |
+| OPEN-SOIL-10 | Disposition of the tracked legacy lanes `data/catalog/domain/soil/` (catalog migration candidate, [DIRRULES] §12.3) and `data/rollback/soil/` (deprecated generic rollback lane, `DIR-RELEASE-004`) | Classify existing objects, then an accepted migration map with consumer cutover and rollback plan; no bulk move by filename; none accepted as of 2026-10-11 | HOLD |
 
 > [!NOTE]
 > Entries above are PROPOSED for tracking in `docs/registers/VERIFICATION_BACKLOG.md`. Each becomes a routine PR once verified.
@@ -515,13 +528,15 @@ Adapt the Directory Rules §16 reviewer checklist for soil-shaped PRs. A reviewe
 
 ## 14. Related docs
 
-- `docs/doctrine/directory-rules.md` — canonical placement authority ([DIRRULES])
+- `docs/doctrine/directory-rules.md` — canonical placement authority ([DIRRULES]); §12.3 source identity (`DIR-SOURCE-001`…`004`)
+- [`data/raw/README.md`](../../../data/raw/README.md) — RAW root contract; source-first capture identity, physical placement HOLD
+- [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) — Soil RAW compatibility/reference lane; no payloads
 - `docs/doctrine/lifecycle-law.md` — lifecycle invariant — **NEEDS VERIFICATION** in mounted repo
 - `docs/doctrine/trust-membrane.md` — public-trust path doctrine — **NEEDS VERIFICATION** in mounted repo
 - `docs/doctrine/truth-posture.md` — cite-or-abstain doctrine — **NEEDS VERIFICATION** in mounted repo
 - `docs/doctrine/authority-ladder.md` — authority ladder — **NEEDS VERIFICATION** in mounted repo
 - `docs/domains/soil/README.md` — soil lane README — **PROPOSED**
-- `docs/adr/ADR-0001-schema-home.md` — schema-home rule — **NEEDS VERIFICATION** that the exact filename exists
+- `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` — schema-home rule — **NEEDS VERIFICATION** that the exact filename exists
 - `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` — Domains Atlas Ch. 5 (Soil) — **NEEDS VERIFICATION**
 - `docs/registers/DRIFT_REGISTER.md` — placement-drift register
 - `docs/registers/VERIFICATION_BACKLOG.md` — verification backlog (this doc's open questions belong here)
@@ -529,4 +544,4 @@ Adapt the Directory Rules §16 reviewer checklist for soil-shaped PRs. A reviewe
 
 ---
 
-<sub>Last updated: 2026-05-19 · Doctrine basis: `directory-rules.md` v1.1; [DOM-SOIL]; [ENCY]; [DIRRULES] · All concrete paths are **PROPOSED** until verified against a mounted repository. · [Back to top](#contents)</sub>
+<sub>Version v1.2 · Last updated: 2026-10-11 · Doctrine basis: `directory-rules.md` v1.1; [DOM-SOIL]; [ENCY]; [DIRRULES] · All concrete paths are **PROPOSED** until verified against a mounted repository. · [Back to top](#contents)</sub>

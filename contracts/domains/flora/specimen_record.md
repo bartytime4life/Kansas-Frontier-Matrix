@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-domains-flora-specimen-record
 title: Specimen Record Contract — Flora
 type: semantic-contract
-version: v0.2
-status: draft; PROPOSED; NEEDS VERIFICATION before promotion
+version: v0.3
+status: draft; PROPOSED_INACTIVE; fixture-only; NEEDS VERIFICATION before promotion
 owners: OWNER_TBD — Flora steward · Specimen steward · Herbarium/source steward · Taxonomy steward · Contract steward · Schema steward · Sensitivity reviewer · Validation steward · Policy steward · Release steward · Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-08-12
 policy_label: public; semantic-contract; flora; specimen-record; voucher; herbarium; source-role-aware; locality-sensitive; evidence-bound; release-gated; no-current-occurrence-proof
 tags: [kfm, contracts, flora, specimen-record, herbarium, voucher, catalog, accession, collector, determination, locality, plant-taxon, occurrence, evidence, source-role, sensitivity, policy, release, correction, rollback]
 related:
@@ -32,14 +32,16 @@ related:
   - ../../../docs/domains/flora/SENSITIVITY_POSTURE.md
   - ../../../schemas/contracts/v1/domains/flora/specimen_record.schema.json
   - ../../../fixtures/domains/flora/specimen_record/
-  - ../../../tests/domains/flora/
+  - ../../../tools/validators/domains/flora/validate_specimen_record.py
+  - ../../../tests/domains/flora/test_specimen_record.py
+  - ../../../docs/intake/exploratory/specimen-record-conformance-source-map.md
   - ../../../policy/domains/flora/
   - ../../../policy/sensitivity/flora/
   - ../../../data/registry/sources/flora/
   - ../../../release/manifests/
 notes:
   - "Expanded from a thin scaffold into a Flora specimen/voucher semantic contract."
-  - "The paired schema is a PROPOSED scaffold with no declared fields and additionalProperties=true; field-level machine enforcement remains NEEDS VERIFICATION."
+  - "The paired schema is now a closed PROPOSED_INACTIVE fixture-only candidate profile with deterministic local validation."
   - "SpecimenRecord captures herbaria-sourced vouchered specimen evidence, determinations, catalog/accession identity, collection event context, locality posture, and correction lineage."
   - "A specimen can support historical evidence and determinations, but it does not by itself prove current occurrence, public exact locality release, accepted taxonomy, or management action."
 [/KFM_META_BLOCK_V2] -->
@@ -72,7 +74,7 @@ notes:
 > **Status:** `draft` / semantic contract  
 > **Contract path:** `contracts/domains/flora/specimen_record.md`  
 > **Schema path:** `schemas/contracts/v1/domains/flora/specimen_record.schema.json`  
-> **Truth posture:** the target contract path exists as a scaffold, the paired schema path exists as a PROPOSED scaffold, and the Flora canonical path register identifies `SpecimenRecord` as the herbaria-sourced vouchered specimen object. Field-level schema shape, fixtures, validators, source registry terms, policy runtime, release workflow, API behavior, UI behavior, digitization/image handling, and test coverage remain **NEEDS VERIFICATION**.
+> **Truth posture:** the target contract, a closed fixture-only schema, synthetic profile, deterministic validator, focused tests, and read-only CI orchestration exist. This confirms only the inactive candidate shape and exact local conformance behavior. Real specimen identity, source admission or terms, accepted taxonomy, evidence resolution, policy, review, release, API/UI behavior, digitization/image handling, and publication remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > `SpecimenRecord` is voucher evidence. It does **not** prove current occurrence by itself, does **not** replace `PlantTaxon`, `FloraOccurrence`, `OccurrenceRestricted`, `OccurrencePublic`, `RarePlantRecord`, or `PhenologyObservation`, and does **not** authorize public release of exact sensitive locality, collector notes, images, or institution-restricted metadata by itself.
@@ -119,20 +121,31 @@ The Flora lane follows the responsibility-root pattern: contracts define semanti
 
 ## Schema posture
 
-The paired schema currently exists as a **PROPOSED scaffold**.
+The paired schema is a **PROPOSED_INACTIVE fixture-only profile**.
 
 | Schema fact | Current posture |
 |---|---|
 | Schema file path | `schemas/contracts/v1/domains/flora/specimen_record.schema.json` |
-| Schema title | `Specimen Record` |
-| Declared properties | none yet |
-| Required fields | none declared |
-| Additional properties | `true` |
-| Schema status | `PROPOSED` |
+| Schema title | `Flora Specimen Record Candidate` |
+| Declared properties | closed specimen identity, source, collection event, determination, evidence, rights, sensitivity, public candidate, governance, correction, and hash fields |
+| Required fields | all top-level profile fields are required |
+| Additional properties | `false` at every profile object |
+| Schema status | `PROPOSED_INACTIVE`; fixture-only; no source or release authority |
 | Source document | `docs/domains/flora/CANONICAL_PATHS.md` |
 | Contract document | `contracts/domains/flora/specimen_record.md` |
 
-Because the schema is empty and permissive, this contract defines **semantic expectations** for future schema fields, fixtures, validators, source registry links, determination/crosswalk logic, sensitivity policy, public derivatives, correction flows, and rollback handling. It does not claim current machine enforcement.
+The profile fixes `schema_version` to
+`kfm.flora.specimen-record.v1` and `object_type` to
+`SpecimenRecordCandidate`. It accepts digest-bound opaque references rather
+than resolving any source, evidence, geometry, taxonomy, review, or release
+object. All authority effects remain fixed false and `release_ref` remains
+null. The validator adds deterministic identity, canonical `spec_hash`,
+historical-not-current occurrence, label-text, locality, determination,
+rights, sensitivity, correction, and ordering checks.
+
+This is machine enforcement for the synthetic profile only. It is not a source
+connector, ingester, catalog authority, taxonomy resolver, policy engine,
+release gate, or public payload implementation.
 
 ---
 
@@ -170,7 +183,9 @@ A reviewed `SpecimenRecord` should semantically assert:
 
 ## Recommended semantics
 
-The following fields are **PROPOSED** targets for future schema work. They are not enforced by the current scaffold schema.
+The following semantic roles are **PROPOSED**. The bounded fixture profile now
+enforces a deliberately smaller representation of them; fields outside that
+profile remain future steward work.
 
 | Field | Meaning |
 |---|---|
@@ -291,12 +306,13 @@ Rules:
 
 Before this contract is promoted beyond draft:
 
-- [ ] Expand `schemas/contracts/v1/domains/flora/specimen_record.schema.json` beyond the empty scaffold.
-- [ ] Add valid fixtures for voucher specimen, herbarium sheet, catalog-only record, image-backed record, duplicate specimen, type specimen, sensitive specimen, candidate record, and public-safe derivative.
-- [ ] Add invalid fixtures for missing source descriptor, missing catalog/source identity, missing source role, accepted taxonomy from label text alone, current occurrence inferred from historical specimen, exact rare-plant locality public output, missing image rights, missing redaction receipt for transformed locality, missing release manifest, and missing rollback target.
-- [ ] Add validator checks for deterministic identity, catalog/accession fields, source role, taxon crosswalk, determination state, collection time precision, locality precision, evidence refs, rights state, sensitivity state, public derivative linkage, release linkage, and correction lineage.
+- [x] Expand `schemas/contracts/v1/domains/flora/specimen_record.schema.json` into a closed fixture-only candidate profile.
+- [x] Add synthetic cases for a public-safe historical candidate, a sensitive hold, an unresolved catalog candidate, and an explicit synthetic record.
+- [x] Add negative cases for source-role, identity, historical/current occurrence, label-text taxonomy, exact locality, rights, sensitivity, redaction, correction, and authority-effect failures.
+- [x] Add deterministic identity, canonical hash, reference ordering, record-role, collection-time, locality, determination, rights, sensitivity, projection, correction, and no-authority validation.
+- [x] Add no-network focused tests and read-only CI orchestration.
+- [ ] Expand conformance only after stewards accept exact real-source identities, rights vocabularies, taxonomic crosswalk rules, and correction semantics.
 - [ ] Add policy tests for rare-plant locality, private-land locality, institution-restricted media, source-restricted fields, candidate rows, OCR/model-derived data, and public citation projection.
-- [ ] Add no-network fixtures so CI can validate this contract without live source access.
 - [ ] Add non-regression tests for re-determination, duplicate merge/split, locality correction, source withdrawal, image takedown, redaction bug, and rollback of released derivatives.
 
 Recommended finite outcomes:
@@ -376,8 +392,8 @@ Rollback artifacts should include affected SpecimenRecord IDs, institution/sourc
 ## Maintainer checklist
 
 - [ ] Confirm this contract against `docs/domains/flora/CANONICAL_PATHS.md` and `docs/domains/flora/OBJECT_FAMILIES.md`.
-- [ ] Expand the schema in a separate schema PR.
-- [ ] Add fixtures and validator coverage before any specimen-backed occurrence, phenology, range, taxon, or public citation depends on this contract.
+- [x] Add a closed fixture-only schema, synthetic profile, validator, tests, source map, workflow, and generated authoring receipt.
+- [ ] Keep the profile inactive until source, taxonomy, rights, sensitivity, policy, evidence, review, correction, release, and consumer stewards accept a stronger transition.
 - [ ] Add source profiles for approved herbarium/specimen/image portals before activation.
 - [ ] Add policy tests for rare-plant locality, private-land locality, institution-restricted media, source-restricted labels, candidate records, and OCR/model-derived fields.
 - [ ] Confirm public API/UI/map/AI surfaces do not treat specimens as current occurrence proof or leak restricted locality/media.

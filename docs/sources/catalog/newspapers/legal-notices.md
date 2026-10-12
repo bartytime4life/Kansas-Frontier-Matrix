@@ -11,15 +11,16 @@ policy_label: public
 related:
   - docs/sources/catalog/newspapers/README.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/newspapers/IDENTITY.md
-  - docs/sources/catalog/newspapers/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, newspapers, product-page]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
   - "PROPOSED path under docs/sources/catalog/newspapers/ — placement basis docs/doctrine/directory-rules.md §6.1."
+owning_root: docs/
+responsibility: "Documentation for Newspaper Public Legal Notices; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Newspaper Public Legal Notices
@@ -82,9 +83,9 @@ This page is a **product-page**: it describes the slice's *catalog identity*, *p
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | Family-level orientation; this product is one slice of `newspapers`. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
-| **Sibling** | [`_examples/`](./_examples/) | Illustrative STAC + `kfm:provenance` examples. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `_examples/` (not present) | Illustrative STAC + `kfm:provenance` examples. |
 | **Upstream (root)** | [`../README.md`](../README.md) | Catalog landing page. |
 | **Cross-root** | [`data/registry/sources/`](../../../../data/registry/sources/) | Authoritative `SourceDescriptor` home; not duplicated here. |
 | **Doctrine** | [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) | Placement authority and lifecycle law. |
@@ -130,7 +131,7 @@ PROPOSED — the descriptor for this slice should at minimum carry:
 - `source_role` — `authority` for the published notice itself; `observation` for the OCR/extracted text; `context` for surrounding pages (see KFM-P3-IDEA-0004, source-role separation)
 - `authority` — publisher + jurisdiction + legal-notice-of-record status
 - `rights` — license, redistribution terms, attribution requirements
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md)
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present)
 - `cadence` — publication frequency and last-known-fresh date
 - `ingest_hash` — content-addressable digest of the admitted payload
 
@@ -144,7 +145,7 @@ PROPOSED — legal-notice items map across the standard KFM-STAC / DCAT / PROV-O
 
 | Profile | Lane | Used by this product? | Notes |
 |---|---|---|---|
-| STAC 1.1 | `data/catalog/stac/` | PROPOSED — Yes (NEEDS VERIFICATION) | Page-level Items with `kfm:provenance`; Collection per [`IDENTITY.md`](./IDENTITY.md). |
+| STAC 1.1 | `data/catalog/stac/` | PROPOSED — Yes (NEEDS VERIFICATION) | Page-level Items with `kfm:provenance`; Collection per `IDENTITY.md` (not present). |
 | DCAT | `data/catalog/dcat/` | PROPOSED — Yes / No (NEEDS VERIFICATION) | Distribution mapping for downloadable corpora; see KFM-P26-PROG-0025. |
 | PROV-O | `data/catalog/prov/` | PROPOSED — Yes (NEEDS VERIFICATION) | Captures `wasGeneratedBy`, `wasDerivedFrom`, `wasAttributedTo` for OCR + extraction steps. |
 | Domain projection | `data/catalog/domain/people-dna-land/` | PROPOSED — partial | Land-patent notices project into the `people-dna-land` domain; other notice types may not. |
@@ -156,7 +157,7 @@ PROPOSED — legal-notice items map across the standard KFM-STAC / DCAT / PROV-O
 
 ## Collection identity
 
-- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-<publisher-or-jurisdiction>-legal-notices`. See sibling [`IDENTITY.md`](./IDENTITY.md) for the family-level rule.
+- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-<publisher-or-jurisdiction>-legal-notices`. See sibling `IDENTITY.md` (not present) for the family-level rule.
 - **PROPOSED namespace.** `kfm:` — pending resolution of *OPEN-DSC-03* (namespace canonicalization). NEEDS VERIFICATION.
 - **PROPOSED Item ID rule.** Deterministic basis: `source_id + page_locator + temporal_scope + normalized_digest` (per the identity pattern recorded for evidence-bound objects in the People/DNA/Land domain).
 - **Asset roles.** NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/`. Candidate roles: `image` (page raster), `ocr` (extracted text), `iiif` (IIIF manifest), `metadata` (legal-notice structured fields), `thumbnail`.
@@ -220,7 +221,7 @@ NEEDS VERIFICATION — confirm against `data/catalog/` artifacts and any cadastr
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and consent / reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and consent / reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -344,13 +345,13 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — `newspapers` family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `newspapers` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 

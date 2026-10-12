@@ -11,10 +11,6 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/landfire/README.md
-  - docs/sources/catalog/landfire/evt.md
-  - docs/sources/catalog/landfire/ldist.md
-  - docs/sources/catalog/landfire/fuels.md
-  - docs/sources/catalog/landfire/disturbance.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
@@ -39,9 +35,8 @@ related:
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/landfire/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -93,6 +88,9 @@ notes:
     analytics); `KFM-P24-PROG-0051` (Soils PMTiles + COG artifact
     contract); `KFM-P13-PROG-0018` (deterministic grid generalization —
     applied weakly).
+owning_root: docs/
+responsibility: "Documentation for LANDFIRE Vegetation and Fuels — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # LANDFIRE Vegetation and Fuels — Source Catalog Entry
@@ -137,10 +135,10 @@ notes:
 
 > [!IMPORTANT]
 > **Structural framing (new in v0.2) — umbrella vs per-sub-product.** This dossier is the **LANDFIRE Vegetation and Fuels umbrella per-product page**. Per `KFM-P25-PROG-0010` (CONFIRMED, Pass 32), each LANDFIRE product gets its own `SourceDescriptor`. The family-README at [`./README.md`](./README.md) v0.2 §4 enumerates per-sub-product pages for the major LANDFIRE product families:
-> - **EVT** (Existing Vegetation Type) → [`./evt.md`](./evt.md) (PROPOSED) — most-cited in corpus (`KFM-P25-IDEA-0010`, `KFM-P25-FEAT-0005`, `KFM-P25-PROG-0024`, `KFM-P25-PROG-0025`, `ML-K-067`)
-> - **LDist 2025** (Limited Disturbance) → [`./ldist.md`](./ldist.md) (PROPOSED) — early-release status per `KFM-P18-PROG-0032`
-> - **Fuels** (FBFM13, FBFM40, FVT, FVH, FVC) → [`./fuels.md`](./fuels.md) (PROPOSED)
-> - **Historical disturbance** (other than LDist 2025) → [`./disturbance.md`](./disturbance.md) (PROPOSED)
+> - **EVT** (Existing Vegetation Type) → `./evt.md` (not present) (PROPOSED) — most-cited in corpus (`KFM-P25-IDEA-0010`, `KFM-P25-FEAT-0005`, `KFM-P25-PROG-0024`, `KFM-P25-PROG-0025`, `ML-K-067`)
+> - **LDist 2025** (Limited Disturbance) → `./ldist.md` (not present) (PROPOSED) — early-release status per `KFM-P18-PROG-0032`
+> - **Fuels** (FBFM13, FBFM40, FVT, FVH, FVC) → `./fuels.md` (not present) (PROPOSED)
+> - **Historical disturbance** (other than LDist 2025) → `./disturbance.md` (not present) (PROPOSED)
 >
 > This umbrella page sets institution-level LANDFIRE-program posture (rights, cadence floor, advisory-crosswalk discipline, distribution shape, USNVC integration); the per-sub-product pages set product-specific admission posture. Where this page states posture, the per-sub-product pages **inherit** unless explicitly overridden. Same umbrella-vs-surface pattern as KBS / KSHS / KSU R&E in the kansas/ family.
 
@@ -206,12 +204,12 @@ This document is **explanation**. It does not store machine-readable descriptors
 
 The following classes of LANDFIRE-program material are **in scope** for admission, subject to per-sub-product page detail, source-role tagging, rights resolution, and the standard receipt envelope.
 
-- **Existing Vegetation Type (EVT) rasters** — LANDFIRE-native classification (LANDFIRE class codes preserved); USNVC `nvc_code` crosswalk per `KFM-P25-PROG-0025`; per-county facies summary derivatives per `KFM-P25-PROG-0024`. Treated as **`observed`** raster product at admission; derived county summaries are **`aggregate`** per Atlas §24.1.3. See [`./evt.md`](./evt.md) (PROPOSED) for per-sub-product detail.
+- **Existing Vegetation Type (EVT) rasters** — LANDFIRE-native classification (LANDFIRE class codes preserved); USNVC `nvc_code` crosswalk per `KFM-P25-PROG-0025`; per-county facies summary derivatives per `KFM-P25-PROG-0024`. Treated as **`observed`** raster product at admission; derived county summaries are **`aggregate`** per Atlas §24.1.3. See `./evt.md` (not present) (PROPOSED) for per-sub-product detail.
 - **Biophysical Settings (BPS) rasters** — modeled pre-European-settlement vegetation reference. Treated as **`modeled`** per Atlas §24.1.3 (BPS is a modeled reference, not an observation).
 - **Existing Vegetation Cover (EVC) and Existing Vegetation Height (EVH) rasters** — continuous-property surfaces; admit as `observed` raster products.
-- **Limited Disturbance (LDist) 2025** — disturbance polygons / rasters per `KFM-P18-PROG-0032` with early-release status flag. Treated as **`observed`** (disturbance observed) at admission; change-detection role explicit. See [`./ldist.md`](./ldist.md) (PROPOSED).
-- **Wildland Fuels products** — Fire Behavior Fuel Models (FBFM13, FBFM40), Forest Vegetation Type (FVT), Forest Vegetation Height (FVH), Forest Vegetation Cover (FVC), Fuel Characteristic Classification (FCC), Canopy products. Treated as **`modeled`** per Atlas §24.1.3 (fuel models are modeled abstractions of vegetation properties, not direct observations). See [`./fuels.md`](./fuels.md) (PROPOSED).
-- **Historical disturbance products** (other than LDist 2025) — admit as `observed` disturbance per Atlas §24.1.3. See [`./disturbance.md`](./disturbance.md) (PROPOSED).
+- **Limited Disturbance (LDist) 2025** — disturbance polygons / rasters per `KFM-P18-PROG-0032` with early-release status flag. Treated as **`observed`** (disturbance observed) at admission; change-detection role explicit. See `./ldist.md` (not present) (PROPOSED).
+- **Wildland Fuels products** — Fire Behavior Fuel Models (FBFM13, FBFM40), Forest Vegetation Type (FVT), Forest Vegetation Height (FVH), Forest Vegetation Cover (FVC), Fuel Characteristic Classification (FCC), Canopy products. Treated as **`modeled`** per Atlas §24.1.3 (fuel models are modeled abstractions of vegetation properties, not direct observations). See `./fuels.md` (not present) (PROPOSED).
+- **Historical disturbance products** (other than LDist 2025) — admit as `observed` disturbance per Atlas §24.1.3. See `./disturbance.md` (not present) (PROPOSED).
 
 Every admitted LANDFIRE record carries: source identity (`source_id: landfire-<product>`), source role per Atlas §24.1.3, product version, raster/vector form, source URI, thematic role per `KFM-P25-PROG-0010`, rights posture (US Federal public-domain assumed; NEEDS VERIFICATION), retrieval metadata (ETag / Last-Modified per `C3-01`), content checksum (`spec_hash` per `C5-04`), and a citation back to LANDFIRE. Records lacking a verifiable product-version pin MUST go to `data/quarantine/`.
 
@@ -546,10 +544,10 @@ Because v0.1 placed the connector at `connectors/lf/` (two-letter top-level abbr
 > Targets below reflect the v0.2 catalog reorganization (`docs/sources/catalog/<family>/<product>.md`, kebab-case slugs). Per-sub-product pages PROPOSED until verified in the mounted repo.
 
 - [`./README.md`](./README.md) — `docs/sources/catalog/landfire/` family README v0.2 (this dossier's parent; lists this umbrella + per-sub-product pages; confirms `connectors/landfire/` as PROPOSED beyond §7.3 per OPEN-DSC-14)
-- [`./evt.md`](./evt.md) — per-sub-product page: LANDFIRE Existing Vegetation Type (EVT) (PROPOSED)
-- [`./ldist.md`](./ldist.md) — per-sub-product page: LANDFIRE LDist 2025 (Limited Disturbance) early-release (PROPOSED)
-- [`./fuels.md`](./fuels.md) — per-sub-product page: LANDFIRE Fuels (FBFM13/40, FVT/FVH/FVC) (PROPOSED)
-- [`./disturbance.md`](./disturbance.md) — per-sub-product page: LANDFIRE historical disturbance products (PROPOSED)
+- `./evt.md` (not present) — per-sub-product page: LANDFIRE Existing Vegetation Type (EVT) (PROPOSED)
+- `./ldist.md` (not present) — per-sub-product page: LANDFIRE LDist 2025 (Limited Disturbance) early-release (PROPOSED)
+- `./fuels.md` (not present) — per-sub-product page: LANDFIRE Fuels (FBFM13/40, FVT/FVH/FVC) (PROPOSED)
+- `./disturbance.md` (not present) — per-sub-product page: LANDFIRE historical disturbance products (PROPOSED)
 - [`../README.md`](../README.md) — `docs/sources/catalog/` index (TODO: create or verify)
 - [`../isric/README.md`](../isric/README.md) — sibling beyond-§7.3 family README (parallel structural model, v0.2 in this conversation series)
 - [`../usgs/README.md`](../usgs/README.md) — sibling §7.3 family README (USGS is LANDFIRE's primary host agency — potential nesting parent per OPEN-DSC-14)
@@ -572,7 +570,7 @@ Because v0.1 placed the connector at `connectors/lf/` (two-letter top-level abbr
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - Pass-10 Idea Index — **`C4-01`** STAC `kfm:provenance`; **`C4-02`** STAC Collection; **`C4-05`** DCAT distribution; **`C5-02`** default-deny promotion; **`C5-04`** spec-hash-match; **`C5-08`** lineage required; **`C3-01`** smart-sync HTTP validators; **`C7-09`** USGS GNIS
 - Pass-23/32 Consolidated Atlas — **`KFM-P2-IDEA-0028`** USDA CDL + NLCD + LANDFIRE + GAP land cover (CONFIRMED, Pass 32); **`KFM-P18-PROG-0032`** LANDFIRE LDist source descriptor (active, Pass 32); **`KFM-P25-PROG-0010`** GAP/LANDFIRE source descriptor (active, Pass 32); **`KFM-P25-IDEA-0010`** LANDFIRE EVT facies mapping (active, Pass 32); **`KFM-P25-FEAT-0005`** vegetation facies county map (active, Pass 32); **`KFM-P25-PROG-0024`** LANDFIRE EVT county summary pipeline (active, Pass 32 — operationally definitive); **`KFM-P25-PROG-0025`** USNVC nvc_code metadata crosswalk (active, Pass 32); **`KFM-P20-IDEA-0002`** mask-aware HLS vegetation analytics (parallel pattern); **`KFM-P24-PROG-0051`** Soils PMTiles/COG artifact contract (parallel distribution model); **`KFM-P13-PROG-0018`** sensitive species grid generalization (applied weakly); Atlas §24.1.2 + §24.1.3 + §24.2.1 + §24.8
 - Master MapLibre Components — **`ML-K-067`** LANDFIRE EVT raster → COG with signed derivative provenance

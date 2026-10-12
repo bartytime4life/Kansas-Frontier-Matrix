@@ -1,0 +1,61 @@
+{
+  "artifact_hashes": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:aa5e78596720f9b275a3dc1c020ceeb68abd6c8f3d66f3a4a4aef6100aa5dce4",
+    "tools/validators/directory_governance/validate_repository_topology.py": "sha256:5816e18cabb092168a64104b7e48050733c7aac2a3ffb84b54d1402962fe7787"
+  },
+  "artifact_paths": [
+    "tools/validators/directory_governance/validate_repository_topology.py",
+    "tests/validators/directory_governance/test_validate_repository_topology.py"
+  ],
+  "citations": [],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-27T15:59:55.035137+00:00",
+  "emitter": "Codex assistant",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@87b144126135d058823bf3be4b56070abb6c5f47",
+      "GitHub Actions job 108649601361",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "The route-parameter exception is limited to syntactically valid bracket segments inside apps/site/source API route.ts paths. It does not alter the baseline, authorize the catalog transition, or claim the aggregate job is green.",
+  "parameters": {
+    "tools_enabled": [
+      "repository editing",
+      "local validation",
+      "GitHub PR"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-site-route-path-topology-20260927",
+  "truth_labels": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/validate_repository_topology.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "four focused topology path tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository topology ratchet",
+      "outcome": "FAIL",
+      "reason": "Three unrelated new drift findings and three stale baseline entries remain; catalog transition remains held."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    }
+  ]
+}

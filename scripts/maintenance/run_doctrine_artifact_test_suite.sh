@@ -8,14 +8,20 @@ cd "$repo_root"
 python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 shadow_summary="$(mktemp -t doctrine_preflight_summary.XXXXXX)"
 readonly shadow_summary
+shadow_receipts="$(mktemp -d -t doctrine_preflight_receipts.XXXXXX)"
+readonly shadow_receipts
 cleanup() {
   if [[ -n "${shadow_summary:-}" ]]; then
     rm -f "$shadow_summary"
   fi
+  if [[ -n "${shadow_receipts:-}" ]]; then
+    rm -rf "$shadow_receipts"
+  fi
 }
 trap cleanup EXIT INT TERM
 
-python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only > "$shadow_summary"
+python scripts/maintenance/run_doctrine_artifact_preflight.py --stable-filenames --emit-normalized-only \
+  --output-dir "$shadow_receipts" > "$shadow_summary"
 python tools/validators/source/validate_doctrine_preflight_summary_consistency.py --require-normalized-only "$shadow_summary"
 python scripts/maintenance/check_normalized_summary_consumer_readiness.py --require-all-validated
 python -m pytest \

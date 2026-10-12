@@ -1,0 +1,85 @@
+{
+  "promotion_id": "promotion:synthetic:digest-mismatch-001",
+  "receipt_profile": "kfm/promotion-receipt/v1",
+  "candidate": {
+    "candidate_id": "candidate:synthetic:evidence-slice-001",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_digests": {
+      "artifact/fixture.json": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "artifact/fixture.pmtiles": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  },
+  "evaluation": {
+    "profile": "kfm/promotion-readiness/A-G/v1",
+    "evaluated_at": "2026-08-05T20:20:00Z",
+    "status": "PASS",
+    "readiness": "APPROVE_READY"
+  },
+  "gates": [
+    {
+      "gate": "A",
+      "name": "identity_and_closure",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "B",
+      "name": "asset_integrity",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "C",
+      "name": "geometry_and_crs",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "D",
+      "name": "temporal_semantics",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "E",
+      "name": "rights_and_sensitivity",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "F",
+      "name": "proof_and_catalog_support",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "gate": "G",
+      "name": "review_and_rollback",
+      "status": "PASS",
+      "findings": []
+    }
+  ],
+  "transition": {
+    "from_state": "CATALOG",
+    "to_state": "PUBLISHED",
+    "applied": false
+  },
+  "decision_ref": null,
+  "evidence_refs": [
+    "evidence:bundle:synthetic-001"
+  ],
+  "policy_refs": [
+    "policy:promotion:synthetic-001"
+  ],
+  "review_refs": [
+    "review:synthetic-001"
+  ],
+  "attestation_refs": [
+    "attestation:synthetic-001"
+  ],
+  "integrity": {
+    "receipt_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "created_by": "actor://fixture/promotion-receipt-generator",
+  "created_at": "2026-08-05T20:20:00Z"
+}

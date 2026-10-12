@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/validation/precommitted_evaluation_record.schema.json",
+  "title": "PrecommittedEvaluationRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "evaluation_id",
+    "seal",
+    "sealed_payload",
+    "interventions",
+    "observed_outcomes",
+    "score",
+    "permissions",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.validation.precommitted-evaluation-record.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_EXTERNAL_EFFECT"},
+    "authority": {"const": "NONE"},
+    "evaluation_id": {"type": "string", "pattern": "^kfm:precommitted-evaluation:[0-9a-f]{64}$"},
+    "seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commitment_method", "commitment", "published_at", "revealed_at"],
+      "properties": {
+        "commitment_method": {"const": "RFC8785-JCS+SHA-256"},
+        "commitment": {"$ref": "#/$defs/spec_hash"},
+        "published_at": {"type": "string", "format": "date-time"},
+        "revealed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "sealed_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_ref", "window", "scoring_rule", "predictions"],
+      "properties": {
+        "protocol_ref": {"$ref": "#/$defs/kfm_ref"},
+        "window": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["opens_at", "closes_at"],
+          "properties": {
+            "opens_at": {"type": "string", "format": "date-time"},
+            "closes_at": {"type": "string", "format": "date-time"}
+          }
+        },
+        "scoring_rule": {"const": "BRIER_SCORE"},
+        "predictions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/prediction"}
+        }
+      }
+    },
+    "interventions": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/intervention"}
+    },
+    "observed_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/observed_outcome"}
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "per_prediction", "mean_brier_fraction"],
+      "properties": {
+        "rule": {"const": "BRIER_SCORE"},
+        "per_prediction": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["prediction_id", "squared_error_basis_points_2"],
+            "properties": {
+              "prediction_id": {"$ref": "#/$defs/prediction_id"},
+              "squared_error_basis_points_2": {"type": "integer", "minimum": 0, "maximum": 100000000}
+            }
+          }
+        },
+        "mean_brier_fraction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["numerator", "denominator"],
+          "properties": {
+            "numerator": {"type": "integer", "minimum": 0},
+            "denominator": {"type": "integer", "minimum": 100000000}
+          }
+        }
+      }
+    },
+    "permissions": {
+      "const": {
+        "observation_write_allowed": false,
+        "scoreboard_write_allowed": false,
+        "lifecycle_write_allowed": false,
+        "release_allowed": false,
+        "publication_allowed": false,
+        "public_use_allowed": false
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_publish_a_commitment_or_reveal",
+        "does_not_collect_or_authenticate_observations",
+        "does_not_run_an_experiment_or_update_a_scoreboard",
+        "does_not_release_deploy_publish_or_authorize_public_use"
+      ]
+    },
+    "spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "$defs": {
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "kfm_ref": {"type": "string", "pattern": "^kfm:(//)?[A-Za-z0-9][A-Za-z0-9._:/-]{3,255}$"},
+    "prediction_id": {"type": "string", "pattern": "^P[0-9]{2,3}$"},
+    "prediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prediction_id", "event_definition", "falsifier", "confidence_basis_points"],
+      "properties": {
+        "prediction_id": {"$ref": "#/$defs/prediction_id"},
+        "event_definition": {"type": "string", "minLength": 8, "maxLength": 1024},
+        "falsifier": {"type": "string", "minLength": 8, "maxLength": 1024},
+        "confidence_basis_points": {"type": "integer", "minimum": 0, "maximum": 10000}
+      }
+    },
+    "intervention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "kind", "evidence_ref"],
+      "properties": {
+        "at": {"type": "string", "format": "date-time"},
+        "kind": {"enum": ["MECHANISM_CHANGE", "ELIGIBILITY_CHANGE", "MEASUREMENT_CHANGE", "DISCLOSURE_ONLY"]},
+        "evidence_ref": {"$ref": "#/$defs/kfm_ref"}
+      }
+    },
+    "observed_outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prediction_id", "occurred", "evidence_ref"],
+      "properties": {
+        "prediction_id": {"$ref": "#/$defs/prediction_id"},
+        "occurred": {"type": "boolean"},
+        "evidence_ref": {"$ref": "#/$defs/kfm_ref"}
+      }
+    }
+  }
+}

@@ -52,6 +52,9 @@ notes:
 
 # Kansas Memory Compatibility Source Layout Boundary
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/kansas_memory/admit.py`, `src/kansas_memory/descriptor.yaml` and `src/kansas_memory/fetch.py` were removed from `connectors/kansas_memory/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > [!IMPORTANT]
 > **Document lifecycle:** `draft`  
 > **Component maturity:** repository-present source-layout scaffold; executable behavior `UNKNOWN`  
@@ -138,10 +141,7 @@ connectors/kansas_memory/src/
 ├── README.md
 └── kansas_memory/
     ├── README.md
-    ├── __init__.py        # CONFIRMED empty
-    ├── admit.py           # CONFIRMED one-line greenfield placeholder
-    ├── fetch.py           # CONFIRMED one-line greenfield placeholder
-    └── descriptor.yaml    # CONFIRMED four-field unsafe placeholder
+    └── __init__.py        # CONFIRMED empty
 ```
 
 The parent package metadata at `connectors/kansas_memory/pyproject.toml` contains only:
@@ -159,9 +159,9 @@ This bounded map corrects the v0.1 statement that only the two README files were
 | `README.md` | This source-layout contract. | Package implementation or activation. |
 | `kansas_memory/README.md` | Draft package-boundary documentation. | Executable modules, valid configuration, tests, or CI. |
 | `kansas_memory/__init__.py` | Empty file. | Import API, version export, initialization, or side-effect safety. |
-| `kansas_memory/admit.py` | One comment identifying a greenfield admission gate placeholder. | Admission decisions, validation, finite outcomes, or writes. |
-| `kansas_memory/fetch.py` | One comment identifying a greenfield fetcher placeholder. | Endpoint support, networking, authentication, retries, or rate limits. |
-| `kansas_memory/descriptor.yaml` | `name`, unresolved `role`, unresolved `rights`, and `sensitivity_floor: public`. | Schema validity, registry authority, activation, rights approval, sensitivity approval, or public-release safety. |
+| `kansas_memory/admit.py` (removed 2026-09-29) | One comment identifying a greenfield admission gate placeholder. | Admission decisions, validation, finite outcomes, or writes. |
+| `kansas_memory/fetch.py` (removed 2026-09-29) | One comment identifying a greenfield fetcher placeholder. | Endpoint support, networking, authentication, retries, or rate limits. |
+| `kansas_memory/descriptor.yaml` (removed 2026-09-29) | `name`, unresolved `role`, unresolved `rights`, and `sensitivity_floor: public`. | Schema validity, registry authority, activation, rights approval, sensitivity approval, or public-release safety. |
 
 [Back to top](#top)
 
@@ -367,8 +367,8 @@ Documentation readiness does not imply package readiness, source activation, evi
 | [`../../../control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) | Machine source-authority register. | **CONFIRMED file / no inspected Kansas Memory entry** |
 | [`../../../policy/rights/`](../../../policy/rights/) | Rights and reuse decisions. | **Outside layout** |
 | [`../../../policy/sensitivity/`](../../../policy/sensitivity/) | Sensitivity, privacy, redaction, and CARE-adjacent controls. | **Outside layout** |
-| [`../../../data/raw/archives/`](../../../data/raw/archives/) | Potential caller-owned admitted capture surface. | **Outside layout / exact shape unverified** |
-| [`../../../data/quarantine/archives/`](../../../data/quarantine/archives/) | Potential caller-owned hold surface. | **Outside layout / exact reason shape unverified** |
+| `data/raw/archives/` (not present) | Potential caller-owned admitted capture surface. | **Outside layout / exact shape unverified** |
+| `data/quarantine/archives/` (not present) | Potential caller-owned hold surface. | **Outside layout / exact reason shape unverified** |
 | [`../../../data/receipts/`](../../../data/receipts/) | Process-memory receipts. | **Outside layout** |
 | [`../../../release/`](../../../release/) | Release, correction, withdrawal, and rollback controls. | **Outside layout** |
 

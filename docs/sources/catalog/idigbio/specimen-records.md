@@ -8,19 +8,20 @@ owners: <PLACEHOLDER — Docs steward + Source steward for idigbio>
 created: 2026-05-20
 updated: 2026-05-21
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable proposed iDigBio specimen-record surface and its source-role, dedupe, rights, and sensitivity boundaries.
+truth_posture: cite-or-abstain; absent companion artifacts remain explicitly proposed.
 related:
   - docs/sources/catalog/idigbio/README.md
-  - docs/sources/catalog/idigbio/occurrence-search.md
   - docs/sources/catalog/idigbio/media-records.md
   - docs/sources/catalog/idigbio/portal-dwca-downloads.md
-  - docs/sources/catalog/idigbio.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
-  - docs/sources/catalog/idigbio/_examples/specimen-record-example.json
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
@@ -41,7 +42,7 @@ notes:
 **Status:** PROPOSED — scaffold + v0.2 polish · **Family:** [`idigbio`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for idigbio>` · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
-> **Two operational facts dominate this product**: (1) the admission filter is `basisOfRecord ∈ {preservedspecimen, fossilspecimen, materialsample}` — records that fall outside this set belong to the broader [`occurrence-search.md`](./occurrence-search.md) product, not here; (2) when an iDigBio specimen record carries an `institutionCode` for a Kansas in-state collection (KU NHM, KANU, KSU KSC, Sternberg), KFM's authority hierarchy says the **direct IPT pull is preferred** and the iDigBio record should be **deduplicated as a shadow**, not promoted as primary evidence.
+> **Two operational facts dominate this product**: (1) the admission filter is `basisOfRecord ∈ {preservedspecimen, fossilspecimen, materialsample}` — records that fall outside this set belong to the broader proposed `occurrence-search.md` product, not here; that companion file is not tracked at the campaign baseline; (2) when an iDigBio specimen record carries an `institutionCode` for a Kansas in-state collection (KU NHM, KANU, KSU KSC, Sternberg), KFM's authority hierarchy says the **direct IPT pull is preferred** and the iDigBio record should be **deduplicated as a shadow**, not promoted as primary evidence.
 
 ---
 
@@ -103,8 +104,8 @@ notes:
 | Rights / license matrix | [`policy/sensitivity/`](../../../../policy/sensitivity/) + license-map JSON. Per-record license carried; iDigBio's CC BY default does **not** override KFM's fail-closed admission gate. | See §[10](#10-rights-type-specimens-and-sensitivity) |
 | Authority precedence (CONFIRMED parent-dossier §10) | **Direct in-state IPT > iDigBio > GBIF** for any Kansas in-state institution's specimen | See §[4](#4-specimen-primacy-and-in-state-institutional-shadowing) |
 | Taxon backbone | ITIS TSN → GBIF Backbone fallback per **C7-08** (DOI `10.15468/39omei`); pinned in `RunReceipt` | CONFIRMED requirement |
-| Sibling product surfaces | [`occurrence-search.md`](./occurrence-search.md), [`media-records.md`](./media-records.md), [`portal-dwca-downloads.md`](./portal-dwca-downloads.md) | CONFIRMED authored prior session |
-| Parent dossier | [`docs/sources/catalog/idigbio.md`](../idigbio.md) *(flat-dossier path; see OPEN-IDB-CONV-01)* | CONFIRMED authored prior session |
+| Sibling product surfaces | Proposed `occurrence-search.md` *(file absent)*, [`media-records.md`](./media-records.md), [`portal-dwca-downloads.md`](./portal-dwca-downloads.md) | Tracked siblings confirmed at the campaign baseline; occurrence-search remains proposed |
+| Parent dossier | [`docs/sources/catalog/idigbio/README.md`](./README.md) | CONFIRMED tracked at the campaign baseline |
 
 [Back to top](#-idigbio-specimen-records)
 
@@ -112,7 +113,7 @@ notes:
 
 ## 3. Surface scope and admission filter
 
-This product is a **subset of the v2 Search API** scoped by the `basisOfRecord` Darwin Core controlled-vocabulary term. The broader API surface lives at [`occurrence-search.md`](./occurrence-search.md); this page covers only the specimen-backed slice.
+This product is a **subset of the v2 Search API** scoped by the `basisOfRecord` Darwin Core controlled-vocabulary term. The broader API surface is proposed as `occurrence-search.md`, which is not tracked at the campaign baseline; this page covers only the specimen-backed slice.
 
 **PROPOSED admission filter (connector enforces at fetch-time):**
 
@@ -122,8 +123,8 @@ This product is a **subset of the v2 Search API** scoped by the `basisOfRecord` 
 | `FossilSpecimen` | **Yes** | High — vouchered fossil; distinct curation context but same primacy. |
 | `MaterialSample` | **Yes** | High — tissue, DNA extract, eDNA sample, or environmental material; carries additional DNA-aware handling (§[11](#11-material-samples-and-dna-aware-handling)). |
 | `LivingSpecimen` | **Yes (with caveats)** | Living individual in a botanical garden, zoo, aquarium, or culture collection; locality semantics differ from in-the-wild observation. |
-| `HumanObservation` | **No** — admitted by [`occurrence-search.md`](./occurrence-search.md) instead | Lower than specimen-backed in dedupe authority. |
-| `MachineObservation` | **No** — admitted by [`occurrence-search.md`](./occurrence-search.md) instead | Camera trap, acoustic monitor, etc. |
+| `HumanObservation` | **No** — assigned to the proposed `occurrence-search.md` surface instead; companion file absent | Lower than specimen-backed in dedupe authority. |
+| `MachineObservation` | **No** — assigned to the proposed `occurrence-search.md` surface instead; companion file absent | Camera trap, acoustic monitor, etc. |
 | `Occurrence` (generic / unspecified) | **No (default-deny)** | Insufficient information to admit; route to quarantine for steward review. |
 | `Taxon`, `Event`, `Organism`, *(other DwC record types)* | **No** | Out of product scope. |
 
@@ -132,7 +133,7 @@ This product is a **subset of the v2 Search API** scoped by the `basisOfRecord` 
 
 ### 3.1 Surface contrast — where does this fit among the iDigBio family?
 
-| Dimension | **Specimen Records (this page)** | [Occurrence Search](./occurrence-search.md) | [Media Records](./media-records.md) | [Portal DwC-A](./portal-dwca-downloads.md) |
+| Dimension | **Specimen Records (this page)** | Occurrence Search *(PROPOSED; file absent)* | [Media Records](./media-records.md) | [Portal DwC-A](./portal-dwca-downloads.md) |
 |---|---|---|---|---|
 | Endpoint | `/v2/search/records/` (filtered) | `/v2/search/records/` (broad) | `/v2/search/media` | bulk download |
 | Vocabulary | Darwin Core | Darwin Core | Audubon Core | DwC-A archive (DwC + AC extensions) |
@@ -503,7 +504,7 @@ flowchart LR
 
 *Illustrative only — do not treat as authoritative.*
 
-See [`_examples/specimen-record-example.json`](./_examples/specimen-record-example.json) for the minimal specimen + `kfm:provenance` shape *(PROPOSED sibling; NEEDS VERIFICATION)*.
+The proposed `_examples/specimen-record-example.json` companion is not tracked at the campaign baseline; the inline shape below remains illustrative and non-authoritative.
 
 <details>
 <summary>📦 PROPOSED specimen-query envelope (input to <code>request_spec_hash</code>)</summary>
@@ -673,7 +674,6 @@ The JCS canonicalization (RFC 8785) over `params` sorted by `params_canonical_or
 | OPEN-IDB-SPEC-08 | **Material-sample DNA-aware handling.** Pin the concrete `material_sample_kind` enumeration and per-kind disposition. | policy | **OPEN** |
 | OPEN-IDB-SPEC-09 | **Coordinate-uncertainty-driven dedupe.** Should the 3-decimal-place rounding tiebreaker be adjusted by `dwc:coordinateUncertaintyInMeters`? | implementation | **OPEN** |
 | OPEN-IDB-SPEC-10 | **Fossil geological-context handling.** Confirm that `dwc:geologicalContext` fields are preserved through normalize → catalog and exposed to the geology-domain projection. | implementation | **NEEDS VERIFICATION** |
-| **OPEN-IDB-CONV-01** | **Flat-dossier vs family-folder convention.** Parallel iDigBio dossier sits at [`docs/sources/catalog/idigbio.md`](../idigbio.md); this product page sits in `docs/sources/catalog/idigbio/`. Reconciliation required. | governance / ADR | **OPEN — ADR-class** (companion to OQ-11 in the iDigBio dossier) |
 | OPEN-DSC-03 | KFM namespace token (`kfm:` vs `ks-kfm:`) for STAC Collection summaries. | identity | **OPEN** — corpus C4-01 unresolved. |
 | OPEN-DSC-* | Lane-wide open items — see [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md). | various | various |
 
@@ -684,10 +684,9 @@ The JCS canonicalization (RFC 8785) over `params` sorted by `params_canonical_or
 ## 19. Related docs
 
 - [`docs/sources/catalog/idigbio/README.md`](./README.md) — family landing page *(PROPOSED; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/idigbio/occurrence-search.md`](./occurrence-search.md) — broader v2 Search API surface; observation-class records (companion / superset) *(PROPOSED; NEEDS VERIFICATION)*
+- `docs/sources/catalog/idigbio/occurrence-search.md` — proposed broader v2 Search API surface; **ABSENT** at the campaign baseline
 - [`docs/sources/catalog/idigbio/media-records.md`](./media-records.md) — Audubon Core media records (companion)
 - [`docs/sources/catalog/idigbio/portal-dwca-downloads.md`](./portal-dwca-downloads.md) — bulk DwC-A snapshot surface (the citable pair to this API surface)
-- [`docs/sources/catalog/idigbio.md`](../idigbio.md) — **parallel iDigBio source dossier (flat-path convention)**; reconciled by OPEN-IDB-CONV-01
 - [`docs/sources/catalog/README.md`](../README.md) — catalog source-pages index
 - [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection-id + namespace conventions
 - [`docs/sources/catalog/PROFILES.md`](../PROFILES.md) — catalog profile lanes
@@ -698,7 +697,7 @@ The JCS canonicalization (RFC 8785) over `params` sorted by `params_canonical_or
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement, lifecycle, and naming authority
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O profile (filename `PROV.md` vs corpus `PROVENANCE.md` is OPEN-DR-01)
 - [`docs/domains/fauna/README.md`](../../../domains/fauna/README.md), [`docs/domains/flora/README.md`](../../../domains/flora/README.md) — primary downstream consumers; geology domain for `FossilSpecimen`
-- **External (cited inline in this family):** iDigBio Search API wiki, iDigBio IP Policy, TDWG Darwin Core `basisOfRecord` / `typeStatus` / `MaterialSample` controlled vocabularies — see the dossier appendix in [`../idigbio.md`](../idigbio.md) for primary-source URLs.
+- **External (cited inline in this family):** iDigBio Search API wiki, iDigBio IP Policy, TDWG Darwin Core `basisOfRecord` / `typeStatus` / `MaterialSample` controlled vocabularies — see the dossier appendix in [`README.md`](./README.md) for primary-source URLs.
 
 <details>
 <summary>📎 Appendix — corpus citations grounding this product page</summary>
@@ -722,7 +721,7 @@ The JCS canonicalization (RFC 8785) over `params` sorted by `params_canonical_or
 - **KFM-P22-PROG-0037** (PROPOSED) — STAC checksum closure against the ReleaseManifest digest.
 - **`directory-rules.md §7.3`** (CONFIRMED) — connectors emit RAW/quarantine only; never publish.
 - **ADR-0001** (PROPOSED) — `schemas/contracts/v1/` schema home.
-- **Parent dossier [`../idigbio.md`](../idigbio.md) §4, §9.2, §10** — source-role posture, dedupe order, in-state-institutional-shadowing rule.
+- **Parent dossier [`README.md`](./README.md) §4, §9.2, §10** — source-role posture, dedupe order, in-state-institutional-shadowing rule.
 
 </details>
 

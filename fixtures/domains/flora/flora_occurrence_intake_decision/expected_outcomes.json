@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "name": "accept_open",
+      "candidate": "../flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "ACCEPT_FOR_WORK",
+      "findings": [],
+      "expected_decision": "expected/accept_open.decision.json"
+    },
+    {
+      "name": "accept_no_coordinate",
+      "candidate": "../flora_occurrence_candidate/expected/gbif_no_coordinate.candidate.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "ACCEPT_FOR_WORK",
+      "findings": [],
+      "expected_decision": "expected/accept_no_coordinate.decision.json"
+    },
+    {
+      "name": "quarantine_missing_license",
+      "candidate": "candidates/missing_license.candidate.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "QUARANTINE",
+      "findings": [],
+      "expected_decision": "expected/quarantine_missing_license.decision.json"
+    },
+    {
+      "name": "quarantine_conditional_license",
+      "candidate": "candidates/conditional_license.candidate.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "QUARANTINE",
+      "findings": [],
+      "expected_decision": "expected/quarantine_conditional_license.decision.json"
+    },
+    {
+      "name": "hold_sensitive_exact",
+      "candidate": "../flora_occurrence_candidate/expected/idigbio_milkweed.candidate.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "HOLD_FOR_REVIEW",
+      "findings": [],
+      "expected_decision": "expected/hold_sensitive_exact.decision.json"
+    },
+    {
+      "name": "dedupe_primary",
+      "candidate": "../flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json",
+      "peers": "peers/primary_duplicate_peers.json",
+      "outcome": "DEDUPLICATE",
+      "findings": [],
+      "expected_decision": "expected/dedupe_primary.decision.json"
+    },
+    {
+      "name": "dedupe_fallback",
+      "candidate": "../flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json",
+      "peers": "peers/fallback_duplicate_peers.json",
+      "outcome": "DEDUPLICATE",
+      "findings": [],
+      "expected_decision": "expected/dedupe_fallback.decision.json"
+    },
+    {
+      "name": "error_hash",
+      "candidate": "invalid/candidate_spec_hash_mismatch.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "ERROR",
+      "findings": [
+        "CANDIDATE_SPEC_HASH_MISMATCH"
+      ],
+      "expected_decision": null
+    },
+    {
+      "name": "error_governance",
+      "candidate": "invalid/candidate_governance_overclaim.json",
+      "peers": "peers/empty_peers.json",
+      "outcome": "ERROR",
+      "findings": [
+        "CANDIDATE_GOVERNANCE_INVALID"
+      ],
+      "expected_decision": null
+    },
+    {
+      "name": "error_self_peer",
+      "candidate": "../flora_occurrence_candidate/expected/gbif_big_bluestem.candidate.json",
+      "peers": "peers/self_peer.json",
+      "outcome": "ERROR",
+      "findings": [
+        "PEER_SET_CONTAINS_CANDIDATE"
+      ],
+      "expected_decision": null
+    }
+  ]
+}

@@ -16,8 +16,6 @@ related:
   - ../src/README.md
   - ../src/ftDNA/README.md
   - ../src/ftDNA/__init__.py
-  - ../src/ftDNA/fetch.py
-  - ../src/ftDNA/descriptor.yaml
   - ../../../docs/sources/catalog/ftdna/README.md
   - ../../../docs/sources/catalog/ftdna/autosomal-raw-data.md
   - ../../../docs/sources/catalog/ftdna/dna-matches.md
@@ -50,6 +48,9 @@ notes:
 <a id="top"></a>
 
 # FamilyTreeDNA Connector Test Lane
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ftDNA/admit.py`, `src/ftDNA/descriptor.yaml` and `src/ftDNA/fetch.py` were removed from `connectors/ftDNA/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Evidence-grounded contract for connector-local tests beneath `connectors/ftDNA/`. The lane is currently documentation-only. Future tests must prove restraint, default denial, import safety, product separation, consent-reference handling, third-party protection, sensitive-data non-disclosure, and RAW-or-QUARANTINE handoff boundaries without using real genetic data or live vendor accounts.
 
@@ -124,9 +125,7 @@ connectors/ftDNA/
 │   ├── README.md
 │   └── ftDNA/
 │       ├── README.md
-│       ├── __init__.py              # empty
-│       ├── descriptor.yaml          # role/rights TBD; unsafe public floor
-│       └── fetch.py                 # one-line greenfield placeholder
+│       └── __init__.py              # empty
 └── tests/
     └── README.md                    # this test contract
 ```
@@ -141,8 +140,8 @@ connectors/ftDNA/
 | `conftest.py` or test configuration | None confirmed. | **ABSENT** |
 | Live-test directory | None confirmed. | **ABSENT / NOT APPROVED** |
 | `src/ftDNA/__init__.py` | Empty file. | **IMPORT-SHAPED / BEHAVIOR ABSENT** |
-| `src/ftDNA/fetch.py` | Comment-only placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
-| `src/ftDNA/descriptor.yaml` | `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | Comment-only placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
 | `pyproject.toml` | Project name `kfm-connector-ftDNA` and version `0.0.0` only. | **INCOMPLETE** |
 | Build backend and package discovery | None confirmed. | **ABSENT** |
 | Supported Python versions and dependencies | None confirmed. | **ABSENT** |

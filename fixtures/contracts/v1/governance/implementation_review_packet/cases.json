@@ -1,0 +1,245 @@
+{
+  "base": {
+    "context": {
+      "authority": "NONE",
+      "base_sha": "1111111111111111111111111111111111111111",
+      "content_boundary": {
+        "file_content_included": false,
+        "private_reasoning_included": false,
+        "raw_diff_included": false,
+        "value_minimized": true
+      },
+      "context_id": "kfm:implementation-change-context:c69fbe9731a8c2e199c15d0923d50b0a10f198fd8be01697cec42f79fdff0528",
+      "execution_mode": "LOCAL_GIT_METADATA_ONLY",
+      "files": [
+        {
+          "additions": 78,
+          "binary": false,
+          "deletions": 0,
+          "path": ".github/workflows/implementation-change-context.yml",
+          "previous_path": null,
+          "status": "ADDED"
+        },
+        {
+          "additions": 144,
+          "binary": false,
+          "deletions": 0,
+          "path": "contracts/governance/implementation_change_context.md",
+          "previous_path": null,
+          "status": "ADDED"
+        },
+        {
+          "additions": 186,
+          "binary": false,
+          "deletions": 0,
+          "path": "schemas/contracts/v1/governance/implementation_change_context.schema.json",
+          "previous_path": null,
+          "status": "ADDED"
+        },
+        {
+          "additions": 184,
+          "binary": false,
+          "deletions": 0,
+          "path": "tests/validators/governance/test_implementation_change_context.py",
+          "previous_path": null,
+          "status": "ADDED"
+        }
+      ],
+      "generated_at": "2026-08-06T23:13:00Z",
+      "head_sha": "2222222222222222222222222222222222222222",
+      "implementation_decision_refs": [
+        "kfm:implementation-decision:review-packet:0001"
+      ],
+      "non_effects": [
+        "no_evidence_creation_or_resolution",
+        "no_policy_or_review_approval",
+        "no_repository_mutation_authority",
+        "no_promotion_release_deployment_or_publication",
+        "no_raw_diff_file_content_person_profile_or_hidden_reasoning"
+      ],
+      "permissions": {
+        "may_approve_review": false,
+        "may_change_policy": false,
+        "may_mutate_repository": false,
+        "may_promote": false,
+        "may_publish": false,
+        "may_release": false
+      },
+      "profile": "kfm.governance.implementation-change-context.v1",
+      "profile_status": "PROPOSED_INACTIVE",
+      "repository": "bartytime4life/Kansas-Frontier-Matrix",
+      "schema_version": "1.0.0",
+      "status": "READY_FOR_REVIEW",
+      "summary": {
+        "additions": 592,
+        "binary_file_count": 0,
+        "decision_capture_recommended": true,
+        "deletions": 0,
+        "file_count": 4,
+        "signal_codes": [
+          "AUTHORITY_SURFACE",
+          "CROSS_ROOT",
+          "LARGE_CHANGE",
+          "WORKFLOW_SURFACE"
+        ],
+        "signal_score": 6,
+        "top_level_roots": [
+          ".github",
+          "contracts",
+          "schemas",
+          "tests"
+        ]
+      }
+    },
+    "decisions": [
+      {
+        "authority": "NONE",
+        "change_ref": "kfm:implementation-change-context:c69fbe9731a8c2e199c15d0923d50b0a10f198fd8be01697cec42f79fdff0528",
+        "created_at": "2026-08-06T23:45:00Z",
+        "decision": {
+          "alternatives": [
+            {
+              "disposition": "REJECTED",
+              "option": "Infer implementation rationale directly from changed file contents.",
+              "reason": "Inference could create persuasive post-hoc narration and would violate the value-minimized context boundary."
+            },
+            {
+              "disposition": "REJECTED",
+              "option": "Replace the pull-request template with the generated packet.",
+              "reason": "The packet is review support and must not replace human-authored scope, authority, or disposition fields."
+            }
+          ],
+          "chosen_option": "Use an exact-bound local renderer over the two existing governance profiles.",
+          "mechanism": "Validate both inputs independently, require exact decision-reference and context-ID bindings, require decision paths to be present in the changed-path set, then render declared fields in deterministic order.",
+          "rationale": "This closes the review-packet gap without inferring intent from a diff, duplicating ADR authority, or storing session transcripts.",
+          "reviewer_questions": [
+            "Are all material implementation choices represented by the bound decision records?",
+            "Does the packet preserve the distinction between review support and review authority?"
+          ]
+        },
+        "evidence_refs": [
+          "contracts/governance/implementation_change_context.md",
+          "contracts/governance/implementation_decision_record.md"
+        ],
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "governance": {
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "generated_receipt_ref": "data/receipts/generated/genrec-implementation-review-packet-20260806.json",
+          "review_record_ref": null,
+          "significance": "CROSS_COMPONENT",
+          "truth_label": "CONFIRMED"
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ],
+        "permissions": {
+          "may_approve_review": false,
+          "may_change_policy": false,
+          "may_mutate_repository": false,
+          "may_promote": false,
+          "may_publish": false,
+          "may_release": false
+        },
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "record_id": "kfm:implementation-decision:review-packet:0001",
+        "rollback": {
+          "strategy": "Revert the review-packet slice; the two input profiles and their workflows remain unchanged.",
+          "target_ref": "git:main@1111111111111111111111111111111111111111"
+        },
+        "schema_version": "1.0.0",
+        "scope": {
+          "behavior": "Assemble validated Git scope and authored implementation rationale into one deterministic, non-authoritative reviewer view.",
+          "object_families": [
+            "ImplementationChangeContext",
+            "ImplementationDecisionRecord"
+          ],
+          "paths": [
+            "contracts/governance/implementation_change_context.md",
+            "tests/validators/governance/test_implementation_change_context.py"
+          ]
+        },
+        "status": "READY_FOR_REVIEW",
+        "title": "Bind change context and implementation rationale for review",
+        "validation_refs": [
+          "test:implementation-review-packet:focused"
+        ]
+      }
+    ]
+  },
+  "cases": [
+    {
+      "expected_findings": [],
+      "expected_outcome": "READY",
+      "name": "ready-exact-binding"
+    },
+    {
+      "context_overrides": {
+        "/status": "DRAFT"
+      },
+      "expected_findings": [
+        "CONTEXT_CONTEXT_DRAFT"
+      ],
+      "expected_outcome": "HOLD",
+      "name": "hold-draft-context"
+    },
+    {
+      "decision_overrides": {
+        "/0/status": "DRAFT",
+        "/0/validation_refs": []
+      },
+      "expected_findings": [
+        "DECISION_RECORD_DRAFT"
+      ],
+      "expected_outcome": "HOLD",
+      "name": "hold-draft-decision"
+    },
+    {
+      "expected_findings": [
+        "DECISION_REFERENCE_SET_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "include_decisions": false,
+      "name": "error-reference-set-mismatch"
+    },
+    {
+      "decision_overrides": {
+        "/0/change_ref": "kfm:implementation-change-context:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected_findings": [
+        "DECISION_CHANGE_REF_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "name": "error-change-ref-mismatch"
+    },
+    {
+      "decision_overrides": {
+        "/0/scope/paths": [
+          "contracts/governance/implementation_change_context.md",
+          "tools/validators/governance/unbound.py"
+        ]
+      },
+      "expected_findings": [
+        "DECISION_PATH_OUTSIDE_CHANGE"
+      ],
+      "expected_outcome": "ERROR",
+      "name": "error-path-outside-change"
+    },
+    {
+      "decision_overrides": {
+        "/0/permissions/may_approve_review": true
+      },
+      "expected_findings": [
+        "DECISION_SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "name": "error-invalid-decision-input"
+    }
+  ],
+  "profile": "kfm.governance.implementation-review-packet.fixture-cases.v1"
+}

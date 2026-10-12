@@ -1,17 +1,45 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/domains/soil/soil_map_unit.schema.json",
-  "title": "Soil Map Unit",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "title": "SoilMapUnit candidate profile",
+  "description": "Closed fixture-first Soil survey map-unit carrier. It is not a parcel, current field condition, release approval, or publication authority.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
-  "x-kfm": {
-    "status": "PROPOSED",
-    "path": "schemas/contracts/v1/domains/soil/soil_map_unit.schema.json",
-    "source_docs": [
-      "docs/domains/soil/CANONICAL_PATHS.md"
-    ],
-    "contract_doc": "contracts/domains/soil/soil_map_unit.md"
-  }
+  "additionalProperties": false,
+  "required": ["profile","status","id","version","spec_hash","domain","support_type","source_ref","source_role","source_native_id","source_native_key_family","map_unit_symbol","map_unit_name","geometry_posture","public_geometry_rule","scale_or_resolution","component_refs","temporal_scope","evidence_refs","lifecycle_stage","release_state","release_ref","rollback_ref","limitations","public_use_allowed","effects"],
+  "properties": {
+    "profile": {"const": "kfm.domains.soil.soil-map-unit.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "id": {"type": "string", "pattern": "^soil-map-unit:[0-9a-f]{24}$"},
+    "version": {"const": "1.0.0"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "domain": {"const": "soil"},
+    "support_type": {"enum": ["authoritative_static_soil","gridded_derivative_soil"]},
+    "source_ref": {"type": "string", "minLength": 1},
+    "source_role": {"type": "string", "minLength": 1},
+    "source_native_id": {"type": "string", "minLength": 1},
+    "source_native_key_family": {"type": "string", "minLength": 1},
+    "map_unit_symbol": {"type": "string", "minLength": 1},
+    "map_unit_name": {"type": "string", "minLength": 1},
+    "geometry_posture": {"enum": ["SOURCE_POLYGON","DERIVED_POLYGON","HIDDEN","DENIED"]},
+    "public_geometry_rule": {"enum": ["GENERALIZED_ONLY","AGGREGATE_ONLY","HIDDEN","DENIED","REVIEW_ONLY"]},
+    "scale_or_resolution": {"type": "string", "minLength": 1},
+    "component_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "temporal_scope": {
+      "type": "object", "additionalProperties": false, "required": ["kind","value"],
+      "properties": {"kind": {"enum": ["SOURCE_VINTAGE","VALID_INTERVAL","DERIVATIVE_VINTAGE"]}, "value": {"type": "string", "minLength": 1}}
+    },
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "lifecycle_stage": {"enum": ["WORK","QUARANTINE","PROCESSED","CATALOG"]},
+    "release_state": {"const": "UNRELEASED"},
+    "release_ref": {"type": "null"},
+    "rollback_ref": {"type": "string", "minLength": 1},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "public_use_allowed": {"const": false},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_activated","evidence_resolved","policy_evaluated","review_approved","released","published"],
+      "properties": {"source_activated":{"const":false},"evidence_resolved":{"const":false},"policy_evaluated":{"const":false},"review_approved":{"const":false},"released":{"const":false},"published":{"const":false}}
+    }
+  },
+  "x-kfm": {"status":"PROPOSED_INACTIVE","contract_doc":"contracts/domains/soil/soil_map_unit.md","authority":"fixture_candidate_only"}
 }

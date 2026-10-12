@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/docs-atlases-kfm-domains-culmination-atlas-v1-1-pointer
 title: KFM Domains Culmination Atlas v1.1 — Pointer File (Underscored Variant)
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-31
 policy_label: public
+owning_root: docs/
+responsibility: "Route readers from the underscored pointer name to current atlas entry points while preserving naming and migration uncertainty."
+truth_posture: "CONFIRMED file presence and current routing / PROPOSED source-era atlas claims / carrier identity, naming, migration, ownership, and document identity remain open decisions or UNKNOWN"
 related:
   - docs/atlases/domains-atlas-v1.1.md
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/domains-v1.1.md
@@ -22,7 +25,7 @@ notes:
   - Doctrinal twin of domains-atlas-v1.1.md (same scope, different naming convention). Defers to twin on all content.
   - No orphan-reference justification (unlike the seventh carrier); exists only to occupy the underscored-UpperCase name slot.
   - Atlas-Markdown naming ADR is now SEVERELY BLOCKING; this file expects to be SUPERSEDED on ADR resolution.
-  - Owners, doc_id, related-path verification all remain placeholders.
+  - Owner remains a placeholder; the path-derived doc_id follows adjacent atlas metadata convention, while machine-registry adoption remains review-only.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Domains Culmination Atlas v1.1 — Pointer File *(underscored variant)*
@@ -57,7 +60,7 @@ notes:
 | You want… | Go to |
 |---|---|
 | **The Domains Culmination Atlas v1.1 as a standalone citable artifact** (cover supersession block, edition note, supersession scope rules, conflict rule, what's-new, Chapter 24 sections, Appendix G, reversibility property) | **`docs/atlases/domains-atlas-v1.1.md`** *(doctrinal twin of this file)* |
-| The full-text Markdown conversion of the consolidated atlas | `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` |
+| The incomplete source-derived Markdown carrier for the consolidated atlas | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` |
 | Top-level navigation across Source A + Source B + wrapper + v1.3 overlay | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` |
 | Top-level navigation at the underscored-UpperCase convention | `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` |
 | 16 domain chapters at single granularity | `docs/atlases/domains-v1.1.md` |
@@ -74,14 +77,16 @@ notes:
 ## 2. The seven-variant proliferation, now eight
 
 > [!WARNING]
-> **`CONFLICTED`** — this file is the **eighth** atlas-family path under `docs/atlases/` and the **seventh** session-authored Markdown carrier. The atlas-Markdown naming ADR is **severely blocking** any further atlas-family authoring.
+> **`CONFLICTED`** — this catalog lists **eight** atlas-family names repository-wide:
+> seven under `docs/atlases/` and one current source-derived carrier at the
+> `docs/` root. The naming/migration decision remains unresolved.
 
-### 2.1 All atlas-family paths under `docs/atlases/` (current state)
+### 2.1 Catalogued atlas-family paths (one outside `docs/atlases/`)
 
 | # | Path | Naming pattern | Scope |
 |---|---|---|---|
 | 1 | `KFM_Domains_Culmination_Atlas_v1_1.pdf` | underscored UpperCase, `.pdf` | Atlas v1.1 (Source A) as PDF |
-| 2 | `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | full-title with `_-_` / `___` separators | Full-text Markdown of the consolidated artifact |
+| 2 | `Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | title-style name with spaces, punctuation, and a numeric underscore | Incomplete source-derived Markdown carrier; currently at the `docs/` root |
 | 3 | `kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | kebab-lowercase + `kfm-` prefix | Consolidated atlas navigation |
 | 4 | `domains-v1.1.md` | kebab-lowercase, `domains-` family | Domain-focused (16 chapters) |
 | 5 | `domains-v1.1-ch14.md` | kebab-lowercase + chapter suffix | Per-chapter (Ch. 14) |
@@ -125,7 +130,7 @@ notes:
 | Reference | Role | Status |
 |---|---|---|
 | `docs/atlases/domains-atlas-v1.1.md` | **Doctrinal twin. Authoritative on all Source-A content.** | `PROPOSED file` |
-| `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` | Full-text Markdown of the consolidated artifact. | `CONFIRMED file presence` |
+| `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` | Incomplete source-derived Markdown carrier for the consolidated artifact. | `CONFIRMED file presence`; retained conversion ends near page 286 and a synthesized continuity tail follows |
 | `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` | Top-level navigation carrier (kebab-lowercase). | `PROPOSED file` |
 | `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` | Top-level navigation carrier (underscored UpperCase). Twin of #3. | `PROPOSED file` |
 | `docs/atlases/domains-v1.1.md` | Domain-focused carrier (16 chapters). | `PROPOSED file` |
@@ -185,7 +190,7 @@ notes:
 | Prior session-authored carriers' §11 / §12 / §3 naming-reconciliation sections | `PROPOSED files` (session-authored) | §2 seven-variant catalog (now eight); §2.3 escalation note; §5 ADR backlog. |
 | `directory-rules.md` v1.2 §6.1, §17, §8.3 | `CONFIRMED at commit b6a279…` | §7 rollback actions. |
 
-> **Memory is not evidence.** No claims about the Domains Culmination Atlas v1.1 are made in this file; for atlas claims, see `docs/atlases/domains-atlas-v1.1.md` and the source PDFs. This pointer file's only verifiable claims are the routing rows in §1, the eight-variant catalog in §2.1, and the twin-relationship table in §3 — all of which are verifiable from prior session output and the existing `/mnt/project/` files.
+> **Memory is not evidence.** No claims about the Domains Culmination Atlas v1.1 are made in this file; for atlas claims, see `docs/atlases/domains-atlas-v1.1.md` and the source PDFs. This pointer file's routing and naming claims must be verified against the current repository tree.
 
 ---
 

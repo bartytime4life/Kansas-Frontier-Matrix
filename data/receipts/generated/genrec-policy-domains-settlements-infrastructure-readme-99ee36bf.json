@@ -1,0 +1,279 @@
+{
+  "receipt_id": "genrec-policy-domains-settlements-infrastructure-readme-99ee36bf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/settlements-infrastructure/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/settlements-infrastructure/README.md": "sha256:99ee36bf27f6414f4fc609668723e3c17e297a154f719c2798900691795dc1cc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-192244).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/domains/settlements-infrastructure/*.rego@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/domains/settlements-infrastructure/sensitivity/.gitkeep@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/domains/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/sensitivity/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/sensitivity/infrastructure_interior_redaction.rego@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/sensitivity/infrastructure/reservation-community-boundary.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/sensitivity/infrastructure/reservation-community.rego@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/doctrine/directory-rules.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:control_plane/root_registry.yaml@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:control_plane/domain_lane_register.yaml@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/registers/DOMAIN_LANE.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/domains/settlements-infrastructure/DENY_BY_DEFAULT.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:docs/domains/settlements-infrastructure/SENSITIVITY.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:contracts/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:schemas/contracts/v1/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:fixtures/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:tests/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:packages/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:packages/policy-runtime/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:policy/bundles/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:tools/validators/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:tools/validators/ci_readiness.py@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:data/registry/sources/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:data/proofs/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:data/published/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:release/candidates/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:.github/workflows/domain-settlements-infrastructure.yml@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:.github/CODEOWNERS@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:CONTRIBUTING.md@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@864d60459eaf65674b4554bfcfa84ca8d2822b80",
+      "repo:tools/validators/validate_generated_receipt.py@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/settlements-infrastructure/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, immutable base, target history and full bytes, accepted placement, parent boundaries, CODEOWNERS routing, current open pull requests, and matching branch names were inspected. No open pull request overlapping the target path was found."
+    },
+    {
+      "gate": "settlements-infrastructure-direct-policy-inventory",
+      "outcome": "PASS",
+      "reason": "The complete target tree was read at the pinned base: one README, four direct Rego files, and one nested zero-byte sensitivity placeholder. Exact-source inspection confirmed three deny-default-false greenfield stubs, one allow-default-false generated scaffold, mixed package families, and no non-default operative rule body."
+    },
+    {
+      "gate": "adjacent-sensitivity-overlap",
+      "outcome": "PASS",
+      "reason": "The cross-cutting sensitivity root and infrastructure child were inspected. The README surfaces the overlapping infrastructure-interior scaffold, reservation-community scaffold, empty operator segment, unresolved package/precedence relationship, and non-activation boundary without editing any policy source."
+    },
+    {
+      "gate": "schema-fixture-test-validator-maturity",
+      "outcome": "PASS",
+      "reason": "Seventeen domain schemas, the recursive fixture inventory, eight direct test modules, four direct validators, and three package modules were inspected. The README distinguishes structural schema parsing from semantic sufficiency and records zero JSON fixtures, seven docstring-only tests, one exact always-true smoke placeholder, four NotImplementedError validator stubs, and three comment-only package modules."
+    },
+    {
+      "gate": "authority-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes accepted directory placement and repository-visible source from proposed lane registration and sensitivity tiers, unresolved aliases, mixed native defaults, unbound evaluator and consumer state, and explicit semantic-validation, proof, and release workflow holds."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, forty-seven logically ordered headings, one balanced KFM_META_BLOCK_V2 wrapper, three balanced fenced blocks, no trailing whitespace or tabs, UTF-8-compatible text, and a final newline."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "A deterministic extraction checked eighteen unique internal fragments against the final README headings and thirty-one unique repository-relative targets against the pinned Git tree; all resolved."
+    },
+    {
+      "gate": "workflow-trigger-and-non-effects-preflight",
+      "outcome": "PASS",
+      "reason": "The relevant domain workflow is pull-request triggered, contents-read only, disables persisted checkout credentials, performs bounded readiness classification, and retains explicit semantic-validation, proof, and release holds. This change does not modify workflow bytes or introduce release, deployment, publication, administration, or secret-bearing execution."
+    },
+    {
+      "gate": "documentation-claim-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The final artifacts contain no credentials, private prompts, hidden reasoning, personal data, restricted payloads, exact sensitive locations, production endpoints, live operational advice, vulnerability detail, or invented functional-owner claims. Sensitive infrastructure, municipal, cultural, sovereignty, and private-join risks remain generalized and fail-safe."
+    },
+    {
+      "gate": "receipt-json-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "The receipt passes JSON Schema Draft 2020-12 shape validation through an isolated validator, parses as finite JSON, uses contract version 3.0.0, has exact artifact/hash/truth-label key parity, contains policy and documentation citations, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The scratch workspace is not a full repository checkout and does not provide the repository validator's declared jsonschema dependency. Equivalent schema, path-parity, citation, policy-reference, format, and SHA-256 checks were performed locally; repository-native validation remains pending on hosted exact-head CI."
+    },
+    {
+      "gate": "direct-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "No policy source changed, and current repository evidence provides no accepted Settlements/Infrastructure bundle, evaluator entrypoint, or direct native Rego test. Static source maturity is recorded without claiming parse or evaluation success."
+    },
+    {
+      "gate": "runtime-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy source, sensitivity profile, contract, schema, fixture, validator, test, workflow, bundle, evaluator, consumer, lifecycle object, release, deployment, promotion, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Authorized human review remains pending. This receipt and draft do not create policy acceptance, independent approval, merge authority, release authority, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "settlements-infrastructure-direct-policy-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-source-inventory-and-defaults",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/settlements-infrastructure/*.rego@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "cross-cutting-sensitivity-boundary-and-overlap",
+      "validated": true,
+      "evidence_ref": "repo:policy/sensitivity/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "domain-policy-parent-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "canonical-policy-root-and-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "proposed-critical-infrastructure-deny-discipline",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "boundary-compact-contract-and-domain-lane-pattern",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "domain-lane-and-alias-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "human-domain-scope-and-sensitivity-register",
+      "validated": true,
+      "evidence_ref": "repo:docs/registers/DOMAIN_LANE.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-domain-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-deny-by-default-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/settlements-infrastructure/DENY_BY_DEFAULT.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-contract-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-schema-inventory",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-placeholder-test-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-readiness-classifier",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/ci_readiness.py@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "settlements-infrastructure-domain-workflow-and-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-settlements-infrastructure.yml@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "source-registry-boundary",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "proof-lane-hold",
+      "validated": true,
+      "evidence_ref": "repo:data/proofs/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "release-candidate-boundary",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/settlements-infrastructure/README.md@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@864d60459eaf65674b4554bfcfa84ca8d2822b80"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T20:18:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of policy/domains/settlements-infrastructure/README.md from a generic greenfield scaffold to a repository-grounded BOUNDARY_COMPACT policy index. The update preserves the exact workflow-required PROPOSED (greenfield scaffold) marker; inventories four local Rego scaffolds, the empty local sensitivity segment, and adjacent cross-cutting infrastructure-sensitivity overlap; separates seventeen-schema structural parsing and placeholder readiness checks from unproved policy maturity; and documents inputs, finite outcomes, municipal and census role separation, rights, critical-asset sensitivity, harmful precision, time, cross-domain composition, governed public and AI surfaces, validation, specialist review, correction, and rollback. It changes no Rego source, sensitivity profile, policy value, contract, schema, fixture, validator, test, workflow, bundle, evaluator, consumer, decision, lifecycle object, release, deployment, promotion, publication, or public behavior. This receipt is provenance and process memory, not factual proof, policy acceptance, independent review, merge authority, release authority, or publication authority; authorized human review remains pending."
+}

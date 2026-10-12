@@ -1,0 +1,14 @@
+{
+  "assessed_at": "2026-08-10T15:00:00Z",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "object_type": "GeoreferenceTransformQualityProjectionRequest",
+  "schema_version": "1.0.0",
+  "thresholds": {
+    "max_loo_residual": 3.0,
+    "max_loo_rms": 2.0,
+    "max_residual": 1.5,
+    "max_rms": 1.0,
+    "minimum_gcps": 4
+  }
+}

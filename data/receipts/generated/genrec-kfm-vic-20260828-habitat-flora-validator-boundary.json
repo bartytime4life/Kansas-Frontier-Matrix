@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-kfm-vic-20260828-habitat-flora-validator-boundary",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/habitat_flora/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/habitat_flora/README.md": "sha256:2e7e35136cd7f663ac1b91e8e7f05f04eb1f22b6d1d797730781e10087476935"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:a0139b81960e4472378757562d9712819396fd35095cbf7363778ebff93ad2fc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive read-only discovery",
+      "Notion read-only coordination",
+      "local deterministic Markdown and SHA-256 validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/habitat_flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/domains/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/habitat_flora/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-baseline-target-role",
+      "outcome": "PASS",
+      "reason": "The exact base contains only an empty README and .gitkeep; no executable validator, command, test, fixture, registry entry, or workflow is claimed from this path."
+    },
+    {
+      "gate": "domain-validator-routing",
+      "outcome": "PASS",
+      "reason": "The current Habitat and Flora domain-validator index paths were verified and are linked without inventing a paired cross-domain implementation home."
+    },
+    {
+      "gate": "metadata-markdown-and-byte-hash",
+      "outcome": "PASS",
+      "reason": "The metadata block is balanced, the final artifact has one H1, a final newline, no trailing whitespace, and a recomputed SHA-256."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The repair contains no species locations, private-land detail, restricted payload, transform parameter, credential, or reconstruction aid."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned final-byte validator runs after the receipt and artifact exist on the campaign branch."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "empty-target-blob",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/habitat_flora/README.md"
+    },
+    {
+      "id": "habitat-validator-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/domains/habitat/README.md"
+    },
+    {
+      "id": "flora-validator-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/tools/validators/domains/flora/README.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T22:28:00Z",
+  "emitter": "openai/codex-gpt-5.6-sol",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only classification of an empty validator scaffold. It creates no validator implementation, registry authority, policy, source, release, deployment, promotion, or publication effect. Rollback is a focused revert of the README and this pending-review receipt."
+}

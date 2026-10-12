@@ -1,0 +1,225 @@
+{
+  "schema_version": "kfm-acquisition-candidate-options-v1",
+  "verified_at": "2026-10-06",
+  "purpose": "Operator selection examples consumed by tools/local_data/candidate_queue.py; not an authoritative source registry, source admission, or live discovery.",
+  "candidates": [
+    {
+      "source_id": "prism",
+      "dataset_id": "prism-history",
+      "label": "PRISM monthly, CONUS",
+      "temporal_start": "1895-01-01",
+      "temporal_end": "2026-09-01",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANm",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Gridded historical context; provider warns against century-long trend calculations. Gaps and selected bytes unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "prism-daily",
+      "dataset_id": "prism-daily-history",
+      "label": "PRISM daily, CONUS",
+      "temporal_start": "1981-01-01",
+      "temporal_end": "2026-10-02",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANd",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Provider catalog dates; observation completeness and revisions require discovery.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "landsat",
+      "dataset_id": "landsat-history",
+      "label": "Landsat Collection 2 and MSS archive",
+      "temporal_start": "1972",
+      "temporal_end": null,
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/landsat",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "MSS 1972-1999; TM from 1982; Landsat 8/9 ongoing. Sensors/products are not interchangeable. Latest scene and gaps unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "annual-nlcd",
+      "dataset_id": "annual-nlcd-history",
+      "label": "Annual NLCD C1.2, CONUS",
+      "temporal_start": "1985",
+      "temporal_end": "2025",
+      "source_url": "https://www.mrlc.gov/data",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Annual classified land cover; provider version C1.2. Local completeness unknown.",
+      "registry_ref": "data/registry/sources/habitat/nlcd.yaml"
+    },
+    {
+      "source_id": "usda-cdl",
+      "dataset_id": "usda-cdl-history",
+      "label": "USDA Cropland Data Layer, CONUS",
+      "temporal_start": "2008",
+      "temporal_end": "2025",
+      "source_url": "https://data.nass.usda.gov/Research_and_Science/Cropland/Release/",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Complete CONUS program coverage from 2008; discover earlier Kansas metadata separately. 30 m to 2023, 10 m from 2024. 2025 national ZIP 9.8 GB at 10 m or 1.9 GB resampled 30 m; selected-area bytes unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "usgs-water",
+      "dataset_id": "usgs-water-history",
+      "label": "USGS water records: full station periods",
+      "temporal_start": null,
+      "temporal_end": null,
+      "source_url": "https://api.waterdata.usgs.gov/",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Dates vary per site, parameter, statistic, and series; metadata envelopes do not prove gap-free coverage.",
+      "registry_ref": "data/registry/sources/hydrology/usgs_nwis.yaml"
+    },
+    {
+      "source_id": "usgs-3dep",
+      "dataset_id": "usgs-3dep-history",
+      "label": "USGS 3DEP terrain and lidar",
+      "temporal_start": null,
+      "temporal_end": null,
+      "source_url": "https://registry.opendata.aws/usgs-lidar/",
+      "scopes": [
+        "kansas"
+      ],
+      "coverage_note": "Work-unit acquisition dates require provider metadata. Public EPT only; original raw LAZ Requester Pays route excluded.",
+      "registry_ref": "data/registry/sources/hydrology/usgs_3dep.yaml"
+    },
+    {
+      "source_id": "jrc-gsw",
+      "dataset_id": "jrc-gsw-history",
+      "label": "JRC Global Surface Water v1.5",
+      "temporal_start": "1984",
+      "temporal_end": "2024",
+      "source_url": "https://global-surface-water.appspot.com/download",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Merge original pre-2016, corrected 2016-2021 and 2022-2024 histories. C1/C2 alignment offsets and monthly recurrence issue; exact gaps unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "era5",
+      "dataset_id": "era5-history",
+      "label": "ERA5 hourly global reanalysis",
+      "temporal_start": "1940-01-01",
+      "temporal_end": "2026-09-29",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_HOURLY",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Reanalysis rather than station observations; catalog endpoint verified, actual query completeness unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "era5-land",
+      "dataset_id": "era5-land-history",
+      "label": "ERA5-Land hourly global land",
+      "temporal_start": "1950-01-01",
+      "temporal_end": "2026-09-30",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Model-derived; accumulation conventions and documented swapped evapotranspiration components require validation.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "terraclimate",
+      "dataset_id": "terraclimate-history",
+      "label": "TerraClimate monthly global land",
+      "temporal_start": "1958-01-01",
+      "temporal_end": "2024-12-01",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_TERRACLIMATE",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "CC0, model-derived water balance; inherited long-term trends and limited fine-scale variability.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "chirps",
+      "dataset_id": "chirps-history",
+      "label": "CHIRPS v2 final, 50S to 50N",
+      "temporal_start": "1981-01-01",
+      "temporal_end": "2026-08-31",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Quasi-global precipitation; excludes polar regions. Actual query gaps unknown.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "sentinel2-toa",
+      "dataset_id": "sentinel2-toa-history",
+      "label": "Sentinel-2 harmonized TOA",
+      "temporal_start": "2015-06-27",
+      "temporal_end": "2026-10-06",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_HARMONIZED",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Top-of-atmosphere reflectance; do not silently merge with surface reflectance. Cloud masks change over time.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "sentinel2-sr",
+      "dataset_id": "sentinel2-sr-history",
+      "label": "Sentinel-2 harmonized surface reflectance",
+      "temporal_start": "2017-03-28",
+      "temporal_end": null,
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Ongoing collection; 2017-2018 coverage is not globally complete. Latest exact scene and local gaps need discovery.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "sentinel1",
+      "dataset_id": "sentinel1-history",
+      "label": "Sentinel-1 GRD radar",
+      "temporal_start": "2014-10-03",
+      "temporal_end": "2026-10-06",
+      "source_url": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Match polarization, orbit and acquisition mode; no requester-pays raw Google mirror.",
+      "registry_ref": null
+    },
+    {
+      "source_id": "ghcnd",
+      "dataset_id": "ghcnd-history",
+      "label": "NOAA GHCN daily station history",
+      "temporal_start": null,
+      "temporal_end": null,
+      "source_url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily",
+      "scopes": [
+        "kansas",
+        "global"
+      ],
+      "coverage_note": "Full periods vary per station and element; global date ranges must not be assigned to each Kansas station.",
+      "registry_ref": null
+    }
+  ]
+}

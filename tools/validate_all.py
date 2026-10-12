@@ -1,6 +1,16 @@
-"""PROPOSED placeholder generated from the current docs/domains inventory.
+#!/usr/bin/env python3
+"""Canonical thin entrypoint for the KFM validator orchestrator."""
+from __future__ import annotations
 
-Path: tools/validate_all.py
-Sources:
-- docs/domains/roads-rail-trade/README.md
-"""
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from tools.validators.validate_all import main  # noqa: E402
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

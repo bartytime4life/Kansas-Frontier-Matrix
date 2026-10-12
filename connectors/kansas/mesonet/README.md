@@ -118,7 +118,7 @@ Substantive connector code should not expand in this lane until the final child 
 | [`connectors/kansas/`](../README.md) | Kansas source-family coordination lane. | **CONFIRMED README / child convention still draft** |
 | `connectors/kansas-mesonet/` | Retired top-level alias. | **Deleted at pinned base; do not recreate** |
 | [`connectors/kansas_mesonet/`](../../kansas_mesonet/README.md) | Repository-present underscore compatibility alias. | **CONFIRMED README / compatibility** |
-| [`connectors/ks-mesonet/`](../../ks-mesonet/README.md) | Repository-present short-name compatibility alias. | **CONFIRMED README / compatibility** |
+| `connectors/ks-mesonet/` (not present) | Repository-present short-name compatibility alias. | **CONFIRMED README / compatibility** |
 | `connectors/kansas/kansas-mesonet/` | Child path named by current repository source/profile prose. | **Not found by direct README probe at the pinned base** |
 | [`docs/sources/catalog/kansas/kansas-mesonet.md`](../../../docs/sources/catalog/kansas/kansas-mesonet.md) | Human-facing source/product profile. | **CONFIRMED docs / current path and rights wording partly stale** |
 | [`data/registry/sources/`](../../../data/registry/sources/README.md) | SourceDescriptor and activation authority surface. | **CONFIRMED responsibility / duplicate placeholders present** |

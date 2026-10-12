@@ -1,0 +1,405 @@
+{
+  "base": {
+    "evaluated_at": "2026-09-09T16:00:00Z",
+    "intent": {
+      "repository": {
+        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+        "repository_id": 1059091169
+      },
+      "target": {
+        "kind": "ISSUE",
+        "issue_number": 9001,
+        "issue_node_id": "I_fixture_issue_9001"
+      },
+      "expected": {
+        "state": "OPEN",
+        "revision": "2026-09-09T14:55:00Z",
+        "expected_head_sha": null
+      },
+      "action": {
+        "type": "ADD_LABEL",
+        "label": "needs-review"
+      },
+      "authority": {
+        "reference": "fixture://authority/issue-maintenance/9001",
+        "actor_class": "ISSUE_MAINTAINER",
+        "expires_at": "2026-09-09T18:00:00Z"
+      },
+      "idempotency_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "preflight": {
+      "read_only": true,
+      "observed_at": "2026-09-09T15:00:00Z",
+      "repository": {
+        "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+        "repository_id": 1059091169
+      },
+      "target": {
+        "kind": "ISSUE",
+        "issue_number": 9001,
+        "issue_node_id": "I_fixture_issue_9001",
+        "state": "OPEN",
+        "revision": "2026-09-09T14:55:00Z",
+        "head_sha": null,
+        "labels": ["governance"]
+      },
+      "authority": {
+        "reference": "fixture://authority/issue-maintenance/9001",
+        "actor_class": "ISSUE_MAINTAINER",
+        "decision": "ALLOW",
+        "expires_at": "2026-09-09T18:00:00Z"
+      },
+      "replay": {
+        "status": "UNSEEN",
+        "idempotency_key": null,
+        "intent_fingerprint": null,
+        "previous_outcome": null
+      }
+    },
+    "attempt": {
+      "status": "ATTEMPTED",
+      "transport": "DECLARED_GITHUB_API",
+      "request_emitted": true,
+      "response_status": null,
+      "error_code": null
+    },
+    "readback": null
+  },
+  "cases": [
+    {
+      "case_id": "eligible_attempt_recorded",
+      "overrides": {},
+      "expected": {
+        "outcome": "ATTEMPTED",
+        "reason_codes": ["ACTION_ATTEMPT_RECORDED"]
+      }
+    },
+    {
+      "case_id": "applied_exact_readback",
+      "overrides": {
+        "attempt": {"status": "SUCCEEDED", "response_status": 200},
+        "readback": {
+          "observed_at": "2026-09-09T15:06:00Z",
+          "repository": {
+            "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+            "repository_id": 1059091169
+          },
+          "target": {
+            "kind": "ISSUE",
+            "issue_number": 9001,
+            "issue_node_id": "I_fixture_issue_9001",
+            "state": "OPEN",
+            "revision": "2026-09-09T15:05:00Z",
+            "head_sha": null,
+            "labels": ["governance", "needs-review"]
+          }
+        }
+      },
+      "expected": {
+        "outcome": "APPLIED",
+        "reason_codes": ["ACTION_APPLIED_READBACK_EXACT"]
+      }
+    },
+    {
+      "case_id": "already_satisfied_no_op",
+      "overrides": {
+        "preflight": {
+          "target": {"labels": ["governance", "needs-review"]}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        },
+        "readback": {
+          "observed_at": "2026-09-09T15:01:00Z",
+          "repository": {
+            "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+            "repository_id": 1059091169
+          },
+          "target": {
+            "kind": "ISSUE",
+            "issue_number": 9001,
+            "issue_node_id": "I_fixture_issue_9001",
+            "state": "OPEN",
+            "revision": "2026-09-09T14:55:00Z",
+            "head_sha": null,
+            "labels": ["governance", "needs-review"]
+          }
+        }
+      },
+      "expected": {
+        "outcome": "NO_OP",
+        "reason_codes": ["ACTION_ALREADY_SATISFIED"]
+      }
+    },
+    {
+      "case_id": "stale_state_denied",
+      "overrides": {
+        "preflight": {"target": {"state": "CLOSED"}},
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["STALE_TARGET_STATE"]
+      }
+    },
+    {
+      "case_id": "stale_revision_denied",
+      "overrides": {
+        "preflight": {
+          "target": {"revision": "2026-09-09T14:56:00Z"}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["STALE_TARGET_REVISION"]
+      }
+    },
+    {
+      "case_id": "wrong_repository_denied",
+      "overrides": {
+        "preflight": {
+          "repository": {"full_name": "bartytime4life/MEGALODON"}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["WRONG_REPOSITORY"]
+      }
+    },
+    {
+      "case_id": "target_substitution_denied",
+      "overrides": {
+        "preflight": {
+          "target": {
+            "issue_number": 9002,
+            "issue_node_id": "I_fixture_issue_9002"
+          }
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["TARGET_SUBSTITUTION"]
+      }
+    },
+    {
+      "case_id": "missing_authority_denied",
+      "overrides": {
+        "intent": {"authority": {"reference": null}},
+        "preflight": {
+          "authority": {"reference": null, "decision": "UNKNOWN"}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["MISSING_AUTHORITY"]
+      }
+    },
+    {
+      "case_id": "authority_denied",
+      "overrides": {
+        "preflight": {"authority": {"decision": "DENY"}},
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["AUTHORITY_NOT_ALLOWED"]
+      }
+    },
+    {
+      "case_id": "unauthorized_actor_class_denied",
+      "overrides": {
+        "preflight": {
+          "authority": {"actor_class": "LIFECYCLE_WRITER"}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["AUTHORITY_MISMATCH"]
+      }
+    },
+    {
+      "case_id": "attempt_after_denial_error",
+      "overrides": {
+        "preflight": {"authority": {"decision": "DENY"}}
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": ["ATTEMPT_AFTER_DENIAL"]
+      }
+    },
+    {
+      "case_id": "expired_intent_denied",
+      "overrides": {
+        "intent": {
+          "authority": {"expires_at": "2026-09-09T15:30:00Z"}
+        },
+        "preflight": {
+          "authority": {"expires_at": "2026-09-09T15:30:00Z"}
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["EXPIRED_INTENT"]
+      }
+    },
+    {
+      "case_id": "replay_converged_no_op",
+      "overrides": {
+        "preflight": {
+          "target": {"labels": ["governance", "needs-review"]},
+          "replay": {
+            "status": "SAME_PARAMETERS",
+            "idempotency_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "intent_fingerprint": "$CURRENT_INTENT_FINGERPRINT",
+            "previous_outcome": "APPLIED"
+          }
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        },
+        "readback": {
+          "observed_at": "2026-09-09T15:01:00Z",
+          "repository": {
+            "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+            "repository_id": 1059091169
+          },
+          "target": {
+            "kind": "ISSUE",
+            "issue_number": 9001,
+            "issue_node_id": "I_fixture_issue_9001",
+            "state": "OPEN",
+            "revision": "2026-09-09T14:55:00Z",
+            "head_sha": null,
+            "labels": ["governance", "needs-review"]
+          }
+        }
+      },
+      "expected": {
+        "outcome": "NO_OP",
+        "reason_codes": ["REPLAY_CONVERGED"]
+      }
+    },
+    {
+      "case_id": "reused_key_different_parameters_denied",
+      "overrides": {
+        "preflight": {
+          "replay": {
+            "status": "DIFFERENT_PARAMETERS",
+            "idempotency_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "intent_fingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "previous_outcome": "APPLIED"
+          }
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "DENIED",
+        "reason_codes": ["IDEMPOTENCY_KEY_REUSED"]
+      }
+    },
+    {
+      "case_id": "replay_state_divergence_error",
+      "overrides": {
+        "preflight": {
+          "replay": {
+            "status": "SAME_PARAMETERS",
+            "idempotency_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "intent_fingerprint": "$CURRENT_INTENT_FINGERPRINT",
+            "previous_outcome": "APPLIED"
+          }
+        },
+        "attempt": {
+          "status": "NOT_REQUESTED",
+          "transport": "NONE",
+          "request_emitted": false
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": ["REPLAY_STATE_DIVERGENCE"]
+      }
+    },
+    {
+      "case_id": "transport_failure_error",
+      "overrides": {
+        "attempt": {"status": "FAILED", "error_code": "TIMEOUT"}
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": ["TRANSPORT_FAILURE"]
+      }
+    },
+    {
+      "case_id": "readback_mismatch_error",
+      "overrides": {
+        "attempt": {"status": "SUCCEEDED", "response_status": 200},
+        "readback": {
+          "observed_at": "2026-09-09T15:06:00Z",
+          "repository": {
+            "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+            "repository_id": 1059091169
+          },
+          "target": {
+            "kind": "ISSUE",
+            "issue_number": 9001,
+            "issue_node_id": "I_fixture_issue_9001",
+            "state": "OPEN",
+            "revision": "2026-09-09T15:05:00Z",
+            "head_sha": null,
+            "labels": ["governance"]
+          }
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": ["READBACK_MISMATCH"]
+      }
+    }
+  ]
+}

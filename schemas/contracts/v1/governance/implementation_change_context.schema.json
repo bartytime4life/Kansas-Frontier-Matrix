@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/implementation_change_context.schema.json",
+  "title": "ImplementationChangeContext",
+  "description": "Closed, value-minimized, non-authoritative review-support context for one committed Git change range. Conformance creates no evidence, policy, review approval, mutation, promotion, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "context_id",
+    "repository",
+    "base_sha",
+    "head_sha",
+    "generated_at",
+    "status",
+    "files",
+    "summary",
+    "implementation_decision_refs",
+    "content_boundary",
+    "permissions",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.governance.implementation-change-context.v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "LOCAL_GIT_METADATA_ONLY"
+    },
+    "authority": {
+      "const": "NONE"
+    },
+    "context_id": {
+      "type": "string",
+      "pattern": "^kfm:implementation-change-context:[0-9a-f]{64}$"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+      "maxLength": 256
+    },
+    "base_sha": {
+      "$ref": "#/$defs/git_sha"
+    },
+    "head_sha": {
+      "$ref": "#/$defs/git_sha"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "READY_FOR_REVIEW"
+      ]
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/file_change"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_count",
+        "additions",
+        "deletions",
+        "binary_file_count",
+        "top_level_roots",
+        "signal_codes",
+        "signal_score",
+        "decision_capture_recommended"
+      ],
+      "properties": {
+        "file_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "additions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "deletions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "binary_file_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "top_level_roots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "signal_codes": {
+          "type": "array",
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "AUTHORITY_SURFACE",
+              "BINARY_CONTENT",
+              "CROSS_ROOT",
+              "DELETION_OR_RENAME",
+              "DEPENDENCY_SURFACE",
+              "DOCUMENTATION_ONLY",
+              "LARGE_CHANGE",
+              "PUBLIC_SURFACE",
+              "SENSITIVE_PATH_NAME",
+              "TEST_OR_FIXTURE_ONLY",
+              "WORKFLOW_SURFACE"
+            ]
+          }
+        },
+        "signal_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "decision_capture_recommended": {
+          "type": "boolean"
+        }
+      }
+    },
+    "implementation_decision_refs": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    },
+    "content_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value_minimized",
+        "raw_diff_included",
+        "file_content_included",
+        "private_reasoning_included"
+      ],
+      "properties": {
+        "value_minimized": {
+          "const": true
+        },
+        "raw_diff_included": {
+          "const": false
+        },
+        "file_content_included": {
+          "const": false
+        },
+        "private_reasoning_included": {
+          "const": false
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_approve_review",
+        "may_mutate_repository",
+        "may_change_policy",
+        "may_promote",
+        "may_release",
+        "may_publish"
+      ],
+      "properties": {
+        "may_approve_review": {
+          "const": false
+        },
+        "may_mutate_repository": {
+          "const": false
+        },
+        "may_change_policy": {
+          "const": false
+        },
+        "may_promote": {
+          "const": false
+        },
+        "may_release": {
+          "const": false
+        },
+        "may_publish": {
+          "const": false
+        }
+      }
+    },
+    "non_effects": {
+      "const": [
+        "no_evidence_creation_or_resolution",
+        "no_policy_or_review_approval",
+        "no_repository_mutation_authority",
+        "no_promotion_release_deployment_or_publication",
+        "no_raw_diff_file_content_person_profile_or_hidden_reasoning"
+      ]
+    }
+  },
+  "$defs": {
+    "git_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "repo_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)[^\\u0000-\\u001F\\u007F]+$"
+    },
+    "nullable_path": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/repo_path"
+        }
+      ]
+    },
+    "nullable_count": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        }
+      ]
+    },
+    "file_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "previous_path",
+        "status",
+        "additions",
+        "deletions",
+        "binary"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/repo_path"
+        },
+        "previous_path": {
+          "$ref": "#/$defs/nullable_path"
+        },
+        "status": {
+          "enum": [
+            "ADDED",
+            "MODIFIED",
+            "DELETED",
+            "RENAMED",
+            "COPIED",
+            "TYPE_CHANGED"
+          ]
+        },
+        "additions": {
+          "$ref": "#/$defs/nullable_count"
+        },
+        "deletions": {
+          "$ref": "#/$defs/nullable_count"
+        },
+        "binary": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

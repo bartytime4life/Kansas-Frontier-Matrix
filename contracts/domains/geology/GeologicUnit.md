@@ -17,7 +17,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; geologic-unit; map-unit; bedrock; interpretation-versioned; source-role-aware; release-gated
 tags: [kfm, contracts, geology, GeologicUnit, geologic-unit, map-unit, bedrock, polygon, lithology, geologic-age, stratigraphic-interval, boundary-version, evidence, source-role, policy, release, correction, rollback]
 related:
@@ -26,7 +26,7 @@ related:
   - ./CrossSection.md
   - ../../../docs/domains/geology/SCOPE.md
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../docs/domains/geology/sublanes/stratigraphy.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../schemas/contracts/v1/domains/geology/GeologicUnit.schema.json
@@ -37,6 +37,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a Geology GeologicUnit semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/GeologicUnit.schema.json was not found in this session; schema shape and casing remain NEEDS VERIFICATION."
   - "GeologicUnit is a mapped bedrock geologic-unit assertion, usually polygonal and interpretation-versioned. It does not replace Lithology, GeologicAge, StratigraphicInterval, GeologyBoundaryVersion, CrossSection, Soil, Hazards, Hydrology, People/Land, or release state."
@@ -104,7 +105,7 @@ A geologic unit can be public-safe at map-unit scale when rights and release gat
 | Machine schema shape | `schemas/contracts/v1/domains/geology/GeologicUnit.schema.json` or accepted variant | NEEDS VERIFICATION; exact path not found |
 | Geology scope | `docs/domains/geology/SCOPE.md` | Confirms owned family and adjacent-lane exclusions |
 | Object-family reference | `docs/domains/geology/OBJECT_FAMILIES.md` | Confirms purpose, key fields, source roles, sensitivity posture, and interpretation-version need |
-| Bedrock / stratigraphy doctrine | `docs/domains/geology/sublanes/bedrock_geology.md`, `docs/domains/geology/sublanes/stratigraphy.md` | Expected context; path/content status may need verification |
+| Bedrock / stratigraphy doctrine | `docs/domains/geology/SUBLANE-BEDROCK.md`, `docs/domains/geology/sublanes/stratigraphy.md` | Expected context; path/content status may need verification |
 | Source registry | `data/registry/sources/geology/` | Source identity, rights, cadence, authority limits |
 | Policy | `policy/domains/geology/` | Allow/deny/abstain and public projection decisions |
 | Fixtures and tests | `fixtures/domains/geology/`, `tests/domains/geology/` | Valid, invalid, source-role, geometry, release, and rollback proof cases |

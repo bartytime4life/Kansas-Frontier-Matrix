@@ -1,0 +1,9 @@
+{
+  "hold_remote_unverified.json": "HOLD",
+  "invalid_checksum_mismatch.json": "FAIL",
+  "invalid_missing_governance.json": "FAIL",
+  "invalid_missing_provenance_links.json": "FAIL",
+  "invalid_path_escape.json": "FAIL",
+  "valid_embargoed_item.json": "PASS",
+  "valid_local_item.json": "PASS"
+}

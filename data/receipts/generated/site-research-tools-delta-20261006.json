@@ -1,0 +1,113 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 153,
+  "site_base_commit": "da94de300c1b20dc98e9f527ba54613cfd696f8b",
+  "site_candidate_commit": "d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae",
+  "github_base_commit": "43ef1c22976b2114ec9a936b97651fba4970bed5",
+  "application_method": "Initial 12-file patch applied cleanly with git apply --3way --directory=apps/site/source; final files independently reproduced with git merge-file -p GitHub-base Site-v153 Site-head.",
+  "hosted_equivalence": false,
+  "mirror_review": "MIRROR_REVIEW_REQUIRED (also observed on exact GitHub base)",
+  "unchanged_local_candidate": "87bd864caf113cd341303fa3394dc643852d0ced",
+  "files": {
+    "app/knowledge/page.tsx": {
+      "github_base_sha256": "6930d5cf91f761147fedc6a67fc57f3dd38fbb770fad718aef168e8bd4a3afb3",
+      "github_result_sha256": "02251bc86c09a60aa84571292ddc28069749717fa7c93cd36cf794912de78fe3",
+      "site_source_sha256": "02251bc86c09a60aa84571292ddc28069749717fa7c93cd36cf794912de78fe3",
+      "relation": "identical_feature_file"
+    },
+    "app/layer-workspaces.ts": {
+      "github_base_sha256": "0791f0a175900f63c806f53bb2c994e0388c55b177191545d9793bb150478c80",
+      "github_result_sha256": "708eb5b876c5408b854e4dd721650d79a0dbc32abafc4c24d50e9c1d8918f366",
+      "site_source_sha256": "708eb5b876c5408b854e4dd721650d79a0dbc32abafc4c24d50e9c1d8918f366",
+      "relation": "identical_feature_file"
+    },
+    "app/page.tsx": {
+      "github_base_sha256": "24b55fcf8efa342dc6451635cc7f34e6d87208ed0e34f16da4c986a117143dab",
+      "github_result_sha256": "29a1fc6793dfb02f878bee8add8ecd2bb786045b668cc8567936a82e2e463f5a",
+      "site_source_sha256": "9b850b8a058e9500a2ca0caf8f8dd0fef14fbdde7dcb20653aaf60cbdd877ebb",
+      "relation": "feature_with_preserved_repository_overlay"
+    },
+    "app/report-story-workspaces.tsx": {
+      "github_base_sha256": "31af0ee91717eb043d051dffe3b8f99403a9be6e93b83b7356ca1eb17f62b84a",
+      "github_result_sha256": "ffa3819da1623bf2240da07f6c83f9b71e30fd9777a663409937d6c380edca00",
+      "site_source_sha256": "ffa3819da1623bf2240da07f6c83f9b71e30fd9777a663409937d6c380edca00",
+      "relation": "identical_feature_file"
+    },
+    "app/research-context.ts": {
+      "github_base_sha256": null,
+      "github_result_sha256": "dd2141abcbabd13e0e4f097dc70feb87bb54b596d01b27020f9284f974978b95",
+      "site_source_sha256": "dd2141abcbabd13e0e4f097dc70feb87bb54b596d01b27020f9284f974978b95",
+      "relation": "identical_feature_file"
+    },
+    "app/research-panel.tsx": {
+      "github_base_sha256": null,
+      "github_result_sha256": "1e18e7cdc9c061f6f20ac891f383bbe34a8da22319799bbe7da66ce1019420c0",
+      "site_source_sha256": "1e18e7cdc9c061f6f20ac891f383bbe34a8da22319799bbe7da66ce1019420c0",
+      "relation": "identical_feature_file"
+    },
+    "app/research.module.css": {
+      "github_base_sha256": null,
+      "github_result_sha256": "b21f6e12148802f49cc8702f64f89a836479fd1d9f6b156a161c6f30582dba09",
+      "site_source_sha256": "b21f6e12148802f49cc8702f64f89a836479fd1d9f6b156a161c6f30582dba09",
+      "relation": "identical_feature_file"
+    },
+    "app/saved-workspaces.ts": {
+      "github_base_sha256": "9aa63ddc35ed453210f7f21d876c4a63a5c007a0cb5377c6cfb7eac013877d43",
+      "github_result_sha256": "ee440c6ed1ca67a59f58ee6d2f067e8efbb542013393e70f4dd782f26b742a78",
+      "site_source_sha256": "ee440c6ed1ca67a59f58ee6d2f067e8efbb542013393e70f4dd782f26b742a78",
+      "relation": "identical_feature_file"
+    },
+    "app/workspace-model.ts": {
+      "github_base_sha256": "b63d6f71f433377316235f2c4c4602bafe5458e202558ba87713770161689fe5",
+      "github_result_sha256": "43587e6cc973b6232e3f25d1d265f6610fc0891112964f143f2bcc5d6373f1f9",
+      "site_source_sha256": "43587e6cc973b6232e3f25d1d265f6610fc0891112964f143f2bcc5d6373f1f9",
+      "relation": "identical_feature_file"
+    },
+    "app/workspace-storage.ts": {
+      "github_base_sha256": "3f105b5263b3e80cad01646cc1343a0c357990a5bd41c2e9c9c1c76569ad7ec1",
+      "github_result_sha256": "8001a415489bd292361a793f98e58166493653968b41b2ed3ff0fd6e95ca5e8e",
+      "site_source_sha256": "8001a415489bd292361a793f98e58166493653968b41b2ed3ff0fd6e95ca5e8e",
+      "relation": "identical_feature_file"
+    },
+    "docs/map-research-tools.md": {
+      "github_base_sha256": null,
+      "github_result_sha256": "a1a0eed6f869cadfbf652a5ded0059eee18223fcca8f7a3953ba3c71e12b9be6",
+      "site_source_sha256": "a1a0eed6f869cadfbf652a5ded0059eee18223fcca8f7a3953ba3c71e12b9be6",
+      "relation": "identical_feature_file"
+    },
+    "tests/research-context.test.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "28ad1f109ba0950d6e0efb53befebb34facb31192348e5e1928c492a5171ee8b",
+      "site_source_sha256": "28ad1f109ba0950d6e0efb53befebb34facb31192348e5e1928c492a5171ee8b",
+      "relation": "identical_feature_file"
+    }
+  },
+  "scope": "Feature delta only. Existing historical mirror receipts, newer GitHub maintenance, local runtime and storage remain separate.",
+  "deployment": {
+    "version": 155,
+    "version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_769352625ae8819192b37861a2d0bc12",
+    "deployment_id": "appgdep_6ac455a36ee881918fa0082865662ebb",
+    "status": "succeeded",
+    "at": "2026-10-06T01:58:06.641270+00:00",
+    "audience": "owner-private",
+    "d1": "DB",
+    "r2": "BUCKET",
+    "original_rollback_version": 153,
+    "preceding_saved_version": 154,
+    "archive_sha256": "a7630bffdaf6f66ac0d1a7dc9d8c6f8c5fa168f460bb20df20c6a20807dab7d9",
+    "browser_acceptance": "UNVERIFIED_ADMIN_SECURITY_CHECK_UNAVAILABLE"
+  },
+  "validation": {
+    "standalone_tests": 397,
+    "review_tree_tests": 408,
+    "typescript": "PASS on both trees",
+    "production_build": "PASS on both trees",
+    "lint": "0 errors; standalone 43 warnings, review tree 44 warnings",
+    "local_api_smoke": "48 checks across 41 routes; 9 provider-only routes excluded",
+    "smoke_startup_tests": 3,
+    "repository_topology": "PASS; 0 new drift, 113 baseline warnings",
+    "mirror_check_base_and_head": "MIRROR_REVIEW_REQUIRED"
+  }
+}

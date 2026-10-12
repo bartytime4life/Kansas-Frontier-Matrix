@@ -2,16 +2,15 @@
 doc_id: kfm://doc/domains/hydrology/glossary
 title: Hydrology — Ubiquitous Language Glossary
 type: standard
-version: v1
-status: draft
+version: v1.1
+status: draft; identity decision REMAIN_PROPOSED
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/hydrology/EXPANSION_BACKLOG.md
@@ -22,9 +21,12 @@ related:
   - docs/standards/PROV.md
 tags: [kfm, domain, hydrology, glossary, ubiquitous-language, governance]
 notes:
-  - Domain-term meanings are CONFIRMED doctrine per Atlas [DOM-HYD] §C (ubiquitous language); field realizations are PROPOSED.
+  - Domain vocabulary and anti-collapse meanings remain documented; decision #1886 keeps the common feature-identity tuple and exact identity terms REMAIN_PROPOSED pending profile closure.
   - Satisfies backlog item HYD-M12 (hydrology ubiquitous-language glossary).
-  - No mounted repo this session; all path/field claims are PROPOSED or NEEDS VERIFICATION.
+  - Current repository evidence at main@9f42d4c3a35f5df4dbf027cbec3922cc03e22b7e confirms a minimal permissive identity schema, proposed ADR-0013, conflicting SourceDescriptor and SpecHash shapes, and no dedicated identity fixture/validator/test lane.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Ubiquitous Language Glossary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Ubiquitous Language Glossary
@@ -38,7 +40,7 @@ notes:
 ![Policy](https://img.shields.io/badge/policy_label-public-2ea44f)
 ![Backlog](https://img.shields.io/badge/backlog-HYD--M12-success)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft / identity `REMAIN_PROPOSED` · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-31
 
 ---
 
@@ -83,7 +85,9 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **CONFLICTED** | Sources disagree; held open until an ADR or drift-register entry resolves it. |
 
 > [!NOTE]
-> A common pattern across this glossary: the **term** is CONFIRMED doctrine, while its **field realization** (the JSON Schema, the exact identity digest) is PROPOSED. That split is deliberate — KFM fixes meaning early and implementation later. [DOM-HYD §C] [DOM-HYD §E]
+> Vocabulary and identity acceptance are separate. Decision #1886 keeps the
+> tuple, its exact slot meanings, persisted representation, and family profiles
+> `REMAIN_PROPOSED`; this glossary must not upgrade them through wording.
 
 [Back to top](#-hydrology--ubiquitous-language-glossary)
 
@@ -91,7 +95,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ## 3 · Hydrology object families
 
-**CONFIRMED terms / PROPOSED field realization** [DOM-HYD §C, §E] [ENCY]. These are the object families the hydrology lane owns. Each is *"evidence or a released derivative within Hydrology,"* with identity on the PROPOSED deterministic basis **source id + object role + temporal scope + normalized digest**, and with source/observed/valid/retrieval/release/correction times kept distinct where material.
+**Documented terms / `REMAIN_PROPOSED` identity realization** [DOM-HYD §C, §E] [ENCY]. These are the object families cataloged by the hydrology lane. The sole identity candidate is **source id + object role + temporal scope + normalized digest**; it is not accepted or enforced. Source/observed/valid/retrieval/release/correction times stay distinct where material.
 
 | Term | Working definition | Notes / discipline |
 |---|---|---|
@@ -103,16 +107,17 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **FlowObservation** | A time-stamped, in-situ discharge observation. | Carries `parameter_code` (e.g., `00060` discharge), `unit`, `qualifier`, `no_data`. **Observed**, not modeled. |
 | **WaterLevelObservation** | A time-stamped gauge-height / stage observation. | Provisional vs final state preserved. **Observed**. |
 | **WaterQualityObservation** | A parameter/value/unit/qualifier water-quality observation. | Parameter discipline required; sensitive joins fail closed. |
-| **GroundwaterWell** | A well identity with screened-interval context and level observations. | Review-required class — private-property implications. |
-| **AquiferObservation** | A groundwater-level or aquifer-state observation. | Cross-lane with Geology (hydrogeology); hydrology does not own aquifer geometry. |
+| **GroundwaterWell** | A well identity with screened-interval context that can anchor separate level observations. | Review-required class — private-property implications; it is not a measurement carrier. |
+| **AquiferObservation** | A first-class groundwater-level or aquifer-state measurement. | Carries observed measurement semantics; optional `AquiferContextLink` refs carry aquifer interpretation. Hydrology does not own aquifer geometry. |
+| **AquiferContextLink** | An evidence-scoped relation from a Hydrology `AquiferObservation` or `GroundwaterWell` to a Geology-owned `HydrostratigraphicUnit`. | Carries typed references and interpretation metadata only; no measurement values or copied Geology geometry. |
 | **NFHLZone** | A FEMA National Flood Hazard Layer regulatory flood-hazard area. | `source_role: "regulatory"` — **never** an observed-flood claim. Carries `EFFECTIVE_DATE`, `VERSION_ID`, `DFIRM_ID`. |
 | **FloodContext** | Regulatory or contextual flood framing for a location. | Context, not event truth; not emergency authority. |
-| **ObservedFloodEvent** | Historical or sourced inundation evidence backed by an admissible observed source. | **Observed**; never NFHL-derived (see §8). |
+| **ObservedFloodEvent** | Proposed historical or sourced inundation evidence. | Identity profile `HOLD` until paired contract and schema exist; never NFHL-derived (see §8). |
 | **Hydrograph** | A derived projection of discharge or stage over time. | **Modeled** — carries model identity, run receipt, and bounds; never relabeled observed. |
 | **UpstreamTrace** | A derived network-traversal projection (upstream/downstream reach set). | Derived from admitted network identity; not a new observation. |
-| **WaterUseLink** | A link relating hydrology to water-use/withdrawal context. | Cross-lane with Agriculture; hydrology does not own use/yield claims. |
-| **DroughtLink** | A link relating hydrology to drought context. | Cross-lane with Atmosphere / Hazards. |
-| **IrrigationLink** | A link relating hydrology to irrigation context. | Cross-lane with Agriculture. |
+| **WaterUseLink** | A proposed link relating hydrology to water-use/withdrawal context. | Family profile `HOLD`; hydrology does not own use/yield claims. |
+| **DroughtLink** | A proposed link relating hydrology to drought context. | Family profile `HOLD`; neighboring-domain identity remains sovereign. |
+| **IrrigationLink** | A proposed link relating hydrology to irrigation context. | Family profile `HOLD`; neighboring-domain identity remains sovereign. |
 
 [Back to top](#-hydrology--ubiquitous-language-glossary)
 
@@ -120,7 +125,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ## 4 · Source families and source roles
 
-**CONFIRMED** [DOM-HYD §D] [Atlas §24.1]. A source's **role** is a first-class identity attribute, one of the canonical seven classes, **fixed at admission and never upgraded by promotion**. A single family can be admitted in more than one role at different times, but the role travels with each admitted descriptor.
+**Documented vocabulary / PROPOSED identity carrier** [DOM-HYD §D] [Atlas §24.1]. An immutable/versioned SourceDescriptor is the proposed canonical role owner. The identity candidate mirrors the role for exact offline parity validation. A role change creates a new descriptor version and identity; promotion never upgrades a role to `observed`.
 
 | Term | Definition |
 |---|---|
@@ -136,12 +141,12 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 | Source family | Typical role(s) | Discipline |
 |---|---|---|
-| **USGS WBD / HUC12** | authority / context | Watershed boundary framework; vintage-tracked. |
-| **NHDPlus HR / 3DHP-oriented hydrography** | authority / context | Flow network, catchments, VAAs; preserve permanent IDs; `nhdplus_version` carried. |
+| **USGS WBD / HUC12** | descriptor-owned; no family default | Watershed boundary framework; vintage-tracked. Do not mint `authority` or `context` role tokens. |
+| **NHDPlus HR / 3DHP-oriented hydrography** | descriptor-owned; no family default | Flow network, catchments, VAAs; preserve permanent IDs and source version. |
 | **USGS Water Data / NWIS** | observed | Real-time and historical streamflow / gauge height. |
 | **FEMA NFHL / MSC** | regulatory (context only) | Effective flood-hazard data; **never** observed inundation or forecast. |
-| **3DEP terrain** | observed / context | DEM products supporting hydrologic derivatives. |
-| **Water-quality / groundwater sources** | observed / context | Sensitive joins fail closed. |
+| **3DEP terrain** | descriptor-owned | DEM products supporting hydrologic derivatives; do not infer observation role from family name. |
+| **Water-quality / groundwater sources** | descriptor-owned | Sensitive joins fail closed; measurement records require an admitted observed role. |
 | **Historical observed-flood evidence** | observed (archival) | Distinct from regulatory NFHL; never collapsed. |
 
 > [!NOTE]
@@ -153,11 +158,19 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ## 5 · Identity, crosswalk, and lineage terms
 
-**CONFIRMED doctrine / PROPOSED field realization** [DOM-HYD §E] [Atlas KFM-P5-PROG-0008].
+**`REMAIN_PROPOSED` identity terms / separately documented crosswalk vocabulary** [DOM-HYD §E] [Atlas KFM-P5-PROG-0008].
 
 | Term | Definition |
 |---|---|
-| **Identity rule** | The deterministic basis for an object's identity: **source id + object role + temporal scope + normalized digest** (PROPOSED). |
+| **Identity rule** | The sole Hydrology candidate: **source id + object role + temporal scope + normalized digest**. Decision #1886 says `REMAIN_PROPOSED`; it is not accepted runtime truth. |
+| **`normalized_digest`** | Semantic tuple term for the digest of the family profile's declared identity-bearing projection under named common and family profiles. |
+| **`spec_hash`** | Proposed persisted machine realization of `normalized_digest`; not a second independently writable digest and not interchangeable with `id`. Exact representation remains cross-cutting profile work. |
+| **`identity_profile`** | Version of the common tuple, canonicalization, digest, and ID derivation. |
+| **`family_profile`** | Versioned declaration of one family's identity-bearing fields and temporal scope. |
+| **`schema_version`** | Machine-shape version; separate from both identity profiles. |
+| **legacy `version`** | Compatibility-only input until inventory and migration; an `id`-only record is `legacy-profile-unknown`. |
+| **source-role mirror** | Proposed required `source_role` copy on an identity candidate; exact parity with the referenced immutable/versioned SourceDescriptor is required. Mismatch target: `FAIL_SOURCE_ROLE_MISMATCH`. |
+| **immutable identity** | Identity-bearing state is never overwritten. A material correction creates a new identity, explicit supersession lineage, preserved prior references, and an affected-consumer inventory. |
 | **COMID** | The NHDPlus persistent common identifier for a flowline/catchment. |
 | **HUC12** | A 12-digit Watershed Boundary Dataset hydrologic-unit code. |
 | **COMID ↔ HUC12 crosswalk** | The deterministic per-release mapping from COMID to HUC12, computed with a fixed fallback order, alignment scoring, geometry sanity flags, version-drift handling, and a DSSE-signed manifest. |
@@ -204,7 +217,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **Pre-RAW** | The watcher-signal/admission edge before RAW; watchers emit signals here without admitting. | `directory-rules.md` |
 | **Promotion** | A governed state transition between lifecycle phases — **never a file move**. Emits `ALLOW` / `DENY` / `HOLD` / `ERROR`. | `directory-rules.md` |
 | **Trust membrane** | The boundary preventing raw/unreviewed/generated/internal state from becoming public truth; operational form is `apps/governed-api/`. | `trust-membrane.md` |
-| **SourceDescriptor** | The admission record carrying source identity, **role**, rights, sensitivity, cadence, citation, time, and content hash. Schema home `schemas/contracts/v1/source/source-descriptor.json` (ADR-0001; `source/` vs `sources/` CONFLICTED); instances live in `data/registry/sources/hydrology/`. | `schemas/contracts/v1/source/` |
+| **SourceDescriptor** | Proposed admission authority for source identity, immutable version, role, rights, sensitivity, cadence, citation, time, and content hash. Two incompatible permissive schema scaffolds currently exist; one canonical path must be accepted before identity-profile graduation. | `CONFLICTED` common source contract/schema surfaces |
 | **EvidenceRef → EvidenceBundle** | A reference (`EvidenceRef`) that must resolve to a closed support package (`EvidenceBundle`) before a public claim has authority. An unresolved ref is an `ABSTAIN` condition. | `ENCY` |
 | **RunReceipt** | Process memory — inputs, outputs, hashes, commit, image, signature. Proves a step ran; does not make a claim true. | `data/receipts/` |
 | **EventEnvelope / EventRunReceipt** | Pre-RAW watcher-signal objects; admission is a separate governed transition. | `data/pre_raw/`, `data/receipts/ingest/` |
@@ -264,8 +277,8 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ## 10 · Related docs
 
-- [`directory-rules.md`](../../../directory-rules.md) — placement law, lifecycle invariant.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`Directory Rules v2`](../../doctrine/directory-rules.md) — accepted placement law and lifecycle invariant.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
 - [`docs/domains/hydrology/README.md`](./README.md) — domain landing page.
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lane governance and gates.
 - [`docs/domains/hydrology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — object-family detail (this glossary's companion).
@@ -312,6 +325,6 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 ---
 
-**Last updated:** 2026-06-06 · **Status:** draft · **Lane:** hydrology · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Backlog:** HYD-M12
+**Last updated:** 2026-07-31 · **Status:** draft / `REMAIN_PROPOSED` identity · **Lane:** hydrology · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Backlog:** HYD-M12
 
 [⬆ Back to top](#-hydrology--ubiquitous-language-glossary)

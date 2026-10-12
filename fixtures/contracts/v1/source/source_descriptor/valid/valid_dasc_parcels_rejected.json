@@ -1,0 +1,123 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:dasc-parcels-rejected",
+  "descriptor_version": "0.1.0",
+  "title": "Parcels — rejected Kansas intake (out-of-state extent)",
+  "description": "Noncanonical metadata-grounded contract fixture; no live connector or release. REJECTED_SCOPE: item extent [-74.55305053265755,39.49905384794952,-74.03106334164784,40.17243907478029] does not intersect Kansas. No feature, owner, address, attachment, or related-table acquisition. Find a separately verified Kansas source.",
+  "domain_scope": [
+    "settlements-infrastructure"
+  ],
+  "source_type": "web_service_endpoint",
+  "source_role": "fixture_only",
+  "authority_rank": "candidate_only",
+  "authority_notes": "REJECTED_SCOPE: item extent [-74.55305053265755,39.49905384794952,-74.03106334164784,40.17243907478029] does not intersect Kansas. No feature, owner, address, attachment, or related-table acquisition. Find a separately verified Kansas source.",
+  "publisher": {
+    "name": "Unknown publisher; university-hosted parcel item is not Kansas coverage",
+    "contact": {
+      "contact_status": "unknown",
+      "contact_url": "https://www.arcgis.com/sharing/rest/content/items/632c404c517744a4997782e087e022d5?f=json"
+    }
+  },
+  "owner_or_steward": {
+    "name": "KFM steward assignment pending",
+    "contact": {
+      "contact_status": "unknown",
+      "contact_url": "https://hub.kansasgis.org/"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "No item licenseInfo or attribution terms supplied; reuse permissions unknown.",
+    "terms_url": "https://www.arcgis.com/sharing/rest/content/items/632c404c517744a4997782e087e022d5?f=json",
+    "attribution_required": true,
+    "attribution_text": "Unresolved; no public use.",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "last_verified_at": "2026-09-20T03:56:33.010238+00:00",
+    "verified_by": "metadata-only technical inspection; not rights approval",
+    "rights_notes": "Timestamp records checking provider metadata, not legal clearance."
+  },
+  "sensitivity_default": "restricted",
+  "sensitivity_notes": "All parcel attributes and linked tables denied; address fields HNUM/HADD and free text NOTES observed in schema only.",
+  "cadence": {
+    "update_cadence": "unknown",
+    "freshness_expectation": "REJECTED_SCOPE: item extent [-74.55305053265755,39.49905384794952,-74.03106334164784,40.17243907478029] does not intersect Kansas. No feature, owner, address, attachment, or related-table acquisition. Find a separately verified Kansas source.",
+    "staleness_policy": "deny_publication"
+  },
+  "access": {
+    "access_method": "arcgis_rest",
+    "access_posture": "restricted",
+    "endpoints": [
+      {
+        "label": "Exact item metadata",
+        "uri": "https://www.arcgis.com/sharing/rest/content/items/632c404c517744a4997782e087e022d5?f=json",
+        "purpose": "metadata"
+      },
+      {
+        "label": "Exact layer metadata",
+        "uri": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Parcels/FeatureServer/0?f=json",
+        "purpose": "metadata"
+      }
+    ],
+    "rate_limit_notes": "No feature queries authorized: wrong geographic scope.",
+    "format_targets": [
+      "ArcGIS JSON"
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "Parcels — rejected Kansas intake (out-of-state extent) (632c404c517744a4997782e087e022d5, layer 0), source_id={source_id}, accessed_at={accessed_at}.",
+    "citation_guidance": "REJECTED_SCOPE: item extent [-74.55305053265755,39.49905384794952,-74.03106334164784,40.17243907478029] does not intersect Kansas. No feature, owner, address, attachment, or related-table acquisition. Find a separately verified Kansas source.",
+    "preferred_link": "https://hub.kansasgis.org/datasets/632c404c517744a4997782e087e022d5"
+  },
+  "source_head": {
+    "observed_at": "2026-09-20T03:56:33.010238+00:00",
+    "method": "api_metadata",
+    "content_identity": {
+      "content_sha256": "ffbe1e85dacec298588dc099f08c1efd4b2c3c8a7fe4e0665a62c7a3b1a02a12",
+      "revision_id": "1737853491000",
+      "source_head_uri": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Parcels/FeatureServer/0?f=json"
+    },
+    "source_head_notes": "SHA-256 binds the observed raw layer metadata response only, not feature data. Item modified milliseconds are a drift signal, not observation time or a dataset release."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "fixture_only"
+    ],
+    "prohibited_claim_roles": [
+      "map_display",
+      "legal_status",
+      "observation",
+      "operational_context"
+    ],
+    "limitations": "REJECTED_SCOPE: item extent [-74.55305053265755,39.49905384794952,-74.03106334164784,40.17243907478029] does not intersect Kansas. No feature, owner, address, attachment, or related-table acquisition. Find a separately verified Kansas source.",
+    "confidence_posture": "fixture_only",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": true,
+    "release_conditions": [
+      "Accepted canonical record placement and writer",
+      "Named item steward and independent review",
+      "Rights and sensitivity decisions covering cache, transform, redistribute and export",
+      "Immutable bounded capture, schema/geometry/epoch validation and correction/rollback evidence",
+      "EvidenceBundle, policy decision and separately authorized release"
+    ],
+    "deny_reason_if_not_allowed": "REJECTED_SCOPE; no Kansas overlap; rights and sensitivity unresolved."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "activation_notes": "No network, scheduler, registry writer or map runtime added."
+  },
+  "review_state": "rejected",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "quarantined",
+    "created_at": "2026-09-20T03:56:33.010238+00:00",
+    "updated_at": "2026-09-20T03:56:33.010238+00:00"
+  }
+}

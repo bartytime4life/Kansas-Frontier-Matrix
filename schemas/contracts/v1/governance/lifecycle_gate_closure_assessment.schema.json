@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/lifecycle_gate_closure_assessment.schema.json",
+  "title": "LifecycleGateClosureAssessment",
+  "description": "Fixture-only assessment of required artifacts, dependency resolution, PolicyDecision presence, and failure-closed disposition for one lifecycle gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "gate",
+    "subject_ref",
+    "prior_stage",
+    "target_stage",
+    "assessed_at",
+    "requirements",
+    "artifacts",
+    "dependencies",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "LifecycleGateClosureAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.lifecycle-gate-closure.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:lifecycle-gate-closure:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "gate": {
+      "enum": [
+        "ADMISSION",
+        "NORMALIZATION",
+        "VALIDATION",
+        "CATALOG_CLOSURE",
+        "RELEASE",
+        "CORRECTION",
+        "ROLLBACK"
+      ]
+    },
+    "subject_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}$"
+    },
+    "prior_stage": {
+      "enum": ["DISCOVERED", "RAW", "WORK", "PROCESSED", "CATALOG", "PUBLISHED"]
+    },
+    "target_stage": {
+      "enum": [
+        "RAW",
+        "WORK",
+        "PROCESSED",
+        "CATALOG",
+        "PUBLISHED",
+        "PUBLISHED_SUPERSEDED",
+        "PRIOR_RELEASE"
+      ]
+    },
+    "assessed_at": { "$ref": "#/$defs/aware_datetime" },
+    "requirements": { "$ref": "#/$defs/requirements" },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "dependencies": { "$ref": "#/$defs/dependencies" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sensitivity_transform_required",
+        "aggregation_required",
+        "graph_projection_required",
+        "model_run_required",
+        "review_required"
+      ],
+      "properties": {
+        "sensitivity_transform_required": { "type": "boolean" },
+        "aggregation_required": { "type": "boolean" },
+        "graph_projection_required": { "type": "boolean" },
+        "model_run_required": { "type": "boolean" },
+        "review_required": { "type": "boolean" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "ref", "resolution_state"],
+      "properties": {
+        "role": {
+          "enum": [
+            "AGGREGATION_RECEIPT",
+            "CATALOG_MATRIX",
+            "CORRECTION_NOTICE",
+            "CORRECTION_PATH",
+            "EVIDENCE_BUNDLE",
+            "GRAPH_PROJECTION",
+            "INVALIDATION_LIST",
+            "MODEL_RUN_RECEIPT",
+            "PAYLOAD_IDENTITY",
+            "POLICY_DECISION",
+            "REDACTION_RECEIPT",
+            "RELEASE_MANIFEST",
+            "REVIEW_RECORD",
+            "ROLLBACK_CARD",
+            "ROLLBACK_TARGET",
+            "SOURCE_DESCRIPTOR",
+            "TRANSFORM_RECEIPT",
+            "VALIDATION_REPORT"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}$"
+        },
+        "resolution_state": { "enum": ["RESOLVED", "UNRESOLVED", "INVALID"] }
+      }
+    },
+    "dependency_state": {
+      "enum": ["RESOLVED", "NOT_REQUIRED", "UNRESOLVED", "INVALID"]
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor",
+        "evidence_bundle",
+        "model_run_receipt",
+        "policy_decision"
+      ],
+      "properties": {
+        "source_descriptor": { "$ref": "#/$defs/dependency_state" },
+        "evidence_bundle": { "$ref": "#/$defs/dependency_state" },
+        "model_run_receipt": { "$ref": "#/$defs/dependency_state" },
+        "policy_decision": { "$ref": "#/$defs/dependency_state" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "disposition",
+        "reason_codes",
+        "prior_state_preservation_required"
+      ],
+      "properties": {
+        "outcome": { "enum": ["ALLOW", "HOLD", "DENY", "ERROR"] },
+        "disposition": {
+          "enum": [
+            "ADVANCE",
+            "NOT_ADMITTED",
+            "QUARANTINE",
+            "STAY_WORK",
+            "HOLD_PROCESSED",
+            "HOLD_CATALOG",
+            "STALE_STATE_ANNOUNCEMENT",
+            "HOLD_CURRENT_RELEASE",
+            "ASSESSMENT_ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ASSESSMENT_ERROR",
+              "DEPENDENCY_INVALID",
+              "GATE_CLOSURE_COMPLETE",
+              "MISSING_REQUIRED_ARTIFACT",
+              "REQUIRED_ARTIFACT_INVALID",
+              "UNRESOLVED_REQUIRED_ARTIFACT",
+              "UNRESOLVED_REQUIRED_DEPENDENCY"
+            ]
+          }
+        },
+        "prior_state_preservation_required": { "type": "boolean" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "reference_resolution_performed",
+        "policy_evaluation_performed",
+        "state_transition_performed",
+        "lifecycle_write_allowed",
+        "promotion_authorized",
+        "release_authorized",
+        "correction_authorized",
+        "rollback_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "reference_resolution_performed": { "const": false },
+        "policy_evaluation_performed": { "const": false },
+        "state_transition_performed": { "const": false },
+        "lifecycle_write_allowed": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "correction_authorized": { "const": false },
+        "rollback_authorized": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}

@@ -10,8 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/blm/README.md
-  - docs/sources/catalog/blm/IDENTITY.md
-  - docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/blm/glo-survey-plats.md
   - docs/sources/catalog/blm/glo-field-notes.md
   - docs/sources/catalog/blm/glo-land-patents.md
@@ -24,6 +22,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (KFM-P2-IDEA-0016, KFM-P2-PROG-0011, KFM-P25-PROG-0027, KFM-P26-PROG-0028, KFM-P26-IDEA-0016, KFM-P26-PROG-0027, KFM-P25-IDEA-0011, KFM-P17-PROG-0014) and Pass 10 (C4-01); descriptor fields intentionally not restated here."
   - "Anchor sibling for the blm family: present-day cadastre; GLO Plats / Field Notes / Land Patents are historical companions; PAD-US is a separate stewardship-context product."
+owning_root: docs/
+responsibility: "Documentation for BLM PLSS / CadNSDI; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -117,8 +118,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, source role (**authority**), rights, cadence, FGDC conformance, version pin, sensitivity | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `blm` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, CARE applicability for tribal-relevant PLSS extents, release class | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, CARE applicability for tribal-relevant PLSS extents, release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/spatial-foundation/` | JSON-schema for descriptor + PLSS corner / line / special-survey records (KFM-P26-PROG-0028) | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **authority** (BLM is the federal cadastre authority for the public-land states). Even so: authority over the **PLSS framework**, not over **title or ownership**.
@@ -171,7 +172,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per CadNSDI **version pin** so consumers can freeze to a specific release. NEEDS VERIFICATION.
 - Asset roles (corner-points, section-polygons, township-polygons, special-survey-polygons, attribute-tables, vector-tiles, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/spatial-foundation/`.
@@ -297,7 +298,7 @@ CONFIRMED doctrine (KFM-P2-PROG-0011, why it matters): *"PLSS is the spatial spi
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -440,8 +441,8 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/blm/README.md`](./README.md) — `blm` family landing page.
-- [`docs/sources/catalog/blm/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `blm` (CARE applicability for tribal-relevant surveys).
+- `docs/sources/catalog/blm/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `blm` (CARE applicability for tribal-relevant surveys).
 - [`docs/sources/catalog/blm/glo-survey-plats.md`](./glo-survey-plats.md) — Sibling: GLO historic raster plats (historical companion).
 - [`docs/sources/catalog/blm/glo-field-notes.md`](./glo-field-notes.md) — Sibling: GLO narrative survey records (historical companion).
 - [`docs/sources/catalog/blm/glo-land-patents.md`](./glo-land-patents.md) — Sibling: GLO title-instrument records (T/R/S consumer of CadNSDI).

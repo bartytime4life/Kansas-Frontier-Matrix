@@ -1,0 +1,9 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/collapsed-identity-001",
+  "version": "v0",
+  "source_id": "kfm://source/synthetic/settlements-infrastructure-collapsed-001",
+  "source_native_id": "synthetic-collapsed-001",
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/settlements-infrastructure/collapsed-cell-001",
+  "fixture_posture": "synthetic; invalid; identity-envelope; object-family-collapse",
+  "known_defect": "object_family and feature_role are both omitted, so this identity cannot be distinguished as a Settlement versus an InfrastructureAsset, violating domain_feature_identity.md invariant 3."
+}

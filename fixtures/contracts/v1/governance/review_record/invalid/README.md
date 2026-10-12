@@ -2,15 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/governance/review-record/invalid/readme
 title: review_record invalid fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): schema steward; TODO(owner): governance contracts steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-06-30
+updated: 2026-08-03
 policy_label: public-review
 related: [invalid_1.json, invalid_1.expected_error.txt, ../valid/valid_1.json, ../../../../../../schemas/contracts/v1/governance/review_record.schema.json, ../../../../../../contracts/governance/review_record.md, ../../../../../../tools/validators/validate_review_record.py, ../../../../../../tests/schemas/test_common_contracts.py, ../../../../../../docs/doctrine/directory-rules.md]
 tags: [kfm, fixtures, contracts, v1, governance, review-record, invalid-fixtures, json-schema, expected-error, negative-tests, non-authoritative]
-notes: ["This README replaces a blank file at `fixtures/contracts/v1/governance/review_record/invalid/README.md`.", "Invalid fixtures are schema test inputs only; schema shape, contract meaning, validator implementation, and policy rules stay in their owning roots.", "The active schema evidence is `schemas/contracts/v1/governance/review_record.schema.json`, whose `x-kfm.fixtures_root` points to `fixtures/contracts/v1/governance/review_record/`.", "The current invalid fixture omits required `review_id`; the expected-error file currently contains the broad matcher text `required`.", "The schema metadata declares `contracts/governance/review_record.md`, but that file was not found during this check.", "The dedicated validator file exists but is a greenfield placeholder and was not executed during this update."]
+notes: ["This README replaces a blank file at `fixtures/contracts/v1/governance/review_record/invalid/README.md`.", "Invalid fixtures here are schema test inputs only; the separate promotion-gate lane exercises the bounded ReviewRecord candidate validator.", "The active schema evidence is `schemas/contracts/v1/governance/review_record.schema.json`, whose `x-kfm.fixtures_root` points to `fixtures/contracts/v1/governance/review_record/`.", "The current invalid fixture omits required `review_id`; the expected-error file currently contains the broad matcher text `required`.", "The schema metadata declares lowercase `contracts/governance/review_record.md`, while the tracked semantic draft is case-sensitive `ReviewRecord.md`; that conflict remains unresolved.", "The dedicated validator is fixture-only and creates no governed ReviewRecord or authority."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -138,9 +138,9 @@ Before changing invalid fixtures here:
 | Expected error | CONFIRMED | `invalid_1.expected_error.txt` exists and contains `required`. |
 | Valid sibling fixture | CONFIRMED | `../valid/valid_1.json` exists and includes `review_id` plus the matching review fields. |
 | Schema | CONFIRMED | `review_record.schema.json` defines required fields, enums, date-time format, and additional-property behavior. |
-| Contract doc | NOT FOUND | `contracts/governance/review_record.md` is declared in schema metadata but was not found during this check. |
-| Validator file | CONFIRMED PLACEHOLDER / NOT RUN | `tools/validators/validate_review_record.py` exists but raises `NotImplementedError`. |
-| Test execution | NOT RUN | No validators, pytest, or CI were run during this README update. |
+| Contract doc | CONFLICTED | Schema metadata declares lowercase `review_record.md`; the tracked semantic draft is `ReviewRecord.md`. |
+| Validator file | CONFIRMED BOUNDED CANDIDATE | `tools/validators/validate_review_record.py` consumes separate synthetic promotion fixtures and creates no governed record or authority. |
+| Test execution | CONFIRMED LOCAL REPLAY 2026-08-03 | Repository schema/contract gate: 150 tests and 26 subtests; separate bounded candidate suite: 30 tests and 45 subtests. |
 
 ---
 
@@ -153,8 +153,8 @@ Before changing invalid fixtures here:
 | [`invalid_1.expected_error.txt`](invalid_1.expected_error.txt) | CONFIRMED | Current expected-error matcher is `required`. | Broad matcher; may be tightened later. |
 | [`../valid/valid_1.json`](../valid/valid_1.json) | CONFIRMED | Positive comparison fixture includes `review_id`. | Does not prove all valid cases are covered. |
 | [`../../../../../../schemas/contracts/v1/governance/review_record.schema.json`](../../../../../../schemas/contracts/v1/governance/review_record.schema.json) | CONFIRMED | Schema shape, required fields, enum values, date-time format, fixture root, and declared validator path. | Schema status is `PROPOSED`. |
-| `../../../../../../contracts/governance/review_record.md` | NOT FOUND | Schema metadata declares this contract path. | No contract file was found during this check. |
-| [`../../../../../../tools/validators/validate_review_record.py`](../../../../../../tools/validators/validate_review_record.py) | CONFIRMED PLACEHOLDER | Validator file exists. | It is a greenfield placeholder and was not executed. |
-| [`../../../../../../tests/schemas/test_common_contracts.py`](../../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED | Fixture discovery and expected-error matching behavior. | Tests were not run during this update. |
+| Schema-declared lowercase path and tracked [`ReviewRecord.md`](../../../../../../contracts/governance/ReviewRecord.md) | CONFLICTED | A semantic draft exists. | Casing and acceptance remain unresolved. |
+| [`../../../../../../tools/validators/validate_review_record.py`](../../../../../../tools/validators/validate_review_record.py) | CONFIRMED BOUNDED CANDIDATE | Executes the separate synthetic Gate G profile. | No governed identity, authority, review record, or release effect. |
+| [`../../../../../../tests/schemas/test_common_contracts.py`](../../../../../../tests/schemas/test_common_contracts.py) | CONFIRMED LOCAL REPLAY | Fixture discovery and expected-error matching passed within the 150-test schema/contract gate. | A shape pass is not governed review or candidate authority. |
 
 [Back to top](#top)

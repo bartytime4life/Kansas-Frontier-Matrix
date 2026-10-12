@@ -6,12 +6,11 @@ version: v2
 status: draft
 owners: <hydrology domain steward> + <docs steward>   # placeholders — resolve via CODEOWNERS / ownership register
 created: 2026-05-17
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md            # canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/README.md
@@ -30,6 +29,9 @@ notes:
   - "All implementation-maturity claims are PROPOSED or NEEDS VERIFICATION pending mounted-repo evidence (no repo mounted this session)."
   - "Sequencing recommendations are non-binding until ADR/steward review."
   - "v2 reconciles crosswalk validator placement (ADR-S-CWV-01), Pre-RAW lifecycle phase, runbook convention (ADR-S-13 / OPEN-DR-02), and CONTRACT_VERSION pin against Atlas v1.1 + Directory Rules + Operating Contract v3.0. See Changelog."
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hydrology Domain — Expansion Backlog
@@ -52,7 +54,7 @@ notes:
 | **Status** | `draft` |
 | **Owners** | `<hydrology domain steward>` + `<docs steward>` *(placeholders — to be filled by CODEOWNERS)* |
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` |
-| **Last updated** | `2026-06-06` |
+| **Last updated** | `2026-07-30` |
 | **Authority class** | Register / lineage (authority-ladder **Rung 5**). `docs/` **explains**; this file does not decide alone. Promotions and ADRs decide. |
 | **Supersedes** | v1 (initial draft, 2026-05-17) |
 
@@ -288,7 +290,7 @@ High-priority items unblock the hydrology proof lane and the trust-membrane inva
 |---|---|---|---|---|---|
 | **HYD-L01** | Hydrograph panel + time-slider proof | T7 | PUBLISHED | One gauge → hydrograph component → drawer roundtrip | PROPOSED |
 | **HYD-L02** | Drought / irrigation context links | T4 (T1) | CATALOG | `DroughtLink`, `IrrigationLink`, `WaterUseLink` object spines | PROPOSED |
-| **HYD-L03** | Groundwater well context | T4 (T1) | CATALOG | `GroundwaterWell` + `AquiferObservation` minimal schema | PROPOSED |
+| **HYD-L03** | Groundwater well context | T4 (T1) | CATALOG | Bounded `AquiferObservation` + `AquiferContextLink` shapes landed; GroundwaterWell, endpoint/evidence, policy, and catalog closure remain | PARTIAL |
 | **HYD-L04** | Coastal / braided / multi-HUC candidate handling | T5 | PROCESSED | `multi_huc_candidate` ranked-candidates fixture set | PROPOSED |
 | **HYD-L05** | NOAA AHPS flood-stage correlation (non-emergency) | T6 (T1) | WORK | Correlation sidecar; **explicitly not** an alert path | PROPOSED |
 | **HYD-L06** | Async / multi-gauge ingest mode | T6 | Pre-RAW → WORK | County-scale sweep orchestrator | PROPOSED |
@@ -421,8 +423,8 @@ These ideas surface in the project corpus but are **not** in scope for hydrology
 > [!NOTE]
 > Links are repository-relative. Targets marked **TODO** are referenced for completeness; the file may not yet exist and should be created or linked as the lane matures.
 
-- [Operating contract](../../../ai-build-operating-contract.md) — canonical; `CONTRACT_VERSION = "3.0.0"`
-- [Directory Rules](../../../directory-rules.md)
+- Operating contract (held: DOC-DOC-002) — canonical; `CONTRACT_VERSION = "3.0.0"`
+- [Directory Rules](../../doctrine/directory-rules.md)
 - [Domain README — Hydrology](./README.md) — **TODO**
 - [Hydrology — Data Lifecycle](./DATA_LIFECYCLE.md) — companion lane doc
 - [Domain glossary — Hydrology](./GLOSSARY.md) — **TODO** (per HYD-M12)
@@ -567,7 +569,7 @@ Source: KFM Domain Encyclopedia §7.2; Domains Culmination Atlas v1.1 §[DOM-HYD
 ### Footer
 
 - **Related docs:** see [§13](#13-related-docs)
-- **Last updated:** `2026-06-06`
+- **Last updated:** `2026-07-30`
 - **Contract:** `CONTRACT_VERSION = "3.0.0"`
 - **Authority class:** register / lineage (Rung 5). `docs/` explains; it does not decide alone.
 - **Conformance:** Directory Rules §12 (Domain Placement Law), Lifecycle Law (Pre-RAW → … → PUBLISHED), Cite-or-Abstain, Watcher-as-Non-Publisher.

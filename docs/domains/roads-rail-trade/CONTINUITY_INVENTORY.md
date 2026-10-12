@@ -16,7 +16,7 @@ related:
   - docs/domains/roads-rail-trade/README.md
   - docs/domains/roads-rail-trade/CANONICAL_PATHS.md
   - docs/domains/roads-rail-trade/sublanes/trade-routes.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
 tags: [kfm, roads-rail-trade, continuity, inventory, evidence, temporal]
 notes:
@@ -520,7 +520,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 - `docs/standards/SENSITIVITY_RUBRIC.md` — T0–T4 tiers. **`TODO`** — PROPOSED in corpus (ADR-S-05); authoring status NEEDS VERIFICATION.
 - `docs/standards/REDACTION_DETERMINISM.md` — generalization-receipt determinism. **`TODO`** — PROPOSED in corpus.
 - `docs/domains/roads-rail-trade/README.md` — lane orientation. **`TODO`** — placement CONFIRMED per `[DIRRULES]` §12; authoring status NEEDS VERIFICATION.
-- `docs/architecture/governed-api.md` — Evidence Drawer, Focus Mode, finite outcomes.
+- `docs/architecture/governed-api/README.md` — Evidence Drawer, Focus Mode, finite outcomes.
 
 [↑ back to top](#quick-jump)
 

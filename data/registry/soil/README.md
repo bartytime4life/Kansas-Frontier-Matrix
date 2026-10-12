@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/registry/soil/readme
 name: Soil Registry README
+title: Soil Registry Compatibility Parent
 path: data/registry/soil/README.md
 type: data-registry-soil-parent-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
   - <registry-steward>
@@ -18,14 +19,16 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-08-24
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
+owning_root: data/
+responsibility: Compatibility routing for the non-canonical domain-first Soil registry path without independent source-descriptor writes
 artifact_family: registry
 registry_scope: soil-domain-first-registry-parent
 domain: soil
-path_posture: existing-parent-stub-replaced; sources-child-lane-confirmed; domain-first-registry-path-exists; cross-domain-source-registry-parent-confirms-data-registry-sources-domain-pattern; soil-domain-registry-points-to-data-registry-sources-soil-or-accepted-source-registry-lane; subtype-first-source-registry-topology-needs-verification
+path_posture: existing-parent-stub-replaced; domain-first-compatibility-parent; independent-writes-denied; canonical-writer-data-registry-sources-soil; compatibility-migration-needs-verification
 sensitivity_posture: registry-internal; no-public-path; source-role-preserving; support-type-separation-required; scale-and-resolution-aware; private-land-and-parcel-joins-reviewed; field-verification-not-implied; rights-aware; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -95,21 +98,22 @@ tags:
 notes:
   - "This README replaces the greenfield stub at `data/registry/soil/README.md`."
   - "This domain-first registry parent exists in the repository and currently has a confirmed `sources/` child README."
-  - "The cross-domain source registry parent confirms `data/registry/sources/<domain>/` as a permitted source-registry pattern, while the Soil domain registry points to `data/registry/sources/soil/` or an accepted source-registry lane."
-  - "This parent is treated as a compatibility/routing lane until registry topology is reconciled. It must not become source payload storage, contract/schema/policy authority, soil truth, field verification, proof, catalog, release, or public output."
+  - "Accepted ADR-0029 and Directory Rules DIR-SOURCE-001 through DIR-SOURCE-004 make data/registry/sources/ the canonical machine source-registry writer."
+  - "This parent is a compatibility/routing lane. It must not become an independent registry writer, source payload storage, contract/schema/policy authority, soil truth, field verification, proof, catalog, release, or public output."
+  - "The four templates under sources/ remain held compatibility material pending a reviewed mapping, generator or retirement strategy, consumer closure, lineage preservation, and rollback plan."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Soil Registry
 
-Domain-first registry parent for Soil registry lanes.
+Domain-first compatibility parent for Soil registry routing.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
   <img alt="Family: registry" src="https://img.shields.io/badge/family-registry-blueviolet">
   <img alt="Domain: soil" src="https://img.shields.io/badge/domain-soil-8B4513">
-  <img alt="Topology: needs verification" src="https://img.shields.io/badge/topology-NEEDS%20VERIFICATION-orange">
+  <img alt="Topology: canonical subtype-first" src="https://img.shields.io/badge/topology-canonical%20subtype--first-1f6feb">
   <img alt="Boundary: not soil truth" src="https://img.shields.io/badge/boundary-not%20soil%20truth-critical">
   <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
 </p>
@@ -123,7 +127,7 @@ Domain-first registry parent for Soil registry lanes.
 
 ## Scope
 
-`data/registry/soil/` is a domain-first routing lane for Soil registry material that already exists in the repository. Its current confirmed child is `sources/`, which documents source descriptor and source-admission records for Soil sources.
+`data/registry/soil/` is a domain-first compatibility lane for Soil registry material that already exists in the repository. Its current confirmed child is `sources/`, which preserves four unmigrated source-descriptor templates and their routing documentation.
 
 This parent README exists to prevent the domain-first path from becoming an unbounded parallel authority. It should route maintainers to the correct registry family and preserve the distinction between registry state and other KFM authority roots.
 
@@ -155,9 +159,17 @@ This is a **domain-first** registry path. Current source-registry evidence also 
 data/registry/sources/soil/
 ```
 
-The Soil domain registry README points to `data/registry/sources/soil/` or an accepted source registry lane for source identity, role, rights, cadence, authority limits, and access posture. The child source README preserves the requested domain-first path while marking final topology **NEEDS VERIFICATION**.
+Accepted ADR-0029 adopts Directory Rules `DIR-SOURCE-001` through
+`DIR-SOURCE-004`. They register canonical source identity once, place machine
+source identities and descriptors under `data/registry/sources/`, and allow
+`data/registry/<domain>/sources/` only as a generated view rather than an
+independent writer.
 
-Therefore, `data/registry/soil/` is treated as **CONFIRMED path presence / NEEDS VERIFICATION topology**. Until an ADR, Directory Rules update, registry README, migration note, or repository-wide inventory resolves the topology, do not create duplicate authoritative records in both domain-first and subtype-first locations.
+Therefore, `data/registry/soil/` is **CONFIRMED compatibility path presence**.
+Its migration remains **NEEDS VERIFICATION**. Do not create or correct canonical
+source records here, copy authoritative records into both lanes, or infer that
+the retained templates are a generated view without an accepted generator and
+source mapping.
 
 ---
 
@@ -166,9 +178,9 @@ Therefore, `data/registry/soil/` is treated as **CONFIRMED path presence / NEEDS
 | Responsibility | Home | Boundary |
 |---|---|---|
 | Soil domain-first registry parent | `data/registry/soil/` | Routing/compatibility parent for existing domain-first registry lanes. |
-| Confirmed child registry lane | `data/registry/soil/sources/` | Source descriptor/admission records, with topology warning. |
+| Confirmed child compatibility lane | `data/registry/soil/sources/` | Unmigrated descriptor templates and routing; independent writes denied. |
 | Cross-domain source registry parent | `data/registry/sources/README.md` | General source registry doctrine and subtype-first source registry pattern. |
-| Potential canonical source lane | `data/registry/sources/soil/` | Needs topology reconciliation with this path. |
+| Canonical Soil source lane | `data/registry/sources/soil/` | Accepted machine source-registry writer under Directory Rules. |
 | Soil domain registry records | `data/registry/domains/soil/` | Domain-state records; do not duplicate here without topology decision. |
 | Dataset registry records | `data/registry/datasets/` | Dataset identity and dataset-state records. |
 | Crosswalk registry records | `data/registry/crosswalks/` | Mapping state across source IDs, authority IDs, field names, MUKEY/component/horizon identifiers, units, vocabularies, and domain lanes. |
@@ -195,7 +207,7 @@ This confirms only path/README evidence. It does not prove emitted records, sche
 
 | Child lane | Status | Purpose | Boundary |
 |---|---:|---|---|
-| [`sources/`](sources/README.md) | CONFIRMED README | Domain-first Soil source descriptor and source-admission registry lane. | Not source payload storage, soil truth, parcel truth, field verification, proof, receipt storage, catalog closure, semantic contract authority, schema authority, policy, release authority, or public output. |
+| [`sources/`](sources/README.md) | CONFIRMED README + four templates | Domain-first compatibility view pending migration. | Independent writes denied; not source payload storage, soil truth, parcel truth, field verification, proof, receipt storage, catalog closure, semantic contract authority, schema authority, policy, release authority, or public output. |
 
 ---
 
@@ -204,7 +216,7 @@ This confirms only path/README evidence. It does not prove emitted records, sche
 | Rule | Handling |
 |---|---|
 | Registry parent is routing state | This parent orients to child registry lanes; it does not contain domain payloads. |
-| Topology is unresolved | Do not silently duplicate records between `data/registry/soil/...` and `data/registry/sources/soil/`. |
+| Canonical writer is resolved | Write source identities and descriptors only under `data/registry/sources/`; this path remains non-writing compatibility material until migration. |
 | Registry is not soil truth | Registry state does not prove map units, components, horizons, soil properties, station readings, gridded surfaces, interpretations, suitability, field conditions, or parcel-scale outcomes. |
 | Source role is preserved | Registry state must not upgrade primary, corroborating, context, restricted, modeled, aggregate, candidate, synthetic, or review-needed source roles. |
 | Support type is preserved | Map-unit, component, horizon, station/depth, grid-cell, model-surface, and interpretation support must not be silently merged. |
@@ -222,16 +234,20 @@ This confirms only path/README evidence. It does not prove emitted records, sche
 
 ## Accepted material
 
-Accepted content is limited to README/routing material and registry-local sidecars that do not duplicate authority from subtype-first lanes:
+Accepted content is limited to README/routing material and reviewed compatibility
+artifacts that do not duplicate authority from the subtype-first lane:
 
 - parent README and routing notes;
 - compatibility notes explaining domain-first versus subtype-first topology;
 - migration notes, redirect notes, rollback notes, or topology decision notes;
-- local indexes that point to child registry lanes without becoming authoritative records themselves;
+- generated indexes only after their canonical source, generator identity, content digest, regeneration command, and no-manual-edit policy are accepted;
 - checksums, manifests, and signatures for registry routing material where applicable;
 - pointers to source descriptors, dataset registry records, crosswalk registry records, domain registry records, rights registry records, sensitivity registry records, layer registry records, contracts, schemas, policy refs, lifecycle payloads, validation/unit/support/aggregation receipts, proof refs, catalog refs, release candidates, correction notices, supersession notices, withdrawal notices, stale-state notices, and rollback cards.
 
-If a child lane under this parent stores actual registry records, it must state whether it is canonical, compatibility, migration-only, or mirrored, and it must name its conflict/rollback path.
+The four existing child templates are held as migration-visible compatibility
+material. Do not add, correct, or supersede authoritative source facts in this
+path. A future generated view or retirement requires a reviewed mapping,
+consumer and link closure, lineage preservation, and rollback path.
 
 ---
 
@@ -242,7 +258,7 @@ If a child lane under this parent stores actual registry records, it must state 
 | Raw soil-survey payloads, SSURGO/gSSURGO/gNATSGO/STATSGO2 tables, SDA query outputs, Web Soil Survey exports, station observations, grids, rasters, shapefiles, GeoParquet, COG, PMTiles, or source-native tables | `data/raw/soil/`, `data/work/soil/`, `data/quarantine/soil/`, or `data/processed/soil/` depending on lifecycle state |
 | Source fetchers, endpoint clients, credentials, watchers, or automation | `connectors/`, `pipelines/`, `pipeline_specs/`, `configs/`, `infra/`, or accepted implementation roots |
 | NRCS connector code or request helpers | `connectors/nrcs/` and product connector lanes |
-| Canonical source descriptor records if a subtype-first lane is accepted as canonical | `data/registry/sources/soil/` after topology reconciliation |
+| Canonical source descriptor records | `data/registry/sources/soil/` under accepted Directory Rules |
 | Dataset identity records | `data/registry/datasets/` |
 | Domain-state records | `data/registry/domains/soil/` |
 | Crosswalk mapping records | `data/registry/crosswalks/` |
@@ -263,20 +279,22 @@ If a child lane under this parent stores actual registry records, it must state 
 
 ## Suggested directory shape
 
-The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist beyond confirmed README evidence.
+The map below records the bounded compatibility posture; it does not authorize a
+new index, template, mirror, or writer.
 
 ```text
 data/registry/soil/
 ├── README.md
 ├── sources/
-│   └── README.md
-└── index.local.json
+│   ├── README.md
+│   └── <four retained templates>       # held pending reviewed migration
+└── <no independent registry writer>
 ```
 
-If subtype-first lanes are accepted as canonical, prefer a migration such as:
+The accepted canonical lane is:
 
 ```text
-data/registry/sources/soil/       # possible canonical source descriptors
+data/registry/sources/soil/       # canonical source-descriptor writer
 data/registry/soil/README.md      # compatibility pointer / migration note only
 ```
 
@@ -286,7 +304,8 @@ Do not maintain divergent descriptor sets.
 
 ## Required checks before use
 
-- [ ] Confirm whether `data/registry/soil/...` or `data/registry/sources/soil/` is canonical before adding real registry payloads.
+- [x] Route canonical source-descriptor work to `data/registry/sources/soil/` under ADR-0029 and `DIR-SOURCE-001` through `DIR-SOURCE-004`.
+- [ ] Deny independent source-descriptor writes under `data/registry/soil/` until a reviewed generated-view or retirement migration is complete.
 - [ ] Confirm a child object is a registry record, not source data, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, test, connector, pipeline, or public artifact.
 - [ ] Confirm source identity, source role, rights posture, terms, cadence, source head, source vintage, source scale, support type, resolution, retrieval time, valid/effective time, and authority limits are preserved for any source-registry child records.
 - [ ] Confirm registry state does not upgrade source role, support type, evidence strength, review state, catalog state, release state, field-verification state, parcel truth, or public-safe posture.
@@ -309,13 +328,14 @@ Do not maintain divergent descriptor sets.
 | This README replaces the greenfield stub at `data/registry/soil/README.md`. | CONFIRMED authored |
 | The target path existed in the live repository as a greenfield stub before this edit. | CONFIRMED by GitHub contents API during this edit |
 | `data/registry/soil/sources/README.md` exists as a confirmed child lane. | CONFIRMED by GitHub contents API during this edit |
-| The child `sources/` README marks the domain-first path as confirmed but final topology NEEDS VERIFICATION against subtype-first source-registry patterns. | CONFIRMED by GitHub contents API during this edit |
+| The child `sources/` lane retains four domain-first templates with unresolved fields. | CONFIRMED at `main@366cfa9185b0d10ca27f128a8a041ca8c5312896` |
 | Cross-domain `data/registry/sources/README.md` says source registry records are admission and authority-control records and that per-domain subfolders such as `data/registry/sources/<domain>/` are permitted. | CONFIRMED by GitHub contents API in this sequence |
 | Soil domain registry README says Soil source registry records belong in `data/registry/sources/soil/` or an accepted source registry lane and names Soil source families including SSURGO, SDA, gSSURGO, gNATSGO, Mesonet, SCAN, USCRN, SMAP, and SoilGrids. | CONFIRMED by GitHub contents API in this sequence |
 | NRCS Soil Data Access documentation says product pages do not replace authoritative SourceDescriptor records in `data/registry/sources/`. | CONFIRMED by GitHub contents API in this sequence |
 | NRCS connector README says NRCS products are multi-product and role-specific and must not be collapsed under one source role, cadence, scale, or release posture. | CONFIRMED by GitHub contents API in this sequence |
 | Concrete Soil registry payloads exist under this parent lane. | UNKNOWN |
-| The final accepted topology between domain-first and subtype-first registry lanes is resolved. | NEEDS VERIFICATION |
+| Accepted ADR-0029 and Directory Rules make the subtype-first registry the canonical writer. | CONFIRMED |
+| Domain-first compatibility migration, generation, redirect, or retirement is complete. | NEEDS VERIFICATION |
 | CI validates Soil registry records. | UNKNOWN |
 | Runtime registry resolution or governed API behavior reads this registry lane. | UNKNOWN |
 | This README grants public access to Soil registry internals. | DENY |

@@ -1,0 +1,83 @@
+{
+  "receipt_id": "genrec-pass18-web-acquisition-conduct-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/web-acquisition-conduct-assessment.yml",
+    "contracts/source/web_acquisition_conduct_assessment.md",
+    "docs/intake/exploratory/pass-18-web-acquisition-conduct-source-map.md",
+    "fixtures/contracts/v1/source/web_acquisition_conduct_assessment/cases.json",
+    "schemas/contracts/v1/source/web_acquisition_conduct_assessment.schema.json",
+    "tests/validators/test_validate_web_acquisition_conduct_assessment.py",
+    "tools/validators/source/validate_web_acquisition_conduct_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/web-acquisition-conduct-assessment.yml": "sha256:fd6d32886307d3df79dd02555e650e3c78d274f022b065e2c619c81917fd8012",
+    "contracts/source/web_acquisition_conduct_assessment.md": "sha256:b64a1c16249fad972c422f82fbb195ae32bbf66f9a7cec87e3de70aac3121983",
+    "docs/intake/exploratory/pass-18-web-acquisition-conduct-source-map.md": "sha256:e6cd322abefafea79b69597b4f3777e0908e04bb7f460f2df1f1d4949669aa7b",
+    "fixtures/contracts/v1/source/web_acquisition_conduct_assessment/cases.json": "sha256:25ffea4a063a696d371cc9c562965ff38b99f978aa850d2fe77f7215e98943f7",
+    "schemas/contracts/v1/source/web_acquisition_conduct_assessment.schema.json": "sha256:2d1362c3f422a03e7013b28bb74d0c97dafb17799ac1b1c6cec86695190dbd4f",
+    "tests/validators/test_validate_web_acquisition_conduct_assessment.py": "sha256:e8e03e293f6e30102bc3bfe107fac7dcb8645989190cfff1c338176d2911e8f6",
+    "tools/validators/source/validate_web_acquisition_conduct_assessment.py": "sha256:0e899242dad934aa2d4259cfd2c74ee26bec679adb3b60414755dea96863f593"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
+  "prompt_or_contract": "sha256:b64a1c16249fad972c422f82fbb195ae32bbf66f9a7cec87e3de70aac3121983",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive connected-corpus discovery", "GitHub connected repository inspection and publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=398&printed-page=395&card=KFM-P18-INV-100",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=410&printed-page=407&card=KFM-P18-INV-247",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=77&printed-page=74&card=KFM-P18-INV-423",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#title=KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/contracts/source/source_rights_currentness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/contracts/source/source_terms_drift_disposition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/contracts/source/source_activation_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/web-acquisition-conduct-assessment.yml": "CONFIRMED",
+    "contracts/source/web_acquisition_conduct_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-web-acquisition-conduct-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/web_acquisition_conduct_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/web_acquisition_conduct_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_web_acquisition_conduct_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_web_acquisition_conduct_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "source-page-visual-review", "outcome": "PASS", "reason": "Physical pages 398, 410, and 77 / printed pages 395, 407, and 74 were rendered and visually verified."},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Ten deterministic web-acquisition conduct tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-six exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "documentation-metadata-and-link-qa", "outcome": "PASS", "reason": "Both changed Markdown files passed explicit no-network metadata and local-link checks; two missing registry entries were emitted as review-only warnings."},
+    {"gate": "adjacent-validator-suite", "outcome": "PASS", "reason": "Thirty-three source rights-currentness, terms-drift, and activation-decision tests passed."},
+    {"gate": "repository-wide-validation", "outcome": "PASS", "reason": "Eight aggregate validators, 427 schema/contract tests, and 29 subtests passed; the validator registry reported REGISTRY_VALID."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-acquisition-gates-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=398&printed-page=395&card=KFM-P18-INV-100"},
+    {"id": "pass18-proxy-evasion-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=410&printed-page=407&card=KFM-P18-INV-247"},
+    {"id": "pass18-undercover-scraper-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=77&printed-page=74&card=KFM-P18-INV-423"},
+    {"id": "drive-connected-dots-architecture", "validated": true, "evidence_ref": "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T16:21:48Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only WebAcquisitionConductAssessmentCandidate packet. It validates declared route, terms, robots, rate, user-agent, proxy, distribution, agreement-reference, and review-reference coherence without retrieving live terms or robots, making a legal or permission decision, fetching, activating a connector or scheduler, selecting credentials or proxies, writing lifecycle data, deciding evidence or policy, releasing, deploying, publishing, or authorizing public use."
+}

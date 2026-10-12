@@ -1,0 +1,19 @@
+{
+  "object_type": "RuntimeVerificationReceipt",
+  "schema_version": "1.0.0",
+  "receipt_id": "kfm://receipt/runtime-verification/r-minimal-001",
+  "job_id": "job-runtime-001",
+  "artifact_ref": "pmtiles://kansas/hydrology/v1",
+  "manifest_ref": null,
+  "source_url": null,
+  "bytes_processed": 0,
+  "checkpoint_index": 0,
+  "partial_digest": null,
+  "status": "STARTED",
+  "recorded_at": "2026-04-12T18:00:00Z",
+  "prior_receipt_ref": null,
+  "verifier": {
+    "surface": "runtime-worker",
+    "version": "0.1.0"
+  }
+}

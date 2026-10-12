@@ -18,10 +18,10 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - docs/domains/agriculture/CROSS_LANE.md
@@ -34,6 +34,9 @@ notes:
   - Authoritative domain glossary for Agriculture; sibling docs reference this register.
   - DDD framing per Atlas card KFM-P1-IDEA-0049 / KFM-P9-FEAT-0005 + MapLibre v2.1 Appendix B DDD Pattern Crosswalk.
   - All path-shaped and identifier claims are PROPOSED until mounted-repo verification.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Domain Definition (Bounded Context, Ubiquitous Language, Conceptual Model); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -57,7 +60,7 @@ notes:
 > [!IMPORTANT]
 > **What this doc is — and what it is not.** This is the **bounded-context, ubiquitous-language, and conceptual-model** authority for Agriculture. It defines *what the domain is*, *what its terms mean*, *which conceptual building blocks it uses* (entities, value objects, aggregates, services, domain events), and *what invariants must always hold*. It does **not** decide:
 > - the *physical architecture* (sublanes, lifecycle pipeline diagram, trust-membrane placement) → [`ARCHITECTURE.md`](./ARCHITECTURE.md),
-> - the *wire shape* of governed-API envelopes → [`api-contracts.md`](./api-contracts.md),
+> - the *wire shape* of governed-API envelopes → [`api-contracts.md`](API_CONTRACTS.md),
 > - the *placement* of files in the monorepo → [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md),
 > - the *lifecycle phases and gates* → [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md),
 > - the *per-edge cross-lane contracts* → [`CROSS_LANE.md`](./CROSS_LANE.md),
@@ -134,7 +137,7 @@ This document MUST obey the doctrinal stack below, in order. A lower row cannot 
 | Lifecycle invariant | [`lifecycle-law.md`](../../doctrine/lifecycle-law.md) | **CONFIRMED doctrine** |
 | Cite-or-abstain truth posture | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| Corrections are first-class | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| Corrections are first-class | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Domains as bounded contexts | Atlas cards KFM-P1-IDEA-0049 · KFM-P9-FEAT-0005 · KFM-P\{PASS\}-IDEA-\{NNNN\} (`KFM Domains as DDD Bounded Contexts with Context Map Pattern`) | **CONFIRMED doctrine** |
 | DDD Pattern Crosswalk | MapLibre v2.1 Appendix B (`SRC-DDD` + KFM application) | **CONFIRMED doctrine** |
 | DDD building-blocks reference | `DomainDriven_Design_Reference.pdf` (Evans) — paraphrased; KFM doctrine outranks | **CONFIRMED external reference** |
@@ -430,7 +433,7 @@ The Agriculture bounded context has **seven load-bearing invariants**. Any aggre
 | **INV-AG-07** | **Alert-Authority Invariant** | KFM is not an alert authority. Agriculture stress indicators (`DroughtStressIndicator`, `PestStressIndicator`) MUST NOT be framed as alerts, life-safety guidance, or operational instructions. | Publication surface; `validate_no_life_safety_framing`; Atlas §24.9.2. | `DENY` at publication; `ABSTAIN` at AI. |
 
 > [!CAUTION]
-> **The seven invariants are non-negotiable.** They are restated in [`ARCHITECTURE.md`](./ARCHITECTURE.md) §9 (architectural form), [`api-contracts.md`](./api-contracts.md) §6 (envelope-level enforcement), [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) §5 (gate-level enforcement), [`CROSS_LANE.md`](./CROSS_LANE.md) §17 (cross-lane validators), and [`policy/README.md`](./policy/README.md) (policy-level enforcement). **If any sibling weakens an invariant, the sibling is wrong** and this doc governs. `[CONFIRMED — operating contract §47 separation of concerns.]`
+> **The seven invariants are non-negotiable.** They are restated in [`ARCHITECTURE.md`](./ARCHITECTURE.md) §9 (architectural form), [`api-contracts.md`](API_CONTRACTS.md) §6 (envelope-level enforcement), [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) §5 (gate-level enforcement), [`CROSS_LANE.md`](./CROSS_LANE.md) §17 (cross-lane validators), and [`policy/README.md`](./policy/README.md) (policy-level enforcement). **If any sibling weakens an invariant, the sibling is wrong** and this doc governs. `[CONFIRMED — operating contract §47 separation of concerns.]`
 
 [⤴ Back to top](#top)
 
@@ -451,7 +454,7 @@ Domain **policies** (in the DDD sense) are decisions about admissibility, sensit
 | **Correction policy** | Whether a `CorrectionNotice` is processed, and what derivatives invalidate. | `policy/correction/agriculture/` *(PROPOSED)* | `ACCEPTED` / `DENY` / `ERROR` *(workflow)* |
 
 > [!IMPORTANT]
-> **Policy outcomes are not runtime outcomes.** `ALLOW` / `RESTRICT` / `DENY` / `HOLD` are **policy-gate** outcomes recorded on a `PolicyDecision`. They feed but are not identical to **runtime** outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` + optional `NARROWED` / `BOUNDED`). Confusing the two is an [`api-contracts.md`](./api-contracts.md) §4 violation. `[CONFIRMED — operating contract §8 + §21.2.]`
+> **Policy outcomes are not runtime outcomes.** `ALLOW` / `RESTRICT` / `DENY` / `HOLD` are **policy-gate** outcomes recorded on a `PolicyDecision`. They feed but are not identical to **runtime** outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` + optional `NARROWED` / `BOUNDED`). Confusing the two is an [`api-contracts.md`](API_CONTRACTS.md) §4 violation. `[CONFIRMED — operating contract §8 + §21.2.]`
 
 Full policy aspect index lives at [`policy/README.md`](./policy/README.md); this section is the *domain-model view* of policies, not the policy authoring guide.
 
@@ -764,13 +767,13 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 15.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract.
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract.
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract.
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path-only crosswalk.
 - [`docs/domains/agriculture/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — carry-forward register.
 - [`docs/domains/agriculture/CROSS_LANE.md`](./CROSS_LANE.md) — per-edge cross-lane contracts.

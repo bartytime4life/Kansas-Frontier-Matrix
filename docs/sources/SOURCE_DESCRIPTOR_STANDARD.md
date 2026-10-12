@@ -2,12 +2,16 @@
 doc_id: kfm://doc/source-descriptor-standard
 title: Source Descriptor Standard
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: TBD — Docs steward + Source/Catalog subsystem owner
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-10-05
+maintenance_scope: Metadata completeness and local navigation only; substantive standard and authority unchanged.
 policy_label: public
+owning_root: docs/
+responsibility: Describe the draft SourceDescriptor fields and source-role vocabulary without admitting sources or asserting runtime conformance.
+truth_posture: PROPOSED standard; implementation conformance and source admission NEEDS VERIFICATION.
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
@@ -59,13 +63,13 @@ notes:
 - [3. What a SourceDescriptor is](#3-what-a-sourcedescriptor-is)
 - [4. Schema home and naming](#4-schema-home-and-naming)
 - [5. Field standard](#5-field-standard)
-- [6. Source-role vocabulary](#6-sourcerole-vocabulary)
+- [6. Source-role vocabulary](#6-source-role-vocabulary)
 - [7. Rights and terms intake](#7-rights-and-terms-intake)
 - [8. Sensitivity tier mapping](#8-sensitivity-tier-mapping)
 - [9. Temporal model](#9-temporal-model)
 - [10. Citation guidance](#10-citation-guidance)
 - [11. Source admission flow](#11-source-admission-flow)
-- [12. Anti-collapse rule](#12-anticollapse-rule)
+- [12. Anti-collapse rule](#12-anti-collapse-rule)
 - [13. Validation and tests](#13-validation-and-tests)
 - [14. Common pitfalls](#14-common-pitfalls)
 - [15. Related ADRs and open questions](#15-related-adrs-and-open-questions)

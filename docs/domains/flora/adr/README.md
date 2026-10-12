@@ -20,6 +20,9 @@ notes:
   # No corpus evidence sanctions docs/domains/<lane>/adr/. Treat this folder as CONFLICTED until an ADR (ADR-S-02-adjacent) decides domain-local ADR placement.
   # ADR template + triggers are CONFIRMED (Directory Rules §2.4). Flora domain ownership is CONFIRMED (Atlas Ch. 8).
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
+owning_root: docs/
+responsibility: "Documentation for Flora Domain — ADR Folder README; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -290,7 +293,7 @@ This README is done enough to enter the repository when:
 ## 12. Related docs
 
 - [`docs/adr/README.md`](../../../adr/README.md) — **canonical** ADR home and index *(PROPOSED — verify presence)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule *(referenced by Flora schema decisions)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule *(referenced by Flora schema decisions)*
 - [`docs/domains/flora/README.md`](../README.md) — Flora domain landing page *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §2.1 authority order, §2.4 ADR triggers + template, §2.5 conflict handling
 - [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; §23.2 sensitive-domain matrix

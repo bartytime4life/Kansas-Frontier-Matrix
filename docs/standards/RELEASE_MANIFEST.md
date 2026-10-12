@@ -1,59 +1,144 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standard/release-manifest-conformance
-title: ReleaseManifest — External Standards Conformance Dossier
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + release/governance lead>
+title: ReleaseManifest — Repository Profile and Release Boundary
+type: "standard; release-profile-guidance; interoperability-boundary"
+version: v2.0
+status: "draft; repository-grounded; dual-profile; strict-fixture-only; operational-release-hold; non-authoritative"
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — accountable release-profile, policy, security, operations, and independent-review stewards"
 created: 2026-05-24
-updated: 2026-05-24
-policy_label: public
-related: [
-  contracts/v1/release/,
-  schemas/contracts/v1/release/,
-  policy/release/,
-  release/,
-  docs/standards/EVIDENCE_BUNDLE.md,
-  docs/standards/PROV/README.md,
-  docs/standards/DUO_PROFILE.md,
-  docs/standards/MAP_TRUST_STATES.md,
-  docs/standards/SIGNING.md,
-  docs/standards/CANONICALIZATION.md,
-  docs/standards/PMTILES.md,
-  docs/standards/ISO-19115.md,
-  docs/architecture/contract-schema-policy-split.md,
-  docs/doctrine/lifecycle-law.md,
-  docs/doctrine/trust-membrane.md
-]
-tags: [kfm, standard, release-manifest, conformance, jcs, merkle, slsa, dsse, cosign, oci, stac, dcat, governance, rollback]
-notes: [
-  "Topical standards document (UPPERCASE_WITH_UNDERSCORES) per Directory Rules §6.1.a — names a KFM-coined object's external-standards conformance posture, not the object's meaning.",
-  "Object meaning is owned by contracts/v1/release/; machine shape by schemas/contracts/v1/release/; admissibility by policy/release/; release decisions by release/. This file does NOT redefine those.",
-  "Placement parallels docs/standards/EVIDENCE_BUNDLE.md; see §2 Scope Guardrail and Appendix B Placement Rationale."
-]
+updated: 2026-08-19
+policy_label: "repository-facing; release-manifest; standards-guidance; evidence-bound; fail-closed; non-release; non-publication"
+owning_root: docs/
+current_path: docs/standards/RELEASE_MANIFEST.md
+responsibility: >
+  Describe the current repository ReleaseManifest profile, its bounded validation
+  and release-readiness surfaces, and its relationships to external standards
+  without redefining semantic, machine-shape, policy, review, release, correction,
+  rollback, runtime, or publication authority.
+truth_posture: >
+  CONFIRMED same-path placement, draft contract, dual-profile schema, closed
+  PROPOSED_INACTIVE fixture profile, deterministic 21-case no-network validation,
+  read-only workflows, bounded publication-denial dry run, release-policy scaffolds,
+  and operational release hold / PROPOSED external-standard bindings, production
+  profile, signature and attestation verification, reference resolution, policy and
+  review integration, release persistence, correction propagation, rollback
+  execution, and public consumers / UNKNOWN first governed production release,
+  deployed release registry, active public alias, and external interoperability.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: cc52dba82d3b1c62e0a0d97fc49a6d205cf1c5ba
+  target_prior_blob: 67df3a29596401d30abc118f6d442e60274a6fb2
+  standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
+  contract_blob: ce7dc89ff447d76d974afdd802b85a38538d8f48
+  schema_blob: c76cd9bdddb34cf33c8eb62801269553726c5923
+  validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
+  fixture_readme_blob: 6b2b0be8f9c72e2fb31c74c0845a06e8ef5123f2
+  test_blob: eff34352614a0c03c7ff8b326f83fa9699525e98
+  workflow_blob: 91d9a995328f8d162121341ed265fa87781be4e8
+  release_dry_run_blob: 5fed3a16aa0915b9233861048fc6a1e676e0ed8f
+  release_dry_run_workflow_blob: 8f76d1011b80769952a0a6561ed7e5cd963bf8c9
+  canonicalization_blob: dc1a945417e0abf6761ccb4980f03433d8e2ba64
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+external_currentness:
+  access_date: 2026-08-19
+  rfc_8785: "RFC 8785, JSON Canonicalization Scheme"
+  json_schema: "JSON Schema Draft 2020-12"
+related:
+  - ./README.md
+  - ./EVIDENCE_BUNDLE.md
+  - ./CANONICALIZATION.md
+  - ./SIGNING.md
+  - ./PROV.md
+  - ./PROVENANCE.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../architecture/contract-schema-policy-split.md
+  - ../../contracts/release/release_manifest.md
+  - ../../schemas/contracts/v1/release/release_manifest.schema.json
+  - ../../fixtures/release/release_manifest/README.md
+  - ../../tools/validators/release/validate_release_manifest.py
+  - ../../tests/validators/test_validate_release_manifest.py
+  - ../../.github/workflows/release-manifest.yml
+  - ../../tools/release/release_dry_run.py
+  - ../../.github/workflows/release-dry-run.yml
+  - ../../policy/release/README.md
+  - ../../release/README.md
+  - ../../release/manifests/README.md
+tags: [kfm, standards, release-manifest, release, validation, evidence, policy, review, signing, correction, rollback, cite-or-abstain]
+notes:
+  - "v2.0 replaces the May 2026 proposal-era conformance dossier with a current-repository profile and explicit release/publication boundary."
+  - "The strict profile validates deterministic synthetic candidates only; the permissive legacy branch remains visible as compatibility debt."
+  - "Current executable identity uses RFC 8785 JCS plus SHA-256 and the wire grammar sha256:<64-lowercase-hex>; jcs:sha256:<hex> is not current behavior."
+  - "No Merkle tree, BLAKE3 path, JSON-LD/PROV requirement, signature verification, SLSA/DSSE enforcement, OCI/IPFS transport, live policy evaluation, release record, deployment, or publication is created by this page."
+  - "Legacy title, numbered-section, quick-jump, and appendix anchors are retained."
 [/KFM_META_BLOCK_V2] -->
 
-# ReleaseManifest — External Standards Conformance Dossier
+<a id="top"></a>
+<a id="releasemanifest--external-standards-conformance-dossier"></a>
 
-> A single place to answer the question *"which external standards does a KFM `ReleaseManifest` conform to, and how does an external consumer verify a KFM release end-to-end?"* — without redefining the manifest itself.
+# ReleaseManifest — Repository Profile and Release Boundary
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: topical standards document](https://img.shields.io/badge/type-topical--standards--document-informational)](#)
-[![scope: external conformance only](https://img.shields.io/badge/scope-external%20conformance%20only-critical)](#)
-[![governance: cite-or-abstain](https://img.shields.io/badge/governance-cite--or--abstain-blueviolet)](#)
-[![identity: JCS+SHA--256](https://img.shields.io/badge/identity-JCS%2BSHA--256-9cf)](#)
-[![integrity: Merkle root](https://img.shields.io/badge/integrity-Merkle%20root-9cf)](#)
-[![signing: Cosign / DSSE / SLSA](https://img.shields.io/badge/signing-Cosign%20%7C%20DSSE%20%7C%20SLSA-yellowgreen)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> **One-line rule.** A current KFM `ReleaseManifest` is a proposed release-binding contract with a permissive compatibility branch and a closed, deterministic fixture-only candidate profile; neither branch creates evidence, policy, review, release, publication, or public-use authority.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + release/governance lead_ | 2026-05-24 |
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-at-a-glance)
+[![Schema: dual profile](https://img.shields.io/badge/schema-dual%20profile-1f6feb?style=flat-square)](#5-identity-and-canonicalization)
+[![Strict profile: fixture only](https://img.shields.io/badge/strict%20profile-fixture%20only-8250df?style=flat-square)](#8-inclusion-semantics--what-the-manifest-binds)
+[![Policy: unbound scaffolds](https://img.shields.io/badge/policy-unbound%20scaffolds-d97706?style=flat-square)](#10-lifecycle-integration--promotion-rollback-correction-withdrawal)
+[![Operational release: held](https://img.shields.io/badge/operational%20release-held-b42318?style=flat-square)](#12-external-verification-flow)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#3-authority-and-standing)
 
----
+> [!IMPORTANT]
+> **Human-readable standards guidance only.** [`contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md) owns semantic meaning; [`schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) owns machine shape; `policy/`, `release/`, governed evidence/proof/receipt families, validators, workflows, and public delivery each retain their own authority.
 
 > [!CAUTION]
-> **Scope guardrail.** This document is **not** the `ReleaseManifest` reference. It does **not** define the object's meaning, fields, validation rules, promotion gates, or admissibility. Those live in `contracts/v1/release/` (meaning), `schemas/contracts/v1/release/` (shape), `policy/release/` (admissibility), and `release/` (decisions and artifacts). This document only describes how a KFM `ReleaseManifest` aligns with the external standards an interoperability partner or external auditor would check it against. See §2 and Appendix B before adding any content here.
+> **The May 2026 dossier overclaimed current conformance.** The repository does not establish a production ReleaseManifest profile, Merkle construction, BLAKE3 path, JSON-LD/PROV requirement, DSSE/SLSA/Sigstore verification, OCI/ORAS/IPFS distribution, live policy evaluator, authenticated review chain, persisted release, cache invalidation, deployment, or external interoperability certificate.
+
+> [!WARNING]
+> **A valid candidate is not a release.** Schema validity, deterministic identity, a validator `PASS`, a workflow result, a signature-shaped reference, a pull request, a merge, or a GitHub release cannot substitute for source authority, EvidenceBundle support, rights, sensitivity handling, policy, review, correction, rollback, release approval, and governed publication.
+
+## Status at a glance
+
+Evidence snapshot: `main@cc52dba82d3b1c62e0a0d97fc49a6d205cf1c5ba`; prior document blob `67df3a29596401d30abc118f6d442e60274a6fb2`.
+
+| Surface | Current repository evidence | Safe conclusion |
+|---|---|---|
+| Placement | Accepted Directory Rules v2 and the standards-lane README classify this path as human-readable release-manifest profile guidance. | **CONFIRMED `PLACE` at the existing path**; no structural migration. |
+| Semantic contract | The flat contract is draft v0.3, `PROPOSED`, schema-paired, and release-governance-oriented. | Meaning is present but not an accepted production release profile. |
+| Machine shape | Draft 2020-12 schema with a permissive legacy branch and a closed strict branch. | **Dual-profile compatibility surface**, not one uniform maturity level. |
+| Strict profile | `RELEASE_MANIFEST_FIXTURE_V1`, `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, lifecycle `CANDIDATE`. | Deterministic candidate validation only. |
+| Identity | RFC 8785 JCS plus SHA-256 over the strict candidate with stored `id` and `spec_hash` omitted; output uses `sha256:<hex>`. | **CONFIRMED bounded implementation**; no `jcs:` wire prefix and no release-signature proof. |
+| Fixtures and tests | Four valid cases, two schema-negative cases, and fifteen semantic-negative cases; deterministic no-network tests. | **CONFIRMED 21-case polarity**; all data and identities are synthetic. |
+| Validator | Checks bounded input, schema, identity, ordering, reference roles, public-intended prerequisites, time, lineage, and false governance flags. | `PASS` proves only declared candidate relationships. |
+| Dedicated workflow | Read-only workflow invokes focused tests and fixture validation. | CI orchestration exists; the workflow does not assemble or write a release. |
+| Publication-denial dry run | Five synthetic negative mutations remain blocked by the bounded promotion gate. | Denial behavior is exercised; no real candidate, decision, manifest, or publication is created. |
+| Release policy | Release-policy lane contains unbound scaffolds; separate policy profiles remain proposed/inactive. | No live policy allow/deny decision can be inferred. |
+| Release records | `release/` is the canonical append-only decision plane, while candidate assembly and operational execution remain held. | No first governed production ReleaseManifest was established here. |
+| Public effect | No deployed registry, active alias, authenticated release operation, or public consumer was established by the inspected evidence. | **UNKNOWN / NOT ESTABLISHED**; publication effect is none. |
+
+### State separation
+
+```text
+path present
+  != semantic contract accepted
+  != schema valid
+  != strict candidate PASS
+  != references resolved
+  != artifact bytes verified
+  != signatures verified
+  != policy evaluated
+  != review authenticated
+  != promotion authorized
+  != release authorized
+  != publication authorized
+  != public use allowed
+```
+
+The strict profile encodes the last nine authority-bearing states as `false` so fixture validation cannot self-promote.
+
+[Back to top](#top)
 
 ---
 
@@ -81,600 +166,479 @@ notes: [
 
 ## 1. Purpose
 
-CONFIRMED doctrine — **KFM-P7-PROG-0003**: *"When the gate allows promotion to PUBLISHED, it emits a `ReleaseManifest`: a single, signed, hashable JSON object listing every dataset, bundle, and tile archive included in the release."* The manifest is **the** content-addressed binding for a release; consumers (the web client, the catalog harvester, downstream pipelines) bind to it, not to floating "latest" pointers.
+This page has three responsibilities:
 
-The corpus elsewhere ranks the manifest unambiguously: *"every release is itself an `EvidenceBundle` in spirit: signable, gateable, citable."* That positioning puts `ReleaseManifest` directly in the path of multiple external standards: JCS+SHA-256 identity, Merkle content-addressing (sorted-pairwise per `KFM-P5-PROG-0002`), Cosign / Sigstore signing, SLSA / in-toto provenance, DSSE envelopes, OCI / ORAS distribution, STAC / DCAT / ISO 19115 catalog interoperability, SPDX licensing, and CDN cache-invalidation semantics tied to revocation and rollback.
+1. describe the **current repository profile** an implementer or reviewer can inspect;
+2. distinguish implemented bindings from **proposed external-standard relationships**; and
+3. state the evidence required before KFM may claim production conformance, release, publication, or external interoperability.
 
-This dossier collects the external-standards posture in one place so that:
+The current repository contains a useful but intentionally bounded implementation: semantic contract text, a dual-profile JSON Schema, a deterministic strict-candidate validator, 21 synthetic fixture cases, focused no-network tests, a read-only workflow, and a separate publication-denial dry run. Those surfaces improve reviewability without creating release authority.
 
-1. An interoperability partner can read **one document** to know what they need to verify.
-2. An external auditor can read **one document** to know which external standard each field maps to.
-3. KFM contributors have **one document** governing version pins for the release-side external surface.
-4. The corpus open question (KFM-P1-FEAT-0044, KFM-P1-IDEA-0056) — *"What vocabulary should be shared across API, UI, and release manifests?"* — has a release-side anchor that interlocks with the API-side anchor (`docs/standards/MAP_TRUST_STATES.md`) and the bundle-side anchor (`docs/standards/EVIDENCE_BUNDLE.md`).
+The current page is not the canonical ReleaseManifest object definition. It follows the contract, schema, implementation, and release decision plane; it cannot override them.
 
-> [!NOTE]
-> This file is a **topical standards document** in the Directory Rules §6.1.a sense — UPPERCASE_WITH_UNDERSCORES, KFM-coined, sibling to `EVIDENCE_BUNDLE.md`, `MAP_TRUST_STATES.md`, `SENSITIVITY_RUBRIC.md`. It is **not** an external-standard short-name profile (those use UPPERCASE-WITH-HYPHENS — `ISO-19115.md`, `OAI-PMH.md`). See §3 and Appendix B for the placement rationale.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
+<a id="2-scope-guardrail"></a>
+
 ## 2. Scope guardrail — what this doc is NOT
 
-> [!IMPORTANT]
-> If you find yourself adding content that defines fields, validates fields, admits/denies releases, or executes rollback, **stop**. That content belongs in `contracts/`, `schemas/`, `policy/`, or `release/`, not here.
+### In scope
 
-| If the content is about… | …it lives at | …not here |
+- current contract, schema, fixture, validator, test, workflow, policy, and release-root posture;
+- the exact legacy-versus-strict compatibility boundary;
+- identity, artifacts, references, time, lineage, rights, sensitivity, review, attestation, correction, and rollback relationships;
+- bounded external-standard relationships and non-conformance statements;
+- finite validation outcomes and what they do not prove;
+- graduation, migration, correction, rollback, and consumer evidence.
+
+### Out of scope
+
+- changing ReleaseManifest semantic meaning or machine shape;
+- accepting a production profile or deprecating legacy instances;
+- activating policy, signing, external transport, registry, runtime, or public serving;
+- resolving real EvidenceRefs, SourceDescriptors, policy decisions, review records, receipts, proofs, or attestations;
+- assembling a release candidate, issuing a decision, changing an alias, purging a cache, deploying, or publishing;
+- choosing singular/plural release-record lanes or domain-schema migration targets;
+- accepting an ADR or changing repository settings.
+
+### Authority map
+
+| Question | Owning surface | This page may do |
 |---|---|---|
-| What a `ReleaseManifest` field **means** | `contracts/v1/release/release_manifest.md` (PROPOSED home) | this doc |
-| The **machine shape** of a `ReleaseManifest` (JSON Schema) | `schemas/contracts/v1/release/release_manifest.schema.json` (PROPOSED home) | this doc |
-| The OPA rules that **admit, deny, or restrict** a release | `policy/release/` (PROPOSED home) | this doc |
-| The **promotion-gate sequence** and reviewer matrix | `policy/release/` + `release/` README | this doc |
-| The **`RollbackCard`** object | `contracts/v1/release/rollback_card.md` + `schemas/contracts/v1/release/` | this doc |
-| **`CorrectionNotice`** object meaning and workflow | `contracts/v1/correction/` + `policy/correction/` | this doc |
-| Actual **release decisions and artifacts** (per-release files) | `release/decisions/`, `release/manifests/`, `release/rollback/` (PROPOSED homes) | this doc |
-| The **map-asset family** (`LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `PMTiles` sidecar) | their own `contracts/v1/` + `schemas/contracts/v1/` homes; see `docs/standards/PMTILES.md` | this doc |
-| **CDN configuration**, purge APIs, cache TTLs | `infra/` | this doc |
-| **Tests and fixtures** | `tests/standards/release/`, `fixtures/standards/release/` | this doc |
-| Tutorials and how-tos for release authors | `docs/runbooks/release/` (PROPOSED home) | this doc |
+| What does `ReleaseManifest` mean? | [`contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md) | Report the current draft meaning and limits. |
+| What machine representation is valid? | [`schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) | Summarize exact profile constraints. |
+| What candidate checks exist? | Validator, fixtures, tests, and workflow | Name the checked boundary and finite outcomes. |
+| What is admissible? | Accepted policy source, evaluator, and governed decision records | Expose the current policy hold; never infer allow. |
+| Who reviewed or approved? | Authenticated review and release authority | State what remains unverified. |
+| Which release/correction/rollback applies? | [`release/`](../../release/README.md) and its accepted record lanes | Link and explain; never issue a decision. |
+| Where published payloads live | Governed `data/published/` and approved delivery | Deny direct publication by path or prose. |
+| Which external standards apply | Upstream specifications plus an accepted KFM profile | Record relationships; do not manufacture conformance. |
 
-What this document **does** own:
-
-- The list of external standards a `ReleaseManifest` conforms to or crosswalks against.
-- The version pin per external standard.
-- The conformance level KFM targets per external standard.
-- The integration touchpoint (which external term maps to which `ReleaseManifest` concept — without redefining the concept).
-- The external-verification recipe — what an outside consumer does to verify a KFM release end-to-end.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 3. Authority and standing
 
-| Aspect | Value | Label |
+| Axis | Current result | Boundary |
 |---|---|---|
-| Document class | KFM-coined **topical standards document** | CONFIRMED per Directory Rules §6.1.a |
-| Canonical path | `docs/standards/RELEASE_MANIFEST.md` | PROPOSED — placement rationale in Appendix B |
-| Primary doctrine anchor | **KFM-P7-PROG-0003** — "ReleaseManifest as the publishable artifact" | CONFIRMED |
-| Companion doctrine | KFM-P1-IDEA-0056 (Promotion as governed state transition), KFM-P5-PROG-0002 (MerkleManifest release content-addressing layer), KFM-P1-IDEA-0059 (Watcher output enters WORK_CANDIDATE, not PUBLISHED) | CONFIRMED |
-| MapLibre report anchor | `MapReleaseManifest` in `Master_MapLibre_Components-Functions-Features` Object-Index — "Canonical publication envelope binding artifacts, evidence_refs, rights, sensitivity, release_state, policy result, attestations, correction_lineage and rollback" | CONFIRMED |
-| Required content (per Atlas object-family table) | `release_id, contents[], digests, evidence_refs[], rollback_target, time` — triggered by PUBLISHED transition | CONFIRMED |
-| Pass-15 addendum | Release index entries carry `dataset_id, spec_hash, run_receipt, SPDX, timestamp, evidence bundle digest` | CONFIRMED |
-| Pass-32 corroboration | KFM-P5-PROG-0002 (Merkle manifest), KFM-P10-PROG-0006 (DSSE/SLSA attestations), KFM-P13-PROG-0011 (SLSA in-toto predicate), ML-058-031 (ReleaseManifest binds PMTiles to DSSE), ML-058-032 (Public runtime rule for ReleaseManifest) | CONFIRMED |
-| Authority **NOT** held by this doc | Object meaning, machine shape, admissibility, promotion-gate sequence, per-release artifacts, rollback procedure, map-asset family | CONFIRMED (Directory Rules §6.1.a) |
+| Document placement | `docs/standards/RELEASE_MANIFEST.md` | Human-readable profile and interoperability guidance only. |
+| Review route | `@bartytime4life` through repository-default CODEOWNERS | GitHub routing, not independent release approval. |
+| Semantic owner | `contracts/release/release_manifest.md` | Draft meaning; no production adoption by this page. |
+| Shape owner | `schemas/contracts/v1/release/release_manifest.schema.json` | Dual-profile Draft 2020-12 shape. |
+| Executable proof | Fixture validator, tests, and read-only workflows | Synthetic candidate proof only. |
+| Policy owner | `policy/release/` plus accepted evaluator/decision contracts | Current lane is scaffolded and unbound. |
+| Release owner | `release/` | Append-only release, correction, withdrawal, rollback, and signature decision records. |
+| Payload owner | Governed data/artifact stores | Manifest references payloads; it does not store them. |
+| Public authority | Governed release and delivery | No current public effect from this document or fixture profile. |
 
-> [!NOTE]
-> Directory Rules §6.1.a names "release manifest patterns" explicitly alongside `EvidenceBundle` and "the trust membrane" as things `docs/standards/` does **not** own for object meaning. The placement rationale in Appendix B walks the scoping commitment that keeps this file's path legitimate.
+The same-path update is editorial and semantic reconciliation within the accepted standards lane. It creates no new root, parallel ReleaseManifest definition, generated mirror, compatibility writer, or release record.
 
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 4. External-standards conformance matrix
 
-The matrix below is the **principal payload** of this document. Each row names an external standard, the KFM `ReleaseManifest` concept that touches it, the conformance level KFM targets, and where to look in the corpus for the doctrine anchor. PROPOSED — every implementation-level claim (Pinned version, Conformance level) NEEDS VERIFICATION against mounted-repo evidence (no mounted repo this session).
+The legacy heading is retained. The table now records **relationship and evidence**, not unsupported certification.
 
-| External standard | KFM touchpoint | Conformance level | Pinned version | Doctrine anchor |
-|---|---|---|---|---|
-| **RFC 8785 — JSON Canonicalization Scheme (JCS)** | Canonical byte form of the manifest prior to `spec_hash` computation. | **CONFORMS** (default canonicalization) | NEEDS VERIFICATION per policy-bundle release | C1-02, C8-05 |
-| **SHA-256 (FIPS 180-4)** | Digest over JCS bytes (manifest `spec_hash` = `jcs:sha256:<hex>`); also default Merkle leaf/node hash. | **CONFORMS** | n/a (algorithm) | C1-02, KFM-P5-PROG-0002 |
-| **BLAKE3** | Permitted alternate digest for high-throughput Merkle layers (PMTiles sidecar precedent KFM-P32-PROG-0014). | **CONFORMS, alternate** | n/a | KFM-P5-PROG-0002 tension |
-| **Merkle (sorted-pairwise)** | File-set integrity root over all release contents; KFM-P5-PROG-0002 specifies sorted-pairwise, **not** RFC 6962. | **CONFORMS, KFM-pinned variant** | sorted-pairwise SHA-256 — NEEDS ADR per KFM-P5-PROG-0002 | KFM-P5-PROG-0002 |
-| **W3C JSON-LD 1.1** | If the manifest is published as JSON-LD (it MAY be), JSON-LD semantics apply. | **CONFORMS, optional** | JSON-LD 1.1 | C8-04 family |
-| **W3C PROV-O** | Per-content provenance fragments threaded through `evidence_refs[]`; `prov:wasGeneratedBy` round-trip to `RunReceipt`. | **CONFORMS, REQUIRED for content provenance** | NEEDS VERIFICATION; profile in `docs/standards/PROV/` | C8-03, KFM-P26-PROG-0013 |
-| **Sigstore / Cosign** | Keyless signing of the manifest's content-addressed digest; transparency-log entry in Rekor. | **CONFORMS, default** | Cosign current; OIDC issuer allowlist NEEDS VERIFICATION | C1-03 |
-| **DSSE (Dead Simple Signing Envelope)** | Envelope format for Cosign signatures over the manifest and over content attestations. | **CONFORMS** | DSSE v1 | C1-03, KFM-P10-PROG-0006, ML-058-031 |
-| **SLSA (Supply-chain Levels for Software Artifacts)** | Per-content `slsaprovenance` predicate attesting builder, materials, invocation; aggregated into the manifest's `attestations[]`. | **CONFORMS, target level NEEDS DECISION (1 / 2 / 3)** | SLSA target NEEDS VERIFICATION | C1-04, KFM-P13-PROG-0011 |
-| **in-toto** | Predicate format underneath SLSA provenance; same DSSE envelope. | **CONFORMS** | in-toto attestation framework v1 | C1-04, KFM-P10-PROG-0006 |
-| **Rekor (Sigstore transparency log)** | Public append-only log of signatures; Rekor entry IDs recorded in `attestations[]` slot. | **CONFORMS** | Rekor current | C1-03 |
-| **OCI Image Spec 1.x / ORAS** | Optional content-addressed distribution: manifest may be published as an OCI artifact (KFM-P1-PROG-0041) alongside the JSON file. | **CONFORMS, optional transport** | OCI 1.x — NEEDS VERIFICATION pin | C4-04 family, KFM-P32-PROG (atlas Pass-32 OCI/ORAS rows) |
-| **OGC STAC 1.x** | STAC catalog items reference release contents and (PROPOSED) the manifest itself via `rel:attestation` (KFM-P7-PROG-0001). | **CONFORMS, with KFM extension** | STAC 1.x — NEEDS VERIFICATION pin | KFM-P7-PROG-0001 |
-| **W3C DCAT v3** | `dcat:Dataset` / `dcat:Distribution` records mirror release contents; `dcat:Distribution` may carry the manifest spec_hash. | **CONFORMS** | DCAT v3 | KFM-P10-PROG-0006 Pass-32 addendum |
-| **ISO 19115** | Geographic-metadata crosswalk reached via DCAT, not directly bound to the manifest. | **CONFORMS, indirect** | ISO 19115-1:2014 + Amd 2:2020 — NEEDS VERIFICATION pin | `docs/standards/ISO-19115.md` |
-| **SPDX (license expressions)** | Per-content `rights_spdx` field on release index entries (Pass-15 addendum) — e.g., `CC0-1.0`, `CC-BY-4.0`. | **CONFORMS** | SPDX License List current — NEEDS VERIFICATION pin | C1-01, Pass-15 addendum |
-| **SPDX or CycloneDX SBOM** | SBOM produced at build time; referenced from `attestations[]` via `RunReceipt`. | **CONFORMS, SBOM format TBD** | NEEDS DECISION | ML-058-031, Master MapLibre v1.5/v2.1 |
-| **RFC 7234 — HTTP Caching** | Cache headers and Cache-Control semantics for published artifacts referenced by the manifest. | **CONFORMS** | RFC 7234 | C6-08 |
-| **CDN cache-invalidation (vendor-specific)** | Purge APIs triggered on release withdrawal / rollback / correction. | **CONFORMS, vendor-neutral** | n/a (per deployment) | C6-08, ML-M-007 |
-| **OpenLineage** | Optional lineage facets on `RunReceipt`s included by reference. | **CONFORMS** | OpenLineage 1.x — NEEDS VERIFICATION pin | C1-05 |
+| External standard or practice | Current repository binding | Current evidence | Safe posture |
+|---|---|---|---|
+| RFC 8785 JCS | Strict-candidate identity subject is canonicalized by the shared hashing package. | Validator recomputes identity; tests prove deterministic replay and semantic sensitivity. | **Implemented for the bounded strict profile.** |
+| SHA-256 | Strict candidate `spec_hash`, `id`, and artifact digests use `sha256:<64-lowercase-hex>`. | Schema patterns and shared hashing implementation. | **Implemented grammar and computation; not signature or release proof.** |
+| JSON Schema Draft 2020-12 | Paired schema declares the 2020-12 dialect. | Schema meta-validation is exercised in tests. | **Implemented machine-shape dialect.** |
+| Merkle trees | No `merkle_root`, tree variant, leaf rule, proof object, or validator exists in the strict profile. | Absent from paired schema and validator. | **Not implemented; design lineage only.** |
+| BLAKE3 | No allowed digest grammar or implementation in this profile. | Artifact digests are SHA-256 only. | **Not implemented.** |
+| JSON-LD / PROV-O / PAV | No JSON-LD context or PROV field is part of the strict profile. | Current profile carries opaque refs and a RunReceipt ref. | **Relationship proposed; no ReleaseManifest conformance claim.** |
+| DSSE / Sigstore / Cosign / Rekor | Strict profile carries opaque `attestation_refs`; `signatures_verified` is fixed to `false`. | No release-manifest signature verifier or trusted-identity policy in this slice. | **Not operationally integrated.** |
+| SLSA / in-toto | No predicate shape, subject binding, builder policy, or verification path in this profile. | Only opaque attestation references are available. | **Proposed relationship; no target level established here.** |
+| SPDX / CycloneDX | Release scope uses coarse rights states; no SPDX expression or SBOM field is defined. | Schema enums are `APPROVED`, `RESTRICTED`, or `UNKNOWN`. | **No SPDX/SBOM conformance in the strict profile.** |
+| STAC / DCAT / ISO 19115 | Strict profile exposes opaque `catalog_refs`; no host-record mapping or validator is bound. | Catalog refs remain unresolved and unauthenticated. | **Interoperability relationship only.** |
+| OpenLineage | RunReceipt may be referenced, but no OpenLineage record is required or verified. | Separate telemetry profiles remain bounded and inactive. | **Not a ReleaseManifest conformance requirement.** |
+| OCI / ORAS / IPFS | No transport field, registry client, media-type profile, or publish workflow exists in this slice. | Strict profile validates local JSON candidates only. | **Not implemented.** |
+| HTTP caching / CDN invalidation | No cache operation or result field exists in the strict profile. | Correction and rollback refs are declarative only. | **Runtime/release follow-up, not profile conformance.** |
 
 > [!IMPORTANT]
-> "Conformance level" in this table is a KFM target, not a third-party assessment. None of these claims have been independently audited; the column is a contract KFM commits to honor, not a certificate.
+> A standards relationship becomes a conformance claim only when a named versioned KFM profile, machine shape, implementation, positive and negative fixtures, producer, consumer, and reviewed release scope establish it. A standards page or opaque reference is insufficient.
 
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 5. Identity and canonicalization
 
-CONFIRMED doctrine — Pass-10 C1-02:
+### 5.1 Legacy branch
 
-> *"The `spec_hash` for a dataset entry, model spec, contract, or evidence bundle is computed by canonicalizing the JSON via RFC 8785 JCS (JSON Canonicalization Scheme) and then taking SHA-256 over the canonical bytes; it is recorded as `jcs:sha256:<hex>`."*
+The compatibility branch requires only `id`, permits optional `spec_hash` and `version`, and allows additional properties. It preserves old scaffold compatibility but does not establish deterministic identity, completeness, signing readiness, or release fitness.
 
-The `ReleaseManifest` is itself a JSON object that **MUST** carry its own `spec_hash`. PROPOSED rule: the manifest is the union of three nested integrity claims, **all three of which must be reproducible** from the published bytes alone:
+### 5.2 Strict fixture branch
 
-| Layer | What it identifies | How it is computed |
-|---|---|---|
-| **Manifest spec_hash** | The manifest object's logical identity. | JCS over the manifest's JSON; SHA-256 over the canonical bytes; recorded as `jcs:sha256:<hex>` at top level of the manifest. |
-| **Per-content digests** | Each entry in `contents[]` carries the included artifact's own digest (`jcs:sha256:` for JSON; `sha256:` or `blake3:` for binary; `oci://...@sha256:...` for OCI artifacts). | Per the included artifact's own profile; mirrored from the artifact's `RunReceipt`. |
-| **Merkle root** | The file-set integrity across the release. | Sorted-pairwise Merkle (KFM-P5-PROG-0002 PROPOSED variant) over the per-content digests; root stored on the manifest. |
+For `RELEASE_MANIFEST_FIXTURE_V1`:
 
-> [!WARNING]
-> The manifest's `spec_hash` and its Merkle root are **not** the same value. The `spec_hash` proves *"this manifest JSON is identical"*; the Merkle root proves *"these contents are identical."* A consumer that records only one is recording only half the release.
+```text
+identity_subject = complete candidate minus stored id and spec_hash
+spec_hash        = SHA-256(RFC 8785 JCS(identity_subject))
+id               = "release-manifest:" + first 24 digest hex characters
+```
 
-### 5.1 Canonicalization choice
+Current wire grammar:
 
-The release-side canonicalization choice MUST match the bundle-side choice documented at `docs/standards/EVIDENCE_BUNDLE.md` §5 — **JCS by default**, URDNA2015 reserved for the narrow RDF-semantic case. The full decision matrix lives at `docs/standards/CANONICALIZATION.md` (PROPOSED, not yet authored — Pass-10 C1-02 expansion direction).
+```text
+sha256:<64 lowercase hexadecimal characters>
+```
 
-### 5.2 Cadence
+The validator rejects mismatched stored identity and tests prove that changing meaning-bearing candidate content changes the digest.
 
-Open per KFM-P7-PROG-0003: *"What is the cadence? Daily, weekly, on-demand? The corpus implies on-demand."* PROPOSED: cadence is **on-demand**, triggered by promotion gate, not by a clock. A clock-driven cadence is permitted for operational map releases (e.g., a daily streamflow snapshot) but **MUST NOT** be the default for atlas-class releases.
+> [!CAUTION]
+> The current implementation does **not** emit `jcs:sha256:<hex>`. [`CANONICALIZATION.md`](./CANONICALIZATION.md) records `jcs:sha256:` as a proposed migration target rather than current wire behavior.
 
-[Back to top](#quick-jump)
+### 5.3 What identity does not prove
+
+A matching digest does not resolve references, verify artifact bytes or signatures, evaluate policy, authenticate review, authorize promotion, record release state, publish a carrier, or prove factual correctness. Identity is one prerequisite in a larger governed chain.
+
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 6. Content addressing and Merkle integrity
 
-CONFIRMED — KFM-P5-PROG-0002: *"Catalog closure with attestations binds the artifact to its lineage; Merkle binds the file set to a single root, which is what enables partial-dataset proofs, cross-version verification, and downstream tamper detection without re-fetching the whole release."*
+The current strict profile binds each artifact through:
 
-### 6.1 Merkle variant in use
+- an opaque stable `artifact_ref`;
+- an exact SHA-256 digest;
+- a media type;
+- a bounded role;
+- deterministic ordering and uniqueness; and
+- `artifact_count` parity.
 
-PROPOSED — pending ADR per KFM-P5-PROG-0002 tension:
+That is useful artifact-set integrity metadata. It is **not** a Merkle tree or a proof of fetched bytes.
 
-| Aspect | KFM choice | Notes |
-|---|---|---|
-| **Tree construction** | Sorted-pairwise binary Merkle | NOT RFC 6962 (Certificate Transparency Merkle). Choice is deterministic but format **MUST be pinned by ADR** before downstream verifiers proliferate. |
-| **Leaf hash** | SHA-256 over the canonical per-content digest string | BLAKE3 considered for high-throughput cases (PMTiles sidecar precedent); algorithm of record is SHA-256 until ADR says otherwise. |
-| **Sort key** | Lexicographic byte order over canonical content path | Reproducibility depends on stable path normalization. |
-| **Empty release** | Forbidden — a `ReleaseManifest` with `contents[] == []` is invalid | Promotion gate fails closed. |
+### Current non-effects
 
-> [!IMPORTANT]
-> The corpus is explicit (KFM-P5-PROG-0002 tension): *"This choice is deterministic but the format should be pinned in an ADR."* Until that ADR exists, this section is the canonical statement of intent. A consumer who computes the Merkle root differently from the rules above will get a different root for the same release.
+The profile does not define:
 
-### 6.2 Merkle scope
+- a manifest-byte digest distinct from `spec_hash`;
+- a Merkle root, leaf encoding, node encoding, sort key, odd-node rule, or partial proof;
+- BLAKE3 or algorithm negotiation;
+- content fetching, byte recomputation, registry resolution, or transport equivalence;
+- immutable storage or public distribution.
 
-Open per KFM-P5-PROG-0002: *"Should the Merkle manifest cover ALL files in `data/published/<collection>/<version>/`, or only the canonical artifact files (excluding receipts and attestations, which are Merkle-secured separately)?"* The corpus implies the former.
+### Graduation requirements
 
-PROPOSED until ADR: the Merkle root covers **all canonical artifact files** referenced by `contents[]`. Receipts, attestations, and signatures are **referenced by digest** in `contents[]` entries and `attestations[]` slots, so they are Merkle-secured transitively. Including them in the Merkle proper would create a circular dependency at sign time.
+A future Merkle or multi-algorithm profile must define the exact hash domain, byte encoding, algorithm/version, ordering, duplicate handling, empty-set behavior, proof format, resource limits, compatibility migration, correction semantics, consumers, and deterministic cross-implementation tests. It must not be introduced by prose alone.
 
-### 6.3 Distribution
-
-A `ReleaseManifest` may be distributed as:
-
-1. **A plain JSON file** at a stable URL under `data/published/`.
-2. **An OCI artifact** in a registry (`oci://<registry>/<repo>@sha256:<hex>`) per the Pass-32 SRC-P32-001 OCI/ORAS/Cosign artifact-publication evidence.
-3. **An IPFS object** when the deployment topology calls for it.
-
-All three transports MUST resolve to **byte-identical** manifest content when the underlying release is the same; the identity is the `spec_hash`, not the transport URL.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 7. Signing and attestation
 
-CONFIRMED doctrine — Pass-10 C1-03 (Cosign keyless), C1-04 (SLSA / in-toto), Pass-32 KFM-P10-PROG-0006 (DSSE/SLSA attestations), ML-058-031 (ReleaseManifest binds PMTiles to DSSE provenance receipts).
+The strict profile carries `attestation_refs`, but it does not define attestation objects or verify them. Its governance object requires:
 
-### 7.1 The three-layer manifest signing stack
-
-```mermaid
-flowchart TB
-  subgraph Layer1["Layer 1 — Identity"]
-    A[JCS canonicalize manifest]
-    B[SHA-256]
-    M[Sorted-pairwise Merkle over contents]
-    A --> B
-    B --> C[manifest.spec_hash<br/>jcs:sha256:HEX]
-    M --> R[manifest.merkle_root<br/>sha256:HEX]
-  end
-
-  subgraph Layer2["Layer 2 — Signature"]
-    D[cosign sign manifest]
-    E[Fulcio cert<br/>via OIDC]
-    F[Rekor entry id]
-    D --> E
-    D --> F
-  end
-
-  subgraph Layer3["Layer 3 — Attestation"]
-    G[SLSA release-level predicate]
-    H[in-toto Statement]
-    I[DSSE envelope]
-    J[cosign attest --predicate]
-    G --> H --> I --> J
-  end
-
-  C --> D
-  R --> D
-  C --> G
-  R --> G
-  J --> K[manifest.attestations[] slot]
-  F --> K
-
-  style C fill:#fff4cc,stroke:#b58900
-  style R fill:#fff4cc,stroke:#b58900
-  style K fill:#d9eaff,stroke:#2c5282
+```text
+signatures_verified = false
 ```
 
-PROPOSED — diagram reflects C1-02 / C1-03 / C1-04 / KFM-P5-PROG-0002 / KFM-P10-PROG-0006 / ML-058-031 in combination. Tooling pins NEED VERIFICATION.
+The current validator never dereferences an attestation, checks a DSSE envelope, verifies a cryptographic signature, authenticates an OIDC identity, queries a transparency log, evaluates a builder policy, or binds an SBOM/SLSA predicate to artifact bytes.
 
-### 7.2 What the manifest's `attestations[]` slot carries
+### Required future closure
 
-PROPOSED — implementation NEEDS VERIFICATION against `contracts/v1/release/release_manifest.md`.
+Production signing requires at least:
 
-| Attestation kind | What it attests | Standard |
-|---|---|---|
-| `cosign` envelope over the manifest | The manifest digest was signed by the named identity, recorded in Rekor. | Cosign + DSSE + Rekor |
-| `slsaprovenance` over the release | The release was built by the named builder, with the named materials, at the named invocation. | SLSA + in-toto + DSSE |
-| `sbom` per included artifact (by reference) | The SBOM of the build environment that produced the artifact. | SPDX or CycloneDX |
-| `evidence_bundle` reference per content (by digest) | Each content has an `EvidenceBundle` resolvable to its `RunReceipt`. | KFM-internal; see `EVIDENCE_BUNDLE.md` |
-| `correction_lineage` (when applicable) | The release supersedes a prior release and references its `CorrectionNotice`. | KFM-internal; see §10 |
+1. an accepted signed-subject and canonical-byte definition;
+2. an accepted envelope and media type;
+3. signer identity and key/trust-root policy;
+4. offline, unavailable-service, revocation, rotation, and compromise behavior;
+5. deterministic positive and negative fixtures;
+6. cryptographic verification code and bounded diagnostics;
+7. authenticated reviewer and separation-of-duties checks;
+8. correction, withdrawal, rollback, and historical verification behavior; and
+9. release consumers that reject unverifiable signatures without treating signatures as truth.
 
-### 7.3 Keyless-vs-keyed posture
+[`SIGNING.md`](./SIGNING.md) remains useful design lineage, but its draft normative language is not evidence that the ReleaseManifest path currently implements DSSE, Sigstore, SLSA, in-toto, or Rekor.
 
-CONFIRMED (C1-03): keyless via Sigstore is the **default**; a pinned key pair is the **air-gapped fallback**. The release-side signing posture is identical to the bundle-side posture; the full dual-mode policy and the OIDC-issuer allowlist live at `docs/standards/SIGNING.md` (PROPOSED, not yet authored). For releases specifically, the OIDC issuer **MUST** be one of the documented build-platform identities; ad-hoc developer identities are prohibited from signing releases.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 8. Inclusion semantics — what the manifest binds
 
-CONFIRMED — Atlas object-family table:
+The contract owns semantic meaning. The table below summarizes the current strict candidate shape without expanding it.
 
-> *"`ReleaseManifest`: Records the contents, version, signatures, and rollback target for a release. Required content: `release_id, contents[], digests, evidence_refs[], rollback_target, time`. Triggered by PUBLISHED transition."*
-
-CONFIRMED — Master MapLibre Object-Index:
-
-> *"`MapReleaseManifest / ReleaseManifest`: Canonical publication envelope binding artifacts, evidence_refs, rights, sensitivity, release_state, policy result, attestations, correction_lineage and rollback."*
-
-This document does **not** specify the field shape (that's the schema's job). It documents the **external-standards binding** each conceptual slot carries.
-
-### 8.1 Conceptual slots and their external bindings
-
-| Slot | External binding | Notes |
+| Field family | Current strict-profile behavior | Authority limit |
 |---|---|---|
-| `release_id` | KFM-internal; no external standard. | Stable, content-addressable. |
-| `spec_hash` | JCS + SHA-256 — see §5. | The manifest's own identity. |
-| `merkle_root` | Sorted-pairwise Merkle — see §6. | The file-set's integrity root. |
-| `contents[]` entries | Per-entry: `dataset_id`, per-content `spec_hash`, `run_receipt` ref, `evidence_bundle` ref, `rights_spdx` (SPDX), `timestamp` (ISO 8601). | Pass-15 addendum. |
-| `evidence_refs[]` | Resolves to `EvidenceBundle` per `docs/standards/EVIDENCE_BUNDLE.md`; carries PROV-O fragments per `docs/standards/PROV/`. | Required for every content with admissible-evidence weight. |
-| `attestations[]` | DSSE envelopes per §7; each entry carries a `type` (cosign / slsaprovenance / sbom / evidence_bundle / correction_lineage). | Cosign DSSE entries are themselves signed; Rekor entry IDs included. |
-| `rights_status` | SPDX-aligned per entry; aggregate posture at manifest level. | Aggregate is the most-restrictive across entries. |
-| `sensitivity` | Sensitivity rubric tier per entry (see `SENSITIVITY_RUBRIC.md` PROPOSED); aggregate tier at manifest level. | Same most-restrictive aggregation rule. |
-| `release_state` | One of: `current`, `withdrawn`, `superseded`. | Drives `MAP_TRUST_STATES` `verified` / `withdrawn` mapping per §10. |
-| `policy_result` | `PolicyDecision` summary across the gates that admitted this release. | Full decision lives in `release/decisions/`. |
-| `promotion_decision` | Reference to `PromotionDecision` (KFM-P1-IDEA-0056). | Records the reviewer chain. |
-| `correction_lineage` | Reference to prior release(s) this one corrects; references the `CorrectionNotice`. | Empty for an originating release. |
-| `rollback_target` | Reference to the previous `ReleaseManifest` the system rolls back to on failure. | Required field. See §10. |
-| `cache_invalidation` | List of cache-purge actions to execute on `verified → withdrawn` / `verified → superseded` transitions. | Vendor-neutral; binds RFC 7234 semantics + CDN-specific purge APIs. |
-| `time` | ISO 8601 timestamp. | Required. |
+| Profile identity | `ReleaseManifest`, schema `1.0.0`, `PROPOSED_INACTIVE`, `FIXTURE_ONLY`. | Declares candidate maturity only. |
+| Release identity | Content-derived candidate `id`, `spec_hash`, `release_id`, version, and title. | Not a persisted release record. |
+| Lifecycle | `lifecycle_state: CANDIDATE`; release state `CANDIDATE`, `HELD`, or `DEGRADED`. | No `RELEASED` state exists in this fixture profile. |
+| Artifacts | Nonempty sorted unique refs with SHA-256 digest, media type, and role. | Payload bytes are not embedded or fetched. |
+| Source/evidence | SourceDescriptor and EvidenceBundle refs; evidence refs require matching `EVIDENCE_BUNDLE` artifact entries. | References remain unresolved and unauthenticated. |
+| Decisions/review | Policy, promotion, and review refs. Public-intended candidates require all three families. | Presence does not prove validity, approval, or authority. |
+| Catalog/proof/receipt/attestation | Separate arrays preserve object-family distinctions. | No referenced object is validated by this profile. |
+| Release scope | Audience, rights, sensitivity, generalization, and transform receipts. | Declared posture only; policy remains separate. |
+| Time | Assembly time and nullable effective interval. | Does not encode every observation, review, release, correction, or withdrawal time. |
+| Lineage | Previous manifest, correction, withdrawal, and rollback refs. | No transition or rollback is executed. |
+| Provenance | RunReceipt ref and fixed validator implementation ref. | No process, source, or artifact is authenticated. |
+| Governance | Nine authority-bearing flags fixed to `false`. | Prevents self-authorization. |
 
-> [!CAUTION]
-> The shape of these fields is **not** this document's authority — it is the contract and schema's. The mapping above identifies the **external standards** each slot binds to. If the schema renames a field, the binding follows the schema; this dossier follows the schema, not the other way around.
+### Fail-closed semantic checks
 
-[Back to top](#quick-jump)
+The validator rejects or flags:
+
+- noncanonical reference or artifact ordering;
+- duplicate or cross-role-collapsed references;
+- floating `latest` references;
+- artifact-count and EvidenceBundle-artifact mismatch;
+- incoherent effective time;
+- correction without a predecessor;
+- public audience without approved rights, acceptable sensitivity, evidence, policy, promotion, and review refs;
+- required transformation without generalization and transform receipts; and
+- any governance flag that is not `false`.
+
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 9. Catalog interoperability — STAC, DCAT, ISO 19115
 
-A `ReleaseManifest` is reached **through** catalog records as well as referenced **by** them. Three external standards govern the reach.
+The strict profile exposes `catalog_refs` as sorted, unique, opaque references. It does not identify a catalog vocabulary, validate a STAC/DCAT/ISO record, compare extents or time, enforce source role, or prove catalog/release closure.
 
-### 9.1 STAC integration
-
-CONFIRMED (KFM-P7-PROG-0001 *STAC attestation hook*): STAC items SHOULD expose a `rel:attestation` link directly to the release-side artifact whose `spec_hash` certifies them — that artifact is the relevant `EvidenceBundle`, and the `EvidenceBundle` is in turn referenced by the `ReleaseManifest.contents[]` entry for that dataset. So a STAC client following two link relations reaches the `ReleaseManifest`:
+A future catalog binding must keep these states separate:
 
 ```text
-STAC Item ──rel:attestation──▶ EvidenceBundle ──evidence_refs──▶ ReleaseManifest
+ReleaseManifest candidate shape
+  != catalog record valid
+  != catalog projection agrees
+  != source/evidence closed
+  != release approved
+  != public distribution active
 ```
 
-The `rel:attestation` link relation is not currently a standard STAC link relation; KFM uses it under a controlled namespace pending submission through the STAC extension process.
+Any STAC, DCAT, ISO 19115, PROV, or domain-catalog crosswalk must pin the host profile and version, mapping, identifiers, cardinality, fields dropped or transformed, rights/sensitivity representation, correction propagation, reverse-reconstruction limits, and producer/consumer tests.
 
-### 9.2 DCAT integration
+Domain-specific `release_manifest.schema.json` scaffolds also exist in several domain lanes. Their permissive `id`-only shapes are not automatically aliases or specializations of the shared strict profile. Reconciliation requires explicit family mapping and migration evidence.
 
-PROPOSED — Pass-32 SRC-P32 atlas addendum: `dcat:Dataset` and `dcat:Distribution` records mirror per-release content. A `dcat:Distribution` MAY carry the `ReleaseManifest` `spec_hash` as the distribution identity, so a DCAT-only consumer can verify the release without STAC-specific knowledge. The full crosswalk lives in `docs/standards/PROV/crosswalk-dcat.md` (PROPOSED, not yet authored).
-
-### 9.3 ISO 19115 — reached via DCAT
-
-ISO 19115 conformance is **indirect** — the manifest does not embed ISO 19115 records directly; the DCAT layer carries the ISO 19115 crosswalk for downstream geographic-metadata consumers. The profile lives at `docs/standards/ISO-19115.md` (prior-session-authored; presence NEEDS VERIFICATION).
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 10. Lifecycle integration — promotion, rollback, correction, withdrawal
 
-CONFIRMED — Pass-10 C6-08, KFM-P1-IDEA-0056, KFM-P7-PROG-0003.
+The strict profile is deliberately pre-release:
 
-The `ReleaseManifest` is the **only artifact** that crosses the PUBLISHED boundary by name; everything else either lives behind the trust membrane or is referenced by the manifest. Its lifecycle is therefore the release lifecycle.
-
-### 10.1 Lifecycle state map
-
-```mermaid
-flowchart LR
-  PD[PromotionDecision] --> M1[ReleaseManifest v1<br/>release_state: current]
-  M1 -->|correction issued| CN[CorrectionNotice]
-  CN --> M2[ReleaseManifest v2<br/>release_state: current<br/>correction_lineage: [v1]]
-  M1 -->|superseded by v2| M1S[ReleaseManifest v1<br/>release_state: superseded]
-  M1 -->|rollback triggered| RC[RollbackCard]
-  RC --> M1R[ReleaseManifest v0<br/>restored as current]
-  M1 -->|withdrawn| M1W[ReleaseManifest v1<br/>release_state: withdrawn<br/>tombstone issued]
-
-  M1W --> CI1[cache invalidation: purge CDN, bump PMTiles index]
-  M2 --> CI2[cache invalidation: purge CDN, bump PMTiles index]
-  M1R --> CI3[cache invalidation: purge CDN, bump PMTiles index]
-
-  style M1 fill:#d9eaff,stroke:#2c5282
-  style M2 fill:#d9eaff,stroke:#2c5282
-  style M1W fill:#ffe4e1,stroke:#a04545
-  style M1S fill:#fff4cc,stroke:#b58900
+```text
+profile_status  = PROPOSED_INACTIVE
+execution_mode  = FIXTURE_ONLY
+lifecycle_state = CANDIDATE
+release_state   = CANDIDATE | HELD | DEGRADED
 ```
 
-PROPOSED — diagram reflects C6-08 (revocation + cache invalidation), KFM-P1-IDEA-0056 (promotion as governed state transition), KFM-P7-PROG-0003 (manifest as publishable artifact). Tooling NEEDS VERIFICATION.
+It can describe intended lineage references but cannot create a transition.
 
-### 10.2 Cache-invalidation contract
+### Current bounded release evidence
 
-CONFIRMED — Pass-10 C6-08: *"Every published item exposes a `revocation_endpoint`, an `embargo_until` field, and (where applicable) cache invalidation hooks (PMTiles index bump, tile server purge). On revocation: issue a signed tombstone, append a new `spec_hash` and `run_receipt` to the ledger, and trigger invalidation webhooks."*
-
-For `ReleaseManifest` transitions:
-
-| Transition | Cache invalidation required | Tombstone required |
+| Surface | What it proves | What it does not prove |
 |---|---|---|
-| `current → superseded` | Yes — PMTiles index bump, CDN purge of content URLs. | No (supersession is graceful; old manifest remains resolvable). |
-| `current → withdrawn` | Yes — same. | **Yes** — withdrawn content MUST NOT be served. |
-| `current → (rollback)` | Yes — same, plus restore prior manifest's URL bindings. | No (the rollback target is itself a valid prior release). |
-| `withdrawn → (re-publish)` | Yes — invalidate the withdrawal chip. | n/a (issue a new release; do not reanimate the withdrawn one). |
+| ReleaseManifest validator | Candidate shape, identity, and selected semantic coherence. | Reference resolution, live policy, approval, persistence, or publication. |
+| Release-manifest workflow | Focused deterministic tests at one revision. | Required-check coupling or operational release. |
+| Publication-denial dry run | Five unsafe synthetic promotion packets remain blocked. | Successful candidate assembly or release. |
+| Promotion-gate fixtures | Bounded A–G readiness semantics over synthetic input. | Authenticated live actors, EvidenceBundles, policy, or signatures. |
+| Rollback-card readiness checks | Selected synthetic rollback presence and consistency. | Rollback execution, alias restoration, cache invalidation, or recovery. |
+| `release/` documentation | Canonical decision-plane boundaries and current holds. | Existence of a governed production release record. |
 
-The cache-invalidation contract binds **RFC 7234** (HTTP caching semantics) and **vendor-specific CDN purge APIs**. KFM remains vendor-neutral: the `cache_invalidation[]` slot in §8.1 lists the actions, not the vendor.
+### Required production chain
 
-### 10.3 Rollback target — required, not optional
+A production path must keep separate, digest-bound records for candidate assembly, evidence/proof, policy evaluation, review, promotion decision, manifest, signatures/attestations, release decision, published carrier, correction/withdrawal, rollback, propagation/invalidation, and verification receipts. A failure at one layer must not be hidden by success at another.
 
-CONFIRMED — Atlas object-family table: `rollback_target` is a **required** field. A `ReleaseManifest` with no `rollback_target` is invalid; promotion gate fails closed. The rollback target points at the prior `ReleaseManifest`'s digest (not at a floating "previous" pointer), so the rollback is content-addressed.
-
-> [!WARNING]
-> A release that ships without a tested rollback path is a trust-membrane violation. ML-061 anti-patterns category names this explicitly: rollback drills are part of release acceptance, not a post-launch nice-to-have.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 11. ReleaseManifest vs delta manifest
 
-CONFIRMED tension — KFM-P7-PROG-0003: *"The relationship between a `ReleaseManifest` and a `delta_manifest` (per-tile-set) is not fully resolved; both exist in the corpus and overlap."*
+The current shared strict profile has no `delta_manifest` field and establishes no canonical relationship to product-specific delta manifests.
 
-PROPOSED reconciliation (from KFM-P7-PROG-0003 expansion direction):
+A safe future distinction is:
 
-| Concept | Granularity | Scope | Relationship |
-|---|---|---|---|
-| `delta_manifest` | Per-product (e.g., per-PMTiles set, per-COG collection) | What changed in this product since the last release of *this product*. | A delta manifest is a **build artifact**; it exists to support efficient updates and partial-fetch verification. |
-| `ReleaseManifest` | Per-release | What is published in this release across all products. | A release manifest **references** the relevant delta manifests by digest; the release manifest is the user-visible, signed envelope. |
+| Object | Candidate responsibility | Required boundary |
+|---|---|---|
+| ReleaseManifest | Bind one governed release scope to an artifact set and release-support references. | Release-governance object; not a payload or build delta. |
+| Delta manifest | Describe changes between product/artifact versions for build, synchronization, or partial-transfer purposes. | Product/build artifact; not release approval. |
 
-> [!IMPORTANT]
-> The PROPOSED rule: **`ReleaseManifest.contents[]` entries MAY reference `delta_manifest` digests, but consumers MUST resolve via the `ReleaseManifest`.** A consumer that binds to a `delta_manifest` directly is binding to a build artifact, not a release.
+A future binding must define stable IDs, digest domains, direction, version comparison, full-versus-delta reconstruction, missing-base behavior, correction and rollback, consumer fallback, and whether a ReleaseManifest references a delta as an artifact. Until then, consumers must not infer release authority from a delta-shaped file or a floating `latest` alias.
 
-ADR resolution NEEDED — see §14 item 1. Until resolved, this document is the working statement of intent.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 12. External verification flow
 
-The recipe below is the **principal external-consumer payload** of this document. It describes what an outside auditor or interoperability partner does to verify a KFM release end-to-end.
+### 12.1 Current bounded verification
 
-PROPOSED. Tool names and step ordering NEED VERIFICATION when the `kfm-hash`, `kfm-merkle`, and `kfm-evidence-resolve` CLIs ship.
+The current repository can verify only a local candidate or fixture profile:
 
-```text
-Given:
-  - A ReleaseManifest URI (https://, kfm://, oci://, or ipfs://)
-  - The expected manifest spec_hash (jcs:sha256:<hex>)
+1. deny symlinks, missing files, oversized input, malformed UTF-8/JSON, duplicate keys, and nonfinite numbers;
+2. validate against the dual-profile Draft 2020-12 schema;
+3. for the strict profile, recompute `spec_hash` and candidate `id`;
+4. check ordering, uniqueness, artifact count, role separation, evidence-artifact binding, time, lineage, public-intended prerequisites, transformation support, and false governance flags;
+5. emit deterministic `PASS`, `FAIL`, or `ERROR` with stable codes and JSON-pointer paths;
+6. perform no network request, reference lookup, policy evaluation, signature verification, release write, or publication.
 
-Steps:
-  1. Fetch the manifest bytes from the URI.
-  2. Verify content-address: SHA-256(manifest bytes) MUST equal the URI digest (if OCI/IPFS).
-  3. Canonicalize the manifest: RFC 8785 JCS over the JSON.
-  4. Compute the manifest spec_hash: SHA-256(canonical bytes).
-  5. Verify the spec_hash matches the expected value.
-  6. Fetch the Cosign signature for the manifest digest.
-  7. Verify the signature against the Sigstore root and the OIDC-issuer allowlist;
-     check the Rekor transparency-log entry.
-  8. Fetch the release-level SLSA provenance predicate from manifest.attestations[].
-  9. Verify the predicate's subject digest matches the manifest spec_hash from step 4.
- 10. Verify the predicate's builder identity is on the documented release-builder
-     allowlist (developer identities are NOT acceptable for releases — §7.3).
- 11. Recompute the Merkle root over manifest.contents[]:
-       a. For each entry, take the per-content digest verbatim.
-       b. Sort entries lexicographically by canonical content path.
-       c. Build a sorted-pairwise Merkle tree (SHA-256 leaves and nodes).
-       d. The computed root MUST equal manifest.merkle_root.
- 12. For each entry in manifest.contents[]:
-       a. Fetch the EvidenceBundle by its evidence_refs entry.
-       b. Run the EvidenceBundle verifier per docs/standards/EVIDENCE_BUNDLE.md §11.
-       c. Verify the bundle's spec_hash matches the manifest's recorded per-content digest.
- 13. Walk manifest.correction_lineage[] (if any):
-       a. Each prior ReleaseManifest referenced MUST itself be verifiable.
-       b. The CorrectionNotice tying them together MUST resolve and verify.
- 14. Verify manifest.rollback_target points at a previous manifest whose
-     spec_hash is itself verifiable (content-addressed rollback).
- 15. For consent-bearing content, additionally verify the ConsentSidecar per
-     docs/standards/DUO_PROFILE.md §7.
+Verified repository commands:
+
+```bash
+python -m unittest tests.validators.test_validate_release_manifest -v
+python tools/validators/release/validate_release_manifest.py --fixtures
+make release-dry-run
 ```
 
-A verifier that completes steps 1–15 has independently established: the manifest is byte-identical to what was signed; the signer is on the release-builder allowlist; the build environment was the one attested; the Merkle root matches the included contents; every content's evidence chain is intact; any corrections in the lineage are themselves verifiable; and rollback is content-addressed to a previously verifiable release. **That is the full external verification surface** of a KFM release.
+A strict-profile `PASS` means the supplied synthetic candidate satisfies the bounded schema and semantic checks. It does not establish a release.
 
-[Back to top](#quick-jump)
+### 12.2 Future end-to-end verification
+
+A production verifier still needs to authenticate the manifest profile and bytes, resolve every required reference, recompute artifact digests, evaluate accepted policy, authenticate review and promotion authority, verify signatures and attestations, confirm release persistence and public carrier parity, walk correction/withdrawal/rollback lineage, and verify propagation or invalidation receipts.
+
+> [!NOTE]
+> The dedicated `release-manifest` workflow currently filters contract, schema, fixture, validator, test, hashing, and source-map changes but does not list this standards page. This docs-only change therefore relies on general documentation and aggregate workflows unless that path filter is separately reviewed and expanded.
+
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 13. Tensions and known limits
 
-| Tension | Source | KFM posture |
+| Tension or limit | Current evidence | Bounded posture |
 |---|---|---|
-| Sorted-pairwise Merkle vs RFC 6962 (CT Merkle). | KFM-P5-PROG-0002 | KFM ships sorted-pairwise; pin by ADR; document so consumers verify with the correct construction. |
-| SHA-256 vs BLAKE3 as the Merkle leaf/node hash. | KFM-P5-PROG-0002 | SHA-256 is the algorithm of record; BLAKE3 is permitted for high-throughput sidecars only (e.g., PMTiles), not for the release Merkle proper. |
-| Merkle scope: all files or only canonical artifact files? | KFM-P5-PROG-0002 open | PROPOSED: canonical artifacts only; receipts and attestations are Merkle-secured transitively via per-entry digests. |
-| `ReleaseManifest` vs `delta_manifest` overlap. | KFM-P7-PROG-0003 tension | Reconciled in §11 PROPOSED; ADR resolution pending. |
-| Release cadence: daily / weekly / on-demand. | KFM-P7-PROG-0003 open | PROPOSED: on-demand by default; clock-driven cadence permitted for operational, not atlas-class. |
-| Atlas-class vs operational-map release gate sequence. | KFM-P1-IDEA-0056 open | Two PROPOSED gate sequences; ADR resolution pending. |
-| SLSA target level (1 / 2 / 3). | C1-04 open | NEEDS DECISION; Level 3 requires hardened build platforms. |
-| OIDC-issuer allowlist for release signing. | C1-03 open | NEEDS DECISION; release-side allowlist MUST be more restrictive than bundle-side. |
-| SBOM format (SPDX vs CycloneDX). | ML-058-031 | NEEDS DECISION; KFM remains format-neutral at the doctrine level. |
-| Cosign keyless mode depends on Sigstore availability at sign time. | C1-03 | KMS-managed-key fallback documented; air-gapped operation uses keyed mode. |
-| Cache-invalidation contract is vendor-neutral; concrete vendor APIs live in `infra/`. | C6-08, ML-M-007 | Vendor neutrality is doctrine; per-vendor adapters are an implementation concern. |
-| Title clash between this doc and the future `contracts/v1/release/release_manifest.md`. | this doc | The §2 scope guardrail is the protection; if drift accumulates, retitle this file (§14 item 5). |
+| Permissive legacy branch vs closed strict branch | Both are accepted by one `oneOf` schema. | Preserve compatibility; never treat an id-only object as release-complete. |
+| Strict fixture profile vs production profile | Strict profile is `PROPOSED_INACTIVE` and `FIXTURE_ONLY`. | Production adoption remains **HOLD**. |
+| Shared release schema vs domain stubs | Several domain schemas remain permissive proposed scaffolds. | Relationship and migration are unresolved. |
+| Flat contract vs object-folder pointer | Flat Markdown is canonical; child README is compatibility/navigation only and contains stale maturity text. | Follow the flat contract and current schema/code. |
+| Singular vs plural release record lanes | `release/manifest/` and `release/manifests/` are documented as unresolved draft paths. | No record migration in this page. |
+| `sha256:` vs proposed `jcs:sha256:` | Current code emits `sha256:`; ADR-0013 remains proposed. | Do not change wire identity by documentation. |
+| Attestation refs vs cryptographic proof | Refs exist; signature verification is fixed false. | Signing integration remains unimplemented. |
+| Release-policy source vs operational evaluator | Policy lane contains scaffolds without accepted bundle/evaluator/consumer closure. | Never infer allow or deny from scaffold defaults. |
+| Release dry run vs release assembly | Current helper proves denial paths only. | Do not label it candidate assembly or release rehearsal success. |
+| Documentation path vs dedicated workflow triggers | Target page is not listed in the release-manifest workflow filter. | General docs checks apply; dedicated coupling is follow-up. |
+| Candidate and record inventory | No production candidate or governed release record was established by the inspected lanes. | Publication remains unknown/not established. |
+| External standards matrix | Many relationships remain useful design lineage. | No external certification or blanket conformance claim. |
 
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 14. Open questions
 
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR or mounted-repo evidence.
+1. Which accepted profile graduates beyond `RELEASE_MANIFEST_FIXTURE_V1`, and what compatibility contract preserves legacy inputs?
+2. When, if ever, may the permissive id-only branch be deprecated, and which producers/consumers still rely on it?
+3. Are domain-specific ReleaseManifest schemas independent domain objects, projections, aliases, or drift requiring migration?
+4. Which shared identity grammar is accepted, and how are `sha256:` and any future profile-tagged grammar migrated without split identity?
+5. Which artifact bytes and fields are included in the signed subject and any future Merkle domain?
+6. Which DSSE/Sigstore/SLSA/in-toto or alternate signing profile is accepted, and which signer/reviewer separation rules apply?
+7. Which reference syntax, registry, resolver, freshness, revocation, and offline behavior govern each ref family?
+8. Which finite production states exist beyond `CANDIDATE`, `HELD`, and `DEGRADED`, and which records authorize each transition?
+9. Which lane is canonical for persisted release-manifest records, and how are singular/plural and domain-first paths converged?
+10. Which policy bundle, evaluator, input contract, normalized outcomes, and authenticated release consumer are accepted?
+11. Which public clients consume ReleaseManifest data, through which governed API or released artifact, and how is parity verified?
+12. How do correction, withdrawal, supersession, rollback, alias restoration, cache/index invalidation, and historical verification compose?
+13. Should `docs/standards/RELEASE_MANIFEST.md` be included in the dedicated workflow path filter, or are general documentation checks sufficient?
+14. What evidence marks the first governed production release without confusing a fixture, workflow, GitHub release, or merge with publication?
 
-1. **`ReleaseManifest` vs `delta_manifest` reconciliation** — adopt the PROPOSED rule in §11 via ADR.
-2. **Merkle variant pin** — sorted-pairwise SHA-256 per §6; pin by ADR per KFM-P5-PROG-0002 tension.
-3. **Merkle scope** — canonical artifacts only vs all files in `data/published/<collection>/<version>/`. Resolution by ADR.
-4. **Release cadence policy** — on-demand vs clock-driven per release class.
-5. **This document's title clash** — if confusion arises with the future contract Markdown, retitle to `RELEASE_MANIFEST_CONFORMANCE.md` and leave a redirect.
-6. **SLSA target level** — 1, 2, or 3; affects release-builder allowlist and build-platform requirements.
-7. **OIDC-issuer allowlist for releases** — release-side must be more restrictive than bundle-side; specific issuers TBD.
-8. **SBOM format** — SPDX or CycloneDX (or both).
-9. **OCI/ORAS publication adoption** — whether the manifest's canonical transport becomes OCI per Pass-32 SRC-P32-001, or remains plain HTTP.
-10. **STAC `rel:attestation` registration** — same submission as `docs/standards/EVIDENCE_BUNDLE.md` §13 item 7.
-11. **Gate sequence per release class** — atlas-class vs operational-map (KFM-P1-IDEA-0056 open).
-12. **Cache-invalidation telemetry contract** — what the `cache_invalidation[]` entries report on completion. NEEDS DECISION.
-13. **Bundle reference verifier languages** — Python and Go per C8-04 expansion; TypeScript open.
-14. **Partial-fetch / partial-verification protocol** — what the sorted-pairwise Merkle proof structure looks like; KFM-P5-PROG-0002 expansion direction.
-
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)
 
 ---
 
 ## 15. Related docs
 
-PROPOSED links — verify all paths against mounted repo before publishing.
+### Repository authority and implementation
 
-- [`contracts/v1/release/`](../../contracts/v1/release/) — _PROPOSED contract home._ Object meaning for `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, `PromotionDecision`. **The canonical place for the manifest's definition; this dossier defers to it.**
-- [`schemas/contracts/v1/release/`](../../schemas/contracts/v1/release/) — _PROPOSED schema home._ Machine shape.
-- [`policy/release/`](../../policy/release/) — _PROPOSED policy home._ Admissibility, promotion-gate sequence, rollback authorization.
-- [`release/`](../../release/) — _PROPOSED home._ Per-release decisions and artifacts.
-- [`docs/standards/EVIDENCE_BUNDLE.md`](./EVIDENCE_BUNDLE.md) — companion topical standards document; the bundle whose digests this manifest aggregates.
-- [`docs/standards/MAP_TRUST_STATES.md`](./MAP_TRUST_STATES.md) — the trust-state vocabulary `release_state` participates in.
-- [`docs/standards/PROV/README.md`](./PROV/README.md) — provenance profile; PROV-O fragments threaded through `evidence_refs[]`.
-- [`docs/standards/DUO_PROFILE.md`](./DUO_PROFILE.md) — consent vocabulary; consent-bearing content adds a verification step (§12 step 15).
-- [`docs/standards/SIGNING.md`](./SIGNING.md) — _PROPOSED, not yet authored._ Cosign / Sigstore / SLSA / DSSE / Rekor.
-- [`docs/standards/CANONICALIZATION.md`](./CANONICALIZATION.md) — _PROPOSED, not yet authored._ JCS-vs-URDNA2015 decision matrix.
-- [`docs/standards/PMTILES.md`](./PMTILES.md) — published-tile profile; PMTiles index bump tied to cache invalidation.
-- [`docs/standards/ISO-19115.md`](./ISO-19115.md) — geographic-metadata profile; reached via DCAT.
-- [`docs/standards/OAI-PMH.md`](./OAI-PMH.md) — harvest protocol profile.
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) — _PROPOSED, not yet authored._ Tier rule that drives `sensitivity` aggregation.
-- [`docs/standards/REDACTION_DETERMINISM.md`](./REDACTION_DETERMINISM.md) — _PROPOSED, not yet authored._ Sister topical standards document.
-- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — the rule that keeps this dossier out of `contracts/`, `schemas/`, and `policy/`.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — _PROPOSED placement._ Trust-membrane invariants the manifest is the publication-side expression of.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — _PROPOSED placement._ The lifecycle this manifest seals the PUBLISHED transition of.
-- [`docs/runbooks/release/`](../runbooks/release/) — _PROPOSED runbook home._ Release author's how-to and rollback drill.
+- [`docs/standards/README.md`](./README.md) — standards-lane authority and evidence limits.
+- [`contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md) — canonical semantic contract.
+- [`schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) — dual-profile machine shape.
+- [`fixtures/release/release_manifest/README.md`](../../fixtures/release/release_manifest/README.md) — synthetic fixture posture.
+- [`tools/validators/release/validate_release_manifest.py`](../../tools/validators/release/validate_release_manifest.py) — deterministic candidate validator.
+- [`tests/validators/test_validate_release_manifest.py`](../../tests/validators/test_validate_release_manifest.py) — focused no-network proof.
+- [`.github/workflows/release-manifest.yml`](../../.github/workflows/release-manifest.yml) — read-only focused workflow.
+- [`tools/release/release_dry_run.py`](../../tools/release/release_dry_run.py) — synthetic publication-denial helper.
+- [`.github/workflows/release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) — bounded denial/promotion/rollback readiness orchestration.
+- [`policy/release/README.md`](../../policy/release/README.md) — release-policy source boundary and current scaffold hold.
+- [`release/README.md`](../../release/README.md) — canonical release decision plane.
+- [`release/manifests/README.md`](../../release/manifests/README.md) — draft record-lane guidance and singular/plural conflict.
+- [`docs/standards/EVIDENCE_BUNDLE.md`](./EVIDENCE_BUNDLE.md) — current evidence-profile boundary.
+- [`docs/standards/CANONICALIZATION.md`](./CANONICALIZATION.md) — current identity implementation and migration boundary.
+- [`docs/standards/SIGNING.md`](./SIGNING.md) — signing design lineage; not current ReleaseManifest implementation proof.
 
-[Back to top](#quick-jump)
+### External references
+
+- [RFC 8785 — JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785.html)
+- [JSON Schema Draft 2020-12](https://json-schema.org/draft/2020-12)
+
+[Back to quick jump](#quick-jump)
 
 ---
 
-<details>
-<summary><strong>Appendix A — Worked external verification</strong></summary>
+## Appendix A — Worked external verification
 
-A worked example for a hypothetical KFM release published via OCI plus the canonical JSON file. **All values are illustrative**; do not copy as a contract.
+The legacy appendix name is retained. The current worked example is deliberately local, fixture-only, and non-authoritative.
 
 ```bash
-# 1-2. Fetch the manifest and verify content-address
-oras pull <registry>/<repo>@sha256:<HEX> --output ./release.json
-sha256sum ./release.json
-# expected: <HEX>
+# Run the exact focused test module.
+python -m unittest tests.validators.test_validate_release_manifest -v
 
-# 3-5. Canonicalize and compute manifest spec_hash
-kfm-hash --canonicalize=jcs ./release.json
-# expected: jcs:sha256:<HEX-matching-release-record>
+# Materialize and validate all 21 reviewed synthetic cases.
+python tools/validators/release/validate_release_manifest.py --fixtures
 
-# 6-7. Fetch the cosign signature bundle and verify
-cosign verify \
-  --certificate-identity-regexp '^https://github.com/<KFM-RELEASE-BUILDER>/.+@refs/tags/release-.+$' \
-  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  <registry>/<repo>@sha256:<HEX>
-
-# 8-10. Fetch and inspect the SLSA release predicate
-cosign verify-attestation \
-  --type slsaprovenance \
-  --certificate-identity-regexp '^https://github.com/<KFM-RELEASE-BUILDER>/.+@refs/tags/release-.+$' \
-  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  <registry>/<repo>@sha256:<HEX> \
-  | jq '.payload | @base64d | fromjson'
-# verify subject digest == manifest spec_hash; builder is on release-builder allowlist
-
-# 11. Recompute Merkle root
-kfm-merkle --variant=sorted-pairwise --hash=sha256 < ./release.json
-# expected: sha256:<HEX-matching-merkle_root>
-
-# 12. Walk contents[] and verify each EvidenceBundle
-jq '.contents[]' ./release.json | while read entry; do
-  ref=$(echo "$entry" | jq -r '.evidence_ref')
-  digest=$(echo "$entry" | jq -r '.spec_hash')
-  kfm-evidence-resolve --ref "$ref" --expect-hash "$digest"
-done
-
-# 13. Walk correction_lineage and verify prior manifests + CorrectionNotice
-jq -r '.correction_lineage[]' ./release.json | while read prior; do
-  kfm-verify-release --uri "$prior"
-done
-
-# 14. Verify rollback target resolves
-prior=$(jq -r '.rollback_target' ./release.json)
-kfm-verify-release --uri "$prior"
+# Exercise five synthetic publication-denial paths and related readiness checks.
+make release-dry-run
 ```
 
-The exact CLI commands depend on the tooling pin (`kfm-hash`, `kfm-merkle`, `kfm-evidence-resolve`, `kfm-verify-release`) — those CLIs are PROPOSED and NEEDS VERIFICATION against mounted-repo evidence. The shape of the steps is doctrine-grounded.
+Expected interpretation:
 
-</details>
+| Result | Meaning | Not equivalent to |
+|---|---|---|
+| Validator `PASS` | Candidate satisfies the bounded profile. | Evidence truth, policy allow, review approval, release, or publication. |
+| Validator `FAIL` | Reviewable schema or semantic violation. | Complete policy denial or correction decision. |
+| Validator `ERROR` | Input/schema/hashing operation could not be trusted. | Safe fallback to release. |
+| Dry-run `PASS` | Every unsafe synthetic case remained blocked as expected. | A real candidate or successful release. |
 
-<details>
-<summary><strong>Appendix B — Placement rationale</strong></summary>
+All fixture IDs, refs, digests, actors, decisions, and artifacts are synthetic. Do not copy them into release records or use them as external verification evidence.
 
-This document lives at `docs/standards/RELEASE_MANIFEST.md` despite Directory Rules §6.1.a stating that `docs/standards/` "is the canonical home for **external** standards profiles … never for KFM's own object meaning (which lives in `contracts/`)." The §6.1.a authority text **names "release manifest patterns" explicitly**, alongside `EvidenceBundle` and the trust membrane, as KFM-canonical patterns that `docs/standards/` does not own. The placement is legitimate, but only because of a narrow scoping commitment that exactly parallels the one for `docs/standards/EVIDENCE_BUNDLE.md`.
-
-**What §6.1.a forbids:** placing the `ReleaseManifest`'s **object meaning** here. That is owned by `contracts/v1/release/`. This document does not do that.
-
-**What §6.1.a permits:** placing a "Multi-word topical standards document … not external standards" using UPPERCASE_WITH_UNDERSCORES. The pattern is established with `SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md`, and (newly authored) `EVIDENCE_BUNDLE.md` and `MAP_TRUST_STATES.md`. This file matches that pattern: it documents the **standardized external-conformance posture** of `ReleaseManifest`.
-
-**Why this scoping is non-trivial.** If left undefended, this file would drift toward becoming "the `ReleaseManifest` reference" — which is precisely what §6.1.a forbids. The scope guardrail in §2 is therefore not boilerplate; it is the structural defense that keeps the placement legitimate. Every reviewer who adds content here is asked to confirm the content is **about `ReleaseManifest`'s external-standards posture**, not about `ReleaseManifest` itself.
-
-**Alternative paths considered:**
-
-| Alternative | Verdict |
-|---|---|
-| Move to `contracts/v1/release/release_manifest.md` | Wrong — `contracts/` is object meaning, not external-conformance dossiers. The conformance dossier travels independently of contract revisions. |
-| Split into per-standard files (`docs/standards/RELEASE_MANIFEST_JCS.md`, `..._SLSA.md`, `..._MERKLE.md`) | Wrong — fragments the cross-cutting view this dossier is meant to provide. |
-| Rename to `RELEASE_MANIFEST_CONFORMANCE.md` for unambiguous scope | **Reasonable.** Recorded as §14 open question 5; resolution by README rule, not ADR. Parallels the same question in `EVIDENCE_BUNDLE.md`. |
-| Embed the content into `contracts/v1/release/release_manifest.md` as a section | Wrong — couples object meaning to external-version churn; external pins should move independently of the contract. |
-| Place under `docs/standards/PROV/` as a subsidiary | Wrong — release-side conformance is broader than provenance (Merkle, OCI, SLSA, STAC, DCAT, ISO 19115). The PROV folder owns only the PROV-O / PAV slice. |
-| Place under `release/README.md` | Wrong — `release/` is the canonical home for **release decisions and artifacts**, not for external-standards conformance documentation. |
-
-The current path is the least-bad choice given the constraints, and it consciously parallels `EVIDENCE_BUNDLE.md` to keep the pattern legible. If §14 item 5 resolves to a rename, the migration is a one-line redirect.
-
-</details>
+[Back to quick jump](#quick-jump)
 
 ---
 
-### Footer
+## Appendix B — Placement rationale
 
-> **Document class:** Topical standards document · **Scope:** External-standards conformance posture for `ReleaseManifest` · **Authority NOT held:** object meaning, machine shape, admissibility, promotion gates, per-release artifacts, rollback procedure, map-asset family.
+`docs/standards/RELEASE_MANIFEST.md` remains the correct same-path home for human-readable profile, standards-relationship, conformance-readiness, and verification-boundary guidance.
 
-| | |
+It is not the correct home for:
+
+- ReleaseManifest semantic meaning;
+- JSON Schema or generated types;
+- policy rules or evaluator code;
+- fixtures, validators, or tests;
+- release candidate or decision records;
+- receipts, proofs, signatures, or attestations;
+- published payloads, registries, aliases, caches, or deployments; or
+- correction, withdrawal, rollback, or publication execution.
+
+Those responsibilities remain in their owning roots. The existing path is therefore `PLACE`, not a new authority. A future rename or consolidation requires an inbound-link, anchor, consumer, compatibility, and rollback migration; this update performs none.
+
+### No-loss disposition
+
+| Legacy material | Disposition |
 |---|---|
-| **Canonical homes** | Meaning → [`contracts/v1/release/`](../../contracts/v1/release/) · Shape → [`schemas/contracts/v1/release/`](../../schemas/contracts/v1/release/) · Admissibility → [`policy/release/`](../../policy/release/) · Decisions → [`release/`](../../release/) |
-| **Sister conformance dossier** | [EVIDENCE_BUNDLE.md](./EVIDENCE_BUNDLE.md) |
-| **Vocabulary anchor** | [MAP_TRUST_STATES.md](./MAP_TRUST_STATES.md) — `release_state` participation |
-| **Related** | [PROV/](./PROV/README.md) · [DUO_PROFILE.md](./DUO_PROFILE.md) · [ISO-19115.md](./ISO-19115.md) · [OAI-PMH.md](./OAI-PMH.md) · [PMTILES.md](./PMTILES.md) · _SIGNING.md (PROPOSED)_ · _CANONICALIZATION.md (PROPOSED)_ |
-| **Sister topical docs** | _SENSITIVITY_RUBRIC.md (PROPOSED)_ · _REDACTION_DETERMINISM.md (PROPOSED)_ |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
+| External-conformance purpose | **CLARIFY** as relationships and graduation criteria. |
+| Scope guardrail | **KEEP / strengthen** with current authority map. |
+| JCS and SHA-256 | **REPAIR** to current `sha256:` implementation. |
+| Merkle and BLAKE3 | **RETAIN as unimplemented design lineage**, not current profile. |
+| Signing, DSSE, SLSA, Sigstore, in-toto, Rekor | **RETAIN as proposed closure**, remove false conformance. |
+| OCI/ORAS/IPFS and catalog mappings | **RETAIN as proposed interoperability**, remove fictional transport/consumer claims. |
+| Inclusion semantics | **RECONCILE** to the exact strict schema and validator. |
+| Lifecycle, correction, withdrawal, rollback | **RECONCILE** to candidate-only refs and operational holds. |
+| Delta-manifest tension | **KEEP** as unresolved object-family relationship. |
+| External verification recipe | **REPLACE** fictional CLIs and production proof with current commands and future ladder. |
+| Open questions | **REFRESH** against current compatibility, policy, workflow, record-lane, and consumer gaps. |
+| Document ID, created date, headings, quick-jump, and appendix anchors | **KEEP** for lineage and link compatibility. |
 
-[Back to top](#quick-jump)
+[Back to quick jump](#quick-jump)

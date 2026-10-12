@@ -6,10 +6,10 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · GBIF source steward · Biodiversity steward · Flora steward · Fauna steward · Habitat steward · Taxonomy steward · Rights reviewer · Privacy/sensitivity reviewer · Security reviewer · Packaging steward · Validation steward · Docs steward
 created: 2026-06-18
-updated: 2026-07-11
+updated: 2026-09-26
 policy_label: public-doctrine; connector-local-tests; greenfield; per-dataset-rights; geoprivacy-gated; product-specific-roles; synthetic-fixtures-only; no-network-default; no-secrets; no-live-tests-approved; raw-or-quarantine-candidate-only; no-publication
 proposed_path: connectors/gbif/tests/README.md
-truth_posture: CONFIRMED README-only test lane / executable tests ABSENT / fixtures ABSENT / package importability UNPROVED / package-local public sensitivity placeholder INVALID / product descriptors and activation ABSENT / plants child COMPATIBILITY-ONLY / live testing NOT APPROVED / CI UNKNOWN
+truth_posture: CONFIRMED synthetic occurrence-API test module (test_occurrence_api.py) / other executable tests ABSENT / file fixtures ABSENT / package importability UNPROVED / package-local public sensitivity placeholder INVALID / product descriptors and activation ABSENT / plants child COMPATIBILITY-ONLY / live testing NOT APPROVED / CI UNKNOWN
 related:
   - ../README.md
   - ../pyproject.toml
@@ -70,7 +70,7 @@ notes:
 `connectors/gbif/tests/`
 
 > [!IMPORTANT]
-> **Confirmed state:** this directory contains this README only. No executable test module, local fixture, `conftest.py`, test dependency, package build configuration, collection configuration, live-test directory, CI job, coverage report, or passing result is confirmed. The adjacent GBIF package is not yet a supported installable implementation. Treat all proposed test filenames, fixture shapes, result names, commands, markers, and coverage statements below as requirements—not current evidence.
+> **Confirmed state (2026-09-26):** this directory contains this README and `test_occurrence_api.py`, a standard-library synthetic suite for `src/gbif/occurrence_api.py` (request planning, URL allowlist, rights/precision quarantine routing, malformed-page rejection, page reconciliation, no-socket guard) run by `.github/workflows/gbif-occurrence-offline.yml`. Beyond that module, no other executable test module, local fixture, `conftest.py`, test dependency, package build configuration, collection configuration, live-test directory, CI job, coverage report, or passing result is confirmed. The adjacent GBIF package is not yet a supported installable implementation. Treat all proposed test filenames, fixture shapes, result names, commands, markers, and coverage statements below as requirements—not current evidence.
 
 > [!CAUTION]
 > `../src/gbif/descriptor.yaml` contains `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. GBIF records inherit rights from originating datasets and may carry rare-species, obscured, culturally sensitive, private-location, or additional-use restrictions. **A future suite must reject the local `public` value. It must never become an activation signal, provider-wide sensitivity default, RAW-admission decision, or accepted public-safety result.**
@@ -78,6 +78,17 @@ notes:
 **Quick jumps:** [Purpose](#purpose) · [Verified repository state](#verified-repository-state) · [Evidence ledger](#evidence-ledger) · [Test authority boundary](#test-authority-boundary) · [Blocking drift](#blocking-drift) · [Test invariants](#test-invariants) · [Allowed test inputs](#allowed-test-inputs) · [Forbidden test material](#forbidden-test-material) · [Proposed test architecture](#proposed-test-architecture) · [Fixture contract](#fixture-contract) · [Build and import tests](#build-and-import-tests) · [Descriptor activation and product-role tests](#descriptor-activation-and-product-role-tests) · [Product dispatch tests](#product-dispatch-tests) · [Rights license and citation tests](#rights-license-and-citation-tests) · [Occurrence API pagination and replay tests](#occurrence-api-pagination-and-replay-tests) · [Async-download lifecycle tests](#async-download-lifecycle-tests) · [Dataset-metadata tests](#dataset-metadata-tests) · [Backbone taxonomy and drift tests](#backbone-taxonomy-and-drift-tests) · [Darwin Core and DwC-A tests](#darwin-core-and-dwc-a-tests) · [Sensitivity geoprivacy and obscuration tests](#sensitivity-geoprivacy-and-obscuration-tests) · [Semantic anti-collapse tests](#semantic-anti-collapse-tests) · [Sensitive logging and secret tests](#sensitive-logging-and-secret-tests) · [Transport archive and resource-bound tests](#transport-archive-and-resource-bound-tests) · [Finite outcomes](#finite-outcomes) · [Lifecycle and handoff boundary](#lifecycle-and-handoff-boundary) · [No-network and live-test posture](#no-network-and-live-test-posture) · [Execution posture](#execution-posture) · [Responsibility separation](#responsibility-separation) · [Implementation sequence](#implementation-sequence) · [Acceptance gates](#acceptance-gates) · [Review and rollback](#review-and-rollback) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog)
 
 ---
+
+
+> **Page retrieval and routing (2026-09-27, supersedes the placeholder statements above for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve()`:** runs one planner-issued occurrence-search page GET (the URL must equal the canonical encoding `plan_pages` would emit, so `country` and `stateProvince` are always present and valid, and the offset/limit window must fit a planner page sequence) through `connectors_core.transport.execute_retrieval`, with the caller's transport, clock and sleeper, under an `api.gbif.org` / `application/json` profile. It records the result with `connectors_core.retrieval_episode` as a fixture-only `SourceRetrievalEpisode`.
+> - **`admit.admit()`:** routes the page:
+>   - a parsed page becomes `RAW_CANDIDATE`, flagged `SENSITIVITY_NOT_EVALUATED` when it has records, plus `RECORD_QUARANTINE_CANDIDATES`, `NONCOMMERCIAL_TERMS_PRESENT`, `ABSENCE_ASSERTIONS_PRESENT` and `PAGING_CEILING_USE_ASYNC_DOWNLOAD` as they apply;
+>   - a page the parser rejects becomes `QUARANTINE_CANDIDATE` with a `PARSE_<code>` reason;
+>   - an uncaptured page becomes `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved, and also unless `sensitivity_floor` is one of the non-public SourceDescriptor values `generalized`, `restricted`, or `quarantine` (`DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED`). A public, unresolved, unknown or misspelled floor therefore cannot authorize a candidate route.
+> - **Continuity:** still requires `reconcile()` over all pages.
+> - **Scope:** no network library, write, sensitivity evaluation, or admission. Tests: `test_fetch_admit.py` (reuses the synthetic builders from `test_occurrence_api.py`; shared episode and descriptor behavior is tested in `tests/packages/connectors_core/`).
 
 ## Purpose
 

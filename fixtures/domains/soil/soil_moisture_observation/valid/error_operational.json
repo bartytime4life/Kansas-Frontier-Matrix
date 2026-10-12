@@ -1,0 +1,68 @@
+{
+  "assessment": {
+    "evidence_refs": [],
+    "limitations": [
+      "fixture_only_no_live_source_claim",
+      "observation_scope_only_not_countywide_truth"
+    ],
+    "outcome": "ERROR",
+    "reason_codes": [
+      "OPERATIONAL_ERROR"
+    ],
+    "time_caveat_ref": null
+  },
+  "domain": "soil",
+  "governance": {
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_authorized": false,
+    "release_manifest_ref": null,
+    "source_activated": false
+  },
+  "measurement": {
+    "depth_support": {
+      "depth_cm": null,
+      "kind": "ROOT_ZONE_LAYER"
+    },
+    "measurement_type": "VOLUMETRIC_WATER_CONTENT",
+    "normalized_unit": "m3_m3",
+    "normalized_value": null,
+    "qc_flags": [
+      "SYNTHETIC",
+      "VALID"
+    ],
+    "source_value": {
+      "unit": "m3/m3",
+      "value": 0.0
+    }
+  },
+  "observation_id": "soil-moisture:fc2c40a38d100858758442fd",
+  "profile_status": "PROPOSED_INACTIVE",
+  "schema_version": "v1",
+  "source": {
+    "source_native_id": "SMAP-SYN-36N-98W",
+    "source_native_key_family": "GRID_CELL",
+    "source_ref": "kfm://source/soil/synthetic/satellite_soil_moisture_grid",
+    "source_role": "SATELLITE_RETRIEVAL"
+  },
+  "spec_hash": "sha256:fc2c40a38d100858758442fd617cffdf5c71ae5e0c688a8ac7dfb4f829b8a5f1",
+  "subject": {
+    "location_ref": "kfm://location/generalized-grid/SMAP-SYN-36N-98W",
+    "public_geometry_rule": "GENERALIZED_GRID",
+    "resolution_m": 9000,
+    "spatial_support": "GRID_CELL",
+    "subject_ref": "kfm://subject/soil/grid/SMAP-SYN-36N-98W"
+  },
+  "support_type": "satellite_soil_moisture_grid",
+  "time": {
+    "cadence_seconds": 3600,
+    "observed_at": "2026-08-07T12:00:00Z",
+    "retrieved_at": "2026-08-07T12:10:00Z",
+    "source_published_at": "2026-08-07T12:05:00Z",
+    "source_timezone": "America/Chicago",
+    "valid_end": "2026-08-07T13:00:00Z",
+    "valid_start": "2026-08-07T12:00:00Z"
+  }
+}

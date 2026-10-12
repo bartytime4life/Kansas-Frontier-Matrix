@@ -1,32 +1,66 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/domain_observation.schema.json",
-  "title": "domain_observation",
+  "title": "Soil DomainObservation candidate profile",
+  "description": "Closed fixture-first source-scoped Soil observation/assertion candidate. It is not source truth, feature identity, release approval, or public-use authority.",
   "type": "object",
-  "description": "KFM v1 contract schema stub for domain_observation. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "additionalProperties": false,
+  "required": [
+    "profile", "status", "id", "version", "spec_hash", "domain",
+    "observation_kind", "object_family", "support_type", "source_ref",
+    "source_role", "source_native_id", "evidence_refs", "temporal_support",
+    "quality_flags", "lifecycle_stage", "release_state", "release_ref",
+    "limitations", "public_use_allowed", "effects"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.domains.soil.domain-observation.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "id": {"type": "string", "pattern": "^soil-observation:[0-9a-f]{24}$"},
+    "version": {"const": "1.0.0"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "domain": {"const": "soil"},
+    "observation_kind": {"enum": ["SURVEY_ASSERTION", "GRIDDED_DERIVATIVE", "STATION_OBSERVATION", "REFERENCE_STATION_OBSERVATION", "SATELLITE_RETRIEVAL", "PROFILE_OBSERVATION", "INTERPRETATION_ASSERTION", "CHANGE_ASSERTION"]},
+    "object_family": {"enum": ["SoilMapUnit", "SoilComponent", "Horizon", "ComponentHorizonJoin", "SoilProperty", "HydrologicSoilGroup", "SoilMoistureObservation", "Pedon", "SoilProfileView", "ErosionRisk", "SuitabilityRating", "SoilTimeCaveat"]},
+    "support_type": {"enum": ["authoritative_static_soil", "gridded_derivative_soil", "station_soil_moisture", "reference_station_soil_climate", "satellite_soil_moisture_grid", "profile_soil_evidence", "soil_interpretation", "governed_change_evidence"]},
+    "source_ref": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_role": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_:-]{1,127}$"},
+    "source_native_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "temporal_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["SOURCE_VINTAGE", "OBSERVED_TIME", "VALID_TIME", "RETRIEVED_TIME", "NOT_APPLICABLE"]},
+        "value": {"type": ["string", "null"], "maxLength": 64}
+      }
+    },
+    "quality_flags": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 128}},
+    "lifecycle_stage": {"enum": ["WORK", "QUARANTINE", "PROCESSED", "CATALOG"]},
+    "release_state": {"const": "UNRELEASED"},
+    "release_ref": {"type": "null"},
+    "limitations": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 240}},
+    "public_use_allowed": {"const": false},
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_activated", "evidence_resolved", "policy_evaluated", "promoted", "released", "published"],
+      "properties": {
+        "source_activated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "promoted": {"const": false},
+        "released": {"const": false},
+        "published": {"const": false}
+      }
+    }
+  },
   "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
     "contract_doc": "contracts/domains/soil/domain_observation.md",
     "fixtures_root": "fixtures/domains/soil/domain_observation/",
     "validator": "tools/validators/domains/soil/validate_domain_observation.py",
-    "policy": "policy/domains/soil/",
-    "status": "PROPOSED"
-  },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
-    }
-  },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
 }

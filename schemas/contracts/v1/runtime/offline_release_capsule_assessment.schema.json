@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/offline_release_capsule_assessment.schema.json",
+  "title": "OfflineReleaseCapsuleAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{4,220}$"
+    },
+    "artifact_role": {
+      "enum": [
+        "CITATION_SUMMARY",
+        "EVIDENCE_SUMMARY",
+        "GLYPH_MANIFEST",
+        "PMTILES",
+        "POLICY_SNAPSHOT",
+        "SPRITE_MANIFEST",
+        "STYLE",
+        "VERIFICATION_MATERIAL"
+      ]
+    },
+    "finding_code": {
+      "enum": [
+        "CORRECTION_UPDATE_PENDING",
+        "MANIFEST_DIGEST_MISMATCH",
+        "RELEASE_ID_MISMATCH",
+        "REQUIRED_ARTIFACT_MISSING",
+        "TRUST_FRESHNESS_EXPIRED",
+        "UPDATE_INTERRUPTED",
+        "WITHDRAWAL_DECLARED"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "artifact_bytes_read": {"const": false},
+        "digest_verified": {"const": false},
+        "signature_verified": {"const": false},
+        "trust_material_loaded": {"const": false},
+        "cache_mutated": {"const": false},
+        "cache_purged": {"const": false},
+        "install_performed": {"const": false},
+        "rollback_performed": {"const": false},
+        "render_performed": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "artifact_bytes_read",
+        "digest_verified",
+        "signature_verified",
+        "trust_material_loaded",
+        "cache_mutated",
+        "cache_purged",
+        "install_performed",
+        "rollback_performed",
+        "render_performed",
+        "evidence_resolved",
+        "policy_evaluated",
+        "review_approved",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {"const": "OfflineReleaseCapsuleAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.offline-release-capsule-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:offline-capsule:[0-9a-f]{24}$"
+    },
+    "spec_hash": {"$ref": "#/$defs/digest"},
+    "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+    "capsule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capsule_ref": {"$ref": "#/$defs/kfm_ref"},
+        "release_id": {"$ref": "#/$defs/kfm_ref"},
+        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "required_artifact_roles": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/artifact_role"}
+        },
+        "installed_at": {"$ref": "#/$defs/aware_datetime"},
+        "last_verified_at": {"$ref": "#/$defs/aware_datetime"},
+        "trust_valid_until": {"$ref": "#/$defs/aware_datetime"},
+        "correction_delta_ref": {
+          "oneOf": [{"$ref": "#/$defs/kfm_ref"}, {"type": "null"}]
+        },
+        "withdrawal_delta_ref": {
+          "oneOf": [{"$ref": "#/$defs/kfm_ref"}, {"type": "null"}]
+        },
+        "rollback_release_ref": {
+          "oneOf": [{"$ref": "#/$defs/kfm_ref"}, {"type": "null"}]
+        }
+      },
+      "required": [
+        "capsule_ref",
+        "release_id",
+        "manifest_digest",
+        "required_artifact_roles",
+        "installed_at",
+        "last_verified_at",
+        "trust_valid_until",
+        "correction_delta_ref",
+        "withdrawal_delta_ref",
+        "rollback_release_ref"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observed_release_id": {"$ref": "#/$defs/kfm_ref"},
+        "observed_manifest_digest": {"$ref": "#/$defs/digest"},
+        "present_artifact_roles": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/artifact_role"}
+        },
+        "install_state": {"enum": ["ATOMIC_COMPLETE", "INTERRUPTED", "ROLLED_BACK"]},
+        "connectivity": {"enum": ["OFFLINE", "RECONNECTED"]},
+        "cache_scope": {"const": "PUBLIC_RELEASE_ONLY"},
+        "correction_applied": {"type": "boolean"},
+        "withdrawal_applied": {"type": "boolean"}
+      },
+      "required": [
+        "observed_release_id",
+        "observed_manifest_digest",
+        "present_artifact_roles",
+        "install_state",
+        "connectivity",
+        "cache_scope",
+        "correction_applied",
+        "withdrawal_applied"
+      ]
+    },
+    "capsule_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capsule_state": {
+          "enum": [
+            "READY_FOR_SEPARATE_INSTALL_REVIEW",
+            "UPDATE_PENDING",
+            "STALE",
+            "INCOMPLETE",
+            "ROLLBACK_REQUIRED",
+            "WITHDRAWN"
+          ]
+        },
+        "finding_codes": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/finding_code"}
+        },
+        "missing_artifact_roles": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/artifact_role"}
+        },
+        "purge_required": {"type": "boolean"},
+        "reconnect_sync_required": {"type": "boolean"},
+        "trusted_render_allowed": {"const": false},
+        "install_allowed": {"const": false},
+        "separate_release_review_required": {"const": true}
+      },
+      "required": [
+        "capsule_state",
+        "finding_codes",
+        "missing_artifact_roles",
+        "purge_required",
+        "reconnect_sync_required",
+        "trusted_render_allowed",
+        "install_allowed",
+        "separate_release_review_required"
+      ]
+    },
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "spec_hash",
+    "assessed_at",
+    "capsule",
+    "observation",
+    "capsule_assessment",
+    "governance"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority": "fixture-only offline capsule declaration assessment; never install, verification, cache, render, release, or publication authority",
+    "canonicalization": "RFC 8785 JCS plus SHA-256 excluding assessment_id and spec_hash"
+  }
+}

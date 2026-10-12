@@ -1,0 +1,115 @@
+{
+  "artifact_hashes": {
+    "Makefile": "sha256:7418a35f78c9e5102fc1dc3eae77a058888fc6960f7de0acd3dc86a5e4961b04",
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:c9866c9f598b514609aa52818d380e349d8338cfc9c9a29a4694570e5bbfdd90",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-10-08.json": "sha256:2d12ee4f8c09538fe0f1e8d31aa1f1683a4780f1d35fb45e35c83275b382748e",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-10-08.json": "sha256:e69000bdade1eeda0fb9002f88081e098eb51b2ed23d32dcea39a54507ea3201",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:5e4e3318104074862b84987ddf4f8cb3bce82159c2e8278d6be8bccf253488be",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-10-08.md": "sha256:536720cd6d0b4c9fcb17b6478fc6dce86c2f701ad729aec22c6778336ca4eca5"
+  },
+  "artifact_paths": [
+    "Makefile",
+    "artifacts/qa/validation/milestone-1/README.md",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-10-08.json",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-10-08.json",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-10-08.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "id": "KFM-ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/governance/ci_conformance_report.md@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "id": "KFM-MRTS-CONFORMANCE-CONTRACT",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-08T16:16:00.920744Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb"
+    ],
+    "evidence_refs": [
+      "repo:main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3364",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "repo:contracts/governance/ci_conformance_report.md@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-6-session-2026-10-08"
+  },
+  "notes": "Append-only dated successor evidence. The report is populated from actual observations and rendered by the existing repository renderer; the renderer does not execute checks. Preserve every historical report/receipt and exact-ancestor replay. This pending receipt approves no evidence, ready/merge, prerequisite disposition, settings, milestone closure, release, deployment, source activation or publication. Revert the bounded successor packet together or append a dated correction.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local Git evidence inspection",
+      "offline Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "prompt_or_contract": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+  "receipt_id": "genrec-ci-conformance-report-successor-20261008",
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-10-08.json": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-10-08.json": "PROPOSED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "PROPOSED",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-10-08.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "head_bound_local_profiles",
+      "outcome": "PASS",
+      "reason": "Bounded MRTS, topology, registry, workflow-security and release-dry-run lanes completed on clean main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe; sidecar records actual command/head/tree/times/exit codes. No final milestone target selected."
+    },
+    {
+      "gate": "governance_conformance",
+      "outcome": "FAIL",
+      "reason": "Profile integrity PASS; conformance HOLD_INHERITED on 113 baseline warnings, 0 new drift, 0 stale fingerprints, 0 findings and 0 introduced findings. Not acceptance."
+    },
+    {
+      "gate": "successor_report_integrity",
+      "outcome": "PASS",
+      "reason": "Unchanged v1 schema/validator replays refreshed governing refs; canonical renderer matches stored bytes; status and closure BLOCKED, four blockers, authority=false."
+    },
+    {
+      "gate": "historical_report_and_receipts",
+      "outcome": "PASS",
+      "reason": "Historical report file hash b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb retained; exact-ancestor historical receipt replay passed. Historical evidence is not current execution."
+    },
+    {
+      "gate": "dedicated_hosted_final_candidate_and_independent_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no final candidate was selected and no independent acceptance was performed. Exact-main aggregate successes and MIRROR_REVIEW_REQUIRED failure are separately retained. Receipt vocabulary SKIPPED is not a report PASS."
+    }
+  ]
+}

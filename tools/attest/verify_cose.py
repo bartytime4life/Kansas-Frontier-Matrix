@@ -9,11 +9,83 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
 
 SHA256_RE = re.compile(r"^sha256:[a-fA-F0-9]{64}$")
+MAX_PMSIG_BYTES = 1024 * 1024
+
+
+class ShapeValidationError(ValueError):
+    """Finite PMSIG shape failure that never reflects untrusted values."""
+
+    def __init__(self, code: str) -> None:
+        super().__init__(code)
+        self.code = code
+
+
+class _DuplicateKeyError(ValueError):
+    pass
+
+
+class _NonFiniteNumberError(ValueError):
+    pass
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise _DuplicateKeyError
+        result[key] = value
+    return result
+
+
+def _reject_nonfinite(_value: str) -> object:
+    raise _NonFiniteNumberError
+
+
+def _parse_finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise _NonFiniteNumberError
+    return parsed
+
+
+def _load_pmsig(path: Path) -> dict[str, object]:
+    """Load one bounded JSON object without following a declared symlink."""
+
+    try:
+        if path.is_symlink():
+            raise ShapeValidationError("PMSIG_SYMLINK_DENIED")
+        if not path.is_file():
+            raise ShapeValidationError("PMSIG_NOT_FILE")
+        if path.stat().st_size > MAX_PMSIG_BYTES:
+            raise ShapeValidationError("PMSIG_JSON_TOO_LARGE")
+        raw = path.read_bytes()
+        if len(raw) > MAX_PMSIG_BYTES:
+            raise ShapeValidationError("PMSIG_JSON_TOO_LARGE")
+        obj = json.loads(
+            raw.decode("utf-8"),
+            object_pairs_hook=_reject_duplicate_keys,
+            parse_constant=_reject_nonfinite,
+            parse_float=_parse_finite_float,
+        )
+    except ShapeValidationError:
+        raise
+    except _DuplicateKeyError as exc:
+        raise ShapeValidationError("PMSIG_JSON_DUPLICATE_KEY") from exc
+    except _NonFiniteNumberError as exc:
+        raise ShapeValidationError("PMSIG_JSON_NONFINITE_NUMBER") from exc
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise ShapeValidationError("PMSIG_JSON_INVALID") from exc
+    except (OSError, RecursionError, ValueError) as exc:
+        raise ShapeValidationError("PMSIG_JSON_UNREADABLE") from exc
+    if not isinstance(obj, dict):
+        raise ShapeValidationError("PMSIG_ROOT_INVALID")
+    return obj
 
 
 def fail(msg: str) -> int:
@@ -22,20 +94,20 @@ def fail(msg: str) -> int:
 
 
 def validate_shape(path: Path) -> None:
-    obj = json.loads(path.read_text(encoding="utf-8"))
+    obj = _load_pmsig(path)
     if obj.get("schema_version") != "kfm.pmsig.v1":
-        raise ValueError("schema_version must be kfm.pmsig.v1")
+        raise ShapeValidationError("PMSIG_SCHEMA_VERSION_INVALID")
     subject = obj.get("subject")
     if not isinstance(subject, dict):
-        raise ValueError("subject must be object")
+        raise ShapeValidationError("PMSIG_SUBJECT_INVALID")
     for field in ["pmtiles_sha256", "pmidx_merkle_root", "spec_hash"]:
         value = subject.get(field)
-        if not isinstance(value, str) or not SHA256_RE.match(value):
-            raise ValueError(f"subject.{field} must be sha256:<64 hex>")
+        if not isinstance(value, str) or not SHA256_RE.fullmatch(value):
+            raise ShapeValidationError("PMSIG_SUBJECT_DIGEST_INVALID")
     if not isinstance(obj.get("key_id"), str) or not obj["key_id"]:
-        raise ValueError("key_id is required")
+        raise ShapeValidationError("PMSIG_KEY_ID_INVALID")
     if not isinstance(obj.get("signature"), str) or not obj["signature"]:
-        raise ValueError("signature is required")
+        raise ShapeValidationError("PMSIG_SIGNATURE_SHAPE_INVALID")
 
 
 def main() -> int:
@@ -49,10 +121,14 @@ def main() -> int:
         try:
             validate_shape(path)
             if not args.shape_only:
-                raise ValueError("cryptographic COSE verification not wired; use approved verifier/key registry")
+                raise ShapeValidationError(
+                    "PMSIG_CRYPTOGRAPHIC_VERIFICATION_UNWIRED"
+                )
             print(f"ALLOW: {path}: signature bundle shape valid [shape-only]")
-        except Exception as exc:  # noqa: BLE001
-            status |= fail(f"{path}: {exc}")
+        except ShapeValidationError as exc:
+            status |= fail(f"{path}: {exc.code}")
+        except Exception:  # noqa: BLE001
+            status |= fail(f"{path}: PMSIG_UNEXPECTED_ERROR")
     return status
 
 

@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-soil-mukey-properties-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-mukey-properties.yml",
+    "contracts/domains/soil/mukey_properties.md",
+    "fixtures/domains/soil/mukey_properties/README.md",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.expected_code.txt",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.json",
+    "fixtures/domains/soil/mukey_properties/valid/multi_component.json",
+    "fixtures/domains/soil/mukey_properties/valid/single_component.json",
+    "schemas/contracts/v1/domains/soil/mukey_properties.schema.json",
+    "tests/validators/domains/soil/mukey_properties/test_mukey_properties.py",
+    "tools/validators/domains/soil/mukey_properties/validate_mukey_properties.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-mukey-properties.yml": "sha256:fe20ceef97386211dd03ecae7d6627896d061b64a849b6daf7f4cbd619171a8b",
+    "contracts/domains/soil/mukey_properties.md": "sha256:125138f742d5fe4b98a153a1451bbcfdfc374e170a75a0ddc5a29dbf7f808ea2",
+    "fixtures/domains/soil/mukey_properties/README.md": "sha256:2c3cf8858d0bc2c462e94a31fa4adcd5ce468101064d098da13ced07813433c6",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.expected_code.txt": "sha256:31c275231e87f1ec43925aef6b751c081f29b77ccbe1fc38b70f94b9ba24fbd1",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.json": "sha256:c6a6e9560a5a6828d0c33886ed20ef02acb701753b96be769240cab28c13a1aa",
+    "fixtures/domains/soil/mukey_properties/valid/multi_component.json": "sha256:29ae96e39e34daefc5a3f8d14f05c052e91b2f135316afada6822aa3be77c761",
+    "fixtures/domains/soil/mukey_properties/valid/single_component.json": "sha256:708f8a02b9ff9ddd1a5fddaf9b1ee55d455b87308d8b4acea4bf6fb275560334",
+    "schemas/contracts/v1/domains/soil/mukey_properties.schema.json": "sha256:dacd1a0a43f964895d860d474f907cce7306e9d8d9a1eb1d44a9cb4ad1a9582a",
+    "tests/validators/domains/soil/mukey_properties/test_mukey_properties.py": "sha256:54384cf09b6a53f6bc3363abc8b868263faf8a88c42ecf662d61684d41d6ac8e",
+    "tools/validators/domains/soil/mukey_properties/validate_mukey_properties.py": "sha256:1813e608410c4780e0223902c3b2345311ef339636f3ca81db417a33753e55be"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:902e3fdfad8708462625ce3d0dd02679fbd871b3ca416e2eac9a9faf6bc01364",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7cb8822a9e0b3adf98607c80dcd649ef95df3fb009f33d21b66f8760fddade86"
+    ],
+    "attached_docs": [
+      "New Ideas 3-31-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-31-26.pdf#ssurgo-mukey-component-horizon-aggregation",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c22329c2313de2493ef69b275ea1fd07f8f92545",
+      "repo:pipeline_specs/soil/support_type_profile.v1.json@c22329c2313de2493ef69b275ea1fd07f8f92545",
+      "repo:schemas/contracts/v1/domains/soil/README.md@c22329c2313de2493ef69b275ea1fd07f8f92545"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-mukey-properties.yml": "PROPOSED",
+    "contracts/domains/soil/mukey_properties.md": "PROPOSED",
+    "fixtures/domains/soil/mukey_properties/README.md": "PROPOSED",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.expected_code.txt": "PROPOSED",
+    "fixtures/domains/soil/mukey_properties/invalid/component_closure.json": "PROPOSED",
+    "fixtures/domains/soil/mukey_properties/valid/multi_component.json": "PROPOSED",
+    "fixtures/domains/soil/mukey_properties/valid/single_component.json": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/mukey_properties.schema.json": "PROPOSED",
+    "tests/validators/domains/soil/mukey_properties/test_mukey_properties.py": "PROPOSED",
+    "tools/validators/domains/soil/mukey_properties/validate_mukey_properties.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-and-json-shape",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema and every JSON fixture parsed locally."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Two valid and one persisted invalid case produced exact expected polarity; additional negative conditions are generated deterministically in focused tests."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic unit tests passed locally."
+    },
+    {
+      "gate": "no-network-determinism",
+      "outcome": "PASS",
+      "reason": "Repeated validation passed while socket and DNS entry points were denied."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this non-self-referential receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-3-31-soil-baseline",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 3-31-26.pdf#ssurgo-mukey-component-horizon-aggregation"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c22329c2313de2493ef69b275ea1fd07f8f92545"
+    },
+    {
+      "id": "repository:soil-support-type-profile",
+      "validated": true,
+      "evidence_ref": "repo:pipeline_specs/soil/support_type_profile.v1.json@c22329c2313de2493ef69b275ea1fd07f8f92545"
+    },
+    {
+      "id": "repository:soil-schema-lane",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/soil/README.md@c22329c2313de2493ef69b275ea1fd07f8f92545"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T02:37:58Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only MukeyProperties contract, schema, validator, two valid fixtures, one persisted negative fixture, dynamically generated negative tests, and CI derived from New Ideas 3-31-26. The slice grants no source, evidence, policy, promotion, release, publication, advice, or public-use authority."
+}

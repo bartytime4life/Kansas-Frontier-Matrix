@@ -1,0 +1,310 @@
+{
+  "profile": "kfm.source.retrieval-intent-query-snapshot-assessment-fixtures.v1",
+  "source_idea_ids": ["KFM-CAND-0127", "KFM-CAND-0128", "KFM-CAND-0129"],
+  "base": {
+    "object_type": "RetrievalIntentQuerySnapshotAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source.retrieval-intent-query-snapshot-assessment.fixture.v1",
+    "status": "PROPOSED_INACTIVE",
+    "assessment_id": "retrieval-query-assessment:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_idea_ids": ["KFM-CAND-0127", "KFM-CAND-0128", "KFM-CAND-0129"],
+    "assessed_at": "2026-08-12T02:30:00Z",
+    "source_descriptor_ref": "kfm://source/synthetic-occurrence-v1",
+    "source_descriptor_version": "2026.08.1",
+    "retrieval_intent": {
+      "purpose": "DATASET_BASELINE",
+      "geographic_scope": {
+        "mode": "ADMIN_AREA",
+        "value_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "temporal_scope": {
+        "mode": "INTERVAL",
+        "semantics": "VALID_TIME",
+        "start": "2026-01-01T00:00:00Z",
+        "end": "2026-06-30T23:59:59Z"
+      },
+      "requested_fields": ["county_fips", "observed_at", "source_record_id", "taxon_key"],
+      "filters": [
+        {"field": "county_fips", "operator": "IN", "value_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+        {"field": "observed_at", "operator": "GTE", "value_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+        {"field": "taxon_key", "operator": "IN", "value_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+      ],
+      "exclusions": ["EXACT_COORDINATES", "PRIVATE_OBSERVER_FIELDS"],
+      "sampling": {"mode": "SOURCE_DEFINED", "profile_ref": "kfm:sampling-profile:synthetic-occurrence-v1"},
+      "pagination": {"mode": "PAGE", "planned_unit_count": 4},
+      "result_selection": "ALL_MATCHES",
+      "authentication_posture": "REFERENCE_ONLY",
+      "secrets_embedded": false
+    },
+    "query_snapshot": {
+      "query_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "request_method": "GET",
+      "source_interface_ref": "kfm:source-interface:synthetic-occurrence-search-v1",
+      "geographic_scope": {
+        "mode": "ADMIN_AREA",
+        "value_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "temporal_scope": {
+        "mode": "INTERVAL",
+        "semantics": "VALID_TIME",
+        "start": "2026-01-01T00:00:00Z",
+        "end": "2026-06-30T23:59:59Z"
+      },
+      "requested_fields": ["county_fips", "observed_at", "source_record_id", "taxon_key"],
+      "filters": [
+        {"field": "county_fips", "operator": "IN", "value_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+        {"field": "observed_at", "operator": "GTE", "value_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+        {"field": "taxon_key", "operator": "IN", "value_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+      ],
+      "exclusions": ["EXACT_COORDINATES", "PRIVATE_OBSERVER_FIELDS"],
+      "sampling": {"mode": "SOURCE_DEFINED", "profile_ref": "kfm:sampling-profile:synthetic-occurrence-v1"},
+      "pagination": {"mode": "PAGE", "units_observed": 4, "complete": true},
+      "result_selection": "ALL_MATCHES",
+      "authentication_posture": "REFERENCE_ONLY",
+      "secret_values_recorded": false,
+      "request_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "response_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "result_count": 27,
+      "execution_state": "COMPLETE"
+    },
+    "retrieval_receipt": {
+      "started_at": "2026-08-12T02:00:00Z",
+      "finished_at": "2026-08-12T02:05:00Z",
+      "retrieval_episode_ref": null,
+      "outcome": "MATCHED_COMPLETE",
+      "deviation_codes": [],
+      "pagination_complete": true,
+      "result_interpretation": "RESULT_SET_RECORDED"
+    },
+    "decision": {"recommendation": "READY_FOR_REVIEW", "review_state": "HOLD"},
+    "limitations": [
+      "FIXTURE_ONLY_REFERENCES_UNRESOLVED",
+      "NO_RAW_QUERY_VALUES_OR_SECRETS",
+      "ZERO_RECORDS_IS_NOT_ABSENCE",
+      "NO_SOURCE_EVIDENCE_POLICY_RELEASE_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "effects": {
+      "network_accessed": false,
+      "secrets_resolved": false,
+      "source_admitted": false,
+      "response_authenticated": false,
+      "completeness_proved": false,
+      "evidence_resolved": false,
+      "policy_decided": false,
+      "human_review_approved": false,
+      "lifecycle_mutated": false,
+      "release_authorized": false,
+      "published": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {"name": "matched_complete_ready_for_review", "expected_outcome": "PASS", "expected_findings": []},
+    {
+      "name": "matched_zero_records_is_no_claim",
+      "mutations": [{"path": "/query_snapshot/result_count", "value": 0}],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "partial_execution_abstains",
+      "mutations": [
+        {"path": "/query_snapshot/execution_state", "value": "PARTIAL"},
+        {"path": "/query_snapshot/pagination/complete", "value": false}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "EXECUTION_INCOMPLETE", "path": "/query_snapshot/execution_state"}]
+    },
+    {
+      "name": "failed_execution_abstains_without_empty_claim",
+      "mutations": [
+        {"path": "/query_snapshot/execution_state", "value": "FAILED"},
+        {"path": "/query_snapshot/pagination/units_observed", "value": 0},
+        {"path": "/query_snapshot/pagination/complete", "value": false},
+        {"path": "/query_snapshot/response_digest", "value": null},
+        {"path": "/query_snapshot/result_count", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "RETRIEVAL_FAILED", "path": "/query_snapshot/execution_state"}]
+    },
+    {
+      "name": "requested_fields_changed",
+      "mutations": [{"path": "/query_snapshot/requested_fields", "value": ["county_fips", "observed_at", "taxon_key"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "FIELDS_CHANGED", "path": "/query_snapshot/requested_fields"}]
+    },
+    {
+      "name": "filter_changed",
+      "mutations": [{"path": "/query_snapshot/filters/2/value_digest", "value": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "FILTERS_CHANGED", "path": "/query_snapshot/filters"}]
+    },
+    {
+      "name": "geographic_scope_changed",
+      "mutations": [
+        {"path": "/query_snapshot/geographic_scope/mode", "value": "WHOLE_SOURCE"},
+        {"path": "/query_snapshot/geographic_scope/value_digest", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "GEOGRAPHIC_SCOPE_CHANGED", "path": "/query_snapshot/geographic_scope"}]
+    },
+    {
+      "name": "temporal_scope_changed",
+      "mutations": [
+        {"path": "/query_snapshot/temporal_scope/mode", "value": "AS_OF"},
+        {"path": "/query_snapshot/temporal_scope/start", "value": null},
+        {"path": "/query_snapshot/temporal_scope/end", "value": "2026-06-30T23:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "TEMPORAL_SCOPE_CHANGED", "path": "/query_snapshot/temporal_scope"}]
+    },
+    {
+      "name": "sampling_changed",
+      "mutations": [
+        {"path": "/query_snapshot/sampling/mode", "value": "COMPLETE"},
+        {"path": "/query_snapshot/sampling/profile_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "SAMPLING_CHANGED", "path": "/query_snapshot/sampling"}]
+    },
+    {
+      "name": "pagination_mode_changed",
+      "mutations": [{"path": "/query_snapshot/pagination/mode", "value": "CURSOR"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "PAGINATION_CHANGED", "path": "/query_snapshot/pagination"}]
+    },
+    {
+      "name": "result_selection_changed",
+      "mutations": [{"path": "/query_snapshot/result_selection", "value": "TOP_N"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RESULT_SELECTION_CHANGED", "path": "/query_snapshot/result_selection"}]
+    },
+    {
+      "name": "authentication_posture_changed",
+      "mutations": [{"path": "/query_snapshot/authentication_posture", "value": "REDACTED_REFERENCE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "AUTHENTICATION_POSTURE_CHANGED", "path": "/query_snapshot/authentication_posture"}]
+    },
+    {
+      "name": "requested_fields_not_canonical",
+      "mutations": [{"path": "/query_snapshot/requested_fields", "value": ["taxon_key", "county_fips", "observed_at", "source_record_id"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "FIELDS_CHANGED", "path": "/query_snapshot/requested_fields"},
+        {"code": "REQUESTED_FIELDS_NOT_CANONICAL", "path": "/query_snapshot/requested_fields"}
+      ]
+    },
+    {
+      "name": "filters_not_canonical",
+      "mutations": [{"path": "/query_snapshot/filters", "value": [
+        {"field": "taxon_key", "operator": "IN", "value_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+        {"field": "county_fips", "operator": "IN", "value_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+        {"field": "observed_at", "operator": "GTE", "value_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+      ]}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "FILTERS_CHANGED", "path": "/query_snapshot/filters"},
+        {"code": "FILTERS_NOT_CANONICAL", "path": "/query_snapshot/filters"}
+      ]
+    },
+    {
+      "name": "geographic_scope_digest_missing",
+      "mutations": [{"path": "/query_snapshot/geographic_scope/value_digest", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GEOGRAPHIC_SCOPE_CHANGED", "path": "/query_snapshot/geographic_scope"},
+        {"code": "GEOGRAPHIC_SCOPE_DIGEST_REQUIRED", "path": "/query_snapshot/geographic_scope/value_digest"}
+      ]
+    },
+    {
+      "name": "temporal_interval_reversed",
+      "mutations": [{"path": "/query_snapshot/temporal_scope/end", "value": "2025-12-31T23:59:59Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "TEMPORAL_INTERVAL_INVALID", "path": "/query_snapshot/temporal_scope"},
+        {"code": "TEMPORAL_SCOPE_CHANGED", "path": "/query_snapshot/temporal_scope"}
+      ]
+    },
+    {
+      "name": "complete_response_digest_missing",
+      "mutations": [{"path": "/query_snapshot/response_digest", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "COMPLETE_RESPONSE_DIGEST_REQUIRED", "path": "/query_snapshot/response_digest"}]
+    },
+    {
+      "name": "failed_execution_carries_result",
+      "mutations": [
+        {"path": "/query_snapshot/execution_state", "value": "FAILED"},
+        {"path": "/query_snapshot/pagination/complete", "value": false},
+        {"path": "/query_snapshot/response_digest", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "FAILED_RESULT_MUST_BE_ABSENT", "path": "/query_snapshot"}]
+    },
+    {
+      "name": "receipt_outcome_mismatch",
+      "receipt_mode": "MISMATCH_OUTCOME",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RECEIPT_OUTCOME_MISMATCH", "path": "/retrieval_receipt/outcome"}]
+    },
+    {
+      "name": "receipt_deviation_codes_mismatch",
+      "mutations": [{"path": "/query_snapshot/requested_fields", "value": ["county_fips", "observed_at", "taxon_key"]}],
+      "receipt_mode": "MISMATCH_DEVIATIONS",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "DEVIATION_CODES_MISMATCH", "path": "/retrieval_receipt/deviation_codes"},
+        {"code": "FIELDS_CHANGED", "path": "/query_snapshot/requested_fields"}
+      ]
+    },
+    {
+      "name": "receipt_interpretation_mismatch",
+      "receipt_mode": "MISMATCH_INTERPRETATION",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RESULT_INTERPRETATION_MISMATCH", "path": "/retrieval_receipt/result_interpretation"}]
+    },
+    {
+      "name": "receipt_pagination_mismatch",
+      "receipt_mode": "MISMATCH_PAGINATION",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RECEIPT_PAGINATION_MISMATCH", "path": "/retrieval_receipt/pagination_complete"}]
+    },
+    {
+      "name": "retrieval_time_order_invalid",
+      "mutations": [{"path": "/retrieval_receipt/finished_at", "value": "2026-08-12T01:59:59Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RETRIEVAL_TIME_ORDER_INVALID", "path": "/retrieval_receipt"}]
+    },
+    {
+      "name": "recommendation_mismatch",
+      "recommendation_mode": "MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RECOMMENDATION_MISMATCH", "path": "/decision/recommendation"}]
+    },
+    {
+      "name": "query_hash_tampered",
+      "identity_mode": "MISMATCH_QUERY_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "QUERY_HASH_MISMATCH", "path": "/query_snapshot/query_hash"}]
+    },
+    {
+      "name": "spec_hash_tampered",
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    },
+    {
+      "name": "assessment_id_tampered",
+      "identity_mode": "MISMATCH_ID",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]
+    },
+    {
+      "name": "unknown_top_level_member",
+      "mutations": [{"path": "/unsafe_raw_query", "value": "token=not-allowed"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "SCHEMA_INVALID", "path": "/"}]
+    }
+  ]
+}

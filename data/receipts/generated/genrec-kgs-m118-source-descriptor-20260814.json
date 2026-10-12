@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-kgs-m118-source-descriptor-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/kgs-m118-source-descriptor.yml",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md",
+    "tests/schemas/test_kgs_m118_source_descriptor.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "sha256:79fb0eb602ed946b6fb4a4e324400bb9acd91e3b57c1d1ca8dd80c108136a730",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "sha256:ad899cafaf5c334e85602d11647686071ed7c20e7cd932d182a2cc5f6c8e23cf",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "sha256:739b41fba541300bd8ef0b3cb89ce8c7ab4e2a725bea2cbc62b8f91ab54f3d0d",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "sha256:e5539b50bc370b01ec456d3bfe63b4bf09718004756fc158adf75b5fb1277ddc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:ad899cafaf5c334e85602d11647686071ed7c20e7cd932d182a2cc5f6c8e23cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connected repository inspection and branch/PR delivery",
+      "uploaded KFM document inspection",
+      "official KGS source-page review",
+      "local deterministic validation and artifact generation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=source-registry-and-onboarding-plan",
+      "https://www.kgs.ku.edu/General/Geology/state23.html",
+      "https://kgs.ku.edu/maps",
+      "https://kgs.ku.edu/kansas-geologic-maps",
+      "https://www.kgs.ku.edu/General/copyright.html",
+      "https://kgs.ku.edu/kgs-publishing-policy-and-guidelines",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/data/registry/sources/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/schemas/contracts/v1/sources/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/tools/validators/sources/validate_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/docs/domains/geology/SOURCE_ROLE_MATRIX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/connectors/geology/kgs/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "PROPOSED",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "PROPOSED",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "CONFIRMED",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-syntax",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "deterministic-spec-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "inactive-release-denied-assertions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "official-host-endpoint-restriction",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "source-role-anti-collapse-assertions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-owned-source-descriptor-schema",
+      "outcome": "SKIPPED",
+      "reason": "Pending hosted exact-head workflow against the repository-owned schema and resolver."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the draft pull request exists."
+    },
+    {
+      "gate": "qualified-rights-review",
+      "outcome": "SKIPPED",
+      "reason": "The legacy Terms of Use and current publishing guidance require reconciliation; rights remain UNKNOWN and public release remains denied."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no source, connector, policy, evidence, lifecycle, release, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "geology-source-registry-plan",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    },
+    {
+      "id": "official-kgs-m118-metadata",
+      "validated": true,
+      "evidence_ref": "https://www.kgs.ku.edu/General/Geology/state23.html"
+    },
+    {
+      "id": "official-kgs-terms-of-use",
+      "validated": true,
+      "evidence_ref": "https://www.kgs.ku.edu/General/copyright.html"
+    },
+    {
+      "id": "official-kgs-publishing-guidance",
+      "validated": true,
+      "evidence_ref": "https://kgs.ku.edu/kgs-publishing-policy-and-guidelines"
+    },
+    {
+      "id": "repository-source-descriptor-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "repository-geology-source-role-matrix",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/103323d7d2916c650e8e9829dd1073ee474d61f0/docs/domains/geology/SOURCE_ROLE_MATRIX.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T16:55:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector, official KGS source review, and local artifact runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds one proposed inactive KGS Map M-118 SourceDescriptor registry candidate. It downloads no source bytes, selects no connector implementation path, activates no source, admits no lifecycle object, resolves no legal or steward rights decision, grants no policy, evidence, review, release, publication, or public-use authority, and keeps public release denied."
+}

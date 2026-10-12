@@ -1,0 +1,210 @@
+{
+  "schema_version": "v1",
+  "suite": "hash-binding-assessment",
+  "cases": [
+    {
+      "case_id": "valid-purpose-bound-assessment",
+      "mutations": [],
+      "recompute_spec_hash": false,
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale-assessment-spec-hash",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/spec_hash",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "recompute_spec_hash": false,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "ASSESSMENT_SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "self-hashing-descriptor-field",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/1/excluded_fields",
+          "value": [
+            "/generated_at",
+            "/signature"
+          ]
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SELF_HASH_FIELD_INCLUDED"
+      ]
+    },
+    {
+      "case_id": "signature-inside-signed-subject",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/4/excluded_fields",
+          "value": [
+            "/signature_digest"
+          ]
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SIGNATURE_FIELD_INCLUDED"
+      ]
+    },
+    {
+      "case_id": "volatile-timestamp-not-excluded",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/1/excluded_fields",
+          "value": [
+            "/descriptor_hash",
+            "/signature"
+          ]
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "VOLATILE_FIELD_INCLUDED"
+      ]
+    },
+    {
+      "case_id": "unordered-collection-rule-undeclared",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/1/unordered_collections/0/ordering_rule",
+          "value": "UNDECLARED"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "UNORDERED_COLLECTION_RULE_MISSING"
+      ]
+    },
+    {
+      "case_id": "jcs-nonfinite-posture-disabled",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/5/finite_numbers_required",
+          "value": false
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "JCS_NONFINITE_NOT_REJECTED"
+      ]
+    },
+    {
+      "case_id": "normalized-geometry-without-crs-control",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/purpose_gaps/0/required_controls",
+          "value": [
+            "FINITE_COORDINATES",
+            "GEOMETRY_NORMALIZATION"
+          ]
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "AMBIGUOUS_CRS_NOT_HELD"
+      ]
+    },
+    {
+      "case_id": "cross-profile-comparison",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/0/comparison_profile_id",
+          "value": "kfm.hash.descriptor-sha256-jcs.v1"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "CROSS_PROFILE_COMPARISON"
+      ]
+    },
+    {
+      "case_id": "readiness-profile-canonicalization-drift",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/1/canonicalization_profile",
+          "value": "RAW-BYTES"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "READINESS_PROFILE_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "algorithm-prefix-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/bindings/0/digest_prefix",
+          "value": "blake3:"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "ALGORITHM_PREFIX_MISMATCH",
+        "READINESS_PROFILE_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "receipt-purpose-bound-without-decision",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/purpose_gaps/1/status",
+          "value": "BOUND_WITHOUT_DECISION"
+        },
+        {
+          "op": "replace",
+          "path": "/purpose_gaps/1/profile_id",
+          "value": "kfm.hash.spec-sha256-jcs.v1"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "PURPOSE_GAP_BOUND_WITHOUT_DECISION"
+      ]
+    },
+    {
+      "case_id": "publication-authority-overreach",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/authority_effects/authorizes_publication",
+          "value": true
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "AUTHORITY_EFFECT_ENABLED"
+      ]
+    }
+  ]
+}

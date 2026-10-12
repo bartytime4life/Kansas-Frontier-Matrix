@@ -109,7 +109,7 @@ Fixtures should be synthetic, deterministic, compact, public-safe, and reviewabl
 | Agriculture object meaning | `contracts/domains/agriculture/` | Referenced, not replaced. |
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture remote-sensing policy | `policy/domains/agriculture/` and sensitivity/release policy roots | Out of scope. |
-| Canonical source/lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical source/lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Source registry records | `data/registry/sources/` | Out of scope. |
 | Published layers | `data/published/layers/agriculture/` | Out of scope. |
 | Release candidates and manifests | `release/candidates/agriculture/` and release roots | Out of scope. |

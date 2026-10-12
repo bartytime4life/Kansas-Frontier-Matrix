@@ -1,0 +1,1752 @@
+{
+  "authority": "content_parity_candidate_only",
+  "comparison": {
+    ".gitignore": {
+      "mirror_sha256": "fd9708195ff845cbc5711dd733f179aa40ea4677bc8f24ac503ac02d904c9a78",
+      "site_sha256": "fd9708195ff845cbc5711dd733f179aa40ea4677bc8f24ac503ac02d904c9a78",
+      "state": "identical"
+    },
+    ".npmrc": {
+      "mirror_sha256": "494e64a8818b6158e89321250500ad5ad018e33ad5cfea06a1cacd2cf4da75fa",
+      "site_sha256": "494e64a8818b6158e89321250500ad5ad018e33ad5cfea06a1cacd2cf4da75fa",
+      "state": "identical"
+    },
+    ".openai/hosting.json": {
+      "mirror_sha256": "c5fdac3f5d324116aa6b13bedf730f0c3600cf728c7c7c71cdb3757313388f11",
+      "site_sha256": "c5fdac3f5d324116aa6b13bedf730f0c3600cf728c7c7c71cdb3757313388f11",
+      "state": "identical"
+    },
+    "AGENTS.md": {
+      "mirror_sha256": "0b6e1ad45d719742fd442064ab8c7cc6b35487c4abe795acc5e010bcec899c7b",
+      "site_sha256": "0b6e1ad45d719742fd442064ab8c7cc6b35487c4abe795acc5e010bcec899c7b",
+      "state": "identical"
+    },
+    "README.md": {
+      "mirror_sha256": "f9249c54add1c1fde286bc483b06126c1b24f66b25e0a2c85e6ac08dc008a1c8",
+      "site_sha256": "f9249c54add1c1fde286bc483b06126c1b24f66b25e0a2c85e6ac08dc008a1c8",
+      "state": "identical"
+    },
+    "app/3dep-dem-tiles.ts": {
+      "mirror_sha256": "67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
+      "site_sha256": "67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
+      "state": "identical"
+    },
+    "app/about/page.tsx": {
+      "mirror_sha256": "c33b382e23a62d8ddd2c9e5995ccb4675b44496df84b8f83c0ceb464b6e9f0f6",
+      "site_sha256": "c33b382e23a62d8ddd2c9e5995ccb4675b44496df84b8f83c0ceb464b6e9f0f6",
+      "state": "identical"
+    },
+    "app/airflow-tiles.ts": {
+      "mirror_sha256": "c78e10c1e6f309ac1f756b55140e9d5a98ccd93d9a677f8970c7e927c1b9e52e",
+      "site_sha256": "c78e10c1e6f309ac1f756b55140e9d5a98ccd93d9a677f8970c7e927c1b9e52e",
+      "state": "identical"
+    },
+    "app/api/3dep-dem-tile/route.ts": {
+      "mirror_sha256": "dbc2aa78a66916e2a582e0ab145fdfca806ecfe2d35584083c29b07f940063ff",
+      "site_sha256": "dbc2aa78a66916e2a582e0ab145fdfca806ecfe2d35584083c29b07f940063ff",
+      "state": "identical"
+    },
+    "app/api/airflow-tile/route.ts": {
+      "mirror_sha256": "bdf4e77628ff931428510a0a1a597aadc3b8354cf297c4444fb5f5d8ac5e3f50",
+      "site_sha256": "bdf4e77628ff931428510a0a1a597aadc3b8354cf297c4444fb5f5d8ac5e3f50",
+      "state": "identical"
+    },
+    "app/api/blm-plss-records/route.ts": {
+      "mirror_sha256": "0e96dd30bc3ae445a1502ec7ec5e832c5f149667ced1deee6f85a13b6fe54197",
+      "site_sha256": "0e96dd30bc3ae445a1502ec7ec5e832c5f149667ced1deee6f85a13b6fe54197",
+      "state": "identical"
+    },
+    "app/api/bridge-records/route.ts": {
+      "mirror_sha256": "9c88db48161a0303485c80f78bb3480634b55f7c548fbd2fcce6459829e213b2",
+      "site_sha256": "9c88db48161a0303485c80f78bb3480634b55f7c548fbd2fcce6459829e213b2",
+      "state": "identical"
+    },
+    "app/api/crop-casma/availability/route.ts": {
+      "mirror_sha256": "e2c2be7ffa650cac17e231d90bf2800da279a498f82fb6e56e676478609346dd",
+      "site_sha256": "e2c2be7ffa650cac17e231d90bf2800da279a498f82fb6e56e676478609346dd",
+      "state": "identical"
+    },
+    "app/api/crop-casma/tile/route.ts": {
+      "mirror_sha256": "50e3d962531051acfbb431f4e598cbca3bccbc637d2d02f6491063033b68a0ab",
+      "site_sha256": "50e3d962531051acfbb431f4e598cbca3bccbc637d2d02f6491063033b68a0ab",
+      "state": "identical"
+    },
+    "app/api/data-submissions/[id]/route.ts": {
+      "mirror_sha256": "31f363aa55f9c5ada38163d4e260deed926f5213accef8fd0dcd182feef596bb",
+      "site_sha256": "31f363aa55f9c5ada38163d4e260deed926f5213accef8fd0dcd182feef596bb",
+      "state": "identical"
+    },
+    "app/api/data-submissions/route.ts": {
+      "mirror_sha256": "45e9c6c129633f191ae312cd0a3e6ab8d629799e6aca23b97bc811554bf82b68",
+      "site_sha256": "45e9c6c129633f191ae312cd0a3e6ab8d629799e6aca23b97bc811554bf82b68",
+      "state": "identical"
+    },
+    "app/api/earth-engine-context/[setId]/[layerId]/[...tile]/route.ts": {
+      "mirror_sha256": "7123e8374a29e242bce087cc8f97b66864ad02b2ce553a221d3f5a8d224d38d5",
+      "site_sha256": "7123e8374a29e242bce087cc8f97b66864ad02b2ce553a221d3f5a8d224d38d5",
+      "state": "identical"
+    },
+    "app/api/earth-engine-context/activate/route.ts": {
+      "mirror_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
+      "site_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
+      "state": "identical"
+    },
+    "app/api/earth-engine-context/active/route.ts": {
+      "mirror_sha256": "90f65dc1841aa367a6daca02e3af4ad02162a9ef1463d7a12ad55340f0a7245d",
+      "site_sha256": "90f65dc1841aa367a6daca02e3af4ad02162a9ef1463d7a12ad55340f0a7245d",
+      "state": "identical"
+    },
+    "app/api/earth-engine-context/catalog/route.ts": {
+      "mirror_sha256": "5643c365a3ae898d1751323fc433ea5076b0d598afbc189b151e60f3ab0533e8",
+      "site_sha256": "5643c365a3ae898d1751323fc433ea5076b0d598afbc189b151e60f3ab0533e8",
+      "state": "identical"
+    },
+    "app/api/earth-engine-context/stage/route.ts": {
+      "mirror_sha256": "2c69c82c24c3e71980c467f4ae8a183752687bfb6affa9a87f97ea2baff12c39",
+      "site_sha256": "2c69c82c24c3e71980c467f4ae8a183752687bfb6affa9a87f97ea2baff12c39",
+      "state": "identical"
+    },
+    "app/api/event-atlas/counties/route.ts": {
+      "mirror_sha256": "a49448469fe677ddb451d20e2c1d7e02a0640c82064a381ea41d09a463a9f9a3",
+      "site_sha256": "a49448469fe677ddb451d20e2c1d7e02a0640c82064a381ea41d09a463a9f9a3",
+      "state": "identical"
+    },
+    "app/api/event-atlas/geology-legend/route.ts": {
+      "mirror_sha256": "d3f5c5d36c7e59d40981134282454859a7c2bcc60863ab1282d7eb8e6f307556",
+      "site_sha256": "d3f5c5d36c7e59d40981134282454859a7c2bcc60863ab1282d7eb8e6f307556",
+      "state": "identical"
+    },
+    "app/api/event-atlas/manifest/route.ts": {
+      "mirror_sha256": "8a360d517acdd5c2044e42e717a9a8eafe82b4a47d1969a3dbb484f6c3e4c3dc",
+      "site_sha256": "8a360d517acdd5c2044e42e717a9a8eafe82b4a47d1969a3dbb484f6c3e4c3dc",
+      "state": "identical"
+    },
+    "app/api/event-atlas/radar-frame/route.ts": {
+      "mirror_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
+      "site_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
+      "state": "identical"
+    },
+    "app/api/event-atlas/resources/route.ts": {
+      "mirror_sha256": "f8cbf39378b0406cd6a1bc298028039b919b5a695c8eeb1c5f40794ad4e9dfc4",
+      "site_sha256": "f8cbf39378b0406cd6a1bc298028039b919b5a695c8eeb1c5f40794ad4e9dfc4",
+      "state": "identical"
+    },
+    "app/api/event-atlas/tile/route.ts": {
+      "mirror_sha256": "5dad3c7b3849e5a2214538c4f917922d7a8416db63c079963d8d2526e7a55224",
+      "site_sha256": "5dad3c7b3849e5a2214538c4f917922d7a8416db63c079963d8d2526e7a55224",
+      "state": "identical"
+    },
+    "app/api/event-atlas/upstream.ts": {
+      "mirror_sha256": "67ae4f2de3596a48c59230835a06da7104e548d89e44f33bb2d0b45c02c2d316",
+      "site_sha256": "67ae4f2de3596a48c59230835a06da7104e548d89e44f33bb2d0b45c02c2d316",
+      "state": "identical"
+    },
+    "app/api/event-atlas/weather/route.ts": {
+      "mirror_sha256": "01153089461936cec80197cf449521cc1080ec4037ecbfcc90c3d009960197dc",
+      "site_sha256": "01153089461936cec80197cf449521cc1080ec4037ecbfcc90c3d009960197dc",
+      "state": "identical"
+    },
+    "app/api/governed/v1/[view]/route.ts": {
+      "mirror_sha256": "de1bf475cc93cec2427e5e76982d0d10e5f6a212665c163fc977092b4ffbbea0",
+      "site_sha256": "de1bf475cc93cec2427e5e76982d0d10e5f6a212665c163fc977092b4ffbbea0",
+      "state": "identical"
+    },
+    "app/api/governed/v1/knowledge/route.ts": {
+      "mirror_sha256": "6ba3ae245e8e2682f79377860ca57c3ce0af3a6561871272cec4ef78573a1102",
+      "site_sha256": "6ba3ae245e8e2682f79377860ca57c3ce0af3a6561871272cec4ef78573a1102",
+      "state": "identical"
+    },
+    "app/api/historical-topo/activate/route.ts": {
+      "mirror_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+      "site_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+      "state": "identical"
+    },
+    "app/api/historical-topo/overlay/route.ts": {
+      "mirror_sha256": "ef28cf64d37b0c711cc594c5ded23b71771e8d75f913b1e3dc35eee0cda6ad55",
+      "site_sha256": "ef28cf64d37b0c711cc594c5ded23b71771e8d75f913b1e3dc35eee0cda6ad55",
+      "state": "identical"
+    },
+    "app/api/historical-topo/queue/route.ts": {
+      "mirror_sha256": "0721890b21e2408c17c6a079a9d5054862050f0bb0092b0439d413e4c42ed9ba",
+      "site_sha256": "0721890b21e2408c17c6a079a9d5054862050f0bb0092b0439d413e4c42ed9ba",
+      "state": "identical"
+    },
+    "app/api/historical-topo/review/route.ts": {
+      "mirror_sha256": "2d3758dde5527b557aa36945b019acf5cae92acfcc52d814997d2a442e22ca8a",
+      "site_sha256": "2d3758dde5527b557aa36945b019acf5cae92acfcc52d814997d2a442e22ca8a",
+      "state": "identical"
+    },
+    "app/api/historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]/route.ts": {
+      "mirror_sha256": "2399c19e405fad9b27f6fd7bc6f3640cde4799ea0f4f4b10ee4793a3b1496e86",
+      "site_sha256": "2399c19e405fad9b27f6fd7bc6f3640cde4799ea0f4f4b10ee4793a3b1496e86",
+      "state": "identical"
+    },
+    "app/api/historical-topo/route.ts": {
+      "mirror_sha256": "e354709ee65db323bdea5a1415a65ebe93b84fcbe289c3808759087cf5791963",
+      "site_sha256": "e354709ee65db323bdea5a1415a65ebe93b84fcbe289c3808759087cf5791963",
+      "state": "identical"
+    },
+    "app/api/historical-topo/stage/route.ts": {
+      "mirror_sha256": "f0747267c99f910419e8c4abbdc43035edb50260719f4e011a350529f000fee0",
+      "site_sha256": "f0747267c99f910419e8c4abbdc43035edb50260719f4e011a350529f000fee0",
+      "state": "identical"
+    },
+    "app/api/historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]/route.ts": {
+      "mirror_sha256": "1a33e0a038d9384528eda200fe221452814b745640c2553fc0bd2485956ea3e5",
+      "site_sha256": "1a33e0a038d9384528eda200fe221452814b745640c2553fc0bd2485956ea3e5",
+      "state": "identical"
+    },
+    "app/api/hydrology/coverage/route.ts": {
+      "mirror_sha256": "8d06ec873718d7547b3ee2e22fe63e5417d901a6c68406d9631466e38b522ae1",
+      "site_sha256": "8d06ec873718d7547b3ee2e22fe63e5417d901a6c68406d9631466e38b522ae1",
+      "state": "identical"
+    },
+    "app/api/hydrology/direction/route.ts": {
+      "mirror_sha256": "2acacf62ebc16c21f05fce821257d13169d462c801f3ee5dcd8c343abed94799",
+      "site_sha256": "2acacf62ebc16c21f05fce821257d13169d462c801f3ee5dcd8c343abed94799",
+      "state": "identical"
+    },
+    "app/api/hydrology/noaa/route.ts": {
+      "mirror_sha256": "520e2353fc92b577f0ee57a533c38772d431ffbc22a78b7ddb42b200461539eb",
+      "site_sha256": "520e2353fc92b577f0ee57a533c38772d431ffbc22a78b7ddb42b200461539eb",
+      "state": "identical"
+    },
+    "app/api/hydrology/streamflow/route.ts": {
+      "mirror_sha256": "214de12d288c8dce8e3283cf0ecc240c480472abc77dee52549126872f0ed876",
+      "site_sha256": "214de12d288c8dce8e3283cf0ecc240c480472abc77dee52549126872f0ed876",
+      "state": "identical"
+    },
+    "app/api/lightning/flashes/route.ts": {
+      "mirror_sha256": "0bc69bcf072987e403d663d03db42ec8c45dbee80732e884c75406d4fa099696",
+      "site_sha256": "0bc69bcf072987e403d663d03db42ec8c45dbee80732e884c75406d4fa099696",
+      "state": "identical"
+    },
+    "app/api/lightning/frames/route.ts": {
+      "mirror_sha256": "160afa2b1014cc8c1c10c306ea8870f621bb786c889d44cad729d2afdf69186b",
+      "site_sha256": "160afa2b1014cc8c1c10c306ea8870f621bb786c889d44cad729d2afdf69186b",
+      "state": "identical"
+    },
+    "app/api/lightning/legend/route.ts": {
+      "mirror_sha256": "605ed3c20f16bc26ec7028b0d49818682d3f6736a4b9d3ce2c16e4d13f42e21b",
+      "site_sha256": "605ed3c20f16bc26ec7028b0d49818682d3f6736a4b9d3ce2c16e4d13f42e21b",
+      "state": "identical"
+    },
+    "app/api/lightning/preview/route.ts": {
+      "mirror_sha256": "f5e82618b5c04dbb27dd9a963e8f5beea4f0c4f9f66add0c934dd12678736035",
+      "site_sha256": "f5e82618b5c04dbb27dd9a963e8f5beea4f0c4f9f66add0c934dd12678736035",
+      "state": "identical"
+    },
+    "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts": {
+      "mirror_sha256": "0c7936181da752187b7017b18fcc3dbfb00b64a87a32d18d9b42028782590e53",
+      "site_sha256": "0c7936181da752187b7017b18fcc3dbfb00b64a87a32d18d9b42028782590e53",
+      "state": "identical"
+    },
+    "app/api/live-context/route.ts": {
+      "mirror_sha256": "137ee649521e0623ee1a3923838d7659ddc743278c3de93a702587cf3ab14fd3",
+      "site_sha256": "137ee649521e0623ee1a3923838d7659ddc743278c3de93a702587cf3ab14fd3",
+      "state": "identical"
+    },
+    "app/api/noaa-radar/frames/route.ts": {
+      "mirror_sha256": "5f86c6bbee3f1d242752f6effd353179e879a13f310238744cdfae31945a97cd",
+      "site_sha256": "5f86c6bbee3f1d242752f6effd353179e879a13f310238744cdfae31945a97cd",
+      "state": "identical"
+    },
+    "app/api/noaa-satellite/frames/route.ts": {
+      "mirror_sha256": "f80201010255642406c086d2b7b7599a4e316837a4984c460840cb319426444f",
+      "site_sha256": "f80201010255642406c086d2b7b7599a4e316837a4984c460840cb319426444f",
+      "state": "identical"
+    },
+    "app/api/qwen/route.ts": {
+      "mirror_sha256": "905006d0bae05df4e80f0efa93addb5f570890a04a7bb4f553f03db8d79cc28c",
+      "site_sha256": "905006d0bae05df4e80f0efa93addb5f570890a04a7bb4f553f03db8d79cc28c",
+      "state": "identical"
+    },
+    "app/api/repository-status/route.ts": {
+      "mirror_sha256": "7b5e104522165b37af2ee5656e790a9cb17a3f2cab4603dde470f6ed9ec3127c",
+      "site_sha256": "7b5e104522165b37af2ee5656e790a9cb17a3f2cab4603dde470f6ed9ec3127c",
+      "state": "identical"
+    },
+    "app/api/soil-moisture/availability/route.ts": {
+      "mirror_sha256": "14a664d1731b95e34e60f940574276b74abf3bf196786cfacf4550ce4629a489",
+      "site_sha256": "14a664d1731b95e34e60f940574276b74abf3bf196786cfacf4550ce4629a489",
+      "state": "identical"
+    },
+    "app/api/soil-moisture/tile/route.ts": {
+      "mirror_sha256": "29a47f6780cd2b2ba1935ae9fc056f091a2091ba4dcd4fad5ce75193d2288ede",
+      "site_sha256": "29a47f6780cd2b2ba1935ae9fc056f091a2091ba4dcd4fad5ce75193d2288ede",
+      "state": "identical"
+    },
+    "app/api/source-download/route.ts": {
+      "mirror_sha256": "e0fa3a1aef0c478ef1d1057b013ba4cdda44674129503a9a154b9b554056e9a0",
+      "site_sha256": "e0fa3a1aef0c478ef1d1057b013ba4cdda44674129503a9a154b9b554056e9a0",
+      "state": "identical"
+    },
+    "app/api/terrain-tile/route.ts": {
+      "mirror_sha256": "e6709538b1acd65bb553318c191fe2179d85de7bdb299be2087fbd8fd5342834",
+      "site_sha256": "e6709538b1acd65bb553318c191fe2179d85de7bdb299be2087fbd8fd5342834",
+      "state": "identical"
+    },
+    "app/api/wind-arrows/route.ts": {
+      "mirror_sha256": "abaaca2ca4abc51fd5a26881cfd0f5543a66ccc23c3b270de2fc3a0bbefaa2e2",
+      "site_sha256": "abaaca2ca4abc51fd5a26881cfd0f5543a66ccc23c3b270de2fc3a0bbefaa2e2",
+      "state": "identical"
+    },
+    "app/archive-day-slider.tsx": {
+      "mirror_sha256": "ae127bb26949eb567484eee1c2fced9f1bc1d59aa0f68ac07f5cea92de3b1b54",
+      "site_sha256": "ae127bb26949eb567484eee1c2fced9f1bc1d59aa0f68ac07f5cea92de3b1b54",
+      "state": "identical"
+    },
+    "app/blm-plss-inspector.tsx": {
+      "mirror_sha256": "611445e527f334d9c3cb25f81e37f646922e827462a2c93ad1d9df01a8d6c247",
+      "site_sha256": "611445e527f334d9c3cb25f81e37f646922e827462a2c93ad1d9df01a8d6c247",
+      "state": "identical"
+    },
+    "app/blm-plss-records.ts": {
+      "mirror_sha256": "e01beed91dca843a2efb27416b6e706bbcb2068474fb9c100a06c65dc39aba4b",
+      "site_sha256": "e01beed91dca843a2efb27416b6e706bbcb2068474fb9c100a06c65dc39aba4b",
+      "state": "identical"
+    },
+    "app/bounded-json.ts": {
+      "mirror_sha256": "67a805413f09e293f4c59f17f37c627340dc3e12ac61ac52969c494ff3e3c392",
+      "site_sha256": "67a805413f09e293f4c59f17f37c627340dc3e12ac61ac52969c494ff3e3c392",
+      "state": "identical"
+    },
+    "app/bridge-record-inspector.tsx": {
+      "mirror_sha256": "9d71736880f5c71b52299a656887c8ccb580623c12a7c1b973f323a81762f058",
+      "site_sha256": "9d71736880f5c71b52299a656887c8ccb580623c12a7c1b973f323a81762f058",
+      "state": "identical"
+    },
+    "app/browser-json-request.ts": {
+      "mirror_sha256": "99cdc197720c62c0a4edd263352ac245f079193745122cf9eb286d8cf145b638",
+      "site_sha256": "99cdc197720c62c0a4edd263352ac245f079193745122cf9eb286d8cf145b638",
+      "state": "identical"
+    },
+    "app/build-clock.ts": {
+      "mirror_sha256": "c9c23bd250d8c63d2b4d367d428391768f265b463606ce137961e094444aa41c",
+      "site_sha256": "c9c23bd250d8c63d2b4d367d428391768f265b463606ce137961e094444aa41c",
+      "state": "identical"
+    },
+    "app/chatgpt-auth.ts": {
+      "mirror_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
+      "site_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
+      "state": "identical"
+    },
+    "app/county-baseline.ts": {
+      "mirror_sha256": "dc30c2528c7d5052b150fe90d968a00c33f61fcb909c0085eec38bb4474936b3",
+      "site_sha256": "dc30c2528c7d5052b150fe90d968a00c33f61fcb909c0085eec38bb4474936b3",
+      "state": "identical"
+    },
+    "app/crop-casma-control.tsx": {
+      "mirror_sha256": "637ca1801f535e06d62cd213f66410ceeb0f19db67ff40b2a95a464ad6b3916f",
+      "site_sha256": "637ca1801f535e06d62cd213f66410ceeb0f19db67ff40b2a95a464ad6b3916f",
+      "state": "identical"
+    },
+    "app/crop-casma-server.ts": {
+      "mirror_sha256": "0c94f70c65ffa85b1861d1f02ffce2b7b7eb45d76234e31205c3263d4b0d1b70",
+      "site_sha256": "0c94f70c65ffa85b1861d1f02ffce2b7b7eb45d76234e31205c3263d4b0d1b70",
+      "state": "identical"
+    },
+    "app/daily-baseline.ts": {
+      "mirror_sha256": "46f98e220245abfad09bc7b99ccb2345dce3e2e7679ad90064fde91828cd3716",
+      "site_sha256": "46f98e220245abfad09bc7b99ccb2345dce3e2e7679ad90064fde91828cd3716",
+      "state": "identical"
+    },
+    "app/data-intake-server.ts": {
+      "mirror_sha256": "46e035e19456206d05adff8eb422027d4569ca87e895a7d7ecce10b7a4138a23",
+      "site_sha256": "46e035e19456206d05adff8eb422027d4569ca87e895a7d7ecce10b7a4138a23",
+      "state": "identical"
+    },
+    "app/data-intake.ts": {
+      "mirror_sha256": "222dfcf2b4f2ad850884b62419669bc792c30dda373adbbda1796e68886abe15",
+      "site_sha256": "222dfcf2b4f2ad850884b62419669bc792c30dda373adbbda1796e68886abe15",
+      "state": "identical"
+    },
+    "app/data/page.tsx": {
+      "mirror_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
+      "site_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
+      "state": "identical"
+    },
+    "app/data/workspace.module.css": {
+      "mirror_sha256": "30839abf51973fcfca48db9310d50b6923513d33612afd124abf6aa039b6ffd5",
+      "site_sha256": "30839abf51973fcfca48db9310d50b6923513d33612afd124abf6aa039b6ffd5",
+      "state": "identical"
+    },
+    "app/data/workspace.tsx": {
+      "mirror_sha256": "640b137b7de90c55181f6c338dd7544ec2d1e19a3b47df3807514085fb02146f",
+      "site_sha256": "640b137b7de90c55181f6c338dd7544ec2d1e19a3b47df3807514085fb02146f",
+      "state": "identical"
+    },
+    "app/daylight-layer.ts": {
+      "mirror_sha256": "7346cef9800c0bf7e22488eae46fa414932bf3f6cf8757b9d41f0c0ef8d1a89e",
+      "site_sha256": "7346cef9800c0bf7e22488eae46fa414932bf3f6cf8757b9d41f0c0ef8d1a89e",
+      "state": "identical"
+    },
+    "app/earth-engine-context-client.ts": {
+      "mirror_sha256": "1876ed6a5382ec6ee971047952f19350e8d524d8584212d06d92a3c2962c4e54",
+      "site_sha256": "1876ed6a5382ec6ee971047952f19350e8d524d8584212d06d92a3c2962c4e54",
+      "state": "identical"
+    },
+    "app/earth-engine-context-server.ts": {
+      "mirror_sha256": "1b075f945126f7fb4aea641182d2ea16840810de9c3c772ae6b5ee31c4f4e1b8",
+      "site_sha256": "1b075f945126f7fb4aea641182d2ea16840810de9c3c772ae6b5ee31c4f4e1b8",
+      "state": "identical"
+    },
+    "app/earth-engine-context.ts": {
+      "mirror_sha256": "4418a9e09fffe17548e0523073645c6bd0ad106ff66db9f4a2512bca091b7593",
+      "site_sha256": "4418a9e09fffe17548e0523073645c6bd0ad106ff66db9f4a2512bca091b7593",
+      "state": "identical"
+    },
+    "app/earth-engine-context/install/installer.tsx": {
+      "mirror_sha256": "f83d97f9492076f47d11c05f24e537c326de54abd0b5de3e4bf1e33e202d1f5e",
+      "site_sha256": "f83d97f9492076f47d11c05f24e537c326de54abd0b5de3e4bf1e33e202d1f5e",
+      "state": "identical"
+    },
+    "app/earth-engine-context/install/page.tsx": {
+      "mirror_sha256": "b1694057b3b9154d84b0e377cb9f4f8d836011d32e26c1e0a1b9921b99f0ce65",
+      "site_sha256": "b1694057b3b9154d84b0e377cb9f4f8d836011d32e26c1e0a1b9921b99f0ce65",
+      "state": "identical"
+    },
+    "app/earth-engine-data.ts": {
+      "mirror_sha256": "8134e2c451728cd0fc77e1130f801120a6f01de58ff69be84715b9d15cd13b0a",
+      "site_sha256": "8134e2c451728cd0fc77e1130f801120a6f01de58ff69be84715b9d15cd13b0a",
+      "state": "identical"
+    },
+    "app/earth-engine-display.module.css": {
+      "mirror_sha256": "73e84e08a508171f3adb45c6b199823d74dd5674c558682c3e87d0c1b64d5d87",
+      "site_sha256": "73e84e08a508171f3adb45c6b199823d74dd5674c558682c3e87d0c1b64d5d87",
+      "state": "identical"
+    },
+    "app/earth-engine-display.tsx": {
+      "mirror_sha256": "a4f965ebc10984e2a07e4b08867a6d5ace46afabbe6a4afea17549e42750d071",
+      "site_sha256": "a4f965ebc10984e2a07e4b08867a6d5ace46afabbe6a4afea17549e42750d071",
+      "state": "identical"
+    },
+    "app/earth-engine-export.ts": {
+      "mirror_sha256": "05df62172b8ad17cd22f59f8241897ff55d6ea46d7c85203de02212b255386e8",
+      "site_sha256": "05df62172b8ad17cd22f59f8241897ff55d6ea46d7c85203de02212b255386e8",
+      "state": "identical"
+    },
+    "app/earth-engine-globe.module.css": {
+      "mirror_sha256": "b83f24be3dca064ed174ff39500f52997f4c7c3edbdbff3c7edf5c43c3dcbfe8",
+      "site_sha256": "b83f24be3dca064ed174ff39500f52997f4c7c3edbdbff3c7edf5c43c3dcbfe8",
+      "state": "identical"
+    },
+    "app/earth-engine-globe.tsx": {
+      "mirror_sha256": "da32af531e22b06f73aeb6a92bb7e36010efbb41445ffc692372fb9285bba997",
+      "site_sha256": "da32af531e22b06f73aeb6a92bb7e36010efbb41445ffc692372fb9285bba997",
+      "state": "identical"
+    },
+    "app/earth-engine-local-read.ts": {
+      "mirror_sha256": "9d1c42763b35225d7076b46ae9dc83eb8de201d4fb816b1321da02a24c6dc30a",
+      "site_sha256": "9d1c42763b35225d7076b46ae9dc83eb8de201d4fb816b1321da02a24c6dc30a",
+      "state": "identical"
+    },
+    "app/earth-engine-raster-fallback.module.css": {
+      "mirror_sha256": "2919f557bc0b5f57652bc0565a9fc95e3e7a941aa866f9414475c6b00b9d26da",
+      "site_sha256": "2919f557bc0b5f57652bc0565a9fc95e3e7a941aa866f9414475c6b00b9d26da",
+      "state": "identical"
+    },
+    "app/earth-engine-raster-fallback.tsx": {
+      "mirror_sha256": "5320d46f241cde4a1ec2d5ff642cf0cb1c7145d0d2c656db7eb4d4e91232064d",
+      "site_sha256": "5320d46f241cde4a1ec2d5ff642cf0cb1c7145d0d2c656db7eb4d4e91232064d",
+      "state": "identical"
+    },
+    "app/earth-engine/page.tsx": {
+      "mirror_sha256": "4c3bd35cee37158203e7ca350f6b3a093a8573476a8fd361517a155e0ca3f5ea",
+      "site_sha256": "4c3bd35cee37158203e7ca350f6b3a093a8573476a8fd361517a155e0ca3f5ea",
+      "state": "identical"
+    },
+    "app/earth-engine/workspace.module.css": {
+      "mirror_sha256": "30fbe2001458244626dd4e2efa24856aef31cf99531f6f5cc40965800b0f5f09",
+      "site_sha256": "30fbe2001458244626dd4e2efa24856aef31cf99531f6f5cc40965800b0f5f09",
+      "state": "identical"
+    },
+    "app/earth-engine/workspace.tsx": {
+      "mirror_sha256": "cdc77f953a93283cef093fceddf4229d14f03217b47ad8b4af9cf37fe2255f0c",
+      "site_sha256": "cdc77f953a93283cef093fceddf4229d14f03217b47ad8b4af9cf37fe2255f0c",
+      "state": "identical"
+    },
+    "app/embed-runtime.ts": {
+      "mirror_sha256": "b4c2502714a049eb9db1cec74e93d2a7e678877bcf713fd13e54ba5bcbf67627",
+      "site_sha256": "b4c2502714a049eb9db1cec74e93d2a7e678877bcf713fd13e54ba5bcbf67627",
+      "state": "identical"
+    },
+    "app/error.tsx": {
+      "mirror_sha256": "4fabee82ba9d3bf665b3d75db414f5f626816c1211f05b9ecad38b37fd92eee7",
+      "site_sha256": "4fabee82ba9d3bf665b3d75db414f5f626816c1211f05b9ecad38b37fd92eee7",
+      "state": "identical"
+    },
+    "app/event-atlas.ts": {
+      "mirror_sha256": "b6ad9786a887e454433726e18d7ff8a69570762c2f0c086f70486182f1e5aaf8",
+      "site_sha256": "b6ad9786a887e454433726e18d7ff8a69570762c2f0c086f70486182f1e5aaf8",
+      "state": "identical"
+    },
+    "app/evidence-drawer-data.ts": {
+      "mirror_sha256": "833b694562b8a6aca9ca1f7672c18cfd76566358d7dd2b1f0ee9772aa5881a63",
+      "site_sha256": "833b694562b8a6aca9ca1f7672c18cfd76566358d7dd2b1f0ee9772aa5881a63",
+      "state": "identical"
+    },
+    "app/evidence-drawer-observation.ts": {
+      "mirror_sha256": "a7b89a4f428c4810086ab92b0f609d82d724ab02b846e3fa868b033205bd87c2",
+      "site_sha256": "a7b89a4f428c4810086ab92b0f609d82d724ab02b846e3fa868b033205bd87c2",
+      "state": "identical"
+    },
+    "app/explorer-data.ts": {
+      "mirror_sha256": "e6eafbd8fb61714e90e1c04d7dda0fa2eddae902e99ded0450bf1bbcbcb5193c",
+      "site_sha256": "e6eafbd8fb61714e90e1c04d7dda0fa2eddae902e99ded0450bf1bbcbcb5193c",
+      "state": "identical"
+    },
+    "app/export-center.ts": {
+      "mirror_sha256": "d6b260183309703bd4fc564294c15cb8849ded5e72a40a6e616f4c304a810288",
+      "site_sha256": "d6b260183309703bd4fc564294c15cb8849ded5e72a40a6e616f4c304a810288",
+      "state": "identical"
+    },
+    "app/external-context-sources.ts": {
+      "mirror_sha256": "a5ba3a8dd0220b744565d86f69c030f9ace4a171b7b6925ea3568c2690dfc06a",
+      "site_sha256": "a5ba3a8dd0220b744565d86f69c030f9ace4a171b7b6925ea3568c2690dfc06a",
+      "state": "identical"
+    },
+    "app/favicon.ico/route.ts": {
+      "mirror_sha256": "1e32ac0f7d1d243b53883f5f009c060a098f707f74aa0ae82785387fdc9debdc",
+      "site_sha256": "1e32ac0f7d1d243b53883f5f009c060a098f707f74aa0ae82785387fdc9debdc",
+      "state": "identical"
+    },
+    "app/feature-catalog.ts": {
+      "mirror_sha256": "5aab712458695a700ca06352ba975913179d3d17f6f85dfaf1bc1861dbccb294",
+      "site_sha256": "5aab712458695a700ca06352ba975913179d3d17f6f85dfaf1bc1861dbccb294",
+      "state": "identical"
+    },
+    "app/fema-declarations.ts": {
+      "mirror_sha256": "4cfea52d7500a61a50b19190afe9c1333b39bd8d33458cd33097aa114876e7cb",
+      "site_sha256": "4cfea52d7500a61a50b19190afe9c1333b39bd8d33458cd33097aa114876e7cb",
+      "state": "identical"
+    },
+    "app/fire-report-analysis.ts": {
+      "mirror_sha256": "6365668a2a3b2cbe0f0e80925e2c384d13768e6f49fbb7d2a7497e20c41f9aec",
+      "site_sha256": "6365668a2a3b2cbe0f0e80925e2c384d13768e6f49fbb7d2a7497e20c41f9aec",
+      "state": "identical"
+    },
+    "app/focus-mode.ts": {
+      "mirror_sha256": "f6dc92d91503dfc7a86f7656efe551986f746f032382bbd239fb47316206e875",
+      "site_sha256": "f6dc92d91503dfc7a86f7656efe551986f746f032382bbd239fb47316206e875",
+      "state": "identical"
+    },
+    "app/function-registry.ts": {
+      "mirror_sha256": "fdd6021c53dceea923cbf90c712b9553895f115a6d38af8225ef0492d5e646ed",
+      "site_sha256": "fdd6021c53dceea923cbf90c712b9553895f115a6d38af8225ef0492d5e646ed",
+      "state": "identical"
+    },
+    "app/global-error.tsx": {
+      "mirror_sha256": "654dbe92e91efcfeaac26e47db9731bacbbdcf246d2a447276c053d9fe989d2e",
+      "site_sha256": "654dbe92e91efcfeaac26e47db9731bacbbdcf246d2a447276c053d9fe989d2e",
+      "state": "identical"
+    },
+    "app/globals.css": {
+      "mirror_sha256": "ec50bc2fbcd0bfe1d4e479bde48b2fd31aa8ebfeb1155b513c4a86e0e56309b2",
+      "site_sha256": "ec50bc2fbcd0bfe1d4e479bde48b2fd31aa8ebfeb1155b513c4a86e0e56309b2",
+      "state": "identical"
+    },
+    "app/globe-context.ts": {
+      "mirror_sha256": "273ab0bf2693fd33577f82d06074c09a7baf6812243d97d20756972c49f0010c",
+      "site_sha256": "273ab0bf2693fd33577f82d06074c09a7baf6812243d97d20756972c49f0010c",
+      "state": "identical"
+    },
+    "app/governed-water-availability.ts": {
+      "mirror_sha256": "4a0dcb304741b8a076e1d094da173d92cd279dfbd5bd529645cc203e40261ff5",
+      "site_sha256": "4a0dcb304741b8a076e1d094da173d92cd279dfbd5bd529645cc203e40261ff5",
+      "state": "identical"
+    },
+    "app/governed-water-control.tsx": {
+      "mirror_sha256": "3d9a1a5e67dd161eef88564533780f64ef2a3cf7e92b663456e50b538c1c3175",
+      "site_sha256": "3d9a1a5e67dd161eef88564533780f64ef2a3cf7e92b663456e50b538c1c3175",
+      "state": "identical"
+    },
+    "app/governed-water-server.ts": {
+      "mirror_sha256": "4faf6c4041f7abb44beaaaf1e08813248220088745570b918d761bc403e43b32",
+      "site_sha256": "4faf6c4041f7abb44beaaaf1e08813248220088745570b918d761bc403e43b32",
+      "state": "identical"
+    },
+    "app/governed-water.ts": {
+      "mirror_sha256": "76a32932f12b01423cf9ecf9d7133d8fe48b9dbace5d5fd92b1f5f1fd2f4d85d",
+      "site_sha256": "76a32932f12b01423cf9ecf9d7133d8fe48b9dbace5d5fd92b1f5f1fd2f4d85d",
+      "state": "identical"
+    },
+    "app/historical-topo-control.tsx": {
+      "mirror_sha256": "0bd21fa867bf41513ce7000f8797ad97ead71bd68826d8768529d07ef1d52993",
+      "site_sha256": "0bd21fa867bf41513ce7000f8797ad97ead71bd68826d8768529d07ef1d52993",
+      "state": "identical"
+    },
+    "app/historical-topo-overlay-server.ts": {
+      "mirror_sha256": "e2cb809d5bb5f28eec28462d0d617948111390b7c97e1fa574fba65f6bd44408",
+      "site_sha256": "e2cb809d5bb5f28eec28462d0d617948111390b7c97e1fa574fba65f6bd44408",
+      "state": "identical"
+    },
+    "app/historical-topo-overlay.ts": {
+      "mirror_sha256": "9210f6087c2efcd10cd6ed93e96e681e5e970edf38e4df0f8dd6ff982e9bf462",
+      "site_sha256": "9210f6087c2efcd10cd6ed93e96e681e5e970edf38e4df0f8dd6ff982e9bf462",
+      "state": "identical"
+    },
+    "app/historical-topo.ts": {
+      "mirror_sha256": "4f89b3efd298b9f517541ae292fa8684dd13379a50919dd0c548065c4c87cdf1",
+      "site_sha256": "4f89b3efd298b9f517541ae292fa8684dd13379a50919dd0c548065c4c87cdf1",
+      "state": "identical"
+    },
+    "app/hms-smoke-playback-control.tsx": {
+      "mirror_sha256": "242cfeec13dddc560d6754dc23e13ddd6b35416618c8a69c2ca3741126678e99",
+      "site_sha256": "242cfeec13dddc560d6754dc23e13ddd6b35416618c8a69c2ca3741126678e99",
+      "state": "identical"
+    },
+    "app/hms-smoke-playback.ts": {
+      "mirror_sha256": "12eef5eb9ecdbcddbce498378d7486ffe462a59f12900f3725a626e419bc7b70",
+      "site_sha256": "12eef5eb9ecdbcddbce498378d7486ffe462a59f12900f3725a626e419bc7b70",
+      "state": "identical"
+    },
+    "app/hydrology-observatory.tsx": {
+      "mirror_sha256": "539ea43b4aa81b045692d0b23729f44f82db74c3258d48d2aa29a991ab651f3e",
+      "site_sha256": "539ea43b4aa81b045692d0b23729f44f82db74c3258d48d2aa29a991ab651f3e",
+      "state": "identical"
+    },
+    "app/import-preview.ts": {
+      "mirror_sha256": "413dd73bbdc5c0e499da28cb29afa3ece242d4b9ade41810b01bc2a98fa02d41",
+      "site_sha256": "413dd73bbdc5c0e499da28cb29afa3ece242d4b9ade41810b01bc2a98fa02d41",
+      "state": "identical"
+    },
+    "app/kansas-bridge-records.ts": {
+      "mirror_sha256": "9e195ba34fa7161df430e27e5531ee5d34fcbe2b913e669092fea0a490e84718",
+      "site_sha256": "9e195ba34fa7161df430e27e5531ee5d34fcbe2b913e669092fea0a490e84718",
+      "state": "identical"
+    },
+    "app/kansas-knowledge-server.ts": {
+      "mirror_sha256": "491f96d28232661f66e159a559a32d1096888cb4d43ec7421eded634c234dc7c",
+      "site_sha256": "491f96d28232661f66e159a559a32d1096888cb4d43ec7421eded634c234dc7c",
+      "state": "identical"
+    },
+    "app/kansas-knowledge.ts": {
+      "mirror_sha256": "4cc3aded483e7418ded8cad84d89e35281eb711587523f2d5b2129c5b72de628",
+      "site_sha256": "4cc3aded483e7418ded8cad84d89e35281eb711587523f2d5b2129c5b72de628",
+      "state": "identical"
+    },
+    "app/kansas-reference-layers.ts": {
+      "mirror_sha256": "562cc125696d8e55aa54db341f3ce63a71460c07ebddf04dc11b63453f8db2ad",
+      "site_sha256": "562cc125696d8e55aa54db341f3ce63a71460c07ebddf04dc11b63453f8db2ad",
+      "state": "identical"
+    },
+    "app/knowledge-read.ts": {
+      "mirror_sha256": "4629fdb1617ad7d30d5a066fd3de6bdb9485819614a912a9012199397ebb9269",
+      "site_sha256": "4629fdb1617ad7d30d5a066fd3de6bdb9485819614a912a9012199397ebb9269",
+      "state": "identical"
+    },
+    "app/knowledge/knowledge.module.css": {
+      "mirror_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
+      "site_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
+      "state": "identical"
+    },
+    "app/knowledge/page.tsx": {
+      "mirror_sha256": "6930d5cf91f761147fedc6a67fc57f3dd38fbb770fad718aef168e8bd4a3afb3",
+      "site_sha256": "6930d5cf91f761147fedc6a67fc57f3dd38fbb770fad718aef168e8bd4a3afb3",
+      "state": "identical"
+    },
+    "app/knowledge/record/page.tsx": {
+      "mirror_sha256": "21d678e71c28057cfa34fe0bb760ae2b4511a50ffb734ff84c232ceabee4fc1e",
+      "site_sha256": "21d678e71c28057cfa34fe0bb760ae2b4511a50ffb734ff84c232ceabee4fc1e",
+      "state": "identical"
+    },
+    "app/layer-workspaces.ts": {
+      "mirror_sha256": "2caedba269749e2ffc26d2011cfc94d9003e3cbc102fddd37f21a4695b1aa9cd",
+      "site_sha256": "2caedba269749e2ffc26d2011cfc94d9003e3cbc102fddd37f21a4695b1aa9cd",
+      "state": "identical"
+    },
+    "app/layout.tsx": {
+      "mirror_sha256": "3129b65e24dbdd17055b2c500d65ccd8beda1a7a2527eb6148afce7a9e84972e",
+      "site_sha256": "3129b65e24dbdd17055b2c500d65ccd8beda1a7a2527eb6148afce7a9e84972e",
+      "state": "identical"
+    },
+    "app/lerc.d.ts": {
+      "mirror_sha256": "96207e9228f8427f96ac2e9b4bbecf6203e8e98737e29e9b9bdb76e2e24d200a",
+      "site_sha256": "96207e9228f8427f96ac2e9b4bbecf6203e8e98737e29e9b9bdb76e2e24d200a",
+      "state": "identical"
+    },
+    "app/lightning-data.ts": {
+      "mirror_sha256": "1bdf7f4e1407aa7f4af4d2e4ae20741fd2a37fe143020ccbf1036c9bd89bdb1c",
+      "site_sha256": "1bdf7f4e1407aa7f4af4d2e4ae20741fd2a37fe143020ccbf1036c9bd89bdb1c",
+      "state": "identical"
+    },
+    "app/lightning-flash-loop.tsx": {
+      "mirror_sha256": "8eaaec4334e8310a0235f43a6e9a2df2778ea4b2ca10b0f24ad4da99edc42127",
+      "site_sha256": "8eaaec4334e8310a0235f43a6e9a2df2778ea4b2ca10b0f24ad4da99edc42127",
+      "state": "identical"
+    },
+    "app/lightning-flashes-server.ts": {
+      "mirror_sha256": "ecbf2092d9c6061cf9e609544a7ba2cdbaec2e4dec6bde4c7fd06443497373ad",
+      "site_sha256": "ecbf2092d9c6061cf9e609544a7ba2cdbaec2e4dec6bde4c7fd06443497373ad",
+      "state": "identical"
+    },
+    "app/lightning-flashes.ts": {
+      "mirror_sha256": "472c46744280e4ec29d727420282affa4583cbb1d14c7d9d60100d5b3a23e400",
+      "site_sha256": "472c46744280e4ec29d727420282affa4583cbb1d14c7d9d60100d5b3a23e400",
+      "state": "identical"
+    },
+    "app/lightning-server.ts": {
+      "mirror_sha256": "002c05172545e75cd672499a75f2b804ae11c9c27eb378d14ad17834d9b67b86",
+      "site_sha256": "002c05172545e75cd672499a75f2b804ae11c9c27eb378d14ad17834d9b67b86",
+      "state": "identical"
+    },
+    "app/live-context.ts": {
+      "mirror_sha256": "c3ecaf0dbae89e87bc53830d05210b7a9066fcec88b04257282d72945d6a1c25",
+      "site_sha256": "c3ecaf0dbae89e87bc53830d05210b7a9066fcec88b04257282d72945d6a1c25",
+      "state": "identical"
+    },
+    "app/living-atlas.ts": {
+      "mirror_sha256": "13d13fa8cf4917ccda0c071aa84fbe5715bcd29772a946f856ad7dd105d2a3cb",
+      "site_sha256": "13d13fa8cf4917ccda0c071aa84fbe5715bcd29772a946f856ad7dd105d2a3cb",
+      "state": "identical"
+    },
+    "app/local-geopdf-map.ts": {
+      "mirror_sha256": "0e65bdf20a2a3a0c7adaf8743ab17782f1d76e1850504319bd2e175013c4a42f",
+      "site_sha256": "0e65bdf20a2a3a0c7adaf8743ab17782f1d76e1850504319bd2e175013c4a42f",
+      "state": "identical"
+    },
+    "app/local-geopdf-review-control.tsx": {
+      "mirror_sha256": "1c9ae3365376eb379ae8c3f8e8531d5f801498fa71d3ce2296ffb919a9baf237",
+      "site_sha256": "1c9ae3365376eb379ae8c3f8e8531d5f801498fa71d3ce2296ffb919a9baf237",
+      "state": "identical"
+    },
+    "app/local-geopdf-review.ts": {
+      "mirror_sha256": "c433e14e1ac3b68880f783bc99b0ae46f5eac4a47e84a927c4390b4627f2607a",
+      "site_sha256": "c433e14e1ac3b68880f783bc99b0ae46f5eac4a47e84a927c4390b4627f2607a",
+      "state": "identical"
+    },
+    "app/local-map-archive-browser.tsx": {
+      "mirror_sha256": "420c7f7e4eddb60fa34cbd74d7d32a67b942a64b2d58e954022311ddb5a86b10",
+      "site_sha256": "420c7f7e4eddb60fa34cbd74d7d32a67b942a64b2d58e954022311ddb5a86b10",
+      "state": "identical"
+    },
+    "app/local-map-archive-inventory.json": {
+      "mirror_sha256": "3a70fc3a0010b142a23eb9a33bd87ee59b201fdf3a080a42e13d5f2c0ed8af81",
+      "site_sha256": "3a70fc3a0010b142a23eb9a33bd87ee59b201fdf3a080a42e13d5f2c0ed8af81",
+      "state": "identical"
+    },
+    "app/local-map-archive-loader.tsx": {
+      "mirror_sha256": "28c6d8620926cbb50215795826260b3313952d6a80c7205dc18fa670c2fa6e24",
+      "site_sha256": "28c6d8620926cbb50215795826260b3313952d6a80c7205dc18fa670c2fa6e24",
+      "state": "identical"
+    },
+    "app/local-map-archive.ts": {
+      "mirror_sha256": "39f600b86e5976542bc8d3879564bf4ecf62e1855c8cc1be603636d215825915",
+      "site_sha256": "39f600b86e5976542bc8d3879564bf4ecf62e1855c8cc1be603636d215825915",
+      "state": "identical"
+    },
+    "app/local-signin-notice.tsx": {
+      "mirror_sha256": "afd09978c3c532e1d5fb3ea6b36f580d1c673953265960524f0fcfa92fdd69a7",
+      "site_sha256": "afd09978c3c532e1d5fb3ea6b36f580d1c673953265960524f0fcfa92fdd69a7",
+      "state": "identical"
+    },
+    "app/map-interface.ts": {
+      "mirror_sha256": "817ab3bc192059e3a63d4dc3a59866b279dd7a89597c3b9bae8c7ad725065709",
+      "site_sha256": "817ab3bc192059e3a63d4dc3a59866b279dd7a89597c3b9bae8c7ad725065709",
+      "state": "identical"
+    },
+    "app/map-layer-composition.ts": {
+      "mirror_sha256": "25d6077ab0d3f6fb1a4e19d26b73db3becffbe4a5c58ce94a062540a2f6b1185",
+      "site_sha256": "25d6077ab0d3f6fb1a4e19d26b73db3becffbe4a5c58ce94a062540a2f6b1185",
+      "state": "identical"
+    },
+    "app/map-layers.css": {
+      "mirror_sha256": "61a1f52f4499c36ac7db4d279d098ff8aca54e626a88c2d257163d00763e6f3c",
+      "site_sha256": "61a1f52f4499c36ac7db4d279d098ff8aca54e626a88c2d257163d00763e6f3c",
+      "state": "identical"
+    },
+    "app/map-performance.ts": {
+      "mirror_sha256": "00f90d0150e83b3cfc9181949251c1db24e0e3f92a648554eb7be166e1c8aa4b",
+      "site_sha256": "00f90d0150e83b3cfc9181949251c1db24e0e3f92a648554eb7be166e1c8aa4b",
+      "state": "identical"
+    },
+    "app/map-runtime.ts": {
+      "mirror_sha256": "fc3b932eea78563c0e370839f2607f1b6daffd8cb3dc9fd9d2f3f66a782b555d",
+      "site_sha256": "fc3b932eea78563c0e370839f2607f1b6daffd8cb3dc9fd9d2f3f66a782b555d",
+      "state": "identical"
+    },
+    "app/map-signals.ts": {
+      "mirror_sha256": "1dd7e2ddc1d23849d5c5a0d6526cf668f0109391d1ff71d0bd162a2cffece922",
+      "site_sha256": "1dd7e2ddc1d23849d5c5a0d6526cf668f0109391d1ff71d0bd162a2cffece922",
+      "state": "identical"
+    },
+    "app/map-toolbar.tsx": {
+      "mirror_sha256": "18610b0dda1775c6b07cc5f3d8d72745df10b447fbebaa54e0347fdf99a9aad6",
+      "site_sha256": "18610b0dda1775c6b07cc5f3d8d72745df10b447fbebaa54e0347fdf99a9aad6",
+      "state": "identical"
+    },
+    "app/maplibre-seam.css": {
+      "mirror_sha256": "06142bf2dc02e9f1fb93de47c8f5df4335ec8342c90cb962549ac15b94cbdd02",
+      "site_sha256": "06142bf2dc02e9f1fb93de47c8f5df4335ec8342c90cb962549ac15b94cbdd02",
+      "state": "identical"
+    },
+    "app/maplibre-seam.ts": {
+      "mirror_sha256": "c3d22a47715c24ba3c8f3b1a494011b77d1e826fe534fd5e5eeba905c298fc9b",
+      "site_sha256": "c3d22a47715c24ba3c8f3b1a494011b77d1e826fe534fd5e5eeba905c298fc9b",
+      "state": "identical"
+    },
+    "app/noaa-hydrology.ts": {
+      "mirror_sha256": "b0e3e9caec864abbda2da9184e85fbb8cdfe28ead92b16cf5abab8ac28e14aa4",
+      "site_sha256": "b0e3e9caec864abbda2da9184e85fbb8cdfe28ead92b16cf5abab8ac28e14aa4",
+      "state": "identical"
+    },
+    "app/noaa-radar.ts": {
+      "mirror_sha256": "907d85d5d2171a08b5b9121947c6de56863bdd8a343fac7530421e5821be0660",
+      "site_sha256": "907d85d5d2171a08b5b9121947c6de56863bdd8a343fac7530421e5821be0660",
+      "state": "identical"
+    },
+    "app/noaa-satellite.ts": {
+      "mirror_sha256": "d5b721e9b5c24e6d8b45c8a35a26d86fd3970329dc21147b49bf91ad8071ac5a",
+      "site_sha256": "d5b721e9b5c24e6d8b45c8a35a26d86fd3970329dc21147b49bf91ad8071ac5a",
+      "state": "identical"
+    },
+    "app/observatory/follow-today.ts": {
+      "mirror_sha256": "e947c485841650a78000f5262a453903fbef8badaa1407ac9483a3900a631b1b",
+      "site_sha256": "e947c485841650a78000f5262a453903fbef8badaa1407ac9483a3900a631b1b",
+      "state": "identical"
+    },
+    "app/observatory/page.tsx": {
+      "mirror_sha256": "a2bd85d1a082209ce8ffb3d4d3beec9623007649709fc47932fb5c71b163f70e",
+      "site_sha256": "a2bd85d1a082209ce8ffb3d4d3beec9623007649709fc47932fb5c71b163f70e",
+      "state": "identical"
+    },
+    "app/observatory/sources/page.tsx": {
+      "mirror_sha256": "c064f9563206d040b786900fd6bb4bc14611c77b9c1862234c800447b58977ee",
+      "site_sha256": "c064f9563206d040b786900fd6bb4bc14611c77b9c1862234c800447b58977ee",
+      "state": "identical"
+    },
+    "app/observatory/workspace.tsx": {
+      "mirror_sha256": "62294c99b541bf9cc52afe27ef1558c4774d6ea61ebbf17c476de1c9ba0ba0c4",
+      "site_sha256": "62294c99b541bf9cc52afe27ef1558c4774d6ea61ebbf17c476de1c9ba0ba0c4",
+      "state": "identical"
+    },
+    "app/official-refresh-plan.ts": {
+      "mirror_sha256": "436cada3230c87679c2ec31af0357889bb1dcf3bb9ce96a8b581f6a17eb5504a",
+      "site_sha256": "436cada3230c87679c2ec31af0357889bb1dcf3bb9ce96a8b581f6a17eb5504a",
+      "state": "identical"
+    },
+    "app/page.tsx": {
+      "mirror_sha256": "9f14f2e2ce71cbb35708ad3bf14e46498e5b8dca94e37336c1676038bb43030c",
+      "site_sha256": "9f14f2e2ce71cbb35708ad3bf14e46498e5b8dca94e37336c1676038bb43030c",
+      "state": "identical"
+    },
+    "app/persistent-select-menus.tsx": {
+      "mirror_sha256": "b7e30eccf2a1f3f8af5943aa046ad61da2a342a753218ea0a134e15d10b6fdf9",
+      "site_sha256": "b7e30eccf2a1f3f8af5943aa046ad61da2a342a753218ea0a134e15d10b6fdf9",
+      "state": "identical"
+    },
+    "app/places-trail.ts": {
+      "mirror_sha256": "336b54ef8cc7a45f9848ac72c7f10afcee3dff4b59532e1828d52f9b750a530f",
+      "site_sha256": "336b54ef8cc7a45f9848ac72c7f10afcee3dff4b59532e1828d52f9b750a530f",
+      "state": "identical"
+    },
+    "app/planning-scenario.ts": {
+      "mirror_sha256": "464942b4c69e5127d3a4ff35bbacc9bd97ad79233726f64898070772a84b44ba",
+      "site_sha256": "464942b4c69e5127d3a4ff35bbacc9bd97ad79233726f64898070772a84b44ba",
+      "state": "identical"
+    },
+    "app/qwen-availability.ts": {
+      "mirror_sha256": "925eff6e9f9dbbdb9cfa6493f5eda4e710d1933191cd82aec59907d2a0054926",
+      "site_sha256": "925eff6e9f9dbbdb9cfa6493f5eda4e710d1933191cd82aec59907d2a0054926",
+      "state": "identical"
+    },
+    "app/qwen-context-safety.mjs": {
+      "mirror_sha256": "e3aa1d8594924b739f5acf75331cf9bafefd688074fed534eaa8afee42715e8f",
+      "site_sha256": "e3aa1d8594924b739f5acf75331cf9bafefd688074fed534eaa8afee42715e8f",
+      "state": "identical"
+    },
+    "app/qwen-context.ts": {
+      "mirror_sha256": "cc5a9ef78178774823a19c95ad7e222c45d08ed9be4d768a644714ddb3f6cb3a",
+      "site_sha256": "cc5a9ef78178774823a19c95ad7e222c45d08ed9be4d768a644714ddb3f6cb3a",
+      "state": "identical"
+    },
+    "app/report-story-workspaces.tsx": {
+      "mirror_sha256": "31af0ee91717eb043d051dffe3b8f99403a9be6e93b83b7356ca1eb17f62b84a",
+      "site_sha256": "31af0ee91717eb043d051dffe3b8f99403a9be6e93b83b7356ca1eb17f62b84a",
+      "state": "identical"
+    },
+    "app/repository-status.ts": {
+      "mirror_sha256": "a6e1cb296c8cb880de433a5fa9fb03fbdb7d0fdb9a2d55f75001031b82db7e89",
+      "site_sha256": "a6e1cb296c8cb880de433a5fa9fb03fbdb7d0fdb9a2d55f75001031b82db7e89",
+      "state": "identical"
+    },
+    "app/repository-updates.ts": {
+      "mirror_sha256": "fbf4157d7f7ca8b765d8249bc172c3860a23fe2ff2aad0551a7d65abc2efccde",
+      "site_sha256": "fbf4157d7f7ca8b765d8249bc172c3860a23fe2ff2aad0551a7d65abc2efccde",
+      "state": "identical"
+    },
+    "app/road-map-editions.ts": {
+      "mirror_sha256": "a94a0510b18f21c0d1571619312f7b03397f3baae0ccf7a533bc870c646be9d8",
+      "site_sha256": "a94a0510b18f21c0d1571619312f7b03397f3baae0ccf7a533bc870c646be9d8",
+      "state": "identical"
+    },
+    "app/road-year-study.ts": {
+      "mirror_sha256": "e7977478ff87f29f09727a860a7a4eb803908473361ec312f5830efbd63a5000",
+      "site_sha256": "e7977478ff87f29f09727a860a7a4eb803908473361ec312f5830efbd63a5000",
+      "state": "identical"
+    },
+    "app/runtime-seam.ts": {
+      "mirror_sha256": "7177fba62f80e31691b419bb4e74485696d322fe6c5202aee8e05235da9326f7",
+      "site_sha256": "7177fba62f80e31691b419bb4e74485696d322fe6c5202aee8e05235da9326f7",
+      "state": "identical"
+    },
+    "app/saved-workspaces.ts": {
+      "mirror_sha256": "9aa63ddc35ed453210f7f21d876c4a63a5c007a0cb5377c6cfb7eac013877d43",
+      "site_sha256": "9aa63ddc35ed453210f7f21d876c4a63a5c007a0cb5377c6cfb7eac013877d43",
+      "state": "identical"
+    },
+    "app/science-events.ts": {
+      "mirror_sha256": "fa8efebd9a6b558b2350cd087232d05db4cc7c24e38f6b93ff6445db01d43a7b",
+      "site_sha256": "fa8efebd9a6b558b2350cd087232d05db4cc7c24e38f6b93ff6445db01d43a7b",
+      "state": "identical"
+    },
+    "app/site-actions.ts": {
+      "mirror_sha256": "a2c3102e60c07ad8c3179e98bd35f33a1281cb1be146b0cf7df7bc568a482f78",
+      "site_sha256": "a2c3102e60c07ad8c3179e98bd35f33a1281cb1be146b0cf7df7bc568a482f78",
+      "state": "identical"
+    },
+    "app/site-architecture.ts": {
+      "mirror_sha256": "f63839b3039608ba687abc129090cb1b5b312d7199c64e8381951c3174441f1e",
+      "site_sha256": "f63839b3039608ba687abc129090cb1b5b312d7199c64e8381951c3174441f1e",
+      "state": "identical"
+    },
+    "app/site-connections.ts": {
+      "mirror_sha256": "1da0d5b19e8618c90b071fefddc5b4072f13ba4f43c60bee1a60e43aac4cc2e5",
+      "site_sha256": "1da0d5b19e8618c90b071fefddc5b4072f13ba4f43c60bee1a60e43aac4cc2e5",
+      "state": "identical"
+    },
+    "app/site-features.ts": {
+      "mirror_sha256": "729a49996ccb6ba2c14dc19235de6f7d3939baf4f27b047ad43390657e0a3d2d",
+      "site_sha256": "729a49996ccb6ba2c14dc19235de6f7d3939baf4f27b047ad43390657e0a3d2d",
+      "state": "identical"
+    },
+    "app/site-identity.ts": {
+      "mirror_sha256": "79c4c7192c54d979654f2b8f966a6bd87a5506ad1cfd56425199e933120eae21",
+      "site_sha256": "79c4c7192c54d979654f2b8f966a6bd87a5506ad1cfd56425199e933120eae21",
+      "state": "identical"
+    },
+    "app/site-registry.ts": {
+      "mirror_sha256": "32d81a913d123ea2cc3d283eb225399dd44b1259f77f9b860fab31e25666b7e2",
+      "site_sha256": "32d81a913d123ea2cc3d283eb225399dd44b1259f77f9b860fab31e25666b7e2",
+      "state": "identical"
+    },
+    "app/snapshot-map.tsx": {
+      "mirror_sha256": "23752dce40d3d726ae39f0c25f6488563d7d9cdced80d1458667c025ae33d3d3",
+      "site_sha256": "23752dce40d3d726ae39f0c25f6488563d7d9cdced80d1458667c025ae33d3d3",
+      "state": "identical"
+    },
+    "app/soil-moisture-control.tsx": {
+      "mirror_sha256": "60a20f36a4689802861512bc918409a28be35b925439e8e5a10bc64e36d69939",
+      "site_sha256": "60a20f36a4689802861512bc918409a28be35b925439e8e5a10bc64e36d69939",
+      "state": "identical"
+    },
+    "app/soil-moisture-server.ts": {
+      "mirror_sha256": "cef575ad87024bfaccbe3080c6164319f8ca17b00342344c9f8cb9d90112ded7",
+      "site_sha256": "cef575ad87024bfaccbe3080c6164319f8ca17b00342344c9f8cb9d90112ded7",
+      "state": "identical"
+    },
+    "app/soil-moisture.ts": {
+      "mirror_sha256": "e61322093bfb3d6acb6c3c0a36b86d5aac3b167d44df6a7402611f428c5659a5",
+      "site_sha256": "e61322093bfb3d6acb6c3c0a36b86d5aac3b167d44df6a7402611f428c5659a5",
+      "state": "identical"
+    },
+    "app/source-downloads.ts": {
+      "mirror_sha256": "84b45549ef3f4be54357dd6ed002a054019ee402113480a8bb319bcf59c43e58",
+      "site_sha256": "84b45549ef3f4be54357dd6ed002a054019ee402113480a8bb319bcf59c43e58",
+      "state": "identical"
+    },
+    "app/source-intelligence.ts": {
+      "mirror_sha256": "9ea7a2b69d53775456df709941651ccec31f1272c9fa1da4ed7d9efdfc7227fd",
+      "site_sha256": "9ea7a2b69d53775456df709941651ccec31f1272c9fa1da4ed7d9efdfc7227fd",
+      "state": "identical"
+    },
+    "app/source-quality-row.tsx": {
+      "mirror_sha256": "6c805952ec3543f397ac088c7dd789aaab8867b21f0439014c2a71ec625bdf3d",
+      "site_sha256": "6c805952ec3543f397ac088c7dd789aaab8867b21f0439014c2a71ec625bdf3d",
+      "state": "identical"
+    },
+    "app/source-time.ts": {
+      "mirror_sha256": "de8ddb5a62f93474c4bf97ca350a7da5b41fe32103a11f62a28e7512a3288736",
+      "site_sha256": "de8ddb5a62f93474c4bf97ca350a7da5b41fe32103a11f62a28e7512a3288736",
+      "state": "identical"
+    },
+    "app/stewards/page.tsx": {
+      "mirror_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
+      "site_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
+      "state": "identical"
+    },
+    "app/streamflow.ts": {
+      "mirror_sha256": "c5ff6e83bb31ce0e36d8fc446b9e6da46b353de1ddec9b219c0b5806bc6e24f9",
+      "site_sha256": "c5ff6e83bb31ce0e36d8fc446b9e6da46b353de1ddec9b219c0b5806bc6e24f9",
+      "state": "identical"
+    },
+    "app/temporal-comparison.ts": {
+      "mirror_sha256": "e37d7a4435d22c96aca129d49720a9aace2c725097e6a5f39096dcf70ed15bbd",
+      "site_sha256": "e37d7a4435d22c96aca129d49720a9aace2c725097e6a5f39096dcf70ed15bbd",
+      "state": "identical"
+    },
+    "app/temporal-sweep.ts": {
+      "mirror_sha256": "7f2ff4378b1a351041ac002031616e9d4c56cb7da6303cbe6ac394369a827475",
+      "site_sha256": "7f2ff4378b1a351041ac002031616e9d4c56cb7da6303cbe6ac394369a827475",
+      "state": "identical"
+    },
+    "app/terrain-raster-status.ts": {
+      "mirror_sha256": "6531a767c7cf21474f1c1ba5ed2107734053e7e214f29b60ba9bc0974797c35f",
+      "site_sha256": "6531a767c7cf21474f1c1ba5ed2107734053e7e214f29b60ba9bc0974797c35f",
+      "state": "identical"
+    },
+    "app/terrain-relief-style.ts": {
+      "mirror_sha256": "f251a943a41ff4f7869c26fdd3e22da8cd0fdbd2ef0792d954788f16511af4fe",
+      "site_sha256": "f251a943a41ff4f7869c26fdd3e22da8cd0fdbd2ef0792d954788f16511af4fe",
+      "state": "identical"
+    },
+    "app/terrain-sources.ts": {
+      "mirror_sha256": "5b1ee16a1b75cea8006b166b222eae450fb52457151ba6ebdef9ad7dd365b730",
+      "site_sha256": "5b1ee16a1b75cea8006b166b222eae450fb52457151ba6ebdef9ad7dd365b730",
+      "state": "identical"
+    },
+    "app/terrain-tiles.ts": {
+      "mirror_sha256": "106ad3367e1a61417e27f1bc938e7595f4476aef2da7dce974ca206b4a1caa2a",
+      "site_sha256": "106ad3367e1a61417e27f1bc938e7595f4476aef2da7dce974ca206b4a1caa2a",
+      "state": "identical"
+    },
+    "app/timeline-availability.ts": {
+      "mirror_sha256": "8a03fd582baad138e12165ff1f67bbbb506e6b82de5ac17180bb8f0585337fbb",
+      "site_sha256": "8a03fd582baad138e12165ff1f67bbbb506e6b82de5ac17180bb8f0585337fbb",
+      "state": "identical"
+    },
+    "app/water-flow-context.ts": {
+      "mirror_sha256": "d4f305c9189e63fcaae3a8c304168b795ae1a93000b14193dd252cbbeae4fbdf",
+      "site_sha256": "d4f305c9189e63fcaae3a8c304168b795ae1a93000b14193dd252cbbeae4fbdf",
+      "state": "identical"
+    },
+    "app/water-motion-canvas.ts": {
+      "mirror_sha256": "4f333d6d66d4210a8e7d2afbf004e65697af6e3328972481e90c07a3e8038959",
+      "site_sha256": "4f333d6d66d4210a8e7d2afbf004e65697af6e3328972481e90c07a3e8038959",
+      "state": "identical"
+    },
+    "app/wind-arrow-canvas.ts": {
+      "mirror_sha256": "299fdf70c376e4718750e153c08a890b2a7536c13f5c742068bc0368f34b21d6",
+      "site_sha256": "299fdf70c376e4718750e153c08a890b2a7536c13f5c742068bc0368f34b21d6",
+      "state": "identical"
+    },
+    "app/wind-arrow-data.ts": {
+      "mirror_sha256": "70489d581d617390d891b59e6de69124a98efcdd247b3e535b72367cfa20a46f",
+      "site_sha256": "70489d581d617390d891b59e6de69124a98efcdd247b3e535b72367cfa20a46f",
+      "state": "identical"
+    },
+    "app/wind-flow-client.ts": {
+      "mirror_sha256": "4f5009b689da4c00466c616934abd73314c8cdfb868471659184730a7c0d85d3",
+      "site_sha256": "4f5009b689da4c00466c616934abd73314c8cdfb868471659184730a7c0d85d3",
+      "state": "identical"
+    },
+    "app/workspace-model.ts": {
+      "mirror_sha256": "b63d6f71f433377316235f2c4c4602bafe5458e202558ba87713770161689fe5",
+      "site_sha256": "b63d6f71f433377316235f2c4c4602bafe5458e202558ba87713770161689fe5",
+      "state": "identical"
+    },
+    "app/workspace-storage.ts": {
+      "mirror_sha256": "3f105b5263b3e80cad01646cc1343a0c357990a5bd41c2e9c9c1c76569ad7ec1",
+      "site_sha256": "3f105b5263b3e80cad01646cc1343a0c357990a5bd41c2e9c9c1c76569ad7ec1",
+      "state": "identical"
+    },
+    "build/sites-vite-plugin.ts": {
+      "mirror_sha256": "81b7cbfaeb970611572256aba0e313425beb3809f6426f63750696c15d9c756b",
+      "site_sha256": "81b7cbfaeb970611572256aba0e313425beb3809f6426f63750696c15d9c756b",
+      "state": "identical"
+    },
+    "cloudflare-runtime.d.ts": {
+      "mirror_sha256": "f25ed34236f067194c283f429ebfa17166fe32d3fc530497af54b5aa9a537042",
+      "site_sha256": "f25ed34236f067194c283f429ebfa17166fe32d3fc530497af54b5aa9a537042",
+      "state": "identical"
+    },
+    "db/index.ts": {
+      "mirror_sha256": "608a6f42e04334a266091d82eb6d1b8c29efa51bb2b5b1565bf4a6e9b9eb5c09",
+      "site_sha256": "608a6f42e04334a266091d82eb6d1b8c29efa51bb2b5b1565bf4a6e9b9eb5c09",
+      "state": "identical"
+    },
+    "docs/EARTH_ENGINE_CONTEXT.md": {
+      "mirror_sha256": "96e8b8aa06a06bb0960a94f12c2a7e2a38e6bd463b527f0528f80febd4ea63fe",
+      "site_sha256": "96e8b8aa06a06bb0960a94f12c2a7e2a38e6bd463b527f0528f80febd4ea63fe",
+      "state": "identical"
+    },
+    "docs/EARTH_ENGINE_DISCOVERY.md": {
+      "mirror_sha256": "ffbd898d5fad8692539654fb96925b325c939a3a40afd10e1dc35a8ce0e151ea",
+      "site_sha256": "ffbd898d5fad8692539654fb96925b325c939a3a40afd10e1dc35a8ce0e151ea",
+      "state": "identical"
+    },
+    "docs/HISTORIC_ROAD_MAP_STUDY.md": {
+      "mirror_sha256": "7598dbef722ab72856356e86d0e1b1160e999d321a93f7f084ca261993e7ecbf",
+      "site_sha256": "7598dbef722ab72856356e86d0e1b1160e999d321a93f7f084ca261993e7ecbf",
+      "state": "identical"
+    },
+    "docs/KFM_SOURCE_GAP_REGISTER.md": {
+      "mirror_sha256": "52662fedb73e77e067a5b41be77733c8c28de3bfe52e9aa35c2a5965aed1db21",
+      "site_sha256": "52662fedb73e77e067a5b41be77733c8c28de3bfe52e9aa35c2a5965aed1db21",
+      "state": "identical"
+    },
+    "docs/LOCAL_PC_SITE_FILES.md": {
+      "mirror_sha256": "7fd68401bedc079ca43ce022962cb81d63f5c9d6b897b6daecedf0a4e425604a",
+      "site_sha256": "7fd68401bedc079ca43ce022962cb81d63f5c9d6b897b6daecedf0a4e425604a",
+      "state": "identical"
+    },
+    "docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md": {
+      "mirror_sha256": "dedc9ede7fbd7145fde9bfe4cf32cc9943494495c51ba143e760f19ffac36192",
+      "site_sha256": "dedc9ede7fbd7145fde9bfe4cf32cc9943494495c51ba143e760f19ffac36192",
+      "state": "identical"
+    },
+    "docs/SITE_PRESERVATION.md": {
+      "mirror_sha256": "454dfc83453c7b755151cd0aa9bf5b0756ad8fc6fc805f8f3571c436dae10a83",
+      "site_sha256": "454dfc83453c7b755151cd0aa9bf5b0756ad8fc6fc805f8f3571c436dae10a83",
+      "state": "identical"
+    },
+    "docs/governed-water.md": {
+      "mirror_sha256": "75fdecc4c1e888698b38b3ec90c8321b74e9cf3fb58858e0317b20bad97ff988",
+      "site_sha256": "75fdecc4c1e888698b38b3ec90c8321b74e9cf3fb58858e0317b20bad97ff988",
+      "state": "identical"
+    },
+    "docs/kansas-reference-layers.md": {
+      "mirror_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
+      "site_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
+      "state": "identical"
+    },
+    "docs/lightning-flash-loop.md": {
+      "mirror_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
+      "site_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
+      "state": "identical"
+    },
+    "docs/local-map-archive.md": {
+      "mirror_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
+      "site_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
+      "state": "identical"
+    },
+    "docs/local-pc-consolidation.md": {
+      "mirror_sha256": "3eadee6ea4d47878be8bbef45f5477a0a93a3769c51921e5ec884b9ae0e0c6fd",
+      "site_sha256": "3eadee6ea4d47878be8bbef45f5477a0a93a3769c51921e5ec884b9ae0e0c6fd",
+      "state": "identical"
+    },
+    "docs/smoke-imagery-bridges.md": {
+      "mirror_sha256": "568ec79aad7aea70c9c9758873992f1ca0c16022fcaa9a20f77d46ec3f221b2b",
+      "site_sha256": "568ec79aad7aea70c9c9758873992f1ca0c16022fcaa9a20f77d46ec3f221b2b",
+      "state": "identical"
+    },
+    "drizzle/0000_tired_swordsman.sql": {
+      "mirror_sha256": "6abf712b3cfc3d7a21ff6194745ef5463c6a3bfb39a4191aa19c0f70fc7e651d",
+      "site_sha256": "6abf712b3cfc3d7a21ff6194745ef5463c6a3bfb39a4191aa19c0f70fc7e651d",
+      "state": "identical"
+    },
+    "drizzle/0001_governed_water.sql": {
+      "mirror_sha256": "2f47e08ca16884457926aa654824e089161a9dc276adc5edf40cd1bf238f9352",
+      "site_sha256": "2f47e08ca16884457926aa654824e089161a9dc276adc5edf40cd1bf238f9352",
+      "state": "identical"
+    },
+    "drizzle/0002_kansas_knowledge.sql": {
+      "mirror_sha256": "0c609d0af7335ad2e4036020c2adc35e70a60487a41875e7b2fe883aee1acbae",
+      "site_sha256": "0c609d0af7335ad2e4036020c2adc35e70a60487a41875e7b2fe883aee1acbae",
+      "state": "identical"
+    },
+    "drizzle/0003_crop_casma.sql": {
+      "mirror_sha256": "db5f3ef464ff9f620a0786834f5b0b79377bd273d998432bd31f4f3e3dc2e3be",
+      "site_sha256": "db5f3ef464ff9f620a0786834f5b0b79377bd273d998432bd31f4f3e3dc2e3be",
+      "state": "identical"
+    },
+    "drizzle/meta/0000_snapshot.json": {
+      "mirror_sha256": "0122b97d8dca224318d416c5bc2e1fe3d3b8b5de9d4feb42d5cb685943f8a1c9",
+      "site_sha256": "0122b97d8dca224318d416c5bc2e1fe3d3b8b5de9d4feb42d5cb685943f8a1c9",
+      "state": "identical"
+    },
+    "drizzle/meta/_journal.json": {
+      "mirror_sha256": "9e7e422b73e071c00d155f3a8d60300e2c5be64e0403c020380a39d68c0492f0",
+      "site_sha256": "9e7e422b73e071c00d155f3a8d60300e2c5be64e0403c020380a39d68c0492f0",
+      "state": "identical"
+    },
+    "eslint.config.mjs": {
+      "mirror_sha256": "870f1adccecf3051cbcd9fd307cef51d7633cf510979c181a81f4b1797273493",
+      "site_sha256": "870f1adccecf3051cbcd9fd307cef51d7633cf510979c181a81f4b1797273493",
+      "state": "identical"
+    },
+    "next.config.ts": {
+      "mirror_sha256": "f21b24743124d6ad17693006499b59b4938d9fc384e641f8e3dcd8076ac31237",
+      "site_sha256": "f21b24743124d6ad17693006499b59b4938d9fc384e641f8e3dcd8076ac31237",
+      "state": "identical"
+    },
+    "package-lock.json": {
+      "mirror_sha256": "52d15d279429cc03d0e3eb21ffc6bd620b247a29ae1574e953a4c7ceb93fff8b",
+      "site_sha256": "52d15d279429cc03d0e3eb21ffc6bd620b247a29ae1574e953a4c7ceb93fff8b",
+      "state": "identical"
+    },
+    "package.json": {
+      "mirror_sha256": "86dc295808f638a3300cff1dabee56a127e86eef09e6c67c657e40c1cbfdb4b2",
+      "site_sha256": "86dc295808f638a3300cff1dabee56a127e86eef09e6c67c657e40c1cbfdb4b2",
+      "state": "identical"
+    },
+    "postcss.config.mjs": {
+      "mirror_sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde",
+      "site_sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde",
+      "state": "identical"
+    },
+    "public/favicon.svg": {
+      "mirror_sha256": "e6d2e59b7b5bbb0342e0fb496dfc262decbfe4426bbb7b047aec8d467d1dc6f7",
+      "site_sha256": "e6d2e59b7b5bbb0342e0fb496dfc262decbfe4426bbb7b047aec8d467d1dc6f7",
+      "state": "identical"
+    },
+    "public/og-guided.png": {
+      "mirror_sha256": "a232e31d7e95f8a8f4067dd3bde61a1b5b8362d7925f221d5489ea456f7cddb9",
+      "site_sha256": "a232e31d7e95f8a8f4067dd3bde61a1b5b8362d7925f221d5489ea456f7cddb9",
+      "state": "identical"
+    },
+    "public/og.png": {
+      "mirror_sha256": "2a67a38cf87f7fcf3dca4b00916e0db62d0b8eb0abc3bc6f60f9d1b26b9db923",
+      "site_sha256": "2a67a38cf87f7fcf3dca4b00916e0db62d0b8eb0abc3bc6f60f9d1b26b9db923",
+      "state": "identical"
+    },
+    "scripts/build-verified.sh": {
+      "mirror_sha256": "b3f73bed7c0958ace1c4f511b082e1065510f1d5caf6a33558f9170a9a37467f",
+      "site_sha256": "b3f73bed7c0958ace1c4f511b082e1065510f1d5caf6a33558f9170a9a37467f",
+      "state": "identical"
+    },
+    "scripts/earth-engine/assemble_statewide.py": {
+      "mirror_sha256": "9bccb5b0ce35fc371d60d767a17534319c37a3cef939e906175a621aa0b01456",
+      "site_sha256": "9bccb5b0ce35fc371d60d767a17534319c37a3cef939e906175a621aa0b01456",
+      "state": "identical"
+    },
+    "scripts/earth-engine/cdl_2024_palette.json": {
+      "mirror_sha256": "289384513cecea8000eb38439d2c9bcc3b557e1ba2d14817395211909ea38a42",
+      "site_sha256": "289384513cecea8000eb38439d2c9bcc3b557e1ba2d14817395211909ea38a42",
+      "state": "identical"
+    },
+    "scripts/earth-engine/prepare_display_set.py": {
+      "mirror_sha256": "706a17b89ffcee8248bfce33d5316016f49ed35b71fed98a710f014f0e4490b9",
+      "site_sha256": "706a17b89ffcee8248bfce33d5316016f49ed35b71fed98a710f014f0e4490b9",
+      "state": "identical"
+    },
+    "scripts/earth-engine/requirements.txt": {
+      "mirror_sha256": "cd95f75e407d90e1025ec9ba9f9375f72ec6ee35b224878eb507448d337f1851",
+      "site_sha256": "cd95f75e407d90e1025ec9ba9f9375f72ec6ee35b224878eb507448d337f1851",
+      "state": "identical"
+    },
+    "scripts/earth-engine/restore-local-display.mjs": {
+      "mirror_sha256": "b2b7de17c383fb39396fd066c7b2021de0f2dcf0b42bd9050ab0371cc0b7e127",
+      "site_sha256": "b2b7de17c383fb39396fd066c7b2021de0f2dcf0b42bd9050ab0371cc0b7e127",
+      "state": "identical"
+    },
+    "scripts/earth-engine/secure-local-read.mjs": {
+      "mirror_sha256": "c1786cb4900e635c5aca41b4e8c1eaa6f2f62061e2bc41b1d8e6192e4ea76c50",
+      "site_sha256": "c1786cb4900e635c5aca41b4e8c1eaa6f2f62061e2bc41b1d8e6192e4ea76c50",
+      "state": "identical"
+    },
+    "scripts/install-ci.sh": {
+      "mirror_sha256": "2432d586910e818c16c83518c06252e1a5ca7c8e40f0c0e37c85b6eb11ef2cec",
+      "site_sha256": "2432d586910e818c16c83518c06252e1a5ca7c8e40f0c0e37c85b6eb11ef2cec",
+      "state": "identical"
+    },
+    "scripts/local-qwen-bridge.mjs": {
+      "mirror_sha256": "0d175aea9d7d685fe7559facb6d5440bbc92e64c04aa336c7acbf64207497edd",
+      "site_sha256": "0d175aea9d7d685fe7559facb6d5440bbc92e64c04aa336c7acbf64207497edd",
+      "state": "identical"
+    },
+    "scripts/prepare-local-pc.mjs": {
+      "mirror_sha256": "fec8af76abc1964370b4fe6849b8739fd548da3e57d50d702b7f4e4e66b47ab3",
+      "site_sha256": "fec8af76abc1964370b4fe6849b8739fd548da3e57d50d702b7f4e4e66b47ab3",
+      "state": "identical"
+    },
+    "scripts/prepare-maplibre-assets.mjs": {
+      "mirror_sha256": "c5b02be891621e9f98362f29cd86ec0df3770ffb07059cd4c3eea70557650993",
+      "site_sha256": "c5b02be891621e9f98362f29cd86ec0df3770ffb07059cd4c3eea70557650993",
+      "state": "identical"
+    },
+    "scripts/project-local-map-archive.py": {
+      "mirror_sha256": "a165f192273ccad60dec90263ab3bed784adcad8a5b1af6de372ac47cfc33390",
+      "site_sha256": "a165f192273ccad60dec90263ab3bed784adcad8a5b1af6de372ac47cfc33390",
+      "state": "identical"
+    },
+    "scripts/serve-local-worker.mjs": {
+      "mirror_sha256": "a0f3d04569e72b125b268b52a5c100ffd87c66d9a0b1e7b92c2ef27db10f66b1",
+      "site_sha256": "a0f3d04569e72b125b268b52a5c100ffd87c66d9a0b1e7b92c2ef27db10f66b1",
+      "state": "identical"
+    },
+    "scripts/sites-env.sh": {
+      "mirror_sha256": "df86ebfc27d2f00860036658e933ac0ddd7b5f6879aa5d51218f0863c7e1fb60",
+      "site_sha256": "df86ebfc27d2f00860036658e933ac0ddd7b5f6879aa5d51218f0863c7e1fb60",
+      "state": "identical"
+    },
+    "tests/3dep-dem-tiles.test.mjs": {
+      "mirror_sha256": "e84aeefeaef02ea9c34d4b7f7b131d2df85318b3ae26df550006541f10c0c298",
+      "site_sha256": "e84aeefeaef02ea9c34d4b7f7b131d2df85318b3ae26df550006541f10c0c298",
+      "state": "identical"
+    },
+    "tests/airflow-tiles.test.mjs": {
+      "mirror_sha256": "3ec3092d58b37f436f367c9f9ec0c810698b38ddab7520432d8cc3548c70f6a3",
+      "site_sha256": "3ec3092d58b37f436f367c9f9ec0c810698b38ddab7520432d8cc3548c70f6a3",
+      "state": "identical"
+    },
+    "tests/blm-plss-records.test.mjs": {
+      "mirror_sha256": "f85ba31eba2724ff1c3a744debbe25b6307dcbbd63d1b7c632f00aaffb2a7da1",
+      "site_sha256": "f85ba31eba2724ff1c3a744debbe25b6307dcbbd63d1b7c632f00aaffb2a7da1",
+      "state": "identical"
+    },
+    "tests/bridge-records.test.mjs": {
+      "mirror_sha256": "3441667fdf0a0270048b586239d9839bf612ae09bf785943acb5739fde2cff8d",
+      "site_sha256": "3441667fdf0a0270048b586239d9839bf612ae09bf785943acb5739fde2cff8d",
+      "state": "identical"
+    },
+    "tests/browser-request-lifecycle.test.mjs": {
+      "mirror_sha256": "038a50d2cf20fc5bcc3bc832d6a45e328d4d69613da8b5291e036a541b157544",
+      "site_sha256": "038a50d2cf20fc5bcc3bc832d6a45e328d4d69613da8b5291e036a541b157544",
+      "state": "identical"
+    },
+    "tests/client-store-boundary.test.mjs": {
+      "mirror_sha256": "eff5c6d45c9bca272c054f938ddb8b185ba4258c8612c33294432aa1de6f066a",
+      "site_sha256": "eff5c6d45c9bca272c054f938ddb8b185ba4258c8612c33294432aa1de6f066a",
+      "state": "identical"
+    },
+    "tests/cloudflare-loader.mjs": {
+      "mirror_sha256": "dae06e38760937d13fafe0d6e50dfdf506e735c7f63e291a5574a06a55c0d28e",
+      "site_sha256": "dae06e38760937d13fafe0d6e50dfdf506e735c7f63e291a5574a06a55c0d28e",
+      "state": "identical"
+    },
+    "tests/cloudflare-register.mjs": {
+      "mirror_sha256": "ce76ea64aa1a2dc1d877a692f4634ac52042967202c5ba31d2f293bf14df1cad",
+      "site_sha256": "ce76ea64aa1a2dc1d877a692f4634ac52042967202c5ba31d2f293bf14df1cad",
+      "state": "identical"
+    },
+    "tests/crop-casma-storage.test.mjs": {
+      "mirror_sha256": "d649b1f3a86eaaff68c8ec2b4a696778f0108866d57383a4f19e76e2d67f1aa6",
+      "site_sha256": "d649b1f3a86eaaff68c8ec2b4a696778f0108866d57383a4f19e76e2d67f1aa6",
+      "state": "identical"
+    },
+    "tests/data-intake.test.mjs": {
+      "mirror_sha256": "4af3935b49afa6e96cdc786da0ba7b7d1e4479d27a04fa5e694840bb4794a235",
+      "site_sha256": "4af3935b49afa6e96cdc786da0ba7b7d1e4479d27a04fa5e694840bb4794a235",
+      "state": "identical"
+    },
+    "tests/daylight-layer.test.mjs": {
+      "mirror_sha256": "316d6bd60ae23d4a062d11bb02d6692feea0ed8f0ba359d5ff09987b8bd3f6a3",
+      "site_sha256": "316d6bd60ae23d4a062d11bb02d6692feea0ed8f0ba359d5ff09987b8bd3f6a3",
+      "state": "identical"
+    },
+    "tests/disaster-blm-layers.test.mjs": {
+      "mirror_sha256": "d141eef1fe362d70758e1ff4d4223e4667eed27db3c0ad039205d37f68726bcd",
+      "site_sha256": "d141eef1fe362d70758e1ff4d4223e4667eed27db3c0ad039205d37f68726bcd",
+      "state": "identical"
+    },
+    "tests/earth-engine-context-worker.test.mjs": {
+      "mirror_sha256": "d26ae1b56073246469074dcdb0220ef9767c38f66ce15cc3468a57c7fdd88913",
+      "site_sha256": "d26ae1b56073246469074dcdb0220ef9767c38f66ce15cc3468a57c7fdd88913",
+      "state": "identical"
+    },
+    "tests/earth-engine-export-years.test.mjs": {
+      "mirror_sha256": "619fa2e29d78eb16421073d170dbf9e57375455b6a29047c7de1b955e83d06a8",
+      "site_sha256": "619fa2e29d78eb16421073d170dbf9e57375455b6a29047c7de1b955e83d06a8",
+      "state": "identical"
+    },
+    "tests/earth-engine-rendered.test.mjs": {
+      "mirror_sha256": "8ad44002b9ab70a4ca757f280a3016eb3f36a8d0ebfc4c6ed2b7ca4ab171bec7",
+      "site_sha256": "8ad44002b9ab70a4ca757f280a3016eb3f36a8d0ebfc4c6ed2b7ca4ab171bec7",
+      "state": "identical"
+    },
+    "tests/earth-engine.test.mjs": {
+      "mirror_sha256": "8d10f3f950de3fd330d1ccd90514da553d00c87f3ff1ec2adc846ce2a5c79714",
+      "site_sha256": "8d10f3f950de3fd330d1ccd90514da553d00c87f3ff1ec2adc846ce2a5c79714",
+      "state": "identical"
+    },
+    "tests/earth_engine_preparation_years.py": {
+      "mirror_sha256": "6ec1f20be2f271d652168cd3e3c6983a94fd55847c4cbc738079667cdc5f474f",
+      "site_sha256": "6ec1f20be2f271d652168cd3e3c6983a94fd55847c4cbc738079667cdc5f474f",
+      "state": "identical"
+    },
+    "tests/event-atlas.test.mjs": {
+      "mirror_sha256": "208df5f1aee92200100d4b3ff09de9d0cc3bbea31483cf6bcdba45de0e77df6c",
+      "site_sha256": "208df5f1aee92200100d4b3ff09de9d0cc3bbea31483cf6bcdba45de0e77df6c",
+      "state": "identical"
+    },
+    "tests/evidence-drawer-data.test.mjs": {
+      "mirror_sha256": "1d01ec628ad173c7b8c795e67e6c9190dcb896e7d37fc43a0623fcf5d77cbb47",
+      "site_sha256": "1d01ec628ad173c7b8c795e67e6c9190dcb896e7d37fc43a0623fcf5d77cbb47",
+      "state": "identical"
+    },
+    "tests/evidence-drawer-observation.test.mjs": {
+      "mirror_sha256": "a4a96636cd3f668c49c230e0cb740f0e93c1fc416725f16bf9bc5dc883f69f98",
+      "site_sha256": "a4a96636cd3f668c49c230e0cb740f0e93c1fc416725f16bf9bc5dc883f69f98",
+      "state": "identical"
+    },
+    "tests/fire-report-analysis.test.mjs": {
+      "mirror_sha256": "70acfaa62395b3f52b00ffdc8c098f1ea84fba767d912cdd7f681033b096ecdd",
+      "site_sha256": "70acfaa62395b3f52b00ffdc8c098f1ea84fba767d912cdd7f681033b096ecdd",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/bootstrap.json": {
+      "mirror_sha256": "3b8f8f893847ac82f37f6b3866b14c6a3b41cdf4fe20f505173e768051300777",
+      "site_sha256": "3b8f8f893847ac82f37f6b3866b14c6a3b41cdf4fe20f505173e768051300777",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/decision.json": {
+      "mirror_sha256": "0eb0606e4b48bcc3809a3d2fb1e3193de0dd6989ce465ef403565607e8159c8f",
+      "site_sha256": "0eb0606e4b48bcc3809a3d2fb1e3193de0dd6989ce465ef403565607e8159c8f",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/evidence.json": {
+      "mirror_sha256": "28557dde8addaabb37b2a084850670f692728a2125d0828b7217fe9dee966c8f",
+      "site_sha256": "28557dde8addaabb37b2a084850670f692728a2125d0828b7217fe9dee966c8f",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/held-snapshot.json": {
+      "mirror_sha256": "c3ead381a91831af161f8fdd7f9c43c1a26f22652e24d7a39e489aa210199b57",
+      "site_sha256": "c3ead381a91831af161f8fdd7f9c43c1a26f22652e24d7a39e489aa210199b57",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/layers.json": {
+      "mirror_sha256": "1cc867a3f4621815269482ffd9c6cbf9e77e8c5e6fb0830150cf13bc905287ee",
+      "site_sha256": "1cc867a3f4621815269482ffd9c6cbf9e77e8c5e6fb0830150cf13bc905287ee",
+      "state": "identical"
+    },
+    "tests/fixtures/governed-water/snapshot.json": {
+      "mirror_sha256": "c5e9ab17e9ec6a6a1995c06ae3050e7e66d8e8c02db9736955911c31040930f1",
+      "site_sha256": "c5e9ab17e9ec6a6a1995c06ae3050e7e66d8e8c02db9736955911c31040930f1",
+      "state": "identical"
+    },
+    "tests/follow-today.test.mjs": {
+      "mirror_sha256": "51430d1a56cdb47fb65fbb89d90a93030348194ddb3fa4a3e2c1bad1568a6325",
+      "site_sha256": "51430d1a56cdb47fb65fbb89d90a93030348194ddb3fa4a3e2c1bad1568a6325",
+      "state": "identical"
+    },
+    "tests/globe-context.test.mjs": {
+      "mirror_sha256": "0b97ad9eb7288c32c25190dfe14798a26d0ad45ad31fbc141ca00c562e20a175",
+      "site_sha256": "0b97ad9eb7288c32c25190dfe14798a26d0ad45ad31fbc141ca00c562e20a175",
+      "state": "identical"
+    },
+    "tests/governed-water-availability.test.mjs": {
+      "mirror_sha256": "ab4cd260619d72a371e816301b5e11c5de5621bce80fce2090bb5548694b8961",
+      "site_sha256": "ab4cd260619d72a371e816301b5e11c5de5621bce80fce2090bb5548694b8961",
+      "state": "identical"
+    },
+    "tests/governed-water-storage.test.mjs": {
+      "mirror_sha256": "f9b968928cc43ac19768580d5e066a6f400c7c8570f4ea549348e68e177620fb",
+      "site_sha256": "f9b968928cc43ac19768580d5e066a6f400c7c8570f4ea549348e68e177620fb",
+      "state": "identical"
+    },
+    "tests/governed-water.test.mjs": {
+      "mirror_sha256": "b9cbe4603d2c936a99ffa32b7a88a7421e9bf1dbf1bb578953140425b99b5f32",
+      "site_sha256": "b9cbe4603d2c936a99ffa32b7a88a7421e9bf1dbf1bb578953140425b99b5f32",
+      "state": "identical"
+    },
+    "tests/historical-topo-overlay.test.mjs": {
+      "mirror_sha256": "8bf42250293039e343b0584880d4566a0008138beff09d92056d6e4241db7cbf",
+      "site_sha256": "8bf42250293039e343b0584880d4566a0008138beff09d92056d6e4241db7cbf",
+      "state": "identical"
+    },
+    "tests/historical-topo-routes.test.mjs": {
+      "mirror_sha256": "69163ebeeddb1f0a78463da660206bc3b6dc0f085f0aa41ff76aacae24145af1",
+      "site_sha256": "69163ebeeddb1f0a78463da660206bc3b6dc0f085f0aa41ff76aacae24145af1",
+      "state": "identical"
+    },
+    "tests/historical-topo.test.mjs": {
+      "mirror_sha256": "8d8545acdeaba8690026cf076b06b07a4ada6364131fa8d04f5f6bbc37ff1544",
+      "site_sha256": "8d8545acdeaba8690026cf076b06b07a4ada6364131fa8d04f5f6bbc37ff1544",
+      "state": "identical"
+    },
+    "tests/hms-smoke-playback.test.mjs": {
+      "mirror_sha256": "3b76aacc4cb6fed5a0d539881b5ac8868ab609b447ab6d49b494b481c69ed29c",
+      "site_sha256": "3b76aacc4cb6fed5a0d539881b5ac8868ab609b447ab6d49b494b481c69ed29c",
+      "state": "identical"
+    },
+    "tests/hms-smoke-transition.test.mjs": {
+      "mirror_sha256": "823c97f4e3a0bdecf880b50a0c85d95bf01068c254d1bbf8c0137a8637b8f3ee",
+      "site_sha256": "823c97f4e3a0bdecf880b50a0c85d95bf01068c254d1bbf8c0137a8637b8f3ee",
+      "state": "identical"
+    },
+    "tests/import-complexity.test.mjs": {
+      "mirror_sha256": "df138e94367bfdfbb2b2961e8e244b2749200785d7eba76ca3fa8eb05d4c0759",
+      "site_sha256": "df138e94367bfdfbb2b2961e8e244b2749200785d7eba76ca3fa8eb05d4c0759",
+      "state": "identical"
+    },
+    "tests/intake-worker.test.mjs": {
+      "mirror_sha256": "a72ace9a0f6374bacd384c218b530ad0f45e668b79303dfacba472efdd1d1a64",
+      "site_sha256": "a72ace9a0f6374bacd384c218b530ad0f45e668b79303dfacba472efdd1d1a64",
+      "state": "identical"
+    },
+    "tests/kansas-geoportal-source.test.mjs": {
+      "mirror_sha256": "ea571296da6579806d9ff64dc9ce9f719f06702b30104c5af4cc7514e600fb6b",
+      "site_sha256": "ea571296da6579806d9ff64dc9ce9f719f06702b30104c5af4cc7514e600fb6b",
+      "state": "identical"
+    },
+    "tests/kansas-historical-society-sources.test.mjs": {
+      "mirror_sha256": "af7a911a0b2e08e9ea43812ca4e12afd2f68caacaa2d04e7653461dec7fc7634",
+      "site_sha256": "af7a911a0b2e08e9ea43812ca4e12afd2f68caacaa2d04e7653461dec7fc7634",
+      "state": "identical"
+    },
+    "tests/kansas-knowledge.test.mjs": {
+      "mirror_sha256": "0bfc3ee21ddcbc5b7f085cb59509ea9290d7dcfde01f283c62e53b8b60eb8212",
+      "site_sha256": "0bfc3ee21ddcbc5b7f085cb59509ea9290d7dcfde01f283c62e53b8b60eb8212",
+      "state": "identical"
+    },
+    "tests/kansas-reference-layers.test.mjs": {
+      "mirror_sha256": "19ad5a3080612b3ed53f62f3ac22412e4e90c2b3047163bb2674a0591b468825",
+      "site_sha256": "19ad5a3080612b3ed53f62f3ac22412e4e90c2b3047163bb2674a0591b468825",
+      "state": "identical"
+    },
+    "tests/lightning-data.test.mjs": {
+      "mirror_sha256": "14dc7f200d60ded2b5168216d1ae5b343b8be4a84f3eb8709b02a3526bb02f24",
+      "site_sha256": "14dc7f200d60ded2b5168216d1ae5b343b8be4a84f3eb8709b02a3526bb02f24",
+      "state": "identical"
+    },
+    "tests/lightning-flashes.test.mjs": {
+      "mirror_sha256": "1545fecb3156e3a59b9840cac8fb29bceb490afe7f2d85fb7adc5d3708e708a4",
+      "site_sha256": "1545fecb3156e3a59b9840cac8fb29bceb490afe7f2d85fb7adc5d3708e708a4",
+      "state": "identical"
+    },
+    "tests/local-geopdf-review.test.mjs": {
+      "mirror_sha256": "b93827eb5ec8956df9a0a4674462f8f00fa95fb75cab6b4bd35ad2108aa095d3",
+      "site_sha256": "b93827eb5ec8956df9a0a4674462f8f00fa95fb75cab6b4bd35ad2108aa095d3",
+      "state": "identical"
+    },
+    "tests/local-map-archive.test.mjs": {
+      "mirror_sha256": "c3dea16086b098493b4997c2c8045376c4e89f85074a082493ff90ab14c2821d",
+      "site_sha256": "c3dea16086b098493b4997c2c8045376c4e89f85074a082493ff90ab14c2821d",
+      "state": "identical"
+    },
+    "tests/local-pc-layout.test.mjs": {
+      "mirror_sha256": "a220b66d87d6e4bc7f44c0af69897fd2c17c19c8cb920296d5f971c4a95be5d4",
+      "site_sha256": "a220b66d87d6e4bc7f44c0af69897fd2c17c19c8cb920296d5f971c4a95be5d4",
+      "state": "identical"
+    },
+    "tests/local-qwen-bridge.test.mjs": {
+      "mirror_sha256": "822484dde132f499034f1b1c823a8a0906e61a41580ab5a479ef9d4b83397dc5",
+      "site_sha256": "822484dde132f499034f1b1c823a8a0906e61a41580ab5a479ef9d4b83397dc5",
+      "state": "identical"
+    },
+    "tests/local-worker-runtime.test.mjs": {
+      "mirror_sha256": "fbe043db8f490fea43908bb95b460c9d0e558fe3094aa3640b9bc19db14e20ec",
+      "site_sha256": "fbe043db8f490fea43908bb95b460c9d0e558fe3094aa3640b9bc19db14e20ec",
+      "state": "identical"
+    },
+    "tests/map-composition.test.mjs": {
+      "mirror_sha256": "9d703605b371f273cd6e295275e45f4ac5d6e7594486563d7d0e816cf484adb5",
+      "site_sha256": "9d703605b371f273cd6e295275e45f4ac5d6e7594486563d7d0e816cf484adb5",
+      "state": "identical"
+    },
+    "tests/map-connections.test.mjs": {
+      "mirror_sha256": "33188730e9771e22836ca6e5443d02642b3b76c8a22eb4e12574bb7ed6fcd097",
+      "site_sha256": "33188730e9771e22836ca6e5443d02642b3b76c8a22eb4e12574bb7ed6fcd097",
+      "state": "identical"
+    },
+    "tests/mobile-compatibility.test.mjs": {
+      "mirror_sha256": "87b33b8b4372940e568a0e83f29882396ab88ae4dc530272c1470186b4c101c3",
+      "site_sha256": "87b33b8b4372940e568a0e83f29882396ab88ae4dc530272c1470186b4c101c3",
+      "state": "identical"
+    },
+    "tests/noaa-radar.test.mjs": {
+      "mirror_sha256": "3a797e961f17c266e73cf89d46f9a00e102ae7c58acafc56612a1471db8b7c9a",
+      "site_sha256": "3a797e961f17c266e73cf89d46f9a00e102ae7c58acafc56612a1471db8b7c9a",
+      "state": "identical"
+    },
+    "tests/noaa-satellite.test.mjs": {
+      "mirror_sha256": "7dd1e40c1c327d353e8ef89abf290d7c45f10eb06a983eda0f7fb65dd5e12c18",
+      "site_sha256": "7dd1e40c1c327d353e8ef89abf290d7c45f10eb06a983eda0f7fb65dd5e12c18",
+      "state": "identical"
+    },
+    "tests/official-refresh-plan.test.mjs": {
+      "mirror_sha256": "7d92f9c2a2ed3ff46166b5de9a64a6c7bb060fbbc9feec91d0b2517de75e0853",
+      "site_sha256": "7d92f9c2a2ed3ff46166b5de9a64a6c7bb060fbbc9feec91d0b2517de75e0853",
+      "state": "identical"
+    },
+    "tests/qwen-availability.test.mjs": {
+      "mirror_sha256": "6bb5fe4a3790f3f2c6399427ee7c6c411d785f75e03f9c0a7bef90da848a643d",
+      "site_sha256": "6bb5fe4a3790f3f2c6399427ee7c6c411d785f75e03f9c0a7bef90da848a643d",
+      "state": "identical"
+    },
+    "tests/rendered-html.test.mjs": {
+      "mirror_sha256": "fec4545e413719dfdfd8a014a401483cc5a4a800264b3fdb59aa4647789280a1",
+      "site_sha256": "fec4545e413719dfdfd8a014a401483cc5a4a800264b3fdb59aa4647789280a1",
+      "state": "identical"
+    },
+    "tests/repository-status.test.mjs": {
+      "mirror_sha256": "3f447c3d18bab75c8e429bc838e3c8f1d094f2d0d978a5dfeb3c91791b56782c",
+      "site_sha256": "3f447c3d18bab75c8e429bc838e3c8f1d094f2d0d978a5dfeb3c91791b56782c",
+      "state": "identical"
+    },
+    "tests/road-year-study.test.mjs": {
+      "mirror_sha256": "639a6cf4156697ebc37e8d9ad3b806649a2fda4145450739eff922e7ee7b3652",
+      "site_sha256": "639a6cf4156697ebc37e8d9ad3b806649a2fda4145450739eff922e7ee7b3652",
+      "state": "identical"
+    },
+    "tests/runtime-resilience.test.mjs": {
+      "mirror_sha256": "8b41a506339940fea17a735ae65fdb228183d75ec1bf624353671483fceb84d5",
+      "site_sha256": "8b41a506339940fea17a735ae65fdb228183d75ec1bf624353671483fceb84d5",
+      "state": "identical"
+    },
+    "tests/science-events.test.mjs": {
+      "mirror_sha256": "96cab3bcbd4b81a9a9e071874210d020e05ab46070c2c347df57d2d21e151b74",
+      "site_sha256": "96cab3bcbd4b81a9a9e071874210d020e05ab46070c2c347df57d2d21e151b74",
+      "state": "identical"
+    },
+    "tests/secure-local-read.test.mjs": {
+      "mirror_sha256": "5849a768ecda550f2ad0ce24cff3c12d7af48870eba309316ffb85394752ba90",
+      "site_sha256": "5849a768ecda550f2ad0ce24cff3c12d7af48870eba309316ffb85394752ba90",
+      "state": "identical"
+    },
+    "tests/security-boundaries.test.mjs": {
+      "mirror_sha256": "ea27a8f890d6b43abbd1dfcd5d21fb61ba12caeb0a07bfa1717f04be4b98ad39",
+      "site_sha256": "ea27a8f890d6b43abbd1dfcd5d21fb61ba12caeb0a07bfa1717f04be4b98ad39",
+      "state": "identical"
+    },
+    "tests/security-upstream.test.mjs": {
+      "mirror_sha256": "69142db0d6adb58d4e907087e42368d3d1d2ef4a885882fb6c5b75f59096b68c",
+      "site_sha256": "69142db0d6adb58d4e907087e42368d3d1d2ef4a885882fb6c5b75f59096b68c",
+      "state": "identical"
+    },
+    "tests/snapshot-workflows.test.mjs": {
+      "mirror_sha256": "5986fe3d2ece3ef27425640fbed458e8f6b29086221683a4140b5d9de6c513fd",
+      "site_sha256": "5986fe3d2ece3ef27425640fbed458e8f6b29086221683a4140b5d9de6c513fd",
+      "state": "identical"
+    },
+    "tests/soil-map-state.test.mjs": {
+      "mirror_sha256": "7b7cbed1ce754f56adb39698ba44dd2df4ddcceec7c33cd45bb18ba5663895fe",
+      "site_sha256": "7b7cbed1ce754f56adb39698ba44dd2df4ddcceec7c33cd45bb18ba5663895fe",
+      "state": "identical"
+    },
+    "tests/soil-moisture.test.mjs": {
+      "mirror_sha256": "f4c652fe8d1ec731c91c27483406ec46d7058c225df5514b1c9e5e07ec84643a",
+      "site_sha256": "f4c652fe8d1ec731c91c27483406ec46d7058c225df5514b1c9e5e07ec84643a",
+      "state": "identical"
+    },
+    "tests/source-time.test.mjs": {
+      "mirror_sha256": "2629d7c1eb8f7df0a3b48d0d13aa17daf2228d60ba2f4e4681b6f0fb7775d76f",
+      "site_sha256": "2629d7c1eb8f7df0a3b48d0d13aa17daf2228d60ba2f4e4681b6f0fb7775d76f",
+      "state": "identical"
+    },
+    "tests/streamflow.test.mjs": {
+      "mirror_sha256": "7573fbcf7895d2f3e7445f250b9758ce588d4cbb8eb31cfa10d1f51414ac375f",
+      "site_sha256": "7573fbcf7895d2f3e7445f250b9758ce588d4cbb8eb31cfa10d1f51414ac375f",
+      "state": "identical"
+    },
+    "tests/temporal-sweep.test.mjs": {
+      "mirror_sha256": "d89951327dea4beeec5d621fea01055ea368edc7cbb139654a1482682d7c007c",
+      "site_sha256": "d89951327dea4beeec5d621fea01055ea368edc7cbb139654a1482682d7c007c",
+      "state": "identical"
+    },
+    "tests/terrain-performance.test.mjs": {
+      "mirror_sha256": "47c1393801576985e87720154fe8fec5d679d90cabfc8773abf7fdc56f6aafc9",
+      "site_sha256": "47c1393801576985e87720154fe8fec5d679d90cabfc8773abf7fdc56f6aafc9",
+      "state": "identical"
+    },
+    "tests/terrain-raster-status.test.mjs": {
+      "mirror_sha256": "72de45711fda7d06bbc796f9d7a26276663ecbebad39644dd40189556c68f24e",
+      "site_sha256": "72de45711fda7d06bbc796f9d7a26276663ecbebad39644dd40189556c68f24e",
+      "state": "identical"
+    },
+    "tests/terrain-relief-style.test.mjs": {
+      "mirror_sha256": "9a48d1b4b42a218ed885df7fa38bebe3c8ccab1f2add69c71427ec6de75f1521",
+      "site_sha256": "9a48d1b4b42a218ed885df7fa38bebe3c8ccab1f2add69c71427ec6de75f1521",
+      "state": "identical"
+    },
+    "tests/water-flow-context.test.mjs": {
+      "mirror_sha256": "5b3cc8e8483dfc19203a7b596c11205aacc3f5af3a1e7f0cde8d6030926d1912",
+      "site_sha256": "5b3cc8e8483dfc19203a7b596c11205aacc3f5af3a1e7f0cde8d6030926d1912",
+      "state": "identical"
+    },
+    "tests/water-motion-canvas.test.mjs": {
+      "mirror_sha256": "b5a349c1cc7c516f9b7ed3f0334c825131d3fa474684dbc48dbb74f5f4d6c775",
+      "site_sha256": "b5a349c1cc7c516f9b7ed3f0334c825131d3fa474684dbc48dbb74f5f4d6c775",
+      "state": "identical"
+    },
+    "tests/wind-arrow-terrain.test.mjs": {
+      "mirror_sha256": "ab037f3282be2631ce07937cafbd42bd99f88f22070dd68b0965234ab07cc9c8",
+      "site_sha256": "ab037f3282be2631ce07937cafbd42bd99f88f22070dd68b0965234ab07cc9c8",
+      "state": "identical"
+    },
+    "tsconfig.json": {
+      "mirror_sha256": "92e711c5df978fb7b6ea86b5bb4b5ca999c2b8b5460bfc6d882631e46aed027b",
+      "site_sha256": "92e711c5df978fb7b6ea86b5bb4b5ca999c2b8b5460bfc6d882631e46aed027b",
+      "state": "identical"
+    },
+    "vendor/vinext-0.0.50-kfm.1.tgz": {
+      "mirror_sha256": "853832fbe391cf1c33c8d3d47447ccf441ed5cb83beffdc8cb97b806db4b244c",
+      "site_sha256": "853832fbe391cf1c33c8d3d47447ccf441ed5cb83beffdc8cb97b806db4b244c",
+      "state": "identical"
+    },
+    "vendor/vinext-kfm.README.md": {
+      "mirror_sha256": "dd5b0bf4250dd3c09b9a4a9dbf83543f345492a0e24b066216a5cc468f0f69a2",
+      "site_sha256": "dd5b0bf4250dd3c09b9a4a9dbf83543f345492a0e24b066216a5cc468f0f69a2",
+      "state": "identical"
+    },
+    "vite.config.ts": {
+      "mirror_sha256": "d4e17251ec9d0fb83dc7e7ef8719d1838b1db55840827450e31128f2dc5f879c",
+      "site_sha256": "d4e17251ec9d0fb83dc7e7ef8719d1838b1db55840827450e31128f2dc5f879c",
+      "state": "identical"
+    },
+    "worker/index.ts": {
+      "mirror_sha256": "4355761771cea528e2862dc94c04e57c01b1432e4b8e8a0a245a5a1341e73c84",
+      "site_sha256": "4355761771cea528e2862dc94c04e57c01b1432e4b8e8a0a245a5a1341e73c84",
+      "state": "identical"
+    }
+  },
+  "counts": {
+    "identical": 336,
+    "inherited_repository_overlay": 0,
+    "merged_water_overlay": 0,
+    "missing": 0,
+    "repository_only_overlay": 0,
+    "repository_only_water_overlay": 0,
+    "unexpected_difference": 0
+  },
+  "destination": "apps/site/source",
+  "profile": "kfm.site-mirror-receipt/v1",
+  "repository_base": "3315c6712145a00af5ba8a732743085df0a20523",
+  "review": {
+    "activation": "NOT REQUESTED",
+    "blocking_checks": [
+      "dependency_audit_disposition",
+      "browser_acceptance",
+      "source_and_overlay_review",
+      "new_head_ci"
+    ],
+    "deployment": "NOT REQUESTED",
+    "source_and_overlay_review": "PENDING"
+  },
+  "rollback": {
+    "mirror": "Revert the v139 mirror commit and restore the v138 receipt selector; the previous source bytes remain in Git history.",
+    "site": "Saved v138 remains available; v139 is not deployed. Keep deployed v131 and existing D1/R2 bindings unless separately reviewed."
+  },
+  "site_archive_sha256": "6de478c9cfbd0790d01e32d281d0c3d80ccc3594a9dcf1f40b5d0d839d3a6458",
+  "site_candidate_commit": "25238b376ef5cbfc1918a2e48f1e508ad8017fd6",
+  "site_candidate_deployed": false,
+  "site_project": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_saved_version": 139,
+  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_ef7aa4e2a9708191a38b205274e8f905",
+  "site_source_tree": "053ae869fcb72be6faffa722b499e3a4da880e5b",
+  "status": "review_pending",
+  "supersedes": "data/receipts/generated/site-mirror-v138-candidate-20261004.json",
+  "tracked_digest_manifest_sha256": "0ee620579ecc9db248332c5631b38aab1a5abe91bd9e2c84bc105cd3eb696ff7",
+  "tracked_file_count": 336,
+  "transition": {
+    "changed_existing_paths": 5,
+    "intermediate_saved_versions": [],
+    "new_site_path_names": [],
+    "new_site_paths": 0,
+    "previous_receipt_preserved": true,
+    "previous_recorded_paths": 336,
+    "removed_mirror_paths": []
+  },
+  "validation": {
+    "browser": "NOT RUN; browser policy verification unavailable",
+    "changed_file_lint": "PASS: affected Site TSX modules and page",
+    "codeql": "PENDING: new PR head scan",
+    "dependency_lock_sha256": "52d15d279429cc03d0e3eb21ffc6bd620b247a29ae1574e953a4c7ceb93fff8b",
+    "diff_check": "PASS: git diff --check before staging",
+    "hosted_equivalence": false,
+    "maplibre_inventory": "HOLD: renderer acquisition confined to accepted Site seam; no new outside-seam finding",
+    "mirror_check": "PASS: python3 tools/qa/site_mirror.py --check; 336 tracked files",
+    "mirror_tool_tests": "PASS: .venv/bin/python -m pytest -q tests/qa/test_site_mirror.py; 8/8",
+    "node_version": "v22.13.1",
+    "npm_audit": "FAIL: fresh npm audit on unchanged v139 lockfile found 8 high, 0 critical; advisory disposition pending",
+    "repository_topology": "PASS: 0 invariant, 0 new drift, 113 baselined warnings, 0 stale baseline entries on supported venv",
+    "secure_local_read": "INHERITED: descriptor containment and byte-limit tests passed at v138",
+    "site_install": "INHERITED: locked install passed on v138; lockfile unchanged",
+    "site_lint": "PASS: 0 errors, 39 warnings on saved v139 source",
+    "site_tests": "PASS: npm test on saved v139 source; production build and 346/346 Node tests",
+    "site_typecheck": "PASS: npx tsc --noEmit on v139 source",
+    "source_comparison": "PASS: clean saved v139 source; five changed existing paths, zero additions/deletions"
+  }
+}

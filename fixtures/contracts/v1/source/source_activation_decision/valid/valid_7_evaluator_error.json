@@ -1,0 +1,52 @@
+{
+  "object_type": "SourceActivationDecision",
+  "schema_version": "1.0.0",
+  "activation_decision_id": "activation:synthetic-evaluator-error:20260803",
+  "source_id": "src:synthetic:evaluator-error",
+  "source_descriptor_ref": "source-descriptor:src:synthetic:evaluator-error:0.1.0",
+  "descriptor_version": "0.1.0",
+  "source_descriptor_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "source_role_ref": "source-descriptor:src:synthetic:evaluator-error:0.1.0#/source_role",
+  "operation": "initial_activation",
+  "context": {
+    "rights_status": "unknown",
+    "sensitivity_class": "unknown_review_required",
+    "access_posture": "unknown",
+    "descriptor_review_state": "draft",
+    "registry_state": "proposed"
+  },
+  "decision": {
+    "route": "ERROR",
+    "activation_state": "disabled",
+    "activation_scope": "none",
+    "reason_codes": [
+      "INTAKE_EVALUATOR_ERROR"
+    ],
+    "obligations": [
+      "minimize_audit_payload",
+      "block_automatic_retry"
+    ],
+    "policy_decision_refs": [
+      "policy:synthetic:intake"
+    ],
+    "review_state": "not_required",
+    "review_refs": [],
+    "decision_authority_ref": "authority:synthetic:intake-evaluator"
+  },
+  "timing": {
+    "created_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-08-03T12:00:00Z",
+    "expires_at": null,
+    "hold_expires_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "authority_created": false
+  }
+}

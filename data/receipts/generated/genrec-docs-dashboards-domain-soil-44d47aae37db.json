@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-docs-dashboards-domain-soil-44d47aae37db",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/soil.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/soil.md": "sha256:44d47aae37db9db4f84933126a0f92d7123aebfdb30f065280bee49e61cecf03"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:078ad30256583bef0a249a14f0070dc37633147cd9c172345770198f2abcc2ec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "Python structural validation",
+      "remote branch, blob, diff, and pull-request verification"
+    ],
+    "task_contract_summary": "Update docs/dashboards/domain/soil.md in bartytime4life/Kansas-Frontier-Matrix using current repository evidence and the attached KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 plus the KFM Soil Architecture Extended Pro planning report; preserve KFM trust, lifecycle, publication, and rollback boundaries; deliver one verified draft pull request and do not merge, release, deploy, promote, publish, or change repository settings."
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6aaea704230259e4fca30fcc0b9c1a168e12c2c2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/soil.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/DASHBOARD_CATALOG.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/contracts/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/schemas/contracts/v1/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/tools/validators/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/policy/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/data/registry/sources/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/apps/explorer-web/src/features/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/domain-soil.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/soil-component-horizon-join.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/soil-mukey-properties.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/soil-moisture-observation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/soil-ssurgo-sda-micro-snapshot.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/data/proofs/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/release/candidates/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/soil.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 6aaea704230259e4fca30fcc0b9c1a168e12c2c2; fetched the target and direct dashboard, Soil-domain, contract, schema, policy, validator, workflow, UI, proof, release, Directory Rules, ADR, and CODEOWNERS boundaries; no open PR targeting docs/dashboards/domain/soil.md was found. Two stale task branches were inspected and not reused because they were hundreds of commits behind and carried no current target change."
+    },
+    {
+      "gate": "same-path-directory-rules-review",
+      "outcome": "PASS",
+      "reason": "The existing human-readable dashboard specification remains under docs/. Accepted ADR-0029 supports the same-path documentation correction; no root, authority home, move, rename, mirror, deletion, or structural migration was introduced."
+    },
+    {
+      "gate": "soil-repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision distinguishes current fixture-first Soil validation from absent production metrics, live source admission, evidence/policy/release closure, dashboard routing, deployment, and publication."
+    },
+    {
+      "gate": "markdown-structure-anchors-and-tables",
+      "outcome": "PASS",
+      "reason": "One complete KFM metadata block, one H1, thirteen unique explicit anchors, all twenty-four same-document links resolved, four balanced fenced blocks, sixteen structurally consistent tables, UTF-8/LF, final newline, no tabs, trailing whitespace, or conflict markers."
+    },
+    {
+      "gate": "repository-relative-link-review",
+      "outcome": "PASS",
+      "reason": "All seventeen unique relative destinations are limited to inspected repository-present dashboard, Soil domain, contract, schema, policy, source registry, validator, workflow, UI, proof, release, doctrine, and ADR surfaces."
+    },
+    {
+      "gate": "security-rights-sensitivity-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "No credential, private source payload, precise protected location, real farm/person/property record, restricted operational parameter, or source, policy, evidence, release, deployment, or publication mutation was introduced."
+    },
+    {
+      "gate": "exact-local-sha256-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 from the final local UTF-8 Markdown bytes: 44d47aae37db9db4f84933126a0f92d7123aebfdb30f065280bee49e61cecf03."
+    },
+    {
+      "gate": "remote-soil-document-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned the expected first and final sections from branch agent/ground-soil-dashboard-20260822 at blob dcb2f9de8ee18433db4eb2ee1b4c7d31ca7775ca. Exact remote SHA-256 remains to be confirmed by the repository-owned receipt validator."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available in the connector session. Hosted exact-head receipt validation must recompute the committed artifact hash."
+    },
+    {
+      "gate": "repository-native-markdown-link-topology-and-full-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only execution did not expose a mounted dependency-complete checkout; hosted pull-request checks remain separate evidence."
+    },
+    {
+      "gate": "operational-source-metric-policy-release-dashboard-validation",
+      "outcome": "SKIPPED",
+      "reason": "No live Soil source, production metric producer, telemetry store, EvidenceBundle resolver, policy evaluator, proof/release service, routed panel, deployment, or public request was exercised."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/6aaea704230259e4fca30fcc0b9c1a168e12c2c2"
+    },
+    {
+      "id": "prior-soil-dashboard-specification",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/dashboards/domain/soil.md"
+    },
+    {
+      "id": "soil-domain-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/domains/soil/README.md"
+    },
+    {
+      "id": "soil-domain-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/.github/workflows/domain-soil.yml"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6aaea704230259e4fca30fcc0b9c1a168e12c2c2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T17:38:22Z",
+  "emitter": "ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation/provenance-only change. The prompt hash binds the visible task contract summarized in parameters.task_contract_summary, not hidden reasoning. This receipt does not prove Soil truth, scientific validity, source admission, rights clearance, policy approval, EvidenceBundle closure, metric correctness, release, deployment, publication, or mergeability. The repository-owned validator must recompute the committed artifact hash at the exact PR head; human review remains pending."
+}

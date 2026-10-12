@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-pass18-distinct-null-deduplication-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/distinct-null-deduplication-assessment.yml",
+    "contracts/common/distinct_null_deduplication_assessment.md",
+    "docs/intake/exploratory/pass-18-distinct-null-deduplication-source-map.md",
+    "fixtures/contracts/v1/common/distinct_null_deduplication_assessment/cases.json",
+    "schemas/contracts/v1/common/distinct_null_deduplication_assessment.schema.json",
+    "tests/validators/test_validate_distinct_null_deduplication_assessment.py",
+    "tools/validators/validate_distinct_null_deduplication_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/distinct-null-deduplication-assessment.yml": "sha256:e2461e0d4e5ef7a0a29e637eb8e2ec5c7409e002b04bc9c22d4494a61657969d",
+    "contracts/common/distinct_null_deduplication_assessment.md": "sha256:99aebca640bf289871be52b5d29b5bbdb049b89b31dd4e1b12d1124a56383e3e",
+    "docs/intake/exploratory/pass-18-distinct-null-deduplication-source-map.md": "sha256:4beab478ef6ca7a120a39d8e9ef71d385115114f910861ea0baa8f55d417ebda",
+    "fixtures/contracts/v1/common/distinct_null_deduplication_assessment/cases.json": "sha256:5776bb67d138b7414c1306c6012ba37f2e9c2d5399929317b4296a8087ae73e0",
+    "schemas/contracts/v1/common/distinct_null_deduplication_assessment.schema.json": "sha256:689ef6f2a350567798fac5360681e32799ac0d577705a09a43d19034a6084394",
+    "tests/validators/test_validate_distinct_null_deduplication_assessment.py": "sha256:c81da2c19c3975823bf550b47344f5da17ca0497fb3c64e91dc4147f0555615d",
+    "tools/validators/validate_distinct_null_deduplication_assessment.py": "sha256:b5501e88e3237b5e629abc4b05047c69c20597f9d3a99e600b0cddd6798571e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:99aebca640bf289871be52b5d29b5bbdb049b89b31dd4e1b12d1124a56383e3e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:cfff0b9e385322c0a42d6a091347c9756167db89975c9fc4b336468732c244be",
+      "sha256:8ec1c38f53e184c7109ceef99a1e9927e16d36eeefdf7e0e63bae607a2d6ea2d",
+      "sha256:e65fe4498b76b65c427a0748767c8c76614042c0cac59a804194d437de33bdc0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; connected Drive file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5 was metadata-confirmed but byte identity was not asserted"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-155",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/evidence/count_population_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/common/aggregate_null_semantics_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/common/reversible_entity_reconciliation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/distinct-null-deduplication-assessment.yml": "CONFIRMED",
+    "contracts/common/distinct_null_deduplication_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-distinct-null-deduplication-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/distinct_null_deduplication_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/distinct_null_deduplication_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_distinct_null_deduplication_assessment.py": "CONFIRMED",
+    "tools/validators/validate_distinct_null_deduplication_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic DISTINCT/NULL deduplication assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Eighteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-analytics-and-reconciliation-regression",
+      "outcome": "PASS",
+      "reason": "Twenty-nine aggregate-NULL, count-population, and reversible-reconciliation tests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred fifty-eight tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "Forty-two metadata and link-check tests passed; both new documents had valid metadata, zero failures, and two expected review-only registry-add warnings. Explicit local link validation passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Fifty-six CI and E2E readiness tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-integrity", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-distinct-null-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-155"
+    },
+    {
+      "id": "drive-pass18-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "count-population-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/evidence/count_population_disclosure.md"
+    },
+    {
+      "id": "reconciliation-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/common/reversible_entity_reconciliation.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:56:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only DISTINCT/NULL deduplication assessment. It records tuple, NULL, dialect, synthetic-summary, and adjacent-contract semantics without storing SQL or source rows, executing a query, mutating rows, reconciling identity, or creating evidence, policy, review, promotion, release, publication, or public-use authority."
+}

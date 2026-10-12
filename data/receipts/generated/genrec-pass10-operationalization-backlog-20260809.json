@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-pass10-operationalization-backlog-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/atlases/pass-10/README.md",
+    "docs/atlases/pass-10/integration-backlog-pass-10.jsonl",
+    "docs/atlases/pass-10/integration-matrix.md",
+    "docs/atlases/pass-10/source-integrity.json"
+  ],
+  "artifact_hashes": {
+    "docs/atlases/pass-10/README.md": "sha256:972b06ab9e8bd54e0475f9346e807d7571226ef5450cfa2c331985e5f0f336e0",
+    "docs/atlases/pass-10/integration-backlog-pass-10.jsonl": "sha256:c7acd68511fde3ad5dbf77a47a02831fee31a0140963f5f301a484c83defe811",
+    "docs/atlases/pass-10/integration-matrix.md": "sha256:e0adf4ae3e81b968d2ef12954a1671534e8c2aad3753fa7c8e1cb2d97ffd4516",
+    "docs/atlases/pass-10/source-integrity.json": "sha256:6efff438b5e01ef88d47ab21f24457bab36e1fe45dbcdcf9d3a94c0d39a22c3d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-09-session"
+  },
+  "prompt_or_contract": "sha256:b8af40657e1db57a53c74e5bef2733c21e6e293549a21f3df0f8bcda97c80158",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local JSON/JSONL validation",
+      "repository evidence reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:386fce4b5915257a162fa60b871d3e6cd857a94723ab0d120a818ef35ce643af",
+      "sha256:1d9da6008c3b28d31e64100d364f330f33406321dc0c8a7bb8f67ef777440967",
+      "sha256:745d66420d401c8ed03e6d76a655d9b7d3a02443107acf6935ea7b73d98182f1",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_10_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2331",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/doctrine/directory-rules.md",
+      "current-user-request://integrate-pass10-and-create-prs"
+    ]
+  },
+  "truth_labels": {
+    "docs/atlases/pass-10/README.md": "PROPOSED",
+    "docs/atlases/pass-10/integration-backlog-pass-10.jsonl": "PROPOSED",
+    "docs/atlases/pass-10/integration-matrix.md": "PROPOSED",
+    "docs/atlases/pass-10/source-integrity.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "stack-base-and-source-carrier",
+      "outcome": "PASS",
+      "reason": "PR #2331 supplied the exact 59-record carrier and source-integrity basis and is present on main at merge commit bb533660fd97297cee908da53c4c228b14ffa7b1."
+    },
+    {
+      "gate": "backlog-set-parity",
+      "outcome": "PASS",
+      "reason": "The backlog contains exactly one record for each of the 59 changed stable IDs, with no extras or duplicates."
+    },
+    {
+      "gate": "operationalization-safety-boundary",
+      "outcome": "PASS",
+      "reason": "Every operationalization outcome is HOLD and every operationalization truth label is UNKNOWN; proposed authority families are not asserted as exact leaf paths."
+    },
+    {
+      "gate": "human-matrix-parity",
+      "outcome": "PASS",
+      "reason": "The human crosswalk contains one row for every changed stable ID and no extra IDs."
+    },
+    {
+      "gate": "source-integrity-refresh",
+      "outcome": "PASS",
+      "reason": "The integrity ledger binds the final backlog and matrix by SHA-256 and byte count."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after draft pull-request creation and remain separate from local validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-PASS10-CARRIER-PR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2331"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T05:19:57Z",
+  "emitter": "codex/openai-gpt-5.6",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored operationalization planning artifacts built on source-carrier PR #2331, which merged while this follow-up branch was being prepared. Every proposed implementation route remains HOLD pending per-card repository evidence, ownership, policy, validation, correction, and rollback closure. This receipt is process memory, not human approval, implementation proof, policy permission, release authority, or publication authority."
+}

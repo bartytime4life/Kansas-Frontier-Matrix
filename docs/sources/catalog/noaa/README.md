@@ -1,27 +1,27 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/sources-catalog-noaa
+doc_id: kfm://doc/sources-catalog-noaa-family-readme
 title: NOAA Source Family — Catalog Entry
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: TODO — Docs steward + Hazards domain steward + Atmosphere/Air/Climate domain steward
-created: TODO-YYYY-MM-DD
-updated: 2026-05-22
+created: 2026-05-08
+updated: 2026-10-12
 policy_label: public
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
+  - docs/sources/catalog/noaa.md
   - docs/domains/hazards/README.md
   - docs/domains/atmosphere/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/noaa/README.md
   - policy/release/hazards/
-  - policy/release/atmosphere/
   - policy/sensitivity/
 tags: [kfm, sources, noaa, hazards, atmosphere, weather, climate, hms, nws, storm-events]
 notes:
@@ -29,6 +29,10 @@ notes:
   - "Confirm with Docs steward before merging; alternative homes include `docs/sources/families/noaa.md` or a flat `docs/sources/noaa.md`. See OPEN-NOAA-01."
   - "Default `source_role` is *multi-role* — NOAA admissions span `observed` (Storm Events, station obs), `regulatory-context` (NWS warnings/advisories — contextual only), `modeled` (forecasts, HMS, model fields), and `aggregate` (climate normals). The family must never be admitted under a single role."
   - "v1.1 polish pass: section numbering unified (Repo fit is now §2); added §5.0 source-role quick reference; added §9.0 receipts quick reference; OPEN questions renumbered as `OPEN-NOAA-NN`; cross-link to sibling product-pages under `docs/sources/catalog/newspapers/` added."
+  - "2026-10-12 (v1.2): doc_id changed from kfm://doc/sources-catalog-noaa (shared with the flat docs/sources/catalog/noaa.md source profile, a KFM-TOPO-016 duplicate) to kfm://doc/sources-catalog-noaa-family-readme; the two are distinct documents (family catalog entry vs agency-level source-use profile), so nothing was merged. Self-path statements now name noaa/README.md and the catalog-landing links point at ../README.md."
+owning_root: docs/
+responsibility: "Documentation for NOAA Source Family — Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA Source Family — Catalog Entry
@@ -48,9 +52,9 @@ notes:
 | **Document role** | Source-family catalog entry under `docs/sources/` |
 | **Authority of these contents** | Reflects current KFM doctrine; specific paths and field names remain `PROPOSED` until verified in the mounted repo. |
 | **Status** | `draft` |
-| **Version** | `v1.1` |
+| **Version** | `v1.2` |
 | **Owners** | *TODO — Docs steward + Hazards domain steward + Atmosphere/Air/Climate domain steward.* |
-| **Last updated** | `2026-05-22` *(v1.1 polish pass; full review pass still pending)* |
+| **Last updated** | `2026-10-12` *(v1.2 doc_id/path reconciliation; full review pass still pending)* |
 | **Path classification** | `PROPOSED` (see [§ 2 Repo fit](#2-repo-fit) and Section 2 of the accompanying notes) |
 
 > [!IMPORTANT]
@@ -107,11 +111,15 @@ What this document is **not**:
 > [!NOTE]
 > Per **Directory Rules §6.1**, `docs/sources/` is the human-facing home for "source-descriptor standards, source families." A `catalog/` subdirectory under `docs/sources/` is **`PROPOSED`** — it is not explicitly enumerated in Directory Rules and should be confirmed (or relocated) before this entry is published. See [OPEN-NOAA-01](#11-open-questions--verification-backlog) and Section 2 of the accompanying notes for migration options.
 
+> [!NOTE]
+> **Companion profile.** The flat [`noaa.md`](../noaa.md) is the agency-level NOAA source-use profile (access handles, source-descriptor baseline, identity/crosswalk, EvidenceBundle mapping, public API/tile policy, refresh and staleness rules). This README is the family catalog entry and hub for the product pages in this folder. They are distinct documents with distinct doc_ids.
+
 ### 2.1 Where NOAA lives across the repo (PROPOSED placements)
 
 | Responsibility | Path | Status | Rule |
 |---|---|---|---|
-| Human-facing source-family catalog entry (this doc) | `docs/sources/catalog/noaa.md` | `PROPOSED` | Directory Rules §6.1 (extension) |
+| Human-facing source-family catalog entry (this doc) | `docs/sources/catalog/noaa/README.md` | `CONFIRMED` present | Directory Rules §6.1 (extension); per-family folder layout ([`INDEX.md`](../INDEX.md)) |
+| Agency-level NOAA source-use profile (access handles, descriptor baseline, crosswalks, staleness) | [`docs/sources/catalog/noaa.md`](../noaa.md) | `CONFIRMED` present; separate document | Flat profile companion — not a copy of this entry |
 | Source-descriptor standard (cross-source) | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | `PROPOSED` | Directory Rules §6.1 |
 | Canonical SourceDescriptor schema | `schemas/contracts/v1/source/source_descriptor.schema.json` | `PROPOSED` | ADR-0001 (schema-home) |
 | Operational source register (per-family entries) | `data/registry/sources/<domain>/` and `data/registry/source_descriptors/` | `PROPOSED` | Directory Rules §7.4 / lifecycle phase rules |
@@ -427,18 +435,19 @@ Tests prove the doctrine is enforceable. The following are `PROPOSED` validator 
 
 ## 12. Related docs
 
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED — cross-source descriptor standard*
-- [`docs/sources/catalog/README.md`](./README.md) — Catalog landing page
-- [`docs/sources/catalog/newspapers/legal-notices.md`](./newspapers/legal-notices.md) — Sibling family product-page (different family; useful structural reference for `authority`-default)
-- [`docs/sources/catalog/newspapers/obituaries.md`](./newspapers/obituaries.md) — Sibling family product-page (`candidate`-default)
-- [`docs/sources/catalog/newspapers/ocr-full-text.md`](./newspapers/ocr-full-text.md) — Sibling family product-page (`observation` + `ModelRunReceipt`)
-- [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — *Hazards domain dossier*
-- [`docs/domains/atmosphere/README.md`](../../domains/atmosphere/README.md) — *Atmosphere/Air/Climate domain dossier*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — *this catalog entry's placement authority*
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — *RAW → … → PUBLISHED invariant*
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — *public-API-only consumption rule*
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — *cite-or-abstain*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — *schema-home convention*
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED — cross-source descriptor standard*
+- [`docs/sources/catalog/README.md`](../README.md) — Catalog landing page
+- [`docs/sources/catalog/noaa.md`](../noaa.md) — Agency-level NOAA source-use profile (separate document: access handles, descriptor baseline, crosswalk, EvidenceBundle mapping, refresh/staleness)
+- [`docs/sources/catalog/newspapers/legal-notices.md`](../newspapers/legal-notices.md) — Sibling family product-page (different family; useful structural reference for `authority`-default)
+- [`docs/sources/catalog/newspapers/obituaries.md`](../newspapers/obituaries.md) — Sibling family product-page (`candidate`-default)
+- [`docs/sources/catalog/newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) — Sibling family product-page (`observation` + `ModelRunReceipt`)
+- [`docs/domains/hazards/README.md`](../../../domains/hazards/README.md) — *Hazards domain dossier*
+- [`docs/domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — *Atmosphere/Air/Climate domain dossier*
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — *this catalog entry's placement authority*
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *RAW → … → PUBLISHED invariant*
+- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *public-API-only consumption rule*
+- [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — *cite-or-abstain*
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — *schema-home convention*
 - `schemas/contracts/v1/source/source_descriptor.schema.json` — *PROPOSED — canonical SourceDescriptor*
 - `connectors/noaa/README.md` — *NOAA-specific connector docs*
 - `policy/release/hazards/` — *release policy for hazard-derived layers*
@@ -446,7 +455,7 @@ Tests prove the doctrine is enforceable. The following are `PROPOSED` validator 
 - `policy/sensitivity/` — *deny-by-default register implementation*
 
 > [!NOTE]
-> Anchors above assume the proposed `docs/sources/catalog/noaa.md` location. If this file lands elsewhere (`docs/sources/families/noaa.md`, `docs/sources/noaa.md`, etc.), inbound links from sibling docs and the registers will need to be updated together. Several relative paths in this list assume the proposed home and are PROPOSED until the path question (OPEN-NOAA-01) is resolved.
+> This entry lives at `docs/sources/catalog/noaa/README.md` (per-family folder layout). The flat `docs/sources/catalog/noaa.md` is a separate agency-level source-use profile with its own doc_id, not an older copy of this entry. If either file moves (`docs/sources/families/...`, etc.), inbound links from sibling docs and the registers will need to be updated together (OPEN-NOAA-01).
 
 [Back to top ↑](#noaa-source-family--catalog-entry)
 
@@ -487,8 +496,8 @@ Excerpted from KFM Atlas v1.1 §24.1.3. Field names below are `PROPOSED` shape; 
 
 ---
 
-**Related docs:** [hazards domain](../../domains/hazards/README.md) · [atmosphere domain](../../domains/atmosphere/README.md) · [source descriptor standard](../SOURCE_DESCRIPTOR_STANDARD.md) · [directory rules](../../doctrine/directory-rules.md) · [catalog root](./README.md)
-**Last updated:** `2026-05-22` *(v1.1 polish pass; full review pass still pending)*
-**Version:** `v1.1` · **Status:** `draft` · **Default `source_role`:** *multi-role (see [§5.0](#50-quick-reference))* · **Owners:** *PLACEHOLDER*
+**Related docs:** [hazards domain](../../../domains/hazards/README.md) · [atmosphere domain](../../../domains/atmosphere/README.md) · [source descriptor standard](../../SOURCE_DESCRIPTOR_STANDARD.md) · [directory rules](../../../doctrine/directory-rules.md) · [catalog root](../README.md)
+**Last updated:** `2026-10-12` *(v1.2 doc_id/path reconciliation; full review pass still pending)*
+**Version:** `v1.2` · **Status:** `draft` · **Default `source_role`:** *multi-role (see [§5.0](#50-quick-reference))* · **Owners:** *PLACEHOLDER*
 
 [Back to top ↑](#noaa-source-family--catalog-entry)

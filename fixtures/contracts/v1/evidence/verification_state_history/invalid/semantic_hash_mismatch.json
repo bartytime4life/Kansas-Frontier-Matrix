@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:hash-mismatch",
+  "subject_ref": "kfm://synthetic/evidence/item-501",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "events": [
+    {
+      "event_id": "evt:501",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-01T00:00:00Z",
+      "recorded_at": "2026-01-01T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-501"
+      ]
+    }
+  ]
+}

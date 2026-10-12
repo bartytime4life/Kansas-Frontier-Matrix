@@ -15,6 +15,9 @@ tags: [kfm, docs, sources, catalog]
 notes:
   - "PROPOSED scaffold; sibling-link presence verified in Claude Code session."
   - "Template — copy to <family>/README.md and replace every <placeholder>. Keep the real KFM Meta Block above; replace the placeholder line below with a real meta block."
+owning_root: docs/
+responsibility: "Documentation for Source family README template; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <KFM Meta Block v2 — type: readme>
@@ -99,8 +102,8 @@ PROPOSED — see lane root [`docs/sources/catalog/INDEX.md`](../INDEX.md).
 - [`docs/sources/catalog/README.md`](../README.md) — lane root.
 - [`docs/sources/README.md`](../../README.md) — parent lane.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority.
-- [`connectors/<family>/`](../../../../connectors/<family>/) — connector implementation.   <!-- append " *(verify presence)*" ONLY if Phase 0 marked ABSENT -->
-- [`data/registry/sources/<family>/`](../../../../data/registry/sources/<family>/) — source descriptors.   <!-- same rule -->
+- `connectors/<family>/` (not present) — connector implementation.   <!-- append " *(verify presence)*" ONLY if Phase 0 marked ABSENT -->
+- `data/registry/sources/<family>/` (not present) — source descriptors.   <!-- same rule -->
 - [`data/catalog/`](../../../../data/catalog/) — catalog artifacts.   <!-- same rule -->
 
 ## ADRs

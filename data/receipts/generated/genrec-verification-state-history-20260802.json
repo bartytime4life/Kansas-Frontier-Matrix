@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-verification-state-history-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/evidence/README.md",
+    "contracts/evidence/verification_state_history.md",
+    "fixtures/contracts/v1/evidence/README.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.expected_error.txt",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_broken_chain.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_after_recorded.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_hash_mismatch.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_invalid_timestamp.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_record_order.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_transition_after_supersession.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_late_recorded_correction.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_revocation_reverification.json",
+    "schemas/contracts/v1/evidence/README.md",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json",
+    "tests/schemas/README.md",
+    "tests/schemas/test_verification_state_history.py",
+    "tools/validators/evidence/README.md",
+    "tools/validators/validate_verification_state_history.py"
+  ],
+  "artifact_hashes": {
+    "contracts/evidence/README.md": "sha256:0fbc60736897524867703dfc2ca2074d298b5ee8616c99bb544eea7f93da8059",
+    "contracts/evidence/verification_state_history.md": "sha256:b395955f1a751bdd5d81cc82942af7aec87b846dfc806ab951f51c103f9bcefd",
+    "fixtures/contracts/v1/evidence/README.md": "sha256:4f1aafa31cce7fcb5b55090de05d3fdb3a6cd7b83f2645a46c68b8985cbe2e64",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "sha256:1bbc7f6da0f5784e1a26ea9798e91ce511dc3e97c5a6a95da3f10feff8d3a7e8",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.expected_error.txt": "sha256:210335000ccf130b7a8a884904eab2052fe08ab7b0ac2db25a8a6381d3907516",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.json": "sha256:4f2c2d1788e8b885abc2bdcc4642126a5f48c4cff01af62c5332c68aa9439246",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_broken_chain.json": "sha256:b76d3b68de53d8faa0d23eab51486571a8eb78f419a99a21bd6bfb79fbfb62cd",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_after_recorded.json": "sha256:c855ba9241bc6a03afcd823c20ed428406ed4112008d070ae55c6981a728ff7f",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_hash_mismatch.json": "sha256:22121ff5f5dd8ee0e17b2a780e3b5776228e454395fdc05df2d173937cf8212f",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_invalid_timestamp.json": "sha256:a0c15cbf54aaf5211f9a2820310acc353a84cb373e3171e816a288b8db4b5070",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_record_order.json": "sha256:708f3b93683231b24cbc1d99abae41ba6ea708eb50f0bad577c58d945b2b96dc",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_transition_after_supersession.json": "sha256:e35f35a4ebfa9882c186f37c018e0f258c06b531a513e41350ceb75535e368c3",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_late_recorded_correction.json": "sha256:0c8658fe6d06e35bfa47987017580ab7991df3a7b6175bd91d4e5c8f47099553",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_revocation_reverification.json": "sha256:a3fba3d50a1c44d1903ddd74dc4af35d290fd925770e509d0b9d8d2ae2fb3877",
+    "schemas/contracts/v1/evidence/README.md": "sha256:ac7069b43261fa3fb175777e590f0f4bbbfc4dd3d0e5f725b6a5e8edf2ac6a08",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json": "sha256:5e89a9f0eb4b4e8412abfaf24dd0ca4821c9db3268f1d43aa8ee5e6cdb8f0ed0",
+    "tests/schemas/README.md": "sha256:cfead3eee6f6cd7f11cb16a8afd8e384ad71837d6ab508e3a3e4a5c559966c7b",
+    "tests/schemas/test_verification_state_history.py": "sha256:2808f7e29db7011ed324223bcc9333055ab2b31ced6a6d39153c4ff30bc8c6d3",
+    "tools/validators/evidence/README.md": "sha256:7b8dfe51dd771ff70cdc7df3bc75d2a3749a2fd7dea1423a38896643dd0cea9c",
+    "tools/validators/validate_verification_state_history.py": "sha256:428fdf8e3858f31dccae554956be5b1c4e967ffd8ad5fde2abd08dd04b853945"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:096f43fb13a6d5f4bc382f20de91f6c1c57ef0a1a351d1a40280f9c8a8772d6f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF text extraction and rendered-page inspection",
+      "Git",
+      "GitHub connector",
+      "isolated repository-declared Python test environment",
+      "deterministic no-network validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:432c5930b66fac814b21680c60015cff2eb286520ec01211bef69c0c78117f3e"
+    ],
+    "attached_docs": [
+      "New Ideas 4-14-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/intake/exploratory/new-ideas-4-14-source-map.md",
+      "attachment://New Ideas 4-14-26(1).pdf#pages=374-388"
+    ]
+  },
+  "truth_labels": {
+    "contracts/evidence/README.md": "PROPOSED",
+    "contracts/evidence/verification_state_history.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.expected_error.txt": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_missing_correction_ref.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_broken_chain.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_after_recorded.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_invalid_timestamp.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_record_order.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_transition_after_supersession.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_late_recorded_correction.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_revocation_reverification.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/README.md": "PROPOSED",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json": "CONFIRMED",
+    "tests/schemas/README.md": "PROPOSED",
+    "tests/schemas/test_verification_state_history.py": "CONFIRMED",
+    "tools/validators/evidence/README.md": "PROPOSED",
+    "tools/validators/validate_verification_state_history.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, exact rebased base main@912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1, merged PRs #1921 and #1922, accepted Directory Rules v2, current evidence/correction/schema/fixture/validator/test lanes, and the existing New Ideas 4-14 source map were inspected. PR #1922 changed only Soil-owned paths and its generated receipt, with no overlap in this evidence-state slice."
+    },
+    {
+      "gate": "source-curation-and-scope-correction",
+      "outcome": "PASS",
+      "reason": "New Ideas 4-14-26(1).pdf pages 374-388 proposed an Evidence Timeline and Correction Graph. The repository source map classified the durable gap as bitemporal verification-state replay. The implementation retains effective/recorded time, correction, supersession, revocation, and replay while rejecting the PDF's proposed parallel runtime_verification path and release/UI authority overreach."
+    },
+    {
+      "gate": "directory-and-authority-placement",
+      "outcome": "PASS",
+      "reason": "Semantic meaning extends contracts/evidence; machine shape extends schemas/contracts/v1/evidence; synthetic examples extend fixtures/contracts/v1/evidence; validator implementation and executable tests extend current tools/validators and tests/schemas conventions. No new root or parallel evidence, correction, policy, receipt, proof, release, runtime, UI, or publication authority was created."
+    },
+    {
+      "gate": "focused-verification-history-validation",
+      "outcome": "PASS",
+      "reason": "The focused suite passed 8 tests and 15 subtests. It accepted two valid histories, rejected one schema-negative and six schema-valid semantic negatives with exact finding codes, replayed active/corrected/reverified/superseded/revoked/unknown states across independent effective and recorded times, and covered hash, order, duplicate identity, parser bounds, CLI polarity, invalid query time, and network denial."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make validate passed in the isolated repository-declared environment. All seven configured aggregate validators preserved valid/expected-invalid polarity and the schema/contract lane passed 148 tests plus 15 subtests."
+    },
+    {
+      "gate": "schema-and-document-integrity",
+      "outcome": "PASS",
+      "reason": "All 496 schema files passed Draft 2020-12 metaschema checks; 486 canonical v1 schemas declared unique IDs. The documentation link checker passed its 18 tests and resolved 111 local targets across seven changed documents. JSON parsing, Python compilation, canonical fixture hashes, placeholder-digest rejection, and git diff --check passed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. Hosted success will not be treated as evidence truth, policy approval, review, release, deployment, promotion, publication, or source activation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-governance-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "new-ideas-4-14-repository-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/912080af2e2bf1fe3ecd4048e6aa5c4a0826f7e1/docs/intake/exploratory/new-ideas-4-14-source-map.md"
+    },
+    {
+      "id": "verification-history-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://New Ideas 4-14-26(1).pdf#pages=374-388"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T18:30:08Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch implements the New Ideas 4-14 source map's recommended bounded offline bitemporal verification-state replay. It preserves independent effective and recorded time, append order, correction, re-verification, supersession, revocation, unknown history, deterministic hashing, parser bounds, and a strict rule that every non-active state blocks ANSWER while ACTIVE remains insufficient by itself. It does not resolve evidence refs, create EvidenceBundles, decide policy, record human review, issue corrections, select releases, render a UI, activate a source, promote, release, deploy, or publish. Rollback is a clean revert of the feature commit; no stored data or public state requires migration."
+}

@@ -1,443 +1,248 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/infra-kubernetes-readme
-title: infra/kubernetes/ — Kubernetes Deployment Manifests and Cluster Boundary Guidance
-type: per-directory-readme
-version: v1
-status: draft
-owners:
-  - <infra-steward>
-  - <security-owner>
-  - <ops-steward>
+title: infra/kubernetes/ — Kubernetes Adoption Hold and Cluster Boundary
+type: per-directory-readme; infrastructure-boundary; adoption-hold
+version: v2
+status: draft; repository-grounded; documentation-only; adoption-hold; non-deployment; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accountable infrastructure, security, platform, and operations stewardship remain unverified
 created: 2026-07-03
-updated: 2026-07-03
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infra; kubernetes; cluster; deny-by-default; least-privilege; rollback-aware
+current_path: infra/kubernetes/README.md
+owning_root: infra/
+responsibility: document the repository boundary for any future Kubernetes deployment slice without claiming cluster selection, manifest adoption, applied state, runtime health, or exposure enforcement
+truth_posture: >
+  CONFIRMED accepted Directory Rules through ADR-0029; infra/ as the deployment and exposure
+  responsibility root; this directory contains only this README; no tracked Kubernetes manifest,
+  Kustomize file, Helm chart, cluster configuration, installer, or Kubernetes-specific validator;
+  CODEOWNERS routing for /infra/; one governed API local entry point; and placeholder Compose
+  loopback mappings / UNKNOWN whether any external Kubernetes cluster, namespace, workload, service,
+  ingress, gateway, policy, identity, volume, secret integration, or release exists / HOLD cluster
+  product, provider, convention, object names, commands, credentials, routes, storage, admission,
+  deployment, validation, and rollback until repository-backed files and review evidence exist
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 83ace64d7451eca641cbe9f3b6fe86eb0867cb0e
+  target_prior_blob: ab53d648803e653d7c533441c23125973a9cbc78
+  directory_tree_blob: 8ff325690544ebfa32618ad67d335e7488efaa2a
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md; accepted
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  compose_blob: 8a45891700a501f6e18a921ce8d260956441e4b3
+  governed_api_entrypoint_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  inspection_method: exact target read; recursive repository tree; repository searches for Kubernetes commands and manifest markers; direct doctrine, infra root, CODEOWNERS, Compose, application entrypoint, hardening, and exposure-plan reads; no cluster or deployed environment inspected
 related:
-  - infra/README.md
-  - infra/hardening/README.md
-  - infra/hardening/CHECKLIST.md
-  - infra/docker/
-  - infra/compose/
-  - infra/reverse_proxy/
-  - infra/firewall/
-  - infra/vpn/
-  - infra/systemd/
-  - infra/terraform/
-  - configs/
-  - runtime/
-  - apps/governed-api/
-  - apps/explorer-web/
-  - docs/doctrine/directory-rules.md
-  - docs/security/README.md
-  - docs/security/EXPOSURE_PLAN.md
-  - docs/architecture/deployment-topology.md
-  - docs/runbooks/
-  - policy/
-  - release/
-  - data/published/
-tags:
-  - kfm
-  - infra
-  - kubernetes
-  - deployment
-  - hardening
-  - trust-membrane
-  - governed-api
-  - deny-by-default
-  - least-privilege
-  - rollback
+  - ../README.md
+  - ../compose/docker-compose.yml
+  - ../hardening/CHECKLIST.md
+  - ../systemd/README.md
+  - ../../apps/governed-api/src/governed_api/main.py
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/security/EXPOSURE_PLAN.md
+  - ../../docs/security/INCIDENT_RESPONSE.md
+  - ../../.github/CODEOWNERS
 notes:
-  - "Kubernetes manifests are deployment mechanics. They must not become policy authority, secret storage, schema authority, release authority, or a public bypass around governed APIs."
-  - "Public ingress must route only to governed public surfaces and released artifact hosting. RAW, WORK, QUARANTINE, internal stores, direct model endpoints, and steward/admin routes are denied by default."
+  - "v2 removes proposal-era Services, ingress topology, namespaces, policies, roles, storage, object names, reviewers, file trees, and kubectl commands that lacked repository or cluster evidence."
+  - "The README is a placement and adoption boundary; it is not a manifest, cluster inventory, applied-state observation, release record, or publication decision."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `infra/kubernetes/` — Kubernetes Deployment Manifests and Cluster Boundary Guidance
+# `infra/kubernetes/` — Kubernetes Adoption Hold and Cluster Boundary
 
-> **One-line purpose.** Hold Kubernetes deployment materials for KFM while preserving deny-by-default exposure, least privilege, governed API routing, raw-data denial, model-runtime isolation, auditability, and rollback.
+`infra/kubernetes/` is the established repository lane for a future,
+reviewed Kubernetes deployment slice. It currently contains this README only.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-infra%2F-blue)
-![runtime](https://img.shields.io/badge/runtime-kubernetes-blueviolet)
-![posture](https://img.shields.io/badge/posture-deny--by--default-red)
-![trust](https://img.shields.io/badge/trust-governed_API_only-success)
-![secrets](https://img.shields.io/badge/secrets-never_commit-red)
+> [!IMPORTANT]
+> No tracked manifest, Kustomize file, Helm chart, cluster configuration,
+> installation procedure, or Kubernetes-specific validator exists here. Do not
+> infer that KFM has selected Kubernetes, created a cluster, applied resources,
+> exposed a route, deployed a workload, or published an artifact.
 
----
+## Current state
 
-## Quick jump
+| Question | Repository evidence | Safe conclusion |
+|---|---|---|
+| What is tracked in this lane? | `infra/kubernetes/README.md` only | **CONFIRMED:** documentation-only lane |
+| Are Kubernetes objects or rendering inputs tracked? | No manifest, Kustomize, or Helm files in the repository tree or targeted searches | **CONFIRMED:** no repository-backed object set |
+| Is there a Kubernetes validator or CI gate? | No Kubernetes-specific command, test, or workflow found | **CONFIRMED:** validation is unestablished |
+| Has KFM selected a distribution, provider, or manifest convention? | No decision or implementation-bearing file found | **HOLD** |
+| Does any KFM cluster or namespace exist? | No cluster inventory or runtime evidence was inspected | **UNKNOWN** |
+| Are workloads, Services, ingress, RBAC, policies, or volumes applied? | No cluster evidence exists in the repository | **UNKNOWN** |
+| Can this README authorize deployment? | Documentation is not an operational transition record | **No** |
 
-[Purpose](#purpose) · [Status & authority](#status--authority) · [Repo fit](#repo-fit) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Cluster trust membrane](#cluster-trust-membrane) · [Manifest expectations](#manifest-expectations) · [Validation](#validation) · [Review burden](#review-burden) · [Open verification](#open-verification)
+The current [`infra/` root](../README.md) likewise records the Kubernetes
+convention and manifests as unestablished. Accepted
+[Directory Rules](../../docs/doctrine/directory-rules.md), adopted through
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md),
+place deployment and exposure configuration under `infra/`; they do not
+select Kubernetes or establish any cluster state.
 
----
+## Evidence boundaries
 
-## Purpose
+Repository-adjacent surfaces do not close this lane:
 
-`infra/kubernetes/` is the Kubernetes deployment lane for Kansas Frontier Matrix. It may hold Kubernetes manifests, overlays, environment templates, admission notes, namespace plans, network policy guidance, workload hardening notes, and cluster-facing deployment documentation.
+- [`apps/governed-api/src/governed_api/main.py`](../../apps/governed-api/src/governed_api/main.py)
+  exposes a local Python entry point with a `127.0.0.1:8000` default. It does
+  not define an image, Pod, Deployment, Service, probe, namespace, identity,
+  configuration source, or cluster listener.
+- [`infra/compose/docker-compose.yml`](../compose/docker-compose.yml) is a
+  Greenfield placeholder with loopback port mappings. Compose rendering and
+  placeholder image builds do not select Kubernetes or provide cluster object
+  semantics.
+- [`infra/systemd/README.md`](../systemd/README.md) is a separate
+  documentation-only adoption hold. It is not a workload definition or
+  evidence that Kubernetes should wrap a host service.
+- [`infra/hardening/CHECKLIST.md`](../hardening/CHECKLIST.md) is a review
+  checklist. Unchecked Kubernetes questions are not cluster enforcement.
+- The [exposure plan](../../docs/security/EXPOSURE_PLAN.md) defines a
+  deny-by-default trust boundary while local deployment controls remain
+  proposed or need verification. Desired posture is not NetworkPolicy,
+  ingress, RBAC, admission, or storage enforcement.
+- [`CODEOWNERS`](../../.github/CODEOWNERS) routes `/infra/` review to
+  `@bartytime4life`. Repository routing does not establish a platform team,
+  cluster custody, deployment approval, or operational access.
 
-This folder exists to keep Kubernetes deployment mechanics aligned with KFM's core operating law:
+Externally managed clusters may exist, but their state is **UNKNOWN**, not
+absent. Kubeconfigs, tokens, private endpoints, tenant names, credentials,
+unredacted object dumps, and sensitive topology must not be committed to
+manufacture implementation proof.
 
-```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
-```
+## Lane contract
 
-Kubernetes must not flatten that lifecycle into “anything mounted in the cluster is available.” Pods, services, ingresses, volumes, service accounts, and network policies must preserve the trust membrane.
+Future portable Kubernetes material may live here when a concrete deployment
+slice exists. Appropriate content includes:
 
-Public traffic should reach KFM through governed public surfaces only:
+- reviewed manifests or one declared canonical render source;
+- non-secret Kustomize overlays, Helm templates or values, and configuration
+  key templates after the convention is selected;
+- exact installation, rendering, validation, recovery, and rollback
+  instructions tied to those files;
+- sanitized evidence describing workload identity, namespace and service
+  accounts, routes, policy, storage, probes, logging, and failure behavior.
 
-```text
-public client -> ingress / edge -> apps/governed-api/ or released static artifacts
-```
+This lane must not contain:
 
-Public traffic must not reach RAW stores, WORK stores, QUARANTINE stores, unpublished candidates, source credentials, direct model runtimes, internal/canonical stores, or steward-only admin paths.
+- application, policy, schema, evidence, lifecycle, or runtime implementation;
+- real Secrets, kubeconfigs, certificates, private keys, tokens, passwords, or
+  production environment values;
+- private cluster endpoints, internal address inventories, tenant identifiers,
+  or raw diagnostics;
+- generated manifests whose canonical input and regeneration command are
+  unknown;
+- release, promotion, publication, source-admission, or correction decisions;
+- object names, namespaces, providers, commands, routes, identities, or
+  storage presented as current before their defining files and deployment
+  evidence exist.
 
-[Back to top](#top)
+## Adoption packet
 
----
+Keep Kubernetes adoption on **HOLD** until one reviewable packet establishes
+all applicable items below.
 
-## Status & authority
-
-| Field | Value |
+| Required item | Evidence needed |
 |---|---|
-| **Document type** | Per-directory README |
-| **Owning responsibility root** | `infra/` |
-| **Subpath role** | `kubernetes/` — Kubernetes manifests, overlays, namespace/network/service-account guidance, and deployment notes |
-| **Authority level** | Draft deployment guidance. KFM doctrine, accepted ADRs, `policy/`, and release gates outrank this README. |
-| **Lifecycle phase** | n/a — deployment mechanics, not lifecycle data |
-| **Default posture** | DENY unless an exposure is explicitly governed, reviewed, released, and rollback-safe |
-| **Owners** | `<infra-steward>`, `<security-owner>`, `<ops-steward>` — fill from CODEOWNERS when assigned |
-| **Reviewers required** | Infra steward + security owner for cluster access, ingress, network policy, volume mounts, service accounts, secrets, model runtime, admin surface, or public exposure changes |
-| **Directory Rules basis** | `infra/` owns deployment, host, network, and exposure posture; `kubernetes/` is a named lane under the expected `infra/` tree. |
+| Adoption decision | Why Kubernetes is required for the selected workload and what simpler deployment path it supersedes or complements |
+| Cluster identity | Distribution/provider, version policy, environment class, custody, upgrade boundary, and supported API set |
+| Canonical source | Plain manifests, Kustomize, Helm, Terraform, or another single declared render authority; generated-file relationship explicit |
+| Workload identity | Repository-backed image or executable, immutable reference strategy, purpose, inputs, outputs, and finite failure behavior |
+| Object identity | Exact namespaces, workloads, Services, accounts, roles, bindings, policies, routes, jobs, and storage objects |
+| Isolation | Namespace and tenant boundaries, Pod security posture, admission controls, and cross-workload trust assumptions |
+| Network | CNI and NetworkPolicy behavior, ingress/Gateway controller, DNS, egress, public/private routes, and negative reachability checks |
+| Identity and RBAC | Service accounts, least-privilege verbs/resources/namespaces, workload identity, admin separation, and escalation checks |
+| Configuration and secrets | Non-secret keys, external secret mechanism, rotation, encryption, access, and missing-secret behavior |
+| Storage | Storage classes, claims, mount modes, backup/restore, retention, sensitivity, lifecycle-phase access, and deletion behavior |
+| Health and resources | Startup/readiness/liveness meaning, graceful termination, disruption behavior, requests/limits, and capacity assumptions |
+| Jobs and automation | Job/CronJob idempotency, concurrency, retry, duplicate-run, receipt, and lifecycle-authority boundaries |
+| Observability | Redaction, identifiers, logs, metrics, audit events, access, retention, alerts, and sensitive-output handling |
+| Supply chain | Image source, digest/signature policy, scanner boundary, base-image updates, and provenance evidence |
+| Operations | Render, inspect, install, update, wait, diagnose, rollback, uninstall, and orphan-resource handling for the exact objects |
+| Validation | Schema/render checks, client/server dry run where safe, policy/RBAC/route/storage tests, and sanitized cluster observation |
+| Rollback | Prior known-good objects or removal target, data compatibility, traffic containment, verification, and recovery owner |
+| Review | CODEOWNERS review plus accountable platform, security, workload, data, release, and operations decisions as applicable |
 
-[Back to top](#top)
+Names such as `apps-governed-api`, `kfm-runtime-model`, `kfm-public`, or
+`kfm-internal` are not reserved or adopted by this README. Select identities
+only with the manifests, consumers, and cluster evidence that make them real.
 
----
+## Trust and sensitivity requirements
 
-## Repo fit
+Any future Kubernetes slice must preserve KFM's governed boundary:
 
-```text
-Kansas-Frontier-Matrix/
-└── infra/
-    ├── README.md
-    ├── docker/
-    ├── compose/
-    ├── reverse_proxy/
-    ├── vpn/
-    ├── firewall/
-    ├── systemd/
-    ├── kubernetes/       ◀── you are here
-    │   └── README.md
-    ├── terraform/
-    └── hardening/
-```
+- Public clients use governed interfaces or released public-safe artifacts.
+- Public ingress cannot reach RAW, WORK, QUARANTINE, canonical/internal
+  stores, source credentials, model runtimes, or review/admin surfaces.
+- A Pod, controller, role, policy, route, volume, or scheduled job does not
+  gain evidence, policy, lifecycle, release, or publication authority.
+- Workload and storage access is narrow, phase-specific, and least-privilege.
+- Logs, events, probes, status, metrics, and diagnostics exclude secrets, raw
+  payloads, living-person data, restricted geometry, culturally sensitive
+  locations, harmful precision, prompts, and full sensitive evidence bodies.
+- Jobs do not silently admit sources, promote lifecycle state, publish,
+  release, correct, withdraw, or bypass review.
+- Missing rights, sensitivity, provenance, identity, policy, storage,
+  dependency, or rollback evidence keeps the deployment slice on hold.
 
-### Responsibility split
+## Repository inspection
 
-| Location | Owns | Does not own |
-|---|---|---|
-| `infra/kubernetes/` | Kubernetes deployment mechanics, manifests, overlays, namespace/service/network policy guidance | KFM policy semantics, schemas, source descriptors, release decisions, app source code |
-| `infra/hardening/` | Cross-infra hardening baselines and checklists | Concrete cluster manifests unless this README delegates them here |
-| `infra/reverse_proxy/` | Reverse proxy / edge details outside the cluster or shared with cluster ingress | Kubernetes-native ingress manifests unless placed here by convention |
-| `infra/firewall/` | Host/network firewall boundaries outside or around the cluster | Kubernetes NetworkPolicy object meaning unless implemented here |
-| `configs/` | Non-secret configuration templates and examples | Real secrets or cluster credentials |
-| `policy/` | Enforceable allow / deny / restrict / abstain rules | Kubernetes deployment mechanics |
-| `runtime/` | Runtime/model adapters behind governed APIs | Public Kubernetes ingress exposure |
-| `apps/governed-api/` | Trust membrane application behavior | Cluster-level host/network hardening |
-| `release/` | Release decisions, manifests, rollback cards, corrections | Deployment manifests |
-
-[Back to top](#top)
-
----
-
-## What belongs here
-
-Use `infra/kubernetes/` for Kubernetes-specific deployment materials such as:
-
-- Namespace plans and namespace-level isolation notes.
-- Deployment, StatefulSet, DaemonSet, Job, CronJob, Service, Ingress, Gateway, NetworkPolicy, ServiceAccount, Role, RoleBinding, ConfigMap template, and storage template files.
-- Kustomize overlays, Helm chart wrappers, or plain manifest bundles when KFM chooses one convention.
-- Kubernetes-specific hardening notes for workloads, pod security, resource limits, probes, service accounts, and network policy.
-- Ingress routing rules that prove public traffic reaches only governed public surfaces or released static artifacts.
-- Internal service routing notes for `apps/governed-api/`, `apps/explorer-web/`, workers, review console, runtime adapters, and model runtimes.
-- Model-runtime isolation manifests that keep direct model endpoints private.
-- Read-only mount patterns for released artifacts and strict denial patterns for RAW / WORK / QUARANTINE.
-- Redacted examples showing how to reference secret stores without committing real secret values.
-- Cluster validation notes and sanitized dry-run output.
-- Rollback notes for manifest or overlay changes.
-
-Accepted file types are Markdown, YAML manifests, Kustomize files, Helm values templates, sanitized examples, policy-adjacent validation notes, and generated-but-reviewable manifests when their canonical source is declared.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-Do **not** use `infra/kubernetes/` as a hidden authority root.
-
-The following must not live here:
-
-- Real Kubernetes Secrets containing live credentials, tokens, certificates, private keys, database passwords, API keys, or source credentials.
-- Raw source data, work data, quarantine data, published data artifacts, catalog records, triplets, proofs, receipts, or release manifests.
-- Policy bundles or Rego rules that belong in `policy/`.
-- JSON Schemas or machine contracts that belong under `schemas/contracts/v1/...`.
-- Application source code for `apps/`, reusable library code for `packages/`, or runtime adapters for `runtime/`.
-- Root-truth statements that claim a Kubernetes object can publish, approve, certify, or release KFM data.
-- Direct public ingress to model runtimes, source stores, raw data stores, internal/canonical stores, or admin surfaces.
-- Debug-only routes, wildcard ingress rules, broad service-account permissions, or unrestricted cluster-admin shortcuts.
-- Unredacted incident data, exploit payloads, private hostnames, internal IP lists, or vulnerability working notes for unfixed issues.
-
-If real secrets or sensitive deployment details are committed here, treat that as a security incident: rotate, audit, remove, and record the response through the incident/runbook path.
-
-[Back to top](#top)
-
----
-
-## Cluster trust membrane
-
-Kubernetes routing must make the KFM trust membrane visible and enforceable.
-
-```mermaid
-flowchart LR
-    Public[Public client]
-    Ingress[Ingress / Gateway]
-    GovAPI[apps-governed-api Service]
-    Explorer[apps-explorer-web Service]
-    Published[Released artifact volume / object store]
-    Workers[workers / pipelines]
-    Model[model runtime Service]
-    Raw[RAW / WORK / QUARANTINE volumes]
-    Internal[canonical / internal stores]
-    Admin[admin / review console]
-
-    Public --> Ingress
-    Ingress --> Explorer
-    Ingress --> GovAPI
-    GovAPI --> Published
-    GovAPI --> Model
-    Workers --> Raw
-    Workers --> Internal
-
-    Public -. DENY .-> Model
-    Public -. DENY .-> Raw
-    Public -. DENY .-> Internal
-    Public -. DENY .-> Admin
-    Explorer -. DENY direct .-> Model
-    Explorer -. DENY direct .-> Raw
-    Explorer -. DENY direct .-> Internal
-```
-
-### Required cluster-level guarantees
-
-A Kubernetes deployment is not acceptable until it can show these negative states:
-
-1. Public ingress to direct model-runtime services is denied.
-2. Public ingress to RAW / WORK / QUARANTINE storage is denied.
-3. Public ingress to internal/canonical stores is denied.
-4. Public ingress to admin/review surfaces is denied unless explicitly steward-only and authenticated.
-5. Browser-facing UI cannot route directly to model runtime, raw storage, source credentials, or internal stores.
-6. Worker/pipeline pods do not publish by themselves; they emit receipts, candidates, reports, or artifacts for governed review.
-7. Released artifact hosting serves only reviewed, released, rollback-addressable artifacts.
-8. Missing policy, release, or evidence closure leads to DENY or ABSTAIN at the governed API boundary, not a Kubernetes bypass.
-
-[Back to top](#top)
-
----
-
-## Proposed structure
-
-The exact convention is **PROPOSED** until the repository settles on Kustomize, Helm, plain manifests, or a hybrid. Do not create every folder unless needed by a concrete deployment slice.
-
-```text
-infra/kubernetes/
-├── README.md
-├── base/
-│   ├── namespace.yaml
-│   ├── serviceaccounts.yaml
-│   ├── networkpolicies.yaml
-│   ├── apps-governed-api.yaml
-│   ├── apps-explorer-web.yaml
-│   ├── workers.yaml
-│   ├── runtime-model-private.yaml
-│   └── published-artifacts-readonly.yaml
-├── overlays/
-│   ├── local/
-│   ├── staging/
-│   └── production/
-├── ingress/
-│   ├── README.md
-│   └── governed-public-routes.yaml
-├── networkpolicy/
-│   ├── README.md
-│   ├── deny-by-default.yaml
-│   ├── governed-api-egress.yaml
-│   └── model-runtime-private.yaml
-├── rbac/
-│   ├── README.md
-│   ├── serviceaccounts.yaml
-│   └── least-privilege-roles.yaml
-├── storage/
-│   ├── README.md
-│   ├── published-readonly.yaml
-│   └── nonpublic-deny-notes.md
-├── jobs/
-│   ├── README.md
-│   └── validation-dry-run.yaml
-└── validation/
-    ├── README.md
-    └── checklist.md
-```
-
-### Naming conventions
-
-- Use lowercase kebab-case for manifest filenames.
-- Name public routes by exposure intent, not convenience.
-- Name private services with `private` where direct public access must be impossible.
-- Keep environment overlays small and reviewable.
-- Avoid duplicating values that belong in non-secret `configs/` templates.
-
-[Back to top](#top)
-
----
-
-## Manifest expectations
-
-### Namespace and isolation
-
-- Default namespace should not be used for KFM workloads.
-- Public, internal, runtime, and admin/review workloads should be isolated by namespace or strong labels plus NetworkPolicy.
-- Label workload purpose and exposure posture explicitly.
-
-### NetworkPolicy
-
-- Start with deny-by-default ingress and egress where practical.
-- Permit public ingress only to approved ingress/gateway targets.
-- Permit browser-facing services to reach only the governed API and required static assets.
-- Keep model runtimes private to governed API adapters.
-- Keep RAW / WORK / QUARANTINE storage private to approved workers and internal validation jobs.
-
-### RBAC and service accounts
-
-- Use dedicated service accounts per workload family.
-- Do not use broad cluster-admin roles for application workloads.
-- Keep review/admin permissions separate from public-serving workloads.
-- Scope read/write access by actual need.
-
-### Volumes and data access
-
-- Public-serving pods should not mount RAW, WORK, QUARANTINE, unpublished candidates, source credentials, or internal stores.
-- Released artifact mounts should be read-only where possible.
-- Worker mounts should be narrow and phase-specific.
-- StorageClass, PVC, and object-store references must be reviewed for sensitivity and release state.
-
-### Secrets and configuration
-
-- Do not commit real Kubernetes Secret values.
-- Use external secret references, sealed/encrypted secret tooling, or environment-specific secret managers when adopted.
-- ConfigMaps may hold non-secret configuration only.
-- Secret names and environment variable names may be documented, but live values must not appear in the repo.
-
-### Ingress and public routes
-
-- Public ingress must be explicit.
-- No wildcard public route should expose internal service names.
-- Ingress should route public API calls to governed API only.
-- Static artifact routes must serve released artifacts only.
-- Admin/review routes must be private, authenticated, and audited.
-
-### Probes and diagnostics
-
-- Health endpoints must not leak secrets, raw paths, internal routes, EvidenceBundle bodies, prompt text, or restricted source data.
-- Readiness should fail closed if required policy/release/evidence dependencies are unavailable.
-- Debug endpoints must not be publicly exposed.
-
-### Resource controls
-
-- Set resource requests and limits for public-facing workloads.
-- Keep model-runtime resource use isolated from public API availability where practical.
-- Avoid one noisy workload taking down the governed API boundary.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Every Kubernetes change should include evidence for these checks, or explicitly mark them `NEEDS VERIFICATION` with a follow-up issue.
-
-| Check | Expected result | Evidence |
-|---|---|---|
-| YAML parse / dry run | Manifests parse and apply in dry-run mode | `kubectl apply --dry-run=server` or equivalent |
-| Kustomize / Helm render | Rendered output is reviewable and deterministic | Rendered manifest summary |
-| Secret scan | No real secret material committed | Secret scan result |
-| Ingress review | Public routes are explicit and governed | Route table / manifest diff |
-| NetworkPolicy review | Deny-by-default and least-privilege paths are visible | NetworkPolicy summary |
-| RBAC review | No unnecessary cluster-admin or broad wildcard permissions | Role/RoleBinding summary |
-| Volume review | Public pods do not mount non-public lifecycle stores | Pod spec / PVC review |
-| Model isolation | Runtime service is private to governed API path | Service/NetworkPolicy check |
-| Raw-data denial | RAW/WORK/QUARANTINE public access denied | Negative test or manifest proof |
-| Admin isolation | Admin/review routes are private and audited | Ingress/auth/audit note |
-| Rollback | Rollback or forward-fix path exists | Runbook / rollback note |
-
-### Suggested local checks
-
-Use the project’s chosen tooling once verified. Until then, reviewers may request the appropriate subset of:
+The following commands inspect tracked repository state only. They do not
+render objects, contact a cluster, or validate a deployment.
 
 ```bash
-# Examples only; adapt to the chosen cluster and manifest convention.
-kubectl apply --dry-run=client -f infra/kubernetes/<path>
-kubectl kustomize infra/kubernetes/overlays/<env>
-kubectl auth can-i --as=system:serviceaccount:<namespace>:<serviceaccount> <verb> <resource>
+git ls-tree -r --name-only HEAD -- infra/kubernetes
+git grep -n -E 'kubectl|kustomize|helm|apiVersion:|kind: (Deployment|StatefulSet|DaemonSet|Service|Ingress|Gateway|NetworkPolicy|ServiceAccount|Role|RoleBinding)' HEAD -- infra apps docs .github
 ```
 
-Do not paste kubeconfigs, tokens, private cluster endpoints, or unredacted dry-run output containing sensitive details into public PR discussion.
+At the pinned evidence snapshot, the first command lists only this README and
+the repository search finds no implementation-bearing Kubernetes command or
+object set.
 
-[Back to top](#top)
+Do not publish generic `kubectl apply`, `kubectl auth can-i`,
+`kubectl kustomize`, or Helm commands as executable runbook steps until exact
+inputs, tool versions, cluster scope, authentication, safe output handling, and
+prerequisites exist. A successful render or dry run cannot by itself prove
+applied state, reachability, authorization, isolation, health, rollback, or
+operational safety.
 
----
+## Failure, correction, and rollback
 
-## Review burden
+If a proposed Kubernetes slice cannot establish its canonical inputs,
+workloads, identities, policies, routes, storage, credentials boundary,
+negative access checks, or rollback, do not apply it.
 
-| Change type | Required review |
-|---|---|
-| README-only wording with no posture change | Infra steward or docs steward |
-| Namespace, ingress, gateway, service, or public route change | Infra steward + security owner + governed API owner |
-| NetworkPolicy, firewall-adjacent, or service-mesh behavior | Infra steward + security owner |
-| RBAC, ServiceAccount, Role, RoleBinding, cluster permissions | Infra steward + security owner |
-| Model-runtime deployment, service, or network path | Runtime owner + security owner |
-| Storage, PVC, object-store mount, or lifecycle data access | Data steward + infra steward + security owner |
-| Admin/review-console deployment or access | Ops steward + security owner |
-| Secret integration or external secret tooling | Security owner + infra steward |
-| Production overlay or rollback-impacting change | Release steward + infra steward + security owner |
-| Exception to deny-by-default | ADR or documented risk acceptance with rollback path |
+If repository documentation overstates Kubernetes adoption:
 
-[Back to top](#top)
+1. correct the claim against current repository and sanitized cluster evidence;
+2. keep operational state **UNKNOWN** where cluster evidence is unavailable;
+3. do not expose private cluster details to manufacture proof;
+4. close or revert the unmerged documentation change if the correction is
+   wrong.
 
----
+If a future applied object violates the trust boundary, contain traffic and
+workloads according to an approved operational runbook, preserve sanitized
+evidence, and follow the
+[incident-response process](../../docs/security/INCIDENT_RESPONSE.md). A Git
+revert alone does not change cluster state or restore data.
 
 ## Open verification
 
-- [ ] Confirm whether KFM will use Kustomize, Helm, plain manifests, Terraform-managed Kubernetes resources, or another convention.
-- [ ] Confirm Kubernetes target: local cluster, k3s, kind, managed cloud cluster, homelab cluster, or production cluster.
-- [ ] Confirm namespace strategy and whether public/internal/runtime/admin workloads are namespace-separated.
-- [ ] Confirm ingress controller, Gateway API usage, or reverse-proxy handoff.
-- [ ] Confirm NetworkPolicy provider and whether deny-by-default policy is enforced.
-- [ ] Confirm external secret manager or sealed/encrypted secret workflow.
-- [ ] Confirm RBAC baseline and service-account naming convention.
-- [ ] Confirm model runtime deployment pattern and network binding.
-- [ ] Confirm released artifact hosting pattern and whether Kubernetes serves it directly or delegates to object storage/CDN.
-- [ ] Confirm validation commands in CI.
-- [ ] Confirm rollback process for Kubernetes manifests and overlays.
-- [ ] Confirm CODEOWNERS for `infra/kubernetes/`.
+- [ ] Decide whether Kubernetes is an adopted KFM deployment mechanism.
+- [ ] Identify the first exact workload and canonical manifest/render source.
+- [ ] Establish cluster/provider/version custody and environment boundaries.
+- [ ] Establish namespaces, workload identities, RBAC, policies, routes,
+      configuration, secrets, storage, probes, resources, and observability.
+- [ ] Establish sanitized applied-state and negative-access evidence without
+      committing sensitive operational details.
+- [ ] Bind rendering, policy, authorization, storage, route, and workload tests
+      to exact files and cluster scope.
+- [ ] Establish update, traffic containment, rollback, uninstall, data
+      recovery, and orphan cleanup.
+- [ ] Confirm accountable platform, security, workload, data, release, and
+      operations review beyond repository routing.
 
-[Back to top](#top)
+Until those items close, this directory remains a documentation-only adoption
+hold. A merged README, passing render, dry run, or draft manifest does not imply
+cluster creation, applied state, deployment, release, promotion, or publication.
 
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing greenfield stub |
-| Next review trigger | First concrete Kubernetes manifest, overlay, ingress, NetworkPolicy, RBAC, storage, model-runtime, or production deployment PR |

@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-p05-held-entrypoints-slice2-20261002",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/workers/src/ai_focus_worker/main.py",
+    "apps/workers/src/correction_worker/main.py",
+    "apps/workers/src/quarantine_review_worker/main.py",
+    "apps/workers/src/receipt_worker/main.py",
+    "apps/workers/src/tile_worker/main.py",
+    "control_plane/verification_backlog.yaml",
+    "pipelines/catalog/main.py",
+    "pipelines/domains/agriculture/catalog.py",
+    "pipelines/domains/hazards/catalog.py",
+    "pipelines/domains/roads-rail-trade/emit_catalog_records.py",
+    "tests/qa/test_held_entry_points.py",
+    "tools/ingest/hydrology/usgs_streamflow_gate.py",
+    "tools/qa/completion_queue.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/validators/validate_catalog_matrix.py"
+  ],
+  "artifact_hashes": {
+    "apps/workers/src/ai_focus_worker/main.py": "sha256:c24020a9c29ec4c33cc28c7ac609afee692f2928fa4dfd3493ceb68d90582b31",
+    "apps/workers/src/correction_worker/main.py": "sha256:72c37f6fb51ea5d234887cead17ea7b77f37f01a1ee504f000568e6d50d5e400",
+    "apps/workers/src/quarantine_review_worker/main.py": "sha256:87e4bfc13e02f76b05a872e348be3e53ce7ce427d6a192c50ea774a7ebfe34a6",
+    "apps/workers/src/receipt_worker/main.py": "sha256:f05a688f14db111d28d5da7e5630146615fd1d0f0c71a277d672c38e8758000c",
+    "apps/workers/src/tile_worker/main.py": "sha256:bbb92c167344d0f405eae7e077ec5d9009778a79ebc0440a74f3e2d5d2743c2a",
+    "control_plane/verification_backlog.yaml": "sha256:39b23b4e6a951df4881892fda7b63a240902c0e485742d99876aab7d14657574",
+    "pipelines/catalog/main.py": "sha256:57ec5f8970679ff428a4f99857596fe25416205aabf7bab68e764d09ea7c5e1a",
+    "pipelines/domains/agriculture/catalog.py": "sha256:44c781223c89571067d927ef2368db03ceff464034ec239ff79330af070549f6",
+    "pipelines/domains/hazards/catalog.py": "sha256:86f309fef4aa8b6802df552b9adcaa537f2ca23d9b3f7ed88f79bf3d0d3895ff",
+    "pipelines/domains/roads-rail-trade/emit_catalog_records.py": "sha256:0e67548552da2bcc08efba68a852c2e1354bb29aae71d529bf00de64c12b38da",
+    "tests/qa/test_held_entry_points.py": "sha256:7331db665b11efea9899814ae4a1bd7e786d09a45816feaf601270ad479e1dd9",
+    "tools/ingest/hydrology/usgs_streamflow_gate.py": "sha256:a2ed113916ac7607dfda7c424660b6b865186d1b9a7d75a916663a3cbb231e21",
+    "tools/qa/completion_queue.py": "sha256:6fa7622c6c6f4d87df767da5319fc03a7eed406981c187c48e7101bdb9706c35",
+    "tools/qa/scaffold_baseline.json": "sha256:7616c9f7d673e674e30f52dc5a437213e2a512151a2d3407111fe7c15f3e40a9",
+    "tools/validators/validate_catalog_matrix.py": "sha256:066f16bcf17d6e232682ed57abb5ef01dbcb85b2d218f51b41c4abd8a645643d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:de7f04c266c11a0ef662db8398f81a9d67ad05c19f08ddf7f96194eadaedd1ab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/55b1d90c00d8a2cbed43b7f22cbea811750f14cd",
+      "repo:tools/validators/docs/link-check/check_links.py"
+    ]
+  },
+  "truth_labels": {
+    "apps/workers/src/ai_focus_worker/main.py": "CONFIRMED",
+    "apps/workers/src/correction_worker/main.py": "CONFIRMED",
+    "apps/workers/src/quarantine_review_worker/main.py": "CONFIRMED",
+    "apps/workers/src/receipt_worker/main.py": "CONFIRMED",
+    "apps/workers/src/tile_worker/main.py": "CONFIRMED",
+    "control_plane/verification_backlog.yaml": "CONFIRMED",
+    "pipelines/catalog/main.py": "CONFIRMED",
+    "pipelines/domains/agriculture/catalog.py": "CONFIRMED",
+    "pipelines/domains/hazards/catalog.py": "CONFIRMED",
+    "pipelines/domains/roads-rail-trade/emit_catalog_records.py": "CONFIRMED",
+    "tests/qa/test_held_entry_points.py": "CONFIRMED",
+    "tools/ingest/hydrology/usgs_streamflow_gate.py": "CONFIRMED",
+    "tools/qa/completion_queue.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/validators/validate_catalog_matrix.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Behavior",
+      "outcome": "PASS",
+      "reason": "tests/qa/test_held_entry_points.py runs each of the eleven entry points from an isolated copy: each exits 2 with its exact HOLD envelope (named reason code and a false authorization flag), writes nothing to stderr, and leaves no file behind; a static check rejects write, open, or network calls; a third test pins its table to completion_queue.HELD_STAGE_PATHS."
+    },
+    {
+      "gate": "Ratchets",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory.py --check passes with the baseline tightened from 917 to 895 findings; completion_queue.py --check passes with the eleven backlog entries recorded as PARTIAL with disposition explicit_hold; gap_scan.py --check passes with the census unchanged (BROKEN_LOCAL_LINK 339, UNRATCHETED_PLACEHOLDER 10)."
+    },
+    {
+      "gate": "Workflows",
+      "outcome": "PASS",
+      "reason": "Shell steps of the 47 PR-triggered workflows were replayed locally: 220 passed. The failing steps depend on GitHub expression-derived environment variables, the pip-audit tool, or the no-network guard path (domain-hydrology schema validation passes when the guard is on PYTHONPATH); repository-governance-parity passes once a gitignored receipts/ directory left by an earlier replayed step is removed; water-pilot mirror digests fail identically on main (G-SITE-01)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/55b1d90c00d8a2cbed43b7f22cbea811750f14cd"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-02T17:02:18Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "pipelines/domains/hydrology/catalog.py stays pinned by hydrology-proof-slice. The 42 P1 schema stubs, policy .rego stubs, and test stubs are left for steward decisions. Docs that describe these files as one-line placeholders or as raising NotImplementedError remain accurate in substance (no working behavior) and are not edited here. The held entry points confer no lifecycle, review, release, or publication authority."
+}

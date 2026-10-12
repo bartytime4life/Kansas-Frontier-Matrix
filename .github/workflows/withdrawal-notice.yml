@@ -1,0 +1,104 @@
+# Validate the current PROPOSED WithdrawalNotice contract/schema pair without network access.
+# A green result proves bounded shape and fixture polarity only. It does not issue,
+# approve, apply, publish, or execute a withdrawal.
+name: withdrawal-notice
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/withdrawal-notice.yml"
+      - "contracts/release/withdrawal_notice.md"
+      - "schemas/contracts/v1/release/withdrawal_notice.schema.json"
+      - "fixtures/release/withdrawal_notice/**"
+      - "tools/validators/release/validate_withdrawal_notice.py"
+      - "tools/validators/validate_withdrawal_notice.py"
+      - "tests/validators/test_validate_withdrawal_notice.py"
+      - "data/receipts/generated/genrec-withdrawal-notice-workflow-20260823.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/withdrawal-notice.yml"
+      - "contracts/release/withdrawal_notice.md"
+      - "schemas/contracts/v1/release/withdrawal_notice.schema.json"
+      - "fixtures/release/withdrawal_notice/**"
+      - "tools/validators/release/validate_withdrawal_notice.py"
+      - "tools/validators/validate_withdrawal_notice.py"
+      - "tests/validators/test_validate_withdrawal_notice.py"
+      - "data/receipts/generated/genrec-withdrawal-notice-workflow-20260823.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: withdrawal-notice-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-withdrawal-notice:
+    name: validate-withdrawal-notice
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@7a0b5fcfe1d29c9f9e132f32f527efe6e8f3b911 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_withdrawal_notice.py' \
+            --verbose
+
+      - name: Validate fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/release/validate_withdrawal_notice.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-withdrawal-notice-workflow-20260823.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### WithdrawalNotice"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: the current PROPOSED contract/schema pair, focused no-network fixtures, validator behavior, and workflow wiring."
+            echo "- Boundary: this job does not issue, approve, apply, release, deploy, promote, publish, or execute a withdrawal."
+            echo "- Remaining gap: production emitters, consumers, human authority, correction propagation, and release-state mutation remain outside this slice."
+          } >> "$GITHUB_STEP_SUMMARY"

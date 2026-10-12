@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-telemetry-readme
 title: contracts/telemetry — Telemetry Contract Semantics README
 type: readme
-version: v0.1
+version: v0.2
 status: draft; PROPOSED; semantic-contract-lane; observability-carrier; redaction-required; no-sovereign-truth
 owners: OWNER_TBD — Observability steward · Runtime steward · Security/Privacy reviewer · Contracts steward · Schema steward · Policy steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — stub existed before v0.1 expansion
-updated: 2026-06-24
+updated: 2026-08-11
 policy_label: public; contracts; telemetry; observability; semantic-contracts; redaction; sensitivity; rights; receipts; release-gated; no-truth-authority
 tags: [kfm, contracts, telemetry, observability, traces, metrics, logs, events, receipts, opentelemetry, openlineage, redaction, sensitivity, rights, trust-membrane, release-gates]
 related:
@@ -26,9 +26,10 @@ related:
   - ../../policy/rights/
   - ../../policy/promotion/
   - ../../docs/architecture/contract-schema-policy-split.md
+  - ./map_build_sustainability.md
 notes:
   - "Expanded from the short stub at `contracts/telemetry/README.md`."
-  - "Repo search in this session found telemetry standards, dashboard docs, and a telemetry-redaction ADR, but did not verify a mature telemetry contract family or paired telemetry schema."
+  - "The lane now contains bounded fixture-first profiles and paired schemas, but no inspected repository evidence proves a mature production telemetry runtime, sink, or release gate."
   - "Telemetry Minimums says telemetry is a carrier, not truth, and earns release evidence rather than establishing it."
   - "ADR-0016 says telemetry that leaves a KFM process is a governed emission subject to sensitivity, rights, and policy gates."
   - "This lane defines semantic meaning only; telemetry collection, sinks, dashboards, alerts, policy, schemas, receipts, release gates, and implementation remain in separate roots."
@@ -133,6 +134,7 @@ These candidate contracts are PROPOSED until schemas, policy, fixtures, validato
 | `lineage_event_ref.md` | Reference semantics for OpenLineage or lineage backend event ids. | PROPOSED |
 | `telemetry_release_evidence.md` | Telemetry evidence summary for promotion/release gate review. | PROPOSED |
 | `telemetry_caveat.md` | Required caveats for sampled, partial, redacted, or degraded telemetry. | PROPOSED |
+| `map_build_sustainability.md` | Closed fixture-only energy/carbon candidate for map-build operational review, with explicit uncertainty, safe abstention, and no truth or release authority. | PROPOSED_INACTIVE_FIXTURE_ONLY |
 
 Do not create these as canonical contracts without checking Directory Rules, schema homes, policy homes, fixtures, tests, release behavior, and ADR status.
 

@@ -1,0 +1,12 @@
+{
+  "surface": "governed_api",
+  "requested_artifact": "data/published/layers/hydrology/fixture-huc12-102600150101.geojson",
+  "scenario_id": "current",
+  "evidence_bundle": "fixtures/domains/hydrology/proof_slice/evidence_bundle.json",
+  "geometry_precision": "generalized_huc12",
+  "feature_source_role": "synthetic_observation",
+  "presented_as": "observed_gauge_series",
+  "policy_evaluator": "available",
+  "release_candidate": "release-candidate:hydrology:proof-slice:fixture-v1",
+  "rollback_target": "release:hydrology:proof-slice:fixture-v0"
+}

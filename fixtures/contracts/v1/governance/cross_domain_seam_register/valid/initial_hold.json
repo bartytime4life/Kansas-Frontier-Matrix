@@ -1,0 +1,221 @@
+{
+  "version": "v1",
+  "registry": "cross_domain_seam_register",
+  "status": "PROPOSED",
+  "authority": "navigational_and_review_projection_only",
+  "updated_at": "2026-08-08",
+  "base_ref": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a",
+  "coverage_scope": "high_risk_initial_seams",
+  "completeness": "partial",
+  "owner_role": "control_plane_steward",
+  "description": "Initial machine-readable context-map projection for five high-risk KFM cross-domain seams. It records ownership, citation, evidence, policy, sensitivity, and release constraints without authorizing a join or creating public truth.",
+  "doctrine": {
+    "path": "docs/doctrine/directory-rules.md",
+    "document_id": "kfm://doctrine/directory-governance/v2",
+    "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "decision_ref": "ADR-0029"
+  },
+  "domain_lane_register": {
+    "path": "control_plane/domain_lane_register.yaml",
+    "git_blob": "1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+    "base_ref": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a"
+  },
+  "decision_requirement": "ADR_S_14_PENDING",
+  "defaults": {
+    "interaction_mode": "CITE_ONLY",
+    "evidence_rule": "EACH_PARTICIPANT_EVIDENCE_BUNDLE_REQUIRED",
+    "source_role_rule": "PRESERVE",
+    "sensitivity_rule": "MOST_RESTRICTIVE",
+    "policy_rule": "MOST_RESTRICTIVE",
+    "release_rule": "EACH_PARTICIPANT_RELEASE_REQUIRED",
+    "mutation_authority": false,
+    "publication_authority": false
+  },
+  "non_effects": [
+    "does_not_authorize_cross_domain_join",
+    "does_not_create_or_modify_domain_records",
+    "does_not_assign_source_evidence_policy_or_release_authority",
+    "does_not_lower_sensitivity_or_precision",
+    "does_not_activate_sources_or_write_lifecycle_state",
+    "does_not_release_deploy_promote_or_publish"
+  ],
+  "entries": [
+    {
+      "seam_id": "agriculture--soil--suitability-context",
+      "participants": [
+        "agriculture",
+        "soil"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contextual_join",
+      "summary": "Soil map-unit and property context may inform agricultural suitability only while farm, operator, parcel, and yield privacy boundaries remain intact.",
+      "authority_allocations": [
+        {
+          "context_id": "agriculture",
+          "owns": [
+            "agricultural_observation",
+            "crop_context",
+            "yield_context"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "soil",
+          "owns": [
+            "soil_component",
+            "soil_map_unit",
+            "soil_property"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "private_farm_operator_parcel_yield_join",
+        "soil_property_as_observed_crop_yield"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    },
+    {
+      "seam_id": "archaeology--roads-rail-trade--historic-corridor-context",
+      "participants": [
+        "archaeology",
+        "roads-rail-trade"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contextual_join",
+      "summary": "Historic corridor identity may provide archaeological context, but archaeological provenience, precise locations, and cultural sensitivity remain owned by archaeology.",
+      "authority_allocations": [
+        {
+          "context_id": "archaeology",
+          "owns": [
+            "archaeological_site_identity",
+            "cultural_sensitivity",
+            "provenience"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "roads-rail-trade",
+          "owns": [
+            "historic_corridor_identity",
+            "route_uncertainty"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "corridor_inflection_as_site_location",
+        "historic_route_as_archaeological_evidence"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    },
+    {
+      "seam_id": "atmosphere--hazards--condition-advisory-context",
+      "participants": [
+        "atmosphere",
+        "hazards"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contextual_join",
+      "summary": "Atmospheric observations and models may be cited by hazard products, while observations, forecasts, models, regulatory context, and advisories remain distinct source roles.",
+      "authority_allocations": [
+        {
+          "context_id": "atmosphere",
+          "owns": [
+            "atmospheric_model",
+            "atmospheric_observation",
+            "forecast_context"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "hazards",
+          "owns": [
+            "hazard_event_identity",
+            "official_advisory_context"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "advisory_as_measurement",
+        "modeled_forecast_as_observed_condition"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    },
+    {
+      "seam_id": "fauna--hydrology--aquatic-occurrence-context",
+      "participants": [
+        "fauna",
+        "hydrology"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contextual_join",
+      "summary": "Hydrologic-unit and reach identity may contextualize aquatic occurrence evidence, while fauna retains occurrence meaning and sensitive-location authority.",
+      "authority_allocations": [
+        {
+          "context_id": "fauna",
+          "owns": [
+            "occurrence_evidence",
+            "species_sensitivity",
+            "taxon_identity"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "hydrology",
+          "owns": [
+            "hydrologic_unit_identity",
+            "reach_identity",
+            "water_observation_context"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "aquatic_occurrence_as_established_population",
+        "public_huc_as_precise_sensitive_occurrence"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    },
+    {
+      "seam_id": "hazards--settlements-infrastructure--exposure-context",
+      "participants": [
+        "hazards",
+        "settlements-infrastructure"
+      ],
+      "status": "HOLD_UNRESOLVED",
+      "relation_class": "contextual_join",
+      "summary": "Hazard exposure summaries may cite settlement and infrastructure context without exposing precise critical-asset locations or transferring asset identity authority.",
+      "authority_allocations": [
+        {
+          "context_id": "hazards",
+          "owns": [
+            "exposure_context",
+            "hazard_event_identity"
+          ],
+          "may_modify_other_context": false
+        },
+        {
+          "context_id": "settlements-infrastructure",
+          "owns": [
+            "critical_asset_sensitivity",
+            "infrastructure_asset_identity",
+            "settlement_identity"
+          ],
+          "may_modify_other_context": false
+        }
+      ],
+      "prohibited_inferences": [
+        "exposure_summary_as_precise_asset_location",
+        "hazard_geometry_as_infrastructure_identity"
+      ],
+      "public_join_allowed": false,
+      "seam_contract_path": null
+    }
+  ]
+}

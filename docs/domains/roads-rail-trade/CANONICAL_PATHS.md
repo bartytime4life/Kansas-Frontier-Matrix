@@ -12,7 +12,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/domains/roads-rail-trade/README.md
   - docs/domains/roads-rail-trade/ARCHITECTURE.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
@@ -23,6 +23,9 @@ notes:
   - "TWO-DIMENSIONAL slug conflict (corrected): (a) `domains/` segment present (Directory Rules §12) vs absent (Atlas §24.13, which uses no `domains/` segment for ANY domain); (b) slug `roads-rail-trade` (§12) vs `transport` (§24.13). See §3 / §11 OPEN-RRT-01. Neither source produces `domains/transport/` — do not fabricate that hybrid."
   - "Specific repo presence of any path below is PROPOSED until verified against a mounted repository."
   - "Cesium retired (v1.3 doctrine-target): packages/maplibre-runtime/ is the SOLE governed browser-side renderer; the §24.13 Spatial-Foundation row still shows the legacy packages/maplibre/ migration target. Flagged in §6."
+owning_root: docs/
+responsibility: "Documentation for Canonical Paths — Roads / Rail / Trade Routes Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Canonical Paths — Roads / Rail / Trade Routes Domain
@@ -531,6 +534,6 @@ Defined in `directory-rules.md` §0 and applied throughout this document.
 
 ---
 
-**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) · [`DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
+**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ARCHITECTURE.md`](./ARCHITECTURE.md) · [`ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) · [`DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
 
 **Last updated:** 2026-06-07 · **Doc version:** v2 · **Status:** draft · **CONTRACT_VERSION:** 3.0.0 · [↑ back to top](#contents)

@@ -10,23 +10,24 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md         # PROPOSED — see §11
-  - docs/sources/catalog/README.md                     # PROPOSED — see §11
-  - docs/sources/catalog/ftdna.md                      # Sibling source-catalog entry (PROPOSED path)
-  - docs/domains/fauna/                                # PROPOSED — CONFIRMED domain in Atlas Part 1
-  - docs/domains/flora/                                # PROPOSED — CONFIRMED domain in Atlas Part 1
-  - docs/domains/habitat/                              # PROPOSED — CONFIRMED domain in Atlas Part 1
-  - schemas/contracts/v1/source/source-descriptor.json # PROPOSED per ADR-0001
-  - schemas/contracts/v1/fauna/occurrence-evidence.schema.json  # PROPOSED — CONFIRMED object family
-  - control_plane/source_authority_register.yaml       # PROPOSED
-  - policy/sensitivity/                                # PROPOSED
-  - policy/rights/                                     # PROPOSED
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/sources/catalog/README.md
+  - docs/domains/fauna/
+  - docs/domains/flora/
+  - docs/domains/habitat/
+  - schemas/contracts/v1/source/source-descriptor.json
+  - control_plane/source_authority_register.yaml
+  - policy/sensitivity/
+  - policy/rights/
 tags: [kfm, source, biodiversity, gbif, taxonomy, dwc, stac, fauna, flora, habitat]
 notes:
   - "Repository is not mounted in this session; all repo-state-shaped claims are PROPOSED or NEEDS VERIFICATION."
   - "GBIF as canonical aggregated biodiversity authority is CONFIRMED per KFM-P2-IDEA-0018 and C10-06."
   - "Source role assignments below are doctrinal defaults; final values are set at admission per SourceDescriptor."
   - "v0.2 corrections from v0.1: (1) replaced spurious C10-12 reference with C10-06 (where EBD restricted-use actually lives); (2) corrected sibling-README link from `../README.md` to `./README.md`; (3) added Domain consumer map (§3.1) tying CONFIRMED Fauna/Flora object families to GBIF inputs; (4) tightened several PROPOSED → CONFIRMED truth labels where the corpus directly supports them; (5) refined source-role badge from misleading single-value claim to multi-value-by-artifact."
+owning_root: docs/
+responsibility: "Documentation for GBIF — Global Biodiversity Information Facility (KFM Source Catalog Entry); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # GBIF — Global Biodiversity Information Facility
@@ -97,7 +98,7 @@ docs/
 | Field                                       | Value                                                                                           |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | **Doc home (this file)**                    | `docs/sources/catalog/gbif.md` — PROPOSED                                                       |
-| **Sibling source-catalog entry**            | [`docs/sources/catalog/ftdna.md`](./ftdna.md) — PROPOSED                                        |
+| **Sibling source-catalog entry**            | `docs/sources/catalog/ftdna.md` (not present) — PROPOSED                                        |
 | **Upstream (canonical KFM doctrine)**       | `docs/doctrine/directory-rules.md` · KFM core invariants · authority ladder                     |
 | **Sibling standard**                        | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — PROPOSED                                         |
 | **Downstream (consumers)**                  | `docs/domains/fauna/`, `docs/domains/flora/`, `docs/domains/habitat/` — PROPOSED                |
@@ -608,16 +609,16 @@ GET https://api.gbif.org/v1/species/match?name=<scientificName>
 
 ## 15. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lifecycle invariant, schema-home convention. **(CONFIRMED reference.)**
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — sibling standard, source-descriptor fields. **(PROPOSED — see §11.)**
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law, lifecycle invariant, schema-home convention. **(CONFIRMED reference.)**
+- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (not present) — sibling standard, source-descriptor fields. **(PROPOSED — see §11.)**
 - [`docs/sources/catalog/README.md`](./README.md) — index of source catalog entries. **(PROPOSED — see §11.)**
-- [`docs/sources/catalog/ftdna.md`](./ftdna.md) — sibling source-catalog entry (FTDNA DTC genetic-genealogy vendor). **(PROPOSED — same catalog convention as this file.)**
-- [`docs/domains/fauna/`](../../domains/fauna/) — Fauna lane that consumes GBIF occurrence data via `OccurrenceEvidence` / `OccurrencePublic` / `OccurrenceRestricted` object families. **(CONFIRMED domain doctrine, Atlas Part 1; folder PROPOSED.)**
-- [`docs/domains/flora/`](../../domains/flora/) — Flora lane (herbaria + observations) via `Flora Occurrence` / `SpecimenRecord` / `Rare Plant Record` object families. **(CONFIRMED domain doctrine; folder PROPOSED.)**
-- [`docs/domains/habitat/`](../../domains/habitat/) — Habitat lane that joins occurrences to habitat surfaces. **(CONFIRMED domain doctrine; folder PROPOSED.)**
-- [`docs/standards/stac-dwc-hybrid.md`](../../standards/stac-dwc-hybrid.md) — STAC × DwC profile. **(PROPOSED — see C4-03.)**
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — log discrepancies between this doc and mounted-repo evidence. **(PROPOSED.)**
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — verification items from §14. **(PROPOSED.)**
+- `docs/sources/catalog/ftdna.md` (not present) — sibling source-catalog entry (FTDNA DTC genetic-genealogy vendor). **(PROPOSED — same catalog convention as this file.)**
+- `docs/domains/fauna/` (not present) — Fauna lane that consumes GBIF occurrence data via `OccurrenceEvidence` / `OccurrencePublic` / `OccurrenceRestricted` object families. **(CONFIRMED domain doctrine, Atlas Part 1; folder PROPOSED.)**
+- `docs/domains/flora/` (not present) — Flora lane (herbaria + observations) via `Flora Occurrence` / `SpecimenRecord` / `Rare Plant Record` object families. **(CONFIRMED domain doctrine; folder PROPOSED.)**
+- `docs/domains/habitat/` (not present) — Habitat lane that joins occurrences to habitat surfaces. **(CONFIRMED domain doctrine; folder PROPOSED.)**
+- `docs/standards/stac-dwc-hybrid.md` (not present) — STAC × DwC profile. **(PROPOSED — see C4-03.)**
+- `docs/registers/DRIFT_REGISTER.md` (not present) — log discrepancies between this doc and mounted-repo evidence. **(PROPOSED.)**
+- `docs/registers/VERIFICATION_BACKLOG.md` (not present) — verification items from §14. **(PROPOSED.)**
 
 ---
 

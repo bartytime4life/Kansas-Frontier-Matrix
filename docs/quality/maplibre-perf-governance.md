@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS_VERIFICATION
+doc_id: kfm://doc/docs-quality-maplibre-perf-governance
 title: MapLibre Performance Governance
 type: standard
 version: v1
@@ -8,14 +8,13 @@ owners: ["NEEDS_VERIFICATION"]
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
-related: [
-  "docs/doctrine/directory-rules.md",
-  "docs/doctrine/lifecycle-law.md",
-  "docs/doctrine/trust-membrane.md",
-  "docs/architecture/map-shell.md",
-  "tools/README.md",
-  ".github/workflows/maplibre-perf-governance.yml"
-]
+related:
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/architecture/map-shell.md
+  - tools/README.md
+  - .github/workflows/maplibre-perf-governance.yml
 tags: ["kfm","maplibre","performance","governance","proof-pack","release-manifest","run-receipt"]
 notes: [
   "Path under docs/quality/ is PROPOSED; not in Directory Rules §6.1 canonical docs/ tree.",
@@ -24,6 +23,17 @@ notes: [
 [/KFM_META_BLOCK_V2] -->
 
 # MapLibre Performance Governance
+
+> [!IMPORTANT]
+> **2026-09-29 removal update.** The legacy standalone MapLibre performance
+> harness (`scripts/maplibre-smoke-perf.mjs`), its render-diff, attestation,
+> release-manifest, proof-pack, correction/rollback, and failure-bundle builders,
+> the root `maplibre:*` npm scripts, the `make maplibre-*` targets, their seven
+> placeholder schemas under `schemas/maplibre/`, and their placeholder verifiers
+> under `tools/validators/maplibre/` were removed. References to them below are
+> historical. The closed performance envelope
+> (`configs/maplibre/perf-envelope.v1.json`, `schemas/maplibre/perf-envelope.schema.json`,
+> `tools/validators/maplibre/validate_perf_envelope.py`) remains.
 
 > Governed performance lane that turns MapLibre renderer smoke runs into inspectable KFM evidence — bounding latency, frame stability, and render diffs through canonical receipts, attestations, and manifests before any release-candidate posture is permitted.
 

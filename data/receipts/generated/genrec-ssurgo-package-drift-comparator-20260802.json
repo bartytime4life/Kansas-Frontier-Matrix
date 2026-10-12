@@ -1,0 +1,241 @@
+{
+  "receipt_id": "genrec-ssurgo-package-drift-comparator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-soil.yml",
+    "docs/sources/catalog/nrcs/ssurgo.md",
+    "tests/ingest/README.md",
+    "tests/ingest/ssurgo_watch/README.md",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/spatial_diff.json",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/spatial_diff.json",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/spatial_diff.json",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/current.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/prior.sidecar.json",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/spatial_diff.json",
+    "tests/ingest/ssurgo_watch/test_ssurgo_watch.py",
+    "tools/ingest/README.md",
+    "tools/ingest/ssurgo_watch/README.md",
+    "tools/ingest/ssurgo_watch/ssurgo_watch.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-soil.yml": "sha256:b464e2f18061a4372d75a25bee994986977cd49c47b4df4f4881efb4e93d3bb9",
+    "docs/sources/catalog/nrcs/ssurgo.md": "sha256:99119d702c616f434d97918df13db8fecdfaf924fb1988408529b9a8ea405248",
+    "tests/ingest/README.md": "sha256:d36024ac380f2a986c28895b6d964859624c88ea3092f4e1fda24acd134a1271",
+    "tests/ingest/ssurgo_watch/README.md": "sha256:00f75d88e75c591be06dccdab4a2f931f8dbcf52c5d60a8118272d2b19d62462",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/current.sidecar.json": "sha256:cf3024349d09cee6847c1e1fe1b0c0c678aea957df82946226ab60cf259038ce",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/spatial_diff.json": "sha256:c975e8eb52e0e1616282788ee15dfe273557096a90306055e1b37e10901f3d03",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/current.sidecar.json": "sha256:b20acf9c0c1c631df57d55754516cbc5f66508990075d024dce5961f7a03a842",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/current.sidecar.json": "sha256:3184eee39869b47fa1165c15147de88bdec942e271e6b2b69fc0803ecf35be0c",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/current.sidecar.json": "sha256:6c29307b20fd12f6e606ac54e23afc33e7a1a7d68d3828bc728b4c6f33737aaf",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/spatial_diff.json": "sha256:93e96af1bbf55623f5b798fef6cd2fa14ab64b8e2187e50f5ab84dba4be3effa",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/current.sidecar.json": "sha256:6c29307b20fd12f6e606ac54e23afc33e7a1a7d68d3828bc728b4c6f33737aaf",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/current.sidecar.json": "sha256:9d58958cb33a4c371db7680fbc0607973955c22c017fbe69b5f1a743a6116a2a",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/spatial_diff.json": "sha256:63999b5fec04be34151283fba136bdcf8e1cffc3a53449f9039319b83467104d",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/current.sidecar.json": "sha256:9daea30f6dfb4b0bc3a00e602ed1a846fee6c1244282f789fb0c379809f91cc9",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/current.sidecar.json": "sha256:4adfa6e8020e28f8f1c42955b905fe124777b456c50d10eab2c6e34a683d9f70",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/current.sidecar.json": "sha256:88852ceea9dc05991d89612c492975207689bf825613ad47c2e3fc0979aef71d",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/current.sidecar.json": "sha256:21712ea3790d018ec092932d5728c0dbff0e8cf735ee47e91403e1bcc1a95cc9",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/current.sidecar.json": "sha256:8416844aa1648f3fc60ce7f5261da10269391a6e432c5198750a5c852262b9e6",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/prior.sidecar.json": "sha256:b35e2c57a1cfcd1a4a6db72dba69ad36177178a16be533efdad332815507fe1e",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/spatial_diff.json": "sha256:79af212af55ef264f04d88e65b05cc6f4a44be5d6e11f77f5e74b59c2e6791a7",
+    "tests/ingest/ssurgo_watch/test_ssurgo_watch.py": "sha256:9ee71e1af11016a1685b57f2e1d361ed00fd01ede5c11e9e81130df8e00a32a4",
+    "tools/ingest/README.md": "sha256:1ecd4684fdf5a63c5826a8837ef150b603c2d71d1a483053d3a94c5d8fb06a9a",
+    "tools/ingest/ssurgo_watch/README.md": "sha256:29f2263a36135cc3d09d3636685b2c7d806ecd8b342d4770c502bc76443338ef",
+    "tools/ingest/ssurgo_watch/ssurgo_watch.py": "sha256:0946b0e844ede77925460ff4ffd91f23e1103a467621010a5f014608db7329f8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "ChatGPT Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:c1fef63ee61adf0124e000fc07dafabc6f4739ea54c9ee1e6a775dfc010b8a27",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local supplied-document and repository inspection",
+      "read-only parallel idea, repository-gap, and directory-governance assays",
+      "connected GitHub app reads and writes without Git or GitHub CLI",
+      "deterministic standard-library Python validation",
+      "local JSON, Python AST, and workflow YAML checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:64dc1c8793ba64a641b12a092201d1cc4e5ac90ce8cdc4a1d7bd54eaf548cc95"
+    ],
+    "attached_docs": [
+      "New Ideas 5-15-26.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/tools/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/tools/ingest/cdl_watch/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/docs/sources/catalog/nrcs/ssurgo.md",
+      "attachment://New-Ideas-5-15-26:sha256:64dc1c8793ba64a641b12a092201d1cc4e5ac90ce8cdc4a1d7bd54eaf548cc95"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-soil.yml": "PROPOSED",
+    "docs/sources/catalog/nrcs/ssurgo.md": "PROPOSED",
+    "tests/ingest/README.md": "PROPOSED",
+    "tests/ingest/ssurgo_watch/README.md": "PROPOSED",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/below_threshold/spatial_diff.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/constraint_change/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/derived_state_drift/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/equal_total_label_drift/spatial_diff.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/geometry_drift/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/material_area_change/spatial_diff.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/no_material_change/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/schema_change/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/stale_input/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/table_content_change/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/current.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/prior.sidecar.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/fixtures/threshold_boundary/spatial_diff.json": "CONFIRMED",
+    "tests/ingest/ssurgo_watch/test_ssurgo_watch.py": "CONFIRMED",
+    "tools/ingest/README.md": "PROPOSED",
+    "tools/ingest/ssurgo_watch/README.md": "PROPOSED",
+    "tools/ingest/ssurgo_watch/ssurgo_watch.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The connected GitHub app verified main at b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb after merged PRs #1929 and #1930. Their evidence-resolution and PMTiles paths do not overlap this slice. Recent merged work and the open pull-request set were reviewed; SSURGO package-drift comparison was unoccupied. Branch, commit, and draft-PR operations are authorized, while ready, merge, release, deployment, publication, and settings changes remain out of scope."
+    },
+    {
+      "gate": "idea-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied New Ideas document was reconciled with current Directory Rules and repository lanes. The result is a fixture-only repository inspector under tools/ingest with test-local fixtures; live acquisition, source admission, cadence, rights, and production policy remain held."
+    },
+    {
+      "gate": "focused-ssurgo-comparator-suite",
+      "outcome": "PASS",
+      "reason": "Twenty-seven standard-library tests passed across 11 synthetic cases, 22 sidecars, and four separately bound spatial-diff artifacts. Coverage includes exact outcomes, strict threshold behavior, equal-total topology drift, schema and table-content drift, PK/FK validation, chronology and profile abstention, content and geometry bindings, bounded parsing, deterministic reports, active network denial, CLI polarity, and create-only external output."
+    },
+    {
+      "gate": "mapunit-partition-semantics",
+      "outcome": "PASS",
+      "reason": "The metric is explicitly mapunit-label disagreement area, not survey-union symmetric difference. Exact synthetic evidence is bound to both sidecars, both geometry sets, the geometry profile, EPSG:5070, square-metre units, a fixed method, and its own content hash; aggregate L1 area is used only as a lower bound."
+    },
+    {
+      "gate": "soil-workflow-identity-and-boundary",
+      "outcome": "PASS",
+      "reason": "Local YAML parsing preserved workflow name domain-soil, job IDs validate-soil/build-proof-soil/publish-dry-run-soil, and contents-read permission. The stdlib proof is a separate no-network validation step; the proof and release-dry-run jobs remain held."
+    },
+    {
+      "gate": "python-json-yaml-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Both Python files parsed, all 26 fixture JSON artifacts parsed, the workflow YAML parsed with stable identity, no bytecode cache remained, and SHA-256 binds all 34 non-receipt artifacts."
+    },
+    {
+      "gate": "documentation-and-authority-closure",
+      "outcome": "PASS",
+      "reason": "Both leaf Boundary Compacts, both parent indexes, the Soil workflow summary, and the existing lowercase SSURGO page were reconciled, including canonical lowercase sibling links and the verified schema-home ADR target. The docs distinguish one tooling/QA responsible owner from applicable domain and source review roles and do not claim a live SourceDescriptor, rights posture, cadence, endpoint, threshold policy, work record, receipt, proof, release, or publication."
+    },
+    {
+      "gate": "generated-receipt-contract-and-integrity",
+      "outcome": "PASS",
+      "reason": "The repository-owned generated-receipt schema was applied with a temporary Draft 2020-12 validator, and equivalent repository cross-field and hash rules were checked independently after final non-receipt bytes were frozen. The repository validator executable was not run because its jsonschema dependency was unavailable; the receipt excludes itself and binds 34 artifacts."
+    },
+    {
+      "gate": "repository-wide-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "The request forbids CLI repository operations and no repository checkout was created. Focused local checks ran against the authored slice; repository-wide and hosted checks remain separate evidence."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The draft pull request had not yet been created when this receipt was emitted. Hosted exact-head results must be observed after the connected GitHub app writes the branch."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is neither authored nor inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "existing-ingest-helper-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/tools/ingest/README.md"
+    },
+    {
+      "id": "existing-ssurgo-product-page",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb/docs/sources/catalog/nrcs/ssurgo.md"
+    },
+    {
+      "id": "supplied-ssurgo-material-change-idea",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-5-15-26:sha256:64dc1c8793ba64a641b12a092201d1cc4e5ac90ce8cdc4a1d7bd54eaf548cc95"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T04:08:02Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts the supplied SSURGO low-churn material-change idea into a repository-native fixture comparator. No third-party code, live source bytes, endpoint, real survey-area identifier, or rights assertion is copied. The helper is deterministic and no-network; it cannot fetch, admit, mutate lifecycle state, create governed work or evidence records, approve policy, promote, release, deploy, or publish. Rollback is a clean revert of the feature commits; no external or live data state is created."
+}

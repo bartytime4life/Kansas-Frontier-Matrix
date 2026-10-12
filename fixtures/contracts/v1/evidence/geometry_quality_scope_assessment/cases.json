@@ -1,0 +1,324 @@
+{
+  "profile": "kfm.evidence.geometry-quality-scope-assessment-fixtures.v1",
+  "source_idea_id": "KFM-P18-INV-052",
+  "base": {
+    "object_type": "GeometryQualityScopeAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.geometry-quality-scope-assessment.fixture.v1",
+    "status": "PROPOSED_INACTIVE",
+    "assessment_id": "geometry-quality-scope:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_idea_id": "KFM-P18-INV-052",
+    "assessed_at": "2026-08-12T02:45:00Z",
+    "dataset_ref": "kfm:dataset:synthetic-generalized-geometry-v1",
+    "geometry_artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "geometry_revision": "synthetic-r2",
+    "feature_count": 3,
+    "quality_scope": {
+      "mode": "DATASET_INHERITED",
+      "dataset_quality_profile_ref": "kfm:geometry-quality-profile:synthetic-generalized-v1"
+    },
+    "quality_records": [
+      {
+        "subject_kind": "DATASET",
+        "subject_ref_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "geometry_revision": "synthetic-r2",
+        "accuracy_class": "TEN_METER",
+        "precision_class": "HUNDRED_METER",
+        "acquisition_method": "GENERALIZED_PUBLIC",
+        "observation_method_ref": "kfm:observation-method:synthetic-digitized-v1",
+        "provenance_ref": "kfm:provenance:synthetic-generalization-v1",
+        "accuracy_inferred_from_precision": false,
+        "precision_used_as_accuracy": false,
+        "derivation": {
+          "kind": "GENERALIZED",
+          "input_quality_ref": "kfm:geometry-quality:synthetic-private-r1",
+          "input_accuracy_class": "METER",
+          "input_precision_class": "SUB_METER",
+          "accuracy_effect": "DEGRADED",
+          "precision_effect": "COARSENED",
+          "transform_receipt_ref": "kfm:transform-receipt:synthetic-generalization-r2"
+        }
+      }
+    ],
+    "summary": {
+      "record_count": 1,
+      "dataset_record_count": 1,
+      "feature_record_count": 0,
+      "resolved_accuracy_count": 1,
+      "resolved_precision_count": 1
+    },
+    "recommendation": "READY_FOR_FITNESS_REVIEW",
+    "review_state": "HOLD",
+    "adjacent_refs": {
+      "representation_fitness_ref": "kfm:representation-fitness:synthetic-public-orientation-v1",
+      "identifier_precision_lineage_ref": null,
+      "field_capture_handoff_ref": null
+    },
+    "limitations": [
+      "FIXTURE_ONLY_REFERENCES_UNRESOLVED",
+      "DISCLOSURE_BANDS_ARE_NOT_UNIVERSAL_THRESHOLDS",
+      "NO_COORDINATES_OR_SENSITIVE_FEATURE_IDENTITIES",
+      "NO_ACCURACY_EVIDENCE_FITNESS_POLICY_RELEASE_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "effects": {
+      "coordinates_read": false,
+      "feature_identities_disclosed": false,
+      "references_resolved": false,
+      "accuracy_measured": false,
+      "precision_measured": false,
+      "transform_executed": false,
+      "fitness_decided": false,
+      "evidence_created": false,
+      "policy_decided": false,
+      "human_review_approved": false,
+      "lifecycle_mutated": false,
+      "release_authorized": false,
+      "published": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {"name": "dataset_quality_inherited_ready_for_review", "expected_outcome": "PASS", "expected_findings": []},
+    {
+      "name": "fine_precision_does_not_imply_accuracy",
+      "mutations": [
+        {"path": "/quality_records/0/accuracy_class", "value": "HUNDRED_METER"},
+        {"path": "/quality_records/0/precision_class", "value": "SUB_METER"},
+        {"path": "/quality_records/0/acquisition_method", "value": "GNSS"},
+        {"path": "/quality_records/0/observation_method_ref", "value": "kfm:observation-method:synthetic-gnss-v1"},
+        {"path": "/quality_records/0/provenance_ref", "value": "kfm:provenance:synthetic-gnss-v1"},
+        {"path": "/quality_records/0/derivation", "value": {
+          "kind": "NONE", "input_quality_ref": null, "input_accuracy_class": null,
+          "input_precision_class": null, "accuracy_effect": "NOT_APPLICABLE",
+          "precision_effect": "NOT_APPLICABLE", "transform_receipt_ref": null
+        }}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "mixed_dataset_default_with_feature_override",
+      "mutations": [
+        {"path": "/quality_scope/mode", "value": "MIXED_OVERRIDE"},
+        {"path": "/quality_records", "value": [
+          {
+            "subject_kind": "DATASET", "subject_ref_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "geometry_revision": "synthetic-r2", "accuracy_class": "TEN_METER", "precision_class": "HUNDRED_METER",
+            "acquisition_method": "GENERALIZED_PUBLIC", "observation_method_ref": "kfm:observation-method:synthetic-digitized-v1",
+            "provenance_ref": "kfm:provenance:synthetic-generalization-v1", "accuracy_inferred_from_precision": false,
+            "precision_used_as_accuracy": false,
+            "derivation": {"kind": "GENERALIZED", "input_quality_ref": "kfm:geometry-quality:synthetic-private-r1", "input_accuracy_class": "METER", "input_precision_class": "SUB_METER", "accuracy_effect": "DEGRADED", "precision_effect": "COARSENED", "transform_receipt_ref": "kfm:transform-receipt:synthetic-generalization-r2"}
+          },
+          {
+            "subject_kind": "FEATURE", "subject_ref_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "geometry_revision": "synthetic-r2", "accuracy_class": "HUNDRED_METER", "precision_class": "SUB_METER",
+            "acquisition_method": "GNSS", "observation_method_ref": "kfm:observation-method:synthetic-gnss-v1",
+            "provenance_ref": "kfm:provenance:synthetic-feature-override-v1", "accuracy_inferred_from_precision": false,
+            "precision_used_as_accuracy": false,
+            "derivation": {"kind": "NONE", "input_quality_ref": null, "input_accuracy_class": null, "input_precision_class": null, "accuracy_effect": "NOT_APPLICABLE", "precision_effect": "NOT_APPLICABLE", "transform_receipt_ref": null}
+          }
+        ]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "feature_explicit_quality",
+      "mutations": [
+        {"path": "/feature_count", "value": 2},
+        {"path": "/quality_scope/mode", "value": "FEATURE_EXPLICIT"},
+        {"path": "/quality_scope/dataset_quality_profile_ref", "value": null},
+        {"path": "/quality_records", "value": [
+          {
+            "subject_kind": "FEATURE", "subject_ref_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "geometry_revision": "synthetic-r2", "accuracy_class": "HUNDRED_METER", "precision_class": "SUB_METER",
+            "acquisition_method": "GNSS", "observation_method_ref": "kfm:observation-method:synthetic-gnss-v1",
+            "provenance_ref": "kfm:provenance:synthetic-feature-a-v1", "accuracy_inferred_from_precision": false,
+            "precision_used_as_accuracy": false,
+            "derivation": {"kind": "NONE", "input_quality_ref": null, "input_accuracy_class": null, "input_precision_class": null, "accuracy_effect": "NOT_APPLICABLE", "precision_effect": "NOT_APPLICABLE", "transform_receipt_ref": null}
+          },
+          {
+            "subject_kind": "FEATURE", "subject_ref_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "geometry_revision": "synthetic-r2", "accuracy_class": "TEN_METER", "precision_class": "METER",
+            "acquisition_method": "SURVEY", "observation_method_ref": "kfm:observation-method:synthetic-survey-v1",
+            "provenance_ref": "kfm:provenance:synthetic-feature-b-v1", "accuracy_inferred_from_precision": false,
+            "precision_used_as_accuracy": false,
+            "derivation": {"kind": "NONE", "input_quality_ref": null, "input_accuracy_class": null, "input_precision_class": null, "accuracy_effect": "NOT_APPLICABLE", "precision_effect": "NOT_APPLICABLE", "transform_receipt_ref": null}
+          }
+        ]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "quality_scope_unknown",
+      "mutations": [
+        {"path": "/quality_scope/mode", "value": "UNKNOWN"},
+        {"path": "/quality_scope/dataset_quality_profile_ref", "value": null},
+        {"path": "/quality_records", "value": []}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "QUALITY_SCOPE_UNKNOWN", "path": "/quality_scope/mode"}]
+    },
+    {
+      "name": "accuracy_unknown",
+      "mutations": [
+        {"path": "/quality_records/0/accuracy_class", "value": "UNKNOWN"},
+        {"path": "/quality_records/0/derivation/accuracy_effect", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "ACCURACY_CLASS_UNKNOWN", "path": "/quality_records/0/accuracy_class"}]
+    },
+    {
+      "name": "precision_unknown",
+      "mutations": [
+        {"path": "/quality_records/0/precision_class", "value": "UNKNOWN"},
+        {"path": "/quality_records/0/derivation/precision_effect", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "PRECISION_CLASS_UNKNOWN", "path": "/quality_records/0/precision_class"}]
+    },
+    {
+      "name": "method_and_provenance_unresolved",
+      "mutations": [
+        {"path": "/quality_records/0/acquisition_method", "value": "UNKNOWN"},
+        {"path": "/quality_records/0/observation_method_ref", "value": null},
+        {"path": "/quality_records/0/provenance_ref", "value": null},
+        {"path": "/quality_records/0/derivation", "value": {
+          "kind": "NONE", "input_quality_ref": null, "input_accuracy_class": null,
+          "input_precision_class": null, "accuracy_effect": "NOT_APPLICABLE",
+          "precision_effect": "NOT_APPLICABLE", "transform_receipt_ref": null
+        }}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "ACQUISITION_METHOD_UNKNOWN", "path": "/quality_records/0/acquisition_method"},
+        {"code": "OBSERVATION_METHOD_UNRESOLVED", "path": "/quality_records/0/observation_method_ref"},
+        {"code": "PROVENANCE_UNRESOLVED", "path": "/quality_records/0/provenance_ref"}
+      ]
+    },
+    {
+      "name": "quality_withheld",
+      "mutations": [
+        {"path": "/quality_records/0/accuracy_class", "value": "WITHHELD"},
+        {"path": "/quality_records/0/precision_class", "value": "WITHHELD"},
+        {"path": "/quality_records/0/derivation/kind", "value": "WITHHELD"},
+        {"path": "/quality_records/0/derivation/accuracy_effect", "value": "WITHHELD"},
+        {"path": "/quality_records/0/derivation/precision_effect", "value": "WITHHELD"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "QUALITY_WITHHELD", "path": "/quality_records/0"}]
+    },
+    {
+      "name": "dataset_profile_missing",
+      "mutations": [{"path": "/quality_scope/dataset_quality_profile_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DATASET_PROFILE_REQUIRED", "path": "/quality_scope/dataset_quality_profile_ref"}]
+    },
+    {
+      "name": "dataset_inheritance_record_pattern_invalid",
+      "mutations": [{"path": "/quality_records/0/subject_kind", "value": "FEATURE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DATASET_INHERITANCE_RECORD_PATTERN_INVALID", "path": "/quality_records"}]
+    },
+    {
+      "name": "mixed_override_missing",
+      "mutations": [{"path": "/quality_scope/mode", "value": "MIXED_OVERRIDE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MIXED_OVERRIDE_REQUIRED", "path": "/quality_records"}]
+    },
+    {
+      "name": "feature_coverage_mismatch",
+      "mutations": [
+        {"path": "/quality_scope/mode", "value": "FEATURE_EXPLICIT"},
+        {"path": "/quality_scope/dataset_quality_profile_ref", "value": null},
+        {"path": "/quality_records/0/subject_kind", "value": "FEATURE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "FEATURE_COVERAGE_MISMATCH", "path": "/quality_records"}]
+    },
+    {
+      "name": "geometry_revision_mismatch",
+      "mutations": [{"path": "/quality_records/0/geometry_revision", "value": "synthetic-r1"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "GEOMETRY_REVISION_MISMATCH", "path": "/quality_records/0/geometry_revision"}]
+    },
+    {
+      "name": "dataset_subject_digest_mismatch",
+      "mutations": [{"path": "/quality_records/0/subject_ref_digest", "value": "sha256:9999999999999999999999999999999999999999999999999999999999999999"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DATASET_SUBJECT_DIGEST_MISMATCH", "path": "/quality_records/0/subject_ref_digest"}]
+    },
+    {
+      "name": "none_derivation_carries_transform_fields",
+      "mutations": [{"path": "/quality_records/0/derivation/kind", "value": "NONE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "NONE_DERIVATION_FIELDS_PRESENT", "path": "/quality_records/0/derivation"}]
+    },
+    {
+      "name": "derived_quality_missing_receipt",
+      "mutations": [{"path": "/quality_records/0/derivation/transform_receipt_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DERIVATION_RECEIPT_REQUIRED", "path": "/quality_records/0/derivation/transform_receipt_ref"}]
+    },
+    {
+      "name": "derived_accuracy_cannot_improve",
+      "mutations": [{"path": "/quality_records/0/accuracy_class", "value": "SUB_METER"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "ACCURACY_IMPROVEMENT_UNSUPPORTED", "path": "/quality_records/0/accuracy_class"}]
+    },
+    {
+      "name": "derived_precision_cannot_improve",
+      "mutations": [
+        {"path": "/quality_records/0/derivation/input_precision_class", "value": "METER"},
+        {"path": "/quality_records/0/precision_class", "value": "SUB_METER"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "PRECISION_IMPROVEMENT_UNSUPPORTED", "path": "/quality_records/0/precision_class"}]
+    },
+    {
+      "name": "accuracy_effect_mismatch",
+      "mutations": [{"path": "/quality_records/0/derivation/accuracy_effect", "value": "UNCHANGED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "ACCURACY_EFFECT_MISMATCH", "path": "/quality_records/0/derivation/accuracy_effect"}]
+    },
+    {
+      "name": "precision_effect_mismatch",
+      "mutations": [{"path": "/quality_records/0/derivation/precision_effect", "value": "UNCHANGED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "PRECISION_EFFECT_MISMATCH", "path": "/quality_records/0/derivation/precision_effect"}]
+    },
+    {
+      "name": "summary_mismatch",
+      "mutations": [{"path": "/summary/record_count", "value": 99}],
+      "summary_mode": "KEEP",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "SUMMARY_MISMATCH", "path": "/summary"}]
+    },
+    {
+      "name": "recommendation_mismatch",
+      "recommendation_mode": "MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RECOMMENDATION_MISMATCH", "path": "/recommendation"}]
+    },
+    {
+      "name": "spec_hash_tampered",
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    },
+    {
+      "name": "assessment_id_tampered",
+      "identity_mode": "MISMATCH_ID",
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]
+    },
+    {
+      "name": "unknown_coordinate_member_denied_by_schema",
+      "mutations": [{"path": "/coordinates", "value": [-98.0, 38.5]}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "SCHEMA_INVALID", "path": "/"}]
+    }
+  ]
+}

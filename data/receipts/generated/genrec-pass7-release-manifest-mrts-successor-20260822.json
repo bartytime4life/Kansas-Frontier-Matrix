@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-pass7-release-manifest-mrts-successor-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/release-manifest.yml",
+    "contracts/release/release_manifest.md",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md",
+    "fixtures/release/release_manifest/README.md",
+    "fixtures/release/release_manifest/cases.json",
+    "schemas/contracts/v1/release/release_manifest.schema.json",
+    "tests/validators/test_validate_release_manifest.py",
+    "tools/validators/release/validate_release_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:9d6d71f03792454e7f5ef96f27968a42319a79dc0475bc2cb63612ad5c5dfd65",
+    ".github/workflows/release-manifest.yml": "sha256:927f3808b5999c6333e2ec7182ad77f4ae2fb12f3963afd5d26be5206173de28",
+    "contracts/release/release_manifest.md": "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
+    "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
+    "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "sha256:c420281c843e88000eaf2dc1bf62cff1ab1bd2d2628bfac0e07c2705fb3bcfb6",
+    "tests/validators/test_validate_release_manifest.py": "sha256:4ec7c00a8bf2b8912693fa2ed44cc49c63297b270f0680be9f85b2ad2f3119a7",
+    "tools/validators/release/validate_release_manifest.py": "sha256:7206739f7f831e2682d1b0a4fe574f07f48e70f19bc632ec247c4884a7d4321f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:b22897bb5108148ca526afc7a4442306eaa5c9f119681d3f36ede4eb018485a8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local no-network validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3409",
+      "actions:release-manifest/run/32595125919/job/97084743503",
+      "repo:main@db070e62a1f95d5edaaa088896a6e9ff3757a9a0",
+      "repo:historical-receipt:data/receipts/generated/genrec-pass7-release-manifest-rollback-card-presence-repair-20260816.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/release-manifest.yml": "PROPOSED",
+    "contracts/release/release_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "PROPOSED",
+    "fixtures/release/release_manifest/README.md": "PROPOSED",
+    "fixtures/release/release_manifest/cases.json": "PROPOSED",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_manifest.py": "PROPOSED",
+    "tools/validators/release/validate_release_manifest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "release-manifest-structural-profile",
+      "outcome": "PASS",
+      "reason": "The focused deterministic test suite and fixture profile pass without network access."
+    },
+    {
+      "gate": "dependency-closed-workflow-binding",
+      "outcome": "PASS",
+      "reason": "This append-only successor binds the release-manifest workflow after it selects this receipt and the release-dry-run workflow after its MRTS receipt correction."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending and this receipt grants no release authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    },
+    {
+      "id": "RELEASE-MANIFEST-EXACT-HEAD-FAILURE",
+      "validated": true,
+      "evidence_ref": "actions:release-manifest/run/32595125919/job/97084743503"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T19:58:10Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": 3409,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only dependency-closed successor after PR #3409 changed release-dry-run workflow bytes. The release-manifest implementation remains fixture-only and inactive. This receipt is not truth, review approval, promotion, rollback, merge, release, deployment, publication, or public-use authority."
+}

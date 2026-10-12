@@ -54,7 +54,7 @@ The root fixture README says `fixtures/` is for operational rendering inputs, no
 - `../negative/README.md`
 - `../invalid/README.md`
 - `../../README.md`
-- `../../../../docs/architecture/governed-api.md`
+- `../../../../docs/architecture/governed-api/README.md`
 - `../../../../docs/architecture/hazards-trust-membrane.md`
 - `../../../../docs/domains/hazards/API_CONTRACTS.md`
 - `../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md`

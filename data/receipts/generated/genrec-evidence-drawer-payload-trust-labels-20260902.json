@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-evidence-drawer-payload-trust-labels-20260902",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "contracts/ui/evidence_drawer_payload.md",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json",
+    "tests/validators/test_validate_evidence_drawer_payload.py",
+    "tools/validators/ui/validate_evidence_drawer_payload.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:03bb1604a9d6db130db7731cce68753fd3059db3202ebee35ce7c3b793e79ea7",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:648a4285af49f72cfb052a39fd3d4ac035b074bb2429b1abc5b7426b839f9af7",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:f59376940ee4af08e93089a5c60ce65a7c043cb9fab2b00283990877fc4588c7",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:312600de850a082d38e04996c919f1c8fe4705cdc7b4e35d039d44dcd72b058b",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt": "sha256:cda21b7240e7b89fc7cf3bafaf8765429a3081e624d7daa5fc62b47e6c653c12",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json": "sha256:514e291537e7d38ffcb15cd78306f7819fc0527c9931c448e1015ef7a524c108",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:1b6d5e1d450fcdeccc02f434aab9af08907dbc671f37916bb643fcdbe14b43c1",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:fe09178b44da72ef503580df4c183bccd9e91ba892d2032f4e23b3043d12ed98"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-09-02"
+  },
+  "prompt_or_contract": "sha256:3cc8d81b04305bf91e254eea1beae3611d36fe8011ff1520ad5ccff9ceaafae5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native local validation",
+      "repository-native hosted validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
+      "repo:pull/4208@1cc7b74e9c924437f7bb1a26db8f73cc34559715",
+      "github:actions/run/33635581612"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "PROPOSED",
+    "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "PROPOSED",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-23 receipt remains unchanged as historical authoring lineage; this successor receipt binds the current final artifact bytes."
+    },
+    {
+      "gate": "focused-no-network-explorer-tests",
+      "outcome": "PASS",
+      "reason": "Eighteen deterministic synthetic public-safe Evidence Drawer tests passed without network access."
+    },
+    {
+      "gate": "canonical-payload-validator",
+      "outcome": "PASS",
+      "reason": "The canonical no-network validator accepted 12 valid fixtures, rejected 11 invalid fixtures, and passed all 15 validator tests including correction-lineage, stale-freshness, and terminal-release trust-state parity."
+    },
+    {
+      "gate": "full-explorer-unit-and-build",
+      "outcome": "PASS",
+      "reason": "All 413 Explorer unit tests and the TypeScript plus Vite production build passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository validator accepted the successor receipt shape, artifact-map parity, canonical paths, and final SHA-256 bindings."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "PASS",
+      "reason": "The evidence-drawer-payload workflow passed at exact receipt-bound head 1cc7b74e9c924437f7bb1a26db8f73cc34559715 in GitHub Actions run 33635581612."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repo:evidence-drawer-payload-contract",
+      "validated": true,
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@1cc7b74e9c924437f7bb1a26db8f73cc34559715"
+    },
+    {
+      "id": "repo:pull-4208-terminal-release-proof",
+      "validated": true,
+      "evidence_ref": "github:actions/run/33635581612"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-02T13:28:00Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT",
+  "links": {
+    "pr_number": 4208,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring provenance for PR #4208's Evidence Drawer current-versus-non-current reference labels, contract-required superseded correction history, correction-lineage trust-state parity, stale-reason freshness parity, terminal withdrawn/revoked release-state parity, canonical validator parity, and regression proof. The historical 2026-08-23 receipt remains unchanged. This receipt is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+}

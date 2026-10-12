@@ -1,0 +1,191 @@
+{
+  "$defs": {
+    "artifactRef": {
+      "maxLength": 300,
+      "pattern": "^artifact:(work|quarantine)/[^\\s]+$",
+      "type": "string"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "network_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activation_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "source_activation_authorized",
+        "network_authorized",
+        "raw_admission_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "contains_authoritative_claims": {
+          "const": false
+        },
+        "lane": {
+          "enum": [
+            "FEATURE_VECTOR",
+            "SCORECARD",
+            "POLICY_REPORT",
+            "RECEIPT",
+            "PREFILTER"
+          ]
+        },
+        "logical_role": {
+          "enum": [
+            "ANALYSIS_DERIVATIVE",
+            "REVIEW_SCORECARD",
+            "POLICY_REVIEW_CANDIDATE",
+            "PROCESS_MEMORY_RECEIPT",
+            "PREFILTER_DECISION_CANDIDATE"
+          ]
+        },
+        "media_type": {
+          "maxLength": 120,
+          "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$",
+          "type": "string"
+        },
+        "output_id": {
+          "pattern": "^[a-z][a-z0-9._-]{2,95}$",
+          "type": "string"
+        },
+        "write_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "output_id",
+        "lane",
+        "artifact_ref",
+        "artifact_sha256",
+        "media_type",
+        "logical_role",
+        "contains_authoritative_claims",
+        "write_authorized"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/data/output_lane_split_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "execution_mode": {
+      "const": "DRY_RUN"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "manifest_id": {
+      "pattern": "^kfm\\.output-lanes\\.[a-z0-9][a-z0-9._-]{2,95}$",
+      "type": "string"
+    },
+    "network_mode": {
+      "const": "DENY"
+    },
+    "object_type": {
+      "const": "OutputLaneSplitManifest"
+    },
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/output"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "type": "array"
+    },
+    "required_lanes": {
+      "items": {
+        "enum": [
+          "FEATURE_VECTOR",
+          "SCORECARD",
+          "POLICY_REPORT",
+          "RECEIPT",
+          "PREFILTER"
+        ]
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "review_state": {
+      "const": "PENDING"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "source_candidate_ref": {
+      "maxLength": 300,
+      "pattern": "^kfm://candidate/[^\\s]+$",
+      "type": "string"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "manifest_id",
+    "status",
+    "execution_mode",
+    "network_mode",
+    "canonicalization_profile",
+    "review_state",
+    "source_candidate_ref",
+    "required_lanes",
+    "outputs",
+    "governance",
+    "spec_hash"
+  ],
+  "title": "OutputLaneSplitManifest",
+  "type": "object",
+  "x-kfm": {
+    "authority": "fixture_only_output_lane_routing_candidate",
+    "contract_doc": "contracts/data/output_lane_split_manifest.md",
+    "generator": "tools/generators/build_output_lane_split.py",
+    "non_effects": [
+      "does_not_move_or_copy_payloads",
+      "does_not_create_policy_decisions",
+      "does_not_promote_release_or_publish"
+    ]
+  }
+}

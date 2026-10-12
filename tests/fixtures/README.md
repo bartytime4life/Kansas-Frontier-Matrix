@@ -1,242 +1,222 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-fixtures-readme
-title: Tests Fixtures README
-type: test-fixture-readme
-version: v0.1
-status: draft; placeholder-replaced; parent-fixture-lane; PROPOSED / NEEDS VERIFICATION
-owners:
-  - OWNER_TBD - Test steward
-  - OWNER_TBD - Fixture steward
-  - OWNER_TBD - QA steward
-  - OWNER_TBD - Policy steward
-  - OWNER_TBD - Release steward
-created: 2026-07-06
-updated: 2026-07-06
-policy_label: public-doc; tests; fixtures; unit-test-scoped; synthetic-only; no-network; public-safe; evidence-aware; policy-aware; release-gated; rollback-aware
-tags: [kfm, tests, fixtures, unit-test-scoped, synthetic, no-network, public-safe, valid, invalid, denied, abstention, rollback, correction, EvidenceBundle, PolicyDecision, ReleaseManifest, RuntimeResponseEnvelope]
+title: tests/fixtures/ — Test-local Fixture Index
+type: README
+version: v0.2
+status: draft; repository-grounded; bounded-local-support; placement-conflicted; mixed-payload-maturity; non-authoritative
+owners: OWNER_TBD — Test steward · Fixture steward · QA steward · Policy steward · Release steward
+created: 2026-07-07
+updated: 2026-08-31
+policy_label: public-doc; tests; fixtures; local-support; synthetic-only; placement-review; non-authoritative; non-publisher
+owning_root: tests/
+responsibility: navigation, bounded consumer guidance, and placement disclosure for existing test-local support inputs without creating reusable fixture authority
+truth_posture: CONFIRMED 11 direct child directories, 82 tracked files, 33 README files, 23 JSON payloads, 26 placeholder .gitkeep files, and two payload-bearing lanes at the pinned snapshot / CONFLICTED placement because the tests root prohibits test_fixture artifacts while current tests guidance treats this tree as bounded local support pending review / UNKNOWN complete consumer coverage, required-check status, migration disposition, and accountable stewardship
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
+evidence_prior_blob: 2d0147e85eae86f687e85c5bea0d3e61f9c3a8f7
+direct_child_directory_count: 11
+tracked_file_count: 82
+readme_count: 33
+json_payload_count: 23
+placeholder_gitkeep_count: 26
+payload_bearing_lane_count: 2
 related:
   - ../README.md
   - ../../fixtures/README.md
-  - ./focus/README.md
-  - ./layers/README.md
-  - ./maplibre/README.md
-  - ./people-dna-land/README.md
-  - ./settlements/README.md
-  - ./settlements-infrastructure/README.md
-  - ./ui/README.md
-  - ./domains/
   - ../../docs/doctrine/directory-rules.md
-  - ../../contracts/
-  - ../../schemas/
-  - ../../policy/
-  - ../../release/
+  - governance/repository_control/README.md
+  - maplibre/README.md
 notes:
-  - "This README replaces placeholder content at tests/fixtures/README.md."
-  - "This parent lane documents unit-test-scoped fixtures only. Root fixtures/ remains the cross-cutting reusable fixture home unless repository doctrine resolves a single fixture home."
-  - "Fixtures here are synthetic test carriers; they do not create source truth, evidence closure, policy approval, release approval, schema authority, implementation authority, or public artifacts."
-  - "Fixture payload inventory, executable tests, schema bindings, policy/runtime wiring, CI jobs, and pass rates remain NEEDS VERIFICATION."
+  - "Counts describe tracked files at the pinned Git tree, not collected cases, semantic coverage, hosted execution, or required-check state."
+  - "Only governance/repository_control and maplibre/source-metadata contain JSON payloads at the pinned snapshot; other lanes are README and placeholder scaffolding."
+  - "This index does not resolve the placement conflict or authorize a migration, deletion, new fixture root, release, deployment, promotion, or publication."
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
+# Test-local fixture index
 
-# Test fixtures
+This authored index helps maintainers inspect the existing support material under
+`tests/fixtures/`, find the two payload-bearing lanes, and run their verified
+consumer tests. It is not generated test output and is not a fixture contract.
 
-> Parent README for unit-test-scoped fixture lanes under `tests/fixtures/`. This directory is for small synthetic fixtures owned by particular tests. It is not the cross-cutting reusable fixture authority, not lifecycle data, not source truth, not policy, not schema, not evidence closure, and not a release or publication surface.
+The authoritative reusable-fixture root is [`fixtures/`](../../fixtures/README.md).
+The current [`tests/` guidance](../README.md) treats this tree as a bounded
+local-support exception while its long-term placement remains unresolved.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: tests" src="https://img.shields.io/badge/root-tests%2F-blue">
-  <img alt="Lane: fixtures" src="https://img.shields.io/badge/lane-fixtures-purple">
-  <img alt="Scope: unit test scoped" src="https://img.shields.io/badge/scope-unit__test__scoped-0a7ea4">
-  <img alt="Network: disabled by default" src="https://img.shields.io/badge/network-disabled__by__default-critical">
-</p>
+## Placement and authority
 
-**Path:** `tests/fixtures/README.md`  
-**Status:** draft / placeholder replaced / parent fixture lane / PROPOSED until executable tests and inventory are verified  
-**Owning root:** `tests/`  
-**Lane family:** `fixtures`  
-**Default posture:** deterministic, synthetic, no-network, public-safe fixture material only  
-**Truth posture:** CONFIRMED target file existed as placeholder content before replacement; CONFIRMED `tests/README.md` defines `tests/fixtures/` as unit-test-scoped and root `fixtures/` as cross-cutting; CONFIRMED several child fixture READMEs exist; NEEDS VERIFICATION for full payload inventory, executable tests, schemas, policy/runtime wiring, CI coverage, and pass rates.
+The repository evidence is intentionally explicit about a conflict:
 
----
+- [`control_plane/root_registry.yaml`](../../control_plane/root_registry.yaml)
+  reserves reusable synthetic valid, invalid, and golden inputs for `fixtures/`
+  and prohibits the `test_fixture` artifact type under `tests/`.
+- [`tests/README.md`](../README.md) records `tests/fixtures/` as an existing
+  bounded local-support lane whose conformance and migration disposition still
+  need verification.
+- [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md)
+  governs responsibility-root placement; this README does not amend it.
 
-## Scope
+Until that conflict is resolved, do not treat this tree as a second reusable
+fixture authority. A file here may support a test, but it does not establish
+source truth, schema or contract meaning, evidence sufficiency, policy approval,
+review completion, release eligibility, deployment, promotion, or publication.
 
-Use `tests/fixtures/` for fixtures local to test needs. A file in this tree should help a test prove an expected behavior, rejection, abstention, denial, correction, rollback, no-leak condition, or finite-outcome boundary.
+## Current tracked inventory
 
-In scope:
+The pinned tree contains 82 tracked files: this parent README plus the 81 files
+summarized below. Counts include nested descendants of each direct child.
 
-- small synthetic JSON/YAML/Markdown fixtures;
-- valid, invalid, denied, abstention, correction, and rollback examples;
-- no-network loader inputs;
-- public-safe transformed sensitive-lane examples;
-- toy refs for evidence, policy, release, review, correction, rollback, layer, runtime, UI, map, and domain objects;
-- README files that route test-local fixture material to the correct lane.
+| Direct child | Tracked files | READMEs | JSON | `.gitkeep` | Current posture |
+|---|---:|---:|---:|---:|---|
+| [`domains/`](domains/README.md) | 28 | 15 | 0 | 13 | Documentation and placeholder scaffolding only. |
+| [`flora/`](flora/README.md) | 5 | 3 | 0 | 2 | Documentation and placeholder scaffolding only. |
+| [`focus/`](focus/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`governance/`](governance/repository_control/README.md) | 12 | 1 | 11 | 0 | Payload-bearing repository-control lane. |
+| [`hydrology/`](hydrology/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`layers/`](layers/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`maplibre/`](maplibre/README.md) | 22 | 6 | 12 | 4 | Payload-bearing source-metadata lane plus scaffolding. |
+| [`people-dna-land/`](people-dna-land/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`settlements/`](settlements/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| [`ui/`](ui/README.md) | 2 | 1 | 0 | 1 | Documentation and placeholder scaffolding only. |
+| **Child total** | **81** | **32** | **23** | **26** | Parent README excluded. |
 
-Out of scope:
+The absence of payloads in a lane is not proof that its proposed behavior is
+implemented or tested elsewhere. Consult its child README and consumer code
+before making a coverage claim.
 
-- real source exports or lifecycle data;
-- production EvidenceBundles, receipts, proofs, releases, or policy decisions;
-- schema, contract, or policy authority;
-- implementation code, app routing, renderer code, or model output;
-- public tiles, screenshots, exports, or map artifacts;
-- sensitive raw detail, secrets, production logs, or private endpoints.
+## Payload-bearing lanes
 
-[Back to top](#top)
+### Repository-control contexts
 
----
+[`governance/repository_control/`](governance/repository_control/README.md)
+contains 11 synthetic JSON contexts. The primary consumer is
+[`tests/validators/test_repository_control.py`](../validators/test_repository_control.py),
+which resolves this directory and evaluates its `context_*.json` files. Five
+incident modules bind named terminal-divergence contexts:
 
-## Repo fit
+- [`test_repository_control_incident_1789.py`](../validators/test_repository_control_incident_1789.py)
+- [`test_repository_control_incident_1790.py`](../validators/test_repository_control_incident_1790.py)
+- [`test_repository_control_incident_1791.py`](../validators/test_repository_control_incident_1791.py)
+- [`test_repository_control_incident_1792.py`](../validators/test_repository_control_incident_1792.py)
+- [`test_repository_control_incident_1829.py`](../validators/test_repository_control_incident_1829.py)
 
-| Responsibility | Correct home | Relationship |
-|---|---|---|
-| Unit-test-scoped fixtures | `tests/fixtures/` | This parent lane. |
-| Executable tests | `tests/` subtrees | Consumers; not owned by this README. |
-| Cross-cutting reusable fixtures | `fixtures/` root | Shared fixture home; keep separate unless doctrine resolves one home. |
-| Object semantics | `contracts/` | Defines meaning; fixtures may reference toy refs only. |
-| Machine schemas | `schemas/` | Defines shape; fixtures are examples, not schemas. |
-| Policy/admissibility | `policy/` | Defines allow/deny/restrict/hold/abstain behavior. |
-| Release/correction/rollback | `release/` and release contracts | Publication authority; fixtures do not approve release. |
-| Lifecycle data | `data/` roots | RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED stays outside tests. |
+These fixtures exercise a repository-control evaluator; they do not grant
+repository authority, change settings, authorize merge, or prove current
+repository state. A direct hosted workflow command for this six-module group was
+not established at the pinned snapshot.
 
-> [!IMPORTANT]
-> `tests/fixtures/` must not become a second canonical fixture registry, data store, release store, evidence store, policy home, schema home, contract home, or public artifact root. It is a test-local proof surface.
+### MapLibre source metadata
 
----
+[`maplibre/source-metadata/`](maplibre/source-metadata/README.md) contains 12
+synthetic JSON payloads across valid, invalid, and edge cases. The focused
+[`test_source_metadata.py`](../maplibre/test_source_metadata.py) module has nine
+tests for fixture polarity, finite outcomes, malformed and duplicate-key JSON,
+determinism, redaction, CLI behavior, and attempted network access.
 
-## Fixture-home rule
+The [`maplibre-source-metadata` workflow](../../.github/workflows/maplibre-source-metadata.yml)
+runs that module, executes the validator's fixture mode, and parses all JSON
+payloads. The
+[`MapLibre Perf Governance` workflow](../../.github/workflows/maplibre-perf-governance.yml)
+separately verifies that the source-metadata fixture, test, validator, and
+workflow boundary remains classified; it does not run the focused module.
 
-KFM currently allows two fixture homes with a strict split:
+Both workflows filter on descendants of `tests/fixtures/maplibre/`, so changing
+this parent README alone does not trigger either focused workflow.
 
-| Home | Purpose | Guardrail |
-|---|---|---|
-| `tests/fixtures/` | Unit-test-scoped fixtures local to a particular test area. | Do not promote to cross-cutting fixture authority. |
-| `fixtures/` | Cross-cutting golden, valid, invalid, and synthetic fixtures shared by multiple test areas and pipelines. | Do not duplicate with `tests/fixtures/` without documenting the split. |
+## Running the verified consumers
 
-Every major object family should have coverage for valid, invalid, denied, abstention, and rollback/correction cases. Sensitive lanes must use public-safe transformed fixtures only.
+There are no executable test modules under `tests/fixtures/` itself. Do not use
+`pytest tests/fixtures` as a fixture-lane validation claim; run the consumer
+modules instead.
 
----
-
-## Observed child lanes
-
-This parent README indexes lanes verified or recently documented in this repository. The list is an orientation surface, not a complete fixture payload inventory.
-
-| Lane | Use for | Notes |
-|---|---|---|
-| [`focus/`](./focus/README.md) | Governed Focus request/response examples. | Finite outcomes and bounded evidence context. |
-| [`layers/`](./layers/README.md) | Layer, layer-catalog, layer-manifest, and map-release examples. | Release-backed layer behavior; not tile/style authority. |
-| [`maplibre/`](./maplibre/README.md) | MapLibre tiny, baseline, invalid, and bad-baseline examples. | Renderer fixtures; not rendered truth. |
-| [`people-dna-land/`](./people-dna-land/README.md) | Consent, revocation, DNA/genomic, relationship, and land-link canaries. | Deny-by-default sensitive lane. |
-| [`settlements/`](./settlements/README.md) | Short-name settlements compatibility fixtures. | Compatibility lane, not canonical domain authority. |
-| [`settlements-infrastructure/`](./settlements-infrastructure/README.md) | Canonical Settlements/Infrastructure test-local fixtures. | Critical-asset and release-aware lane. |
-| [`ui/`](./ui/README.md) | UI trust-state, accessibility, and finite-outcome fixtures. | UI fixtures; not component implementation. |
-| [`domains/`](./domains/) | Domain-scoped test fixture grouping. | Inventory and child README coverage NEEDS VERIFICATION. |
-
----
-
-## Fixture rule
-
-Fixtures are downstream test carriers. They should prove behavior without becoming authority.
-
-Core expectations:
-
-| Expectation | Required posture |
-|---|---|
-| Synthetic only | Use toy IDs, toy refs, toy timestamps, toy geometry, and review-safe values. |
-| No-network default | No live source, API, tile, style, glyph, sprite, model, vendor, or public-service calls. |
-| Finite outcomes | Expected outcomes are explicit where useful: `PASS`, `ANSWER`, `ABSTAIN`, `DENY`, `HOLD`, `ERROR`, or validation failure. |
-| Public-safe sensitive fixtures | Sensitive examples are transformed, generalized, redacted, withheld, denied, or synthetic-only. |
-| Trust boundary | Fixtures do not bypass governed APIs, release gates, policy checks, evidence resolution, or review state. |
-| Reversibility | Correction and rollback cases remain testable where public or consequential state is modeled. |
-
----
-
-## Accepted material
-
-Accepted material is limited to compact, synthetic, reviewable examples, such as:
-
-- `*.json`, `*.jsonl`, `*.yaml`, `*.yml`, and `*.md` fixture files;
-- toy EvidenceRef, EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, CorrectionNotice, RollbackCard, LayerManifest, RuntimeResponseEnvelope, FocusResponseEnvelope, and EvidenceDrawerPayload refs;
-- public-safe expected-output examples;
-- negative canaries for forbidden boundaries, missing evidence, denied policy, stale release, missing rollback, unsupported citations, direct-store access, and no-network violations;
-- child README files that explain lane scope and route material to the correct responsibility root.
-
----
-
-## Exclusions
-
-Do not place these materials in this parent lane:
-
-| Excluded material | Correct destination |
-|---|---|
-| cross-cutting reusable fixture sets | `fixtures/` root, if shared across tests/pipelines |
-| executable test code | appropriate `tests/` subtree |
-| object contracts | `contracts/` |
-| machine schemas | `schemas/` |
-| policy rules | `policy/` |
-| source data or lifecycle material | `data/` lifecycle roots |
-| release decisions, real correction notices, rollback cards | `release/` roots |
-| UI/app/renderer/model implementation | `apps/`, `packages/`, `runtime/`, or accepted code roots |
-| real sensitive data, secrets, production logs, public artifacts | not allowed in this fixture lane |
-
----
-
-## Suggested layout
-
-```text
-tests/fixtures/
-|-- README.md
-|-- focus/
-|-- layers/
-|-- maplibre/
-|-- people-dna-land/
-|-- settlements/
-|-- settlements-infrastructure/
-|-- ui/
-`-- domains/
-```
-
-The visible README coverage for these lanes was inspected during authoring, but complete fixture payload inventory remains NEEDS VERIFICATION.
-
----
-
-## Run posture
-
-No single executable runner was verified while authoring this README.
+Repository-control consumers:
 
 ```bash
-: "PROPOSED / NEEDS VERIFICATION"
-pytest tests/fixtures
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 \
+  PYTHONUNBUFFERED=1 TZ=UTC \
+  python -m pytest -q \
+  tests/validators/test_repository_control.py \
+  tests/validators/test_repository_control_incident_1789.py \
+  tests/validators/test_repository_control_incident_1790.py \
+  tests/validators/test_repository_control_incident_1791.py \
+  tests/validators/test_repository_control_incident_1792.py \
+  tests/validators/test_repository_control_incident_1829.py
 ```
 
-Default fixture use should be deterministic, local, no-network, public-safe, and finite-outcome only.
+MapLibre source-metadata consumers, matching the focused workflow:
 
----
+```bash
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 \
+  PYTHONUNBUFFERED=1 TZ=UTC \
+  python -m unittest discover \
+  --start-directory tests/maplibre \
+  --pattern 'test_source_metadata.py' \
+  --verbose
 
-## Maintenance checklist
+python tools/validators/maplibre/validate_source_metadata.py --fixtures
+```
 
-- [ ] Keep this parent README navigational and boundary-focused.
-- [ ] Keep fixture payloads synthetic, compact, public-safe, and reviewable.
-- [ ] Preserve the split between `tests/fixtures/` and root `fixtures/` unless doctrine is updated.
-- [ ] Do not store real source data, releases, evidence/proof records, schemas, contracts, policy rules, app code, renderer code, model output, secrets, production logs, or public artifacts here.
-- [ ] Add or update child README files when a fixture lane is introduced.
-- [ ] Link child fixture lanes to consumer tests only after verification.
-- [ ] Mark payload inventory, test wiring, schema bindings, policy/runtime wiring, CI coverage, and pass rates as NEEDS VERIFICATION until checked.
+For a syntax-only JSON check across this tree:
 
----
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
 
-## Verification status
+paths = sorted(Path("tests/fixtures").rglob("*.json"))
+for path in paths:
+    json.loads(path.read_text(encoding="utf-8"))
+print(f"parsed {len(paths)} JSON fixture payloads")
+PY
+```
 
-| Item | Status |
-|---|---|
-| Target README path | CONFIRMED; placeholder replaced. |
-| `tests/fixtures/` fixture-home rule | CONFIRMED in `tests/README.md`. |
-| Root `fixtures/` split | CONFIRMED in `tests/README.md`; resolved single-home status remains NEEDS VERIFICATION. |
-| Child README examples | PARTIALLY CONFIRMED during authoring. |
-| Complete child-lane inventory | NEEDS VERIFICATION. |
-| Fixture payload inventory | NEEDS VERIFICATION. |
-| Consumer tests | NEEDS VERIFICATION. |
-| Schema bindings | NEEDS VERIFICATION. |
-| Policy/runtime wiring | NEEDS VERIFICATION. |
-| Runner and CI wiring | NEEDS VERIFICATION. |
-| Tests and validators | NOT RUN. |
+That last command checks JSON parsing only. It does not validate schemas,
+consumer semantics, fixture polarity, rights, sensitivity, policy, or release
+fitness.
+
+## Failure interpretation
+
+| Failure | Interpret first as | Do not infer |
+|---|---|---|
+| JSON parsing fails | A tracked payload is not valid JSON. | Which contract or schema should govern it. |
+| Repository-control test fails | Fixture assumptions, evaluator behavior, or the tracked control-state projection diverged. | Permission to alter settings, merge, or bypass review. |
+| Source-metadata test fails | Projection outcome, reason code, redaction, determinism, CLI, or no-network behavior diverged. | Source authority, rights clearance, or remote-byte validation. |
+| Consumer cannot find a path | Fixture layout and consumer binding disagree. | That moving the fixture is authorized. |
+| Documentation-only lane remains empty | No payload has been admitted to that local lane. | Missing coverage, implementation maturity, or approval to invent fixtures. |
+
+When a failure exposes a placement or semantic dispute, hold the narrow change
+and resolve it with the owning contract, schema, policy, or responsibility root.
+Do not change runtime behavior merely to make this index pass.
+
+## Safety and maintenance
+
+- Keep payloads synthetic, compact, deterministic, reviewable, and no-network.
+- Do not store source exports, lifecycle data, production logs, secrets, real
+  sensitive detail, released artifacts, or public outputs in this tree.
+- Preserve deny, abstain, correction, rollback, redaction, and harmful-precision
+  cases when a consumer depends on them.
+- Update counts and consumer links in the same reviewable change when tracked
+  fixture paths change.
+- Add a payload only with an identified consumer and expected outcome. A child
+  README or `.gitkeep` is not executable coverage.
+- Do not duplicate material from [`fixtures/`](../../fixtures/README.md). Resolve
+  reuse or migration through the accepted directory rules.
+- Treat a passing test as bounded evidence about the checked behavior, not as
+  review, release, deployment, promotion, or publication.
+
+## Known gaps
+
+- The long-term disposition of `tests/fixtures/` is unresolved against the
+  registered fixture root and the `tests/` artifact prohibition.
+- Accountable stewardship and review ownership remain `OWNER_TBD`.
+- Complete consumer coverage outside the two verified payload-bearing lanes is
+  unknown.
+- Direct hosted collection for the repository-control fixture consumers was not
+  established.
+- Required-check status, production parity, correction propagation, and
+  operational rollback remain unverified.
+
+Removing or reverting this README changes navigation only. It does not move or
+delete fixtures, modify a consumer, change policy, roll back runtime state, or
+withdraw a released artifact.

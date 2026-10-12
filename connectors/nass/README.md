@@ -60,6 +60,8 @@ notes:
 
 # NASS Connector Coordination Lane
 
+> **Crop-CASMA candidate capture (2026-09-30):** `crop_casma.py` is an executable, bounded WCS capture for one explicitly selected Kansas day of the SMAP Hybrid 1 km product. It verifies the exact advertised coverage ID and preserves the numeric EPSG:5070 GeoTIFF, provider capabilities, request, and digests in a new external directory. It does not admit, review, or release data. Placement in `connectors/nass/` follows the current interim coordination target described below; the three-way NASS placement conflict remains open and this change does not create a second executable NASS home.
+
 `connectors/nass/`
 
 > Current documentation boundary for USDA National Agricultural Statistics Service intake coordination. Placement remains conflicted, and no live connector is established by this README.

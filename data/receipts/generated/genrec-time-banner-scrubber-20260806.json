@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-time-banner-scrubber-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/time_banner/index.tsx",
+    "apps/explorer-web/src/features/time_banner/ACCESSIBLE_SCRUBBER.md",
+    "apps/explorer-web/tests/time-banner.test.ts",
+    "apps/explorer-web/tests/browser/time-banner.fixture.ts",
+    "apps/explorer-web/tests/browser/time-banner.html",
+    "apps/explorer-web/tests/browser/time-banner.spec.ts",
+    "fixtures/ui/time_scrubber_projection/valid/answer-current.json",
+    "fixtures/ui/time_scrubber_projection/valid/deny-policy.json",
+    "fixtures/ui/time_scrubber_projection/valid/answer-stale.json",
+    "fixtures/ui/time_scrubber_projection/valid/answer-conflict.json",
+    "fixtures/ui/time_scrubber_projection/invalid/extra-field.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/time_banner/index.tsx": "sha256:5d2d677225b6cd298ca4ea75ba766f28da5f7041ce834a6e5f4ccce75cb38f0e",
+    "apps/explorer-web/src/features/time_banner/ACCESSIBLE_SCRUBBER.md": "sha256:8ad84d96981f6c0988ac90cf12322f7a5ac95f2eaf3630fbbf8c295a8863ca57",
+    "apps/explorer-web/tests/time-banner.test.ts": "sha256:74b5e6dfe4b234423e69a9d4d2792b67916669a628a3c0bed65da86365264a03",
+    "apps/explorer-web/tests/browser/time-banner.fixture.ts": "sha256:da59a7e33121b82e59bd5c34aa3fefdcef26ac413e9be080d9c06431c1310847",
+    "apps/explorer-web/tests/browser/time-banner.html": "sha256:b255c8f01ad7588d2d73f99149849607ad9133f9c5e45b77f4b0da204d172e96",
+    "apps/explorer-web/tests/browser/time-banner.spec.ts": "sha256:e5e3a0ad77653cd27fb08f225d16ba394e122e60290de9368121aa9f91b35fdb",
+    "fixtures/ui/time_scrubber_projection/valid/answer-current.json": "sha256:4843cb2ae91028a4c5668ef4baa94f116cd9f9f962b3a997b41673ab6cd410c0",
+    "fixtures/ui/time_scrubber_projection/valid/deny-policy.json": "sha256:5f7446c91f2bc35db8d1f67fb1894d78df03fa22534c0c9590e7317666358de3",
+    "fixtures/ui/time_scrubber_projection/valid/answer-stale.json": "sha256:85fb8b2ff095c69c3637fd4e67d0c7f76b459b8a527659670d823986c8a070ad",
+    "fixtures/ui/time_scrubber_projection/valid/answer-conflict.json": "sha256:040156378d40ddd1364389c237440155af5c706b7d08f3d2c117111e9bdca97d",
+    "fixtures/ui/time_scrubber_projection/invalid/extra-field.json": "sha256:c2dece52ab421458c50975b2d0cb4e587de8f259e50f44d70b42fbd615e85626"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06-session"
+  },
+  "prompt_or_contract": "sha256:0105dfced5f32018342e7dfef0b3158495ecc94a4d65a904a8895db3d1c84961",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "file_search",
+      "GitHub connector",
+      "container",
+      "TypeScript compiler"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:17b2f51d90306a75b118bdf5826fc1c30c1550d44f8c1347bb603d3080e23b3c"
+    ],
+    "attached_docs": [
+      "New Ideas 3-4-26.pdf"
+    ],
+    "evidence_refs": [
+      "file:New Ideas 3-4-26.pdf#pages=86-87",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c:apps/explorer-web/src/features/time_banner/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c:apps/explorer-web/src/features/time_banner/index.tsx",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c:apps/explorer-web/package.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/time_banner/index.tsx": "PROPOSED",
+    "apps/explorer-web/src/features/time_banner/ACCESSIBLE_SCRUBBER.md": "PROPOSED",
+    "apps/explorer-web/tests/time-banner.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/time-banner.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/time-banner.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/time-banner.spec.ts": "PROPOSED",
+    "fixtures/ui/time_scrubber_projection/valid/answer-current.json": "PROPOSED",
+    "fixtures/ui/time_scrubber_projection/valid/deny-policy.json": "PROPOSED",
+    "fixtures/ui/time_scrubber_projection/valid/answer-stale.json": "PROPOSED",
+    "fixtures/ui/time_scrubber_projection/valid/answer-conflict.json": "PROPOSED",
+    "fixtures/ui/time_scrubber_projection/invalid/extra-field.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "typescript_no_emit_isolated",
+      "outcome": "PASS",
+      "reason": "Production module compiled under strict TypeScript with ES2022 and DOM libraries."
+    },
+    {
+      "gate": "deterministic_logic_harness",
+      "outcome": "PASS",
+      "reason": "Compiled resolver produced the expected visible, deny, stale, conflict, invalid, and no-leak outcomes from synthetic fixtures."
+    },
+    {
+      "gate": "source_boundary_scan",
+      "outcome": "PASS",
+      "reason": "Production source contains no fetch call, browser persistence access, lifecycle-store path, or direct AI-provider runtime access."
+    },
+    {
+      "gate": "repo_native_vitest",
+      "outcome": "SKIPPED",
+      "reason": "Repository dependencies were not installed in the local artifact workspace; hosted ui-build owns Vitest execution."
+    },
+    {
+      "gate": "repo_native_playwright",
+      "outcome": "SKIPPED",
+      "reason": "Repository dependencies and browser binaries were not installed locally; hosted ui-build owns Playwright execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "SRC-NEW-IDEAS-3-4-26-ACCESSIBLE-TIME-SCRUBBER",
+      "validated": true,
+      "evidence_ref": "file:New Ideas 3-4-26.pdf#pages=86-87"
+    },
+    {
+      "id": "REPO-TIME-BANNER-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/time_banner/README.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c"
+    },
+    {
+      "id": "ADR-0029-DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T03:35:54Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored additive UI slice based on current main@9960a2e22fb78cd6d6cf9bedb2379c09c8d5239c. The receipt records local authoring validation only; exact-head hosted checks remain separate PR evidence. No live source, route wiring, release, deployment, promotion, or publication action is represented."
+}

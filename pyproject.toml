@@ -1,6 +1,7 @@
 # KFM root Python distribution and repository test configuration.
-# This remains a scaffold dependency carrier with a minimal `kfm` namespace;
-# it does not establish a public API, release, or publication authority.
+# This is a metadata-only dependency carrier, not an importable `kfm` SDK.
+# It grants no public API, source admission, release, or publication authority.
+# See tests/ci/README.md#root-python-distribution-boundary for verification limits.
 
 [build-system]
 requires = ["hatchling"]
@@ -12,15 +13,22 @@ version = "0.0.0"
 description = "Kansas Frontier Matrix — governed, evidence-first spatial knowledge system."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
-license = { text = "TBD" }
+license = { text = "Apache-2.0" }
 authors = [{ name = "KFM Maintainers" }]
 dependencies = [
     # Registry API used by tools/validators/_common/local_resolver.py (jsonschema >=4.18).
     "jsonschema>=4.26.0,<5",
+    # Activates jsonschema's RFC 3339 date-time format check when a validator explicitly opts in.
+    "rfc3339-validator==0.1.4",
+    # Exact RFC 8785 JCS implementation for deterministic common spec_hash support.
+    "rfc8785==0.1.4",
+    # Strict YAML parsing for repository governance projections and validators.
+    "PyYAML==6.0.3",
 ]
 
 [project.optional-dependencies]
 test = [
+    "hypothesis>=6.138.0,<7",
     "pytest>=9.1.1,<10",
 ]
 
@@ -38,12 +46,15 @@ schema_version = "v1"
 pythonpath = ["."]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/kfm"]
+# An explicit include disables package-name discovery. Exclude takes precedence,
+# so no project payload is selected, even if a matching Python module appears.
+# Backend-generated distribution metadata and license metadata remain separate.
+include = ["/pyproject.toml"]
+exclude = ["*"]
 
 [tool.hatch.build.targets.sdist]
 include = [
     "/LICENSE",
     "/README.md",
     "/pyproject.toml",
-    "/src/kfm",
 ]

@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-western-kansas-observation-assessment-current-binding-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md",
+    "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+    "tests/validators/test_western_kansas_observation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:a48b6c29cf740324232c14758506dc64da1e3549e57e0f98741f52f2b5f2d317",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:f0d930f54bc3ea74581ccad833fe0225908dee8bcc0dae9737530b00125bf7a5",
+    "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json": "sha256:b30da2962637780acd4d2b786944f706194f6fe68fc1dd5fcd0624b49a5bb951",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:7fc4c7687b77cdf13046d5c11bb36da87d6da35a914d1acfb795461792fbc8eb",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:6f7d9bf8d2ef8a8dc401f5dcb5f13524d8955659d05e92380063424c5bd4d0a6",
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:d97742f721d7aa764794a872ce5db40602735ef71fd4ee583521dd718c78f17d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:8b57684bc0d59c09345c92ae8d059b6e334f609041ea221e63c486bd84934bd0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8b57684bc0d59c09345c92ae8d059b6e334f609041ea221e63c486bd84934bd0"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@35a6237f2f29e680bafe9af16f71e28fc585a735",
+      "repo:pull/2905",
+      "repo:data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json@35a6237f2f29e680bafe9af16f71e28fc585a735",
+      "github-actions:domain-hydrology/run/31900734299/job/95050992276",
+      "github-actions:western-kansas-observation-assessment/run/31900734297"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "PROPOSED",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json": "PROPOSED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "PROPOSED",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "PROPOSED",
+    "tests/validators/test_western_kansas_observation_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The original PR #2905 authoring receipt remains unchanged as historical process memory."
+    },
+    {
+      "gate": "focused-profile-validation",
+      "outcome": "PASS",
+      "reason": "The dedicated western-kansas-observation-assessment workflow passed at the original PR head."
+    },
+    {
+      "gate": "domain-inventory-failure-reproduction",
+      "outcome": "PASS",
+      "reason": "The domain-hydrology workflow failure was traced to the new substantive test and validator appearing inside strict hard-coded domain inventories without central registration."
+    },
+    {
+      "gate": "strict-inventory-preservation",
+      "outcome": "PASS",
+      "reason": "The dedicated profile implementation moved to existing evidence-validator and validator-test roots; no domain inventory, readiness classifier, ratchet, or baseline was weakened."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the six current non-self artifacts."
+    },
+    {
+      "gate": "live-source-admission",
+      "outcome": "SKIPPED",
+      "reason": "Live observations remain gated by source admission, rights, sensitivity, evidence, policy, correction, and release review."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the corrective draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Hydrology, evidence, validation, CI, source, policy, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "original-profile-merge",
+      "validated": true,
+      "evidence_ref": "repo:pull/2905"
+    },
+    {
+      "id": "original-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json@35a6237f2f29e680bafe9af16f71e28fc585a735"
+    },
+    {
+      "id": "introduced-domain-inventory-failure",
+      "validated": true,
+      "evidence_ref": "github-actions:domain-hydrology/run/31900734299/job/95050992276"
+    },
+    {
+      "id": "focused-profile-success",
+      "validated": true,
+      "evidence_ref": "github-actions:western-kansas-observation-assessment/run/31900734297"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@35a6237f2f29e680bafe9af16f71e28fc585a735"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T18:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md",
+    "drift_register_entry": null
+  },
+  "notes": "Creates a current-state binding after the broad Hydrology inventory gate correctly rejected the original domain-root placement. The original receipt remains unchanged. This correction preserves profile behavior and trust boundaries, changes no source or policy state, and grants no lifecycle, release, deployment, publication, or public-use authority."
+}

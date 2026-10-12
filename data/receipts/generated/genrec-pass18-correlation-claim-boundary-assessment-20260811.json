@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-pass18-correlation-claim-boundary-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/correlation-claim-boundary-assessment.yml",
+    "contracts/evidence/correlation_claim_boundary_assessment.md",
+    "docs/intake/exploratory/pass-18-correlation-claim-boundary-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/cases.json",
+    "schemas/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json",
+    "tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py",
+    "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/correlation-claim-boundary-assessment.yml": "sha256:991e556cd03e201c881234df0239357c0613b6ffe8f366471fd554645bfe4dbb",
+    "contracts/evidence/correlation_claim_boundary_assessment.md": "sha256:c3e91f3bd94d9db7d5f9b7369b5e2843021b0a298c715d7660ff98060ae6ee0d",
+    "docs/intake/exploratory/pass-18-correlation-claim-boundary-assessment-source-map.md": "sha256:215a0ea1ca6e7200674bba00fc28b0186269615551705e31b9d602d13469e2ea",
+    "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/cases.json": "sha256:1eca04546ac78a3c23a1cbc964b5618566359051a5a2ced07e897b49c54a62f1",
+    "schemas/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json": "sha256:4caacb9311c46cb18d893c3b1ecbc78653e70b9d17cdef3d8889d0a2a8ecf5a8",
+    "tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py": "sha256:62e78caa4d748b0bd67ff9151477e45e8b8ee6876fb6c77a2864cb5e4acde8b0",
+    "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py": "sha256:bd7b0bee5ad4099a6a4bca2deafb2e7e1f1e86eac8faa191a4b9a5ea13cb5edc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:c3e91f3bd94d9db7d5f9b7369b5e2843021b0a298c715d7660ff98060ae6ee0d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e",
+      "sha256:dfbc9eaa4bf855fcf471bfd7196901ebb3094a1fa317fb59889dd896b784f01b",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; private discovery identifier withheld"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-158",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/common/condition_relation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/evidence/analytic_output_disclosure_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/correlation-claim-boundary-assessment.yml": "CONFIRMED",
+    "contracts/evidence/correlation_claim_boundary_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-correlation-claim-boundary-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic correlation claim-boundary tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Thirty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-composition-regression", "outcome": "PASS", "reason": "Thirty-eight adjacent analytic-output-disclosure and condition-relation tests passed in separate repository-native suites."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-correlation-boundary-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-158"},
+    {"id": "adjacent-condition-relation-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/common/condition_relation.md"},
+    {"id": "adjacent-analytic-output-disclosure-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/evidence/analytic_output_disclosure_assessment.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T20:30:25Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only correlation claim-boundary assessment. Private connected-source content, raw observations, coefficient values, and real-world claim text are excluded. The wording and causal-design matrix is proposed test logic, not statistical, causal, evidence, policy, review, release, or publication authority."
+}

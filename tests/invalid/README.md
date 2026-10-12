@@ -14,7 +14,7 @@ updated: 2026-07-16
 supersedes: v0.1
 policy_label: public-doctrine; tests; invalid; fail-closed; negative-tests; compatibility-lane; synthetic-only; no-network-default; no-parallel-authority; no-publication
 current_path: tests/invalid/README.md
-truth_posture: CONFIRMED target README, canonical tests root, tests/valid sibling README, tests/fixtures parent README, root invalid-fixture README, schema invalid-fixture test, policy non-publisher test, Explorer Web adapter-boundary test, governed-API boundary tests, Makefile test target limited to tests/schemas plus tests/contracts, TODO-only deny-test workflow, checked absence of tests/invalid/conftest.py, tests/invalid/test_invalid.py, and tests/invalid/pytest.ini, and bounded search that did not establish direct executable coverage / PROPOSED compatibility-lane retention rule, routing matrix, minimum negative-case contract, positive-control requirement, non-leaking denial assertions, deterministic no-network harness, zero-collection failure, correction and rollback cases, CI graduation gates, and deprecation path / UNKNOWN exhaustive recursive lane inventory, ignored or generated files, dynamic collection, complete invalid fixture inventory, accepted shared runner, current pass rates, coverage, mutation score, flake rate, and promotion dependency / NEEDS VERIFICATION owners, whether this compatibility lane should be retained, canonical fixture split, accepted failure and reason vocabularies, network-denial mechanism, sensitive-fixture review, artifact retention, CI ownership, and migration of future cases into specific lanes
+truth_posture: CONFIRMED target README, canonical tests root, tests/valid sibling README, tests/fixtures parent README, root invalid-fixture README, schema invalid-fixture test, policy non-publisher test, Explorer Web adapter-boundary test, governed-API boundary tests, Makefile test target limited to tests/schemas plus tests/contracts, TODO-only deny-test workflow at the pinned evidence snapshot, current local-aggregate/three-job deny-test parity, checked absence of tests/invalid/conftest.py, tests/invalid/test_invalid.py, and tests/invalid/pytest.ini, and bounded search that did not establish direct executable coverage / PROPOSED compatibility-lane retention rule, routing matrix, minimum negative-case contract, positive-control requirement, non-leaking denial assertions, deterministic no-network harness, zero-collection failure, correction and rollback cases, CI graduation gates, and deprecation path / UNKNOWN exhaustive recursive lane inventory, ignored or generated files, dynamic collection, complete invalid fixture inventory, accepted shared runner, current pass rates, coverage, mutation score, flake rate, and promotion dependency / NEEDS VERIFICATION owners, whether this compatibility lane should be retained, canonical fixture split, accepted failure and reason vocabularies, network-denial mechanism, sensitive-fixture review, artifact retention, CI ownership, and migration of future cases into specific lanes
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
@@ -62,7 +62,7 @@ notes:
   - "v0.2 replaces a planning-heavy catch-all guide with a commit-pinned compatibility and routing boundary."
   - "The direct lane is README-only at the bounded snapshot."
   - "Executable fail-closed coverage exists in specific schema, policy, and governed-API lanes and must not be relabeled as tests/invalid coverage."
-  - "The Makefile test target does not collect tests/invalid, and deny-test is an echo-only workflow scaffold."
+  - "The Makefile test target does not collect tests/invalid; the current aggregate make deny-test target and three CI jobs cover the same five app-owned structural guards, not this lane."
   - "This revision changes documentation only and creates no test, fixture, schema, contract, policy, workflow behavior, data, receipt, proof, release object, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
@@ -89,7 +89,9 @@ notes:
 > **Direct lane:** `tests/invalid/README.md` only at the bounded snapshot  
 > **Checked absent:** `conftest.py`, `test_invalid.py`, `pytest.ini`  
 > **Makefile:** `make test` runs `tests/schemas` and `tests/contracts`, not this lane  
-> **Workflow:** `deny-test` checks out the repository and echoes three TODO commands
+> **Workflow at that snapshot:** `deny-test` checked out the repository and echoed three TODO commands
+>
+> **Current deny-test wiring:** one local aggregate target and three existing CI jobs cover the same five app-owned route, method, manifest, internal-store-literal, and forbidden-import structural guards
 
 `tests/invalid/` is currently a documented **compatibility and utility lane**, not an established executable suite.
 
@@ -109,7 +111,7 @@ Those tests are evidence of specific negative coverage. They are not evidence th
 | Specific negative tests elsewhere | `CONFIRMED` | Schema, policy, and API boundary tests exist. |
 | Root invalid-fixture README | `CONFIRMED` | Fixture intent exists; payload inventory remains unverified. |
 | Makefile collection | `NOT ESTABLISHED` | Current default test target omits this lane. |
-| Deny workflow | `TODO-ONLY` | A green run cannot prove negative behavior. |
+| Deny workflow | `BOUNDED STRUCTURAL GUARDS` | The three jobs collectively run the same five app-owned API structural guards as the local aggregate target; they do not collect or prove this lane. |
 | Pass rate / coverage | `UNKNOWN` | No dedicated suite or report was verified. |
 | Promotion blocking | `UNKNOWN` | No verified gate depends on this lane. |
 
@@ -443,8 +445,9 @@ A test may verify these controls. It may not perform or approve an operational p
 
 - No accepted `tests/invalid` runner is established.
 - `make test` collects only `tests/schemas` and `tests/contracts`.
-- `make deny-test` echoes TODO.
-- `.github/workflows/deny-test.yml` runs three echo-only jobs.
+- `make deny-test` runs the app-owned five-test route, method, manifest, internal-store-literal, and forbidden-import guard module as one local aggregate.
+- `.github/workflows/deny-test.yml` preserves three existing jobs whose combined selectors cover the same five tests.
+- Neither surface collects `tests/invalid` or establishes a dedicated invalid-lane suite.
 
 A candidate future command is:
 
@@ -475,7 +478,7 @@ Before activation, verify:
 
 Substantive negative tests may block promotion after acceptance. They cannot approve promotion.
 
-A green echo-only job is not enforcement.
+A green deny-test job is bounded evidence for the five named structural guards; it is not `tests/invalid` coverage or promotion approval.
 
 [Back to top](#top)
 
@@ -513,7 +516,7 @@ Revert this README if it claims nonexistent coverage, centralizes all negative t
 - [x] Classifies the lane as compatibility/utility rather than universal negative authority.
 - [x] Identifies substantive negative coverage in specific schema, policy, and API lanes.
 - [x] Records fixture-home boundaries.
-- [x] Records Makefile exclusion and TODO-only deny workflow.
+- [x] Records Makefile exclusion and bounded deny-test wiring without relabeling it as `tests/invalid` coverage.
 - [x] Replaces speculative files with routing and admission rules.
 - [x] Separates test, validation, runtime, policy, workflow, and release vocabularies.
 - [x] Adds positive-control, non-leakage, no-network, side-effect, correction, and rollback requirements.
@@ -545,7 +548,7 @@ The direct lane is not complete until retention is accepted, owners are assigned
 | `INVALID-011` | Is mutation testing required for trust-bearing cases? | `NEEDS VERIFICATION` |
 | `INVALID-012` | How are sensitive fixtures reviewed? | `NEEDS VERIFICATION` |
 | `INVALID-013` | What reports may CI retain? | `NEEDS VERIFICATION` |
-| `INVALID-014` | Which workflow should replace the deny-test scaffold? | `UNKNOWN` |
+| `INVALID-014` | Which accepted workflow, if any, should collect this lane? | `NEEDS VERIFICATION` |
 | `INVALID-015` | Does this suite block promotion? | `UNKNOWN` |
 | `INVALID-016` | What are current count, pass rate, coverage, duration, and flake rate? | `UNKNOWN` |
 | `INVALID-017` | What is the deprecation trigger? | `NEEDS VERIFICATION` |
@@ -568,7 +571,7 @@ The direct lane is not complete until retention is accepted, owners are assigned
 | non-publisher test `c6164787…` | `CONFIRMED EXECUTABLE` | Connector/pipeline publish-target writes are rejected. | All mutation paths. |
 | Explorer boundary test `97d44069…` | `CONFIRMED EXECUTABLE` | Adapter and internal-store boundaries. | Full UI negative coverage. |
 | governed API test `d84ccd2a…` | `CONFIRMED EXECUTABLE` | Route, method, import, and internal-store negative checks. | Production deployment. |
-| deny workflow `d2dd40c2…` | `CONFIRMED TODO SCAFFOLD` | Workflow exists. | Deny-test execution. |
+| deny workflow `d2dd40c2…` | `CONFIRMED HISTORICAL TODO SCAFFOLD` | Workflow existed as a scaffold at the pinned snapshot. | Current three-job execution and local aggregate parity. |
 | Makefile `4dc8cf63…` | `CONFIRMED` | Default test target omits this lane. | Dynamic external collection. |
 | cross-domain parent `cdf514e6…` | `CONFIRMED / CONFLICTED` | Multi-domain composition has a separate routing lane. | Invalid-lane ownership. |
 | bounded search/path checks | `CONFIRMED BOUNDED RESULT` | README-only conclusion and checked absent files. | Exhaustive absence. |

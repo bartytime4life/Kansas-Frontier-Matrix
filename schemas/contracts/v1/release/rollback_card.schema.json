@@ -1,32 +1,324 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/release/rollback_card.schema.json",
-  "title": "rollback_card",
+  "title": "RollbackCard",
+  "description": "Fixture-first non-executing rollback candidate profile. A valid card identifies an affected release, a prior safe target or withdrawal/hold posture, invalidations, correction linkage, and local consistency. It does not execute rollback or authorize release mutation.",
   "type": "object",
-  "description": "KFM v1 contract schema stub for rollback_card. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "id",
+    "version",
+    "spec_hash",
+    "disposition",
+    "trigger",
+    "affected_release_ref",
+    "target",
+    "evidence_bundle_refs",
+    "policy_decision_refs",
+    "review_record_refs",
+    "correction_notice_ref",
+    "invalidations",
+    "restoration",
+    "timing",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "RollbackCard"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^rollback:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "disposition": {
+      "type": "string",
+      "enum": [
+        "ROLLBACK_CANDIDATE",
+        "WITHDRAWAL_CANDIDATE",
+        "HOLD",
+        "ERROR"
+      ]
+    },
+    "trigger": {
+      "$ref": "#/$defs/trigger"
+    },
+    "affected_release_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "evidence_bundle_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "policy_decision_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "review_record_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "correction_notice_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "invalidations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "API_CACHE",
+          "CDN",
+          "TILES",
+          "CATALOG",
+          "TRIPLETS",
+          "SEARCH_INDEX",
+          "VECTOR_INDEX",
+          "AI_CACHE",
+          "DOWNSTREAM_DERIVATIVES"
+        ]
+      }
+    },
+    "restoration": {
+      "$ref": "#/$defs/restoration"
+    },
+    "timing": {
+      "$ref": "#/$defs/timing"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason_code",
+        "detected_at"
+      ],
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "enum": [
+            "RELEASE_DEFECT",
+            "EVIDENCE_CONTRADICTION",
+            "RIGHTS_CHANGE",
+            "SENSITIVITY_DISCOVERY",
+            "VALIDATION_FAILURE",
+            "SOURCE_WITHDRAWAL",
+            "POLICY_FAILURE",
+            "SECURITY_ISSUE",
+            "OPERATIONAL_FAILURE",
+            "EMERGENCY_HOLD",
+            "INSUFFICIENT_EVIDENCE",
+            "INPUT_INVALID"
+          ]
+        },
+        "detected_at": {
+          "$ref": "#/$defs/aware_datetime"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "release_ref"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "PRIOR_RELEASE",
+            "WITHDRAWAL",
+            "HOLD"
+          ]
+        },
+        "release_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "restoration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "restore_release_ref",
+        "public_notice_required",
+        "validation_required"
+      ],
+      "properties": {
+        "restore_release_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "public_notice_required": {
+          "type": "boolean"
+        },
+        "validation_required": {
+          "const": true
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decided_at",
+        "effective_at"
+      ],
+      "properties": {
+        "decided_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "effective_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/aware_datetime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes",
+        "superseded_by"
+      ],
+      "properties": {
+        "supersedes": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "superseded_by": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "policy_evaluated",
+        "review_completed",
+        "rollback_executed",
+        "public_state_mutated",
+        "release_ref"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "rollback_executed": {
+          "const": false
+        },
+        "public_state_mutated": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
   "x-kfm": {
     "contract_doc": "contracts/release/rollback_card.md",
     "fixtures_root": "fixtures/release/rollback_card/",
     "validator": "tools/validators/release/validate_rollback_card.py",
     "policy": "policy/release/",
-    "status": "PROPOSED"
-  },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
-    }
-  },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+    "status": "PROPOSED",
+    "authority": "candidate_shape_and_local_consistency_only",
+    "non_effects": [
+      "does_not_execute_rollback",
+      "does_not_authorize_release_mutation",
+      "does_not_erase_history",
+      "does_not_publish"
+    ]
+  }
 }

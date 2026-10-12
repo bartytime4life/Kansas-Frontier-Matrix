@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-kansas-transportation-geometry-source-assessment-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/kansas-transportation-geometry-source-assessment.yml",
+    "contracts/source/kansas_transportation_geometry_source_assessment.md",
+    "schemas/contracts/v1/source/kansas_transportation_geometry_source_assessment.schema.json",
+    "fixtures/contracts/v1/source/kansas_transportation_geometry_source_assessment/cases.json",
+    "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py",
+    "tests/source/test_kansas_transportation_geometry_source_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/kansas-transportation-geometry-source-assessment.yml": "sha256:eca19163c5bdd5b43e6fc7a5b8a6dfe4960416b35702381af7df32d949768649",
+    "contracts/source/kansas_transportation_geometry_source_assessment.md": "sha256:648fd9fad22107f2637d59120867a28abee345b67688aae81f5ad1f3b25d5015",
+    "schemas/contracts/v1/source/kansas_transportation_geometry_source_assessment.schema.json": "sha256:cea5ee18be1044f9ea5d45569b58335857b2454a391c8c3d6ea3b204e3856fce",
+    "fixtures/contracts/v1/source/kansas_transportation_geometry_source_assessment/cases.json": "sha256:5e456f368547ccbd77b23a94fb4c6b9427f9c80929154a310869e09835636995",
+    "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py": "sha256:46c899f0a80d982315ee96174c7b6032928f1bacc3d659d2dfc83ced0a6a871d",
+    "tests/source/test_kansas_transportation_geometry_source_assessment.py": "sha256:1a9e6478465e2056bbe84d02ca35e796dd5622e235a151cd44ff7c6fb0a62320"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:7038597a4eadd6f76e15e032bc60333e0cdfe8436e694f1558b607516d9f84aa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7038597a4eadd6f76e15e032bc60333e0cdfe8436e694f1558b607516d9f84aa"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "repo:main@92d7ec61d4b84aa90c6af273ef642ae10e2cb51c",
+      "repo:issue/2898",
+      "repo:docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md@92d7ec61d4b84aa90c6af273ef642ae10e2cb51c",
+      "repo:docs/adr/ADR-0017-source-descriptor-admission-process.md@92d7ec61d4b84aa90c6af273ef642ae10e2cb51c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@92d7ec61d4b84aa90c6af273ef642ae10e2cb51c",
+      "attached:KFM_Briefing_to_System_Integration_Architecture.docx#sections-9-11-19-27"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/kansas-transportation-geometry-source-assessment.yml": "PROPOSED",
+    "contracts/source/kansas_transportation_geometry_source_assessment.md": "PROPOSED",
+    "schemas/contracts/v1/source/kansas_transportation_geometry_source_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/source/kansas_transportation_geometry_source_assessment/cases.json": "PROPOSED",
+    "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py": "PROPOSED",
+    "tests/source/test_kansas_transportation_geometry_source_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 candidate schema passed jsonschema meta-validation."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Nine focused pytest tests passed locally."
+    },
+    {
+      "gate": "synthetic-case-polarity",
+      "outcome": "PASS",
+      "reason": "Nineteen exact-polarity cases passed for endpoint, layer, CRS, rights, authentication, identifiers, precision, source-role, crosswalk, blockers, deterministic identity, and governance effects."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator and tests use committed synthetic fixtures only and a socket-denial regression test passed."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the six finalized non-self artifacts."
+    },
+    {
+      "gate": "live-source-admission",
+      "outcome": "SKIPPED",
+      "reason": "No live endpoint, payload, credential, source admission, or connector is in scope."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Transportation source, rights, sensitivity, architecture, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "transportation-source-admission-assessment",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md@92d7ec61d4b84aa90c6af273ef642ae10e2cb51c"
+    },
+    {
+      "id": "transportation-source-admission-issue",
+      "validated": true,
+      "evidence_ref": "repo:issue/2898"
+    },
+    {
+      "id": "briefing-integration-fixture-first-pattern",
+      "validated": true,
+      "evidence_ref": "attached:KFM_Briefing_to_System_Integration_Architecture.docx#sections-9-11-19-27"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T22:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a PROPOSED_INACTIVE no-network synthetic four-lane Kansas transportation geometry source-assessment profile. It creates no SourceDescriptor admission, connector, schedule, source payload, canonical road or crosswalk authority, lifecycle write, release, deployment, publication, or public-use permission."
+}

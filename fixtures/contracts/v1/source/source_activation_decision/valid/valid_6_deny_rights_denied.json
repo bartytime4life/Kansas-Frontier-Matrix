@@ -1,0 +1,56 @@
+{
+  "object_type": "SourceActivationDecision",
+  "schema_version": "1.0.0",
+  "activation_decision_id": "activation:synthetic-denied-source:20260803",
+  "source_id": "src:synthetic:denied-source",
+  "source_descriptor_ref": "source-descriptor:src:synthetic:denied-source:1.0.1",
+  "descriptor_version": "1.0.1",
+  "source_descriptor_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "source_role_ref": "source-descriptor:src:synthetic:denied-source:1.0.1#/source_role",
+  "operation": "deactivation",
+  "context": {
+    "rights_status": "denied",
+    "sensitivity_class": "restricted",
+    "access_posture": "closed",
+    "descriptor_review_state": "rejected",
+    "registry_state": "retired"
+  },
+  "decision": {
+    "route": "DENY_INTAKE",
+    "activation_state": "disabled",
+    "activation_scope": "none",
+    "reason_codes": [
+      "INTAKE_RIGHTS_DENIED",
+      "INTAKE_DENIED"
+    ],
+    "obligations": [
+      "block_public_release",
+      "block_redistribution",
+      "preserve_audit_history"
+    ],
+    "policy_decision_refs": [
+      "policy:synthetic:rights-denied"
+    ],
+    "review_state": "rejected",
+    "review_refs": [
+      "review:synthetic:rights-denied"
+    ],
+    "decision_authority_ref": "authority:synthetic:rights-steward"
+  },
+  "timing": {
+    "created_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-08-03T12:00:00Z",
+    "expires_at": null,
+    "hold_expires_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "authority_created": false
+  }
+}

@@ -1,611 +1,1231 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governance/steward-charters
-title: Steward Charters
-type: standard
-version: v0.2
-status: draft
-owners: Docs steward (PROPOSED)
+title: Steward Charters — Role Families, Assignment Boundaries, and Governance Handoffs
+type: governance-guide
+version: v2-draft
+status: draft; repository-grounded; proposed role guidance; non-authoritative; no-release-effect
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route only"
+owner_status: "No accepted StewardshipAssignment, authenticated KFM actor identity, independent reviewer capacity, release authority, reviewer quorum, or approval is implied."
 created: 2026-05-12
-updated: 2026-05-16
+updated: 2026-08-23
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/doctrine/authority-ladder.md, docs/doctrine/trust-membrane.md, docs/doctrine/lifecycle-law.md, docs/governance/REVIEW_BURDEN.md, docs/governance/SEPARATION_OF_DUTIES.md, docs/adr/README.md, docs/registers/DRIFT_REGISTER.md, control_plane/policy_gate_register.yaml]
-tags: [kfm, governance, stewards, separation-of-duties, charters]
-notes: [PROPOSED consolidation per Domains Culmination Atlas v1.1 §24.7; pending ADR-S-09 (reviewer separation tooling threshold); v0.2 clarifies evidence boundary, materiality triggers, source key map, verification checklist, and rollback posture]
+owning_root: docs/
+current_path: docs/governance/STEWARD_CHARTERS.md
+responsibility: "Explain proposed KFM steward role families, their responsibility and non-authority boundaries, the relationship between a charter and a concrete StewardshipAssignment, required handoffs, absence and succession posture, and the current repository evidence needed before staffing or operational authority may be claimed."
+truth_posture: "CONFIRMED repository evidence and accepted Directory Rules placement / PROPOSED role families, charters, partner duties, and assignment procedure / CONFLICTED role vocabularies and ReviewRecord schema candidates / UNKNOWN operational actors, assignments, policy, release, and public-state authority / NEEDS VERIFICATION platform enforcement and independent human capacity; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 565af2021254c27ea3626724106ad6b1eae800df
+  target_prior_blob: a42ada278e03e930be590b2182ffdd1fe2ac36e6
+  governance_readme_blob: 500f8bcad3a384160a561f1460617f0a13d42fcc
+  review_duties_blob: df9848c324cbb1b7a3d63b32bd5e2fcf929ff4e9
+  separation_of_duties_blob: 00f68beeeec7d57cce806e6cdbd710a837bd4f0c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  release_sod_decision: ADR-0024 source draft / effective decision proposed
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  stewardship_assignment_contract_blob: 80c6fd4149deeb4172e2401dfaf741226380f085
+  stewardship_assignment_schema_blob: bd12f7e5e8eea966306c250d992f2826693815c9
+  review_record_contract_blob: 9641345d1e5d939dc59687a900e60a563d92c4f0
+  governance_review_schema_blob: fe2f2223af46481e7fb19b0baa94f62ce9c6c855
+  alternate_review_schema_blob: a053448d68e8379b92b12a16e6528275b975433c
+  review_authority_binding_contract_blob: f156e100660e9fd97ca95e90092143a3cd6d62ee
+  sensitive_release_review_contract_blob: 235ca86dd807c6842ca8c861f995371fe7758f64
+  release_reviews_readme_blob: bf3058a5af8fc85aa04a25a36ed03541cd9eb657
+  release_policy_readme_blob: 8a6a91e18f29f6f961eac88270b385a95b86281e
+  review_proof_readme_blob: 071a507bf1f9e2ff3e94d4a3618341ea004898b3
+inspection_boundary: >-
+  Current-session GitHub reads of the target, governance landing page, current Review Duties
+  and Separation of Duties guides, accepted Directory Rules decision and adopted bytes,
+  proposed ADR-0024, CODEOWNERS, StewardshipAssignment and ReviewRecord semantic contracts,
+  the StewardshipAssignment schema stub, both ReviewRecord schema candidates,
+  ReviewAuthorityBinding, SensitiveReleaseReviewClosure, release-policy guidance,
+  release-review guidance, and review-proof guidance. No actor was authenticated, no alias
+  or conflict registry was resolved, no StewardshipAssignment was accepted, no private roster
+  was inspected, no live policy or release gate was evaluated, and no promotion, release,
+  deployment, publication, correction, withdrawal, or rollback was exercised.
+related:
+  - ./README.md
+  - ./REVIEW_DUTIES.md
+  - ./SEPARATION_OF_DUTIES.md
+  - ./ESCALATION.md
+  - ./CONTRADICTION_HANDLING.md
+  - ./DEPRECATION_PROCESS.md
+  - ./DECISION_LOG.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - ../registers/DRIFT_REGISTER.md
+  - ../registers/VERIFICATION_BACKLOG.md
+  - ../../contracts/governance/README.md
+  - ../../contracts/governance/ReviewRecord.md
+  - ../../contracts/governance/steward_assignment.md
+  - ../../contracts/governance/review_authority_binding.md
+  - ../../contracts/governance/sensitive_release_review_closure.md
+  - ../../schemas/contracts/v1/governance/steward_assignment.schema.json
+  - ../../schemas/contracts/v1/governance/review_record.schema.json
+  - ../../schemas/contracts/v1/review/review_record.schema.json
+  - ../../policy/release/README.md
+  - ../../release/reviews/README.md
+  - ../../data/proofs/review/README.md
+  - ../../.github/CODEOWNERS
+  - ../../.github/workflows/review-authority-binding.yml
+  - ../../.github/workflows/sensitive-release-review-closure.yml
+tags: [kfm, governance, stewardship, role-families, assignments, review, separation-of-duties, release, correction, rollback, cite-or-abstain]
+notes:
+  - "v2-draft is a same-path documentation-only reconciliation against current repository evidence."
+  - "ADR-0029 is accepted and confirms the docs/ responsibility root; no path, authority root, schema home, policy home, roster, or release lane is created."
+  - "ADR-0024 is the current numbered release-separation decision and remains proposed. Historical ADR-S-09, ADR-S-13, and ADR-S-15 labels are retained only as source-lineage vocabulary."
+  - "The eight human-facing role families and the role labels in the draft StewardshipAssignment contract are not a closed, synchronized vocabulary; this document records the conflict and does not normalize it."
+  - "No contract, schema, policy, fixture, validator, workflow, repository setting, assignment, review record, release record, or published artifact changes."
 [/KFM_META_BLOCK_V2] -->
 
-# Steward Charters
+<a id="top"></a>
 
-> Named-role charters defining who owns what across the KFM trust membrane — admission, validation, sensitivity, rights, release, correction, AI surface, and docs.
+# Steward Charters — Role Families, Assignment Boundaries, and Governance Handoffs
 
-[![Doctrine class](https://img.shields.io/badge/doctrine-governance-blue)]()
-[![Status](https://img.shields.io/badge/status-draft-orange)]()
-[![Charter maturity](https://img.shields.io/badge/charter--maturity-PROPOSED-yellow)]()
-[![Pending ADR](https://img.shields.io/badge/ADR--S--09-open-lightgrey)]()
-[![Last updated](https://img.shields.io/badge/updated-2026--05--16-informational)]()
+> **Human governance guidance for stewardship.** This document explains the proposed KFM role families, the bounded responsibilities each charter carries, the evidence needed to bind a role to a real actor and target, and the handoffs required before a trust-bearing action can advance. It does not staff a role, authenticate an actor, grant authority, approve a review, or release anything.
 
-**Status:** draft · **Owners:** Docs steward (PROPOSED) · **Last updated:** 2026-05-16
-
-> [!IMPORTANT]
-> **Target home (PROPOSED):** `docs/governance/steward-charters.md`  
-> **Truth posture:** CONFIRMED doctrine / PROPOSED charter scopes / UNKNOWN staffing and tooling  
-> **Evidence boundary:** This document governs role separation at the doctrine layer. It does not claim that roles are staffed, queues exist, or tooling enforces separation until mounted-repo evidence proves those facts.
-
----
-
-## Contents
-
-1. [Purpose and Scope](#1-purpose-and-scope)
-2. [Authority and Doctrinal Basis](#2-authority-and-doctrinal-basis)
-3. [Roster of Stewards](#3-roster-of-stewards)
-4. [Charter Template](#4-charter-template)
-5. [Source steward](#5-source-steward)
-6. [Domain steward](#6-domain-steward)
-7. [Sensitivity reviewer](#7-sensitivity-reviewer)
-8. [Rights-holder representative](#8-rights-holder-representative)
-9. [Release authority](#9-release-authority)
-10. [Correction reviewer](#10-correction-reviewer)
-11. [AI surface steward](#11-ai-surface-steward)
-12. [Docs steward](#12-docs-steward)
-13. [Separation-of-Duties Matrix](#13-separation-of-duties-matrix)
-14. [Maturity Model and Enforcement Posture](#14-maturity-model-and-enforcement-posture)
-15. [Onboarding, Review, and Succession](#15-onboarding-review-and-succession)
-16. [Open Questions and ADR Linkage](#16-open-questions-and-adr-linkage)
-17. [Glossary](#17-glossary)
-18. [Related Docs](#18-related-docs)
-19. [Verification and Rollback](#19-verification-and-rollback)
-
----
-
-## 1. Purpose and Scope
-
-This document names the **named-role charters** that make KFM's separation of duties operational. Each charter defines: who the steward is, what they own, what artifacts they sign, what they cannot do alone, and when a co-signer is required.
-
-The charters exist because KFM is a governed, evidence-first system. Once a claim crosses the trust membrane into `PUBLISHED`, multiple downstream readers act on it. **A trust membrane without named owners is a membrane no one can defend.** The charters fix that gap. [ENCY] [DIRRULES]
-
-### 1.1 What this doc does
-
-- Lists the eight named stewards consolidated from KFM doctrine.
-- Defines each steward's scope, owned artifacts, gate authority, and required co-signers.
-- Restates the separation-of-duties matrix in charter context, with citation back to canonical sources.
-- Names the maturity threshold at which tooling — not custom — must enforce separation.
-
-### 1.2 What this doc does *not* do
-
-- It does not change **object meaning** (see `contracts/`).
-- It does not define **schema shape** (see `schemas/`).
-- It does not decide **admissibility or release outcomes** (see `policy/`, `release/`).
-- It does not name individuals or teams — that lives in a separate, repo-private roster.
-
-> [!NOTE]
-> The role consolidation in this document is **PROPOSED** per *Domains Culmination Atlas v1.1* §24.7. The doctrine of separation of policy-significant duties is **CONFIRMED**. Specific role scopes are proposals pending ADR-S-09 (reviewer separation tooling threshold). [ENCY] [DIRRULES]
-
-### 1.3 How to use this charter
-
-Use this file as a **routing aid**, not as an automatic approval engine:
-
-1. Identify the lifecycle transition or governance action.
-2. Find the candidate steward in §3 and the detailed charter in §§5–12.
-3. Apply the materiality rules in §§13–14.
-4. Require the co-signers named in the matrix before release, tier upgrade, AI policy binding, sensitive-lane publication, or derivative-affecting rollback.
-5. Emit or attach the appropriate `ReviewRecord`, receipt, correction, rollback, or release artifact. If the artifact family or queue is missing, label the action **NEEDS VERIFICATION** instead of treating the charter as enforcement.
-
-This sequence is **PROPOSED** operational guidance. It does not bypass policy gates, `ReleaseManifest` issuance, ADRs, or the trust membrane.
-
-[↑ Back to top](#contents)
-
----
-
-## 2. Authority and Doctrinal Basis
-
-### 2.1 Where this document sits
-
-| Layer | Artifact | Status |
-|---|---|---|
-| Doctrine — operating law | KFM operating-law invariant 9: "Separate policy-significant release duties when maturity justifies it." | **CONFIRMED** [ENCY] |
-| Doctrine — placement | Directory Rules §6.1 confirms `docs/governance/` is the home for "roles, review burden, separation of duties." | **CONFIRMED** [DIRRULES] |
-| Reference — consolidation | Atlas v1.1 §24.7 *Reviewer Role and Separation-of-Duties Matrix*. | **PROPOSED** reference for ADR discussion [ENCY] |
-| Open ADR | ADR-S-09 — reviewer separation enforced by tooling vs. custom; threshold to specify. | **OPEN** [ENCY] |
-| This document | Per-role charters, scopes, and co-signer requirements. | **PROPOSED v0.2** |
-
-### 2.2 What outranks this doc
-
-In any conflict, authority resolves in this order [DIRRULES]:
-
-1. KFM operating-law invariants (lifecycle, trust membrane, cite-or-abstain, authority ladder).
-2. Accepted ADRs that amend governance directly.
-3. *Domains Culmination Atlas v1.1* §24.7 (the canonical role roster).
-4. This document.
-5. Per-domain dossiers and supplementary reports (lineage / proposed only).
-
-### 2.3 Reading the labels
-
-This file uses the standard KFM truth labels [ENCY]:
-
-- **CONFIRMED** — verified in attached doctrine or Atlas v1.1.
-- **PROPOSED** — proposed by Atlas v1.1 §24.7 or by this charter file; pending ADR.
-- **INFERRED** — derived from CONFIRMED doctrine but not directly stated.
-- **NEEDS VERIFICATION** — checkable against mounted-repo evidence; not yet checked.
-- **UNKNOWN** — not resolvable without more evidence.
+[![Document: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#0-status--authority)
+[![Directory authority: ADR-0029 accepted](https://img.shields.io/badge/directory%20authority-ADR--0029%20accepted-1f883d?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Release SoD decision: proposed](https://img.shields.io/badge/release%20SoD%20decision-proposed-d4a72c?style=flat-square)](../adr/ADR-0024-steward-separation-of-duties-for-release.md)
+[![Role vocabulary: conflicted](https://img.shields.io/badge/role%20vocabulary-CONFLICTED-b42318?style=flat-square)](#4-role-vocabularies-and-current-drift)
+[![Assignment schema: stub](https://img.shields.io/badge/assignment%20schema-stub-f59e0b?style=flat-square)](#22-current-repository-evidence-ledger)
+[![Operational staffing: hold](https://img.shields.io/badge/operational%20staffing-HOLD-b42318?style=flat-square)](#18-maturity-and-enforcement-posture)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#23-verification-non-effects--rollback)
 
 > [!IMPORTANT]
-> **Memory is not evidence.** No charter in this document claims that a role is staffed, that a tool enforces separation, or that a repo path is present in production. Those claims are **UNKNOWN** until verified against mounted-repo evidence.
+> **A charter is not an assignment.** A role description states what a responsibility should cover. A concrete `StewardshipAssignment`, current actor identity, effective interval, accepted authority basis, subject scope, conflict posture, and required partner roles are separate evidence. None was created or accepted by this update.
 
-### 2.4 Evidence boundary and repo-depth limits
+> [!WARNING]
+> **A role label is not an actor and a GitHub route is not governance authority.** [`CODEOWNERS`](../../.github/CODEOWNERS) currently routes the relevant repository paths to one verified account. That proves review routing only; it does not prove eight staffed roles, independent review, a rights-holder mandate, policy authority, release authority, or separation of duties.
 
-| Question | Label | Handling rule |
-|---|---|---|
-| Does KFM require separation of policy-significant duties when maturity justifies it? | **CONFIRMED doctrine** | Treat as governing law for release-significant surfaces. |
-| Are the eight steward names and role families usable as a consolidated charter roster? | **PROPOSED / doctrine-derived** | Use for routing and review design while ADR-S-09 remains open. |
-| Are named people, teams, queues, CI gates, or runtime enforcers already present? | **UNKNOWN** | Verify in mounted-repo evidence before claiming enforcement. |
-| Are path references in this file authoritative current repo paths? | **PROPOSED unless verified** | If the mounted repo conflicts with Directory Rules, open a drift entry rather than silently normalizing. |
+> [!CAUTION]
+> **Do not choose or normalize a role vocabulary through prose.** The eight human-facing role families in current governance guidance do not match the eleven labels listed by the draft `StewardshipAssignment` contract. Two human roles have no direct contract label, five contract labels have no direct human charter, and one example uses `governance_steward` even though that label is absent from the contract's role table. Resolution requires an authority decision and synchronized contract, schema, fixture, validator, consumer, migration, and rollback work.
 
-[↑ Back to top](#contents)
+| Field | Current bounded value |
+|---|---|
+| **Document status** | `draft` human-facing governance guidance |
+| **Tracked path** | `docs/governance/STEWARD_CHARTERS.md` — **CONFIRMED** repository-present, same-path update |
+| **Placement authority** | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`directory-rules.md`](../doctrine/directory-rules.md) place human governance explanation under `docs/` |
+| **Detailed release-SoD decision** | [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) is source status `draft`, effective decision status `proposed` |
+| **Repository review route** | `@bartytime4life` through [`CODEOWNERS`](../../.github/CODEOWNERS); routing is not assignment, independence, approval, or release authority |
+| **Human role model** | Eight proposed role families retained from current governance guidance |
+| **Assignment meaning** | Draft [`StewardshipAssignment`](../../contracts/governance/steward_assignment.md) semantic contract |
+| **Assignment machine shape** | **PROPOSED permissive stub**; it does not enforce the semantic fields or role vocabulary |
+| **Review-event meaning** | Draft [`ReviewRecord`](../../contracts/governance/ReviewRecord.md) semantic contract |
+| **Review-event machine shape** | **CONFLICTED:** one concrete proposed governance schema and one permissive proposed review scaffold |
+| **Bounded executable support** | Fixture-only `ReviewAuthorityBinding` and T3/T4 `SensitiveReleaseReviewClosure`; both grant no authority |
+| **Accepted assignments or private roster** | Not verified; operational staffing is `UNKNOWN / HOLD` |
+| **Operational policy, review, and release authority** | `UNKNOWN / HOLD` |
+| **Release, deployment, publication effect** | None |
+| **Evidence snapshot** | `main@565af2021254c27ea3626724106ad6b1eae800df` |
 
 ---
 
-## 3. Roster of Stewards
+## Quick navigation
 
-CONFIRMED roster of eight named stewards consolidated from Atlas v1.1 §24.7.1 [ENCY]:
+[§0 Status](#0-status--authority) ·
+[§1 Purpose](#1-purpose--scope) ·
+[§2 Determination](#2-current-repository-determination) ·
+[§3 Charter model](#3-charter-model-and-anti-collapse-rules) ·
+[§4 Vocabulary drift](#4-role-vocabularies-and-current-drift) ·
+[§5 Roster](#5-the-eight-proposed-human-role-families) ·
+[§6 Source](#6-source-steward) ·
+[§7 Domain](#7-domain-steward) ·
+[§8 Sensitivity](#8-sensitivity-reviewer) ·
+[§9 Rights](#9-rights-holder--sovereignty-representative) ·
+[§10 Release](#10-release-authority) ·
+[§11 Correction](#11-correction-reviewer) ·
+[§12 AI](#12-ai-surface-steward) ·
+[§13 Docs](#13-docs-steward) ·
+[§14 Companion labels](#14-companion-implementation-duty-labels) ·
+[§15 Assignment](#15-assignment-eligibility-and-effective-scope) ·
+[§16 Handoff](#16-charter-invocation-and-handoff-packet) ·
+[§17 Absence](#17-absence-recusal-delegation-and-succession) ·
+[§18 Maturity](#18-maturity-and-enforcement-posture) ·
+[§19 Sensitive/public-safe](#19-sensitive-and-public-safe-stewardship) ·
+[§20 Anti-patterns](#20-anti-patterns) ·
+[§21 Responsibility map](#21-related-responsibility-map) ·
+[§22 Evidence ledger](#22-current-repository-evidence-ledger) ·
+[§23 Verification](#23-verification-non-effects--rollback) ·
+[Appendix A](#appendix-a--no-loss-modernization-ledger) ·
+[Appendix B](#appendix-b--open-convergence-backlog)
 
-| # | Steward | One-line scope | Primary owned artifact(s) |
+---
+
+## 0. Status & authority
+
+### 0.1 Authority order
+
+Authority depends on the question being asked. No role charter controls every layer.
+
+| Question | Controlling surface | Current status |
+|---|---|---|
+| Where may this human guide live? | Accepted ADR-0029, adopted Directory Rules, and the repository-present path | **CONFIRMED** under `docs/governance/` |
+| Is the release-separation model accepted? | ADR-0024 and the canonical ADR index | **PROPOSED**, not accepted |
+| What does a stewardship assignment mean? | `contracts/governance/steward_assignment.md` | **DRAFT semantic contract** |
+| What machine shape is accepted? | Accepted schema authority and reviewed object-family decision | Assignment schema is a **stub**; ReviewRecord schemas are **CONFLICTED** |
+| Who holds a role now? | Accepted assignment, actor identity, interval, scope, conflict status, and authority basis | **UNKNOWN / HOLD** |
+| What is admissible? | Accepted policy source through an accepted evaluator | Release-policy lane remains scaffolded |
+| What may advance or be released? | Governed promotion and release controls with applicable evidence, policy, review, correction, and rollback | Not established by this guide |
+| What does GitHub enforce? | Current platform settings and exact required-check coupling | **NEEDS VERIFICATION** before operational reliance |
+
+### 0.2 Same-path Directory Rules basis
+
+This file is a human governance guide. Its one authority owner is the `docs/` responsibility root. Updating the tracked path does not create:
+
+- a new root or governance registry;
+- a role enum or actor directory;
+- a contract or schema authority;
+- a policy bundle or evaluator;
+- a `ReviewRecord`, `StewardshipAssignment`, release review, or release decision;
+- a private roster, team, repository permission, or platform rule;
+- a promotion, correction, withdrawal, rollback, release, deployment, or publication transition.
+
+### 0.3 Historical source-lineage boundary
+
+The prior v0.2 document relied heavily on the supplied Atlas and historical `ADR-S-*` labels. Those materials remain useful design lineage. They do not outrank current repository evidence or the numbered ADR inventory.
+
+- `ADR-S-09` is retained as historical vocabulary for reviewer-separation tooling pressure.
+- `ADR-0024` is the current numbered separation decision and remains proposed.
+- Historical `ADR-S-13` and `ADR-S-15` labels are not treated here as verified current ADR paths.
+- Atlas role definitions are retained as proposal lineage, not staffing or enforcement evidence.
+
+[Back to top](#top)
+
+---
+
+## 1. Purpose & scope
+
+A steward charter is a human-readable responsibility boundary. It should let a maintainer determine:
+
+1. which responsibility family is implicated by a candidate action;
+2. what the role must inspect or hand off;
+3. what the role cannot decide alone;
+4. which partner roles are required when materiality applies;
+5. what evidence must prove actor eligibility, scope, independence, and timing;
+6. which separate gate owns the next state transition;
+7. what happens when the role is absent, conflicted, expired, or unable to decide.
+
+### This document can establish
+
+- the current proposed eight-role human vocabulary;
+- role responsibility and non-authority boundaries;
+- the relationship among a charter, assignment, review, policy, release, correction, rollback, and platform routing;
+- a conservative handoff procedure and fail-closed absence posture;
+- current repository conflicts, gaps, and graduation evidence requirements;
+- documentation-safe guidance for sensitive or sovereignty-bearing stewardship.
+
+### This document cannot establish
+
+- that an actor, team, service, community, family, descendant group, or rights-holder has accepted a role;
+- that a role label resolves to a GitHub account or team;
+- that a reviewer is independent, eligible, current, conflict-free, or authorized;
+- that the eight-role roster is a canonical machine enum;
+- that the draft `StewardshipAssignment` semantic fields are accepted or schema-enforced;
+- that a review, policy evaluation, promotion decision, release decision, correction, withdrawal, or rollback occurred;
+- that a source, claim, layer, AI answer, map, tile, graph, report, or export is admissible or public;
+- that current platform controls enforce the proposed model.
+
+### Responsibility boundary
+
+| Responsibility | Owning surface | Relationship to this document |
+|---|---|---|
+| Human role purpose, boundaries, absence, handoff, and anti-patterns | `docs/governance/` | **Owned here** |
+| Decision to adopt release-significant separation | `docs/adr/` | ADR-0024; still proposed |
+| Assignment and review-event meaning | `contracts/governance/` | Referenced; not redefined |
+| Machine-checkable shape | `schemas/contracts/v1/` | Referenced; gaps and conflicts disclosed |
+| Admissibility | `policy/` and accepted evaluator surfaces | Separate authority |
+| Synthetic cases and deterministic validation | `fixtures/`, `tests/`, `tools/validators/`, workflows | Bounded evidence only |
+| Review-support proof objects | `data/proofs/review/` | Separate support family |
+| Release-review instances and state-bearing release objects | `release/` | Separate release-control family |
+| GitHub routing and repository controls | `.github/` and platform settings | Routing/enforcement; not KFM governance authority |
+| Public delivery | Governed APIs and released public-safe carriers | Never conferred by this guide |
+
+[Back to top](#top)
+
+---
+
+## 2. Current repository determination
+
+### 2.1 Confirmed repository evidence
+
+At the evidence snapshot, KFM contains:
+
+- this repository-present governance-document lane;
+- accepted Directory Rules placement through ADR-0029;
+- proposed ADR-0024 for release-significant separation of duties;
+- one verified CODEOWNERS route for relevant roots;
+- draft `StewardshipAssignment` and `ReviewRecord` semantic contracts;
+- a permissive proposed StewardshipAssignment schema stub;
+- two overlapping ReviewRecord schema candidates;
+- fixture-only `ReviewAuthorityBinding` and T3/T4 `SensitiveReleaseReviewClosure` profiles;
+- release-policy, release-review, and review-proof guidance surfaces.
+
+### 2.2 Proposed design
+
+The following remain proposed:
+
+- the eight human role families as a stable governance roster;
+- the responsibility and partner-role details in §§6–13;
+- the charter template in §3;
+- assignment eligibility and absence procedure;
+- materiality and maturity rules where ADR-0024 would control;
+- any mapping from human role families to machine or assignment identifiers.
+
+### 2.3 Conflicted evidence
+
+The current repository presents at least three unresolved conflicts:
+
+1. **Role vocabulary conflict.** The eight human role families do not match the role labels in the StewardshipAssignment semantic contract.
+2. **Assignment shape gap.** The StewardshipAssignment schema is a greenfield-style permissive stub and does not enforce the semantic contract.
+3. **ReviewRecord schema conflict.** One concrete governance schema and one permissive review scaffold overlap, while the semantic contract is richer than either candidate.
+
+These conflicts are not resolved by this file. Trust-bearing use remains `HOLD` until the relevant authority and compatibility work closes.
+
+### 2.4 Unknown or held operational state
+
+No current-session evidence established:
+
+- authenticated KFM actor identity or alias resolution;
+- an accepted, current `StewardshipAssignment` instance;
+- a public or private operational steward roster;
+- independent human reviewer capacity;
+- accepted recusal, delegation, or succession records;
+- an active release-policy bundle and evaluator;
+- a governed parent-level release review;
+- operational release authority, signer custody, or public-state mutation;
+- completed correction, withdrawal, or rollback drill;
+- deployed or public behavior that relies on this charter.
+
+[Back to top](#top)
+
+---
+
+## 3. Charter model and anti-collapse rules
+
+### 3.1 What a charter contains
+
+Each role-family charter in this document uses the following human guidance fields.
+
+| Field | Human meaning | Machine / authority boundary |
+|---|---|---|
+| **Role family** | Proposed responsibility label | Not an actor or enum by itself |
+| **Purpose** | Why the role exists | Does not grant authority |
+| **Typical targets** | Objects, paths, decisions, or surfaces commonly reviewed | Target scope must be bound by an accepted assignment |
+| **Responsibilities** | What the role should inspect, maintain, or hand off | Does not prove the action occurred |
+| **Cannot establish alone** | Decisions or facts outside the role's authority | Separate gates remain mandatory |
+| **Partner roles** | Other role families normally required by materiality | Exact requirements await accepted decision and assignment evidence |
+| **Escalation triggers** | Conditions requiring abstention, hold, denial, or higher review | Escalation must follow an accepted path |
+| **Refresh triggers** | Conditions that expire or supersede prior role work | Does not define a machine expiry field |
+| **Current posture** | Repository-grounded maturity statement | Must remain bounded to inspected evidence |
+
+This table is not a substitute for the `StewardshipAssignment` contract or schema.
+
+### 3.2 Objects that must remain distinct
+
+| Object or control | What it establishes | What it does not establish |
+|---|---|---|
+| **Role charter** | Human responsibility boundary | Actor, assignment, review, policy, release |
+| **StewardshipAssignment** | Proposed semantic record binding a role to a target, actor, interval, and authority basis | Proof that the assigned actor acted or that the assignment is accepted |
+| **ReviewRecord** | Proposed semantic record of a review event | Policy, promotion, release, publication |
+| **ReviewAuthorityBinding** | Fixture-only structural agreement among declared review, assignment, and subject projections | Actor authentication or authority grant |
+| **PolicyDecision** | A bounded policy outcome from an accepted policy execution | Evidence, review, or release decision |
+| **PromotionDecision** | A lifecycle transition decision | Publication by itself |
+| **ReleaseManifest / release decision** | State-bearing release identity and scope under the accepted release model | Source truth or immunity from correction |
+| **Correction / withdrawal / rollback record** | Governed change to prior public or release state | Silent replacement or erased history |
+| **CODEOWNERS / GitHub review** | Repository routing and platform review evidence | KFM stewardship, independence, policy, or release authority |
+| **Workflow result** | Outcome of a named automated check | Human review, policy approval, promotion, release, publication |
+
+### 3.3 Finite posture when evidence is missing
+
+A role-family guide must not fill evidence gaps with plausible assumptions.
+
+- Use `HOLD` when a required decision, assignment, partner, or safe path is unresolved.
+- Use `ABSTAIN` when an eligible reviewer cannot reach a supported conclusion.
+- Use `DENY` when a governing profile establishes an impermissible action or unsafe condition.
+- Use `NEEDS VERIFICATION` for a concrete unresolved check.
+- Use `UNKNOWN` when the condition cannot be resolved from available evidence.
+
+[Back to top](#top)
+
+---
+
+## 4. Role vocabularies and current drift
+
+### 4.1 Eight human role families
+
+Current governance guidance carries these eight proposed families:
+
+1. Source steward
+2. Domain steward
+3. Sensitivity reviewer
+4. Rights-holder / sovereignty representative
+5. Release authority
+6. Correction reviewer
+7. AI surface steward
+8. Docs steward
+
+### 4.2 StewardshipAssignment contract labels
+
+The draft semantic contract separately lists these proposed identifiers:
+
+- `docs_steward`
+- `contract_steward`
+- `schema_steward`
+- `policy_steward`
+- `domain_steward`
+- `source_steward`
+- `sensitivity_reviewer`
+- `release_authority`
+- `ai_surface_steward`
+- `ui_api_steward`
+- `validation_steward`
+
+One example in that contract also refers to `governance_steward`, which is not included in the listed role table.
+
+### 4.3 Comparison and safe posture
+
+| Human role family | Draft contract label | Current relationship |
+|---|---|---|
+| Source steward | `source_steward` | Nominal match only; no accepted enum or assignment |
+| Domain steward | `domain_steward` | Nominal match only |
+| Sensitivity reviewer | `sensitivity_reviewer` | Nominal match only |
+| Rights-holder / sovereignty representative | No direct listed label | **GAP / CONFLICTED** |
+| Release authority | `release_authority` | Nominal match only |
+| Correction reviewer | No direct listed label | **GAP / CONFLICTED** |
+| AI surface steward | `ai_surface_steward` | Nominal match only |
+| Docs steward | `docs_steward` | Nominal match only |
+| No direct eight-role counterpart | `contract_steward`, `schema_steward`, `policy_steward`, `ui_api_steward`, `validation_steward` | **UNMAPPED companion labels** |
+| No stable entry in either roster | `governance_steward` appears in an example | **INTERNAL CONTRACT DRIFT** |
+
+> [!IMPORTANT]
+> “Nominal match” means the words resemble one another. It does not prove identical scope, accepted casing, enum membership, assignment eligibility, or compatibility.
+
+### 4.4 Convergence requirement
+
+A future vocabulary decision should, at minimum:
+
+1. identify the authority owner for role semantics;
+2. decide whether human role families, duty labels, assignment roles, and reviewer roles are one vocabulary or several related vocabularies;
+3. preserve rights-holder and correction responsibilities explicitly;
+4. decide whether contract, schema, policy, validation, UI/API, and governance stewardship are standalone roles, capabilities, or scoped assignments;
+5. synchronize contract meaning, schema enum, fixtures, validators, docs, consumers, indexes, and migration notes;
+6. provide aliases or versioned compatibility where needed;
+7. define fail-closed behavior for unknown roles;
+8. preserve rollback to the pre-convergence vocabulary.
+
+Until then, consumers must record the exact profile and role string they used. Silent translation is prohibited.
+
+[Back to top](#top)
+
+---
+
+## 5. The eight proposed human role families
+
+| # | Role family | Proposed responsibility | Current operational posture |
 |---|---|---|---|
-| 1 | **Source steward** | Admission, rights, sensitivity tag for a source family. | `SourceDescriptor` |
-| 2 | **Domain steward** | Meaning, contracts, validators for a domain's object families. | Domain contracts / schemas; `ValidationReport` |
-| 3 | **Sensitivity reviewer** | Redaction, generalization, withholding, tier decisions. | `RedactionReceipt`; tier transitions |
-| 4 | **Rights-holder representative** | Sovereignty, cultural-heritage, consent-based release. | Release approval for archaeology, sovereign data, living-person data, DNA data |
-| 5 | **Release authority** | Issues `ReleaseManifest`s; authorizes PUBLISHED transitions; rollback. | `ReleaseManifest`; `RollbackCard` |
-| 6 | **Correction reviewer** | Reviews corrections and rollback decisions post-publication. | `CorrectionNotice`; `RollbackCard` |
-| 7 | **AI surface steward** | Focus Mode templates, `AIReceipt`s, policy bindings, cite-or-abstain audits. | `AIReceipt` sampling; Focus Mode policy bindings |
-| 8 | **Docs steward** | Governance docs, ADR index, drift register, Atlas / supplement integrity. | `docs/` tree; ADR index; `DRIFT_REGISTER` |
+| 1 | **Source steward** | Source identity, role, terms, intended use, cadence, and admission handoff | No accepted assignment verified |
+| 2 | **Domain steward** | Domain meaning, evidence interpretation, domain quality, and domain-scoped handoff | No accepted assignment verified |
+| 3 | **Sensitivity reviewer** | Harmful precision, redaction, generalization, withholding, access, and sensitivity review | No accepted assignment verified |
+| 4 | **Rights-holder / sovereignty representative** | Rights, consent, sovereignty, cultural/community authority, and controlled-use review | Identity and mandate must be target-specific; none verified |
+| 5 | **Release authority** | Accountable release-state decision and rollback authorization under the accepted release model | ADR-0024 proposed; operational authority held |
+| 6 | **Correction reviewer** | Correction, withdrawal, supersession, derivative invalidation, and rollback assessment | No direct assignment-role label; held |
+| 7 | **AI surface steward** | Evidence-bounded AI templates, citations, finite outcomes, and public-surface behavior | No accepted assignment verified |
+| 8 | **Docs steward** | Human doctrine/navigation integrity, metadata, links, drift, and supersession visibility | CODEOWNERS route exists; assignment and independence not verified |
 
-### 3.1 Role-to-lifecycle map (illustrative)
+The charters below define proposal-level responsibility boundaries. They do not create a roster or precedence among roles.
+
+[Back to top](#top)
+
+---
+
+## 6. Source steward
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Keep source identity, source role, authority limits, terms, intended use, update cadence, and initial risk posture explicit before source material enters a governed lane. |
+| **Typical targets** | `SourceDescriptor` candidates, source-family registries, source-role classifications, source refresh or retirement proposals, connector admission packets. |
+| **Responsibilities** | Verify source identity and steward; distinguish observed, modeled, forecast, regulatory, aggregate, contextual, synthetic, and other accepted roles; record terms and permitted use; identify rights and sensitivity triggers; hand off unresolved domain meaning, rights, or public-safety questions. |
+| **Cannot establish alone** | Rights clearance, sovereignty or community consent, domain truth, policy permission, public-safe transformation, release, publication, or source-role upcast. |
+| **Partner roles** | Domain steward for meaning; sensitivity reviewer for exposure risk; rights-holder / sovereignty representative where rights or community authority applies; release authority only at a later release gate. |
+| **Escalation triggers** | Unknown terms, unclear authority, role ambiguity, conflicting source versions, living-person or genomic content, archaeology, rare species, infrastructure, land/title, harmful precision, or missing correction path. |
+| **Refresh triggers** | Source terms, endpoint, steward, cadence, schema, authority role, license, sensitivity, or correction state changes. |
+| **Current posture** | Human role proposed; source-related repository surfaces exist, but no accepted assignment or operational source-steward roster was verified. |
+
+### 6.1 Source-role anti-collapse
+
+A source steward must not silently reinterpret a source to make it more authoritative. In particular:
+
+- regulatory status is not automatically an observed event;
+- a model is not a measurement;
+- an aggregate is not a per-place observation;
+- a discovery service is not necessarily the source of record;
+- a map layer is not proof of the claim it depicts;
+- a source descriptor is not source admission or release by itself.
+
+A proposed role change requires an explicit descriptor/version/correction path and the applicable domain, policy, and review checks. When the accepted profile is unresolved, hold rather than upcast.
+
+### 6.2 Minimum handoff
+
+A source-steward handoff should identify:
+
+- stable source identity and version or retrieval context;
+- declared source role and limitations;
+- terms, rights, consent, sensitivity, and intended-use status;
+- spatial, temporal, and precision scope;
+- update cadence and stale-state trigger;
+- source hash or immutable locator where practical;
+- unresolved domain, rights, policy, validation, correction, and rollback questions;
+- requested next gate, never an implied public-release state.
+
+[Back to top](#top)
+
+---
+
+## 7. Domain steward
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Protect the meaning of domain concepts and ensure domain evidence is interpreted within the correct bounded context. |
+| **Typical targets** | Domain contracts and schema proposals, domain records, validation reports, transforms, catalog relations, cross-domain join proposals, domain-facing map/API/AI behavior. |
+| **Responsibilities** | State domain meaning and limitations; preserve source-role distinctions; inspect domain evidence and time/geography context; require appropriate validation and negative cases; identify cross-domain or sensitivity effects; hand off contract, schema, policy, release, and public-delivery work to their owning duties. |
+| **Cannot establish alone** | Canonical schema authority, policy override, rights or sovereignty clearance, public-safe exposure, cross-domain authority, release, or publication. |
+| **Partner roles** | Source steward, sensitivity reviewer, rights-holder / sovereignty representative, and the applicable contract, schema, policy, validation, UI/API, AI, or release duties. |
+| **Escalation triggers** | Domain term collision, source-role collapse, unsupported cross-domain relation, uncertain geography/time, generated inference presented as evidence, unsafe precision, contract/schema mismatch, or public claim without evidence closure. |
+| **Refresh triggers** | Domain model, source role, contract, schema, validator, evidence, geography, time basis, policy, or public representation changes. |
+| **Current posture** | Human role proposed. Current assignment semantics also list separate contract, schema, policy, validation, and UI/API labels, so domain stewardship must not be assumed to absorb those duties. |
+
+### 7.1 Bounded-context rule
+
+Domain stewardship is not universal subject-matter authority. A domain steward acts only within an exact target and scope. Cross-domain work must preserve the source and domain role of each input rather than flattening all inputs into one “domain truth.”
+
+### 7.2 Contract and schema boundary
+
+The prior v0.2 charter described the domain steward as owning contracts, schemas, and validators. Current repository evidence contains separate proposed `contract_steward`, `schema_steward`, and `validation_steward` labels. This update narrows the safe claim:
+
+- the domain steward is accountable for domain meaning and domain-specific review;
+- implementation ownership of contract, schema, and validator artifacts is **CONFLICTED / NEEDS DECISION**;
+- no role may amend another responsibility root merely because the change is domain-related.
+
+[Back to top](#top)
+
+---
+
+## 8. Sensitivity reviewer
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Assess whether content, joins, precision, representation, timing, or access could expose protected or harmful information. |
+| **Typical targets** | Redaction, aggregation, generalization, withholding, delayed release, audience restriction, sensitive geometry, public-safe transformations, and sensitivity-related corrections. |
+| **Responsibilities** | Identify sensitivity triggers; inspect source and joined-data risk; require transformations before ordinary public delivery; review reconstruction risk; record limitations and expiry; require correction and rollback paths. |
+| **Cannot establish alone** | Rights or sovereignty mandate, source truth, domain meaning, policy permission, release authority, publication, or consent. |
+| **Partner roles** | Rights-holder / sovereignty representative where applicable; domain and source stewards; policy duty; release authority for public-state decisions. |
+| **Escalation triggers** | Unknown sensitivity, exact rare-species or archaeological locations, critical-infrastructure vulnerability, living-person or genomic data, private-land information, culturally restricted material, re-identification risk, or client-side-only hiding. |
+| **Refresh triggers** | Audience, precision, join, source, policy, rights, threat model, public interface, correction, or downstream derivative changes. |
+| **Current posture** | Human role proposed. A fixture-only T3/T4 closure profile exists, but no accepted universal tier model or operational sensitivity reviewer assignment was established. |
+
+### 8.1 Tier-language boundary
+
+The prior document treated a T0–T4 schedule as generally established. Current evidence supports a narrower statement:
+
+- the `SensitiveReleaseReviewClosure` fixture profile explicitly covers T3/T4 candidates;
+- that profile is proposed-inactive and grants no authority;
+- a universal T0–T4 taxonomy, its assignment semantics, and its operational policy binding remain `NEEDS VERIFICATION`;
+- sensitivity review is required by the actual risk and accepted profile, not by an inferred domain label alone.
+
+### 8.2 Transform-before-delivery rule
+
+Sensitive values must be removed, transformed, generalized, delayed, or denied before ordinary public delivery. A style filter, hidden layer, collapsed panel, obscured label, or client-only check is not a sufficient protection boundary.
+
+[Back to top](#top)
+
+---
+
+## 9. Rights-holder / sovereignty representative
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Represent the rights, consent, sovereignty, cultural/community authority, or controlled-use interests applicable to one exact subject and mandate. |
+| **Typical targets** | Archaeology, Indigenous or community-governed data, cultural heritage, living-person material, genomic data, consent-bearing collections, licensed or agreement-restricted content, and revocation-sensitive release proposals. |
+| **Responsibilities** | Confirm the applicable mandate; state permitted and prohibited uses; identify consent, consultation, attribution, access, revocation, and re-review obligations; require protected handling and public-safe representation; escalate unresolved authority. |
+| **Cannot establish alone** | Technical validation, source role, domain meaning, policy execution, release manifest, public deployment, or generalized authority for another person, family, community, or dataset. |
+| **Partner roles** | Source steward at intake; domain steward for meaning; sensitivity reviewer for exposure; policy duty and release authority for any later release action. |
+| **Escalation triggers** | Missing mandate, disputed authority, incomplete consultation, incompatible terms, revoked consent, living-person risk, sacred or culturally restricted material, uncertain descendants or community, or pressure to disclose protected reasons. |
+| **Refresh triggers** | Mandate, agreement, consent, representative, community instruction, rights status, public purpose, audience, geography, precision, or use changes. |
+| **Current posture** | Human role proposed. No direct role identifier exists in the draft StewardshipAssignment role table, and no target-specific representative identity or mandate was verified. |
+
+> [!WARNING]
+> **Representation is target-specific and non-transferable.** A person or body authorized for one family, community, collection, agreement, lane, or purpose must not be assumed to represent another. Public repository prose must not invent, infer, or expose protected identity or mandate details.
+
+### 9.1 Public documentation boundary
+
+This public guide may describe the responsibility family. It should not store:
+
+- private contact information;
+- restricted consultation notes;
+- protected community reasoning;
+- confidential agreement terms;
+- sensitive identity or consent evidence;
+- precise locations or attributes that the review is meant to protect.
+
+Use governed references and public-safe reason codes. Fail closed when the safe reference path is unresolved.
+
+[Back to top](#top)
+
+---
+
+## 10. Release authority
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Make the accountable, subject-bound decision for a release-significant transition under the accepted release model. |
+| **Typical targets** | Release candidates, manifests, public-safe carriers, corrections, withdrawals, rollback proposals, public aliases, and release re-issuance. |
+| **Responsibilities** | Confirm exact subject and release scope; require evidence, validation, policy, rights, sensitivity, review, integrity, correction, and rollback support appropriate to consequence; record the state-bearing outcome through the accepted release family; preserve lineage and obligations. |
+| **Cannot establish alone** | Source truth, evidence creation, rights-holder mandate, policy evaluation, technical validation, public-safe transformation, or independent review where separation applies. |
+| **Partner roles** | Author or producer, domain/source stewards, sensitivity reviewer, rights-holder representative, policy duty, correction reviewer, and applicable technical stewards. |
+| **Escalation triggers** | Self-approval, unresolved assignment or identity, missing evidence/policy/review, unsafe precision, missing correction or rollback, conflicted schema/contract, stale support, or incomplete downstream invalidation. |
+| **Refresh triggers** | Subject bytes, manifest, evidence, policy, assignment, review, rights, sensitivity, release scope, correction, rollback, or public carrier changes. |
+| **Current posture** | ADR-0024 remains proposed; no accepted release-authority assignment or operational release path was verified. |
+
+### 10.1 Release is a separate state transition
+
+A release authority does not “approve publication” by editing this file, approving a pull request, or observing a green workflow. A state-bearing release action must use the accepted release controls and preserve correction and rollback.
+
+### 10.2 Independence boundary
+
+When materiality applies, the author or producer must not be treated as independently authorized release authority merely because the same account owns the repository or receives CODEOWNERS routing. The exact accepted decision and assignment evidence must establish eligibility and independence.
+
+[Back to top](#top)
+
+---
+
+## 11. Correction reviewer
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Assess whether a released or public-facing subject must be corrected, withdrawn, superseded, invalidated, or rolled back, and ensure prior state remains auditable. |
+| **Typical targets** | `CorrectionNotice`, withdrawal proposal, rollback proposal, supersession chain, stale-versus-wrong determination, derivative invalidation plan, cache and index repair. |
+| **Responsibilities** | Freeze prior state; inspect defect evidence and blast radius; distinguish stale, incomplete, contradicted, and wrong; require replacement or rollback target; identify affected carriers, caches, indexes, graphs, tiles, APIs, docs, and AI outputs; preserve public-safe notice and provenance. |
+| **Cannot establish alone** | New source truth, replacement content meaning, policy override, rights clearance, release execution, silent deletion, or erased history. |
+| **Partner roles** | Detector or author, domain/source stewards, sensitivity and rights roles where applicable, release authority for public-state change, docs steward for visible lineage. |
+| **Escalation triggers** | Unknown blast radius, missing prior bytes, no rollback target, protected reason text, conflicting corrections, derivative reconstruction risk, or pressure to rewrite history silently. |
+| **Refresh triggers** | New defect evidence, corrected subject, changed derivative inventory, public alias, policy, rights, sensitivity, or rollback outcome. |
+| **Current posture** | Human role proposed. No direct `correction_reviewer` label exists in the draft StewardshipAssignment role table; operational assignment and authority remain held. |
+
+### 11.1 Stale, wrong, withdrawn, and superseded are distinct
+
+- **Stale** means support or review has aged beyond the accepted tolerance.
+- **Wrong** means the substantive claim or artifact is incorrect.
+- **Withdrawn** means continued use or exposure is no longer permitted or supported.
+- **Superseded** means a newer governed object replaces the prior one without erasing lineage.
+
+The correction reviewer should not collapse these states into one generic “updated” label.
+
+### 11.2 Downgrade and containment
+
+Immediate containment may reduce exposure before a complete correction review when safety requires it. Containment is not a new release and does not erase the need for retrospective review, correction, lineage, and rollback evidence.
+
+[Back to top](#top)
+
+---
+
+## 12. AI surface steward
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Keep AI-facing interpretation evidence-bound, policy-aware, finite in outcome, traceable, and subordinate to governed evidence and release state. |
+| **Typical targets** | Focus Mode templates, retrieval scope, evidence presentation, citation behavior, abstention/denial logic, model-adapter boundaries, `AIReceipt` sampling, and public map/AI actions. |
+| **Responsibilities** | Define bounded question scope; require EvidenceRef resolution; inspect citation closure; test `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` behavior; review prompt-injection and unsafe-action posture; preserve model/provider non-authority; route domain, policy, sensitivity, rights, release, and UI/API work to their owners. |
+| **Cannot establish alone** | Truth, evidence, source authority, policy, rights, sensitivity clearance, release, publication, or model self-approval. |
+| **Partner roles** | Domain and source stewards, docs steward, policy duty, sensitivity or rights roles, UI/API duty, release authority for public changes, validation duty for negative tests. |
+| **Escalation triggers** | Missing evidence, unsupported citation, direct model-to-public path, generated text treated as evidence, prompt injection, unsafe action request, hidden policy bypass, sensitive context, or unbounded question scope. |
+| **Refresh triggers** | Template, retrieval, model, provider, policy, evidence contract, citation validator, UI/API, public scope, correction, or release changes. |
+| **Current posture** | Human role proposed; no accepted AI-surface assignment or operational release authority was verified. |
+
+### 12.1 Evidence outranks generated language
+
+The AI surface steward must preserve the ordering:
+
+```text
+scope
+  -> evidence retrieval and EvidenceRef resolution
+  -> policy / rights / sensitivity checks
+  -> bounded interpretation
+  -> citation validation
+  -> finite outcome
+  -> separate public-release and correction controls where applicable
+```
+
+A fluent answer, summary, map annotation, story, or recommendation is not sovereign truth.
+
+### 12.2 AIReceipt boundary
+
+An `AIReceipt` may make a model interaction inspectable. It does not make the answer correct, admissible, reviewed, released, or published. Current `AIReceipt` object maturity is outside this target's verified scope and must not be inferred from the role charter.
+
+[Back to top](#top)
+
+---
+
+## 13. Docs steward
+
+| Charter field | Proposed boundary |
+|---|---|
+| **Purpose** | Keep human doctrine, governance guidance, navigation, metadata, decision status, source lineage, drift, supersession, and rollback information accurate and inspectable. |
+| **Typical targets** | `docs/` guides, indexes, ADR navigation, governance landing pages, drift and verification references, source maps, migration notes, and documentation-only corrections. |
+| **Responsibilities** | Preserve authority labels; verify current paths and links; distinguish proposal from implementation; prevent duplicate authority; record drift and verification backlog; coordinate ADR or migration handoff; keep rollback and non-effects visible. |
+| **Cannot establish alone** | Contract meaning, schema shape, policy permission, actor assignment, independent review, source admission, release authority, publication, or public truth. |
+| **Partner roles** | Affected subsystem/domain owner; contract/schema/policy/release duties as applicable; AI surface steward for AI policy-facing guidance; correction reviewer for public documentation correction. |
+| **Escalation triggers** | Conflicting authority, stale decision status, broken canonical link, duplicate writable home, undocumented migration, overclaimed implementation, sensitive data in public docs, or proposed content presented as accepted. |
+| **Refresh triggers** | ADR status, Directory Rules, path, object-family, schema, policy, workflow, release, correction, or public-behavior changes. |
+| **Current posture** | `@bartytime4life` is the verified CODEOWNERS route for `docs/`; no accepted Docs-steward assignment, independent reviewer, or publication authority was verified. |
+
+### 13.1 Documentation is part of the system, not a substitute for it
+
+Documentation should accurately expose responsibilities, controls, and gaps. It must not simulate closure by copying contracts, schemas, policy, review records, release manifests, proofs, or private rosters into prose.
+
+### 13.2 ADR and status discipline
+
+The Docs steward may prepare and maintain an ADR record. Acceptance depends on the applicable decision process. A metadata edit, index entry, pull request, or merge does not silently accept a proposed decision.
+
+[Back to top](#top)
+
+---
+
+## 14. Companion implementation duty labels
+
+The draft StewardshipAssignment contract introduces five labels without direct counterparts in the eight human role-family roster:
+
+| Draft label | Proposed concern | Safe relationship to this guide |
+|---|---|---|
+| `contract_steward` | Semantic meaning, anti-collapse boundaries, versioning, paired schema expectations | Companion duty label; no adopted mapping or assignment verified |
+| `schema_steward` | Machine shape, schema lifecycle, fixtures, compatibility | Companion duty label; must remain separate from semantic meaning |
+| `policy_steward` | Policy semantics, bundles, allow/deny/restrict/abstain behavior | Companion duty label; does not equal release authority |
+| `ui_api_steward` | Governed public delivery and trust-membrane behavior | Companion duty label; public delivery remains downstream of release |
+| `validation_steward` | Fixtures, validators, tests, CI assertions, negative-state evidence | Companion duty label; validation is not authority or release |
+
+### 14.1 No implied hierarchy
+
+This document does not decide whether these labels are:
+
+- standalone steward roles;
+- capabilities attached to one of the eight human roles;
+- temporary duty assignments;
+- subsystem-owner responsibilities;
+- review roles used only for a named profile;
+- implementation labels that should not appear in governance assignments.
+
+### 14.2 `governance_steward` drift
+
+The draft StewardshipAssignment contract uses `governance_steward` in an example but omits it from the role table. Consumers must not infer an enum entry from the example. The conflict should be repaired through the same synchronized convergence process described in §4.4.
+
+### 14.3 Partner-duty rule
+
+A human role charter may require a contract, schema, policy, validation, UI/API, or other technical duty in its handoff. That does not transfer responsibility-root authority to the human role or prove that a named steward exists.
+
+[Back to top](#top)
+
+---
+
+## 15. Assignment, eligibility, and effective scope
+
+### 15.1 Draft assignment semantics
+
+The current semantic contract proposes that a `StewardshipAssignment` identify:
+
+- stable assignment identity;
+- exact target and target type;
+- role label;
+- assigned actor, team, service, placeholder, or governance body;
+- assignment status;
+- authority-basis references;
+- start and optional expiry or review time;
+- bounded scope statement;
+- required partner roles;
+- escalation path;
+- supersession and review references.
+
+These are draft semantics. The current schema stub does not enforce them.
+
+### 15.2 Eligibility evidence for one action
+
+Before relying on a steward for a trust-bearing action, verify all applicable facts:
+
+1. **Actor identity** — stable identity and relevant aliases are resolved.
+2. **Assignment identity** — a current, accepted assignment exists for the exact role and target.
+3. **Scope** — the assignment covers the subject, domain, operation, audience, and requested next gate.
+4. **Interval** — the assignment is effective at review or decision time and has not expired or been revoked.
+5. **Authority basis** — accepted decision, policy, agreement, or governance record supports the assignment.
+6. **Conflict and recusal** — conflicts are disclosed; required independence is established.
+7. **Partner roles** — all required roles are eligible for the same subject and interval.
+8. **Access** — the steward can inspect necessary protected context without exposing it improperly.
+9. **Evidence and policy** — the steward has the relevant evidence, validation, policy, rights, and sensitivity context.
+10. **Correction and rollback** — the action has an appropriate reversal and lineage path.
+
+Missing or conflicting evidence fails closed for a trust-bearing action.
+
+### 15.3 Assignment status posture
+
+The semantic contract proposes `active`, `provisional`, `expired`, `superseded`, `revoked`, and `unknown` postures.
+
+| Status | Safe interpretation |
+|---|---|
+| `active` | Candidate eligibility input only; still requires exact scope, identity, interval, conflict, and partner checks |
+| `provisional` | May support bounded preparation or review; cannot be assumed sufficient for material release authority |
+| `expired` | Cannot authorize a current trust-bearing action |
+| `superseded` | Follow the successor and preserve lineage |
+| `revoked` | Cannot authorize; inspect correction and invalidation needs |
+| `unknown` | `HOLD` / `ABSTAIN`; never assume authority |
+
+This table explains draft semantics; it is not a machine policy or active registry.
+
+### 15.4 Public and private roster boundary
+
+A future operational roster may need restricted identity, mandate, contact, conflict, or agreement details. This public document does not assert that such a roster exists and must not become a shadow roster. Public guidance should use stable public-safe role and assignment references while protected details remain in an approved governed system.
+
+[Back to top](#top)
+
+---
+
+## 16. Charter invocation and handoff packet
+
+### 16.1 Procedure
+
+1. **Freeze the subject.** Record stable identity, version, digest, and immutable locator where practical.
+2. **Name the requested next gate.** A charter handoff must not imply later promotion or release.
+3. **Classify the responsibility.** Select the relevant human role family without silently mapping it to an assignment enum.
+4. **Resolve assignment and eligibility.** Verify actor, role, target, interval, authority basis, conflicts, and partner duties.
+5. **Collect support.** Resolve evidence, validation, source role, provenance, rights, sensitivity, policy, correction, and rollback context.
+6. **Review positive and negative states.** Include denial, abstention, error, expiry, revocation, and unsafe-precision cases.
+7. **Record the bounded finding.** Use an accepted `ReviewRecord` or other exact profile when one exists; otherwise label the guidance and limitations.
+8. **Hand off to the separate gate.** Policy, promotion, release, correction, withdrawal, rollback, or platform action remains separate.
+
+### 16.2 Illustrative human handoff packet
+
+The following is a documentation template, not a new contract or accepted machine schema.
+
+```yaml
+steward_handoff:
+  subject_ref: "<stable subject identifier>"
+  subject_version: "<version or commit>"
+  subject_digest: "sha256:<digest>"
+  requested_next_gate: "<admission|validation|promotion|release|correction|rollback|other>"
+  role_family: "<exact human role-family label>"
+  role_profile_ref: "docs/governance/STEWARD_CHARTERS.md#<section>"
+  assignment_ref: "<accepted assignment reference or HOLD>"
+  actor_ref: "<public-safe stable identity reference or restricted reference>"
+  assignment_interval: "<start/end or unresolved>"
+  independence_and_conflicts: "<resolved|recused|unresolved>"
+  included_scope: []
+  excluded_scope: []
+  evidence_refs: []
+  validation_report_refs: []
+  policy_decision_refs: []
+  rights_and_sensitivity_refs: []
+  required_partner_roles: []
+  correction_and_rollback_refs: []
+  bounded_finding: "<supported next gate|hold|abstain|deny|escalate>"
+  open_obligations: []
+  expires_or_refreshes_at: "<time or trigger>"
+```
+
+### 16.3 Handoff outcome boundary
+
+A completed handoff may support the next gate. It does not prove that the next gate passed. Use explicit language such as:
+
+- “ready for independent review”;
+- “supported for policy evaluation”;
+- “held pending rights mandate”;
+- “closed for a separate release gate”;
+- “abstained because assignment evidence is missing.”
+
+Do not say “released,” “published,” “approved for public use,” or “authority confirmed” unless the separate governing evidence establishes that exact state.
+
+[Back to top](#top)
+
+---
+
+## 17. Absence, recusal, delegation, and succession
+
+### 17.1 Role absence
+
+When a required role is unstaffed or no eligible assignment can be resolved:
+
+- low-risk preparation may continue only within an explicitly bounded non-authoritative scope;
+- material, sensitive, rights-bearing, policy-significant, or public-state transitions remain `HOLD`;
+- do not assign the missing role to the author by default;
+- record the gap in the verification or escalation path without inventing a person or team;
+- prefer a narrowed subject or delayed transition over fabricated independence.
+
+### 17.2 Recusal and conflict
+
+A steward should recuse when personal, organizational, authorship, financial, rights, community, or operational conflicts undermine the required independence or mandate.
+
+A public record should disclose the existence and effect of recusal without exposing protected personal or community details. The replacement reviewer must have a separately valid assignment and scope.
+
+### 17.3 Delegation
+
+Delegation is not implied by repository access, team membership, account ownership, or a forwarded request. A valid delegation should be:
+
+- authorized by the applicable governance basis;
+- bounded to a target, role, action, and interval;
+- accepted by the delegate;
+- conflict-checked;
+- visible through an inspectable assignment or delegation record;
+- revocable and supersession-aware.
+
+No accepted delegation object or procedure was verified for this update.
+
+### 17.4 Succession
+
+A role transition should preserve:
+
+- the prior assignment and effective interval;
+- the successor assignment and authority basis;
+- open reviews, obligations, escalations, corrections, and rollback duties;
+- access removal or change where applicable;
+- public-safe continuity notes and protected private details in their proper system;
+- supersession and rollback links.
+
+Editing a name in a document or CODEOWNERS file is not sufficient proof of governed succession.
+
+### 17.5 Emergency containment
+
+Emergency containment may reduce exposure or stop an unsafe operation before ordinary review completes. It must be:
+
+- narrowly scoped;
+- time-bounded;
+- fail-safe;
+- logged without leaking protected details;
+- followed by retrospective review, correction, and rollback analysis;
+- prevented from becoming a normal release shortcut.
+
+[Back to top](#top)
+
+---
+
+## 18. Maturity and enforcement posture
+
+This ladder aligns stewardship guidance with current Review Duties and Separation of Duties documentation.
+
+| Level | Required capability | Current bounded evidence | Status |
+|---|---|---|---|
+| **L0 — Guidance and routing** | Role vocabulary, charters, handoff, escalation, and non-authority boundaries | Governance documents and CODEOWNERS routing exist | **PRESENT / PROPOSED** |
+| **L1 — Semantic and machine candidates** | Contracts, schemas, registries, public-safe fixtures, stable identifiers | Draft contracts exist; assignment schema is a stub; ReviewRecord schemas conflict | **PARTIAL / CONFLICTED** |
+| **L2 — Bounded deterministic execution** | Positive/negative fixtures, validators, tests, finite non-authoritative outcomes | ReviewAuthorityBinding and SensitiveReleaseReviewClosure profiles exist | **PARTIAL / FIXTURE-ONLY** |
+| **L3 — Governed identity and assignment** | Actor authentication, alias resolution, accepted assignments, intervals, conflict/recusal handling | Not established by inspected evidence | **HOLD** |
+| **L4 — Platform and policy enforcement** | Verified required participation, anti-bypass controls, accepted policy/evaluator coupling, audit trail | Current exact platform and policy enforcement not established here | **NEEDS VERIFICATION / HOLD** |
+| **L5 — Governed release and operational assurance** | Parent-level review records, release decisions, signer custody, correction/rollback drills, repeated operational evidence | Not verified | **UNKNOWN / HOLD** |
+
+### 18.1 Current safe claim
+
+KFM has substantive human guidance and two bounded fixture-only review profiles. It does not yet have evidence strong enough to claim operationally staffed steward roles or governed release separation.
+
+### 18.2 Tooling does not create mandate
+
+Automation may validate declared assignment fields, compare actor and author identities, check intervals, or enforce platform review. It cannot manufacture:
+
+- a rights-holder mandate;
+- community authority;
+- domain expertise;
+- evidence truth;
+- policy legitimacy;
+- independent human capacity;
+- release authority outside the accepted model.
+
+### 18.3 Graduation evidence
+
+Before claiming an operational charter for one role and target, require evidence such as:
+
+- accepted role and assignment vocabulary;
+- closed semantic contract and machine schema;
+- valid and invalid public-safe fixtures;
+- deterministic validator with stable diagnostics;
+- accepted actor identity and alias model;
+- current scoped assignment and conflict/recusal handling;
+- policy and platform coupling for the exact gate;
+- required partner-role capacity;
+- parent-level review and release records where relevant;
+- correction, withdrawal, rollback, and expiry tests;
+- observed fail-closed behavior and audit trail.
+
+[Back to top](#top)
+
+---
+
+## 19. Sensitive and public-safe stewardship
+
+### 19.1 Fail-closed categories
+
+Unknown or unresolved posture should fail closed where the subject involves:
+
+- rights, sovereignty, cultural authority, or consent;
+- living-person or genomic data;
+- archaeology or sacred/culturally restricted information;
+- rare species, habitat, or sensitive ecological locations;
+- critical infrastructure or exploitable vulnerabilities;
+- private land, title, or protected ownership information;
+- precise locations whose exposure could cause harm;
+- protected reviewer, source, or rights-holder identity.
+
+### 19.2 Public-safe record content
+
+Public charter and handoff records should prefer:
+
+- stable opaque identifiers;
+- public-safe reason and obligation codes;
+- generalized scope descriptions;
+- links to governed restricted records;
+- explicit `RESTRICTED_REF`, `WITHHELD`, `ABSTAIN`, or `HOLD` posture where appropriate;
+- dates, versions, and digests that do not disclose protected payloads.
+
+They should exclude:
+
+- credentials and access tokens;
+- private contact or identity details beyond governance need;
+- exact protected coordinates;
+- sensitive source excerpts;
+- control-defeating redaction parameters;
+- protected conflict or consultation reasons;
+- restricted evidence copied merely to make a public packet look complete.
+
+### 19.3 Join-induced sensitivity
+
+A collection of individually public fields can become sensitive when joined. Stewardship review must consider the combined subject, not only each input in isolation. The public-safe transformation and release review must bind to the actual joined output.
+
+[Back to top](#top)
+
+---
+
+## 20. Anti-patterns
+
+The following patterns are prohibited or fail-closed for trust-bearing use:
+
+| Anti-pattern | Why it fails |
+|---|---|
+| Treating a charter as an assignment | Responsibility prose does not bind an actor, target, interval, or mandate |
+| Treating CODEOWNERS as a steward roster | Repository routing lacks assignment semantics, scope, expiry, conflicts, and release authority |
+| Treating different usernames as proof of independence | Accounts may alias one actor or lack accepted assignment |
+| Treating the eight human roles as a canonical enum | Current contract vocabulary conflicts and the schema does not enforce it |
+| Translating role labels silently | Scope and compatibility are unresolved |
+| Treating a fixture `BOUND` result as authority | The profile explicitly grants no authority |
+| Treating `CLOSED_FOR_SEPARATE_RELEASE_GATE` as release | A separate policy and release authority must still act |
+| Treating a green check, PR approval, or merge as KFM release approval | Platform state is not governed release state |
+| Letting the author self-assign a missing material role | Absence of capacity is not permission to fabricate independence |
+| Using a generic rights-holder representative | Mandate is subject- and community-specific |
+| Hiding sensitive values only in the UI | Public clients may still receive or reconstruct the data |
+| Letting a domain steward absorb contract/schema/policy/release authority | Responsibility roots and current role vocabularies remain separate |
+| Treating documentation as contract, schema, policy, proof, or release state | Each authority belongs to its owning surface |
+| Rewriting a corrected record in place | Correction and supersession lineage must remain auditable |
+| Allowing AI to approve its own evidence, policy, release, or correction | AI is interpretive and subordinate to governed evidence and authority |
+| Publishing a private roster or protected reasons in public docs | Governance visibility does not justify harmful disclosure |
+
+[Back to top](#top)
+
+---
+
+## 21. Related responsibility map
+
+| Concern | Current repository surface | Boundary |
+|---|---|---|
+| Governance landing page | [`README.md`](./README.md) | Human lane map; no authority grant |
+| Reviewer tasks and handoff | [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md) | Detailed review procedure and ReviewRecord conflict |
+| Duty separation | [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) | Proposed independence model and maturity posture |
+| Escalation | [`ESCALATION.md`](./ESCALATION.md) | Human escalation guidance |
+| Contradictions | [`CONTRADICTION_HANDLING.md`](./CONTRADICTION_HANDLING.md) | Classification and anti-smoothing guidance |
+| Deprecation and retirement | [`DEPRECATION_PROCESS.md`](./DEPRECATION_PROCESS.md) | Planned retirement and successor guidance |
+| Decision history | [`DECISION_LOG.md`](./DECISION_LOG.md) and ADRs | Decision documentation; placement/status evaluated separately |
+| Directory authority | [`directory-rules.md`](../doctrine/directory-rules.md) + [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement law |
+| Release-SoD decision | [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) | Proposed, not accepted |
+| Governance contract lane | [`contracts/governance/`](../../contracts/governance/README.md) | Semantic meaning |
+| Assignment meaning | [`steward_assignment.md`](../../contracts/governance/steward_assignment.md) | Draft semantic contract |
+| Review meaning | [`ReviewRecord.md`](../../contracts/governance/ReviewRecord.md) | Draft semantic contract |
+| Assignment shape | [`steward_assignment.schema.json`](../../schemas/contracts/v1/governance/steward_assignment.schema.json) | Proposed permissive stub |
+| Review shapes | Governance and review schema candidates | Conflicted; no selection here |
+| Bounded authority binding | [`review_authority_binding.md`](../../contracts/governance/review_authority_binding.md) | Fixture-only, no authority |
+| Sensitive closure | [`sensitive_release_review_closure.md`](../../contracts/governance/sensitive_release_review_closure.md) | Fixture-only, no release |
+| Release policy | [`policy/release/README.md`](../../policy/release/README.md) | Scaffolded/inactive guidance |
+| Release reviews | [`release/reviews/README.md`](../../release/reviews/README.md) | Guidance-only lane; no parent governed record verified |
+| Review proof | [`data/proofs/review/README.md`](../../data/proofs/review/README.md) | Support lane; README-only inventory at its checkpoint |
+| Repository routing | [`CODEOWNERS`](../../.github/CODEOWNERS) | One verified GitHub route; no assignment or independence |
+| Drift and open verification | [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Human tracking; not authority or proof |
+
+### 21.1 Dependency direction
 
 ```mermaid
 flowchart LR
-    A["— → RAW"] --> B["RAW → WORK / QUARANTINE"]
-    B --> C["WORK → PROCESSED"]
-    C --> D["PROCESSED → CATALOG / TRIPLET"]
-    D --> E["CATALOG → PUBLISHED"]
-    E --> F["PUBLISHED → PUBLISHED'"]
-    SRC(["Source steward"]):::role -.->|admission| A
-    DOM(["Domain steward"]):::role -.->|validation| C
-    SENS(["Sensitivity reviewer"]):::role -.->|sensitive lanes| C
-    SENS -.->|tier transitions| D
-    REL(["Release authority"]):::role -.->|materiality| E
-    RIGHTS(["Rights-holder rep"]):::role -.->|sovereignty| E
-    CORR(["Correction reviewer"]):::role -.->|corrections| F
-    AI(["AI surface steward"]):::role -.->|Focus Mode| E
-    DOCS(["Docs steward"]):::role -.->|Atlas / ADR| E
-    classDef role fill:#eef,stroke:#446,stroke-width:1px;
+    DOC["Steward charter<br/>human responsibility"] --> ASSIGN["StewardshipAssignment<br/>actor + role + target + interval"]
+    ASSIGN --> REVIEW["ReviewRecord<br/>subject-bound review event"]
+    REVIEW --> POLICY["PolicyDecision<br/>separate admissibility"]
+    REVIEW --> PROMOTE["PromotionDecision<br/>separate lifecycle decision"]
+    POLICY --> RELEASE["Release control<br/>separate state-bearing decision"]
+    PROMOTE --> RELEASE
+    RELEASE --> PUBLIC["Governed API / released public-safe carrier"]
+    RELEASE --> CORRECT["Correction / withdrawal / rollback"]
+
+    CODEOWNERS["CODEOWNERS / GitHub review"] -. routing evidence only .-> REVIEW
+    FIXTURE["Fixture validators"] -. bounded conformance only .-> REVIEW
 ```
 
-> [!NOTE]
-> The diagram shows **doctrine-level** role engagement at each lifecycle gate. Concrete tooling, queue ownership, and notification flow are **PROPOSED** — see §14 (Maturity Model). The lifecycle invariant itself is **CONFIRMED**. [ENCY] [DIRRULES]
+The diagram shows intended responsibility flow. It does not prove operational integration.
 
-[↑ Back to top](#contents)
-
----
-
-## 4. Charter Template
-
-Each individual charter (§§5–12) uses this fixed shape so they read in parallel. Field-level shape MAY tighten under ADR-S-09; the field set itself is **PROPOSED stable**.
-
-| Field | Meaning |
-|---|---|
-| **Role name** | Canonical KFM name from Atlas v1.1 §24.7.1. |
-| **Definition** | One-sentence scope statement from Atlas v1.1. CONFIRMED quote where possible. |
-| **Charter status** | CONFIRMED definition / PROPOSED scope / NEEDS VERIFICATION staffing. |
-| **Owned artifacts** | Object families and receipts this steward signs or authors. |
-| **Gate authority** | Which lifecycle gates the steward owns or co-owns. |
-| **Cannot be the sole approver of** | Decisions that require a co-signer. |
-| **Required collaborators** | Other charters this role typically co-signs with. |
-| **Review cadence** | Proposed review window for the steward's own actions and the audit sample. |
-| **Onboarding minimum** | Proposed minimum context a new occupant must hold. |
-| **Citation** | Atlas / Encyclopedia / Directory Rules cites. |
-
-### 4.1 Field semantics
-
-The charter fields describe **responsibility**, not current implementation. For example:
-
-- `Owned artifacts` means the steward is responsible for that artifact family when it exists; it does **not** prove the schema or file is present in the mounted repo.
-- `Gate authority` means the steward is the doctrine owner or co-owner for that transition; it does **not** prove a queue, workflow, or CI gate enforces it.
-- `Review cadence` and `Onboarding minimum` are **PROPOSED** unless a mounted repo, accepted ADR, or staffed roster confirms them.
-
-[↑ Back to top](#contents)
+[Back to top](#top)
 
 ---
 
-## 5. Source steward
+## 22. Current repository evidence ledger
 
-| Field | Value |
-|---|---|
-| **Definition** | "Owns admission, rights confirmation, and sensitivity tag for a named source family." [ENCY] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | `SourceDescriptor`; ingest-side `RunReceipt`; initial sensitivity tag; admission `PolicyDecision` records. |
-| **Gate authority** | Admission gate (— → RAW). |
-| **Cannot be the sole approver of** | Admission of any source with unresolved rights or sovereignty. [DIRRULES] [DOM-ARCH] [DOM-PEOPLE] |
-| **Required collaborators** | Rights-holder representative (sovereign / consent-sensitive sources); Sensitivity reviewer (T3 / T4 admission). |
-| **Review cadence** | **PROPOSED** — every admitted source family receives a freshness review at the cadence declared in its `SourceDescriptor`; backlog tracked in `docs/registers/VERIFICATION_BACKLOG.md`. |
-| **Onboarding minimum** | **PROPOSED** — familiarity with the source-role anti-collapse register (Atlas v1.1 §24.1), the Sensitive / Deny-by-Default Register, and the `SourceDescriptor` schema. |
-| **Citation** | [ENCY] [DIRRULES] |
-
-### 5.1 Source-role anti-collapse
-
-Source role is fixed at admission. A source steward **MUST NOT** silently upgrade a role (e.g., `modeled → observed`) during admission or later promotion. Source-role upcasts are forbidden by doctrine; corrections must produce a *new* descriptor and a `CorrectionNotice`. [ENCY] Atlas v1.1 §24.1
-
-> [!CAUTION]
-> Treating a regulatory layer as observed evidence, an aggregate as a per-place observation, or an administrative compilation as an observed event timeline is a **source-role collapse** and a defined DENY case at the trust membrane. [ENCY] Atlas v1.1 §24.9.2
-
-[↑ Back to top](#contents)
-
----
-
-## 6. Domain steward
-
-| Field | Value |
-|---|---|
-| **Definition** | "Owns the meaning, contracts, and validators of a domain's object families." [ENCY] [DDD] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | Domain `contracts/` files; `schemas/contracts/v1/<domain>/...`; domain validators; `ValidationReport`; domain-internal `TransformReceipt`. |
-| **Gate authority** | Normalization gate (RAW → WORK / QUARANTINE); validation gate (WORK → PROCESSED); domain-internal catalog closure. |
-| **Cannot be the sole approver of** | Sensitive-lane promotion; cross-lane catalog joins flagged by sensitivity policy; schema or contract changes that affect another domain's invariants (those require ADR). |
-| **Required collaborators** | Sensitivity reviewer for any transform with sensitivity implications; Docs steward for ADR coordination on contract changes. |
-| **Review cadence** | **PROPOSED** — per-domain quarterly contract review; validator re-run on every release; periodic audit by Docs steward. [ENCY] Atlas v1.1 §24.7.2 |
-| **Onboarding minimum** | **PROPOSED** — domain dossier, `contracts/<domain>/`, `schemas/contracts/v1/<domain>/`, the Pipeline Gate Reference (Atlas v1.1 §24.6), and the Cross-Lane Relation Atlas for the owned domain. |
-| **Citation** | [ENCY] [DDD] [DIRRULES] |
-
-### 6.1 Validators are deterministic
-
-Validator authorship and run are routinely author-approvable because validators are deterministic; a periodic audit by the Docs steward replaces per-run separation. [ENCY] Atlas v1.1 §24.7.2
-
-[↑ Back to top](#contents)
-
----
-
-## 7. Sensitivity reviewer
-
-| Field | Value |
-|---|---|
-| **Definition** | "Reviews redaction, generalization, withholding, and tier decisions for sensitive content." [ENCY] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | `RedactionReceipt`; tier-transition `ReviewRecord`; `AggregationReceipt` when aggregation is the sensitivity transform. |
-| **Gate authority** | Tier transitions T4 → T3 / T2 / T1; sensitivity-relevant transitions at every lifecycle gate where defaults are T1+. |
-| **Cannot be the sole approver of** | T1 → T0 release (needs Release authority); release of archaeology / sovereign / living-person / DNA data (needs Rights-holder representative); promotion of a candidate to PUBLISHED. |
-| **Required collaborators** | Rights-holder representative for sovereign, cultural-heritage, or consent-bearing material; Release authority for any T1 → T0 motion. |
-| **Review cadence** | **PROPOSED** — aged-review badge fires after the per-lane tolerance set by the lane's sensitivity policy; the reviewer is the trigger for tier re-evaluation. [ENCY] Atlas v1.1 §24.8.1 |
-| **Onboarding minimum** | **PROPOSED** — Sensitivity / Rights Tier Reference (Atlas v1.1 §24.5); Sensitive / Deny-by-Default Register; domain redaction patterns for archaeology, fauna, flora, people/DNA, settlements/infrastructure. |
-| **Citation** | [ENCY] [DOM-ARCH] [DOM-FAUNA] [DOM-FLORA] [DOM-PEOPLE] |
-
-> [!IMPORTANT]
-> **Tier-motion asymmetry.** Tier *upgrade* (toward more public) requires both a transform receipt and a `ReviewRecord`. Tier *downgrade* (toward less public) is always permitted via `CorrectionNotice` alone. The sensitivity reviewer's authority is symmetric in direction but asymmetric in burden: downgrade is fast; upgrade is slow. [ENCY] Atlas v1.1 §24.5.3
-
-[↑ Back to top](#contents)
-
----
-
-## 8. Rights-holder representative
-
-| Field | Value |
-|---|---|
-| **Definition** | "Confirms sovereignty, cultural-heritage, or consent-based release decisions." [DOM-ARCH] [DOM-PEOPLE] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | Consent / sovereignty `ReviewRecord`; consultation record; named-party agreement reference (T4 → T3 transitions). |
-| **Gate authority** | Sovereignty / consent gates wherever the lane is archaeology, sovereign data, living-person data, or DNA data. |
-| **Cannot be the sole approver of** | Schema or validator changes (Domain steward); release manifest issuance (Release authority); routine admission of non-sovereign sources. |
-| **Required collaborators** | Sensitivity reviewer; Release authority; Source steward at admission. |
-| **Review cadence** | **PROPOSED** — agreement-based; rights-status-changed badge requires immediate re-evaluation. [ENCY] Atlas v1.1 §24.8.1 |
-| **Onboarding minimum** | **PROPOSED** — lane-specific cultural protocols, consent terms, and the named-agreement register. Per-lane onboarding is **non-fungible** across communities or domains. |
-| **Citation** | [DOM-ARCH] [DOM-PEOPLE] [ENCY] |
-
-> [!WARNING]
-> **Sovereignty is not transferable.** A rights-holder representative confirms decisions for the *specific* community, family, descendant group, or data subject the data concerns. A representative for one lane or one community **MUST NOT** be assumed to represent another.
-
-[↑ Back to top](#contents)
-
----
-
-## 9. Release authority
-
-| Field | Value |
-|---|---|
-| **Definition** | "Issues `ReleaseManifest`s and authorizes PUBLISHED transitions; distinct from authorship when materiality applies." [ENCY] [DIRRULES] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | `ReleaseManifest`; rollback target; `RollbackCard` (initiated by Correction reviewer, executed / authorized by Release authority). |
-| **Gate authority** | Release gate (CATALOG / TRIPLET → PUBLISHED); rollback authorization; release re-issuance after correction. |
-| **Cannot be the sole approver of** | Sensitive-lane release (needs Sensitivity reviewer + Rights-holder representative); AI surface change in a policy binding (needs AI surface steward + Docs steward); the *content* of the release (the author / Domain steward owns content; this role authorizes release). |
-| **Required collaborators** | The author / Domain steward; Sensitivity reviewer where T1+; Rights-holder representative for sovereign lanes; Correction reviewer for rollbacks. |
-| **Review cadence** | **PROPOSED** — every release sampled by the Docs steward into the audit ladder; release queue tracked in `release/` per Directory Rules §9. [DIRRULES] |
-| **Onboarding minimum** | **PROPOSED** — Pipeline Gate Reference (Atlas v1.1 §24.6); `ReleaseManifest` schema; rollback drill in `docs/runbooks/`; `release/manifests/` and `release/rollback_cards/` layout. |
-| **Citation** | [ENCY] [DIRRULES] |
-
-### 9.1 The author-≠-release-authority rule
-
-When materiality applies, the author of a claim **MUST NOT** also be the release authority. Materiality includes: sensitivity tier ≥ T1, cross-domain integration, AI-surface bindings, story / export carriers, and any release whose rollback target affects derivatives. [ENCY] Atlas v1.1 §24.7.2
-
-[↑ Back to top](#contents)
-
----
-
-## 10. Correction reviewer
-
-| Field | Value |
-|---|---|
-| **Definition** | "Reviews `CorrectionNotice` / `RollbackCard` before they amend a PUBLISHED claim." [ENCY] [DIRRULES] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | `CorrectionNotice`; rollback decision (paired with Release authority for execution); supersession entry in the source / claim register. |
-| **Gate authority** | Correction gate (PUBLISHED → PUBLISHED'); supersession lineage closure; derivative invalidation. |
-| **Cannot be the sole approver of** | The rollback execution itself (Release authority co-signs); the new content being substituted (Domain steward / author owns the new content). |
-| **Required collaborators** | Author / detector of the error; Release authority; Sensitivity reviewer if the correction crosses a tier boundary; Docs steward for atlas-level supersession entries. |
-| **Review cadence** | **PROPOSED** — every correction must close its derivative-invalidation list; periodic audit by Docs steward. [ENCY] Atlas v1.1 §24.9.3 |
-| **Onboarding minimum** | **PROPOSED** — Stale-State and Supersession Reference (Atlas v1.1 §24.8); `CorrectionNotice` / `RollbackCard` schemas; the "stale vs. wrong" doctrinal distinction. |
-| **Citation** | [ENCY] [DIRRULES] |
-
-### 10.1 Stale ≠ wrong
-
-A *stale* claim has aged past its evidence, source freshness, or supporting-context tolerance. A *wrong* claim is substantively incorrect. Correction reviewers handle the *wrong* path. Stale-state markers (source freshness expired, schema drift, geography version drift, review aged out, policy version changed) trigger a separate evaluation; not every stale marker becomes a correction. [ENCY] Atlas v1.1 §24.8
-
-[↑ Back to top](#contents)
-
----
-
-## 11. AI surface steward
-
-| Field | Value |
-|---|---|
-| **Definition** | "Reviews Focus Mode templates, `AIReceipt`s, and policy bindings; audits AI behavior against doctrine." [GAI] [UIAI] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | Focus Mode prompt templates; AI policy bindings; `AIReceipt` sampling reports; cite-or-abstain audit records. |
-| **Gate authority** | AI surface change gate (template / policy binding); Focus Mode admission of new question scopes; AI-surface red-team / abstention sampling. |
-| **Cannot be the sole approver of** | Any AI policy binding (Docs steward co-signs); model selection or version pinning if it crosses ADR-class change; an AI answer being treated as evidence (forbidden by doctrine). |
-| **Required collaborators** | Docs steward (policy bindings); Release authority for any AI-driven public surface; Domain steward for domain-bounded scopes. |
-| **Review cadence** | **PROPOSED** — per-release `AIReceipt` sample; periodic cite-or-abstain audit; `AIReceipt`s are *never* superseded retroactively — old answers stay, new ones become new receipts. [ENCY] Atlas v1.1 §24.8.2 |
-| **Onboarding minimum** | **PROPOSED** — Governed AI doctrine; `AIReceipt` schema; Focus Mode boundaries; finite-outcome envelope (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`); cite-or-abstain rule. |
-| **Citation** | [GAI] [UIAI] [ENCY] |
-
-> [!CAUTION]
-> AI is **interpretive, not the root truth source.** `EvidenceBundle` outranks generated language; AI answering from `RAW` / `WORK` is forbidden; AI surface change routed through an admin shortcut is a defined anti-pattern. [GAI] [DIRRULES] Atlas v1.1 §24.9.2
-
-[↑ Back to top](#contents)
-
----
-
-## 12. Docs steward
-
-| Field | Value |
-|---|---|
-| **Definition** | "Owns governance documentation, ADR index, drift register, and Atlas / supplement integrity." [DIRRULES] |
-| **Charter status** | CONFIRMED definition · PROPOSED scope · NEEDS VERIFICATION staffing |
-| **Owned artifacts** | The `docs/` tree; the ADR index; `docs/registers/DRIFT_REGISTER.md`; `docs/registers/VERIFICATION_BACKLOG.md`; Atlas / supplement supersession entries; this charters file. |
-| **Gate authority** | Atlas / supplement publication; ADR coordination; drift-register triage; periodic audit of every other steward. |
-| **Cannot be the sole approver of** | Atlas / supplement publication (needs at least one subsystem owner per Directory Rules §2); AI policy binding (AI surface steward co-signs); domain contract change (Domain steward authors). |
-| **Required collaborators** | At least one subsystem owner for any Atlas / supplement publication; the role being audited for any periodic audit. |
-| **Review cadence** | **PROPOSED** — drift-register triage at a cadence defined by ADR-S-13; ADR backlog review every release cycle. [ENCY] Atlas v1.1 §24.12 |
-| **Onboarding minimum** | **PROPOSED** — Directory Rules; Atlas v1.0 + v1.1; ADR template; drift-register methodology; the four-layer doctrine (`docs/` explains, `control_plane/` indexes, `contracts/` defines meaning, `schemas/` defines shape). |
-| **Citation** | [DIRRULES] [ENCY] |
-
-[↑ Back to top](#contents)
-
----
-
-## 13. Separation-of-Duties Matrix
-
-The canonical separation matrix is **Atlas v1.1 §24.7.2**. This table re-presents it from the charter perspective: which roles must co-sign each gate, and at what materiality threshold. **PROPOSED specifics; CONFIRMED doctrine of "separate when materiality justifies."** [ENCY] [DIRRULES]
-
-| Action | Author may self-approve? | Required separation (PROPOSED) |
+| Surface | Blob at evidence snapshot | Current bounded finding |
 |---|---|---|
-| Source admission (— → RAW), routine | Yes | — |
-| Source admission, unresolved rights / sovereignty | No | Source steward **+** Rights-holder representative |
-| Normalization receipts, routine | Yes | — |
-| Normalization receipts, sensitivity-relevant | No | Domain steward **+** Sensitivity reviewer |
-| Validator authorship and run | Yes (deterministic) | Periodic audit by Docs steward |
-| Promotion to PROCESSED / CATALOG, non-sensitive routine | Yes | — |
-| Promotion to PROCESSED / CATALOG, sensitive lane | No | Domain steward **+** Sensitivity reviewer |
-| Release to PUBLISHED, materiality applies | No | Author **≠** Release authority; Rights-holder representative where applicable |
-| Sensitive-lane release | No | Author **+** Sensitivity reviewer **+** Release authority **+** Rights-holder representative |
-| Correction / rollback, steward-significant | No | Author / detector **+** Correction reviewer **+** Release authority |
-| AI surface change (template / policy binding) | No | AI surface steward **+** Docs steward |
-| Atlas / supplement publication | No | Docs steward **+** ≥ 1 subsystem owner |
+| `docs/governance/STEWARD_CHARTERS.md` prior version | `a42ada278e03e930be590b2182ffdd1fe2ac36e6` | v0.2 draft based largely on source corpus; stale path, ADR, and repo-depth posture |
+| `docs/governance/README.md` | `500f8bcad3a384160a561f1460617f0a13d42fcc` | Repository-grounded landing page; eight roles proposed; no staffing proof |
+| `docs/governance/REVIEW_DUTIES.md` | `df9848c324cbb1b7a3d63b32bd5e2fcf929ff4e9` | Current review procedure; role matrix proposed; ReviewRecord schemas conflicted |
+| `docs/governance/SEPARATION_OF_DUTIES.md` | `00f68beeeec7d57cce806e6cdbd710a837bd4f0c` | Current SoD guide; operational authority held |
+| `docs/doctrine/directory-rules.md` | `fd49a0b83e55cef52c1124281f093e263526898d` | Exact bytes adopted by accepted ADR-0029 |
+| `.github/CODEOWNERS` | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | One verified review route; file itself disclaims assignment/release authority |
+| `contracts/governance/steward_assignment.md` | `80c6fd4149deeb4172e2401dfaf741226380f085` | Draft semantic assignment contract; role vocabulary differs from human roster |
+| `schemas/contracts/v1/governance/steward_assignment.schema.json` | `bd12f7e5e8eea966306c250d992f2826693815c9` | Proposed stub; requires only `id`, allows additional properties, no role enum |
+| `contracts/governance/ReviewRecord.md` | `9641345d1e5d939dc59687a900e60a563d92c4f0` | Draft rich semantic review contract |
+| `schemas/contracts/v1/governance/review_record.schema.json` | `fe2f2223af46481e7fb19b0baa94f62ce9c6c855` | Concrete proposed candidate; narrower vocabulary and case-link issue |
+| `schemas/contracts/v1/review/review_record.schema.json` | `a053448d68e8379b92b12a16e6528275b975433c` | Overlapping permissive scaffold |
+| `contracts/governance/review_authority_binding.md` | `f156e100660e9fd97ca95e90092143a3cd6d62ee` | Proposed-inactive fixture-only binding; `BOUND/HOLD/DENY`; no authority |
+| `contracts/governance/sensitive_release_review_closure.md` | `235ca86dd807c6842ca8c861f995371fe7758f64` | Proposed-inactive T3/T4 closure; separate release gate still required |
+| `release/reviews/README.md` | `bf3058a5af8fc85aa04a25a36ed03541cd9eb657` | Release-review guidance; no parent governed ReviewRecord established |
+| `policy/release/README.md` | `8a6a91e18f29f6f961eac88270b385a95b86281e` | Release-policy lane scaffolded/inactive; no accepted evaluator or authority |
+| `data/proofs/review/README.md` | `071a507bf1f9e2ff3e94d4a3618341ea004898b3` | Review-support guidance; operational proof payload/profile not established |
 
-> [!NOTE]
-> This is a reflection of the canonical matrix, not a replacement. Where this file and Atlas v1.1 §24.7.2 disagree, **Atlas v1.1 wins**; treat the disagreement as a `DRIFT_REGISTER` entry. [DIRRULES]
+### 22.1 Evidence interpretation
 
-### 13.1 Materiality triggers (PROPOSED)
+- File presence proves bytes and declared posture at the snapshot.
+- A semantic contract does not prove accepted shape or operational use.
+- A schema stub does not prove the contract is enforced.
+- A fixture validator does not prove actor identity or release authority.
+- A human guide does not prove staffing.
+- CODEOWNERS does not prove independence.
+- A pull request or merge does not prove release, deployment, or publication.
 
-Materiality is the point where self-approval stops being safe. Until ADR-S-09 is accepted, use this conservative trigger list:
-
-| Trigger | Minimum separation response |
-|---|---|
-| Sensitivity tier is T1+ or may become public. | Author **≠** sole approver; involve Sensitivity reviewer and Release authority. |
-| Rights, sovereignty, cultural heritage, living-person, DNA, land/title, rare-species, archaeology, or critical-infrastructure exposure is unclear. | Fail closed; involve Rights-holder representative and Sensitivity reviewer where applicable. |
-| A source-role change, upcast, or authority reinterpretation is proposed. | Require Source steward + Domain steward + correction / descriptor update path. |
-| A cross-domain join, aggregation, graph edge, tile, story, export, or AI answer will carry a public claim. | Require EvidenceBundle closure and release-state review before public exposure. |
-| A rollback or correction invalidates derivatives. | Require Correction reviewer + Release authority and derivative invalidation list. |
-| A policy binding, Focus Mode template, or model-surface behavior changes. | Require AI surface steward + Docs steward; release authority joins for public surfaces. |
-
-[↑ Back to top](#contents)
+[Back to top](#top)
 
 ---
 
-## 14. Maturity Model and Enforcement Posture
+## 23. Verification, non-effects & rollback
 
-**CONFIRMED doctrine** [ENCY] [DIRRULES]: Separation of duties is **maturity-dependent**. Early-stage doctrine work may be authored and approved by the same actor when materiality is low. As maturity rises and the public trust surface expands, separation MUST be enforced through **tooling**, not custom.
+### 23.1 Documentation verification checklist
 
-**INFERRED maturity ladder** (PROPOSED naming; pending ADR-S-09):
+A valid update to this file should demonstrate:
 
-| Level | Posture | Authoring discipline | Tooling expectation |
+- [ ] one H1 and one closed `KFM_META_BLOCK_V2`;
+- [ ] exact tracked path and accepted Directory Rules basis;
+- [ ] ADR-0024 described as proposed, not accepted;
+- [ ] historical `ADR-S-*` labels identified as lineage only;
+- [ ] eight human role families preserved without claiming staffing;
+- [ ] role-vocabulary conflicts recorded without silent normalization;
+- [ ] `StewardshipAssignment`, `ReviewRecord`, policy, release, CODEOWNERS, and workflow boundaries kept distinct;
+- [ ] links limited to verified repository targets;
+- [ ] no private roster, credentials, protected identity, restricted reason, or sensitive location;
+- [ ] no invented policy result, assignment, approval, release, deployment, or publication state;
+- [ ] balanced code fences, no trailing whitespace, and a final newline.
+
+### 23.2 Open operational verification
+
+Before any charter is treated as operational for one target, verify:
+
+- [ ] accepted role vocabulary and mapping or explicitly separate vocabularies;
+- [ ] accepted StewardshipAssignment semantic contract and closed schema;
+- [ ] actor identity, aliases, assignment, scope, interval, conflict, recusal, and delegation evidence;
+- [ ] independent capacity for every required material role;
+- [ ] canonical ReviewRecord authority and schema resolution;
+- [ ] accepted policy bundle, evaluator, and normalized decision binding;
+- [ ] platform controls and exact required-check coupling;
+- [ ] governed review and release records for the target profile;
+- [ ] correction, withdrawal, rollback, expiry, and downstream invalidation drills;
+- [ ] public-safe handling of rights, sovereignty, sensitive identity, and protected reasons;
+- [ ] observed fail-closed behavior and auditable operational evidence.
+
+### 23.3 Non-effects
+
+This documentation-only change does not:
+
+- accept ADR-0024 or another decision;
+- assign or revoke a steward;
+- authenticate an actor or resolve aliases;
+- create a team, permission, CODEOWNERS route, ruleset, or required review;
+- define or modify a contract, schema, enum, registry, policy, fixture, validator, test, or workflow;
+- validate or issue a `StewardshipAssignment` or `ReviewRecord`;
+- evaluate evidence, policy, rights, sensitivity, or release readiness;
+- create or mutate a source, lifecycle object, receipt, proof, candidate, manifest, correction, withdrawal, or rollback record;
+- promote, release, deploy, publish, or expose a public artifact.
+
+### 23.4 Rollback
+
+Rollback is required if a later edit:
+
+- presents a proposed role as staffed or accepted without assignment evidence;
+- treats CODEOWNERS, a username, or a workflow as authority;
+- silently normalizes the conflicting role vocabularies;
+- selects a ReviewRecord schema through prose;
+- weakens rights, sensitivity, independence, correction, or rollback boundaries;
+- exposes protected identity, mandate, reason, or location details;
+- implies release, deployment, publication, or operational enforcement without state-bearing evidence.
+
+**Documentation rollback target:** prior blob `a42ada278e03e930be590b2182ffdd1fe2ac36e6`.
+
+A rollback restores documentation bytes only. It does not reverse any external assignment, review, policy, release, platform, or public-state action; none is created by this change.
+
+[Back to top](#top)
+
+---
+
+## Appendix A — no-loss modernization ledger
+
+| v0.2 material | v2-draft disposition |
+|---|---|
+| Purpose and scope | Preserved and grounded in current repository authority |
+| Authority and doctrinal basis | Replaced stale proposed-path and historical-ADR posture with accepted ADR-0029 and proposed ADR-0024 |
+| Eight-role roster | Preserved as proposed human role families; staffing claim narrowed |
+| Charter template | Preserved and reframed as human guidance, not machine shape |
+| Source steward | Preserved; source-role anti-collapse strengthened |
+| Domain steward | Preserved; contract/schema/validator ownership narrowed because current role vocabulary is conflicted |
+| Sensitivity reviewer | Preserved; universal tier claim narrowed to exact-profile evidence |
+| Rights-holder representative | Preserved; mandate-specific, non-transferable, public-safe boundary strengthened |
+| Release authority | Preserved; operational authority and ADR status corrected |
+| Correction reviewer | Preserved; role-identifier gap and derivative invalidation made explicit |
+| AI surface steward | Preserved; evidence, policy, finite-outcome, and public-surface boundaries strengthened |
+| Docs steward | Preserved; CODEOWNERS and ADR-acceptance boundaries grounded |
+| Separation matrix | Summary responsibility retained; detailed matrix delegated to current sibling guides |
+| Maturity model | Replaced M0–M3 source-derived ladder with repository-aligned L0–L5 evidence ladder |
+| Onboarding and succession | Preserved as assignment, absence, recusal, delegation, and succession procedure |
+| Open ADR linkage | Historical `ADR-S-*` labels retained as lineage; current ADR-0024 identified |
+| Glossary | Replaced with anti-collapse tables and responsibility map tied to current repository evidence |
+| Source key map | Replaced with exact repository evidence ledger and verified relative links |
+| Verification and rollback | Expanded with target blob, operational checklist, and explicit non-effects |
+
+No substantive role family from v0.2 was silently deleted. Claims that were unsupported or stale were narrowed, relabeled, or redirected to current authority.
+
+[Back to top](#top)
+
+---
+
+## Appendix B — open convergence backlog
+
+| ID | Open item | Current status | Smallest safe next class of work |
 |---|---|---|---|
-| **M0** Pre-doctrine | No charters; doctrine being authored. | Author = approver. | None. |
-| **M1** Early doctrine | Charters CONFIRMED in roster; specific scopes PROPOSED. | Author may self-approve when materiality is low; sensitive lanes require co-signer. | Custom enforcement: PR review, manual queues. |
-| **M2** Reviewed doctrine | Separation enforced for every policy-significant gate via review process. | Author **≠** approver on every materiality-applying gate. | Some tooling: gate checks, manifest validation, policy linters. |
-| **M3** Mature doctrine | Separation enforced by tooling on all policy-significant gates. | Author cannot self-approve sensitive lanes by construction. | Full tooling: signed `ReviewRecord` + `ReleaseManifest`, separation enforced at PR / release queue / runtime. |
+| `STEW-ROLE-001` | Decide whether human role families and assignment role identifiers are one vocabulary or related vocabularies | **CONFLICTED / HOLD** | ADR or accepted governance decision with consumer inventory |
+| `STEW-ROLE-002` | Add or deliberately map rights-holder / sovereignty representation | **GAP** | Contract/schema design with rights and sensitivity review |
+| `STEW-ROLE-003` | Add or deliberately map correction review | **GAP** | Contract/release/correction design with rollback tests |
+| `STEW-ROLE-004` | Resolve `contract_steward`, `schema_steward`, `policy_steward`, `ui_api_steward`, and `validation_steward` relationship | **UNMAPPED** | Bounded context and responsibility decision |
+| `STEW-ROLE-005` | Resolve stray `governance_steward` example label | **CONTRACT DRIFT** | Same-authority semantic-contract correction |
+| `STEW-SCHEMA-001` | Replace or retire the StewardshipAssignment schema stub | **PROPOSED STUB** | Synchronized contract/schema/fixtures/validator PR after authority decision |
+| `STEW-REVIEW-001` | Resolve ReviewRecord schema conflict and case-sensitive contract reference | **CONFLICTED / HOLD** | Compatibility and migration packet |
+| `STEW-IDENTITY-001` | Establish accepted actor identity and alias model | **UNKNOWN / HOLD** | Separate governed identity slice |
+| `STEW-ASSIGN-001` | Establish one accepted scoped assignment profile with expiry, recusal, and supersession | **UNKNOWN / HOLD** | Fixture-first assignment proof after vocabulary closure |
+| `STEW-PLATFORM-001` | Verify current required-review and anti-bypass platform controls | **NEEDS VERIFICATION** | Read-only platform evidence and gap report |
+| `STEW-RELEASE-001` | Close one parent-level governed review-to-release path | **UNKNOWN / HOLD** | Separate commissioned proof with policy, correction, and rollback |
+| `STEW-PRIVACY-001` | Define public-safe versus restricted roster and mandate references | **UNKNOWN / HOLD** | Rights/privacy architecture and access decision |
 
-> [!IMPORTANT]
-> KFM doctrine **does not pretend** any specific maturity level is reached. The Atlas v1.1 maturity note is explicit: *"the supplement does not pretend the enforcement exists yet."* [ENCY] §24.7.2. Implementation maturity of charters and tooling is **UNKNOWN** without mounted-repo evidence.
+Backlog presence does not commission implementation. Each item requires its own owner, dependencies, acceptance criteria, validation, review boundary, and rollback.
 
-### 14.1 Anti-patterns at every maturity level
-
-These remain DENY cases regardless of M-level [ENCY] Atlas v1.1 §24.9:
-
-- Approving one's own release on a sensitive lane.
-- Treating an Atlas summary or master matrix as evidence.
-- Silent migrations between schema or policy homes (ADR required).
-- Promotion that "upgrades" a source role (e.g., `modeled → observed`).
-- Re-publishing a corrected claim without invalidating derivatives.
-- AI generation routed through an admin shortcut as a normal-path public route.
-
-### 14.2 Evidence needed to claim M2 or M3
-
-Do not promote a maturity label by prose. To claim M2 or M3, attach current evidence such as:
-
-- accepted ADR-S-09 or successor ADR;
-- required `ReviewRecord` / `ReleaseManifest` fields in schemas;
-- CI or policy-gate output showing author ≠ approver on material gates;
-- CODEOWNERS, release queue, or workflow rules that enforce separation;
-- rollback and correction fixtures proving derivative invalidation.
-
-Without those artifacts, maturity remains **UNKNOWN** even if the doctrine is clear.
-
-[↑ Back to top](#contents)
-
----
-
-## 15. Onboarding, Review, and Succession
-
-> [!NOTE]
-> Concrete onboarding artifacts (checklists, training materials, named individuals) are **out of scope** for this doctrinal charter file. They belong in a repo-private steward roster and in `docs/runbooks/`. This section names only the *doctrinal minimums* a new occupant must hold. PROPOSED throughout.
-
-### 15.1 Minimum context for any steward (PROPOSED)
-
-Every steward, regardless of role, should be able to articulate:
-
-1. **The lifecycle invariant** — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, not a file move. [ENCY]
-2. **The trust membrane** — public clients consume governed APIs and released artifacts, not canonical / internal stores. [ENCY]
-3. **The cite-or-abstain default** — `EvidenceBundle` outranks generated language. [GAI]
-4. **The four-layer doctrine** — `docs/` explains, `control_plane/` indexes, `contracts/` defines meaning, `schemas/` defines shape — and these MUST NOT collapse. [DIRRULES] §6.1
-5. **The Sensitive / Deny-by-Default Register** (T0–T4). [ENCY] §24.5
-
-### 15.2 Succession (PROPOSED)
-
-A steward succession is itself a governance event. Doctrinal expectations:
-
-- Outgoing steward closes any open `ReviewRecord`s or transfers ownership to a named successor.
-- Docs steward logs the succession in `docs/registers/AUTHORITY_LADDER.md` (or its successor register).
-- Where the role co-signs sensitive lanes, the rights-holder representative is informed before the cutover.
-
-### 15.3 Audit sampling (PROPOSED)
-
-- Docs steward periodically audits a sample of each steward's `ReviewRecord`s.
-- `AIReceipt`s are sampled per release by the AI surface steward and re-sampled by the Docs steward (cross-audit).
-- Findings flow into `docs/registers/DRIFT_REGISTER.md` and, where doctrine-relevant, an ADR.
-
-[↑ Back to top](#contents)
-
----
-
-## 16. Open Questions and ADR Linkage
-
-CONFIRMED open ADRs from Atlas v1.1 §24.12 that this charter file depends on [ENCY]:
-
-| ADR | Topic | Why this charter waits on it |
-|---|---|---|
-| **ADR-S-09** | Reviewer role separation: when enforced by tooling vs. custom. | Locks the M2 → M3 threshold and the tooling requirements per gate. |
-| **ADR-S-13** | Drift-register triage: cadence, owner, outcome. | Defines the Docs steward audit cadence concretely. |
-| **ADR-S-15** | Atlas / supplement lifecycle: revision cadence, deprecation, supersession. | Defines the Docs steward + subsystem-owner co-sign rule concretely. |
-
-Other open questions (PROPOSED for this charter file):
-
-- Should the **Source steward** role split into "source-family steward" (per source) vs. "source-class steward" (per source class)? Atlas v1.1 §24.7.1 keeps a single role; concrete operations may demand a split. **NEEDS VERIFICATION** against mounted-repo source roster.
-- Should the **Sensitivity reviewer** and **Rights-holder representative** be combinable for non-sovereign T4 cases (e.g., critical infrastructure)? Doctrine permits it; this file does not yet propose a rule.
-- Where does the **AI surface steward** sit when AI is bounded to steward-only access (per ADR-S-06)? Charter scope is unchanged; gate engagement narrows.
-- Whether the Docs steward's drift-register triage should be sampled by an *external* auditor at M3. **UNKNOWN.**
-
-[↑ Back to top](#contents)
-
----
-
-## 17. Glossary
-
-<details>
-<summary><strong>Terms used in this document</strong> (click to expand)</summary>
-
-| Term | Definition (placement-relevant) |
-|---|---|
-| **EvidenceBundle / EvidenceRef** | Resolved support package for claims; `EvidenceBundle` lives in `data/proofs/`. References resolve via the evidence resolver. [DIRRULES] |
-| **ReleaseManifest** | The release decision artifact; lives in `release/manifests/`. [DIRRULES] |
-| **CorrectionNotice** | Public notice of a corrected claim; lives in `release/correction_notices/`. [DIRRULES] |
-| **RollbackCard** | Rollback decision artifact; lives in `release/rollback_cards/`. [DIRRULES] |
-| **SourceDescriptor** | Source identity, role, authority, rights, sensitivity, cadence. Schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per ADR-0001. [DIRRULES] |
-| **ReviewRecord** | Records a steward, rights-holder, or policy review of a candidate transition. [ENCY] §24.2 |
-| **RedactionReceipt** | Records a redaction / generalization / withholding transform on sensitive material. [ENCY] §24.2 |
-| **AggregationReceipt** | Records an aggregation step and pins geometry scope. [ENCY] §24.2 |
-| **AIReceipt** | Records a governed AI answer: scope, evidence used, policy decision, outcome class, reason. [ENCY] [GAI] |
-| **PolicyDecision** | Records a policy evaluation outcome on a target object. [ENCY] §24.2 |
-| **ValidationReport** | Records the outcome of a validator run. [ENCY] §24.2 |
-| **Trust membrane** | The boundary preventing raw / unreviewed / model-generated / internal state from becoming public truth; operational form: governed API. [DIRRULES] [ENCY] |
-| **Tier T0–T4** | Sensitivity / rights tiers from fully public (T0) to default-deny (T4); transitions are receipt- and review-bearing. [ENCY] §24.5 |
-| **Materiality** | The condition that requires separation: sensitivity ≥ T1, cross-domain integration, AI bindings, public carriers, derivative-affecting rollback. PROPOSED definition; CONFIRMED concept. [ENCY] |
-
-</details>
-
-[↑ Back to top](#contents)
-
----
-
-## 18. Related Docs
-
-- **Doctrine** — `docs/doctrine/directory-rules.md`, `docs/doctrine/authority-ladder.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/trust-membrane.md`, `docs/doctrine/lifecycle-law.md` (PROPOSED homes per Directory Rules §6.1).
-- **Atlas** — *Kansas Frontier Matrix Domains Culmination Atlas v1.1*, §§24.5–24.12 (sensitivity tiers, pipeline gates, reviewer roles, stale state, anti-patterns, risks, ADR backlog).
-- **Encyclopedia** — *KFM Domain and Capability Encyclopedia v0.1*, §§4 (Operating Law), 13 (Sensitive / Deny-by-Default Register).
-- **Architecture** — `docs/architecture/contract-schema-policy-split.md` (the four-layer split).
-- **Registers** — `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/AUTHORITY_LADDER.md`.
-- **Governance siblings (PROPOSED)** — `docs/governance/REVIEW_BURDEN.md`, `docs/governance/SEPARATION_OF_DUTIES.md`.
-- **ADRs** — `docs/adr/README.md`; open ADRs: ADR-S-09, ADR-S-13, ADR-S-15 (Atlas v1.1 §24.12).
-- **Control plane** — `control_plane/policy_gate_register.yaml`, `control_plane/release_state_register.yaml`.
-- **Contracts** — `contracts/governance/review_record/`, `contracts/release/release_manifest/`, `contracts/correction/correction_notice/`.
-- **Schemas** — `schemas/contracts/v1/governance/`, `schemas/contracts/v1/release/`, `schemas/contracts/v1/correction/`, `schemas/contracts/v1/source/` (PROPOSED homes; confirm against ADR-0001 and mounted repo).
-
-### 18.1 Source key map
-
-| Key | Source family | Use in this file |
-|---|---|---|
-| `[DIRRULES]` | Directory Rules / placement doctrine. | Responsibility roots, schema-home convention, lifecycle placement, drift handling. |
-| `[ENCY]` | KFM encyclopedia / Atlas-derived operating-law references. | Steward roster, materiality, sensitivity tiers, ADR backlog, anti-patterns. |
-| `[GAI]` | Governed AI architecture and source-ledger reports. | AI surface steward, `AIReceipt`, cite-or-abstain, finite outcomes. |
-| `[UIAI]` | Whole-UI + Governed AI expansion report. | Evidence Drawer, Focus Mode, trust-visible UI posture. |
-| `[DOM-ARCH]` | Archaeology architecture reports. | Cultural sensitivity, exact-location denial, steward / rights review posture. |
-| `[DOM-FAUNA]` / `[DOM-FLORA]` | Fauna and Flora architecture reports. | Rare-species / biodiversity geoprivacy, sensitivity review, public-safe derivatives. |
-| `[DOM-PEOPLE]` | People, Genealogy-DNA, and Land Ownership blueprint. | Living-person, DNA, consent, land/title caution. |
-| `[DDD]` | Domain-Driven Design reference. | Bounded contexts, domain steward vocabulary, domain-language discipline. |
-
-> [!NOTE]
-> Link targets are **PROPOSED** per Directory Rules and may resolve differently in the mounted repo. The Docs steward is responsible for keeping these targets accurate as the doctrinal tree settles into the repo. [DIRRULES]
-
-[↑ Back to top](#contents)
-
----
-
-## 19. Verification and Rollback
-
-### 19.1 Verification checklist
-
-Before this charter is treated as active governance rather than draft doctrine, verify:
-
-- [ ] Target path and neighboring docs in the mounted repo.
-- [ ] Accepted ADR status for ADR-S-09, ADR-S-13, and ADR-S-15 or their successors.
-- [ ] Whether the eight steward roles are staffed in a repo-private roster.
-- [ ] Whether `ReviewRecord`, `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`, `RedactionReceipt`, `AIReceipt`, and `SourceDescriptor` schemas exist at the cited homes.
-- [ ] Whether CI, CODEOWNERS, release queues, or policy gates enforce author ≠ approver where materiality applies.
-- [ ] Whether the Docs steward audit cadence and drift-register cadence are recorded in an accepted ADR or runbook.
-- [ ] Whether public UI / API surfaces consume governed release and evidence envelopes rather than canonical/internal stores.
-
-### 19.2 Rollback posture
-
-Rollback is required if an edit to this charter weakens separation of duties, silently promotes a proposed role scope to confirmed staffing, creates parallel schema/contract authority, obscures sensitivity or rights review, or implies that tooling exists without evidence.
-
-**Rollback target:** the last accepted version of `kfm://doc/governance/steward-charters` in the mounted repo. If no mounted repo version is available, use the v0.1 baseline attached to this update as the review baseline and mark the action **NEEDS VERIFICATION**.
-
-[↑ Back to top](#contents)
-
----
-
-**Last updated:** 2026-05-16 · **Version:** v0.2 (PROPOSED) · **Status:** draft · [↑ Back to top](#contents)
+[Back to top](#top)

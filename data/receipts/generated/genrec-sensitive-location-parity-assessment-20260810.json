@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-sensitive-location-parity-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/sensitive-location-parity-assessment.yml",
+    "contracts/governance/sensitive_location_parity_assessment.md",
+    "docs/intake/exploratory/sensitive-location-parity-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/sensitive_location_parity_assessment/cases.json",
+    "schemas/contracts/v1/governance/sensitive_location_parity_assessment.schema.json",
+    "tests/validators/test_validate_sensitive_location_parity_assessment.py",
+    "tools/validators/validate_sensitive_location_parity_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/sensitive-location-parity-assessment.yml": "sha256:1d8adb334ce04b8b4c531306b781421dc9f128e1dc9e12a00b8f57cee0889ad9",
+    "contracts/governance/sensitive_location_parity_assessment.md": "sha256:e2bdc98603d99c620a9a788d8ec20ffc749ca24e43631cfced4896e8b0a3c51e",
+    "docs/intake/exploratory/sensitive-location-parity-assessment-source-map.md": "sha256:8d136cd0d0103777bf2a0c6a541626732fd109fce0e5bbd91fe4ad0339a183f8",
+    "fixtures/contracts/v1/governance/sensitive_location_parity_assessment/cases.json": "sha256:f2b097d379eb55ce3920313c9944dc7c295fc6a3bf1756542c5ff00c11d46d6a",
+    "schemas/contracts/v1/governance/sensitive_location_parity_assessment.schema.json": "sha256:c271af5a1acf8e3b0dedc2bcbf8da26043cdc7ee60f0285d0c29f44d39c81bfe",
+    "tests/validators/test_validate_sensitive_location_parity_assessment.py": "sha256:8933d81b5e77b8b2d4cb1e8b2d42815b6b1df91e5b95deb4562acabb794a29be",
+    "tools/validators/validate_sensitive_location_parity_assessment.py": "sha256:d8e8cbe7cfe4d3b5fce80a7b25e79f75b7273f767f89db9192e154a63e34e9e9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a44642c55b55271e4807eaca14dbfc6a284ca55fa58943f2900562fa54c4dd58",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic repository inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Google Drive: New Ideas 5-15-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-011",
+      "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ",
+      "repo:docs/doctrine/directory-rules.md@202976d687e76dfb928f714b61d4a4eaea925bdc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@202976d687e76dfb928f714b61d4a4eaea925bdc"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/sensitive-location-parity-assessment.yml": "PROPOSED",
+    "contracts/governance/sensitive_location_parity_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/sensitive-location-parity-assessment-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/sensitive_location_parity_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/sensitive_location_parity_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_sensitive_location_parity_assessment.py": "PROPOSED",
+    "tools/validators/validate_sensitive_location_parity_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-and-duplicate-assay",
+      "outcome": "PASS",
+      "reason": "The assessment uses existing governance, schema, fixture, validator, test, workflow, intake, and generated-receipt roots and creates no policy, domain, seam, catalog, release, or public authority."
+    },
+    {
+      "gate": "schema-and-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema validation and all 24 exact-head fixture expectations passed: 10 PASS, 13 DENY, and 1 ERROR."
+    },
+    {
+      "gate": "focused-deterministic-tests",
+      "outcome": "PASS",
+      "reason": "Fourteen focused unit tests passed, including all five exact-deny families, all five generalized-with-receipt candidates, owner mismatch, identity, duplicate-key, non-finite-number, symlink, value-free output, and no-network boundaries."
+    },
+    {
+      "gate": "documentation-meta-block-and-links",
+      "outcome": "PASS",
+      "reason": "The required source-map metadata block and local links for both authored Markdown files passed bounded no-network validation."
+    },
+    {
+      "gate": "json-yaml-and-python-static-boundaries",
+      "outcome": "PASS",
+      "reason": "Schema and fixture JSON parsed, workflow YAML parsed, Python modules compiled, and git diff whitespace validation passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human domain, policy, governance, and validation review is pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-exp011",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-011"
+    },
+    {
+      "id": "gdrive:new-ideas-5-15-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@202976d687e76dfb928f714b61d4a4eaea925bdc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:44:19Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only Pass 20 EXP-011 assessment. No coordinates, source payloads, policy evaluation, evidence resolution, transform execution, steward decision, access grant, lifecycle mutation, promotion, release, deployment, or publication."
+}

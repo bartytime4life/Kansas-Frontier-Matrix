@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests/domains/atmosphere/readme
 title: Atmosphere Domain Test Lane README
 type: domain-test-readme
-version: v0.1
-status: draft
+version: v0.4
+status: draft; bounded synthetic precipitation, knowledge-character, low-cost-sensor calibration, and observed-versus-modeled fixture profiles executable
 owners:
   - <PLACEHOLDER — Atmosphere steward>
   - <PLACEHOLDER — Test steward>
@@ -11,10 +11,10 @@ owners:
   - <PLACEHOLDER — Schema steward>
   - <PLACEHOLDER — Evidence/governance reviewer>
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-08-03
 policy_label: public
-implementation_status: scaffold
-verification_status: current-session path verified; child lanes listed in plan; executable tests, fixtures, validators, and CI not verified
+implementation_status: four bounded standard-library fixture profiles executable; broader lane scaffolded
+verification_status: current-session paths verified; precipitation, knowledge-character, low-cost-sensor calibration, and observed-versus-modeled positive, negative, boundary, parser, CLI, and no-network checks executable; cross-domain isolation check executable; broader semantics, scientific validity, policy, and release state unverified
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -56,14 +56,14 @@ tags:
 ![lane: tests%2Fdomains%2Fatmosphere-informational](https://img.shields.io/badge/lane-tests%2Fdomains%2Fatmosphere-informational)
 ![authority: tests--only](https://img.shields.io/badge/authority-tests--only-lightgrey)
 ![posture: no--network](https://img.shields.io/badge/posture-no--network-blue)
-![implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-yellow)
+![implementation: bounded](https://img.shields.io/badge/implementation-bounded-blue)
 
 **Status:** `draft`  
 **Authority:** parent domain-test README; not a schema, contract, policy implementation, validator, fixture inventory, source registry, receipt, proof, release decision, or published artifact  
 **Owning root:** `tests/`  
 **Domain segment:** `domains/atmosphere/`  
 **Default posture:** deterministic, public-safe fixtures; finite outcomes; cite-or-abstain  
-**Last reviewed:** 2026-07-05
+**Last reviewed:** 2026-08-03
 
 ---
 
@@ -149,9 +149,13 @@ This path is correct because:
 | `tests/README.md` allows schema, contract, validator, policy, evidence, lifecycle, receipt/proof, release-manifest, API, UI, e2e, runtime-proof, and domain-specific tests | CONFIRMED from current repo docs. |
 | Atmosphere file-system plan lists `tests/domains/atmosphere/` child lanes | CONFIRMED from current repo docs. |
 | Atmosphere policy spine lists key deny/restrict rules | CONFIRMED from current repo docs. |
-| Executable tests under each child lane | UNKNOWN in this README. |
-| Fixture inventory | NEEDS VERIFICATION. |
-| Validator modules and commands | NEEDS VERIFICATION. |
+| `test_atmosphere_smoke.py` | CONFIRMED bounded executable for the synthetic precipitation fixture profile; it is not Atmosphere truth or release proof. |
+| `test_knowledge_character_registry.py` | CONFIRMED bounded executable for the synthetic anti-collapse fixture profile; it does not settle the canonical enum, registry, policy, or release state. |
+| `test_low_cost_sensor_caveat_required.py` | CONFIRMED bounded executable for the synthetic low-cost PM2.5 calibration profile; it does not establish scientific validity, live-record acceptance, Rego policy, source admission, or release state. |
+| `test_observed_modeled_separation.py` | CONFIRMED bounded executable for closed AirObservation and ForecastContext profiles, exact ABSTAIN/DENY behavior, source/evidence/time/unit/model-lineage boundaries, schema mirrors, and active no-network denial; no live observation, model, policy, evidence, release, or life-safety authority. |
+| Executable tests under every broader child lane | NEEDS VERIFICATION. |
+| Fixture inventory | The bounded precipitation pair, knowledge-character corpus, low-cost-sensor calibration corpus, and observed-versus-modeled corpus are CONFIRMED; broader inventory remains NEEDS VERIFICATION. |
+| Validator modules and commands | The four bounded fixture validators are CONFIRMED; broader commands remain NEEDS VERIFICATION. |
 | CI job names / pytest markers | NEEDS VERIFICATION. |
 | Runtime/API/UI behavior | NEEDS VERIFICATION unless supported by executable tests. |
 
@@ -167,11 +171,71 @@ The Atmosphere file-system plan names these child lanes under `tests/domains/atm
 |---|---|---|
 | `schema/` | Schema shape, metadata, and schema-to-contract alignment tests. | Parent/child README work may exist in open PRs; executable tests NEED VERIFICATION. |
 | `source-role/` | Source-role anti-collapse tests. | NEEDS VERIFICATION beyond existing docs. |
-| `knowledge-character/` | Knowledge-character boundary tests. | README work may exist in open PRs; executable tests NEED VERIFICATION. |
+| `knowledge-character/` | Knowledge-character boundary tests. | Parent-level executable covers the frozen fixture profile; broader authority, identity, correction, and release simulations remain NEEDS VERIFICATION. |
 | `unit-normalization/` | Unit conversion and normalization behavior tests. | README work may exist in an open PR; executable tests NEED VERIFICATION. |
-| `policy-deny/` | Negative policy tests that fail closed for unsupported or collapsed claims. | Parent/child README work may exist in open PRs; executable tests NEED VERIFICATION. |
+| `policy-deny/` | Negative policy tests that fail closed for unsupported or collapsed claims. | The parent-level low-cost-sensor fixture validator exercises sixteen exact-negative qualification cases; Rego and broader policy runtime remain NEEDS VERIFICATION. |
 | `no-network-fixtures/` | Public-safe deterministic fixture discipline for no-network tests. | README work may exist in open PRs; fixture inventory NEEDS VERIFICATION. |
 | `no-network/` | Default offline/no-network behavior for Atmosphere tests. | README work may exist in open PRs; enforcement NEEDS VERIFICATION. |
+
+The bounded accepted command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+```
+
+It exercises only the frozen synthetic precipitation profile, including exact
+fixture polarity, observation-vs-model role separation, generalized location,
+time ordering, millimetre units, bounded accumulation/value fields, fixture-only
+governance, parser/file limits, CLI behavior, and explicit network denial.
+
+The bounded knowledge-character command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+```
+
+It exercises six synthetic character pairings, five exact-negative fixtures,
+three in-memory missing/unknown/multiple cases,
+closed shapes, reference/file limits, deterministic non-echoing findings, CLI
+polarity, generalized geometry, and active network denial. The fixture profile
+does not become the canonical enum, registry, policy, evidence, or release
+authority.
+
+The bounded low-cost-sensor calibration command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
+```
+
+It exercises two synthetic qualification states and sixteen exact-negative
+fixture/sidecar pairs. The checks require low-cost observation character,
+caveat, confidence, limitations, separate raw/corrected identity, pinned
+correction and training identity, identity-string digests, bounded reference collocation,
+held-out-evaluation metadata and validity state,
+relative-humidity and temperature inputs, generalized location, explicit
+transferability/drift posture, fixture-only governance, deterministic
+diagnostics, bounded parsing, and active network denial. It does not determine
+measurement accuracy, select a correction, resolve evidence, admit a source,
+execute Rego, or approve release.
+
+The bounded observed-versus-modeled command is:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
+```
+
+It exercises three synthetic positive/abstaining fixtures and twelve exact
+negative fixtures. The checks keep AirObservation and ForecastContext
+non-substitutable, require station versus model-run identity, preserve
+observed/retrieval versus generated/valid times, require units, DERIVED_FROM
+lineage and uncertainty, expose unresolved source/evidence/QA/rights as
+ABSTAIN, deny false release state, and actively block network access. The
+profile does not validate current air quality, scientific model skill, policy,
+EvidenceBundle resolution, release, or life-safety output.
 
 Additional sublanes may be added when they have a clear test responsibility and do not duplicate an existing authority root.
 
@@ -310,8 +374,20 @@ Live or integration checks, if needed, should be explicitly marked outside the d
 
 ## 12. Suggested local commands
 
+Accepted bounded fixture checks:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_atmosphere_smoke.py --verbose
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
+```
+
 > [!NOTE]
-> Command names, validator names, marker names, and CI job names are **NEEDS VERIFICATION** until checked against actual repo configuration.
+> The commands above are confirmed for their frozen synthetic profiles. Marker
+> names and broader repo-wide commands remain **NEEDS VERIFICATION**.
 
 Likely domain lane check:
 
@@ -402,12 +478,17 @@ This parent lane is mature when:
 
 | Date | Version | Change |
 |---|---:|---|
+| 2026-08-03 | v0.3 | Added the bounded low-cost-sensor calibration fixture profile, exact denials, no-network test command, and workflow boundary. |
 | 2026-07-05 | v0.1 | Replaced greenfield stub with governed Atmosphere domain-test README. |
 
 ---
 
 ## 18. Last reviewed
 
-**2026-07-05** — Replaced greenfield stub. Current evidence confirms the tests root, Directory Rules domain-segment rule, Atmosphere file-system test lanes, Atmosphere domain README, and policy spine; executable tests, fixtures, validator behavior, child-lane merge state, and CI enforcement remain **NEEDS VERIFICATION**.
+**2026-08-03** — Confirmed three bounded synthetic fixture profiles and their
+workflow wiring. The low-cost-sensor profile is qualification-pedigree evidence
+only; scientific validity, canonical schema evolution, Rego enforcement, live
+records, source admission, evidence resolution, and release remain **NEEDS
+VERIFICATION**.
 
 [↑ Back to top](#top)

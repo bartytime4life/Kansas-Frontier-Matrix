@@ -11,18 +11,19 @@ policy_label: public
 related:
   - docs/sources/catalog/newspapers/README.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/newspapers/IDENTITY.md
-  - docs/sources/catalog/newspapers/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/newspapers/legal-notices.md
   - docs/sources/catalog/newspapers/obituaries.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, newspapers, product-page, ocr, model-run]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
   - "PROPOSED path under docs/sources/catalog/newspapers/ — placement basis docs/doctrine/directory-rules.md §6.1."
   - "Default source_role is observation (with mandatory ModelRunReceipt) — OCR text is a model's reading of the page, not the page itself."
+owning_root: docs/
+responsibility: "Documentation for Newspaper OCR Full Text; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Newspaper OCR Full Text
@@ -127,11 +128,11 @@ CONFIRMED doctrine: *AI text treated as evidence → DENY publication; ABSTAIN a
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | Family-level orientation; this product is one slice of `newspapers`. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling** | [`legal-notices.md`](./legal-notices.md) | Downstream consumer of OCR text (`authority` default). |
 | **Sibling** | [`obituaries.md`](./obituaries.md) | Downstream consumer of OCR text (`candidate` default). |
-| **Sibling** | [`_examples/`](./_examples/) | Illustrative STAC + `kfm:provenance` examples. |
+| **Sibling** | `_examples/` (not present) | Illustrative STAC + `kfm:provenance` examples. |
 | **Upstream (root)** | [`../README.md`](../README.md) | Catalog landing page. |
 | **Cross-root (data)** | [`data/registry/sources/`](../../../../data/registry/sources/) | Authoritative `SourceDescriptor` home; not duplicated here. |
 | **Doctrine** | [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) | Placement authority and lifecycle law. |
@@ -183,7 +184,7 @@ PROPOSED — the descriptor for this slice should at minimum carry:
 - `role_model_run_ref` — `EvidenceRef → ModelRunReceipt` (**MUST** when role includes `modeled`; **SHOULD** for every `observation` produced by OCR to make the engine traceable)
 - `authority` — the upstream page-raster source (the publisher) — *not* the OCR engine
 - `rights` — license, redistribution terms, attribution requirements; OCR output inherits the page's rights (see [Rights and sensitivity](#rights-and-sensitivity))
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md)
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present)
 - `cadence` — re-OCR cadence (engine upgrades, parameter changes, rerun policy)
 - `ingest_hash` — content-addressable digest of the admitted OCR output
 
@@ -211,7 +212,7 @@ PROPOSED — OCR items map across the standard KFM-STAC / DCAT / PROV-O profile 
 
 ## Collection identity
 
-- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-<publisher-or-jurisdiction>-ocr-full-text`. See sibling [`IDENTITY.md`](./IDENTITY.md) for the family-level rule.
+- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-<publisher-or-jurisdiction>-ocr-full-text`. See sibling `IDENTITY.md` (not present) for the family-level rule.
 - **PROPOSED namespace.** `kfm:` — pending resolution of *OPEN-DSC-03* (namespace canonicalization). NEEDS VERIFICATION.
 - **PROPOSED Item ID rule.** Deterministic basis: `source_id + page_locator + ocr_engine_version + parameters_digest + temporal_scope + normalized_digest`. The **engine version and parameters digest** are part of identity — re-OCR with a different engine or parameter set produces a **new Item**, not an updated one.
 - **Asset roles.** NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/`. Candidate roles: `image` (page raster), `ocr` (extracted text, plain), `ocr-alto` (ALTO XML with coordinates), `ocr-hocr` (hOCR), `iiif` (IIIF manifest), `quality` (confidence scores), `thumbnail`.
@@ -320,7 +321,7 @@ NEEDS VERIFICATION — confirm against any ALTO/hOCR schema fixtures in `tests/`
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and consent / reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and consent / reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 **Rights inherit from the page.** OCR does not change the copyright status of the underlying page. The OCR pipeline must propagate the page's rights into every OCR Asset (per KFM-P15-PROG-0033, "OCR, image, IIIF, and visual-metadata source families for NER-to-event extraction *with rights propagation*").
 
@@ -514,15 +515,15 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — `newspapers` family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./legal-notices.md`](./legal-notices.md) — Downstream consumer (`authority` default).
 - [`./obituaries.md`](./obituaries.md) — Downstream consumer (`candidate` default).
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `newspapers` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `ModelRunReceipt` schema README once authored.

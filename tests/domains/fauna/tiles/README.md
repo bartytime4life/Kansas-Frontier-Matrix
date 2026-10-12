@@ -2,18 +2,17 @@
 doc_id: kfm://doc/tests/domains/fauna/tiles/readme
 title: Fauna Tiles Test Lane README
 type: test-lane-readme
-version: v0.1
-status: draft
-owners:
-  - <PLACEHOLDER — Fauna steward>
-  - <PLACEHOLDER — Map/UI steward>
-  - <PLACEHOLDER — Release steward>
-  - <PLACEHOLDER — Test steward>
+version: v1.0.0
+status: draft; one bounded executable field-name slice
+owners: OWNER_TBD — Fauna steward · Map/UI steward · Release steward · Test steward
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-08-11
 policy_label: public
-implementation_status: scaffold
-verification_status: current-session path verified; executable tests, fixtures, tile artifacts, tile manifests, validators, and CI not verified
+implementation_status: bounded fixture-only field-name allowlist executable; actual tile-byte and release validation held
+verification_status: policy/schema/validator/fixtures/tests/workflow confirmed in-tree; local execution recorded in draft PR; hosted CI needs verification
+owning_root: tests/
+responsibility: Document Fauna tile conformance scope and the bounded inactive field-name executable while holding byte-level, geometry, value, manifest, release, and publication proof.
+truth_posture: "CONFIRMED local field-name fixture proof; PROPOSED broader tile test lane; UNKNOWN production artifacts and consumers; NEEDS VERIFICATION human review and hosted CI"
 related:
   - tests/README.md
   - tests/domains/fauna/README.md
@@ -41,7 +40,7 @@ tags:
   - integrity
   - no-network
   - fail-closed
-] -->
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
@@ -53,7 +52,7 @@ tags:
 ![lane: tests%2Fdomains%2Ffauna%2Ftiles-informational](https://img.shields.io/badge/lane-tests%2Fdomains%2Ffauna%2Ftiles-informational)
 ![authority: tests--only](https://img.shields.io/badge/authority-tests--only-lightgrey)
 ![posture: fail--closed](https://img.shields.io/badge/posture-fail--closed-blue)
-![implementation: scaffold](https://img.shields.io/badge/implementation-scaffold-yellow)
+![implementation: bounded field names](https://img.shields.io/badge/implementation-bounded--field--names-orange)
 
 **Status:** `draft`  
 **Authority:** tile test-lane README; not a tile store, tile artifact, layer manifest, release manifest, schema, policy bundle, fixture inventory, receipt, proof, or public artifact  
@@ -61,7 +60,7 @@ tags:
 **Domain segment:** `domains/fauna/`  
 **Lane:** `tiles/`  
 **Default posture:** public-safe fixtures; no-network by default; finite outcomes; fail closed when tile safety or release context is unresolved  
-**Last reviewed:** 2026-07-05
+**Last reviewed:** 2026-08-11
 
 ---
 
@@ -122,12 +121,12 @@ tests/domains/fauna/tiles/
 | Fauna Map UI contract says renderer and tiles are downstream carriers, not truth or release authority | CONFIRMED from current repo docs. |
 | Fauna Map UI contract says public clients must not read internal lifecycle stores | CONFIRMED from current repo docs. |
 | Fauna Map UI contract names tile field allowlist testing for Fauna tiles | CONFIRMED from current repo docs. |
-| Actual executable tests in this directory | UNKNOWN in this README. |
-| Actual tile artifact manifests and validators | NEEDS VERIFICATION. |
-| Actual fixture inventory | NEEDS VERIFICATION. |
-| Actual CI job names / pytest markers | NEEDS VERIFICATION. |
+| Inactive field-name allowlist executable | CONFIRMED: policy, schema, validator, synthetic cases, focused unit tests, and workflow definition are present. |
+| Actual PMTiles/MVT/MLT byte inspection | NOT IMPLEMENTED / HOLD. |
+| Actual TileArtifactManifest, release, digest, rollback, geometry, value, size, and cache validation | NEEDS VERIFICATION / HOLD. |
+| Focused CI job | CONFIRMED definition: `fauna-tile-field-allowlist`; hosted run NEEDS VERIFICATION until the PR check completes. |
 
-This README defines the test-lane contract. It does not claim that tile artifacts, manifests, fixtures, validators, or CI checks already exist.
+This README defines the broader test-lane contract and records one implemented subset. The executable compares synthetic property names with a candidate `LayerManifest` allowlist and an inactive domain policy. It does not inspect tile bytes or prove that a tile artifact, manifest, release, or public consumer exists.
 
 ---
 
@@ -198,15 +197,18 @@ Expected fixture families include valid public tile metadata, missing manifest, 
 
 ---
 
-## 9. Suggested local commands
-
-> [!NOTE]
-> Command names, tile validator names, markers, and CI jobs are **NEEDS VERIFICATION** until checked against actual repository configuration.
+## 9. Local commands for the bounded slice
 
 ```bash
-pytest tests/domains/fauna/tiles
-pytest tests/domains/fauna
-python tools/validate_all.py
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_tile_field_allowlist.py' \
+  --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/domains/fauna/tiles/validate_tile_field_allowlist.py \
+  --fixtures
 ```
 
 ---
@@ -216,10 +218,10 @@ python tools/validate_all.py
 | Question | Status | Notes |
 |---|---|---|
 | What is the canonical TileArtifactManifest schema/path? | NEEDS VERIFICATION | Must inspect map/release schema roots. |
-| Which validator command owns tile allowlist checks? | NEEDS VERIFICATION | Must inspect validator roots. |
-| Which fixture families already exist? | NEEDS VERIFICATION | Must inspect `fixtures/domains/fauna/`. |
+| Which validator command owns the inactive field-name slice? | RESOLVED FOR FIXTURES | `tools/validators/domains/fauna/tiles/validate_tile_field_allowlist.py --fixtures`; production build-gate ownership remains open. |
+| Which field-name fixture family exists? | RESOLVED FOR THIS SLICE | `fixtures/domains/fauna/layers/tile_field_allowlist_cases.json`. |
 | Which published tile artifact paths exist on `main`? | NEEDS VERIFICATION | Must inspect `data/published/layers/fauna/`. |
-| Which CI job runs this lane? | NEEDS VERIFICATION | Must inspect `.github/workflows/`. |
+| Which CI job runs the bounded slice? | RESOLVED IN DEFINITION / HOSTED RUN PENDING | `.github/workflows/fauna-tile-field-allowlist.yml`. |
 | Should shared tile-manifest tests live here or under a cross-domain map/tile test root? | OPEN | This lane should own Fauna-specific expectations only. |
 
 ---
@@ -228,7 +230,10 @@ python tools/validate_all.py
 
 This lane is mature when:
 
-- [ ] Fauna tile tests run locally.
+- [x] A deterministic no-network field-name allowlist test runs locally.
+- [x] Synthetic cases cover a valid candidate, forbidden coordinates, observer identity, style-only protection, missing click-to-evidence field, manifest mismatch, manifest policy overreach, and authority elevation.
+- [x] Tests call the canonical inactive profile and repository validator rather than redefining allowlist behavior locally.
+- [ ] Actual tile properties are enumerated from bounded PMTiles/MVT/MLT artifacts.
 - [ ] Missing manifest, missing digest, missing rollback target, forbidden field, unsafe geometry, stale tile, withdrawn tile, and superseded tile cases are tested.
 - [ ] Positive public-safe fixtures prove allowed tile behavior without becoming publication approval.
 - [ ] Tests call canonical tile/layer/release/policy validators rather than redefining behavior locally.
@@ -242,12 +247,13 @@ This lane is mature when:
 
 | Date | Version | Change |
 |---|---:|---|
+| 2026-08-11 | v1.0.0 | Recorded the bounded inactive field-name allowlist policy/schema/validator/fixture/test/workflow slice and kept actual tile/release validation held. |
 | 2026-07-05 | v0.1 | Initial governed README for the Fauna tiles test lane. |
 
 ---
 
 ## 13. Last reviewed
 
-**2026-07-05** — Initial README scaffold. Target path was present but empty before update. Current evidence confirms the tests root, Directory Rules domain-segment rule, root test allowance for release/lifecycle/policy/API/UI/domain tests, and Fauna Map UI tile doctrine; executable tests, fixtures, tile artifact manifests, validators, published artifact paths, and CI enforcement remain **NEEDS VERIFICATION**.
+**2026-08-11** — Confirmed one inactive, synthetic, field-name-only executable slice. Actual tile bytes, values, geometry, artifact manifests, release bindings, published artifact paths, cache behavior, and hosted CI outcome remain **NEEDS VERIFICATION** or `HOLD`.
 
 [↑ Back to top](#top)

@@ -1,17 +1,22 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/doctrine/ai-build-operating-contract
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; the §22 example block now omits its comment delimiters so it is no longer parsed as a second metadata block"
+owning_root: docs/
+responsibility: State the operating contract for AI-assisted KFM Markdown authoring; doctrine guidance that confers no merge, release, or publication authority.
+truth_posture: PROPOSED edition v3.0; doctrine basis cited in-body; doc ids, owners, and related kfm:// URIs NEEDS VERIFICATION
 title: KFM Repository Markdown Authoring Agent — Full Operating Prompt
 type: standard
 version: v3.0
 status: draft
 owners: docs-steward, ai-surface-steward
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-10-12
 policy_label: public
 related:
-  - kfm://doc/ai-build-operating-contract@v3.0.0
   - docs/doctrine/directory-rules.md
   - docs/prompts/ai-builder-system-prompts.md
+related_unresolved:
+  - kfm://doc/ai-build-operating-contract@v3.0.0
 tags: [kfm, doctrine, ai-builder, markdown, prompt]
 notes:
   - PROPOSED placement at docs/prompts/ai-builder-markdown-authoring.md per AI Build Operating Contract §47.
@@ -887,8 +892,10 @@ The agent MUST record transforms and reasons when generalizing, redacting, quara
 
 For standard docs, include this exact HTML comment meta block at the top of the file and populate it with grounded values or clearly marked placeholders when verification is still needed:
 
+> The example below omits the outer `<!-- ` and ` -->` comment delimiters so validators do not parse it as this file's own metadata block; wrap it in them when you use it.
+
 ```html
-<!-- [KFM_META_BLOCK_V2]
+[KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
 title: <Title>
 type: standard
@@ -901,7 +908,7 @@ policy_label: public|restricted|...
 related: [<paths or kfm:// ids>]
 tags: [kfm]
 notes: [<short notes>]
-[/KFM_META_BLOCK_V2] -->
+[/KFM_META_BLOCK_V2]
 ```
 
 Rules for this block:

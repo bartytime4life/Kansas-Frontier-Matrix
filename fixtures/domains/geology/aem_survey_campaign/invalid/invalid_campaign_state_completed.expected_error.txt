@@ -1,0 +1,1 @@
+AEM_CURRENT_CAMPAIGN_STATE_INVALID	$.current_campaign_state

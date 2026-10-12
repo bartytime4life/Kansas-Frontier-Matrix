@@ -1,32 +1,515 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/data/layer_manifest.schema.json",
-  "title": "layer_manifest",
-  "type": "object",
-  "description": "KFM v1 contract schema stub for layer_manifest. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "title": "LayerManifest",
+  "description": "Dual-profile LayerManifest schema. The legacy id-required profile remains permissive; the closed fixture-only profile validates deterministic inactive candidates and creates no policy, review, release, publication, signing, or public-use authority.",
   "x-kfm": {
     "contract_doc": "contracts/data/layer_manifest.md",
     "fixtures_root": "fixtures/data/layer_manifest/",
     "validator": "tools/validators/data/validate_layer_manifest.py",
+    "tests": "tests/validators/test_validate_layer_manifest.py",
     "policy": "policy/data/",
-    "status": "PROPOSED"
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "legacy_profile": "LEGACY_MINIMAL",
+    "strict_profile": "LAYER_MANIFEST_FIXTURE_V1",
+    "hash_profile": "RFC8785-JCS+SHA-256",
+    "authority": "deterministic_candidate_validation_only",
+    "non_effects": [
+      "does_not_resolve_or_authenticate_references",
+      "does_not_verify_artifact_bytes_or_signatures",
+      "does_not_evaluate_policy_or_authenticate_review",
+      "does_not_authorize_release_publication_or_public_use",
+      "does_not_register_or_load_a_map_layer"
+    ]
   },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+  "oneOf": [
+    {
+      "$ref": "#/$defs/legacy_profile"
     },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
+    {
+      "$ref": "#/$defs/strict_profile"
     }
-  },
-  "required": [
-    "id"
   ],
-  "additionalProperties": true
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 640,
+      "pattern": "^\\S+$"
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "optional_ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "legacy_profile": {
+      "type": "object",
+      "description": "Backward-compatible permissive profile retained from the greenfield scaffold.",
+      "not": {
+        "required": [
+          "object_type"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "spec_hash": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": true
+    },
+    "representation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderer",
+        "protocol",
+        "artifact_ref",
+        "source_layer",
+        "min_zoom",
+        "max_zoom",
+        "bounds",
+        "attribution"
+      ],
+      "properties": {
+        "renderer": {
+          "const": "MAPLIBRE_GL_JS"
+        },
+        "protocol": {
+          "enum": [
+            "PMTILES",
+            "XYZ",
+            "COG",
+            "GEOJSON_FIXTURE"
+          ]
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_layer": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "min_zoom": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "max_zoom": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "bounds": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "attribution": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid_from",
+        "valid_to",
+        "source_updated_at",
+        "evaluated_at"
+      ],
+      "properties": {
+        "valid_from": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "source_updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audience",
+        "rights_status",
+        "sensitivity_status",
+        "public_field_allowlist",
+        "generalized_geometry",
+        "transform_receipt_refs"
+      ],
+      "properties": {
+        "audience": {
+          "enum": [
+            "PUBLIC",
+            "RESTRICTED",
+            "INTERNAL"
+          ]
+        },
+        "rights_status": {
+          "enum": [
+            "APPROVED",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "sensitivity_status": {
+          "enum": [
+            "PUBLIC_SAFE",
+            "TRANSFORM_REQUIRED",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "public_field_allowlist": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "generalized_geometry": {
+          "type": "boolean"
+        },
+        "transform_receipt_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        }
+      }
+    },
+    "performance_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_tile_bytes",
+        "max_features_per_tile",
+        "max_properties_per_feature",
+        "max_render_ms"
+      ],
+      "properties": {
+        "max_tile_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "max_features_per_tile": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "max_properties_per_feature": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "max_render_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_drawer_enabled",
+        "focus_mode_enabled",
+        "stale_behavior",
+        "performance_budget"
+      ],
+      "properties": {
+        "evidence_drawer_enabled": {
+          "type": "boolean"
+        },
+        "focus_mode_enabled": {
+          "type": "boolean"
+        },
+        "stale_behavior": {
+          "enum": [
+            "BADGE",
+            "ABSTAIN",
+            "DENY"
+          ]
+        },
+        "performance_budget": {
+          "$ref": "#/$defs/performance_budget"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_manifest_ref",
+        "correction_refs",
+        "rollback_ref"
+      ],
+      "properties": {
+        "previous_manifest_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_receipt_ref",
+        "validator_implementation_ref"
+      ],
+      "properties": {
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "validator_implementation_ref": {
+          "const": "tools/validators/data/validate_layer_manifest.py"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "references_resolved",
+        "artifact_verified",
+        "policy_evaluated",
+        "review_authenticated",
+        "manifest_signature_verified",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "references_resolved": {
+          "const": false
+        },
+        "artifact_verified": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "review_authenticated": {
+          "const": false
+        },
+        "manifest_signature_verified": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "strict_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_type",
+        "schema_version",
+        "profile_status",
+        "execution_mode",
+        "id",
+        "spec_hash",
+        "layer_id",
+        "layer_version",
+        "title",
+        "lifecycle_state",
+        "trust_state",
+        "catalog_ref",
+        "release_manifest_ref",
+        "promotion_decision_ref",
+        "style_manifest_ref",
+        "source_descriptor_refs",
+        "evidence_bundle_refs",
+        "policy_decision_refs",
+        "review_record_refs",
+        "representation",
+        "temporal",
+        "exposure",
+        "runtime",
+        "lineage",
+        "provenance",
+        "governance"
+      ],
+      "properties": {
+        "object_type": {
+          "const": "LayerManifest"
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "profile_status": {
+          "const": "PROPOSED_INACTIVE"
+        },
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^layer-manifest:[0-9a-f]{24}$"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "layer_id": {
+          "type": "string",
+          "pattern": "^layer:[a-z0-9][a-z0-9_.:-]{3,240}$"
+        },
+        "layer_version": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "lifecycle_state": {
+          "const": "CANDIDATE"
+        },
+        "trust_state": {
+          "enum": [
+            "CANDIDATE",
+            "DEGRADED",
+            "STALE",
+            "HELD"
+          ]
+        },
+        "catalog_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "release_manifest_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "promotion_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "style_manifest_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_descriptor_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "evidence_bundle_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "review_record_refs": {
+          "$ref": "#/$defs/optional_ref_array"
+        },
+        "representation": {
+          "$ref": "#/$defs/representation"
+        },
+        "temporal": {
+          "$ref": "#/$defs/temporal"
+        },
+        "exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "runtime": {
+          "$ref": "#/$defs/runtime"
+        },
+        "lineage": {
+          "$ref": "#/$defs/lineage"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "governance": {
+          "$ref": "#/$defs/governance"
+        }
+      }
+    }
+  }
 }

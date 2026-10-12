@@ -47,7 +47,7 @@ Resolve raw Flora taxon names, identifiers, synonyms, ranks, and authority cross
 - [Failure behavior](#failure-behavior)
 - [Maintenance checklist](#maintenance-checklist)
 - [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Rollback
 
 ---
 

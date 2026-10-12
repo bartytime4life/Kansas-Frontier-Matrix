@@ -313,3 +313,18 @@ def test_connector_allowlist_and_pipeline_non_publisher_boundaries(tmp_path: Pat
 
     legacy_violations = legacy_publish_target_violations(repository_root)
     assert not legacy_violations, "\n".join(legacy_violations)
+
+
+def test_yaml_flow_mapping_escaped_scalar_rejection_is_bounded() -> None:
+    repository_root = Path(__file__).resolve().parents[2]
+    adversarial = '{run: "' + (r"\!" * 4096) + "}"
+
+    violations = scan_yaml_source(
+        adversarial,
+        source="unterminated-escaped-flow-scalar.yaml",
+        repository_root=repository_root,
+    )
+
+    assert len(violations) == 1
+    assert violations[0].sink == "shell-parse"
+    assert "DIR-PLACE-003" in violations[0].reason

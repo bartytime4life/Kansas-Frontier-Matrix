@@ -1,53 +1,110 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/bundles
 title: policy/bundles/ — Governed Policy Bundle Boundary
-type: policy-readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Policy steward · Security steward · Policy-runtime steward · Contracts steward · Schema steward · Validation steward · Release steward · Docs steward
+type: policy-readme; directory-readme; boundary-compact; policy-bundle-boundary
+version: v0.3
+status: draft; repository-grounded; current-state-reconciled; documentation-led; one-proposed-inactive-packaging-profile; bounded-executable-rego-outside-lane; active-bundle-unaccepted; general-evaluator-unbound; fail-closed; non-release; non-publication
+owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted bundle stewardship, independent policy approval, and release separation remain unproved
 created: 2026-06-15
-updated: 2026-07-14
+updated: 2026-08-13
 policy_label: "restricted-review; policy-bundle-boundary; finite-outcomes; explicit-inputs; immutable-digests; fail-closed; evidence-aware; rights-aware; sensitivity-aware; release-gated; replayable; rollback-aware; no-secrets; no-hidden-fetches; no-directory-activation; no-public-bundle-selection"
+supersedes: v0.2 (2026-07-14)
 current_path: policy/bundles/README.md
-truth_posture: CONFIRMED policy/bundles README path, canonical singular policy root, policy bundle responsibility under policy/, paired PolicyInputBundle and PolicyDecision contracts and schemas, concrete PolicyDecision outcome and policy-family enums, minimal PolicyDecision fixtures and common schema harness, policy-runtime package version 0.0.0 placeholder, absent declared dedicated policy validators, TODO-only policy-test workflow, and search-limited README-only bundle-lane inventory / PROPOSED bundle artifact, manifest, lock, build, signing, activation, replay, and rollback contracts / CONFLICTED engine-native policy result vocabulary versus canonical PolicyDecision outcome vocabulary, policy schema fixture paths, policy schema x-kfm policy path, promotion/redaction schema overlap, and accepted evaluator/bundle format / UNKNOWN executable bundle artifacts, manifest instances, direct consumers, runtime selection, policy-engine binding, activation state, deployment state, receipt emission, branch protection, and production enforcement / NEEDS VERIFICATION accepted owners, canonical bundle format, deterministic builder, manifest schema home, reason-code and obligation registries, dependency closure, tests, CI, signatures, receipt/proof links, retention, supersession, and rollback automation
+owning_root: policy/
+canonical_relationship: canonical policy-packaging boundary inside the singular policy root; the present Pass 12 child is a documentation-only packaging profile whose Rego source, native test, and fixtures remain in their responsibility lanes
+directory_governance: accepted ADR-0029 adopts Directory Rules v2; the root-registry projection classifies policy/ as canonical for policy rules and bundles; this BOUNDARY_COMPACT README does not assemble, select, activate, evaluate, release, or publish a bundle
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 8c8a8d8b216030ed32fb440deadb37968841e03e
-  prior_blob: 2e52fa9b8c4bd12d5847244dec9a5c68e4f29d0d
-  bounded_path_search: policy/bundles/README.md and repository-indexed bundle terminology
+  base_commit: 06ea27fd9b996adb21b2545f69e6860c0c681bc5
+  base_tree: ae0e3620ad30d41efb3401c4f0dcdc6f9a645f7e
+  target_baseline_blob: 77f59c399fbce668c916cbbc385009121d6169f4
+  target_tree: 01eec7348cd3032137aada5b6f00e0c12619a2a5
+  pass12_profile_tree: ec7537c9f6544abd6b0511d75c77dedceb2d65c9
+  pass12_profile_readme_blob: 0c36c7c68180e74ccd9277f92284530cc2a96db0
+  rego_lane_readme_blob: 0d8ddd117e091d5af099fa36aaa94487eafd20a4
+  pass12_rego_blob: 175871cb929663e7a19345fd18f97a81a850b628
+  pass12_rego_test_blob: 3dd5dcc6ae14381949d9aba453da9acaa9a7731f
+  pass12_workflow_blob: 478f910e8e899796d15b8921e3baa55f4ce1ce73
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  policy_input_contract_blob: 545c352681dd0db0cd4d169a5d2f9c364356457c
+  policy_input_schema_blob: b89db4b1730c61258441e0eed037276b910b1990
+  policy_input_profile_contract_blob: 3af1c2c8d525f60f6e2aac89c5a0455898d77768
+  policy_input_profile_schema_blob: d72288fe5e807ea76ad65636cca682cd0c3631e7
+  policy_input_profile_validator_blob: dacb6ca9a1092c23becff22c5efca4ae81c5a6fe
+  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
+  policy_vocabulary_registry_blob: ae68a9f3cf80308f18bd04207ef2c85057750f12
+  policy_vocabulary_validator_blob: 285a24415fa7cc8358f445c8d5c8ff3e5f2b03f4
+  policy_evaluation_binding_validator_blob: d2c158646de6fcc56d5506219231d6f307e32c76
+  policy_runtime_metadata_blob: ebb6725ad9a00d77df06f779a603814027abe084
+  policy_runtime_core_blob: e7e14cf39ae6919fbbc80f1b471de6b907292edb
+  policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
+  pull_request_template_blob: c5624d7dbc2b83055421b4fb4542794bafa10bee
+  direct_lane_files_confirmed:
+    - policy/bundles/README.md
+    - policy/bundles/pass12-release-gate-v1/README.md
+  open_overlapping_pull_requests_found: "0 at preflight"
+  inventory_method: authenticated GitHub reads of the target and history, complete 16,985-entry recursive tree, direct lane, accepted directory governance, root registry, policy source and native tests, synthetic fixtures, contracts, schemas, inactive profiles, validators, workflows, placeholder runtime, ownership routing, contribution controls, branches, and open pull requests
+  bounded_inventory_note: the complete direct lane contains documentation only; no non-document bundle payload, manifest instance, lock, selector, signature, activation record, emitted decision, evaluation receipt, or publisher was established there
 related:
   - ../README.md
-  - ../access/README.md
-  - ../ai_builder/README.md
-  - ../decision/README.md
-  - ../../packages/policy-runtime/README.md
-  - ../../contracts/policy/README.md
+  - ./pass12-release-gate-v1/README.md
+  - ../rego/README.md
+  - ../rego/release_gate_v1.rego
+  - ../rego/release_gate_v1_test.rego
+  - ../../fixtures/policy/release_gate_v1/allow_public.json
+  - ../../fixtures/policy/release_gate_v1/deny_missing_evidence.json
+  - ../../fixtures/policy/release_gate_v1/deny_missing_sensitivity.json
+  - ../../fixtures/policy/release_gate_v1/deny_missing_attestation.json
   - ../../contracts/policy/policy_input_bundle.md
+  - ../../contracts/policy/policy_input_bundle_profile_v1.md
   - ../../contracts/policy/policy_decision.md
-  - ../../schemas/contracts/v1/policy/README.md
+  - ../../contracts/policy/policy_decision_vocabulary.md
+  - ../../contracts/policy/policy_evaluation_binding_v1.md
+  - ../../contracts/policy/policy_obligation_set.md
+  - ../../contracts/policy/policy_obligation_reduction.md
+  - ../../contracts/policy/policy_enforcement_maturity.md
   - ../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
+  - ../../schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json
   - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../schemas/contracts/v1/policy/policy_decision_vocabulary.schema.json
+  - ../../schemas/contracts/v1/policy/policy_evaluation_binding_v1.schema.json
+  - ../decision/vocabulary.v1.json
   - ../../tools/validators/policy/README.md
-  - ../../fixtures/contracts/v1/policy/policy_decision/README.md
-  - ../../tests/schemas/test_common_contracts.py
+  - ../../tools/validators/policy/validate_policy_input_bundle_profile_v1.py
+  - ../../tools/validators/policy/validate_policy_decision_vocabulary.py
+  - ../../tools/validators/policy/validate_policy_evaluation_binding_v1.py
+  - ../../packages/policy-runtime/README.md
+  - ../../.github/workflows/pass12-release-policy-v1.yml
+  - ../../.github/workflows/policy-input-bundle-profile-v1.yml
+  - ../../.github/workflows/policy-decision-vocabulary.yml
+  - ../../.github/workflows/policy-evaluation-binding-v1.yml
   - ../../.github/workflows/policy-test.yml
-  - ../../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/trust-membrane.md
   - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/registers/DRIFT_REGISTER.md
-  - ../../apps/governed-api/README.md
-tags: [kfm, policy, bundles, manifest, rego, opa, policy-runtime, PolicyInputBundle, PolicyDecision, finite-outcomes, reason-codes, obligations, deterministic-build, digest, replay, fail-closed, release-gated, rollback]
+  - ../../control_plane/root_registry.yaml
+  - ../../release/README.md
+  - ../../.github/CODEOWNERS
+  - ../../CONTRIBUTING.md
+  - ../../.github/PULL_REQUEST_TEMPLATE.md
+tags: [kfm, policy, bundles, manifest, rego, opa, pass12, policy-runtime, PolicyInputBundle, PolicyDecision, finite-outcomes, reason-codes, obligations, deterministic-build, digest, replay, fail-closed, release-gated, rollback, boundary-compact]
+truth_posture: "CONFIRMED exact two-file documentation-only direct lane, canonical singular policy root, accepted ADR-0029 placement, one PROPOSED_INACTIVE Pass 12 packaging profile, its external deny-by-default Rego source, six native tests, four workflow-evaluated fixtures, checksum-pinned OPA 1.19.0 workflow, static broad policy-readiness hold, permissive parent PolicyInputBundle schema, restrictive inactive PolicyInputBundle profile with validator, two valid and three invalid PolicyDecision shape fixtures, inactive reason/obligation vocabulary, declared-only exact-byte evaluation binding, multiple profile-specific policy validators, and placeholder general policy runtime / PROPOSED executable bundle artifact, manifest, lock, deterministic builder, accepted evaluator, normalization, selector, signing, activation, replay, and rollback contracts / CONFLICTED Pass 12 engine-native boolean/set result versus canonical PolicyDecision, documentation-only bundle profile versus an executable bundle, and stale general schema-declared validator/policy paths / UNKNOWN accepted local owner, canonical executable bundle format, bundle instance, manifest instance, runtime selector, evaluator binding, production consumer, decision receipt, required-check coupling, deployment enforcement, and publication behavior"
 notes:
-  - "The bounded repository search surfaced this README for policy/bundles and did not surface an executable bundle, bundle manifest instance, bundle lock, bundle registry, or direct runtime selection file in this lane. Treat the lane as README-only unless a later recursive checkout proves otherwise."
-  - "The policy runtime package is version 0.0.0 and indexed implementation references resolve to README documentation rather than evaluator code. Runtime execution remains unproved."
-  - "PolicyInputBundle has a permissive PROPOSED schema requiring only id. PolicyDecision has a concrete PROPOSED schema with outcomes ANSWER, ABSTAIN, DENY, and ERROR and policy families promotion, access, render, capability, consent, and sensitivity."
-  - "The dedicated validator paths declared by the policy schemas were not found. The common schema fixture harness and one valid/one invalid PolicyDecision fixture family are repository-present."
-  - "The policy-test workflow currently echoes TODO for OPA tests and fixture coverage. Workflow success does not prove policy behavior until meaningful checks replace those stubs."
-  - "Only this Markdown file changes."
+  - "v0.3 reconciles the substantive v0.2 boundary against current main and preserves all thirty prior H2 sections."
+  - "The Pass 12 child is a packaging profile README only; executable Rego remains under policy/rego and reusable fixtures remain under fixtures/."
+  - "The dedicated Pass 12 workflow executes the named Rego source and native test under checksum-pinned OPA 1.19.0; the broad policy-test workflow remains a static readiness hold and does not establish a general evaluator."
+  - "Profile-specific validators and workflows validate inactive declarations; the parent PolicyInputBundle and PolicyDecision schema-declared validators remain absent at their declared paths."
+  - "This revision changes only policy/bundles/README.md and creates no policy behavior, bundle payload, selector, runtime, decision, receipt, release, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -59,21 +116,21 @@ notes:
 > Governed boundary for immutable, reviewable, replayable policy bundle artifacts and their manifests. This lane may package accepted policy source for an approved evaluator, but it is not the policy runtime, input schema, decision contract, receipt store, release authority, or public trust path.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-informational)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
+![version](https://img.shields.io/badge/version-v0.3-informational)
+![maturity](https://img.shields.io/badge/maturity-docs%2Bbounded__Rego-lightgrey)
 ![authority](https://img.shields.io/badge/authority-policy__bundle__boundary-6f42c1)
 ![outcomes](https://img.shields.io/badge/canonical__outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0b7285)
 ![default](https://img.shields.io/badge/default-fail__closed-critical)
 ![activation](https://img.shields.io/badge/directory__activation-forbidden-critical)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Bundle classes](#bundle-artifact-classes) · [Manifest](#minimum-bundle-manifest-contract) · [Identity](#identity-version-digest-and-canonicalization) · [Composition](#composition-and-dependency-closure) · [Inputs](#policy-input-binding) · [Decisions](#decision-vocabulary-and-normalization) · [Activation](#activation-selection-and-deployment) · [Lifecycle](#bundle-lifecycle-and-promotion) · [Supply chain](#build-and-supply-chain-controls) · [Reasons](#reason-codes-and-obligations) · [Audit](#audit-replay-receipts-and-retention) · [Sensitivity](#rights-sensitivity-and-data-minimization) · [Failure](#failure-behavior) · [Threats](#threat-model) · [Validation](#validation-and-test-matrix) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Rollback](#rollback-correction-and-supersession)
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Bundle classes](#bundle-artifact-classes) · [Manifest](#minimum-bundle-manifest-contract) · [Identity](#identity-version-digest-and-canonicalization) · [Composition](#composition-and-dependency-closure) · [Inputs](#policy-input-binding) · [Decisions](#decision-vocabulary-and-normalization) · [Activation](#activation-selection-and-deployment) · [Lifecycle](#bundle-lifecycle-and-promotion) · [Supply chain](#build-and-supply-chain-controls) · [Reasons](#reason-codes-and-obligations) · [Audit](#audit-replay-receipts-and-retention) · [Sensitivity](#rights-sensitivity-and-data-minimization) · [Failure](#failure-behavior) · [Threats](#threat-model) · [Validation](#validation-and-test-matrix) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Ledger](#no-loss-and-evidence-ledger) · [Changelog](#changelog) · [Rollback](#rollback-correction-and-supersession)
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.2`<br>
-> **Observed lane maturity:** README-only in the bounded repository search<br>
+> **Document lifecycle:** draft `v0.3`<br>
+> **Observed lane maturity:** two documentation files; one bounded Rego source/test profile is validated in adjacent responsibility lanes<br>
 > **Authority:** policy-bundle packaging and manifest boundary only<br>
-> **Runtime posture:** no accepted bundle format, bundle instance, manifest instance, evaluator binding, active selection, or deployed enforcement is established by this README
+> **Runtime posture:** no accepted executable bundle format, bundle payload, manifest instance, general evaluator, active selector, deployed enforcement, or production consumer is established
 
 > [!CAUTION]
 > File presence is never activation. A valid archive, successful schema check, OPA-compatible directory, matching digest, or `ANSWER` decision does not authorize release or publication. Missing or stale bundle identity, input context, evidence, rights, sensitivity, review, evaluator integrity, reason-code mapping, obligation handling, release state, correction path, or rollback support must fail closed.
@@ -84,7 +141,9 @@ notes:
 
 `policy/bundles/` is the canonical policy-root sublane for packaging reviewed policy source into an immutable evaluation unit and describing that unit with inspectable metadata.
 
-A future bundle may support:
+The current `pass12-release-gate-v1/` child documents one proposed, inactive packaging profile. Its Rego source, native test, fixtures, and dedicated workflow are real repository artifacts in adjacent responsibility lanes, but no executable bundle payload is assembled here.
+
+A future executable bundle may support:
 
 - access gates;
 - capability gates;
@@ -147,39 +206,59 @@ A bundle is a frozen evaluation input, not a universal permission grant.
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
-| `policy/bundles/README.md` | **CONFIRMED** | This README exists and previously documented a proposed bundle boundary. |
-| Other indexed files in `policy/bundles/` | **NOT SURFACED IN BOUNDED SEARCH** | No executable bundle, manifest instance, lock, registry, signature, or bundle-local test file was found. This is search-limited, not proof of permanent absence. |
-| Canonical policy root | **CONFIRMED repository-present** | `policy/` exists and is the singular policy authority root; the root README remains a short `PROPOSED` scaffold. |
-| Policy-root ADR | **CONFIRMED repository-present / PROPOSED ADR** | ADR-0003 records `policy/` as canonical and `policies/` as compatibility if present. Its acceptance status remains proposed. |
-| `PolicyInputBundle` contract | **CONFIRMED** | Semantic contract exists and explicitly forbids hidden fact fetching. |
-| `PolicyInputBundle` schema | **CONFIRMED / PROPOSED PERMISSIVE STUB** | Requires only `id`; allows additional properties. Rich policy context is not yet machine-enforced. |
-| `PolicyDecision` contract | **CONFIRMED** | Semantic contract exists and distinguishes engine-native results from canonical outcomes. |
-| `PolicyDecision` schema | **CONFIRMED / PROPOSED CONCRETE SHAPE** | Requires six fields and permits only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. |
-| PolicyDecision fixtures | **CONFIRMED MINIMAL COVERAGE** | One valid fixture and one invalid missing-`decision_id` fixture are documented. |
-| Common schema harness | **CONFIRMED CODE** | `tests/schemas/test_common_contracts.py` discovers policy schemas with matching fixture directories. |
-| Dedicated policy validators | **ABSENT AT DECLARED PATHS** | `tools/validators/validate_policy_decision.py` and `tools/validators/policy/validate_policy_input_bundle.py` were not found. |
-| Policy validator index | **CONFIRMED README** | Validator expectations are documented; executable policy validation remains unproved. |
-| Policy runtime package | **CONFIRMED PLACEHOLDER** | `pyproject.toml` declares `kfm-policy-runtime` version `0.0.0`; indexed evaluator references lead to READMEs, not code. |
-| Policy-test workflow | **CONFIRMED TODO-ONLY** | OPA tests and fixture coverage are echo stubs. A successful run does not prove policy behavior. |
-| Accepted bundle format | **UNKNOWN** | OPA directory bundle, tarball, WASM package, or another format has not been accepted in inspected evidence. |
-| Active bundle selection | **UNKNOWN** | No allowlisted selector, deployment binding, or active bundle registry is confirmed. |
-| Receipt/proof linkage | **NEEDS VERIFICATION** | Required for consequential replay, but no accepted bundle-evaluation receipt path was established here. |
+| `policy/bundles/README.md` | **CONFIRMED** | This v0.2 baseline exists and defines a substantive proposed bundle boundary. |
+| Complete direct lane | **CONFIRMED TWO FILES** | The recursive tree contains this README and `pass12-release-gate-v1/README.md`; both are documentation. |
+| Pass 12 packaging profile | **CONFIRMED / PROPOSED_INACTIVE** | The child README names exact source, test, fixtures, and workflow, and explicitly grants no publication authority. It is not a bundle payload or manifest. |
+| Pass 12 Rego source | **CONFIRMED BOUNDED EXECUTABLE SOURCE** | `policy/rego/release_gate_v1.rego` is deny-by-default and exposes `allow`, a deterministic `deny` set, and a decision object with sorted reasons. |
+| Pass 12 native tests and fixtures | **CONFIRMED BOUNDED COVERAGE** | Six native Rego tests exist; the dedicated workflow evaluates one allow fixture and three denial fixtures. This is not complete policy coverage. |
+| Pass 12 hosted workflow | **CONFIRMED COMMAND-BEARING DEFINITION** | Installs checksum-pinned OPA 1.19.0, checks formatting, runs native tests, verifies fixture polarity, and asserts three stable deny reasons. A workflow definition is not current-run or production evidence. |
+| Canonical policy root | **CONFIRMED MIXED MATURITY** | `policy/` is the singular policy-source root. Its v0.3.1 README records one bounded Rego lane, multiple inactive profiles, and a general evaluator hold. |
+| Directory governance | **CONFIRMED ACCEPTED** | ADR-0029 adopts Directory Rules v2; the root registry projects `policy/` as canonical for policy rules and bundles. |
+| Parent `PolicyInputBundle` | **CONFIRMED PROPOSED PERMISSIVE STUB** | The parent schema requires only `id` and permits additional properties. |
+| Explicit input profile v1 | **CONFIRMED PROPOSED_INACTIVE / FIXTURE_ONLY** | A closed schema, semantic validator, synthetic fixtures, tests, and read-only workflow check one bounded input profile without evaluating policy. |
+| `PolicyDecision` schema and fixtures | **CONFIRMED PROPOSED SHAPE** | The schema permits only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` across six families; two valid and three invalid shape fixtures are inventoried. |
+| Decision vocabulary v1 | **CONFIRMED PROPOSED_INACTIVE** | A reviewed candidate registry contains nine reason codes and eight obligation codes with a validator, fixtures, tests, and workflow; it is not evaluator or consumer authority. |
+| Evaluation binding v1 | **CONFIRMED PROPOSED_INACTIVE / DECLARED_ONLY** | The profile checks exact input/decision file digests and evaluator-declaration coherence; it proves no execution or decision authenticity. |
+| Policy validators | **CONFIRMED PARTIAL** | Multiple profile-specific Python validators have focused tests and workflows. The parent schema-declared `validate_policy_input_bundle.py` and `tools/validators/validate_policy_decision.py` remain absent. |
+| Policy runtime package | **CONFIRMED PLACEHOLDER** | `kfm-policy-runtime` remains version `0.0.0` and `core.py` is comment-only. |
+| Broad `policy-test` workflow | **CONFIRMED STATIC READINESS HOLD** | It inventories the bounded Pass 12 lane and profile-validator support, rejects non-document bundle payloads, preserves the placeholder runtime hold, and evaluates no general policy. |
+| Accepted executable bundle format | **UNKNOWN / NOT ESTABLISHED** | No accepted OPA bundle, archive, WASM package, or other executable bundle profile was established. |
+| Active bundle selection | **UNKNOWN / NOT ESTABLISHED** | No allowlisted selector, activation record, deployment binding, or active bundle registry was established. |
+| Receipt/proof linkage | **NEEDS VERIFICATION** | Declared-only bindings and documentation do not establish authenticated evaluation receipts or replay closure. |
+
+### Current direct map
+
+```text
+policy/bundles/
+├── README.md
+└── pass12-release-gate-v1/
+    └── README.md
+```
+
+The executable Pass 12 materials remain outside this directory by responsibility:
+
+```text
+policy/rego/release_gate_v1.rego
+policy/rego/release_gate_v1_test.rego
+fixtures/policy/release_gate_v1/*.json
+.github/workflows/pass12-release-policy-v1.yml
+```
 
 ### Evidence boundary
 
-This README may confidently state repository presence and inspected file contents. It must not claim:
+This README may state repository presence, inspected file content, and bounded validation wiring. It must not claim:
 
-- production policy enforcement;
-- active bundle deployment;
-- runtime compatibility;
+- an assembled or signed bundle;
+- accepted bundle format or manifest;
+- general or production policy evaluation;
+- active bundle deployment or selector state;
 - complete policy coverage;
-- branch-protection enforcement;
-- accepted signing;
-- bundle registry operation;
-- receipt emission;
-- public release safety.
+- runtime compatibility or consumer enforcement;
+- branch-protection or required-check enforcement;
+- authenticated decision or reviewer authority;
+- receipt emission, release approval, or public safety.
 
-Those remain `UNKNOWN` or `NEEDS VERIFICATION` until tests, runtime evidence, manifests, receipts, or deployment records prove them.
+Those remain `UNKNOWN`, `NEEDS VERIFICATION`, or explicitly proposed until accepted artifacts, current-run evidence, runtime bindings, receipts, deployment records, and independent review prove them.
 
 [Back to top](#top)
 
@@ -285,25 +364,32 @@ Directory and filename conventions are `PROPOSED` until an accepted manifest sch
 
 ## Repository fit and Directory Rules basis
 
-`policy/bundles/` belongs under the singular `policy/` responsibility root because bundles package executable policy authority.
+Accepted ADR-0029 and Directory Rules v2 place normative policy rules and bundles under the singular `policy/` root. The root-registry projection records the same responsibility but is machine projection, not independent authority.
+
+The complete bundle-lane file map and its bounded executable dependencies are:
 
 ```text
 policy/
-├── README.md
-├── access/
-├── ai_builder/
-├── decision/
-├── domains/
-├── sensitivity/
-├── rights/
-├── runtime/
-├── promotion/
-├── release/
-└── bundles/
-    └── README.md
+├── bundles/
+│   ├── README.md
+│   └── pass12-release-gate-v1/
+│       └── README.md
+└── rego/
+    ├── README.md
+    ├── release_gate_v1.rego
+    ├── release_gate_v1_test.rego
+    └── tiles_publish.rego
+
+fixtures/policy/release_gate_v1/
+├── allow_public.json
+├── deny_missing_attestation.json
+├── deny_missing_evidence.json
+└── deny_missing_sensitivity.json
+
+.github/workflows/pass12-release-policy-v1.yml
 ```
 
-The tree above is a responsibility map, not a confirmed exhaustive inventory.
+This is a relevant-surface map, not an exhaustive `policy/` inventory. The Pass 12 source remains source, the fixtures remain reusable synthetic inputs, CI remains orchestration, and the child README remains a packaging profile.
 
 ### Responsibility split
 
@@ -319,16 +405,29 @@ release/correction/rollback       -> release/
 public enforcement                -> governed apps/APIs
 ```
 
+### BOUNDARY_COMPACT responsibility signature
+
+| Dimension | Boundary |
+|---|---|
+| Owns | Proposed bundle packaging, immutable identity, dependency closure, manifest expectations, and safe selection requirements. |
+| Receives | Reviewed policy source references, accepted contracts/schemas, explicit evaluator requirements, synthetic validation evidence, and external review/release references. |
+| Produces | Documentation today; a future accepted lane may produce immutable bundle payloads and manifests. |
+| Must not own | Semantic object meaning, JSON Schema authority, evaluator/runtime code, request facts, decisions, receipts, release state, credentials, deployment, or public presentation. |
+| Activation | Directory presence, valid Markdown, Rego success, or a passing workflow never activates a bundle. |
+| Mutation and retention | Versioned Git history; future payloads require immutable identities, supersession, withdrawal, replay, and rollback retention. |
+| Exposure | Repository-public documentation and source; operating selection remains internal and governed. |
+| Correction | Revert or forward-fix documentation; correct active policy through separately governed withdrawal, supersession, reevaluation, cache invalidation, and release correction. |
+
 ### Placement constraints
 
 - `policy/` is singular and canonical.
-- `policies/`, if present, must remain a compatibility lane and cannot evolve independently.
+- `policies/`, if present, must remain compatibility-only unless a successor accepted decision changes that posture.
 - Bundle artifacts must not be copied into `packages/policy-runtime/` as a second policy authority.
 - Bundle manifests must not be placed in `release/` merely because a bundle is deployed; release manifests and policy bundle manifests are different object families.
 - Schema files must not be placed beside bundle instances.
 - Emitted evaluation receipts must not be stored as bundle source.
 - Domain-specific policies may be included by reference, but the bundle does not transfer domain ownership into this directory.
-- Creating a parallel `bundles/` root or `policies/bundles/` authority requires an accepted ADR or migration decision.
+- Creating a parallel `bundles/` root or independent compatibility authority requires a governed path decision and, when triggered, an accepted ADR and migration plan.
 
 [Back to top](#top)
 
@@ -597,21 +696,26 @@ A governed caller should construct an explicit [`PolicyInputBundle`](../../contr
 
 ### Current contract reality
 
-The semantic contract expects operation, audience, object, evidence, source, rights, sensitivity, review, release, and evaluator context. The current schema, however:
+The semantic parent expects operation, audience, object, evidence, source, rights, sensitivity, review, release, and evaluator context. Its current schema, however:
 
 - requires only `id`;
 - optionally shapes `spec_hash` and `version`;
 - allows arbitrary additional properties;
-- remains `PROPOSED`.
+- remains `PROPOSED`; and
+- still declares validator and policy paths that are absent.
+
+The additive [explicit context profile v1](../../contracts/policy/policy_input_bundle_profile_v1.md) closes one bounded shape for `ANSWER`, `RENDER`, `EXPORT`, `PROMOTE`, and `RELEASE` inputs. Its validator checks sorted references, evidence/citation coherence, public rights and sensitivity, release prerequisites, fail-closed evaluator declaration, and false authority flags.
+
+That profile is `PROPOSED_INACTIVE` and `FIXTURE_ONLY`. Passing it means the declared input is coherent enough for a future evaluator boundary; it does not evaluate a rule or authorize an outcome.
 
 Therefore:
 
-- schema validity alone is insufficient;
-- a bundle must not assume rich fields are machine-enforced;
+- parent-schema validity alone is insufficient;
+- the profile must not be described as the universal accepted input shape;
 - callers and policy modules must not silently disagree on field names;
-- accepted profiles must version the expected semantic field set;
-- missing facts must remain explicitly unresolved;
-- hidden fetches are forbidden.
+- missing facts remain explicitly unresolved;
+- hidden fetches are forbidden; and
+- every active evaluator profile must version and bind its exact input contract.
 
 ### Required evaluator binding
 
@@ -629,7 +733,9 @@ PolicyInputBundle id/hash
 + receipt/proof target
 ```
 
-The current `PolicyDecision` schema does not carry all of those fields. Do not add undeclared properties to a `PolicyDecision` instance because `additionalProperties` is `false`. Carry replay metadata in an accepted `DecisionEnvelope`, evaluation receipt, or future schema revision.
+The inactive [Policy Evaluation Binding v1](../../contracts/policy/policy_evaluation_binding_v1.md) currently checks only exact input/decision file SHA-256 values and equality of a declared `bundle_ref` and `bundle_version`. Its `execution_mode` is `DECLARED_ONLY` and all authority flags remain false. It does not prove that the named bundle exists, that an evaluator ran, or that the decision is authentic.
+
+The current `PolicyDecision` schema does not carry all replay fields and rejects undeclared properties. Carry additional replay metadata only in an accepted envelope, receipt, binding revision, or future schema—not by extending an instance ad hoc.
 
 ### Input immutability
 
@@ -648,26 +754,31 @@ After evaluation:
 
 ### Two distinct vocabularies
 
-KFM currently documents two layers:
+KFM currently documents two general layers:
 
 1. **Engine-native or internal policy result classes**
    `ALLOW | RESTRICT | HOLD | DENY | ABSTAIN | ERROR`
-
 2. **Canonical `PolicyDecision.outcome` values confirmed by schema**
    `ANSWER | ABSTAIN | DENY | ERROR`
 
-These must not be mixed in one field or described as interchangeable.
+The current Pass 12 Rego profile uses a narrower engine-native surface: Boolean `allow`, a set-valued `deny`, and `decision = {profile, allow, deny_reasons}`. Its child README explicitly says the result is not normalized into `PolicyDecision`. Neither native form may be stored or advertised as a canonical decision without an accepted mapping and authenticated evaluation boundary.
+
+The inactive `policy/decision/vocabulary.v1.json` registry supplies candidate reason and obligation codes for the canonical decision contract. Fixture validation of that registry does not activate it.
 
 ### Required normalization
 
+The following general mapping remains `PROPOSED` until accepted and implemented:
+
 | Engine-native result | Canonical outcome | Required handling |
 |---|---|---|
-| `ALLOW` | `ANSWER` | Proceed only for the evaluated operation and audience; preserve any citations and release gates. |
-| `RESTRICT` | `ANSWER` | `obligations` must encode every enforceable restriction; caller fails closed if any obligation cannot be satisfied. |
-| `HOLD` | `ABSTAIN` | Reasons identify pending review/maturity/support safely; obligations may require steward review or reevaluation. |
+| `ALLOW` | `ANSWER` | Proceed only for the evaluated operation and audience; preserve citations, obligations, and release gates. |
+| `RESTRICT` | `ANSWER` | `obligations` encode every enforceable restriction; fail closed if any required interpreter is unavailable. |
+| `HOLD` | `ABSTAIN` | Preserve pending review, maturity, or support without turning uncertainty into permission. |
 | `ABSTAIN` | `ABSTAIN` | Preserve unresolved support and do not turn it into a denial or answer. |
-| `DENY` | `DENY` | Preserve safe reason code; do not reveal protected facts. |
-| `ERROR` | `ERROR` | Preserve evaluator/process failure; never normalize to `ANSWER`. |
+| `DENY` | `DENY` | Preserve a public-safe reason code without exposing protected facts. |
+| `ERROR` | `ERROR` | Preserve evaluator/process failure; never normalize it to `ANSWER`. |
+
+For Pass 12, `allow: true` must not be mapped mechanically to `ANSWER`. A future adapter must also bind the exact input, source/bundle identity, evaluator, entrypoint, denial set, review context, and receipt target, and it must preserve the profile's explicit non-release boundary.
 
 ### Canonical policy family
 
@@ -680,21 +791,21 @@ The current `PolicyDecision.policy_family` enum is:
 - `consent`;
 - `sensitivity`.
 
-`bundle` is not a policy family in the current schema. Bundle packaging, integrity, or selection failure must map to the gate family being evaluated, with an appropriate reason, or to a separately accepted future contract. Do not emit an invalid `policy_family: "bundle"` merely because the bundle failed.
+`bundle` and `release` are not policy families in the current schema. Bundle integrity or selection failure must map to the family of the evaluated gate under an accepted contract; do not emit a schema-invalid family merely because packaging failed.
 
 ### Composition rules
 
 When multiple policy evaluations apply:
 
 - do not let `ANSWER` override `DENY`;
-- do not let an empty result become `ANSWER`;
-- preserve `ERROR` as a process failure;
+- do not let an empty or undefined result become `ANSWER`;
+- preserve `ERROR` as process failure;
 - preserve `ABSTAIN` when evidence or authority is unresolved;
 - apply the most restrictive unsatisfied obligation;
-- record which family and bundle version produced each decision;
+- record which family and exact bundle/evaluator identity produced each decision; and
 - use an accepted aggregation contract rather than free-text precedence.
 
-A safe default aggregation posture is:
+A safe default proposal is:
 
 ```text
 ERROR or DENY blocks
@@ -702,7 +813,7 @@ ABSTAIN prevents authoritative answer/publication
 ANSWER proceeds only when every required obligation is enforceable
 ```
 
-This is a `PROPOSED` composition rule until accepted in contracts, policy, tests, and runtime.
+This remains proposed until accepted in contracts, policy, tests, runtime, consumers, and receipts.
 
 [Back to top](#top)
 
@@ -896,69 +1007,54 @@ An externally produced bundle must not enter active use without:
 
 ### Reason codes
 
-Reason codes should be:
+Reason codes should be stable, versioned, public-safe, gate-specific where necessary, separable from protected detail, fixture-covered, and mapped to bounded explanations.
 
-- stable;
-- versioned;
-- public-safe;
-- gate-specific where necessary;
-- append-only when practical;
-- separable from sensitive internal detail;
-- covered by fixtures and metrics;
-- mapped to a human-readable explanation.
-
-Examples of `PROPOSED` bundle/runtime reason families:
+A real candidate registry now exists at [`policy/decision/vocabulary.v1.json`](../decision/vocabulary.v1.json). It is `PROPOSED_INACTIVE` and currently contains nine candidate reason codes:
 
 ```text
-bundle.missing
-bundle.digest_mismatch
-bundle.manifest_invalid
-bundle.withdrawn
-bundle.unsupported_evaluator
-bundle.entrypoint_missing
-bundle.dependency_incomplete
-input.missing_operation
-input.missing_audience
-input.schema_invalid
-evidence.unresolved
-rights.unknown
-sensitivity.unresolved
-review.required
-obligation.unsupported
-runtime.timeout
-runtime.undefined_result
-runtime.multiple_results
+CONSENT_REQUIRED
+EVIDENCE_STALE
+EVIDENCE_UNRESOLVED
+OPERATION_ALLOWED_WITH_OBLIGATIONS
+POLICY_BUNDLE_UNAVAILABLE
+POLICY_INPUT_INCOMPLETE
+PUBLIC_PRECISION_UNSAFE
+RIGHTS_UNKNOWN
+SENSITIVITY_UNRESOLVED
 ```
 
-These are examples, not an accepted registry.
+The Pass 12 Rego profile separately emits ten engine-native denial codes, including `MISSING_EVIDENCE`, `MISSING_SENSITIVITY_REVIEW`, and `MISSING_REQUIRED_ATTESTATION`. Those codes are not automatically entries in the canonical registry. A future normalization contract must resolve naming, outcome, family, public-safety, versioning, and compatibility explicitly.
+
+Additional bundle/runtime failure codes such as digest mismatch, invalid manifest, unsupported evaluator, incomplete dependency closure, timeout, undefined result, or multiple results remain proposed until registered and tested.
 
 ### Obligations
 
-Obligations must be executable downstream duties, not advisory prose.
+The inactive vocabulary currently contains eight candidate obligation codes:
 
-Examples already documented by the `PolicyDecision` contract include:
+```text
+ATTACH_CITATIONS
+ATTACH_RIGHTS_NOTICE
+DELAY_PUBLICATION
+GENERALIZE_GEOMETRY
+REDACT_EXACT_LOCATION
+REQUIRE_STEWARD_REVIEW
+VERIFY_ROLLBACK_TARGET
+WITHHOLD_EXPORT
+```
 
-- `attach_citation`;
-- `redact_coordinates`;
-- `generalize_geometry`;
-- `withhold_exact_location`;
-- `require_steward_review`;
-- `delay_publication`;
-- `attach_rights_notice`;
-- `block_export`;
-- `rollback_check_required`.
+The additive `PolicyObligationSet` and `PolicyObligationReduction` profiles provide deterministic fixture-only shape and reduction evidence. They do not prove that an accepted bundle issued an obligation or that a consumer enforced one.
 
-Before an obligation is allowed in an active bundle:
+Before any obligation is active:
 
-- define its exact semantics;
-- identify the responsible interpreter;
-- define success and failure;
-- define ordering and composition;
+- define exact semantics and versioning;
+- identify every responsible interpreter;
+- define success, failure, ordering, and composition;
 - test supported and unsupported consumers;
-- ensure logs do not leak protected values;
-- fail closed when the caller cannot enforce it.
+- bind enforcement evidence and correction behavior;
+- keep logs free of protected values; and
+- fail closed when a caller cannot enforce the obligation.
 
-`RESTRICT` must not disappear during normalization: it becomes `ANSWER` only with complete, enforceable obligations.
+`RESTRICT` must not disappear during normalization: it becomes `ANSWER` only when all restrictions are represented by complete, enforceable obligations under an accepted mapping.
 
 [Back to top](#top)
 
@@ -1219,25 +1315,24 @@ Tests must prove:
 
 ### Current CI reality
 
-The repository's `policy-test` workflow currently performs:
+The current CI posture is split:
 
-```text
-echo TODO opa-test
-echo TODO policy-fixture-coverage
-```
+| Surface | Confirmed behavior | Limit |
+|---|---|---|
+| `pass12-release-policy-v1` | Downloads checksum-pinned OPA 1.19.0; formats and tests the named Rego source; evaluates four fixtures; checks three stable deny reasons | One proposed inactive release-gate profile only; no bundle assembly, canonical decision, release, or publication |
+| `policy-test` OPA readiness job | Inventories all Rego, requires the sole native-test profile and its dedicated workflow, rejects non-document bundle payloads, verifies the placeholder runtime, and preserves the `make policy` TODO hold | Static readiness only; evaluates no general policy and proves no active evaluator |
+| `policy-test` fixture job | Inventories two valid and three invalid `PolicyDecision` shape fixtures and the common harness | Shape-only; no dedicated parent validator, bundle identity, reason/obligation semantics, or evaluated decision |
+| Profile-specific workflows | Run deterministic validators and fixtures for inactive input, vocabulary, binding, obligation, and related profiles | Validator results are not policy outcomes, bundle activation, or runtime enforcement |
 
-Therefore a green workflow run proves only that those echo commands ran. It does not prove:
+A green run may therefore prove the exact bounded command or invariant it reports. It does not by itself prove:
 
-- OPA/Rego syntax;
-- bundle assembly;
-- digest reproducibility;
-- manifest validation;
-- policy behavior;
-- outcome normalization;
-- obligation enforcement;
-- runtime selection;
-- replay;
-- rollback.
+- an executable bundle archive or manifest;
+- deterministic bundle assembly or digest reproducibility;
+- accepted evaluator selection;
+- canonical outcome normalization;
+- obligation enforcement by consumers;
+- authenticated decision receipts;
+- production deployment, replay, rollback, release, or publication.
 
 [Back to top](#top)
 
@@ -1245,46 +1340,32 @@ Therefore a green workflow run proves only that those echo commands ran. It does
 
 ## Smallest sound implementation sequence
 
-This sequence is `PROPOSED` and preserves reversible change.
+The repository has completed parts of a fixture-first slice, but executable bundle activation remains held. The smallest dependency-ordered sequence is:
 
-1. **Confirm bundle format and evaluator.**
-   Accept OPA directory/tar bundle, WASM, or another explicit profile.
+1. **Accept the executable bundle format and evaluator.**
+   OPA directory/tar bundle, WASM, or another profile needs an explicit decision, capability contract, provenance, and rollback.
+2. **Define and accept the semantic bundle-manifest contract.**
+3. **Add a restrictive manifest schema, fixtures, validator, and tests.**
+4. **Reconcile the existing Pass 12 packaging profile.**
+   Bind exact `release_gate_v1.rego` and dependency digests without moving source authority into this lane.
+5. **Version the engine-result-to-`PolicyDecision` mapping.**
+   The current declared-only evaluation binding is provenance scaffolding, not execution evidence.
+6. **Review the inactive reason and obligation vocabulary.**
+   Accept, revise, or supersede it; define consumer interpreters and compatibility.
+7. **Add a deterministic builder and complete lock.**
+8. **Build one synthetic immutable bundle candidate.**
+9. **Expand negative coverage.**
+   Include malformed input, undefined or multiple results, stale/withdrawn bundle, digest mismatch, unsupported evaluator, unsupported obligation, timeout, and replay/correction cases.
+10. **Close validator gaps.**
+    Keep profile-specific validators; reconcile the missing parent `PolicyInputBundle` and `PolicyDecision` validator declarations.
+11. **Graduate broad CI deliberately.**
+    Preserve the readiness hold until repository-wide bundle, evaluator, manifest, fixture, and normalization checks exist.
+12. **Add shadow evaluation and authenticated receipts.**
+13. **Add reviewed activation, deactivation, correction, and rollback records.**
+14. **Bind governed consumers and caches to immutable identities.**
+15. **Promote only after acceptance gates pass.**
 
-2. **Define semantic manifest contract.**
-   Keep bundle manifest meaning under `contracts/policy/` or another Directory-Rules-approved contract path.
-
-3. **Create restrictive manifest schema.**
-   Use `schemas/contracts/v1/policy/` only after checking overlap and schema naming rules.
-
-4. **Define engine-result mapping contract.**
-   Version the mapping to canonical `PolicyDecision`.
-
-5. **Define reason-code and obligation registries.**
-   Specify interpreters and failure behavior.
-
-6. **Build one synthetic bundle.**
-   Use non-sensitive toy rules covering one policy family.
-
-7. **Add deterministic builder and lock.**
-   Keep implementation in the appropriate tool/package root, not in this README lane.
-
-8. **Add valid, invalid, deny, restrict, hold, abstain, and error fixtures.**
-
-9. **Implement dedicated validators.**
-   Reconcile the currently missing declared validator paths.
-
-10. **Replace TODO workflow jobs with meaningful checks.**
-
-11. **Add shadow/replay integration.**
-   Do not activate in public paths.
-
-12. **Add reviewed activation and rollback records.**
-
-13. **Add receipt/proof linkage.**
-
-14. **Promote only after acceptance gates pass.**
-
-The first implementation should be a thin slice, not a repository-wide policy rewrite.
+The first executable candidate should remain a thin, synthetic, reversible slice rather than a repository-wide policy rewrite.
 
 [Back to top](#top)
 
@@ -1295,14 +1376,17 @@ The first implementation should be a thin slice, not a repository-wide policy re
 ### Documentation boundary
 
 - [x] Canonical root and adjacent authority boundaries are explicit.
+- [x] Complete current direct-lane and Pass 12 dependency maps are recorded.
 - [x] Current repository maturity is separated from proposal.
-- [x] Engine-native and canonical decision vocabularies are separated.
-- [x] No bundle, evaluator, validator, CI, activation, receipt, or deployment maturity is overclaimed.
-- [x] Failure, threat, replay, correction, and rollback posture is explicit.
+- [x] Pass 12 engine-native output and canonical decision vocabulary are separated.
+- [x] Bounded OPA execution, static readiness, fixture validators, and placeholder runtime are qualified independently.
+- [x] No executable bundle, evaluator, selector, receipt, deployment, release, or publication maturity is overclaimed.
+- [x] Failure, threat, replay, correction, supersession, and rollback posture remains explicit.
+- [x] All thirty prior H2 sections and their substantive doctrine are retained.
 
-### First candidate bundle
+### First executable candidate bundle
 
-- [ ] Accepted owners and reviewers are assigned.
+- [ ] Accepted owners and independent reviewers are assigned.
 - [ ] Bundle format, builder, evaluator, capabilities, and entrypoints are accepted.
 - [ ] Semantic bundle-manifest contract exists.
 - [ ] Restrictive bundle-manifest schema exists.
@@ -1310,20 +1394,22 @@ The first implementation should be a thin slice, not a repository-wide policy re
 - [ ] Complete source/dependency lock exists.
 - [ ] Deterministic clean build passes.
 - [ ] Artifact and manifest digest verification passes.
-- [ ] PolicyInputBundle profile is explicit and semantically validated.
-- [ ] PolicyDecision normalization passes current schema.
-- [ ] Reason-code registry is accepted.
-- [ ] Obligation registry and caller interpreters are accepted.
-- [ ] Valid, invalid, deny, restrict, hold, abstain, error, stale, withdrawn, and adversarial fixtures pass.
-- [ ] Dedicated validators exist and declared paths are correct.
+- [ ] The inactive input profile is accepted or superseded for the exact evaluator.
+- [ ] `PolicyDecision` normalization passes the current schema through an accepted mapping.
+- [ ] The inactive reason-code vocabulary is accepted or superseded.
+- [ ] Obligation vocabulary and all required caller interpreters are accepted.
+- [ ] Valid, invalid, deny, restrict, hold, abstain, error, stale, withdrawn, and adversarial cases pass.
+- [ ] Parent validator declarations and implementations agree.
 - [ ] No-network, secret, archive-safety, and sensitive-data checks pass.
-- [ ] Policy-test workflow runs meaningful checks.
-- [ ] Policy, security, domain, rights, sensitivity, and release-adjacent reviews close as applicable.
+- [ ] Broad bundle/evaluator CI runs meaningful checks beyond static readiness.
+- [ ] Policy, security, domain, rights, sensitivity, runtime, and release-adjacent reviews close as applicable.
 - [ ] Shadow/replay behavior is verified.
 - [ ] External activation binding is immutable and auditable.
-- [ ] Evaluation receipts bind input, bundle, evaluator, and decision.
+- [ ] Evaluation receipts bind input, bundle, evaluator, entrypoint, result, and decision.
 - [ ] Rollback target is present, reviewed, compatible, and not withdrawn.
 - [ ] Public clients cannot enumerate, upload, select, or bypass bundles.
+
+The current Pass 12 profile partially supplies source, native tests, four workflow-evaluated fixtures, and a dedicated pinned-OPA workflow. It does not satisfy the executable bundle checklist.
 
 ### Active bundle
 
@@ -1342,26 +1428,27 @@ The first implementation should be a thin slice, not a repository-wide policy re
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Accepted bundle format | **NEEDS VERIFICATION** | ADR, contract, builder, and tested example. |
-| Bundle lane inventory | **NEEDS VERIFICATION** | Recursive checkout or tree listing beyond indexed search. |
-| Manifest schema home | **NEEDS VERIFICATION** | Directory Rules review and schema/contract split. |
-| Policy runtime implementation | **UNKNOWN** | Importable code, package tests, and runtime logs. |
-| Evaluator family/version | **UNKNOWN** | Accepted configuration and successful tests. |
-| Deterministic builder | **UNKNOWN** | Code, clean rebuild comparison, and validation report. |
-| Bundle selector/activation | **UNKNOWN** | Deployment/activation record and consumer binding. |
-| Dedicated validators | **ABSENT AT DECLARED PATHS** | Implemented files and tests. |
-| PolicyInputBundle restrictive shape | **NEEDS VERIFICATION** | Schema revision and fixtures. |
-| PolicyDecision mapping | **NEEDS VERIFICATION** | Mapping contract, runtime adapter, fixtures, and tests. |
-| Reason-code registry | **NEEDS VERIFICATION** | Versioned accepted registry. |
-| Obligation registry/interpreters | **NEEDS VERIFICATION** | Contract, consumer matrix, and negative tests. |
-| Bundle signatures | **UNKNOWN** | Trust model, key custody, verification, revocation. |
-| Receipt/proof home | **NEEDS VERIFICATION** | Accepted contract, path, instances, and replay test. |
-| Retention policy | **NEEDS VERIFICATION** | Governance decision and deletion/access controls. |
-| Policy-test CI | **CONFIRMED TODO-ONLY** | Real OPA/bundle/fixture/normalization checks. |
-| Branch protection/review enforcement | **UNKNOWN** | Repository rules and protected-check evidence. |
-| Public API enforcement | **UNKNOWN** | Implemented trust-membrane integration and tests. |
-| Rollback automation | **UNKNOWN** | Runbook, selection rollback, cache invalidation, drill. |
-| Generated-receipt requirement for docs changes | **NEEDS VERIFICATION** | Accepted AI-build/provenance enforcement path. |
+| Accepted executable bundle format | **UNKNOWN / NOT ESTABLISHED** | Accepted decision, contract, builder, and tested example. |
+| Bundle lane inventory | **CONFIRMED** | Complete recursive tree at the pinned base: two documentation files and no non-document payload. |
+| Pass 12 packaging profile | **CONFIRMED PROPOSED_INACTIVE** | Current README, exact external Rego/test/fixtures, and dedicated workflow; activation remains absent. |
+| Manifest contract and schema home | **NEEDS VERIFICATION** | Accepted semantic contract, Directory Rules review, restrictive schema, fixtures, validator, and tests. |
+| General policy runtime | **CONFIRMED PLACEHOLDER** | `0.0.0` metadata and comment-only core; implementation, package tests, and runtime observations remain absent. |
+| Evaluator family/version | **UNKNOWN / NOT ACCEPTED** | Accepted configuration, provenance, capability checks, and successful execution evidence. |
+| Deterministic builder and lock | **UNKNOWN / NOT ESTABLISHED** | Code, pinned toolchain, complete closure, clean rebuild comparison, and validation report. |
+| Bundle selector/activation | **UNKNOWN / NOT ESTABLISHED** | Governed selector, immutable binding, activation/deactivation records, and consumer evidence. |
+| Policy validators | **CONFIRMED PARTIAL** | Profile validators have tests/workflows; parent schema-declared validators still require reconciliation. |
+| Restrictive `PolicyInputBundle` shape | **CONFIRMED INACTIVE PROFILE / PARENT GAP** | Profile v1 is closed and validated; acceptance, generality, and runtime binding remain open. |
+| `PolicyDecision` mapping | **CONFIRMED DECLARED-ONLY SCAFFOLD / RUNTIME GAP** | Exact-byte binding exists; accepted mapping, executed adapter, authentication, receipts, and tests remain open. |
+| Reason-code registry | **CONFIRMED PROPOSED_INACTIVE** | Review, adoption or supersession, bundle linkage, and compatibility policy. |
+| Obligation registry/interpreters | **CONFIRMED PROPOSED_INACTIVE / PARTIAL** | Candidate vocabulary and fixture profiles exist; accepted issuers, consumers, enforcement, and negative tests remain open. |
+| Bundle signatures | **UNKNOWN** | Trust model, key custody, verification, rotation, and revocation. |
+| Receipt/proof home | **NEEDS VERIFICATION** | Accepted contract, path, authenticated instances, retention, and replay test. |
+| Retention policy | **NEEDS VERIFICATION** | Governance decision and deletion/access controls for bundles, inputs, decisions, and receipts. |
+| Policy CI | **CONFIRMED SPLIT / PARTIAL** | One bounded OPA lane executes; the broad workflow remains a static readiness hold. |
+| Branch protection/required checks | **UNKNOWN** | Repository ruleset and required-check evidence. |
+| Governed consumer enforcement | **UNKNOWN** | Implemented server-side binding, negative tests, runtime observations, and correction handling. |
+| Rollback automation | **UNKNOWN** | Runbook, selector rollback, cache invalidation, reevaluation, and drill evidence. |
+| Generated-receipt enforcement | **NEEDS VERIFICATION** | Contribution policy names the requirement; complete automated enforcement and exception handling remain unproved. |
 
 [Back to top](#top)
 
@@ -1459,17 +1546,18 @@ Also require, as applicable:
 
 Review this README again when:
 
-- the first bundle file is added;
-- a manifest contract or schema is accepted;
-- evaluator code appears;
-- dedicated validators are implemented;
-- policy-test stops being TODO-only;
+- the first non-document bundle payload, manifest instance, or lock is added;
+- the Pass 12 profile is assembled, renamed, superseded, or activated;
+- a bundle manifest contract or schema is accepted;
+- evaluator or policy-runtime implementation appears;
+- a parent policy validator declaration is implemented or changed;
+- the broad readiness hold becomes repository-wide bundle/evaluator execution;
 - active bundle selection is introduced;
-- reason-code or obligation vocabularies change;
-- `PolicyDecision` schema changes;
-- a signing/attestation process is added;
-- a bundle is withdrawn or rolled back;
-- `policy/` versus compatibility-root placement changes.
+- the inactive reason/obligation vocabulary is accepted, changed, or superseded;
+- `PolicyDecision` schema or normalization changes;
+- a signing/attestation trust process is added;
+- a bundle is withdrawn, corrected, or rolled back; or
+- canonical policy/bundle placement changes.
 
 [Back to top](#top)
 
@@ -1477,34 +1565,33 @@ Review this README again when:
 
 ## ADRs and drift triggers
 
-No new ADR is created by this README.
+No new ADR is created by this README. Accepted ADR-0029 and Directory Rules v2 establish the current placement basis; they do not accept a bundle format or evaluator.
 
-Separate governance is required to:
+Separate governed decisions are required to:
 
-- accept the bundle format;
-- accept a bundle manifest contract/schema;
-- change the canonical policy root;
-- create a parallel bundle root;
-- accept evaluator/compiler compatibility policy;
-- change canonical PolicyDecision outcome or family enums;
-- accept reason-code or obligation registries;
+- accept the executable bundle and manifest formats;
+- accept evaluator/compiler compatibility and provenance rules;
+- change the canonical policy root or create a parallel bundle authority;
+- change canonical `PolicyDecision` outcomes or families;
+- accept or supersede the reason/obligation vocabulary;
 - allow network-dependent builds;
 - introduce signing keys or trust roots;
-- define production activation;
-- define public/client bundle selection;
-- merge bundle activation with release approval;
-- move receipts or proofs into this lane.
+- define production selection and activation;
+- permit public/client bundle selection;
+- merge bundle activation with release approval; or
+- move decisions, receipts, proofs, or release records into this lane.
 
 Record drift when:
 
-- a bundle exists without a manifest;
-- manifests and artifacts disagree;
-- a mutable alias is used by runtime;
-- `policies/` evolves independently;
-- bundle copies exist under packages, apps, release, or artifacts;
-- schema-declared validator paths remain stale;
-- workflow success is cited as policy proof while jobs remain TODO stubs;
-- engine-native results are stored directly as canonical PolicyDecision outcomes.
+- a non-document bundle payload exists without a manifest and immutable identity;
+- manifests, locks, source closure, and payload digests disagree;
+- runtime follows a mutable alias or request-selected path;
+- compatibility policy roots evolve independently;
+- bundle copies appear under packages, apps, release, artifacts, or data roots as parallel authority;
+- parent schema-declared validator or policy paths remain stale without explicit qualification;
+- a static readiness or fixture workflow is cited as general policy or production proof;
+- the Pass 12 Boolean/set result is stored directly as canonical `PolicyDecision`; or
+- an inactive vocabulary, input profile, or declared-only binding is presented as accepted runtime authority.
 
 [Back to top](#top)
 
@@ -1563,6 +1650,51 @@ A Git revert alone does not revoke a deployed bundle, invalidate caches, correct
 
 ## Last reviewed
 
-**2026-07-14**, against `main@8c8a8d8b216030ed32fb440deadb37968841e03e`.
+**2026-08-13**, against `main@06ea27fd9b996adb21b2545f69e6860c0c681bc5` and complete tree `ae0e3620ad30d41efb3401c4f0dcdc6f9a645f7e`.
 
-Review again before the first non-README bundle artifact, manifest instance, dependency lock, evaluator binding, dedicated validator, real policy-test job, active selector, receipt integration, signature, deployment, or rollback drill.
+Review again before the first non-document bundle artifact, manifest, lock, general evaluator binding, active selector, authenticated receipt integration, signature trust root, deployment, required-check claim, production consumer, or rollback drill.
+
+[Back to top](#top)
+
+---
+
+## No-loss and evidence ledger
+
+| v0.2 concern | v0.3 disposition |
+|---|---|
+| Purpose, authority, scope, belongs/exclusions | **RETAINED** with current Pass 12 qualification. |
+| Directory placement and singular policy root | **RETAINED AND UPDATED** to accepted ADR-0029, Directory Rules v2, root-registry projection, and the exact direct map. |
+| Bundle classes, manifest fields, identity, canonicalization, dependency closure | **RETAINED AS PROPOSED**; no executable format or manifest is silently accepted. |
+| Explicit inputs and no-hidden-fetch rule | **RETAINED AND EXTENDED** with the inactive input-profile evidence and parent-schema gap. |
+| Engine/canonical outcome separation | **RETAINED AND EXTENDED** with the actual Pass 12 Boolean/set shape and declared-only binding limit. |
+| Activation, lifecycle, build, supply chain, audit, sensitivity, failure, and threat controls | **RETAINED** without activation or production claims. |
+| Reason codes and obligations | **RETAINED AND RECONCILED** with the inactive candidate registry and fixture-only obligation profiles. |
+| Validation and implementation sequence | **RETAINED AND UPDATED** to distinguish the bounded OPA workflow, broad static readiness hold, and remaining bundle/runtime work. |
+| Definition of done and open work | **RETAINED AND RE-BASED** against complete current evidence. |
+| Illustrative manifest | **RETAINED** as synthetic and non-validating. |
+| Maintenance, ADR triggers, rollback, correction, supersession | **RETAINED** with current trigger language. |
+| Repository-state claims | **SUPERSEDED** where v0.2 said README-only, TODO-only, minimal fixtures, proposed placement basis, or globally absent validators. |
+
+No prior H2 section was removed. This revision adds evidence and change ledgers only; it does not create or modify any bundle payload, policy source, contract, schema, registry, fixture, validator, test, workflow, runtime, decision, receipt, release object, deployment, or public behavior.
+
+[Back to top](#top)
+
+---
+
+## Changelog
+
+### v0.3 — 2026-08-13
+
+- pinned the complete current repository tree and exact target preimage;
+- replaced the stale README-only lane claim with the exact two-file documentation map;
+- recorded the Pass 12 source, six native tests, four workflow-evaluated fixtures, and checksum-pinned OPA workflow without calling them a bundle;
+- reconciled the restrictive inactive input profile, inactive vocabulary, declared-only binding, profile validators, and placeholder general runtime;
+- reclassified `policy-test` from TODO-only to a static broad readiness hold with one separately governed executable Rego lane;
+- added the `BOUNDARY_COMPACT` responsibility signature;
+- preserved all thirty prior H2 sections and recorded the no-loss disposition.
+
+### v0.2 — 2026-07-14
+
+Established the comprehensive proposed bundle boundary, artifact and manifest model, immutable identity, dependency closure, finite-outcome normalization, selection controls, supply-chain posture, replay, sensitivity, validation, rollback, and open-work register. Its repository-state snapshot is superseded by v0.3; its substantive doctrine remains retained.
+
+[Back to top](#top)

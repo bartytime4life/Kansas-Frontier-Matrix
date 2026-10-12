@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-explorer-src-readme-currentness-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/README.md": "sha256:3968eccbc8404bef139b1973df040bbe6fdb6c6b2e23184e802433aac6a437f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:a0f243299080e6ad0f6ecb10358a117356cc7e8164dca57ae3f6fc04149a2bd6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector",
+      "container static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a0f243299080e6ad0f6ecb10358a117356cc7e8164dca57ae3f6fc04149a2bd6",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Notion: KFM Repository Workbench — coordination-only readback",
+      "Google Drive: KFM System Chronicle — coordination-only readback"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:apps/explorer-web/src/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:apps/explorer-web/src",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:apps/explorer-web/src/site",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:apps/explorer-web/src/features",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:apps/explorer-web/src/adapters",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e:tests/policy/test_explorer_web_adapter_boundary.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "https://docs.google.com/document/d/1fBOUDqrcsHaPJiEfM5HmtJL7fBMKFr-rgoN2ge_uVrI/edit"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The exact main ref 0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e was re-read immediately before authoring; no open pull requests were returned and the task branch name was absent."
+    },
+    {
+      "gate": "directory-rules-and-adr-preflight",
+      "outcome": "PASS",
+      "reason": "The existing apps/explorer-web/src README path was retained. Directory Rules v2 section 16 requires a current README contract where ownership and evidence behavior are documented; accepted ADR-0029 remains the placement authority. No new root or authority home was introduced."
+    },
+    {
+      "gate": "current-tree-inventory",
+      "outcome": "PASS",
+      "reason": "The current src tree was read from GitHub: six direct entries, 25 adapter files plus README, 39 feature directories, 16 site files plus README, four viewer templates, and 55 direct test files. The README's structural counts remain unchanged."
+    },
+    {
+      "gate": "snapshot-repin-and-static-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one metadata block, balanced fences, a final newline, no merge markers, no prior main/tree hashes, the current commit/tree, current site/features directory anchors, and no newly introduced trailing whitespace; three pre-existing Markdown hard-break lines remain unchanged."
+    },
+    {
+      "gate": "remote-byte-and-hash-binding",
+      "outcome": "PASS",
+      "reason": "GitHub readback of the branch returns blob da7171b875e6e3c3dea39499b25c8787967c5cdf and independently computed UTF-8 SHA-256 3968eccbc8404bef139b1973df040bbe6fdb6c6b2e23184e802433aac6a437f."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for git diff --check or repository-native Markdown/link validators; no runtime or application behavior is claimed."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "No hosted result was used before opening the draft; any GitHub checks remain pending or separately observable on the exact PR head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T05:29:51.792Z",
+  "emitter": "OpenAI Codex (GPT-5)",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation currentness repair. The receipt records a draft-only, reversible source README re-pin. It is not evidence authority, a ReviewRecord, PolicyDecision, release approval, deployment, promotion, publication, source admission, or repository-settings authorization. Notion and Google Drive were read for coordination context only; GitHub remains the implementation authority."
+}

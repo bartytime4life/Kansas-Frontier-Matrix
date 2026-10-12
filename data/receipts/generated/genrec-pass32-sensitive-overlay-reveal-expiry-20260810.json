@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-pass32-sensitive-overlay-reveal-expiry-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/sensitive-overlay-reveal-expiry.yml",
+    "contracts/governance/sensitive_overlay_reveal_expiry.md",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md",
+    "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/cases.json",
+    "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json",
+    "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py",
+    "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/sensitive-overlay-reveal-expiry.yml": "sha256:2899937174037aca37d6a4c4a3e4890f042278ba3c3745f58c6a7814f178af47",
+    "contracts/governance/sensitive_overlay_reveal_expiry.md": "sha256:54c930576deb9a394e30be4c84451103e2cae7cc16fe3bc5cc3a85335eeeac16",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md": "sha256:6a27667b45d2f95c1ef5400472d4f1dc964e748f4bb36ccd4be61f94144dd3cd",
+    "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/cases.json": "sha256:6817e725b0e0c55bddca26834a85d4284e5b465a337c7fce300f0a8ad2238132",
+    "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json": "sha256:11254d6a95b1f130bdd62bcd030e7ca6082cdc6e355bb517e34fb7efb2c24bba",
+    "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py": "sha256:2b4ed2928eef5dcbe6e89f798224ecc3caff2dcc46933af1d8266edad5cafcb8",
+    "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py": "sha256:251589c0d51fda650e2e5848a76d177e871ef0db63269c49d03723e548874b6f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:54c930576deb9a394e30be4c84451103e2cae7cc16fe3bc5cc3a85335eeeac16",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection",
+      "local Git branch validation",
+      "private research candidate discovery with public identifiers withheld",
+      "deterministic no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:878fd226e926a315905867821ea5796f3e64742e993118e00c4d82f33d6f0413",
+      "sha256:fa57f563010c52f747eedf30b4db8e56bc22651ff80828a34c8ae2ac9da2a900",
+      "sha256:358e27a541ae85ccb62a83b70dc69ffee204fdd858c8586b02193f139749eaaa",
+      "sha256:f482961101bee621863113b4bc7297b75ae72c3284806018a4da0afbf4bbce29"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:contracts/governance/sensitive_overlay_gatehouse_preflight.md@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:schemas/contracts/v1/governance/sensitive_overlay_gatehouse_preflight.schema.json@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:tools/validators/governance/validate_sensitive_overlay_gatehouse_preflight.py@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:tests/validators/governance/test_sensitive_overlay_gatehouse_preflight.py@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:docs/doctrine/directory-rules.md@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@149af17075f7f12d716aa14de439ea22ee6a343e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/sensitive-overlay-reveal-expiry.yml": "PROPOSED",
+    "contracts/governance/sensitive_overlay_reveal_expiry.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-reveal-expiry-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/sensitive_overlay_reveal_expiry/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/sensitive_overlay_reveal_expiry.schema.json": "CONFIRMED",
+    "tests/validators/governance/test_sensitive_overlay_reveal_expiry.py": "CONFIRMED",
+    "tools/validators/governance/validate_sensitive_overlay_reveal_expiry.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-reveal-expiry-suite-15-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-2-hold-2-abstain-16-deny",
+      "outcome": "PASS",
+      "reason": "All 20 synthetic cases produced the exact state, outcome, and finding list."
+    },
+    {
+      "gate": "adjacent-gatehouse-regression-12-tests",
+      "outcome": "PASS",
+      "reason": "The combined reveal-expiry and existing gatehouse run passed 27 tests and 69 subtests."
+    },
+    {
+      "gate": "inclusive-expiry-24-hour-cap-no-secret-no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests freeze inclusive expiry, the exact 24-hour cap, required cleanup declarations, closed raw-token/key fields, and blocked network entry points."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-local-link-check",
+      "outcome": "PASS",
+      "reason": "Both authored Markdown files passed deterministic local-target validation."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "Repository-native validation bound all seven non-receipt artifact paths to their final SHA-256 bytes."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "SENSITIVE-OVERLAY-GATEHOUSE@149af1707",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/sensitive_overlay_gatehouse_preflight.md@149af17075f7f12d716aa14de439ea22ee6a343e"
+    },
+    {
+      "id": "ADR-0029@149af1707",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@149af17075f7f12d716aa14de439ea22ee6a343e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:11:33Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only transition profile selected from private research and grounded publicly as a dependency-closed follow-on to the repository-resident SensitiveOverlayGatehousePreflight. Private source identifiers, hashes, titles, page references, and content are intentionally excluded. It consumes only hashes and synthetic summaries. Required cleanup actions are declarative and do not prove key discard, overlay removal, blurred-view restoration, or audit-receipt emission. Live token, key, revocation, attestation, policy, browser/UI, receipt, execution, release, deployment, and publication paths remain unwired."
+}

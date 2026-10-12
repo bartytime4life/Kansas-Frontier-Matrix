@@ -1,0 +1,38 @@
+{
+  "record_type": "fauna_public_safe_migration_candidate",
+  "route_id": "fixture:fauna:migration:synthetic-alpha",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:fauna:synthetic-alpha",
+  "source_descriptor_ref": "fixture:source:fauna:synthetic-alpha",
+  "source_role": "synthetic",
+  "claim_scope": "migration-corridor-support-only",
+  "telemetry_truth": false,
+  "individual_tracking_truth": false,
+  "time_scope": {
+    "kind": "synthetic-nonwrapping-season-window",
+    "start_day_of_year": 60,
+    "end_day_of_year": 120
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [0.0, 0.0],
+      [1.0, 1.0],
+      [2.0, 1.0]
+    ],
+    "precision_class": "public-safe-synthetic",
+    "derivation_method": "synthetic-corridor-generalization"
+  },
+  "sensitivity_state": "public-safe-synthetic",
+  "evidence_refs": [
+    "fixture:evidence:fauna:synthetic-migration-alpha"
+  ],
+  "governance": {
+    "policy_state": "not-evaluated-fixture",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "promotion_state": "not-eligible"
+  }
+}

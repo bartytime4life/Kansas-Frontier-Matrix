@@ -1,0 +1,483 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_activation_decision.schema.json",
+  "title": "source_activation_decision",
+  "description": "Proposed fixture-first SourceActivationDecision profile for one pre-RAW source activation, re-admission, scope-change, deactivation, or retirement operation. Shape validity does not activate a source, evaluate policy, write lifecycle state, release, or publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "activation_decision_id",
+    "source_id",
+    "source_descriptor_ref",
+    "descriptor_version",
+    "source_descriptor_digest",
+    "source_role_ref",
+    "operation",
+    "context",
+    "decision",
+    "timing",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "SourceActivationDecision"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "activation_decision_id": {
+      "type": "string",
+      "pattern": "^activation:[a-z0-9][a-z0-9_:.-]{7,240}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^(?:kfm://source/|src:)[a-z0-9][a-z0-9._~:/-]{2,240}$"
+    },
+    "source_descriptor_ref": {
+      "$ref": "#/$defs/nonempty_ref"
+    },
+    "descriptor_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "source_descriptor_digest": {
+      "$ref": "#/$defs/sha256_digest"
+    },
+    "source_role_ref": {
+      "$ref": "#/$defs/nonempty_ref"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "initial_activation",
+        "re_admission",
+        "scope_change",
+        "deactivation",
+        "retirement"
+      ]
+    },
+    "context": {
+      "$ref": "#/$defs/context"
+    },
+    "decision": {
+      "$ref": "#/$defs/decision"
+    },
+    "timing": {
+      "$ref": "#/$defs/timing"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "nonempty_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonempty_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonempty_ref"
+      },
+      "uniqueItems": true
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": [
+        "verified_open",
+        "verified_restricted",
+        "permission_required",
+        "unknown",
+        "noassertion",
+        "denied"
+      ]
+    },
+    "sensitivity_class": {
+      "type": "string",
+      "enum": [
+        "public",
+        "low",
+        "restricted",
+        "sensitive_location",
+        "living_person",
+        "dna_genomic",
+        "cultural_sensitive",
+        "infrastructure_sensitive",
+        "steward_controlled",
+        "controlled",
+        "unknown_review_required"
+      ]
+    },
+    "access_posture": {
+      "type": "string",
+      "enum": [
+        "open",
+        "credentialed",
+        "restricted",
+        "closed",
+        "unknown"
+      ]
+    },
+    "descriptor_review_state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "needs_review",
+        "reviewed",
+        "approved",
+        "rejected",
+        "superseded",
+        "deactivated"
+      ]
+    },
+    "registry_state": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "active",
+        "quarantined",
+        "retired",
+        "superseded"
+      ]
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_status",
+        "sensitivity_class",
+        "access_posture",
+        "descriptor_review_state",
+        "registry_state"
+      ],
+      "properties": {
+        "rights_status": {
+          "$ref": "#/$defs/rights_status"
+        },
+        "sensitivity_class": {
+          "$ref": "#/$defs/sensitivity_class"
+        },
+        "access_posture": {
+          "$ref": "#/$defs/access_posture"
+        },
+        "descriptor_review_state": {
+          "$ref": "#/$defs/descriptor_review_state"
+        },
+        "registry_state": {
+          "$ref": "#/$defs/registry_state"
+        }
+      }
+    },
+    "route": {
+      "type": "string",
+      "enum": [
+        "ADMIT_TO_RAW",
+        "QUARANTINE",
+        "DENY_INTAKE",
+        "HOLD",
+        "ERROR"
+      ]
+    },
+    "activation_state": {
+      "type": "string",
+      "enum": [
+        "disabled",
+        "fixture_only",
+        "live_candidate",
+        "live_active",
+        "quarantined",
+        "retired"
+      ]
+    },
+    "activation_scope": {
+      "type": "string",
+      "enum": [
+        "none",
+        "fixture_only",
+        "metadata_only",
+        "raw_capture",
+        "quarantine_only"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "enum": [
+        "INTAKE_ADMITTED",
+        "INTAKE_INPUT_INVALID",
+        "INTAKE_OPERATION_MISSING",
+        "INTAKE_CLASS_UNKNOWN",
+        "INTAKE_ROUTE_UNSUPPORTED",
+        "INTAKE_POLICY_BUNDLE_MISSING",
+        "INTAKE_POLICY_BUNDLE_STALE",
+        "INTAKE_EVALUATOR_ERROR",
+        "INTAKE_DECISION_FAMILY_UNRESOLVED",
+        "INTAKE_SOURCE_DESCRIPTOR_MISSING",
+        "INTAKE_SOURCE_ID_UNRESOLVED",
+        "INTAKE_DESCRIPTOR_STALE",
+        "INTAKE_DESCRIPTOR_SUPERSEDED",
+        "INTAKE_SOURCE_ROLE_MISSING",
+        "INTAKE_SOURCE_ROLE_CONFLICT",
+        "INTAKE_SOURCE_ROLE_OVERCLAIM",
+        "INTAKE_AUTHORITY_INSUFFICIENT",
+        "INTAKE_DOMAIN_SCOPE_UNRESOLVED",
+        "INTAKE_RIGHTS_UNKNOWN",
+        "INTAKE_RIGHTS_DENIED",
+        "INTAKE_RIGHTS_EXPIRED",
+        "INTAKE_ATTRIBUTION_UNRESOLVED",
+        "INTAKE_REDISTRIBUTION_RESTRICTED",
+        "INTAKE_ACCESS_POSTURE_UNRESOLVED",
+        "INTAKE_SENSITIVITY_UNRESOLVED",
+        "INTAKE_PROTECTED_CLASS_REVIEW_REQUIRED",
+        "INTAKE_PRECISION_OVEREXPOSED",
+        "INTAKE_CONSENT_UNRESOLVED",
+        "INTAKE_DIGEST_MISSING",
+        "INTAKE_DIGEST_MISMATCH",
+        "INTAKE_BYTES_UNACCOUNTED",
+        "INTAKE_CONTENT_TYPE_UNKNOWN",
+        "INTAKE_FORMAT_UNSUPPORTED",
+        "INTAKE_ARCHIVE_UNSAFE",
+        "INTAKE_CONTENT_SCAN_REQUIRED",
+        "INTAKE_CONTENT_SCAN_FAILED",
+        "INTAKE_CREDENTIAL_MATERIAL_DETECTED",
+        "INTAKE_DUPLICATE_CAPTURE",
+        "INTAKE_SOURCE_HEAD_CHANGED",
+        "INTAKE_REVIEW_REQUIRED",
+        "INTAKE_REVIEW_INSUFFICIENT",
+        "INTAKE_REVIEW_REJECTED",
+        "INTAKE_QUARANTINE_REQUIRED",
+        "INTAKE_QUARANTINE_ROUTE_MISSING",
+        "INTAKE_RECEIPT_REQUIRED",
+        "INTAKE_AUDIT_CONTEXT_MISSING",
+        "INTAKE_RETRY_NOT_AUTHORIZED",
+        "INTAKE_RE_ADMISSION_REQUIRED",
+        "INTAKE_DENIED"
+      ]
+    },
+    "obligation": {
+      "type": "string",
+      "enum": [
+        "require_source_descriptor",
+        "require_descriptor_review",
+        "require_source_activation_decision",
+        "preserve_candidate_source_role",
+        "preserve_source_role_limitations",
+        "record_domain_scope",
+        "record_source_head",
+        "require_re_admission_on_source_change",
+        "require_rights_review",
+        "require_attribution",
+        "block_redistribution",
+        "block_public_release",
+        "require_sensitivity_review",
+        "withhold_exact_location",
+        "generalize_geometry_before_downstream_use",
+        "minimize_living_person_data",
+        "block_dna_genomic_intake",
+        "require_cultural_or_sovereignty_review",
+        "require_digest_pinning",
+        "require_ingest_receipt",
+        "require_safe_content_scan",
+        "strip_or_isolate_credential_material",
+        "block_active_content_execution",
+        "limit_archive_expansion",
+        "use_no_network_processing",
+        "store_only_in_restricted_lane",
+        "minimize_audit_payload",
+        "route_to_raw_candidate",
+        "route_to_quarantine",
+        "open_quarantine_case",
+        "assign_source_steward",
+        "assign_domain_steward",
+        "assign_security_review",
+        "require_second_review",
+        "set_hold_expiry",
+        "block_automatic_retry",
+        "preserve_prior_decision_refs",
+        "emit_superseding_descriptor",
+        "invalidate_cached_decisions",
+        "link_affected_ingest_receipts",
+        "open_correction_review",
+        "withdraw_affected_derivatives",
+        "preserve_audit_history",
+        "verify_rollback_target"
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route",
+        "activation_state",
+        "activation_scope",
+        "reason_codes",
+        "obligations",
+        "policy_decision_refs",
+        "review_state",
+        "review_refs",
+        "decision_authority_ref"
+      ],
+      "properties": {
+        "route": {
+          "$ref": "#/$defs/route"
+        },
+        "activation_state": {
+          "$ref": "#/$defs/activation_state"
+        },
+        "activation_scope": {
+          "$ref": "#/$defs/activation_scope"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/reason_code"
+          },
+          "uniqueItems": true
+        },
+        "obligations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/obligation"
+          },
+          "uniqueItems": true
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "review_state": {
+          "type": "string",
+          "enum": [
+            "not_required",
+            "pending",
+            "approved",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "review_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "decision_authority_ref": {
+          "$ref": "#/$defs/nonempty_ref"
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "effective_at",
+        "expires_at",
+        "hold_expires_at"
+      ],
+      "properties": {
+        "created_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "hold_expires_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes",
+        "superseded_by"
+      ],
+      "properties": {
+        "supersedes": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_use_allowed",
+        "release_ref",
+        "spec_hash",
+        "authority_created"
+      ],
+      "properties": {
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256_digest"
+        },
+        "authority_created": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_activation_decision.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_activation_decision/",
+    "validator": "tools/validators/validate_source_activation_decision.py",
+    "tests": "tests/validators/test_validate_source_activation_decision.py",
+    "policy": "policy/intake/",
+    "authority": "fixture_first_source_admission_decision_shape_only",
+    "non_effects": [
+      "does_not_accept_adr_0017",
+      "does_not_activate_source",
+      "does_not_evaluate_live_policy",
+      "does_not_write_lifecycle_state",
+      "does_not_release_or_publish"
+    ]
+  }
+}

@@ -16,11 +16,14 @@ related:
   - schemas/contracts/v1/domains/fauna/
   - policy/sensitivity/
   - policy/domains/fauna/
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, standards, stac, darwin-core, biodiversity, catalog, sensitivity]
 notes:
   - All non-doctrine paths are PROPOSED per Directory Rules §0 until verified against mounted-repo evidence.
   - Canonical-form decision (STAC × DwC vs DwC-A) is OPEN; see §11.
+owning_root: docs/
+responsibility: "Documentation for STAC × Darwin Core Hybrid Profile; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # STAC × Darwin Core Hybrid Profile
@@ -593,7 +596,7 @@ These items are explicitly **not** resolved by this document and should be track
 
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law for every path in this document.
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — why object meaning, shape, admissibility, and proof live in four different roots.
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home rule (`schemas/contracts/v1/<…>`).
+- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule (`schemas/contracts/v1/<…>`).
 - [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) — *(PROPOSED, may not yet exist)* — the C6 rubric and redaction-profile catalog this profile references.
 - [`docs/standards/REDACTION_DETERMINISM.md`](./REDACTION_DETERMINISM.md) — *(PROPOSED, may not yet exist)* — seed-concatenation rules and replay discipline.
 - [`docs/standards/PROVENANCE.md`](./PROVENANCE.md) — *(PROPOSED, may not yet exist)* — `kfm:provenance` namespace, SLSA posture, OpenLineage facets.

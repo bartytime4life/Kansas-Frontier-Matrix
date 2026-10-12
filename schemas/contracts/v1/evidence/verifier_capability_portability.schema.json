@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/verifier_capability_portability.schema.json",
+  "title": "VerifierCapabilityPortabilityAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{4,220}$"
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"},
+        "version": {"type": "string", "pattern": "^[0-9A-Za-z][0-9A-Za-z.+_-]{0,63}$"},
+        "digest": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["name", "version", "digest"]
+    },
+    "resource_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "memory_mb": {"type": "integer", "minimum": 16, "maximum": 65536},
+        "cpu_seconds": {"type": "integer", "minimum": 1, "maximum": 3600},
+        "input_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824}
+      },
+      "required": ["memory_mb", "cpu_seconds", "input_bytes"]
+    },
+    "finding_code": {
+      "enum": [
+        "ALGORITHM_UNSUPPORTED",
+        "CANONICALIZATION_PROFILE_MISMATCH",
+        "CLOCK_UNAVAILABLE",
+        "DEPENDENCY_PROFILE_DRIFT",
+        "NETWORK_CAPABILITY_UNAVAILABLE",
+        "RESOURCE_CAPACITY_INSUFFICIENT",
+        "RESOURCE_EXHAUSTED",
+        "REVOCATION_INPUT_UNAVAILABLE",
+        "TIME_SOURCE_MISMATCH",
+        "TRUST_MATERIAL_MISMATCH",
+        "TRUST_MATERIAL_STALE"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "artifact_resolved": {"const": false},
+        "cryptography_performed": {"const": false},
+        "trust_material_loaded": {"const": false},
+        "revocation_checked": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "artifact_resolved",
+        "cryptography_performed",
+        "trust_material_loaded",
+        "revocation_checked",
+        "evidence_resolved",
+        "policy_evaluated",
+        "review_approved",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {"const": "VerifierCapabilityPortabilityAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.verifier-capability-portability.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:verifier-portability:[0-9a-f]{24}$"
+    },
+    "spec_hash": {"$ref": "#/$defs/digest"},
+    "subject_ref": {"$ref": "#/$defs/kfm_ref"},
+    "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+    "verifier_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile_ref": {"$ref": "#/$defs/kfm_ref"},
+        "required_algorithm": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"},
+        "required_canonicalization": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"},
+        "trust_material_digest": {"$ref": "#/$defs/digest"},
+        "trust_valid_until": {"$ref": "#/$defs/aware_datetime"},
+        "revocation_required": {"type": "boolean"},
+        "revocation_input_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "dependencies": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/dependency"}
+        },
+        "network_requirement": {"enum": ["FORBIDDEN", "OPTIONAL", "REQUIRED"]},
+        "time_source": {"enum": ["PINNED_UTC", "SYSTEM_UTC"]},
+        "required_capacity": {"$ref": "#/$defs/resource_limits"}
+      },
+      "required": [
+        "profile_ref",
+        "required_algorithm",
+        "required_canonicalization",
+        "trust_material_digest",
+        "trust_valid_until",
+        "revocation_required",
+        "revocation_input_digest",
+        "dependencies",
+        "network_requirement",
+        "time_source",
+        "required_capacity"
+      ]
+    },
+    "capability_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verifier_id": {"$ref": "#/$defs/kfm_ref"},
+        "environment_class": {"enum": ["CI", "SERVER", "DESKTOP", "BROWSER", "OFFLINE"]},
+        "supported_algorithms": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"}
+        },
+        "supported_canonicalization_profiles": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"}
+        },
+        "trust_material_digest": {"$ref": "#/$defs/digest"},
+        "trust_valid_until": {"$ref": "#/$defs/aware_datetime"},
+        "revocation_input_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "dependency_versions": {
+          "type": "array", "minItems": 1, "maxItems": 16,
+          "items": {"$ref": "#/$defs/dependency"}
+        },
+        "network_available": {"type": "boolean"},
+        "time_source": {"enum": ["PINNED_UTC", "SYSTEM_UTC", "UNAVAILABLE"]},
+        "resource_limits": {"$ref": "#/$defs/resource_limits"}
+      },
+      "required": [
+        "verifier_id",
+        "environment_class",
+        "supported_algorithms",
+        "supported_canonicalization_profiles",
+        "trust_material_digest",
+        "trust_valid_until",
+        "revocation_input_digest",
+        "dependency_versions",
+        "network_available",
+        "time_source",
+        "resource_limits"
+      ]
+    },
+    "verification_attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_ref": {"$ref": "#/$defs/kfm_ref"},
+        "profile_ref": {"$ref": "#/$defs/kfm_ref"},
+        "algorithm": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"},
+        "canonicalization_profile": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"},
+        "observed_at": {"$ref": "#/$defs/aware_datetime"},
+        "attempted_checks": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"enum": ["CANONICALIZE", "CHECK_REVOCATION_INPUT", "CHECK_TRUST_INPUT", "VERIFY_SIGNATURE"]}
+        },
+        "resource_usage": {"$ref": "#/$defs/resource_limits"},
+        "execution_mode": {"const": "SYNTHETIC"},
+        "artifact_input_resolved": {"const": false},
+        "cryptographic_verification_performed": {"const": false}
+      },
+      "required": [
+        "attempt_ref",
+        "profile_ref",
+        "algorithm",
+        "canonicalization_profile",
+        "observed_at",
+        "attempted_checks",
+        "resource_usage",
+        "execution_mode",
+        "artifact_input_resolved",
+        "cryptographic_verification_performed"
+      ]
+    },
+    "portability_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "portability_status": {"enum": ["PORTABLE", "QUALIFIED", "UNSUPPORTED", "INCOMPARABLE"]},
+        "finding_codes": {
+          "type": "array", "maxItems": 16, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/finding_code"}
+        },
+        "equivalent_verification_claimed": {"const": false},
+        "trusted_result_allowed": {"const": false},
+        "separate_security_review_required": {"const": true}
+      },
+      "required": [
+        "portability_status",
+        "finding_codes",
+        "equivalent_verification_claimed",
+        "trusted_result_allowed",
+        "separate_security_review_required"
+      ]
+    },
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "spec_hash",
+    "subject_ref",
+    "assessed_at",
+    "verifier_profile",
+    "capability_claim",
+    "verification_attempt",
+    "portability_assessment",
+    "governance"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority": "fixture-only verifier capability comparison; never cryptographic verification or release authority",
+    "canonicalization": "RFC 8785 JCS plus SHA-256 excluding assessment_id and spec_hash"
+  }
+}

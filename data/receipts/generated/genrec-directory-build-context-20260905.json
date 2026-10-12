@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-directory-build-context-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh",
+    "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "sha256:a0950ac8a7305bf9e66b4f72ad1a45ece2892f97e51372e1baeb63230d90c318",
+    "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs": "sha256:dd7a17c94520a3ea048f85ec5c4118fb1425aae4ce97bbf78526ee125708a1f5",
+    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md": "sha256:012e6138828c3950c07c6a5f7f93dbcc5ec8c7c0624b9f1237f8d7903160c897"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:bea0921d69007e4c8b74640130b78b5cbd4453e923bec77cec47e9f81253ddb2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Existing base wrapper tests",
+      "outcome": "PASS",
+      "reason": "4 tests, zero skips, exit 0; exact d1b source snapshots."
+    },
+    {
+      "gate": "New regression suite over unchanged base wrapper",
+      "outcome": "FAIL",
+      "reason": "8 pass, exactly 2 targeted missing/directory sibling regressions fail, zero skips, exit 1. Test overlay, not pristine main test suite."
+    },
+    {
+      "gate": "Candidate focused wrapper tests",
+      "outcome": "PASS",
+      "reason": "10 tests, zero skips, exit 0; Node 22.16.0 on Linux; no renderer or real builder is exercised."
+    },
+    {
+      "gate": "Shell syntax",
+      "outcome": "PASS",
+      "reason": "bash -n returned 0."
+    },
+    {
+      "gate": "Real lock-native application build and deployed behavior",
+      "outcome": "SKIPPED",
+      "reason": "Not executed at receipt authorship; later exact-head evidence must supplement, not rewrite, this historical field."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "approved",
+    "reviewer_ids": [
+      "bartytime4life"
+    ],
+    "timestamp": "2026-09-06T00:12:47Z"
+  },
+  "created_at": "2026-09-05T19:29:50.674788+00:00",
+  "emitter": "kfm-directory-modernization-author",
+  "notes": "Branch-only app build-composition cleanup under adopted DIR-EXEC-001, DIR-DEP-003 and existing app-local tests. Base repinned from d1b430ca51887777766050e5582659ab34322286 to 8b9c52d88687986879c8f87d7e3835f6a58bbacd: only workers README and its receipt changed; target dependencies unchanged. Guard proves only presence of the sibling facade file, not transitive closure, compilation, renderer capability, release, deployment or Site operation. Existing npm/pnpm manifests, both locks and all pnpm build-script decisions are unchanged. No rule adoption, topology baseline/frozen-catalog changes, PR, merge, settings, source activation or publication. Revert guard/tests/guide together; retain this receipt as historical evidence. Project-owner artifact review was explicitly recorded on 2026-09-05 after exact current-main matched validation and independent assistant review. Approval is artifact-review evidence only; it does not authorize a ready transition, merge, deployment, release, publication, source activation, topology waiver, or Directory Rules adoption."
+}

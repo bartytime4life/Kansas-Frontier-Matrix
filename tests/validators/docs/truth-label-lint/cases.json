@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "id": "valid-separate-axes",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_PASS",
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Current result |\n|---|---|\n| Authority / epistemic posture | CONFIRMED repository presence; proposal status retained |\n| Capability maturity | PARTIAL — executable validator and tests only |\n"
+    },
+    {
+      "id": "unmarked-is-not-applicable",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_NOT_APPLICABLE",
+      "markdown": "# Ordinary document\n\nNo assessment contract is declared.\n"
+    },
+    {
+      "id": "missing-authority-axis",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["AUTHORITY_AXIS_MISSING"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Result |\n|---|---|\n| Capability maturity | PARTIAL |\n"
+    },
+    {
+      "id": "missing-capability-axis",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["CAPABILITY_MATURITY_AXIS_MISSING"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Assessment |\n|---|---|\n| Authority / epistemic posture | CONFIRMED |\n"
+    },
+    {
+      "id": "collapsed-axes-row",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": [
+        "ASSESSMENT_AXES_COLLAPSED",
+        "AUTHORITY_AXIS_MISSING",
+        "CAPABILITY_MATURITY_AXIS_MISSING"
+      ],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Value |\n|---|---|\n| Authority and capability maturity | green |\n"
+    },
+    {
+      "id": "axes-split-across-tables",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["ASSESSMENT_AXES_SPLIT_TABLE"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Result |\n|---|---|\n| Authority / epistemic posture | PROPOSED |\n\n| Axis | Result |\n|---|---|\n| Capability maturity | ABSENT |\n"
+    },
+    {
+      "id": "empty-maturity-result",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["ASSESSMENT_AXIS_VALUE_MISSING"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Current result |\n|---|---|\n| Authority / epistemic posture | NEEDS VERIFICATION |\n| Capability maturity | |\n"
+    },
+    {
+      "id": "duplicate-authority-row",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["ASSESSMENT_AXIS_DUPLICATE"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n| Axis | Result |\n|---|---|\n| Authority / epistemic posture | CONFIRMED |\n| Epistemic posture | PROPOSED |\n| Capability maturity | PARTIAL |\n"
+    },
+    {
+      "id": "marker-without-table",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["ASSESSMENT_TABLE_MISSING"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\nAuthority is discussed only in prose.\n"
+    },
+    {
+      "id": "fenced-table-is-ignored",
+      "expected_outcome": "DOC_TRUTH_LABEL_LINT_FAIL",
+      "expected_codes": ["ASSESSMENT_TABLE_MISSING"],
+      "markdown": "<!-- kfm-assessment-axes: required -->\n\n```markdown\n| Axis | Result |\n|---|---|\n| Authority / epistemic posture | CONFIRMED |\n| Capability maturity | IMPLEMENTED |\n```\n"
+    }
+  ]
+}

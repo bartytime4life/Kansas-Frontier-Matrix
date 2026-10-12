@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/asynchronous_transfer_assessment.schema.json",
+  "title": "AsynchronousTransferAssessment",
+  "description": "Fixture-only assessment that preserves provider job, partial transfer, checkpoint, digest, retry, and ingest-candidate state without performing network or lifecycle writes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "source_id",
+    "source_descriptor_ref",
+    "normalized_query_hash",
+    "request_idempotency_key",
+    "provider_request_id",
+    "assessed_at",
+    "job",
+    "poll_history",
+    "transfer",
+    "checkpoint",
+    "retry_lineage",
+    "ingest",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "AsynchronousTransferAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.asynchronous-transfer.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:async-transfer:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "normalized_query_hash": { "$ref": "#/$defs/sha256" },
+    "request_idempotency_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+    },
+    "provider_request_id": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$" },
+        { "type": "null" }
+      ]
+    },
+    "assessed_at": { "$ref": "#/$defs/aware_datetime" },
+    "job": { "$ref": "#/$defs/job" },
+    "poll_history": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/poll" }
+    },
+    "transfer": { "$ref": "#/$defs/transfer" },
+    "checkpoint": { "$ref": "#/$defs/checkpoint" },
+    "retry_lineage": { "$ref": "#/$defs/retry_lineage" },
+    "ingest": { "$ref": "#/$defs/ingest" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        { "$ref": "#/$defs/aware_datetime" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "job_state": {
+      "enum": ["REQUESTED", "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED", "EXPIRED", "ERROR"]
+    },
+    "transfer_state": {
+      "enum": ["NOT_STARTED", "PARTIAL", "COMPLETE", "FAILED", "CANCELLED", "QUARANTINED", "ERROR"]
+    },
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "attempt",
+        "requested_at",
+        "last_observed_at",
+        "completed_at",
+        "archive_expires_at"
+      ],
+      "properties": {
+        "state": { "$ref": "#/$defs/job_state" },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "requested_at": { "$ref": "#/$defs/aware_datetime" },
+        "last_observed_at": { "$ref": "#/$defs/aware_datetime" },
+        "completed_at": { "$ref": "#/$defs/nullable_datetime" },
+        "archive_expires_at": { "$ref": "#/$defs/nullable_datetime" }
+      }
+    },
+    "poll": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "observed_at", "state"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 1000000 },
+        "observed_at": { "$ref": "#/$defs/aware_datetime" },
+        "state": { "$ref": "#/$defs/job_state" }
+      }
+    },
+    "byte_range": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "integer", "minimum": 1 }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "transfer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "expected_size_bytes",
+        "local_size_bytes",
+        "completed_ranges",
+        "expected_sha256",
+        "partial_sha256",
+        "final_sha256",
+        "digest_match",
+        "resume_supported",
+        "resume_basis"
+      ],
+      "properties": {
+        "state": { "$ref": "#/$defs/transfer_state" },
+        "expected_size_bytes": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+            { "type": "null" }
+          ]
+        },
+        "local_size_bytes": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "completed_ranges": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": { "$ref": "#/$defs/byte_range" }
+        },
+        "expected_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "partial_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "final_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "digest_match": {
+          "oneOf": [{ "type": "boolean" }, { "type": "null" }]
+        },
+        "resume_supported": { "type": "boolean" },
+        "resume_basis": { "enum": ["NONE", "BYTE_RANGE", "PROVIDER_RESTART"] }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_id",
+        "sequence",
+        "observed_at",
+        "byte_offset",
+        "provider_job_state",
+        "transfer_state"
+      ],
+      "properties": {
+        "checkpoint_id": {
+          "type": "string",
+          "pattern": "^kfm:transfer-checkpoint:[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 1000000 },
+        "observed_at": { "$ref": "#/$defs/aware_datetime" },
+        "byte_offset": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "provider_job_state": { "$ref": "#/$defs/job_state" },
+        "transfer_state": { "$ref": "#/$defs/transfer_state" }
+      }
+    },
+    "retry_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previous_assessment_ref", "reason"],
+      "properties": {
+        "previous_assessment_ref": {
+          "oneOf": [
+            { "type": "string", "pattern": "^kfm:async-transfer:[a-f0-9]{24}$" },
+            { "type": "null" }
+          ]
+        },
+        "reason": {
+          "oneOf": [
+            { "enum": ["PROVIDER_FAILURE", "ARCHIVE_EXPIRED", "TRANSFER_INTERRUPTED", "DIGEST_MISMATCH", "OPERATOR_RETRY"] },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "ingest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "candidate_artifact_ref", "downstream_processed_incomplete_bytes"],
+      "properties": {
+        "state": { "enum": ["NOT_SEEN", "QUARANTINE_CANDIDATE"] },
+        "candidate_artifact_ref": {
+          "oneOf": [
+            { "type": "string", "pattern": "^kfm:artifact-candidate:[a-z0-9][a-z0-9._:-]{2,127}$" },
+            { "type": "null" }
+          ]
+        },
+        "downstream_processed_incomplete_bytes": { "const": false }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason_codes", "review_required", "retry_allowed", "ingest_candidate_allowed"],
+      "properties": {
+        "state": {
+          "enum": ["WAITING", "RESUME_ELIGIBLE", "COMPLETE_CANDIDATE", "QUARANTINED", "TERMINAL_NO_ARTIFACT", "ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["PROVIDER_JOB_ACTIVE", "PARTIAL_PREFIX_CHECKPOINTED", "SIZE_AND_DIGEST_MATCH", "CHECKSUM_MISMATCH", "JOB_TERMINAL_WITHOUT_ARTIFACT", "ASSESSMENT_ERROR"]
+          }
+        },
+        "review_required": { "const": true },
+        "retry_allowed": { "type": "boolean" },
+        "ingest_candidate_allowed": { "type": "boolean" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activation_allowed",
+        "download_allowed",
+        "raw_write_allowed",
+        "ingest_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_activation_allowed": { "const": false },
+        "download_allowed": { "const": false },
+        "raw_write_allowed": { "const": false },
+        "ingest_authorized": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false },
+        "public_use_allowed": { "const": false }
+      }
+    }
+  }
+}

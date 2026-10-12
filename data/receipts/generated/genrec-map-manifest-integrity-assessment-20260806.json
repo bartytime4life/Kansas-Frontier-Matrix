@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-map-manifest-integrity-assessment-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-manifest-integrity-assessment.yml",
+    "contracts/map/map_manifest_integrity_assessment.md",
+    "fixtures/map/map_manifest_integrity_assessment/invalid/decision_mismatch.json",
+    "fixtures/map/map_manifest_integrity_assessment/valid/evidence_unresolved_abstain.json",
+    "fixtures/map/map_manifest_integrity_assessment/valid/hash_mismatch_denied.json",
+    "fixtures/map/map_manifest_integrity_assessment/valid/unsigned_abstain.json",
+    "fixtures/map/map_manifest_integrity_assessment/valid/verified_answer.json",
+    "schemas/contracts/v1/map/map_manifest_integrity_assessment.schema.json",
+    "tests/validators/map/map_manifest_integrity_assessment/test_validate_map_manifest_integrity_assessment.py",
+    "tools/validators/map/map_manifest_integrity_assessment/README.md",
+    "tools/validators/map/map_manifest_integrity_assessment/validate_map_manifest_integrity_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-manifest-integrity-assessment.yml": "sha256:666d1110d6a665d443a89bcb70f7a8aa993731cb15185080db963774235cec15",
+    "contracts/map/map_manifest_integrity_assessment.md": "sha256:f22cf9805a21ad991dff8e1ea434fd434a755d8b50ee119735f73edabadad2a9",
+    "fixtures/map/map_manifest_integrity_assessment/invalid/decision_mismatch.json": "sha256:06d4f65fc3ac85dbe59c61ec17a27d6c6dee115176a92e75782297ae49072bfc",
+    "fixtures/map/map_manifest_integrity_assessment/valid/evidence_unresolved_abstain.json": "sha256:b717e06091d91137f12bf7fd23ebb7f55740d5ccc0f71b76f33f48ffd7d14fe2",
+    "fixtures/map/map_manifest_integrity_assessment/valid/hash_mismatch_denied.json": "sha256:476616f1ae2098fb12015df65aa2a061d3d7d1ea9b8416e3a2166769dfe56f60",
+    "fixtures/map/map_manifest_integrity_assessment/valid/unsigned_abstain.json": "sha256:96ad5508b67d8e48ccba758b9f8bc3b6191c270aa88250cb334f64be2990d4b3",
+    "fixtures/map/map_manifest_integrity_assessment/valid/verified_answer.json": "sha256:9d60310b64cc7d507047342958ebd8d6e692996c18e78d59bdafd530f8d396a9",
+    "schemas/contracts/v1/map/map_manifest_integrity_assessment.schema.json": "sha256:0312e2b5b48f6cd20391e74373fcb1f599008c140a48603525e4027ef06536b5",
+    "tests/validators/map/map_manifest_integrity_assessment/test_validate_map_manifest_integrity_assessment.py": "sha256:30332ee331e09b4d691b1b771571a1b15e7946812aef2671ad6101cc4a532d39",
+    "tools/validators/map/map_manifest_integrity_assessment/README.md": "sha256:1740c84308d2fd0f3f192eefbdf159140ffdcfabd0d10e5553fbeb0b83f14385",
+    "tools/validators/map/map_manifest_integrity_assessment/validate_map_manifest_integrity_assessment.py": "sha256:f4427d4b9128c9f04d425249afa9e4fa0ae75f39b576e015bb4b77cb6fe55e35"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:4d1c787c3ff1b62ea2746d8ba08921d1928c3192474c996ed66d3680e18a22fa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-10-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-10-26.pdf#kfm-integrity-control",
+      "repo:contracts/map/README.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-manifest-integrity-assessment.yml": "PROPOSED",
+    "contracts/map/map_manifest_integrity_assessment.md": "PROPOSED",
+    "fixtures/map/map_manifest_integrity_assessment/invalid/decision_mismatch.json": "PROPOSED",
+    "fixtures/map/map_manifest_integrity_assessment/valid/evidence_unresolved_abstain.json": "PROPOSED",
+    "fixtures/map/map_manifest_integrity_assessment/valid/hash_mismatch_denied.json": "PROPOSED",
+    "fixtures/map/map_manifest_integrity_assessment/valid/unsigned_abstain.json": "PROPOSED",
+    "fixtures/map/map_manifest_integrity_assessment/valid/verified_answer.json": "PROPOSED",
+    "schemas/contracts/v1/map/map_manifest_integrity_assessment.schema.json": "PROPOSED",
+    "tests/validators/map/map_manifest_integrity_assessment/test_validate_map_manifest_integrity_assessment.py": "PROPOSED",
+    "tools/validators/map/map_manifest_integrity_assessment/README.md": "PROPOSED",
+    "tools/validators/map/map_manifest_integrity_assessment/validate_map_manifest_integrity_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic map-manifest integrity assessment tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "ANSWER, ABSTAIN, and DENY fixtures carry deterministic manifest and assessment hashes with exact finite outcomes."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:kfm-integrity-control",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-10-26.pdf#kfm-integrity-control"
+    },
+    {
+      "id": "repository:map-contract-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/map/README.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T21:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only map manifest integrity assessment contract, schema, deterministic validator, fixtures, tests, and read-only CI. It carries precomputed trust verdicts and performs no live fetch or cryptography."
+}

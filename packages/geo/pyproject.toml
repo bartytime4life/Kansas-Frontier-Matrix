@@ -1,4 +1,8 @@
-# packages/geo pyproject — greenfield placeholder
+# Optional, local-only transform dependency; no package publication or source admission.
 [project]
 name = "kfm-geo"
 version = "0.0.0"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+transforms = ["pyproj==3.7.2"]

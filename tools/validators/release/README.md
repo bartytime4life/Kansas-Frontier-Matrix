@@ -86,8 +86,8 @@ The answer should be a deterministic validation result or routing decision. This
 | `contracts/release/README.md` | **CONFIRMED contract-family README / mixed maturity** | Release contracts define semantic meaning only; release artifact/process authority belongs to `release/`. |
 | `tools/release/README.md` | **CONFIRMED tooling README / executable behavior NEEDS VERIFICATION** | Release-support helpers may prepare dry-run reports and review scaffolds; they do not approve release. |
 | `docs/architecture/publication/RELEASE_GATES.md` | **CONFIRMED architecture doc / implementation NEEDS VERIFICATION** | Defines release gates at `CATALOG / TRIPLET -> PUBLISHED` and public-trust membrane constraints. |
-| `tools/validators/promotion_gate/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Specialized promotion-gate validator route; release validation is broader and includes manifest, correction, rollback, withdrawal, and post-release posture. |
-| Executable release validator scripts, registry wiring, schema bindings, policy bundles, release storage, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README is documentation only. |
+| `tools/validators/promotion_gate/README.md` | **CONFIRMED bounded executable specialization** | Checks declared A-G readiness with synthetic fixtures; release validation remains broader than this profile. |
+| Broader release validator scripts, registry wiring, policy execution, release storage, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | The promotion-gate thin slice does not close these surfaces. |
 
 [Back to top](#top)
 
@@ -182,7 +182,8 @@ Safe interpretation:
 
 - **CONFIRMED:** this README exists.
 - **PROPOSED:** validator code may live here when it checks declared release-readiness and active-release invariants and delegates policy, evidence, schemas, contracts, receipts, lifecycle data, release records, and public runtime authority to owning roots.
-- **NEEDS VERIFICATION:** exact executable files, registry entries, ReleaseManifest schemas, PromotionDecision schemas, RollbackCard schemas, CorrectionNotice and WithdrawalNotice schemas, policy bundle homes, policy bundle digests, fixture files, test paths, report destinations, receipt emission, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** the adjacent promotion-gate command, fixture matrix, focused test, Make target, and workflow invocation are present.
+- **NEEDS VERIFICATION:** broader registry entries, ReleaseManifest/RollbackCard/CorrectionNotice/WithdrawalNotice maturity, policy execution, authenticated references, report destinations, receipt emission, release integration, runtime behavior, and required-check enforcement.
 - **DENY:** using this folder as release authority, release record store, ReleaseManifest store, PromotionDecision store, rollback-card store, correction/withdrawal record store, policy home, evidence store, proof store, receipt store, lifecycle data store, canonical schema home, public runtime surface, AI answer source, or publication authority.
 
 [Back to top](#top)

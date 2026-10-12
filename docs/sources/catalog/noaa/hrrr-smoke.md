@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/goes-abi-aod.md
   - docs/sources/catalog/noaa/hms-fire-smoke.md
   - docs/sources/catalog/README.md
@@ -19,7 +17,7 @@ related:
   - docs/domains/hazards/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, hrrr-smoke, forecast, nwp, modeled, atmosphere-air, hazards]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -27,6 +25,9 @@ notes:
   - "Default source_role is modeled (with mandatory ModelRunReceipt). HRRR-Smoke is a numerical weather prediction with smoke physics — a FORECAST, not an observation or satellite retrieval."
   - "Forecast cycle and lead time are part of Item identity — re-runs produce new Items, not updates."
   - "Dominant anti-collapse: model fields are not observations (CONFIRMED DOM-AIR §I doctrine); modeled surface PM2.5 is not an observed PM2.5 reading."
+owning_root: docs/
+responsibility: "Documentation for HRRR-Smoke Forecast; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # HRRR-Smoke Forecast
@@ -153,8 +154,8 @@ This page is a **product-page**: it describes the slice's *catalog identity*, *p
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation; this product is one slice. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling** | [`goes-abi-aod.md`](./goes-abi-aod.md) | Satellite-retrieval sibling (also `modeled`-default but retrieval, not forecast). |
 | **Sibling** | [`hms-fire-smoke.md`](./hms-fire-smoke.md) | Analyst-augmented sibling; the *observed/analyst* smoke product to HRRR-Smoke's *forecast* smoke product. |
 | **Cross-family sibling** | [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) | Structural parallel for `ModelRunReceipt`-mandatory products with version-in-identity. |
@@ -214,7 +215,7 @@ PROPOSED — the descriptor for this slice should at minimum carry:
 - `role_authority` — NOAA NCEP / ESRL / GSL (whichever is the current operational steward — NEEDS VERIFICATION).
 - `role_model_run_ref` — `EvidenceRef → ModelRunReceipt` (**MUST**, per Atlas Ch. 24.1.3 when `source_role = modeled`).
 - `rights` — license, redistribution terms, attribution. HRRR-Smoke is generally a U.S. government work in the public domain; per-product terms NEEDS VERIFICATION.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - `cadence` — typically hourly cycles with sub-hourly forecast steps out to a finite lead time horizon; exact cadence NEEDS VERIFICATION against current NOAA documentation.
 - `ingest_hash` — content-addressable digest of the admitted product.
 
@@ -391,7 +392,7 @@ NEEDS VERIFICATION — confirm against `data/catalog/` artifacts and any HRRR fi
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -600,18 +601,18 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./goes-abi-aod.md`](./goes-abi-aod.md) — Satellite-retrieval sibling (also `modeled`; algorithm-version-in-identity).
 - [`./hms-fire-smoke.md`](./hms-fire-smoke.md) — Observed/analyst smoke product (paired with HRRR-Smoke for observation-vs-forecast framing).
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) — Structural parallel for `ModelRunReceipt`-mandatory products with version-in-identity.
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Primary domain; owner of `ForecastContext`, `SmokeContext`, "model fields are not observations" doctrine.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Adjacency domain consumer.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/hrrr-smoke` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `ModelRunReceipt` schema README once authored.

@@ -23,7 +23,6 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/domains/roads-rail-trade/
   - docs/domains/hazards/
-  - docs/domains/people-genealogy-dna-land/
   - data/registry/sources/
   - schemas/contracts/v1/source/
   - connectors/fra_form57/
@@ -41,6 +40,9 @@ notes:
   - "Exact form scope (Form 6180.57 covers what incident classes) is NEEDS VERIFICATION; FRA has multiple incident-related forms in the 6180.xx family."
   - "Namespace pin (kfm: vs ks-kfm:) UNKNOWN — examples use <NS>: placeholder; see OPEN-DSC-03."
   - "All repo paths PROPOSED until verified against a mounted repository."
+owning_root: docs/
+responsibility: "Documentation for FRA Form 57 Rail Incident Reports; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -581,7 +583,7 @@ See [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) for the full lane-wide register.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority
 - [`../../../domains/roads-rail-trade/`](../../../domains/roads-rail-trade/) — primary owning domain *(`[DOM-ROADS]`)*
 - [`../../../domains/hazards/`](../../../domains/hazards/) — secondary cross-domain *(`[DOM-HAZ]`)*
-- [`../../../domains/people-genealogy-dna-land/`](../../../domains/people-genealogy-dna-land/) — tertiary cross-domain *(`[DOM-PEOPLE]`)*
+- `../../../domains/people-genealogy-dna-land/` (not present) — tertiary cross-domain *(`[DOM-PEOPLE]`)*
 - [`../../../../data/registry/sources/`](../../../../data/registry/sources/) — authoritative `SourceDescriptor` home
 - [`../../../../schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — machine schema home *(ADR-0001)*
 - [`../../../../connectors/fra_form57/`](../../../../connectors/fra_form57/) — connector folder

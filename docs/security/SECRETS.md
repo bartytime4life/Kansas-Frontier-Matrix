@@ -13,7 +13,6 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/security/THREAT_MODEL.md
   - docs/security/INCIDENT_RESPONSE.md
-  - docs/runbooks/SECRET_LEAK_RUNBOOK.md
   - docs/standards/SIGNING.md
   - infra/README.md
   - configs/README.md
@@ -22,6 +21,9 @@ notes:
   - "Doctrine-level claims are CONFIRMED from attached KFM materials."
   - "Implementation specifics (secret store choice, rotation cadence, owner teams) are PROPOSED or NEEDS VERIFICATION until a repo is inspected."
   - "External-tool syntax (cosign, GitHub Actions OIDC) is described from KFM source materials, not from a live web check."
+owning_root: docs/
+responsibility: "Documentation for Secrets Management; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🔐 Secrets Management
@@ -93,7 +95,7 @@ This document records how KFM **enters, holds, rotates, and removes** those secr
 ### 2.2 Out of scope
 
 - The **threat model** in full — that lives in [`docs/security/THREAT_MODEL.md`](./THREAT_MODEL.md) **(PROPOSED file)**.
-- **Incident response** procedural detail — that lives in [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) and the operational runbook [`docs/runbooks/SECRET_LEAK_RUNBOOK.md`](../runbooks/SECRET_LEAK_RUNBOOK.md) **(PROPOSED files)**.
+- **Incident response** procedural detail — that lives in [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) and the operational runbook `docs/runbooks/SECRET_LEAK_RUNBOOK.md` (PROPOSED; not present) **(PROPOSED files)**.
 - **Signing standards** in detail — that lives in [`docs/standards/SIGNING.md`](../standards/SIGNING.md) **(PROPOSED file)**. This document references it but does not duplicate it.
 
 ### 2.3 Authority chain
@@ -443,7 +445,7 @@ The repository, CI, and any host that handles secrets must run **defense in dept
 
 ## 15. Incident Response Hooks
 
-This section is a **hooks-only summary**. Full procedural detail belongs in [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) and the leak runbook [`docs/runbooks/SECRET_LEAK_RUNBOOK.md`](../runbooks/SECRET_LEAK_RUNBOOK.md) **(PROPOSED files)**.
+This section is a **hooks-only summary**. Full procedural detail belongs in [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) and the leak runbook `docs/runbooks/SECRET_LEAK_RUNBOOK.md` (PROPOSED; not present) **(PROPOSED files)**.
 
 A confirmed or suspected leak triggers, in order:
 
@@ -510,8 +512,8 @@ KFM source materials explicitly mark several secrets-relevant operational facts 
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — public/internal exposure boundary doctrine. **(PROPOSED file).**
 - [`docs/security/THREAT_MODEL.md`](./THREAT_MODEL.md) — adversary model and assumptions. **(PROPOSED file).**
 - [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) — full incident procedure. **(PROPOSED file).**
-- [`docs/runbooks/SECRET_LEAK_RUNBOOK.md`](../runbooks/SECRET_LEAK_RUNBOOK.md) — operator step-by-step on confirmed leaks. **(PROPOSED file).**
-- [`docs/runbooks/SECRET_ROTATION.md`](../runbooks/SECRET_ROTATION.md) — operator step-by-step on scheduled rotations. **(PROPOSED file).**
+- `docs/runbooks/SECRET_LEAK_RUNBOOK.md` (PROPOSED; not present) — operator step-by-step on confirmed leaks. **(PROPOSED file).**
+- `docs/runbooks/SECRET_ROTATION.md` (PROPOSED; not present) — operator step-by-step on scheduled rotations. **(PROPOSED file).**
 - [`docs/standards/SIGNING.md`](../standards/SIGNING.md) — Cosign / DSSE / Rekor standard. **(PROPOSED file).**
 - [`infra/README.md`](../../infra/README.md) — deny-by-default exposure posture. **(PROPOSED file).**
 - [`configs/README.md`](../../configs/README.md) — non-secret config defaults and templates. **(PROPOSED file).**

@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-release-dry-run-rollback-card-presence-repair-20260816",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/rollback-drill.yml",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:ead110559ab8ed6e2965f5295922dacae1d2ca063c5efb510dbfaa0aa6c7a40b",
+    ".github/workflows/rollback-drill.yml": "sha256:32a83bf38f62f0bd30b8c569de4246056124f2450428d2e0d4f838b62ce385f4",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json": "sha256:496bfbee30f7fe928f6646475a71c6658c1522db0d433d6fec8b0020bf7aba86"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-16"
+  },
+  "prompt_or_contract": "sha256:7f3a8dc38a3dc1e05581c50516d2b9aac824da53b12458e2e373c29d6a25cc7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ead110559ab8ed6e2965f5295922dacae1d2ca063c5efb510dbfaa0aa6c7a40b",
+      "sha256:32a83bf38f62f0bd30b8c569de4246056124f2450428d2e0d4f838b62ce385f4",
+      "sha256:496bfbee30f7fe928f6646475a71c6658c1522db0d433d6fec8b0020bf7aba86"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@26769be9a30927adad7cb64827909695a3208b37",
+      "actions:release-dry-run/run/31984144633/job/95256260853",
+      "actions:release-dry-run/run/31984690043/job/95257729903",
+      "actions:rollback-drill/run/31984690046/job/95257520613",
+      "actions:rollback-card-binding-probe/run/31985153349/job/95258754605",
+      "repo:commit/fd5788a7b5a65d02e2aaa8ebd84ad6d1369b899a",
+      "repo:pull/2976",
+      "repo:pull/2979",
+      "repo:pull/2983",
+      "repo:contracts/release/rollback_card.md@26769be9a30927adad7cb64827909695a3208b37",
+      "repo:.github/workflows/rollback-rehearsal.yml@26769be9a30927adad7cb64827909695a3208b37"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    ".github/workflows/rollback-drill.yml": "CONFIRMED",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main-failure-reproduction",
+      "outcome": "PASS",
+      "reason": "Current-main release-dry-run run 31984144633 passed candidate assembly, current generated receipt bindings, and promotion checks, then failed only because rollback-card-presence still required the pre-implementation rollback_apply.py placeholder text."
+    },
+    {
+      "gate": "implementation-provenance",
+      "outcome": "PASS",
+      "reason": "Commit fd5788a7b5a65d02e2aaa8ebd84ad6d1369b899a in merged PR 2976 intentionally replaced the helper placeholder with the marker-protected synthetic rollback rehearsal while leaving the RollbackCard candidate contract non-authoritative."
+    },
+    {
+      "gate": "direct-consumer-closure",
+      "outcome": "PASS",
+      "reason": "Both release-dry-run and rollback-drill retained stale helper-placeholder assertions after PR 2976. Each now preserves the production pipeline and RollbackCard holds while requiring the existing synthetic guard markers and non-vacuous isolated-root rehearsal tests."
+    },
+    {
+      "gate": "rollback-card-boundary-preserved",
+      "outcome": "PASS",
+      "reason": "The workflows continue to require the PROPOSED RollbackCard schema metadata, closed fixture profile, root placeholder shim, non-schema-admissible root inventory cards, and absent production rollback and published-alias authorities."
+    },
+    {
+      "gate": "workflow-byte-binding",
+      "outcome": "PASS",
+      "reason": "Read-only workflow run 31985153349 computed the exact SHA-256 digests of the dependency-closed release-dry-run and rollback-drill workflow bytes and independently reproduced the current implementation-successor receipt digest."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-09, 2026-08-14, and prior 2026-08-16 authoring receipts remain present and unchanged as immutable process-memory lineage."
+    },
+    {
+      "gate": "no-authority-expansion",
+      "outcome": "PASS",
+      "reason": "The repair changes only CI assertions, focused synthetic validation, workflow summary text, and current successor bindings; it creates no rollback approval, policy decision, review approval, release mutation, deployment, publication, external invalidation, alias mutation, or public-state authority."
+    },
+    {
+      "gate": "hosted-exact-head-dependency-closed-validation",
+      "outcome": "SKIPPED",
+      "reason": "Pending final pull-request execution after both direct workflow consumers and their generated receipt dependencies are reconciled and the temporary read-only digest probe is removed."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@26769be9a30927adad7cb64827909695a3208b37"
+  ],
+  "citations": [
+    {
+      "id": "ISSUE-2972-SYNTHETIC-ROLLBACK-REHEARSAL",
+      "validated": true,
+      "evidence_ref": "repo:issue/2972"
+    },
+    {
+      "id": "PR-2976-SYNTHETIC-ROLLBACK-IMPLEMENTATION",
+      "validated": true,
+      "evidence_ref": "repo:pull/2976"
+    },
+    {
+      "id": "PR-2979-INHERITED-ROLLBACK-CARD-PRESENCE-FAILURE",
+      "validated": true,
+      "evidence_ref": "repo:pull/2979"
+    },
+    {
+      "id": "ROLLBACK-CARD-CONTRACT-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/rollback_card.md@26769be9a30927adad7cb64827909695a3208b37"
+    },
+    {
+      "id": "DEPENDENCY-CLOSED-BINDING-PROBE",
+      "validated": true,
+      "evidence_ref": "actions:rollback-card-binding-probe/run/31985153349/job/95258754605"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-17T01:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2983,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance for the dependency-closed rollback-card-presence repair. The receipt binds the corrected release-dry-run and rollback-drill workflows plus the existing current implementation-successor receipt. Historical receipts remain unchanged. This record is process memory only; it is not truth, proof, policy approval, human review, rollback authority, release authority, deployment authority, publication authority, alias authority, or external invalidation authority."
+}

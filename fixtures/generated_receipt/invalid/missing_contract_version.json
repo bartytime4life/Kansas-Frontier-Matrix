@@ -1,10 +1,10 @@
 {
   "receipt_id": "01HXYZ8K6PXM9YZAB1CD2EF3GH",
   "artifact_paths": [
-    "schemas/contracts/v1/sources/source_descriptor.schema.json"
+    "fixtures/generated_receipt/artifacts/minimal.txt"
   ],
   "artifact_hashes": {
-    "schemas/contracts/v1/sources/source_descriptor.schema.json": "blake3:7f4c2a8b9d0e1f2a3b4c5d6e7f8091a2b3c4d5e6f70819a2b3c4d5e6f7081927"
+    "fixtures/generated_receipt/artifacts/minimal.txt": "sha256:a04fd36d3f1e8e8c63308cb7498a4b2f5e062110cc47a4b934669bc5db5f6f06"
   },
   "model_identity": {
     "provider": "anthropic",
@@ -15,7 +15,7 @@
   "parameters": {},
   "inputs": {},
   "truth_labels": {
-    "schemas/contracts/v1/sources/source_descriptor.schema.json": "PROPOSED"
+    "fixtures/generated_receipt/artifacts/minimal.txt": "PROPOSED"
   },
   "validation_gates": [
     { "gate": "json-schema-parse", "outcome": "PASS" }
@@ -28,6 +28,5 @@
     "timestamp": null
   },
   "created_at": "2026-05-19T18:42:00Z",
-  "emitter": "ai-builder/claude-opus-4-7",
-  "_negative_test_note": "MISSING contract_version field — schema MUST reject this instance. This fixture exists to prove the validator works."
+  "emitter": "ai-builder/claude-opus-4-7"
 }

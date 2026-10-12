@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-pass32-attestation-badge-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/AttestationBadgeProjection.ts",
+    "apps/explorer-web/src/features/attestation_badge/README.md",
+    "apps/explorer-web/src/features/attestation_badge/index.ts",
+    "apps/explorer-web/tests/attestation-badge.test.ts",
+    "apps/explorer-web/tests/browser/attestation-badge.fixture.ts",
+    "apps/explorer-web/tests/browser/attestation-badge.html",
+    "apps/explorer-web/tests/browser/attestation-badge.spec.ts",
+    "docs/intake/exploratory/pass-32-attestation-badge-source-map.md",
+    "fixtures/ui/attestation_badge_projection/README.md",
+    "fixtures/ui/attestation_badge_projection/invalid/extra-field.json",
+    "fixtures/ui/attestation_badge_projection/invalid/verified-missing-reference.json",
+    "fixtures/ui/attestation_badge_projection/valid/error.json",
+    "fixtures/ui/attestation_badge_projection/valid/failed.json",
+    "fixtures/ui/attestation_badge_projection/valid/incomplete.json",
+    "fixtures/ui/attestation_badge_projection/valid/verified.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/AttestationBadgeProjection.ts": "sha256:8b9396e389e60a2795f684f5e669d65559af7a295fff882bca45f4c12a932d40",
+    "apps/explorer-web/src/features/attestation_badge/README.md": "sha256:f0eb083c03272c67904c5acf07fd82bed5f70ee7e4d76b73ef428741184abb96",
+    "apps/explorer-web/src/features/attestation_badge/index.ts": "sha256:833ecac9613288b46ed104461ca460c4a26dcb6161ffd676c140b92f00eedb62",
+    "apps/explorer-web/tests/attestation-badge.test.ts": "sha256:960dbd7233a83c57fa61dbaf4440470f44bcdfcae16f279b61132f886ba1a6fd",
+    "apps/explorer-web/tests/browser/attestation-badge.fixture.ts": "sha256:fe7385f33ff264cb57edb70ab6c50769bfea39f76b9199dc43a3cbfa8cc319b6",
+    "apps/explorer-web/tests/browser/attestation-badge.html": "sha256:4e619c1cc39b45cbf898d6f764ed669f6ef51b4a24119341436915587b78ed71",
+    "apps/explorer-web/tests/browser/attestation-badge.spec.ts": "sha256:8df066ac40c865b116d65e36c8063b52317e9c42dfd69ec7075479401c293b4a",
+    "docs/intake/exploratory/pass-32-attestation-badge-source-map.md": "sha256:1a5ccc83d0d6fdd81e749abdc2f074e0555ddf22a65da2cf694074cfda7d54b6",
+    "fixtures/ui/attestation_badge_projection/README.md": "sha256:f99ea11b2065538187e90b0f7e1d51c90fa07e44332ae17cef5d799f9afbd808",
+    "fixtures/ui/attestation_badge_projection/invalid/extra-field.json": "sha256:72742b6361548c1a9603ddf23283097a3bfbaa1f59bcbf46749bf82e3d050464",
+    "fixtures/ui/attestation_badge_projection/invalid/verified-missing-reference.json": "sha256:5e038aace5fe71a2bbad7d8c532b83e9a037e9d0b72dc485a5868971b190f4f3",
+    "fixtures/ui/attestation_badge_projection/valid/error.json": "sha256:ba9a408a880059c897d06a5680e21b0835e4b3debf9ba143a577039e9eb24f0d",
+    "fixtures/ui/attestation_badge_projection/valid/failed.json": "sha256:92866a650546906a59f5cfb23f8708e2a4ff956945402a657fea1c09ab4142f0",
+    "fixtures/ui/attestation_badge_projection/valid/incomplete.json": "sha256:56410798e6283c3fc57122e620d424681cdebaeeffe4549a7b1167243668f495",
+    "fixtures/ui/attestation_badge_projection/valid/verified.json": "sha256:6e73e14881bbda4eab415e84752fd34f519d66bd87fdcfe6a97abba566be81aa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:ba7a40e52f79b860fbfe4098086536cfc54279dad6df72ddce1584c01e2d339e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0011",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:contracts/evidence/release_bound_run_receipt.md",
+      "repo:docs/architecture/evidence-drawer.md",
+      "repo:docs/architecture/ui/TRUST_BADGES.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/AttestationBadgeProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/attestation_badge/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/attestation_badge/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/attestation-badge.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/attestation-badge.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/attestation-badge.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/attestation-badge.spec.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-attestation-badge-source-map.md": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/README.md": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/invalid/verified-missing-reference.json": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/valid/failed.json": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/valid/incomplete.json": "PROPOSED",
+    "fixtures/ui/attestation_badge_projection/valid/verified.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the selected card ID and feature terms; no implementation overlap was found."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The Explorer adapter boundary tests passed after using the established split-token form for the governed release-reference prefix."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 112 Explorer unit tests passed, including the attestation-badge tests."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The attestation-badge browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-attestation-badge",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0011"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:release-bound-run-receipt",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/release_bound_run_receipt.md"
+    },
+    {
+      "id": "repository:trust-badge-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/TRUST_BADGES.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:49:47Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0011. The badge reports a bounded upstream result and delegates inspection; it performs no verification and grants no evidence, policy, receipt, attestation, review, release, deployment, publication, or public-use authority."
+}

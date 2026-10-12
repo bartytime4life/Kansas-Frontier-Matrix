@@ -1,0 +1,175 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T00:04:34.718934Z",
+  "owning_root": "data/",
+  "responsibility": "Append-only source comparison and bounded validation; no review or release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 164,
+  "site_base_commit": "5a2c8f05c76ceadcf141fe95a140564ed89f7484",
+  "site_candidate_commit": "64ee0a61e577a0455fd1180fd18d346c017876bf",
+  "github_base_commit": "07e6b26c3ba0cd1c689de29fa2c07d0a30c26ae5",
+  "destination": "apps/site/source",
+  "application_method": "Apply the verified v163-to-v164 nine-path delta, retain repository dependency and worker-seam fixes, copy two bounded test-fixture lint corrections and the shared synchronization document. No deletions.",
+  "deployment": {
+    "site_version": 165,
+    "source_commit": "64ee0a61e577a0455fd1180fd18d346c017876bf",
+    "version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_d8315955028c81919cafe71a9c36788c",
+    "deployment_id": "appgdep_6ac58bec935c8191880186b2d51ca6d7",
+    "status": "succeeded",
+    "updated_at": "2026-10-07T00:01:59.996797Z",
+    "evidence": "Parent native Sites deployment readback."
+  },
+  "counts": {
+    "changed_paths": 10,
+    "updated_paths": 4,
+    "new_paths": 6,
+    "deleted_paths": 0
+  },
+  "files": {
+    "README.md": {
+      "github_base_sha256": "684e5f5530af53af8d546921cc4d7ac604fafd8394dfef8a69e63eaf7f6b6b37",
+      "github_result_sha256": "175dee9c1e3cf0cf9ae226885d08e01c59387ead7dc1a85ec3c07d04ecd58a74",
+      "site_source_sha256": "175dee9c1e3cf0cf9ae226885d08e01c59387ead7dc1a85ec3c07d04ecd58a74"
+    },
+    "app/knowledge/record/page.tsx": {
+      "github_base_sha256": "21d678e71c28057cfa34fe0bb760ae2b4511a50ffb734ff84c232ceabee4fc1e",
+      "github_result_sha256": "0b125b0d2022c2626d426c533286dacfef324b5b2738fd95527d70f90d996dee",
+      "site_source_sha256": "0b125b0d2022c2626d426c533286dacfef324b5b2738fd95527d70f90d996dee"
+    },
+    "app/persistent-select-menus.tsx": {
+      "github_base_sha256": "b7e30eccf2a1f3f8af5943aa046ad61da2a342a753218ea0a134e15d10b6fdf9",
+      "github_result_sha256": "99217c8c530d17aed74f383a0b3f5058184871989b23873430a158762c45fceb",
+      "site_source_sha256": "99217c8c530d17aed74f383a0b3f5058184871989b23873430a158762c45fceb"
+    },
+    "app/snapshot-map.tsx": {
+      "github_base_sha256": "23752dce40d3d726ae39f0c25f6488563d7d9cdced80d1458667c025ae33d3d3",
+      "github_result_sha256": "8ae6fabfcdc9bd47c06e2f23764ff52caa35bf1539d84ed25734bad004cd782a",
+      "site_source_sha256": "8ae6fabfcdc9bd47c06e2f23764ff52caa35bf1539d84ed25734bad004cd782a"
+    },
+    "docs/explorer-reliability-review-2026-10-06.md": {
+      "github_base_sha256": null,
+      "github_result_sha256": "8dcde4629dc7ecd1ddbd69b4fe6b89f19458e232d52dbc00afddb728cffdea1e",
+      "site_source_sha256": "8dcde4629dc7ecd1ddbd69b4fe6b89f19458e232d52dbc00afddb728cffdea1e"
+    },
+    "docs/site-synchronization-2026-10-06.md": {
+      "github_base_sha256": null,
+      "github_result_sha256": "d2b947ee2eec0a8296e94618c3d92c3fedcf485595356c6f5db254aff1718269",
+      "site_source_sha256": "d2b947ee2eec0a8296e94618c3d92c3fedcf485595356c6f5db254aff1718269"
+    },
+    "tests/component-harness.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "a122aa3e787df2a956cfb3350767678788a015c821fb276fbcf0e45522b65f67",
+      "site_source_sha256": "a122aa3e787df2a956cfb3350767678788a015c821fb276fbcf0e45522b65f67"
+    },
+    "tests/knowledge-record-retry.test.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "d50983f716eaccaa7ff668f3e4e0d2973f42cd562f3f56ce7e98fed41f9c5a75",
+      "site_source_sha256": "d50983f716eaccaa7ff668f3e4e0d2973f42cd562f3f56ce7e98fed41f9c5a75"
+    },
+    "tests/persistent-select-menus.test.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "548ccb394fce86f23da4a782967c7aff1b961b1a3cc110b5be4f779d30914750",
+      "site_source_sha256": "548ccb394fce86f23da4a782967c7aff1b961b1a3cc110b5be4f779d30914750"
+    },
+    "tests/snapshot-map-state.test.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "2e53df2beb0686fbbf52e9d71802a4b410a3e5e1f533c785460a8cf082799d01",
+      "site_source_sha256": "2e53df2beb0686fbbf52e9d71802a4b410a3e5e1f533c785460a8cf082799d01"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "64ee0a61e577a0455fd1180fd18d346c017876bf",
+    "source_dirty": false,
+    "mirrored_paths": 699,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "6ceefd15e4e07ccf594ba92425c2e968314fecd2c7ab9a0cab5ffb32d62eb6f6",
+    "inventory_encoding": "SHA-256 of UTF-8 compact JSON array sorted by path; each entry has path and lowercase sha256, object keys sorted."
+  },
+  "prior_record": {
+    "path": "data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json",
+    "sha256": "1d96d6e2c19c2aa736e836a4217fa0b3b15c82a0a22078ef52fddc0b93722bfa",
+    "unchanged": true,
+    "meaning": "Historical v153 reviewed receipt retained; later source parity does not replace mirror review."
+  },
+  "validation": {
+    "node_version": "22.13.1",
+    "production_build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "passed": 552,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "errors": 0,
+      "inherited_warnings": 46
+    },
+    "local_smoke": {
+      "checks_passed": 53,
+      "routes_checked": 44,
+      "provider_only_routes_unprobed": 9,
+      "port": 4178
+    },
+    "startup_isolation_tests_passed": 3,
+    "changed_area_repository_topology": "PASS",
+    "maplibre_clean_source_inventory": {
+      "base_outcome": "HOLD",
+      "candidate_outcome": "HOLD",
+      "exit_code": 3,
+      "reasons": [
+        "RENDERER_ACQUISITION_PRESENT"
+      ],
+      "same_finding_counts": true
+    },
+    "historical_mirror_check": {
+      "base": "FAIL",
+      "candidate": "FAIL",
+      "reason_code": "MIRROR_REVIEW_REQUIRED",
+      "inherited": true
+    },
+    "working_tree_inventory_limit": "An additional post-build scan reported SCAN_INPUT_TOO_LARGE for ignored public/vendor/h5wasm/h5wasm.js; clean source exports of base and candidate retained the same HOLD.",
+    "logs": [
+      {
+        "name": "kfm-v164-repo-tests.log",
+        "sha256": "36bee7a1f23ce1f6d756cd052d0ecc9cf6f06956b61cc6b410d02732af419c48"
+      },
+      {
+        "name": "kfm-v164-repo-typecheck.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "kfm-v165-repo-node-tests.log",
+        "sha256": "1e7fbcc1fdfc123cd93c88af8f882c5d0f4c8c283cded8908124286b6c98bca2"
+      },
+      {
+        "name": "kfm-v164-repo-lint.log",
+        "sha256": "19e3a3ebf9a43b8cd101c51662326c5faf6a2f3a0bf470bb7ffdac38bb3ebc0a"
+      },
+      {
+        "name": "kfm-v164-repo-smoke.log",
+        "sha256": "626e8f0517d110dfab38baecabb47b161caed366b6b6de3c0499018482120ff8"
+      },
+      {
+        "name": "kfm-v165-repo-validators.json",
+        "sha256": "28f7e84a39f8f1815387b4b1ead6aae447618f387b902b27d53149f8acc437b6"
+      },
+      {
+        "name": "kfm-v165-clean-inventory.json",
+        "sha256": "f8d7d25f4577989936194885542b7bcf0e296a19b4b8a9836b5b79a6515b37e9"
+      }
+    ]
+  },
+  "limits": [
+    "No dataset source admission, activation, review, promotion or release.",
+    "Source parity does not establish full browser, WebGL, hosted behavior or independent human acceptance.",
+    "Local service installation and data inventories are separately recorded by the parent task."
+  ],
+  "rollback": "Revert this bounded repository change; retain immutable receipts. Source rollback never restores an older database over newer writes."
+}

@@ -37,6 +37,13 @@ notes:
 
 # USGS Connector Python Package
 
+> **Implementation update, 2026-09-30:** `gnis.py` captures one exact Kansas
+> populated-place name from the official National Map GNIS service. It preserves
+> original response bytes and a checksum, rejects ambiguous/out-of-scope/error
+> results, and marks every candidate unreleased. This is a narrow USGS-family
+> placement while the wider GNIS product/lifecycle placement is reviewed. Run
+> `python3.12 -m unittest discover -s connectors/usgs/tests -p 'test_gnis.py'`.
+
 > Draft package boundary for importable USGS connector helper code. This package supports governed source admission; it is not a source-family authority or publication path.
 
 <p>
@@ -146,6 +153,16 @@ USGS package helpers must preserve:
 No package helper should claim that a source is activated, published, or authoritative without registry and release evidence.
 
 ---
+
+### Implemented modules (2026-09-27)
+
+| Module | Behavior | Boundary |
+|---|---|---|
+| `earthquake.py` | Plans official summary-feed and FDSN query URLs; parses supplied GeoJSON bytes into immutable snapshot candidates. | Never fetches. |
+| `fetch.py` | Runs one planner-issued GET through `connectors_core.transport.execute_retrieval` with caller-supplied transport, clock, sleeper, jitter and cancellation, using a USGS profile (host `earthquake.usgs.gov`, JSON/GeoJSON media types, byte budget). Records the result with `connectors_core.retrieval_episode` as a `SourceRetrievalEpisode` that the repository contract validator accepts. The shared value object keeps the body only when captured and re-checks its integrity on construction. | Imports no network library; redirects, byte budgets, retries, and digests belong to `connectors_core`. The episode contract fixes `execution_mode: FIXTURE_ONLY` and `network_attempted: false`, so only synthetic transports are in scope. An FDSN `204` is refused (`EMPTY_SUCCESS_UNREPRESENTABLE`), and a `304` to an unconditional request is recorded as `INVALID_RESPONSE_METADATA`. |
+| `admit.py` | Routes a classified retrieval to `RAW_CANDIDATE` (parsed), `QUARANTINE_CANDIDATE` (parser rejected), or `HOLD` (not captured). The final route is `HOLD` while `descriptor.yaml` leaves `role` or `rights` unresolved (`TBD`, `NEEDS VERIFICATION` in any case or separator spelling, `PROPOSED`, `OWNER_TBD`, or empty); the provisional lane is reported separately. Descriptor reading is `connectors_core.descriptor_gate`. The episode's identity and bytes are re-checked when the shared value object is constructed. | Never writes, never admits (`admission: NOT_ADMITTED`), never establishes coverage. |
+
+`descriptor.yaml` is unchanged: its `role` and `rights` values are steward decisions and are **NEEDS VERIFICATION**.
 
 ## Source-role discipline
 

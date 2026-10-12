@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/hash_binding_assessment.schema.json",
+  "title": "HashBindingAssessment",
+  "description": "Closed, inactive, synthetic assessment of purpose-specific hash subjects against the existing hash-profile readiness matrix.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/common/hash_binding_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/common/hash_binding_assessment/",
+    "validator": "tools/validators/validate_hash_binding_assessment.py",
+    "status": "PROPOSED_INACTIVE",
+    "object_family": "HashBindingAssessment",
+    "source_idea": "KFM-TRIAD-042",
+    "authority": "synthetic-conformance-only"
+  },
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "status",
+    "source_card",
+    "readiness_matrix_ref",
+    "readiness_matrix_spec_hash",
+    "decision_ref",
+    "bindings",
+    "purpose_gaps",
+    "authority_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1"
+    },
+    "assessment_id": {
+      "const": "kfm://fixture/common/hash-binding-assessment/v1/baseline"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "source_card": {
+      "const": "KFM-TRIAD-042"
+    },
+    "readiness_matrix_ref": {
+      "const": "control_plane/hash_profile_readiness_matrix.json"
+    },
+    "readiness_matrix_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "decision_ref": {
+      "type": "null"
+    },
+    "bindings": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/binding"
+      }
+    },
+    "purpose_gaps": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/purposeGap"
+      }
+    },
+    "authority_effects": {
+      "$ref": "#/$defs/authorityEffects"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "fieldPointer": {
+      "type": "string",
+      "anyOf": [
+        {
+          "const": "$bytes"
+        },
+        {
+          "const": "$byte_range"
+        },
+        {
+          "pattern": "^/(?:[^~/]|~0|~1)+(?:/(?:[^~/]|~0|~1)+)*$"
+        }
+      ]
+    },
+    "fieldSet": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/fieldPointer"
+      }
+    },
+    "unorderedCollection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "ordering_rule"
+      ],
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/fieldPointer"
+        },
+        "ordering_rule": {
+          "enum": [
+            "PATH_UTF8_LEXICOGRAPHIC",
+            "STABLE_ID_UTF8_LEXICOGRAPHIC",
+            "UTF8_LEXICOGRAPHIC",
+            "UNDECLARED"
+          ]
+        }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "hash_role",
+        "purpose",
+        "subject_kind",
+        "algorithm",
+        "digest_prefix",
+        "canonicalization_profile",
+        "included_fields",
+        "excluded_fields",
+        "volatile_fields",
+        "digest_fields",
+        "signature_fields",
+        "unordered_collections",
+        "finite_numbers_required",
+        "crs_profile",
+        "equality_scope",
+        "comparison_profile_id",
+        "implementation_state",
+        "activation_state"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "pattern": "^kfm\\.hash\\.[a-z0-9][a-z0-9.-]{2,127}$"
+        },
+        "hash_role": {
+          "enum": [
+            "content_hash",
+            "descriptor_hash",
+            "range_hash",
+            "root_hash",
+            "signature_digest",
+            "spec_hash"
+          ]
+        },
+        "purpose": {
+          "enum": [
+            "ARTIFACT_BYTE_INTEGRITY",
+            "SEMANTIC_DESCRIPTOR_IDENTITY",
+            "RANGE_PROOF_IDENTITY",
+            "ORDERED_FILESET_IDENTITY",
+            "SIGNED_SUBJECT_IDENTITY",
+            "SPECIFICATION_IDENTITY"
+          ]
+        },
+        "subject_kind": {
+          "enum": [
+            "RAW_BYTES",
+            "JSON_FIELD_SELECTION",
+            "BYTE_RANGE",
+            "ORDERED_FILESET",
+            "DSSE_PAYLOAD_BYTES"
+          ]
+        },
+        "algorithm": {
+          "enum": [
+            "SHA-256",
+            "BLAKE3"
+          ]
+        },
+        "digest_prefix": {
+          "enum": [
+            "sha256:",
+            "blake3:"
+          ]
+        },
+        "canonicalization_profile": {
+          "enum": [
+            "RFC8785-JCS",
+            "RAW-BYTES",
+            "ORDERED-FILESET-V1",
+            "BAO-TREE-V1",
+            "DSSE-PAYLOAD-BYTES"
+          ]
+        },
+        "included_fields": {
+          "$ref": "#/$defs/fieldSet"
+        },
+        "excluded_fields": {
+          "$ref": "#/$defs/fieldSet"
+        },
+        "volatile_fields": {
+          "$ref": "#/$defs/fieldSet"
+        },
+        "digest_fields": {
+          "$ref": "#/$defs/fieldSet"
+        },
+        "signature_fields": {
+          "$ref": "#/$defs/fieldSet"
+        },
+        "unordered_collections": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/unorderedCollection"
+          }
+        },
+        "finite_numbers_required": {
+          "type": "boolean"
+        },
+        "crs_profile": {
+          "type": "null"
+        },
+        "equality_scope": {
+          "const": "SAME_PROFILE_ONLY"
+        },
+        "comparison_profile_id": {
+          "type": "string",
+          "pattern": "^kfm\\.hash\\.[a-z0-9][a-z0-9.-]{2,127}$"
+        },
+        "implementation_state": {
+          "enum": [
+            "EXECUTABLE",
+            "SPEC_ONLY",
+            "UNAVAILABLE"
+          ]
+        },
+        "activation_state": {
+          "enum": [
+            "BASELINE",
+            "INACTIVE"
+          ]
+        }
+      }
+    },
+    "purposeGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "status",
+        "profile_id",
+        "required_controls",
+        "reason"
+      ],
+      "properties": {
+        "purpose": {
+          "enum": [
+            "NORMALIZED_GEOMETRY_IDENTITY",
+            "RECEIPT_PAYLOAD_IDENTITY"
+          ]
+        },
+        "status": {
+          "enum": [
+            "HOLD_NO_PROFILE",
+            "BOUND_WITHOUT_DECISION"
+          ]
+        },
+        "profile_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^kfm\\.hash\\.[a-z0-9][a-z0-9.-]{2,127}$"
+        },
+        "required_controls": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CRS_PROFILE",
+              "FINITE_COORDINATES",
+              "GEOMETRY_NORMALIZATION",
+              "PAYLOAD_SUBJECT_SELECTION",
+              "VOLATILE_FIELD_EXCLUSION",
+              "SIGNATURE_EXCLUSION"
+            ]
+          }
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        }
+      }
+    },
+    "authorityEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proves_truth",
+        "establishes_authority",
+        "admits_source",
+        "closes_evidence",
+        "approves_policy",
+        "authorizes_release",
+        "authorizes_publication"
+      ],
+      "properties": {
+        "proves_truth": {
+          "type": "boolean"
+        },
+        "establishes_authority": {
+          "type": "boolean"
+        },
+        "admits_source": {
+          "type": "boolean"
+        },
+        "closes_evidence": {
+          "type": "boolean"
+        },
+        "approves_policy": {
+          "type": "boolean"
+        },
+        "authorizes_release": {
+          "type": "boolean"
+        },
+        "authorizes_publication": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

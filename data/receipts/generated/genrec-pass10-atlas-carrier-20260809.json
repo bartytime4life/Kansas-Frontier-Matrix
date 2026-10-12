@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-pass10-atlas-carrier-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/atlases/pass-10/README.md",
+    "docs/atlases/pass-10/changed-cards-pass-10.jsonl",
+    "docs/atlases/pass-10/change-report-pass-10.json",
+    "docs/atlases/pass-10/path-decision.md",
+    "docs/atlases/pass-10/source-integrity.json"
+  ],
+  "artifact_hashes": {
+    "docs/atlases/pass-10/README.md": "sha256:e4ec4ed27b93abbb5041122e9d0e2ef751604b5ee9ca01fadc026589e1376095",
+    "docs/atlases/pass-10/changed-cards-pass-10.jsonl": "sha256:1d9da6008c3b28d31e64100d364f330f33406321dc0c8a7bb8f67ef777440967",
+    "docs/atlases/pass-10/change-report-pass-10.json": "sha256:745d66420d401c8ed03e6d76a655d9b7d3a02443107acf6935ea7b73d98182f1",
+    "docs/atlases/pass-10/path-decision.md": "sha256:299cc9b75f8da717724863b330e4a8aff499b38df8e794c8b7b9dc74bc6dde53",
+    "docs/atlases/pass-10/source-integrity.json": "sha256:ece3ed467610a9dbca6d99add79ec177fd9c5a10cce71557d5fc39c2bc889f8a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-09-session"
+  },
+  "prompt_or_contract": "sha256:b8af40657e1db57a53c74e5bef2733c21e6e293549a21f3df0f8bcda97c80158",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local PDF extraction and validation",
+      "Poppler visual review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:386fce4b5915257a162fa60b871d3e6cd857a94723ab0d120a818ef35ce643af",
+      "sha256:78e48c272aeaff3d17232511922dcfe1a9ce52edfc850585896f15c3bcc98d2e",
+      "sha256:745d66420d401c8ed03e6d76a655d9b7d3a02443107acf6935ea7b73d98182f1",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_10_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/atlases",
+      "current-user-request://integrate-pass10-and-create-prs"
+    ]
+  },
+  "truth_labels": {
+    "docs/atlases/pass-10/README.md": "CONFIRMED",
+    "docs/atlases/pass-10/changed-cards-pass-10.jsonl": "CONFIRMED",
+    "docs/atlases/pass-10/change-report-pass-10.json": "CONFIRMED",
+    "docs/atlases/pass-10/path-decision.md": "CONFIRMED",
+    "docs/atlases/pass-10/source-integrity.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-and-attachment-integrity",
+      "outcome": "PASS",
+      "reason": "The 866-page PDF and embedded Pass 9/10 manifest, index, and change-report attachments were extracted and pinned by SHA-256."
+    },
+    {
+      "gate": "changed-card-set-parity",
+      "outcome": "PASS",
+      "reason": "The exact carrier contains 59 unique stable IDs: 29 NEW and 30 EXPANDED, matching the embedded change report."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2, and docs/atlases is the established human atlas lane at the pinned base."
+    },
+    {
+      "gate": "authority-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "The carrier explicitly denies implementation, policy, lifecycle, release, and publication authority."
+    },
+    {
+      "gate": "remote-readback-integrity",
+      "outcome": "PASS",
+      "reason": "All five artifact Git blob SHAs matched local Git blob hashes after connector upload."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after draft pull-request creation and remain separate from local validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM-GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3d24ac428f7e6a9631a2b1228d10ddc991e3f33/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T05:17:12Z",
+  "emitter": "codex/openai-gpt-5.6",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored, documentation-and-provenance-only carrier. This receipt is process memory, not human approval, implementation proof, source admission, policy permission, lifecycle promotion, release authority, or publication authority. Human review and hosted checks remain pending. Rollback is removal of this additive Pass 10 packet after checking for consumers."
+}

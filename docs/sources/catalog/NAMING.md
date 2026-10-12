@@ -21,6 +21,9 @@ notes:
   - "v0.1 claimed the convention is 'locked'; v0.2 corrects this to PROPOSED — OPEN-DSC-07 (this lane) and OPEN-DR-04 (doctrine §18) are both still OPEN."
   - "PROPOSED scaffold; sibling-link presence verified in a prior Claude Code session, not in this session."
   - "Cross-references: OPEN-DR-04 (directory-rules §18 — corpus-wide casing question); OPEN-DSC-02 (lane: flat per-family pages reconciliation); OPEN-CM-01..04 (COVERAGE-MATRIX drift signals where casing intersects domain-axis naming)."
+owning_root: docs/
+responsibility: "Documentation for Source catalog naming conventions; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source catalog naming conventions
@@ -282,7 +285,7 @@ flowchart LR
 - [`docs/sources/catalog/README.md`](./README.md) — lane root and authoritative scope *(PROPOSED)*
 - [`docs/sources/catalog/COVERAGE-MATRIX.md`](./COVERAGE-MATRIX.md) — uses family-axis casing (row 1) for column headers
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§6.1.a standards casing; §6.7.3 per-host-root principle; §7.3 family axis; §18 OPEN-DR-04)*
-- [`docs/standards/README.md`](../../../standards/README.md) — sibling per-root README convention *(PROPOSED — referenced in OPEN-DR-04 resolution path)*
+- [`docs/standards/README.md`](../../standards/README.md) — sibling per-root README convention *(PROPOSED — referenced in OPEN-DR-04 resolution path)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries
 - [`docs/adr/`](../../adr/) — ADRs
 

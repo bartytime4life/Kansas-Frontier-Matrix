@@ -18,7 +18,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-12
 policy_label: public-with-generalization-gates
 path: pipelines/domains/geology/bedrock_units/README.md
 related:
@@ -30,7 +30,7 @@ related:
   - pipelines/domains/geology/cross_sections/README.md
   - pipelines/domains/geology/boreholes/README.md
   - docs/domains/geology/README.md
-  - docs/domains/geology/sublanes/bedrock_geology.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
   - docs/domains/geology/sublanes/stratigraphy.md
   - docs/domains/geology/sublanes/structures.md
   - docs/domains/geology/POLICY.md
@@ -73,6 +73,7 @@ tags:
   - policy
   - governance
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills the blank pipelines/domains/geology/bedrock_units path as a nested executable Geology bedrock-units sublane."
   - "Bedrock-units pipeline logic is executable implementation support only; it does not own source descriptors, source catalog profiles, connectors, schemas, policy, lifecycle data, catalog truth, stratigraphic truth, structural truth, surficial truth, well-log truth, or release decisions."
   - "Bedrock units are consolidated-rock map/context candidates. They must not collapse into surficial units, soil map units, mineral occurrences, hazard risk, hydrology measurements, ownership/title, or release-approved public layers."
@@ -155,7 +156,7 @@ This directory implements or will implement the **how** of bedrock-unit processi
 | Why `domains/geology/`? | Geology is a domain lane under the domain-pipeline umbrella. | CONFIRMED path responsibility pattern; behavior NEEDS VERIFICATION |
 | Why `bedrock_units/`? | This is a narrow executable sublane for consolidated-rock geologic units and map boundary versions. | PROPOSED / NEEDS VERIFICATION |
 | Is this a connector? | No. Source fetching belongs in `connectors/<source>` or an accepted source-edge home. | CONFIRMED separation |
-| Does this own bedrock doctrine? | No. Human-facing doctrine remains in `docs/domains/geology/sublanes/bedrock_geology.md`; object meaning belongs in contracts. | CONFIRMED doc separation |
+| Does this own bedrock doctrine? | No. Human-facing doctrine remains in `docs/domains/geology/SUBLANE-BEDROCK.md`; object meaning belongs in contracts. | CONFIRMED doc separation |
 | Does this own stratigraphy or structures? | No. It references accepted stratigraphy/structure context but must not become their sole authority. | CONFIRMED boundary posture |
 | Can this sublane publish? | No. It may prepare candidates and release handoffs only through governed workflow. | CONFIRMED doctrine posture |
 

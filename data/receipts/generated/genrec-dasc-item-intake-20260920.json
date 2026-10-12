@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-dasc-item-intake-20260920",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/app/source-intelligence.ts",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs",
+    "docs/sources/catalog/kansas/README.md",
+    "docs/sources/catalog/kansas/dasc-geoportal.md",
+    "fixtures/contracts/v1/source/source_descriptor/README.md",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py",
+    "fixtures/contracts/v1/source/source_descriptor/dasc_item_profiles.json",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_huc12.json",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_parcels_rejected.json",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_plss.json",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_streams.json"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/app/source-intelligence.ts": "sha256:f789a471be8055073a5771782e54edec28e0d9213184a98dc4079d2aa63962ef",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs": "sha256:4fdc304325fb2762aac9e4b20c1a2c5374fb61afd5070fb659144fd300aeaa43",
+    "docs/sources/catalog/kansas/README.md": "sha256:747ce8d968c0f9f3bc1abd62a0cb525e90a1f6865d148fdc7a5a66f855cebf18",
+    "docs/sources/catalog/kansas/dasc-geoportal.md": "sha256:752b4c88ea2e511ea8f5d044d7b81d9815e7706ea0036c51ab47b76c4aaa8681",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "sha256:f6388592b7a322cf84c80202830a3da67d9c707f3c03b93b8a3ca6070c1f0335",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "sha256:39b20da2a46ac82e0adb24491176f47d8c84814bc1118eaf52801a81a27f0105",
+    "fixtures/contracts/v1/source/source_descriptor/dasc_item_profiles.json": "sha256:fcd5c70bbdb01e166759a4d0ae586f3ad564ff6124eb3425aa87af701465c618",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_huc12.json": "sha256:66d9bf11f8f183f7d68abe30b83f4c08720b3e2aa3950dfd3d99c43d7936ce70",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_parcels_rejected.json": "sha256:5dd179016a852c93ffbff8bfab90218fc8a938e0cdfc5ff7403387d6c92942d0",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_plss.json": "sha256:7cb17d4c1d54eb1d6a9ee0cf4b50abe02c65e5313a51a37d72572c3e89e1594b",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_streams.json": "sha256:3508909331686c94443bed7463a8cf940a8edfa690d6c754b559d54adb91fa27"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "tools_enabled": [
+      "repository inspection",
+      "provider metadata queries",
+      "schema validation",
+      "bounded ID-only probes"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:c1d08f4e2569e5fc46d0b0f1e4aed106ac7c1f09",
+      "fixtures/contracts/v1/source/source_descriptor/dasc_item_profiles.json",
+      "data/registry/sources/README.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/app/source-intelligence.ts": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs": "PROPOSED",
+    "docs/sources/catalog/kansas/README.md": "PROPOSED",
+    "docs/sources/catalog/kansas/dasc-geoportal.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "PROPOSED",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/dasc_item_profiles.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_huc12.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_parcels_rejected.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_plss.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_dasc_streams.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source descriptor fixtures",
+      "outcome": "PASS",
+      "reason": "10 valid and 3 expected-invalid fixtures"
+    },
+    {
+      "gate": "validator entrypoint regression",
+      "outcome": "PASS",
+      "reason": "13 tests passed including DASC schema mutations"
+    },
+    {
+      "gate": "Explorer DASC candidate regression",
+      "outcome": "PASS",
+      "reason": "1 test passed; separate saved Site build and 105 tests passed"
+    },
+    {
+      "gate": "full capture and production consumer integration",
+      "outcome": "SKIPPED",
+      "reason": "Not implemented; canonical writer held. ID-only two-page probes are not complete capture."
+    },
+    {
+      "gate": "rights, sensitivity, independent human review and release",
+      "outcome": "SKIPPED",
+      "reason": "No authorized approval; all descriptors disabled and unreleased."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "DASC discovery",
+      "validated": true,
+      "evidence_ref": "https://hub.kansasgis.org/"
+    },
+    {
+      "id": "item metadata and paging observations",
+      "validated": true,
+      "evidence_ref": "fixtures/contracts/v1/source/source_descriptor/dasc_item_profiles.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-20T04:05:39.873Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": 4635
+  },
+  "notes": "Review-only fixtures, not canonical source registrations or production acquisition configuration. Parcel metadata extent is outside Kansas; reject scope and fetch no parcel features. ArcGIS protocol compatibility is not proof of existing live ingestion adapter reuse. Model runtime revision is not exposed; do not infer a specific model release. Pending receipt is not merge/release authority."
+}

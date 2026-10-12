@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.county-ndvi-change.fixture.v1",
+  "panel_id": "kfm:county-ndvi-change-panel:synthetic-missing",
+  "outcome": "ABSTAIN",
+  "reason_code": "PANEL_MISSING",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": null,
+  "windows": null,
+  "metrics": null,
+  "evidence": null,
+  "network_attempted": false,
+  "source_activated": false,
+  "interpretation_authorized": false,
+  "promotion_authorized": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

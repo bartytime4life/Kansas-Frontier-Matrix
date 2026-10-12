@@ -1,0 +1,17 @@
+{
+  "invalid_decision_mismatch.json": [
+    "DECISION_MISMATCH"
+  ],
+  "invalid_exit_code_mismatch.json": [
+    "EXIT_CODE_MISMATCH"
+  ],
+  "invalid_governance_violation.json": [
+    "GOVERNANCE_VIOLATION"
+  ],
+  "invalid_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_noncanonical_reason_codes.json": [
+    "REASON_CODES_NOT_CANONICAL"
+  ]
+}

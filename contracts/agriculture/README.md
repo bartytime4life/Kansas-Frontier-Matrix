@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-agriculture-readme
 title: contracts/agriculture/ — Agriculture Semantic Contracts
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Agriculture steward · Contract steward · Schema steward · Policy steward · Data steward · Docs steward
 created: 2026-06-20
-updated: 2026-07-27
+updated: 2026-09-07
 policy_label: public; contracts; agriculture; semantic-contracts; compatibility-path
 related:
   - ../README.md
@@ -16,7 +16,9 @@ related:
   - ../../docs/domains/agriculture/OBJECTS.md
   - ../../docs/domains/agriculture/OBJECT_FAMILIES.md
   - ../../docs/domains/agriculture/API_CONTRACTS.md
+  - ../../docs/doctrine/directory-rules.md
   - ../../docs/architecture/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../schemas/contracts/v1/domains/agriculture/README.md
   - ../../policy/domains/agriculture/README.md
@@ -26,7 +28,7 @@ related:
   - ../../tools/validators/agriculture/README.md
 tags: [kfm, contracts, agriculture, semantic-contracts, object-families, field-candidate, compatibility, transitional, schemas-separated, policy-separated, governance]
 notes:
-  - "This path is CONFIRMED present and is classified PROPOSED / transitional compatibility; the doctrine-aligned Agriculture semantic-contract lane is contracts/domains/agriculture/."
+  - "This path is CONFIRMED present and remains a transitional compatibility surface; accepted ADR-0029 makes docs/doctrine/directory-rules.md the writable Directory Rules authority, and its domain-lane pattern places new Agriculture semantic contracts under contracts/domains/agriculture/."
   - "No accepted migration or sunset record was verified for contracts/agriculture/; this README does not move, redirect, delete, or canonicalize files."
   - "New Agriculture semantic contracts belong in contracts/domains/agriculture/ unless an accepted ADR changes the Directory Rules domain-lane pattern."
   - "Contracts define semantic meaning; machine-checkable shape, policy, validators, fixtures, data, proofs, release decisions, APIs, and UI remain separate authority surfaces."
@@ -57,7 +59,7 @@ notes:
 > **Path:** `contracts/agriculture/`  
 > **Authority level:** `PROPOSED` transitional compatibility lane under the canonical `contracts/` responsibility root  
 > **Path posture:** `CONFIRMED` live path; `CONFIRMED` doctrine-aligned counterpart at `contracts/domains/agriculture/`; migration and sunset state remain `NEEDS VERIFICATION`  
-> **Truth posture:** `CONFIRMED` repository presence and bounded companion inventory at `main@0b0309664313543b6816e8e5dcefc9593366aba5`. Contract, schema, policy, fixture, validator, test, runtime, release, and publication maturity must be read from their own evidence.
+> **Truth posture:** `CONFIRMED` repository presence and bounded companion inventory at `main@05293236fd4c9538d4b9dc8afb16fa9ac847c132`. Contract, schema, policy, fixture, validator, test, runtime, release, and publication maturity must be read from their own evidence.
 
 ---
 
@@ -78,7 +80,7 @@ Both Agriculture contract paths exist at the pinned repository state, but they d
 | Path | Verified state | Authority posture |
 |---|---|---|
 | `contracts/agriculture/` | `CONFIRMED` with this README and `FieldCandidate.md` | `PROPOSED` transitional compatibility lane. Preserve links and correct existing material; do not expand it into parallel authority. |
-| [`contracts/domains/agriculture/`](../domains/agriculture/README.md) | `CONFIRMED` with a directory README and bounded object/support contracts | Doctrine-aligned domain lane under Directory Rules §12. Its own documents remain draft and mixed-maturity. |
+| [`contracts/domains/agriculture/`](../domains/agriculture/README.md) | `CONFIRMED` with a directory README and ten bounded contract documents | Doctrine-aligned domain lane under Directory Rules §12 as adopted by ADR-0029. Its own documents remain draft and mixed-maturity. |
 | [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | `CONFIRMED` nonempty schema lane | Machine shape only. ADR-0001 remains `proposed`, so accepted decision status is not inferred from repository use. |
 | Migration or sunset record for `contracts/agriculture/` | `NEEDS VERIFICATION` | No move, redirect, removal, or canonicalization is authorized by this README. |
 
@@ -104,7 +106,12 @@ contracts/
         ├── domain_feature_identity.md
         ├── domain_layer_descriptor.md
         ├── domain_observation.md
-        └── domain_validation_report.md
+        ├── domain_validation_report.md
+        ├── hls_ndvi_zonal_materiality.md
+        ├── ndvi_delta_computation.md
+        ├── ndvi_readiness.md
+        ├── public_safe_map_feature.md
+        └── vegetation_connectivity_gate.md
 ```
 
 | Responsibility surface | Relationship to this directory |
@@ -168,8 +175,8 @@ The following surfaces were read or existence-checked at the pinned base. Presen
 
 | Surface | Confirmed evidence | Bounded conclusion |
 |---|---|---|
-| [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | README plus five contract files shown in [Repo fit](#repo-fit) | The doctrine-aligned lane is nonempty; it does not yet provide a `FieldCandidate` successor or all named object-family contracts. |
-| [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | `aggregation_receipt` plus four `domain_*` schemas | Machine-shape scaffolds exist; `field_candidate.schema.json` was not found at the pinned base. |
+| [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | README plus ten contract files shown in [Repo fit](#repo-fit) | The doctrine-aligned lane is nonempty and now includes bounded NDVI, connectivity, and public-safe map profiles; it still does not provide a `FieldCandidate` successor or all named object-family contracts. |
+| [`schemas/contracts/v1/domains/agriculture/`](../../schemas/contracts/v1/domains/agriculture/README.md) | Twenty-four root-level JSON Schema files plus `hydrology-ext/` and `receipts/` child lanes | Machine-shape coverage has expanded beyond the stale README index; `field_candidate.schema.json` was not found at the pinned base. Presence does not establish accepted or complete coverage. |
 | [`policy/domains/agriculture/README.md`](../../policy/domains/agriculture/README.md) | Repository-grounded draft policy README | Policy scaffolds exist, but the README reports the evaluator and production enforcement as unimplemented. |
 | [`tests/domains/agriculture/README.md`](../../tests/domains/agriculture/README.md) | Repository-grounded draft test README | The lane is documentation-heavy; the README does not establish executable Agriculture coverage. |
 | [`fixtures/domains/agriculture/README.md`](../../fixtures/domains/agriculture/README.md) | Confirmed path | Fixture documentation exists; complete coverage and safe negative cases require separate verification. |
@@ -183,7 +190,8 @@ The following surfaces were read or existence-checked at the pinned base. Presen
 |---|---|---|---|
 | `FieldCandidate` | [`./FieldCandidate.md`](./FieldCandidate.md) — `CONFIRMED` compatibility contract | `NEEDS VERIFICATION`; neither `field_candidate.md` nor `FieldCandidate.md` was found under `contracts/domains/agriculture/` at the pinned base | `field_candidate.schema.json` was not found under the Agriculture domain schema lane. |
 | Agriculture aggregation receipt | No contract in this compatibility directory | [`../domains/agriculture/aggregation-receipt.md`](../domains/agriculture/aggregation-receipt.md) — `CONFIRMED`, with filename/home conflicts documented in that file | `aggregation_receipt.schema.json` is `CONFIRMED` present and scaffold maturity. |
-| Domain support contracts | None in this compatibility directory | `domain_observation`, `domain_feature_identity`, `domain_layer_descriptor`, and `domain_validation_report` are `CONFIRMED` present | Four paired `domain_*` schemas are `CONFIRMED` present; contract files describe them as placeholders. |
+| Domain support contracts | None in this compatibility directory | `domain_observation`, `domain_feature_identity`, `domain_layer_descriptor`, and `domain_validation_report` are `CONFIRMED` present | Four paired `domain_*` schemas are `CONFIRMED` present; maturity remains file-specific. |
+| Bounded map, NDVI, and connectivity profiles | None in this compatibility directory | `hls_ndvi_zonal_materiality`, `ndvi_delta_computation`, `ndvi_readiness`, `public_safe_map_feature`, and `vegetation_connectivity_gate` are `CONFIRMED` present | Corresponding root-level schema profiles are `CONFIRMED` present; their own contracts, fixtures, validators, tests, workflows, and review evidence determine maturity. |
 | Remaining Agriculture object families | `UNKNOWN` here | Coverage remains incomplete or `NEEDS VERIFICATION` against the domain register | Verify per object; do not infer coverage from directory presence. |
 
 Agriculture references name twelve object families. This compatibility lane must not become a second implementation plan for all twelve.
@@ -277,11 +285,12 @@ Until ownership is resolved:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) | `CONFIRMED` live placement doctrine | `contracts/` owns meaning; domains use `contracts/domains/<domain>/`; compatibility paths must not evolve as parallel authority. | Directory Rules does not complete this path's migration. |
+| [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) and [`ADR-0029`](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `CONFIRMED` adopted placement authority | `contracts/` owns meaning; domains use `contracts/domains/<domain>/`; compatibility paths must not evolve as parallel authority. | Adoption does not complete this path's migration or accept later implementation claims. |
+| [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) | `CONFIRMED` read-only compatibility tombstone | Preserves legacy links and redirects readers to the adopted doctrine path. | The tombstone is not a writable placement authority and does not authorize this path's retirement. |
 | [`contracts/README.md`](../README.md) | `CONFIRMED` canonical-root README | Semantic meaning belongs in `contracts/`; schemas, policy, evidence, release, runtime, and publication remain separate. | Root guidance does not prove every child contract or companion surface. |
 | [`contracts/domains/agriculture/README.md`](../domains/agriculture/README.md) | `CONFIRMED` current lane README | The doctrine-aligned Agriculture contract lane exists and names this path as compatibility. | The README remains draft and does not close migration or implementation. |
 | [`contracts/agriculture/FieldCandidate.md`](./FieldCandidate.md) | `CONFIRMED` compatibility contract | `FieldCandidate` meaning, candidate posture, source-role limits, and public-exposure warning. | No canonical-lane successor, schema, validator, or release behavior is inferred. |
-| [`schemas/contracts/v1/domains/agriculture/README.md`](../../schemas/contracts/v1/domains/agriculture/README.md) and verified schema files | `CONFIRMED` nonempty schema lane | Five Agriculture schema files are present in the bounded snapshot. | Files are mixed-maturity scaffolds; no `FieldCandidate` schema was found. |
+| [`schemas/contracts/v1/domains/agriculture/README.md`](../../schemas/contracts/v1/domains/agriculture/README.md) and verified schema inventory | `CONFIRMED` nonempty schema lane | Twenty-four root-level schema files and two child lanes are present in the bounded snapshot. | The README index is stale relative to the directory; files are mixed-maturity, and no `FieldCandidate` schema was found. |
 | [`policy/domains/agriculture/README.md`](../../policy/domains/agriculture/README.md) | `CONFIRMED` repository-grounded draft | Current policy inventory, fail-closed posture, and explicit evaluator limitations. | It does not prove active production enforcement. |
 | [`tests/domains/agriculture/README.md`](../../tests/domains/agriculture/README.md) | `CONFIRMED` repository-grounded draft | Current test-lane inventory and explicit executable-coverage gaps. | It does not prove Agriculture test success. |
 | Agriculture identity, object-family, object, and API references | `CONFIRMED` repository documents / mixed implementation posture | Stable object names, identity and source-role rules, field-level sensitivity, and governed public-surface expectations. | Proposed routes, DTOs, validators, and coverage remain verification-bound. |
@@ -292,7 +301,7 @@ Until ownership is resolved:
 
 Before merge, rollback is to close the draft pull request and leave the branch unmerged. After merge, revert the scoped documentation commit; do not rewrite shared history.
 
-Immediate content rollback target: prior README blob `6ad0b16202119291fe9f391daabcce8f5d87b558`.
+Immediate content rollback target: prior README blob `5c9d2c04756c1b6c2b4e135ca161c29dda375afa`.
 
 A future path retirement needs a separate migration rollback plan that preserves inbound links, document lineage, and the existing `FieldCandidate` contract until its canonical successor and companion surfaces are verified.
 
@@ -303,7 +312,7 @@ A future path retirement needs a separate migration rollback plan that preserves
 ### This documentation upgrade
 
 - [x] Existing README remains at the same path with stable `doc_id` and `created` date.
-- [x] Live Directory Rules and the doctrine-aligned Agriculture contract lane are linked.
+- [x] Adopted Directory Rules, its compatibility tombstone, ADR-0029, and the doctrine-aligned Agriculture contract lane are linked.
 - [x] Placeholder owner badge is removed; the unresolved owner remains visible in text.
 - [x] Compatibility-only admission rules prevent this lane from growing into parallel authority.
 - [x] Verified companion contracts, schemas, policy, tests, fixtures, and validator documentation are distinguished from maturity claims.
@@ -324,12 +333,14 @@ A future path retirement needs a separate migration rollback plan that preserves
 
 | Field | Value |
 |---|---|
-| Review date | 2026-07-27 |
+| Review date | 2026-09-07 |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
 | Base ref | `main` |
-| Pinned base commit | `0b0309664313543b6816e8e5dcefc9593366aba5` |
-| Prior README blob | `6ad0b16202119291fe9f391daabcce8f5d87b558` |
-| Directory Rules blob | `18653c00ba193a4afaa3e07a0924452807fb98ef` |
+| Pinned base commit | `05293236fd4c9538d4b9dc8afb16fa9ac847c132` |
+| Prior README blob | `5c9d2c04756c1b6c2b4e135ca161c29dda375afa` |
+| Adopted Directory Rules blob | `fd49a0b83e55cef52c1124281f093e263526898d` |
+| Directory Rules compatibility tombstone blob | `9f70679c61dba2df46fd85d780f115fee6b59007` |
+| ADR-0029 blob | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` |
 | Path overlap at review time | No open pull request found for this target |
 
 ---
@@ -339,3 +350,4 @@ A future path retirement needs a separate migration rollback plan that preserves
 `contracts/agriculture/` is a confirmed live, proposed transitional compatibility lane. It preserves `FieldCandidate` meaning and stable links while [`contracts/domains/agriculture/`](../domains/agriculture/README.md) serves as the doctrine-aligned domain lane for new Agriculture semantic contracts. Neither directory is a schema, policy, source-registry, lifecycle-data, evidence, proof, release, API, UI, or publication authority.
 
 <p align="right"><a href="#top">Back to top</a></p>
+

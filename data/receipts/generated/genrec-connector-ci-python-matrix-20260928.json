@@ -1,0 +1,102 @@
+{
+  "receipt_id": "genrec-connector-ci-python-matrix-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/blm-connector-offline.yml",
+    ".github/workflows/census-offline.yml",
+    ".github/workflows/fema-openfema-declarations-offline.yml",
+    ".github/workflows/gbif-occurrence-offline.yml",
+    ".github/workflows/inaturalist-observations-offline.yml",
+    ".github/workflows/noaa-connector-offline.yml",
+    ".github/workflows/noaa-storm-events-offline.yml",
+    ".github/workflows/noaa-uscrn-offline.yml",
+    ".github/workflows/nrcs-connector-offline.yml",
+    ".github/workflows/nws-alerts-offline.yml",
+    ".github/workflows/usgs-earthquake-offline.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/blm-connector-offline.yml": "sha256:c95fe1808769f65567fb2cdd4ad484fe380ac8f33fd9e7d09a6aca959ccaffa4",
+    ".github/workflows/census-offline.yml": "sha256:1d3774f16743b3a9a9c49081801acc5d30228dcd6e6db55b327ade4bf99a7321",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "sha256:a9d8537a7bd170c7fcacc75030d96cdf57e484129579bf3555b9fa1501625172",
+    ".github/workflows/gbif-occurrence-offline.yml": "sha256:618526f380d0192f95e4e3574196dd3be5d0009c7385a4b9987ed8bcd3a974d4",
+    ".github/workflows/inaturalist-observations-offline.yml": "sha256:710c75184cc7f803ea821c87a38b1320dbc13f2f384f34d5fbcc19c94b72110a",
+    ".github/workflows/noaa-connector-offline.yml": "sha256:96539ac6d452c0f3e2ff3e0591f24be766d0f92700112ba29444c64628760181",
+    ".github/workflows/noaa-storm-events-offline.yml": "sha256:fba056251fa9888091cab5066685a45dc31330c22aa93fc8fc451429cb2eae6a",
+    ".github/workflows/noaa-uscrn-offline.yml": "sha256:cf240191b19dddfeee0aa5431adc079af6c6726d4e7c408f65f63c79a961df4a",
+    ".github/workflows/nrcs-connector-offline.yml": "sha256:b5b7d6bdc0e754eeda9baee0e8785fe1ac2fa5f533bc78ce7cf711b250229d7b",
+    ".github/workflows/nws-alerts-offline.yml": "sha256:db85ca40ff4ed8725ef3797ab157e852b3e5dcd53ae2de1ccf367dec4f0b3067",
+    ".github/workflows/usgs-earthquake-offline.yml": "sha256:fd87538d8aee604b6054ab049a1bde7b6776d8c017faa969a143eb78213a5384"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d864fc67d21e9dcb454bfce794bb0dd28c3ef5bf",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4776"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/blm-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/census-offline.yml": "CONFIRMED",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "CONFIRMED",
+    ".github/workflows/gbif-occurrence-offline.yml": "CONFIRMED",
+    ".github/workflows/inaturalist-observations-offline.yml": "CONFIRMED",
+    ".github/workflows/noaa-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/noaa-storm-events-offline.yml": "CONFIRMED",
+    ".github/workflows/noaa-uscrn-offline.yml": "CONFIRMED",
+    ".github/workflows/nrcs-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/nws-alerts-offline.yml": "CONFIRMED",
+    ".github/workflows/usgs-earthquake-offline.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Workflow security guardrail",
+      "outcome": "PASS",
+      "reason": "make workflow-security: PASS, 488 workflows, 0 invariant, 0 new drift."
+    },
+    {
+      "gate": "Every matrixed test command on Python 3.12",
+      "outcome": "PASS",
+      "reason": "All 16 unittest commands from the 11 workflows pass in a fresh 3.12 venv without PYTHONPATH, with tools/ci/python-test.lock installed for the USGS conformance step; YAML parses and each matrix is ['3.11', '3.12']."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Branch-protection required-check names",
+      "outcome": "SKIPPED",
+      "reason": "Rulesets are not readable from this session; no repository file references the synthetic-candidates job name."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d864fc67d21e9dcb454bfce794bb0dd28c3ef5bf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T04:50:47Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Runs the eleven connector offline workflows on the interpreters python-test.lock declares (3.11 and 3.12), so interpreter-dependent parser behavior like the #4768/#4776 nesting finding is caught in CI."
+}

@@ -2,342 +2,426 @@
 doc_id: kfm://contract/correction/supersession-notice
 title: contracts/correction/supersession_notice.md — SupersessionNotice Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Correction steward · Release steward · Governance steward · Contract steward · Schema steward · Policy steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-07
 policy_label: public; contracts; correction; supersession-notice; semantic-contract; first-class-corrections; lineage; rollback-aware
+owning_root: contracts/
+evidence_snapshot: ec203a9ba11fb83b52245f9523ce36cc1ec6ac66
+prior_blob: 22f1fdb4a82063b7e66d0478fcc83cb03a89d68b
 related:
   - ./README.md
   - ./correction_notice.md
-  - ../release/README.md
+  - ./correction_impact_assessment.md
+  - ./correction_propagation_plan.md
   - ../../schemas/contracts/v1/correction/supersession_notice.schema.json
-  - ../../fixtures/correction/supersession_notice/
-  - ../../tools/validators/correction/validate_supersession_notice.py
-  - ../../policy/correction/
-  - ../../policy/release/
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../docs/doctrine/corrections-first-class.md
   - ../../docs/architecture/publication/CORRECTION.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../release/
-  - ../../data/proofs/
-tags: [kfm, contracts, correction, supersession-notice, supersession, correction, rollback, release, lineage, public-notice, evidence, governance]
+tags: [kfm, contracts, correction, supersession-notice, supersession, rollback, release, lineage, evidence, governance]
 notes:
-  - "Expanded from a greenfield scaffold into the object-level SupersessionNotice semantic contract."
-  - "Machine-checkable shape is in schemas/contracts/v1/correction/supersession_notice.schema.json, but that schema is explicitly a greenfield placeholder with only id required and additional properties allowed."
-  - "The schema-declared validator path was not found in this session; validator behavior remains UNKNOWN / NEEDS VERIFICATION."
-  - "SupersessionNotice is a lineage/public-notice artifact that names replacement of a prior published object; it is not the new release itself, not proof closure, not a ReleaseManifest, not a RollbackCard, and not policy approval by itself."
+  - "Same-path semantic-document refresh; no schema, validator, policy, runtime, release, or publication change."
+  - "CONFIRMED placeholder shape; only id is required. Semantic clarifications remain draft and are not enforced by that schema."
+  - "Schema-declared supersession fixtures, validator, and policy/correction path are absent at the pinned snapshot; other correction validators exist."
+  - "Public documentation does not classify a notice instance, its references, or its underlying evidence as public-safe."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # SupersessionNotice Contract
 
-> Semantic contract for `SupersessionNotice`, the named artifact that records that one published KFM claim, artifact, layer, release, report, answer, or other governed public object has been replaced by a newer governed object while the prior record remains inspectable in audit.
+> Semantic contract for the named, append-only record that a published KFM
+> object has been replaced by a governed successor. A draft notice records
+> intent; it does not make the replacement effective or authorize exposure.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Family: correction" src="https://img.shields.io/badge/family-correction-blue">
-  <img alt="Schema: placeholder" src="https://img.shields.io/badge/schema-placeholder-orange">
-  <img alt="Validator: missing" src="https://img.shields.io/badge/validator-missing-red">
-  <img alt="Doctrine: append-only" src="https://img.shields.io/badge/doctrine-append--only-purple">
-</p>
-
-`contracts/correction/supersession_notice.md`
+**Status: draft. Schema: placeholder. Supersession execution: not established.**
 
 ## Quick jumps
 
 [Status](#status) · [Meaning](#meaning) · [Repo fit](#repo-fit) · [Schema pairing](#schema-pairing) · [Accepted uses](#accepted-uses) · [Exclusions](#exclusions) · [Fields](#fields) · [Recommended semantic fields](#recommended-semantic-fields) · [Invariants](#invariants) · [Supersession scenarios](#supersession-scenarios) · [Lifecycle](#lifecycle) · [Validation](#validation) · [No-loss preservation](#no-loss-preservation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
 
----
-
 ## Status
 
-> [!IMPORTANT]
-> **Status:** `draft` / semantic contract  
-> **Owner:** `OWNER_TBD`  
-> **Contract path:** `contracts/correction/supersession_notice.md`  
-> **Schema path:** `schemas/contracts/v1/correction/supersession_notice.schema.json`  
-> **Truth posture:** `CONFIRMED` contract path, current update, correction doctrine, and placeholder schema presence. Validator path was not found. Field completeness, fixtures, policy behavior, release integration, public route/UI behavior, and tests remain `NEEDS VERIFICATION`.
+This revision is grounded in `main@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66`,
+inspected on 2026-09-07. The prior document blob is
+`22f1fdb4a82063b7e66d0478fcc83cb03a89d68b`.
 
----
+| Surface | Confirmed evidence at that snapshot | Limit |
+| --- | --- | --- |
+| This contract | Existing draft semantic document; stable identity and path retained. | Wording is not implementation or approval. |
+| Paired schema | Existing greenfield placeholder; only `id` is required. | Does not enforce a replacement relationship or release gates. |
+| Declared validator | `tools/validators/correction/validate_supersession_notice.py` is absent from the correction-validator directory. | Absence is scoped to that path, not all correction validation. |
+| Declared fixtures | `fixtures/correction/supersession_notice/` returns not found. | No supersession-specific fixture coverage is established here. |
+| Declared policy path | `policy/correction/` returns not found. | Does not establish that all correction-related policy is absent. |
+| Adjacent contracts | CorrectionNotice, CorrectionImpactAssessment, and CorrectionPropagationPlan documents exist. | Their presence does not prove SupersessionNotice execution or downstream consumption. |
+
+**PROPOSED:** the semantic refinements below, including reference binding,
+partial-scope handling, and acceptance cases. **UNKNOWN / NEEDS VERIFICATION:**
+complete producer/consumer inventory, operational reference resolution,
+supersession-specific enforcement, public API/UI behavior, hosted validation,
+and accountable steward review. `OWNER_TBD` is retained rather than inventing
+an assignment or treating review routing as completed review.
+
+This document's `public` label describes documentation. It grants no public
+access to notice instances, previous releases, successor objects, evidence,
+private review records, or sensitive locations.
 
 ## Meaning
 
-`SupersessionNotice` is the semantic record that a prior published KFM object has been replaced by a successor while preserving append-only history.
+`SupersessionNotice` records a replacement relationship, its bounded scope,
+reason, effective time, and supporting evidence and decisions while retaining
+prior history. It answers: what was replaced, what replaces it, why, when,
+under whose recorded review and release decision, and what consumers should
+see or stop using.
 
-It answers six questions:
+The distinction between intention and fact is essential. A candidate successor,
+a higher version number, a newer timestamp, an approved-looking field, or a
+successful validation report does not make supersession effective. The
+relevant governed release transition must exist and be verified separately.
 
-1. **What prior object was superseded?** — the old release, claim, artifact, layer, answer, or record.
-2. **What replaces it?** — the successor object, release, or public pointer.
-3. **Why was it superseded?** — source update, correction, validation repair, sensitivity change, policy change, rights change, versioned improvement, or other governed reason.
-4. **When did supersession become effective?** — the effective/public transition time.
-5. **What evidence and review support the change?** — EvidenceBundle, ReviewRecord, PolicyDecision, ReleaseManifest, or related trust objects.
-6. **How should public surfaces behave?** — mark old object superseded, link forward, preserve audit, and direct ordinary users to the successor where policy allows.
+| Related concept | Distinction |
+| --- | --- |
+| Correction | Names the broader trust-significant change; a correction can lead to supersession, withdrawal, redaction, or another bounded outcome. |
+| Supersession | Replaces a prior published object with an identifiable governed successor for a stated scope. It need not imply that the prior version was erroneous. |
+| Withdrawal | Removes or restricts public use; a replacement need not exist. Do not invent a successor to represent withdrawal. |
+| Stale or disputed state | Warns or limits reliance pending evidence or review; does not establish a replacement. |
+| Rollback | Separately authorized restoration of a suitable earlier target or another safe posture, with auditable lineage. A supersession notice does not execute it. |
 
-`SupersessionNotice` is a correction-family lineage artifact. It is not a silent overwrite and not a deletion.
-
----
+Earlier doctrine uses `SupersessionRecord`, `old_release`, `new_release`,
+`effective_time`, and `superseded_by`. These are retained as source vocabulary,
+not silently adopted aliases or evidence of a second implemented object family.
 
 ## Repo fit
 
-```text
-contracts/
-├── correction/
-│   ├── README.md
-│   ├── correction_notice.md
-│   └── supersession_notice.md
-└── release/
-    ├── README.md
-    ├── correction_notice.md
-    ├── rollback_card.md
-    └── withdrawal_notice.md
+**Placement outcome: PLACE, same path.** Accepted
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../docs/doctrine/directory-rules.md).
+Section 7.2 assigns semantic meaning to `contracts/`, machine shape to
+`schemas/`, admissibility rules to `policy/`, accountability instances to
+`data/`, and correction/release decisions to `release/`.
 
-schemas/
-└── contracts/
-    └── v1/
-        └── correction/
-            └── supersession_notice.schema.json
-```
+This file remains under the existing `contracts/correction/` responsibility.
+It creates no new root, schema home, policy directory, notice-instance store,
+release lane, or migration. The generated authoring receipt belongs in the
+existing `data/receipts/generated/` lane, not in this contract.
 
-Adjacent responsibility roots:
+[ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+remains **proposed**. Its title is not adoption evidence; the accepted
+Directory Rules already establish the default machine-schema route.
 
-| Root | Relationship to this contract |
-|---|---|
-| `./README.md` | Correction-family directory boundary and doctrine summary. |
-| `./correction_notice.md` | Related correction artifact for general correction reasons; supersession may be one correction outcome. |
-| `../release/README.md` | Release-family boundary; release manifests and rollback cards remain separate. |
-| `../../schemas/contracts/v1/correction/supersession_notice.schema.json` | Current placeholder schema for this semantic contract. |
-| `../../fixtures/correction/supersession_notice/` | Schema-declared fixture root; existence/coverage remain `NEEDS VERIFICATION`. |
-| `../../tools/validators/correction/validate_supersession_notice.py` | Schema-declared validator path; not found in this session. |
-| `../../policy/correction/`, `../../policy/release/` | Policy decision homes for correction/release behavior. |
-| `../../docs/doctrine/corrections-first-class.md` | Governing correction doctrine. |
-| `../../docs/architecture/publication/CORRECTION.md` | Publication correction flow and supersession posture. |
-| `../../release/` | Release state, manifests, aliases, rollback targets, supersession lineage. |
-| `../../data/proofs/` | EvidenceBundle/proof support for supersession reasons. |
-
----
+The [family README](./README.md) and [CorrectionNotice](./correction_notice.md)
+carry older placement and maturity questions about correction/release
+contracts. This refresh neither resolves those questions nor treats their
+historical inventories as current implementation evidence.
 
 ## Schema pairing
 
-The paired schema is:
+The existing pairing is
+[supersession_notice.schema.json](../../schemas/contracts/v1/correction/supersession_notice.schema.json),
+blob `5ea3ef0895ff8527a3c2a466c654bf53b1431632` at the evidence snapshot.
 
-```text
-schemas/contracts/v1/correction/supersession_notice.schema.json
-```
+| Schema entry | Current value or effect |
+| --- | --- |
+| `$schema` | JSON Schema Draft 2020-12. |
+| `$id` | `https://schemas.kfm.local/contracts/v1/correction/supersession_notice.schema.json`. An identifier, not a verified public endpoint. |
+| `x-kfm.contract_doc` | `contracts/correction/supersession_notice.md`. |
+| `x-kfm.fixtures_root` | `fixtures/correction/supersession_notice/`; declared but absent. |
+| `x-kfm.validator` | `tools/validators/correction/validate_supersession_notice.py`; declared but absent. |
+| `x-kfm.policy` | `policy/correction/`; declared but absent. |
+| `x-kfm.status` | `PROPOSED`. |
+| `required` | Exactly `id`. |
+| `additionalProperties` | `true`. |
 
-The schema defines machine shape. This Markdown contract defines meaning.
-
-The current schema metadata identifies:
-
-| Schema metadata | Value | Verification posture |
-|---|---|---|
-| `$id` | `https://schemas.kfm.local/contracts/v1/correction/supersession_notice.schema.json` | `CONFIRMED` from schema. |
-| `contract_doc` | `contracts/correction/supersession_notice.md` | `CONFIRMED` from schema metadata. |
-| `fixtures_root` | `fixtures/correction/supersession_notice/` | `NEEDS VERIFICATION` existence/coverage. |
-| `validator` | `tools/validators/correction/validate_supersession_notice.py` | `UNKNOWN / NOT FOUND` in this session. |
-| `policy` | `policy/correction/` | `NEEDS VERIFICATION` existence/behavior. |
-| `status` | `PROPOSED` | `CONFIRMED` from schema metadata. |
-
-> [!CAUTION]
-> The current schema is explicitly a greenfield placeholder. It only requires `id`, allows additional properties, and does not yet encode old/new release linkage, effective time, evidence linkage, or public notice requirements.
-
----
+**The schema is unchanged by this revision.** A document containing only
+`{"id":""}` satisfies its current shape, as does an arbitrary extra field.
+Neither is a semantically complete or admissible supersession notice.
+Shape acceptance must never be represented as evidence, review, release,
+public-safety, or propagation closure.
 
 ## Accepted uses
 
-| Use | Allowed? | Rule |
-|---|---:|---|
-| Recording that a published object was replaced by a successor | Yes | Must preserve old object auditability and link forward to successor. |
-| Expressing supersession caused by correction, source update, policy change, or versioned release | Yes | Must preserve reason and supporting evidence/review. |
-| Linking old release and new release in public-safe notices | Conditional | Public wording must not leak restricted content. |
-| Driving public stale/superseded badges | Conditional | UI/API behavior must come from governed release/publication surfaces. |
-| Deleting or silently overwriting the prior object | No | Supersession is append-only and visible where appropriate. |
-| Serving as the new release itself | No | ReleaseManifest remains the release authority. |
-| Serving as rollback execution | No | RollbackCard/runbook/pipeline and release authority execute rollback. |
+These are intended semantic uses, not permissions granted to a caller.
 
----
+| Use | Required boundary |
+| --- | --- |
+| Draft replacement proposal | Identify unresolved dependencies and remain non-effective until the external gates close. |
+| Effective replacement record | Bind the prior object, successor, scope, reason, evidence, review, policy, and release transition. |
+| Public-safe lineage summary | Expose only the approved projection and permitted forward references. |
+| Map, report, or answer supersession context | Use governed evidence/release resolution; a rendered badge or generated summary is not authority. |
+
+Neither publication of this Markdown file nor acceptance of a schema-valid
+instance performs any of these governed transitions.
 
 ## Exclusions
 
-| Does not belong in `SupersessionNotice` | Correct owner / surface |
-|---|---|
-| New release manifest body | ReleaseManifest / release contracts. |
-| Old or new artifact payload | Artifact/release/data roots. |
-| Full EvidenceBundle content | Evidence/proof root. |
-| Full ReviewRecord body | Review/governance contract family. |
-| Policy decision logic | `policy/correction/`, `policy/release/`, or appropriate policy root. |
-| Alias repointing execution | Release root and publication pipeline. |
-| Rollback execution mechanics | Rollback runbooks/pipelines and release authority. |
-| Redacted sensitive details | Do not expose in public notice; link restricted evidence internally as policy allows. |
-| Public UI badge implementation | Governed UI/app roots. |
+The notice references, but does not own, artifact payloads, EvidenceBundles,
+ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, or redaction
+receipts. It contains no executable policy, arbitrary endpoint instructions,
+cache-purge commands, alias writes, rebuild jobs, or UI implementation.
 
----
+Internal evidence and restricted reasons are not copied into a public summary.
+Even a reference, digest, identifier, title, or forward link can disclose
+protected information and must be screened for the intended audience.
 
 ## Fields
 
-The current placeholder schema only defines these machine fields:
+These are the **only declared machine properties** in the current schema:
 
-| Field | Required by current schema | Semantic meaning | Verification posture |
-|---|---:|---|---|
-| `id` | Yes | Canonical identifier for the supersession notice. | `CONFIRMED` schema field; format not constrained by current schema. |
-| `version` | No | Contract/object version for the notice. | `CONFIRMED` schema field; semantics need stronger schema support. |
-| `spec_hash` | No | Deterministic content/spec hash reference. | `CONFIRMED` schema field; current schema says string only and does not enforce `spec_hash` common pattern. |
+| Field | Required | What the schema actually checks |
+| --- | --- | --- |
+| `id` | Yes | String; no non-empty, canonical-identity, or uniqueness constraint. |
+| `version` | No | String; no version grammar or ordering constraint. |
+| `spec_hash` | No | String; no digest grammar, canonicalization, or recomputation check. |
 
----
+This revision introduces no wire-format change and no new accepted enum.
+A canonicalization method, identity algorithm, or alias set must not be inferred
+from this table or from the mere presence of `spec_hash`.
 
 ## Recommended semantic fields
 
-The doctrine and publication architecture require more semantic structure than the current placeholder schema enforces.
+**PROPOSED, not implemented by the paired schema.** The following preserve
+prior semantic intentions while making the future implementation boundary
+explicit. Field spellings and object-reference shapes require a reviewed,
+versioned schema/fixture/validator slice before interoperable use.
 
-These fields are `PROPOSED` for future schema/fixture/validator work unless already adopted elsewhere:
+| Existing source vocabulary or semantic group | Required meaning for a future profile |
+| --- | --- |
+| `id`, `version`, `spec_hash` | Stable notice identity, revision identity, and a declared digest method. Do not overwrite an effective notice under the same identity. |
+| `supersedes`, `old_release`, affected-object references | Unambiguous typed, version-bound predecessor and the affected spatial, temporal, claim, or artifact scope. A mutable `latest` alias alone is insufficient. |
+| `superseded_by`, `new_release`, successor references | Resolvable successor and its applicable release/decision binding; predecessor and successor are distinct. These spellings are not interchangeable by default. |
+| `reason`, `defect_class` | Evidence-supported reason, distinguishing routine version improvement from error, rights, sensitivity, or policy repair. |
+| `effective_time` and recording context | Effective transition time distinct from when the notice was authored, recorded, or observed, and from the underlying data's valid time. |
+| `source_refs`, `evidence_refs` | Supporting evidence resolves through EvidenceRef to EvidenceBundle under the caller's policy context. A non-empty string does not prove resolution. |
+| `review_state`, policy and release references | Review, policy, release, and notice state stay separate. A claimed state in the notice cannot approve itself. |
+| `public_summary` | Audience-safe explanation with permitted history/forward links and explicit limits. |
+| `rollback_target` | A separately reviewable recovery target; current policy must still permit restoration. |
+| Generated-receipt and propagation references | AI-authorship provenance where applicable, and links to separately owned impact, propagation, and completion records. |
 
-| Field | Semantic role | Why it matters |
-|---|---|---|
-| `notice_id` or canonical `id` | Stable supersession notice identifier. | Makes the notice inspectable and linkable. |
-| `supersedes` / `old_release` / `old_artifact` / `old_claim` | Prior object being replaced. | Prevents ambiguous lineage. |
-| `superseded_by` / `new_release` / `new_artifact` / `new_claim` | Successor object. | Gives public and internal consumers a forward pointer. |
-| `reason` / `defect_class` | Why supersession occurred. | Separates source update, error correction, rights change, policy change, and version improvement. |
-| `effective_time` | When successor becomes effective. | Supports temporal query and public display. |
-| `source_refs` / `evidence_refs` | Evidence supporting supersession. | Preserves cite-or-abstain and EvidenceBundle resolution. |
-| `review_state` | Draft, steward review, approved, rejected, withdrawn, superseded. | Prevents unreviewed supersession publication. |
-| `public_summary` | Human-readable public-safe summary. | Supports visible correction without leaking restricted details. |
-| `rollback_target` | Release or route target if successor fails. | Supports reversible publication. |
-| `policy_decision_ref` | Linked policy decision. | Separates notice semantics from policy authority. |
-| `release_manifest_ref` | Linked release/supersession state. | Separates notice semantics from release authority. |
-| `generated_receipt_ref` | AI-authorship receipt where applicable. | Keeps generated prose evidence-subordinate. |
-
----
+Pending notices must not manufacture an effective time, approved reviewer,
+policy result, resolvable successor, or completion receipt to fill a field.
+Unknown dependencies remain visible and block the affected later transition,
+not safe authoring of the candidate.
 
 ## Invariants
 
-A `SupersessionNotice` must preserve these invariants:
+The retained doctrinal requirements are named operations, append-only history,
+public visibility where safe, a correction/rollback path, cite-or-abstain, and
+the governed public boundary. The following are proposed acceptance-level
+clarifications of those requirements, not claims of current enforcement.
 
-- supersession is append-only;
-- the prior object remains inspectable unless access is restricted by policy;
-- ordinary consumers should be pointed to the successor where policy allows;
-- old and new objects must be distinguishable and linked;
-- supersession must not silently rewrite or delete prior public history;
-- the reason for supersession must be evidence-supported or the affected claim must ABSTAIN/DENY as appropriate;
-- rights and sensitivity changes fail closed when evidence/policy is insufficient;
-- public summaries must be safe for the intended audience;
-- restricted details must not be exposed in public supersession notices;
-- supersession notices do not replace EvidenceBundle, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, CorrectionNotice, or RedactionReceipt objects.
-
----
+1. **Preserve history without preserving unsafe access.** Retain predecessor,
+   manifest, notice, and decision lineage for authorized audit. Do not silently
+   rewrite or delete it. Rights or sensitivity controls may restrict public
+   access; auditability is not an exemption from those controls.
+2. **Bind scope and identity.** Prevent self-supersession, cycles, unresolved
+   references, and competing successors for the same effective scope. Partial
+   replacement must not mark an entire dataset or release replaced. Splits and
+   merges require an explicit mapping, not a guessed one-to-one relationship.
+3. **Separate time and authority.** Effective time is supported by the recorded
+   release transition, not inferred from version order or file modification
+   time. A future-dated proposal is not already effective. Historical queries
+   retain their as-of/version context rather than being silently rewritten.
+4. **Keep the trust membrane.** Public clients use governed APIs or released
+   artifacts, never RAW, WORK, QUARANTINE, internal stores, or direct models.
+   Each proposed successor must pass its own evidence, rights, sensitivity,
+   validation, integrity, review, release, and rollback gates.
+5. **Treat propagation as separately evidenced work.** A valid notice or plan
+   does not prove caches, maps, exports, citations, or other consumers changed.
+   Failed or unobserved propagation remains explicit; do not claim global
+   completion from one successful consumer.
+6. **Keep AI subordinate.** Generated wording cannot decide source authority,
+   policy, review, or release state. Preserve authorship receipts and validate
+   citations against admissible evidence before a consequential answer.
 
 ## Supersession scenarios
 
-| Scenario | Required notice posture | Required external support |
-|---|---|---|
-| Source update | Link prior source-derived release to new source-derived release. | SourceDescriptor/DatasetVersion, comparison receipt, EvidenceBundle. |
-| Error correction | Link defective claim/artifact to corrected successor. | CorrectionNotice, ReviewRecord, ReleaseManifest. |
-| Validation repair | Link prior invalid/weakly validated artifact to validated successor. | ValidationReport, ReviewRecord, ReleaseManifest. |
-| Rights change | Link prior public artifact to restricted/withdrawn/superseding posture. | PolicyDecision, legal/reviewer signoff where applicable. |
-| Sensitivity change | Link prior representation to redacted/generalized successor. | Sensitivity policy, RedactionReceipt, ReviewRecord, ReleaseManifest. |
-| Versioned improvement | Link older version to newer version without implying defect. | ReleaseManifest, changelog, evidence/provenance. |
-| AI-answer correction | Link prior answer/envelope to corrected or abstained successor. | AIReceipt, RuntimeResponseEnvelope, EvidenceBundle, CitationValidationReport. |
-
----
+| Scenario | Notice and consumer posture |
+| --- | --- |
+| Source update | Link exact source-derived versions and comparison evidence; make replacement effective only through the release process. |
+| Error correction or validation repair | Link the correction and validated successor. A repaired validator alone does not validate all historical artifacts. |
+| Rights or sensitivity change | Restrict unsafe exposure through the appropriate authorized process. Record withdrawal when there is no admissible replacement; record supersession only when a permitted successor exists. |
+| Redacted or generalized successor | Bind the transform/review evidence without leaking original geometry or restricted reasons in notices, links, or logs. |
+| Versioned improvement | Explain what changed without falsely declaring the predecessor defective. |
+| Partial replacement | State exactly which features, claims, regions, or time interval changed; preserve unaffected scope. |
+| AI-answer correction | Bind the old answer and corrected or explicitly abstaining successor, with evidence/citation revalidation. Do not regenerate prose and call it proof. |
+| Missing, conflicting, or failing successor | Hold the replacement claim. Use the separately governed stale, withdrawal, or rollback path as appropriate; never automatically restore an unsafe predecessor. |
 
 ## Lifecycle
 
-```mermaid
-flowchart LR
-  DETECT[Detect successor condition] --> DRAFT[Draft SupersessionNotice]
-  DRAFT --> OLD[Resolve old object]
-  DRAFT --> NEW[Resolve successor object]
-  OLD --> EVID[EvidenceBundle / source / release support]
-  NEW --> EVID
-  EVID --> REVIEW[ReviewRecord / steward review]
-  REVIEW --> POLICY[PolicyDecision]
-  POLICY --> RELEASE[ReleaseManifest + alias/pointer update]
-  RELEASE --> PUBLIC[Public-safe superseded_by notice]
-  PUBLIC --> AUDIT[Append-only audit trail]
+The data lifecycle remains unchanged:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Lifecycle notes:
+A proposed supersession sequence is:
 
-- A notice may begin from source update, correction review, release promotion, policy review, validation repair, or derivative invalidation.
-- Schema validation proves only shape.
-- The old and new objects must resolve before a supersession can be trusted.
-- Review/policy/release gates decide whether the supersession changes public behavior.
-- Prior releases are not deleted or silently overwritten.
+```text
+Detect a replacement condition -> draft a notice
+  -> resolve predecessor, successor, evidence, and affected scope
+  -> assess impact and plan propagation
+  -> validate; check rights, sensitivity, policy, and accountable review
+  -> separately authorize and record the release transition
+  -> expose the permitted notice and successor through governed surfaces
+  -> verify consumer actions; retain history and recovery evidence
+```
 
----
+This is explanatory sequencing, not an executable state machine or automatic
+promotion. A notice file does not repoint an alias. Failed gates preserve a
+non-effective proposal; containment of an already unsafe publication is a
+separate authorized action and must not wait for a replacement to be invented.
+
+### Relationship to impact assessment and propagation
+
+[CorrectionImpactAssessment](./correction_impact_assessment.md) documents the
+fixture-only assessment of `CATALOG`, `API`, `MAP`, `TILE`, `SEARCH`, `GRAPH`,
+`EXPORT`, `AI`, `CACHE`, and `DOCUMENTATION`. Its `COMPLETE` result is not
+execution authority. The sibling validator exists, but this documentation
+refresh does not rerun or certify that implementation.
+
+[CorrectionPropagationPlan](./correction_propagation_plan.md) documents the
+non-executing dependency/action inventory. Its `PASS` result is not proof
+that downstream systems consumed the plan. The plan and assessment retain
+their own profiles and outcome vocabularies; neither becomes the notice schema.
+
+For a future operational supersession slice, identify affected carriers,
+required rebuild/invalidation/revalidation actions, dependencies, and actual
+completion evidence. Map layers, tiles, graphs, indexes, reports, and AI
+answers remain carriers, not truth. Preserve stale/unavailable states until
+applicable checks complete. An offline export already held by a user cannot
+be assumed recalled merely because a server pointer changed.
 
 ## Validation
 
-Before relying on this contract, verify:
+### Checks for this documentation revision
 
-- schema expanded beyond the current greenfield placeholder or intentionally accepted as placeholder;
-- validator path exists and behavior is implemented;
-- fixtures cover source update, error correction, validation repair, rights change, sensitivity change, version improvement, and AI-answer correction cases;
-- old and new object references resolve;
-- prior release remains inspectable or restricted under documented policy;
-- successor release/artifact/claim has evidence support;
-- ReviewRecord and PolicyDecision links are present where consequential;
-- ReleaseManifest and rollback target are linked where public release changes;
-- public notice is safe and does not leak restricted details;
-- tests fail on silent overwrite/deletion of prior published history.
+Check the single H1, preserved anchors, balanced fences, table structure,
+repository-relative link targets, final newline, whitespace, source pins,
+and exact generated-receipt artifact hash. Report the validation environment
+and commands actually used. A bounded connector-sourced workspace is not a
+full checkout, and schema characterization is not runtime conformance.
 
----
+The existing schema can be characterized without a supersession validator:
+
+```python
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator
+
+schema = json.loads(Path(
+    "schemas/contracts/v1/correction/supersession_notice.schema.json"
+).read_text(encoding="utf-8"))
+Draft202012Validator.check_schema(schema)
+validator = Draft202012Validator(schema)
+assert validator.is_valid({"id": ""})  # Documents the placeholder gap.
+assert validator.is_valid({"id": "example", "superseded_by": 123})
+assert not validator.is_valid({})
+assert not validator.is_valid({"id": 123})
+```
+
+Run from the repository root using its existing JSON Schema dependency.
+These expectations describe the pinned placeholder only. Passing them does
+not make either accepted example an admissible notice; revise this
+characterization when the schema is deliberately strengthened.
+
+### Future semantic and integration acceptance cases
+
+**PROPOSED and not executed by this revision:**
+
+| Case | Expected safety property |
+| --- | --- |
+| Valid governed replacement | Exact predecessor/successor/scope and decision/evidence bindings resolve; safe history and forward navigation remain available. |
+| Shape-valid but incomplete notice | No effective replacement or publication claim. |
+| Self-link, cycle, ambiguous successor, digest or version mismatch | Reject the claimed lineage or hold for reconciliation; no silent selection. |
+| Partial replacement | Only the mapped scope changes; unrelated regions, periods, and claims remain unaffected. |
+| Future effective time or delayed recording | Do not confuse planned, effective, recorded, and as-of state. |
+| Missing evidence/review/release dependency | Preserve the appropriate non-effective, abstain, deny, or error posture; do not invent approval. |
+| Restricted predecessor or successor | No sensitive body, identifier, reference, digest, or location leaks through the notice projection. |
+| Incomplete propagation or stale offline consumer | No global completion claim; stale state and unverified consumers remain visible. |
+| Failed successor and now-prohibited old release | Do not restore the old release automatically; use an independently permitted recovery posture. |
+| Attempted overwrite or history deletion | Fail closed and preserve auditable correction lineage. |
+
+No new reason-code enum, route, validator command, or production protocol is
+adopted by this table.
 
 ## No-loss preservation
 
-| Existing element | Disposition | Reason |
-|---|---|---|
-| Prior title/family/status scaffold | `KEEP + EXPAND` | Preserved correction family and proposed scaffold posture. |
-| Schema path | `KEEP + GROUND` | Current placeholder schema exists and is cited. |
-| Meaning section | `KEEP + REPLACE WITH CONCRETE SEMANTICS` | The scaffold asked what meaning should be; this edit supplies doctrine-grounded meaning. |
-| Fields section | `KEEP + CLARIFY` | Current schema fields are documented, and recommended semantic fields are labeled `PROPOSED`. |
-| Invariants | `KEEP + STRENGTHEN` | General invariant placeholders are replaced with supersession-specific trust invariants. |
-| Lifecycle | `KEEP + CLARIFY` | Lifecycle now separates draft, old/new resolution, evidence, review, policy, release, public notice, and audit. |
-| Open questions | `KEEP + MOVE INTO VALIDATION / DEFINITION OF DONE` | Verification gaps are now actionable. |
-
----
+| Previous element | Disposition in v0.3 |
+| --- | --- |
+| Document ID, path, draft status, owner uncertainty, principal anchors | Retained. |
+| Append-only replacement, evidence, rights, review, release, AI, and rollback boundaries | Retained and clarified; no operational authority added. |
+| Placeholder schema and three declared fields | Retained and rechecked, including permissive empty-ID behavior. |
+| Proposed semantic field vocabulary | Retained as proposal lineage; no implied aliases, enum, or schema adoption. |
+| Unverified path references and old family inventory | Replaced with scoped current observations and explicit historical limits. |
+| Supersession/withdrawal and draft/effective ambiguity | Separated without changing an executable profile. |
+| Decorative badges and incomplete example tree | Replaced with a text status and evidence table; not implementation evidence. |
+| Ancient scaffold rollback target | Replaced with the immediate prior document blob; earlier history remains in Git. |
 
 ## Evidence basis
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Prior `contracts/correction/supersession_notice.md` scaffold | `CONFIRMED` | Target file existed as proposed greenfield scaffold with family and schema path. | It contained placeholders, not complete semantics. |
-| `schemas/contracts/v1/correction/supersession_notice.schema.json` | `CONFIRMED placeholder` | Current schema exists; x-kfm metadata points to this contract, fixtures, validator, and policy; `id` is the only required field. | Schema explicitly says greenfield placeholder and does not enforce full supersession semantics. |
-| `tools/validators/correction/validate_supersession_notice.py` | `UNKNOWN / NOT FOUND` | Schema-declared validator path was checked. | File was not found in this session; behavior is not implemented evidence. |
-| `contracts/correction/README.md` | `CONFIRMED` | Correction directory README defines correction-family boundaries and notes placeholder schema / verification limits. | Does not complete object-level schema or validator behavior. |
-| `contracts/correction/correction_notice.md` | `CONFIRMED` | CorrectionNotice semantics define general correction posture and link supersession as a correction scenario. | Does not replace this supersession-specific contract. |
-| `docs/doctrine/corrections-first-class.md` | `CONFIRMED doctrine` | Supersession is a first-class correction pattern; history remains append-only and public-visible where appropriate. | Some implementation paths/fields remain proposed or verification-bound. |
-| `docs/architecture/publication/CORRECTION.md` | `CONFIRMED doctrine / PROPOSED implementation` | Publication correction architecture defines supersession lineage, prior/new release relationship, trust membrane, and cite-or-abstain. | Route names, schema homes, and implementation maturity remain proposed unless separately verified. |
+Repository claims above use the pinned snapshot, not moving `main`. The
+same-path documents linked here were inspected as sources; descriptions of
+runtime behavior inside older documents were not promoted to implementation
+facts.
 
----
+| Source | What it supports | Limit |
+| --- | --- | --- |
+| [Pinned prior contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ec203a9ba11fb83b52245f9523ce36cc1ec6ac66/contracts/correction/supersession_notice.md) | Preserved identity, meanings, anchors, and rollback baseline. | Historical document, not execution evidence. |
+| [Paired schema](../../schemas/contracts/v1/correction/supersession_notice.schema.json) | Exact required fields, types, metadata, and permissiveness. | Shape only; declared paths are not proof of implementations. |
+| [Directory Rules](../../docs/doctrine/directory-rules.md) and [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted responsibility-root boundary and same-path placement. | No new schema, policy, migration, or release authority. |
+| [Corrections Are First-Class](../../docs/doctrine/corrections-first-class.md) | Named operations, append-only audit, safe public visibility, recovery, and source vocabulary. | Draft doctrine document with historical/proposed implementation references. |
+| [Publication correction architecture](../../docs/architecture/publication/CORRECTION.md) | Trust membrane, supersession lineage, review, and derivative-invalidation design. | Its proposed routes and sequencing are not verified operational behavior. |
+| [Impact assessment](./correction_impact_assessment.md) and [propagation plan](./correction_propagation_plan.md) | Separate documented responsibilities and bounded outcome semantics. | No live ref resolution, downstream consumption, or SupersessionNotice enforcement proof. |
+| [Drive Directory Rules](https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit) | Read-only responsibility-root and lifecycle design lineage. | Does not override adopted repository authority. |
+| [Notion Repository Workbench](https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204) | Read-only coordination and review/delivery-boundary context. | Neither implementation authority nor approval of this contract. |
+
+Not-found observations are scoped to the exact pinned paths in the Status
+and Schema pairing sections. Other implementations, unmerged work, external
+consumers, and runtime deployment are not exhaustively inventoried here.
 
 ## Rollback
 
-Rollback is required if this contract is used to claim schema completeness, validator coverage, policy enforcement, release execution, alias movement, public-route behavior, or implementation maturity not verified in this session.
+For this documentation change, preserve the immediate prior blob
+`22f1fdb4a82063b7e66d0478fcc83cb03a89d68b` at the evidence snapshot. Before
+integration, retain or abandon the isolated branch without altering main.
+After any separately authorized integration, use an ordinary reviewed forward
+revert or corrective commit. Preserve the generated receipt as historical
+provenance; any correction to its assertions must be separately traceable.
 
-Rollback target: prior scaffold content SHA `ec33f599707e34a2076c241f453923f082a84139`.
-
----
+Reverting this document does not roll back a published object, restore an
+alias, purge a cache, revoke an export, or change release decisions. Actual
+rollback requires its own evidence, policy, review, release, and execution
+records. Never restore previously restricted material merely because it is
+an older version.
 
 ## Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Schema is expanded beyond greenfield placeholder or placeholder status is intentionally accepted.
-- [ ] Validator path exists and behavior is implemented.
-- [ ] Fixtures cover supersession scenarios and invalid cases.
-- [ ] Old and new object references are required and validated.
-- [ ] EvidenceRef/EvidenceBundle linkage is required where consequential.
-- [ ] ReviewRecord and PolicyDecision linkage is defined and tested.
-- [ ] ReleaseManifest / rollback target / alias movement linkage is testable.
-- [ ] Public-safe supersession notice behavior is verified.
-- [ ] Tests fail on silent overwrite or deletion of prior published history.
+**Documentation delivery** means the same-path revision and authoring receipt
+are reviewable, source-pinned, structurally checked, and accompanied by exact
+validation limitations. It does not mean this draft contract is adopted or
+that its semantic rules are implemented.
 
----
+Before a future operational SupersessionNotice profile can be relied upon:
+
+- [ ] Confirm accountable owners and review duties.
+- [ ] Reconcile object/reference vocabulary and any correction/release compatibility questions without creating parallel authority.
+- [ ] Replace the placeholder through a reviewed versioned schema, fixtures, validator, and tests covering the semantic acceptance cases.
+- [ ] Verify evidence, policy, review, release, integrity, rights, sensitivity, and rollback bindings at the actual transition.
+- [ ] Verify public-safe notices, as-of lineage, affected-scope behavior, and negative API/UI states.
+- [ ] Demonstrate propagation completion, failure handling, and a policy-safe rollback without silently deleting history.
+
+Safe candidate authoring may proceed while these later gates remain open.
+A placeholder's acceptance is never a substitute for their closure.
 
 ## Status summary
 
-`SupersessionNotice` is the semantic trust object that records an append-only replacement relationship between an old published object and a successor. It is not the new release, not proof closure, not policy approval, not release approval, not rollback execution, not alias movement, and not permission to silently overwrite or delete prior published history.
+`SupersessionNotice` remains a **draft semantic contract with a placeholder
+schema**. It records auditable replacement lineage; it is not the replacement
+release, policy approval, proof closure, a propagation executor, a rollback
+command, or permission to publish or silently mutate history.
 
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)

@@ -1,0 +1,23 @@
+meta:
+  status: PROPOSED
+entries:
+  - doc_id: kfm://doc/fixture-root
+    path: README.md
+    kind: README
+    authority: fixture
+    status: active
+  - doc_id: kfm://doc/fixture-docs
+    path: docs/README.md
+    kind: README
+    authority: fixture
+    status: active
+  - doc_id: kfm://doc/fixture-alpha
+    path: docs/architecture/alpha.md
+    kind: architecture
+    authority: fixture
+    status: draft
+  - doc_id: kfm://doc/fixture-beta
+    path: docs/domains/beta.md
+    kind: domain-dossier
+    authority: fixture
+    status: draft

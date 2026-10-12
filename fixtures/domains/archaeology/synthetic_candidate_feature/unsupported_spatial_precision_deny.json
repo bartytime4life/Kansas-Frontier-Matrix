@@ -1,0 +1,13 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-deny-007",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/archaeology-candidate-deny-007"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "RESTRICTED",
+  "spatial_precision_class": "EXACT",
+  "lifecycle_state": "WORK"
+}

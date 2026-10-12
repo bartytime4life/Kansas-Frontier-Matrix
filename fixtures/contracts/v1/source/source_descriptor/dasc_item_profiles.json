@@ -1,0 +1,1310 @@
+{
+  "purpose": "Metadata-derived test vectors and proposed item profiles, not registry records or ingestion authorization",
+  "projection": "Selected provider layer metadata fields; omitted properties are not implied absent",
+  "profiles": [
+    {
+      "source_id": "src:dasc-huc12",
+      "item_id": "0d15901ab05142bd8e8346bbf7ee59f7",
+      "item_modified_ms": 1678372109000,
+      "scope": "KANSAS_INTERSECTION_CANDIDATE",
+      "item_extent_wgs84": [
+        -103.79209099536656,
+        36.20247594994039,
+        -92.85122595260303,
+        41.200265532060904
+      ],
+      "layer_url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/WBDHU12/FeatureServer/0",
+      "observed_at": "2026-09-20T03:56:33.013197+00:00",
+      "raw_metadata_sha256": "ad09a35f2b3d19319151685da8e9b278e22b29fffe4ea254c1baca5d7561f774",
+      "metadata": {
+        "id": 0,
+        "name": "WBDHU12",
+        "geometryType": "esriGeometryPolygon",
+        "objectIdField": "FID",
+        "globalIdField": "",
+        "extent": {
+          "xmin": -11554082.71797332,
+          "ymin": 4328517.635894545,
+          "xmax": -10336151.192574957,
+          "ymax": 5041925.811599262,
+          "spatialReference": {
+            "wkid": 102100,
+            "latestWkid": 3857
+          }
+        },
+        "maxRecordCount": 2000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsPaginationOnAggregatedQueries": true,
+          "supportsQueryRelatedPagination": true,
+          "supportsQueryWithDistance": true,
+          "supportsOutDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsSqlExpression": true,
+          "supportsTimeRelation": true,
+          "supportsAdvancedQueryRelated": true,
+          "supportsCountDistinct": true,
+          "supportsPercentileStatistics": true,
+          "supportsApproxPercentileStatistics": true,
+          "supportsSpatialAggregationStatistics": true,
+          "supportsTrueCurve": true,
+          "supportedSpatialAggregationStatistics": [
+            "EnvelopeAggregate",
+            "CentroidAggregate",
+            "ConvexHullAggregate"
+          ],
+          "supportsLod": true,
+          "supportsQueryWithLodSR": false,
+          "supportedLodTypes": [
+            "geohash"
+          ],
+          "supportsReturningGeometryCentroid": true,
+          "supportsReturningGeometryEnvelope": true,
+          "supportsReturningGeometryProperties": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsCurrentUserQueries": true,
+          "supportsHavingClause": true,
+          "supportsOutFieldSQLExpression": true,
+          "supportsMaxRecordCountFactor": true,
+          "supportsTopFeaturesQuery": true,
+          "supportsDisjointSpatialRel": true,
+          "supportsQueryWithCacheHint": true,
+          "supportedOperationsWithCacheHint": [
+            "query",
+            "queryTopFilter",
+            "queryAnalytics",
+            "queryAttachments",
+            "queryRelated",
+            "queryBins",
+            "queryPivot"
+          ],
+          "supportsQueryAnalytic": true,
+          "supportsQueryPivot": true,
+          "supportsQueryBins": true,
+          "supportsDefaultSR": true,
+          "supportsTranslations": false,
+          "supportsAggIds": true,
+          "supportsQueryWithCollation": true,
+          "supportsISODOW": true,
+          "supportsISOWeek": true,
+          "supportsFullTextSearch": true,
+          "fullTextSearchCapabilities": {
+            "supportsAccentSensitivity": true,
+            "supportsStopWords": true,
+            "supportsSearchOperator": true,
+            "supportsOperator": true
+          }
+        },
+        "editingInfo": {
+          "lastEditDate": 1678370105283,
+          "schemaLastEditDate": 1678370093197,
+          "dataLastEditDate": 1678370093197
+        },
+        "fields": [
+          {
+            "name": "FID",
+            "type": "esriFieldTypeOID",
+            "actualType": "int",
+            "alias": "FID",
+            "sqlType": "sqlTypeInteger",
+            "nullable": false,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "tnmid",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "tnmid",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 40,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "metasource",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "metasource",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 40,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "sourcedata",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "sourcedata",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 100,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "sourceorig",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "sourceorig",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 130,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "sourcefeat",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "sourcefeat",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 40,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "loaddate",
+            "type": "esriFieldTypeDate",
+            "actualType": "datetime2",
+            "alias": "loaddate",
+            "sqlType": "sqlTypeTimestamp2",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null,
+            "precision": 1
+          },
+          {
+            "name": "referenceg",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "referenceg",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 50,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "areaacres",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "areaacres",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "areasqkm",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "areasqkm",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "states",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "states",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 50,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "huc12",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "huc12",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 12,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "name",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "name",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 120,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "hutype",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "hutype",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 1,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "humod",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "humod",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 30,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "tohuc",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "tohuc",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 16,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "noncontrib",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "noncontrib",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "noncontr_1",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "noncontr_1",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "shape_Leng",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "shape_Leng",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "shape_Area",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "shape_Area",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "huc12num",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "huc12num",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Area",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "Shape__Area",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "Shape__Length",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          }
+        ]
+      },
+      "acquisition_fields": [
+        "FID",
+        "huc12",
+        "name",
+        "tohuc",
+        "hutype",
+        "humod"
+      ],
+      "public_fields": [],
+      "pagination": {
+        "page_size": 200,
+        "order_by": "FID ASC",
+        "max_pages": 250,
+        "max_rows": 50000,
+        "full_capture_tested": false
+      },
+      "probe": {
+        "performed": true,
+        "geometry": false,
+        "fields": [
+          "FID"
+        ],
+        "page_size": 2,
+        "offsets": [
+          0,
+          2
+        ],
+        "observed_ids": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "exceeded_transfer_limit": [
+          true,
+          true
+        ]
+      }
+    },
+    {
+      "source_id": "src:dasc-streams",
+      "item_id": "00683d63239e4237bfc1878ce97ec156",
+      "item_modified_ms": 1645922142000,
+      "scope": "KANSAS_INTERSECTION_CANDIDATE",
+      "item_extent_wgs84": [
+        -102.04871562137365,
+        36.99768916109349,
+        -94.58805439852591,
+        40.0027369691052
+      ],
+      "layer_url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/kansas_streams_order3_9_webmerc/FeatureServer/0",
+      "observed_at": "2026-09-20T03:56:33.269434+00:00",
+      "raw_metadata_sha256": "1acc660a0b71df7ce8542064bdb2278ff253bb37d4129a2b9b10dd260d7f5d40",
+      "metadata": {
+        "id": 0,
+        "name": "kansas_streams_order3_9_webmerc",
+        "geometryType": "esriGeometryPolyline",
+        "objectIdField": "FID",
+        "globalIdField": "",
+        "extent": {
+          "xmin": -11360011.059078896,
+          "ymin": 4438784.691002384,
+          "xmax": -10529494.050770365,
+          "ymax": 4866340.016366012,
+          "spatialReference": {
+            "wkid": 102100,
+            "latestWkid": 3857
+          }
+        },
+        "maxRecordCount": 2000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsPaginationOnAggregatedQueries": true,
+          "supportsQueryRelatedPagination": true,
+          "supportsQueryWithDistance": true,
+          "supportsOutDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsSqlExpression": true,
+          "supportsTimeRelation": true,
+          "supportsAdvancedQueryRelated": true,
+          "supportsCountDistinct": true,
+          "supportsPercentileStatistics": true,
+          "supportsApproxPercentileStatistics": true,
+          "supportsSpatialAggregationStatistics": true,
+          "supportsTrueCurve": true,
+          "supportedSpatialAggregationStatistics": [
+            "EnvelopeAggregate",
+            "CentroidAggregate",
+            "ConvexHullAggregate"
+          ],
+          "supportsLod": true,
+          "supportsQueryWithLodSR": false,
+          "supportedLodTypes": [
+            "geohash"
+          ],
+          "supportsReturningGeometryCentroid": false,
+          "supportsReturningGeometryEnvelope": true,
+          "supportsReturningGeometryProperties": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsCurrentUserQueries": true,
+          "supportsHavingClause": true,
+          "supportsOutFieldSQLExpression": true,
+          "supportsMaxRecordCountFactor": true,
+          "supportsTopFeaturesQuery": true,
+          "supportsDisjointSpatialRel": true,
+          "supportsQueryWithCacheHint": true,
+          "supportedOperationsWithCacheHint": [
+            "query",
+            "queryTopFilter",
+            "queryAnalytics",
+            "queryAttachments",
+            "queryRelated",
+            "queryBins",
+            "queryPivot"
+          ],
+          "supportsQueryAnalytic": true,
+          "supportsQueryPivot": true,
+          "supportsQueryBins": true,
+          "supportsDefaultSR": true,
+          "supportsTranslations": false,
+          "supportsAggIds": true,
+          "supportsQueryWithCollation": true,
+          "supportsISODOW": true,
+          "supportsISOWeek": true,
+          "supportsFullTextSearch": true,
+          "fullTextSearchCapabilities": {
+            "supportsAccentSensitivity": true,
+            "supportsStopWords": true,
+            "supportsSearchOperator": true,
+            "supportsOperator": true
+          }
+        },
+        "editingInfo": {
+          "lastEditDate": 1645921719931,
+          "schemaLastEditDate": 1645921719931,
+          "dataLastEditDate": 1645921719931
+        },
+        "fields": [
+          {
+            "name": "FID",
+            "type": "esriFieldTypeOID",
+            "actualType": "int",
+            "alias": "FID",
+            "sqlType": "sqlTypeInteger",
+            "nullable": false,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "GNIS_NAME",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "GNIS_NAME",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 65,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "REACHCODE",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "REACHCODE",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 14,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "STRAHLER",
+            "type": "esriFieldTypeSmallInteger",
+            "actualType": "smallint",
+            "alias": "STRAHLER",
+            "sqlType": "sqlTypeSmallInt",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "FNODE_",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "FNODE_",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "TNODE_",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "TNODE_",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "LPOLY_",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "LPOLY_",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "RPOLY_",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "RPOLY_",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "LENGTH",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "LENGTH",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "NHD_",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "NHD_",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "NHD_ID",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "NHD_ID",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "OBJECTID",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "OBJECTID",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "COMID",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "COMID",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "PERMANENT_",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "PERMANENT_",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 40,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "GNIS_ID",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "GNIS_ID",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 10,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "FTYPE",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "FTYPE",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "FCODE",
+            "type": "esriFieldTypeInteger",
+            "actualType": "int",
+            "alias": "FCODE",
+            "sqlType": "sqlTypeInteger",
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "GTE5_names",
+            "type": "esriFieldTypeString",
+            "actualType": "nvarchar",
+            "alias": "GTE5_names",
+            "sqlType": "sqlTypeNVarchar",
+            "length": 50,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "actualType": "float",
+            "alias": "Shape__Length",
+            "sqlType": "sqlTypeFloat",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          }
+        ]
+      },
+      "acquisition_fields": [
+        "FID",
+        "REACHCODE",
+        "COMID",
+        "PERMANENT_",
+        "GNIS_NAME",
+        "STRAHLER"
+      ],
+      "public_fields": [],
+      "pagination": {
+        "page_size": 200,
+        "order_by": "FID ASC",
+        "max_pages": 250,
+        "max_rows": 50000,
+        "full_capture_tested": false
+      },
+      "probe": {
+        "performed": true,
+        "geometry": false,
+        "fields": [
+          "FID"
+        ],
+        "page_size": 2,
+        "offsets": [
+          0,
+          2
+        ],
+        "observed_ids": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "exceeded_transfer_limit": [
+          true,
+          true
+        ]
+      }
+    },
+    {
+      "source_id": "src:dasc-plss",
+      "item_id": "b9fcc1196a6e4201b0d356b4836104f7",
+      "item_modified_ms": 1789059239000,
+      "scope": "KANSAS_INTERSECTION_CANDIDATE",
+      "item_extent_wgs84": [
+        -102.0518299719571,
+        36.993090029243355,
+        -94.58873002800551,
+        40.00317996904933
+      ],
+      "layer_url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Townships/FeatureServer/0",
+      "observed_at": "2026-09-20T03:56:32.964619+00:00",
+      "raw_metadata_sha256": "c6df32742f64cc6da26b9e4831fd5d8e215031c958289e5ba1cc4c69a4535146",
+      "metadata": {
+        "id": 0,
+        "name": "Townships",
+        "geometryType": "esriGeometryPolygon",
+        "objectIdField": "OBJECTID",
+        "globalIdField": "",
+        "extent": {
+          "xmin": -11360357.747,
+          "ymin": 4438143.670199998,
+          "xmax": -10529569.2615,
+          "ymax": 4866404.394699998,
+          "spatialReference": {
+            "wkid": 102100,
+            "latestWkid": 3857
+          }
+        },
+        "maxRecordCount": 2000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsPaginationOnAggregatedQueries": true,
+          "supportsQueryRelatedPagination": true,
+          "supportsQueryWithDistance": true,
+          "supportsOutDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsSqlExpression": true,
+          "supportsTimeRelation": true,
+          "supportsAdvancedQueryRelated": true,
+          "supportsCountDistinct": true,
+          "supportsPercentileStatistics": true,
+          "supportsApproxPercentileStatistics": true,
+          "supportsSpatialAggregationStatistics": true,
+          "supportsTrueCurve": true,
+          "supportedSpatialAggregationStatistics": [
+            "EnvelopeAggregate",
+            "CentroidAggregate",
+            "ConvexHullAggregate"
+          ],
+          "supportsLod": true,
+          "supportsQueryWithLodSR": false,
+          "supportedLodTypes": [
+            "geohash"
+          ],
+          "supportsReturningGeometryCentroid": true,
+          "supportsReturningGeometryEnvelope": true,
+          "supportsReturningGeometryProperties": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsCurrentUserQueries": true,
+          "supportsHavingClause": true,
+          "supportsOutFieldSQLExpression": true,
+          "supportsMaxRecordCountFactor": true,
+          "supportsTopFeaturesQuery": true,
+          "supportsDisjointSpatialRel": true,
+          "supportsQueryWithCacheHint": true,
+          "supportedOperationsWithCacheHint": [
+            "query",
+            "queryTopFilter",
+            "queryAnalytics",
+            "queryAttachments",
+            "queryRelated",
+            "queryBins",
+            "queryPivot"
+          ],
+          "supportsQueryAnalytic": true,
+          "supportsQueryPivot": true,
+          "supportsQueryBins": true,
+          "supportsDefaultSR": true,
+          "supportsTranslations": false,
+          "supportsAggIds": true,
+          "supportsQueryWithCollation": true,
+          "supportsISODOW": true,
+          "supportsISOWeek": true,
+          "supportsFullTextSearch": true,
+          "fullTextSearchCapabilities": {
+            "supportsAccentSensitivity": true,
+            "supportsStopWords": true,
+            "supportsSearchOperator": true,
+            "supportsOperator": true
+          }
+        },
+        "editingInfo": {
+          "lastEditDate": 1737495051149,
+          "schemaLastEditDate": 1737495051149,
+          "dataLastEditDate": 1737495051149
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "type": "esriFieldTypeOID",
+            "alias": "OBJECTID_1",
+            "sqlType": "sqlTypeOther",
+            "nullable": false,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "T_R",
+            "type": "esriFieldTypeString",
+            "alias": "T_R",
+            "sqlType": "sqlTypeOther",
+            "length": 255,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Area",
+            "type": "esriFieldTypeDouble",
+            "alias": "Shape__Area",
+            "sqlType": "sqlTypeDouble",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "alias": "Shape__Length",
+            "sqlType": "sqlTypeDouble",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          }
+        ]
+      },
+      "acquisition_fields": [
+        "OBJECTID",
+        "T_R"
+      ],
+      "public_fields": [],
+      "pagination": {
+        "page_size": 200,
+        "order_by": "OBJECTID ASC",
+        "max_pages": 250,
+        "max_rows": 50000,
+        "full_capture_tested": false
+      },
+      "probe": {
+        "performed": true,
+        "geometry": false,
+        "fields": [
+          "OBJECTID"
+        ],
+        "page_size": 2,
+        "offsets": [
+          0,
+          2
+        ],
+        "observed_ids": [
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "exceeded_transfer_limit": [
+          true,
+          true
+        ]
+      }
+    },
+    {
+      "source_id": "src:dasc-parcels-rejected",
+      "item_id": "632c404c517744a4997782e087e022d5",
+      "item_modified_ms": 1737853491000,
+      "scope": "REJECTED_SCOPE",
+      "item_extent_wgs84": [
+        -74.55305053265755,
+        39.49905384794952,
+        -74.03106334164784,
+        40.17243907478029
+      ],
+      "layer_url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Parcels/FeatureServer/0",
+      "observed_at": "2026-09-20T03:56:33.010238+00:00",
+      "raw_metadata_sha256": "ffbe1e85dacec298588dc099f08c1efd4b2c3c8a7fe4e0665a62c7a3b1a02a12",
+      "metadata": {
+        "id": 0,
+        "name": "parcels_2023",
+        "geometryType": "esriGeometryPolygon",
+        "objectIdField": "OBJECTID",
+        "globalIdField": "",
+        "extent": {
+          "xmin": -8299207.622380631,
+          "ymin": 4793410.962095935,
+          "xmax": -8241100.2740768185,
+          "ymax": 4891032.388177044,
+          "spatialReference": {
+            "wkid": 102100,
+            "latestWkid": 3857
+          }
+        },
+        "maxRecordCount": 2000,
+        "supportedQueryFormats": "JSON, geoJSON, PBF",
+        "advancedQueryCapabilities": {
+          "supportsPagination": true,
+          "supportsPaginationOnAggregatedQueries": true,
+          "supportsQueryRelatedPagination": true,
+          "supportsQueryWithDistance": true,
+          "supportsOutDistance": true,
+          "supportsReturningQueryExtent": true,
+          "supportsStatistics": true,
+          "supportsOrderBy": true,
+          "supportsDistinct": true,
+          "supportsQueryWithResultType": true,
+          "supportsSqlExpression": true,
+          "supportsTimeRelation": true,
+          "supportsAdvancedQueryRelated": true,
+          "supportsCountDistinct": true,
+          "supportsPercentileStatistics": true,
+          "supportsApproxPercentileStatistics": true,
+          "supportsSpatialAggregationStatistics": true,
+          "supportsTrueCurve": true,
+          "supportedSpatialAggregationStatistics": [
+            "EnvelopeAggregate",
+            "CentroidAggregate",
+            "ConvexHullAggregate"
+          ],
+          "supportsLod": true,
+          "supportsQueryWithLodSR": false,
+          "supportedLodTypes": [
+            "geohash"
+          ],
+          "supportsReturningGeometryCentroid": true,
+          "supportsReturningGeometryEnvelope": true,
+          "supportsReturningGeometryProperties": true,
+          "supportsQueryWithDatumTransformation": true,
+          "supportsCurrentUserQueries": true,
+          "supportsHavingClause": true,
+          "supportsOutFieldSQLExpression": true,
+          "supportsMaxRecordCountFactor": true,
+          "supportsTopFeaturesQuery": true,
+          "supportsDisjointSpatialRel": true,
+          "supportsQueryWithCacheHint": true,
+          "supportedOperationsWithCacheHint": [
+            "query",
+            "queryTopFilter",
+            "queryAnalytics",
+            "queryAttachments",
+            "queryRelated",
+            "queryBins",
+            "queryPivot"
+          ],
+          "supportsQueryAnalytic": true,
+          "supportsQueryPivot": true,
+          "supportsQueryBins": true,
+          "supportsDefaultSR": true,
+          "supportsTranslations": false,
+          "supportsAggIds": true,
+          "supportsQueryWithCollation": true,
+          "supportsISODOW": true,
+          "supportsISOWeek": true,
+          "supportsFullTextSearch": true,
+          "fullTextSearchCapabilities": {
+            "supportsAccentSensitivity": true,
+            "supportsStopWords": true,
+            "supportsSearchOperator": true,
+            "supportsOperator": true
+          }
+        },
+        "editingInfo": {
+          "lastEditDate": 1737853089780,
+          "schemaLastEditDate": 1737853089780,
+          "dataLastEditDate": 1737853089780
+        },
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "type": "esriFieldTypeOID",
+            "alias": "OBJECTID",
+            "sqlType": "sqlTypeOther",
+            "nullable": false,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null,
+            "required": true
+          },
+          {
+            "name": "PAMS_PIN",
+            "type": "esriFieldTypeString",
+            "alias": "PAMS_PIN",
+            "sqlType": "sqlTypeOther",
+            "length": 38,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "MUN",
+            "type": "esriFieldTypeString",
+            "alias": "MUN",
+            "sqlType": "sqlTypeOther",
+            "length": 4,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "BLOCK",
+            "type": "esriFieldTypeString",
+            "alias": "BLOCK",
+            "sqlType": "sqlTypeOther",
+            "length": 10,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "LOT",
+            "type": "esriFieldTypeString",
+            "alias": "LOT",
+            "sqlType": "sqlTypeOther",
+            "length": 10,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "QCODE",
+            "type": "esriFieldTypeString",
+            "alias": "QCODE",
+            "sqlType": "sqlTypeOther",
+            "length": 11,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "LASTUPDATE",
+            "type": "esriFieldTypeDate",
+            "alias": "LASTUPDATE",
+            "sqlType": "sqlTypeOther",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null,
+            "precision": 1
+          },
+          {
+            "name": "MUNICIPALITY",
+            "type": "esriFieldTypeString",
+            "alias": "MUNICIPALITY",
+            "sqlType": "sqlTypeOther",
+            "length": 32,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "MAPSHTNO",
+            "type": "esriFieldTypeString",
+            "alias": "MAPSHTNO",
+            "sqlType": "sqlTypeOther",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "NOTES",
+            "type": "esriFieldTypeString",
+            "alias": "NOTES",
+            "sqlType": "sqlTypeOther",
+            "length": 254,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "HBLOCK",
+            "type": "esriFieldTypeString",
+            "alias": "HBLOCK",
+            "sqlType": "sqlTypeOther",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "HLOT",
+            "type": "esriFieldTypeString",
+            "alias": "HLOT",
+            "sqlType": "sqlTypeOther",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "DATASOURCE",
+            "type": "esriFieldTypeString",
+            "alias": "DATASOURCE",
+            "sqlType": "sqlTypeOther",
+            "length": 8,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "SOURCEDATE",
+            "type": "esriFieldTypeString",
+            "alias": "SOURCEDATE",
+            "sqlType": "sqlTypeOther",
+            "length": 4,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "HNUM",
+            "type": "esriFieldTypeString",
+            "alias": "HNUM",
+            "sqlType": "sqlTypeOther",
+            "length": 50,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "HADD",
+            "type": "esriFieldTypeString",
+            "alias": "HADD",
+            "sqlType": "sqlTypeOther",
+            "length": 100,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "UNIQUEID",
+            "type": "esriFieldTypeString",
+            "alias": "UNIQUEID",
+            "sqlType": "sqlTypeOther",
+            "length": 32,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "OLD_UNIQUEID",
+            "type": "esriFieldTypeString",
+            "alias": "OLD_UNIQUEID",
+            "sqlType": "sqlTypeOther",
+            "length": 254,
+            "nullable": true,
+            "editable": true,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Area",
+            "type": "esriFieldTypeDouble",
+            "alias": "Shape__Area",
+            "sqlType": "sqlTypeDouble",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          },
+          {
+            "name": "Shape__Length",
+            "type": "esriFieldTypeDouble",
+            "alias": "Shape__Length",
+            "sqlType": "sqlTypeDouble",
+            "nullable": true,
+            "editable": false,
+            "domain": null,
+            "defaultValue": null
+          }
+        ]
+      },
+      "acquisition_fields": [],
+      "public_fields": [],
+      "pagination": {
+        "page_size": 200,
+        "order_by": "OBJECTID ASC",
+        "max_pages": 250,
+        "max_rows": 50000,
+        "full_capture_tested": false
+      },
+      "probe": {
+        "performed": false,
+        "reason": "scope rejected; metadata only"
+      }
+    }
+  ]
+}

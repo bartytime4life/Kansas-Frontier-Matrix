@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/authority_index.schema.json",
+  "title": "KFM authority and currentness index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repository", "observed_at", "records"],
+  "properties": {
+    "schema_version": {"const": "kfm.authority-index/v1"},
+    "repository": {"const": "bartytime4life/Kansas-Frontier-Matrix"},
+    "observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "location",
+          "resource_ref",
+          "role",
+          "status",
+          "implementation_authority",
+          "currentness_pointer",
+          "notes"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]+$"
+          },
+          "location": {"enum": ["github", "google-drive", "notion", "site"]},
+          "resource_ref": {"type": "string", "minLength": 1},
+          "role": {
+            "enum": [
+              "implementation",
+              "governance",
+              "coordination",
+              "historical-reference",
+              "runtime-observation"
+            ]
+          },
+          "status": {"enum": ["CURRENT", "SUPERSEDED", "PROPOSAL", "HISTORICAL"]},
+          "implementation_authority": {"type": "boolean"},
+          "currentness_pointer": {"type": ["string", "null"]},
+          "notes": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

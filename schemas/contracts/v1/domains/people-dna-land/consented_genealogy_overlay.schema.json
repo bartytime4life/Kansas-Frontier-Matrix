@@ -1,0 +1,450 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/people-dna-land/consented_genealogy_overlay.schema.json",
+  "title": "Consented Genealogy Overlay Candidate - Synthetic Fixture Profile",
+  "description": "A closed, fixture-only profile for testing consent, revocation, non-identifying genealogy summaries, deterministic identity, evidence references, and fail-closed non-release governance. It is not a production consent record, identity proof, kinship proof, DNA record, release manifest, or publication authority.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "profile_id": "kfm-people-dna-land-consent-overlay-fixture-v1",
+    "object_family": "ConsentedGenealogyOverlayCandidate",
+    "contract_doc": "contracts/domains/people-dna-land/consented_genealogy_overlay.md",
+    "fixtures_root": "fixtures/domains/people-dna-land/consent_overlay/",
+    "validator": "tools/validators/domains/people-dna-land/validate_consent_overlay.py",
+    "policy_refs": [
+      "policy/consent/people-dna-land/README.md",
+      "policy/domains/people-dna-land/README.md"
+    ],
+    "release_posture": "fixture-only; not-released; no-public-exposure"
+  },
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "profile_id",
+    "object_family",
+    "overlay_id",
+    "spec_hash",
+    "evaluation_time",
+    "material_kind",
+    "subject_posture",
+    "source_role",
+    "kit_hash",
+    "kit_salt_version",
+    "consent",
+    "revocation_root",
+    "events",
+    "evidence_refs",
+    "disclosure_level",
+    "governance",
+    "limitations"
+  ],
+  "properties": {
+    "fixture_id": {
+      "$ref": "#/$defs/fixture_ref"
+    },
+    "profile_id": {
+      "const": "kfm-people-dna-land-consent-overlay-fixture-v1"
+    },
+    "object_family": {
+      "const": "ConsentedGenealogyOverlayCandidate"
+    },
+    "overlay_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "evaluation_time": {
+      "$ref": "#/$defs/date_time"
+    },
+    "material_kind": {
+      "type": "string",
+      "enum": [
+        "dna_derived_summary",
+        "documentary_genealogy_context"
+      ]
+    },
+    "subject_posture": {
+      "type": "string",
+      "enum": [
+        "living_person",
+        "deceased_or_historical",
+        "unknown"
+      ]
+    },
+    "source_role": {
+      "const": "fixture_only"
+    },
+    "kit_hash": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kit_salt_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "token_hash",
+        "issued_at",
+        "expires_at",
+        "revocation_ref",
+        "scope",
+        "audience"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "revoked",
+            "expired",
+            "not_required"
+          ]
+        },
+        "token_hash": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issued_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/date_time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expires_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/date_time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revocation_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/fixture_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scope": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "derived_match_summary",
+              "historical_context",
+              "restricted_genealogy_overlay"
+            ]
+          }
+        },
+        "audience": {
+          "const": "restricted_steward"
+        }
+      }
+    },
+    "revocation_root": {
+      "$ref": "#/$defs/sha256"
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/evidence_refs"
+    },
+    "disclosure_level": {
+      "type": "string",
+      "enum": [
+        "restricted",
+        "internal"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_state",
+        "sensitivity_state",
+        "review_state",
+        "release_state",
+        "promotion_eligible",
+        "public_exposure",
+        "rollback_state"
+      ],
+      "properties": {
+        "rights_state": {
+          "const": "fixture_only"
+        },
+        "sensitivity_state": {
+          "const": "restricted_fixture"
+        },
+        "review_state": {
+          "const": "fixture_only"
+        },
+        "release_state": {
+          "const": "not_released"
+        },
+        "promotion_eligible": {
+          "const": false
+        },
+        "public_exposure": {
+          "const": false
+        },
+        "rollback_state": {
+          "const": "fixture_only"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "no_identity_proof",
+          "no_kinship_proof",
+          "no_person_parcel_link",
+          "no_raw_genomic_material",
+          "not_released",
+          "synthetic_fixture_only"
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "no_identity_proof"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "const": "no_kinship_proof"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "const": "no_person_parcel_link"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "const": "no_raw_genomic_material"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "const": "not_released"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "const": "synthetic_fixture_only"
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "material_kind": {
+            "const": "dna_derived_summary"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "kit_hash": {
+            "$ref": "#/$defs/sha256"
+          },
+          "kit_salt_version": {
+            "const": "fixture-v1"
+          },
+          "consent": {
+            "properties": {
+              "status": {
+                "const": "active"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "kit_hash": {
+            "type": "null"
+          },
+          "kit_salt_version": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject_posture": {
+            "const": "living_person"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "consent": {
+            "properties": {
+              "status": {
+                "const": "active"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "fixture_ref": {
+      "type": "string",
+      "pattern": "^fixture://[a-z0-9][a-z0-9._~:/-]*$"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/fixture_ref"
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_type",
+        "time_bucket",
+        "place_bucket",
+        "non_identifying_match_score",
+        "evidence_refs"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "match_hint",
+            "shared_ancestor",
+            "lineage_cluster",
+            "tree_link"
+          ]
+        },
+        "time_bucket": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "$ref": "#/$defs/date"
+            },
+            "end": {
+              "$ref": "#/$defs/date"
+            }
+          }
+        },
+        "place_bucket": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "county_fips",
+            "precision"
+          ],
+          "properties": {
+            "county_fips": {
+              "type": "string",
+              "pattern": "^[0-9]{5}$"
+            },
+            "precision": {
+              "type": "string",
+              "enum": [
+                "coarse",
+                "county",
+                "state"
+              ]
+            }
+          }
+        },
+        "non_identifying_match_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidence_refs"
+        }
+      }
+    }
+  }
+}

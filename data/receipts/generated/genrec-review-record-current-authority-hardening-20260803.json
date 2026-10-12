@@ -1,0 +1,206 @@
+{
+  "receipt_id": "genrec-review-record-current-authority-hardening-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/promotion-gate.yml",
+    ".github/workflows/release-dry-run.yml",
+    "data/proofs/review/README.md",
+    "docs/adr/ADR-0018-promotion-gate-sequence.md",
+    "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md",
+    "fixtures/contracts/v1/governance/review_record/README.md",
+    "fixtures/contracts/v1/governance/review_record/invalid/README.md",
+    "fixtures/contracts/v1/governance/review_record/valid/README.md",
+    "fixtures/release/README.md",
+    "fixtures/release/promotion_gate/README.md",
+    "fixtures/release/promotion_gate/invalid/abstain__review_obligations_open.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_authority_expired.json",
+    "release/reviews/README.md",
+    "tests/release/README.md",
+    "tests/release/test_promotion_gate.py",
+    "tests/release/test_review_record.py",
+    "tools/validators/README.md",
+    "tools/validators/promotion_gate/README.md",
+    "tools/validators/promotion_gate/validate_promotion_gate.py",
+    "tools/validators/validate_review_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:576b16033b8bade589eb96ca5ed8aa1a57dd92ae03e7a39f25407ac16ded4e77",
+    ".github/workflows/promotion-gate.yml": "sha256:3c1d530c261e90f37a944e924ea292b94909b9ecc0da559c4d901c5e9647756f",
+    ".github/workflows/release-dry-run.yml": "sha256:0a6f83f09191a74692138a786ad1dfc44de2811949dd295754e372c9cb90fb3a",
+    "data/proofs/review/README.md": "sha256:6a33bb42110eb8f67c70ce68004742975dcb21ba3423889d08c52862ec5c0c1b",
+    "docs/adr/ADR-0018-promotion-gate-sequence.md": "sha256:a68db9bf6f2b860deedf9330b05c825d8c7b7307e6da3a483a1eb493e54a55f6",
+    "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md": "sha256:127a27857ba0ccdee134804dcb7fc769a04b3f38d7112368a94a1a6414613431",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md": "sha256:aa62e284e839b1a68651951120533dea1f5653da391911ee01ad41d1f84e3487",
+    "fixtures/contracts/v1/governance/review_record/README.md": "sha256:ac29c06d7e6cd4f63b19a3a8830a9898e7bafadb6c0d41fd02f4dcc63cbf82e5",
+    "fixtures/contracts/v1/governance/review_record/invalid/README.md": "sha256:dcdb27610546422b8181df7c480462c77d5c258f6a9d680ddd247605d9c2609e",
+    "fixtures/contracts/v1/governance/review_record/valid/README.md": "sha256:e998ae4dcfb96c2b49b9f394927bd06837a3418679523abdb2d73efafc6e44bf",
+    "fixtures/release/README.md": "sha256:63f06fe9d0a3e2c6dc6b9b1dfb4386f2d74e5a1443a93edf1f0e051423dcdf58",
+    "fixtures/release/promotion_gate/README.md": "sha256:03abcdf8262e728e0539c86d4016254d2299670f240784f7f79a7156649442f8",
+    "fixtures/release/promotion_gate/invalid/abstain__review_obligations_open.json": "sha256:2579d997db4de44cf724137e468cb166a1c4b7f7c3a7cbac8f619975601ad9d9",
+    "fixtures/release/promotion_gate/invalid/deny__review_authority_expired.json": "sha256:47cc01df4b368630ea7c62ada2718d999e62f3f9531a1c3711bd7015131c5d0f",
+    "release/reviews/README.md": "sha256:0628900f486a105926bca0ba27a4019074b68c0e16364d52ce3d91dacab3d056",
+    "tests/release/README.md": "sha256:5fdb03fd4f41bd5b9a230ee283257fde5bb41468c3e7e10b2cdfc28e800654b1",
+    "tests/release/test_promotion_gate.py": "sha256:6dc75238a764605bbd0c7ba5578339fc01f34210aa3d5d5fe692f2bf704bf418",
+    "tests/release/test_review_record.py": "sha256:c246e40501b9542f458a0e63bc8d27114bbc36fa15147e2a47f5608884016510",
+    "tools/validators/README.md": "sha256:31ea39d40547fdb7a0aaf1adc2a8d7f9a85db5136c01c53ec90f4f4433ddcdd5",
+    "tools/validators/promotion_gate/README.md": "sha256:dbe33059cfb2e072d217c6d9bbd9cfcac07eef1881627f782463c893e87d4c5a",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "sha256:8c54aab9219dbd8c8ab16261a9acdc4dac4a6983141de38428397998f4ad2f43",
+    "tools/validators/validate_review_record.py": "sha256:47308e7f1716339700463aca89b432788418c7169401375015d3a7d14620a3a1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:2bae1638a12d84dc9aeb5f2a081e168d227d659d0281c722f1e283f9b7ebce69",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "isolated repository-declared Python test environment",
+      "deterministic no-network validators",
+      "parallel independent code and documentation review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b28b0cba512b95c8c106a143acb65c89d384843ff313420b2429daa51f8fcf78",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/68069dce9e292649697f63f96fa57edd07181a27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1936",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/data/receipts/generated/genrec-promotion-gate-review-record-20260803.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/contracts/governance/ReviewRecord.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/contracts/governance/steward_assignment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/docs/adr/ADR-0024-steward-separation-of-duties-for-release.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/promotion-gate.yml": "CONFIRMED",
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    "data/proofs/review/README.md": "PROPOSED",
+    "docs/adr/ADR-0018-promotion-gate-sequence.md": "PROPOSED",
+    "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/review_record/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/review_record/invalid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/review_record/valid/README.md": "PROPOSED",
+    "fixtures/release/README.md": "PROPOSED",
+    "fixtures/release/promotion_gate/README.md": "PROPOSED",
+    "fixtures/release/promotion_gate/invalid/abstain__review_obligations_open.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_authority_expired.json": "CONFIRMED",
+    "release/reviews/README.md": "PROPOSED",
+    "tests/release/README.md": "PROPOSED",
+    "tests/release/test_promotion_gate.py": "CONFIRMED",
+    "tests/release/test_review_record.py": "CONFIRMED",
+    "tools/validators/README.md": "PROPOSED",
+    "tools/validators/promotion_gate/README.md": "PROPOSED",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "CONFIRMED",
+    "tools/validators/validate_review_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main at 68069dce9e292649697f63f96fa57edd07181a27, merged PR 1936, the ReviewRecord and promotion-gate implementations, Directory Rules, contracts, schemas, fixtures, workflows, prior receipt, and supplied source documents were inspected. The intervening Atmosphere merge was path-independent and the correction was rebased before final validation."
+    },
+    {
+      "gate": "review-record-current-authority-hardening",
+      "outcome": "PASS",
+      "reason": "The eleven-fixture ReviewRecord subset produced one PASS, eight DENY, and two ABSTAIN outcomes. Thirty focused tests plus forty-five subtests cover canonical identity/time, issuance no later than review, supplied authority and valid-until intervals with exclusive expiry, empty approving-review obligations, explicit self-declared supersession marking, unavailable Gate G context, value/path redaction, symlink-loop finite errors, deterministic CLI polarity, and no-network behavior."
+    },
+    {
+      "gate": "promotion-gate-integration",
+      "outcome": "PASS",
+      "reason": "The eighteen-file promotion matrix produced one PASS, twelve DENY, three ABSTAIN, and two ERROR outcomes. PASS remains APPROVE_READY only, all non-PASS states remain blocked, and no governed ReviewRecord, PromotionDecision, release, or publication state is emitted."
+    },
+    {
+      "gate": "repository-regression",
+      "outcome": "PASS",
+      "reason": "The rebased tree passed 150 repository schema/contract tests plus 26 subtests and the aggregate repository validator runner."
+    },
+    {
+      "gate": "workflow-document-and-syntax-integrity",
+      "outcome": "PASS",
+      "reason": "Both changed workflows parsed as YAML with an isolated task parser; eighteen documentation-link tests passed; all four changed Python files compiled; seventeen well-formed promotion fixtures parsed as JSON while the single malformed negative remained intentionally invalid; git diff --check passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator checked the final twenty-two-artifact path, digest, truth-label, protected-root policy-reference, and documentation-citation binding with human review explicitly pending."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. Hosted success will not be treated as review, approval, promotion, release, deployment, or publication authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored, authenticated, or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/68069dce9e292649697f63f96fa57edd07181a27"
+    },
+    {
+      "id": "merged-review-record-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1936"
+    },
+    {
+      "id": "prior-review-record-receipt",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/data/receipts/generated/genrec-promotion-gate-review-record-20260803.json"
+    },
+    {
+      "id": "greenfield-plan-pages-5-10-18",
+      "validated": true,
+      "evidence_ref": "attachment://Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf#sha256=b28b0cba512b95c8c106a143acb65c89d384843ff313420b2429daa51f8fcf78"
+    },
+    {
+      "id": "unified-manual-lines-346-363-428-435",
+      "validated": true,
+      "evidence_ref": "attachment://Unified Implementation Architecture Build Manual.md#sha256=e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    },
+    {
+      "id": "directory-placement-decision-only",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T07:02:57Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This corrective follow-up closes reproduced canonical-identity/time, post-review identity issuance, supplied-authority expiry, nonempty approving-review obligations, Gate G context attribution, explicit supersession-marker, expiry-boundary, and external-path diagnostic cases over synthetic inputs only. ADR-0029 supports directory placement only; it is not release or SoD policy. The profile does not resolve aliases, live identity or authority, the current ReviewRecord head, the role qualified as release authority, evidence, policy, signatures, or governed records. It creates no real ReviewRecord, actor assignment, PolicyDecision, approval, promotion, release, deployment, publication, source activation, or settings change. Human review remains pending."
+}

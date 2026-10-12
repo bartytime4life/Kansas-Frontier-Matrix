@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-pass18-historic-map-scan-lineage-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/historic-map-scan-lineage-assessment.yml",
+    "contracts/evidence/historic_map_scan_lineage_assessment.md",
+    "docs/intake/exploratory/pass-18-historic-map-scan-lineage-source-map.md",
+    "fixtures/contracts/v1/evidence/historic_map_scan_lineage_assessment/cases.json",
+    "schemas/contracts/v1/evidence/historic_map_scan_lineage_assessment.schema.json",
+    "tests/validators/evidence/test_validate_historic_map_scan_lineage_assessment.py",
+    "tools/validators/evidence/validate_historic_map_scan_lineage_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/historic-map-scan-lineage-assessment.yml": "sha256:c3daaafa7f60ad9f8fd1835fabd383152f8f446922324f8d9e7e390d6575738e",
+    "contracts/evidence/historic_map_scan_lineage_assessment.md": "sha256:f40c71ea75dc485a9d7a0d022dc7bacd78da2456cc04d1042049d970c7e425da",
+    "docs/intake/exploratory/pass-18-historic-map-scan-lineage-source-map.md": "sha256:c304a721360c41f06b98a3de514799fe828b3b918a08bae90aacf192cdfd8065",
+    "fixtures/contracts/v1/evidence/historic_map_scan_lineage_assessment/cases.json": "sha256:e97062cf0c38adeb4bfdd83a20a268dec04a4e4008ca86035c394de9ed223850",
+    "schemas/contracts/v1/evidence/historic_map_scan_lineage_assessment.schema.json": "sha256:844072358144f80d67694c2adac8587d8889c569b3599406eacefb382e3c9f47",
+    "tests/validators/evidence/test_validate_historic_map_scan_lineage_assessment.py": "sha256:a8de680cfe9599828ea70964142eaa400ef68107a23ce9d71955bd803b471b24",
+    "tools/validators/evidence/validate_historic_map_scan_lineage_assessment.py": "sha256:ab151100d537938a1407926d75e78570780b83751dfcc68714fbb68c35f306c1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f40c71ea75dc485a9d7a0d022dc7bacd78da2456cc04d1042049d970c7e425da",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF text and visual inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:9e087ff6ed24530ad112f96330a012bf74d4f57fa2587545e99c1e9abc9e13b6",
+      "sha256:25a77df1d1b8f802d96c53da5af0d733ce85c2e2c8e855265286a113fba7fba4",
+      "sha256:0441f9613b79c8dabfe3dcc28b040febdf15989e15e62d9621d9673bd5623da0",
+      "sha256:1907fdf395e626000a79827fde7049ddd41b10d7c2cdfe91af3a41a1d3265db1"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-252-pages-141-142",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/sources/catalog/loc/loc-historic-maps.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/map/georeference_control_point_set.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/map/georeference_transform_quality.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/source/source_rights_currentness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/historic-map-scan-lineage-assessment.yml": "CONFIRMED",
+    "contracts/evidence/historic_map_scan_lineage_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-historic-map-scan-lineage-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/historic_map_scan_lineage_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/historic_map_scan_lineage_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_historic_map_scan_lineage_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_historic_map_scan_lineage_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Validator and focused test modules compiled successfully."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed candidate schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty exact synthetic cases matched their finite outcomes and findings."
+    },
+    {
+      "gate": "adjacent-contract-regression-suite",
+      "outcome": "PASS",
+      "reason": "Focused and adjacent georeference and rights suites reported 37 tests and 35 subtests passing."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow parsed as YAML and remains read-only with no persisted checkout credentials."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and the candidate validator uses local repository evidence only."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All listed artifact SHA-256 values were recomputed after final local edits; the receipt does not bind its own bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-historic-map-scan-lineage-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-252-pages-141-142"
+    },
+    {
+      "id": "drive-pass18-dossier-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "repository-historic-map-source-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/sources/catalog/loc/loc-historic-maps.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:28:34Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only HistoricMapScanLineageAssessmentCandidate derived from Pass 18 card KFM-P18-INV-252 and reconciled against current historic-map source guidance plus existing georeference and rights contracts. Drive metadata confirmed a matching dossier title, while the locally supplied PDF was inspected and hashed; byte identity between those objects is not asserted. The packet distinguishes original-map rights, scan provenance, georeference quality, and derivative-use limits without activating a source, retrieving bytes, deciding rights, executing a transform, admitting evidence, releasing, deploying, publishing, or authorizing public use."
+}

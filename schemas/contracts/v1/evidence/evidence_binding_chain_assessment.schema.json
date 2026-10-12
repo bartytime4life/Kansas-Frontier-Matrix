@@ -1,0 +1,401 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json",
+  "title": "EvidenceBindingChainAssessment",
+  "description": "Closed, inactive, synthetic reference-closure assessment from SourceArtifact through ParseResult and EvidenceRef to ClaimFieldBinding without EvidenceBundle or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "version",
+    "assessment_id",
+    "spec_hash",
+    "source_artifact",
+    "parse_result",
+    "evidence_ref",
+    "evidence_resolution",
+    "claim_field_binding",
+    "closure_state",
+    "evidence_bundle_ref",
+    "release_ref",
+    "public_use_allowed",
+    "limitations",
+    "effects"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.evidence.binding-chain-assessment.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^evidence-binding-chain:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_artifact": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/source/source_artifact.schema.json"
+    },
+    "parse_result": {
+      "$ref": "#/$defs/parseResult"
+    },
+    "evidence_ref": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ref",
+            "kind"
+          ],
+          "properties": {
+            "ref": {
+              "type": "string",
+              "pattern": "^evidence-ref:sha256:[a-f0-9]{64}$"
+            },
+            "kind": {
+              "const": "record"
+            }
+          }
+        }
+      ]
+    },
+    "evidence_resolution": {
+      "$ref": "#/$defs/evidenceResolution"
+    },
+    "claim_field_binding": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/evidence/claim_field_binding.schema.json"
+    },
+    "closure_state": {
+      "const": "REFERENCE_CLOSED_SYNTHETIC"
+    },
+    "evidence_bundle_ref": {
+      "type": "null"
+    },
+    "release_ref": {
+      "type": "null"
+    },
+    "public_use_allowed": {
+      "type": "boolean"
+    },
+    "limitations": {
+      "$ref": "#/$defs/canonicalStrings"
+    },
+    "effects": {
+      "$ref": "#/$defs/effects"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "canonicalStrings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "reasonCodes": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,79}$"
+      }
+    },
+    "nativeLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "JSON_POINTER",
+            "XPATH",
+            "CSV_COLUMN",
+            "TEXT_RANGE",
+            "RECORD_FIELD"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "parsedRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_ref",
+        "record_digest",
+        "native_locator"
+      ],
+      "properties": {
+        "record_ref": {
+          "type": "string",
+          "pattern": "^parsed-record:[a-z0-9][a-z0-9._:-]{2,159}$"
+        },
+        "record_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "native_locator": {
+          "$ref": "#/$defs/nativeLocator"
+        }
+      }
+    },
+    "parseFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "path"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,79}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^/"
+        }
+      }
+    },
+    "parseResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parse_result_ref",
+        "spec_hash",
+        "source_artifact_ref",
+        "parser_id",
+        "parser_version",
+        "parser_spec_digest",
+        "outcome",
+        "records",
+        "findings",
+        "unsupported_flags",
+        "source_conflict_ref",
+        "authority_created",
+        "evidence_created",
+        "lifecycle_write_allowed",
+        "receipt_created",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "repository_mutation_allowed"
+      ],
+      "properties": {
+        "parse_result_ref": {
+          "type": "string",
+          "pattern": "^parse-result:sha256:[a-f0-9]{64}$"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_artifact_ref": {
+          "type": "string",
+          "pattern": "^source-artifact:sha256:[a-f0-9]{64}$"
+        },
+        "parser_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "parser_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "parser_spec_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "outcome": {
+          "enum": [
+            "PARSED",
+            "MALFORMED",
+            "UNSUPPORTED",
+            "CONFLICT",
+            "ERROR"
+          ]
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/parsedRecord"
+          }
+        },
+        "findings": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/parseFinding"
+          }
+        },
+        "unsupported_flags": {
+          "$ref": "#/$defs/reasonCodes"
+        },
+        "source_conflict_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authority_created": {
+          "type": "boolean"
+        },
+        "evidence_created": {
+          "type": "boolean"
+        },
+        "lifecycle_write_allowed": {
+          "type": "boolean"
+        },
+        "receipt_created": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        },
+        "repository_mutation_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evidenceResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_ref",
+        "source_artifact_ref",
+        "parse_result_ref",
+        "parsed_record_ref",
+        "parsed_record_digest",
+        "cited_native_locator",
+        "supported_observation_digest",
+        "limitations"
+      ],
+      "properties": {
+        "evidence_ref": {
+          "type": "string",
+          "pattern": "^evidence-ref:sha256:[a-f0-9]{64}$"
+        },
+        "source_artifact_ref": {
+          "type": "string",
+          "pattern": "^source-artifact:sha256:[a-f0-9]{64}$"
+        },
+        "parse_result_ref": {
+          "type": "string",
+          "pattern": "^parse-result:sha256:[a-f0-9]{64}$"
+        },
+        "parsed_record_ref": {
+          "type": "string",
+          "pattern": "^parsed-record:[a-z0-9][a-z0-9._:-]{2,159}$"
+        },
+        "parsed_record_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "cited_native_locator": {
+          "$ref": "#/$defs/nativeLocator"
+        },
+        "supported_observation_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "limitations": {
+          "$ref": "#/$defs/canonicalStrings"
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_created",
+        "evidence_resolved",
+        "evidence_bundle_created",
+        "policy_evaluated",
+        "review_approved",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {
+          "type": "boolean"
+        },
+        "evidence_created": {
+          "type": "boolean"
+        },
+        "evidence_resolved": {
+          "type": "boolean"
+        },
+        "evidence_bundle_created": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "review_approved": {
+          "type": "boolean"
+        },
+        "released": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/evidence/evidence_binding_chain_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/",
+    "validator": "tools/validators/validate_evidence_binding_chain_assessment.py",
+    "tests": "tests/validators/test_validate_evidence_binding_chain_assessment.py",
+    "authority": "synthetic_reference_closure_only",
+    "evidence_bundle_authority": false,
+    "public_release_authority": false
+  }
+}

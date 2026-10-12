@@ -13,12 +13,13 @@ related:
   - docs/standards/CANONICALIZATION.md
   - docs/standards/RUN_RECEIPT.md
   - policy/redaction/profiles.yaml
-  - contracts/runtime/redaction_receipt.md
-  - schemas/contracts/v1/runtime/redaction_receipt.schema.json
 tags: [kfm, geoprivacy, redaction, determinism, prng, jitter, receipts]
 notes:
   - Operationalizes C6-03 (Seeded Reproducible Jitter) and pins the seed concatenation contract referenced by C6-02 named profiles.
   - Live repository not mounted at draft time; all path, validator, and profile-name claims are PROPOSED pending repo verification and ADR.
+owning_root: docs/
+responsibility: "Documentation for Redaction Determinism — Seed, PRNG, and Reproducibility Rules; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -466,8 +467,8 @@ Each profile MUST ship at least:
 - [`docs/standards/RUN_RECEIPT.md`](./RUN_RECEIPT.md) — receipt envelope that wraps `RedactionReceipt` for promotion. *(PROPOSED.)*
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — tracks the open salting decision and any per-profile open items.
 - [`policy/redaction/profiles.yaml`](../../policy/redaction/profiles.yaml) — the profile catalog. *(PROPOSED path.)*
-- [`contracts/runtime/redaction_receipt.md`](../../contracts/runtime/redaction_receipt.md) — `RedactionReceipt` semantic contract. *(PROPOSED path.)*
-- [`schemas/contracts/v1/runtime/redaction_receipt.schema.json`](../../schemas/contracts/v1/runtime/redaction_receipt.schema.json) — machine schema (per ADR-0001). *(PROPOSED path.)*
+- `contracts/runtime/redaction_receipt.md` (PROPOSED; not present) — `RedactionReceipt` semantic contract. *(PROPOSED path.)*
+- `schemas/contracts/v1/runtime/redaction_receipt.schema.json` (PROPOSED; not present) — machine schema (per ADR-0001). *(PROPOSED path.)*
 
 [Back to top](#top)
 

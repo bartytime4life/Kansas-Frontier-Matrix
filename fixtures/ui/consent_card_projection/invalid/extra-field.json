@@ -1,0 +1,15 @@
+{
+  "profile": "kfm.explorer.consent-card.public-safe.v1",
+  "id": "kfm:consent-card:synthetic:extra-field",
+  "outcome": "ANSWER",
+  "reason_code": "CONSENT_CARD_READY",
+  "layer_ref": "kfm://layer/synthetic/extra-field",
+  "layer_label": "Synthetic layer",
+  "basis": "Synthetic basis.",
+  "scope": ["Synthetic scope"],
+  "expires_at": null,
+  "subject_consent_state": "RECORDED",
+  "obligation_set_ref": "kfm://policy/obligation-set/c05e17c05e17c05e17c05e17",
+  "policy_decision_ref": "kfm://policy/decision/synthetic-extra-field",
+  "private_detail": "PRIVATE_CONSENT_CANARY_11f0"
+}

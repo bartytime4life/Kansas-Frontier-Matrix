@@ -6,8 +6,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts" / "maintenance" / "enforce_doctrine_preflight_gates.sh"
 
 
-def test_enforce_doctrine_preflight_gates_returns_nonzero_when_provenance_fails():
-    cmd = [str(SCRIPT), "--stable-filenames"]
+def test_enforce_doctrine_preflight_gates_returns_nonzero_when_provenance_fails(tmp_path: Path):
+    cmd = [str(SCRIPT), "--stable-filenames", "--output-dir", str(tmp_path / "receipts")]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     assert res.returncode == 1
     assert '"provenance_returncode": 1' in res.stdout

@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-explorer-ts7-worker-baseline-repair-673a0fd6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/db/index.ts",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "apps/kansas-frontier-matrix-explorer/worker-configuration.d.ts",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts",
+    "pnpm-lock.yaml"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/db/index.ts": "sha256:556a2fedcc9c58ca68dd5dae1315181177a78655b8e181307812c324f2d3728a",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:c237cba4c1c6f5bda8e9041a87debdc578eaf258f1de0cf50ae7c47474f8f699",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:40088997c079d487995ef0ba73b4ed03bf7b043b7877159bb6a8ecdc69260788",
+    "apps/kansas-frontier-matrix-explorer/worker-configuration.d.ts": "sha256:f7f0e5ec13f3b0f65176a53383ebaba540a742ca7277cb81b56285e1dd2ada75",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts": "sha256:8add974c91a20d7c3d37b913b94e1a1eafcf7857317a091520c7df1bc17e7f09",
+    "pnpm-lock.yaml": "sha256:386d5d1472099f7d8b63517cea7fd583a6ee43d0855762887544b0763d99e4a7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:ae92b3c13c34f5bdef3258ab40aa85f98a7ac9dc58f28e1821c11135d99bb284",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "web",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bcad1a68fd4756fca74772fdd8257d235003bfd0279d9ac76803f5dac7fdd1c4",
+      "sha256:9d88dff0c1b420354416565169cabaf089ed106dad427b0ea7ad59474536490a",
+      "sha256:3a48be5a850d265bd0d5fd87375fdb72dd5d16359322b5dd9f0737aafb6040cd"
+    ],
+    "evidence_refs": [
+      "repo:main@8b9c52d88687986879c8f87d7e3835f6a58bbacd",
+      "repo:agent/explorer-baseline-ts7-worker-types-20260905@673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8",
+      "github-actions:33995862708",
+      "github-actions:33996045022",
+      "https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/",
+      "https://github.com/jsx-eslint/eslint-plugin-react/issues/4018",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/db/index.ts": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/worker-configuration.d.ts": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts": "CONFIRMED",
+    "pnpm-lock.yaml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "fresh-main-and-overlap-pin",
+      "outcome": "PASS",
+      "reason": "Repair source is based on and independently compared with main 8b9c52d88687986879c8f87d7e3835f6a58bbacd; main remained at that exact commit through final source validation."
+    },
+    {
+      "gate": "exact-artifact-hash-capture",
+      "outcome": "PASS",
+      "reason": "Run 33996045022 checked out exact source 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8, proved the main comparison contained exactly six repair paths, ran git diff --check, and emitted all six SHA-256 bindings."
+    },
+    {
+      "gate": "frozen-workspace-install",
+      "outcome": "PASS",
+      "reason": "Run 33995862708 completed pnpm install --frozen-lockfile for candidate and pinned main and rechecked tracked package/lock inputs after execution."
+    },
+    {
+      "gate": "typescript-7-cli-typescript-6-tooling-api",
+      "outcome": "PASS",
+      "reason": "Candidate reports tsc Version 7.0.2 while import(typescript) exposes the TypeScript 6 compatibility API version 6.0.3 through the Microsoft-recommended npm alias layout."
+    },
+    {
+      "gate": "explorer-build",
+      "outcome": "PASS",
+      "reason": "Existing kansas-frontier-matrix-explorer build passes in the complete frozen workspace."
+    },
+    {
+      "gate": "complete-app-node-suite",
+      "outcome": "PASS",
+      "reason": "Candidate exact source passes 32 of 32 Node tests; pinned main reproduces 20 pass and 12 fail under the same invocation."
+    },
+    {
+      "gate": "complete-app-typecheck",
+      "outcome": "PASS",
+      "reason": "Candidate tsc --noEmit exits 0. Pinned main independently reproduces the prior cloudflare:workers, Fetcher, and D1Database errors. The repair uses a narrow opaque host bridge plus structural binding checks rather than excluding files or weakening compiler settings."
+    },
+    {
+      "gate": "app-lint",
+      "outcome": "FAIL",
+      "reason": "Candidate advances beyond main's typescript-eslint/TS7 rejection but ESLint 10.9.1 then fails loading eslint-plugin-react 7.37.5 react/display-name because contextOrFilename.getFilename is unavailable. This exact ESLint-10 incompatibility is tracked upstream; no EOL ESLint downgrade, transitive patch, ignored rule, or nonblocking waiver is introduced."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "Raw topology remains red on both exact candidate and pinned main with 5 new-drift groups, 122 baselined warnings, and 5 stale-baseline entries. Candidate has one additional tracked file but does not establish a green topology result; the frozen baseline and #4228 correction authority are untouched."
+    },
+    {
+      "gate": "dependency-and-tracked-source-immutability",
+      "outcome": "PASS",
+      "reason": "Validation rechecks the package and lock hashes after execution and observes no tracked worktree mutation. Lock synthesis ran with package scripts disabled and the generated lock commit was restricted to pnpm-lock.yaml and the app package-lock.json."
+    },
+    {
+      "gate": "generated-receipt-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "This receipt is emitted after the exact-source application runs. Repository-native receipt replay against artifact source 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8 is the next post-commit evidence step and must not be preclaimed."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. No reviewer approval or override is fabricated."
+    },
+    {
+      "gate": "runtime-release-deployment-publication",
+      "outcome": "SKIPPED",
+      "reason": "No public Site mutation, renderer/source activation, release, deployment, promotion, publication, repository-setting change, or PR lifecycle operation is part of this repair."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "typescript-7-side-by-side-guidance",
+      "validated": true,
+      "evidence_ref": "https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/"
+    },
+    {
+      "id": "eslint-plugin-react-eslint10-getfilename-incompatibility",
+      "validated": true,
+      "evidence_ref": "https://github.com/jsx-eslint/eslint-plugin-react/issues/4018"
+    },
+    {
+      "id": "frozen-topology-authority-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T22:30:58.914138+00:00",
+  "emitter": "ChatGPT GPT-5.6 Sol; GitHub connector branch authoring and exact-source validation",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Branch-only baseline repair. Exact six-file product source is 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8; later commits restore temporary validation transport and add this receipt without changing those six bytes. TypeScript 7 remains the app compiler, while TypeScript 6 is exposed only as the classic programmatic API required by current tooling. The local cloudflare:workers declaration is intentionally opaque because this Sites-derived app has no committed Wrangler configuration from which to generate compatibility-date-bound worker types; DB is narrowed structurally at use. Lint remains a visible upstream compatibility HOLD and topology remains a separate #4228 HOLD. No PR, merge, release, deployment, publication, source admission, renderer activation, or topology-baseline mutation is authorized or performed."
+}

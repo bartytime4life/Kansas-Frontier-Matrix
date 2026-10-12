@@ -18,6 +18,9 @@ tags: [kfm, roads, rail, trade-routes, domain, expansion, roadmap]
 notes:
   - EXPANSION_PLAN.md filename pattern is PROPOSED; ADR may freeze the doc-type
   - Repo not mounted; all implementation-level paths/routes/schemas are PROPOSED
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail, and Trade Routes — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Roads, Rail, and Trade Routes — Expansion Plan
@@ -73,7 +76,7 @@ The plan covers:
 > [!IMPORTANT]
 > This plan is **doctrine-anchored, implementation-bounded.** No mounted repo, CI, workflow, manifest, dashboard, or runtime log was inspected when this document was authored. Every claim about routes, paths, packages, schemas, tests, and deployment state is **PROPOSED** until verified against the mounted repository.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -134,7 +137,7 @@ flowchart LR
 > [!NOTE]
 > Dashed boxes are PROPOSED downstream artifacts. Their existence in the mounted repo is **NEEDS VERIFICATION**.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -171,7 +174,7 @@ The atlas chapter (Atlas Ch. 13) is the doctrinal anchor. The plan does not rest
 
 **CONFIRMED as plan.** Atlas Ch. 21 places Roads/Rail in **Phase 11 — Transport and settlements expansion**, with exit criteria *"road/rail and settlement identity public-safe layers"* and rollback posture *"disable facility layer if leak"*. The governance spine (Phases 0–9) is the precondition for Phase 11. [DOM-ROADS] [UNIFIED]
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -186,7 +189,7 @@ These are not new rules — they are the operating doctrine the expansion follow
 5. **CONFIRMED:** Responsibility-rooted placement. Domain content lives **inside** responsibility roots (`contracts/`, `schemas/`, `policy/`, `tests/`, `data/`, `release/`, `docs/`), not as a root-level domain folder. [DIRRULES §3, §12]
 6. **PROPOSED:** Smallest reversible change. Prefer adapters, validators, fixtures, and ADRs over broad rewrites. Backward compatibility is preferred but documented breakage is acceptable.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -234,7 +237,7 @@ flowchart TD
 > [!IMPORTANT]
 > Sub-phase ordering reflects doctrine, **not a verified project plan**. No calendar dates, sprint allocations, or owner assignments are asserted here.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -273,7 +276,7 @@ flowchart TD
 
 </details>
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -310,7 +313,7 @@ flowchart TD
 > [!NOTE]
 > Per **ADR-0001** (default schema home is `schemas/contracts/v1/...`), any draft schemas authored under `contracts/<domain>/<x>.schema.json` are **CONFLICTED lineage** and MUST migrate before any new schema lands. [DIRRULES §6.4]
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -350,7 +353,7 @@ Fixture file homes are **PROPOSED**; coverage is **PROPOSED**; the list is **ill
 
 </details>
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -386,7 +389,7 @@ RoadsRailDecisionEnvelope
 
 The above is **illustrative**; field names align with cross-cutting envelopes catalogued in [MAP-MASTER] M (`MapReleaseManifest`, `EvidenceDrawerPayload`, `FocusModeRequest/Response`, `AIReceipt`, `PolicyDecision`).
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -424,7 +427,7 @@ A `LayerManifest` entry for any Roads/Rail layer carries:
 > [!NOTE]
 > Layer-manifest field names above are **CONFIRMED in [MAP-MASTER] doctrine**; whether they appear under those exact keys in the mounted repo is **NEEDS VERIFICATION**.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -457,7 +460,7 @@ A `LayerManifest` entry for any Roads/Rail layer carries:
 - stale-state rule
 - rollback target
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -480,7 +483,7 @@ A `LayerManifest` entry for any Roads/Rail layer carries:
 3. **EvidenceBundle support is per-claim.** A multi-lane claim resolves all referenced `EvidenceRef`s before publication.
 4. **No emergency-alert routing.** Hazards-sourced closures may be cited as context but never published as life-safety instruction. [DOM-HAZ]
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -505,7 +508,7 @@ AI in this lane MUST:
 > [!IMPORTANT]
 > Per the Governed AI dossier, **EvidenceBundle outranks generated language.** The preferred order is: scope → retrieve evidence → resolve `EvidenceRef` → apply policy/sensitivity → answer with traceability or narrowed scope. [GAI]
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -522,7 +525,7 @@ AI in this lane MUST:
 
 These items SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED canonical register per Directory Rules §6.1).
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -542,7 +545,7 @@ PROPOSED ADRs surfaced by this expansion plan:
 > [!NOTE]
 > Naming and numbering are **PROPOSED**. The repo's actual ADR registry may already cover one or more of these — verification needed.
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -575,7 +578,7 @@ PROPOSED ADRs surfaced by this expansion plan:
 
 </details>
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -595,7 +598,7 @@ Sibling domain expansion plans (if/when authored under the same pattern):
 - `docs/domains/hydrology/EXPANSION_PLAN.md` — **PROPOSED**
 - `docs/domains/archaeology/EXPANSION_PLAN.md` — **PROPOSED**
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
@@ -674,8 +677,8 @@ Phase 11 (master) · Roads/Rail · sub-phase G exit:
 
 </details>
 
-[↑ back to top](#contents)
+[↑ back to top](#-contents)
 
 ---
 
-<sub>**Last updated:** 2026-05-19 · **Doc version:** v0.1 (draft) · **Anchor:** KFM Domains v1.1 Atlas Ch. 13 [DOM-ROADS] [ENCY] · [↑ back to top](#contents)</sub>
+<sub>**Last updated:** 2026-05-19 · **Doc version:** v0.1 (draft) · **Anchor:** KFM Domains v1.1 Atlas Ch. 13 [DOM-ROADS] [ENCY] · [↑ back to top](#-contents)</sub>

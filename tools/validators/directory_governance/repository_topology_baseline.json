@@ -1,0 +1,666 @@
+{
+  "authority": "implementation_waivers_only",
+  "closure_ref": "ADR-0029-post-adoption-convergence-ratchet",
+  "entries": [
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:04a881fbb2424119ee703fadb0fb4e9a3cc2f8b1d585f3adc7bab293f33bb087",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0001-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:e3d385ff721b2dd2835007407edfed3ec1c9e31ab72af9fb793df1976866ece6",
+      "evidence_zlib_base64": "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",
+      "fingerprint": "sha256:04d08ba8440a39fe2f7cce26bb2fc468d389992ba480a4e701cf45c85c9506f4",
+      "rule_id": "KFM-TOPO-009",
+      "subject": "scaffold-only-leaf-directories"
+    },
+    {
+      "evidence_sha256": "sha256:378df54d27d6b07db2112a0776092827897e8bde10009f170999d0e04c6f83da",
+      "evidence_zlib_base64": "eNqNzTFOA0EMhWEulGQ847VnuiCRkoYLIHtsQ9BmN9oNRW5PCopIpOCVf/E9WS7HkH5Zd4uPLqvv3g7PL6+H7cn21j13YYFiDVEktDB1oqoqoJQKQCqtypP8QUK+J7mjAjMOffCC4g0cEDsbl6qUgSICI0VotgfU59WWeZw/rncck0PjSDXpbQUbSWfPSozK0iln15qsPODOPp9H39gkm1Emu0PVmd2b50hQM5qlikXBOCmrIym15nWgf6C//f0k0zF8vWy/1nnat140UkNzxuH2kNWcwDrkMA+NBtm9OvwATYSB8g==",
+      "fingerprint": "sha256:075416438d2ac6202043316b2adeb1189111907ddbc2a4ebe637cf806f4d6e0c",
+      "rule_id": "KFM-TOPO-005",
+      "subject": "artifacts/release/"
+    },
+    {
+      "evidence_sha256": "sha256:872f2a8855772e5f600013fa17c8d57f16fe2190c428aad9515e4e3fa7d8c8f2",
+      "evidence_zlib_base64": "eNpLSSxJ1C8oyi/TD3J1dPF11ctNAQBDogZt",
+      "fingerprint": "sha256:0b204caec29547aa5bcb105d288db6256011742c79cd24890b73ee10d1edf59a",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/prov/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:0c79df58b5bd0172dc032f521b10df3819b287c12605e35029510a6c5765f34d",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0003-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:1032c3d69b1769b08b5bfbae7715511d697161573bf87cc5ba6bbf4a4f0a671b",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0001.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:4d035c8dc503fb9d8d3963141113abaae2f330d878b57e0579e275b75b2033db",
+      "evidence_zlib_base64": "eNpLSSxJ1M9NzMtMSy0uKdYPcnV08XXVy01hSEGVSMvJL0rELZ2emo9bMiexMrUIj9lFqTmpicWpuBUUl+QXVSKkASYdPoc=",
+      "fingerprint": "sha256:19bc8d346cec3474556437a19ad99c220dfd03803eae4cbdd0257fa0c5fb2a71",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/manifests/"
+    },
+    {
+      "evidence_sha256": "sha256:964640eddfa5168c576d063d53c99219ba8d94494fb276603f9eb381f3d232e2",
+      "evidence_zlib_base64": "eNpLSSxJ1E/JTy7NTc0r0Q9ydXTxddXLTQEAZUcIBQ==",
+      "fingerprint": "sha256:1e6fe22069d219a1509419dbce96499aa8bf5e16fdfcf35cf2e15ee757c12847",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/document/"
+    },
+    {
+      "evidence_sha256": "sha256:752c925a6112c9cfdcf625484919daa2220b92f945c8137612ede0a8b881316d",
+      "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdb3d/TUDfD10MtNYUhBlclPzNQtyM0AygAA2JYSKw==",
+      "fingerprint": "sha256:238d3aa621befa1b680e0e9243c7d783d514504b8445ccc6969449166158dd39",
+      "rule_id": "KFM-TOPO-007",
+      "subject": "casefold:docs/standards/oai-pmh.md"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:241116cfa7feb2019e963acd1bd3660a2c508cc25e0810e2a4b0b56e838d012d",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0001-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
+      "fingerprint": "sha256:290f9efe3dbceff387c49f406c1c645dd647a956041670ba5a8c903f9808d691",
+      "rule_id": "KFM-TOPO-012",
+      "subject": "release/public_safe_geometry.rego"
+    },
+    {
+      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
+      "fingerprint": "sha256:2c4fb339ee8582a442da202a4a3f64b66a26f1e1abb9bb0caa0ff9888386f04e",
+      "rule_id": "KFM-TOPO-012",
+      "subject": "tools/validators/hydro/policy/hydro_publication.rego"
+    },
+    {
+      "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+      "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
+      "fingerprint": "sha256:31ad479a2fde39c4aaad196b34166ac14c3e9a5240a78217b8374b9589180fca",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/build/env/tool-versions.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:9ce519422354d717ca0241f1495e372a61c3439f0b7a9d78179281aca17ce9ec",
+      "evidence_zlib_base64": "eNpLzs/LS00uyS8q1i8tTisv1k1Nzi9mSEYTjQeJAgB4iBEr",
+      "fingerprint": "sha256:31c1fc85060a8bbef8eed6bf850a48f3877b903c758220bc9cfc7b6692ac4278",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:connectors/usfws_ecos"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:31d6ec90bc39f3a763d11beedc1f26354289ebf8612b141de79051577a8e124d",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-fauna-invasive-monitoring-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
+      "fingerprint": "sha256:3473f2281487d8a49f458e0ac4eb0ab95654c5ada4f73dde099328b364d53658",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/build/env/build-env.json"
+    },
+    {
+      "evidence_sha256": "sha256:c67c6ba5a6ce1b0ef14851b0b75a97b2681e610e2bd8720c4df669a800bd2ee2",
+      "evidence_zlib_base64": "eNorSs1JTSxO1U/OLypKTS7JzM/TD3J1dPF11ctNYSjClCzKz8lJSkzORqgCAC5jF8I=",
+      "fingerprint": "sha256:3639cdf807ce19defae231656917ffdc7106725633b63934d1be2921dc3e420d",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "release/correction/->release/correction_notices/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:368db8dd36ec23ca848f2c5575fb0c560f44eba113f3de463fb145abcd8591f4",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0002-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:198c313880601c6429f9a41bbd66c7a4ca69f88314802709eb5a52ee52568c4c",
+      "evidence_zlib_base64": "eNptjkFOw0AMRTmK95XTNl3AthAVAa2EmgMgM3bTkZJxZE8DSw7BCTkJ03bblaUv//cfa/B5owPF1FicJEEjHrsEezmISQpSjXy44/PbGyUnh41pylEMdpQtfgPCte8wLaslzOCd3KFefaxqeNLk2kemLAzr3JNXA19pxDZfN3tcLBb38PfzW3DjNn6awPMWXlt4cchHgVZ7gUfTLxfDNrIUs8RFzW6Q6hoDZeq1w+Eih+iZAs6QS17OaDrhcPKM1JnILcTDRabNRRk9UFnfaDg57LRse9Dx3PoHnThprA==",
+      "fingerprint": "sha256:380f9e0d4ca00d303f40b4060d5427f06a28b2a89ff94cea5f3e8384fef8786f",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "path-grammar:nonportable-punctuation"
+    },
+    {
+      "evidence_sha256": "sha256:41ecc6203663c505ac447a1ca363d7a095687f83e3134707ef7560d8ad8e2ecd",
+      "evidence_zlib_base64": "eNp9kLENwzAMBLOQ4hkCxGWabPAxaUsALQoUVTjTp4wbuuUd/sEnOCbjpuZ9es+P52u+73Sj8xmblWWID+NQsSWDVXQ7QsV37S1zHLJiVIRQ1EK4XVdnfIrDY/yFUfh+Psgu4xtrE05UkQSVIs0U1JOhSHIDhTN0dhfeuXpPpa6G7jaWq/W7FvmzH4RlpOI=",
+      "fingerprint": "sha256:3a3ef35e70b1fda2f503a2e346fabaa3b601bfc84c0ab81d19169996bf8410b3",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/reports/"
+    },
+    {
+      "evidence_sha256": "sha256:0273d7c5584cf504833372a53205e8b8f63c2075676e6efd00ba30f7af2e9017",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF8WXpRYVZ+bnwWWKMxKNTM0AVBIf4Q==",
+      "fingerprint": "sha256:3b57fc23adb261e9d606e06c8e40c9a7e700f4fd270cce16d74fe35926c04327",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/validation/validation_report.json"
+    },
+    {
+      "evidence_sha256": "sha256:63c1e51003dde2f8188f66a5fcdb4a9d3ff858014e5114cba6288866e24f9dcb",
+      "evidence_zlib_base64": "eNp9zDEOgCAMRmEvpJzBREYXb1DxV4wFTFsGb+9qHJjflydgkMJJYV4pXG7x4zT7IW2d/BNJiITC5XiazFLRO0LQUjvVTC2gMGMkZNP+zLuQmtRg9bt9AXFxRII=",
+      "fingerprint": "sha256:3fa38dc0657823e4d0eb939166e02858bf1174e2c830549897df4864be433fed",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/rollback/"
+    },
+    {
+      "evidence_sha256": "sha256:4a6ff9b6044bb533ff5cc067686ef6299f432527bce6392209ec743dda05fc94",
+      "evidence_zlib_base64": "eNqtXd12ozqWPo+Sy5nVi/hUzpzunksMsk0XBh/ASaVvWMQmDh0MHsCpyrmah5gnnCeZLYkfAfpLauqikqBvC7Gl/Wlr6+/2lDUv16eF5dvIf/BQEP5y2z5a7T3b8da37+e8f+aE4R7FEdruXDNCiwCZ9hbdno8iQHKsJKlP15MkNX3LjmlxSONDWVXpocnKQoJ+TpPmWqUSRJ0WddZkb1nzDllCxpUsv7q8VvDu5HjO6nry6t3edeMA/bFHYdRLYIC5jzZ+EOJfrY3prZHrr8kfTmRGju/dHp6ff8Gqjv1VbPmevbciku57UeAs9xHWN/ztOhbyQvTLNnlNn7M8/SVE1j5wokeceEiaJC9PizAyrQUu0muaXsZPh3qBDy1Ad2VVL54b2zNlSZf3S1X+Cx7dNiXU+Sy9rg4ycZysfMcAiuOsyJo4vr28z2FNWjf1OJ+mSg7wzF/+A1lRvDV34+fJqcoO1xy3gcUqS/OjlRTH7Jg06Rh3LM9JVgC+OrwkaQkqexfmycPurk95BsqGJhFVSVE/l9U5SA9pdmkEws25rC8vKZTL9O0gqZu0UiOPb1ldVu8WgNIfGjlnlf9Up9Vb0pmJCh42mtD+VxCy00OGjQEVb2leXlKltJVnZ6gCs4Ck/F0X7oFOk1yJXpVAC6BPXSX5f5ZF+hE17bZ3v38ID+XJLhnV7EcEw3P5mup+RpSeL2lF2O4j73gAgoRfPiGi21QesuJITI+PfM7LKlksyyYpwIDy8Fq9pe8yqJ3VTZU9XfHLAf2cHFIZfIX/9w+HK/QWhQY0Sn6UhVWVdf09yV9l8E3yhCvVrOvykEl0QdFO8ZbU2Vu6y5OiAWooK6lCdi9pQahFWTMtHmdLyi5DBUlxSndl/n5S4SrdggbpMSG9cEd35LFcogZOJ19E3pEVJxk8vID5nNNCXZT79JTSRmmV5/MV+hFBQzq1rG2mZ9rerOR8SbJTIYcvgVleyjwN0udU0pg6uAXwEDLOVTjc2MLBlREj0Q+SgBt+1ihyXafl4SU9Y2N51ynFmvzMDuZJE7gH/eog35fltTgm1ft9WtXKTwSZy8t7jalA2fI7mc37EVTY4CZ1qpLLi07ZXPDZyG9y2DYrgFRzFX90cGijeXJOWnMQNtcBTv1JO72UtarEHRjVDekO5eiQVYcDXQhoMleKXA+4/1gNTrMY/ZDmuVueFLbwQjlyEV7hx1OWg0luy2MqKMkFKj9PjWORGEAMx4UL/zkF1OwV7H+inlP5Bq56Am8Gzbxl6Xeewqsr0Ms5Xcg9lA51bFFx2sIW96br2MRHjz0/QuFYjtbHIvT3gYViG4VW4OwiP+hRZR5f4EPSRZWeMuzh1Qs7cFYRjBLWThghggRnNFlcsP9Yv6THRZ68YxzruB6q8hKDE36q0rqGQQoU931x9+vdX/+4u72cGxgJsE4xyY++sHqfqZSWuXWob98T8OiP5QHKRarArqCHKm7stAYyvBnq9nJ8prCvq60BT94PWD3HjPB8lxCD1T1n6TF2MNvgGiOGEJvgJwNdkaYVL69Zfoy3SXGlzZEKg8ec1DerCpSWpdXNNoEe/seNcUNLVd+8fbn9cvOXm11S1zd3v8W/3d2AW1SXOfHkjzdmkyd1n9uWONPwjoubPcEroTO4gItXNLWxuhaEPuE32sbr+O3u9ku8gqFbLw+j04VpB8avv/76xagxiSbGS3lOjfaP2uibgPH2xcjg76QoiffCy+M34wIFPbwbNXR01zypRhLGv5HULK3JYygqKI0ayr/zcvurcU4uOf4u46nlVcMoi/y9f54ckwt8v5HBV1dQxO45L7e/3fzvf//PTaepm7V784/wxqlvwL+7CaGnu1lW5XdgYSOEQTe0h+IIDaLi5PTlN6OGfjp+SeoXA9qZATYVZ0cDj9Ub+BYDmOh8Trii/2E0KS4rKOOtPCRPWEfwUXX2w8BmabyCA1kbWOGv6ZGXwe8GbvNGb0NGTAklNihrN0aSZwlRMGUNgDy9G2Ce+RNkGh+Sipfv3Z3RDp9Bh7hBQpma5GD8xTjCc/gBJvlmnK815A+myVPw3d+JgrGrnELrSUCjq/JwrW8wCd7Uh5aKRlIe/DOGoa9Bv8Wo01NHgiP4N/hnDO62kbRjRAMamJFnz/De5DmlnpBU8LUov+fp8ZQaMKzFrRuqfagPpThjKDMsM1I20h+QtZGXdLDc2oZUglIWrq60ngGfsTqNM+5TjK7ld4YxA7e9kfGcXIEPmxesVnh9KgSSfKG1vIFpVlnDNfEOK1NAj5F9Sg9q0u/QIuuX7GLgsalIR9hq8tYR6BMcz0bfRk88P9hCN/ZPZMfhfrs1g0ccY4JfURDjXsPxUBjG1gZZX13olAZZhrYX4Vfkogi6wTYawkE8Qoe2FadHwT6M4i3aLgPTQ3xMb51JBl9o7qCHjEkQzLQiDQkHvsdC0AWHavDS33u2GThIA4uL4Hh7J3ocvAC5xMq39mG8cv0HNXbrW1/jlROEGp/ou665NWPHi9A6oLFDpcwu8Le7CGRwNEtLIvD3ERLX5AC9gNL3toM8cH8s1wxDtW5AxEY713/cIg/8oL2rJYK8e+T6Oz1sEPi42dhaaNdZIevRclG8NiMtiWgDVgMtGV7g8uHQ40KPgZ2QxZ0d/2bHO7OL0krB6N6xiS7twHxonUMZ3jUfwUD6L1DidyhYYTLAr1ju7TUSGQojEyAglABe0xqM+isiB5RpBpGzAqtVv+DeQfCt8T0Cx9ixJG36MoRYwSKDQNaaWewa+dCWPdCSyMJYdAA8Z4bS1jCCg0UuTesrH4njHO8MffBRV7AiywISdpaOK0OpOOuKqWoLjQ3079kx+rbzg0gC1WE1AGo1y6ua9ACy9qGePdwTbZDrCmGkYbeTHlwAcBNwB5R/ixQNE8ABwm2MdHq+yEoAFsLI7THekXcLQRE0jy2KJG+j/dzSBPNiVIoHKCkdJbVjmti65uesaIdIOD1++xJ/+YwIjM7Y8Z9IGmNhPHqtYzyOgmEU/vHbXcwOpeLxUOqpwmNG8MLKxWjmaprYzkzxkqKX1KDjO6Mb3xl0fGeEKbj8DZ4uuSTETccDXRhW3l6K0yyffWiuhxccYZzxVGIvaWGb4Wbpm4EdA3uYbAEZELhFmFxwxyAGMSEF8CXCfQAMhuINMt1oo8Db0PZxj0ZjBWSQr5DorYp25qzd8wU6Zhq4L56xD18yhLpxIucem3rgrDcMKzMCJQ230bHnAjpbr2/sMZ4+5L6lJHMO0B6THAhlHf/TDLBXCT6HvbemfCaQA4IOd6A4043/sKCv9Jh+VSAS4DrBxr9CQCarAIUb7MWqxELXh+7ynoox6G7Sgom5mDundz0VyMDaOBHUyD5AUqBler4HrdCFb4w28kzn1sZFDRTugIfkYQaTCwQ++Pou64DzYDbYCMev4EL9rel4Ugj0QyY0QGivuK2qvmlAAxXLM15hT6MddyjB2NoirKmx48aD6n057oP2uo1k60D37q1jICBcUtwF4tLLhegEtA4mXplbsDVFfjtnh1xHUfc7H8hc3op2YG8ouKdctzWjwPkmxXfMNR6b8pAMU8lxJOQaamDaUKvCLljvU9xKmfl+BT2wSCk9MEAlPbBYMT2wKC16YAUIPYhMmgXuXfgeEy93wb6VFKsiEwaqwRRcNN/4GaiaKRiwiikYqJoDWLA2B8wXoYjtm12EIrRvFqRjvCx+v3Q7y8CjChE/MCIKe2eQUntncSJ7n2Ek9s5g23mddlGWGKZFC8yqGDkrMEApKTArX1ScwEKJXytSOgPUYgUGj0nhwXS/KkHEsYAKcInCpKVVkcKA1OAEHphv5cwqISUjDFgVIQzIr57/4CIY+sXA0LgVoCD8IF7SgAc5Ne8wWG3aYdZEMazzOIoEKsHjWAIXjvkHSkG0iWMBaGdOgpm8VVRCcmMwAm5iEDrsx8AZ8tv5ocpcFcTHrOyS8R4DE9HeFCLpH2ZQdeFURDpA90vnD2ASf09sf70fDdHncC0+JZMzCiptMTIWpRAVgbYoHUpsoTpER6EKjqMgNb1NcVy2oiAlqVGYgs8oSEkxLUyXXShcNKRhU8WNuUXtkBeTVdYS5QuooE3UYAGKlFs0xYTWBm1NUUFkpj5DCEmmRQr4gE1Vaa+3bhI1wVHUpe9/VYEFVDBG+eJ617N8sopPYfkUI7V8AlFaPkVpWT6Fdn5QKANQauB3gu36VQUtEJAo5j5BqcljguOzAl39qiQPuo5VQR4EpCYPCtMmDwJX0gNdCatj3BQ5GdrMw6njdatyLqAYEl4luUkNn65s/QhCNPDiAUOJXQg5hElVqbj3JCLzq/w9ap4Zg0U8M0L54iYSbRwvDvF0hKwNf4CNzuUxybMmS+vF9jfj3t8D2c/N8aQVFjrphIROmuGg00eCPCe9WEy/znjMPmLfTiSwMx9d37TFeCVxnfSCPB1sZf4hTlMR20kv8HPSDfqcPhrwOWkGe3qc3APqYALGOH0gEnTSCun0K4gtKJk4VUJ3HIyQx06KoNA4PSbj60CFElLPFAfko1JWCP0KeAHGEtmBz+lOOpzO6KnHOngY3k1Kij9ai9q6VdlyuupRMrrqQCq66nHCyHWP0CE0FiwvvYLyOpiakeZILpl0MCXrdMCNucT7QNuwu4B7puCRnQQ+fplaRmoPHVpBgh1MSYI9UJcEewH83vg+jGmgiB8Y6sAKJuxgwuBRD9Dgwg4bABMCarzCbA6SEWa/LUJCiRwM8SvXyN8Fzr1p6YkIOoEeKiDRcbq4S5rgVO7eDC5gXQFuusxlCtdkvz/JygAV+7UoOftR0NLdI6gULxIi1PzY4vTY78926YuC21pY4O9hWAKtJ8Jf7LrmLhSjdZhwihQQHIVpMCEFrl0YQJuS71VyE4VhjcShuUKAnK0Om4I1iKwF6hMZFdDjlBY7GYoqi63iF4oSWzebrmG1E7jQark4sdWO4RLXqoPqGTjeD6gxHmNwUiPvYeJa6SFKOx+QWpY+wLvw02TR9BypYoUeqGHpHCzfhHug2tp7qNjee4jK4gcg3w76dLWZD1BtQ+9FVAO3GZI3pTaAtJhjQGtMUg1oBXH0OGXHP0WKWWGGlBl6Dx5COVogVWPTYo7pbkk5f8zQMhaZglVEMcNv8OjAX8VgDq4owjwTAqcYcbwSAU5gZSL0aBerQkBNdTMhnZm2qZCC+2ZwtHI8hzQJ0KztexoinhnDGNZ22fXpIrCaYcUS3PY8hSvZdiqgINTZDmzsjNAToDbOTgnHLIsl8KIwTKF0HbCG6SjpeSagS9JTwR0Mn0Bn0tH2TEaDj6cycp6doknkTO75zUQkY0cJVhgumMkoOgABXhBeEKBVnqdQTNDXKPAiT3QqptVZVGVyrI0qycgmhqNq+RcXLoznzdGyzmWGVvUuHAHZ8rE5XBjGm0N1yJ8jFQSODdZNNyPSOXZh252JK/qBGV5N1BIRLvHO8EqqnkmsA3O3wd/c7tzUqMaNg7cxORZVm4aAoj+Y4ZVEPZfQZeqZpMqrngkIw3xzpAajz4TklD6Dywh6DhaM1AXADyhFuuxLhBYSrEpAxLAzOZ3Jj5mQFi/XadPQ80dqIyueq6TuDrZRMLRMUMa+EjkVD+uLihQry0GHeSXyChKVSSLvMV4+xuBfm3s3+oiomom1hLkMK5FUsrNEVsGhEkklm8pkdXlVkocODUrEaZP8RMuUM6lEUMapMjEFaapFhYQoEf1ZtqqvT/j0qOFwp9upbJnlKk4jECl7YYSSpyiI+oiW64finISeIU3W4iSC7Mf/guKo6Ilg1AN8gtNgnTGMzxEYo2YSjBLGPkmqilEwRs0dBKXNEhitxQcYqDBgDBF5NEyixKowiHsmhBAxqzn2nDJOsxwlj79jOFSoj3WBWUQo8HgQciAbXiBmwdCdtGtBXj0wwedo1WXRneU2+TsmMjGWiZ/IeWn4FDmot2/IluZbXes6zfMu22D0J5MVL5Man1GFz4mOprXK7CSnjc126PbzWRiM3RCPLIcYCqvyUTq0tS5oHfgWu3ub3SUfAieNG8BoSzw52cHeRyypj3a+d1tLiPmLcRF6ICcIbMxgtGcnK5rklfTw5nS5Y5vkQQFwcjjR2nDkn2kH4jRyNDi2dNe0bSZuMkAGasZDG3CT8cEerh+YI+pk8DKGHcP6quSkMxXES23PO5hbMIshIbbRbnPpQYhjwGhbkSp9NKEyYOjiB3KYCye1IzFJIToIsQtOestjfTVyIFKOqq7FU1m+koYA6mpPjzBBM7sgxotb2FJ1WFA+MLM3nLIDYLRy8dLjObhfmsk5M6cHkeOn4v50Fnj3NCA3gYLVs8fp9KmOZ5G+C3Qa7nz2SJAe4vmxh6IHP/gaR/ikfOGb8MFVPj3nQgT5Yw/mjZs7mpNRD+rq0A4ecU4cQLvuW/weNn7KoaQBJ49qDrjIXOIgtLNatVuoSfn91WqO7feqQh9ubUBjxPLnOHY/u7aOx9v6lfoe7epXao27G1+hGXb7rf5XjPY3q7+C3aus/greHmPVV7DbbYfjWjTg+t/MbmpUf/J8k6LGl3OEdLAfyfgTGgXjcVtG1sIzh/gK4e0mu6UdQyfsYAf4nkw74o8WobWrqtt0pqylFsjM5+OeS0xc7R61Tt/QpTKHaolQird3VIdi37L20HY9Uj2jYx6mIpp1SNGR+c33/O0j7iJ8d6/QCNmEoa/pdgeQWtN0t45aJzp7WcZo0scvfTxt7UeCfoICx9nOUf2583QdubAWTh/ly5M+V560efL0QY7s1mxql3pYq6ssdb8KV1lqzfWrMzw+bBxcvLKYdvo8Ebp2zfPBW/XpgY3d8kR8fKb0kztRbR11aw81dNSuJFTQxwynzFFbl/3iHP3vY9ZIqb9wWPQ03dknwejk9/EvHDohCSqWoYSrcEQvn61ciawYxoN4UtUl5/zw63u2BATcXryUA4bFWNkCDppKadfofK2Fsl5nSy0ULViI136Dbn3P1hFouB7ztQekih7MyNpAF7GbS8ymxbSVzZkHVWp7Pg2qVJ94klChP0kwXPsbpdMdyq+VTVoov1tnGkGlARzW1P9WGrRVfxWJ2arLPwrNKkp6zYBGcFjKRvfcVDHpQiKH6er0cK3w2ZO0U3S8ezNwYHQfzhEk9E9OnJ4HiAcQnoTE+uNkgM/GxXMY4wh9nywOY/SQr+hx7uD1qSGyAsR7Mff06O5SDtMm4XpOSLRDdFcGxus9qM9j1sZ2iHYHujB9dlsJHknhFWf2DNpdHmiZATLwycKuw82yx81i7DMEjjCZa2RM5hZmuPlZC1PIbAJlCujmUMSAUUx2muqZWzaaNE3GsTljvvFsCmsXLIkBtLoMqAGDCTIZbDhzKhJ3B/8zewLY6yYVQm0DwQuIPyLGTqE+fkKwXQqqlgRf6Hp6aeJzWWRNWTEBFAPfeWP8+jfj7nfjWh/PxuHalM/PwpzoHTd9apPgWyG6LV1AQEbX8kMOqA+7O/+c2PgAcWzfMqxgy0tjrYB5Sn22yP+KPN5bbSAz3mOEl4WCFh+g0foPXMnd7Ex3JhGHFDywYWbWlk3FJ6TvdqP2PkqdrrtjUpPqe1bE+K4zTmoffF7uPZsrv1rboMLQXvOUiLc6mgFYGU8njuOseI9D3/jyn1++/M5Jw1Om9HxuEj3iaWp7z3uXbzrGbrvhpawtw9w5RjS28iEdeKKbt8ErPbnVs9uKxEHx94YvSBA8nq7HGKcib8zhfWKAbJPGKW0UoQDYzwm3Utyc3BgQjRfODt5nIHuvu6+Dk0oXfBp+wGuSowOt98vAsXggZ+3xW3S4NQNoAo8eVywyLcP+LkxCviBF8Di2HyyJ/RAIPqVdA0KbLvoWIbIGgQMdTuzG1bfdb3l187DlNsLuJrHd1rG/xeEOwWjxixRHGm2MJ8bD1iuZuRLfs9dswV4ANk7Bl5vSuzzpHZBDio1vdHKz5xRP0k+k7JRcz3YmNzsVR+M+IafXt/cEMji6VGD8cA0+OrzNCJukapj7pGhiXtY1e3MQfdpPFJPXofYG6jFow977Q55sk4uxd4iI6YyTdvRGZVyI5jopYEAvA8RXOEEO47SwdSNJpuFwc/UY9QD/gWxWNCkp9Tg1XpVlw1ziRR/iC76e6P1cz9kPcjUa96TkU5nDxy+gC7fQxnfbKWupSFa84Qr6kIymBDM1o1swRkTzJcNMwtO1OOKm37WAJfn7NsmquGQuq0x/0Ps2/1WXhTQ/3TIPEuUTbjc1c2d0q93bJjmd0mOc1PHlfPe7+t3znGg++oLjy6W7ciT/leFCkKvUi4Yevf/pTD9YpOnVz3Pd0GpKNfLsx0vtDZ31ocouYJW3RRkXafO9rF4FmdA5A826PX2s+XZwXZs6faipd8FtzcJ0cN3CdHhd9J/tRRaahaFwzcz7wKxm9tMo3SfFdFU1ldOTmsXdNEs5k9N7nSTcpfliSQ66mpJkoZkBDnrxy0vyA+DhNa3Am8A/nsH3uWXvA2tBL9D40gIci8XoJr1LcnhNTnhMOlzoiGeOFnV1YJ7F5Fm/nIdZC/KhDHaBsyVzt+GHRbuFTPTWvQ+LR4Hphd11U71keyVifxmtA0N/1F+Tg6FVmqdJjS8EK8DXqxvqBRh0xSK5D8joLr416I23+MJPSryd7Ogez89kgC+7pbfBagkz46vP5lBdC9AKvS/9WNetq9DdQ2w6i9tT1rym6YV9xry2fUiup4zbay+h86S/WO3ttBLkFtpyi769vItQfo4vs2Zw7f23i+EK5LcvC/B+cLcd0tt+bymGfhAXzzsOv/dBPiXd3nja9fqfymPsd3wyi5/RgZWTW73NApLy95/JwisryOJTOUwdqM/k4eM7S39Wmbvt3e8/nQd8S3bJaJ38bGbhuXxNf0YtUXomN1EBSfxsWR7SpIFf/p+y+ZlG+5AVx1WW5seJNHaVoYdN3xZL34/wkkUSzm7KModeobsoGsf3/oEnlVfIxFtTYttZd9M1FPpGR/bQzbT+eIyvzp33I/8HHKZrpw==",
+      "fingerprint": "sha256:40a9e192b712aac69367df1585918fa6ac47e8100a1db23078692699d632fdea",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "path-grammar:uppercase"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:440b97e2ee2b9f5ddc8355e6c92f8ab57ba93c691dd401f77d980cb513b9750f",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-roads-rail-alignment-v1-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:8c60121d7e470e9193d66a004330818432752df1784ee4f9ffc223a85e43fdeb",
+      "evidence_zlib_base64": "eNqFjVEKwzAMQ3ehJuxEITim9ZbYITKB3n6DsdFCYZ9Cenpk6iOTIxZrWRTxHRXdhsdhuSzgtbF6aOXWrQrtEawQlym+H8ZhFX8y9+/qogFt3DIi/Zzz/k/7YcIDptf8mUMaWWoqTAIxTayTq3U+/rwA+pheXA==",
+      "fingerprint": "sha256:469383fa0bdd57649524c07d7c4aaf9cfcf98581570c159db12a5e545944bc25",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:transport"
+    },
+    {
+      "evidence_sha256": "sha256:23a0341752bb619fdb21390d58934f6928634e016399d37751a174ad419e1fea",
+      "evidence_zlib_base64": "eNqFzTsKgDAQRVE3FLMGwZQ27mBInhjIR95M9m9rIaS+By5RIAofO4louTf1Z9j2I6w1LfypYrXrc4OYQHZJ6ii5OKOkGVeYFVQ0U5fbRVHjiDa+nxfqjUAz",
+      "fingerprint": "sha256:470f0846ce9337b3a7716b70e84dc2b82e4bc1607b531b3a7a5f78b1a9cbc971",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/corrections/"
+    },
+    {
+      "evidence_sha256": "sha256:3510d33e6e657537c97a9b00f17af6d0feab55efcb1aad7cab4755b5061a7465",
+      "evidence_zlib_base64": "eNorSS0uKdZPyc9NzMwr1k9Pzc/JT6/UT04sSQQydJNz8otLi1IZSvCpioeqAgBa6R1/",
+      "fingerprint": "sha256:490a0de0249c45ec506852785ccc324557afa270656b4117457ef4b6aa10004e",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:tests/domains/geology/catalog_closure"
+    },
+    {
+      "evidence_sha256": "sha256:4f57bdf06af664a6020e350ab537f3eb6e22c0604074dbd7a8dbad049c7777e8",
+      "evidence_zlib_base64": "eNorSs1JTSxO1U9ML8pMLs0pKS1K1Q9ydXTxddXLTQEAp7sKlA==",
+      "fingerprint": "sha256:4a3a3524bc66128845c4545016896a7bd0c7d8eef5c386f5682ccd9e81cef4af",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/agriculture/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:5102623cd91d0e9500ac0066229a9539ea1f6ec6bc9b831a18cd3bc9fd1dc155",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0003.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:32555f7828d78ee8b3bf6d5e057d02ab20bebdcd8b6a8ba1b33d58da5979eea2",
+      "evidence_zlib_base64": "eNoryc/PKdYvS8zJTEksyS8q1s9ITMosSSzRTUsszUtkKMEhHQ+WBgDltBft",
+      "fingerprint": "sha256:53db4a14b2f3af963d5ff4248f076103149bac0dff3617b80832fe6256d49622",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:tools/validators/habitat_fauna"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:5732ad35446a917c3d36da85b364320a25ca8eb3a12d91baab1dba9bd57014eb",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"
+    },
+    {
+      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
+      "fingerprint": "sha256:5cc012601c1db89269624e39da827ef191725cad1e98fa4c695e87f9c4ad4606",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/source_role_anti_collapse.rego"
+    },
+    {
+      "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
+      "fingerprint": "sha256:5d9bbcc4e195962be0428df9d0c6afeb99418d7801b702546ceb355d46bd748c",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/lint/markdownlint.json"
+    },
+    {
+      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
+      "fingerprint": "sha256:5f2fa42a92e70cecbcbfe568f31415e5abc51af354d84255e31cfe864d2f40d7",
+      "rule_id": "KFM-TOPO-012",
+      "subject": "release/source_role_anti_collapse.rego"
+    },
+    {
+      "evidence_sha256": "sha256:66a47b7cb0f2d4e6dcacb1f5d405b2be65af9ba5a390bda575a3cd1434f4fe8a",
+      "evidence_zlib_base64": "eNqFkDEOwkAMBPlQyBuQSEnDDzZ3zuWEE0e2rwivp0QUPlrPaFfrDMeowjwjvcbndLs/puuWL/nnjqI1NfamFDuaVpCwlDN2fBM7VurELGg7YsqiMS1/6lfM1eEd/oZmi/mZtd9wkBwcj1NBtkFReXBFjkUjd6aNdreh7ovCXFvq/t+k8hd+ABQUpPA=",
+      "fingerprint": "sha256:61aee41516368418566146a9658292146c22389c442836d99a2345cbef43eca2",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "data/rollback/->data/receipts/rollback/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:61dbfbd7838f0a0d8e40cdea7326f315bac96bbe7ea4125c9ec479bb5771da0d",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0003-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
+      "evidence_zlib_base64": "eNorSs1JTSxO1c9NzMtMSy0u0ddLzyzJTk0tYChClwlydXTxddXLTQEACH8S8Q==",
+      "fingerprint": "sha256:66cf6e298f5a101c6be8f6208ede7198a78c25ab899aad692c541cadc21e4c14",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "release/manifest/->release/manifests/"
+    },
+    {
+      "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoLkhMTgUALjQFHg==",
+      "fingerprint": "sha256:6dccd2a876f400e69fa76640438638ef623328ccb1e65afc370d769114db20ba",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md"
+    },
+    {
+      "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWHIy8/TTSxOzsxkKC5ITE4FAHNpCJ8=",
+      "fingerprint": "sha256:6e3aa36a6e142764f9a9a71cb6d602ab599417dd7a6d6b3e4fce0352dd5fba09",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0028 \u2014 State-scale Focus Mode scope.md"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:711feb0503128bb4debb3fba518819783cd6ea4262373db7168248e71db97224",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0002.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:304b679f591315a09c358d2aa286d5ed9f2910679d8f6ed39790b2c7f6811e9c",
+      "evidence_zlib_base64": "eNqtlsmOG0cMhvNCE9fCWnizkfiYS5IX4DojWCMNWhIQ5+nDiR2rrfYpGkCAoKW+/lkkf1LoTPvj47vfP3749bePPz/re4A6pmVwGzCSZ1QvydgFMQNptqqFOuFP8vXoH39++OXdz4+78yezl/fWUa0gc9GsHSrw5IJkYzTSKcVgSquYvz9+fXz8o5ah5ExsUkW7SJ7NOyZncfBShlC+ntfjM+0OKwIpWoHUabQBXbFz8gkIVFxSxy4ubVYZtwR6XHZy2Z8vi62vgy2PnNkp5dxrJ8nSRHO1ITitpVTcUdKGtsgT2TG++byi1dwSVZ3GSlbJuE1gMfCUPQ2rMzSqMG1o5+fj6eXJQtr/v+kt6yos1TKLOHFGFOplBEYjzA6YOGua3RSL2y3M6XKg+zV9wazk2Eyt9VJ6H/j65ATmIq3M2p1m5USATfqGsz8ubyHnX8xVThQPJ5BkqgnjiLHxxASlmSYZWPLgkLkpqcevBXC3oMdNJSkXQ8KcG8zh5iM3RYY06nDC1FsUaTOBW9IT8e5M5/sl/Qe6SpqhwkBypjm1QpnRt9G96i2KumlznCVaSLakv2nR01tI+gK6ShphBOTKAzKMoqCtWoIa9oatpRy2VrPK3PTb02dd3ih1V9SqvCe1cNIUXlSLpAxQ4obQsIa3ZKgal1fKtrxf7Piytwc90MOeDroiNoGZw0yyQov+ZYu2DaltRoSY4teBgydsymE5kp4eFtrtH84L6doSKAuxYMSa3FKdaD1Tg9F8cPPJ7ZVrXm6RJzuf9/Zsh/PpYXfwhU7n5SI3tpqHp1mACYuyuuX+OmeQB3FYv1iznCIk3MCPu/067FKnU5mDSw9nZaZIiGRr1fsorQ4BCd/3b5jdQe2vO5L65fwqjiyMrVvrOS5Is8S7thHdOCMeLjNpyboCPNNh53a6pwG/Ia4yGABrTL3BvXQjBmWMyx2SaqLoPe1DbMz2jfGyHI++rkh9HT1Spnj0hrXcE0fKc8RVVGj0UWOiQr0BLLY3OtmD7I+ny13D6ce8dScnrJ44UqszShv9NTSqOTRHbBargQBi+jHwrYStBMXzUtyv9Vo05RIdC8hlJDGtPrNJIaKEfAVdeL+LD7vj4R45K8pqGtRUMQZCCCBPsZRAVCG2NAaBjAytB9fyjZjT07rdY45Zmu5RCBOptpKdYiEAQ0TnGiWQ6yDaIMLd9kzy6d6g1qjV/pUp0owG0GdUuNQRPu41ttRY6waE61n7ztjuz/g21zXyaLN72HN0OcSUG95jH/VpEwiS1lmLt+v1npddGPW6QwvrBGkxsaFEgQzq1SZZlK8IFuwxlcgFtgi+HHRv90zHW9LaPmOhnlli96zxqhwNJtZttIgwzJ1YW6x/7R8fHsjg",
+      "fingerprint": "sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f",
+      "rule_id": "KFM-TOPO-004",
+      "subject": "catalog/"
+    },
+    {
+      "evidence_sha256": "sha256:33abc0a306d4007bd5970d10cabc2b929e1e5e0d31976a780bc311b47555b70c",
+      "evidence_zlib_base64": "eNqVz90KwjAMhmFvyBWvaIT0m0bbtDRZcXfvhiA78AfPcvC88CWSU/AmNcEtGNwTMtTDcBa/AfUwyd3nBguxZBJ9j6pUJFGMVsEfSEnCS2hIIMM3YlATly6+7Nm6Aa2TS9Ejl5xn3cArNr4gkwUu6o14/aaf9nlEhUYoL8OTDlcr+jObSvMRfT3/yrapwhipgfbhA8/6jlc=",
+      "fingerprint": "sha256:773747b25979dd02a6a6c79a1ef4b41c066513265060cd0c76ddc20960c968c8",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:settlement"
+    },
+    {
+      "evidence_sha256": "sha256:c9220f9c5ef852f903155494ac71e22a2420cd90e7d28b41d6376c85dde902c8",
+      "evidence_zlib_base64": "eNqNzzGSE0EMBVAuZLvVrZFamaliQxIuQEktaTE7O2PGQ7C3xwGBA1eBol8/eL+k235JHfvt9EtPW1zX7R6H7jqvr4f5suyn4+tlf4u4nsmbGKoU96HOatxDShHQ4iwsJDgZTfhJ/2l+e/n85evL8d3PAL1nTYpJfLIhvUESUuWhEg49Hepw6g/oFnPoLR4QH1GHskJzQVRNa0yDqJspGJUGUJp0fYKk/l70gUqsOI0pGmoIBCAOdm7dqAJlJmbJtOpPqB8fvq33Fz8eOKYA4Sy92P0aCungqEaMxjqo1rBevD3hrrFe5zj4oodZF39ALZgjJGoW6BXdS8dm4FyMLZCMRKJP9B/o3/77uy6XjNt+/Hlbl7OMZlkEPRin+0I1DwIfUNMjLQVqRA/4Ay9juFE=",
+      "fingerprint": "sha256:781cda6ebe07128b68bdf550abb550f8aa536fa56e4c7e3bf628cd68f6f4d12c",
+      "rule_id": "KFM-TOPO-013",
+      "subject": "artifacts/trust-shaped"
+    },
+    {
+      "evidence_sha256": "sha256:d706e32adc8a2a3fbee2a312ee51a3237e10dbe29258b3353517b501908d3aa7",
+      "evidence_zlib_base64": "eNorSs1JTSxO1S/OLy1KTo0vys9JjU/MK8mMT87PyUksAMoEuTq6+Lrq5aYAAHgOEEw=",
+      "fingerprint": "sha256:797fcfd63d775ae1dbfcc4b88b8e825ce717721decc40a79803c800d1d1cd429",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/source_role_anti_collapse/"
+    },
+    {
+      "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
+      "fingerprint": "sha256:7c1ece611590bfe7b44b1756077c687a9d4175f21712a04062ce1cb58fa8934b",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/release/people-dna-land/release_manifest.json"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:7c6d6a88931fb35a3a38351adb75c0f83b90346e60fc096447f8f2c9dae88010",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0001.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:7aa0cfa4c6644aed7df1d3e5aa135234e6168a4d6d3fef74da0def74d3e92978",
+      "evidence_zlib_base64": "eNp9j1EKAyEMRHsipXshSaOt6aoRk23x9hX8WSjr5zAv4Y0yJ7EfSORBuYmN3Te2GAPuDhuLfCHtpvabrsh44H1bUCGTugyFnkF0wVVOhH0GV4/HSKDExbTw4qsjGQ4ZxCJn8lPlpD5b8xYuVw90SLn/yT9z8m6U",
+      "fingerprint": "sha256:7e60eb86dda93ece41bfe860f4fe7a89dd44db102219b905bf99445a873a11a4",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:hydro"
+    },
+    {
+      "evidence_sha256": "sha256:a5b74c2df465ca29d1094bada3ef45a52f43e9978600d36317a8bd91cf8962d2",
+      "evidence_zlib_base64": "eNorSs1JTSxO1U9JTc4szszPK9YPcnV08XXVy00BAI9xCa4=",
+      "fingerprint": "sha256:7f0be84c8db7e74c1950fbf7f4482754c291db52591c682454235569c954db39",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/decisions/"
+    },
+    {
+      "evidence_sha256": "sha256:bd597557db543ce1d71fd84b5277df572d2d03c0218c5031e4e1d9a887fd0f72",
+      "evidence_zlib_base64": "eNpLyU8u1k8syUks1g9ydXTxddXLTWFIQQjmJhaXpBbpJhZk6haXFqUlJqeiKSjOLy1KTtUtys9J1U3MK8nUTc7PyUksKAapAwAVuiHS",
+      "fingerprint": "sha256:80b3ed201e924894f6c6d99f87de70058696ea8770af04e6730a512f221bee40",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "docs/atlas/->docs/atlases/"
+    },
+    {
+      "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
+      "evidence_zlib_base64": "eNorSs1JTSxO1c9NzMtMSy0u0ddLzyzJTk0tYChClwlydXTxddXLTQEACH8S8Q==",
+      "fingerprint": "sha256:821f7daa9c5c2ab1961dba84f96eed5d3743fd3964503e0454f25ae29490215f",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifest/"
+    },
+    {
+      "evidence_sha256": "sha256:66a47b7cb0f2d4e6dcacb1f5d405b2be65af9ba5a390bda575a3cd1434f4fe8a",
+      "evidence_zlib_base64": "eNqFkDEOwkAMBPlQyBuQSEnDDzZ3zuWEE0e2rwivp0QUPlrPaFfrDMeowjwjvcbndLs/puuWL/nnjqI1NfamFDuaVpCwlDN2fBM7VurELGg7YsqiMS1/6lfM1eEd/oZmi/mZtd9wkBwcj1NBtkFReXBFjkUjd6aNdreh7ovCXFvq/t+k8hd+ABQUpPA=",
+      "fingerprint": "sha256:85f3bdd160a555d2714e3ef114802de0e6920d6fa8fd7540bdaa1023ffd15581",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/rollback/"
+    },
+    {
+      "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoSCxKzSvJSC1OLQYAVgMHtA==",
+      "fingerprint": "sha256:89996a501d9f73859b11ec468667147c5e9666d75e20837952f47bfcbaf9cafb",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:8ee07b3380566c9eaf58fdbef087f35644ad925143a838d62e3eed70d68eb7d0",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/agri-soil-crop-suitability-v1-001.json"
+    },
+    {
+      "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
+      "fingerprint": "sha256:8fa7362ea67f01335271f54f58181f716b575d96d70e0279fcc32862936b31fd",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/lint/ruff.json"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:9044a9b9988ee36914740529779eaf944ae8f43705a6a254e6696aff39e75200",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-roads-corridor-trade-v1-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:a0297328755694dbae4ceeb6952c527c8f510213b05f2b5a2aca41cd906be38b",
+      "evidence_zlib_base64": "eNorSs1JTSxO1S9KLctMLS/WD3J1dPF11ctNYShCk0ksyc0vLshILUrV10vPLMlOTS3ApwZuEAADNSQM",
+      "fingerprint": "sha256:907acec7b03420430ad4e709c67286fcaec060ab6ab2b740b06776b155519679",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/reviews/"
+    },
+    {
+      "evidence_sha256": "sha256:fb6ecc9db892e569bd93289c809307379f30eec5a2d4bcf4fc0a9074c7330989",
+      "evidence_zlib_base64": "eNpLzs8rLs1NLYpPzskvLi1KtfUPcPVjKEstykzLTE4syczPiy8uSSxJtQ1wDArxdPQBAMtdEgU=",
+      "fingerprint": "sha256:911a8949240cb17321f3258d874a8dbf252f3cfa29f6405ebc485014e3d96ff3",
+      "rule_id": "KFM-TOPO-020",
+      "subject": "alias.directory-rules.legacy-architecture"
+    },
+    {
+      "evidence_sha256": "sha256:8ab49520f872da6edee38e139a8d7472a801b816fc5326a0106f5309793c8fab",
+      "evidence_zlib_base64": "eNoryc/PKdYvS8zJTEksyS8q1i/OLy1KTtVNSS1OLsosAAoxlGBXEo9QAgDEhxu9",
+      "fingerprint": "sha256:927a8475a2f867ddd8e6d05f8789d20dcb28efc7370773db7bac8522c687ba7b",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:tools/validators/source_descriptor"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:92c28545304b6d725a168dcebf9fff7cc3fb059084fb15626d9a8edfee2d3567",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:9451608884e49a56cf6fa1814cd724a597762b5c88bd96fb791be7d6ea170a24",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-roads-historic-claim-v1-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWHIy8/TTSxOzsxkKC5ITE4FAHNpCJ8=",
+      "fingerprint": "sha256:9470b11d549bdaec9bae97946e4fafb256de3bb5663ad4fccc5b51b3385d630d",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+    },
+    {
+      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
+      "fingerprint": "sha256:953300d8e1d4ae0adf9c9f29288b0e91784d4965dc24016b3454d9177fa6087b",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/public_safe_geometry.rego"
+    },
+    {
+      "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+      "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
+      "fingerprint": "sha256:9f7caca1153d28bd7c05283f40fc287e04b3eb8d62061de3319afe9ae0e90de3",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/coverage/lcov.info"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:a08096a90ddd2733965291e258ad2a2229c918bdaba0933f2de18c626f3fd499",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0003.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:be38436fdc6b41d657f1e58120cabc9349768e7396ac9e37739fc2e1e6a93d59",
+      "evidence_zlib_base64": "eNpLzs/LS00uyS8q1s/LT0zULQYyc3VTy1LzSooZklEl48GS8RBJAI17FsU=",
+      "fingerprint": "sha256:a967587d2e5f4006ac8dd26362b7d0f47394afb024ebf45e68289c278c36fa8a",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:connectors/noaa_storm_events"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:bb382acfa086f4c69e44bd8cf57e622f7732b1651d4ac3beda9e662de0388218",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/agri-county-crop-progress-2026Q2-001.json"
+    },
+    {
+      "evidence_sha256": "sha256:c67c6ba5a6ce1b0ef14851b0b75a97b2681e610e2bd8720c4df669a800bd2ee2",
+      "evidence_zlib_base64": "eNorSs1JTSxO1U/OLypKTS7JzM/TD3J1dPF11ctNYSjClCzKz8lJSkzORqgCAC5jF8I=",
+      "fingerprint": "sha256:bc2d3e4508fca3b91363a699875db42790b7d1cdaaa82a3c5e06ebed44a3a739",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/correction/"
+    },
+    {
+      "evidence_sha256": "sha256:63c1e51003dde2f8188f66a5fcdb4a9d3ff858014e5114cba6288866e24f9dcb",
+      "evidence_zlib_base64": "eNp9zDEOgCAMRmEvpJzBREYXb1DxV4wFTFsGb+9qHJjflydgkMJJYV4pXG7x4zT7IW2d/BNJiITC5XiazFLRO0LQUjvVTC2gMGMkZNP+zLuQmtRg9bt9AXFxRII=",
+      "fingerprint": "sha256:c06117eab17e2a62b003da112d08da56e8dbdcf3dc3578d5859afcc43ce7a0be",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "release/rollback/->release/rollback_cards/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:c065ce01fc9f4ac4a3bc7cec2e03dbf918d436e9c0f04c5b18693dfe6158f092",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-roads-modern-network-v1-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:23a0341752bb619fdb21390d58934f6928634e016399d37751a174ad419e1fea",
+      "evidence_zlib_base64": "eNqFzTsKgDAQRVE3FLMGwZQ27mBInhjIR95M9m9rIaS+By5RIAofO4louTf1Z9j2I6w1LfypYrXrc4OYQHZJ6ii5OKOkGVeYFVQ0U5fbRVHjiDa+nxfqjUAz",
+      "fingerprint": "sha256:c2d706a32530f6e9843374bf3e6a38a8dc74fc8b8229f0855aaa4f3e01708e43",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "release/corrections/->release/correction_notices/"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:c9095384b221cd529033b9e38b36ad50b3a3a044e828bdddfd4b7b039efe1c0c",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-fauna-density-grid-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:d51845545bff6700ba536b43ee86776a58a3c66498269e2b78a35eacd4d7f734",
+      "evidence_zlib_base64": "eNpLzs/LS00uyS8q1i8tTknULchJzCspZkhGFY6HCAMAmaMR5Q==",
+      "fingerprint": "sha256:ca3be5a74fbe308e8fb28c4bd3301053d9f116c221270e5a132cd105be111824",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:connectors/usda_plants"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:cb90565e46550748cb754b16078a0055338ddc54e36c753c10b64821fd902aef",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-fauna-public-range-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:ea71f568add95276daab632b24b466ee052285b4e6b9f5d708bec563f0b94e94",
+      "evidence_zlib_base64": "eNqNz+EKwjAMBGBfqPaRJLTnDHZJaKK4t7cgTJwM/Re4jztSKShHZ2sIzwYdRz5OHFfADmd+xK3Dc9WZWFZQhd7I2NBYcHJD+e4wbVyWXFQcEnvx50AaA6mR1P/4Wv6DDeMcfOdYNi+8+ExRLsmLdpZpb7qjgRzb+AlQ4nx+",
+      "fingerprint": "sha256:ce9eb23152715b66a5c227e1dc29fa06981c9b71f420be8fd16a7d4ad11cdab9",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:people"
+    },
+    {
+      "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+      "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
+      "fingerprint": "sha256:d31766806deaf4f8615b36f7cfc2c174978844e45afec99227e3c6e873f4f3dc",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/lint/mypy.txt"
+    },
+    {
+      "evidence_sha256": "sha256:a3822fae229baf56a632b3d2684362716502b109ceba777cc44f936fb0461444",
+      "evidence_zlib_base64": "eNpLSSxJ1C8pSkxJ1S3KLy1JLdYPcnV08XXVy00BAIvDCYU=",
+      "fingerprint": "sha256:d65d7d4784ae5b7cb1fb498f77016ef96e5ca2ac2729722afdc9b1fc8403e904",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/trade-routes/"
+    },
+    {
+      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
+      "fingerprint": "sha256:da5a2accc8625952a68005b8ede2d1ca447e014160f09364abbbeee2e35db378",
+      "rule_id": "KFM-TOPO-012",
+      "subject": "release/hydrology_publication.rego"
+    },
+    {
+      "evidence_sha256": "sha256:867adc1763205ca6d8ecdc83f7f643d92e60bb8051ff4c70adfe526b8d7d74f0",
+      "evidence_zlib_base64": "eNqdk7FOxDAMhnmhtKgS7EjcyMILIF/sawNuHDmOUHl6Cgy3nOSUxUPyfXb0y0EwGONeWOYRZYWUx9fT0/PLaVjxDm/cwqwpNram5JEaFyDZTzaPtFVqWchveQXLOj28TffT43+UKMwULUke3qvkm+IFWgan+R9T2plT7EKVqu35GaGHs6g3fe4Kd4FzMrBOiqIozXsw1RW+QNGlNtSeRxaSwhQwQ2DIeJD+KUE+M2ldUumS+yB0N0AFsAaFxMEUkI7i1US3kAXJi7KSGdNK2brBGlK+KOwr1+Lvhx3mZB9E5ajnDJTEV+QbneSIzw==",
+      "fingerprint": "sha256:dac10301275769ce63ab4cb2250734076f5dc3cbcb5ef6da0ed5e4793f2025c7",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "data/catalog/domain/->data/catalog/domains/"
+    },
+    {
+      "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+      "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
+      "fingerprint": "sha256:e16ed6e6f389e8a5022e3bc1aef48741e6e166724e63b283cd6cb0018e857fcc",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/lint/eslint.json"
+    },
+    {
+      "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoLkhMTgUALjQFHg==",
+      "fingerprint": "sha256:e26c2dae233ced7ed0116537e848b27f2d6a83c60ddf47c722ada7f0600eca86",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/DomainDriven Design Reference.pdf"
+    },
+    {
+      "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+      "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
+      "fingerprint": "sha256:e2f82d843a14e6606521f1bde3b7e0b9174b438bbcaf203400a8bee3d28acda2",
+      "rule_id": "KFM-TOPO-017",
+      "subject": "artifacts/qa/coverage/coverage.xml"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:f025c1a05a10399dd2011d799e48db740c9e7529f852d015bd428b4996fe169c",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/promotion_decisions/hazards-r0002.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
+      "fingerprint": "sha256:f037bb9801d1690154bbb3058f863254d5644e1a126d0a7fe37cfa8fca4bee0c",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/hydrology_publication.rego"
+    },
+    {
+      "evidence_sha256": "sha256:d3f92304035ea6ed29dbb69b21aebb82e190ce8eaa51d9c3ace28995e878e2f6",
+      "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdYPDnF01stNYUhBFQaykoHCAHpFEGs=",
+      "fingerprint": "sha256:f11867231a4ec310c4f527063739c0e860bb9a0dcc31fa3e51be8bc04ca5b0e7",
+      "rule_id": "KFM-TOPO-007",
+      "subject": "casefold:docs/standards/stac.md"
+    },
+    {
+      "evidence_sha256": "sha256:43145b92a489c0e0d4b7104ce4d04d6275b3bf5b8cd6b1d5441df51654de6049",
+      "evidence_zlib_base64": "eNpVytEJgDAMBUAnanAEZ3AACeGh0dqEJghuL+iX33eujqoNSzgkiLVTWTUPwAe3qnJTRwUH/hay4eQgsZadJYOu8R2T9jk51Vr5TtnD2gPk4Sav",
+      "fingerprint": "sha256:f23881363518e7e8616f129482c53c4901e45b0e191ba86807c772f15cf9b274",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:air"
+    },
+    {
+      "evidence_sha256": "sha256:04eb09536052f254c0ae6a0742915e1af43cc5de9fa2c9f64f9ce8641f96834c",
+      "evidence_zlib_base64": "eNpLSSxJ1M9NLCjWD3J1dPF11ctNAQBChgZX",
+      "fingerprint": "sha256:f2cb20b8da2fb6cab980cc5d2f3f80b8623623fb231501de565d5df19655796f",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/maps/"
+    },
+    {
+      "evidence_sha256": "sha256:c28a793a528b2d1887f961c7a1b8c60cf7ca9419fdddaaa9c63edb0956e2c4d4",
+      "evidence_zlib_base64": "eNpLzs8rKUpMLinWL84vLUpO1Q/2Dw1ydo13cQ12DvIMCPEP0stNYUhGVwWh4lNSi5OLMgtK8ouAqgAPWRvd",
+      "fingerprint": "sha256:f34e26f3a71914b233dc68dc4c6e18600e9dd84cb99b8b4fc6b2bc403dd6a488",
+      "rule_id": "KFM-TOPO-007",
+      "subject": "casefold:contracts/source/source_descriptor.md"
+    },
+    {
+      "evidence_sha256": "sha256:da4765183a5699667cb7124320ddda505a06ff5ee654b16816a05084ce664ae7",
+      "evidence_zlib_base64": "eNorSs1JTSxO1S/Iz8lMrtQPcnV08XXVy00BAHDzCH0=",
+      "fingerprint": "sha256:f379bfe413c416ddc7a982104803525b2bdd8e1cb721384bd6bddf3ec9842e6d",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/policy/"
+    },
+    {
+      "evidence_sha256": "sha256:0fc8f4158e50495b824661219a53d11f50188274c8ba237542ab11e5a7cea9e7",
+      "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdZ3dvTz9/N0dvTxjHIM8fT308tNYUhBVZKcmJefl5mcmJNZlViSmZ8HVAIAT3YY4Q==",
+      "fingerprint": "sha256:f4f1f94c4b45fa5e1378045bbf07679e8f0af99dd9665b7416bfba8e54e22de4",
+      "rule_id": "KFM-TOPO-007",
+      "subject": "casefold:docs/standards/canonicalization.md"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:f76dcc774cdaedcad7bc3080ebb9e1bec42be4ca6dc4abd207fff6153266dc92",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/hazards-r0002-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+      "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
+      "fingerprint": "sha256:faf573130aebb37681bf241a03aa0087db5420efe310514fb0873038868e74d1",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/manifests/rel-roads-graph-connectivity-v1-template.json"
+    },
+    {
+      "evidence_sha256": "sha256:8f20ffede834f292a857988ed4582e7de36357548137d208ebda3d2296ec8754",
+      "evidence_zlib_base64": "eNorSs1JTSxO1S9IzS/ISdVNyUvUzUnMS9E3MjAy0zUw1TU01Q9ydXTxddXLTWEowqEYrgIA9+sZWQ==",
+      "fingerprint": "sha256:ff4542f9ab214f9f23132530d92793e9b2ab9d0d47d6a37fd02450013af0f368",
+      "rule_id": "KFM-TOPO-011",
+      "subject": "release/people-dna-land/"
+    },
+    {
+      "evidence_sha256": "sha256:27fb1f9af41710db788a92f4fb83f6990a6af1e3687ad27a9da46ad97a30c2b3",
+      "evidence_zlib_base64": "eNoryc/PKdYvS8zJTEksyS8q1o9Pzs/Nzc9jKEGXgIgDANHyEwI=",
+      "fingerprint": "sha256:ff78c9e6ba545ff86586723f0f9f1aea506be2f21fda50cce38194c53f2fcb83",
+      "rule_id": "KFM-TOPO-008",
+      "subject": "separator-alias:tools/validators/common"
+    }
+  ],
+  "expires_on": "2026-11-10",
+  "generated_from_ref": "main@bff35f5ddf00ef623eacf96be13a743e134f482f",
+  "non_effects": [
+    "does_not_define_or_amend_rules",
+    "does_not_authorize_migration_or_deletion",
+    "does_not_grant_evidence_policy_review_release_or_publication_status"
+  ],
+  "owner": "@bartytime4life",
+  "schema_version": "kfm.repository-topology-baseline.v1"
+}

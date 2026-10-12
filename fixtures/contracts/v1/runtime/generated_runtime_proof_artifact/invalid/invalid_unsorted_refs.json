@@ -1,0 +1,76 @@
+{
+  "artifact_id": "runtime-proof-artifact:unsorted-refs",
+  "artifact_kind": "ACTUAL_RESPONSE",
+  "artifact_ref": "kfm://artifact/runtime-proof/ephemeral-answer@sha256:e37e318301d420ad947a6504de08a9f46be9348b1578f01f266005c10a4a62de",
+  "case_id": "unsorted-refs",
+  "content": {
+    "byte_size": 256,
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest": "sha256:e37e318301d420ad947a6504de08a9f46be9348b1578f01f266005c10a4a62de",
+    "encoding": "utf-8",
+    "media_type": "application/json"
+  },
+  "golden_promotion": {
+    "artifact_digest": null,
+    "authority": "TEST_FIXTURE_ONLY",
+    "decided_at": null,
+    "decision": "NOT_REQUESTED",
+    "decision_id": null,
+    "expires_at": null,
+    "review_record_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "release_ref": null
+  },
+  "invalidation": {
+    "correction_ref": null,
+    "deletion_receipt_ref": null,
+    "reason_codes": [],
+    "superseded_by_ref": null
+  },
+  "lifecycle": {
+    "expires_at": "2026-08-06T00:00:00Z",
+    "previous_state": null,
+    "prior_record_ref": null,
+    "reason_codes": [
+      "GENERATED_FOR_REVIEW"
+    ],
+    "state": "EPHEMERAL",
+    "transitioned_at": "2026-08-05T00:00:01Z"
+  },
+  "object_type": "GeneratedRuntimeProofArtifact",
+  "profile": {
+    "profile_id": "kfm://profile/runtime-proof/generated-artifact@v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:8021456f8acaa98f1502ce75f93983f89f43390d133c24535623774440d31f45"
+  },
+  "provenance": {
+    "generated_at": "2026-08-05T00:00:00Z",
+    "generator_id": "kfm/runtime-proof-fixture-emitter",
+    "generator_version": "1.0.0",
+    "input_refs": [
+      "kfm://fixture/z",
+      "kfm://fixture/a"
+    ],
+    "run_receipt_ref": "kfm://receipt/runtime-proof/ephemeral-answer@v1"
+  },
+  "review": {
+    "review_record_refs": [],
+    "state": "NOT_REQUESTED"
+  },
+  "safety": {
+    "contains_personal_data": false,
+    "contains_precise_sensitive_geometry": false,
+    "contains_secrets": false,
+    "data_class": "SYNTHETIC_PUBLIC_SAFE",
+    "public_use_allowed": false
+  },
+  "schema_negative_canary": true,
+  "schema_version": "1.0.0"
+}

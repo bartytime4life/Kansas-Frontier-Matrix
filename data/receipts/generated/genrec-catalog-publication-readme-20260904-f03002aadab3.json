@@ -1,0 +1,165 @@
+{
+  "receipt_id": "genrec-catalog-publication-readme-20260904-f03002aadab3",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "catalog/publication/README.md"
+  ],
+  "artifact_hashes": {
+    "catalog/publication/README.md": "sha256:f03002aadab39da75dc114166345816ddceae34d03a74b114c5407293d539903"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "exact build not exposed"
+  },
+  "prompt_or_contract": "sha256:c37ef5c75b7e1db8c08c40cbc5a347a5b23b075e18d7e4c5fd0b1bffa9544e20",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google Drive",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/catalog/publication/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/catalog/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/data/published/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/release/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/control_plane/root_registry.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/control_plane/repository_topology_correction_register.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "catalog/publication/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "candidate-content-hygiene",
+      "outcome": "PASS",
+      "reason": "Session-local UTF-8/LF, final-newline, trailing-whitespace, conflict-marker and unsafe-HTML checks; git diff --no-index --check against /dev/null emitted no diagnostics."
+    },
+    {
+      "gate": "metadata-and-markdown-navigation",
+      "outcome": "PASS",
+      "reason": "YAML metadata parsed; H1, top and all 19 numbered headings retained; 9 unique fragment targets resolve; 3 fenced blocks and 8 tables parse with consistent row widths."
+    },
+    {
+      "gate": "relative-link-targets",
+      "outcome": "PASS",
+      "reason": "18 unique relative destinations, including metadata references, checked against paths confirmed by pinned connector file/tree reads; not a deployed-site link crawl."
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus format checking against exact repository schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact-path/truth-label/hash key parity and full SHA-256 checked. Two invalid receipt cases rejected and a mutated artifact failed the digest comparison."
+    },
+    {
+      "gate": "frozen-root-integration-authority-review",
+      "outcome": "FAIL",
+      "reason": "Read-only authority review: no accepted exact transition for catalog/publication/README.md. The new blob is an introduced KFM-TOPO-004 evidence delta. This is not a topology-validator execution result. Integration remains held; no baseline/register/validator edits."
+    },
+    {
+      "gate": "repository-native-validator-and-full-suite",
+      "outcome": "SKIPPED",
+      "reason": "No full Git checkout; container could not resolve codeload.github.com. Native generated-receipt/topology validators, make validate, pre-commit and full-suite tests were not run. Session-local checks are not equivalent."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not yet available when this immutable pre-PR receipt was emitted; later hosted status belongs in the PR, not a rewritten historical receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/catalog/publication/README.md"
+    },
+    {
+      "id": "repo-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/catalog/README.md"
+    },
+    {
+      "id": "repo-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/data/published/README.md"
+    },
+    {
+      "id": "repo-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/release/README.md"
+    },
+    {
+      "id": "repo-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repo-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repo-7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md"
+    },
+    {
+      "id": "repo-8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "repo-9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/control_plane/repository_topology_correction_register.yaml"
+    },
+    {
+      "id": "repo-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "repo-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/data/receipts/generated/README.md"
+    },
+    {
+      "id": "repo-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T20:05:00Z",
+  "emitter": "KFM scoped catalog-publication README writer",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md",
+    "drift_register_entry": null
+  },
+  "notes": "Two-artifact review unit: same-path README correction plus this self-excluding provenance receipt. The receipt hashes its authored README, not itself. Prompt hash covers only the current user request; no prompt text or hidden reasoning is stored. Drive Directory Rules and Notion KFM Repository Workbench were consulted read-only as lineage/coordination, not implementation or acceptance authority. Review-route identity is not an approval claim. No live PolicyDecision was consulted or fabricated. All prior receipts, the empty .gitkeep, governing decisions, correction register, topology baseline, validator, payloads and runtime remain untouched. The old task branch agent/update-catalog-publication-readme is an ancestor of main at 650902412bd5c27a492f170be6a92af981fc3585 and is preserved, not overwritten. Proposed delivery is one new task-owned draft PR; no ready, approval, merge, source admission, release, deployment, promotion, publication or settings operation. Rollback before integration: leave unmerged or non-force revert on the task branch; later frozen-root transitions need their own accepted authority."
+}

@@ -1,0 +1,74 @@
+{
+  "receipt_id": "genrec-pass18-classification-layer-evaluation-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/classification-layer-evaluation-assessment.yml",
+    "contracts/evidence/classification_layer_evaluation_assessment.md",
+    "docs/intake/exploratory/pass-18-classification-layer-evaluation-source-map.md",
+    "fixtures/contracts/v1/evidence/classification_layer_evaluation_assessment/cases.json",
+    "schemas/contracts/v1/evidence/classification_layer_evaluation_assessment.schema.json",
+    "tests/validators/evidence/test_validate_classification_layer_evaluation_assessment.py",
+    "tools/validators/evidence/validate_classification_layer_evaluation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/classification-layer-evaluation-assessment.yml": "sha256:53d04efc26b31110adb401a5e9df0a7189b4c04ab12c24c21d645d5358de946e",
+    "contracts/evidence/classification_layer_evaluation_assessment.md": "sha256:a40e498e327a9a88d1c3c40c5c78d15714c4aac820e57546ee44be65786dc7e5",
+    "docs/intake/exploratory/pass-18-classification-layer-evaluation-source-map.md": "sha256:5c0a6fc7e7f658941c8d9b8e7ea9ff4ff3e2ff0d4bae97c76c212f9a44b64df4",
+    "fixtures/contracts/v1/evidence/classification_layer_evaluation_assessment/cases.json": "sha256:e9c55f04eb33e69235e1d4db39f432083d48264379cb702fad4b346d08fbc5a1",
+    "schemas/contracts/v1/evidence/classification_layer_evaluation_assessment.schema.json": "sha256:12111973515b7cc1559a7af42a571afc3f790a40a92780e5ea1d942cc84aa03b",
+    "tests/validators/evidence/test_validate_classification_layer_evaluation_assessment.py": "sha256:61adeded49917908d830365a299f5abe56d3b1021b21e603fca8d6d610f7e636",
+    "tools/validators/evidence/validate_classification_layer_evaluation_assessment.py": "sha256:496fd2bddc0735d4f68f265f39739b6c7f5753133d2de7c8b3abc29befd6ac0e"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:a40e498e327a9a88d1c3c40c5c78d15714c4aac820e57546ee44be65786dc7e5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e", "sha256:769e69cb891bb8a9d3649600ef08e67e08ef378c81e17ce6fcbed7647e76eca2", "sha256:cb6275b4bf2c44e5fc56b166b1161ceb859a1de0562462814ad5b8ad6fd111b6", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas and AI concepts reference; private discovery identifiers withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-432", "attachment://supplied-ai-concepts-reference#physical-pages=166,219", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/evidence/analytic_output_disclosure_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/governance/model_card_envelope.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/classification-layer-evaluation-assessment.yml": "CONFIRMED",
+    "contracts/evidence/classification_layer_evaluation_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-classification-layer-evaluation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/classification_layer_evaluation_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/classification_layer_evaluation_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_classification_layer_evaluation_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_classification_layer_evaluation_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic classification-layer evaluation tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-three exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-model-disclosure-regression", "outcome": "PASS", "reason": "Twenty-eight predictive-generalization, analytic-output disclosure, and model-card envelope tests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both metadata blocks were valid; new registry entries remain review-only candidates."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-classification-evaluation-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-432"},
+    {"id": "ai-concepts-evaluation-pages", "validated": true, "evidence_ref": "attachment://supplied-ai-concepts-reference#physical-pages=166,219"},
+    {"id": "analytic-output-disclosure-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/evidence/analytic_output_disclosure_assessment.md"},
+    {"id": "model-card-envelope-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/governance/model_card_envelope.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T04:05:10Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only classification-layer evaluation assessment. It recomputes declared confusion-matrix and class-level metrics without defining a scientific performance threshold or creating model, label, evidence, layer, policy, review, release, publication, or public-use authority."
+}

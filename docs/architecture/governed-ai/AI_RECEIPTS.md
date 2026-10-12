@@ -1,594 +1,772 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/governed-ai/ai-receipts
-title: AI Receipts — Governed AI Subsystem
-type: standard
-version: v1
-status: draft
-owners: Docs steward + governed-AI subsystem owner
+title: Governed AI — AIReceipt Architecture and Accountability Boundary
+type: architecture-standard
+version: v2.0
+status: draft; repository-grounded; schema-paired; bounded-proof-only; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — governed-AI, runtime, evidence, policy, citation, security, privacy, contracts, schemas, validation, correction, retention, and release reviewers"
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-08-19
 policy_label: public
+owning_root: docs/
+responsibility: Explain the current AIReceipt contract/schema, bounded candidate builders, validator and fixture proofs, object-family boundaries, data-minimization rules, unresolved persistence and correction work, and the conditions required before AIReceipt can participate in an operational governed-AI flow.
+truth_posture: CONFIRMED current repository evidence / PROPOSED operational composition / UNKNOWN deployed emission, persistence, retention, correction propagation, signing, and release use
+repository: bartytime4life/Kansas-Frontier-Matrix
+base_commit: 1fbb35ccf3f4d9166c815ded78bfd851e3825ece
+target_prior_blob: df65d7b33d359c6721378caaf1e2933c240a9ef3
+codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+adr_0019_blob: 5c45cbaf0aae510638088913757634ea978c9ec3
+governed_ai_readme_blob: 9e1071bb69910bde3f364d319923c4db00637639
+ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
+ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
+ai_receipt_validator_blob: eb80e77aed15f478c32215c8f773f308a87a092a
+ai_receipt_validator_test_blob: f35514538205fbac359520327e7519b3a851cea8
+ai_receipt_workflow_blob: 1192926b29a6007b78887ade1058e8e2c6ce8023
+ai_receipt_builder_blob: 5fe03c96f22ea99b3e8689b92c7ee23d4fc12a65
+ai_receipt_builder_test_blob: 34b07a7f8353ef402f721e234789a6d4f3a5b924
+mock_projection_blob: 6b77074f1b47c575abd00fff989ff7d0795bedb1
+mock_projection_test_blob: 6ac251c7ea2a17ec2c7bd326880d582cc012e6b4
+data_receipts_ai_readme_blob: e2b8971c19ae6edd4f1e6a566eee2ec24d14becc
+inspection_boundary: >
+  Current-session GitHub reads covered the complete prior target, accepted Directory
+  Rules and ADR-0029, CODEOWNERS, the governed-AI parent and adjacent adapter page,
+  ADR-0019 status, the runtime AIReceipt contract and strict schema, current valid and
+  invalid fixture inventories, the dedicated validator, focused validator tests,
+  path-scoped workflow, deterministic candidate builder, MockAdapter projection,
+  focused package tests, generated implementation receipts, runtime policy inventory,
+  and the documented data/receipts/ai lane. No live model, credential, provider endpoint,
+  governed-AI API route, evidence resolver, policy evaluator, citation-validation service,
+  receipt emitter or durable store, retention job, correction propagation, signature
+  verifier, deployed client, release environment, rollback drill, or publication path was
+  exercised.
 related:
-  - docs/architecture/governed-ai/README.md
-  - docs/architecture/governed-ai/STATE_OWNERSHIP.md
-  - docs/architecture/governed-ai/ROUTE_MAP.md
-  - docs/architecture/governed-ai/BOUNDARIES.md
-  - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/evidence-flow.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/governance/cite-or-abstain.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - contracts/runtime/ai_receipt.md
-  - contracts/runtime/run_receipt.md
-  - schemas/contracts/v1/runtime/ai_receipt.schema.json
-  - schemas/contracts/v1/focus/citation_validation_report.schema.json
-  - policy/runtime/ai_receipts.rego
-  - tools/validators/ai/
-tags: [kfm, architecture, governed-ai, receipts, focus-mode, evidence, replay]
+  - README.md
+  - ADAPTER_CONTRACT.md
+  - BOUNDARIES.md
+  - FOCUS_FLOW.md
+  - MOCK_FIRST.md
+  - ROUTE_MAP.md
+  - ../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../../contracts/runtime/ai_receipt.md
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/policy/policy_decision.md
+  - ../../../contracts/evidence/evidence_bundle.md
+  - ../../../schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - ../../../fixtures/contracts/v1/runtime/ai_receipt/README.md
+  - ../../../tools/validators/validate_ai_receipt.py
+  - ../../../tests/validators/test_validate_ai_receipt.py
+  - ../../../packages/envelopes/src/envelopes/ai_receipt.py
+  - ../../../packages/envelopes/src/envelopes/mock_adapter_receipt.py
+  - ../../../tests/packages/envelopes/test_ai_receipt_candidate.py
+  - ../../../tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py
+  - ../../../.github/workflows/ai-receipt.yml
+  - ../../../data/receipts/ai/README.md
+tags: [kfm, architecture, governed-ai, ai-receipt, accountability, runtime, schema, validator, finite-outcomes, citation-validation, policy-decision, digests, no-chain-of-thought, no-publication-authority]
 notes:
-  - Repository unmounted in authoring session; every repo-shape, field-shape, and validator-name claim is PROPOSED until verified.
-  - Placement justified by Directory Rules §6.1 (docs/architecture/) and the Whole-UI + Governed AI Expansion Report Appendix A (governed-ai subsystem doc set).
-  - This is the subsystem-view explanation. Canonical object meaning lives in contracts/runtime/ai_receipt.md; machine shape lives in schemas/contracts/v1/runtime/ai_receipt.schema.json per ADR-0001.
+  - "v2.0 replaces a stale, truncated proposal with a current repository-grounded architecture companion."
+  - "The previous page described a larger speculative field set that conflicts with the current closed runtime schema; this revision defers field authority to the contract/schema pair."
+  - "This same-path revision changes documentation and its generated authoring receipt only."
+  - "No contract, schema, policy, package, runtime, fixture, validator, test, workflow, receipt instance, data layout, release record, deployment, source, or repository setting is changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# AI Receipts
+# Governed AI — AIReceipt Architecture and Accountability Boundary
 
-> **A signed, evidence-subordinate accountability record for every governed AI answer.**
-> Records *that* a bounded model call happened, against *which* evidence, under *which* policy, with *which* finite outcome — never the model's private chain-of-thought, never the raw prompt body, never a substitute for `EvidenceBundle`.
+> **Operating boundary.** `AIReceipt` records a bounded accountability trace for an AI-mediated runtime event. It binds adapter/model identity, caller-supplied input and output digests, policy and citation-validation references, and one finite outcome. It does **not** make generated language true, prove that references resolve, authorize a public answer, or create release or publication authority.
 
-<p align="center">
-  <b>Kansas Frontier Matrix — Evidence First · Cite or Abstain · Fail Closed</b>
-</p>
-
-<p align="center">
-  <img alt="Subsystem" src="https://img.shields.io/badge/subsystem-governed--ai-blue">
-  <img alt="Object family" src="https://img.shields.io/badge/object--family-receipt-7c3aed">
-  <img alt="Outcomes" src="https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-orange">
-  <img alt="Replay" src="https://img.shields.io/badge/replay-deterministic-green">
-  <img alt="Truth posture" src="https://img.shields.io/badge/posture-cite--or--abstain-critical">
-  <img alt="Status" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Authority" src="https://img.shields.io/badge/authority-subsystem%20doc-lightblue">
-</p>
+[![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-authority)
+[![shape](https://img.shields.io/badge/schema-9%20required%20fields-0969da?style=flat-square)](#current-schema-paired-profile)
+[![validator](https://img.shields.io/badge/validator-bounded%20offline%20proof-2da44e?style=flat-square)](#validation-and-proof)
+[![runtime](https://img.shields.io/badge/runtime%20emitter-HOLD-d4a72c?style=flat-square)](#operational-maturity-and-holds)
+[![truth](https://img.shields.io/badge/model%20truth-no-6e7781?style=flat-square)](#object-family-boundaries)
+[![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#status-and-authority)
 
 > [!IMPORTANT]
-> **AIReceipt is a runtime accountability record. It is not the answer.**
->
-> The answer's truth comes from `EvidenceBundle`, source role, policy decision, citation validation, review state, and release state — never from generated language.
->
-> An AI answer **without a valid AIReceipt** is, in the governed sense, **an answer that did not happen.** If the receipt cannot be produced, validated, persisted, and (where required) signed, the finite outcome **MUST** be `ABSTAIN` or `ERROR`, never `ANSWER`.
-
----
-
-## Quick links
-
-- [1. Purpose](#1-purpose)
-- [2. What AIReceipt is — and is not](#2-what-aireceipt-is--and-is-not)
-- [3. Where AIReceipts are emitted](#3-where-aireceipts-are-emitted)
-- [4. Receipt shape (PROPOSED)](#4-receipt-shape-proposed)
-- [5. Finite outcomes and reason codes](#5-finite-outcomes-and-reason-codes)
-- [6. Receipt-family relationships](#6-receipt-family-relationships)
-- [7. Lifecycle: emit → validate → persist → replay](#7-lifecycle-emit--validate--persist--replay)
-- [8. Signing, integrity, replay verification](#8-signing-integrity-replay-verification)
-- [9. Storage and retention](#9-storage-and-retention)
-- [10. Validator expectations and negative-path coverage](#10-validator-expectations-and-negative-path-coverage)
-- [11. Anti-patterns](#11-anti-patterns)
-- [12. Verification checklist](#12-verification-checklist)
-- [13. Rollback and change discipline](#13-rollback-and-change-discipline)
-- [14. Open questions](#14-open-questions)
-- [15. Related documents](#15-related-documents)
-- [Appendix A — Field cross-reference (PROPOSED)](#appendix-a--field-cross-reference-proposed)
-
----
-
-## 1. Purpose
-
-`AIReceipt` is the governed AI subsystem's **process-memory object**: a structured, persisted record that a specific bounded model invocation took place under a specific evidence, policy, and runtime configuration, and produced a specific finite outcome.
-
-It exists so KFM can answer four questions about any AI surface — Focus Mode, AI-drafted notes, AI exports, AI-assisted review suggestions — long after the moment the model spoke:
-
-| Question | Answered by | Without AIReceipt |
-|---|---|---|
-| **Did this answer happen?** | Receipt presence, signature, time | Unverifiable; treat as never happened |
-| **What did it see?** | `evidence_refs[]`, `prompt_scope_digest`, `context_window_digest` | Unverifiable; treat as ungoverned |
-| **What was permitted?** | `policy_decision_ref`, `policy_bundle_hash` | Admissibility unknown; cannot publish |
-| **Can it be re-derived?** | `model_id`, `seed`, `temperature`, `spec_hash`, deterministic reducer state | Not replayable; not audit-defensible |
-
-This document is the **subsystem-view** explanation of `AIReceipt` — how it fits Focus Mode, the trust membrane, and the receipt family. Canonical object meaning lives in `contracts/runtime/ai_receipt.md` (**PROPOSED**) and machine shape lives in `schemas/contracts/v1/runtime/ai_receipt.schema.json` (**PROPOSED**) per ADR-0001 schema-home rule.
-
-[↩ back to top](#top)
-
----
-
-## 2. What AIReceipt is — and is not
-
-### 2.1 Is
-
-- A **runtime accountability record** for governed AI use.
-- A **provenance witness** that links a finite outcome to a specific evidence set, policy decision, citation report, model identity, and runtime configuration.
-- A **replay anchor**: same evidence + same prompt envelope + same model + same seed + same policy bundle **MUST** yield the same receipt digest.
-- A **deterministic, structured object** — JSON, schema-validated, optionally DSSE-signed.
-- A **first-class member of the receipt family** alongside `RunReceipt`, `VerifyReceipt`, `TransformReceipt`, `RedactionReceipt`, `AggregationReceipt`, `ModelRunReceipt`, and `RepresentationReceipt`.
-
-### 2.2 Is not
+> **This page is explanatory architecture, not field authority.** The semantic contract lives at [`contracts/runtime/ai_receipt.md`](../../../contracts/runtime/ai_receipt.md); the machine shape lives at [`schemas/contracts/v1/runtime/ai_receipt.schema.json`](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json). Policy, citation validation, runtime behavior, persisted receipt instances, and release decisions remain in their owning roots.
 
 > [!CAUTION]
-> The following are **MUST NOT** for every AIReceipt emitter, regardless of provider, lane, or surface.
-
-- **Not a transcript.** Receipts MUST NOT carry free-form private chain-of-thought, hidden reasoning tokens, or unstructured model deliberation. Only the *outcome*, *digests*, and *governance metadata* persist.
-- **Not the prompt body.** Receipts carry `prompt_scope_digest` and `prompt_template_id`, never the raw user-plus-context prompt text. Raw prompts MUST be derivable only inside the governed runtime, behind policy.
-- **Not the raw model output.** Receipts carry `output_digest` and a *governance-safe* outcome envelope. The raw model text MUST NOT escape the governed API as a public surface.
-- **Not a substitute for `EvidenceBundle`.** A signed AIReceipt over a wrong, missing, or stale `EvidenceBundle` is a faithfully signed record of a non-answer. Cite-or-abstain still applies.
-- **Not a release artifact.** AIReceipts are *process memory* (`data/receipts/`), not release decisions (`release/`) and not evidence proofs (`data/proofs/`). The receipt-family-mixing anti-pattern is called out in Directory Rules §13.2.
-- **Not a public surface.** AIReceipts MAY be exposed in projection (a governed `AIReceiptSummaryDTO`) but the raw receipt object MUST NOT be the public path to truth. The Evidence Drawer cites `EvidenceBundle`; it cites the receipt only as a process pointer.
-
-[↩ back to top](#top)
-
----
-
-## 3. Where AIReceipts are emitted
-
-> [!NOTE]
-> All emission points listed are **PROPOSED** until verified against mounted-repo evidence. Doctrine is CONFIRMED by the encyclopedia, MapLibre report (v1.5/1.7/1.9), and Domain Atlas v1.1 §24.2.
-
-| Surface | Trigger | Outcome set | Receipt class | Notes |
-|---|---|---|---|---|
-| **Focus Mode** | `FocusModeRequest` resolved through adapter | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `AIReceipt` | Every Focus response — even `ABSTAIN`/`DENY` — carries a receipt. |
-| **AI-drafted note / summary** | Steward-invoked AI drafting inside review console | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `AIReceipt` | The draft is *candidate* content; receipt anchors provenance. |
-| **AI-assisted export** | Public-safe export with AI-rendered narrative | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | `AIReceipt` + `ExportReceipt` | Export gate requires both. |
-| **AI candidate generation for review** | Anomaly explanation, schema suggestion, validator hint | `ANSWER` · `ABSTAIN` · `ERROR` | `AIReceipt` | Internal lane; still receipt-bearing. |
-| **Modeled product** (forecasts, suitability surfaces, restoration models) | Model pipeline run | n/a (artifact, not Q&A) | `ModelRunReceipt` (sibling class) | `AIReceipt` ≠ `ModelRunReceipt`; see §6. |
-
-The watcher-as-non-publisher invariant applies: AI surfaces emit receipts and finite outcomes, but **MUST NOT** write to `data/catalog/`, `data/published/`, or `release/`. Promotion remains a separate governed state transition.
-
-[↩ back to top](#top)
-
----
-
-## 4. Receipt shape (PROPOSED)
+> **A schema-valid receipt is not a governed answer.** The current validator proves closed JSON shape and limited local consistency. It does not resolve `policy_decision_ref` or `citation_validation_ref`, calculate or verify semantic digest coverage, call a model, approve a provider, authorize an answer, promote lifecycle state, release, or publish.
 
 > [!WARNING]
-> Field names below are **PROPOSED** until the canonical schema lands at `schemas/contracts/v1/runtime/ai_receipt.schema.json` and ADR-0001 confirms the runtime schema home. Where this doc and the live schema conflict, the schema wins and a drift entry **MUST** be opened in `docs/registers/DRIFT_REGISTER.md`.
+> **Do not store prompts, chain-of-thought, credentials, raw evidence, or protected details in AIReceipt.** The current schema is closed with `additionalProperties: false`; raw payload and hidden-reasoning fields are outside the profile and must remain outside the receipt.
 
-### 4.1 Required fields (PROPOSED)
+**Quick navigation:** [Status](#status-and-authority) · [Purpose](#purpose-and-scope) · [Current profile](#current-schema-paired-profile) · [Fields](#field-semantics) · [Outcomes](#finite-outcome-vocabularies) · [Construction](#candidate-construction) · [Flow](#target-governed-flow) · [Boundaries](#object-family-boundaries) · [Safety](#data-minimization-and-security) · [Validation](#validation-and-proof) · [Storage](#persistence-retention-and-access) · [Correction](#correction-supersession-and-replay) · [HOLDs](#operational-maturity-and-holds) · [Anti-patterns](#anti-patterns) · [Change](#change-discipline-and-rollback) · [Evidence](#evidence-ledger) · [Related](#related-documents)
 
-The encyclopedia, MapLibre report v1.5/1.7/1.9, and Domain Atlas v1.1 §24.2 converge on a required-field set. The names below normalize that vocabulary into a single PROPOSED shape.
+---
 
-| Field | Type | Why required |
-|---|---|---|
-| `receipt_id` | string (deterministic ULID/UUID) | Stable identity; receipt is addressable. |
-| `receipt_class` | const `"ai_receipt"` | Disambiguates from `RunReceipt`, `VerifyReceipt`, etc. |
-| `schema_uri` | URI | Schema versioning; spec-hash-match per `C5-04`. |
-| `created_at` | RFC 3339 UTC | When the receipt was sealed. |
-| `outcome` | enum `ANSWER` \| `ABSTAIN` \| `DENY` \| `ERROR` | Finite-outcome contract. No free-form states. |
-| `reason_code` | enum (PROPOSED catalog) | Machine-readable explanation; see §5.2. |
-| `surface` | enum `focus` \| `note` \| `export` \| `review_assist` \| `other` | Which AI surface emitted it. |
-| `model_id` | string | Provider-stable model identity (e.g. `local/llama3.1:8b-q4_K_M`). |
-| `model_provider` | string | `mock` \| `ollama` \| `openai` \| `anthropic` \| … |
-| `runtime_adapter` | string | Adapter contract path/version; provider-agnostic boundary. |
-| `model_params_digest` | hex digest | Hash of `{seed, temperature, top_p, num_ctx, …}` — deterministic. |
-| `prompt_template_id` | string | Pinned, reviewable template; never freeform. |
-| `prompt_scope_digest` | hex digest | Hash of the assembled context envelope (not the body). |
-| `evidence_refs` | array of `EvidenceRef` | Admissible evidence used; cite-or-abstain enforced here. |
-| `citation_validation_ref` | `CitationValidationReport` ref | Closure proof for cited claims. |
-| `policy_decision_ref` | `PolicyDecision` ref | The allow/deny/restrict/abstain decision that admitted this call. |
-| `policy_bundle_hash` | hex digest | Pins the policy version that decided admissibility. |
-| `spec_hash` | hex digest | Combined hash of schema + template + adapter contract. |
-| `output_digest` | hex digest | Hash of the structured (not raw) outcome envelope. |
-| `runtime_metadata` | object | Adapter-bounded metadata (latency, tokens, num_ctx) — no PII, no prompt body. |
+<a id="status-and-authority"></a>
 
-### 4.2 Conditionally required fields (PROPOSED)
+## Status and authority
 
-| Field | Required when |
+| Question | Current evidence-backed answer |
 |---|---|
-| `seed` | Provider supports seeded determinism (Ollama, MockAdapter, llama.cpp). MUST be present for `ANSWER` outcomes in lanes claiming replay. |
-| `output_envelope_ref` | `outcome = ANSWER`. Points to the governed response envelope (not raw text). |
-| `denial_reason_ref` | `outcome = DENY`. Points to policy or sensitivity rationale. |
-| `abstention_reason_ref` | `outcome = ABSTAIN`. Points to missing-evidence or citation-failure detail. |
-| `error_ref` | `outcome = ERROR`. Points to structured error envelope. |
-| `dsse_envelope_ref` | Lane requires signed receipts (publication path, sensitive lanes). |
-| `signature_ref` | DSSE/cosign signing applied; references `release/signatures/` blob. |
-| `domain` | Lane is a domain surface (hazards, hydrology, archaeology, …). Required for domain-aware Rego per `I4.4`. |
-| `domain_constraints` | `domain` set. Encodes per-domain admissibility (e.g. `max_mapunit_uncertainty` for soils). |
+| Is this a tracked architecture document? | **CONFIRMED.** `docs/architecture/governed-ai/AI_RECEIPTS.md` existed at the inspected base. |
+| Is the same-path placement valid? | **CONFIRMED.** Accepted ADR-0029 adopts Directory Rules v2; this file remains a human architecture explanation under `docs/`. |
+| Was the prior page current? | **No.** It was truncated mid-sentence and described a speculative receipt shape that does not match the current closed schema. |
+| Is there a semantic AIReceipt contract? | **CONFIRMED present / PROPOSED status.** [`contracts/runtime/ai_receipt.md`](../../../contracts/runtime/ai_receipt.md) defines the meaning and boundaries. |
+| Is there a machine schema? | **CONFIRMED present / PROPOSED status.** The strict Draft 2020-12 schema requires nine fields and denies additional properties. |
+| Is there executable validation? | **CONFIRMED, bounded.** A deterministic no-network validator, focused tests, two valid fixtures, three invalid fixtures, and a path-scoped workflow exist. |
+| Is there candidate-construction code? | **CONFIRMED, bounded.** A package helper builds exactly the nine schema fields; a second helper projects a prevalidated MockAdapter outcome into that candidate. |
+| Is there an operational AIReceipt emitter or durable store? | **No verified implementation.** The inspected evidence does not establish runtime emission, persistence, retention, query, correction, or public projection. |
+| Is AIReceipt an accepted architecture decision? | **No.** ADR-0019 remains `proposed`; this page cannot accept it. |
+| Does this revision change runtime or publication state? | **No.** It is documentation plus generated authoring provenance only. |
 
-### 4.3 Forbidden fields (MUST NOT)
+### Directory Rules basis
 
-> [!CAUTION]
-> Any field below appearing in a receipt is a **policy violation** and MUST cause the receipt to be rejected by `policy/runtime/ai_receipts.rego` (**PROPOSED** path).
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes [Directory Rules v2](../../doctrine/directory-rules.md) the placement authority. The current file receives `PLACE` as an existing same-path explanatory document. It does not move authority from any other root.
 
-- `prompt_body` — the raw assembled prompt text.
-- `chain_of_thought` / `reasoning_tokens` / `scratchpad` — private model deliberation.
-- `raw_model_output` — the un-enveloped completion string.
-- `user_pii` — names, emails, IPs, geolocation precise enough to identify a person.
-- `source_internal_paths` — direct file paths to `data/raw/`, `data/work/`, `data/quarantine/`, or other canonical/internal stores.
-- `bearer_tokens`, `api_keys`, `secrets` — handled in `configs/` policy, not in receipts.
+| Responsibility | Owning surface | This page may do |
+|---|---|---|
+| Human architecture explanation | `docs/architecture/governed-ai/` | Explain current evidence, boundaries, risks, HOLDs, validation, and rollback. |
+| Semantic meaning | `contracts/runtime/ai_receipt.md` | Summarize and link; never redefine silently. |
+| Machine shape | `schemas/contracts/v1/runtime/ai_receipt.schema.json` | Report the current field grammar; never create a competing shape. |
+| Admissibility and access | `policy/` | State required separation; never claim a policy decision occurred. |
+| Candidate construction | `packages/envelopes/` | Cite bounded behavior; never infer end-to-end orchestration. |
+| Runtime execution | `runtime/` and `apps/` | Record verified maturity; never invent an emitter, route, or store. |
+| Fixtures, tests, validators, CI | `fixtures/`, `tests/`, `tools/`, `.github/workflows/` | Cite the exact proof surface and its limits. |
+| Receipt instances | governed `data/receipts/` lanes | Describe unresolved storage posture; never treat a README as emitted data. |
+| Release, correction, rollback | distinct governed families | Keep these decisions separate from receipt presence. |
 
-### 4.4 Minimal example (PROPOSED, illustrative)
+[Back to top](#top)
+
+---
+
+<a id="purpose-and-scope"></a>
+
+## Purpose and scope
+
+### Purpose
+
+This page explains how the current `AIReceipt` profile fits into KFM's governed-AI trust membrane. It is intended for runtime, API, evidence, policy, citation, validation, security, correction, and release reviewers who need to distinguish:
+
+1. the current receipt shape;
+2. the bounded code that can construct and validate a candidate;
+3. the authority-bearing objects that the receipt only references;
+4. the runtime and storage work that remains unverified; and
+5. the controls required before a receipt can support audit, replay, incident review, correction, or release review.
+
+### In scope
+
+- the current nine-field contract/schema pair;
+- finite AI outcomes and separate validator outcomes;
+- candidate-builder and MockAdapter projection behavior;
+- local shape and consistency validation;
+- data minimization, sensitive-content exclusions, and safe findings;
+- receipt/evidence/policy/citation/envelope/release boundaries;
+- persistence, retention, signing, correction, and replay HOLDs;
+- validation commands, graduation criteria, and rollback.
+
+### Out of scope
+
+This page does not:
+
+- accept ADR-0019 or any provider/adaptor decision;
+- change the AIReceipt contract or schema;
+- define a new reason-code, timestamp, evidence-ref, prompt, token, cost, signature, or retention field;
+- admit or call a model;
+- implement evidence resolution, policy evaluation, citation validation, a Governed API route, runtime emission, or durable persistence;
+- authorize access to `data/receipts/ai/` from public clients;
+- release, deploy, promote, publish, or approve generated language.
+
+[Back to top](#top)
+
+---
+
+<a id="current-schema-paired-profile"></a>
+
+## Current schema-paired profile
+
+The current machine authority is a closed JSON object with exactly nine required properties:
 
 ```json
 {
-  "receipt_id": "01J7XYZ7K1Q9V0H8W2M3R4N5T6",
-  "receipt_class": "ai_receipt",
-  "schema_uri": "kfm://schema/runtime/ai_receipt/v1",
-  "created_at": "2026-05-15T03:10:43Z",
-  "outcome": "ABSTAIN",
-  "reason_code": "EVIDENCE_INSUFFICIENT",
-  "surface": "focus",
-  "model_id": "mock/deterministic-v1",
-  "model_provider": "mock",
-  "runtime_adapter": "kfm://adapter/runtime/mock@v1",
-  "model_params_digest": "blake3:8a7c…",
-  "prompt_template_id": "focus.evidence_qa.v1",
-  "prompt_scope_digest": "blake3:e3b0…",
-  "evidence_refs": [],
-  "citation_validation_ref": "kfm://citation_validation/2026/…",
-  "policy_decision_ref": "kfm://policy_decision/2026/…",
-  "policy_bundle_hash": "blake3:9f1c…",
-  "spec_hash": "blake3:2d4e…",
-  "output_digest": "blake3:cf9b…",
-  "runtime_metadata": {
-    "decode_latency_ms": 42,
-    "tokens_in": 0,
-    "tokens_out": 0,
-    "num_ctx": 8192
-  },
-  "abstention_reason_ref": "kfm://abstain_reason/no_evidence_in_scope"
+  "id": "ai_receipt:focus:example-001",
+  "run_id": "run-example-001",
+  "adapter": "mock",
+  "model_ref": "fixture-only",
+  "inputs_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "outputs_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "policy_decision_ref": "policy-decision:example-001",
+  "citation_validation_ref": "citation-validation:example-001",
+  "outcome": "ABSTAIN"
 }
 ```
 
 > [!NOTE]
-> The example shows a *deterministic ABSTAIN* — a Focus Mode question whose scope returned no admissible evidence. Notice: no prompt body, no model output, evidence array empty, abstention reason linked. The receipt is still complete and replayable.
+> This is an illustrative schema-valid shape, not an emitted receipt, policy decision, citation result, answer, or release record.
 
-[↩ back to top](#top)
-
----
-
-## 5. Finite outcomes and reason codes
-
-### 5.1 Outcome set (CONFIRMED doctrine)
-
-The governed AI subsystem emits exactly four runtime outcomes. There is no fifth state, no `UNKNOWN`, no `PARTIAL`, no `MAYBE`.
-
-| Outcome | Meaning | Required receipt content |
-|---|---|---|
-| **`ANSWER`** | Evidence sufficient; citations validated; policy permits; release state allows. | Full receipt + `output_envelope_ref` + non-empty `evidence_refs[]` + passing `citation_validation_ref`. |
-| **`ABSTAIN`** | Evidence missing, citations failed to resolve, source role conflicted, temporal scope insufficient, or evidence stale. | Full receipt + `abstention_reason_ref`. `evidence_refs[]` MAY be empty. `output_envelope_ref` MUST be absent or null. |
-| **`DENY`** | Policy, rights, sensitivity, role, or release state forbids the answer. Sensitive lanes default here. | Full receipt + `denial_reason_ref` + `policy_decision_ref` with `decision = DENY`. |
-| **`ERROR`** | The governed surface could not evaluate (schema violation, adapter failure, infrastructure error, contract violation). | Full receipt + `error_ref`. Never a silent fall-through. |
-
-Validators **MUST** assert receipts exercise all four outcomes — see §10.2.
-
-### 5.2 Reason-code catalog (PROPOSED)
-
-The reason-code vocabulary is **PROPOSED**; the catalog will be hardened by an ADR once domain Rego packs land (see `I4.4`).
-
-| Reason code (PROPOSED) | Family | Typical outcome | Recovery path |
-|---|---|---|---|
-| `EVIDENCE_INSUFFICIENT` | Evidence gap | `ABSTAIN` | Add admissible evidence; rerun. |
-| `EVIDENCE_STALE` | Freshness | `ABSTAIN` | Re-ingest; refresh `EvidenceBundle`. |
-| `CITATION_UNRESOLVED` | Citation closure | `ABSTAIN` | Repair `EvidenceRef` resolution; rerun. |
-| `SOURCE_ROLE_CONFLICT` | Source-role collapse | `ABSTAIN` | Restore role; do not upcast. |
-| `SENSITIVITY_DENY` | Sensitivity / rights | `DENY` | Steward review; tier reassignment. |
-| `RIGHTS_DENY` | Rights | `DENY` | Resolve rights; reassign tier. |
-| `SOVEREIGNTY_DENY` | CARE / sovereignty | `DENY` | Convene rights-holder review. |
-| `PUBLIC_LEAK_RISK` | Public-safe transform missing | `DENY` | Apply generalization/redaction; re-emit. |
-| `POLICY_BUNDLE_STALE` | Replay drift | `ERROR` | Refresh policy bundle; rerun. |
-| `MODEL_UNAPPROVED` | Allowlist | `DENY` / `ERROR` | Use approved model; rerun. |
-| `SCHEMA_VIOLATION` | Receipt-shape failure | `ERROR` | Fix emitter; rerun. |
-| `ADAPTER_ERROR` | Runtime adapter failure | `ERROR` | Inspect adapter logs; rerun. |
-
-> [!NOTE]
-> Reason codes are **machine-readable**. The user-facing message lives in the response envelope. Receipts carry the code; UI carries the prose. Do not blur these layers — see Anti-pattern §11.3.
-
-[↩ back to top](#top)
-
----
-
-## 6. Receipt-family relationships
-
-`AIReceipt` is one member of the KFM receipt family. Each receipt class records a different governed transformation. **MUST NOT** collapse them.
-
-```mermaid
-flowchart TB
-    subgraph Pipeline["Pipeline lane"]
-        RR[RunReceipt<br/>build/run provenance]
-        TR[TransformReceipt<br/>geometry/attr transform]
-        AR[AggregationReceipt<br/>roll-up]
-        MR[ModelRunReceipt<br/>modeled product]
-        ReR[RepresentationReceipt<br/>3D/scene generalization]
-        RdR[RedactionReceipt<br/>public-safe transform]
-    end
-
-    subgraph Runtime["Runtime / AI lane"]
-        AIR[AIReceipt<br/>governed AI answer]
-        VR[VerifyReceipt<br/>tile activation]
-    end
-
-    subgraph Closure["Release / governance"]
-        CVR[CitationValidationReport]
-        PD[PolicyDecision]
-        PrD[PromotionDecision]
-        RM[ReleaseManifest]
-        RC[RollbackCard]
-    end
-
-    EB[(EvidenceBundle)]:::evidence
-    SD[(SourceDescriptor)]:::evidence
-
-    SD --> RR
-    RR --> EB
-    EB --> AIR
-    AIR --> CVR
-    AIR --> PD
-    PD --> PrD
-    PrD --> RM
-    RM --> RC
-    MR -.distinct from.-> AIR
-    classDef evidence fill:#e0f2fe,stroke:#0369a1
-```
-
-### 6.1 `AIReceipt` vs `RunReceipt`
-
-| Concern | `AIReceipt` | `RunReceipt` |
-|---|---|---|
-| Records | A bounded **AI answer** (Q→A surface) | A **pipeline/tile build** (data transform) |
-| Triggered by | Focus Mode, AI export, AI-drafted note | Connector run, COG/PMTiles build, OCI publish, validator run |
-| Primary digest | `output_digest` of governed envelope | `artifact_digests[]` of built outputs |
-| Replay key | `model + seed + prompt_scope + policy_bundle` | `inputs + config_hash + spec_hash` |
-| Home (**PROPOSED**) | `data/receipts/ai/` | `data/receipts/runs/` |
-
-> The MapLibre report v1.4 §ML-056-023 makes this explicit: *"build-run receipts and live-answer runtime receipts are distinct."* Do not collapse pipeline provenance and response provenance.
-
-### 6.2 `AIReceipt` vs `ModelRunReceipt`
-
-| Concern | `AIReceipt` | `ModelRunReceipt` |
-|---|---|---|
-| Records | An **interactive** AI surface answer | A **modeled product** publication (forecast, suitability surface, restoration model) |
-| Outcome class | Q&A finite envelope | Modeled artifact with uncertainty surface |
-| Source-role implication | `evidence_role` from cited sources | `source_role = modeled` on the produced layer |
-| Home (**PROPOSED**) | `data/receipts/ai/` | `data/receipts/models/` |
-
-Domain Atlas v1.1 §24.2 lists both as distinct receipt classes. The `SourceDescriptor` field `role_model_run_ref` MUST point to a `ModelRunReceipt`, never an `AIReceipt`.
-
-### 6.3 `AIReceipt` + `CitationValidationReport`
-
-The two are paired. An `AIReceipt` with `outcome = ANSWER` is admissible only when its `citation_validation_ref` resolves to a passing `CitationValidationReport`. The encyclopedia §I makes this an invariant: *"No uncited claims; DENY sensitive exposure."*
-
-[↩ back to top](#top)
-
----
-
-## 7. Lifecycle: emit → validate → persist → replay
-
-```mermaid
-flowchart LR
-    A[FocusModeRequest] --> B[Scope resolution]
-    B --> C[EvidenceRef → EvidenceBundle]
-    C --> D{Evidence<br/>admissible?}
-    D -- no --> AB[outcome: ABSTAIN]
-    D -- yes --> E[Policy precheck]
-    E -- deny --> DN[outcome: DENY]
-    E -- allow --> F[Adapter call<br/>structured output]
-    F --> G[Citation validation]
-    G -- fail --> AB
-    G -- pass --> H[Policy postcheck]
-    H -- deny --> DN
-    H -- allow --> AN[outcome: ANSWER]
-    AB --> RC[AIReceipt sealed]
-    DN --> RC
-    AN --> RC
-    F -. adapter failure .-> ER[outcome: ERROR]
-    ER --> RC
-    RC --> SCH[Schema validation]
-    SCH --> POL[Rego: ai_receipts.rego]
-    POL --> DSSE[DSSE sign optional]
-    DSSE --> ST[(data/receipts/ai/)]
-    ST --> RV[Replay verification]
-```
-
-The pipeline is **fail-closed** at every gate. A failure at any node before `AIReceipt sealed` MUST coerce the outcome to `ABSTAIN`, `DENY`, or `ERROR` — never silent success.
-
-### 7.1 Emission
-
-1. **Scope resolution.** `FocusModeRequest` → bounded scope envelope. Bounded means: capped context size, declared evidence-depth budget, pinned time basis, pinned release state, pinned policy bundle.
-2. **Evidence resolution.** `EvidenceRef` array → `EvidenceBundle` resolution. Stale, missing, or rights-unresolved bundles short-circuit to `ABSTAIN` / `DENY`.
-3. **Policy precheck.** Rights, sensitivity, role, release state, user purpose. Deny short-circuits before any model call.
-4. **Adapter call.** Provider-agnostic adapter contract. Structured output only (JSON envelope, schema-validated). No raw text drop.
-5. **Citation validation.** Every cited claim's `EvidenceRef` MUST resolve, MUST be released or review-authorized, MUST be in scope. Fail → `ABSTAIN`.
-6. **Policy postcheck.** A second pass over the candidate answer for surface-level sensitivity leak (coordinate precision, living-person inference, restricted DNA inference). Fail → `DENY`.
-7. **Seal.** Compute `output_digest`, `prompt_scope_digest`, `model_params_digest`, `spec_hash`. Stamp `created_at`. Receipt is now immutable.
-
-### 7.2 Validation
-
-The receipt is validated by **three** independent checks before persistence:
-
-| Check | Tool (PROPOSED) | Fails on |
-|---|---|---|
-| Schema shape | `tools/validators/ai/receipt_schema.py` | Missing required field, type error, additionalProperties, forbidden field present. |
-| Admissibility | `policy/runtime/ai_receipts.rego` | Outcome/reason mismatch, unapproved model, missing citation when `ANSWER`, forbidden field present. |
-| Replay integrity | `tools/validators/ai/replay_check.py` | `spec_hash` drift, `policy_bundle_hash` drift, `model_params_digest` non-deterministic. |
-
-Failure at any of the three coerces the surface to `ERROR` and the receipt is recorded with `outcome = ERROR` rather than dropped.
-
-### 7.3 Persistence
-
-PROPOSED layout:
-
-```text
-data/
-└── receipts/
-    └── ai/
-        ├── 2026/
-        │   ├── 05/
-        │   │   ├── 15/
-        │   │   │   ├── 01J7XYZ…_ai_receipt.json
-        │   │   │   └── 01J7XYZ…_ai_receipt.dsse.json    # when signed
-        │   │   └── _index.jsonl
-        └── _schema/
-            └── ai_receipt.schema.json -> ../../../../schemas/contracts/v1/runtime/
-```
-
-The directory is **append-only**. Receipts MUST NOT be edited or deleted after seal; corrections are issued as **new** receipts with `supersedes_ref`. Lifecycle-skip and lifecycle-rewrite anti-patterns are called out in Directory Rules §13.
-
-### 7.4 Replay
-
-The replay invariant is the strongest property AIReceipt buys KFM:
-
-> **same evidence + same prompt envelope + same model + same seed + same policy bundle ⇒ same receipt digest**
-
-`make ai-replay-check` (PROPOSED CI target) rebuilds a fixture set and asserts byte-identical receipt JSON. Drift on any axis (model version bump, policy bundle change, schema bump) breaks replay and is **expected** — it signals that admissibility moved and prior publications must be re-evaluated.
-
-[↩ back to top](#top)
-
----
-
-## 8. Signing, integrity, replay verification
-
-### 8.1 Why sign receipts
-
-Receipts are *process memory*, but in publication lanes they become *promotion-chain evidence*. A tampered or unsigned receipt is indistinguishable from a fabricated one. Signing buys:
-
-- **Tamper detection.** DSSE envelope over the canonical JSON.
-- **Replay trust.** Signature pins the exact receipt that was sealed.
-- **Promotion-chain integrity.** `PromotionDecision` may consume signed receipts as proof.
-- **Publication auditability.** Public corrections and rollbacks can name the receipt by digest.
-
-### 8.2 PROPOSED signing flow
-
-```text
-ai_receipt.json
-    │
-    ├─► canonical JSON (RFC 8785 / deterministic)
-    │
-    ├─► BLAKE3 / SHA-256 digest
-    │
-    ├─► cosign sign-blob ──► ai_receipt.sig
-    │
-    └─► DSSE envelope ────► ai_receipt.dsse.json
-                              │
-                              └─► release/signatures/ on publication
-```
-
-Signing keys, key rotation policy, and verification posture are **OUT OF SCOPE** for this document and live under `docs/security/` (**PROPOSED**) and the signing ADR (**PROPOSED**, not yet authored).
-
-### 8.3 Replay verification
-
-The replay validator (`tools/validators/ai/replay_check.py`, **PROPOSED**) re-executes a fixture receipt against the current adapter and policy bundle and asserts identity. CI runs replay on every PR that touches:
-
-- `schemas/contracts/v1/runtime/ai_receipt.schema.json`
-- `policy/runtime/ai_receipts.rego`
-- `policy/bundles/` (any bundle hash change)
-- any approved-model identity
-
-A non-identity result is **not** a test failure to be ignored — it is a **promotion-chain break** that requires correction lineage.
-
-[↩ back to top](#top)
-
----
-
-## 9. Storage and retention
-
-### 9.1 Where AIReceipts live (PROPOSED)
-
-| Class of receipt | Home | Notes |
-|---|---|---|
-| Unsigned receipts (dev, mock, ABSTAIN/DENY/ERROR not promoted) | `data/receipts/ai/YYYY/MM/DD/` | Append-only. |
-| Signed receipts (publication path) | `data/receipts/ai/YYYY/MM/DD/*.dsse.json` + `release/signatures/` | DSSE envelope persisted twice — once with the receipt, once in the release signature lane. |
-| Supersession (corrected receipt) | New receipt at new path with `supersedes_ref` | The old receipt is **not deleted**; it is marked superseded by the new one. |
-| Audit projection | `data/receipts/ai/_index.jsonl` | Append-only audit log; one line per receipt. |
-
-> [!CAUTION]
-> AIReceipts are receipts. They MUST NOT land in `artifacts/`, `release/`, `data/published/`, or `data/proofs/`. Mixing the receipt / proof / release / artifact lanes is one of the four drift patterns called out in Directory Rules §13.2.
-
-### 9.2 Retention (OPEN)
-
-> **OPEN:** Retention policy for AIReceipts is **NEEDS VERIFICATION**. Pass 10 Idea Index `C12-03` notes: *"the corpus does not yet specify retention policy for GENERATED_RECEIPTS — do they live as long as the artifact, or longer?"*
->
-> PROPOSED default: **keep forever, append-only.** Retention shortening requires an ADR per Directory Rules §2.4(4). Track in `docs/registers/VERIFICATION_BACKLOG.md`.
-
-### 9.3 Public exposure
-
-Receipts MAY be projected into a public-safe summary (`AIReceiptSummaryDTO`, **PROPOSED**) carrying outcome, reason code, evidence refs count, citation pass/fail, and signature presence — never `prompt_scope_digest`, `model_params_digest`, or `output_digest` raw bytes. The Evidence Drawer surfaces the projection, not the receipt.
-
-[↩ back to top](#top)
-
----
-
-## 10. Validator expectations and negative-path coverage
-
-### 10.1 Required validator surface (PROPOSED)
-
-Per Directory Rules §13.5 ("Test-only validator" anti-pattern), validators live in `tools/validators/ai/`, not buried in test files.
-
-```text
-tools/
-└── validators/
-    └── ai/
-        ├── README.md
-        ├── receipt_schema.py        # JSON Schema validator
-        ├── receipt_admissibility.py # Rego runner
-        ├── replay_check.py          # determinism + digest re-compute
-        ├── hash_utils.py            # canonical JSON / BLAKE3 / SHA-256
-        └── fixtures/
-            ├── valid/
-            │   ├── minimal_answer.json
-            │   ├── minimal_abstain.json
-            │   ├── minimal_deny.json
-            │   ├── minimal_error.json
-            │   └── deterministic_replay.json
-            └── invalid/
-                ├── missing_outcome.json
-                ├── prompt_body_present.json          # forbidden field
-                ├── raw_model_output_present.json     # forbidden field
-                ├── chain_of_thought_present.json     # forbidden field
-                ├── answer_without_citation.json
-                ├── unapproved_model.json
-                ├── stale_policy_bundle.json
-                ├── duplicate_receipt_id.json
-                ├── invalid_outcome_enum.json
-                └── temperature_nonzero_without_seed.json
-```
-
-### 10.2 Negative-path coverage rule
-
-> [!IMPORTANT]
-> **An AIReceipt validator that has never exercised `ABSTAIN`, `DENY`, or `ERROR` is not a validator — it is a hopeful test of the happy path.**
-
-Every CI run **MUST** prove all four outcomes are emittable, schema-valid, and policy-admissible. The negative-state rule established for KFM validators applies here verbatim: silence on the bad cases is the failure mode that drift exploits.
-
-### 10.3 Test families (PROPOSED)
-
-| Test family | What it asserts |
+| Schema rule | Current value |
 |---|---|
-| Schema validation | Every `valid/` fixture passes; every `invalid/` fixture fails with the expected error class. |
-| Outcome coverage | Each of `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` is exercised at least once per release. |
-| Forbidden-field rejection | `prompt_body`, `chain_of_thought`, `raw_model_output`, `user_pii` cause Rego `deny`. |
-| Citation closure | `outcome = ANSWER` ∧ empty `evidence_refs[]` → Rego `deny`. |
-| Replay identity | Deterministic fixture, byte-identical receipt digest across re-runs. |
-| Policy-bundle drift | Policy bundle hash change while fixture unchanged → `ERROR` outcome, not silent re-publication. |
-| Approved-model allowlist | Unknown `model_id` → `DENY` with reason `MODEL_UNAPPROVED`. |
-| Domain-aware rules | (per `I4.4`) Soil receipt with `max_mapunit_uncertainty > 0.10` → `DENY`. |
-| No-network | Replay runs without internet; no provider call leaks; MockAdapter only. |
-| DSSE signing | Sign → verify → tamper → verify-fails; round-trip identity preserved. |
+| JSON Schema dialect | Draft 2020-12 |
+| Root type | object |
+| Required properties | all nine properties shown above |
+| `id` pattern | `^[a-z][a-z0-9_:.-]*$` |
+| Digest pattern | `^sha256:[a-f0-9]{64}$` |
+| Receipt outcomes | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Additional properties | denied |
+| Schema status | `PROPOSED` |
+| Declared validator | `tools/validators/validate_ai_receipt.py` |
+| Declared fixture root | `fixtures/contracts/v1/runtime/ai_receipt/` |
 
-[↩ back to top](#top)
+### Fields that are not in the current profile
+
+The current schema does **not** contain fields for:
+
+- prompt text, prompt template, or chain-of-thought;
+- evidence payloads or direct `evidence_refs`;
+- answer text, citations, or a `reason_code`;
+- timestamps or duration;
+- token counts, cost, temperature, seed, or other generation parameters;
+- provider request/response bodies;
+- sensitivity labels or redaction details;
+- signatures, attestations, review approval, release state, correction state, or rollback target.
+
+Those concerns must remain in their owning objects or require an explicit contract/schema evolution. They must not be inserted as unreviewed extra properties.
+
+[Back to top](#top)
 
 ---
 
-## 11. Anti-patterns
+<a id="field-semantics"></a>
 
-> [!WARNING]
-> Each pattern below has been observed in adjacent systems and called out in KFM doctrine. Reviewers SHOULD reject PRs exhibiting any of them.
+## Field semantics
 
-### 11.1 Persisting chain-of-thought as receipt content
+| Field | Current role | What it does not prove |
+|---|---|---|
+| `id` | Stable receipt identifier matching the schema pattern. | It does not prove uniqueness, persistence, or deterministic derivation across implementations. |
+| `run_id` | Opaque identifier supplied by the runtime caller. | It does not prove a corresponding log, trace, or model invocation exists. |
+| `adapter` | Provider-neutral adapter identifier supplied by the caller or fixed by a bounded projection. | It is not an admitted-provider registry lookup or policy allow decision. |
+| `model_ref` | Model/profile reference supplied by the caller. | It does not approve a model, pin weights, prove local/hosted execution, or verify provenance. |
+| `inputs_digest` | SHA-256-shaped binding supplied for the bounded input set. | The current builder and validator do not calculate it or prove which bytes/canonicalization profile it covers. |
+| `outputs_digest` | SHA-256-shaped binding supplied for the bounded output set. | It does not make output true, cited, safe, released, or byte-reproducible without a canonicalization profile. |
+| `policy_decision_ref` | Opaque reference to the governing policy decision. | The current schema/validator do not resolve or authenticate the referenced object. |
+| `citation_validation_ref` | Opaque reference to citation validation. | The current schema/validator do not resolve the report or prove that cited evidence supports the output. |
+| `outcome` | One closed runtime outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. | `ANSWER` does not itself authorize client display, release, or publication. |
 
-**Symptom:** AIReceipt includes a `reasoning` field with model deliberation tokens.
-**Why it's wrong:** Chain-of-thought is private model state, not governed evidence. Persisting it (a) trains future systems on it as truth, (b) leaks reasoning that may contain disallowed inferences, (c) confuses receipt readers about what is admissible.
-**Fix:** Drop the field. The receipt records the *outcome* and *digests*, not the deliberation.
+### Reference-resolution rule
 
-### 11.2 Collapsing AIReceipt and RunReceipt
+For trust-bearing use, `policy_decision_ref` and `citation_validation_ref` must resolve through governed repository/runtime interfaces to compatible, reviewable objects. A non-empty string is only local shape evidence. Until reference resolution and authority checks exist, the receipt remains a bounded candidate or process-memory record.
 
-**Symptom:** A pipeline-build receipt is filed as an AIReceipt because the pipeline used an AI​​​​​​​​​​​​​​​​
+### Digest rule
+
+The current validator and builder reject all-zero placeholder digests, but they do not define canonicalization. A future reproducible digest profile must specify, at minimum:
+
+- the exact input/output object boundary;
+- canonical serialization and character encoding;
+- ordering and normalization rules;
+- inclusion/exclusion of redacted or sensitive fields;
+- algorithm/version identity;
+- replay behavior when schemas evolve; and
+- correction/supersession handling.
+
+That profile is **PROPOSED** work. This page does not create it.
+
+[Back to top](#top)
+
+---
+
+<a id="finite-outcome-vocabularies"></a>
+
+## Finite outcome vocabularies
+
+Two different closed vocabularies are present and must not be confused.
+
+### AIReceipt runtime outcomes
+
+| Receipt outcome | Bounded meaning | Required caution |
+|---|---|---|
+| `ANSWER` | The recorded AI-mediated event ended in an answer-like runtime outcome. | Receipt presence alone does not prove evidence, policy, citation, review, release, or client-display eligibility. |
+| `ABSTAIN` | The governed path declined to answer. | The current receipt has no reason-code field; inspect the referenced validation/decision/envelope objects. |
+| `DENY` | Policy or access posture denied the operation or exposure. | Sensitive denial details must remain controlled; do not echo protected inputs into receipt findings. |
+| `ERROR` | The path failed safely. | Do not fall back to an ungoverned answer or silently reinterpret the failure as abstention. |
+
+### Validator outcomes
+
+The dedicated validator emits `PASS`, `FAIL`, or `ERROR` for its own bounded check:
+
+| Validator outcome | Meaning |
+|---|---|
+| `PASS` | Schema shape and local consistency checks passed. |
+| `FAIL` | The candidate was readable but violated schema or local semantic checks. |
+| `ERROR` | The input could not be safely processed, for example duplicate keys, non-finite JSON, symlink input, unreadable input, or missing schema. |
+
+`PASS` is not equivalent to `ANSWER`, policy allow, evidence closure, review approval, release, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="candidate-construction"></a>
+
+## Candidate construction
+
+### Generic candidate builder
+
+[`packages/envelopes/src/envelopes/ai_receipt.py`](../../../packages/envelopes/src/envelopes/ai_receipt.py) provides `build_ai_receipt_candidate(...)`.
+
+**CONFIRMED behavior:**
+
+- accepts every current schema field explicitly;
+- requires non-empty string values for runtime identity and refs;
+- enforces the `id` and SHA-256 string patterns;
+- rejects all-zero digest placeholders;
+- enforces the four receipt outcomes;
+- returns exactly the nine schema fields; and
+- performs no network or model call.
+
+**Explicit non-effects:**
+
+- does not calculate either digest;
+- does not resolve evidence, policy, or citations;
+- does not validate a provider or model;
+- does not persist the candidate;
+- does not select public-answer eligibility;
+- does not promote, release, deploy, or publish.
+
+### MockAdapter projection
+
+[`packages/envelopes/src/envelopes/mock_adapter_receipt.py`](../../../packages/envelopes/src/envelopes/mock_adapter_receipt.py) projects one prevalidated MockAdapter response into an AIReceipt candidate by:
+
+- reading only `response_envelope["outcome"]`;
+- fixing `adapter` to `mock`;
+- fixing `model_ref` to `fixture-only`; and
+- forwarding caller-supplied digests and authority references to the generic builder.
+
+It does not invoke `MockAdapter`, validate the source response envelope, bind the output digest to response bytes, or create runtime/persistence authority.
+
+### Construction rule
+
+A successful builder return means only that local constructor guards passed. The candidate must still pass the authoritative schema and dedicated validator at the trust boundary, and every authority-bearing reference must be resolved by its owning subsystem before consequential use.
+
+[Back to top](#top)
+
+---
+
+<a id="target-governed-flow"></a>
+
+## Target governed flow
+
+The intended composition is broader than the currently proven builder/validator slice:
+
+```text
+caller request
+  -> scope, release, evidence, rights, sensitivity and policy precheck
+  -> minimized admissible model request
+  -> provider-neutral adapter
+  -> untrusted structured candidate
+  -> output-shape, citation, precision, freshness and policy postcheck
+  -> finite RuntimeResponseEnvelope
+  -> caller supplies exact refs and canonical digests
+  -> AIReceipt candidate builder
+  -> AIReceipt schema + bounded validator
+  -> reference resolution and authority checks                 [HOLD]
+  -> durable receipt persistence and access controls           [HOLD]
+  -> correction, supersession, retention and replay support    [HOLD]
+```
+
+### Current proof boundary
+
+| Step | Current state |
+|---|---|
+| Closed AIReceipt schema | **CONFIRMED present / PROPOSED profile** |
+| Local candidate construction | **CONFIRMED bounded implementation** |
+| Mock outcome projection | **CONFIRMED bounded implementation** |
+| Strict no-network shape/local validator | **CONFIRMED implementation** |
+| Synthetic fixture and focused test proof | **CONFIRMED repository surfaces** |
+| Provider-neutral runtime orchestration | **HOLD / no verified composed path** |
+| Policy-decision resolution | **HOLD** |
+| Citation-validation resolution | **HOLD** |
+| Canonical digest calculation | **HOLD** |
+| Runtime emission | **HOLD** |
+| Durable persistence/query | **HOLD** |
+| Client/public projection | **DENY by default until governed release criteria exist** |
+
+The receipt must remain downstream of evidence and policy. It cannot repair a missing upstream gate by recording that the gate was skipped.
+
+[Back to top](#top)
+
+---
+
+<a id="object-family-boundaries"></a>
+
+## Object-family boundaries
+
+| Object | Owns | AIReceipt relationship |
+|---|---|---|
+| `EvidenceBundle` | Claim-support evidence, provenance, scope, and source authority. | AIReceipt does not replace or embed it; generated language remains subordinate to evidence. |
+| `PolicyDecision` | Admissibility, access, sensitivity, and obligations. | AIReceipt stores only a ref; it does not decide or authenticate policy. |
+| Citation-validation result | Whether cited support resolves and supports answer posture. | AIReceipt stores only a ref; it does not validate citations. |
+| `RuntimeResponseEnvelope` | Client-facing finite outcome, reason posture, citations, and safe response context under its contract. | AIReceipt is audit/process memory, not the response envelope. |
+| Model/provider output | Untrusted candidate language or structure. | AIReceipt may bind an output digest but does not make output authoritative. |
+| `RunReceipt` / other process receipts | Accountability for other execution families. | Keep receipt subclasses/families distinct; do not relabel a non-AI process merely because AI assisted authoring. |
+| `GENERATED_RECEIPT` | Repository-authoring provenance for AI-authored tracked artifacts. | Separate object family and schema; it is not runtime `AIReceipt`. |
+| Proof object | Verifiable support for a bounded claim or transition. | AIReceipt can be referenced as process lineage, never substituted for proof. |
+| Release/correction/rollback records | Govern public state, withdrawal, supersession, and recovery. | AIReceipt cannot promote, release, correct, withdraw, or roll back by itself. |
+| Logs and telemetry | Operational traces and diagnostics under retention/security policy. | `run_id` may link to them where allowed, but the current profile does not prove linkage. |
+
+### Classification rule
+
+Classify by **what was governed**, not by which tool appeared in the workflow:
+
+- model-mediated runtime event → candidate for `AIReceipt`;
+- repository AI authoring → `GENERATED_RECEIPT`;
+- data transform → transform/run receipt family;
+- validation run → validation receipt/report family;
+- release transition → release decision/manifest/receipt family.
+
+A pipeline-build receipt does not become `AIReceipt` merely because AI helped write the pipeline.
+
+[Back to top](#top)
+
+---
+
+<a id="data-minimization-and-security"></a>
+
+## Data minimization and security
+
+### Allowed current payload
+
+Only the nine schema fields belong in the current AIReceipt object. Values should be minimized, opaque where practical, and safe for the receipt's access class.
+
+### Forbidden content
+
+Do not place any of the following in AIReceipt:
+
+- raw prompts, system prompts, hidden instructions, or chain-of-thought;
+- provider request/response bodies or answer text;
+- credentials, tokens, endpoint secrets, infrastructure internals, or private URLs;
+- raw evidence rows, unpublished source excerpts, or canonical/internal-store payloads;
+- living-person private data, DNA/genomic material, exact rare-species locations, archaeology coordinates, infrastructure detail, or other protected precision;
+- policy denial details that would reveal the restricted fact;
+- full exception traces, request headers, environment variables, or filesystem paths;
+- unsigned review, release, or publication claims disguised as receipt metadata.
+
+### Safe-error behavior
+
+The current validator reports finding codes and JSON-pointer paths rather than candidate values. It also:
+
+- rejects symbolic-link inputs;
+- limits input size and finding count;
+- rejects duplicate keys and non-standard non-finite numbers;
+- rejects malformed/non-UTF-8 JSON and non-object roots;
+- rejects blank required refs/identity fields; and
+- rejects all-zero placeholder digests.
+
+Those defenses reduce accidental disclosure. They do not replace threat modeling, authorization, encryption, retention policy, or incident response for any future receipt store.
+
+### Public boundary
+
+Normal public clients must not read `data/receipts/ai/` or any future internal receipt store directly. A public-safe projection, when justified, must expose only the minimum released metadata through a governed API and must remain subordinate to evidence, policy, correction, and release state.
+
+[Back to top](#top)
+
+---
+
+<a id="validation-and-proof"></a>
+
+## Validation and proof
+
+### Current fixture inventory
+
+Repository inventory at the evidence snapshot confirms:
+
+- two positive JSON fixtures under `valid/`;
+- three negative JSON fixtures under `invalid/`; and
+- expected-error sidecars for the negative fixtures.
+
+Some adjacent fixture README prose still describes the earlier one-positive/one-negative inventory. Current directory bytes and the dedicated source map are stronger evidence for the present count; that documentation drift is outside this file's change scope.
+
+### Dedicated validator scope
+
+[`tools/validators/validate_ai_receipt.py`](../../../tools/validators/validate_ai_receipt.py) proves only:
+
+- safe local JSON ingestion;
+- Draft 2020-12 schema conformance;
+- non-empty configured identity/reference strings;
+- rejection of all-zero digest placeholders;
+- deterministic, payload-safe finding output; and
+- valid/invalid fixture polarity.
+
+Its serialized result explicitly sets `authority_created` to `false` and identifies the scope as `ai-receipt-shape-and-local-consistency-only`.
+
+### Focused proof files
+
+| Proof surface | What it verifies |
+|---|---|
+| [`tests/validators/test_validate_ai_receipt.py`](../../../tests/validators/test_validate_ai_receipt.py) | Fixture polarity, blank-ref and zero-digest failures, duplicate-key/non-finite handling, symlink denial, and payload-safe output. |
+| [`tests/packages/envelopes/test_ai_receipt_candidate.py`](../../../tests/packages/envelopes/test_ai_receipt_candidate.py) | All four outcomes, deterministic exact-key construction, invalid-field rejection, zero-digest rejection, schema alignment, repository-validator integration, and absence of authority/payload fields. |
+| [`tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py`](../../../tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py) | Mock outcome projection, fixed mock identity, source-response immutability, safe rejection, and preservation of explicit digests/refs. |
+| [`.github/workflows/ai-receipt.yml`](../../../.github/workflows/ai-receipt.yml) | Path-scoped, no-network fixture validation plus generated-receipt integrity for the validator closure slice. |
+
+### Reproducible commands
+
+```bash
+python -m pytest -q tests/validators/test_validate_ai_receipt.py
+python tools/validators/validate_ai_receipt.py --fixtures
+
+PYTHONPATH=packages/envelopes/src \
+  python -m pytest -q \
+  tests/packages/envelopes/test_ai_receipt_candidate.py
+
+PYTHONPATH=packages/envelopes/src:. \
+  python -m pytest -q \
+  tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py
+```
+
+### What passing checks do not establish
+
+Passing all commands above does not establish:
+
+- evidence resolution or factual correctness;
+- policy authorization or citation sufficiency;
+- digest canonicalization or semantic coverage;
+- model/provider approval or a real model call;
+- runtime emission, persistence, retention, signing, or access control;
+- client rendering, release, correction propagation, rollback, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="persistence-retention-and-access"></a>
+
+## Persistence, retention, and access
+
+[`data/receipts/ai/README.md`](../../../data/receipts/ai/README.md) documents an AI receipt family lane and two documented domain sublanes. That is **documentation evidence only**.
+
+### Current posture
+
+| Concern | Status |
+|---|---|
+| Logical receipt family under `data/receipts/` | **CONFIRMED documented** |
+| Final subtype/domain directory grammar | **NEEDS VERIFICATION** |
+| Actual runtime AIReceipt instances under the lane | **UNKNOWN** |
+| Runtime emitter | **HOLD / no verified implementation** |
+| Durable store or query API | **HOLD** |
+| Access-control policy | **HOLD** |
+| Encryption/key management | **HOLD** |
+| Retention and deletion schedule | **HOLD** |
+| Public-safe projection | **DENY by default / HOLD** |
+| Signing or attestation | **HOLD** |
+
+### Required persistence properties before adoption
+
+A future operational store should not be considered complete until it has:
+
+- one accepted logical owner and physical-storage contract;
+- append-only or explicitly versioned mutation rules;
+- deterministic or collision-resistant identity policy;
+- bounded payload size and safe serialization;
+- access classes and least-privilege read/write paths;
+- encryption and secret-management posture where applicable;
+- retention, legal hold, correction, withdrawal, and deletion rules;
+- reference-resolution and orphan detection;
+- integrity verification and backup/restore evidence;
+- audit logging that does not leak sensitive content; and
+- a public boundary that denies direct receipt-store access.
+
+This page does not select a database, object-store layout, monthly directory scheme, signature system, or retention period.
+
+[Back to top](#top)
+
+---
+
+<a id="correction-supersession-and-replay"></a>
+
+## Correction, supersession, and replay
+
+### Historical integrity
+
+A receipt should record what occurred at a particular accountability boundary. Corrections should not silently rewrite historical receipt bytes merely to make a past event appear compliant.
+
+### Proposed correction pattern
+
+A future governed correction path should:
+
+1. preserve the original receipt or its immutable digest;
+2. emit a separate correction, supersession, invalidation, or withdrawal reference;
+3. identify the affected `id`, `run_id`, output digest, policy/citation refs, and downstream response/release objects;
+4. propagate stale/withdrawn state through governed APIs, caches, indexes, maps, stories, and AI surfaces where relevant;
+5. preserve the reason at the appropriate access class; and
+6. record a rollback or recovery target when public state was affected.
+
+This pattern is **PROPOSED**. No current AIReceipt-specific correction schema or propagation proof was established.
+
+### Replay limits
+
+Current code can deterministically rebuild a candidate from identical explicit inputs. That is not full replay. End-to-end replay requires verified:
+
+- canonical input/output serialization;
+- exact adapter/model/profile identity;
+- evidence, policy, citation, prompt/configuration, and release snapshots;
+- deterministic or bounded-nondeterministic runtime posture;
+- compatible contract/schema versions; and
+- preserved correction/supersession state.
+
+A matching digest proves byte equality for the selected object boundary; it does not prove factual correctness or policy legitimacy.
+
+[Back to top](#top)
+
+---
+
+<a id="operational-maturity-and-holds"></a>
+
+## Operational maturity and HOLDs
+
+### Confirmed bounded implementation
+
+- strict proposed runtime schema;
+- semantic contract documentation;
+- two valid and three invalid fixtures;
+- deterministic no-network validator and focused tests;
+- path-scoped hosted workflow;
+- exact-key candidate builder and focused tests;
+- MockAdapter outcome projection and focused tests;
+- generated authoring receipts that bind the validator and builder slices.
+
+### HOLD — required before operational receipt use
+
+- accepted architecture/contract decision or explicit maintained proposed-profile posture;
+- canonical input/output digest profile;
+- resolvable policy-decision and citation-validation contracts plus runtime resolvers;
+- admitted provider/model/profile identity governance;
+- composed governed-AI route and runtime orchestration;
+- AIReceipt emitter integrated after finite outcome selection;
+- durable storage, access control, retention, backup, and query behavior;
+- correction, invalidation, supersession, and stale-state propagation;
+- incident-response and security review;
+- signing/attestation decision and verification path, if required;
+- end-to-end tests that prove no raw prompt, chain-of-thought, secret, restricted evidence, or protected precision enters the receipt;
+- release review for any public-safe receipt projection; and
+- independent human review appropriate to the consequence.
+
+### UNKNOWN
+
+- whether any deployed environment currently emits a shape-compatible AIReceipt;
+- whether external systems consume `id` or `run_id` values;
+- whether any physical receipt store exists outside the repository;
+- whether retention, signing, or audit obligations apply in a target deployment; and
+- whether future schema evolution must preserve compatibility with persisted records.
+
+[Back to top](#top)
+
+---
+
+<a id="anti-patterns"></a>
+
+## Anti-patterns
+
+| Anti-pattern | Why it fails | Required response |
+|---|---|---|
+| Treating `outcome=ANSWER` as public authorization | The receipt does not prove evidence, policy, citation, review, release, or client-display eligibility. | Resolve governing objects and fail closed. |
+| Adding speculative fields directly to receipt instances | `additionalProperties: false` makes them invalid and creates schema drift. | Propose contract/schema evolution with fixtures, validators, tests, and migration analysis. |
+| Storing raw prompts or chain-of-thought | Expands privacy/security exposure and mistakes hidden reasoning for evidence. | Store only minimized refs/digests in approved objects. |
+| Using non-empty refs as proof of resolution | Current validator checks strings, not target objects or authority. | Resolve refs through governed interfaces. |
+| Using hash shape as proof of correct binding | A digest can match the wrong or ambiguously serialized bytes. | Adopt a canonicalization profile and verify semantic scope. |
+| Relabeling every AI-assisted process receipt as AIReceipt | Collapses object families and loses the actual governed event. | Classify by process responsibility. |
+| Treating validator `PASS` as evidence or policy approval | Validator scope is shape/local consistency only. | Keep validation, evidence, policy, proof, and release separate. |
+| Writing directly to a public receipt endpoint | Exposes internal process memory and may leak sensitive metadata. | Deny direct public access; use governed, released projections only. |
+| Mutating a historical receipt after correction | Erases audit lineage. | Preserve history and emit separate correction/supersession state. |
+| Claiming signing, retention, or replay is implemented from architecture prose | No current implementation evidence establishes those controls. | Keep them on HOLD until tested artifacts and runtime evidence exist. |
+
+[Back to top](#top)
+
+---
+
+<a id="change-discipline-and-rollback"></a>
+
+## Change discipline and rollback
+
+### Field or semantic changes
+
+A change to any of the nine fields, their meaning, patterns, outcome vocabulary, or additional-property posture is not a documentation-only change. It must reconcile at least:
+
+- `contracts/runtime/ai_receipt.md`;
+- `schemas/contracts/v1/runtime/ai_receipt.schema.json`;
+- valid and invalid fixtures;
+- `tools/validators/validate_ai_receipt.py`;
+- candidate builders and imports;
+- focused tests and workflow paths;
+- persisted-record compatibility and migration, if any;
+- policy/citation/reference-resolution behavior;
+- correction and rollback; and
+- architecture and operator documentation.
+
+Accepted Directory Rules still apply. Do not create a second AIReceipt contract, schema, policy, receipt, or proof home to avoid a migration.
+
+### Rollback for this documentation revision
+
+Before merge, close the draft pull request and delete the feature branch. After an authorized merge, revert the documentation commit and remove its generated authoring receipt, or restore prior blob `df65d7b33d359c6721378caaf1e2933c240a9ef3`.
+
+Rollback affects explanatory documentation and authorship provenance only. It does not change runtime, policy, evidence, schema, candidate builders, validator behavior, persisted receipts, release, deployment, or publication state.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-ledger"></a>
+
+## Evidence ledger
+
+| Evidence | Status | Supports | Limit |
+|---|---|---|---|
+| Prior `AI_RECEIPTS.md` blob | **CONFIRMED stale/truncated** | Existing path, prior themes, and need for same-path repair. | Its speculative fields and implementation claims are not current authority. |
+| [`contracts/runtime/ai_receipt.md`](../../../contracts/runtime/ai_receipt.md) | **CONFIRMED present / PROPOSED** | Semantic purpose, boundaries, and schema pairing. | Does not prove operational runtime emission. |
+| [`ai_receipt.schema.json`](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | **CONFIRMED** | Exact nine-field closed machine grammar. | Status remains proposed; shape alone creates no authority. |
+| Fixture directories | **CONFIRMED inventory** | Two valid and three invalid cases at the evidence snapshot. | Synthetic coverage does not prove production data. |
+| [`validate_ai_receipt.py`](../../../tools/validators/validate_ai_receipt.py) | **CONFIRMED implementation** | Safe local parsing, schema validation, local semantic checks, finite validator results. | No reference resolution, policy/citation authentication, or runtime authority. |
+| [`test_validate_ai_receipt.py`](../../../tests/validators/test_validate_ai_receipt.py) | **CONFIRMED tests** | Hostile-input and fixture-profile proof. | Test presence is not a current hosted run result for this docs-only branch. |
+| [`ai-receipt.yml`](../../../.github/workflows/ai-receipt.yml) | **CONFIRMED workflow** | Dedicated no-network validation for its listed paths. | This architecture page is not in its path filter. |
+| [`envelopes.ai_receipt`](../../../packages/envelopes/src/envelopes/ai_receipt.py) | **CONFIRMED bounded implementation** | Deterministic exact-key candidate construction. | Does not compute digests or resolve authority refs. |
+| [`envelopes.mock_adapter_receipt`](../../../packages/envelopes/src/envelopes/mock_adapter_receipt.py) | **CONFIRMED bounded implementation** | Copies a prevalidated mock outcome with fixed synthetic identity. | Does not invoke or validate MockAdapter or bind response bytes. |
+| Package tests | **CONFIRMED tests** | Four-outcome, deterministic, schema, validator, and safe-failure proof. | Do not establish composed runtime. |
+| [`data/receipts/ai/README.md`](../../../data/receipts/ai/README.md) | **CONFIRMED documentation** | Logical receipt-family intent and no-public-path boundary. | Does not prove emitted instances, final layout, retention, access, signing, or integration. |
+| [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | **CONFIRMED proposed** | Decision proposal and bounded current architecture context. | Not accepted authority. |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **CONFIRMED accepted** | Placement authority and responsibility-root separation. | Does not adopt AIReceipt semantics or runtime use. |
+| Current-session inspection | **CONFIRMED bounded** | Repository-grounded status in this document. | No live runtime, provider, store, deployment, release, or public client was exercised. |
+
+[Back to top](#top)
+
+---
+
+<a id="related-documents"></a>
+
+## Related documents
+
+### Governed-AI architecture
+
+- [Subsystem README](./README.md)
+- [Adapter contract architecture](./ADAPTER_CONTRACT.md)
+- [Trust boundaries](./BOUNDARIES.md)
+- [Focus flow](./FOCUS_FLOW.md)
+- [Mock-first posture](./MOCK_FIRST.md)
+- [Route map](./ROUTE_MAP.md)
+
+### Authoritative and executable surfaces
+
+- [AIReceipt semantic contract](../../../contracts/runtime/ai_receipt.md)
+- [AIReceipt machine schema](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json)
+- [AIReceipt fixtures](../../../fixtures/contracts/v1/runtime/ai_receipt/README.md)
+- [AIReceipt validator](../../../tools/validators/validate_ai_receipt.py)
+- [Validator tests](../../../tests/validators/test_validate_ai_receipt.py)
+- [Candidate builder](../../../packages/envelopes/src/envelopes/ai_receipt.py)
+- [Mock projection](../../../packages/envelopes/src/envelopes/mock_adapter_receipt.py)
+- [Candidate-builder tests](../../../tests/packages/envelopes/test_ai_receipt_candidate.py)
+- [Mock-projection tests](../../../tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py)
+- [Dedicated workflow](../../../.github/workflows/ai-receipt.yml)
+- [Documented AI receipt data lane](../../../data/receipts/ai/README.md)
+
+### Governance
+
+- [ADR-0019 — proposed adapter and finite-envelope decision](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md)
+- [ADR-0029 — accepted Directory Rules v2 adoption](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+
+[Back to top](#top)

@@ -44,9 +44,9 @@ Resolve Flora taxonomic identity, naming, synonymy, authority crosswalks, and un
 - [Output expectations](#output-expectations)
 - [Validation and quality gates](#validation-and-quality-gates)
 - [Failure behavior](#failure-behavior)
-- [Maintenance checklist](#maintenance-checklist)
-- [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Maintenance checklist
+- Verification checklist
+- Rollback
 
 ---
 

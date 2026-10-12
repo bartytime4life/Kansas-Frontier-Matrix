@@ -1,0 +1,19 @@
+{
+  "profile": "kfm.explorer.watcher-registry-browser.public-safe.v1",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "evaluated_at": null,
+  "registry_id": null,
+  "registry_spec_hash": null,
+  "registry_status": null,
+  "watchers": [],
+  "governance": {
+    "network_attempted": false,
+    "registry_mutation_allowed": false,
+    "watcher_execution_allowed": false,
+    "source_activation_allowed": false,
+    "lifecycle_write_allowed": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

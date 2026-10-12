@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-kansas-transportation-source-admission-assessment-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md"
+  ],
+  "artifact_hashes": {
+    "docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md": "sha256:6f13d70d86878e49d27aabc8f8b8a0fab04b42b595d3b5d6a7358c5551e8cf88"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:775f24cdce4280fd098f78f28725e260f9374b2ed52abf26c13f33580c0ccc5f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "web primary-source verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:775f24cdce4280fd098f78f28725e260f9374b2ed52abf26c13f33580c0ccc5f"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@0dcc2e4cc6d2257a7a389acd00d67d420af1ae13",
+      "repo:issue/2898",
+      "official:DASC-NG911-Road-Centerline-MapServer-1",
+      "official:KDOT-State-System-KUPS-MapServer-0",
+      "official:KDOT-Mobile-LiDAR-GIS-download-guidance",
+      "official:DASC-2026-state-GIS-assessment",
+      "official:DASC-Geoportal-sharing-guidelines"
+    ]
+  },
+  "truth_labels": {
+    "docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "official-source-metadata-inspection",
+      "outcome": "PASS",
+      "reason": "Official Kansas DASC and KDOT service and guidance surfaces were inspected for endpoint, layer, CRS, fields, pagination, stewardship, and access evidence."
+    },
+    {
+      "gate": "finite-lane-disposition",
+      "outcome": "PASS",
+      "reason": "Each candidate lane has one non-promotional disposition and separate geometry, attribute, observation, rights, sensitivity, and correction boundaries."
+    },
+    {
+      "gate": "no-live-payload-retention",
+      "outcome": "PASS",
+      "reason": "No bulk feature or LiDAR payload was downloaded, retained, ingested, normalized, or published."
+    },
+    {
+      "gate": "snapshot-admission",
+      "outcome": "SKIPPED",
+      "reason": "Snapshot admission remains held pending rights, identifier lifecycle, public-safe precision, and reproducible query evidence."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Transportation, rights, sensitivity, source, and governance review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "ng911-road-service",
+      "validated": true,
+      "evidence_ref": "official:DASC-NG911-Road-Centerline-MapServer-1"
+    },
+    {
+      "id": "kdot-khub-lrs-service",
+      "validated": true,
+      "evidence_ref": "official:KDOT-State-System-KUPS-MapServer-0"
+    },
+    {
+      "id": "mobile-lidar-access-guidance",
+      "validated": true,
+      "evidence_ref": "official:KDOT-Mobile-LiDAR-GIS-download-guidance"
+    },
+    {
+      "id": "state-gis-assessment",
+      "validated": true,
+      "evidence_ref": "official:DASC-2026-state-GIS-assessment"
+    },
+    {
+      "id": "geoportal-stewardship-guidance",
+      "validated": true,
+      "evidence_ref": "official:DASC-Geoportal-sharing-guidelines"
+    },
+    {
+      "id": "governed-source-issue",
+      "validated": true,
+      "evidence_ref": "repo:issue/2898"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T18:08:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "drift_register_entry": null
+  },
+  "notes": "Records reference-candidate and HOLD dispositions only. No source is admitted, activated, queried on a schedule, ingested, copied, released, deployed, published, or made authoritative by this assessment."
+}

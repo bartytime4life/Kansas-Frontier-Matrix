@@ -2,8 +2,8 @@
 doc_id: kfm://fixture/generated-receipt/invalid/readme
 title: GENERATED_RECEIPT Invalid Fixture Lane
 type: readme; directory-readme; invalid-fixture-lane; generated-receipt; ai-builder; provenance; non-authoritative
-version: v0.2
-status: draft; repository-grounded; schema-aligned; policy-aware; readme-only-direct-inventory; executable-harness-unverified; receipt-family-drift-corrected
+version: v0.3
+status: draft; repository-grounded; schema-aligned; policy-aware; one-defect-fixture-confirmed; executable-harness-confirmed; receipt-family-drift-corrected
 owners:
   - OWNER_TBD — generated-receipt / provenance steward
   - OWNER_TBD — AI-builder policy steward
@@ -12,7 +12,7 @@ owners:
   - OWNER_TBD — security and sensitive-data reviewer
   - OWNER_TBD — docs steward
 created: NEEDS VERIFICATION — target README existed before this repository-grounded rewrite
-updated: 2026-07-21
+updated: 2026-08-02
 policy_label: public-review; synthetic-only; invalid-fixtures; no-secrets; no-hidden-reasoning; no-publication
 current_path: fixtures/generated_receipt/invalid/README.md
 governing_schema: schemas/contracts/v1/receipts/generated_receipt.schema.json
@@ -25,14 +25,14 @@ truth_posture:
     - the AI-builder Rego policy stub exists and pins contract_version 3.0.0
     - data/receipts/generated/ is the emitted generated-work receipt lane
     - runtime AIReceipt has a separate contract, schema, and fixture family
-    - bounded code search returned this README as the only indexed direct file under the invalid lane
+    - missing_contract_version.json is a one-defect schema-negative fixture
+    - tools/validators/validate_generated_receipt.py and its focused tests consume this lane without network access
   PROPOSED:
-    - the negative-case naming and expected-result sidecar conventions in this README
-    - the staged validation order and failure-class vocabulary until a canonical harness adopts them
+    - structured expected-result records beyond the accepted bounded text sidecar
+    - the broader staged failure-class vocabulary beyond the implemented schema/integrity checks
   NEEDS_VERIFICATION:
     - exhaustive filesystem inventory beneath this lane
-    - a canonical generated-receipt fixture harness and executable validator
-    - CI invocation of AI-builder policy and generated-receipt schema validation
+    - CI invocation of AI-builder policy
     - generated-receipt semantic-contract ownership
     - accepted owners, reviewers, and branch-protection requirements
 evidence_snapshot:
@@ -48,8 +48,8 @@ evidence_snapshot:
   runtime_ai_receipt_invalid_readme_blob: bb241dcb14845c0a7cd09eb9cc7d4bb2086f1330
 notes:
   - "This revision corrects a material receipt-family collapse: GENERATED_RECEIPT records provenance for AI-authored repository artifacts; AIReceipt records an AI-mediated runtime event."
-  - "No invalid JSON payload, validator, test, policy, schema, emitted receipt, workflow, release object, or public artifact is created or changed by this README-only revision."
-  - "The parent and valid-sibling READMEs retain AIReceipt-centric wording and should be reconciled separately rather than silently treated as authority here."
+  - "v0.3 records the one-defect negative payload, separate GENERATED_RECEIPT validator, focused tests, and read-only CI wiring."
+  - "The parent and valid-sibling READMEs are reconciled with the repository-authoring receipt family in the same dependency-closed batch."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +64,7 @@ notes:
   <img alt="Object: GENERATED_RECEIPT" src="https://img.shields.io/badge/object-GENERATED__RECEIPT-6f42c1">
   <img alt="Schema: concrete" src="https://img.shields.io/badge/schema-concrete-success">
   <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail__closed-critical">
-  <img alt="Inventory: README only" src="https://img.shields.io/badge/indexed__inventory-README__only-lightgrey">
+  <img alt="Inventory: one negative fixture" src="https://img.shields.io/badge/indexed__inventory-one__fixture-success">
   <img alt="Authority: fixture only" src="https://img.shields.io/badge/authority-fixture__only-red">
 </p>
 
@@ -84,7 +84,7 @@ notes:
 | **Machine-shape authority** | `schemas/contracts/v1/receipts/generated_receipt.schema.json` |
 | **AI-builder policy surface** | `policy/ai_builder/operating_contract.rego` |
 | **Emitted instance home** | `data/receipts/generated/` |
-| **Direct indexed inventory** | This README only at the recorded evidence snapshot |
+| **Direct indexed inventory** | This README plus `missing_contract_version.json` |
 | **Network posture** | No network required for fixture validation |
 | **Public-surface posture** | Denied; invalid fixtures and generated receipts are not public truth |
 | **Last reviewed** | 2026-07-21 |
@@ -129,14 +129,14 @@ This lane may show what KFM expects a validator or policy gate to reject. It doe
 | Surface | Status | Evidence-bounded interpretation |
 |---|---|---|
 | Target README | **CONFIRMED** | Existing file fetched at the recorded base. |
-| Direct indexed payload inventory | **README only** | Bounded code search found no invalid JSON payload under this lane. Exhaustive filesystem inventory remains NEEDS VERIFICATION. |
+| Direct indexed payload inventory | **One JSON fixture** | `missing_contract_version.json` omits only the required `contract_version` field. |
 | Generated-receipt schema | **CONFIRMED file / PROPOSED schema** | Concrete closed schema with required fields and nested constraints. |
 | AI-builder Rego policy | **CONFIRMED stub / PROPOSED enforcement** | Selected deny rules exist; CI invocation and complete input assembly remain unverified. |
 | Emitted generated-receipt instances | **CONFIRMED lane** | `data/receipts/generated/` contains repository-committed process-memory records; this fixture lane is not that store. |
 | Runtime AIReceipt fixture family | **CONFIRMED separate family** | Negative runtime AIReceipt fixtures live elsewhere under `fixtures/contracts/v1/runtime/ai_receipt/invalid/`. |
-| Canonical generated-receipt validator or fixture harness | **NOT CONFIRMED** | No dedicated executable consumer was established in this pass. |
-| Parent and valid-sibling wording | **CONFLICTED / stale** | Both currently describe runtime AIReceipt concepts rather than the live GENERATED_RECEIPT schema. |
-| CI, branch protection, and merge enforcement | **UNKNOWN / NEEDS VERIFICATION** | Repository artifacts exist, but end-to-end enforcement was not established. |
+| Generated-receipt validator and fixture harness | **CONFIRMED bounded implementation** | Dedicated no-network validator and focused tests exercise schema, cross-field, path, SHA-256, and review-gate behavior. |
+| Parent and valid-sibling wording | **RECONCILED** | Both distinguish repository-authoring `GENERATED_RECEIPT` from runtime `AIReceipt`. |
+| CI, branch protection, and merge enforcement | **PARTIAL / NEEDS VERIFICATION** | `validator-suite` runs focused tests and fixture polarity; branch-protection significance and merge enforcement remain unverified. |
 
 ## What belongs here
 
@@ -292,8 +292,8 @@ A fixture must not be marked accepted merely because its author also wrote the v
 
 ## Related folders
 
-- [`../README.md`](../README.md) — parent generated-receipt fixture index; **currently contains AIReceipt-centric drift**.
-- [`../valid/README.md`](../valid/README.md) — positive sibling; **currently contains AIReceipt-centric drift**.
+- [`../README.md`](../README.md) — parent `GENERATED_RECEIPT` fixture index and family boundary.
+- [`../valid/README.md`](../valid/README.md) — positive sibling with a local SHA-256-bound synthetic artifact.
 - [`../../README.md`](../../README.md) — root runtime and synthetic fixture boundary.
 - [`../../../schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — machine shape for `GENERATED_RECEIPT`.
 - [`../../../schemas/contracts/v1/receipts/README.md`](../../../schemas/contracts/v1/receipts/README.md) — receipt schema-family maturity and promotion obligations.
@@ -326,7 +326,7 @@ A future ADR or reviewed migration decision is required before:
 
 - **Evidence snapshot:** `main@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0`
 - **Target prior blob:** `c1cae99c27a6013c19f5c8565005b78a6251f63c`
-- **Direct indexed inventory:** README only
+- **Direct indexed inventory:** README plus one one-defect JSON payload
 - **Invalid payloads:** NOT FOUND in bounded search
 - **Executable harness:** NEEDS VERIFICATION
 - **AI-builder policy enforcement:** NEEDS VERIFICATION
@@ -503,23 +503,17 @@ hidden-reasoning-leak.expected.json
 
 Avoid generic names such as `invalid_1.json`, `bad.json`, or `broken.json` once the lane has more than one case. Existing files do not need renaming unless a migration and consumer update are reviewed together.
 
-### Proposed expected-result sidecar
+### Accepted bounded expected-result sidecar
 
-Until a harness contract is accepted, this shape is **PROPOSED**:
+The current harness requires one sibling `<fixture>.expected_error.txt` file for every invalid JSON fixture. It contains exactly one bounded line:
 
-```json
-{
-  "fixture_id": "missing-receipt-id",
-  "invalid_layer": "schema",
-  "expected_outcome": "FAIL",
-  "expected_keyword": "required",
-  "expected_instance_path": "/",
-  "expected_schema_path": "/required",
-  "notes": "Synthetic one-defect negative case."
-}
+```text
+SCHEMA_INVALID|/|schema constraint failed: required
 ```
 
-The sidecar must not hard-code unstable full error prose unless the validator's message contract is intentionally versioned.
+The three pipe-separated fields are the stable finding code, bounded field pointer, and validator-owned detail. Fixture mode requires the candidate's complete finding tuple to equal that sidecar, so an unrelated rejection or an added secondary defect cannot silently pass. Symlinked, missing, oversized, unreadable, multiline, or malformed sidecars fail fixture polarity.
+
+A richer structured expected-result record remains `PROPOSED` until a separately reviewed report contract is adopted.
 
 ### Safety rules
 
@@ -535,43 +529,43 @@ The sidecar must not hard-code unstable full error prose unless the validator's 
 | Item | Status | Evidence or limit |
 |---|---|---|
 | `README.md` | **CONFIRMED** | Existing target revised in place. |
-| Direct invalid JSON fixtures | **NOT FOUND in bounded index search** | Exhaustive filesystem inventory remains NEEDS VERIFICATION. |
-| Expected-result sidecars | **NOT FOUND in bounded index search** | Convention remains PROPOSED. |
-| Parent `fixtures/generated_receipt/README.md` | **CONFIRMED / receipt-family drift** | Exists and currently describes AIReceipt-style fields and outcomes. |
-| Valid sibling README | **CONFIRMED / receipt-family drift** | Exists and currently describes AIReceipt-style fields and outcomes. |
+| `missing_contract_version.json` | **CONFIRMED one-defect fixture** | Omits the required contract version while preserving otherwise valid shape and artifact binding. |
+| `missing_contract_version.expected_error.txt` | **CONFIRMED exact sidecar** | Pins the sole expected `SCHEMA_INVALID` root finding with the `required` keyword. |
+| Parent `fixtures/generated_receipt/README.md` | **CONFIRMED / reconciled** | Indexes the repository-authoring provenance fixture family. |
+| Valid sibling README and payload | **CONFIRMED / executable** | `minimal.json` binds `artifacts/minimal.txt` with SHA-256. |
 | GeneratedReceipt schema | **CONFIRMED file / concrete PROPOSED shape** | Closed Draft 2020-12 schema. |
 | GeneratedReceipt policy | **CONFIRMED Rego stub / enforcement NEEDS VERIFICATION** | Selected deny rules exist. |
 | GeneratedReceipt emitted examples | **CONFIRMED under `data/receipts/generated/`** | This lane does not validate or approve them. |
-| Canonical negative harness | **NOT CONFIRMED** | Do not claim executable negative coverage yet. |
+| Bounded negative harness | **CONFIRMED** | Dedicated validator, focused tests, and workflow fixture-polarity invocation. |
 
 ## Maintenance, correction, and rollback
 
 - Update this README whenever the generated-receipt schema, AI-builder policy, contract version, fixture inventory, harness, expected-result format, or CI binding changes.
-- Reconcile the parent and valid sibling in separate scoped changes; do not silently edit them as part of this target-only task.
+- Keep parent, valid, and invalid fixture-family claims synchronized with validator behavior.
 - Link every fixture to an exact validator/test and every validator/test back to its fixture family.
 - Keep schema-invalid, policy-denied, integrity-failing, and security-denied cases distinct.
 - Preserve invalid cases that protect load-bearing invariants even when field names evolve; migrate them with schema-version notes.
 - Remove or quarantine any accidental real receipt, sensitive material, secret, or lifecycle artifact and record the correction path.
 - If a fixture becomes misleading, supersede or correct it visibly rather than changing the expected meaning silently.
 
-**Rollback for this README:** revert the documentation commit and restore the prior blob. Because this change adds no fixture payload or implementation, no data, policy, schema, test, workflow, release, or public-state rollback is required.
+**Rollback:** revert the implementation commit, restoring the prior fixture payloads and READMEs and removing the dedicated validator/test/workflow step. No policy, schema, release, deployment, or public state is changed.
 
 ## Open verification register
 
 | Item | Status | Required evidence |
 |---|---|---|
-| Exhaustive direct-child inventory | NEEDS VERIFICATION | Mounted checkout or complete tree listing. |
+| Direct-child inventory | CONFIRMED for this bounded family | One invalid payload plus README in the complete repository tree. |
 | GeneratedReceipt semantic contract | UNKNOWN / NEEDS VERIFICATION | Accepted contract path and object-family owner. |
-| Canonical fixture harness | NEEDS VERIFICATION | Executable validator/test path and deterministic output contract. |
+| Bounded fixture harness | CONFIRMED | `validate_generated_receipt.py --fixtures` and focused deterministic tests. |
 | AI-builder Rego CI invocation | NEEDS VERIFICATION | Workflow, assembled input, test suite, and run evidence. |
-| GeneratedReceipt schema validation in CI | NEEDS VERIFICATION | Workflow/job and passing/failing fixture run. |
-| Artifact path/hash recomputation | NEEDS VERIFICATION | Implementation and negative tests. |
+| GeneratedReceipt fixture validation in CI | CONFIGURED / hosted result pending | `validator-suite` workflow step and first hosted run. |
+| Artifact path/hash recomputation | CONFIRMED for SHA-256 | Implementation and focused negative tests; BLAKE3 remains unsupported without an admitted dependency. |
 | Evidence/citation reference resolution | NEEDS VERIFICATION | Resolver and invalid-reference cases. |
 | Secret and sensitive-data scanning | NEEDS VERIFICATION | Scanner configuration and synthetic canaries. |
 | Review-state synchronization after rebase | NEEDS VERIFICATION | End-to-end PR/receipt update evidence. |
 | Branch-protection significance | UNKNOWN | Repository settings or ruleset evidence. |
 | Accepted owners and separation of duties | NEEDS VERIFICATION | Approved assignments and enforced review path. |
-| Parent and valid-sibling correction | READY follow-up | Separate target-scoped revisions. |
+| Parent and valid-sibling correction | COMPLETE in batch | Reconciled repository-authoring family wording and executable inventory. |
 
 ## Evidence ledger
 

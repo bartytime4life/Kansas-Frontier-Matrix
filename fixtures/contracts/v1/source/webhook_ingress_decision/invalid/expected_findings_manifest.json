@@ -1,0 +1,26 @@
+{
+  "semantic_invalid_duplicate_digest_conflict.json": [
+    "DUPLICATE_NOOP_INVALID",
+    "IDEMPOTENCY_DIGEST_MISMATCH"
+  ],
+  "semantic_invalid_governance_overreach.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "semantic_invalid_nonce_replay_accept.json": [
+    "ACCEPT_VERIFICATION_INCOMPLETE",
+    "NONCE_REPLAY_NOT_REJECTED"
+  ],
+  "semantic_invalid_poll_without_conditionals.json": [
+    "POLLING_FALLBACK_INVALID"
+  ],
+  "semantic_invalid_secret_persistence.json": [
+    "SECRET_PERSISTENCE_DENIED"
+  ],
+  "semantic_invalid_spec_hash.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_stale_accept.json": [
+    "ACCEPT_VERIFICATION_INCOMPLETE",
+    "STALE_EVENT_NOT_REJECTED"
+  ]
+}

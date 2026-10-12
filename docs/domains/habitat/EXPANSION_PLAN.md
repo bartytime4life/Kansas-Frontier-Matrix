@@ -627,7 +627,7 @@ The minimum bar: KFM does not work merely because a folder tree, map layer, rout
 - `docs/doctrine/directory-rules.md` — placement law *(CONFIRMED authority)*
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED *(referenced)*
 - `docs/doctrine/trust-membrane.md` — public-path rule *(referenced)*
-- `docs/architecture/governed-ai.md` — Focus Mode binding *(TODO link if present)*
+- `docs/architecture/governed-ai/README.md` — Focus Mode binding *(TODO link if present)*
 - `ai-build-operating-contract.md` — operating law; §23.2 sensitive-domain matrix *(`CONTRACT_VERSION = "3.0.0"`)*
 - `schemas/contracts/v1/domains/habitat/` — schema home *(slug `CONFLICTED`; ADR-S-01 open; existence NEEDS VERIFICATION)*
 - `policy/domains/habitat/` — policy bundle home *(existence NEEDS VERIFICATION)*

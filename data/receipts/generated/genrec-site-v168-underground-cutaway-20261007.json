@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-site-v168-underground-cutaway-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "apps/site/source/app/aquifer-view-session.ts",
+    "apps/site/source/app/aquifer-volume-view.tsx",
+    "apps/site/source/app/cutaway-model.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/subsurface.module.css",
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs",
+    "apps/site/source/tests/aquifer-view-session.test.mjs",
+    "apps/site/source/tests/cutaway-model.test.mjs",
+    "data/receipts/generated/site-v168-underground-cutaway-20261007.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:f60fd9e2c9ed80fef7aef853693929bd2bb6a19bfe3c11aa953e59646933dee9",
+    "apps/site/source/app/aquifer-view-session.ts": "sha256:44ddec6e320410ad6350f5dae1c23a2c552444f7d7a2aeb36192b9e1f35d2d3b",
+    "apps/site/source/app/aquifer-volume-view.tsx": "sha256:3ea80a25109c132aa0391ac35c5e9de592b647526cc78c0d20662457c20ae149",
+    "apps/site/source/app/cutaway-model.ts": "sha256:7bbd5acc308f16bd7ec697c8cad8e5e44d8bd012aab424fa4c03b46e2363b624",
+    "apps/site/source/app/globals.css": "sha256:441bcf55f6f1d566de8df0d4474bb524caf18e08f937aa5f2279e653b7edbb5f",
+    "apps/site/source/app/subsurface.module.css": "sha256:2dfc12f494688ac51666cf5706f73a311e3c3fd8d3d29cc60a24484141aef323",
+    "apps/site/source/app/underground-panel.tsx": "sha256:32210692406f9581b1306f7c696d0df822f43eebda9c6ee039352e4d85a91c8f",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:4e1f4e6957384a36ab2e5d64a3597626e29411905024cee32a89c7fee47525f5",
+    "apps/site/source/docs/underground-explorer.md": "sha256:e5b303a7300952fc6524733e327cf4f24e7dd3e53a2e7266f6db05c7b341821d",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "sha256:bd6b9963cbc26be6e5ce5d2dc2859c06442c115dd83837afb813906f13edc4b8",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "sha256:0c336ff701d305927280fcf1da9235e18d615fefd8037b6c60acf78249ec4319",
+    "apps/site/source/tests/cutaway-model.test.mjs": "sha256:5a63a73a00f1ea87052cdfbb5769894a5edca5cd19c5ad134bfc25df878ecfa8",
+    "data/receipts/generated/site-v168-underground-cutaway-20261007.json": "sha256:6ccc7004e5a2d33111da0fe4528bb4eff240d492f505ed2adfa5a0e9d99741cb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-readback",
+      "parent-Sites-browser-readback"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:3ad031ee05b8efe3ee4e06014b14cb0d08093e5f",
+      "git:c17013dfc0f6a227b17ab336590eef4c7ba9f2fb",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631@c74ca07a33f742eecef5461f13769167df3e1d9d",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "apps/site/source/app/aquifer-view-session.ts": "CONFIRMED",
+    "apps/site/source/app/aquifer-volume-view.tsx": "CONFIRMED",
+    "apps/site/source/app/cutaway-model.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/subsurface.module.css": "CONFIRMED",
+    "apps/site/source/app/underground-panel.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/docs/underground-explorer.md": "CONFIRMED",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "CONFIRMED",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/cutaway-model.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v168-underground-cutaway-20261007.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact same-Site source parity",
+      "outcome": "PASS",
+      "reason": "701 source paths match corrected immutable source c74ca07a33f742eecef5461f13769167df3e1d9d."
+    },
+    {
+      "gate": "Application build, TypeScript, Node and lint",
+      "outcome": "PASS",
+      "reason": "Root final corrected-source validation reused after byte parity: 563 tests, zero failures/skips; lint zero errors and46 inherited warnings."
+    },
+    {
+      "gate": "Bounded browser and independent startup checks",
+      "outcome": "PASS",
+      "reason": "Root desktop/mobile observations and corrected hosted startup pass; independent design evaluation and12 startup checks pass. No full accessibility/device acceptance claimed."
+    },
+    {
+      "gate": "Documentation links",
+      "outcome": "PASS",
+      "reason": "Three changed Markdown documents and19 local targets pass;4 external targets classified unverified."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "FAIL",
+      "reason": "Six inherited KFM-TOPO-017 failure findings on exact3ad branch base; candidate equality is recorded separately after index scan."
+    },
+    {
+      "gate": "Historical mirror review",
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED retained; historical receipts unchanged."
+    },
+    {
+      "gate": "Local runtime installation",
+      "outcome": "PASS",
+      "reason": "Root exact local installation/readback supplied separately."
+    },
+    {
+      "gate": "Independent human review and exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending; authored evidence grants no approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v168-underground-cutaway-20261007.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T05:19:55.001389Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, binding final authored artifact bytes except this self-referential record. No prompts, secrets, private payloads, hidden reasoning or review approvals. Source, deployment, runtime, browser and dataset-release states remain separate."
+}

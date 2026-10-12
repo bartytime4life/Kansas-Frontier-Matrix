@@ -2,75 +2,43 @@
 doc_id: kfm://doc/configs-domains-archaeology-readme
 title: configs/domains/archaeology/ — Governed Archaeology and Cultural Heritage Configuration Boundary
 type: readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — Config steward · Archaeology steward · Cultural/Tribal/sovereignty reviewer · Rights-holder representative · Human-remains and burial reviewer · Collection-security steward · Source steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
+version: v0.4.0
+status: draft; repository-grounded; README-only; no-live-binding
+owners: NEEDS VERIFICATION — configuration, archaeology, cultural/Tribal, rights, sensitivity, consumer, and validation stewardship
+review_route: "@bartytime4life via /configs/ CODEOWNERS; routing is not cultural authority or independent approval"
 created: 2026-07-13
-updated: 2026-07-14
-policy_label: "public; config-sublane; archaeology; cultural-heritage; sovereignty-aware; consent-and-revocation-aware; exact-location-deny; burial-and-sacred-site-deny; collection-security-aware; source-role-aware; candidate-not-site; non-secret; non-authoritative; no-live-binding; no-site-confirmation; no-cultural-authority; no-release-authority"
+updated: 2026-09-04
+policy_label: public-doc; non-secret; exact-location-deny; sovereignty-aware; no-site-confirmation; no-release-authority
 current_path: configs/domains/archaeology/README.md
-truth_posture: CONFIRMED canonical Archaeology config lane, parent configuration contract, repository-present Archaeology doctrine and implementation-shaped surfaces, README-only bounded config inventory, exact-location denial doctrine, current contract-home reconciliation, object-family and short-name compatibility conflicts, placeholder/scaffold status of inspected package metadata and code, pipeline entrypoints, pipeline specs, policy files, schemas, validators, source records, published-layer registry, UI files, and domain workflow, and prior README lineage / PROPOSED future consumer-bound templates and accepted profile references / CONFLICTED Site versus ArchaeologicalSite, collapsed versus decomposed object-family names, publication-transform terminology, policy-home layering, and source-registry topology / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, and publication use / NEEDS VERIFICATION accepted owners and named authorities, cultural and Tribal review, rights-holder representation, consent and revocation records, source roles and rights, exact-location transform floors, collection-security controls, object identity, chronology methods, schema completeness, executable validation, policy-runtime binding, scanners, CI enforcement, correction propagation, and rollback integration
+owning_root: configs/
+readme_profile: BOUNDARY_COMPACT
+domain_slug: archaeology
+truth_posture: CONFIRMED pinned tracked inventory and selected source inspection; PROPOSED future configuration; UNKNOWN consumer binding and runtime enforcement
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 5049e03434f9b6880464605a5eb31c843bb7e450
-  prior_blob: e429009d4877428c46f4a77c48857ec26c13f0e2
-  bounded_path_search: configs/domains/archaeology/README.md only
+  base_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  authoring_base_commit: 700570cbcf191038aa20a030174c2dd08cf93675
+  prior_readme_blob: e42316554e24777096611a5cc54fd3a61e2fa0be
+  tracked_files_in_lane: 1
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
 related:
   - ../README.md
   - ../../README.md
   - ../../../docs/domains/archaeology/README.md
-  - ../../../docs/domains/archaeology/ARCHITECTURE.md
-  - ../../../docs/domains/archaeology/CANONICAL_PATHS.md
-  - ../../../docs/domains/archaeology/CULTURAL_REVIEW.md
-  - ../../../docs/domains/archaeology/DATA_LIFECYCLE.md
-  - ../../../docs/domains/archaeology/API_CONTRACTS.md
-  - ../../../docs/domains/archaeology/CROSS_DOMAIN.md
-  - ../../../docs/domains/archaeology/CONTINUITY_INVENTORY.md
-  - ../../../docs/domains/archaeology/ubiquitous-language.md
-  - ../../../docs/domains/archaeology/source-families.md
-  - ../../../docs/domains/archaeology/sensitivity-and-publication-posture.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/archaeology/
-  - ../../../schemas/contracts/v1/domains/archaeology/
-  - ../../../policy/domains/archaeology/
-  - ../../../policy/sensitivity/archaeology/
-  - ../../../data/registry/sources/archaeology/
-  - ../../../data/registry/archaeology/sources/
-  - ../../../packages/domains/archaeology/
-  - ../../../pipelines/domains/archaeology/
-  - ../../../pipeline_specs/archaeology/
-  - ../../../tools/validators/domains/archaeology/
-  - ../../../tests/domains/archaeology/
-  - ../../../fixtures/domains/archaeology/
-  - ../../../apps/explorer-web/src/features/domains/archaeology/
-  - ../../../data/raw/archaeology/
-  - ../../../data/work/archaeology/
-  - ../../../data/quarantine/archaeology/
-  - ../../../data/processed/archaeology/
-  - ../../../data/catalog/domain/archaeology/
-  - ../../../data/triplets/archaeology/
-  - ../../../data/published/layers/archaeology/
-  - ../../../data/receipts/archaeology/
-  - ../../../data/proofs/archaeology/
-  - ../../../release/candidates/archaeology/
-  - ../../../release/manifests/archaeology/
-  - ../../../docs/adr/ADR-archaeology-source-roles.md
-  - ../../../docs/adr/ADR-archaeology-exact-location-policy.md
-  - ../../../.github/workflows/domain-archaeology.yml
-tags: [kfm, configs, archaeology, cultural-heritage, sites, surveys, artifacts, contexts, lidar, remote-sensing, geophysics, collections, chronology, cultural-review, sovereignty, consent, exact-location, looting-risk, source-role, no-secrets, governance]
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/CODEOWNERS
+  - ../../../schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json
+  - ../../../tools/validators/validate_archaeology_evidence_bundle_projection.py
+  - ../../../tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py
+  - ../../../.github/workflows/archaeology-evidence-bundle-convergence.yml
 notes:
-  - "The bounded repository search for configs/domains/archaeology returned this README only. No executable Archaeology configuration payload or indexed direct consumer was found."
-  - "The prior v0.2 README already carried strong exact-location, cultural-authority, sovereignty, burial, sacred-site, collection-security, candidate-vs-confirmed, reconstruction-risk, validation, correction, and rollback controls. v0.3 preserves them and adds current repository evidence, implementation maturity, object/path conflicts, source-registry topology, and stricter first-payload gates."
-  - "The repository contains many Archaeology implementation-shaped files, but inspected package code, pipeline files, declarative specs, schemas, validators, source records, public-layer registry, UI files, and workflow jobs are greenfield placeholders, empty-stage specs, empty-permissive schemas, NotImplemented entrypoints, PROPOSED records, placeholder exports, or TODO-only jobs."
-  - "Opened policy files are scaffolds rather than verified enforcement. Several default to allow=false, while precise-coordinate redaction stubs explicitly say no real rules yet and default deny=false. Configuration must not activate or rely on those stubs as a safety control."
-  - "Repository evidence preserves Site versus ArchaeologicalSite and other object-family naming conflicts, segmented versus lineage contract/schema paths, policy-home layering, and subtype-first versus domain-first source-registry paths. This lane does not resolve, alias, or duplicate those conflicts."
-  - "Only this Markdown file changes."
+  - "Same-path documentation correction; no executable configuration or consumer is added."
+  - "The exact tracked lane contains only README.md. Untracked, ignored, branch-only, and externally hosted state is not established."
+  - "The former all-scaffold maturity summary is historical, not a current classification of every archaeology surface."
+  - "The EvidenceBundle projection has executable source and focused tests; it is not this lane's configuration validator."
+  - "All existing H2 navigation destinations and the document identity are retained. No cultural, rights, sensitivity, evidence, or release permission is created."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -79,1126 +47,401 @@ notes:
 
 `configs/domains/archaeology/`
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for archaeological surveys, site and feature candidates, artifact and provenience records, excavation and stratigraphic context, remote sensing and LiDAR anomalies, geophysics, 3D documentation, chronology, collections, cultural review, sensitivity transforms, and public-safe derivatives. This lane is not archaeological truth, cultural authority, consent, site confirmation, collection custody, exact-location clearance, evidence, policy, or release authority.
+**Configuration can select already-governed behavior. It cannot confirm a site, supply cultural authority or consent, clear a protected location, or authorize publication.**
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![location](https://img.shields.io/badge/exact__location-deny__by__default-red)
-![cultural](https://img.shields.io/badge/cultural__authority-defer__to__named__authority-purple)
-![secrets](https://img.shields.io/badge/secrets-forbidden-red)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#archaeology-object-family-boundaries) · [Identity](#identity-alias-and-candidate-promotion) · [Roles](#source-role-and-knowledge-character) · [Cultural authority](#cultural-authority-sovereignty-consent-and-revocation) · [Location](#exact-location-reconstruction-and-looting-risk) · [Burial](#burial-human-remains-sacred-and-funerary-material) · [Collections](#collections-custody-repatriation-and-security) · [Time](#chronology-time-and-uncertainty) · [Remote sensing](#remote-sensing-lidar-geophysics-and-three-dimensional-documentation) · [Joins](#cross-domain-context-and-anti-confirmation) · [Logging](#logging-telemetry-caches-and-derived-indexes) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-withdrawal-and-invalidation) · [Done](#definition-of-done-for-the-first-payload)
+[Parent configuration lane](../README.md) · [Archaeology documentation](../../../docs/domains/archaeology/README.md) · [Current evidence](#status) · [Validation](#validation) · [Location protection](#exact-location-reconstruction-and-looting-risk) · [First payload](#definition-of-done-for-the-first-payload)
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.3`  
-> **Observed lane maturity:** README-only in the bounded config-path search; no executable Archaeology configuration payload or direct consumer binding is established  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for archaeological meaning, cultural authority, consent, site identity, sensitivity, policy, evidence, review, or release  
-> **Runtime posture:** no loader, precedence rule, source activation, network fetch, anomaly analysis, site confirmation, map layer, public lookup, AI interpretation, release, or publication is established by this README
+> **Current lane: README-only at the pinned revision.** No configuration payload is tracked here. No loader, precedence rule, runtime binding, source activation, map layer, or publication behavior is established by this document. The surrounding archaeology implementation is mixed, not uniformly scaffold-only.
 
 > [!CAUTION]
-> Exact or reconstructable archaeological locations, burial and human-remains information, sacred or ceremonial places, culturally restricted knowledge, collection-security details, private-land context, and looting-risk clues fail closed. A configuration value cannot convert a candidate into a site, identify the rightful cultural authority, establish consent or waiver, lower sensitivity, make a permissive scaffold safe, or authorize public exposure.
-
----
+> Exact or reconstructable archaeological locations, burial and human-remains information, sacred places, restricted cultural knowledge, collection-security details, private-land context, and looting-risk clues remain fail-closed. A public repository, a passing shape check, a reviewed example, or a hidden map marker is not clearance to expose them.
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `archaeology` domain segment under `configs/domains/`.
+This README maintains the archaeology boundary within the [shared configuration root](../../README.md). It helps a contributor decide whether a proposed setting is commit-safe, which consumer owns it, which authorities constrain it, and what evidence is required before use.
 
-It may eventually hold small defaults, templates, examples, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, route, label, generalize, redact, render, or package already-governed Archaeology material, but they cannot decide:
-
-- whether an archaeological site, component, artifact, feature, context, excavation unit, stratigraphic unit, chronology, collection, anomaly, or candidate is true;
-- whether `Site` and `ArchaeologicalSite`, `LiDARCandidate` and `CandidateFeature`, or other overlapping names are equivalent;
-- whether a remote-sensing anomaly, LiDAR return, geophysics observation, historic source, oral history, route correlation, terrain pattern, or model score confirms a site;
-- who holds cultural authority, sovereignty, custodial authority, consent authority, or rights-holder standing;
-- whether consent exists, remains current, was revoked, was limited, or applies to a new use;
-- whether a place, narrative, object, collection, image, recording, or category is sacred, restricted, community-controlled, or appropriate for KFM representation;
-- whether exact, buffered, generalized, delayed, or fully denied geometry is appropriate;
-- whether burial, human remains, funerary objects, associated records, or sacred-place context may be processed or exposed;
-- whether collection ownership, lawful custody, repository status, repatriation status, access permission, or legal disposition is established;
-- whether a source is admitted, active, rights-cleared, current, redistributable, or authoritative for a requested claim;
-- whether evidence supports a claim;
-- whether an artifact may be promoted, released, rendered, indexed, searched, exported, summarized, or published.
-
-This README is intended for configuration maintainers, Archaeology stewards, cultural and Tribal reviewers, rights-holder representatives, human-remains and burial reviewers, collection-security stewards, source and evidence stewards, consumer owners, validation owners, policy and release reviewers, security reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+The lane currently provides documentation only. Future genuinely shared defaults or templates may belong here after consumer and placement review. Under [adopted Directory Rules](../../../docs/doctrine/directory-rules.md) §10.4, configuration for one app follows that app; declarative pipeline runs belong to `pipeline_specs/`, deployment configuration to `infra/`, and executable admissibility rules to `policy/`. Domain naming alone does not justify moving them into this directory.
 
 ## Authority level
 
-**Configuration-supporting and non-authoritative.**
+The owning responsibility root is **`configs/`**, not an independent archaeology authority. The local profile is `BOUNDARY_COMPACT`, inheriting the parent configuration contract.
 
-| Concern | Authority in this lane |
-|---|---|
-| Archaeology domain meaning | **None.** Human doctrine remains under `docs/domains/archaeology/`; semantic meaning remains in accepted contract homes. |
-| Cultural knowledge substance | **None.** KFM defers to the named authority; config cannot translate, normalize, reinterpret, or claim ownership of community-controlled meaning. |
-| Cultural authority and sovereignty | **None.** Config cannot choose the authority, reviewer, rights-holder, or community representative by convenience. |
-| Consent and revocation | **None.** Config may reference an accepted live consent/revocation record; it cannot create consent, infer consent, waive review, or ignore revocation. |
-| Site and object identity | **None.** Config cannot merge aliases, promote candidates, or resolve object-family conflicts. |
-| Source identity, role, rights, and activation | **None.** Config may reference reviewed source/profile IDs; it cannot admit, activate, suspend, retire, or supersede a source. |
-| Exact-location or sensitivity disposition | **None.** Config may select an accepted transform profile; it cannot define the public floor, lower a tier, or authorize exact exposure. |
-| Burial, human remains, sacred sites, funerary objects | **None.** Config cannot grant processing, access, display, or release permission. |
-| Collection custody, ownership, repatriation, access | **None.** Config cannot determine legal, cultural, ethical, or custodial status. |
-| Chronology and interpretation | **None.** Config may reference an accepted method; it cannot make a date, period, affiliation, or interpretation certain. |
-| Evidence and claim truth | **None.** Config cannot create an `EvidenceBundle`, close proof, validate a claim, or convert a candidate into truth. |
-| Policy and review | **None.** Config cannot substitute for executable policy, CulturalReview, StewardReview, ReviewRecord, or named-authority decision. |
-| Release and publication | **None.** Config cannot authorize lifecycle promotion, public map/API/UI use, export, Focus Mode, AI response, or publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and deterministic precedence. |
+[ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes. The rules' internal draft-era label is retained in those adopted bytes; it does not undo that acceptance. This update changes no adopted decision or responsibility boundary.
 
-A configuration value may point to authority. It cannot acquire that authority through naming, file placement, parsing, repetition, successful validation, or operational convenience.
-
-[Back to top](#top)
-
----
+Configuration owns none of the following: archaeological meaning, site identity, cultural authority, consent, custody, source admission, machine-shape authority, policy, evidence, review approval, release, or publication. A setting may reference an authority but cannot create it. `configs/` is a canonical configuration root; the frozen top-level `catalog/` correction mechanism is not a placement rule for this lane.
 
 ## Status
 
 ### Repository snapshot
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `5049e03434f9b6880464605a5eb31c843bb7e450` |
-| Prior target blob | `e429009d4877428c46f4a77c48857ec26c13f0e2` |
-| Bounded config search | `configs/domains/archaeology/README.md` only |
+The current evidence review is pinned to `main@bb3eb695e6068b38453ca3ded8f1394a8fdebc20`. The incoming README is blob `e42316554e24777096611a5cc54fd3a61e2fa0be`, version `v0.3`, dated 2026-07-14.
 
-The bounded search result is not a complete recursive filesystem receipt. Differently named, generated, unindexed, branch-only, or future files remain `UNKNOWN` until directly inspected.
+A direct, exact-ref directory listing returned one file and no child directories. The complete **tracked lane** is therefore:
+
+```text
+configs/domains/archaeology/
+└── README.md  # configuration boundary; no executable payload
+```
+
+This is not an inventory of local ignored files, other branches, external storage, or deployment state. A bounded indexed path search found only this README, but its index snapshot lagged the review pin; it is not an exhaustive proof of zero consumers.
 
 ### Current evidence matrix
 
-| Surface | Inspected evidence | Status | Safe conclusion |
-|---|---|---:|---|
-| Config lane | This README only in bounded search | **README-ONLY** | No payload or consumer is established. |
-| Parent config contract | `configs/domains/README.md` v0.4 | **CONFIRMED** | No secrets, no authority, no automatic activation. |
-| Archaeology doctrine | README, canonical paths, cultural review, sensitivity/publication docs | **CONFIRMED DOCUMENTS / DRAFT** | Strong fail-closed doctrine; runtime enforcement remains separate. |
-| Contract lane | Rich README and object contracts | **CONFIRMED DRAFTS** | Meaning surfaces exist; naming and coverage remain incomplete/conflicted. |
-| `Site` naming | `site.md` is compatibility; object map expects `ArchaeologicalSite` | **CONFLICTED** | Config must not choose an alias or canonical family. |
-| Package metadata | `pyproject.toml` version `0.0.0` | **GREENFIELD** | Package maturity is not established. |
-| Package code | `layers.py` contains only a placeholder comment | **PLACEHOLDER** | No working layer helper is proven. |
-| Pipeline code | Inspected ingest, validate, catalog, triplets, rollback files are placeholders | **PLACEHOLDER** | No executable pipeline behavior is proven. |
-| Pipeline specs | Inspected specs contain `stages: []` | **EMPTY STAGE LISTS** | No declarative execution is wired. |
-| Policy modules | Generated files are `PROPOSED`; precise-coordinate stubs say no real rules yet | **SCAFFOLD / MIXED DEFAULTS** | Presence is not policy enforcement. |
-| Schema files | Opened schemas have empty `properties` and `additionalProperties: true` | **PROPOSED PERMISSIVE SCAFFOLDS** | They do not meaningfully validate Archaeology objects. |
-| Validator files | Opened validators raise `NotImplementedError` | **NOT IMPLEMENTED** | No executable domain validation is proven. |
-| Source-role and source files | Opened YAML files are `PROPOSED` placeholders/TBD templates | **PLACEHOLDER** | No source is admitted or active. |
-| Registry topology | Both subtype-first and domain-first paths exist | **CONFLICTED / NEEDS VERIFICATION** | Do not maintain divergent records. |
-| Published-layer registry | File exists but says `status: PROPOSED` and placeholder | **NOT A RELEASE** | Path presence does not prove a published layer. |
-| Explorer Web files | Opened TypeScript/TSX files export placeholder flags | **PLACEHOLDER** | No UI display or Evidence Drawer behavior is proven. |
-| Domain workflow | Three jobs execute TODO echo commands | **TODO SCAFFOLD** | CI does not prove Archaeology validation, proof, or publication. |
-| Archaeology ADRs | Source-role and exact-location ADR files are `PROPOSED` scaffolds | **NOT ACCEPTED** | They are planning handles, not current decisions. |
-| Direct consumer/loader | No indexed direct consumer from config search | **UNKNOWN / NOT ESTABLISHED** | No file here is active by presence. |
+| Surface | Current bounded finding | What it does not establish |
+|---|---|---|
+| This configuration lane | **CONFIRMED / README-only:** one tracked file. | A parser, payload, loader, precedence rule, or deployment binding. |
+| Parent and root READMEs | **CONFIRMED documents:** domain parent `v0.6`; configuration root `v0.5`. | Execution or policy enforcement. Their dated inventories remain their own snapshots. |
+| Archaeology domain README | **CONFIRMED document:** `v2.2.3` describes mixed implementation and bounded convergence work. | A fresh audit of every domain component or live service. |
+| Archaeology EvidenceBundle schema | **CONFIRMED / PROPOSED projection:** delegates shape by `$ref` to the shared schema; denies independent fields and declares no public-release authority. | Accepted independent semantics, cultural approval, or configuration validation. |
+| Projection validator and convergence tests | **CONFIRMED executable source:** shared runner wrapper and three substantive test methods. | A test result in this session, consumer binding, or sensitive-data permission. |
+| Legacy domain EvidenceBundle validator | **CONFIRMED placeholder:** `main()` raises `NotImplementedError`. | A substitute for the separately named projection validator. |
+| Focused convergence workflow | **CONFIRMED source:** compilation, startup-guard assertion, unittest, and fixture validation commands exist. | Exact-head hosted success, required-check enforcement, or runner-wide no-egress. |
+| Runtime, sources, public access, cultural and specialist review | **UNKNOWN / NEEDS VERIFICATION.** | No activation, release, or operational maturity is inferred. |
 
 ### Critical scaffold warning
 
-Some inspected policy scaffolds use `default allow := false`. Two precise-coordinate redaction stubs explicitly state that no real rules exist and use `default deny := false`.
+The July edition's blanket scaffold summary is superseded by the bounded matrix above. It must not be generalized to every present-day schema, validator, or workflow. Conversely, one implemented projection does not make the whole domain operational.
 
-Therefore:
-
-- no scaffold may be treated as an accepted protection;
-- no config may select a scaffold as though it were a production policy profile;
-- absence of a deny result from a stub is **not** permission;
-- consumers must enter a safe inactive, `DENY`, `HOLD`, `ABSTAIN`, or `ERROR` state until accepted policy and tests exist.
+For each future consumer, inspect the exact code and referenced profile. An empty schema, `NotImplementedError`, TODO job, or unbound policy default is not effective protection. Absence of a deny result is never permission. The current projection validator is **not a configuration validator** and establishes no loading or activation binding to this directory.
 
 ### Current conflict register
 
-| Conflict | Status | Required posture |
-|---|---:|---|
-| `Site` versus `ArchaeologicalSite` | `CONFLICTED` | Treat `site.*` as compatibility/lineage until accepted reconciliation. |
-| Collapsed versus decomposed object-family names | `CONFLICTED / NEEDS VERIFICATION` | Preserve source terms and map through reviewed contracts. |
-| `SensitivityTransform` versus `PublicationTransformReceipt` and cross-cutting receipt names | `CONFLICTED / NEEDS VERIFICATION` | Do not invent equivalence or receipt authority in config. |
-| `contracts/domains/archaeology/` versus `contracts/archaeology/` | `RESOLVED IN CURRENT PATH DOC / LINEAGE REMAINS` | Follow segmented path; preserve migration history. |
-| `schemas/contracts/v1/domains/archaeology/` versus flat shorthand | `RESOLVED IN CURRENT PATH DOC / LINEAGE REMAINS` | Follow segmented path; do not duplicate schemas. |
-| Domain policy versus sensitivity-policy placement | `LAYERED / NEEDS VERIFICATION` | Reference accepted policy IDs; do not copy rules or assume runtime binding. |
-| `data/registry/sources/archaeology/` versus `data/registry/archaeology/sources/` | `CONFLICTED` | Do not create divergent descriptor sets; require ADR/migration. |
-| Cultural-review schemas under domain versus governance homes | `NEEDS VERIFICATION` | Do not choose a machine authority from config. |
-| Exact-location public floor and lane-local refinements | `NEEDS STEWARD RATIFICATION` | Most restrictive applicable rule controls. |
-
-[Back to top](#top)
-
----
+This revision does not re-adjudicate every historical naming, schema, source-registry, or policy-layer question. `Site` versus `ArchaeologicalSite`, collapsed versus decomposed names, transform/receipt terminology, consent-record authority, and alternate registry layouts remain matters to resolve against their current owning contracts and decisions before dependent use. Do not assert they are settled—or still identical to the July snapshot—without reinspection.
 
 ## What belongs here
 
-Only safe, non-secret Archaeology configuration support for a named and verified consumer belongs here.
+The retained README belongs here now. Future small, non-secret shared defaults, inert templates, or config-facing migration notes require a concrete consumer and a responsibility-root basis; directory symmetry is not sufficient.
 
-| Material | Permitted purpose | Minimum posture |
-|---|---|---|
-| `README.md` | Define the configuration boundary. | Preserve exact-location, cultural-authority, consent, source-role, evidence, policy, and release controls. |
-| `*.template.yaml` / `*.template.yml` | Placeholder-based template for a verified consumer. | Parseable, versioned, synthetic, inert by presence, explicit consumer and schema/profile refs. |
-| `*.example.yaml` / `*.example.json` / `*.example.toml` | Tiny fictional example. | Impossible IDs and geometry; no real cultural terms, sites, collections, communities, people, or routes. |
-| Conservative review defaults | Select accepted deny, hold, abstain, review, redaction, generalization, or restricted-access profiles. | Cannot lower protection or replace a review record. |
-| Public-safe display selectors | Reference an accepted transform/release profile. | No coordinates, tile identifiers, query windows, exact counts, or reconstruction clues. |
-| Candidate-labeling selectors | Preserve candidate, anomaly, interpretation, and confirmed distinctions. | Cannot promote or relabel an object. |
-| Migration notes | Document a real key/path/version transition. | Time-bounded, owner-linked, reversible, and does not create a second authority. |
-| Validation notes | Explain required deterministic and sensitivity checks. | Executable commands must be verified or labeled `PROPOSED` / `NEEDS VERIFICATION`. |
-
-Examples must remain unmistakably synthetic. A plausible-looking fictitious location, cultural identifier, accession, oral-history excerpt, Tribal name, parcel, route, coordinate, or object description can still cause harm and is not acceptable merely because it is labeled “example.”
-
-[Back to top](#top)
-
----
+Examples must be unmistakably synthetic and non-operational. Do not include real or plausibly identifying sites, communities, accessions, people, parcels, routes, coordinates, oral-history content, collection records, credentials, or access details. A label saying “example” does not make sensitive content safe.
 
 ## What does not belong here
 
-| Prohibited material | Why prohibited | Correct home or action |
-|---|---|---|
-| Exact or reconstructable site geometry | Looting, damage, trespass, cultural harm, and irreversible exposure risk. | Restricted lifecycle/policy/release lanes; deny, quarantine, generalize, or withhold. |
-| Burial, human-remains, funerary, sacred, ceremonial, or restricted-knowledge detail | High cultural, ethical, legal, and sovereignty significance. | Named-authority and governed review process; no ordinary public config. |
-| Cultural authority, consent, waiver, revocation, affiliation, or rights-holder determinations | Config cannot make or replace human/community authority decisions. | Accepted governance/review/consent records. |
-| Oral-history substance or community-controlled categories | KFM must not translate or appropriate the substance. | Named authority controls; store only governed references where permitted. |
-| Looting-risk, access, vulnerability, storage, security, or collection-location clues | Can enable theft or site harm. | Restricted operational/security controls; not public repository config. |
-| Real site, survey, artifact, collection, accession, private-land, or person records | These are lifecycle/evidence objects, often sensitive. | Correct `data/`, proof, registry, or restricted store. |
-| Source descriptors, source-role definitions, activation decisions, rights rows | Config cannot admit or activate sources. | Accepted source registry. |
-| Schemas, contracts, policy modules, review records, receipts, proofs, release records | These are authority/trust object families. | Their canonical responsibility roots. |
-| Pipeline, package, validator, app, UI, or runtime code | Config is not implementation. | `packages/`, `pipelines/`, `tools/`, `apps/`, or runtime roots. |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED payloads | Config is not a lifecycle store. | Correct lifecycle phase under `data/`. |
-| Credentials, private endpoints, access tokens, local paths, signed URLs | Secret and topology exposure. | External secret/config manager or ignored local deployment settings. |
-| Settings that turn candidates, anomalies, models, histories, routes, or context into confirmed sites | Violates source-role and candidate/site boundaries. | Contracts, evidence, review, and governed lifecycle. |
-| Settings that mark a `PROPOSED` schema/policy/source/layer as active | Presence and labels are not acceptance. | Accepted registry/policy/release state. |
-| Automatic publication, indexing, vectorization, map-layer creation, or AI answering | Bypasses review and the trust membrane. | Explicit governed consumer/release workflow. |
+Do not store source records, archaeological observations, site or candidate geometry, raw scans, restricted knowledge, custody determinations, consent or review records, policy rules, schemas, proofs, receipts, catalog instances, release decisions, or published products in this lane. They retain their own responsibility and access controls.
 
-No file in this lane may act as a hidden shortcut around cultural review, consent/revocation, sensitivity transforms, source rights, evidence closure, review records, or release governance.
+Secret values, signed URLs, private endpoints, deployment-only paths, reviewer rosters, and live source bindings are also excluded. Restricted material must not be moved into public Git merely because its logical home is a `data/` lane.
 
-[Back to top](#top)
-
----
+No threshold, flag, alias, or fallback may confirm a candidate, waive review, lower sensitivity, turn a placeholder into an active source, or enable direct public access to internal stores.
 
 ## Inputs
 
-A future payload requires all of the following:
+A future configuration proposal needs an exact consumer, intended use and audience, format/version, field-meaning owner, schema/profile reference, explicit binding, precedence and merge semantics, missing/unknown-key behavior, and a correction/rollback plan.
 
-1. **Named consumer** — exact package, pipeline, service, app, runtime, test, or tool.
-2. **Declared format and version** — including parser and canonical schema/profile references.
-3. **Explicit binding** — exact path or identifier; no recursive discovery or filename activation.
-4. **Deterministic precedence** — base, domain, environment, deployment, command-line, and runtime order.
-5. **Unknown-key behavior** — reject by default where safety or authority could change.
-6. **Accepted authority references** — contracts, schemas, policy, source registry, cultural review, consent/revocation, and release profiles.
-7. **Synthetic values only** — no real locations, names, identifiers, access details, cultural content, or collection records.
-8. **Object and source-role preservation** — candidate, observation, context, interpretation, authority, restricted, and confirmed states remain distinct.
-9. **Named-authority posture** — unresolved `authority_to_control` or equivalent produces hold/deny/abstain.
-10. **Consent and revocation posture** — revocation is a live fail-closed input, not cached permission.
-11. **Location and reconstruction review** — coordinates, grids, tiles, hashes, logs, joins, counts, and timing are assessed.
-12. **Burial/sacred/human-remains review** — most restrictive applicable rule applies.
-13. **Rights and collection-security review** — including private land, access, storage, custody, and redistribution.
-14. **No-network fixtures** — valid, invalid, denied, held, abstained, quarantined, and error examples.
-15. **Correction and rollback** — deactivation, cache/index invalidation, downstream withdrawal, and prior known-good state.
-
-A file missing any required item remains `PROPOSED` and inert.
-
-[Back to top](#top)
-
----
+For consequential use, references must resolve to the applicable current source, rights, cultural-authority, consent/revocation, sensitivity, evidence, policy, review, and release controls. Unresolved dependencies remain visible and block the dependent use; they need not block safe, inert, synthetic authoring.
 
 ## Outputs
 
-This lane currently outputs documentation only.
+Today, the output is configuration guidance. A future validated setting may select an already-governed candidate label, uncertainty display, review route, denial state, or approved representation profile for its named consumer.
 
-A future validated payload may support a verified consumer by selecting already-governed behavior such as:
+It cannot emit a site confirmation, supply consent, establish custody or affiliation, activate a source, close an EvidenceBundle, or grant release permission. Public clients consume governed interfaces and released public-safe carriers, not this directory or internal registries directly.
 
-- candidate labels and non-confirmation warnings;
-- accepted deny/hold/abstain/review routing;
-- an accepted county/region or more restrictive public-safe geometry profile;
-- an accepted redaction/generalization profile;
-- required cultural, Tribal, rights-holder, human-remains, burial, collection, or security review routes;
-- stale, revoked, superseded, restricted, withdrawn, or correction state display;
-- source-role, uncertainty, chronology, and evidence-citation presentation;
-- network-disabled or public-output-disabled behavior when dependencies are missing.
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
-It may not:
-
-- confirm or expose a site;
-- identify or choose cultural authority;
-- create consent or ignore revocation;
-- determine burial, sacred, affiliation, custody, ownership, repatriation, or access status;
-- activate a source, policy, schema, validator, layer, route, or model;
-- close evidence, review, receipts, catalog, or release;
-- advance lifecycle state;
-- create a public map/API/UI/search/vector/AI surface.
-
-[Back to top](#top)
-
----
+Configuration supports a consumer within that lifecycle. It does not advance the lifecycle; promotion remains a governed transition, not a file move, configuration toggle, successful job, or merge.
 
 ## Validation
 
-No executable validator for this config lane was verified. Opened Archaeology validator files raise `NotImplementedError`; opened schemas are empty and permissive; the domain workflow runs TODO echo commands.
-
-The following matrix is the **required target**, not a claim of implementation.
-
-| Check | Required result | Current evidence |
-|---|---|---|
-| Parse and format | Deterministic parse under declared version. | `NEEDS VERIFICATION` per future payload. |
-| Non-empty accepted schema | Schema has meaningful required fields, closed/controlled extras, fixtures, validator, and review. | Opened schemas fail this target. |
-| Known-key behavior | Unknown risk-bearing keys fail. | `UNKNOWN`. |
-| Explicit consumer binding | Exact consumer and selection path are tested. | No consumer established. |
-| Precedence and fallback | Deterministic and fail-closed. | `UNKNOWN`. |
-| Secret and private-path scan | No credentials, endpoints, local paths, or operational details. | Required; enforcement unverified. |
-| Sensitive-content scan | No site, burial, sacred, cultural, private-land, collection, or access clues. | Required; enforcement unverified. |
-| Candidate-not-site | Candidate/anomaly/context/model cannot be emitted as confirmed. | Required; policy scaffold is not proof. |
-| Named-authority check | Missing/unverified cultural authority blocks consequential use. | Required; mechanism unverified. |
-| Consent/revocation check | Missing, expired, limited, or revoked consent blocks use. | Required; mechanism unverified. |
-| Exact-location denial | Coordinates and reconstruction channels fail closed. | Required; policy stubs are not proof. |
-| Burial/sacred/human-remains cases | Denied/held and routed to required authority/review. | Required. |
-| Collection-security case | Storage/access/custody clues are suppressed and reviewed. | Required. |
-| Source-role preservation | Observation, candidate, context, model, authority, restricted, synthetic remain distinct. | Source-role YAML is placeholder. |
-| Identity and alias checks | `Site`/`ArchaeologicalSite` and other conflicts do not silently merge. | Required; contracts document conflict. |
-| Chronology and uncertainty | Method, range, confidence, source time, valid time, review/release/correction time remain explicit. | Required. |
-| Cross-domain anti-confirmation | Routes, geology, land, hazards, genealogy, imagery, terrain cannot confirm a site. | Required. |
-| No-network validation | Fixtures and checks avoid live source systems. | Required where practical. |
-| No side effect | Parse/validation does not fetch, publish, index, map, vectorize, or call models. | Required. |
-| Logging and error safety | No sensitive values, hashes, identifiers, joins, or side-channel clues. | Required. |
-| Release support | Public-bound behavior requires accepted evidence, policy, review, transform, release, correction, rollback. | Required; runtime wiring unverified. |
-| Invalidation | Revocation/correction/withdrawal removes derived caches, indexes, layers, exports, and generated text. | `NEEDS VERIFICATION`. |
-
 ### Configuration-review outcomes
 
-These outcomes apply to config review only, not public release:
+`PASS`, `HOLD`, `DENY`, and `ERROR` below are review descriptions, **not a new machine enum**. A check passing establishes only that check. Missing support keeps the affected behavior inactive; an error must never become permission. Runtime `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` mappings remain owned by their contracts.
 
-| Outcome | Meaning | Action |
-|---|---|---|
-| `PASS` | Config support checks pass and all referenced authorities are accepted/current. | May merge as implementation support; no release authority. |
-| `HOLD` | Reviewable uncertainty remains. | Keep inactive; resolve authority, rights, consent, policy, or validation. |
-| `DENY` | Sensitive content, authority bypass, permissive fallback, real location, or unsafe binding exists. | Remove/quarantine and follow incident/correction process. |
-| `ERROR` | Parser, validator, or review machinery failed. | Repair the process; failure is not permission. |
+For this README, check identity and preserved anchors, metadata, relative links, table/fence structure, safe examples, final newline, whitespace, and evidence attribution. The generated-work receipt is validated separately and retains pending human review.
 
-Where runtime contracts use `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, a configuration consumer must map safely without converting `HOLD` or unresolved review into `ANSWER`.
+For a future payload, require meaningful shape validation, explicit consumer selection, deterministic precedence, safe fallback, no implicit network or publication effects, and targeted positive and negative tests. Unknown risk-bearing keys, type coercion, missing references, stale permissions, and invalid profiles must not weaken the boundary.
 
-[Back to top](#top)
+**Existing implementation is adjacent evidence, not a shortcut:**
 
----
+- [Projection validator](../../../tools/validators/validate_archaeology_evidence_bundle_projection.py) selects the archaeology EvidenceBundle schema and shared fixtures through the common runner.
+- [Convergence tests](../../../tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py) check delegation, shared closed shape, and acceptance/rejection of shared fixtures.
+- [Focused workflow](../../../.github/workflows/archaeology-evidence-bundle-convergence.yml) defines real commands. Its `pull_request.paths` list does **not** include this README; this documentation edit alone does not select that workflow. No manual dispatch is implied.
+
+These sources were inspected, not executed by this documentation review. They do not validate hypothetical configuration, authenticate review, prove cultural permission, or establish system-wide no-network enforcement.
 
 ## Review burden
 
 ### Minimum review posture
 
-| Change | Required review |
-|---|---|
-| README clarification | Config/docs + Archaeology steward + cultural/sensitivity reviewer. |
-| New template/example | Config + consumer + Archaeology + sensitivity/security. |
-| Candidate/site, object-family, identity, chronology, source-role setting | Add contract/schema/source/evidence reviewers. |
-| Exact-location, generalization, redaction, map, search, export, tile, cache, index, or AI setting | Cultural/Tribal reviewer + rights-holder representative + policy + security + release. |
-| Oral history, community-controlled knowledge, consent, revocation, sovereignty | Named authority + cultural/Tribal reviewer + consent/governance + legal/rights as applicable. |
-| Burial, human remains, funerary, sacred, ceremonial | Most restrictive review; no ordinary config-only approval. |
-| Collections, custody, repatriation, repository access/security | Collection steward + cultural/rights-holder + security + legal/rights as applicable. |
-| Source or rights setting | Source steward + rights + sensitivity + policy. |
-| Runtime/public behavior | Consumer/app/runtime + evidence + policy + review + release + rollback owners. |
-| Path, schema, policy, registry, or object-family authority change | ADR/migration-class review. |
+[CODEOWNERS](../../../.github/CODEOWNERS) routes `/configs/` to `@bartytime4life`. This is a repository review route, not a verified archaeology, Tribal, cultural, rights-holder, or human-remains authority assignment. Specialist stewardship, independent review, and effective approval enforcement remain `NEEDS VERIFICATION`.
 
-`OWNER_TBD` is not accepted ownership. Automatic reviewer enforcement remains `NEEDS VERIFICATION`.
+Review should match the effect: documentation accuracy for this update; consumer/schema/validation review for a payload; cultural, rights, sensitivity, security, and release review for any change affecting protected representation or exposure. Source-role, identity, chronology, and alias changes also involve the relevant meaning and source owners.
 
 ### Separation of duties
 
-Configuration authors must not unilaterally:
-
-- choose the named cultural authority;
-- approve their own consent/review record;
-- define and approve a public geometry transform;
-- treat a validator pass as release approval;
-- approve public exposure of sensitive or exact material;
-- collapse generation, review, policy, and release into one step.
-
-[Back to top](#top)
-
----
+An author must not choose the rightful cultural authority, approve its own consent or release claim, define and approve a sensitive transform, or treat its own generated receipt as approval. Draft authoring, human review, integration, source activation, release, and publication remain separate.
 
 ## Related folders
 
-| Responsibility | Home | Relationship |
+| Responsibility | Owning family or entry point | Boundary |
 |---|---|---|
-| Parent config boundary | `configs/domains/README.md` | Common no-secret/no-authority rules. |
-| Domain doctrine | `docs/domains/archaeology/` | Scope, language, cultural review, sensitivity, lifecycle. |
-| Semantic meaning | `contracts/domains/archaeology/` | Current segmented contract home; naming conflicts remain. |
-| Machine shape | `schemas/contracts/v1/domains/archaeology/` | Draft scaffold schemas; field completeness unverified. |
-| Domain policy | `policy/domains/archaeology/` | Domain policy modules; inspected files are scaffolds. |
-| Sensitivity policy | `policy/sensitivity/archaeology/` and related paths | Sensitive geometry/sovereignty controls; runtime binding unverified. |
-| Source registry | `data/registry/sources/archaeology/` or accepted topology | Source roles, rights, cadence, activation. |
-| Domain-first source registry | `data/registry/archaeology/sources/` | Existing competing topology; do not diverge. |
-| Package helpers | `packages/domains/archaeology/` | Current inspected metadata/code is greenfield. |
-| Pipeline logic | `pipelines/domains/archaeology/` | Current inspected core files are placeholders. |
-| Pipeline specs | `pipeline_specs/archaeology/` | Current inspected specs have no stages. |
-| Validators | `tools/validators/domains/archaeology/` | Current inspected entrypoints raise `NotImplementedError`. |
-| Tests/fixtures | `tests/domains/archaeology/`, `fixtures/domains/archaeology/` | Enforceability and synthetic examples. |
-| Lifecycle | `data/<phase>/archaeology/` | Source/candidate/processed/catalog/published state. |
-| Receipts/proofs | `data/receipts/`, `data/proofs/` | Process memory and EvidenceBundle/proof support. |
-| Release | `release/` | Promotion, review linkage, correction, withdrawal, rollback. |
-| Explorer UI | `apps/explorer-web/src/features/domains/archaeology/` | Current inspected files are placeholders. |
-| Domain CI | `.github/workflows/domain-archaeology.yml` | Current jobs are TODO scaffolds. |
+| Shared configuration | [Parent lane](../README.md), [root contract](../../README.md) | Non-secret inputs for named consumers. |
+| Domain explanation | [Archaeology documentation](../../../docs/domains/archaeology/README.md) | Scope, language, sensitivity, and verification context. |
+| Meaning and machine shape | `contracts/`, `schemas/` | Refer to current owning definitions; do not copy them into config. |
+| Admissibility | `policy/` | Executable rights, sensitivity, and access rules, not settings that grant permission. |
+| Source identity | `data/registry/` | Resolve the accepted family/lane before adding a descriptor or alternate topology. |
+| Evidence and process memory | `data/proofs/`, `data/receipts/` | EvidenceBundle/proof support and process records remain distinct. |
+| Catalog and public carriers | `data/catalog/`, `data/published/` | Discovery projections and released public-safe bytes are not evidence authority. |
+| Release and correction | `release/` | Release, withdrawal, correction, and rollback decisions. |
+| Implementation and tests | Consumer-owning code and test roots | Configuration does not implement the consumer or prove behavior. |
 
-Public clients must use governed interfaces and released, policy-safe derivatives. They must not read this config lane, source registries, canonical/internal lifecycle stores, sensitive proof records, or unpublished layer registries directly.
-
-[Back to top](#top)
-
----
+This table routes responsibilities, not a claim that every possible archaeology child path is active or populated. In particular, a catalog pointer to an EvidenceBundle does not move the bundle's authority into a catalog lane.
 
 ## ADRs and drift triggers
 
 ### Repository-present Archaeology ADRs
 
-| ADR | Current status | Effect |
-|---|---:|---|
-| `ADR-archaeology-source-roles.md` | `PROPOSED scaffold` | Does not establish an accepted source-role vocabulary. |
-| `ADR-archaeology-exact-location-policy.md` | `PROPOSED scaffold` | Does not establish accepted exact-location runtime enforcement. |
+The domain's [current documentation entry point](../../../docs/domains/archaeology/README.md) provides its decision context. This configuration update does not accept a domain ADR or reclassify a proposal as adopted. The July source-role and exact-location descriptions are historical evidence, not current decision-status proof.
 
 ### Decisions not enacted here
 
-This README does not decide:
-
-- `Site` versus `ArchaeologicalSite`;
-- collapsed versus decomposed object-family names;
-- receipt and transform terminology;
-- consent/revocation schema and record homes;
-- domain versus governance cultural-review schema placement;
-- policy domain/sensitivity layering;
-- source-registry topology;
-- public geometry floors or transform profiles;
-- accepted cultural/Tribal/rights-holder roles;
-- configuration discovery or precedence;
-- runtime, API, UI, map, search, index, AI, or release behavior.
+No new configuration schema, source-role enum, canonical object alias, cultural-review record home, source-registry topology, public geometry floor, loader order, or policy/runtime binding is established.
 
 ### ADR or migration triggers
 
-Create or update a governed decision before:
-
-- changing a canonical object-family name or alias;
-- creating a second schema, contract, policy, review, consent, source, or receipt authority;
-- changing exact-location, burial, sacred-site, human-remains, or cultural-control defaults;
-- changing consent or revocation semantics;
-- changing source-registry order;
-- treating a scaffold policy/schema/validator as active;
-- making directory presence a loader/activation mechanism;
-- enabling public location, map, search, vector, export, or AI behavior;
-- retiring compatibility paths or moving trust-bearing records.
-
-[Back to top](#top)
-
----
+A new authority home, conflicting alias, canonical identity change, policy or consent semantic change, source-registry reorganization, public-access change, or retirement requires the applicable decision and migration review before dependent use. Routine same-path explanatory maintenance does not itself adopt those changes.
 
 ## Last reviewed
 
-**2026-07-14**, against `main@5049e03434f9b6880464605a5eb31c843bb7e450`.
+**2026-09-04**, against `bb3eb695e6068b38453ca3ded8f1394a8fdebc20`. Selected sources and limits are listed in the [evidence ledger](#evidence-ledger). Before authoring, main advanced to `700570cbcf191038aa20a030174c2dd08cf93675`; the exact comparison changed only `catalog/triplet/README.md`, leaving the inspected inputs unchanged. The authoring branch starts from that newer base.
 
-Review again when:
-
-- a non-README payload is proposed;
-- a direct consumer or loader appears;
-- `Site`/`ArchaeologicalSite` or another object conflict is resolved;
-- an Archaeology ADR changes status;
-- a schema gains meaningful fields;
-- a validator becomes executable;
-- a policy module gains reviewed rules and runtime binding;
-- source descriptors are admitted;
-- cultural review/consent/revocation integration is implemented;
-- a map, layer, API, UI, search, index, export, or AI surface becomes real;
-- six months pass.
-
-[Back to top](#top)
-
----
+Re-review when a payload or consumer is proposed; a contract, schema, ADR, policy, reviewer route, or sensitivity obligation changes; a source is admitted; a public consumer is connected; or an incident, correction, revocation, or rollback changes the evidence. Review is event- and risk-based, not an unsupported blanket six-month freshness claim.
 
 ## Scope and bounded context
 
-This configuration lane may support already-governed Archaeology object families without owning their meaning.
+The configuration scope may support surveys and transects, site/component candidates, artifacts and provenience, excavation and stratigraphy, chronology, remote sensing and geophysics, three-dimensional documentation, collections, and review-oriented representations. It owns none of those records or meanings.
 
-| Family | Config may support | Config must not decide |
-|---|---|---|
-| Site and site component | Display label/profile selection after accepted identity/review. | Site existence, confirmation, boundaries, public coordinates. |
-| Survey project/transect | Parser/display/validation profile selection. | Survey adequacy, authority, site confirmation. |
-| Artifact/artifact record | Safe presentation profile selection. | Ownership, provenance truth, affiliation, custody, public access. |
-| Provenience/context | Accepted context-display profile. | Context reconstruction, exact provenience exposure. |
-| Excavation/stratigraphy | Unit/method presentation profile. | Archaeological interpretation or chronology truth. |
-| Remote sensing/LiDAR/candidate feature | Candidate label, method, uncertainty, review routing. | Site confirmation or public precise geometry. |
-| Geophysics observation | Method/QC display profile. | Feature/site truth. |
-| 3D documentation | Public-safe derivative profile after release. | Exact reconstruction, access, ownership, or site clearance. |
-| Cultural/Steward review | Reference accepted review status. | Who has authority or whether a review is sufficient. |
-| Collection/repository record | Safe repository-display profile. | Ownership, custody, repatriation, access permission, storage location. |
-| Chronology assertion/period | Method/range/uncertainty display. | Final date, affiliation, or period certainty. |
-| Sensitivity/publication transform | Reference accepted profile and receipt. | Policy definition, transform approval, release. |
-
----
+A consumer must declare which families it supports. A broad “archaeology” selector is not permission to process all domain material. Location, culture, community authority, consent, custody, and method uncertainty remain attached to the relevant evidence and use.
 
 ## Configuration classes
 
-| Class | Use | Posture |
-|---|---|---|
-| `template` | Demonstrate supported keys with placeholders. | Never active by presence. |
-| `example` | Fictional, non-operational illustration. | No plausible real site/cultural/collection detail. |
-| `dev-default` | Conservative setting for verified development consumer. | Synthetic/no-network; public exposure disabled. |
-| `test-default` | Deterministic test configuration. | Fixture-bound and no real sensitive values. |
-| `review-default` | Hold/deny/review routing for a verified review tool. | Cannot approve review or release. |
-| `public-safe-template` | Reference an accepted transform/release profile. | No geometry or transform logic embedded. |
-| `compatibility` | Temporary key/path/profile alias. | Time-bounded, documented, reversible. |
-| `production-binding` | Real source, endpoint, credential, reviewer roster, or release binding. | **Forbidden here.** |
+The retained vocabulary—`template`, `example`, `dev-default`, `test-default`, `review-default`, `public-safe-template`, and `compatibility`—is a **PROPOSED authoring taxonomy**, not an accepted parser contract.
 
----
+Development and test material stays synthetic and network-disabled by default. Review defaults cannot approve review; public-safe templates only reference reviewed profiles. Compatibility requires a bounded migration, one writable authority, expiry/exit criteria, and rollback. `production-binding` remains forbidden here.
 
 ## Minimum configuration contract
 
-A future non-README file must document:
+The following is a **PROPOSED design checklist**, not an executable payload or schema. Names must be reconciled with the actual consumer before implementation.
 
-| Field | Requirement |
+| Candidate fields | Required meaning |
 |---|---|
-| `domain_slug` | `archaeology`. |
-| `config_class` | One class from the taxonomy above. |
-| `intended_consumer` | Exact code/app/pipeline/tool path. |
-| `consumer_version` | Verified version/range or `NEEDS VERIFICATION`. |
-| `format` | Parser and format version. |
-| `authority_refs` | Accepted contract/schema/policy/source/review/release handles only. |
-| `object_families` | Explicit set; no implicit all-Archaeology scope. |
-| `source_roles` | Accepted roles and anti-upcast behavior. |
-| `candidate_behavior` | Candidate/anomaly/context/model never silently confirmed. |
-| `cultural_authority_ref` | Named-authority handle where required; not a free-text assertion. |
-| `consent_revocation_ref` | Live governed reference where applicable. |
-| `sensitivity_floor` | Reference to accepted policy; most restrictive applies. |
-| `geometry_behavior` | Deny/generalize/redact profile reference; no embedded coordinates. |
-| `burial_sacred_behavior` | Mandatory deny/hold/review routing. |
-| `collection_security_behavior` | Redaction and access limits. |
-| `chronology_behavior` | Methods, uncertainty, ranges, and temporal facets. |
-| `network_behavior` | `none` for parse/validation by default. |
-| `side_effects` | `none` for parse/validation. |
-| `unknown_key_behavior` | Reject for safety/authority keys. |
-| `missing_ref_behavior` | Safe inactive/deny/hold/abstain/error. |
-| `logging_posture` | Redacted; no sensitive identifiers, joins, or values. |
-| `validation_ref` | Executable accepted validator/test or `NEEDS VERIFICATION`. |
-| `rollback` | Deactivation, prior version, invalidation, and correction path. |
-| `owner` | Accepted owner or `OWNER_TBD`; never invented. |
-| `reviewed_at` | ISO date. |
+| `domain_slug`, `config_class` | Explicit archaeology scope and authoring class; no activation by filename. |
+| `intended_consumer`, `consumer_version`, `format` | Exact consumer, supported version, parser, and format version. |
+| `authority_refs`, `validation_ref` | Current owning contracts/profiles and executable validation; a name or placeholder is not a resolved reference. |
+| `object_families`, `source_roles`, `candidate_behavior` | Preserve family and use-specific role; no automatic candidate confirmation or alias adoption. |
+| `cultural_authority_ref`, `consent_revocation_ref` | Governed authority and scoped, current consent/revocation references where required; never manufactured permission. |
+| `sensitivity_floor`, `geometry_behavior`, `burial_sacred_behavior` | References to governing restrictions and reviewed transforms; no embedded sensitive geometry or invented universal floor. |
+| `collection_security_behavior`, `chronology_behavior` | Preserve custody/access limits, methods, ranges, and uncertainty. |
+| `network_behavior`, `side_effects` | No network, model, indexing, release, or publication effects during parsing/validation by default. |
+| `unknown_key_behavior`, `missing_ref_behavior`, `logging_posture` | Reject unsafe ambiguity; remain inactive or return the governing finite failure outcome without disclosing protected values. |
+| `rollback`, `owner`, `reviewed_at` | Named responsibility when verified, versioned correction/invalidation path, and review timestamp; unknowns remain explicit. |
 
-A payload referencing an empty schema, placeholder validator, scaffold policy, TBD source descriptor, or PROPOSED layer registry is not ready for active use.
-
----
+Merely satisfying this checklist does not authorize use. A future configuration contract belongs with its proper meaning/shape owners, not as parallel authority inside this README.
 
 ## Consumer binding, precedence, and discovery
 
 ### Explicit binding
 
-Consumers must name the exact file or stable config identifier. Do not recursively discover `configs/domains/archaeology/`.
+Consumers must select an exact path or stable identifier. Do not recursively activate files because they are present here. No consumer or loader was established by the current bounded search.
 
 ### No implicit precedence
 
-This README does not establish an overlay order. The verified consumer must define:
-
-- files considered;
-- merge versus replace;
-- environment/deployment overrides;
-- unknown-key behavior;
-- type coercion;
-- missing-file behavior;
-- stale config behavior;
-- safe fallback;
-- logging and telemetry redaction;
-- cache and invalidation behavior.
+The consumer must define merge versus replace, domain/environment/deployment/CLI ordering, unknown keys, coercion, missing files, stale values, and safe fallback. This README does not prescribe an unimplemented overlay order.
 
 ### Fail-safe behavior
 
-A loader failure must not:
-
-- expose exact or generalized geometry by guessing;
-- fall back to a permissive policy stub;
-- ignore a revoked consent record;
-- promote a candidate;
-- select a “latest” release without review;
-- retain stale map/search/vector/AI caches;
-- query source systems automatically;
-- emit a public answer.
-
----
+A failure cannot trigger live fetching, choose an unreviewed “latest” release, ignore revocation, retain unsafe caches, promote a candidate, switch to permissive policy, or reveal guessed geometry. Report safe reason codes and preserve a protected audit reference when appropriate.
 
 ## Archaeology object-family boundaries
 
-The repository carries overlapping collapsed and decomposed object-family vocabularies.
+Keep source vocabulary and uncertainty intact until an owning contract and reviewed crosswalk support a mapping. Neither close spelling nor a familiar noun creates equivalence.
 
-Configuration must:
+In particular: `Site` is not automatically `ArchaeologicalSite`; `CandidateFeature`, `LiDARCandidate`, and `RemoteSensingAnomaly` are not site confirmations; `ArtifactRecord` is not ownership; `CulturalReview` is not consent; `StewardReview` is not release approval; and `SensitivityTransform`, `PublicationTransformReceipt`, and a cross-cutting redaction receipt must not be substituted for one another without their contracts.
 
-- preserve the original object family;
-- use reviewed crosswalks rather than string similarity;
-- record aliases without choosing canonical authority;
-- avoid mapping broad `Site`, `Survey`, `Artifact`, `Feature`, or `Context` labels to narrower objects by convenience;
-- avoid treating review, transform, receipt, proof, and release objects as interchangeable.
-
-Configuration must not collapse:
-
-```text
-Site -> ArchaeologicalSite
-CandidateFeature -> ArchaeologicalSite
-LiDARCandidate -> ArchaeologicalSite
-RemoteSensingAnomaly -> ArchaeologicalSite
-SurveyProject -> confirmed site
-ArtifactRecord -> collection ownership
-CulturalReview -> consent
-StewardReview -> release approval
-SensitivityTransform -> PublicationTransformReceipt
-PublicationTransformReceipt -> RedactionReceipt
-validation pass -> policy approval
-policy allow -> release
-published-path placeholder -> released artifact
-```
-
----
+Validation, policy allowance, review, evidence closure, and publication are separate facts. A configuration alias must not collapse them.
 
 ## Identity, alias, and candidate promotion
 
 ### `Site` versus `ArchaeologicalSite`
 
-Current repository evidence treats:
-
-- `archaeological_site.md` as the object-map expected contract;
-- `site.md` as a compatibility/lineage contract;
-- `site.schema.json` as an empty permissive scaffold.
-
-A config must not:
-
-- select `site` as canonical;
-- merge both identities;
-- direct consumers to the scaffold as complete validation;
-- use an alias to bypass candidate-to-site review;
-- treat an old path as release authority.
+The earlier README recorded overlapping names and compatibility paths. Their complete current reconciliation was not audited here. Preserve that uncertainty and resolve the current contract before selecting an alias; a config file cannot arbitrate canonical identity.
 
 ### Candidate promotion
 
-Promotion from anomaly/candidate/context to reviewed site identity requires evidence and governance outside this lane. Configuration may only preserve labels and route to review.
+An anomaly, score, model output, contextual source, or survey record remains what its evidence supports. Promotion to a reviewed site identity requires evidence and decisions outside this lane. Configuration can preserve a label or route to review, not approve promotion.
 
 ### Stable identity
 
-Where accepted contracts exist, preserve:
+Preserve governed source-native, project/transect, provenience/context, collection/accession, candidate/model/run, and correction identifiers where permitted. Do not expose them in public configuration merely because they are stable. Digests of sensitive geometry can also reveal or confirm location.
 
-- source-native identifiers;
-- survey/project/transect identifiers;
-- provenience and context identifiers;
-- collection/accession/repository identifiers;
-- candidate/model/run identifiers;
-- geometry/provenance digests where safe and non-reconstructive;
-- correction/supersession lineage.
-
-Do not merge by proximity, geometry overlap, similar names, historic labels, route association, parcel intersection, imagery resemblance, or generated embedding similarity.
-
----
+Do not merge records by proximity, geometry overlap, similar names, historic labels, route/parcel association, image resemblance, or embedding similarity alone.
 
 ## Source role and knowledge character
 
-Use only an accepted vocabulary. Until source-role ADR/schema acceptance is verified, map roles explicitly and conservatively.
+Observation, official designation, candidate, context, model/inference, community-controlled oral history, restricted material, synthetic examples, and legacy records are different knowledge characters. This is explanatory vocabulary, not a newly adopted role enum.
 
-| Knowledge character | Boundary |
-|---|---|
-| `observed` | Direct documented observation under stated method; not automatically public. |
-| `authority` / `regulatory` | Official designation or authority record; not site condition or public permission. |
-| `candidate` | Unreviewed possibility; never site confirmation. |
-| `context` | Background, historical, environmental, route, land, or geology context; insufficient for confirmation. |
-| `modeled` / `inferred` | Remote sensing, classification, prediction, reconstruction, or statistical inference. |
-| `oral_history` / community-controlled | Governed by named authority, consent, restrictions, attribution, retention, and revocation. |
-| `restricted` | Cannot be exposed through ordinary public config. |
-| `synthetic` | Demo/test material with explicit reality boundary. |
-| `legacy` | Historical record or prior terminology; preserve vintage and uncertainty. |
-
-No config value may upcast a role. A source role belongs to the use and evidence context, not merely to a publisher name.
-
----
+A source may be authoritative for one assertion and contextual for another. Do not upcast a role based on publisher name. Preserve source vintage, claim scope, method, rights, uncertainty, and restrictions; validate against the owning source-role contract before use.
 
 ## Cultural authority, sovereignty, consent, and revocation
 
-Configuration must defer the substance of cultural knowledge to the named authority.
+Defer community-controlled knowledge and its permitted uses to the relevant named authority. Geography, government records, dataset ownership, organizational names, and convenience do not establish that authority. Multiple communities or authorities must not be flattened into one presumed representative.
 
-It may reference:
+A governed reference may carry scoped obligations for attribution, retention, benefit, access, and permitted use. Configuration cannot create `authority_to_control`, infer consent from silence, turn one-time consent into perpetual or secondary-use permission, or normalize restricted cultural meaning without authority.
 
-- accepted authority identifiers;
-- accepted review workflow/profile identifiers;
-- governed consent and revocation handles;
-- obligations, restrictions, attribution, retention, benefit, and access profile IDs;
-- safe public notice/chip profile IDs after review.
-
-It must not:
-
-- create `authority_to_control`;
-- infer authority from geography, organization name, dataset ownership, or government records;
-- flatten multiple communities or authorities;
-- treat silence or missing metadata as consent;
-- convert one-time consent into perpetual or secondary-use permission;
-- ignore partial, scoped, expired, superseded, or revoked consent;
-- expose internal reviewer identity where not appropriate;
-- encode cultural categories or sacred meaning without authority control;
-- allow generated text to translate or reinterpret restricted knowledge.
-
-Revocation must invalidate active views, caches, indexes, exports, prompts, embeddings, vector entries, generated summaries, and release derivatives as required by the governing process.
-
----
+Missing, limited, expired, superseded, revoked, or out-of-scope consent blocks the affected use. Resolve current revocation state rather than indefinitely caching permission. Invalidation obligations follow every affected representation and retrieval surface.
 
 ## Exact location, reconstruction, and looting risk
 
-Exact-location denial includes more than latitude/longitude.
-
 ### Direct geometry channels
 
-- coordinates, UTM, survey grids, bearings, distances;
-- polygons, points, centroids, bounding boxes;
-- buffers small enough to reveal the site;
-- elevations or terrain profiles when identifying;
-- collection/find-spot references.
+Protection covers coordinates, UTM/survey grids, bearings and distances, polygons, centroids, bounding boxes, revealing buffers, elevation profiles, and find-spot references—not just a latitude/longitude column.
 
 ### Indirect reconstruction channels
 
-- tile, quad, H3, geohash, grid, raster cell, or zoom identifiers;
-- stable hashes or cache keys derived from geometry;
-- filenames, IDs, directory names, or URLs encoding location;
-- query windows, map extents, viewport state, API pagination, or error messages;
-- route, river, land parcel, ownership, geology, landform, trail, fort, mission, settlement, or infrastructure proximity;
-- public layer intersections and cross-layer differencing;
-- rarity, count, date, survey description, accession, collection, photograph, or narrative clues;
-- model saliency maps, embeddings, nearest-neighbor results, or AI chain outputs;
-- screenshot metadata, debug traces, logs, metrics labels, telemetry dimensions, or test snapshots.
+Review tile/H3/geohash/grid/raster/zoom identifiers; extents and query windows; filenames, URLs, IDs, hashes, and cache keys; dates, counts, accessions, narratives, photographs and metadata; parcel, route, river, settlement and environmental joins; cross-layer differencing; model saliency, embeddings and nearest-neighbor results; and logs, errors, telemetry, previews, or test snapshots.
 
 ### Required behavior
 
-When reconstruction risk is unresolved:
+Unresolved reconstruction risk means inactive, `DENY`, `HOLD`, or `ABSTAIN` as the governing process requires—not guessed geometry, intermediate centroids, public risk maps, or best-effort disclosure. Client-only blurring or hiding a marker is not protection when the underlying bytes remain accessible.
 
-- do not degrade to “best effort” geometry;
-- do not expose an intermediate tile or centroid;
-- do not use a client-side-only blur as protection;
-- do not return a count or narrative that uniquely identifies the location;
-- use `DENY`, `HOLD`, or `ABSTAIN`, or an accepted more restrictive transform.
-
-County/region generalization described in project doctrine is a public floor proposal, not a promise that every record may be generalized and released. Burial, sacred, cultural, rights, looting, and named-authority rules can require full denial.
-
----
+County/region generalization is not a universal safe floor or a permission to publish. Cultural, burial, sacred-site, rights, collection-security, and looting-risk controls can require stronger generalization or complete denial. No transform is selected or approved by this update.
 
 ## Burial, human remains, sacred, and funerary material
 
-No ordinary configuration switch may allow:
+No ordinary configuration switch may authorize exact or generalized locations; human-remains inventory or disposition; sacred/ceremonial identification; culturally restricted affiliation; excavation, storage, access, handling, imaging, analysis or transfer details; or legal/repatriation conclusions.
 
-- exact or generalized burial location;
-- human-remains inventory or disposition details;
-- funerary object or associated object locations;
-- sacred/ceremonial place identification;
-- culturally sensitive affiliation or community-controlled classification;
-- excavation, storage, access, handling, imaging, analysis, or transfer details;
-- legal, ethical, repatriation, or eligibility conclusions.
-
-The most restrictive applicable policy and named-authority decision controls. Missing context is not clearance.
-
-Tests for this area must use deliberately non-real synthetic fixtures with no resemblance to known locations or communities.
-
----
+The most restrictive applicable policy and named-authority decision controls. Missing context is not clearance. Tests must use deliberately non-real synthetic fixtures without identifying locations, communities, or restricted knowledge.
 
 ## Collections, custody, repatriation, and security
 
-Configuration may reference a public-safe released repository profile. It cannot determine:
+Configuration cannot determine title, ownership, lawful custody, accession legitimacy, repository authority, consultation/repatriation status, legal eligibility, access permission, storage location, insurance/valuation, security arrangements, movement, or vulnerability.
 
-- ownership or title;
-- lawful custody;
-- accession legitimacy;
-- repository authority;
-- repatriation or consultation status;
-- NAGPRA or other legal eligibility/status;
-- access permission;
-- storage location;
-- security arrangements;
-- insurance or valuation;
-- movement, transport, handling, or vulnerability.
-
-Collection identifiers, accession numbers, repository names, images, and descriptions can create reconstruction or theft risk and require review.
-
----
+Collection identifiers, repository names, photographs, accession numbers, and descriptions can themselves be sensitive or reconstructive. A released public-safe profile is a reference for its specified use, not permission to expose the underlying collection record.
 
 ## Chronology, time, and uncertainty
 
-Keep distinct where material:
+Keep source creation/vintage, observation/excavation, collection/acquisition, valid/effective time, interpretation/model time, retrieval, cultural review, consent/revocation, policy decision, release, and correction/withdrawal time distinct where material.
 
-- source creation/vintage;
-- observation or excavation time;
-- collection/acquisition time;
-- valid/effective time;
-- interpretation/model time;
-- retrieval time;
-- cultural review time;
-- consent/revocation time;
-- policy decision time;
-- release time;
-- correction/supersession/withdrawal time.
-
-Chronology configuration may select an accepted display or method profile. It cannot:
-
-- make a date range exact;
-- select a cultural period as certain;
-- infer affiliation;
-- suppress calibration/method uncertainty;
-- equate terminology across communities or scholarship;
-- present a legacy interpretation as current;
-- erase revised or contested chronology.
-
----
+A display profile must not turn a range into an exact date, suppress calibration or method uncertainty, establish cultural affiliation, equate terms across communities, present a legacy interpretation as current, or erase contested chronology. Preserve limitations and correction lineage alongside the time representation.
 
 ## Remote sensing, LiDAR, geophysics, and three-dimensional documentation
 
-These surfaces are evidence-bearing methods, not site-confirmation shortcuts.
+Preserve sensor/product/source identity, acquisition time, permitted geometry context, resolution, processing chain, model/run/version, relevant parameters, method limitations, uncertainty/false positives, candidate state, and evidence/review linkage in the owning records—not as sensitive payloads in config.
 
-A config may reference accepted method, QA, uncertainty, visualization, and review profiles. It must preserve:
-
-- sensor/product/source identity;
-- acquisition date and geometry;
-- resolution and processing chain;
-- model/run/version and parameters where accepted;
-- confidence/uncertainty and false-positive limits;
-- candidate status;
-- cultural, sensitivity, rights, and access restrictions;
-- EvidenceRef and review linkage.
-
-It must not:
-
-- convert an anomaly score to site truth;
-- publish raw or derived exact candidate geometry;
-- expose saliency or feature layers that reconstruct the candidate;
-- treat 3D documentation as permission to reproduce or distribute;
-- let AI vision or spatial models confirm a site;
-- use public imagery availability as rights or sensitivity clearance.
-
----
+An anomaly score or plausible reconstruction does not confirm a site. Public imagery availability is not rights or sensitivity clearance. Three-dimensional documentation does not grant reproduction, access, or distribution rights. Do not expose precise candidate geometry, saliency layers, or intermediate derivatives that undo location controls.
 
 ## Cross-domain context and anti-confirmation
 
-| Related lane | Allowed relation | Forbidden collapse |
-|---|---|---|
-| Roads/Rail/Trade | Historic-route context. | Route proximity confirms a site. |
-| People/DNA/Land | Genealogy, deeds, parcels, land history under governance. | Ownership/title/identity confirms site or grants access. |
-| Geology | Landform, materials, stratigraphy context. | Geological suitability confirms archaeology. |
-| Hazards | Erosion, fire, flood, exposure context. | Hazard layer authorizes disclosure or intervention. |
-| Settlements/Infrastructure | Historic settlement/facility context. | Settlement/facility identity confirms site or safe access. |
-| Hydrology | Water/river context. | Water proximity confirms a site. |
-| Habitat/Flora/Fauna | Environmental context. | Ecological association confirms site or exposes rare/sensitive joins. |
-| Atmosphere | Weather/climate context. | Environmental condition confirms chronology/site. |
-| Agriculture | Land-use disturbance/context. | Field/crop classification confirms site or grants field access. |
+Roads and historical routes, people/DNA/land and parcel records, geology, hazards, settlements/infrastructure, hydrology, habitat/flora/fauna, atmosphere, and agriculture may supply governed context. They do not confirm archaeology, grant land access, establish ownership or affiliation, or authorize intervention or disclosure.
 
-Cross-domain relations do not transfer authority. The strongest sensitivity and named-authority obligations survive every join and projection.
-
----
+Joins retain the strongest applicable sensitivity and named-authority obligations. A harmless-looking pair of public layers can still require reconstruction-risk review before an archaeology-facing derivative is exposed.
 
 ## Logging, telemetry, caches, and derived indexes
 
-Do not log or index:
+Do not dump configuration, protected identifiers, coordinates, extents, geometry hashes, cultural/review/consent substance, oral histories, collection/access details, private endpoints, raw prompts, or revealing denial context into public logs or indexes.
 
-- coordinates, grids, tiles, extents, or geometry-derived hashes;
-- site/candidate/cultural/collection identifiers;
-- authority, consent, review, or restriction details beyond safe audit references;
-- oral-history text or restricted cultural categories;
-- private-land, owner, access, storage, security, or collection details;
-- raw prompts, model explanations, embeddings, nearest-neighbor outputs, or full denial context;
-- sensitive source endpoints, paths, query parameters, or filenames.
+Prefer bounded safe reason codes and protected audit references; even counts and coarse categories require review when they identify a place or person. Corrections, revocations, withdrawals, and increased restrictions must propagate to affected app/CDN/tile caches, search/vector indexes, embeddings, graph projections, reports/exports, controlled previews/bookmarks, AI retrieval, and generated summaries.
 
-Safe observability should use bounded reason codes, non-sensitive counts, reviewed coarse categories, and protected audit references.
-
-A correction, revocation, withdrawal, or sensitivity increase must invalidate:
-
-- application caches;
-- CDN/tile caches;
-- search indexes;
-- vector indexes and embeddings;
-- graph/triplet projections;
-- exported files and reports;
-- screenshots/previews where controlled;
-- AI retrieval indexes and generated summaries;
-- downstream layer manifests and bookmarks as governed.
-
----
+Invalidation must be verified where controlled. Reverting a file does not recover copies already disclosed to others.
 
 ## Failure behavior
 
-| Condition | Minimum safe behavior |
+| Condition | Required safe disposition before dependent use |
 |---|---|
-| Missing/invalid config | `ERROR` or conservative inactive denial. |
-| Unknown risk-bearing key | Reject or `HOLD`. |
-| Empty/permissive schema | Do not activate payload. |
-| Placeholder validator | Do not claim validation; `HOLD`/`ERROR`. |
-| Scaffold policy or mixed permissive default | Do not rely on it; safe denial/inactive state. |
-| Cultural authority unresolved | `HOLD`, `DENY`, or `ABSTAIN`. |
-| Consent missing/expired/revoked/out-of-scope | `DENY`/`HOLD`; invalidate prior derivatives. |
-| Candidate presented as site | Reject/relabel and route to review. |
-| Exact/reconstruction risk unresolved | `DENY` or accepted more restrictive transform. |
-| Burial/sacred/human-remains involvement | `DENY`/`HOLD` under most restrictive rule. |
-| Collection security/custody unresolved | `DENY`/`HOLD`. |
-| Source role/rights unclear | `HOLD`, `DENY`, or `ABSTAIN`. |
-| Evidence/review/receipt/release/rollback missing | Do not render or promote publicly. |
-| Source/consumer unavailable | Fail closed; do not overstate stale state. |
-| Correction/revocation invalidation incomplete | Keep withdrawn/restricted; do not restore public response. |
+| Missing/invalid config, unknown risk-bearing key, coercion, unresolved reference | Reject, remain inactive, or return the contract's error/hold; never silently widen access. |
+| Empty schema, placeholder validator, unbound or permissive policy | Do not activate or describe the consumer as protected. |
+| Authority, consent, rights, custody, or source role unresolved | Hold/deny/abstain as applicable; missing evidence is not permission. |
+| Candidate presented as site or unreviewed alias substituted | Reject/relabel under the owning contract and route to review. |
+| Exact-location, reconstruction, sacred, burial, or collection risk | Deny/hold under the most restrictive applicable rule. |
+| Evidence, review, transform, release, correction, or rollback support missing | No public rendering, export, indexing, AI answer, or promotion. |
+| Source/consumer unavailable or permission stale/revoked | Fail closed; do not conceal stale state or retain unsafe public derivatives. |
+| Invalidation incomplete | Keep affected delivery withdrawn or restricted; do not claim restoration is safe. |
 
-Errors must not reveal the protected value or enough context to infer it.
-
----
+Errors must not reveal the rejected value or enough context to reconstruct it.
 
 ## Governed AI and generated language
 
-AI is interpretive, not root truth.
+AI is interpretive, never root truth. It must not confirm sites from imagery or model scores, infer authority/consent/affiliation/custody/legal status, reconstruct protected locations, rank vulnerable targets, provide access directions, or reveal restricted knowledge.
 
-Configuration must not permit AI to:
+The intended sequence remains: scope the question and audience; resolve permitted released `EvidenceRef` to `EvidenceBundle`; apply cultural authority, consent/revocation, rights, sensitivity, policy, review and release checks; then answer with citations and bounded limitations or abstain/deny. A citation is not permission to disclose its underlying restricted content.
 
-- confirm archaeological sites;
-- infer sacredness, affiliation, authority, consent, ownership, custody, repatriation, or legal status;
-- reconstruct exact locations from public clues;
-- rank looting targets or vulnerable sites;
-- generate access directions;
-- reveal restricted oral-history or cultural knowledge;
-- turn anomaly/model output into fact;
-- produce public answers from RAW, WORK, QUARANTINE, candidates, private registries, or unreleased records;
-- treat citations as permission to expose sensitive content.
-
-Preferred order:
-
-1. define bounded question and audience;
-2. resolve released EvidenceRef to EvidenceBundle;
-3. apply named-authority, consent/revocation, sensitivity, rights, policy, review, and release checks;
-4. use public-safe released projections only;
-5. answer with citations, limitations, and bounded confidence—or `ABSTAIN`/`DENY`.
-
-AI receipts, retrieval indexes, prompt logs, and generated summaries must follow the same correction, revocation, and invalidation rules.
-
----
+Ordinary public AI must not read RAW, WORK, QUARANTINE, private registries, candidate stores, or unreleased records. AI receipts, retrieval indexes, and controlled generated outputs remain subject to correction and invalidation.
 
 ## Migration and anti-bypass posture
 
-When misplaced or unsafe material is found here:
+When unsafe or misplaced material is discovered, stop affected activation/exposure, identify consumers and the disclosure window, preserve a protected audit trail, and handle secrets or sensitive bytes through the appropriate incident process. Do not copy protected contents into public issues or “cleanup” commits.
 
-1. freeze activation and public use;
-2. identify consumers, caches, indexes, exports, generated outputs, and exposure window;
-3. remove/quarantine secrets and sensitive details immediately;
-4. preserve incident/correction evidence without copying protected content into public notes;
-5. identify the true responsibility root;
-6. move meaning to contracts, shape to schemas, policy to policy, source records to registry, data to lifecycle, reviews/consent to governance homes, receipts/proofs to their roots, release decisions to release;
-7. preserve aliases/migration notes without parallel authority;
-8. update consumers through explicit binding;
-9. run candidate/site, cultural authority, consent/revocation, reconstruction, burial/sacred, collection-security, rights, source-role, no-network, and negative tests;
-10. invalidate derived maps, caches, indexes, embeddings, graph projections, exports, and generated language;
-11. record correction/withdrawal/rollback;
-12. remove compatibility material when closure is verified.
+Classify by responsibility before any migration. Preserve source and object identity, versions, digests where safe, aliases, review decisions, consumer cutover, correction, and rollback. Migration must not create two writable authorities or be inferred from `git mv` alone.
 
 ### Anti-bypass matrix
 
-| Bypass | Required response |
-|---|---|
-| Config selects scaffold policy as active | Reject; require accepted policy and tests. |
-| Config treats empty schema as validation | Reject; require meaningful schema/fixtures/validator. |
-| Config treats validator README/path as executable proof | Reject; verify runnable code and results. |
-| Config treats source placeholder as admitted source | Reject; require accepted descriptor/rights/activation. |
-| Config treats `data/published/...` path as released | Reject; require release state/manifests and public-safe artifact. |
-| Config enables direct UI/source-store reads | Reject; route through governed API/released artifact. |
-| Config promotes candidate based on score/threshold | Reject; preserve candidate and review. |
-| Config lowers geometry/sensitivity for convenience | Reject; most restrictive accepted rule applies. |
-| Config caches permission or consent indefinitely | Reject; resolve current live state. |
-| Config suppresses a denial reason by exposing sensitive detail | Return safe reason code only. |
-
----
+Reject config that treats a source placeholder as admission, an empty schema as meaningful validation, a validator filename as a passing run, a published-path file as release, a candidate threshold as confirmation, a cached consent flag as perpetual permission, or direct UI/store access as governed delivery. Require current owning evidence and negative tests for the actual consumer.
 
 ## Rollback, correction, withdrawal, and invalidation
 
 ### Rollback triggers
 
-- sensitive or exact detail appears;
-- cultural authority or consent was misrepresented;
-- revocation was ignored;
-- candidate was presented as confirmed;
-- scaffold policy/schema/validator/source/layer was treated as active;
-- public/client path bypassed release governance;
-- collection security or looting risk increased;
-- cross-domain joins enabled reconstruction;
-- correction did not propagate to caches/indexes/AI outputs.
+Sensitive disclosure, misrepresented authority/consent, candidate confirmation, unsafe aliasing, scaffold reliance, reconstruction, ignored revocation, broken release mediation, or incomplete correction propagation requires safer handling of the affected consumer.
 
 ### Required response
 
-1. enter a safer state immediately;
-2. stop public/API/UI/search/export/AI delivery;
-3. preserve a protected audit trail;
-4. identify affected releases and derivatives;
-5. restore prior safe config or built-in denial;
-6. issue correction, restriction, withdrawal, supersession, or rollback records;
-7. invalidate caches, tiles, indexes, vectors, graphs, exports, prompts, and summaries;
-8. re-run tests and review;
-9. verify no downstream surface still exposes or implies the unsafe state.
+Enter a safer state; stop affected public/API/UI/search/export/AI delivery; preserve protected audit evidence; identify releases and derivatives; restore a known-safe configuration or built-in denial; record correction/withdrawal/rollback decisions; invalidate controlled derivatives; and revalidate before restoration.
 
-For this README, the mechanical rollback target is prior blob `e429009d4877428c46f4a77c48857ec26c13f0e2`.
-
-Deleting or reverting a file does not erase already disclosed information.
-
----
+For this **documentation-only change**, the prior README blob is `e42316554e24777096611a5cc54fd3a61e2fa0be`. Keep the branch unintegrated or use a reviewed non-force revert/forward correction. Preserve the generated-work receipt as provenance for the bytes it recorded; do not silently repurpose it as a receipt for different content. No runtime rollback, source change, or data migration is performed here.
 
 ## Definition of done for the first payload
 
-Before the first non-README file is accepted:
+**Inert authoring:** identify the exact consumer and placement basis; keep values synthetic/non-secret; label proposed fields and unresolved dependencies; specify parser, version, binding, precedence, unknown/missing behavior, tests, and rollback. Do not add empty symmetry scaffolds or imply activation.
 
-- [ ] exact consumer, owner, and code binding verified;
-- [ ] config class, format, version, parser, precedence, missing-file, unknown-key, and fallback behavior defined;
-- [ ] accepted non-empty schema with required fields and controlled additional properties;
-- [ ] executable validator and valid/invalid fixtures;
-- [ ] accepted policy modules with tests and runtime binding; no scaffold reliance;
-- [ ] canonical contract/object-family names resolved or explicit compatibility mapping approved;
-- [ ] source IDs, roles, rights, cadence, sensitivity, and activation verified;
-- [ ] named cultural authority and reviewer requirements verified;
-- [ ] consent scope, retention, secondary use, expiration, and revocation flow verified;
-- [ ] candidate/anomaly/context/model-to-site promotion tests pass;
-- [ ] exact-location and reconstruction-channel denial tests pass;
-- [ ] burial, human-remains, sacred, funerary, and restricted-knowledge tests pass;
-- [ ] oral-history and community-controlled-content tests pass;
-- [ ] collection custody/repatriation/access/security tests pass;
-- [ ] identity/alias/provenience/collection/chronology tests pass;
-- [ ] cross-domain anti-confirmation tests pass;
-- [ ] no real locations, names, cultural content, access details, or restricted records in fixtures;
-- [ ] no-network parse/validation tests pass;
-- [ ] logging/telemetry/cache/index redaction tests pass;
-- [ ] public-bound flow requires EvidenceBundle, policy, review, transform receipt, release, correction, and rollback;
-- [ ] revocation/correction/withdrawal invalidation tests cover caches, maps, search, vector, graph, exports, and AI;
-- [ ] reviewers approve under separation-of-duties posture;
-- [ ] documentation and evidence ledger updated.
+**Before activation:** verify the consumer and owner; resolve applicable contracts and meaningful schemas; run executable positive/negative tests; demonstrate fail-closed policy integration, authority/consent/revocation handling, candidate/identity boundaries, source-role and chronology preservation, no-network parse/validation, and safe observability. Sensitive behavior requires cultural/rights/security review and reconstruction, burial/sacred/human-remains, collection-security, and cross-domain denial cases.
 
----
+**Before public use:** close evidence, rights, sensitivity, transforms, review, integrity, receipts/proofs, release, correction, and rollback. Verify invalidation across the actual map, cache, search, vector, graph, export, and AI consumers. Neither an inert template nor this checklist grants that transition.
 
 ## Verification backlog
 
-| Item | Status |
-|---|---:|
-| Exhaustive recursive config inventory | `NEEDS VERIFICATION` |
-| Direct config consumer/loader | `UNKNOWN` |
-| Discovery/precedence/fallback | `UNKNOWN` |
-| Accepted owners and named authorities | `OWNER_TBD / NEEDS VERIFICATION` |
-| `Site` versus `ArchaeologicalSite` | `CONFLICTED` |
-| Collapsed versus decomposed object-family vocabulary | `CONFLICTED` |
-| Transform/receipt vocabulary and homes | `CONFLICTED / NEEDS VERIFICATION` |
-| Contract/schema lineage migration | `NEEDS VERIFICATION` |
-| Domain/sensitivity policy layering | `NEEDS VERIFICATION` |
-| Source-registry topology | `CONFLICTED` |
-| Source-role vocabulary and accepted descriptors | `NEEDS VERIFICATION` |
-| Cultural/Tribal/rights-holder reviewer roster | `NEEDS VERIFICATION` |
-| Consent/revocation record authority and live lookup | `NEEDS VERIFICATION` |
-| Public geometry floor and transform profiles | `NEEDS STEWARD RATIFICATION` |
-| Package implementation | `GREENFIELD 0.0.0 / PLACEHOLDER` |
-| Pipeline implementation | `PLACEHOLDER` |
-| Pipeline specs | `EMPTY STAGE LISTS` |
-| Policy implementation | `PROPOSED SCAFFOLDS / MIXED DEFAULTS` |
-| Schema completeness | `EMPTY-PROPERTIES PERMISSIVE SCAFFOLDS` |
-| Validator implementation | `NOT IMPLEMENTED IN OPENED FILES` |
-| Source records | `PROPOSED/TBD PLACEHOLDERS` |
-| Published-layer registry | `PROPOSED PLACEHOLDER — NOT RELEASE` |
-| Explorer UI | `PLACEHOLDER EXPORTS` |
-| Workflow enforcement | `TODO SCAFFOLD` |
-| Tests/pass rates | `NEEDS VERIFICATION` |
-| Burial/human-remains/sacred handling | `NEEDS VERIFICATION` |
-| Collection custody/repatriation/security | `NEEDS VERIFICATION` |
-| Chronology methods and uncertainty profiles | `NEEDS VERIFICATION` |
-| Logging/telemetry/cache/index scanners | `NEEDS VERIFICATION` |
-| Governed API/runtime/publication | `UNKNOWN` |
-| Correction/revocation invalidation | `NEEDS VERIFICATION` |
-| CODEOWNERS/branch protection | `NEEDS VERIFICATION` |
-
----
+| Item | Current posture and next evidence |
+|---|---|
+| Tracked configuration inventory | **CONFIRMED** at the pin: README only. Recheck on a payload or tree change. |
+| Consumer, loader, discovery, precedence | **UNKNOWN.** Exact source binding and focused tests required. |
+| Configuration schema and validator | **NEEDS VERIFICATION.** Do not substitute the EvidenceBundle projection. |
+| Other archaeology packages, pipelines, schemas, policies, registries, UI and API | **NOT INSPECTED comprehensively in this review.** Classify each selected consumer rather than reuse the old blanket scaffold matrix. |
+| Domain decision, alias, object-family and registry reconciliation | **NEEDS VERIFICATION** before dependent implementation. |
+| Cultural/Tribal/rights-holder and specialist authority | **NEEDS VERIFICATION.** Repository routing is not assignment or consent. |
+| Review enforcement and hosted exact-head results | **NEEDS VERIFICATION.** No approval or required-check claim. |
+| Consent/revocation, location transforms, collection security, chronology and invalidation | **NEEDS VERIFICATION** for the actual consuming path; active/public use stays held without support. |
+| External storage, live sources and deployed public behavior | **UNKNOWN.** This documentation change does not probe or activate them. |
 
 ## Safe language rules
 
-| Avoid | Prefer |
-|---|---|
-| “The config is active.” | “The README defines a boundary; direct consumer binding is not established.” |
-| “The policy denies exact coordinates.” | “Exact-location denial is doctrine; opened policy files are scaffolds and runtime enforcement is unverified.” |
-| “The schema validates sites.” | “Opened schemas are PROPOSED empty-permissive scaffolds.” |
-| “The validator passed.” | “Opened validator entrypoints raise `NotImplementedError`; no result is claimed.” |
-| “The source is registered.” | “A PROPOSED placeholder/TBD source record exists; admission and activation are unverified.” |
-| “The layer is published.” | “A `status: PROPOSED` placeholder exists under a published-path lane; no release is proven.” |
-| “This is an archaeological site.” | “This is a candidate/anomaly/context record unless reviewed evidence supports a governed site identity.” |
-| “Exact location hidden.” | “No direct or indirect reconstruction channel is exposed under the accepted transform and review.” |
-| “County generalization makes it public-safe.” | “Generalization is only one requirement; named authority, rights, sensitivity, review, evidence, policy, release, and looting risk still control.” |
-| “The Tribe approved it.” | “A current governed review/authority record supports the specified use; do not generalize beyond its scope.” |
-| “Consent was obtained.” | “A current scoped consent record exists and revocation has been checked.” |
-| “No consent means public.” | “Missing or unclear consent/authority fails closed.” |
-| “This artifact belongs to…” | “The cited record reports a custody/provenance assertion; ownership and cultural/legal status are not inferred.” |
-| “LiDAR found a site.” | “LiDAR produced a candidate/anomaly under a stated method and uncertainty.” |
-| “Historical route confirms the site.” | “The route is contextual evidence and does not confirm the site.” |
-| “The UI hides it.” | “Protection is enforced upstream by accepted policy/release controls; client rendering is not the security boundary.” |
-| “CI validates Archaeology.” | “The inspected domain workflow currently runs TODO echo jobs.” |
+Say “one tracked README at the pinned revision,” not “nothing exists anywhere.” Say “executable projection source inspected,” not “archaeology validation passed.” Say “the named legacy entrypoint is a placeholder,” not “all validators are placeholders.” Say “workflow commands exist,” not “CI enforces all archaeology controls.”
 
----
+Say “candidate/anomaly under a method and uncertainty,” not “LiDAR found a confirmed site.” Say “current scoped authority and consent records support this use,” not “the community approved everything.” Say “reviewed upstream controls protect permitted representations,” not “the UI hides it” or “county generalization makes it safe.”
+
+Use the core truth labels separately from implementation maturity, review state, and release state. Unknowns are not negative findings and code presence is not operation.
 
 ## Evidence ledger
 
-| Evidence | State | Supports | Does not prove |
-|---|---|---|---|
-| Target README | prior blob `e429009d…`, v0.2 | Existing exact-location/cultural/reconstruction/failure/rollback safeguards. | Payloads or consumers. |
-| Parent config README | blob `2c5e8b70…`, v0.4 | No-secret/no-authority child contract. | Archaeology runtime behavior. |
-| Bounded config search | README only | No indexed payload/direct consumer. | Exhaustive absence. |
-| Archaeology README | blob `e44040a1…` | Scope, objects, T4/CARE/exact-location doctrine. | Current implementation. |
-| Canonical paths | blob `e2443077…` | Segmented path resolution, lineage paths, sensitive disposition guidance. | Accepted runtime policy or every path’s contents. |
-| Cultural review | blob `2097297f…` | Named-authority, consent/revocation, CARE, review governance. | Implemented records or runtime checks. |
-| Sensitivity/publication doc | blob `3522cfc1…` | Fail-closed categories and required release-support concepts. | Accepted reason codes or enforcement. |
-| Contract README | blob `d857c0eb…` | Semantic boundary and object-family conflicts. | Complete contract/schema coverage. |
-| `site.md` | blob `841ef554…` | Site/ArchaeologicalSite compatibility conflict. | Canonical resolution or site confirmation. |
-| Package metadata/code | blobs `484e115e…`, `3578be96…` | Version 0.0.0 and placeholder layer file. | Working package. |
-| Pipeline files | placeholder comments | Core paths exist as greenfield placeholders. | Executable processing. |
-| Pipeline specs | `stages: []` | Spec paths exist. | Stage wiring. |
-| Candidate/sacred/oral-history/AI policy files | `PROPOSED`, `default allow := false` | Fail-closed intent. | Complete rules, tests, runtime binding. |
-| Precise-coordinate policy stubs | “No real rules yet”, `default deny := false` | Path/stub presence. | Safe enforcement. |
-| Opened schemas | empty properties, additional properties allowed | Proposed paths and paired contract refs. | Meaningful validation. |
-| Opened validators | `raise NotImplementedError` | Intended entrypoint paths. | Executable validation. |
-| Source-role/source YAML | `PROPOSED` placeholders/TBD template | Candidate registry paths and topology conflict. | Accepted source roles, rights, or activation. |
-| Published layer registry | `status: PROPOSED` placeholder | Path presence. | Released layer or public safety. |
-| Explorer UI files | placeholder exports | Intended UI paths. | Real layers/Evidence Drawer/privacy enforcement. |
-| Domain workflow | TODO echo jobs | Trigger/job scaffolding. | Substantive CI/proof/release. |
-| Archaeology ADR files | `PROPOSED` scaffolds | Open decision handles. | Accepted decisions. |
+All repository observations below refer to **`bb3eb695e6068b38453ca3ded8f1394a8fdebc20`** unless explicitly marked historical. Relative links are navigation; the pin and blob identities make the review reproducible.
 
----
+| Evidence | Identity | Bounded support |
+|---|---|---|
+| Incoming target README | `e42316554e24777096611a5cc54fd3a61e2fa0be` | July `v0.3` source and safeguards retained; its broad maturity claims are not reused as current proof. |
+| Exact configuration directory listing | One README, no child directories | Closed tracked-lane inventory only. |
+| Parent / root configuration READMEs | `c497e41466f3aaf934aeca4b9976a2fa8516ff21` / `a800983eac7582a84e9dd82bc7d4baf04f552ad8` | Inherited responsibility and no-live-binding boundary. |
+| Directory Rules / accepted ADR-0029 | `fd49a0b83e55cef52c1124281f093e263526898d` / `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Adopted placement; consumer-owned config; responsibility/lifecycle separation. |
+| CODEOWNERS | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Repository review routing only. |
+| Archaeology domain README | `c128be25ea31227cf03fc756dcd74b2a5e82bb06` | Domain framing and reported mixed maturity; not a substitute for code inspection. |
+| [EvidenceBundle projection](../../../schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json) | `6bf74442d485f346c2412a2e07564161d80d1900` | Shared-shape delegation, proposed status, no independent fields/public release authority. |
+| Projection validator / convergence tests | `28cceef5f1446fd492c6e520f3c7ed64698a4ee7` / `79e712f5ada05eae3596134f23c1281121b9f544` | Runnable source and substantive tests; not executed in this review. |
+| Legacy domain validator | `5eb3a70d78c1074ba64071b16f591032b629b8c5` | Separate `NotImplementedError` entrypoint; not the projection implementation. |
+| Focused convergence workflow | `259d61c5e339d693e964ca7297cff60a0ada5d80` | Source-level commands and selected paths; no README trigger or hosted result claim. |
 
-<details>
-<summary><strong>Appendix A — no-loss preservation note</strong></summary>
-
-v0.2 established:
-
-- the Archaeology config lane and documentation-only maturity;
-- no archaeology truth, cultural authority, consent, source, evidence, policy, or release authority;
-- exact/reconstructable location denial;
-- burial, human-remains, sacred-site, restricted-knowledge, private-land, collection-security, and looting-risk safeguards;
-- candidate-vs-confirmed separation;
-- direct and indirect reconstruction controls;
-- AI as interpretive and evidence-subordinate;
-- minimum configuration contract;
-- future validation, failure behavior, review, correction, and rollback.
-
-v0.3 preserves those safeguards and adds:
-
-- current repository and prior-blob evidence;
-- bounded config inventory;
-- actual scaffold/placeholder maturity across implementation-shaped surfaces;
-- mixed policy-default warning;
-- object-family, alias, path, policy-layer, receipt, and registry conflicts;
-- named-authority, consent, revocation, sovereignty, and oral-history rules;
-- collection custody/repatriation/security boundaries;
-- chronology and uncertainty rules;
-- remote sensing/LiDAR/geophysics/3D controls;
-- cross-domain anti-confirmation;
-- logging, telemetry, cache, search, vector, graph, export, and AI invalidation;
-- stricter validation matrix and first-payload gate;
-- safe-language and evidence ledgers.
-
-No v0.2 safeguard is intentionally weakened.
-
-</details>
-
-<details>
-<summary><strong>Appendix B — documentation-only boundary</strong></summary>
-
-This revision changes no:
-
-- executable config payload;
-- consumer, loader, discovery, or precedence behavior;
-- source descriptor, activation decision, connector, or watcher;
-- schema, contract, policy, package, pipeline, validator, test, fixture, or workflow code;
-- cultural authority, consent, revocation, review, or rights record;
-- site, candidate, survey, artifact, collection, chronology, geometry, source payload, or interpretation;
-- lifecycle, registry, receipt, proof, catalog, triplet, graph, or published artifact;
-- release, correction, withdrawal, supersession, or rollback object;
-- API, map, UI, search, vector, export, Focus Mode, AI, or deployment behavior.
-
-Any future behavior change must be implemented and validated in its owning responsibility roots.
-
-</details>
+The earlier July evidence inventory remains available in the prior Git blob. Google Drive's *Directory Rules* is lineage; the Notion archaeology builder page is coordination with an older repository checkpoint. Neither overrides the adopted repository rules or proves a scheduler, runtime, review, or release state.
 
 ## Status summary
 
-`configs/domains/archaeology/` is a README-only, non-secret, non-authoritative configuration-support lane. The surrounding repository contains rich Archaeology doctrine, contracts, and many implementation-shaped paths, but the inspected package, pipeline, specification, policy, schema, validator, source, published-layer, UI, workflow, and ADR surfaces remain draft, scaffolded, placeholder, conflicted, or unverified. No direct config consumer is established. Future payloads require explicit binding, accepted non-empty schemas and executable validators, accepted policy/runtime enforcement, named cultural authority, current consent/revocation, source rights, candidate/site and identity controls, exact-location and reconstruction denial, burial/sacred/human-remains and collection-security safeguards, evidence, review, transform receipts, release, correction, withdrawal, invalidation, and rollback.
+**README-only configuration lane; selected adjacent validation is implemented in source; active configuration and public-use closure are unproved.** This revision corrects currentness, narrows unsupported maturity claims, preserves the document identity and H2 navigation, and retains cultural authority, consent/revocation, exact-location, candidate, collection, chronology, source-role, AI, correction, and rollback safeguards.
 
-<p align="right"><a href="#top">Back to top</a></p>
+Only this README and its required AI-generated-work receipt participate in the change. No configuration payload, consumer, dependency, schema, policy, source record, domain data, workflow, permission, release decision, or deployment is changed. Human review remains separate and pending.
+
+[Back to top](#top)

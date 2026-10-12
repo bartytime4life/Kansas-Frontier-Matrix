@@ -1,0 +1,120 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/precommitted-evaluation-record.yml": "sha256:08d12700f46fecd0ce55c776b484a542b42ce6c317a68f2411fce715dc84ed7d",
+    "contracts/validation/precommitted_evaluation_record.md": "sha256:0e1d46d051738210b315dfece2e206482434af4a40666730808d18ab09e5eef6"
+  },
+  "artifact_paths": [
+    ".github/workflows/precommitted-evaluation-record.yml",
+    "contracts/validation/precommitted_evaluation_record.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "id": "ADR-0029-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/validation/precommitted_evaluation_record.md@eecaa9b77c1d12af4f36747ad1a24f51d0b647be",
+      "id": "precommitted-evaluation-record-prior-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json@2197c3a2adaa4c8a4364c236d233f63847c8e746",
+      "id": "precommitted-evaluation-record-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/validate_precommitted_evaluation_record.py@5d134488ffb4b543d07257036632db5a5f9e237e",
+      "id": "precommitted-evaluation-record-validator",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tests/validators/test_validate_precommitted_evaluation_record.py@de388e7172ee881147cf9560925fac0993b14ddf",
+      "id": "precommitted-evaluation-record-focused-tests",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-cairnwake-precommitted-evaluation-20260825.json@f3592629c832d277c080f8fc31c0e599231248a4",
+      "id": "historical-generated-receipt",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-06T16:50:13.799Z",
+  "emitter": "Codex (GPT-5) via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@2b65cfdb6d4a8ce472a8c6a10cc0718c7d43ef3a",
+      "repo:fixtures/contracts/v1/validation/precommitted_evaluation_record/cases.json@f952ac2cd63fcf1245455f1f0acaa70ce3c8b396",
+      "repo:tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py@a0427fd5ad934e800fa971f34df9ae82f45da1c4",
+      "repo:docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md@84e74b173c42855c6745a52740bc5f21ce9c8f48",
+      "drive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs (Directory Rules; read-only lineage)",
+      "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6 (Contributor Reliability System; read-only lineage)",
+      "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447 (coordination only)"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5",
+    "provider": "OpenAI",
+    "version": "2026-09-06"
+  },
+  "notes": "Authoring provenance for an additive repository-evidence/currentness refresh of the fixture-only PrecommittedEvaluationRecord contract and its receipt-validation wiring. The receipt excludes itself from artifact hashes. The historical 2026-08-25 receipt remains immutable and is validated against exact originating commit 6af91c7d4cc132b53a747736c2109e5561ff2c04; this receipt binds the refreshed contract and workflow to the current branch. No schema, fixture, builder, validator, focused test, external observation, scoreboard, lifecycle store, release, deployment, publication, or public-use authority is created or changed. Human review and current-head hosted validation remain pending.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "Notion connector (coordination)",
+      "remote exact-ref readback"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-contract-precommitted-evaluation-record-currentness-20260906",
+  "truth_labels": {
+    ".github/workflows/precommitted-evaluation-record.yml": "PROPOSED",
+    "contracts/validation/precommitted_evaluation_record.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-bundle-reconciliation",
+      "outcome": "PASS",
+      "reason": "The target bundle was read at main@2b65cfdb6d4a8ce472a8c6a10cc0718c7d43ef3a; its companion blobs match the unchanged exact-head bundle validated at 6af91c7d4cc132b53a747736c2109e5561ff2c04."
+    },
+    {
+      "gate": "remote-document-structure-checks",
+      "outcome": "PASS",
+      "reason": "Target metadata, relative links, preserved contract sections, workflow receipt references, and final-newline shape were checked from exact-ref content."
+    },
+    {
+      "gate": "historical-exact-head-workflow",
+      "outcome": "PASS",
+      "reason": "GitHub workflow run 32929740203 (run number 3) completed successfully, including all seven job steps and historical receipt integrity."
+    },
+    {
+      "gate": "currentness-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch and draft pull-request workflow execution."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No human reviewer is recorded; review remains pending."
+    }
+  ]
+}

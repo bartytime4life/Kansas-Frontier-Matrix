@@ -1,0 +1,10 @@
+{
+  "decision_id": "dec-secret",
+  "outcome": "ERROR",
+  "policy_family": "capability",
+  "reasons": [
+    "authorization: bearer fixture-token"
+  ],
+  "obligations": [],
+  "evaluated_at": "2026-08-07T00:00:00Z"
+}

@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · Frontier Matrix steward · Data steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-10
+updated: 2026-09-26
 policy_label: public; implementation-root; source-admission; aggregate-data; vintage-aware; uncertainty-aware
 related:
   - ../README.md
@@ -51,6 +51,9 @@ notes:
 
 `connectors/census/`
 
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/census/descriptor.yaml` now sets `role: aggregate` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. Because source role is product-level, `admit.PRODUCT_ROLES` gives each product its own role, as set by the repository owner: ACS estimate tables `aggregate`, TIGER/Line packages `administrative` (reference geometry, not legal-boundary authority). Each returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD` and carries its `source_role`; a product without a role still ends at `HOLD` with `PRODUCT_ROLE_UNRESOLVED`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
 ## Quick jumps
 
 [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Product-family boundaries](#product-family-boundaries) · [Admission contract](#admission-contract) · [Time and geography](#time-and-geography) · [Uncertainty and suppression](#uncertainty-and-suppression) · [Lifecycle](#lifecycle) · [Bounded outcomes](#bounded-outcomes) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
@@ -58,6 +61,26 @@ notes:
 ---
 
 ## Status
+
+> [!NOTE]
+> **Offline Census surfaces (2026-09-26).** Two standard-library modules now exist, neither of which fetches, activates, or admits anything:
+>
+> - `src/census/tiger_package.py` inspects one *supplied* TIGER/Line package against its entry in `../tiger-line-2025-kansas-core.source-reference.json` (byte length and SHA-256), then reads the zip in memory with member-path, duplicate-member, size, and compression-ratio bounds. It checks the `.shp`/`.shx` headers (shape type, bbox, feature count agreement), the `.prj` CRS (NAD83 geographic), and the `.dbf` attributes (identity uniqueness via `GEOID`/`GEOID20`/`LINEARID`/`HYDROID`, `STATEFP` and `COUNTYFP` scope against the file name). Geometry is never decoded. National packages are flagged as needing spatial or attribute selection. Candidates carry `source_role: REFERENCE_GEOMETRY_CANDIDATE` and are not legal-boundary, cadastral, or road authority.
+> - `src/census/acs_api.py` plans Kansas-scoped ACS data-API URLs (detailed, profile, and subject tables; estimates auto-paired with MOEs; API keys are never part of a provenance URL and are rejected if present) and parses supplied responses. Numbers become exact `Decimal`s; ACS annotation (jam) values such as `-666666666` become named annotations with no numeric value; nulls stay null; HTTP 204 is `EMPTY_RESULT_NOT_ABSENCE`. Nothing is converted to zero. Unrecognized negatives quarantine the row; header, width, geography-code, state-scope, or duplicate-GEOID problems reject the table.
+>
+> Synthetic tests: `tests/test_tiger_package.py`, `tests/test_acs_api.py`, run by `.github/workflows/census-offline.yml`. The `TBD` descriptor remains a steward decision.
+
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve_acs(url)`:** accepts only the exact URL `acs_api.acs_url` would emit (`key=` is refused).
+> - **`fetch.retrieve_tiger(file_name)`:** accepts only packages in the committed source-reference manifest. The URL must be `https://www2.census.gov/geo/tiger/TIGER<vintage>/<PRODUCT>/<file>`, the byte budget is the manifest length, and the manifest SHA-256 is the transport's expected digest, so a byte mismatch is an `INTEGRITY_MISMATCH` episode.
+> - Both run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`census.acs-api`, `census.tiger-line`) and profiles.
+> - **`admit.admit()`:** selects the product from the episode's own source identity. Unknown or mismatched sources are refused. It routes as follows:
+>   - an ACS table becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES` or with the table's own reasons when they apply;
+>   - a TIGER package keeps the route the inspector assigned;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/census/tests/test_fetch_admit.py`.
 
 > [!IMPORTANT]
 > **Status:** `draft` / `NEEDS VERIFICATION`  

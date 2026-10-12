@@ -1,0 +1,308 @@
+{
+  "bases": {
+    "on_time": {
+      "object_type": "DeliveryAvailabilityAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.delivery-availability.fixture.v1",
+      "assessment_id": "",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic.atmos.product",
+      "source_descriptor_ref": "kfm://source/synthetic.atmos.product",
+      "source_descriptor_version": "v3",
+      "assessed_at": "2026-08-09T05:15:00Z",
+      "expectation": {
+        "expectation_version": "v1",
+        "observation_cadence_seconds": 10800,
+        "product_cadence_seconds": 10800,
+        "delivery_window_seconds": {
+          "minimum_seconds": 3600,
+          "maximum_seconds": 7200
+        },
+        "freshness_window_seconds": 21600,
+        "stale_threshold_seconds": 43200,
+        "tolerance_profile_ref": "kfm:delivery-tolerance:synthetic-v1",
+        "calendar_exception_profile_ref": null,
+        "outage_exception_allowed": true
+      },
+      "observation": {
+        "observed_at": "2026-08-09T00:00:00Z",
+        "generated_at": "2026-08-09T03:00:00Z",
+        "expected_available_from": "2026-08-09T04:00:00Z",
+        "expected_available_until": "2026-08-09T05:00:00Z",
+        "actually_available_at": "2026-08-09T04:30:00Z",
+        "retrieved_at": "2026-08-09T05:00:00Z",
+        "validated_at": "2026-08-09T05:10:00Z",
+        "released_at": null,
+        "source_revision": "rev-001",
+        "superseded_by_revision": null,
+        "retrieval_result": "SUCCESS",
+        "source_outage_evidence_ref": null
+      },
+      "decision": {
+        "state": "ON_TIME",
+        "freshness_state": "WITHIN_WINDOW",
+        "reason_codes": [
+          "DELIVERED_WITHIN_EXPECTED_WINDOW"
+        ],
+        "review_required": true,
+        "policy_change_candidate": false
+      },
+      "learned_observation": {
+        "observed_delivery_latency_seconds": 5400,
+        "use_for_expectation_update": "REVIEW_REQUIRED",
+        "expectation_mutated": false
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activation_allowed": false,
+        "expectation_update_authorized": false,
+        "policy_evaluated": false,
+        "raw_write_allowed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      },
+      "spec_hash": ""
+    }
+  },
+  "cases": [
+    {
+      "case_id": "on-time-delivery",
+      "base": "on_time",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "expected-product-lag",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T04:30:00Z" },
+        { "path": "/observation/actually_available_at", "value": null },
+        { "path": "/observation/retrieved_at", "value": null },
+        { "path": "/observation/validated_at", "value": null },
+        { "path": "/observation/retrieval_result", "value": "NOT_YET_AVAILABLE" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "late-but-not-stale",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T06:30:00Z" },
+        { "path": "/observation/actually_available_at", "value": "2026-08-09T06:00:00Z" },
+        { "path": "/observation/retrieved_at", "value": "2026-08-09T06:15:00Z" },
+        { "path": "/observation/validated_at", "value": "2026-08-09T06:20:00Z" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale-threshold-elapsed",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T13:00:00Z" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "STALE_THRESHOLD_ELAPSED", "path": "/decision/state" }
+      ]
+    },
+    {
+      "case_id": "missing-after-window",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T06:30:00Z" },
+        { "path": "/observation/actually_available_at", "value": null },
+        { "path": "/observation/retrieved_at", "value": null },
+        { "path": "/observation/validated_at", "value": null },
+        { "path": "/observation/retrieval_result", "value": "NOT_FOUND" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "DELIVERY_MISSING_AFTER_EXPECTED_WINDOW", "path": "/decision/state" }
+      ]
+    },
+    {
+      "case_id": "evidenced-source-outage",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T04:30:00Z" },
+        { "path": "/observation/actually_available_at", "value": null },
+        { "path": "/observation/retrieved_at", "value": null },
+        { "path": "/observation/validated_at", "value": null },
+        { "path": "/observation/retrieval_result", "value": "SOURCE_ERROR" },
+        { "path": "/observation/source_outage_evidence_ref", "value": "kfm:evidence:synthetic-outage-001" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "SOURCE_OUTAGE_EVIDENCED", "path": "/decision/state" }
+      ]
+    },
+    {
+      "case_id": "superseded-revision",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/observation/superseded_by_revision", "value": "rev-002" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        { "code": "SOURCE_REVISION_SUPERSEDED", "path": "/decision/state" }
+      ]
+    },
+    {
+      "case_id": "assessment-error",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessment_state", "value": "ERROR" }
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        { "code": "ASSESSMENT_ERROR", "path": "/decision/state" }
+      ]
+    },
+    {
+      "case_id": "decision-mismatch",
+      "base": "on_time",
+      "decision_override": {
+        "state": "LATE",
+        "freshness_state": "WITHIN_WINDOW",
+        "reason_codes": [
+          "DELIVERY_AFTER_EXPECTED_WINDOW"
+        ],
+        "review_required": true,
+        "policy_change_candidate": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_DECISION_MISMATCH", "path": "/decision" }
+      ]
+    },
+    {
+      "case_id": "expected-window-mismatch",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/observation/expected_available_until", "value": "2026-08-09T05:30:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_EXPECTED_WINDOW_MISMATCH", "path": "/observation" }
+      ]
+    },
+    {
+      "case_id": "retrieved-before-available",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/observation/retrieved_at", "value": "2026-08-09T04:00:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_TIME_ORDER_INVALID", "path": "/observation/retrieved_at" }
+      ]
+    },
+    {
+      "case_id": "source-reference-mismatch",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/source_descriptor_ref", "value": "kfm://source/synthetic.other.product" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_SOURCE_REF_MISMATCH", "path": "/source_descriptor_ref" }
+      ]
+    },
+    {
+      "case_id": "learned-observation-mismatch",
+      "base": "on_time",
+      "learned_override": {
+        "observed_delivery_latency_seconds": 999,
+        "use_for_expectation_update": "REVIEW_REQUIRED",
+        "expectation_mutated": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_LEARNED_OBSERVATION_MISMATCH", "path": "/learned_observation" }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "on_time",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "base": "on_time",
+      "assessment_id_override": "kfm:delivery-availability:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_ID_MISMATCH", "path": "/assessment_id" }
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/governance/release_authorized", "value": true }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_SCHEMA_INVALID", "path": "/governance/release_authorized" }
+      ]
+    },
+    {
+      "case_id": "outage-without-evidence",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-09T04:30:00Z" },
+        { "path": "/observation/actually_available_at", "value": null },
+        { "path": "/observation/retrieved_at", "value": null },
+        { "path": "/observation/validated_at", "value": null },
+        { "path": "/observation/retrieval_result", "value": "SOURCE_ERROR" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_OUTAGE_EVIDENCE_REQUIRED", "path": "/observation/source_outage_evidence_ref" }
+      ]
+    },
+    {
+      "case_id": "self-supersession",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/observation/superseded_by_revision", "value": "rev-001" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_SUPERSESSION_SELF_REFERENCE", "path": "/observation/superseded_by_revision" }
+      ]
+    },
+    {
+      "case_id": "freshness-not-before-stale",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/expectation/stale_threshold_seconds", "value": 21600 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_FRESHNESS_THRESHOLD_INVALID", "path": "/expectation/stale_threshold_seconds" }
+      ]
+    },
+    {
+      "case_id": "delivery-window-reversed",
+      "base": "on_time",
+      "mutations": [
+        { "path": "/expectation/delivery_window_seconds/minimum_seconds", "value": 8000 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "DELIVERY_EXPECTATION_WINDOW_INVALID", "path": "/expectation/delivery_window_seconds" },
+        { "code": "DELIVERY_EXPECTED_WINDOW_MISMATCH", "path": "/observation" }
+      ]
+    }
+  ]
+}

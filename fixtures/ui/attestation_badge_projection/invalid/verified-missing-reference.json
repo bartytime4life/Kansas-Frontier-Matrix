@@ -1,0 +1,12 @@
+{
+  "profile": "kfm.explorer.attestation-badge.public-safe.v1",
+  "badge_id": "kfm:attestation-badge:synthetic:invalid-missing",
+  "outcome": "ANSWER",
+  "reason_code": "CHECKS_VERIFIED",
+  "layer_ref": "kfm://layer/synthetic/environmental-001",
+  "evaluated_at": "2026-08-10T15:40:00Z",
+  "attestation_ref": "kfm://attestation/synthetic/dsse-001",
+  "run_receipt_ref": null,
+  "evidence_bundle_ref": "kfm://evidence/synthetic/bundle-001",
+  "release_manifest_ref": "kfm://release/synthetic/manifest-001"
+}

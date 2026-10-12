@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-pass18-spatial-model-family-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/spatial-model-family-assessment.yml",
+    "contracts/common/spatial_model_family_assessment.md",
+    "docs/intake/exploratory/pass-18-spatial-model-family-assessment-source-map.md",
+    "fixtures/contracts/v1/common/spatial_model_family_assessment/cases.json",
+    "schemas/contracts/v1/common/spatial_model_family_assessment.schema.json",
+    "tests/validators/test_validate_spatial_model_family_assessment.py",
+    "tools/validators/validate_spatial_model_family_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/spatial-model-family-assessment.yml": "sha256:992f6e354c9815389d91793a512513aee244f9d7c839ca6959e91c0c618b9e05",
+    "contracts/common/spatial_model_family_assessment.md": "sha256:79d4db2f84d9a491f464922977a2f85d355748fd53fc7059b74e9b57274ca851",
+    "docs/intake/exploratory/pass-18-spatial-model-family-assessment-source-map.md": "sha256:4037c9821e8963561a6eaffe3568ecef106de220aed44599d5cbac3fbca7248c",
+    "fixtures/contracts/v1/common/spatial_model_family_assessment/cases.json": "sha256:1b34141b01a24a1da22e37ce22ea5a020729c3a75b4c73564facdef6d3c1dcd9",
+    "schemas/contracts/v1/common/spatial_model_family_assessment.schema.json": "sha256:5b9ed3606d959153d4b75f4548aaf5b05eaf87025ea15cff47061415828727ff",
+    "tests/validators/test_validate_spatial_model_family_assessment.py": "sha256:9cbaa0c14618d1342ba5ba380ed8940d97383a1f7ac77f69e78ed894a1cb98bb",
+    "tools/validators/validate_spatial_model_family_assessment.py": "sha256:6f60ba10845e18f2d98e61eec2f22a034ea7e80b18c97e2af938f222e14ffb63"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:79d4db2f84d9a491f464922977a2f85d355748fd53fc7059b74e9b57274ca851",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation",
+      "local PDF extraction and rendered-page inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Supplied Pass 18 idea corpus (private discovery source; identifier withheld)",
+      "Connected Directory Rules document (private discovery source; identifier withheld)"
+    ],
+    "evidence_refs": [
+      "supplied://pass18/KFM-P18-INV-054",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/spatial_geometry.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/modeled_surface.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/representation_fitness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/spatial-model-family-assessment.yml": "CONFIRMED",
+    "contracts/common/spatial_model_family_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-spatial-model-family-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/spatial_model_family_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/spatial_model_family_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_spatial_model_family_assessment.py": "CONFIRMED",
+    "tools/validators/validate_spatial_model_family_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic spatial-model-family tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "adjacent-spatial-contract-tests",
+      "outcome": "PASS",
+      "reason": "Thirty-nine tests passed across the new profile, modeled-surface, spatial-geometry, and representation-fitness validators."
+    },
+    {
+      "gate": "repository-contract-regression",
+      "outcome": "PASS",
+      "reason": "Four hundred eighty-nine schema, contract, fixture-root, and generated-receipt tests plus twenty-nine parameterized subtests passed."
+    },
+    {"gate": "documentation-metadata-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-spatial-model-family-proposal",
+      "validated": true,
+      "evidence_ref": "supplied://pass18/KFM-P18-INV-054"
+    },
+    {
+      "id": "spatial-geometry-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/spatial_geometry.md"
+    },
+    {
+      "id": "modeled-surface-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/modeled_surface.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T19:00:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SpatialModelFamilyAssessmentCandidate derived from supplied Pass 18 card KFM-P18-INV-054 and reconciled to existing spatial geometry, modeled surface, representation fitness, and Directory Rules authorities. It distinguishes position, network, field, transformation, and decomposed composite declarations without inspecting data, establishing scientific truth or fitness, dispatching production validators, mutating registries or layers, or authorizing policy, review, release, deployment, publication, or public use."
+}

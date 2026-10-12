@@ -1,43 +1,20 @@
 # KFM release-dry-run readiness workflow.
 #
 # Responsibility:
-#   Inspect whether a release candidate can be assembled, exercise the concrete
-#   PromotionDecision shape-fixture test, and verify rollback-card readiness
-#   without writing release records or presenting placeholders as a dry run.
+#   Exercise five deterministic publication-denial paths over the synthetic
+#   promotion packet, prove its catalog/provenance/rollback identity closure,
+#   run the bounded A-G readiness proof, and verify rollback-card readiness
+#   without assembling or writing release records.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
 #   is untrusted. The workflow has read-only repository permission. Network use
 #   is limited to installing dependencies declared by the root pyproject for
-#   the one repository-owned test; no release, signing, or deployment secret is
-#   available.
-#
-# Inputs:
-#   Release candidate inventory, release-support tooling and Make target,
-#   ReleaseManifest/PromotionDecision/RollbackCard contracts and schemas,
-#   PromotionDecision fixtures/test, rollback-card records, validator/fixture
-#   inventories, and release/promotion policy routing surfaces.
+#   repository-owned tests; no release, signing, or deployment secret exists.
 #
 # Outputs and outcomes:
-#   Test output and job summaries only. Jobs either confirm the bounded current
-#   holds or fail on drift so newly surfaced implementation can be wired and
-#   reviewed deliberately. No candidate, decision, receipt, proof, manifest,
-#   rollback card, signature, release, or published artifact is emitted.
-#
-# Compatibility:
-#   Preserve workflow name `release-dry-run` and job ids `assemble-candidate`,
-#   `promotion-gate-check`, and `rollback-card-presence`; repository rules may
-#   refer to those check names.
-#
-# Rollback:
-#   Revert this file. Do not restore echo-only green jobs or run placeholder
-#   helpers as though they assemble, approve, or reverse a release.
-#
-# Placement:
-#   `.github/workflows/` owns CI orchestration. Release governance remains under
-#   `release/`; all contracts, schemas, policies, fixtures, validators, tests,
-#   evidence, receipts, proofs, lifecycle artifacts, and public outputs remain
-#   in their owning responsibility roots.
+#   Test output and job summaries only. No candidate, decision, receipt, proof,
+#   manifest, rollback card, signature, release, or published artifact is emitted.
 
 name: release-dry-run
 
@@ -70,32 +47,44 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out inspected revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up inspection Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
 
-      - name: Confirm candidate assembly remains an explicit hold
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Confirm dry-run inputs remain synthetic and no-write
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import json
           import re
 
           required = [
               Path("Makefile"),
               Path("tools/release/README.md"),
               Path("tools/release/release_dry_run.py"),
+              Path("tests/release/test_publication_deny_dry_run.py"),
+              Path("tests/release/test_synthetic_release_closure.py"),
+              Path("fixtures/release/promotion_gate/valid/pass__complete_candidate.json"),
               Path("release/candidates/README.md"),
-              Path("contracts/release/release_manifest.md"),
-              Path("schemas/contracts/v1/release/release_manifest.schema.json"),
-              Path("policy/release/README.md"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json"),
+              Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json"),
+              Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260816.json"),
+              Path("data/receipts/generated/genrec-release-dry-run-rollback-card-presence-repair-20260816.json"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json"),
+              Path("data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -113,53 +102,45 @@ jobs:
               f"assembling a dry run: {candidate_payloads}"
           )
 
-          helper = Path("tools/release/release_dry_run.py").read_text(
-              encoding="utf-8"
-          ).strip()
-          assert helper == "# Release dry-run — greenfield placeholder", (
-              "the release dry-run helper has changed; wire its accepted CLI, deterministic "
-              "outputs, negative fixtures, and no-write tests deliberately"
-          )
-
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^release-dry-run:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile release-dry-run target is missing"
-          assert target.group("body").splitlines() == [
-              '\t@echo "TODO: tools/release dry-run"'
-          ], "release-dry-run target changed; invoke and verify the accepted command deliberately"
-
-          schema = json.loads(
-              Path(
-                  "schemas/contracts/v1/release/release_manifest.schema.json"
-              ).read_text(encoding="utf-8")
-          )
-          assert schema["x-kfm"] == {
-              "contract_doc": "contracts/release/release_manifest.md",
-              "fixtures_root": "fixtures/release/release_manifest/",
-              "validator": "tools/validators/release/validate_release_manifest.py",
-              "policy": "policy/release/",
-              "status": "PROPOSED",
-          }, "ReleaseManifest schema metadata changed; reconcile the dry-run boundary"
-          assert schema["required"] == ["id"]
-          assert schema["additionalProperties"] is True
-          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
-              "ReleaseManifest fixtures have appeared; add non-vacuous schema and governance "
-              "tests before retaining this hold"
-          )
-          assert not Path(schema["x-kfm"]["validator"]).exists(), (
-              "the schema-declared ReleaseManifest validator has appeared; wire and test it "
-              "instead of retaining this hold"
-          )
+          body = target.group("body")
+          assert "python tools/release/release_dry_run.py" in body
+          assert "python -m unittest -q tests.release.test_publication_deny_dry_run" in body
+          assert (
+              "python -m pytest -q -p no:cacheprovider "
+              "tests/release/test_synthetic_release_closure.py"
+          ) in body
+          assert "TODO: tools/release dry-run" not in body
 
           print(
               f"CONFIRMED: {len(candidate_files)} candidate-lane guidance/placeholder files "
               "exist and no candidate packet payload is present."
           )
-          print("CONFIRMED: ReleaseManifest remains a permissive PROPOSED id-only schema.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no candidate was assembled.")
-          print("WORKFLOW_HOLD: no accepted dry-run command, manifest fixture, or declared validator exists.")
-          print("No release record, artifact, or publication authority was created.")
+          print("CONFIRMED: the Make target invokes the bounded dry run and its no-write tests.")
+          print("CONFIRMED: the Make target invokes the shared synthetic identity-closure proof.")
+          print("CONFIRMED: historical authoring receipts are retained and the current rollback-card-presence successor binding is present.")
           PY
+
+      - name: Prove bounded publication-denial behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make release-dry-run
+
+      - name: Replay retained authoring receipts from their exact Git tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json \
+            --repo-root . \
+            --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json \
+            --repo-root . \
+            --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80
 
       - name: Record candidate assembly outcome
         if: always()
@@ -168,8 +149,11 @@ jobs:
           {
             echo "### Candidate assembly"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** candidate lanes contain guidance/placeholders, the release-dry-run helper is comment-only, and the Make target remains TODO-only."
-            echo "- ReleaseManifest is still a permissive PROPOSED id-only schema with no declared fixture directory or validator implementation."
+            echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
+            echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
+            echo "- The fixture-only catalog, EvidenceBundle, STAC, DCAT, PROV, rollback, and carrier references retained one manifest identity; the dry run created no authority."
+            echo "- Historical authoring receipts remain immutable and replay from exact authoring tree 8383a722a619df64c7eaa668c9e6427540f2df80; successor workflow and Makefile bytes do not rewrite earlier evidence."
+            echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -181,19 +165,19 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out tested revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up repository Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
 
       - name: Install declared repository test dependencies
         shell: bash
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Require non-vacuous PromotionDecision fixtures
         shell: bash
@@ -230,6 +214,12 @@ jobs:
           set -euo pipefail
           python -m pytest -q tests/release/test_promotion_decision_schema.py
 
+      - name: Prove bounded promotion-gate behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          make publish-check
+
       - name: Record promotion check boundary
         if: always()
         shell: bash
@@ -237,8 +227,10 @@ jobs:
           {
             echo "### Promotion gate check"
             echo
-            echo "- The repository-owned PromotionDecision fixture test ran after a non-empty fixture check."
-            echo "- **WORKFLOW_HOLD:** this is shape validation for a PROPOSED contract. It does not assemble a candidate, resolve EvidenceRefs, evaluate promotion policy, enforce accountable review, validate rollback, or bind another workflow result."
+            echo "- The repository-owned PromotionDecision shape test and bounded A-G promotion-gate proof ran after non-empty fixture checks."
+            echo "- PASS means only APPROVE_READY over declared synthetic closure; it never assembles or promotes a release candidate."
+            echo "- Gate G checks synthetic declarations for canonical identity syntax, issuance by review time, supplied authority and valid-until intervals covering evaluation, an empty approving-review obligations list, an explicit self-declared supersession marker, scope, and hash binding."
+            echo "- **WORKFLOW_HOLD:** this job does not authenticate EvidenceRefs, evaluate promotion policy, verify attestations, authenticate live actors or assignments, execute rollback, or bind another workflow result."
             echo "- Result: ${{ job.status }}. No PromotionDecision, release transition, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -250,35 +242,52 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out inspected revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up inspection Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
+          cache: pip
 
-      - name: Confirm rollback-card readiness hold
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Validate rollback-card fixtures and readiness boundary
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           import json
+          import subprocess
+          import sys
 
           schema_path = Path("schemas/contracts/v1/release/rollback_card.schema.json")
           contract_path = Path("contracts/release/rollback_card.md")
           root_validator = Path("tools/validators/validate_rollback_card.py")
+          declared_validator = Path("tools/validators/release/validate_rollback_card.py")
           rollback_helper = Path("tools/release/rollback_apply.py")
+          rehearsal_test = Path("tests/release/test_synthetic_rollback_rehearsal.py")
+          fixture_root = Path("fixtures/release/rollback_card")
           required = [
               schema_path,
               contract_path,
               root_validator,
+              declared_validator,
               rollback_helper,
+              rehearsal_test,
               Path("release/rollback_cards/README.md"),
               Path("release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"),
               Path("release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"),
+              fixture_root / "README.md",
+              fixture_root / "valid/valid_prior_release_candidate.json",
+              fixture_root / "valid/valid_withdrawal_candidate.json",
+              fixture_root / "valid/valid_hold.json",
+              fixture_root / "invalid/expected_findings_manifest.json",
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required rollback readiness evidence is missing: {missing}"
@@ -290,24 +299,98 @@ jobs:
               "validator": "tools/validators/release/validate_rollback_card.py",
               "policy": "policy/release/",
               "status": "PROPOSED",
+              "authority": "candidate_shape_and_local_consistency_only",
+              "non_effects": [
+                  "does_not_execute_rollback",
+                  "does_not_authorize_release_mutation",
+                  "does_not_erase_history",
+                  "does_not_publish",
+              ],
           }, "RollbackCard schema metadata changed; reconcile the readiness boundary"
-          assert schema["required"] == ["id"]
-          assert schema["additionalProperties"] is True
-          assert not Path(schema["x-kfm"]["fixtures_root"]).exists(), (
-              "RollbackCard fixtures have appeared; add non-vacuous schema and governance "
-              "tests before retaining this hold"
+          assert "id" in schema["required"]
+          assert schema["additionalProperties"] is False
+          assert Path(schema["x-kfm"]["fixtures_root"]).is_dir(), (
+              "RollbackCard fixtures are missing; fixture-first validation is required"
           )
-          assert not Path(schema["x-kfm"]["validator"]).exists(), (
-              "the schema-declared RollbackCard validator has appeared; wire and test it "
-              "instead of retaining this hold"
+          assert Path(schema["x-kfm"]["validator"]).is_file(), (
+              "the schema-declared RollbackCard validator must exist"
           )
 
-          assert 'raise NotImplementedError("Greenfield placeholder")' in (
-              root_validator.read_text(encoding="utf-8")
-          ), "the root rollback-card validator is no longer the confirmed placeholder"
-          assert rollback_helper.read_text(encoding="utf-8").strip() == (
-              "# Apply a signed rollback_card — greenfield placeholder"
-          ), "rollback_apply.py changed; review its authority and tests before execution"
+          root_validator_text = root_validator.read_text(encoding="utf-8")
+          assert "NotImplementedError" not in root_validator_text, (
+              "the root RollbackCard compatibility entrypoint regressed to a placeholder"
+          )
+          assert (
+              "from tools.validators.release.validate_rollback_card import main as _canonical_main"
+              in root_validator_text
+          ), "the root RollbackCard entrypoint no longer delegates to the canonical validator"
+          assert "return _canonical_main(argv)" in root_validator_text, (
+              "the root RollbackCard entrypoint delegation call changed"
+          )
+
+          rollback_helper_text = rollback_helper.read_text(encoding="utf-8")
+          assert "greenfield placeholder" not in rollback_helper_text, (
+              "rollback_apply.py regressed to an unimplemented placeholder"
+          )
+          helper_markers = [
+              ".kfm-synthetic-rollback-rehearsal",
+              "NON_SYNTHETIC_INPUT_DENIED",
+              '"public_state_mutated": False',
+          ]
+          missing_helper_markers = [
+              marker for marker in helper_markers if marker not in rollback_helper_text
+          ]
+          assert not missing_helper_markers, (
+              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
+              f"{missing_helper_markers}"
+          )
+
+          fixture_result = subprocess.run(
+              [sys.executable, declared_validator.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert fixture_result.returncode == 0, fixture_result.stdout + fixture_result.stderr
+          assert '"outcome":"PASS"' in fixture_result.stdout
+          assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
+
+          compatibility_result = subprocess.run(
+              [sys.executable, root_validator.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert compatibility_result.returncode == fixture_result.returncode, (
+              compatibility_result.stdout + compatibility_result.stderr
+          )
+          assert compatibility_result.stdout == fixture_result.stdout, (
+              "compatibility and canonical RollbackCard fixture output diverged"
+          )
+          assert compatibility_result.stderr == fixture_result.stderr, (
+              "compatibility and canonical RollbackCard diagnostics diverged"
+          )
+
+          rehearsal_result = subprocess.run(
+              [
+                  sys.executable,
+                  "-m",
+                  "unittest",
+                  "-q",
+                  "tests.release.test_synthetic_rollback_rehearsal",
+              ],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          rehearsal_output = rehearsal_result.stdout + rehearsal_result.stderr
+          assert rehearsal_result.returncode == 0, rehearsal_output
+          assert "Ran 0 tests" not in rehearsal_output, (
+              "synthetic rollback rehearsal test profile is vacuous"
+          )
+          assert "Ran " in rehearsal_output and "OK" in rehearsal_output, (
+              "synthetic rollback rehearsal test result was not recognized"
+          )
 
           root_cards = sorted(Path("release/rollback_cards").glob("*.json"))
           assert [path.name for path in root_cards] == [
@@ -332,15 +415,17 @@ jobs:
                   ],
               }, f"rollback-card placeholder changed: {path}"
               assert "id" not in card, (
-                  f"{path} unexpectedly looks schema-admissible; add a governed validator and "
-                  "semantic tests before treating presence as rollback readiness"
+                  f"{path} unexpectedly looks schema-admissible; review whether it has crossed "
+                  "from documentation inventory into governed rollback authority"
               )
 
-          print("CONFIRMED: RollbackCard remains a permissive PROPOSED id-only schema.")
-          print("CONFIRMED: two root JSON cards are explicitly PROPOSED placeholders without id.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback helper or validator was executed.")
-          print("WORKFLOW_HOLD: no rollback-card fixtures or implemented declared validator exist.")
-          print("No rollback, release mutation, or publication authority was created.")
+          print("CONFIRMED: RollbackCard schema remains PROPOSED while pointing to a bounded local validator and fixture lane.")
+          print("CONFIRMED: the root RollbackCard compatibility entrypoint delegates to the canonical validator with byte-identical fixture output.")
+          print("CONFIRMED: rollback-card valid/invalid fixtures passed the implemented bounded validator profile.")
+          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
+          print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
+          print("CONFIRMED: two root JSON cards remain PROPOSED documentation placeholders without id.")
+          print("WORKFLOW_HOLD: no production rollback, release mutation, or publication authority was created.")
           PY
 
       - name: Record rollback-card outcome
@@ -350,8 +435,10 @@ jobs:
           {
             echo "### Rollback-card presence"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** RollbackCard remains a permissive PROPOSED id-only schema; its declared fixture lane and validator are absent, while the root validator and rollback helper are placeholders."
-            echo "- The two root JSON cards are PROPOSED documentation-inventory placeholders without the schema-required id. File presence is therefore not rollback readiness."
-            echo "- Result: ${{ job.status }}. No rollback, mutation, release decision, or publication authority was created."
-            echo "- **NEEDS VERIFICATION:** documentation that describes this workflow or release tooling as TODO-only must be reconciled separately."
+            echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes."
+            echo "- The historical root validator entrypoint delegates to the schema-declared canonical validator and must produce byte-identical fixture output; rollback_apply.py remains a marker-protected synthetic-only rehearsal verified through isolated temporary-root tests."
+            echo "- The helper denies non-synthetic inputs, incomplete invalidation sets, missing targets, digest mismatches, and missing markers without touching production state."
+            echo "- The two root JSON cards remain PROPOSED documentation-inventory placeholders without the schema-required id; they are inventory evidence, not executable rollback authority."
+            echo "- Result: ${{ job.status }}. No production rollback, mutation, release decision, or publication authority was created."
+            echo "- **WORKFLOW_HOLD:** the rehearsal does not authenticate actors, signatures, policy decisions, live releases, or external invalidations."
           } >> "$GITHUB_STEP_SUMMARY"

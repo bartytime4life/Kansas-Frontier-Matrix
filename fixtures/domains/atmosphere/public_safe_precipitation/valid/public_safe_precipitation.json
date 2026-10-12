@@ -1,0 +1,37 @@
+{
+  "record_id": "fixture:atmosphere:precipitation:99999:20260802T120000Z",
+  "object_family": "PrecipitationObservation",
+  "knowledge_character": "OBSERVED_SENSOR",
+  "source_descriptor_ref": "fixture://sources/atmosphere/synthetic-gauge",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/precipitation/99999/20260802T120000Z"
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-08-02T12:00:00Z",
+    "retrieved_at": "2026-08-02T12:05:00Z"
+  },
+  "measurement": {
+    "parameter": "precipitation_amount",
+    "value": 12.5,
+    "unit": "mm",
+    "accumulation_minutes": 60,
+    "method": "synthetic_gauge"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_an_alert",
+    "not_life_safety_guidance",
+    "synthetic_fixture_only"
+  ]
+}

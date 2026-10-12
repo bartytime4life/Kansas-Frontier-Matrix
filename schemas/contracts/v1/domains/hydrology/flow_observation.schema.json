@@ -2,13 +2,135 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/hydrology/flow_observation.schema.json",
   "title": "Flow Observation",
+  "description": "Closed v1 discharge pilot projection. Source authority and release eligibility require separate evidence, policy and review checks. Replaces the unused permissive scaffold; see paired contract migration note.",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/hydrology/flow_observation.schema.json. Fields are to be defined by the owning domain steward.",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "id",
+    "station_id",
+    "time_series_id",
+    "source_feature_id",
+    "parameter_code",
+    "statistic_id",
+    "method_category",
+    "observed_at",
+    "provider_revision_at",
+    "retrieved_at",
+    "value",
+    "unit",
+    "qualifiers",
+    "approval_status",
+    "provisional",
+    "source_role",
+    "page_digest",
+    "evidence_ref",
+    "record_digest"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.flow-observation/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^kfm:flow:[a-f0-9]{64}$"
+    },
+    "station_id": {
+      "enum": [
+        "USGS-06892518",
+        "USGS-07156900"
+      ]
+    },
+    "time_series_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "source_feature_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "parameter_code": {
+      "const": "00060"
+    },
+    "statistic_id": {
+      "type": "string",
+      "pattern": "^[0-9]{5}$"
+    },
+    "method_category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 256
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 40
+    },
+    "provider_revision_at": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 40
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 40
+    },
+    "value": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": -1000000000,
+      "maximum": 1000000000
+    },
+    "unit": {
+      "const": "ft^3/s"
+    },
+    "qualifiers": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "approval_status": {
+      "enum": [
+        "Provisional",
+        "Approved",
+        "P",
+        "A"
+      ]
+    },
+    "provisional": {
+      "type": "boolean"
+    },
+    "source_role": {
+      "const": "observed_gauge"
+    },
+    "page_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "evidence_ref": {
+      "type": "string",
+      "pattern": "^kfm:evidence:flow:[a-f0-9]{64}$"
+    },
+    "record_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
   "x-kfm": {
     "status": "PROPOSED",
-    "source_doc": "docs/domains/hydrology/CANONICAL_PATHS.md",
-    "contract_doc": "contracts/domains/hydrology/flow_observation.md"
-  },
-  "properties": {},
-  "additionalProperties": true
+    "contract_doc": "contracts/domains/hydrology/flow_observation.md",
+    "validator": "pipelines/domains/hydrology/validate.py",
+    "scope": "two-station USGS discharge pilot"
+  }
 }

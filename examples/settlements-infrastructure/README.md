@@ -353,7 +353,7 @@ Validation must match the maturity claimed. At the pinned base, repository-nativ
 |---|---|---|
 | [`docs-build`](../../.github/workflows/docs-build.yml) | `WORKFLOW_HOLD` | No accepted docs generator, preview artifact, or publication handoff. |
 | [`link-check`](../../.github/workflows/link-check.yml) | `WORKFLOW_HOLD` | No repository links, anchors, images, or external URLs are checked by that workflow. |
-| [`accessibility`](../../.github/workflows/accessibility.yml) | `WORKFLOW_HOLD` | No axe or keyboard-navigation execution occurs. |
+| `accessibility` (not present) | `WORKFLOW_HOLD` | No axe or keyboard-navigation execution occurs. |
 | [Domain test parent](../../tests/domains/settlements-infrastructure/README.md) | `CONFIRMED README` | Executable domain tests, validators, CI coverage, and pass rates remain `NEEDS VERIFICATION`. |
 | [Domain fixture lane](../../fixtures/domains/settlements-infrastructure/README.md) | `CONFIRMED greenfield stub` | Accepted example-to-fixture structure, payloads, validation, and parity are not established. |
 | Examples-specific validator | `NEEDS VERIFICATION` | No accepted validator, deterministic fixture suite, or repository-native command was verified. |
@@ -462,7 +462,7 @@ The current [CODEOWNERS](../../.github/CODEOWNERS) file routes this path through
 | [`../../tests/domains/settlements-infrastructure/README.md`](../../tests/domains/settlements-infrastructure/README.md) | CONFIRMED README | A domain test parent and documented identity sublane exist. | Executable tests, validators, CI coverage, and pass rates remain `NEEDS VERIFICATION`. |
 | [`../../fixtures/domains/settlements-infrastructure/README.md`](../../fixtures/domains/settlements-infrastructure/README.md) | CONFIRMED greenfield stub | The working domain fixture path is present. | Accepted fixture structure, payloads, validation, and example parity are not established. |
 | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | CONFIRMED repository evidence | Default GitHub review route is `@bartytime4life`. | Routing is not stewardship, review completion, policy approval, or release authorization. |
-| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml), [`link-check.yml`](../../.github/workflows/link-check.yml), and [`accessibility.yml`](../../.github/workflows/accessibility.yml) | CONFIRMED workflow text | The repository exposes docs-build, link-check, and accessibility readiness holds. | They do not establish rendering, link validity, accessibility, release, or publication. |
+| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml), [`link-check.yml`](../../.github/workflows/link-check.yml), and `accessibility.yml` (not present) | CONFIRMED workflow text | The repository exposes docs-build, link-check, and accessibility readiness holds. | They do not establish rendering, link validity, accessibility, release, or publication. |
 | [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `examples/` owns worked examples; domain names remain lane segments; lifecycle, proof, receipt, release, and publication responsibilities stay separate. | Some implementation path claims remain PROPOSED / NEEDS VERIFICATION per doctrine notes. |
 
 [Back to top](#top)

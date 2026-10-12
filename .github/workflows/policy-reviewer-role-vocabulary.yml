@@ -1,0 +1,27 @@
+name: policy-reviewer-role-vocabulary
+"on":
+  pull_request:
+    paths:
+      - "contracts/policy/policy_reviewer_role_vocabulary.md"
+      - "policy/decision/reviewer_roles.v1.json"
+      - "schemas/contracts/v1/policy/policy_reviewer_role_vocabulary.schema.json"
+      - "fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/**"
+      - "tools/validators/policy/validate_policy_reviewer_role_vocabulary.py"
+      - "tests/validators/test_validate_policy_reviewer_role_vocabulary.py"
+      - "docs/intake/exploratory/pass9-policy-reviewer-role-vocabulary-source-map.md"
+  workflow_dispatch:
+permissions: {contents: read}
+env: {KFM_NO_NETWORK: "1", PYTHONDONTWRITEBYTECODE: "1", PYTHONHASHSEED: "0", TZ: UTC}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with: {python-version: "3.11"}
+      - run: python -m py_compile tools/validators/policy/validate_policy_reviewer_role_vocabulary.py tests/validators/test_validate_policy_reviewer_role_vocabulary.py
+      - run: python -m unittest tests.validators.test_validate_policy_reviewer_role_vocabulary -v
+      - run: python tools/validators/policy/validate_policy_reviewer_role_vocabulary.py --registry
+      - run: python tools/validators/policy/validate_policy_reviewer_role_vocabulary.py --fixtures

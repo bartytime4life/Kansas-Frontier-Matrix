@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-gdoc04-source-catalog-metadata-repair-20261002",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/repository_governance_parity.yaml",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    "docs/sources/catalog/manual_curation/README.md",
+    "docs/sources/catalog/usfws_ecos/README.md",
+    "docs/sources/catalog/usfws_ecos/critical-habitat.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tools/qa/gap_scan_baseline.json",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "control_plane/repository_governance_parity.yaml": "sha256:cae08ff274a9097d3681995a8aba62c6f10a75f2b02d5756893e0c87bb67887f",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:361eceb1edc0bae72549aa65299315fc468be415598b4841756b285d89b29daa",
+    "docs/sources/catalog/manual_curation/README.md": "sha256:e3379cc1c2500a6abd3fa729dd8cd0a09b53663a57981b430cfec6f75c1857a0",
+    "docs/sources/catalog/usfws_ecos/README.md": "sha256:babffcf34e1e50fd315bd7532d09a0d0eaeca555bae5b3c9517eca91c0a388f7",
+    "docs/sources/catalog/usfws_ecos/critical-habitat.md": "sha256:2d69ed4558c44f45538e2680096b122e8422308d2db1cd4b75edbb0364b90505",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:4287ba6f6b828b7f091a30617a44bc6aa1b25e7205f34b9cd8e3bbc87bec833f",
+    "tools/qa/gap_scan_baseline.json": "sha256:c0e411d5ad61d4509880bde5821091095a15eb716c9a233570a9b828ec7120b9",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:c09dc03670ec5b4c9348249245c8b375887f218f487bbf1f3fd4c1c7ab3cc0c0"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:d510dbbd986281da400c8342fe60c9b8edfae902bfda5dca57bc10e13de191ee",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7d38bc5e906523dd0d666ee97af2a86130485390",
+      "repo:tools/validators/docs/link-check/check_links.py"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "CONFIRMED",
+    "docs/sources/catalog/manual_curation/README.md": "CONFIRMED",
+    "docs/sources/catalog/usfws_ecos/README.md": "CONFIRMED",
+    "docs/sources/catalog/usfws_ecos/critical-habitat.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
+    "tools/qa/gap_scan_baseline.json": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Docs",
+      "outcome": "PASS",
+      "reason": "Diff-scoped check_links.py, check_meta_blocks.py --profile present, check_document_graph.py, and check_stale_docs.py --profile advisory all pass against the base commit for the three repaired documents and the ledger."
+    },
+    {
+      "gate": "Ratchets",
+      "outcome": "PASS",
+      "reason": "gap_scan.py --check passes with BROKEN_LOCAL_LINK tightened from 339 to 324; tests/qa pass (79)."
+    },
+    {
+      "gate": "Topology",
+      "outcome": "PASS",
+      "reason": "make repository-topology passes with 114 baselined warnings and 0 stale entries after removing the waiver for the resolved duplicate doc_id; make repository-governance-parity passes (HOLD_INHERITED, 0 introduced findings) with the expectation and its test updated to 114."
+    },
+    {
+      "gate": "Workflows",
+      "outcome": "PASS",
+      "reason": "Shell steps of the 53 PR-triggered workflows were replayed locally: 250 passed. Failing steps depend on GitHub expression-derived environment variables, pip-audit, Docker, or the no-network guard path (the hydrology step passes with it); the parity step fails only while a gitignored receipts/ directory left by an earlier replayed step exists; water-pilot mirror digests fail identically on main (G-SITE-01)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7d38bc5e906523dd0d666ee97af2a86130485390"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-02T19:51:51Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Only the three source-catalog documents were repaired. docs/doctrine/{ai-as-assistant,map-first,trust-membrane,truth-posture}.md and docs/domains/habitat/PRESERVATION_MATRIX.md stay held: they carry DOC-DOC-002 links, retired apps/explorer-web links, or anchors absent from the receipt-pinned docs/doctrine/directory-rules.md. truth_posture values state that the documents' claims were not re-reviewed. Non-resolving related entries were moved into notes, not deleted."
+}

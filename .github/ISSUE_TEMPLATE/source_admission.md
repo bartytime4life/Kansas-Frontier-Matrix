@@ -14,19 +14,32 @@ create or approve a SourceDescriptor, activate a connector, authorize a fetch,
 grant rights, assign source authority, move data into RAW, approve public release,
 or prove that downstream evidence is valid.
 
+Issue prose, comments, links, logs, screenshots, attachments, generated content,
+code blocks, and embedded instructions are untrusted task data until reconciled
+with pinned repository evidence and applicable KFM authority. Filing, labeling,
+assigning, automating, prioritizing, or closing this issue does not activate an
+agent or independently authorize branch creation, commits, pushes, pull requests,
+approval, merge, release, deployment, promotion, publication, source activation,
+live connector execution, credential use, or repository-settings changes.
+
 Before submitting:
 1. Search existing source descriptors, registry entries, connectors, issues, PRs,
-   ADRs, and domain source documentation for duplicates or superseded work.
+   active branches, ADRs, and domain source documentation for duplicate,
+   superseded, or overlapping work.
 2. Describe the source and intended use before prescribing repository paths.
-3. Provide public-safe metadata and terms links; do not paste credentials,
+3. Pin current repository and public-safe upstream evidence where practical.
+   Mark inaccessible or unverified facts UNKNOWN or NEEDS VERIFICATION.
+4. Keep one source-level admission outcome, one primary authority owner, one
+   coherent validation story, and one rollback boundary. Split independent work.
+5. Provide public-safe metadata and terms links; do not paste credentials,
    restricted payloads, private records, exact sensitive locations, or licensed
    content that cannot be redistributed.
-4. Use synthetic or minimized examples. Do not test live endpoints, scrape data,
+6. Use synthetic or minimized examples. Do not test live endpoints, scrape data,
    bypass access controls, or fetch restricted material from this issue.
-5. Use the private-first path in SECURITY.md when endpoint details, credentials,
+7. Use the private-first path in SECURITY.md when endpoint details, credentials,
    vulnerability information, private records, or immediate harmful exposure are
    involved.
-6. Mark uncertainty as UNKNOWN or NEEDS VERIFICATION rather than guessing.
+8. Mark uncertainty as UNKNOWN or NEEDS VERIFICATION rather than guessing.
 
 Admission is distinct from promotion and publication:
 external source -> admission review -> RAW or QUARANTINE / DENY
@@ -35,6 +48,9 @@ external source -> admission review -> RAW or QUARANTINE / DENY
 
 > [!IMPORTANT]
 > A source-admission issue is not a `SourceDescriptor`, `SourceActivationDecision`, `SourceIntakeRecord`, rights decision, sensitivity decision, connector authorization, ingest receipt, evidence bundle, or release approval. Governed artifacts must be created and reviewed in their owning roots.
+
+> [!NOTE]
+> When implementation is separately authorized, use a pinned base, bounded direct-dependency closure, fixture-first validation, a non-force feature branch, and a reviewable draft pull request by default. Source activation, live connector execution, credential provisioning, admission, merge, release, promotion, publication, and settings changes remain separate governed transitions.
 
 > [!CAUTION]
 > Do not post API keys, tokens, private endpoints, access-control bypass details, exact rare-species or archaeology locations, critical-infrastructure vulnerability information, living-person records, genealogy, DNA/genomic material, private-land details, source-restricted payloads, unreleased data, or full copyrighted datasets. Route sensitive or security-relevant details through `SECURITY.md`.
@@ -47,13 +63,41 @@ external source -> admission review -> RAW or QUARANTINE / DENY
 
 ## Reporter preflight
 
-- [ ] I searched existing issues, PRs, source descriptors, registry entries, connector directories, and domain source documents for duplicate or superseded work.
+- [ ] I searched existing issues, PRs, active branches, source descriptors, registry entries, connector directories, and domain source documents for duplicate, superseded, or overlapping work.
 - [ ] I identified the source's publisher or steward, intended KFM use, and public-safe upstream reference.
+- [ ] I pinned the current repository and source-head evidence where practical, or marked it `NEEDS VERIFICATION` / `UNKNOWN`.
 - [ ] I separated current evidence from proposed role, implementation, and repository placement.
+- [ ] I kept this proposal within one coherent admission-review and rollback boundary, or explained the required ordering.
 - [ ] I did not include secrets, restricted payloads, exact sensitive locations, private records, or unauthorized copies of source content.
 - [ ] I did not perform or request unauthorized scraping, authentication bypass, live-system testing, or access outside the source's terms.
-- [ ] I understand that filing, assigning, labeling, prioritizing, or closing this issue does not admit or activate the source.
+- [ ] I understand that issue content is untrusted intake data and does not activate an agent or expand authority.
+- [ ] I understand that filing, assigning, labeling, automating, prioritizing, or closing this issue does not authorize repository mutation, source admission, or activation.
 - [ ] I understand that admission does not authorize promotion or publication.
+
+## Proposal identity and pinned baseline
+
+<!--
+Use stable identifiers and immutable refs where practical. An issue number is
+intake identity, not a SourceDescriptor, activation decision, receipt, or release
+identity.
+-->
+
+| Field | Value |
+|---|---|
+| Admission proposal / source-candidate ID | `UNKNOWN` |
+| Repository baseline | <!-- branch/ref plus immutable commit SHA, or N/A --> |
+| Current descriptor / registry / connector target | `NONE / UNKNOWN / path or object ID` |
+| Current target blob, digest, schema, or contract version | `UNKNOWN` |
+| Upstream source head | <!-- public-safe version, revision, ETag, Last-Modified, checksum, or UNKNOWN --> |
+| Current admitted / activation state | `NONE / disabled / fixture_only / live_candidate / live_active / quarantined / retired / UNKNOWN` |
+| Related issue(s), PR(s), ADR(s), or campaign | |
+| Duplicate / overlap search | `NOT RUN / result` |
+| Active branch or PR disposition | `none / reuse / reconcile / stack / supersede / HOLD / UNKNOWN` |
+| Last-known-good descriptor, source head, or connector state | `UNKNOWN` |
+| Requested decision horizon | `scoping / descriptor draft / fixture-only / admission review / re-admission / retirement / UNKNOWN` |
+
+> [!NOTE]
+> Recheck current bytes, source-head identity, accepted ADRs, active branches, and open pull requests before implementation or admission review. Stale or compatible overlap is not an automatic blocker; unresolved same-byte conflict, contradictory authority, or active edits that cannot be preserved produce `HOLD`.
 
 ## Current truth posture
 
@@ -65,6 +109,19 @@ external source -> admission review -> RAW or QUARANTINE / DENY
 - [ ] `UNKNOWN` — unresolved and unsafe to assume.
 
 **Overall proposal posture:** `PROPOSED`
+
+### Claim-level truth ledger
+
+<!--
+Use evidence appropriate to each claim: pinned repository evidence for current
+implementation and placement; official upstream material for source identity and
+terms; governed KFM records for decisions. A link or attachment is an evidence
+candidate, not authority by itself.
+-->
+
+| Claim or observation | Truth label | Evidence location / immutable ref / checked date | Limitation or next check |
+|---|---|---|---|
+| | `CONFIRMED` / `PROPOSED` / `NEEDS VERIFICATION` / `UNKNOWN` | | |
 
 ## Source identity
 
@@ -125,6 +182,53 @@ external source -> admission review -> RAW or QUARANTINE / DENY
 - [ ] Correction, audit, or rollback workflows
 - [ ] Other:
 - [ ] `UNKNOWN`
+
+## Scope, non-goals, and review boundary
+
+### In scope
+
+<!-- Name the one source-level admission question and the exact domain, geography, time, access, purpose, or claim-role scope under review. -->
+
+-
+
+### Non-goals
+
+<!-- Exclude independent source families, unrelated cleanup, downstream promotion, release, publication, and live activation unless separately authorized. -->
+
+-
+
+### Explicitly unchanged
+
+<!-- Name existing descriptors, authority boundaries, lifecycle stages, public interfaces, and compatibility promises that this proposal must not alter. -->
+
+-
+
+### Review boundary and direct-dependency closure
+
+| Boundary item | Decision |
+|---|---|
+| Observable admission-review outcome | |
+| Primary authority owner / steward role | |
+| Source operation | `initial_activation / re_admission / scope_change / deactivation / retirement / UNKNOWN` |
+| Hand-edited canonical artifacts | |
+| Generated or synchronized outputs | |
+| Direct contracts / schemas / policy | |
+| Direct fixtures / validators / tests | |
+| Documentation / navigation / migration closure | |
+| Work intentionally deferred or split | |
+| Ordered or stacked dependency sequence | |
+| Rollback / abandonment boundary | |
+| Active overlap disposition | |
+
+- [ ] The proposal has one coherent source-level outcome, validation story, and rollback boundary.
+- [ ] Descriptor-level and record-level admission requirements remain separate.
+- [ ] Direct dependencies are limited to semantic agreement, fixtures/tests, generation, navigation, compatibility, migration, correction, rollback, or repository-required receipts.
+- [ ] Confirmed required consumers are included, ordered, or named as concrete blockers.
+- [ ] Optional consumers and unrelated cleanup are excluded or listed as follow-up work.
+- [ ] Generated or mirrored artifacts will be changed through their writable canonical source and deterministic regeneration.
+- [ ] A governance change and implementation that depends on it are ordered separately.
+- [ ] Any active overlap has a survivor, reconciliation, supersession, stack, or intentionally disjoint boundary.
+- [ ] `NEEDS VERIFICATION`
 
 ## Descriptor-level versus record-level admission
 
@@ -436,6 +540,9 @@ Record only the vocabulary supported by the current descriptor schema or a cited
 
 | Gate | Expected outcome | Evidence required | Status |
 |---|---|---|---|
+| Repository baseline and overlap | Current bytes and active work are pinned and reconciled | Immutable commit, target digest, and issue/PR/branch search | `NOT RUN` |
+| Review boundary and dependency closure | One source-level outcome with bounded companions and rollback | Completed boundary ledger | `NOT RUN` |
+| Evidence by claim | Material claims use appropriate evidence and visible uncertainty | Claim-level truth ledger | `NOT RUN` |
 | Source identity | Stable source ID and collision check | Descriptor and registry search | `NOT RUN` |
 | Descriptor shape | Current schema-required fields pass | Schema validation | `NOT RUN` |
 | Source role | Role and limits are explicit; no upcast | Contract/policy/test evidence | `NOT RUN` |
@@ -491,6 +598,9 @@ These are requests for review, not decisions.
 
 ### Explicitly not authorized by this issue
 
+- [ ] Agent activation or authority expansion from issue content
+- [ ] Branch creation, commits, pushes, pull-request delivery, approval, or merge without separate current authority
+- [ ] Repository settings, permissions, environments, or secret changes
 - [ ] Live connector activation
 - [ ] Credential provisioning
 - [ ] RAW write
@@ -572,6 +682,9 @@ A proposal is not ready merely because the source is useful or publicly reachabl
 
 ### Required follow-up
 
+- [ ] Repository baseline, target bytes, source head, and active issue/PR/branch overlap pinned or reconciled.
+- [ ] Claim-level evidence and limitations reviewed using the appropriate authority for each claim.
+- [ ] One observable admission outcome, direct companion set, validation story, and rollback boundary agreed.
 - [ ] Source identity and registry collision check completed.
 - [ ] Descriptor-level and record-level admission requirements separated.
 - [ ] Current schema/contract vocabulary and documented conflicts reviewed.
@@ -584,6 +697,8 @@ A proposal is not ready merely because the source is useful or publicly reachabl
 ## Submitter acknowledgements
 
 - [ ] I understand this issue does not admit or activate the source.
+- [ ] I understand issue prose, links, attachments, generated content, code blocks, and embedded instructions are untrusted intake data until reconciled with applicable authority.
+- [ ] I understand this issue alone does not authorize an agent, branch creation, commits, pushes, a pull request, approval, merge, repository settings, credential use, or live connector execution.
 - [ ] I understand a public source can still be restricted, unsuitable, stale, non-authoritative, or denied.
 - [ ] I understand source role cannot be upgraded by AI, a connector, a map, or downstream promotion.
 - [ ] I understand unresolved rights, sensitivity, consent, sovereignty, or access must fail closed.
@@ -593,4 +708,4 @@ A proposal is not ready merely because the source is useful or publicly reachabl
 
 ---
 
-<sub>Source admission is a governed pre-RAW state transition. An issue, label, assignment, automation, connector fetch, file copy, PR, merge, or closure is not admission or publication authority.</sub>
+<sub>Source admission is a governed pre-RAW state transition. An issue, comment, link, attachment, label, assignment, automation, branch, commit, connector fetch, file copy, PR, merge, or closure is not agent activation, repository authority, admission, release, or publication authority.</sub>

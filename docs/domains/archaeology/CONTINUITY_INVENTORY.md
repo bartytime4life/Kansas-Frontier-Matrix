@@ -2,39 +2,46 @@
 doc_id: kfm://doc/domains/archaeology/continuity-inventory
 title: Archaeology Domain — Continuity Inventory
 type: standard
-version: v1.1
+version: v1.1.2
 status: draft
 owners: archaeology-domain-steward + docs-steward    # PLACEHOLDER — NEEDS VERIFICATION
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-10-12
 policy_label: public                                 # Document is public; subject content is sensitivity-gated
+owning_root: docs/
+responsibility: "Register what Archaeology lane doctrine carries forward, extends, or retires for human readers; not evidence, policy, release, or publication authority."
+truth_posture: "Mixed: CONFIRMED doctrine citations; PROPOSED lane application and paths; RAW physical placement HOLD; implementation UNKNOWN unless separately verified."
 related:
-  - docs/doctrine/ai-build-operating-contract.md     # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                 # PROPOSED canonical home
-  - docs/doctrine/authority-ladder.md                # PROPOSED
-  - docs/doctrine/lifecycle-law.md                   # PROPOSED
-  - docs/doctrine/truth-posture.md                   # PROPOSED
-  - docs/domains/archaeology/README.md               # PROPOSED
-  - docs/domains/archaeology/ARCHITECTURE.md         # PROPOSED — sibling (see OQ-CI-02)
-  - docs/domains/archaeology/CANONICAL_PATHS.md      # PROPOSED — sibling (path-namespace authority for this lane)
-  - docs/domains/archaeology/CROSS_DOMAIN.md         # PROPOSED — sibling (cross-lane boundary register)
-  - docs/domains/README.md                           # PROPOSED
-  - docs/registers/VERIFICATION_BACKLOG.md           # PROPOSED
-  - docs/registers/DRIFT_REGISTER.md                 # PROPOSED
-  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md  # PROPOSED
-  - docs/architecture/ui/CONTINUITY_NOTES.md         # PROPOSED — sibling pattern
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - data/raw/README.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
+  - docs/domains/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
+  - docs/architecture/ui/CONTINUITY_NOTES.md
   - docs/architecture/governed-ai/CONTINUITY_NOTES.md# PROPOSED — sibling pattern
-  - policy/domains/archaeology/README.md             # PROPOSED
-  - policy/sensitivity/archaeology/                  # PROPOSED — §23.2 enforcement home (ENCY §7.13)
-  - schemas/contracts/v1/domains/archaeology/        # PROPOSED — schema home (ADR-0001)
+  - policy/domains/archaeology/README.md
+  - policy/sensitivity/archaeology/
+  - schemas/contracts/v1/domains/archaeology/
 tags: [kfm, archaeology, continuity, governance, evidence, sensitivity, doctrine-adjacent]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
+  - "2026-10-11: inline status comments were dropped from related entries so each entry resolves as a repository path; every target exists on main."
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §1.3 / §8 (truth labels) and §37 (versioning + CONTRACT_VERSION pinning convention)."
   - "All file-path-shaped claims are PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §7 current-session evidence limit)."
   - "Path namespace contracts/domains/archaeology/ is consistent with CANONICAL_PATHS.md v1.1 §2.4 resolution (Directory Rules §12 form). Atlas v1.1 §24.13 shorthand (contracts/archaeology/) and ENCY §7.13 (schemas/contracts/v1/archaeology/) kept as LINEAGE."
   - "Exact archaeological site locations DENY by default per [CONTRACT v3.0] §23.2 row 'Archaeology — site locations' (the §23.2 matrix is itself PROPOSED in v3.0 pending steward ratification; until ratified the most restrictive applicable row applies, which only strengthens the gate); this inventory does not record them."
   - "Terminology drift exists between DOM-ARCH (Culmination Atlas §E) and ENCY §7.13 (encyclopedia) object lists — flagged in §4 and Appendix A.2 as CONFLICTED; resolution path is ADR."
   - "v1.1 adds [CONTRACT v3.0] §23.2 row, RedactionReceipt / MapReleaseManifest continuity entries, NARROWED/BOUNDED/SOURCE_STALE finite outcomes, GENERATED_RECEIPT.json discipline (§34), Open Questions Register, Changelog, and Definition of Done."
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Continuity Inventory
@@ -51,10 +58,10 @@ notes:
 ![truth%20posture](https://img.shields.io/badge/truth-cite%20or%20abstain-success)
 ![conformance](https://img.shields.io/badge/conformance-RFC%202119-555)
 ![repo%20mount](https://img.shields.io/badge/repo%20mount-NOT%20VERIFIED-lightgrey)
-![last updated](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
+![last updated](https://img.shields.io/badge/last%20updated-2026--10--11-informational)
 <!-- TODO: replace placeholder badges with workflow / version targets once CI and ADR identifiers exist. -->
 
-**Status:** draft · v1.1  ·  **Pinned contract:** `CONTRACT_VERSION = "3.0.0"`  ·  **Owners:** `archaeology-domain-steward + docs-steward` *(placeholder — NEEDS VERIFICATION)*  ·  **Required additional reviewer (§23.2):** tribal/cultural reviewer · rights-holder rep  ·  **Last updated:** 2026-05-29  ·  **Path basis:** Directory Rules §4 (responsibility root = `docs/` for human-facing explanation), §12 (Domain Placement Law: domain segment under responsibility root), and `[CONTRACT v3.0]` §11. *Per-root presence in the live repo: PROPOSED until verified.*
+**Status:** draft · v1.1.2  ·  **Pinned contract:** `CONTRACT_VERSION = "3.0.0"`  ·  **Owners:** `archaeology-domain-steward + docs-steward` *(placeholder — NEEDS VERIFICATION)*  ·  **Required additional reviewer (§23.2):** tribal/cultural reviewer · rights-holder rep  ·  **Last updated:** 2026-10-11  ·  **Path basis:** Directory Rules §4 (responsibility root = `docs/` for human-facing explanation), §12 (Domain Placement Law: domain segment under responsibility root), and `[CONTRACT v3.0]` §11. *Per-root presence in the live repo: PROPOSED until verified.*
 
 > [!IMPORTANT]
 > **Sensitivity posture.** Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), the default disposition for archaeology site locations is **`DENY` exact coordinates · generalize to county/region · tribal/cultural reviewer + rights-holder rep required · `RedactionReceipt` + `PolicyDecision` + `MapReleaseManifest` required**. The §23.2 matrix is **PROPOSED** as of v3.0 (steward ratification pending); until ratified, the **most restrictive applicable row applies**, which only strengthens the gate. Exact archaeological site coordinates, burial/human-remains records, sacred or culturally sensitive places, restricted cultural archives, and any geometry below **H3 r7** for sensitive archaeology products **DENY by default**. This document records the *continuity* of those rules — it does not host, link to, or describe exact-location data.
@@ -171,7 +178,7 @@ The table below is the **core register** of this document. Each row is a prior g
 | Lifecycle law: RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | KEEP AND EXTEND | Directory Rules §0; ENCY §4; DOM-ARCH §H; `[CONTRACT v3.0]` §10.1 | Promotion remains a **governed state transition, not a file move**; all archaeology lanes traverse every phase. | CONFIRMED doctrine / PROPOSED lane application |
 | Cite-or-abstain truth posture | KEEP AND EXTEND | ENCY §4 (Operating Law); `[CONTRACT v3.0]` §10.3 | Public archaeology claims resolve to `EvidenceBundle` or `ABSTAIN`; AI `ABSTAIN`s when evidence is insufficient. | CONFIRMED |
 | Trust membrane (public clients use governed APIs, not canonical stores) | KEEP AND EXTEND | ENCY §4; Directory Rules §13; `[CONTRACT v3.0]` §10.2 | Archaeology routes go through `apps/governed-api/`; no direct browser access to RAW/WORK/QUARANTINE/PROCESSED archaeology stores. | CONFIRMED doctrine |
-| Watcher-as-non-publisher invariant | KEEP AND EXTEND | Directory Rules §13; `[CONTRACT v3.0]` §38.11 ("a watcher saw a change, so publish") | Connectors/watchers emit only to `data/raw/archaeology/` or `data/quarantine/archaeology/`; promotion is governed. | CONFIRMED doctrine / PROPOSED test |
+| Watcher-as-non-publisher invariant | KEEP AND EXTEND | Directory Rules §13; `[CONTRACT v3.0]` §38.11 ("a watcher saw a change, so publish") | Connectors/watchers emit only to the accepted source-first RAW home (exact path **HOLD**; `DIR-SOURCE-001`) or `data/quarantine/archaeology/`; the `data/raw/archaeology/` compatibility/reference lane receives no payloads; promotion is governed. | CONFIRMED doctrine / PROPOSED test |
 | Exact archaeological location denial by default | KEEP AND EXTEND | DOM-ARCH §I; ENCY §13 (Sensitive Register); `[CONTRACT v3.0]` §10.4, §23.2 | All public archaeology layers serve generalized geometry only; exact joins fail closed. | CONFIRMED doctrine / PROPOSED enforcement |
 | H3 r7 floor for sensitive archaeology products; H3 r7–r9 generalization for cultural/landscape layers | KEEP AND EXTEND | Master MapLibre §Q (ML-061-156, ML-061-158, ML-061-159) | Validators enforce the floor; release fails closed below it; profile parameters tracked as `OQ-CI-04`. | CONFIRMED source rule / PROPOSED validator |
 | Steward / cultural / tribal review surface | KEEP AND EXTEND | ENCY §7.13; DOM-ARCH §I,L; `[CONTRACT v3.0]` §23.2 (required reviewer beyond domain steward), §33 | Promotion of sensitive archaeology objects requires recorded `StewardReview` / `CulturalReview` outcome + rights-holder rep sign-off. | CONFIRMED doctrine / PROPOSED review record schema |
@@ -286,7 +293,7 @@ flowchart LR
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, `MapReleaseManifest` (for map layers), `RedactionReceipt`, correction path, rollback target, and review/policy state exist. | Only generalized, review-approved derivatives are public-reachable; emergency disable + rollback drill must be operable; `SOURCE_STALE` triggers flagging or rollback. | PROPOSED |
 
 > [!NOTE]
-> **Lifecycle continuity rule.** A pipeline that writes directly from `data/raw/archaeology/` to `data/published/layers/archaeology/` is an anti-pattern (Directory Rules §13: *lifecycle skip*; `[CONTRACT v3.0]` §10.1, §38). All phases run. Promotion is a **governed state transition, not a file move**.
+> **Lifecycle continuity rule.** A pipeline that writes directly from RAW (the source-first capture or the legacy `data/raw/archaeology/` lane) to `data/published/layers/archaeology/` is an anti-pattern (Directory Rules §13: *lifecycle skip*; `[CONTRACT v3.0]` §10.1, §38). All phases run. Promotion is a **governed state transition, not a file move**.
 
 [Back to top ↑](#-quick-jump)
 
@@ -364,7 +371,7 @@ PROPOSED. When a material change affects an archaeology entity, schema, policy, 
 |---|---|---|---|---|---|---|---|
 | `Archaeological Site` schema change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/` | `tests/fixtures/domains/archaeology/sites/` | `policy/domains/archaeology/` | `GENERATED_RECEIPT.json` if AI-authored | this file (§5) | `release/rollback_cards/<release_id>/` |
 | `CandidateFeature → Archaeological Site` promotion rule | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/` | `tests/fixtures/domains/archaeology/promotion/` | `policy/domains/archaeology/promotion/` | `EvidenceBundle` closure + `ReviewRecord` | this file (§4, §6) | `release/rollback_cards/<release_id>/` |
-| H3 r7 floor or generalization profile change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/PublicationTransformReceipt.md` | `tests/fixtures/domains/archaeology/sensitive_geometry/` | `policy/sensitivity/archaeology/` | `RedactionReceipt` + `MapReleaseManifest` re-issue | this file (§8) | revert profile bundle; fail closed |
+| H3 r7 floor or generalization profile change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/publication_transform_receipt.md` | `tests/fixtures/domains/archaeology/sensitive_geometry/` | `policy/sensitivity/archaeology/` | `RedactionReceipt` + `MapReleaseManifest` re-issue | this file (§8) | revert profile bundle; fail closed |
 | Source descriptor change for SHPO / NRHP-like / tribal review feed | `docs/domains/archaeology/README.md` | `contracts/source/` | `tests/fixtures/domains/archaeology/source/` | `policy/domains/archaeology/source/` | `SourceDescriptor` change log | this file (§4) | source-activation rollback |
 | Steward / cultural / tribal review record schema | `docs/domains/archaeology/README.md` | `contracts/governance/ReviewRecord.md` | `tests/fixtures/domains/archaeology/review/` | `policy/domains/archaeology/review/` | `ReviewRecord` schema bump | this file (§4) | revert review bundle |
 | Archaeology API surface (feature resolver, layer manifest, Evidence Drawer payload, Focus Mode answer) | `docs/architecture/governed-api/archaeology.md` *(PROPOSED)* | `contracts/runtime/RuntimeResponseEnvelope.md` | `tests/fixtures/domains/archaeology/api/` | `policy/runtime/archaeology/` | `AIReceipt` + `RuntimeResponseEnvelope` | this file (§4) | revert route + feature flag |
@@ -398,7 +405,7 @@ PROPOSED. When a material change affects an archaeology entity, schema, policy, 
 11. Schema home for archaeology contracts — `schemas/contracts/v1/domains/archaeology/` per ADR-0001 default vs `schemas/contracts/v1/archaeology/` (Atlas §24.13 / ENCY §7.13 form). **Mounted repo inspection; ADR-0001 verification; namespace reconciliation required.** See `OQ-CI-02`.
 12. Schema home for `RedactionReceipt` and `MapReleaseManifest` — domain-local versus cross-cutting (`schemas/contracts/v1/receipts/`, `schemas/contracts/v1/release/`). **ADR required (Atlas backlog ADR-S-03).** See `OQ-CI-03`.
 13. Relationship between `PublicationTransformReceipt` (DOM-ARCH terminology) and `RedactionReceipt` (`[CONTRACT v3.0]` §23.2 / §29 terminology). **Glossary reconciliation ADR required.** See `OQ-CI-03`.
-14. Existence of `docs/domains/archaeology/README.md`, `policy/domains/archaeology/`, `policy/sensitivity/archaeology/`, `tests/domains/archaeology/`, `data/raw/archaeology/`, etc. **`git ls-tree`-equivalent mount inspection required.** Status: **UNKNOWN**.
+14. Existence of `docs/domains/archaeology/README.md`, `policy/domains/archaeology/`, `policy/sensitivity/archaeology/`, `tests/domains/archaeology/`, etc. **`git ls-tree`-equivalent mount inspection required.** Status: **UNKNOWN**. *(2026-10-11: `data/raw/archaeology/README.md` EXISTS as a compatibility/reference lane, v0.2.0; a per-source/per-run payload tree there is **HOLD** — superseded by `DIR-SOURCE-001`; physical source-first placement undecided.)*
 15. CI workflow that enforces archaeology negative-fixture suite. **`.github/workflows/` inspection; workflow output log required.** Status: **UNKNOWN**.
 16. Current branch state, deployment state, public-release state for archaeology layers. **Mounted repo + dashboards + release manifests required.** Status: **UNKNOWN**.
 17. `GENERATED_RECEIPT.json` schema availability at `schemas/contracts/v1/receipts/generated_receipt.schema.json` per `[CONTRACT v3.0]` §34.1, §47.
@@ -466,6 +473,7 @@ PROPOSED. When a material change affects an archaeology entity, schema, policy, 
 | Updated `related` block to include `ai-build-operating-contract.md`, `authority-ladder.md`, `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`, `policy/sensitivity/archaeology/` | new | Doctrine-adjacent linkage; sibling cross-references. |
 | Added `RETIRE WITH ADR` row to §3 classification table | clarification | Promotes implicit corpus convention (`[CONTRACT v3.0]` §28, §37) to a named class. |
 | Strengthened Appendix B with `RedactionReceipt` / `MapReleaseManifest` / `GENERATED_RECEIPT.json` triggers | gap closure | Match new §4 and §5 entries. |
+| **v1.1.2 RAW placement reconciliation (2026-10-11):** §4 watcher row and §6 lifecycle continuity rule now name the accepted source-first RAW home (path **HOLD**) or the legacy `data/raw/archaeology/` lane as applicable; §10 item 14 records that `data/raw/archaeology/README.md` exists as a compatibility/reference lane; required `owning_root` / `responsibility` / `truth_posture` metadata added; `data/raw/README.md` added to `related` and §14. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted, and every deny-by-default, exact-location, sovereignty, and cultural-review rule is unchanged. Documentation only. |
 | **v1.1.1 correction pass:** corrected contract section citations (no §0; `CONTRACT_VERSION` pinning is §37; invariants are §10.x; memory-is-not-evidence is §1.3/§9.5/§38.25; chain-of-thought exclusion is §26.2; lifecycle skip and watcher rules cite Directory Rules §13). | correction | Prior draft cited non-existent §0, §13.5, §34.7, §10.4-watcher; aligned to the v3.0 section map. |
 
 > **Backward compatibility.** Anchors `#1-purpose-and-scope` through `#10-verification-backlog` are unchanged. `#11-related-docs` is now `#14-related-docs` — **anchor change**; inbound links from companion docs should be updated. Appendix anchors are unchanged. All existing path forms (`contracts/domains/archaeology/`, etc.) are unchanged — this revision preserves the v1.0 path conventions, which already used the Directory Rules §12 form.
@@ -503,7 +511,8 @@ This document is done enough to enter the repository when:
 
 - **Doctrine roots** (CONFIRMED rule / PROPOSED placement):
   [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (CONFIRMED; pinned `CONTRACT_VERSION = "3.0.0"`) ·
-  [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law (CONFIRMED) ·
+  [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law (CONFIRMED; §12.3 `DIR-SOURCE-001`–`004`) ·
+  [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract (physical placement HOLD) ·
   [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — truth labels and authority order ·
   [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance ·
   [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain ·
@@ -528,7 +537,7 @@ This document is done enough to enter the repository when:
   [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — archaeology schemas (ADR-0001 default; vs `schemas/contracts/v1/archaeology/` in Atlas §24.13 / ENCY §7.13 — `OQ-CI-02`) ·
   [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/) — archaeology object-meaning Markdown ·
   [`schemas/contracts/v1/receipts/redaction_receipt.schema.json`](../../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) — §23.2 receipt schema ·
-  [`schemas/contracts/v1/release/map_release_manifest.schema.json`](../../../schemas/contracts/v1/release/map_release_manifest.schema.json) — §23.2 manifest schema ·
+  [`schemas/contracts/v1/map/map_release_manifest.schema.json`](../../../schemas/contracts/v1/map/map_release_manifest.schema.json) — §23.2 manifest schema ·
   [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — `GENERATED_RECEIPT.json` schema (`[CONTRACT v3.0]` §34.1, §47)
 - **ADR entries**: <!-- TODO: link archaeology-relevant ADRs (sensitive-geometry policy, candidate-promotion rule, steward-authority model, OQ-CI-01–08 proposals) once filed. -->
 
@@ -621,4 +630,4 @@ This appendix mirrors §9 (Carry-forward responsibilities) from the perspective 
 
 <sub>**Related:** [Operating Contract v3.0](../../doctrine/ai-build-operating-contract.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Authority Ladder](../../doctrine/authority-ladder.md) · [Architecture](./ARCHITECTURE.md) · [Canonical Paths](./CANONICAL_PATHS.md) · [Cross-Domain](./CROSS_DOMAIN.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md) · [UI Continuity Notes](../../architecture/ui/CONTINUITY_NOTES.md) · [Governed-AI Continuity Notes](../../architecture/governed-ai/CONTINUITY_NOTES.md) *(all PROPOSED until mounted-repo evidence verifies presence)*</sub>
 
-<sub>**Last updated:** 2026-05-29 · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Doc type:** standard (continuity register) · **§23.2 row:** Archaeology — site locations (matrix PROPOSED) · **Authority:** refines but never overrides core invariants, ADRs, or canonical doctrine docs · [Back to top ↑](#-quick-jump)</sub>
+<sub>**Last updated:** 2026-10-11 · **Pinned:** <code>CONTRACT_VERSION = "3.0.0"</code> · **Doc type:** standard (continuity register) · **§23.2 row:** Archaeology — site locations (matrix PROPOSED) · **Authority:** refines but never overrides core invariants, ADRs, or canonical doctrine docs · [Back to top ↑](#-quick-jump)</sub>

@@ -2,22 +2,30 @@
 doc_id: kfm://doc/configs-domains-readme
 title: configs/domains/ — Governed Domain Configuration Defaults and Templates
 type: readme
-version: v0.5
+version: v0.6
 status: draft
 owners: OWNER_TBD — Config steward · Security steward · Domain stewards · Consumer owners · Validation steward · Policy steward · Release steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-14
+updated: 2026-09-04
 policy_label: "public; config-sublane; domain-scoped; non-secret; non-authoritative; no-live-binding; no-policy-authority; no-schema-authority; no-release-authority"
 current_path: configs/domains/README.md
-truth_posture: CONFIRMED repository-present parent README, thirteen canonical README-backed child lanes at the pinned base, current child README versions and statuses, empty machine lane register, config-specific CODEOWNERS absence, placeholder docs/link workflow state, and prior revision lineage / PROPOSED future consumer-bound payloads / UNKNOWN exhaustive differently named payload inventory, accepted owners, consumer wiring, loader precedence, schema binding, policy enforcement, CI enforcement, deployment integration, runtime behavior, and publication behavior
+truth_posture: CONFIRMED current main branch pin, exact tracked configs/domains subtree, thirteen canonical README-backed child lanes with current child versions/statuses, one zero-byte habitat .gitkeep, thirteen-entry machine domain projection, /configs/ CODEOWNERS review route, bounded workflow sources, accepted Directory Rules adoption pointer, and prior revision lineage / PROPOSED future consumer-bound payloads, consumer-bound templates, and accepted owners / UNKNOWN ignored or untracked files, consumer wiring, loader precedence, schema binding, policy enforcement, required-check enforcement, deployment integration, runtime behavior, and publication behavior
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 93da20f35990ff8a30da9db4c2d5dc1809475e7c
-  prior_blob: 2c5e8b70f4938eea5ac79f8f705cc3313df3f590
-  prior_revision_commit: 2ca2d5c84d2c2f93f4f925e8f062b977a2f692e7
+  base_commit: b5a91a33b6c900033364fe924a74a907745a6d2d
+  main_tree: b52d0c835a3b82f997bf1c0d4f122227a7eff9a2
+  domain_tree: f452396bc6413547e2fd4aad68bfd6d4c3c77467
+  tracked_domain_prefix_entries: 29
+  tracked_domain_blobs: 15
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  prior_blob: 0c4a7e7090dd9a8aabb01efc01ef073484bf0e08
+  prior_revision_commit: 2a3c9baedffecab68a0297db7c035b9b1add81bf
   prior_merge_commit: a5015c9047f6211a575748485a7485cc7271a6d1
 related:
   - ../README.md
@@ -34,6 +42,7 @@ related:
   - ../../control_plane/domain_lane_register.yaml
   - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/security/SECRETS.md
   - ../../docs/security/INCIDENT_RESPONSE.md
   - ../../contracts/domains/
@@ -55,10 +64,11 @@ related:
   - ../../.github/PULL_REQUEST_TEMPLATE.md
 tags: [kfm, configs, domains, bounded-contexts, defaults, templates, placeholders, consumer-binding, validation, source-role, sensitivity, geoprivacy, no-secrets, non-authoritative, governance]
 notes:
-  - "v0.5 preserves the v0.4 no-secrets, no-authority, source-role, geoprivacy, migration, rollback, validation, and safe-language controls while refreshing the parent index to the current merged child README set."
-  - "At the pinned base, all thirteen canonical child README paths are repository-present. Their documentation versions are mixed: nine v0.3, Habitat v0.4, and three v0.2. Version skew describes documentation maturity only; it does not establish executable configuration maturity."
-  - "The human-facing domain register lists thirteen canonical domain lanes. The machine register at control_plane/domain_lane_register.yaml currently contains entries: []. No config discovery, validation, or activation behavior should depend on machine registration until the register is populated and validated."
-  - "ADR-0001 and ADR-0003 are repository-present but status: proposed. This README references them as proposed governance handles and does not upgrade them to accepted authority."
+  - "v0.6 preserves the v0.5 no-secrets, no-authority, source-role, geoprivacy, migration, rollback, validation, and safe-language controls while re-pinning the parent index to current main and closing the tracked-subtree inventory over the exact non-truncated Git tree."
+  - "At current main@b5a91a33b6c900033364fe924a74a907745a6d2d, the exact non-truncated tracked subtree contains 15 blobs: this parent README, thirteen child README files, and the zero-byte habitat/.gitkeep. Child documentation versions remain nine v0.3, one v0.4, and three v0.2. This does not inventory ignored, untracked, or external files."
+  - "The human-facing domain register lists thirteen canonical domain lanes. The machine register at control_plane/domain_lane_register.yaml is present with 13 entries and meta.status PROPOSED / authority machine_projection_only. Its entries project lane identities; they do not create domains, assign accepted stewards, adopt sensitivity policy, activate sources, or authorize validation, release, or publication."
+  - "ADR-0029 is accepted and adopts the exact Directory Rules v2.0.0-draft.1 bytes at docs/doctrine/directory-rules.md as the sole writable human-readable Directory Rules authority. ADR-0001 and ADR-0003 remain proposed; this README does not change any ADR."
+  - "Current .github/CODEOWNERS routes /configs/ to @bartytime4life; no narrower /configs/domains/ route was observed. CODEOWNERS is review routing only, not accepted stewardship, required review, independent approval, or proof that review occurred."
   - "This revision changes only configs/domains/README.md. No child README, executable configuration payload, consumer, schema, contract, policy, registry, validator, test, fixture, workflow, runtime, deployment, lifecycle object, release object, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -71,18 +81,18 @@ notes:
 > Domain-scoped configuration may make safe defaults and templates inspectable. It must never make domain truth, source admission, policy, schema, evidence, release, or publication decisions.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.5-informational)
+![version](https://img.shields.io/badge/version-v0.6-informational)
 ![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![inventory](https://img.shields.io/badge/inventory-bounded__named--path__snapshot-yellow)
+![inventory](https://img.shields.io/badge/inventory-exact__tracked--tree__snapshot-green)
 ![secrets](https://img.shields.io/badge/secrets-forbidden-red)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
 
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Domain matrix](#canonical-domain-configuration-matrix) · [File contract](#minimum-per-file-contract) · [Security](#secret-live-binding-and-sensitive-value-rules) · [Rollback](#rollback-and-correction-posture) · [FAQ](#faq)
 
 > [!IMPORTANT]
-> **Document status:** draft `v0.5`
+> **Document status:** draft `v0.6`
 > **Owning responsibility root:** `configs/`  
-> **Observed lane maturity at the pinned base:** one README-backed child lane for each of the thirteen canonical domain slugs; the child documentation is at mixed versions, and no executable domain config payloads or consumers are established
+**Observed lane maturity at current main@b5a91a33b6c900033364fe924a74a907745a6d2d:** one parent README, thirteen child README files, and one zero-byte habitat `.gitkeep`; no executable domain config payloads or consumers are established
 > **Authority:** safe, non-secret, domain-scoped configuration defaults, templates, examples, and config-facing documentation only  
 > **Lifecycle effect:** none by itself; configuration is not promotion, release, publication, or evidence  
 > **Default runtime posture:** not loaded, not active, and not safe to assume consumed unless a current consumer and validation path are verified
@@ -132,10 +142,10 @@ A domain config may describe **how a verified consumer should be configured**. I
 | Folder placement | **CONFIRMED** | `configs/domains/README.md` exists under `configs/`, whose parent README defines safe non-secret defaults and templates as the root responsibility. |
 | Domain set | **CONFIRMED human-facing doctrine** | `docs/domains/README.md` and `docs/registers/DOMAIN_LANE.md` identify thirteen canonical domain lanes. |
 | Config content | **NON-AUTHORITATIVE** | Files may express safe defaults and placeholders; they cannot own domain meaning, machine shape, policy, source identity, evidence, lifecycle state, or release state. |
-| Current child inventory | **CONFIRMED FOR NAMED README PATHS** | Every canonical domain slug has a repository-present child `README.md` at the pinned base. This bounded check does not prove that differently named payloads are absent. |
-| Machine domain registration | **NOT ESTABLISHED** | `control_plane/domain_lane_register.yaml` is repository-present but currently contains `entries: []`. |
+| Current child inventory | **CONFIRMED AT CURRENT MAIN / EXACT TRACKED PREFIX** | The non-truncated Git tree at the pinned main records the parent README, one child README for each of thirteen canonical slugs, and one zero-byte `habitat/.gitkeep`; no other tracked blobs occur under this prefix. Ignored, untracked, and external files remain outside this evidence. |
+| Machine domain registration | **CONFIRMED PRESENT / PROPOSED PROJECTION** | `control_plane/domain_lane_register.yaml` contains 13 entries and declares `machine_projection_only`. It does not create domains, establish accepted ownership, activate sources, or authorize publication. |
 | Consumer behavior | **UNKNOWN** | No general auto-discovery, loading, merge order, precedence, or unknown-key behavior is established by this README. |
-| Validation enforcement | **NEEDS VERIFICATION** | Validation expectations are defined here; the inspected docs/link workflows remain TODO scaffolds rather than proof of enforcement. |
+| Validation enforcement | **PARTIAL / NEEDS VERIFICATION** | Current workflows provide bounded YAML, metadata, link, and domain-lane checks; exact-head results, generic config semantic validation, required-check enforcement, and broader domain readiness remain unverified. |
 | Secret and sensitivity safety | **REQUIRED / ENFORCEMENT UNKNOWN** | Real secrets and protected context are forbidden; current full-lane scanning and review coverage remain unverified. |
 | Production or public use | **NOT AUTHORIZED** | Parsing, presence, or a friendly filename is not deployment, activation, policy approval, or release approval. |
 
@@ -157,10 +167,13 @@ The evidence snapshot for this revision is pinned to:
 | Repository ID | `1059091169` |
 | Visibility | public |
 | Base ref | `main` |
-| Base commit | `93da20f35990ff8a30da9db4c2d5dc1809475e7c` |
-| Prior target blob | `2c5e8b70f4938eea5ac79f8f705cc3313df3f590` |
-| Prior content revision | `2ca2d5c84d2c2f93f4f925e8f062b977a2f692e7` |
-| Prior merge commit | `a5015c9047f6211a575748485a7485cc7271a6d1` |
+| Base commit | `b5a91a33b6c900033364fe924a74a907745a6d2d` |
+| Main tree | `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2` |
+| Domain subtree | `f452396bc6413547e2fd4aad68bfd6d4c3c77467` |
+| Tracked prefix | `29 tree/blob entries; 15 tracked blobs` |
+| Prior target blob | `0c4a7e7090dd9a8aabb01efc01ef073484bf0e08` |
+| Prior content revision | `2a3c9baedffecab68a0297db7c035b9b1add81bf` |
+| Prior materialization merge | `a5015c9047f6211a575748485a7485cc7271a6d1` |
 
 ### Directly observed named paths
 
@@ -173,7 +186,9 @@ configs/domains/
 ├── fauna/README.md
 ├── flora/README.md
 ├── geology/README.md
-├── habitat/README.md
+├── habitat/
+│   ├── .gitkeep
+│   └── README.md
 ├── hazards/README.md
 ├── hydrology/README.md
 ├── people-dna-land/README.md
@@ -182,7 +197,7 @@ configs/domains/
 └── soil/README.md
 ```
 
-The following proposed payload/validation paths remain absent:
+The following proposed payload/validation paths are not present in the current tracked tree:
 
 ```text
 configs/domains/validation.md
@@ -191,11 +206,11 @@ configs/domains/habitat/default.template.yaml
 configs/domains/habitat/review.template.yaml
 ```
 
-Every named child README path above was fetched successfully at the pinned base. The four proposed payload/validation paths were probed directly and were not found. Child READMEs also describe bounded documentation-only inventories, but an exhaustive recursive tree receipt was not available; differently named payloads therefore remain `NEEDS VERIFICATION`. None of these checks establishes consumer wiring, executable configuration maturity, validation enforcement, deployment integration, or runtime/publication behavior.
+The exact non-truncated recursive Git tree at `main@b5a91a33b6c900033364fe924a74a907745a6d2d` (`tree b52d0c835a3b82f997bf1c0d4f122227a7eff9a2`) contains 29 entries under this prefix: 14 directory/tree entries and 15 tracked blobs. The 15 blobs are this parent README, thirteen child README files, and the zero-byte `habitat/.gitkeep`; no other tracked file is present under `configs/domains/`. This is a GitHub-tracked inventory only: ignored, untracked, generated, mounted, and external files are not observed.
 
 ### Current child README snapshot
 
-| Canonical slug | README version | Declared status | Blob at pinned base | Bounded conclusion |
+| Canonical slug | README version | Declared status | Blob at current main | Bounded conclusion |
 |---|---:|---|---|---|
 | `agriculture` | v0.3 | draft | `99032995f37f…` | README-backed boundary; executable payload and consumer not established. |
 | `archaeology` | v0.3 | draft | `e42316554e24…` | README-backed boundary; executable payload and consumer not established. |
@@ -218,16 +233,16 @@ Documentation-version summary: **nine v0.3 lanes, one v0.4 lane, and three v0.2 
 | Capability | Status | Safe conclusion |
 |---|---:|---|
 | Parent boundary README | **CONFIRMED** | The lane has a documented parent contract. |
-| Canonical child READMEs | **CONFIRMED AT PINNED BASE** | All thirteen canonical slugs have a repository-present documentation boundary. |
-| Domain configuration payloads | **NOT ESTABLISHED** | No general defaults, templates, or validation file was verified in the named probes. |
-| Machine domain-lane entries | **EMPTY** | The current machine register does not enumerate domain lanes. |
+| Canonical child READMEs | **CONFIRMED AT CURRENT MAIN** | All thirteen canonical slugs have a repository-present documentation boundary at current main. |
+| Domain configuration payloads | **NOT PRESENT IN TRACKED TREE** | No executable defaults, templates, or validation file is present in the exact tracked subtree; ignored, untracked, and external files are outside this evidence. |
+| Machine domain-lane entries | **13 / PROPOSED PROJECTION** | The current machine register enumerates 13 lane entries with `authority: machine_projection_only`; it does not establish domain or policy authority. |
 | Auto-discovery | **NOT ESTABLISHED** | Folder presence must not trigger activation or loading by assumption. |
 | Config precedence | **UNKNOWN** | No overlay order between defaults, dev, test, local, domain, environment, or deployment layers is established here. |
 | Schema/contract binding | **NEEDS VERIFICATION** | Proposed governance handles exist; per-file bindings are not proven. |
 | Secret scanning | **NEEDS VERIFICATION** | Prohibition is clear; repository-wide enforcement for this lane was not proven. |
 | Sensitive-value scanning | **NEEDS VERIFICATION** | Human and automated coverage remain unverified. |
-| Docs/link workflows | **PLACEHOLDER SCAFFOLDS** | Inspected workflows run TODO echo steps and do not prove content validation. |
-| Accepted owners/CODEOWNERS | **UNKNOWN** | The CODEOWNERS file has a wildcard placeholder but no config-specific rule; effective review enforcement was not inspected. |
+| Docs/link workflows | **PARTIAL / CURRENT WORKFLOW SOURCES** | Inspected workflows contain bounded validator/test commands and explicit hold states; exact-head results and required-check enforcement are not proven. |
+| Accepted owners/CODEOWNERS | **REVIEW ROUTE CONFIRMED / STEWARDSHIP NEEDS VERIFICATION** | `.github/CODEOWNERS` routes `/configs/` to `@bartytime4life`; no narrower `/configs/domains/` rule was observed. Route presence does not prove accepted ownership, effective enforcement, or independent review. |
 | Runtime/deployment/publication | **UNKNOWN / NOT AUTHORIZED BY THIS LANE** | Nothing here proves operational use or release. |
 
 [Back to top](#top)
@@ -373,10 +388,10 @@ No repository-native executable validator was verified for the parent lane in th
 | Sensitive-value review | No exact protected location, private-person, private-land, cultural, infrastructure, or rights-restricted clue exists. | Required; full enforcement `NEEDS VERIFICATION`. |
 | Private endpoint/path scan | No private operational endpoint or personal workstation path exists. | Required; enforcement `NEEDS VERIFICATION`. |
 | No side effect | Validation does not activate sources, write lifecycle data, publish, deploy, or call external services. | Required. |
-| No-network fixture check | Parse and basic validation can run with network disabled where practical. | `PROPOSED`; not yet proven for this lane. |
+| No-network fixture check | Parse and basic validation can run with network disabled where practical. | `PARTIAL`; bounded workflow source exists; exact-head result not observed for this lane. |
 | Lifecycle isolation | No data, registry, receipt, proof, catalog, release, or published object is stored here. | Manual boundary review required. |
 | Authority references | Schema, contract, policy, consumer, owner, and override references are accurate or explicitly unresolved. | Manual review required. |
-| Documentation links | Relative links and anchors resolve. | Inspected repository link workflow is a TODO stub; local/manual check required. |
+| Documentation links | Relative links and anchors resolve. | Current link-check workflow provides bounded no-network checks; exact-head result and external URL verification remain unobserved. |
 | Staleness | Owner, consumer, version, and review date remain current. | Review every six months or on consumer change. |
 
 ### Finite review dispositions
@@ -392,14 +407,15 @@ These dispositions apply to configuration review only; they are **not** KFM publ
 
 ### Workflow threat preflight for this documentation change
 
-The inspected docs-control-plane, docs-build, and link-check workflows:
+The inspected docs-control-plane, docs-meta-block, link-check, domain-lane-register, and docs-build workflows:
 
-- trigger on `pull_request` and pushes to `main`;
+- trigger on pull requests and/or pushes to `main`, with `workflow_dispatch` on the inspected workflows;
 - use GitHub-hosted `ubuntu-latest` runners;
-- contain TODO echo steps rather than substantive validation;
+- execute repository-owned YAML, metadata, link, and domain-lane validator/test commands with bounded no-network controls in applicable checks;
+- retain explicit hold states for docs rendering and preview/publication readiness where readiness is not established;
 - do not show `pull_request_target`, explicit secret use, or self-hosted runner use in their inspected bodies.
 
-This is a bounded preflight, not proof of repository-wide workflow safety or branch-protection enforcement.
+This is bounded workflow-source evidence; it does not claim an exact-head run passed, branch protection or required checks are enforced, or generic config semantics are validated.
 
 [Back to top](#top)
 
@@ -421,10 +437,11 @@ This is a bounded preflight, not proof of repository-wide workflow safety or bra
 
 ### CODEOWNERS boundary
 
-The inspected `.github/CODEOWNERS` file contains a wildcard placeholder and selected root/domain rules, but no config-specific path rule. Therefore:
+The inspected `.github/CODEOWNERS` file contains a wildcard placeholder and a `/configs/` root route to `@bartytime4life`, but no narrower `/configs/domains/` route. Therefore:
 
-- automatic reviewer assignment for this lane is `UNKNOWN`;
+- review routing is present at `/configs/`, but accepted stewardship for this sublane is `UNKNOWN`;
 - `OWNER_TBD` must not be presented as accepted ownership;
+- route presence does not prove effective enforcement, independent review, or that review occurred;
 - manual reviewer selection remains necessary until ownership and enforcement are verified.
 
 ### Change budget
@@ -450,7 +467,7 @@ Do not bundle config cleanup with unrelated schema, policy, data, release, or ru
 | Environment-specific examples | `configs/dev/`, `configs/test/`, `configs/local/`, `configs/examples/`, `configs/templates/` | Sibling config concerns; no implicit precedence is established. |
 | Human domain doctrine | `docs/domains/<slug>/` | Explains domain scope and source-role/sensitivity posture. |
 | Human domain register | `docs/registers/DOMAIN_LANE.md` | Lists the canonical thirteen domain lanes. |
-| Machine domain register | `control_plane/domain_lane_register.yaml` | Intended machine index; currently contains no entries. |
+| Machine domain register | `control_plane/domain_lane_register.yaml` | Current 13-entry proposed machine projection; it does not create domains or authority. |
 | Object meaning | `contracts/domains/<slug>/` | Semantic authority; config only references it. |
 | Machine shape | `schemas/contracts/v1/domains/<slug>/` | Proposed canonical schema shape under ADR-0001; verify status and actual files. |
 | Admissibility and exposure | `policy/domains/<slug>/` | Policy authority under proposed policy-root ADR; config cannot override it. |
@@ -474,6 +491,7 @@ Do not bundle config cleanup with unrelated schema, policy, data, release, or ru
 |---|---:|---|
 | `ADR-0001 — Schema Home: schemas/contracts/v1/ is Canonical` | **PROPOSED** | Provides a proposed schema-reference target. This README does not upgrade it to accepted authority. |
 | `ADR-0003 — policy/ is canonical; policies/ is compatibility` | **PROPOSED** | Provides a proposed policy-root target. This README does not upgrade it to accepted authority. |
+| `ADR-0029 — Adopt Directory Governance Standard v2` | **ACCEPTED** | Adopts the exact `v2.0.0-draft.1` bytes at `docs/doctrine/directory-rules.md` as the sole writable human-readable Directory Rules authority. This README does not modify that authority. |
 | Domain lane addition/rename/removal | **ADR REQUIRED by Directory Rules** | A config directory cannot create a new KFM domain by itself. |
 | Config auto-discovery and precedence | **NO ACCEPTED DECISION VERIFIED** | Consumers must bind files explicitly until governed behavior is documented and tested. |
 | Universal domain-config envelope | **OPEN / PROPOSED** | This README defines a minimum documentation contract but does not create a machine schema. |
@@ -494,7 +512,7 @@ This documentation-only revision does not:
 
 ## Last reviewed
 
-**2026-07-14** — pinned to `main@93da20f35990ff8a30da9db4c2d5dc1809475e7c`
+**2026-09-04** — pinned to `main@b5a91a33b6c900033364fe924a74a907745a6d2d` (tree `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2`)
 
 Review again when any of the following occurs:
 
@@ -503,6 +521,7 @@ Review again when any of the following occurs:
 - a consumer begins loading files from this lane;
 - config precedence or auto-discovery is decided;
 - ADR-0001 or ADR-0003 changes status;
+- ADR-0029 or its adopted Directory Rules bytes change;
 - secret/sensitivity validation is implemented;
 - six months pass without review.
 
@@ -514,7 +533,7 @@ Review again when any of the following occurs:
 
 The human-facing domain register identifies thirteen canonical domain lanes. The table below distinguishes **domain standing** from **repository-present config documentation**.
 
-| Canonical slug | Domain posture carried into config | Child README at pinned base | Default config caution |
+| Canonical slug | Domain posture carried into config | Child README at current main | Default config caution |
 |---|---|---:|---|
 | `hydrology` | Preserve observed, regulatory, modeled, forecast, and historical roles. | **CONFIRMED** | Never become emergency-warning or live-status authority. |
 | `soil` | Preserve static survey, gridded derivative, station, satellite, pedon, and interpretation support types. | **CONFIRMED** | Do not flatten support types or expose private production/land context. |
@@ -531,7 +550,7 @@ The human-facing domain register identifies thirteen canonical domain lanes. The
 | `people-dna-land` | Preserve assertion-first identity, consent, living/deceased status, genealogy, DNA, title, and land-claim distinctions. | **CONFIRMED** | Living-person, DNA, consent, title, and cultural-rights controls are mandatory. |
 
 > [!NOTE]
-> PR #1116 materialized documentation-only boundaries for every canonical slug. This v0.5 refresh records their current merged state; it does not authorize payloads. A non-README config still requires a real consumer, review owner, validation plan, and rollback path.
+> PR #1116 materialized documentation-only boundaries for every canonical slug. This v0.6 refresh records the current tracked state; it does not authorize payloads. A non-README config still requires a real consumer, review owner, validation plan, and rollback path.
 
 [Back to top](#top)
 
@@ -846,20 +865,20 @@ For this README revision, the prior blob is recorded in the meta block so restor
 
 | Item | Status | Evidence needed |
 |---|---:|---|
-| Exhaustive recursive `configs/domains/` inventory | `NEEDS VERIFICATION` | Non-truncated tree or mounted checkout receipt. |
-| Differently named child files/directories | `UNKNOWN` | Full tree inspection. |
-| Refresh the parent `configs/README.md` tree snapshot | `OPEN` | Update its stale `main@55a84f062…` inventory, which still shows only the Habitat child lane. |
-| Populate and validate `control_plane/domain_lane_register.yaml` | `OPEN` | Machine entries, schema, human/machine parity test, owner review. |
+| Exhaustive recursive `configs/domains/` inventory | `CONFIRMED AT CURRENT MAIN` | Non-truncated recursive tree at current main; 29 entries / 15 blobs under this prefix. Ignored, untracked, and external files remain outside this evidence. |
+| Differently named child files/directories | `NEEDS VERIFICATION` | No other tracked blob occurs in the exact prefix; ignored, untracked, or external files remain outside GitHub evidence. |
+| Refresh the parent `configs/README.md` tree snapshot | `OPEN` | Parent README remains pinned to older `main@c46694ebc4a43030592a785b44e85977b33f1de2`; refresh its root/configs tree snapshot separately. |
+| Populate and validate `control_plane/domain_lane_register.yaml` | `PARTIAL / NEEDS VERIFICATION` | Register has 13 proposed projection entries and validator/workflow sources; adoption, accepted owners, consumer enforcement, and required checks remain unverified. |
 | Accepted config and domain owners | `OWNER_TBD` | Valid CODEOWNERS/team assignments and steward acceptance. |
 | Consumer bindings | `UNKNOWN` | Code references, loader tests, package/app/pipeline docs. |
 | Precedence and unknown-key behavior | `UNKNOWN` | Accepted decision plus tests. |
 | Per-file schema/contract/policy links | `NEEDS VERIFICATION` | Current files and accepted authority references. |
 | Secret scanning coverage | `NEEDS VERIFICATION` | Workflow/tool config and passing evidence. |
 | Sensitive-value scanning/review | `NEEDS VERIFICATION` | Rules, fixtures, reviewer workflow, passing evidence. |
-| No-network validation | `NEEDS VERIFICATION` | Executable test or documented bounded exception. |
-| Docs/link validation | `NEEDS VERIFICATION` | Non-placeholder workflow or local receipt. |
+| No-network validation | `PARTIAL / NEEDS VERIFICATION` | Applicable workflow sources contain bounded no-network checks; exact-head execution and inherited failures are not observed in this README update. |
+| Docs/link validation | `PARTIAL / NEEDS VERIFICATION` | Current workflow sources contain substantive bounded checks; exact-head execution and hosted result are not observed in this README update. |
 | Deployment/runtime/publication integration | `UNKNOWN` | Current implementation, manifests, logs, and release evidence. |
-| ADR-0001 and ADR-0003 disposition | `PROPOSED` | Accepted/superseded/rejected ADR status. |
+| ADR-0001 and ADR-0003 disposition | `PROPOSED` | Accepted/superseded/rejected status for these two handles remains unverified; ADR-0029 is separately accepted for Directory Rules v2. |
 
 ---
 
@@ -867,13 +886,13 @@ For this README revision, the prior blob is recorded in the meta block so restor
 
 | Avoid saying | Prefer saying |
 |---|---|
-| “This folder contains every domain config.” | “The pinned snapshot confirms README boundaries for all thirteen canonical slugs; exhaustive payload and consumer coverage is not established.” |
+| “This folder contains every domain config.” | “The current tracked snapshot confirms 15 blobs under this prefix: the parent README, thirteen child README files, and `habitat/.gitkeep`; it does not establish payload or consumer coverage outside the tracked Git tree.” |
 | “The API uses this file.” | “This file names the API as an intended consumer; wiring is `NEEDS VERIFICATION` unless cited.” |
 | “This setting makes the output public-safe.” | “This setting references or supports a public-safe profile; policy, transform, review, release, and rollback remain required.” |
 | “The source is active.” | “The template contains a source reference or placeholder; activation belongs to registry governance.” |
 | “The schema is canonical.” | “ADR-0001 proposes the schema home; acceptance and file presence must be verified.” |
 | “The policy path is canonical.” | “ADR-0003 proposes the policy-root decision; acceptance must be verified.” |
-| “CI validates domain config.” | “Validation is required; the inspected docs/link workflows are placeholder scaffolds.” |
+| “CI validates domain config.” | “Repository workflows provide bounded documentation and domain-lane checks; generic config semantics and exact-head outcomes remain separately verified.” |
 | “No secrets are present.” | “No secrets are intended; full inventory and scanning coverage remain `NEEDS VERIFICATION` unless checked.” |
 | “The threshold proves risk/suitability/habitat.” | “The threshold is a method parameter and does not establish domain truth.” |
 | “Missing config means safe defaults apply.” | “Missing or invalid config must enter an explicit safe inactive/error/hold state defined by the consumer.” |
@@ -888,7 +907,7 @@ No. Domain standing comes from doctrine, registers, ADRs, and review. Config pla
 
 ### Should every canonical domain have an empty config folder?
 
-No. All canonical slugs currently have non-empty, documentation-only boundaries, created under the scope of PR #1116. That history does not justify placeholder payloads. Future child lanes or non-README files still require explicit authority or a real consumer, owner, validation plan, and rollback path.
+No. The current tracked subtree has child README boundaries for all thirteen canonical slugs plus a zero-byte Habitat `.gitkeep`; that is documentation/support structure, not payload authorization. Future child lanes or non-README files still require explicit authority or a real consumer, owner, validation plan, and rollback path.
 
 ### Can a config contain a source URL?
 
@@ -920,18 +939,20 @@ No. It means the configuration-support review passed. Publication still requires
 
 | Evidence | Blob / state | Supports | Does not prove |
 |---|---|---|---|
-| `configs/domains/README.md` | prior blob `2c5e8b70…`; v0.4 | Existing parent boundary and lineage. | Current payload inventory or consumers. |
-| `configs/README.md` | blob `129c2016…`; v0.3 | Parent safe non-secret configuration responsibility. | Current domain tree: its embedded snapshot remains pinned to `main@55a84f062…`. |
-| Thirteen child `README.md` paths | current blobs listed in the child snapshot; v0.2–v0.4 | All canonical slugs have a repository-present documentation boundary at the pinned base. | Exhaustive payload absence, consumer wiring, validation, or runtime activation. |
-| `docs/domains/README.md` | blob `5ee0df96…` | Thirteen canonical domain slugs and Domain Placement Law. | Config child presence. |
+| `configs/domains/README.md` | current source blob `0c4a7e70…`; v0.5 | Existing parent boundary and immediate rollback target for this v0.6 refresh. | Current payload inventory or consumers. |
+| `configs/README.md` | blob `a800983e…`; v0.5; embedded snapshot pinned to `main@c46694ebc4a43030592a785b44e85977b33f1de2` | Parent safe non-secret configuration responsibility. | Current domain tree: refresh of its embedded root/configs snapshot remains open. |
+| Current main recursive Git tree | `main@b5a91a33…`; tree `b52d0c83…`; domain subtree `f452396b…`; non-truncated | Exact tracked `configs/domains/` inventory: 29 entries / 15 blobs. | Ignored, untracked, generated, mounted, or external files. |
+| Thirteen child `README.md` paths | current blobs listed in the child snapshot; v0.2–v0.4 | All canonical slugs have a repository-present documentation boundary at current main. | Exhaustive non-Git payload absence, consumer wiring, validation, or runtime activation. |
+| `docs/domains/README.md` | blob `7bf702fb…`; v0.4 | Thirteen canonical domain slugs and Domain Placement Law. | Config child presence. |
 | `docs/registers/DOMAIN_LANE.md` | blob `7cd641d9…` | Human-facing domain lane register and sensitivity posture. | Machine enforcement. |
-| `control_plane/domain_lane_register.yaml` | blob `81b23beb…`; `entries: []` | Machine register currently empty. | Future population or validator behavior. |
-| Directory Rules | blob `2affb080…`; v1.4 | `configs/` no-secrets rule, domain placement, README contract. | Full implementation conformance. |
-| ADR-0001 | blob `ab0010a2…`; `status: proposed` | Proposed schema-home governance handle. | Accepted schema authority. |
-| ADR-0003 | blob `cef5528d…`; `status: proposed` | Proposed policy-root governance handle. | Accepted policy authority. |
+| `control_plane/domain_lane_register.yaml` | blob `1bfc6f91…`; 13 entries; `status: PROPOSED`; `authority: machine_projection_only` | Current machine projection and its bounded non-authority posture. | Accepted domain ownership, source activation, or policy enforcement. |
+| Directory Rules | blob `fd49a0b8…`; `v2.0.0-draft.1`; exact bytes adopted by accepted ADR-0029 | `configs/` no-secrets rule, domain placement, README contract. | Full implementation conformance. |
+| ADR-0001 | blob `ed6f258f…`; `status: proposed` | Proposed schema-home governance handle. | Accepted schema authority. |
+| ADR-0003 | blob `08ed3609…`; `status: proposed` | Proposed policy-root governance handle. | Accepted policy authority. |
+| ADR-0029 | blob `a4de0d7a…`; `status: accepted` | Accepted Directory Rules v2 adoption decision. | Any future change to its adopted bytes or legacy compatibility/tombstone posture. |
 | DRIFT_REGISTER | blob `97a77552…` | Existing drift log inspected; no configs/domains entry observed. | Absence of unrecorded drift. |
-| CODEOWNERS | blob `6adabefc…` | No config-specific rule in inspected file. | Effective GitHub team validity or branch protection. |
-| Docs/link workflows | blobs `e503…`, `3841…`, `9326…` | Inspected workflow bodies are TODO scaffolds. | Repository-wide CI or security posture. |
+| CODEOWNERS | blob `dd2a84aa…`; `/configs/` route; no narrower `/configs/domains/` route observed | Review routing evidence only. | Accepted stewardship, effective enforcement, independent review, or branch protection. |
+| Docs/link/domain-lane workflows | blobs `ed0d3b50…`, `732879cd…`, `7b6c675d…`, `318214ba…`, `7816e07…` | Current bounded validator/test sources and explicit docs-build hold. | Exact-head hosted pass, generic config semantics, or repository-wide CI/security posture. |
 | PR #1116 lineage | content `2ca2d5c8…`; merge `a5015c90…` | Creation of the twelve previously missing child README boundaries and the v0.4 parent. | Current implementation maturity. |
 
 ---
@@ -962,6 +983,8 @@ v0.4 added the twelve missing canonical child README boundaries, updated the inv
 
 v0.5 refreshes the parent against the current merged mainline: it records all thirteen child README blobs and declared versions, re-pins machine-register, CODEOWNERS, and workflow evidence, identifies the stale parent `configs/README.md` tree snapshot, and removes branch-era language. It does not add a payload or alter a child lane.
 
+v0.6 refreshes v0.5 against current `main@b5a91a33b6c900033364fe924a74a907745a6d2d`: it closes the tracked-subtree inventory over the non-truncated recursive tree, records `habitat/.gitkeep`, updates the 13-entry machine projection, `/configs/` review route, accepted ADR-0029 pointer, and bounded current workflow sources. It changes only this README.
+
 </details>
 
 <details>
@@ -989,6 +1012,6 @@ Any future behavior change must be implemented and validated in its owning respo
 
 ## Status summary
 
-`configs/domains/` is a governed configuration-support lane under `configs/`. At `main@93da20f35990ff8a30da9db4c2d5dc1809475e7c`, each of the thirteen canonical domain slugs has a repository-present child README: nine declare v0.3, Habitat declares v0.4, and three declare v0.2. No executable domain config payload, loader, or consumer is established by this bounded snapshot, and the machine domain register still contains no entries. These lanes cannot create domain truth, source admission, policy, schema, evidence, lifecycle, release, publication, deployment, or runtime authority.
+`configs/domains/` is a governed configuration-support lane under `configs/`. At current `main@b5a91a33b6c900033364fe924a74a907745a6d2d`, the exact tracked subtree contains 15 blobs: this parent README, thirteen child README files, and the zero-byte `habitat/.gitkeep`. The child documentation declares nine v0.3 lanes, one v0.4 lane, and three v0.2 lanes. No executable domain config payload, loader, or consumer is established by this snapshot; the machine domain register has 13 proposed projection entries. These lanes cannot create domain truth, source admission, policy, schema, evidence, lifecycle, release, publication, deployment, or runtime authority.
 
 <p align="right"><a href="#top">Back to top</a></p>

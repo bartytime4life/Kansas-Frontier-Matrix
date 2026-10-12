@@ -1,0 +1,21 @@
+{
+  "object_type": "CatalogTrustExtension",
+  "schema_version": "1.0.0",
+  "extension_id": "catalog-trust-extension:fixture:dcat-catalog",
+  "host_profile": "DCAT_DISTRIBUTION",
+  "host_record_ref": "fixture:catalog:dcat:distribution-catalog",
+  "namespace": "kfm",
+  "hash_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:a3e6b9b2f2a14285069e1a91821499be0e0fbefaef35584d077905108ce0ead5",
+  "kfm:run_receipt_ref": "fixture:run:dcat-catalog",
+  "kfm:proof_ref": null,
+  "kfm:trust_class": "catalog",
+  "kfm:source_role": "aggregate",
+  "governance": {
+    "catalog_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

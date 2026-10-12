@@ -17,8 +17,11 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-22
-updated: 2026-06-22
+updated: 2026-08-10
 policy_label: public-with-gates; semantic-contract; habitat; model-run-receipt; receipt-not-proof; model-vs-observation; source-role-aware; source-vintage-aware; evidence-bound; uncertainty-bound; release-gated; rollback-aware
+owning_root: contracts/
+responsibility: Define Habitat ModelRunReceipt meaning and the bounded fixture profile without granting model, evidence, policy, review, release, or publication authority.
+truth_posture: CONFIRMED existing semantic boundaries / PROPOSED closed fixture profile / NEEDS VERIFICATION runtime emission and cross-sublane hierarchy
 tags: [kfm, contracts, habitat, ModelRunReceipt, model_run_receipt, model-run, receipt, run-receipt, receipt-not-proof, suitability, habitat-quality-score, modeled-habitat, uncertainty-surface, model-card, source-role, evidence, policy, release, correction, rollback, anti-collapse]
 related:
   - ./README.md
@@ -56,7 +59,7 @@ related:
 notes:
   - "Expanded from a top-level scaffold at contracts/domains/habitat/model_run_receipt.md."
   - "This top-level path is currently referenced by schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json."
-  - "The paired top-level schema exists, but it is still a PROPOSED scaffold with empty properties and additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
+  - "The paired top-level schema now defines a closed, fixture-only v1 profile with deterministic validation; canonical runtime emission and cross-sublane hierarchy remain NEEDS VERIFICATION."
   - "A land-cover-specific receipt contract already exists at contracts/domains/habitat/land_cover/model_run_receipt.md. This top-level contract treats ModelRunReceipt as the Habitat-wide receipt family, with land_cover/model_run_receipt.md as a specialization, not a competing authority."
   - "A ModelRunReceipt is process memory. It is not EvidenceBundle proof, not a policy decision, not a review approval, not a catalog record, not a ReleaseManifest, and not publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -73,7 +76,7 @@ notes:
   <img alt="Domain: habitat" src="https://img.shields.io/badge/domain-habitat-2e7d32">
   <img alt="Object: ModelRunReceipt" src="https://img.shields.io/badge/object-ModelRunReceipt-blue">
   <img alt="Boundary: receipt not proof" src="https://img.shields.io/badge/boundary-receipt__not__proof-critical">
-  <img alt="Schema: scaffold" src="https://img.shields.io/badge/schema-scaffold%20%2F%20NEEDS__VERIFICATION-orange">
+  <img alt="Schema: fixture profile" src="https://img.shields.io/badge/schema-fixture__profile-blue">
   <img alt="Publication: release gated" src="https://img.shields.io/badge/publication-release__gated-critical">
 </p>
 
@@ -91,9 +94,9 @@ notes:
 > **Status:** `draft` / semantic contract  
 > **Contract path:** `contracts/domains/habitat/model_run_receipt.md`  
 > **Top-level schema path:** `schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json`  
-> **Schema posture:** paired top-level schema exists, but is still a `PROPOSED` scaffold with empty `properties` and `additionalProperties: true`.  
+> **Schema posture:** paired top-level schema defines a closed `kfm.habitat-model-run-receipt.fixture.v1` profile for deterministic no-network validation.
 > **Related specialization:** `contracts/domains/habitat/land_cover/model_run_receipt.md` already exists for land-cover-derived runs.  
-> **Truth posture:** Habitat doctrine confirms `Model Run Receipt` as a canonical Habitat object family. Top-level field shape, fixtures, validators, policy runtime, emitted receipt instances, release artifacts, API/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.
+> **Truth posture:** Habitat doctrine confirms `Model Run Receipt` as a canonical Habitat object family. The bounded fixture shape, deterministic identity, completed/failed separation, and explicit non-authority checks are executable. Policy runtime, real receipt emission, durable instances, release artifacts, API/UI behavior, Focus Mode behavior, and canonical cross-sublane hierarchy remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > A `ModelRunReceipt` is process memory. It records what ran, with which inputs, configuration, environment, outputs, digests, and caveats. It does **not** prove that an output is true, public-safe, reviewed, policy-allowed, released, or fit for consequential use.
@@ -135,7 +138,7 @@ Receipts make runs inspectable. They do not make claims true.
 | Responsibility | Path or root | This contract's role |
 |---|---|---|
 | Habitat-wide receipt meaning | `contracts/domains/habitat/model_run_receipt.md` | Top-level semantic contract requested here |
-| Habitat-wide schema | `schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json` | CONFIRMED scaffold pointing to this file |
+| Habitat-wide schema | `schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json` | Closed fixture-only v1 profile pointing to this file |
 | Land-cover specialization | `contracts/domains/habitat/land_cover/model_run_receipt.md` | Sublane-specific specialization for land-cover-derived runs |
 | Suitability doctrine | `docs/domains/habitat/sublanes/suitability.md` | Requires model cards, receipts, and uncertainty for modeled suitability products |
 | Model-vs-observation doctrine | `docs/domains/habitat/MODEL_VS_OBSERVATION.md` | Requires model outputs to stay labeled as model, not observed or regulatory |
@@ -152,16 +155,16 @@ Receipts make runs inspectable. They do not make claims true.
 | Schema fact | Current posture |
 |---|---|
 | Confirmed schema path | `schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json` |
-| Schema status | `PROPOSED` |
+| Schema status | `PROPOSED` fixture-only profile |
 | Schema title | `Model Run Receipt` |
-| Schema properties | Empty object |
-| Required fields | None visible in the scaffold |
-| Additional properties | `true` |
-| Source doc | `docs/domains/habitat/MISSING_OR_PLANNED_FILES.md` |
+| Schema properties | Closed run identity, model, input, config, output, evidence, governance, limitation, and digest fields |
+| Required fields | Enforced for the fixture profile |
+| Additional properties | `false` at every object boundary |
+| Source map | `docs/intake/exploratory/habitat-model-run-receipt-source-map.md` |
 | Contract doc pointer | `contracts/domains/habitat/model_run_receipt.md` |
-| Field-level validation | NEEDS VERIFICATION |
+| Field-level validation | Deterministic fixture validator and focused tests present |
 
-Until schema fields are added, this contract is semantic guidance and review vocabulary only.
+This executable profile proves local shape and semantic consistency only. It does not emit a receipt, run a model, resolve evidence, evaluate policy, authenticate review, assemble a release, or publish.
 
 ---
 
@@ -237,7 +240,7 @@ A reviewed `ModelRunReceipt` should semantically assert:
 
 ## Recommended semantics
 
-The following fields are **PROPOSED** targets for future schema expansion. They are not enforced by the confirmed scaffold schema.
+The fixture profile enforces a bounded subset of the following semantics. The broader field catalog remains **PROPOSED** for runtime and cross-sublane review.
 
 | Field | Meaning |
 |---|---|
@@ -343,13 +346,13 @@ Rules:
 
 Before this contract is promoted beyond draft:
 
-- [ ] Expand `schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json` beyond an empty scaffold.
+- [x] Replace the empty schema scaffold with a closed fixture-only profile.
 - [ ] Confirm how the top-level Habitat-wide receipt schema relates to `land_cover/model_run_receipt.md` and any future sublane receipt schemas.
 - [ ] Confirm canonical source-role enum spelling, including `model` vs `modeled` and `authority` vs `regulatory`.
 - [ ] Confirm model-card/method-card required fields for suitability, quality, patch, connectivity, corridor, and redaction runs.
 - [ ] Add valid fixtures for suitability inference, habitat-quality score run, land-cover reclassification, patch derivation, corridor derivation, uncertainty generation, redaction/generalization transform, watcher candidate, and AI-assisted candidate.
 - [ ] Add invalid fixtures for missing model card, missing input digest, missing config digest, missing uncertainty, modeled-as-observed, modeled-as-regulatory, candidate-as-public, receipt-as-proof, receipt-as-release, and missing rollback target.
-- [ ] Add validator checks for run identity, model/tool version, inputs digest, config digest, source roles, source vintages, outputs, uncertainty refs, evidence refs, policy refs, validation refs, release refs, correction refs, and rollback refs.
+- [x] Add deterministic fixture checks for run identity, model version, input/config digests, source roles, completed/failed state, outputs, uncertainty/validation refs, evidence refs, chronology, and explicit non-authority.
 - [ ] Add tests proving public map/UI/AI surfaces cannot treat receipts as proof, publication, policy, source truth, or release authority.
 - [ ] Confirm release tests proving public clients consume released public-safe artifacts only.
 
@@ -369,7 +372,7 @@ Recommended finite outcomes:
 | Evidence class | Use | Limit |
 |---|---|---|
 | Target scaffold | Confirms top-level `model_run_receipt.md` existed as scaffold before replacement. | Does not prove contract maturity. |
-| Top-level schema scaffold | Confirms `model_run_receipt.schema.json` path and that it points to this contract path. | Does not prove field-level validation. |
+| Top-level fixture schema | Defines closed v1 machine shape and points to this contract path. | Does not prove runtime emission, evidence, policy, review, release, or publication. |
 | Land-cover receipt contract | Confirms a sublane-specific ModelRunReceipt specialization already exists. | Does not define the top-level Habitat-wide schema. |
 | Habitat README | Confirms `Model Run Receipt` as a canonical Habitat object family and confirms lifecycle/release posture. | Field realization remains PROPOSED. |
 | Model-vs-observation doc | Confirms source-role anti-collapse, model-card, receipt, and uncertainty burden for modeled outputs. | Exact policy/schema enforcement remains NEEDS VERIFICATION. |
@@ -395,7 +398,7 @@ Rollback artifacts should include affected run IDs, model/tool refs, model card 
 |---|---|---|
 | Is `model_run_receipt.md` the canonical Habitat-wide receipt contract, with sublane-specific specializations underneath? | NEEDS VERIFICATION | Habitat steward + schema steward review. |
 | Should future sublanes own their own receipt schemas, or should all Habitat model receipts conform to this top-level schema? | NEEDS VERIFICATION | ADR/schema migration note. |
-| Which fields must be required in `model_run_receipt.schema.json`? | NEEDS VERIFICATION | Schema PR and fixture review. |
+| Which additional fields must be required beyond the bounded fixture profile before runtime adoption? | NEEDS VERIFICATION | Runtime consumer, schema, and migration review. |
 | What model-card/method-card field set is required by suitability, patch, corridor, quality-score, and redaction runs? | NEEDS VERIFICATION | Contract/schema/policy review. |
 | Which receipt metadata can be public when inputs include sensitive habitat/occurrence joins? | NEEDS VERIFICATION | Policy, sensitivity, and release review. |
 | Where should Habitat receipt instances live: `data/receipts/habitat/`, run-specific family homes, or another ADR-backed path? | NEEDS VERIFICATION | Directory Rules + ADR-0011 review. |
@@ -419,6 +422,6 @@ Rollback artifacts should include affected run IDs, model/tool refs, model card 
 - [`../../../docs/domains/habitat/MODEL_VS_OBSERVATION.md`](../../../docs/domains/habitat/MODEL_VS_OBSERVATION.md) — source-role anti-collapse doctrine.
 - [`../../../docs/domains/habitat/sublanes/suitability.md`](../../../docs/domains/habitat/sublanes/suitability.md) — suitability, model-card, receipt, and uncertainty doctrine.
 - [`../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md`](../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) — receipt/proof/catalog/publication separation doctrine.
-- [`../../../schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json`](../../../schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json) — confirmed scaffold schema, pending expansion.
+- [`../../../schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json`](../../../schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json) — closed fixture-only v1 schema; runtime adoption remains separate.
 
 [Back to top](#top)

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json",
+  "title": "CorrelationClaimBoundaryAssessmentCandidate",
+  "description": "Fixture-only assessment that treats a correlation statistic as relationship evidence and prevents it from becoming causal wording without a separate causal-design review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "statistic",
+    "claim",
+    "disclosure",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "CorrelationClaimBoundaryAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.correlation-claim-boundary-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-158"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "statistic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_ref", "output_digest", "statistic_role", "analytic_output_disclosure", "condition_relation", "method", "uncertainty"],
+      "properties": {
+        "output_ref": {"$ref": "#/$defs/ref"},
+        "output_digest": {"$ref": "#/$defs/sha256"},
+        "statistic_role": {"const": "RELATIONSHIP_EVIDENCE"},
+        "analytic_output_disclosure": {"$ref": "#/$defs/resolved_reference"},
+        "condition_relation": {"$ref": "#/$defs/resolved_reference"},
+        "method": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "registry_ref", "registry_digest", "resolution"],
+          "properties": {
+            "kind": {"enum": ["PEARSON_R", "SPEARMAN_RHO", "KENDALL_TAU", "OTHER_REGISTERED"]},
+            "registry_ref": {"$ref": "#/$defs/ref"},
+            "registry_digest": {"$ref": "#/$defs/sha256"},
+            "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+          }
+        },
+        "uncertainty": {"$ref": "#/$defs/resolved_reference"}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_ref", "claim_digest", "requested_role", "wording_class", "intended_use", "causal_design"],
+      "properties": {
+        "claim_ref": {"$ref": "#/$defs/ref"},
+        "claim_digest": {"$ref": "#/$defs/sha256"},
+        "requested_role": {"enum": ["ASSOCIATION", "CONTRIBUTION", "EXPOSURE", "CAUSE"]},
+        "wording_class": {"enum": ["ASSOCIATIONAL", "CONTRIBUTION_OR_EXPOSURE", "CAUSAL", "AMBIGUOUS"]},
+        "intended_use": {"enum": ["INTERNAL_QA", "EXPLORATORY_ANALYSIS", "PUBLIC_EXPLANATION", "RELEASE_REVIEW"]},
+        "causal_design": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref", "digest", "resolution", "design_class"],
+          "properties": {
+            "ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+            "digest": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+            "resolution": {"enum": ["NOT_PROVIDED", "UNRESOLVED", "RESOLVED"]},
+            "design_class": {"enum": ["NOT_PROVIDED", "UNKNOWN", "OBSERVATIONAL", "QUASI_EXPERIMENTAL", "RANDOMIZED_EXPERIMENT", "MECHANISTIC", "OTHER"]}
+          }
+        }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "permitted_role", "caveat_codes", "explanation", "evidence_refs", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN"]},
+        "permitted_role": {"enum": ["ASSOCIATION_ONLY", "CAUSAL_REVIEW_REQUIRED", "NO_CLAIM"]},
+        "caveat_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"enum": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "PUBLIC_EXPLANATION_REQUIRED", "SCOPE_BOUND"]}
+        },
+        "explanation": {"type": "string", "minLength": 20, "maxLength": 1200},
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationship_evidence_authority", "causal_inference_authority", "evidence_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "relationship_evidence_authority": {"const": false},
+        "causal_inference_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/correlation_claim_boundary_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/",
+    "validator": "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}

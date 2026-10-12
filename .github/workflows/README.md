@@ -2,22 +2,28 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.5
-status: draft; repository-grounded workflow governance reference
+version: v0.18
+status: draft; repository-grounded workflow governance reference; exact filename inventory; static and hosted behavior bounded
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-07-29
+updated: 2026-09-25
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
-responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, and CI maturity disclosure
+responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, CI maturity disclosure, and workflow inventory accountability
 truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull request is not release or publication authority
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: f93357688c0178e90db7cb976798ef998995d009
-  workflow_inventory_snapshot: 1180cf7ec53d5acbbb859a39d93c1d129ec83df9
-  documented_workflow_files: 41
-  inventory_method: complete tracked-tree inspection and static workflow review recorded in v0.3
+  read_commit: 4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c
+  workflows_tree: f0cc4efee0649f20c0d2c2006642270c50076042
+  readme_prior_blob: 0b19d140a568114f4cef66cf7dac04df2d4e9585
+  current_workflow_files: 486
+  workflow_security_rules: 20
+  workflow_security_baseline_entries: 0
+  workflow_security_result_at_read_commit: NOT RUN
+  current_workflow_extension: .yml
+  current_workflow_readme_files: 1
+  prior_detailed_inventory: 44 workflow files at v0.14; retained in Git history; superseded as current inventory
 related:
   - ../README.md
   - ../CODEOWNERS
@@ -25,56 +31,65 @@ related:
   - ../../CONTRIBUTING.md
   - ../../SECURITY.md
   - ../../Makefile
+  - ../../docs/runbooks/pr-reliability-guide.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/ai-build-operating-contract.md
   - ../../docs/adr/README.md
   - ../../tools/validators/README.md
-  - ../../policy/
-  - ../../schemas/
-  - ../../contracts/
-  - ../../tests/
-  - ../../fixtures/
-  - ../../release/
+  - ../../tests/README.md
+  - ../../fixtures/README.md
+  - ../../policy/README.md
+  - ../../schemas/README.md
+  - ../../contracts/README.md
+  - ../../release/README.md
 notes:
-  - "The v0.4 prior README bytes were inspected at main@f93357688c0178e90db7cb976798ef998995d009."
-  - "The detailed 41-file workflow inventory and static findings remain pinned to 1180cf7ec53d5acbbb859a39d93c1d129ec83df9 until a new complete inventory is generated."
-  - "Workflow maturity groups describe inspected files and steps; they do not certify current run success, branch protection, release readiness, or KFM publication."
-  - "v0.5 narrowly reconciles shared domain holds and the E2E, Focus mock, and rollback-drill readiness checks; it does not establish UI or runtime readiness."
+  - "The 486-file count is exact for the pinned Git tree. The twenty-rule static ratchet and empty implementation-waiver baseline exist at that ref, but the ratchet was not executed for this documentation refresh."
+  - "The v0.14 detailed forty-four-workflow classification and action inventory remain historical process evidence in Git history, not current-tree evidence."
+  - "Workflow filenames and green checks are orchestration evidence only; they do not create policy, review, release, lifecycle, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `.github/workflows/`
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Inventory snapshot: 41 workflows](https://img.shields.io/badge/inventory%20snapshot-41%20workflows-1f6feb?style=flat-square)](#complete-workflow-inventory)
-[![Permissions snapshot: explicit](https://img.shields.io/badge/permissions%20snapshot-41%2F41%20explicit-15803d?style=flat-square)](#trigger-permission-and-workflow-threat-preflight)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c?style=flat-square)](#authority-level)
-[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-8250df?style=flat-square)](../../docs/doctrine/ai-build-operating-contract.md)
-
-> GitHub Actions orchestration for repository-owned checks, bounded automation, and explicit readiness holds. Workflow YAML may invoke tools and report outcomes; it does not become policy, evidence, review, release, or publication authority.
+> GitHub Actions orchestration for repository-owned checks, bounded automation, and explicit readiness outcomes. Workflow YAML may invoke tools and report results; it does not become policy, evidence, review, release, lifecycle-transition, or publication authority.
 
 > [!IMPORTANT]
-> A green workflow, `WORKFLOW_HOLD`, skip, static-readiness pass, and substantive validator pass are different outcomes. Names and summaries must never imply more maturity than the executed steps establish.
+> A green workflow, governed hold, skip, static-readiness pass, and substantive validator pass are different outcomes. Names and summaries must not imply more maturity than the executed steps establish.
+
+## At a glance
+
+| Item | Current repository-grounded statement |
+|---|---|
+| Responsibility | GitHub Actions orchestration under the `.github/` platform-integration root. |
+| Inventory | 486 tracked `.yml` workflows and this README at the pinned tree. |
+| Static guardrail profile | 20 repository-owned rules with an empty implementation-waiver baseline. |
+| Exact-current static result | `NOT RUN` for the pinned read commit; do not inherit the older 425-workflow result. |
+| Hosted and ruleset state | `NEEDS VERIFICATION`; inspect GitHub object state at the exact ref. |
+| Publication authority | None. Workflows and their outputs remain carriers or review signals unless a separate governed transition says otherwise. |
 
 ## Navigation
 
+- [At a glance](#at-a-glance)
 - [Purpose](#purpose)
 - [Authority level](#authority-level)
-- [Status](#status)
+- [Status and evidence boundary](#status-and-evidence-boundary)
+- [Current inventory boundary](#current-inventory-boundary)
+- [Find and assess a workflow](#find-and-assess-a-workflow)
+- [Workflow families](#workflow-families)
+- [Historical inventory boundary](#historical-inventory-boundary)
 - [What belongs here](#what-belongs-here)
 - [What does not belong here](#what-does-not-belong-here)
 - [Inputs](#inputs)
 - [Outputs](#outputs)
+- [Trigger, permission, and threat preflight](#trigger-permission-and-threat-preflight)
 - [Validation](#validation)
+- [Workflow authoring contract](#workflow-authoring-contract)
+- [Change and review sequence](#change-and-review-sequence)
 - [Review burden](#review-burden)
 - [Related folders](#related-folders)
 - [ADRs](#adrs)
-- [Last reviewed](#last-reviewed)
-- [Complete workflow inventory](#complete-workflow-inventory)
-- [Trigger, permission, and workflow-threat preflight](#trigger-permission-and-workflow-threat-preflight)
-- [External action inventory](#external-action-inventory)
-- [Workflow authoring contract](#workflow-authoring-contract)
 - [Rollback and correction](#rollback-and-correction)
 - [Open verification items](#open-verification-items)
 - [Changelog](#changelog)
@@ -83,73 +98,156 @@ notes:
 
 This subtree answers one bounded operational question:
 
-> Which GitHub-hosted jobs run for a repository event, with which permissions and inputs, and what review signal do they produce?
+> Which GitHub-hosted jobs run for a repository event, with which declared orchestration, and what review signal do they produce?
 
-It supports maintainers, reviewers, CI/tooling stewards, domain owners, policy reviewers, release stewards, security reviewers, and agents changing workflow orchestration.
-
-The subtree exists to make triggers, path filters, permissions, runners, commands, dependencies, check names, failure behavior, and rollback coupling inspectable. It is not a general-purpose home for repository logic.
+It exists to make triggers, path filters, permissions, runners, commands, dependencies, check names, failure behavior, caches, artifacts, and rollback coupling inspectable. Reusable validator, policy, domain, pipeline, release, and application logic stays in its owning root and is invoked from workflow YAML.
 
 ## Authority level
 
-**Authority class:** implementation-bearing orchestration under the canonical `.github/` responsibility root.
+**Authority class:** implementation-bearing orchestration under the canonical `.github/` platform-integration root.
 
 | Concern | Authority owner | Workflow role |
 |---|---|---|
-| Trigger, path filters, job graph, runner, token permissions, concurrency, timeout, cache use, artifact retention, and check name | `.github/workflows/` | Own GitHub Actions orchestration. |
-| Validator and domain behavior | `tools/`, `packages/`, `pipelines/`, applications | Invoke repository-owned commands; do not reproduce their logic in YAML. |
+| Trigger, path filters, job graph, runner, token permissions, concurrency, timeout, cache, artifact orchestration, and check name | `.github/workflows/` | Own GitHub Actions orchestration. |
+| Validator and domain behavior | `tools/`, `packages/`, `pipelines/`, applications | Invoke repository-owned commands; do not duplicate their logic in YAML. |
 | Policy decisions | `policy/` | Evaluate reviewed policy inputs; never create inline policy authority. |
 | Object meaning and machine shape | `contracts/`, `schemas/` | Validate without redefining. |
-| Expected behavior | `tests/`, `fixtures/` | Execute deterministic positive and negative cases. |
-| Evidence, receipts, proofs, catalogs, and releases | governed `data/` and `release/` lanes | Emit only candidates or verification aids through accepted tools and transitions. |
-| Branch protection and required checks | GitHub repository rules | Workflow names may be coupled to rules, but workflow files do not define those rules. |
-| KFM publication | governed promotion and release process | Never inferred from a workflow, artifact upload, commit, merge, or GitHub Release alone. |
+| Expected behavior | `tests/`, `fixtures/` | Execute deterministic positive, negative, and regression cases. |
+| Evidence, receipts, proofs, catalogs, and data lifecycle | governed `data/` lanes | Emit only candidates or reviewer aids unless a separate governed transition admits them. |
+| Promotion, release, correction, withdrawal, and rollback | `release/` | Verify or dry-run; do not approve or execute authority by workflow success alone. |
+| Branch protection and required checks | GitHub repository rulesets | Workflow and job names may be coupled to rules, but YAML files do not define those rules. |
 
-The workflow layer is a **non-publisher**. Watchers, drift detectors, documentation checks, release dry-runs, and promotion-gate simulations may propose or verify work; they must not silently promote candidates or write public truth.
+The workflow layer is a **non-publisher**. Watchers, drift detectors, documentation checks, promotion simulations, and release dry-runs may propose or verify work; they must not silently write public truth or change lifecycle state.
 
-## Status
+## Status and evidence boundary
 
-### Current document state
+This edition was prepared against `main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c` and workflow tree `f0cc4efee0649f20c0d2c2006642270c50076042` on 2026-09-06.
 
-- **CONFIRMED:** this README was read on `main@f93357688c0178e90db7cb976798ef998995d009`.
-- **CONFIRMED / LINEAGE:** the detailed static inventory below was generated from `main@1180cf7ec53d5acbbb859a39d93c1d129ec83df9` and documented 41 tracked `.yml` workflows.
-- **NEEDS VERIFICATION:** whether workflow files, action references, permissions, triggers, or maturity groups changed between the inventory snapshot and the current read commit.
-- **UNKNOWN:** current branch-protection coupling, recent workflow conclusions, logs, organization defaults, artifact retention, and runtime behavior unless separately inspected.
+**CONFIRMED for that snapshot:**
 
-### Documented inventory findings
+- the workflow subtree contains one README and **486 tracked `.yml` workflow files**;
+- the subtree contains no `.yaml` workflows, non-Markdown companion files, or nested directories;
+- the old v0.14 README blob remains in Git history;
+- the current tree includes rapidly expanded domain, source, evidence, policy, review, artifact, map, runtime, and governance lanes;
+- the 20-rule workflow-security scanner, empty implementation-waiver baseline, Make targets, and `security.yml` and `validator-suite.yml` bindings exist at the pinned ref;
+- this documentation change does not modify workflow YAML or a GitHub repository setting.
 
-| Finding | Snapshot status | Interpretation |
+**NEEDS VERIFICATION for the pinned 486-workflow tree:**
+
+- every trigger and path filter;
+- every permission and write scope;
+- `pull_request_target`, `workflow_run`, privileged dispatch, and schedule exposure;
+- self-hosted runners, containers, services, secrets, OIDC, network access, caches, and artifacts;
+- external action provenance and immutable pinning;
+- duplicate or misleading workflow and job names;
+- current hosted conclusions, required-check coupling, and failure causes;
+- whether each command is substantive, partial, held, skipped, or placeholder behavior.
+
+The exact-current workflow-security scan was not run while preparing this README. The scanner's empty baseline is not a substitute for executing it against the exact head.
+
+A filename proves only that bytes exist. It does not establish that the lane is safe, required, current, complete, or production-ready.
+
+## Current inventory boundary
+
+| Inventory fact | Current value | Interpretation |
+|---|---:|---|
+| Workflow files | **486** | Exact count of tracked `.yml` files in the pinned tree. |
+| Workflow README files | **1** | This file. |
+| Alternative `.yaml` workflow files | **0 observed** | The pinned workflow tree contains `.yml` files and this README. |
+| Growth since the v0.16 snapshot | **61** | New workflow files since the prior 425-file inventory; growth is maintenance pressure, not maturity. |
+| Prior documented workflow set | **44** | Historical v0.14 classification; no longer a complete current inventory. |
+| Net growth since prior detailed snapshot | **438** | Inventory delta only; it does not establish coverage or readiness. |
+| Deterministic static guardrails | **20** | Repository-owned local source rules; not hosted or runtime proof. |
+| Implementation-waiver baseline entries | **0** | Exact count in `workflow_security_baseline.json`; not a current scan result. |
+| Exact-current static result | **`NOT RUN`** | Run `make workflow-security` at the exact head before reporting a result. |
+| Complete current behavioral audit | **Not performed** | Hosted conclusions, rulesets, runtime behavior, and semantic maturity remain `NEEDS VERIFICATION`. |
+
+Regenerate the count from the Git index whenever workflows change:
+
+```bash
+git ls-files '.github/workflows/*.yml' | wc -l
+```
+
+## Trigger fan-out control boundary
+
+The pinned tree contains 486 workflow files. This revision narrows four responsibility-owned lanes to changed-path triggers: `object-family-register` watches its own workflow plus object-family inputs; `docs-build` watches documentation/build-contract inputs; `docs-control-plane` watches control-plane and documentation governance inputs; and `link-check` watches Markdown plus its validator/test inputs. Manual dispatch remains available for each lane. This is a bounded reduction, not a complete trigger audit, required-check map, or shared-install redesign.
+
+## Find and assess a workflow
+
+Start from tracked files rather than a copied inventory:
+
+```bash
+git ls-files '.github/workflows/*.yml' | sort
+rg -n '^(name|on|"on"|permissions):' .github/workflows
+rg -n 'pull_request_target|workflow_run|id-token: write|contents: write|packages: write|secrets: inherit|self-hosted' .github/workflows
+```
+
+Then answer the exact question with the correct authority surface:
+
+| Question | Evidence to inspect | Do not infer |
 |---|---|---|
-| Workflow inventory | **CONFIRMED at inventory commit: 41 tracked `.yml` files** | Complete for the pinned tree. No `.yaml` workflow was recorded. |
-| Explicit permissions | **CONFIRMED at inventory commit: 41/41** | Every inspected workflow declared a top-level permissions boundary. |
-| Privileged PR trigger | **CONFIRMED absent at inventory commit** | No active `pull_request_target` trigger key. |
-| Runner trust | **CONFIRMED GitHub-hosted at inventory commit** | No `self-hosted` occurrence. |
-| Direct secret expressions | **CONFIRMED absent at inventory commit** | No direct `secrets.*` occurrence; repository and organization settings remain external. |
-| Write scopes | **CodeQL only at inventory commit** | `security-events: write` supported code-scanning upload; ordinary repository write grants were absent. |
-| External action pinning | **Version tags, not immutable SHAs** | Reviewable and Dependabot-visible, but not immutable. |
-| Branch protection | **NEEDS VERIFICATION** | Static workflow inspection cannot establish required checks or rulesets. |
-| Workflow execution | **NEEDS VERIFICATION** | Inventory does not establish recent success, failure, or readiness. |
+| Does a workflow file exist? | Git tree at the exact ref | That it runs, passes, or is required. |
+| What activates it? | Its `on` block and path filters | Hosted event reachability from its filename. |
+| What can it access? | Workflow/job `permissions`, secrets, OIDC, runner, cache, artifact, and network configuration | Least privilege from a read-only job alone. |
+| What does it actually prove? | Invoked command, tests and fixtures, negative cases, logs, and exact-head conclusion | Substantive validation from a green name or skipped scaffold. |
+| Is its check required? | Live repository ruleset and branch-protection state | Ruleset coupling from YAML or this README. |
+| Can it publish or change lifecycle state? | Accepted policy and release authority plus an authenticated transition record | Authority from an artifact, receipt, workflow success, merge, or badge. |
+
+## Workflow families
+
+The current filenames show these broad orchestration families. The grouping is navigational only; it does not assign authority or certify behavior.
+
+| Family | Examples visible in the pinned tree | Review focus |
+|---|---|---|
+| Documentation control | `docs-control-plane.yml`, `docs-meta-block.yml`, `docs-document-graph.yml`, `docs-stale-scan.yml`, `link-check.yml` | Trusted base, metadata scope, freshness semantics, local-only checks, ruleset coupling. |
+| Domain lanes | `domain-hydrology.yml`, `domain-soil.yml`, `domain-fauna.yml`, `domain-geology.yml`, and other `domain-*` workflows | Fixture polarity, source-role boundaries, domain-specific holds, public-safety limits. |
+| Source, evidence, and identity | `source-descriptor-validate.yml`, `source-event-envelope.yml`, `evidence-resolver.yml`, `spec-hash.yml`, `trace-receipt-link.yml` | Source authority, deterministic identity, evidence closure, no live-source overreach. |
+| Policy, review, and obligations | `policy-test.yml`, `policy-obligation-set.yml`, `review-authority-binding.yml`, `implementation-decision-review.yml` | Policy inputs, reviewer identity, self-review denial, obligation reduction, fail-closed behavior. |
+| Promotion, release, proof, and rollback | `promotion-gate.yml`, `promotion-receipt.yml`, `release-dry-run.yml`, `proof-pack-closure.yml`, `rollback-drill.yml` | State-transition boundaries, synthetic-vs-live distinction, signatures, correction and rollback. |
+| Map, runtime, and delivery carriers | `maplibre-perf-governance.yml`, `map-context-envelope.yml`, `runtime-evidence-resolution.yml`, `pmtiles-attestation.yml` | Governed API boundary, renderer-as-carrier, artifact integrity, performance and public exposure. |
+| Artifact and catalog projections | `artifact-delta-receipt.yml`, `catalog-closure-packet.yml`, `catalog-trust-extension.yml`, `openlineage-run-event-projection.yml` | Candidate-vs-authority separation, provenance, catalog closure, receipt/proof distinctions. |
+
+`repository-control.yml` is retained source for a retired workflow. GitHub workflow
+`324077182` is disabled and its required check was removed at the owner's request
+on 2026-09-25. Its presence in the tree is not an active contributor gate. See the
+[retirement record](../../docs/governance/repository_transition_control_source.md).
+
+Review the exact workflow before relying on any example above. Similar names do not imply equivalent triggers, permissions, commands, or maturity.
+
+## Historical inventory boundary
+
+Version v0.14 documented a detailed **44-workflow** classification, selected command semantics, and an external-action inventory. That material was useful for its pinned snapshots, but the current tree is more than ten times larger.
+
+This edition therefore:
+
+- preserves v0.15 in Git history at prior blob `6d83ab369cbb474be874130dc3cadc645c77323e`;
+- supersedes its 44-file count and “complete workflow inventory” label as current evidence;
+- does not copy stale per-workflow conclusions onto 438 additional files;
+- retains the underlying authoring, threat-model, validation, non-publisher, and rollback rules;
+- retains the bounded 20-rule static ratchet while keeping its exact-current result and hosted behavior explicit verification items.
+
+Historical evidence remains citable at its pinned commit. It must not be silently presented as current-main behavior.
 
 ## What belongs here
 
-- GitHub Actions workflow files using `.yml` or a repository-approved equivalent;
+- GitHub Actions workflow files using the repository-approved `.yml` extension;
 - event triggers and changed-path filters;
 - workflow and job permissions;
 - runner, container, service, timeout, concurrency, cache, and artifact orchestration;
 - calls to repository-owned validators, tests, builders, scanners, and dry-run commands;
-- explicit job summaries that distinguish pass, fail, hold, skip, and partial coverage;
-- narrowly scoped workflow comments explaining security or compatibility constraints;
-- reusable workflow definitions when the repository adopts them;
+- explicit job summaries that distinguish pass, fail, hold, skip, partial coverage, and error;
+- reusable workflow definitions when actual reuse is established;
 - workflow-specific documentation in this README.
 
 ## What does not belong here
 
-- semantic contract definitions, JSON Schemas, policy rules, domain algorithms, or reusable validator logic;
+- semantic contracts, JSON Schemas, normative policy rules, domain algorithms, or reusable validator logic;
 - canonical source data, evidence, proofs, receipts, release manifests, rollback cards, or publication records;
 - secrets, credentials, signed URLs, private endpoints, or sensitive data;
-- application logic embedded in YAML merely to avoid placing it in `tools/`, `packages/`, `pipelines/`, or an application;
+- application logic embedded in YAML merely to avoid its owning implementation root;
 - workflows created solely to obtain a green badge;
 - direct watcher-to-default-branch, watcher-to-release, or CI-to-published mutation paths;
-- `pull_request_target` use without a dedicated threat model, least-privilege design, and explicit approval;
+- privileged event use without a dedicated threat model, least privilege, and explicit approval;
 - unbounded network fetches where deterministic fixtures can prove the behavior;
 - duplicated policy or validation implementations that can drift from canonical owners.
 
@@ -159,7 +257,7 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 - GitHub event, actor, ref, and changed-path metadata;
 - repository-owned Make targets, validators, tests, fixtures, packages, pipelines, and scripts;
 - schemas, contracts, policies, source descriptors, registers, candidates, and release objects when a job is explicitly a verifier;
-- caches and prior workflow artifacts only when their trust, keys, retention, and poisoning risks are understood;
+- caches and prior artifacts only when trust, keys, retention, and poisoning risks are understood;
 - network dependencies only when the workflow declares and justifies them.
 
 Treat submitted code, Markdown, issue or pull-request text, metadata, downloaded content, caches, and artifacts as untrusted input.
@@ -168,61 +266,106 @@ Treat submitted code, Markdown, issue or pull-request text, metadata, downloaded
 
 | Output | Accepted role | Limit |
 |---|---|---|
-| Check conclusion | Review or branch-protection signal | Not release approval or publication. |
+| Check conclusion | Review or ruleset signal | Not release approval or publication. |
 | Log, annotation, or job summary | Diagnostic and maturity context | Must not disclose secrets, private data, or protected locations. |
 | JUnit, lint, scan, or QA report | Reviewer aid | Not canonical evidence or proof by location alone. |
 | Uploaded workflow artifact | Temporary reviewer aid | Admission into governed data or release homes requires a separate transition. |
-| Hold or skip summary | Honest readiness outcome | Must not be named or described as completed enforcement. |
-| Candidate receipt, proof, or release output | Review input | Remains candidate until validated and approved by its owning process. |
+| Hold, skip, partial, or error summary | Honest readiness outcome | Must not be named as completed enforcement. |
+| Candidate receipt, proof, catalog, or release output | Review input | Remains candidate until validated and approved by its owning process. |
 | Dependency or security finding | Remediation input | Does not self-authorize a fix, waiver, merge, or release. |
+
+## Trigger, permission, and threat preflight
+
+Before changing or relying on a workflow, record:
+
+| Question | Required answer |
+|---|---|
+| Event | Which of `pull_request`, `pull_request_target`, `push`, `workflow_dispatch`, `schedule`, `workflow_call`, or `workflow_run` triggers it? |
+| Path scope | Which changed paths activate it, and which expected paths are excluded? |
+| Untrusted input | Can fork code, issue text, pull-request metadata, artifacts, caches, or downloaded content influence execution? |
+| Token | What is the smallest explicit `permissions` set? |
+| Secrets/OIDC | Why is identity or secret access required, and is it reachable from untrusted code? |
+| Runner | Is the runner GitHub-hosted or self-hosted, and what trust boundary follows? |
+| Network | Which registries or endpoints are contacted, and can deterministic fixtures replace them? |
+| Dependency | Is every external action necessary, maintained, licensed, and pinned according to repository policy? |
+| Output | Is the output a check signal, log, report, artifact, candidate object, or governed object? |
+| Failure | Can `continue-on-error`, `if: always()`, `|| true`, or conditionals mask the governing result? |
+| Check name | Is the workflow or job name coupled to a current ruleset? |
+| Rollback | How can the workflow be disabled or reverted without weakening unrelated gates? |
+
+A `pull_request_target`, self-hosted runner, write token, secret/OIDC path, deployment, package publication, or lifecycle mutation is a materially higher-risk boundary and requires explicit threat review.
 
 ## Validation
 
 ### Workflow source checks
 
 ```bash
-actionlint .github/workflows/*.yml
+make validator-registry-check
+make workflow-security
 git diff --check
 ```
 
-Use a YAML 1.2-aware parser when `actionlint` is unavailable; YAML 1.1 parsers can misinterpret the GitHub Actions `on` key.
+For a workflow change, `make repository-guardrails` runs the registry, workflow-security, and repository-topology guardrails together. Attribute each outcome separately; a topology baseline or inherited finding is not a workflow-security result.
+
+`actionlint` may be used when it is installed, but it is not a repository-pinned dependency at the pinned ref. Use a YAML 1.2-aware parser for any supplemental YAML parsing because YAML 1.1 parsers can misinterpret the GitHub Actions `on` key.
 
 ### Repository behavior checks
 
-Run only established commands applicable to the changed workflow. Commands referenced by this subtree include:
+Run only established commands applicable to the changed workflow. Representative repository commands include:
 
 ```bash
 make validate
 make schemas
 make test
-make governed-api-smoke
-make boundary-guards-ci
 ```
 
-Inspect the target before relying on it. A Make target that only echoes `TODO`, a skipped job, or a hold condition is not substantive validation.
+Inspect each target before relying on it. A Make target that only echoes a hold, a skipped job, or a non-enforcing readiness check is not substantive validation.
 
 ### Documentation and inventory checks
 
-- verify every tracked workflow is classified exactly once;
-- regenerate workflow, action-reference, trigger, permission, runner, secret-expression, and write-scope counts from the proposed head;
-- verify all relative links and fragments;
-- verify balanced code fences, alerts, tables, HTML anchors, and final newline;
+- regenerate workflow filename counts from the proposed head;
+- verify relative links and fragments;
+- verify balanced fences, alerts, tables, HTML anchors, and final newline;
 - distinguish current findings from pinned historical snapshots;
-- record checks as `PASS`, `FAIL`, `PARTIAL`, `PENDING`, `NOT RUN`, `NOT APPLICABLE`, or `UNKNOWN`.
+- record outcomes as `PASS`, `FAIL`, `PARTIAL`, `PENDING`, `NOT RUN`, `NOT APPLICABLE`, or `UNKNOWN`;
+- do not claim current action-pin, permission, or threat posture without scanning every workflow at the exact head.
+
+For Markdown changes, run the bounded local link-check tests and changed-file checker described by [`link-check.yml`](link-check.yml). The repository does not define a general Markdown-lint profile at the pinned ref, so do not report one as run.
 
 ### Required negative checks
 
-Where relevant, include deterministic tests for:
+Where relevant, include deterministic tests for malformed input, missing evidence, policy denial, sensitive-location leakage, direct public reads from internal stores, watcher publication attempts, stale or corrected state, invalid receipt/proof/release linkage, unsafe caches, and secret-bearing logs.
 
-- malformed or unsupported input;
-- missing evidence and cite-or-abstain behavior;
-- policy denial and restricted fields;
-- exact sensitive-location leakage;
-- direct public reads from canonical or internal stores;
-- watcher or CI attempts to publish;
-- stale, superseded, quarantined, withdrawn, or corrected state;
-- invalid receipt, proof, manifest, rollback, or correction linkage;
-- secret-bearing logs, unsafe caches, and artifact over-retention.
+## Workflow authoring contract
+
+1. Use stable, unique workflow names and job identifiers.
+2. Declare least-privilege permissions and narrow further at job level when needed.
+3. Prefer `pull_request` for untrusted contributions; use privileged triggers only with a dedicated threat model and approval.
+4. Use GitHub-hosted runners unless a reviewed self-hosted boundary is required.
+5. Call repository-owned commands instead of embedding policy, validators, or domain logic in YAML.
+6. Keep default CI deterministic and no-network where practical; pin runtimes and dependencies according to repository policy.
+7. Make holds, skips, partial coverage, errors, and missing prerequisites visible.
+8. Do not let diagnostic error suppression convert governing failure into success.
+9. Keep public clients behind governed APIs and keep watchers and ordinary CI non-publishing.
+10. Coordinate workflow and job renames with rulesets, documentation, and rollback planning.
+11. Bound caches and artifacts by content, trust, key, retention, and sensitivity.
+12. Preserve correction and supersession visibility; do not silently remove a relied-upon gate.
+13. Avoid one-workflow-per-idea growth when an existing bounded workflow or reusable lane can own the same responsibility safely.
+14. Reconcile overlap by behavior and authority, not by filename similarity alone.
+
+## Change and review sequence
+
+1. Record the default branch and exact base SHA.
+2. Search open pull requests and coordination notes for path or authority overlap.
+3. Read this README, the target workflow, its invoked implementation, relevant tests and fixtures, [`CODEOWNERS`](../CODEOWNERS), and the [PR reliability guide](../../docs/runbooks/pr-reliability-guide.md).
+4. Define the observable outcome, non-goals, trigger and permission changes, negative cases, validation, rollback, and any required-check name impact.
+5. Make one dependency-closed change; keep reusable logic in its owning root.
+6. Run changed-area checks and the workflow-security ratchet at the exact head.
+7. Open or update a focused draft pull request and report exact base/head evidence.
+8. Classify failures as introduced, inherited, resolved, integration/base drift, environmental/flaky, pending, not run, not applicable, or unknown using comparable evidence.
+9. Recheck hosted state, review state, changed paths, and ruleset coupling before changing readiness claims.
+
+Branch work and a draft pull request do not authorize approval, merge, release, deployment, promotion, publication, source activation, or repository-setting changes.
 
 ## Review burden
 
@@ -230,14 +373,15 @@ Workflow changes require review through the current [`CODEOWNERS`](../CODEOWNERS
 
 Review must cover more than YAML syntax:
 
-1. trigger and changed-path correctness;
+1. trigger and path-filter correctness;
 2. untrusted-input reachability;
 3. token, secret, OIDC, and network exposure;
 4. action provenance and pinning posture;
 5. command maturity and failure masking;
-6. check-name stability and branch-protection coupling;
+6. check-name stability and ruleset coupling;
 7. artifact and cache retention;
-8. non-publisher and rollback boundaries.
+8. non-publisher and rollback boundaries;
+9. overlap with existing workflows and whether consolidation is safer.
 
 The author must not treat a self-generated check, badge, receipt, or pull request as independent approval.
 
@@ -245,9 +389,9 @@ The author must not treat a self-generated check, badge, receipt, or pull reques
 
 | Path | Relationship |
 |---|---|
-| [`.github/`](../README.md) | Parent GitHub governance and collaboration surface. |
+| [`.github/`](../) | Parent GitHub governance and collaboration surface. |
 | [`tools/`](../../tools/README.md) | Repository-wide validators, builders, and checkers invoked by workflows. |
-| [`tests/`](../../tests/README.md) and [`fixtures/`](../../fixtures/README.md) | Deterministic positive, negative, and regression proof. |
+| [`tests/`](../../tests/README.md) and [`fixtures/`](../../fixtures/README.md) | Deterministic positive, negative, and regression evidence. |
 | [`contracts/`](../../contracts/README.md) and [`schemas/`](../../schemas/README.md) | Semantic meaning and machine-checkable shape. |
 | [`policy/`](../../policy/README.md) | Allow, deny, restrict, hold, and abstain decisions. |
 | [`pipelines/`](../../pipelines/README.md) and [`pipeline_specs/`](../../pipeline_specs/README.md) | Executable and declarative pipeline behavior. |
@@ -257,211 +401,58 @@ The author must not treat a self-generated check, badge, receipt, or pull reques
 
 ## ADRs
 
-No workflow-specific ADR is asserted here without a verified accepted record.
+Accepted ADR-0029 establishes the canonical Directory Rules authority and confirms `.github/` as the platform-integration root. It does not approve any particular workflow behavior or privileged boundary.
 
-Before a workflow change bends a trust or placement invariant, inspect [`docs/adr/`](../../docs/adr/README.md). A dedicated ADR or equivalent approved decision is expected for materially consequential changes such as:
+Inspect [`docs/adr/`](../../docs/adr/README.md) before a workflow change bends a trust or placement invariant. A dedicated accepted decision or equivalent explicit authority is expected before introducing:
 
-- enabling `pull_request_target`;
-- introducing self-hosted runners;
-- granting ordinary repository, deployment, package, or identity-token write scopes;
-- creating a workflow-controlled publication path;
-- changing required check names or branch-protection contracts;
-- creating a parallel policy, schema, receipt, proof, catalog, or release authority in workflow YAML.
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| README content read | 2026-07-23 |
-| Read ref | `main` |
-| Read commit | `f93357688c0178e90db7cb976798ef998995d009` |
-| Detailed workflow inventory snapshot | `1180cf7ec53d5acbbb859a39d93c1d129ec83df9` |
-| Bounded readiness reconciliation | 2026-07-29; shared domain holds plus E2E, Focus mock, and rollback-drill checks only |
-| Inventory refresh status | **NEEDS VERIFICATION** against the proposed head before relying on counts as current |
-
-## Complete workflow inventory
-
-The groups below preserve the repository-grounded v0.3 inventory. They describe the inspected code and status comments at the inventory commit; they are not release-readiness grades.
-
-### Explicit greenfield, non-enforcing scaffolds
-
-- [`accessibility.yml`](accessibility.yml)
-- [`citation-validation.yml`](citation-validation.yml)
-- [`ui-build.yml`](ui-build.yml)
-
-These files declared proposed greenfield scaffolds and visible TODO or hold behavior. They must not be required as proof that accessibility, citation resolution, or the UI build is implemented.
-
-### Bounded domain readiness and governed holds
-
-- [`domain-agriculture.yml`](domain-agriculture.yml)
-- [`domain-archaeology.yml`](domain-archaeology.yml)
-- [`domain-atmosphere.yml`](domain-atmosphere.yml)
-- [`domain-fauna.yml`](domain-fauna.yml)
-- [`domain-flora.yml`](domain-flora.yml)
-- [`domain-geology.yml`](domain-geology.yml)
-- [`domain-habitat.yml`](domain-habitat.yml)
-- [`domain-hazards.yml`](domain-hazards.yml)
-- [`domain-hydrology.yml`](domain-hydrology.yml)
-- [`domain-people-dna-land.yml`](domain-people-dna-land.yml)
-- [`domain-roads-rail-trade.yml`](domain-roads-rail-trade.yml)
-- [`domain-settlements-infrastructure.yml`](domain-settlements-infrastructure.yml)
-- [`domain-soil.yml`](domain-soil.yml)
-
-These workflows share a bounded readiness posture: they may confirm exact
-repository scaffolds or selected synthetic validation slices while keeping
-unimplemented validation, proof, and release lanes on explicit
-`WORKFLOW_HOLD`. A green readiness/hold job does not establish complete domain,
-runtime, UI, policy, proof, release, or publication readiness.
-
-### Bounded system readiness and governed holds
-
-- [`docs-build.yml`](docs-build.yml)
-- [`e2e-smoke.yml`](e2e-smoke.yml)
-- [`evidence-resolver.yml`](evidence-resolver.yml)
-- [`focus-mock-test.yml`](focus-mock-test.yml)
-- [`hydrology-proof-slice.yml`](hydrology-proof-slice.yml)
-- [`link-check.yml`](link-check.yml)
-
-These jobs intentionally expose missing executables, fixtures, proof closure, or runtime readiness. A hold is a truthful finite outcome, not a passing implementation claim.
-
-The current E2E inspection accepts only the root manifest's exact fail-closed
-`WORKFLOW_HOLD` scripts and still runs no composed browser/API journey. The
-Focus mock inspection relies on structured synthetic, non-authoritative,
-do-not-publish, expected-`ABSTAIN` markers and still produces no runtime
-response. The rollback drill relies on ADR-0015's structured draft/proposed and
-held/alias-absent markers and remains read-only. None of these checks establishes
-UI readiness.
-
-### Command-bearing and partial gates
-
-- [`api-test.yml`](api-test.yml)
-- [`codeql.yml`](codeql.yml)
-- [`connector-gate.yml`](connector-gate.yml)
-- [`contract-drift.yml`](contract-drift.yml)
-- [`contracts-validate.yml`](contracts-validate.yml)
-- [`deny-test.yml`](deny-test.yml)
-- [`dependency-scan.yml`](dependency-scan.yml)
-- [`docs-control-plane.yml`](docs-control-plane.yml)
-- [`maplibre-perf-governance.yml`](maplibre-perf-governance.yml)
-- [`pmtiles-attestation.yml`](pmtiles-attestation.yml)
-- [`policy-boundary-guards.yml`](policy-boundary-guards.yml)
-- [`policy-test.yml`](policy-test.yml)
-- [`promotion-gate.yml`](promotion-gate.yml)
-- [`release-dry-run.yml`](release-dry-run.yml)
-- [`rollback-drill.yml`](rollback-drill.yml)
-- [`schema-validation.yml`](schema-validation.yml)
-- [`source-descriptor-validate.yml`](source-descriptor-validate.yml)
-- [`telemetry-policy.yml`](telemetry-policy.yml)
-- [`validator-suite.yml`](validator-suite.yml)
-
-Read the exact steps and job summaries before relying on any workflow as a merge gate. “Command-bearing” does not mean complete, current, or production-ready.
-
-`dependency-scan.yml` preserves the stable `npm-audit` job id for check-name
-compatibility but now proposes the repository's accepted pnpm contract. Its
-repository-owned, no-network validator checks the exact manager pin, Node
-engine, workspace definitions, lockfile version and importers, competing root
-lockfiles, and safe manifest inputs before any registry access. The workflow
-then runs `pnpm audit --audit-level high --json` and classifies the combined
-report and command exit as `PASS`, `REGRESSION`, or `ERROR`. Threshold findings,
-registry or command failures without confirmed findings, malformed reports, and
-command/report polarity mismatches fail closed. The result is point-in-time
-supply-chain evidence only; exact-head remote execution remains
-**NEEDS VERIFICATION**, and this change does not satisfy the separate E2E hold.
-
-## Trigger, permission, and workflow-threat preflight
-
-Before changing or relying on a workflow, record:
-
-| Question | Required answer |
-|---|---|
-| Event | Which of `pull_request`, `push`, `workflow_dispatch`, `schedule`, `workflow_call`, or `workflow_run` triggers it? |
-| Path scope | Which changed paths activate it, and which expected paths are excluded? |
-| Untrusted input | Can fork code, issue text, pull-request metadata, artifacts, caches, or downloaded content influence execution? |
-| Token | What is the smallest explicit `permissions` set? |
-| Secrets/OIDC | Why is identity or secret access required, and is it reachable from untrusted code? |
-| Runner | Is the runner GitHub-hosted or self-hosted, and what trust boundary follows? |
-| Network | Which registries or endpoints are contacted, and can deterministic fixtures replace them? |
-| Dependency | Is every external action necessary, maintained, licensed, and pinned according to repository policy? |
-| Output | Check signal, log, report, artifact, candidate receipt, or governed object? |
-| Failure | Does failure stay visible, or can `continue-on-error`, `if: always()`, or `|| true` mask the governing result? |
-| Check name | Is the workflow or job name coupled to branch protection? |
-| Rollback | How can the workflow be disabled or reverted without weakening unrelated gates? |
-
-### Static threat findings at the inventory snapshot
-
-| Threat surface | Finding |
-|---|---|
-| `pull_request_target` | No active trigger key; one safety comment named it without enabling it. |
-| Self-hosted runner | No occurrence. |
-| Direct secret expressions | No `secrets.*` occurrence. |
-| Ordinary write permissions | No `contents`, `issues`, `pull-requests`, `packages`, `deployments`, or `id-token` write grant. |
-| Code scanning | [`codeql.yml`](codeql.yml) granted `security-events: write`; re-review if its event or trust boundary changes. |
-| External action immutability | Action refs used version tags, not immutable commit SHAs. |
-| Publication path | No file-presence claim authorized publication; every invoked command still requires inspection. |
-
-## External action inventory
-
-Snapshot at `1180cf7ec53d5acbbb859a39d93c1d129ec83df9`:
-
-| Action reference | Occurrences | Pinning posture |
-|---|---:|---|
-| `actions/checkout@v7` | 88 | Major tag; mutable. |
-| `actions/setup-python@v7` | 54 | Major tag; mutable. |
-| `actions/setup-node@v7.0.0` | 3 | Release tag; mutable. |
-| `actions/upload-artifact@v7` | 1 | Major tag; mutable. |
-| `github/codeql-action/init@v4` | 1 | Major tag; mutable. |
-| `github/codeql-action/analyze@v4` | 1 | Major tag; mutable. |
-
-Dependabot monitoring reduces update toil but does not make tags immutable, establish compatibility, or replace review of changelogs and runtime requirements.
-
-## Workflow authoring contract
-
-1. Use stable, unique workflow names and job identifiers.
-2. Declare least-privilege permissions at workflow level and narrow further at job level when needed.
-3. Prefer `pull_request` for untrusted contributions; do not introduce `pull_request_target` without a dedicated threat model and approval.
-4. Use GitHub-hosted runners unless a reviewed self-hosted boundary is required.
-5. Call repository-owned commands instead of embedding policy, validators, or domain logic in YAML.
-6. Keep default CI deterministic and no-network where practical; pin runtimes and dependencies according to repository policy.
-7. Make holds, skips, partial coverage, and missing prerequisites visible in names and job summaries.
-8. Do not let diagnostic `|| true`, `continue-on-error`, or unconditional follow-up steps convert governing failure into success.
-9. Keep public clients behind governed APIs and keep watchers and ordinary CI non-publishing.
-10. Coordinate workflow and job renames with branch protection, documentation, and rollback planning.
-11. Bound caches and artifacts by content, trust, key, retention, and sensitivity.
-12. Preserve correction and supersession visibility; do not silently remove a gate that public or review processes rely on.
+- a privileged trigger or self-hosted runner;
+- ordinary repository, deployment, package, or identity-token write scopes;
+- a workflow-controlled publication or lifecycle-transition path;
+- a required-check rename or ruleset migration;
+- a parallel policy, schema, receipt, proof, catalog, or release authority in workflow YAML.
 
 ## Rollback and correction
 
 A workflow rollback should identify:
 
 1. the workflow commit to revert;
-2. any required-check or branch-protection coupling;
+2. any required-check or ruleset coupling;
 3. caches, artifacts, comments, deployments, or external effects to invalidate;
 4. the validation set to rerun;
 5. whether any release, report, badge, or public artifact referenced the withdrawn result;
-6. whether the README inventory or maturity classification must be corrected.
+6. whether this README inventory or maturity classification must be corrected.
 
-Before merge, the normal rollback is to revert or close the unmerged workflow change without weakening unrelated checks. After merge, use a transparent revert commit or follow-up pull request; never rewrite shared history.
+Before merge, close or revert the unmerged workflow change without weakening unrelated checks. After merge, use a transparent revert or forward correction; never rewrite shared history.
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — regenerate the complete workflow inventory against the proposed head and reconcile any delta from the 41-file snapshot.
-- **NEEDS VERIFICATION** — required checks, rulesets, and exact branch-protection coupling.
-- **NEEDS VERIFICATION** — current workflow run results, failure causes, logs, and artifact retention.
-- **NEEDS VERIFICATION** — repository and organization default token permissions.
-- **NEEDS VERIFICATION** — whether every path filter covers intended implementation and documentation surfaces.
-- **NEEDS VERIFICATION** — whether hold and readiness job names could be mistaken for substantive enforcement.
-- **NEEDS VERIFICATION** — whether immutable action SHA pinning will be adopted and enforced.
-- **NEEDS VERIFICATION** — complete CI/runtime policy-bundle parity and proof/release closure.
+- **NEEDS VERIFICATION** — behavioral review of commands, trigger reachability, secrets/OIDC, network, caches, artifacts, and write effects for all 486 files.
+- **NEEDS VERIFICATION** — exact-current execution of the twenty-rule static ratchet for all 482 workflow files.
+- **NEEDS VERIFICATION** — current rulesets and exact required-check coupling.
+- **NEEDS VERIFICATION** — recent hosted outcomes, failure causes, logs, rerun state, and artifact retention.
+- **NEEDS VERIFICATION** — duplicate, overlapping, obsolete, or misleading workflow/check identities created during rapid growth.
+- **NEEDS VERIFICATION** — commands that remain placeholders, readiness holds, or partial validation despite authoritative-sounding names.
+- **NEEDS VERIFICATION** — complete policy-bundle, schema, fixture, and runtime parity.
 - **NEEDS VERIFICATION** — whether workflow-generated artifacts contain sensitive data or outlive their review purpose.
+- **NEEDS VERIFICATION** — the governance-validator README still describes its receipt-bound 424-workflow snapshot as current; correct it only with a provenance-safe receipt update or supersession.
+- **CONFIRMED at the pinned ref / exact-current result NEEDS VERIFICATION** — the repository-owned, no-network workflow-security ratchet and its empty implementation-waiver baseline exist; no current pass is claimed here.
+- **PROPOSED consolidation** — prefer reusable validators and bounded workflows where multiple files share the same trigger, permissions, and acceptance boundary.
 
 ## Changelog
 
 | Date | Version | Change |
 |---|---|---|
-| 2026-07-29 | v0.5 | Reconciled shared domain hold semantics and the bounded E2E, Focus mock, and rollback-drill readiness checks with current structured repository evidence; preserved explicit holds and no UI/runtime readiness claim. |
-| 2026-07-23 | v0.4 | Aligned the README with the canonical-root contract; separated current document evidence from the pinned workflow inventory; added belongs/non-belongs, review burden, related-folder, ADR, threat-preflight, rollback, accessibility, and anti-overclaim guidance. |
-| 2026-07-22 | v0.3 | Replaced the stale 34-stub/7-command snapshot with the complete 41-file inventory; reconciled maturity groups, explicit permissions, action refs, and removal of prior OIDC drift. |
-| 2026-07-17 | v0.2 | Added the first repository-grounded inventory from indexed searches. |
-| 2026-07-08 | v0.1 | Established the workflow governance README. |
+| 2026-08-31 | v0.17 | Re-pinned the subtree to `main@1b654851…`; recorded 482 `.yml` workflows and 57-file growth since v0.16; separated the empty waiver baseline from an unrun exact-current scan; added practical discovery, evidence-routing, repository-supported validation, and review guidance; and removed the badge wall. |
+| 2026-09-06 | v0.18 | Re-pinned the subtree to `main@4a2ddb9…` and `486` tracked `.yml` workflows; narrowed four responsibility-owned lanes to changed-path triggers while retaining manual dispatch, check names, and historical evidence; complete trigger reachability, required-check mapping, and shared-install consolidation remain open. |
+| 2026-08-12 | v0.16 | Re-pinned the subtree to `main@bff35f5…`; recorded the exact 425-workflow count; added a deterministic twenty-rule workflow-security ratchet with inherited-drift accounting; and kept hosted conclusions, ruleset state, and runtime maturity explicitly unverified. |
+| 2026-08-08 | v0.15 | Re-pinned the subtree to `main@d4586ec…`; recorded the exact 191-workflow count; superseded the 44-file classification as current inventory while preserving it in Git history; separated filename facts from unverified per-workflow behavior; and retained the non-publisher, threat-preflight, validation, review, and rollback contracts. |
+| 2026-08-03 | v0.14 | Reconciled promotion workflow documentation with a bounded fixture-only ReviewRecord candidate inside the prior 44-workflow snapshot. |
+| 2026-08-02 | v0.13 | Added a deterministic finite-envelope shape proof while preserving mock-runtime and composed-E2E holds. |
+| 2026-08-02 | v0.12 | Added focused `GENERATED_RECEIPT` validation to the validator suite without changing publication authority. |
+| 2026-08-01 | v0.11 | Replaced then-current floating executable action references with reviewed immutable commits for the pinned 44-workflow-era snapshot. |
+| 2026-08-01 | v0.10 | Extended the bounded no-network documentation link checker. |
+| 2026-08-01 | v0.9 | Added shared JSON Schema runner tests and aligned negative-fixture diagnostics. |
+| 2026-07-31 | v0.8 | Replaced a stale inline E2E readiness assumption with a repository-owned checker. |
+| 2026-07-31 | v0.7 | Reconciled the prior 44-workflow tree and documented the repository-control threat boundary. |
 
 [Back to top](#top)

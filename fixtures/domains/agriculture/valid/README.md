@@ -128,7 +128,7 @@ Use synthetic, minimized examples. Do not include real operational records, sour
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture domain policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
 | Sensitivity and release policy | `policy/sensitivity/`, `policy/release/` | Out of scope. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Source registry records | `data/registry/sources/` | Out of scope. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 

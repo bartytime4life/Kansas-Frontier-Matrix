@@ -417,7 +417,7 @@ The author or generator must not be treated as the sole approver for policy-sign
 | Proofs and EvidenceBundles | [`data/proofs/`](../../data/proofs/README.md) |
 | Release, correction, and rollback decisions | [`release/`](../../release/README.md) |
 | Public dynamic boundary | [`apps/governed-api/`](../../apps/governed-api/README.md) |
-| Map-first client | [`apps/explorer-web/`](../../apps/explorer-web/README.md) |
+| Map-first client | `apps/explorer-web/` (retired) |
 | Package review routing | [`.github/CODEOWNERS`](../../.github/CODEOWNERS) |
 
 A related path is not automatically canonical, implemented, complete, or accepted. Read its README, ADR status, and current repository evidence before relying on it.

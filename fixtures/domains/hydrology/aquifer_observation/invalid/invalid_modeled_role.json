@@ -1,0 +1,30 @@
+{
+  "id": "kfm:hydrology:aquifer-observation:synthetic-invalid-modeled",
+  "version": "v0.3",
+  "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "object_type": "AquiferObservation",
+  "source_descriptor_ref": "source:synthetic-groundwater-model:v1",
+  "source_record_ref": "synthetic:model-cell:001",
+  "source_role": "modeled",
+  "parameter": {
+    "name": "modeled groundwater level"
+  },
+  "measurement": {
+    "source_value": 25.0,
+    "unit": "ft",
+    "basis": {
+      "reference_type": "source_defined",
+      "reference_ref": "synthetic:model-datum:001"
+    },
+    "status": "estimated",
+    "no_data": false
+  },
+  "observed_time": "2026-01-15T12:00:00Z",
+  "spatial_context": {
+    "site_ref": "synthetic:model-cell:001",
+    "geometry_role": "aggregate_public"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-model-run:001"
+  ]
+}

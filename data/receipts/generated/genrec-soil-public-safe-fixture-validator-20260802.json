@@ -1,0 +1,246 @@
+{
+  "receipt_id": "genrec-soil-public-safe-fixture-validator-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-soil.yml",
+    "docs/domains/soil/README.md",
+    "fixtures/domains/soil/README.md",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.expected_error.txt",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.json",
+    "fixtures/domains/soil/invalid/candidate_not_object.expected_error.txt",
+    "fixtures/domains/soil/invalid/candidate_not_object.json",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.expected_error.txt",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.json",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.expected_error.txt",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.json",
+    "fixtures/domains/soil/invalid/invalid_governance.expected_error.txt",
+    "fixtures/domains/soil/invalid/invalid_governance.json",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.expected_error.txt",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.json",
+    "fixtures/domains/soil/invalid/missing_references.expected_error.txt",
+    "fixtures/domains/soil/invalid/missing_references.json",
+    "fixtures/domains/soil/invalid/undeclared_fields.expected_error.txt",
+    "fixtures/domains/soil/invalid/undeclared_fields.json",
+    "fixtures/domains/soil/valid/public_safe_observation.json",
+    "tests/domains/soil/README.md",
+    "tests/domains/soil/test_soil_smoke.py",
+    "tools/validators/domains/soil/README.md",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-soil.yml": "sha256:796e843ed93cfa54d454d1ba1cea1008dc416481c403c637afb1a938d6aab69d",
+    "docs/domains/soil/README.md": "sha256:7fda0b7814c378392d5220bc6e83522262004e3e6e6be3aad40d651a2031f7b1",
+    "fixtures/domains/soil/README.md": "sha256:74211464e59c0617ba29cd371f0eec24b0a0b501925a9db81f528387c6f4ba24",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.expected_error.txt": "sha256:c5d508d545b12c06045fc7907d1a57e7187f502077a28f0f5885dff807ca0de7",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.json": "sha256:0f5d9696e4b1db41e38c5ab7d162fc41a15a23bb3acac0e8cf7977410527eb90",
+    "fixtures/domains/soil/invalid/candidate_not_object.expected_error.txt": "sha256:605aff0eab866b0f3abe71dd1bbbe8c544bbd7172c9eea7e4103d48b2c85e78a",
+    "fixtures/domains/soil/invalid/candidate_not_object.json": "sha256:15d074cc6dadf734200c8738c806fe5a15cd7a05b25929a18e6207056a600f69",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.expected_error.txt": "sha256:bc97ec00ee5581c18d835314f04764506661c6eba39f678867a9266434efe31e",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.json": "sha256:a0291d5c4bce1cf1194752f6fb0699352ac6ef6f394caab9ffebf292ce73836a",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.expected_error.txt": "sha256:49804b9952b989101651437474c452bf8f47ea6a3e3de9ecc8611df3294a301d",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.json": "sha256:d31a0068ba220a07064a9b7b740f2013b3ae8ecb80624218b941d9d859a98b94",
+    "fixtures/domains/soil/invalid/invalid_governance.expected_error.txt": "sha256:e8803827013deb091fd3618e4e9cd3b90dd75372aaa90d7786f89eca292a304c",
+    "fixtures/domains/soil/invalid/invalid_governance.json": "sha256:8a0fb226b858c997220d793a4f7b583ea2bdc8a7fb1a67cd848254aeab3e83f3",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.expected_error.txt": "sha256:f0ba684a49f9ae686ea9ab358263c9e50d637e9904147c911f63379ed793f5ce",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.json": "sha256:784a23c5a870b82de41432abf2c9d7f8f8901aaaa99637c040c0ca9e9cf61139",
+    "fixtures/domains/soil/invalid/missing_references.expected_error.txt": "sha256:539416e6528a55eea93f4c3f7657259b99e8ce09a13b08c013e42cb8c03f1a14",
+    "fixtures/domains/soil/invalid/missing_references.json": "sha256:4ea9641e4c527004998aef8260ac7a2fcef0f1e62b964e4b90c245c8b0f56764",
+    "fixtures/domains/soil/invalid/undeclared_fields.expected_error.txt": "sha256:2964a6240b0db0122ba360887cac5a06a7d5c7b616b375b62ade4bddb1b6f80e",
+    "fixtures/domains/soil/invalid/undeclared_fields.json": "sha256:7d435700ecc36b02f31f07019afcfb6290de8f6784327df3be461166f1241c8b",
+    "fixtures/domains/soil/valid/public_safe_observation.json": "sha256:9932563d72f58dd7da2860b5fcad5588801dd4132c97baaa28091c9749d9ff60",
+    "tests/domains/soil/README.md": "sha256:f3b341ae4f5fbcb3264fc5aeacb41fc8ebb53417b2df2149906bad652756a71f",
+    "tests/domains/soil/test_soil_smoke.py": "sha256:1c7c464af92178c96c7866bebeb560ed15b4d447a0b3ee0ca49bd65c623d4e5d",
+    "tools/validators/domains/soil/README.md": "sha256:d9e854fce3721f3e833cff8d6b0ac9bd07a22a374b4d94190418fac13c9bfb03",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py": "sha256:f165b2f3fe69fa4c31dfb517ab7701600113e8c3494928a2b9329f4de3b52c65"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation",
+      "PyYAML syntax parsing",
+      "read-only adversarial subagent review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea",
+      "sha256:2bfe3acc92d77a1c4bc1bb78afa719005f9015b9884d9e1e9a50cf38ea9fec22",
+      "sha256:b6f5efc88c76286c306876351503949d972ecca057baf4d77fd476d1cf7d7cec",
+      "sha256:efbf01b184987df119f6fa6ab81bbafdcc369208b2b33f35ef5425d95f486ac0"
+    ],
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/14d6385f963b7113518ea90d949c0926a2f88b88",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fc451ecd469654f34f67135ef39184a9b15be60e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/.github/workflows/domain-soil.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/tests/domains/soil/test_soil_smoke.py",
+      "attachment://kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-soil.yml": "PROPOSED",
+    "docs/domains/soil/README.md": "PROPOSED",
+    "fixtures/domains/soil/README.md": "PROPOSED",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/boolean_numeric_misuse.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/candidate_not_object.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/candidate_not_object.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_container_shapes.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_depth_and_measurement.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_governance.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_governance.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/invalid_support_and_spatial.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/missing_references.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/missing_references.json": "CONFIRMED",
+    "fixtures/domains/soil/invalid/undeclared_fields.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/soil/invalid/undeclared_fields.json": "CONFIRMED",
+    "fixtures/domains/soil/valid/public_safe_observation.json": "CONFIRMED",
+    "tests/domains/soil/README.md": "PROPOSED",
+    "tests/domains/soil/test_soil_smoke.py": "CONFIRMED",
+    "tools/validators/domains/soil/README.md": "PROPOSED",
+    "tools/validators/domains/soil/validate_public_safe_fixture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The repository, initial main@14d6385f963b7113518ea90d949c0926a2f88b88, final delivery base main@fc451ecd469654f34f67135ef39184a9b15be60e, accepted ADR-0029, adopted Directory Rules, contribution guidance, CODEOWNERS posture, branches, issues, pull requests, Soil lanes, and final issue #1675 owner resolution were inspected. No open issue, pull request, or scoped instruction owned this batch. The owner resolution permits bounded feature-branch authoring, non-force pushes, and draft pull requests while direct-main, force-push, ready, merge, source activation, proof, release, deployment, and publication holds remain."
+    },
+    {
+      "gate": "evidence-assay-and-candidate-selection",
+      "outcome": "PASS",
+      "reason": "The supplied Soil architecture report and current repository bytes supported a deterministic offline validator/fixture/test slice. The report was treated as design lineage, not implementation authority. A Geology schema slice and other candidates were not selected because this Soil extraction was narrower and avoided unresolved object-schema and support-vocabulary decisions."
+    },
+    {
+      "gate": "should-exist-can-exist-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "Reusable behavior is extracted from tests into tools/validators/domains/soil; reusable synthetic inputs and exact fail-closed sidecars live under fixtures/domains/soil; executable conformance proof remains under tests/domains/soil; human-readable state remains under docs and owning READMEs; and .github only orchestrates the existing suite. No parallel contract, schema, policy, source, evidence, proof, release, or publication authority is created."
+    },
+    {
+      "gate": "focused-soil-standard-library-suite",
+      "outcome": "PASS",
+      "reason": "Sixteen deterministic tests passed with PYTHONDONTWRITEBYTECODE=1 and KFM_NO_NETWORK=1. Coverage includes exact positive/negative fixture inventory and polarity, all frozen support values and invalid container types, closed object shapes, precise-location aliases, finite numerics and boolean separation, governance state, sorted findings, duplicate keys, malformed and non-standard numbers, integer/file/depth/node bounds, regular-file confinement, FIFO rejection, no-network guards, safe output, and CLI behavior."
+    },
+    {
+      "gate": "validator-cli-contract",
+      "outcome": "PASS",
+      "reason": "Direct execution returned 0 for the valid fixture, 1 for an invalid fixture with deterministic code-and-path findings, and 2 for missing arguments. JSON-line output did not echo candidate values."
+    },
+    {
+      "gate": "read-only-adversarial-review-and-repair",
+      "outcome": "PASS",
+      "reason": "Independent current-byte review exposed and then verified repairs for unhashable support_type handling, bounded regular-file reads, FIFO rejection, explicit custom depth/node boundary coverage, stale domain maturity text, and incomplete fixture-lane inventory. The final review reported no remaining blocker or material finding."
+    },
+    {
+      "gate": "soil-documentation-link-check",
+      "outcome": "PASS",
+      "reason": "The no-network repository link checker passed across all four changed Markdown documents with 56 local targets. Six pre-existing external badge targets were classified as unverified and were not requested."
+    },
+    {
+      "gate": "workflow-syntax-and-trust-boundary",
+      "outcome": "PASS",
+      "reason": "PyYAML parsed domain-soil.yml and confirmed its three expected jobs. The change adds only the validator to the existing required-path check and updates the scope summary; triggers, read-only permissions, immutable action pins, runner, timeouts, test command, proof hold, and release-dry-run hold remain unchanged."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "make validate was attempted but stopped before repository validation because the local runtime lacks the repository-declared jsonschema dependency. Network installation is prohibited for this run, so the dependency was not downloaded; focused dependency-free Soil validation passed separately."
+    },
+    {
+      "gate": "python-json-diff-and-artifact-hash-integrity",
+      "outcome": "PASS",
+      "reason": "All JSON fixtures and this receipt parse, git diff --check passes, artifact_paths exactly match artifact_hashes and truth_labels, and all 24 SHA-256 hashes were recomputed against final artifact bytes. The receipt is excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The repository generated-receipt validator imports jsonschema, which is unavailable locally, and network installation is prohibited. Manual JSON, key-set, hash, truth-label, citation, and receipt-path checks were run; hosted schema validation remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions conclusions remain unavailable until the bounded branch and draft pull request are delivered. No green check will be interpreted as review, merge, release, deployment, publication, or source activation authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repository-authoring-hold-lift",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "ai-build-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "soil-planning-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    },
+    {
+      "id": "baseline-soil-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/.github/workflows/domain-soil.yml"
+    },
+    {
+      "id": "baseline-soil-smoke-profile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14d6385f963b7113518ea90d949c0926a2f88b88/tests/domains/soil/test_soil_smoke.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T16:18:00Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch graduates only the pre-existing Soil synthetic public-safe smoke profile from test-local behavior to a reusable standard-library validator with a frozen file-backed fixture corpus and exact fail-closed findings. It does not change semantic contracts, schemas, policy, source admission, live source execution, MUKEY/COKEY/CHKEY lineage, evidence or proof closure, lifecycle data, public interfaces, release, deployment, or publication. The existing four-value support_type profile is preserved rather than widened because richer repository documentation uses a conflicting vocabulary. Record-identity constraints and ASCII-only FIPS semantics are also deferred for a later contract-backed batch. Human review and hosted exact-head checks remain pending."
+}

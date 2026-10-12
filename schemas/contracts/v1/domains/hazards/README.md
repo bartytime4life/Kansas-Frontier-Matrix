@@ -1,320 +1,209 @@
-# `schemas/contracts/v1/domains/hazards/` — Hazards Domain Schema Index
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-domains-hazards-readme
 title: schemas/contracts/v1/domains/hazards/ — Hazards Domain Schema Index
-version: v1
-status: draft
-policy_label: public
-owners:
-  - <schema-steward>
-  - <hazards-domain-steward>
-  - <contract-steward>
-  - <validation-steward>
-  - <freshness-steward>
-  - <policy-steward>
-  - <docs-steward>
-updated: 2026-07-03
-tags: [kfm, schemas, contracts, v1, domains, hazards, receipts, warning-context, freshness, json-schema]
+type: readme
+version: v1.1
+status: draft; repository-grounded; mixed-maturity; non-semantic; non-policy; non-release; non-publication
+owner: NEEDS VERIFICATION — explicit CODEOWNERS routing for schemas/ is @bartytime4life; no independently verified Hazards schema steward or required-review control was established
+created: 2026-08-28
+updated: 2026-08-28
+policy_label: repository-facing; schemas; hazards; machine-shape; cite-or-abstain; release-gated; no-life-safety-authority
+current_path: schemas/contracts/v1/domains/hazards/README.md
+owning_root: schemas/
+responsibility: index the current Hazards machine-schema lane without replacing semantic contracts, evidence, policy, lifecycle, release, or publication authority
+truth_posture: cite-or-abstain; file presence and schema validity prove only current machine shape, never source admission, semantic truth, evidence closure, rights, sensitivity, policy approval, release state, publication safety, or life-safety authority
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_ref: main
+evidence_base_commit: bacb77cfbc04014a2c05da541f9cba8025629068
+codeowners_route: /schemas/ @bartytime4life
+directory_rules_adoption_adr: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+related:
+  - ../../../../README.md
+  - ./receipts/README.md
+  - ../../hazards/README.md
+  - ../../../../../contracts/domains/hazards/README.md
+  - ../../../../../docs/domains/hazards/README.md
+  - ../../../../../fixtures/domains/hazards/README.md
+  - ../../../../../tests/domains/hazards/README.md
+  - ../../../../../tools/validators/domains/hazards/README.md
+  - ../../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../../../docs/doctrine/directory-rules.md
+notes:
+  - "v1.1 corrects the prior claim that this lane contained no concrete schema files; the pinned tree contains 23 root-level .schema.json files and one receipts child index."
+  - "The inventory is maturity-specific: permissive scaffolds, bounded proposed profiles, and tested convergence profiles are not described as one implementation state."
+  - "Accepted ADR-0029 adopts Directory Rules placement; ADR-0001 and the Hazards architecture schema-home question remain proposed or NEEDS VERIFICATION and are not accepted here."
+  - "This documentation-only change modifies no schema bytes, contract semantics, source state, evidence, policy, lifecycle object, release, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![root](https://img.shields.io/badge/root-schemas%2F-blue)
-![domain](https://img.shields.io/badge/domain-hazards-red)
-![posture](https://img.shields.io/badge/posture-domain--schema--index-orange)
-![canonical](https://img.shields.io/badge/canonical-PROPOSED%20%2F%20CONFLICTED-yellow)
-![boundary](https://img.shields.io/badge/boundary-not%20life--safety%20authority-critical)
+# `schemas/contracts/v1/domains/hazards/` — Hazards Domain Schema Index
+
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Inventory: 23 schemas](https://img.shields.io/badge/inventory-23%20schemas-2da44e?style=flat-square)](#current-schema-inventory)
+[![Authority: machine shape](https://img.shields.io/badge/authority-machine%20shape-1f6feb?style=flat-square)](#authority-boundary)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#exposure-mutation-and-retention)
+
+> [!IMPORTANT]
+> **Schema presence is not operational authority.** These files constrain proposed or fixture-backed machine shapes. They do not admit a source, prove a hazard claim, authorize an emergency alert, promote lifecycle state, approve a release, or permit publication.
 
 ## Purpose
 
-`schemas/contracts/v1/domains/hazards/` is the draft Hazards domain schema lane.
+This directory is the populated Hazards domain lane under the `schemas/` machine-shape responsibility root. It owns JSON Schema files and local schema-family navigation. It inherits the contract/schema/policy/evidence/release separation from the [schema-root contract](../../../../README.md) and accepted [Directory Rules](../../../../../docs/doctrine/directory-rules.md).
 
-This path is for machine-checkable Hazards schema shapes: JSON Schema files, schema-family README files, schema index notes, migration notes, and links to paired contracts, fixtures, validators, registry records, tests, policy references, source-registry references, freshness references, correction references, rollback references, and release references.
+The index reports what is present at pinned `main@bacb77cfbc04014a2c05da541f9cba8025629068`. It does not upgrade a scaffold or proposed profile to active status.
 
-This path is not a home for Hazards contract prose, policy rules, validator code, packages, pipelines, lifecycle data, source registry records, emitted receipts, proof outputs, EvidenceBundles, catalog records, release records, review records, public map/API artifacts, operational alerts, or life-safety instructions.
+## Status
 
-This README is documentation only. It is not itself a schema file, contract prose, policy, validator code, pipeline code, lifecycle data, registry data, proof output, receipt instance, source descriptor instance, emergency alert authority, or release authority.
-
-## Status & authority
-
-| Field | Value |
+| Field | Repository-grounded value |
 |---|---|
-| Document type | Hazards domain schema README |
-| Owning root | `schemas/` |
-| Requested path | `schemas/contracts/v1/domains/hazards/` |
-| Status | Draft |
-| Authority level | Domain schema index guidance. Schema files, paired contracts, registry records, validators, fixtures, tests, ADRs, policy records, release records, and steward decisions outrank this README. |
-| Path posture | PROPOSED / CONFLICTED. This path exists in the repo as a scaffold, while Hazards architecture records a non-domain schema-home note for Hazards pending ADR/schema-home resolution. |
-| Canonical posture | ADR-0001 says domain schemas nest under `schemas/contracts/v1/domains/<domain>/...`, but Hazards architecture records an unresolved Hazards-specific schema-home segment conflict. |
-| Concrete schema inventory | NEEDS VERIFICATION. Current-session search did not confirm concrete `.schema.json` files under this path. |
-| Known child lanes | `receipts/` README exists as a draft Hazards receipts schema index. |
-| Hazards boundary | KFM Hazards is not an emergency alert system or life-safety authority. Official sources remain the authority for live safety action. |
-| Required reviewers | Schema steward, Hazards domain steward, receipt steward where applicable, contract steward, validation steward, freshness steward, policy/release stewards where applicable, and docs steward. |
+| Owning responsibility root | `schemas/` — machine-checkable shape |
+| Local scope | Hazards domain schema index |
+| Current root inventory | 23 `.schema.json` files |
+| Current child lane | [`receipts/`](./receipts/README.md), index-only; no child schema file is present |
+| Maturity | Mixed: 16 permissive or empty proposed scaffolds; 7 bounded proposed profiles with executable evidence |
+| CODEOWNERS route | `/schemas/ @bartytime4life` |
+| Steward assignment | **NEEDS VERIFICATION** beyond the repository route |
+| Source admission, policy, release, deployment, publication | Not granted by this lane |
 
-## Placement basis
+## Authority boundary
 
-Current-session evidence confirms `schemas/README.md` defines `schemas/` as the machine-checkable shape root and says schemas pair one-to-one with `contracts/`.
+[Accepted ADR-0029](../../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the Directory Rules bytes that place domain machine shape under `schemas/contracts/v1/domains/<domain>/`. The narrower [ADR-0001](../../../../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) remains proposed. The alternate [`schemas/contracts/v1/hazards/`](../../hazards/README.md) lane is a README-only guardrail, not a second writable schema home.
 
-Current-session evidence confirms ADR-0001 says domain-specific schemas nest under `schemas/contracts/v1/domains/<domain>/...`, while `contracts/` retains object meaning and `schemas/` owns machine-checkable shape.
+The Hazards architecture contains a conflicting, proposed schema-home statement. This index records the current populated tree and accepted responsibility-root placement; it does not silently resolve the remaining documentation/ADR question.
 
-Current-session Directory Rules evidence confirms field-level shape belongs under `schemas/`, while lifecycle data, registries, proofs, receipts, policy decisions, and release materials are separate responsibility roots and parallel homes require ADR review.
-
-Current-session evidence confirms this README previously claimed broadly that docs, contracts, schemas, policies, fixtures, tests, packages, pipelines, registries, and data lifecycle artifacts could belong here. This update corrects that boundary: this path is schema-shape only.
-
-Current-session evidence confirms `schemas/contracts/v1/domains/hazards/receipts/README.md` exists as a draft Hazards receipts schema index and marks concrete receipt schemas NEEDS VERIFICATION.
-
-Current-session search did not confirm concrete Hazards `.schema.json` files under `schemas/contracts/v1/domains/hazards/`.
-
-Current-session Hazards architecture evidence records a Hazards-specific schema-home conflict: it says an older/default Hazards schema home was `schemas/contracts/v1/hazards/`, while the `/domains/<x>/` form is flagged CONFLICTED pending ADR-S-01 / ADR-0001. This README therefore treats the requested path as present and useful, but not fully settled as canonical until the conflict is resolved.
-
-Current-session Hazards architecture evidence also confirms the Hazards lane covers historical, regulatory, modeled, and operational-context hazard information for analysis and resilience, while refusing to act as life-safety alerting.
-
-## Repo fit
+The authority split remains:
 
 ```text
-schemas/
-├── README.md
-└── contracts/
-    └── v1/
-        └── domains/
-            └── hazards/
-                ├── README.md              # you are here
-                └── receipts/
-                    └── README.md          # draft receipt schema index
-
-contracts/
-└── domains/
-    └── hazards/                           # semantic meaning; not schema shape
-
-docs/
-└── domains/
-    └── hazards/                           # human-facing doctrine; not schema shape
-
-data/
-├── receipts/hazards/                      # emitted process-memory receipts; not schema shape
-├── proofs/hazards/                        # proof objects; not schema shape
-└── catalog/domain/hazards/                # catalog/discovery; not schema shape
-
-policy/
-└── domains/hazards/                       # allow/deny/restrict/abstain; not schema shape
-
-fixtures/
-└── domains/hazards/                       # test examples; coverage NEEDS VERIFICATION
-
-release/                                  # release decisions and records; not schema home
+contracts/  semantic meaning and claim limits
+schemas/    machine-checkable shape
+fixtures/   valid, invalid, edge, and golden examples
+tests/      executable proof for the tested surface
+tools/      validator implementation
+policy/     allow, deny, restrict, hold, and abstain decisions
+data/       lifecycle objects, receipts, proofs, catalogs, and published carriers
+release/    promotion, release, correction, withdrawal, and rollback decisions
 ```
-
-## Current-session related evidence
-
-| Evidence | Status |
-|---|---|
-| `schemas/contracts/v1/domains/hazards/README.md` | Greenfield scaffold before this update. |
-| `schemas/README.md` | Confirms `schemas/` owns machine-checkable shape and pairs with `contracts/`. |
-| ADR-0001 | Confirms domain schemas nest under `schemas/contracts/v1/domains/<domain>/...`. |
-| Directory Rules | Confirms machine shape belongs under `schemas/`; parallel homes require ADR review. |
-| `schemas/contracts/v1/domains/hazards/receipts/README.md` | Existing draft Hazards receipts schema index; concrete receipt schema inventory remains NEEDS VERIFICATION. |
-| Search for Hazards schema files | Did not confirm concrete `.schema.json` files under this path in current-session search. |
-| `data/receipts/hazards/README.md` | Hazards receipt process-memory lane; not proof, catalog, release, public, alert, or life-safety authority. |
-| ADR-0011 | Proposed separation rule: receipt, proof, catalog, and publication are distinct families; schema homes remain governed by ADR-0001. |
-| `docs/domains/hazards/ARCHITECTURE.md` | Hazards architecture; records schema-home conflict and establishes the life-safety boundary. |
-
-This README does not verify complete Hazards schema coverage, schema registry entries, fixture coverage, validator wiring, CI behavior, source-admission behavior, freshness enforcement, policy behavior, release integration, emitted receipt instance layout, runtime behavior, public API behavior, or map rendering behavior.
 
 ## Current schema inventory
 
-| Schema file | Paired contract | Status | Notes |
-|---|---|---|---|
-| No concrete `.schema.json` file confirmed in this edit | N/A | NEEDS VERIFICATION | Current-session search found Hazards docs/contracts/receipt lanes but did not confirm concrete Hazards schemas under this path. |
+### Bounded proposed profiles with executable evidence
 
-## Current child lanes
-
-| Child path | Status | Responsibility |
+| Schema | Declared posture | Confirmed executable evidence |
 |---|---|---|
-| `receipts/` | Draft schema index / NEEDS VERIFICATION | Candidate receipt-shaped Hazards schema sublane. It does not store emitted receipts and does not become proof, catalog, policy, release, alert, or life-safety authority. |
+| `drinking_water_advisory.schema.json` | `PROPOSED_INACTIVE`; closed advisory profile | Domain test, validator, fixtures, and dedicated workflow |
+| `drought_observation.schema.json` | `PROPOSED`; closed physical-observation family | Valid/invalid fixtures plus drought separation and family-validator tests |
+| `drought_declaration.schema.json` | `PROPOSED`; closed legal/administrative family | Valid/invalid fixtures plus drought separation and family-validator tests |
+| `drought_obs_decl_relationship.schema.json` | `PROPOSED`; closed relationship family | Valid/invalid fixtures plus drought separation and family-validator tests |
+| `evidence_bundle.schema.json` | `PROPOSED`; Hazards projection of the shared EvidenceBundle | Convergence validator, test, and dedicated workflow |
+| `kdhe_hab_advisory_snapshot.schema.json` | `PROPOSED`; closed no-network snapshot candidate | Valid/invalid fixtures and schema tests |
+| `nfhl_nld_nid_source_role_profile.schema.json` | `PROPOSED_INACTIVE`; closed source-role profile | Fixture cases, validator test, and dedicated workflow |
 
-## Candidate schema inventory
+Executable evidence proves only the asserted fixture and validator behavior. It does not prove live retrieval, source admission, rights, freshness, complete EvidenceRef resolution, policy activation, release, or publication.
 
-Hazards schema candidates below require steward review, schema files, paired contracts, fixtures, validators, registry records, freshness semantics, and CI support before promotion.
+### Permissive or empty proposed scaffolds
 
-| Candidate schema | Status | Notes |
-|---|---|---|
-| `hazard_event.schema.json` | NEEDS VERIFICATION | Candidate historical or observed hazard event shape. |
-| `hazard_context.schema.json` | NEEDS VERIFICATION | Candidate context envelope for regulatory, modeled, or operational context. |
-| `warning_context.schema.json` | NEEDS VERIFICATION | Candidate operational warning/advisory/watch context shape; not life-safety authority. |
-| `regulatory_hazard_area.schema.json` | NEEDS VERIFICATION | Candidate regulatory context shape such as NFHL-style areas; not observed inundation. |
-| `remote_sensing_detection.schema.json` | NEEDS VERIFICATION | Candidate detection/candidate shape; not event confirmation by itself. |
-| `exposure_summary.schema.json` | NEEDS VERIFICATION | Candidate exposure/resilience summary shape. |
-| `hazard_timeline.schema.json` | NEEDS VERIFICATION | Candidate role-aware hazard timeline shape. |
-| `freshness_envelope.schema.json` | NEEDS VERIFICATION | Candidate time/freshness/expiry support shape. |
-| `domain_feature_identity.schema.json` | NEEDS VERIFICATION | Candidate deterministic identity support shape. |
-| `domain_validation_report.schema.json` | NEEDS VERIFICATION | Candidate validation-report shape; not proof or release authority. |
-| `receipts/source_intake_receipt.schema.json` | NEEDS VERIFICATION | Candidate source-intake process-memory receipt shape. |
-| `receipts/freshness_receipt.schema.json` | NEEDS VERIFICATION | Candidate freshness-check receipt shape. |
-| `receipts/model_run_receipt.schema.json` | NEEDS VERIFICATION | Candidate model/materialization receipt shape. |
-| `receipts/release_support_receipt.schema.json` | NEEDS VERIFICATION | Candidate release-support receipt shape, not release authority. |
+The following 16 files are present, but their current descriptions or open shapes identify them as scaffolds rather than field-complete contracts:
 
-## Schema-lane responsibilities
+```text
+catalog_matrix.schema.json
+correction_notice.schema.json
+decision_envelope.schema.json
+domain_feature_identity.schema.json
+domain_layer_descriptor.schema.json
+domain_observation.schema.json
+domain_validation_report.schema.json
+evidence_drawer_payload.schema.json
+hazards_decision_envelope.schema.json
+layer_manifest.schema.json
+promotion_decision.schema.json
+release_manifest.schema.json
+rollback_card.schema.json
+run_receipt.schema.json
+source_descriptor.schema.json
+source_state_hash.schema.json
+```
 
-| Responsibility | Expectation |
-|---|---|
-| Domain schema index | List Hazards schema files and child schema lanes as they are verified. |
-| Contract pairing | Link each schema to paired semantic contracts under `contracts/domains/hazards/` or another verified contract lane. |
-| Path-conflict discipline | Keep the `/domains/hazards/` vs `v1/hazards/` conflict visible until ADR/steward resolution. |
-| Life-safety boundary | Do not encode operational instructions, emergency directions, or public life-safety authority. |
-| Freshness discipline | Preserve source time, issue time, expiry time, retrieval time, release time, and correction time where schemas eventually require them. |
-| Boundary preservation | Keep policy, fixtures, validators, pipelines, lifecycle data, source registry records, receipt instances, proofs, catalog records, and release records in their own responsibility roots. |
-| Adjacent-domain discipline | Hazards may reference Hydrology, Atmosphere, Geology, Soil, Agriculture, Settlements/Infrastructure, Roads/Rail/Trade, Archaeology, and People context, but must not replace their owned truth. |
-| Drift prevention | Prevent duplicate canonical schema definitions across requested domain path, possible non-domain Hazards path, child lanes, cross-domain lanes, and common schema families. |
-| Review status | Mark unverified implementation claims as NEEDS VERIFICATION. |
+Their presence is **CONFIRMED**. Their field completeness, fixture polarity, validator coverage, consumer adoption, and activation are **NEEDS VERIFICATION**.
+
+## Current child map
+
+```text
+schemas/contracts/v1/domains/hazards/
+├── README.md
+├── 23 root-level *.schema.json files
+└── receipts/
+    ├── .gitkeep
+    └── README.md
+```
+
+No receipt schema file is present under the child lane at the pinned snapshot.
 
 ## What belongs here
 
-- This README.
-- Machine-checkable Hazards JSON Schema files once placement is confirmed.
-- Hazards schema-family and child-lane README files.
-- Schema index notes.
-- Migration notes for Hazards schema placement.
-- Drift notes about duplicate or stale Hazards schema paths.
-- Links to paired contracts, fixtures, validators, schema registry records, source-registry records, policy references, release references, correction references, rollback references, and tests.
+- Hazards JSON Schema documents at the currently governed domain-machine-shape path.
+- This index and bounded schema-family indexes.
+- Links to paired contracts, fixtures, validators, tests, registry records, policy, evidence, correction, rollback, and release families.
+- Migration or compatibility notes that preserve one writer and identify an accepted target.
 
-## What does not belong here
+## What is prohibited
 
-- Contract prose.
-- Policy rules or sensitivity decisions.
-- Validator implementation code.
-- Runtime code.
-- Packages or pipeline implementation.
-- Lifecycle data payloads.
-- Source registry records or SourceDescriptor instances.
-- Emitted receipt instances.
-- Proof outputs or EvidenceBundles.
-- Catalog records.
-- Release records, release manifests, or release decisions.
-- Public tiles, map/UI behavior, dashboards, screenshots, or generated summaries.
-- Operational alert instructions, emergency directions, or life-safety guidance.
-- Hydrology measurements, Atmosphere/Air observations, Geology truth, Soil truth, Agriculture truth, Settlements/Infrastructure truth, Roads/Rail/Trade truth, Archaeology truth, or People/living-person truth.
-- Cross-domain schemas that belong under `schemas/contracts/v1/cross/` or another lowest-common responsibility root.
-- Generic reusable schemas that belong under `schemas/contracts/v1/common/`.
-- Claims that a schema is complete without fixtures, validators, registry records, and steward review support.
+- Semantic contract prose, policy rules, validator implementation, runtime code, connector logic, or pipeline logic.
+- Source payloads, source-registry instances, emitted receipts, proofs, EvidenceBundles as instance data, catalogs, or release records.
+- RAW, WORK, QUARANTINE, PROCESSED, PUBLISHED, or other lifecycle payloads.
+- Emergency directions, public alert authority, or claims that a schema-valid object is safe for operational use.
+- Duplicate writable schemas under the alternate Hazards guardrail lane without an accepted migration decision.
 
-## Schema status values
+## Inputs and outputs
 
-Use finite status values where possible:
+Inputs are reviewed semantic contracts, accepted placement decisions, object-family identity, and explicit shape requirements. Outputs are versioned JSON Schema documents and this navigation index.
 
-| Status | Meaning |
+Permitted writers are repository contributors routed through CODEOWNERS and normal review. A schema edit must not mutate semantic meaning, evidence state, policy state, lifecycle state, or release state by implication.
+
+## Exposure, mutation, and retention
+
+This lane is repository-facing and contains no sensitive hazard instance payloads. Schema files are mutable only through reviewed Git history. Published payloads and release decisions are outside this directory. Rollback is a reviewed revert of the index or schema commit; it is not a lifecycle rollback by itself.
+
+## Validation
+
+For this index, the minimum documentation checks are metadata, local links, changed-document graph, whitespace, and repository topology. For a schema change, add the narrowest paired schema/fixture tests and the relevant domain or convergence workflow.
+
+Confirmed executable relationships include:
+
+- [Drought schema separation tests](../../../../../tests/schemas/test_drought_separation_contracts.py)
+- [KDHE HAB snapshot schema tests](../../../../../tests/schemas/test_kdhe_hab_advisory_snapshot_contracts.py)
+- [Hazards EvidenceBundle convergence test](../../../../../tests/validators/domains/hazards/test_evidence_bundle_schema_convergence.py)
+- [NFHL/NLD/NID source-role validator test](../../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py)
+- [Drinking-water advisory fixtures](../../../../../fixtures/domains/hazards/drinking_water_advisory/README.md)
+- [Hazards validator index](../../../../../tools/validators/domains/hazards/README.md)
+
+## Related families
+
+| Family | Responsibility |
 |---|---|
-| `STUB` | Schema exists but is not field-complete. |
-| `DRAFT_SCHEMA` | Schema has meaningful fields but still needs review and test support. |
-| `ACTIVE_SCHEMA` | Schema has accepted contract pairing, fixtures, validator support, registry record, and review status. |
-| `PATH_CONFLICT` | Schema placement is blocked by unresolved Hazards schema-home conflict. |
-| `PROFILE` | Schema profiles a shared source, spatial, time, or common schema without creating duplicate authority. |
-| `MIRROR` | Schema mirrors another accepted schema location. |
-| `TRANSITIONAL` | Schema is awaiting migration to the accepted home. |
-| `DEPRECATED` | Schema should no longer receive new consumers. |
-| `NEEDS_VERIFICATION` | Pairing, fixture, validator, registry, review, or CI support has not been verified. |
+| [Hazards semantic contracts](../../../../../contracts/domains/hazards/README.md) | Meaning and claim limits; not machine shape |
+| [Hazards domain documentation](../../../../../docs/domains/hazards/README.md) | Human navigation and doctrine; not schema authority |
+| [Hazards fixtures](../../../../../fixtures/domains/hazards/README.md) | Representative test material; not source or published data |
+| [Hazards tests](../../../../../tests/domains/hazards/README.md) | Executable assertions for covered behavior |
+| [Hazards receipts schema child](./receipts/README.md) | Candidate receipt-shape index; no emitted receipts |
+| [Alternate Hazards schema guardrail](../../hazards/README.md) | README-only conflict/migration boundary; no current schema files |
 
-## Minimal schema note
+## Review burden
 
-```markdown
-# <hazards-schema-note-id>
-
-## Status
-STUB / DRAFT_SCHEMA / ACTIVE_SCHEMA / PATH_CONFLICT / PROFILE / MIRROR / TRANSITIONAL / DEPRECATED / NEEDS_VERIFICATION
-
-## Schema path
-<schemas/contracts/v1/domains/hazards/... or alternate path under review>
-
-## Paired contract
-<contracts/domains/hazards/... or N/A>
-
-## Child lane
-<root / receipts / other / N/A>
-
-## Freshness posture
-<source-time / issue-time / expiry-time / retrieval-time / release-time / correction-time / N/A / NEEDS VERIFICATION>
-
-## Fixtures
-<fixtures path or N/A>
-
-## Validator
-<tools/validators path or N/A>
-
-## Policy and release references
-<policy/release path or N/A>
-
-## Notes
-<short note grounded in repo evidence>
-
-## Follow-up
-<open items or none>
-```
-
-## Review checklist
-
-- [ ] Schema has a stable `$id`.
-- [ ] Schema has `$schema` set to JSON Schema draft 2020-12 unless an ADR says otherwise.
-- [ ] Paired contract path is linked or marked NEEDS VERIFICATION.
-- [ ] Hazards schema-home conflict is resolved or explicitly marked PROPOSED / CONFLICTED.
-- [ ] Schema registry entry is linked or marked NEEDS VERIFICATION.
-- [ ] Valid fixtures are linked or marked NEEDS VERIFICATION.
-- [ ] Invalid fixtures are linked or marked NEEDS VERIFICATION.
-- [ ] Freshness/expiry behavior is linked or marked NEEDS VERIFICATION where relevant.
-- [ ] Validator path is linked or marked NEEDS VERIFICATION.
-- [ ] CI/schema-test support is linked or marked NEEDS VERIFICATION.
-- [ ] Pipeline, policy, data, registry, proof, receipt, catalog, and release records remain outside `schemas/`.
-- [ ] Hazards life-safety boundary is preserved.
-- [ ] Adjacent-domain boundaries are preserved.
-- [ ] Any migration or compatibility claim cites an ADR, migration note, or verified repo evidence.
-
-## Naming guidance
-
-Recommended schema filename pattern:
-
-```text
-<object_name>.schema.json
-```
-
-Examples:
-
-```text
-hazard_event.schema.json
-hazard_context.schema.json
-warning_context.schema.json
-regulatory_hazard_area.schema.json
-remote_sensing_detection.schema.json
-exposure_summary.schema.json
-hazard_timeline.schema.json
-freshness_envelope.schema.json
-domain_feature_identity.schema.json
-domain_validation_report.schema.json
-receipts/source_intake_receipt.schema.json
-receipts/freshness_receipt.schema.json
-receipts/model_run_receipt.schema.json
-receipts/release_support_receipt.schema.json
-```
-
-Use lowercase snake_case for schema filenames unless the schema registry or ADR specifies otherwise. Do not silently create duplicate schemas across `schemas/contracts/v1/domains/hazards/`, `schemas/contracts/v1/hazards/`, cross-domain, or common schema paths.
+Changes require the repository's `schemas/` owner route. Object-family changes also require the relevant semantic-contract, validation, evidence, policy, and release reviewers where those responsibilities are affected. Named steward assignments and enforced separation of duties remain **NEEDS VERIFICATION**.
 
 ## Open verification
 
-- [ ] Confirm CODEOWNERS for `schemas/contracts/v1/domains/hazards/`.
-- [ ] Resolve the Hazards schema-home conflict between the requested `/domains/hazards/` path and the non-domain `schemas/contracts/v1/hazards/` note in Hazards architecture.
-- [ ] Confirm complete Hazards schema inventory.
-- [ ] Confirm whether concrete schema files exist under alternate casing or alternate paths.
-- [ ] Confirm paired contract paths for all accepted schemas.
-- [ ] Confirm schema registry records.
-- [ ] Confirm valid fixture paths.
-- [ ] Confirm invalid fixture paths.
-- [ ] Confirm freshness/expiry fixture paths.
-- [ ] Confirm validator paths.
-- [ ] Confirm CI schema-test coverage.
-- [ ] Confirm policy, source-registry, release, correction, and rollback references for Hazards schemas.
-- [ ] Confirm whether `schemas/README.md` should index this Hazards domain schema lane.
+- Map every scaffold to its exact semantic contract and classify whether it should be completed, replaced by a shared reference, or retired.
+- Record complete valid/invalid fixture and validator coverage per schema.
+- Reconcile the proposed Hazards architecture schema-home statement with accepted Directory Rules and the populated domain lane without creating parallel authority.
+- Verify schema-registry records, `$id` uniqueness, and downstream consumers.
+- Verify source admission, rights, sensitivity, freshness, EvidenceRef closure, policy, release, correction, withdrawal, and rollback dependencies before any operational use.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing greenfield scaffold |
-| Next review trigger | Hazards schema-home resolution, new Hazards schema, child-lane decision, schema-home migration, validator update, fixture update, schema registry update, ADR update, Hazards contract update, freshness-policy update, policy/release reference update, or compatibility-lane decision |
+| Evidence date | 2026-08-28 |
+| Pinned repository commit | `bacb77cfbc04014a2c05da541f9cba8025629068` |
+| Review result | 23 root schema files and one index-only child lane confirmed; maturity reported file-family by file-family |
+| Next trigger | Schema add/remove/rename, schema-home authority change, fixture/validator/workflow change, registry change, or consumer adoption |

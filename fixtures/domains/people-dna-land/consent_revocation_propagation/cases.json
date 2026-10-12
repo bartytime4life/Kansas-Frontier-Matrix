@@ -1,0 +1,232 @@
+{
+  "object_type": "ConsentRevocationPropagationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.people-dna-land.consent-revocation-propagation.fixture.v1",
+  "base_candidate": {
+    "object_type": "ConsentRevocationPropagationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.people-dna-land.consent-revocation-propagation.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-TRIAD-038",
+    "assessment_ref": "kfm:consent-revocation-propagation:synthetic:active-001",
+    "evaluated_at": "2026-08-11T18:00:00Z",
+    "consent_grant_ref": "kfm:consent-grant:synthetic:scope-001",
+    "consent_state": {
+      "status": "ACTIVE",
+      "observed_at": "2026-08-11T17:59:00Z",
+      "valid_until": "2026-09-01T00:00:00Z",
+      "status_receipt_ref": "kfm:consent-status-receipt:synthetic:active-001",
+      "revocation_receipt_ref": null
+    },
+    "scope_match": {
+      "purpose": true,
+      "operation": true,
+      "fields": true,
+      "relationships": true,
+      "audience": true,
+      "retention": true,
+      "time": true
+    },
+    "dependencies": [
+      {"surface": "READ", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "ANSWER", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "EXPORT", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "TILE", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "GRAPH", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "INDEX", "state": "READY", "action": "NONE", "action_receipt_ref": null},
+      {"surface": "CACHE", "state": "READY", "action": "NONE", "action_receipt_ref": null}
+    ],
+    "declared_outcome": "SATISFIED",
+    "reason_codes": ["ACTIVE_SCOPE_SATISFIED"],
+    "limitations": [
+      "CONSENT_DIMENSION_ONLY",
+      "NO_CLEANUP_EXECUTION",
+      "NO_EVIDENCE_OR_POLICY_AUTHORITY",
+      "NO_REAL_PERSON_OR_DNA_DATA",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "consent_issuance_authority": false,
+      "identity_authority": false,
+      "evidence_authority": false,
+      "rights_authority": false,
+      "sensitivity_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "cleanup_execution_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_active_scope_satisfied",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_revoked_fully_propagated",
+      "patch": {
+        "assessment_ref": "kfm:consent-revocation-propagation:synthetic:revoked-001",
+        "consent_state": {
+          "status": "REVOKED",
+          "valid_until": null,
+          "revocation_receipt_ref": "kfm:revocation-receipt:synthetic:revoked-001"
+        },
+        "dependencies": [
+          {"surface": "READ", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:read-blocked-001"},
+          {"surface": "ANSWER", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:answer-blocked-001"},
+          {"surface": "EXPORT", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:export-blocked-001"},
+          {"surface": "TILE", "state": "INVALIDATED", "action": "INVALIDATE", "action_receipt_ref": "kfm:action-receipt:synthetic:tile-invalidated-001"},
+          {"surface": "GRAPH", "state": "PURGED", "action": "PURGE", "action_receipt_ref": "kfm:action-receipt:synthetic:graph-purged-001"},
+          {"surface": "INDEX", "state": "INVALIDATED", "action": "INVALIDATE", "action_receipt_ref": "kfm:action-receipt:synthetic:index-invalidated-001"},
+          {"surface": "CACHE", "state": "PURGED", "action": "PURGE", "action_receipt_ref": "kfm:action-receipt:synthetic:cache-purged-001"}
+        ],
+        "declared_outcome": "DENY",
+        "reason_codes": ["CONSENT_REVOKED", "PROPAGATION_RECEIPTS_DECLARED"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_expired_fully_propagated",
+      "patch": {
+        "assessment_ref": "kfm:consent-revocation-propagation:synthetic:expired-001",
+        "consent_state": {
+          "status": "EXPIRED",
+          "valid_until": "2026-08-10T00:00:00Z"
+        },
+        "dependencies": [
+          {"surface": "READ", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:read-blocked-002"},
+          {"surface": "ANSWER", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:answer-blocked-002"},
+          {"surface": "EXPORT", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:export-blocked-002"},
+          {"surface": "TILE", "state": "INVALIDATED", "action": "INVALIDATE", "action_receipt_ref": "kfm:action-receipt:synthetic:tile-invalidated-002"},
+          {"surface": "GRAPH", "state": "INVALIDATED", "action": "INVALIDATE", "action_receipt_ref": "kfm:action-receipt:synthetic:graph-invalidated-002"},
+          {"surface": "INDEX", "state": "PURGED", "action": "PURGE", "action_receipt_ref": "kfm:action-receipt:synthetic:index-purged-002"},
+          {"surface": "CACHE", "state": "PURGED", "action": "PURGE", "action_receipt_ref": "kfm:action-receipt:synthetic:cache-purged-002"}
+        ],
+        "declared_outcome": "DENY",
+        "reason_codes": ["CONSENT_EXPIRED", "PROPAGATION_RECEIPTS_DECLARED"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_unknown_status_abstains",
+      "patch": {
+        "assessment_ref": "kfm:consent-revocation-propagation:synthetic:unknown-001",
+        "consent_state": {"status": "UNKNOWN", "valid_until": null},
+        "dependencies": [
+          {"surface": "READ", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:read-blocked-003"},
+          {"surface": "ANSWER", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:answer-blocked-003"},
+          {"surface": "EXPORT", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:export-blocked-003"},
+          {"surface": "TILE", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "GRAPH", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "INDEX", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "CACHE", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null}
+        ],
+        "declared_outcome": "ABSTAIN",
+        "reason_codes": ["CONSENT_STATUS_UNKNOWN"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_status_lookup_error_fails_closed",
+      "patch": {
+        "assessment_ref": "kfm:consent-revocation-propagation:synthetic:error-001",
+        "consent_state": {"status": "ERROR", "valid_until": null},
+        "dependencies": [
+          {"surface": "READ", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:read-blocked-004"},
+          {"surface": "ANSWER", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:answer-blocked-004"},
+          {"surface": "EXPORT", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:export-blocked-004"},
+          {"surface": "TILE", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "GRAPH", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "INDEX", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null},
+          {"surface": "CACHE", "state": "PENDING", "action": "REVIEW", "action_receipt_ref": null}
+        ],
+        "declared_outcome": "ERROR",
+        "reason_codes": ["CONSENT_STATUS_LOOKUP_ERROR"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_scope_mismatch_denies_every_surface",
+      "patch": {
+        "assessment_ref": "kfm:consent-revocation-propagation:synthetic:scope-mismatch-001",
+        "scope_match": {"audience": false},
+        "dependencies": [
+          {"surface": "READ", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:read-blocked-005"},
+          {"surface": "ANSWER", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:answer-blocked-005"},
+          {"surface": "EXPORT", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:export-blocked-005"},
+          {"surface": "TILE", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:tile-blocked-005"},
+          {"surface": "GRAPH", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:graph-blocked-005"},
+          {"surface": "INDEX", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:index-blocked-005"},
+          {"surface": "CACHE", "state": "BLOCKED", "action": "DENY_NEXT_USE", "action_receipt_ref": "kfm:action-receipt:synthetic:cache-blocked-005"}
+        ],
+        "declared_outcome": "DENY",
+        "reason_codes": ["CONSENT_SCOPE_MISMATCH"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "deny_revoked_answer_still_ready",
+      "from_case": "pass_revoked_fully_propagated",
+      "patch": {"dependencies": {"1": {"state": "READY", "action": "NONE"}}},
+      "expected": {"outcome": "DENY", "codes": ["REVOCATION_PROPAGATION_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_revoked_action_receipt_missing",
+      "from_case": "pass_revoked_fully_propagated",
+      "patch": {"dependencies": {"3": {"action_receipt_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["ACTION_RECEIPT_REQUIRED"]}
+    },
+    {
+      "name": "deny_revoked_receipt_missing",
+      "from_case": "pass_revoked_fully_propagated",
+      "patch": {"consent_state": {"revocation_receipt_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["REVOCATION_RECEIPT_REQUIRED"]}
+    },
+    {
+      "name": "deny_active_scope_mismatch_declared_satisfied",
+      "patch": {
+        "scope_match": {"purpose": false},
+        "reason_codes": ["CONSENT_SCOPE_MISMATCH"]
+      },
+      "expected": {"outcome": "DENY", "codes": ["SCOPE_OUTCOME_MISMATCH", "SCOPE_PROPAGATION_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_active_status_expired",
+      "patch": {"consent_state": {"valid_until": "2026-08-10T00:00:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["ACTIVE_STATUS_EXPIRED"]}
+    },
+    {
+      "name": "deny_status_observed_after_evaluation",
+      "patch": {"consent_state": {"observed_at": "2026-08-11T18:01:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["STATUS_OBSERVED_AFTER_EVALUATION"]}
+    },
+    {
+      "name": "deny_reason_codes_not_canonical",
+      "patch": {"reason_codes": ["ZZZ", "ACTIVE_SCOPE_SATISFIED"]},
+      "expected": {"outcome": "DENY", "codes": ["REASON_CODES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_dependency_surface_omitted",
+      "patch": {"dependencies": {"6": null}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_authority_overclaim",
+      "patch": {"authority_claims": {"publication_authority": true}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"consent_token": "forbidden"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

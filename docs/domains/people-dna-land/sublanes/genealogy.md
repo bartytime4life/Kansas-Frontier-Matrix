@@ -8,15 +8,18 @@ owners: <People-DNA-Land domain steward — TODO>, <source steward — TODO>, <s
 created: 2026-05-18
 updated: 2026-06-06
 policy_label: restricted
+owning_root: docs/
+responsibility: Define scope and boundary for the Genealogy sublane within People/Genealogy/DNA/Land Ownership without deciding whether genealogy is a standalone sublane, activating a source, or authorizing release or publication.
+truth_posture: PROPOSED sublane scope and standards crosswalk / NEEDS VERIFICATION pending the sublane-convention ADR (OQ-PEOPLE-SUB-01, OQ-PEOPLE-SUB-02)
 related:
   # NEEDS VERIFICATION — every path below is PROPOSED until checked against a mounted repo
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/domains/people-dna-land/sublanes/people/README.md
-  - docs/domains/people-dna-land/sublanes/dna/README.md
-  - docs/domains/people-dna-land/sublanes/land/README.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - docs/domains/people-dna-land/sublanes/dna.md
+  - docs/domains/people-dna-land/sublanes/land.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, genealogy, people-dna-land, sublane, governance, FAIR-CARE]
@@ -47,7 +50,7 @@ notes:
 | **Last updated** | 2026-06-06                                                     |
 | **Contract**     | `CONTRACT_VERSION = "3.0.0"`                                   |
 | **Parent**       | [`docs/domains/people-dna-land/README.md`](../README.md)       |
-| **Sibling sublanes** | [`people/README.md`](../people/README.md) · [`dna/README.md`](../dna/README.md) · [`land/README.md`](../land/README.md) — *paths PROPOSED* |
+| **Sibling sublanes** | [`people/README.md`](people/README.md) · [`dna/README.md`](dna.md) · [`land/README.md`](land.md) — *paths PROPOSED* |
 
 > [!IMPORTANT]
 > **CONFLICTED — does this sublane exist on its own?** The domain is titled "People,
@@ -147,9 +150,9 @@ Genealogy is presented here as one slice of People / Genealogy / DNA / Land Owne
 
 | Excluded                                              | Belongs in                                                            |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
-| DNA match evidence, DNA segments, DTC raw genotypes   | [`sublanes/dna/README.md`](../dna/README.md) — *PROPOSED*             |
-| Land ownership assertions, deeds, titles, parcel-version, chain-of-title | [`sublanes/land/README.md`](../land/README.md) — *PROPOSED* |
-| Canonical person records (`PersonCanonical`) and identity resolution across all sublanes | [`sublanes/people/README.md`](../people/README.md) — *PROPOSED* |
+| DNA match evidence, DNA segments, DTC raw genotypes   | [`sublanes/dna/README.md`](dna.md) — *PROPOSED*             |
+| Land ownership assertions, deeds, titles, parcel-version, chain-of-title | [`sublanes/land/README.md`](land.md) — *PROPOSED* |
+| Canonical person records (`PersonCanonical`) and identity resolution across all sublanes | [`sublanes/people/README.md`](people/README.md) — *PROPOSED* |
 | Settlements, cemeteries as places, schools as places, court venues       | `docs/domains/settlements-infrastructure/` *(CONFIRMED parent)*    |
 | Indigenous community context, cultural sovereignty review                | `docs/domains/archaeology/` *(CONFIRMED parent)*                    |
 | Spatial foundation, base layers, hydrology context                       | `docs/domains/spatial-foundation/` (and sibling natural-system domains) |
@@ -281,7 +284,7 @@ Object families this sublane is responsible for, with identity and temporal hand
 | Vital / cemetery / burial / obituary / church / school / military / census / directory / court / probate records   | authority / observed / context / modeled | rights & current terms **NEEDS VERIFICATION**; sensitive joins fail closed    | source-vintage specific | [DOM-PEOPLE] [ENCY]     |
 | GEDCOM / GEDZip / tree overlays                                                                                     | authority / observed / context / modeled | rights & current terms **NEEDS VERIFICATION**; sensitive joins fail closed    | source-vintage specific | [DOM-PEOPLE] [ENCY]     |
 | FamilySearch API responses                                                                                          | observed                                   | OAuth2-scoped consent; user-revocable                                          | live / cadence-bound    | [Pass-10 C9-02] CONFIRMED upstream / PROPOSED integration |
-| DNA vendor match data (DTC genomic exports, segment, triangulation)                                                 | observed                                   | **default-deny**; restricted-policy required                                  | source-vintage specific | [DOM-PEOPLE] [ENCY] — *out of scope here; see [`dna/README.md`](../dna/README.md)* |
+| DNA vendor match data (DTC genomic exports, segment, triangulation)                                                 | observed                                   | **default-deny**; restricted-policy required                                  | source-vintage specific | [DOM-PEOPLE] [ENCY] — *out of scope here; see [`dna/README.md`](dna.md)* |
 
 > [!WARNING]
 > Rights and current terms for every source family are flagged **NEEDS VERIFICATION**. Source admission MUST NOT proceed without a resolvable `SourceDescriptor` carrying source role, authority, rights, sensitivity, cadence, and a payload/reference hash. *(CONFIRMED doctrine / PROPOSED implementation.)*
@@ -548,13 +551,13 @@ CARE gates **what can publish**, to whom, on what terms:
 
 - [`../README.md`](../README.md) — People / Genealogy / DNA / Land Ownership domain landing *(PROPOSED)*
 - [`../sublanes/README.md`](./README.md) — sublanes index *(PROPOSED layer)*
-- [`../people/README.md`](../people/README.md) — People sublane: PersonCanonical, identity resolution *(PROPOSED)*
-- [`../dna/README.md`](../dna/README.md) — DNA sublane: DNAMatchEvidence, DNASegment, restricted access *(PROPOSED)*
-- [`../land/README.md`](../land/README.md) — Land sublane: deeds, titles, parcels, chain-of-title *(PROPOSED)*
-- [`directory-rules.md`](../../../../../directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
-- [`docs/standards/PROV.md`](../../../../standards/PROV.md) — provenance vocabulary profile
-- [`docs/standards/ISO-19115.md`](../../../../standards/ISO-19115.md) — metadata profile
+- [`people/README.md`](people/README.md) — People sublane: PersonCanonical, identity resolution *(PROPOSED)*
+- [`dna.md`](dna.md) — DNA sublane: DNAMatchEvidence, DNASegment, restricted access *(PROPOSED)*
+- [`land.md`](land.md) — Land sublane: deeds, titles, parcels, chain-of-title *(PROPOSED)*
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance vocabulary profile
+- [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata profile
 - `docs/runbooks/people-dna-land/` — operational procedures *(per-source refresh runbooks PROPOSED; subfolder convention per §18 OPEN-DR-02)*
 
 *(All link paths in this list are relative to this doc's PROPOSED location and **will need verification** once the sublane folder convention is ratified.)*

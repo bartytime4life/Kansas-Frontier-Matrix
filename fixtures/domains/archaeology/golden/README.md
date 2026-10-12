@@ -140,7 +140,7 @@ Do not place any of the following in this lane:
 | Archaeology contracts and schemas | `contracts/domains/archaeology/`, `schemas/contracts/v1/domains/archaeology/` | Referenced, not duplicated. |
 | Archaeology policy | `policy/domains/archaeology/` and related policy roots | Out of scope; fixtures may test policy helpers but do not define policy. |
 | Cultural/sensitivity review | Reviewer workflows, receipts, policy decisions, release records | Out of scope; fixture success cannot substitute for review. |
-| Lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope. |
+| Lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope. |
 | Release authority | `release/` roots | Out of scope. |
 | Tests and validation proof | `tests/domains/archaeology/` and validator tooling | Referenced, not claimed as run. |
 

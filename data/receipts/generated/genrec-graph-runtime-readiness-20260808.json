@@ -1,0 +1,140 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/graph-runtime-readiness.yml": "sha256:7cf9c75901b709f109070856e0c77b90acfaf85c6e893df511d996b76496d060",
+    "contracts/runtime/graph_runtime_compatibility_matrix.md": "sha256:d9f3c22afc64af98aacb64984dfb59d301a3e4a231ede5cfd008a197c0fbb9e9",
+    "control_plane/graph_runtime_compatibility_matrix.json": "sha256:2d001a1867961c591aea2478e124ca4143a821e53cc13c1add66a27e0b40cf2d",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/README.md": "sha256:68d48da21ca07f443c1d5eeeb77d73b020ac48c42106bf56e36041a16bffa971",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/expected_findings_manifest.json": "sha256:e97be1f87a0c3fe00da67bdd6f82c526bafe1942b504578388f1df0c39c0b164",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/clustered_without_rehearsal.json": "sha256:f2134ac948e8d204c7874d38f10044c3e8ca2d40fe4ce1c69d8eda0ba8d856f7",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/duplicate_tuple.json": "sha256:e01ffd799e98ed5e34ea1ddd908151b0dfca7aa79148ecdea72da08a2cf3c4d2",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/spec_hash_mismatch.json": "sha256:b5c3b67ff5904ab68272e00f67fede34d57020860bda3a35f10671e6f8b1802b",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/supported_without_evidence.json": "sha256:09ab6b8a36206705588865c853e25c3dd829905084c21687ff83aaf7b874a0a7",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/valid/valid_placeholder_matrix.json": "sha256:2d001a1867961c591aea2478e124ca4143a821e53cc13c1add66a27e0b40cf2d",
+    "schemas/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json": "sha256:517785a2ba479a68eff4b5c38974124db830eaf07ffcdd20ab96da1ae39def97",
+    "tests/validators/test_validate_graph_runtime_compatibility_matrix.py": "sha256:347c923bdaedfcff20ec3f6a5a44512cf26d126a84d6ee16592104e4e4a6136f",
+    "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py": "sha256:526a0f0f141d201280f2468a12b06ab89f38469d5472ef98cf72ed09cb3a87f7"
+  },
+  "artifact_paths": [
+    ".github/workflows/graph-runtime-readiness.yml",
+    "contracts/runtime/graph_runtime_compatibility_matrix.md",
+    "control_plane/graph_runtime_compatibility_matrix.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/README.md",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/expected_findings_manifest.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/clustered_without_rehearsal.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/duplicate_tuple.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/spec_hash_mismatch.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/supported_without_evidence.json",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/valid/valid_placeholder_matrix.json",
+    "schemas/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json",
+    "tests/validators/test_validate_graph_runtime_compatibility_matrix.py",
+    "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0001",
+      "id": "attachment:pass31-graph-readiness",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:migrations/graph/README.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:graph-migration-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T05:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0001",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0002",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0003",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0001",
+      "repo:migrations/graph/README.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first graph runtime compatibility matrix. It records unresolved readiness evidence without selecting Neo4j, installing a JVM, connecting to a graph, authorizing migration, releasing, or publishing.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:7dc7c8fd8f5c1c313a3354224606c6ec1ee1cb21e9b2e0b5763343acb3defa24",
+  "receipt_id": "genrec-graph-runtime-readiness-20260808",
+  "truth_labels": {
+    ".github/workflows/graph-runtime-readiness.yml": "CONFIRMED",
+    "contracts/runtime/graph_runtime_compatibility_matrix.md": "PROPOSED",
+    "control_plane/graph_runtime_compatibility_matrix.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/clustered_without_rehearsal.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/duplicate_tuple.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/semantic_invalid/supported_without_evidence.json": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/graph_runtime_compatibility_matrix/valid/valid_placeholder_matrix.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/graph_runtime_compatibility_matrix.schema.json": "PROPOSED",
+    "tests/validators/test_validate_graph_runtime_compatibility_matrix.py": "CONFIRMED",
+    "tools/validators/runtime/validate_graph_runtime_compatibility_matrix.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Five deterministic unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Positive and negative fixtures matched exact finite outcomes and reason codes."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema, matrix projection, canonical rows, and spec_hash validated locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

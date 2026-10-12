@@ -14,17 +14,16 @@ related:
   - docs/standards/SIGNING.md
   - docs/standards/PROVENANCE.md
   - docs/standards/CANONICALIZATION.md
-  - docs/runbooks/key-rotation-cosign.md
-  - docs/runbooks/credential-leak-response.md
-  - docs/runbooks/pseudonymisation-key-cycle.md
   - infra/README.md
   - configs/README.md
-  - control_plane/key_register.yaml
 tags: [kfm, security, signing, cosign, sigstore, pseudonymisation, rotation, kms, governance]
 notes:
   - Policy doc; class-specific operations live under docs/runbooks/.
   - Default cadences are PROPOSED and require ADR ratification before they become operating reality.
   - Owners are placeholders; confirm at merge.
+owning_root: docs/
+responsibility: "Documentation for Key Rotation Policy; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -313,7 +312,7 @@ The storage requirements below are **MUST**-level when the class is in productio
 | Audit log of every access | ✓ | ✓ (Rekor) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 > [!CAUTION]
-> **CONFIRMED doctrine:** `configs/` MUST NOT store real secrets — ever, even for "test" or "local". If a real secret lands in `configs/`, treat it as a **security incident**: rotate the affected key, audit any access during the exposure window, and write a runbook entry under `docs/runbooks/`. See [`docs/runbooks/credential-leak-response.md`](../runbooks/credential-leak-response.md) *(PROPOSED path; verify at merge)*.
+> **CONFIRMED doctrine:** `configs/` MUST NOT store real secrets — ever, even for "test" or "local". If a real secret lands in `configs/`, treat it as a **security incident**: rotate the affected key, audit any access during the exposure window, and write a runbook entry under `docs/runbooks/`. See `docs/runbooks/credential-leak-response.md` (PROPOSED; not present) *(PROPOSED path; verify at merge)*.
 
 [Back to top](#top)
 
@@ -329,7 +328,7 @@ A compromise rotation is **not** a faster scheduled rotation. It is a different 
 - Unauthorized access logged against KMS, HSM, or secret store.
 - A signed artifact whose contents were not produced by the recorded build identity (Rekor inclusion proof present but materials do not match the SLSA predicate).
 - Vendor announcement of compromise affecting cosign, Fulcio, Rekor, the KMS provider, or an upstream OIDC issuer.
-- Credential leak event for a CI secret (see [`docs/runbooks/credential-leak-response.md`](../runbooks/credential-leak-response.md), PROPOSED path).
+- Credential leak event for a CI secret (see `docs/runbooks/credential-leak-response.md` (PROPOSED; not present), PROPOSED path).
 
 ### Required response actions
 
@@ -420,12 +419,12 @@ The links below use PROPOSED paths consistent with `docs/doctrine/directory-rule
 - [`docs/standards/SIGNING.md`](../standards/SIGNING.md) — cosign signing standard *(PROPOSED — referenced as expansion direction in C1-03)*
 - [`docs/standards/PROVENANCE.md`](../standards/PROVENANCE.md) — SLSA / in-toto provenance standard *(PROPOSED — C1-04 expansion direction)*
 - [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) — JCS / `spec_hash` determinism
-- [`docs/runbooks/key-rotation-cosign.md`](../runbooks/key-rotation-cosign.md) — operational runbook for cosign key rotations *(PROPOSED path)*
-- [`docs/runbooks/credential-leak-response.md`](../runbooks/credential-leak-response.md) — incident response for real-secret leaks into configs *(PROPOSED path)*
-- [`docs/runbooks/pseudonymisation-key-cycle.md`](../runbooks/pseudonymisation-key-cycle.md) — EDPB-aligned worked example *(PROPOSED path; C9-05 suggested future work)*
+- `docs/runbooks/key-rotation-cosign.md` (PROPOSED; not present) — operational runbook for cosign key rotations *(PROPOSED path)*
+- `docs/runbooks/credential-leak-response.md` (PROPOSED; not present) — incident response for real-secret leaks into configs *(PROPOSED path)*
+- `docs/runbooks/pseudonymisation-key-cycle.md` (PROPOSED; not present) — EDPB-aligned worked example *(PROPOSED path; C9-05 suggested future work)*
 - [`infra/README.md`](../../infra/README.md) — deny-by-default, audit, secret-isolation posture *(PROPOSED path per Directory Rules §10.2)*
 - [`configs/README.md`](../../configs/README.md) — the "no real secrets in configs" rule *(PROPOSED path per Directory Rules §10.3)*
-- [`control_plane/key_register.yaml`](../../control_plane/key_register.yaml) — machine-readable key inventory *(PROPOSED path)*
+- `control_plane/key_register.yaml` (PROPOSED; not present) — machine-readable key inventory *(PROPOSED path)*
 
 ---
 
@@ -471,6 +470,6 @@ For compromise rotation, treat every box above as completable in parallel within
 | **Last updated** | 2026-05-13 |
 | **Status** | `draft` — cadences PROPOSED pending ADR |
 
-**Related:** [trust-membrane](../doctrine/trust-membrane.md) · [SIGNING](../standards/SIGNING.md) · [PROVENANCE](../standards/PROVENANCE.md) · [key-rotation-cosign runbook](../runbooks/key-rotation-cosign.md) · [credential-leak-response runbook](../runbooks/credential-leak-response.md) · [`configs/`](../../configs/README.md) · [`infra/`](../../infra/README.md)
+**Related:** [trust-membrane](../doctrine/trust-membrane.md) · [SIGNING](../standards/SIGNING.md) · [PROVENANCE](../standards/PROVENANCE.md) · key-rotation-cosign runbook (PROPOSED; not present) · credential-leak-response runbook (PROPOSED; not present) · [`configs/`](../../configs/README.md) · [`infra/`](../../infra/README.md)
 
 [⤴ Back to top](#top)

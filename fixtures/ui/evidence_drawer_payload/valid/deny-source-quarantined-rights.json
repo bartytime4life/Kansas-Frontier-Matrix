@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:source-quarantined-rights",
+  "outcome": "DENY",
+  "reason_code": "RIGHTS_UNRESOLVED",
+  "title": "STEWARD_ONLY_QUARANTINE_TITLE_CANARY_7f3b21",
+  "summary": "STEWARD_ONLY_QUARANTINE_PATH_CANARY_data/quarantine/source-001",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "STEWARD_ONLY_QUARANTINE_REASON_CANARY_contract-review-pending"
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "DENY",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

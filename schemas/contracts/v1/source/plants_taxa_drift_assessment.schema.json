@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/plants_taxa_drift_assessment.schema.json",
+  "title": "PlantsTaxaDriftAssessmentCandidate",
+  "description": "Fixture-only comparison of synthetic PLANTS taxa inventories under a pinned taxonomy version, with sensitivity and non-publication controls.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_cards",
+    "observed_at",
+    "source_bindings",
+    "snapshot_pair",
+    "set_delta",
+    "materiality",
+    "sensitivity",
+    "attestations",
+    "output",
+    "review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "PlantsTaxaDriftAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.source.plants-taxa-drift-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:plants-taxa-drift:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_cards": {
+      "const": ["EXP-001", "KFM-IDX-ANA-004", "KFM-IDX-SRC-006"]
+    },
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_bindings": {"$ref": "#/$defs/source_bindings"},
+    "snapshot_pair": {"$ref": "#/$defs/snapshot_pair"},
+    "set_delta": {"$ref": "#/$defs/set_delta"},
+    "materiality": {
+      "enum": ["CHANGE_CANDIDATE", "NO_MATERIAL_CHANGE", "UNRESOLVED"]
+    },
+    "sensitivity": {"$ref": "#/$defs/sensitivity"},
+    "attestations": {"$ref": "#/$defs/attestations"},
+    "output": {"$ref": "#/$defs/output"},
+    "review": {"$ref": "#/$defs/review"},
+    "limitations": {
+      "const": [
+        "FIXTURE_ONLY",
+        "NO_LIVE_SOURCE_OR_NETWORK",
+        "NO_OCCURRENCE_JOIN_OR_EXACT_LOCATION",
+        "NO_TAXONOMY_OR_CONSERVATION_AUTHORITY",
+        "NO_SOURCE_ADMISSION_OR_LIFECYCLE_MUTATION",
+        "NO_PROMOTION_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 512,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "canonical_refs": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "source_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "source_intake_record_ref",
+        "watcher_registry_ref",
+        "taxonomic_concept_lineage_ref"
+      ],
+      "properties": {
+        "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+        "source_intake_record_ref": {"$ref": "#/$defs/ref"},
+        "watcher_registry_ref": {"$ref": "#/$defs/ref"},
+        "taxonomic_concept_lineage_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_ref",
+        "content_digest",
+        "taxonomy_version_ref",
+        "observed_at"
+      ],
+      "properties": {
+        "snapshot_ref": {"$ref": "#/$defs/ref"},
+        "content_digest": {"$ref": "#/$defs/sha256"},
+        "taxonomy_version_ref": {"$ref": "#/$defs/ref"},
+        "observed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "snapshot_pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prior", "current"],
+      "properties": {
+        "prior": {"$ref": "#/$defs/snapshot"},
+        "current": {"$ref": "#/$defs/snapshot"}
+      }
+    },
+    "rename_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_taxon_ref", "target_taxon_ref", "relationship"],
+      "properties": {
+        "source_taxon_ref": {"$ref": "#/$defs/ref"},
+        "target_taxon_ref": {"$ref": "#/$defs/ref"},
+        "relationship": {"const": "RENAMED_OR_RECODED_CANDIDATE"}
+      }
+    },
+    "set_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added_taxon_refs", "removed_taxon_refs", "rename_edges"],
+      "properties": {
+        "added_taxon_refs": {"$ref": "#/$defs/canonical_refs"},
+        "removed_taxon_refs": {"$ref": "#/$defs/canonical_refs"},
+        "rename_edges": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/rename_edge"}
+        }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "occurrence_join_performed",
+        "exact_locations_present",
+        "conservation_intersection_state",
+        "public_detail_mode",
+        "policy_decision_ref",
+        "sensitivity_review_required"
+      ],
+      "properties": {
+        "occurrence_join_performed": {"type": "boolean"},
+        "exact_locations_present": {"type": "boolean"},
+        "conservation_intersection_state": {
+          "enum": ["NONE", "PRESENT", "UNKNOWN"]
+        },
+        "public_detail_mode": {"enum": ["COUNTS_ONLY", "WITHHELD"]},
+        "policy_decision_ref": {"$ref": "#/$defs/nullable_ref"},
+        "sensitivity_review_required": {"type": "boolean"}
+      }
+    },
+    "attestations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_snapshot_attestation_refs",
+        "taxonomy_version_attestation_ref"
+      ],
+      "properties": {
+        "source_snapshot_attestation_refs": {"$ref": "#/$defs/canonical_refs"},
+        "taxonomy_version_attestation_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["posture", "publication_state", "candidate_ref"],
+      "properties": {
+        "posture": {"enum": ["NO_WORK_RECORD", "WORK_CANDIDATE"]},
+        "publication_state": {"const": "NOT_PUBLISHED"},
+        "candidate_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/canonical_refs"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admission_authority",
+        "taxonomy_authority",
+        "conservation_status_authority",
+        "occurrence_authority",
+        "sensitivity_policy_authority",
+        "lifecycle_mutation_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "source_admission_authority": {"const": false},
+        "taxonomy_authority": {"const": false},
+        "conservation_status_authority": {"const": false},
+        "occurrence_authority": {"const": false},
+        "sensitivity_policy_authority": {"const": false},
+        "lifecycle_mutation_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  }
+}

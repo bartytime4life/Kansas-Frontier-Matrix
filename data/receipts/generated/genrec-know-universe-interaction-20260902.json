@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-know-universe-interaction-20260902",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts",
+    "apps/explorer-web/src/features/map_runtime/view-context-strip.ts",
+    "apps/explorer-web/tests/evidence-drawer-derived-representation.test.ts",
+    "apps/explorer-web/tests/know-universe-interactions.test.ts",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:6d2f98fbf49946e0d2d6779980f1709ef76210971da8758031871f48f1b64e73",
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts": "sha256:47023bad47cf1fc08a7d46f2856757d02a2ac5f69da18142e591c7088b84bf0c",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts": "sha256:47a2e7f40300c472487dce1d04d40a154be398852725b7f4e6554b4eb459354b",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts": "sha256:1c9c9098c38ff85bf64a3e6a6a054c526667b6e93528068c711498a90d2798fb",
+    "apps/explorer-web/src/features/map_runtime/view-context-strip.ts": "sha256:f461cefb523261158216e63d1b0a03ce1fcd2d3e905c1aca9ce6d73755a2b272",
+    "apps/explorer-web/tests/evidence-drawer-derived-representation.test.ts": "sha256:9ee6919d085347b7ea2af27cc21bfad54025d3b64dc3c752bc9daf48d8563819",
+    "apps/explorer-web/tests/know-universe-interactions.test.ts": "sha256:60d4aad08327c9de16b222caaf20ab417ba8a860fb757a07c79bbf5ce3aeb79d",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md": "sha256:8537e26b9d36d1d368bbd5dc920b5bacffecda48751d5da8048a14a94ec07295"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-09-02",
+    "parameter_hash": "sha256:f5cb7b59537807b31ba1294ec188c6cc5807184d602b8e77f834cbb99302f6e3"
+  },
+  "prompt_or_contract": "sha256:2ea8d9970e3c401e6db1ea4b9c9f8d252412d7652001d46c8ebb7f2965f1c1a3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "TypeScript 5.8.3",
+      "Node.js 22.16.0"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:201cb561f86f66e057f3849ec48b4dc444c8f0b909f06024092d29def62e6a64"
+    ],
+    "attached_docs": [
+      "KFM_Know_the_Universe_Pattern_Review_2026-09-02.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Google Earth Patterns for a Working Kansas Frontier Matrix Explorer.pdf",
+      "KFM Contributor Reliability System_ Documentation, PR Quality, and CI Hardening.pdf"
+    ],
+    "evidence_refs": [
+      "url:https://knowtheuniverse.com/?sel=13094770-2323017",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@4f41d9aa6123ea38207f21cd74dd1d704fef48f4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "repo:apps/explorer-web/src/site/workspace-context.ts"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/crosshair-selection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/exploration-mode.ts": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/point-cloud-benchmark.ts": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/view-context-strip.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer-derived-representation.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/know-universe-interactions.test.ts": "PROPOSED",
+    "docs/intake/exploratory/know-the-universe-pattern-review.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, open pull requests, and repository code were inspected; no open pull request or existing canonical implementation of this combined source pattern was found."
+    },
+    {
+      "gate": "strict-typescript-no-emit",
+      "outcome": "PASS",
+      "reason": "The changed production modules and tests passed TypeScript 5.8.3 strict no-emit checking with minimal declarations for current repository imports."
+    },
+    {
+      "gate": "app-local-runtime-assertions",
+      "outcome": "PASS",
+      "reason": "Node.js 22.16.0 assertions covered exploration interruption, reduced-motion fallback, closed context parsing, crosshair disambiguation, deterministic point samples, and benchmark outcomes."
+    },
+    {
+      "gate": "repository-native-explorer-unit-and-build",
+      "outcome": "SKIPPED",
+      "reason": "The authoring workspace did not contain the repository dependency installation or pnpm; exact-head GitHub CI must run the repository-native Vitest and Vite commands."
+    },
+    {
+      "gate": "hosted-browser-and-accessibility",
+      "outcome": "SKIPPED",
+      "reason": "Concrete browser, Playwright, reduced-motion, and accessibility results remain exact-head hosted checks."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  ],
+  "citations": [
+    {
+      "id": "source:know-the-universe",
+      "validated": true,
+      "evidence_ref": "url:https://knowtheuniverse.com/?sel=13094770-2323017"
+    },
+    {
+      "id": "repository:exact-base",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@4f41d9aa6123ea38207f21cd74dd1d704fef48f4"
+    },
+    {
+      "id": "repository:directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:maplibre-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-02T17:44:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 4225,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first KFM adaptation of public interaction patterns. The packet adds no live source, renderer dependency, policy decision, lifecycle promotion, release, deployment, publication, or repository-settings authority."
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-artifact-manifest-pmtiles-mvt-profile-complete",
+  "expected": {
+    "issue_codes": [],
+    "status": "STRUCTURAL_PASS"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_none"
+}

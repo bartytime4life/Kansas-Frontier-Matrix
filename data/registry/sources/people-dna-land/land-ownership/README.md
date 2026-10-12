@@ -1,12 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/data/registry/sources/people-dna-land/land-ownership/readme
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: People / DNA / Land Ownership Source Registry
 type: standard
 version: v1
 status: draft
 owners: OWNER_TBD
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-10-12
 policy_label: restricted-review
 related: [../README.md, ../../README.md, ../../people/README.md, ../../../people-dna-land/README.md, ../../../people-dna-land/sources/README.md, ../../../../../docs/domains/people-dna-land/README.md, ../../../../../docs/domains/people-dna-land/SOURCE_REGISTRY.md, ../../../../../docs/domains/people-dna-land/SOURCE_FAMILIES.md, ../../../../../docs/domains/people-dna-land/LAND_OWNERSHIP.md]
 tags: [kfm, data, registry, sources, people-dna-land, land-ownership, source-descriptor, source-role, deed, title, parcel, assessor, tax-roll, plss, survey, chain-of-title, consent, living-person, rights, sensitivity, evidence, provenance, release-gated, no-public-path]

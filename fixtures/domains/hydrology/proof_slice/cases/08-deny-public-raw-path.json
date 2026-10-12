@@ -1,0 +1,8 @@
+{
+  "case_id": "08-deny-public-raw-path",
+  "thin_slice_assertion": 8,
+  "description": "A public request for a RAW lifecycle path is denied.",
+  "overrides": {
+    "requested_artifact": "data/raw/hydrology/fixture-huc12-102600150101.json"
+  }
+}

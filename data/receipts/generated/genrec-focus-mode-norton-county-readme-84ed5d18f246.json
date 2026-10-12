@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-focus-mode-norton-county-readme-84ed5d18f246",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/norton_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/norton_county/README.md": "NEEDS_VERIFICATION"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@db1f4e4762247c9f00eb89e2c66e7f2b324e2d8c",
+      "github:docs/focus-mode/counties/norton_county/README.md@db1f4e4762247c9f00eb89e2c66e7f2b324e2d8c#blob:8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "github:docs/focus-mode/counties/norton_county/norton_county_focus_mode_build_plan.md@db1f4e4762247c9f00eb89e2c66e7f2b324e2d8c#blob:8f2b88b95d97ff03a8bce6168c810d47664cd7b9",
+      "task-contract:kfm-focus-mode-norton-county-readme-20260821"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/norton_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main, read the one-byte predecessor and full sibling build plan, and found no matching open Norton County README pull request or task branch before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "The change remains at the tracked docs/ path and does not create a parallel Focus Mode authority or migration."
+    },
+    {
+      "gate": "material-no-loss-and-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The sibling build plan remains byte-unchanged; its dynamic refuge-boundary, reservoir-currentness, public-safety, source-role, correction, and rollback limits were preserved without refreshing external claims."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One metadata block, one H1, explicit anchors, balanced fences, supported GFM alerts, and final newline."
+    },
+    {
+      "gate": "security-rights-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private records, exact sensitive wildlife locations, tactical response details, or live operational payloads were introduced."
+    },
+    {
+      "gate": "full-repository-native-validation",
+      "outcome": "NOT_RUN",
+      "reason": "Connector-only run; no mounted checkout was available for repository-native validator execution."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "PENDING",
+      "reason": "Observe after draft pull-request creation."
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T02:42:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null
+  },
+  "notes": "Provenance receipt for the Norton County README modernization only. It does not validate the sibling plan's 2026-05-24 external-source observations, admit sources, determine current refuge boundaries, reservoir values, regulations, boating/access, health, water supply/allocation, wildlife sensitivity, activate policy, prove runtime behavior, approve release, deploy, publish, or merge."
+}

@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-pass32-layer-lineage-timeline-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/LayerLineageProjection.ts",
+    "apps/explorer-web/src/features/layer_lineage_timeline/README.md",
+    "apps/explorer-web/src/features/layer_lineage_timeline/index.ts",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.fixture.ts",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.html",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.spec.ts",
+    "apps/explorer-web/tests/layer-lineage-timeline.test.ts",
+    "docs/intake/exploratory/pass-32-layer-lineage-timeline-source-map.md",
+    "fixtures/ui/layer_lineage_projection/README.md",
+    "fixtures/ui/layer_lineage_projection/invalid/extra-field.json",
+    "fixtures/ui/layer_lineage_projection/invalid/rollback-digest-mismatch.json",
+    "fixtures/ui/layer_lineage_projection/valid/available.json",
+    "fixtures/ui/layer_lineage_projection/valid/denied.json",
+    "fixtures/ui/layer_lineage_projection/valid/error.json",
+    "fixtures/ui/layer_lineage_projection/valid/missing.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/LayerLineageProjection.ts": "sha256:6bc10ffb46ec24ccaf90daa4c427496fb2f556f9e87cea74f7db2a2912fc9321",
+    "apps/explorer-web/src/features/layer_lineage_timeline/README.md": "sha256:482564e8dee9844bc626b43c79b9cb08ff6e462bcd92aa52a8f5df4a24310ec4",
+    "apps/explorer-web/src/features/layer_lineage_timeline/index.ts": "sha256:d87e5e12cb1f8c6306c4bb211e9b57a29a25b7385ecdae7095fecce8b8c63bc1",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.fixture.ts": "sha256:4dddd2cc9f9b1d6c7ba0ab77d3d892229cdb2ad5f05538244abcc7d556de7f4f",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.html": "sha256:7a2a382c969fd5af3d99ff9cd4eef88bcec65acc8c4391e78d577e0c7d9110da",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.spec.ts": "sha256:443c64f85e71c8569d8cbbfa97f29e2a16df534d59381062002acec10d9fa72f",
+    "apps/explorer-web/tests/layer-lineage-timeline.test.ts": "sha256:4f2720c02bec81c8f70aee34fe3064397f66a14af609680c6b99370592253ebe",
+    "docs/intake/exploratory/pass-32-layer-lineage-timeline-source-map.md": "sha256:1cf57857f5e10a166b94d562099e3ac2a47b42899ee96a9ccba2108b7041eab5",
+    "fixtures/ui/layer_lineage_projection/README.md": "sha256:cc98624a4c26b7ba274fdeeb2e9ad4342182d58e4d7cb9a4203f30eba9a22465",
+    "fixtures/ui/layer_lineage_projection/invalid/extra-field.json": "sha256:46b06a1e3ab212f22fe6f961988f0ccb0c96af8aee1020bed1de47f6eadb5e06",
+    "fixtures/ui/layer_lineage_projection/invalid/rollback-digest-mismatch.json": "sha256:1341873d8e6dc1215967f8e768f3443030238f5c9ae9ea26dfbe7f0805090dd4",
+    "fixtures/ui/layer_lineage_projection/valid/available.json": "sha256:fd2b7d009847d9df5b69004c0eb6f124ca0c745fbbc0e60b1d9419326540866d",
+    "fixtures/ui/layer_lineage_projection/valid/denied.json": "sha256:0a72fdfc21d33fb7813040d5f4627637b16ff52a0c129e7af6e4a53095e7e384",
+    "fixtures/ui/layer_lineage_projection/valid/error.json": "sha256:f17fd05359a2d6b62882ace97ddc849d470e4297b12e57ff3368b216de640566",
+    "fixtures/ui/layer_lineage_projection/valid/missing.json": "sha256:cd0f3cff459ebf62fc0bd8f37a47f2d6a16d25f33e1c9bd689cb43406861d403"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:c088fb2e037c0058acbfdea3d9db97a4418116847a646d2cf71a167e353ecf55",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards",
+      "New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0020",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@149af17075f7f12d716aa14de439ea22ee6a343e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:docs/architecture/publication/ROLLBACK.md",
+      "repo:docs/architecture/publication/rollback-and-correction.md",
+      "repo:schemas/contracts/v1/release/rollback_card.schema.json",
+      "repo:schemas/contracts/v1/release/correction_notice.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/LayerLineageProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/layer_lineage_timeline/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/layer_lineage_timeline/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/layer-lineage-timeline.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/layer-lineage-timeline.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-layer-lineage-timeline-source-map.md": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/README.md": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/invalid/rollback-digest-mismatch.json": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/valid/available.json": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/layer_lineage_projection/valid/missing.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the selected card ID and rollback/correction timeline terms; no implementation overlap was found."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The Explorer adapter boundary tests passed after using the established split-token form for governed release references."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "layer-lineage-targeted-unit-suite",
+      "outcome": "PASS",
+      "reason": "The layer-lineage timeline unit target passed all 8 tests."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 128 tests in the local Explorer working tree passed."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The layer-lineage browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-layer-lineage-timeline",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0020"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "gdrive:new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:rollback-and-correction-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/publication/rollback-and-correction.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T16:10:04Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0020. It is a read-only display projection and grants no lifecycle, evidence, policy, receipt, correction, rollback, review, release, deployment, publication, or public-use authority."
+}

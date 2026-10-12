@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-validators-dependencies-readme
 title: tools/validators/dependencies — Dependency Audit Boundary
 type: README; validator-lane; supply-chain-readiness
-version: v0.1
+version: v0.3
 status: proposed; executable-validator; focused-tests; fail-closed; non-authoritative
 owner: OWNER_TBD — Supply-chain reviewer · Validator steward · CI steward
 created: 2026-07-29
-updated: 2026-07-29
+updated: 2026-09-25
 policy_label: repository-facing; dependency-audit; pnpm; deterministic-readiness; network-classification; fail-closed; non-release
 owning_root: tools/
-responsibility: validate repository-local dependency-audit preconditions and classify external audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
+responsibility: validate repository-local dependency-audit preconditions and classify external pnpm audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
 truth_posture: CONFIRMED implementation and focused no-network tests / PROPOSED workflow execution / NEEDS VERIFICATION exact-head remote audit result
 related:
   - ../README.md
@@ -20,9 +20,10 @@ related:
   - ../../../pnpm-workspace.yaml
   - ../../../pnpm-lock.yaml
 notes:
-  - "Repository readiness is no-network and deterministic; the pnpm audit itself is a point-in-time registry query."
+  - "Repository readiness is no-network and deterministic; the pnpm audit is a point-in-time registry query."
   - "PASS means only that declared checks passed for the inspected revision and configured advisory response."
-  - "The stable workflow job id remains npm-audit for compatibility even though the accepted manager is pnpm."
+  - "The stable workflow job id remains npm-audit; the remaining root workspace graph uses pnpm."
+  - "Audit classification emits a bounded package/advisory identity projection; it never echoes the complete registry response."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,7 +47,8 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
   classify-audit \
   --report /path/to/pnpm-audit.json \
   --command-exit-code 0 \
-  --audit-level high
+  --audit-level high \
+  --manager pnpm
 ```
 
 `validate-repository` performs no network access. It checks:
@@ -60,8 +62,19 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
 - absence of npm, Yarn, or Bun root lockfiles that would make the authority
   ambiguous.
 
-`classify-audit` parses an already-produced pnpm JSON report. It never queries
-the registry itself.
+`classify-audit` parses an already-produced npm-compatible JSON report and
+labels the result for either `pnpm` or `npm`. It never queries the registry
+itself. When the report supplies package-level vulnerability records, the
+one-line result also includes a deterministic `threshold_vulnerabilities`
+projection with package name, severity, bounded advisory IDs, and a bounded
+fix hint when available. The parser accepts npm's package-keyed
+`vulnerabilities` shape and pnpm's legacy advisory-keyed `advisories`
+shape, and labels the selected `source_format`. The projection is limited to
+50 sorted records and 10 sorted advisory IDs per record. It does not echo
+titles, descriptions, recommendations, dependency paths, registry payloads,
+or arbitrary advisory URLs. `NOT_PROVIDED`, `PARTIAL_INVALID`, and
+`COUNT_MISMATCH` remain explicit instead of being misrepresented as a
+complete finding inventory.
 
 ## Finite outcomes
 
@@ -71,8 +84,8 @@ the registry itself.
 | `REGRESSION` | `1` | The command failed and the structured report confirms one or more findings at or above the selected threshold. |
 | `ERROR` | `2` | Inputs are missing, unsafe, malformed, inconsistent, unsupported, or the audit failed without confirmed threshold findings. |
 
-Reason codes and findings are sorted before one-line JSON emission. Identical
-inputs therefore produce identical output.
+Reason codes, findings, and the bounded threshold projection are sorted before
+one-line JSON emission. Identical inputs therefore produce identical output.
 
 ## Workflow boundary
 
@@ -80,8 +93,19 @@ The `dependency-scan` workflow:
 
 1. runs the no-network readiness command;
 2. activates the exact manager through Corepack;
-3. executes `pnpm audit --audit-level high --json`; and
-4. passes both the report and command exit code to the classifier.
+3. executes `pnpm audit --audit-level high --json` for the remaining root
+   workspace graph; and
+4. passes that report and command exit code to the classifier, then fails if
+   the graph reports a regression or error.
+
+The retired monorepo Explorer graph is no longer audited here. The mirrored
+Explorer Site keeps its own npm lockfile in `apps/site/source/`, outside the
+root workspace. The separate `site-npm-audit` job runs
+`npm audit --omit=dev --audit-level high --json` there and passes the report
+to the same classifier with `--manager npm`, so production dependencies gate
+the job. It also records the count of all findings, including development
+tooling, in the step summary without gating on them; those are fixed in the
+standalone Site project and reach this repository through a reviewed mirror.
 
 The workflow does not use `--ignore-registry-errors`. An unavailable registry,
 unparseable response, command failure without qualifying findings, or
@@ -119,8 +143,10 @@ python -m pytest tests/validators/test_pnpm_audit_readiness.py -q
 
 The suite covers the positive repository contract plus manager, engine,
 workspace, lockfile, importer, malformed-manifest, symlink, threshold,
-malformed-report, command-failure, polarity, deterministic-output, and CLI-exit
-cases. Fixtures are temporary, synthetic, and no-network.
+bounded npm and legacy-pnpm advisory projections, raw-text exclusion,
+missing-detail, count-mismatch, malformed-report, command-failure, polarity,
+deterministic-output, and CLI-exit cases. Fixtures are temporary, synthetic,
+and no-network.
 
 ## Correction and rollback
 

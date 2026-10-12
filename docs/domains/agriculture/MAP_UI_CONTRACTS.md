@@ -16,7 +16,7 @@ related:
   - docs/domains/agriculture/IDENTITY_MODEL.md
   - docs/domains/agriculture/FILE_SYSTEM_PLAN.md
   - docs/architecture/ui/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
@@ -32,6 +32,9 @@ notes:
   - All paths in this document are PROPOSED until verified against mounted-repo evidence.
   - Agriculture map products are aggregate-only by default; field-level joins fail closed (operating contract §23.2 sensitive-domain matrix).
   - Mermaid diagrams use quoted node labels to defend against punctuation-induced parse errors.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Map & UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌾 Agriculture — Map & UI Contracts
@@ -113,7 +116,7 @@ This is the **interface seam** between domain truth and the user-facing renderer
 | Home | `docs/domains/agriculture/MAP_UI_CONTRACTS.md` | **PROPOSED** *(per Directory Rules §12, Domain Placement Law)* |
 | Authority root | `docs/` (explains; does not decide alone) | CONFIRMED doctrine |
 | Sibling docs (same lane) | `README.md`, `FILE_SYSTEM_PLAN.md`, `IDENTITY_MODEL.md`, `LIFECYCLE.md`, `SOURCES.md`, `POLICY.md`, `OBJECTS.md` | **PROPOSED** *(typical KFM domain doc family; FILE_SYSTEM_PLAN / IDENTITY_MODEL / LIFECYCLE drafted in companion v1.1 PRs)* |
-| Upstream authority | `docs/doctrine/ai-build-operating-contract.md`, `docs/architecture/map-shell.md`, `docs/architecture/governed-api.md`, `docs/doctrine/trust-membrane.md` | **CONFIRMED** for operating contract; **PROPOSED** for architecture paths *(canonical architecture homes per Directory Rules §6.1)* |
+| Upstream authority | `docs/doctrine/ai-build-operating-contract.md`, `docs/architecture/map-shell.md`, `docs/architecture/governed-api/README.md`, `docs/doctrine/trust-membrane.md` | **CONFIRMED** for operating contract; **PROPOSED** for architecture paths *(canonical architecture homes per Directory Rules §6.1)* |
 | Downstream consumers | `apps/explorer-web/`, `packages/maplibre/` *(or `packages/maplibre-runtime/` per Directory Rules v1.3)*, `packages/ui/`, `apps/governed-api/` | **PROPOSED** *(per Directory Rules §13.3 canonical UI shell; renderer-package slug NEEDS VERIFICATION against `maplibre/` vs `maplibre-runtime/` — Directory Rules OPEN-DR-10)* |
 | Schema home | `schemas/contracts/v1/` | **CONFIRMED** doctrine per ADR-0001 *(schema-home rule)* |
 | Receipt requirement | `GENERATED_RECEIPT.json` for any AI-authored change to this file or to schemas / contracts / policy this file references | **CONFIRMED** *(operating contract §34.2(1))* |
@@ -594,12 +597,12 @@ Forbidden in Agriculture map UI work. Each anti-pattern below corresponds to a D
 - [`docs/domains/agriculture/POLICY.md`](./POLICY.md) — Agriculture sensitivity, rights, aggregation policy *(PROPOSED)*
 - [`docs/domains/agriculture/OBJECTS.md`](./OBJECTS.md) — Object family details *(PROPOSED)*
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — Canonical map shell architecture *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Trust-membrane API doctrine *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Trust-membrane API doctrine *(PROPOSED)*
 - [`docs/architecture/ui/README.md`](../../architecture/ui/README.md) — UI architecture *(PROPOSED, per `[UIAI-WHOLE]` §24)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine *(PROPOSED)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariants *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement rules.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home rule *(PROPOSED)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule *(PROPOSED)*
 - [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) — Object-to-schema crosswalk *(PROPOSED)*
 
 ### Domain neighbors

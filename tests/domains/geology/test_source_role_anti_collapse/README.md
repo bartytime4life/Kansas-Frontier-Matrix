@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-geology-test-source-role-anti-collapse-readme
 title: Geology Source-Role Anti-Collapse Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; bounded fixture suite executable; broader test lane PROPOSED
 owners:
   - OWNER_TBD — Geology domain steward
   - OWNER_TBD — Source steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
 created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+updated: 2026-08-02
 policy_label: public-doc; tests; geology; source-role; anti-collapse; no-network; cite-or-abstain; release-gated
 tags: [kfm, tests, geology, source-role, anti-collapse, occurrence, deposit, estimate, permit, production, reserve, SourceDescriptor, EvidenceBundle, PolicyDecision, DENY, ABSTAIN]
 related:
@@ -31,7 +31,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This file replaces a blank placeholder at tests/domains/geology/test_source_role_anti_collapse/README.md."
+  - "The sibling test_source_role_anti_collapse.py executes the frozen synthetic resource-class fixture profile and is wired into domain-geology.yml."
   - "This is a test-lane README only. It does not define source-role doctrine, SourceDescriptor schemas, policy rules, semantic contracts, evidence bundles, receipts, release decisions, or published artifacts."
   - "The tested invariant is that Geology source roles and claim classes must not collapse: Occurrence, Deposit, Estimate, Permit, Production, Reserve, model, observation, interpretation, administrative, aggregate, candidate, and synthetic records are not interchangeable."
   - "The default posture is deterministic and no-network. Live source checks, credentials, and real source exports do not belong in this lane."
@@ -54,12 +54,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/geology/test_source_role_anti_collapse/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until paired test files are verified  
+**Status:** draft / bounded fixture suite executable / broader lane PROPOSED
 **Owning root:** `tests/`  
 **Domain segment:** `geology`  
 **Test lane:** `test_source_role_anti_collapse`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED KFM cross-domain doctrine treats source role as a first-class identity attribute fixed at admission · CONFIRMED Geology domain doctrine requires `Occurrence`, `Deposit`, `Estimate`, `Permit`, `Production`, and `Reserve` claims to remain distinct · NEEDS VERIFICATION for actual test modules, fixtures, source descriptors, validators, policy engine wiring, CI coverage, receipt emission, and release-gate integration.
+**Truth posture:** CONFIRMED the sibling test executes a frozen synthetic `MineralOccurrence` / `ResourceDeposit` / `ResourceEstimate` profile with exact positive and negative cases under `domain-geology.yml` · source admission, canonical classification vocabulary, schemas, policy, EvidenceBundle resolution, live records, proof, and release integration remain NEEDS VERIFICATION.
 
 **Quick jumps:** [Purpose](#purpose) · [Placement basis](#placement-basis) · [Invariant under test](#invariant-under-test) · [Expected test scope](#expected-test-scope) · [Fixture posture](#fixture-posture) · [Assertions](#assertions) · [Finite outcomes](#finite-outcomes) · [Forbidden shortcuts](#forbidden-shortcuts) · [Suggested test layout](#suggested-test-layout) · [Run posture](#run-posture) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
 
@@ -244,13 +244,16 @@ Keep helpers local only when they are test-specific. Shared source-role, policy,
 
 ## Run posture
 
-Default run expectations:
+Bounded fixture-profile run:
 
 ```bash
-pytest tests/domains/geology/test_source_role_anti_collapse
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/geology/test_source_role_anti_collapse.py --verbose
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that the test modules exist. This README does not claim the command currently passes.
+The command above is wired into `.github/workflows/domain-geology.yml`. It
+validates fixture mechanics and anti-collapse behavior only; it does not run a
+live source, canonical schema, policy, proof, or release integration test.
 
 Expected CI posture:
 
@@ -265,7 +268,7 @@ Expected CI posture:
 
 | Evidence | Status | Supports | Limits |
 |---|---|---|---|
-| Previous target file | CONFIRMED | `tests/domains/geology/test_source_role_anti_collapse/README.md` existed as a blank placeholder before this replacement. | Did not define the lane. |
+| Executable fixture suite | CONFIRMED | `tests/domains/geology/test_source_role_anti_collapse.py` validates the bounded `fixtures/domains/geology/resource_class/` profile. | Does not establish canonical resource classification, source admission, policy, proof, or release. |
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof; domain-specific tests belong under `tests/domains/<domain>/`; default suite should avoid sensitive data and live network calls. | Does not prove this lane's modules or pass rate. |
 | `docs/architecture/cross-domain/source-role-anti-collapse.md` | CONFIRMED doctrine / PROPOSED implementation | Source role is first-class, fixed at admission, preserved through promotion, and fail-closed when roles are conflated. | Notes implementation surfaces and path placement are PROPOSED / NEEDS VERIFICATION. |
 | `docs/domains/geology/README.md` | CONFIRMED doctrine / PROPOSED implementation | Geology's first job is anti-collapse: keep occurrence, deposit, estimate, permit, production, and reserve claims distinct. | Does not prove test modules, validators, or policy enforcement. |
@@ -278,15 +281,14 @@ Expected CI posture:
 
 Before treating this README as implemented behavior, verify:
 
-- [ ] Test modules exist under this lane.
-- [ ] Test runner and import paths match the repo's accepted convention.
-- [ ] Synthetic fixtures exist for missing role, valid occurrence, occurrence/deposit mismatch, deposit/estimate/reserve mismatch, permit/extraction mismatch, production/physical-proof mismatch, model/observed mismatch, aggregate/per-place mismatch, candidate public exposure, and AI-text-as-evidence rejection.
+- [x] The bounded sibling test module and imports execute with the standard-library runner.
+- [x] Synthetic fixtures cover valid occurrence/deposit/estimate plus occurrence, modeled-potential, permit, production, observation, reserve, classification-support, and sensitive-location negative cases.
 - [ ] SourceDescriptor/source-role schema path is accepted.
 - [ ] Source-role policy behavior is available to tests or safely stubbed.
 - [ ] EvidenceRef / EvidenceBundle resolver behavior is available to tests or safely stubbed.
 - [ ] Public payload role metadata expectations are defined before enforcing UI/API assertions.
 - [ ] Receipt-ready role-preservation metadata expectations are defined before enforcing them.
-- [ ] CI runs the no-network source-role anti-collapse suite.
+- [x] `domain-geology.yml` runs the bounded suite with network access denied.
 - [ ] Failures block public carrier promotion or release candidate approval.
 
 ---

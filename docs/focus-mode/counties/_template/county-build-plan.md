@@ -1,371 +1,351 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<county-slug>-county-focus-mode-build-plan
-title: <County Name> County Focus Mode — Build Plan
-type: standard
-version: v1
-status: draft
-owners: <OWNER>
-created: <YYYY-MM-DD>
-updated: <YYYY-MM-DD>
-policy_label: public
+doc_id: kfm://doc/focus-mode-county-build-plan-template
+title: County Focus Mode Build-Plan Authoring Template
+type: template
+version: v2.0-draft
+status: draft; authoring-aid; compatibility-lane; validator-contract-conflicted; non-publication
+owners:
+  - "@bartytime4life — current CODEOWNERS review route"
+  - "NEEDS VERIFICATION — Focus architecture, evidence, policy, sensitivity, release, and county-scope stewardship"
+created: 2026-05-23
+updated: 2026-08-20
+policy_label: public; documentation-template; county-scope; cite-or-abstain; non-authoritative
+owning_root: docs/
+responsibility: Provide a reusable county Focus Mode planning scaffold while keeping current path, schema, validator, policy, release, and publication uncertainty explicit.
+truth_posture: CONFIRMED current repository surfaces and accepted placement principles / PROPOSED county-plan grammar and control-plane convergence / NEEDS VERIFICATION destination path, parser contract, payload admission, policy binding, release, and governed consumers
+evidence_snapshot: "bartytime4life/Kansas-Frontier-Matrix main@7ef962c606beabd9119d0aae283171839f806093; prior target blob 327c6304cd5301a38c9e086610be12725f3fabf7"
 related:
-  - directory-rules.md#67
-  - kfm_unified_doctrine_synthesis.md#8
-  - kfm_unified_doctrine_synthesis.md#11
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md#163
-  - docs/focus-mode/README.md#3
+  - docs/focus-mode/README.md
   - docs/focus-mode/counties/COUNTY_INDEX.md
-  - docs/focus-mode/state/STATE_INDEX.md
+  - docs/adr/ADR-0027-county-focus-mode-control-plane.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
   - contracts/focus_mode/focus_mode_payload.md
-  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json
+  - schemas/contracts/v1/focus/README.md
+  - schemas/contracts/v1/ui/map_context_envelope.schema.json
+  - policy/focus/README.md
   - tools/validators/validate_focus_mode_index.py
-tags: [kfm, focus-mode, build-plan, county-scale]
+  - tools/validators/validator_registry.json
 notes:
-  - PROPOSED. Template; placeholders MUST be filled before merge.
-  - Structured plan data lives at §12 (validator input); KFM Meta Block above is the standard doc-level metadata only.
+  - "This same-path revision changes documentation only; it does not select or create a canonical Focus documentation lane."
+  - "The fenced YAML in section 12 is retained as a compatibility authoring scaffold. Current validate_focus_mode_index.py does not parse it."
+  - "No county plan, payload, policy decision, release, deployment, or publication is created by copying this file."
 [/KFM_META_BLOCK_V2] -->
-
-<!--
-COUNTY BUILD PLAN TEMPLATE — KFM Focus Mode Control Plane
-
-Copy this file to:
-  docs/focus-mode/counties/<county-slug>-county/build-plan.md
-  (example: docs/focus-mode/counties/ellsworth-county/build-plan.md)
-
-Path note: directory-rules.md §6.7.3 (CONFIRMED doctrine) requires kebab-case
-lane folders in docs/. Earlier drafts of this template instructed an
-underscored folder + verbose filename (<county-slug>_county/
-<county-slug>_county_focus_mode_build_plan.md); that pattern conflicts with
-§6.7.3 and with the YAML field `area.lane` below, which is kebab-case.
-The path above is the canonical form.
-
-Then, in parallel:
-  1. Update the KFM Meta Block v2 above (title, owners, dates, doc_id slug).
-  2. Fill the §12 "Plan data block (validator input)" YAML at the bottom of
-     this file. That YAML is the structured spec the validator parses.
-  3. Fill every "PROPOSED. <prompt>." narrative under §§1–10 with
-     slice-specific content. Keep section anchor IDs unchanged.
-
-The validator at tools/validators/validate_focus_mode_index.py parses the
-SINGLE fenced ```yaml block located at §12 in this file. It will REJECT this
-template while placeholders are present and ACCEPT a fully-filled instance.
-
-Validator rejection contract (what is checked at §12):
-  - kfm_artifact == "focus_mode_build_plan"
-  - schema_version == "1"
-  - area.lane matches the parent folder name exactly (kebab-case + "-county")
-  - area.scope ∈ {county, region, corridor}
-  - owner is not an unresolved <PLACEHOLDER>
-  - last_reviewed is a valid ISO date, not "YYYY-MM-DD"
-  - sensitivity_lanes defaults present; any override carries justification,
-    deny-fixture path, and (where required) additional_reviewer
-  - canonical_paths.* point inside the responsibility roots named in
-    directory-rules.md §6.7
-
-This template is also the spec: do not change required keys or field types
-in §12 without an ADR (see docs/focus-mode/README.md §20).
--->
 
 <a id="top"></a>
 
-# `<County Name>` County Focus Mode — Build Plan
+# County Focus Mode — Build-Plan Authoring Template
 
-> *Per-slice planning and acceptance artifact for one county-scale Focus Mode. Becomes a `FocusModePayload` only through the crosswalk in `contracts/focus_mode/focus_mode_payload.md §3` after all seven promotion gates pass.*
-
-> **Status:** see §12 plan data `status` · **Lane:** `docs/focus-mode/counties/<county-slug>-county/` · **Owner:** see §12 plan data `owner` · **Priority:** see §12 plan data `priority`
-
-![status](https://img.shields.io/badge/status-PROPOSED-yellow)
-![placement](https://img.shields.io/badge/placement-Directory%20Rules%20v1.2%20%C2%A76.7-blue)
-![ui--shell](https://img.shields.io/badge/UI%20shell-apps%2Fexplorer--web-green)
-![sensitivity](https://img.shields.io/badge/sensitivity%20defaults-fail--closed-orange)
-![gates](https://img.shields.io/badge/gates-A%E2%80%93G%20(0%2F7)-lightgrey)
-![validator](https://img.shields.io/badge/validator-not--run-lightgrey)
+> **Purpose.** Help an author describe one county-scale Focus composition without turning a planning document into evidence, policy, machine admission, release authority, or publication proof.
 
 > [!IMPORTANT]
-> This file is one of **seven required files** per area lane (§13 of `docs/focus-mode/README.md`). It is a **planning + acceptance** artifact, **not a publication target**. The slice becomes a `FocusModePayload` only through the crosswalk in `contracts/focus_mode/focus_mode_payload.md` §3, and only after gates A–G (§8) all pass.
+> This tracked file is an **authoring aid in the current singular documentation lane**. It is not the canonical county-plan schema. Accepted Directory Rules v2 defines a county or Focus Mode as a composition scope, but it does not select an exact Focus documentation subtree. Proposed ADR-0027 discusses a plural replacement lane; it is not accepted. Do not create, move, or rename a county lane from this template alone.
+
+> [!CAUTION]
+> The current county-index validator and this template do not agree. `validate_focus_mode_index.py` targets `docs/focus-modes/`, expects YAML front matter and seven exact filenames, and does **not** parse the fenced block in section 12. The validator is also not registered in the current validator registry. A copied plan must not claim validator success until that contract is reconciled and a pinned run actually passes.
+
+## Status and authority boundary
+
+| Surface | Current repository evidence | What this template may claim |
+|---|---|---|
+| Current file | Present at `docs/focus-mode/counties/_template/county-build-plan.md` | Reusable documentation scaffold only |
+| Placement | Accepted Directory Rules v2 §12.4 says county and Focus Mode are composition scopes; exact Focus docs path remains unresolved | Same-path editing is valid; structural migration remains on hold |
+| County control-plane decision | ADR-0027 is `proposed` | Design input, not adopted authority |
+| County index | Present as a collision-prevention/planning register with mixed maturity | Prevent duplicate selection; does not prove lane completeness |
+| Semantic payload contract | `contracts/focus_mode/focus_mode_payload.md` exists and is marked `PROPOSED` | Crosswalk candidate only |
+| Machine payload admission | No `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` or `validate_focus_mode_payload.py` at the inspected base | `NEEDS VERIFICATION`; never imply schema-valid payload state |
+| Focus policy | Policy files exist, while the Focus README says the policy is inactive | Planning defaults only; no operational enforcement claim |
+| Release/publication | No county release evidence is established by this file | None; a plan, test, PR, or merge is not publication |
+
+## How to use this template safely
+
+1. Check the county index and repository for an existing county claim before drafting.
+2. Resolve the writable destination against accepted Directory Rules, current path evidence, and any accepted successor to ADR-0027. If no decision closes the path, revise an existing same-path artifact or hold creation.
+3. Replace every placeholder and every `PROPOSED — fill` prompt with county-specific, source-backed content. Keep `UNKNOWN` and `NEEDS VERIFICATION` visible.
+4. Reference shared source, evidence, contract, schema, policy, fixture, registry, and release objects; do not copy them into the county documentation lane.
+5. Build the support packet by **responsibility closure**, not by assuming seven files are universally required. The Focus README §13 is the current human guidance.
+6. Run only validators that actually cover the chosen path and grammar. Record the command, version or commit, result, and negative fixtures.
+7. Keep the plan at `draft` until evidence, rights, sensitivity, contract, validation, review, correction, and rollback dependencies are closed for the claimed use.
 
 > [!NOTE]
-> **How to use this template.** Copy this file to `docs/focus-mode/counties/<county-slug>-county/build-plan.md`, then (1) update the KFM Meta Block v2 at the top of this file (doc-level metadata: title, owners, dates), (2) fill every `<PLACEHOLDER>` in the **§12 Plan data block** at the bottom of this file, and (3) fill every `PROPOSED. <prompt>.` narrative under §§1–10 with slice-specific content. Keep section anchor IDs unchanged so validator anchor checks pass. The validator's rejection contract is listed in the HTML comment at the top of the source file.
-
----
+> Preserve the explicit section anchors below when instantiating or revising a plan. They keep existing references stable while the control-plane grammar remains under review.
 
 ## Contents
 
 - [1. Slice scope](#1-slice-scope)
 - [2. Geographic and temporal frame](#2-geographic-and-temporal-frame)
 - [3. Domains in scope](#3-domains-in-scope)
-- [4. Source-seed signals (summary)](#4-source-seed-signals-summary)
-- [5. Layer plan (summary)](#5-layer-plan-summary)
-- [6. Evidence model (summary)](#6-evidence-model-summary)
-- [7. Public-safety posture (summary)](#7-public-safety-posture-summary)
+- [4. Source-seed signals](#4-source-seed-signals-summary)
+- [5. Layer plan](#5-layer-plan-summary)
+- [6. Evidence model](#6-evidence-model-summary)
+- [7. Public-safety posture](#7-public-safety-posture-summary)
 - [8. Promotion path](#8-promotion-path)
-- [9. Acceptance criteria reference](#9-acceptance-criteria-reference)
+- [9. Acceptance criteria](#9-acceptance-criteria-reference)
 - [10. Open questions](#10-open-questions)
 - [11. Cross-references](#11-cross-references)
-- [12. Plan data block (validator input)](#12-plan-data-block-validator-input)
-- [Appendix — glossary and template legend](#appendix--glossary-and-template-legend)
+- [12. Candidate plan data](#12-plan-data-block-validator-input)
+- [Appendix A. Copy-and-review checklist](#appendix-a-copy-and-review-checklist)
+- [Appendix B. Truth labels](#appendix-b-truth-labels)
 
 ---
+
+<a id="1-slice-scope"></a>
 
 ## 1. Slice scope
 
-PROPOSED. State, in one paragraph, what a public user can ask of this Focus Mode and what they will get back. Reference the proof-slice pattern (`Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3 COUNTY-01). State what this slice does **not** show and why (see §7).
+**PROPOSED — fill.** In one paragraph, state:
 
-> [!TIP]
-> When filling: keep it to one paragraph. Lead with what the slice **does** answer; close with one sentence on what it **refuses** to answer at county scale.
+- the county-scale questions this composition is intended to answer;
+- the bounded map, time, layer, claim, and audience context;
+- the finite outcomes the user can see (`ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, where applicable to the governed surface); and
+- the questions or precision it refuses to answer and why.
 
-[↑ Back to top](#top)
+Do not describe a county encyclopedia, unrestricted data portal, emergency-alert service, title system, source-of-record database, or general model chat surface. A Focus Mode composes governed references for a bounded purpose; it does not become sovereign truth.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-geographic-and-temporal-frame"></a>
 
 ## 2. Geographic and temporal frame
 
-PROPOSED. Bounding geometry (county boundary plus tolerance), CRS, time window for layers (earliest/latest source observation), refresh cadence per source family. The `MapContextEnvelope` schema at `schemas/contracts/v1/ui/map_context_envelope.schema.json` defines acceptable bounds/time fields.
+**PROPOSED — fill.** Describe the scope without embedding protected geometry or source payloads in this document.
 
-| Frame attribute | Required content | Example (illustrative) |
+| Frame field | Required authoring question | County-plan value |
 |---|---|---|
-| Bounding geometry | County polygon + buffer tolerance (m) | Ellsworth County polygon, 250 m buffer |
-| CRS | EPSG code; document any reprojection at slice boundary | EPSG:4326 (display); EPSG:5070 (analysis) |
-| Time window | `earliest` / `latest` ISO timestamps spanning published layers | `1860-01-01T00:00:00Z` → `2026-05-21T00:00:00Z` |
-| Refresh cadence | Per source family (daily / weekly / monthly / annual / on-event) | County GIS: monthly; KDOT projects: weekly; KDA / NASS: annual |
-| Temporal-role separation | One column per role: `source_time`, `observed_time`, `valid_time`, `retrieval_time`, `release_time`, `correction_time` | (kept distinct where material) |
+| Stable scope identity | Which registered or proposed `scope_id` identifies this composition? | `PROPOSED — fill` |
+| Geographic reference | Which governed boundary or released geometry reference defines the county? | `PROPOSED — fill reference; do not paste protected geometry` |
+| Display CRS | Which CRS does the public map use? | `PROPOSED — fill` |
+| Analysis CRS | Which CRS is used for measurement, and where is reprojection recorded? | `PROPOSED — fill` |
+| Tolerance/generalization | Which reviewed transform or public-safe profile applies? | `NEEDS VERIFICATION` |
+| Temporal extent | What are the earliest and latest supported observations or valid times? | `PROPOSED — fill` |
+| As-of/release context | Which release or candidate snapshot bounds the view? | `PROPOSED — fill reference` |
+| Refresh/freshness | What cadence and stale threshold applies per source role? | `PROPOSED — fill` |
+| Temporal roles | How are source, observation, valid, retrieval, release, correction, and supersession times kept distinct? | `PROPOSED — fill` |
 
-[↑ Back to top](#top)
+The current [`MapContextEnvelope` schema](../../../../schemas/contracts/v1/ui/map_context_envelope.schema.json) is relevant UI shape evidence, not proof that this county plan has been admitted to a runtime.
+
+[Back to top](#top)
 
 ---
+
+<a id="3-domains-in-scope"></a>
 
 ## 3. Domains in scope
 
-PROPOSED. The KFM domain bounded-contexts this slice composes across. Standard set listed below; strike or annotate per-slice rationale.
+Start with `not-assessed`; never make every documented domain automatically in scope. For each participating domain, cite the registered identity, source roles, evidence, rights/sensitivity posture, and reason it is necessary to the county question.
 
-| # | Domain | Default at county scale | Per-slice note (fill at slice time) |
-|---|---|---|---|
-| 1 | Hydrology | in scope | PROPOSED. |
-| 2 | Soil | in scope | PROPOSED. |
-| 3 | Atmosphere | in scope | PROPOSED. |
-| 4 | Geology | in scope | PROPOSED. |
-| 5 | Fauna | in scope | PROPOSED. |
-| 6 | Flora | in scope | PROPOSED. |
-| 7 | Habitat | in scope | PROPOSED. |
-| 8 | Archaeology | **aggregates-only** | PROPOSED — no exact locations at any scale (see §7). |
-| 9 | Settlements / Infrastructure | in scope | PROPOSED — note any sensitive critical-infrastructure carve-outs. |
-| 10 | Hazards | in scope | PROPOSED. |
-| 11 | Agriculture | in scope | PROPOSED. |
-| 12 | People / DNA / Land / Genealogy | **aggregates-only** | PROPOSED — living-person, DNA, and parcel-title fail-closed per §7. |
-| 13 | Roads / Railroads | in scope | PROPOSED. |
+| Domain or seam | Disposition | Evidence/source role | Rights and sensitivity | County-specific rationale |
+|---|---|---|---|---|
+| Hydrology | `not-assessed` | `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` |
+| Soil | `not-assessed` | `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` |
+| Atmosphere | `not-assessed` | `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` |
+| Geology | `not-assessed` | `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` |
+| Fauna / flora / habitat | `not-assessed` | `PROPOSED — fill` | rare-location review required | `PROPOSED — fill` |
+| Archaeology / cultural places | `not-assessed` | `PROPOSED — fill` | exact or reconstructive location fails closed | `PROPOSED — fill` |
+| Settlements / infrastructure | `not-assessed` | `PROPOSED — fill` | critical-detail review required | `PROPOSED — fill` |
+| Hazards | `not-assessed` | `PROPOSED — fill` | not an emergency-broadcast authority | `PROPOSED — fill` |
+| Agriculture | `not-assessed` | `PROPOSED — fill` | household, farm, and private-well risks reviewed | `PROPOSED — fill` |
+| People / genealogy / DNA / land | `not-assessed` | `PROPOSED — fill` | living-person, genomic, consent, and title claims fail closed | `PROPOSED — fill` |
+| Roads / rail / mobility | `not-assessed` | `PROPOSED — fill` | operational and infrastructure detail reviewed | `PROPOSED — fill` |
+| Cross-domain seam | `not-assessed` | `PROPOSED — registered seam ID` | inherit the most restrictive applicable posture | `PROPOSED — fill` |
 
-> [!NOTE]
-> A domain marked **out of scope** for a specific county requires a one-line rationale in the "Per-slice note" column. Domains 8 and 12 are aggregates-only by default at every scale; they are not strikeable to "in scope (exact)" without a sensitivity override (§7).
+Allowed dispositions should be tied to an accepted profile; until then use plain truth labels such as `PROPOSED`, `NEEDS VERIFICATION`, `HOLD`, or `not-applicable` rather than inventing an enum.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="4-source-seed-signals-summary"></a>
 
 ## 4. Source-seed signals (summary)
 
-PROPOSED. Bulleted summary; full ledger in `source-seed-list.md`. Each source MUST carry rights posture per `data/catalog/sources/<county-slug>-county/source_descriptors.yaml`.
+**PROPOSED — fill.** Summarize candidate sources here and keep the authoritative identity in the source registry. Accepted Directory Rules v2 is source-first: a source is registered once and may support several domains without duplicated RAW bytes or county-owned copies.
 
-| Source-seed family (from §12 plan data) | Typical role at county scale | Notes (fill at slice time) |
-|---|---|---|
-| County / City GIS | Parcels (aggregated), zoning, public-facility layers | PROPOSED. |
-| KDOT projects | Active road and bridge project network | PROPOSED. |
-| FEMA / USGS floodplain administration | Floodplain, gauge, watershed | PROPOSED. |
-| KDA / NASS agriculture data | County-level crop / livestock aggregates | PROPOSED. |
-| KGS geology | County-level surficial / structural geology | PROPOSED. |
-| KHRI / Museum heritage | Heritage register (aggregates-only) | PROPOSED. |
+| Source ID or candidate | Source role | Authority class | Rights/terms | Spatial and temporal coverage | Cadence/freshness | Evidence refs | Limitations/state |
+|---|---|---|---|---|---|---|---|
+| `PROPOSED — fill` | `authoritative / corroborating / contextual / derived` | `PROPOSED — fill` | `UNKNOWN until reviewed` | `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` | `HOLD` |
 
-> [!IMPORTANT]
-> Every source family enumerated here MUST appear as a `SourceDescriptor` under `data/catalog/sources/<county-slug>-county/source_descriptors.yaml` before this slice can advance past `draft`.
+Do not infer rights from public availability, copy source records into county docs, or activate a connector from a source-seed list. A watcher may propose work; it does not publish.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="5-layer-plan-summary"></a>
 
 ## 5. Layer plan (summary)
 
-PROPOSED. Bulleted summary; per-layer detail (source, policy, evidence ref, style ref, sensitivity tier) lives in `layer-registry.md`. Each entry MUST have a `SourceDescriptor`, a `LayerManifest`, a `PolicyDecision`, and a sensitivity label (COUNTY-01 acceptance item (c)).
+**PROPOSED — fill.** Each visible layer is a governed projection, not canonical truth. Keep detailed registry state in its owning object family and summarize references here.
 
-> [!CAUTION]
-> The §12 plan-data counters `required_layers_min` and `required_layers_with_policy_decision` MUST be equal before `status` advances to `validated`. The validator enforces this.
+| Layer candidate | Released/candidate carrier ref | Source and evidence refs | Policy/sensitivity state | Time/freshness | Public-safe transform | UI behavior | Correction/withdrawal path |
+|---|---|---|---|---|---|---|---|
+| `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` | `HOLD` | `PROPOSED — fill` | `NEEDS VERIFICATION` | `PROPOSED — fill` | `PROPOSED — fill` |
 
-| Layer-plan column | Required value at slice time |
-|---|---|
-| `layer_id` | Stable identifier; appears in `LayerManifest` |
-| `source_descriptor` | Path under `data/catalog/sources/<county-slug>-county/` |
-| `policy_decision` | `ALLOW` / `DENY` / `HOLD` per layer |
-| `style_ref` | Style file under `apps/explorer-web/src/focus-modes/<county-slug>-county/` |
-| `sensitivity_tier` | `T0` – `T4` per `kfm_unified_doctrine_synthesis.md` §15 |
-| `evidence_ref` | Resolves to `EvidenceBundle` under `data/published/.../<county-slug>-county/` |
+Required negative behavior should include missing evidence, stale or revoked carrier, policy denial, unsupported time, sensitive precision, and renderer failure. Client-side hiding is not a sensitivity control; protected data must not be delivered to a public client.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="6-evidence-model-summary"></a>
 
 ## 6. Evidence model (summary)
 
-PROPOSED. What claims the slice will display, each tied to an `EvidenceRef` ID. Full model in `evidence-model.md`. **Cite-or-abstain is the default truth posture** (`kfm_unified_doctrine_synthesis.md` Part III).
+**PROPOSED — fill.** Define only claims the county composition needs. Every consequential claim must point through an `EvidenceRef` to a resolvable `EvidenceBundle`, carry source roles and limitations, and remain correctable.
 
-The §12 plan-data counters `evidence_refs_resolved` and `evidence_refs_total` track closure. The ratio MUST be `1.0` (every claim resolves to an `EvidenceBundle`) before the slice advances past `draft`. A claim whose `EvidenceRef` does not resolve **MUST** be removed from the model or marked `ABSTAIN`-only — it does not pass through silently.
+| Claim ID | Claim scope | EvidenceRef | EvidenceBundle resolution | Source roles/citations | Policy/review state | Finite result when unresolved |
+|---|---|---|---|---|---|---|
+| `PROPOSED — fill` | `PROPOSED — fill` | `PROPOSED — fill` | `NEEDS VERIFICATION` | `PROPOSED — fill` | `HOLD` | `ABSTAIN` or `ERROR`, as the bound contract requires |
 
-[↑ Back to top](#top)
+EvidenceBundle outranks generated language. Search indexes, maps, tiles, graphs, screenshots, summaries, dashboards, tests, badges, and model output are delivery or interpretation surfaces; none substitutes for evidence closure.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-public-safety-posture-summary"></a>
 
 ## 7. Public-safety posture (summary)
 
-PROPOSED. Bulleted summary; full posture in `public-safety-notes.md`. Defaults applied from `docs/focus-mode/README.md §15` and reflected in §12 plan-data `sensitivity_lanes`.
+**PROPOSED — fill.** Bind the plan to accepted policy and review evidence when available. Until a governing profile is proven, use the restrictive authoring posture below; it is not a claim that current Focus policy is active.
 
-| Sensitivity lane | Default outcome (county scale) | Why fail-closed |
+| Concern | Restrictive authoring posture | Required closure before a less restrictive result |
 |---|---|---|
-| `parcel_title` | **ABSTAIN** | Living-person + private-land collision; exact title implication risks reidentification. |
-| `exact_archaeology` | **DENY** | Looting risk; KSHS / federal protections; aggregates-only at every scale. |
-| `burial_sacred` | **DENY** | Tribal-sovereignty and cultural-sensitivity floor; no exact public exposure. |
-| `rare_species_exact` | **DENY** | Poaching / collection risk; exact occurrence denied for sensitive taxa. |
-| `critical_infrastructure_exact` | **DENY** | Security; aggregates only. |
-| `living_person_identifiers` | **DENY** | Privacy floor. |
-| `dna_genomic` | **DENY** | Consent + revocation discipline. |
-| `emergency_alert` | **ABSTAIN** | KFM is not an emergency-broadcast surface; defer to authoritative NWS / county EOC. |
+| Living-person, household, genealogy, health, or identifier data | `DENY` or `ABSTAIN` | lawful purpose, consent/authority, minimization, policy, review, expiry, revocation, correction |
+| DNA/genomic data | `DENY` | explicit authority and consent, purpose/audience limits, policy, revocation propagation, independent review |
+| Exact/reconstructive archaeology, burial, sacred, or culturally restricted location | `DENY` | do not expose exact detail; any public-safe derivative needs separate cultural/sovereignty/rights review, transform lineage, policy, validation, release, and rollback |
+| Rare species, nests, dens, roosts, or sensitive habitat location | `DENY` | accepted species/location profile, generalization or suppression, policy, negative reconstruction tests, release |
+| Critical or exploitable infrastructure and active operations | `DENY` | audience/purpose limit, approved generalization, security review, policy, release |
+| Parcel/title, private well, or private-land inference | `ABSTAIN` or `DENY` | source-role and legal review, de-identification, policy, correction path |
+| Emergency alert or current hazard instruction | `ABSTAIN` | defer users to the named authoritative emergency source; KFM does not become the alert authority |
+| Unknown rights, terms, sovereignty, sensitivity, or audience | `HOLD`, `ABSTAIN`, or `DENY` | missing authority resolved and recorded |
 
-Any per-lane override requires:
+Record every transformation and residual inference risk. Do not disclose protective thresholds, seeds, buffers, grids, or reconstruction recipes in a public plan when that detail could weaken the control.
 
-- a written **justification**;
-- a **deny-fixture** under `fixtures/focus_modes/<county-slug>-county/invalid/` exercising the exact outcome the override changes;
-- the entry recorded in §12 plan-data `sensitivity_overrides[]`.
-
-> [!WARNING]
-> Empty `sensitivity_overrides: []` is the expected default. A non-empty override list triggers Gate C (Sensitivity) re-review on every revision and changes the gate evidence requirements.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="8-promotion-path"></a>
 
 ## 8. Promotion path
 
-PROPOSED. The seven promotion gates A–G (per `kfm_unified_doctrine_synthesis.md §8`, CONFIRMED canonical labels) this slice must clear before `released`. **Per-slice promotion is a governed state transition, not a file move** (`kfm_unified_doctrine_synthesis.md` Part II invariants).
+A county plan is upstream planning evidence, not a lifecycle transition. Use the current release and promotion documents for the exact executable vocabulary; do not copy the older source-to-publication A–G labels from prior versions of this template as if they were the current gate contract.
 
-> [!IMPORTANT]
-> **Canonical gate labels.** The labels below match `kfm_unified_doctrine_synthesis.md §8` (CONFIRMED). Pass 10 C5-01 notes that the corpus has used slightly different labels in different sections; ADR-S-08 (PROPOSED) would finalize them. Use these labels in §12 plan-data `release.promotion_gates_passed[]` and in CI workflow names.
+| Stage | Required evidence | Failure posture | What completion does not prove |
+|---|---|---|---|
+| Scope and source identity | Stable scope/source references, roles, coverage, limitations | `HOLD` / `ABSTAIN` | rights or public fitness |
+| Rights and sensitivity | Terms, consent/authority, sovereignty/cultural review, audience, precision posture | `DENY` / `HOLD` | schema or evidence closure |
+| Evidence and contract closure | Resolving EvidenceRefs/Bundles, citations, contract/schema validation, finite negatives | `ABSTAIN` / `DENY` / `ERROR` | independent approval or release |
+| Catalog/provenance closure | Traceable carrier, provenance, time, transforms, integrity, correction lineage | `HOLD` | publication |
+| Independent review and release decision | Accountable review, applicable promotion evidence, manifest, correction and rollback targets | `DENY` / `HOLD` | deployment or public serving |
+| Governed delivery | Released public-safe artifact or governed API response, cache/correction/withdrawal behavior | fail closed | universal truth or permanence |
 
-```mermaid
-flowchart LR
-  A["A. Source identity<br/><i>SourceDescriptor</i>"] --> B["B. Rights and terms<br/><i>RightsReviewRecord</i>"]
-  B --> C["C. Sensitivity<br/><i>PolicyDecision + RedactionReceipt</i>"]
-  C --> D["D. Schema / contract<br/><i>SchemaValidationReport</i>"]
-  D --> E["E. Evidence closure<br/><i>EvidenceBundle + CitationValidationReport</i>"]
-  E --> F["F. Catalog / provenance<br/><i>CatalogMatrixReport</i>"]
-  F --> G["G. Review / release / rollback<br/><i>PromotionReceipt + ReleaseManifest + RollbackCard</i>"]
-  G --> P["PUBLISHED"]
-  classDef gate fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-  classDef pub  fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px;
-  class A,B,C,D,E,F,G gate;
-  class P pub;
-```
+Promotion is a governed state transition, not a file move, status string, pull request, merge, badge, validator pass, GitHub release, deployment, or model assertion.
 
-| Gate | Canonical purpose (synthesis §8) | What this slice checks at county scale | Required artifact | Status |
-|---|---|---|---|---|
-| **A — Source identity** | `SourceDescriptor` exists; source role + authority class known. | Every source family in §4 has a `SourceDescriptor` under `canonical_paths.source_descriptors`. | `SourceDescriptor` validation report. | not-run |
-| **B — Rights and terms** | License / terms / contact / attribution obligations resolved. | Every source's SPDX license is on the allowlist; attribution carried forward into `LayerManifest`. | `RightsReviewRecord`. | not-run |
-| **C — Sensitivity** | Living-person, DNA, archaeology, rare species, infrastructure, cultural sensitivity, private land, or sovereignty risks resolved. | §7 sensitivity-lane defaults applied; any override has fixture + (where required) additional reviewer. | `PolicyDecision` + `RedactionReceipt` (where transformed). | not-run |
-| **D — Schema / contract** | Artifacts match schemas and API contracts. | Every layer-registry entry validates against `schemas/contracts/v1/focus_mode/`; payload validates against `focus_mode_payload.schema.json`. | `SchemaValidationReport`. | not-run |
-| **E — Evidence closure** | `EvidenceRef` resolves to `EvidenceBundle`; citations valid. | `evidence_refs_resolved == evidence_refs_total`; every §6 claim has a resolving bundle. | `EvidenceBundle` + `CitationValidationReport`. | not-run |
-| **F — Catalog / provenance** | STAC / DCAT / PROV and `CatalogMatrix` closed. | Catalog entries published under `data/catalog/sources/<county-slug>-county/` and `data/catalog/stac/<county-slug>-county/`. | `CatalogMatrixReport`. | not-run |
-| **G — Review / release / rollback** | `PromotionDecision`, release manifest, proof pack, rollback target, correction path. | §12 `release.release_manifest_id` and `release.rollback_target_id` set; reviewer ≠ author; correction path declared. | `PromotionReceipt` + `ReleaseManifest` + `RollbackCard`. | not-run |
-
-> [!CAUTION]
-> **A gate that did not run is a gate that failed.** Empty §12 `release.promotion_gates_passed[]` does not mean "all green" — it means **zero**. The validator and Conftest/OPA bundle default-deny when evidence is missing (Pass 10 C5-02, CONFIRMED).
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="9-acceptance-criteria-reference"></a>
 
 ## 9. Acceptance criteria reference
 
-The eight COUNTY-01 acceptance items (a)–(h) live in `acceptance-checklist.md`. The validator checks that file for the eight literal items and verifies each item is marked `pass`, `fail`, or `not-run` (no other values accepted).
+Build the checklist from the observable outcome and direct dependencies. Do not assume that eight legacy literals or seven documentation filenames are an accepted universal contract.
 
-| Acceptance item | What it asserts (paraphrased; see `acceptance-checklist.md` for canonical text) |
-|---|---|
-| (a) | §12 plan data block validates against the schema in this template. |
-| (b) | All in-scope domains have a per-slice note in §3. |
-| (c) | Every layer in `layer-registry.md` has a `SourceDescriptor`, `LayerManifest`, `PolicyDecision`, and sensitivity label. |
-| (d) | Every source family in §4 has a `SourceDescriptor`. |
-| (e) | `evidence_refs_resolved == evidence_refs_total > 0`. |
-| (f) | Sensitivity lanes match §7 defaults or carry compliant overrides. |
-| (g) | Promotion gates A–G all `pass`. |
-| (h) | Release manifest + rollback target + correction path declared. |
+| Acceptance item | State | Evidence or negative proof | Accountable review | Recheck trigger |
+|---|---|---|---|---|
+| Scope identity and county collision are closed | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | scope, path, or index change |
+| Every participating domain and source role is justified | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | domain/source change |
+| Every visible layer has carrier, evidence, policy, sensitivity, time, and correction references | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | layer or policy change |
+| Every consequential claim resolves or returns the required finite negative outcome | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | evidence/contract change |
+| Rights, privacy, sovereignty, cultural sensitivity, and harmful precision are fail-closed | `not-run` | `PROPOSED — fill valid and invalid fixtures` | `NEEDS VERIFICATION` | source, audience, transform, or policy change |
+| Runtime and UI consume only governed/released public-safe surfaces | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | route, adapter, or consumer change |
+| Validation is deterministic, no-network where practical, and includes exact negative cases | `not-run` | `PROPOSED — command, commit, report` | `NEEDS VERIFICATION` | validator/tool/profile change |
+| Review, release, correction, withdrawal, and rollback are bound | `not-run` | `PROPOSED — fill` | `NEEDS VERIFICATION` | release or public-reliance change |
 
-[↑ Back to top](#top)
+Allowed checklist states must come from the chosen validator or contract. Until one is bound, use `not-run`, `pass`, `fail`, `error`, or an explicit truth label consistently and explain the source of that vocabulary.
+
+[Back to top](#top)
 
 ---
+
+<a id="10-open-questions"></a>
 
 ## 10. Open questions
 
-PROPOSED. Open `NEEDS VERIFICATION` / `UNKNOWN` items specific to this slice. Add ADR triggers to §12 plan-data `adr_open_questions[]`.
+Do not hide path, schema, policy, source, or release uncertainty in prose. Give each material item a stable local ID and a concrete closure condition.
 
-| # | Question / item | Class | Resolves when |
-|---|---|---|---|
-| 1 | `PROPOSED — fill at slice time` | `NEEDS VERIFICATION` | `<evidence that would settle>` |
+| ID | Question or conflict | Truth label | Blocking surface | Resolves when |
+|---|---|---|---|---|
+| `FM-<county>-01` | `PROPOSED — fill` | `NEEDS VERIFICATION` | `PROPOSED — fill` | `specific evidence, decision, or test` |
 
-[↑ Back to top](#top)
+Escalate to an ADR or accepted migration record when a change would alter canonical path, identity, index/template grammar, contract/schema authority, policy outcome semantics, public API boundary, release authority, or another cross-root responsibility boundary.
+
+[Back to top](#top)
 
 ---
+
+<a id="11-cross-references"></a>
 
 ## 11. Cross-references
 
-| Reference | Role | Status |
+| Reference | Current role | Status at inspected base |
 |---|---|---|
-| `docs/focus-mode/README.md` | Control plane (state + county scales) | PROPOSED |
-| `docs/focus-mode/counties/COUNTY_INDEX.md` | Master index (county scale) | PROPOSED |
-| `docs/focus-mode/state/STATE_INDEX.md` | Companion index (state scale, PROPOSED) | PROPOSED |
-| `contracts/focus_mode/focus_mode_payload.md` §3 | Plan → payload crosswalk | PROPOSED |
-| `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` | Payload machine schema | PROPOSED |
-| `schemas/contracts/v1/ui/map_context_envelope.schema.json` | `MapContextEnvelope` schema | PROPOSED |
-| `tools/validators/validate_focus_mode_index.py` | Validator | PROPOSED |
-| `directory-rules.md` §6.7 | Focus Mode placement contract | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §8 | Promotion gates A–G (canonical labels) | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §11 | Finite outcome envelope vocabulary | CONFIRMED doctrine |
-| `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3 | COUNTY-01..04 governance cards | CONFIRMED corpus reference |
+| [Focus Mode documentation lane](../../README.md) | Current lane evidence, responsibility-closure guidance, migration hold | Current; non-canonical path decision remains unresolved |
+| [County index](../COUNTY_INDEX.md) | Collision-prevention and planning register | Present; implementation maturity is not proven |
+| [ADR-0027](../../../adr/ADR-0027-county-focus-mode-control-plane.md) | Proposed county control-plane decision and convergence plan | `PROPOSED`; not acceptance authority |
+| [ADR-0029](../../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted adoption of exact Directory Rules v2 bytes | `ACCEPTED` placement authority |
+| [Directory Rules v2](../../../doctrine/directory-rules.md) | Responsibility-root, scope, naming, dependency, migration, and rollback law | Adopted exact bytes via ADR-0029 |
+| [FocusModePayload semantic contract](../../../../contracts/focus_mode/focus_mode_payload.md) | Proposed plan-to-payload semantics | Present; proposed and internally stale |
+| [Focus schema family](../../../../schemas/contracts/v1/focus/README.md) | Current Focus request/response/runtime schema boundary | Present; not a county payload schema |
+| [MapContextEnvelope schema](../../../../schemas/contracts/v1/ui/map_context_envelope.schema.json) | Bounded UI map-context shape | Present; runtime binding not established by this plan |
+| [Focus policy README](../../../../policy/focus/README.md) | Current policy inventory and limitations | Present; policy described as inactive |
+| [County index validator](../../../../tools/validators/validate_focus_mode_index.py) | Proposed plural-lane/index validator | Present; grammar/path mismatch with current lane/template |
+| [Validator registry](../../../../tools/validators/validator_registry.json) | Current orchestration inventory | Focus index validator not registered at inspected base |
+| [UI Focus flow](../../../architecture/ui/FOCUS_FLOW.md) | Governed Focus interaction and negative-state architecture | Documentation evidence only |
+| [Publication promotion gates](../../../architecture/publication/promotion-gates.md) | Current bounded promotion-readiness vocabulary and conflict notes | Non-authoritative architecture; release remains held |
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 12. Plan data block (validator input)
+<a id="12-plan-data-block-validator-input"></a>
 
-This is the **single fenced YAML block** the validator at `tools/validators/validate_focus_mode_index.py` parses. It is the structured spec for this slice. Fill every `<PLACEHOLDER>` exactly per the inline comments. Do not change required keys or field types without an ADR (see `docs/focus-mode/README.md §20`).
+## 12. Plan data block (compatibility authoring scaffold)
 
-> [!IMPORTANT]
-> **One YAML block only.** The validator locates this block by the marker comment `# === KFM Focus Mode Build Plan: structured plan data (REQUIRED) ===` on its first line. Do not introduce a second `yaml`-fenced block before this one in the file, and do not split this block across fences.
+> [!WARNING]
+> **Not current validator input.** This single fenced YAML block is retained so existing template users and proposed contract work have a visible migration target. On the inspected `main`, `validate_focus_mode_index.py` searches YAML front matter instead and does not parse this fence. No schema at the former `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` path exists. Do not call this block valid, canonical, or payload-ready.
 
-> [!NOTE]
-> **Why this block is here, not at the top.** Per the KFM Meta Block v2 doctrine, the invisible HTML-comment metadata at the top of this file carries the standard document-level metadata (`doc_id`, `title`, `type`, `version`, `status`, `owners`, `created`, `updated`, `policy_label`, `related`, `tags`, `notes`). The YAML below carries the **slice-specific structured assertions** the validator reads — schema version, area identity, canonical paths, sensitivity lanes, gate state, and ADR dependencies. These are separate concerns. When you fill the template, update both blocks in parallel: the KFM Meta Block above for doc identity, and the YAML below for plan content.
+Keep the legacy top-level keys stable until ADR-0027 or a successor accepts one grammar and synchronized contract, schema, validator, fixtures, and migration. Placeholder values are deliberately invalid as county claims.
 
 ```yaml
-# === KFM Focus Mode Build Plan: structured plan data (REQUIRED) ===
-# Schema authority: contracts/focus_mode/focus_mode_payload.md §3 (plan→payload crosswalk)
-# Validator: tools/validators/validate_focus_mode_index.py
-schema_version: "1"                        # bump only via ADR
-kfm_artifact: "focus_mode_build_plan"      # MUST equal this literal
+# === KFM Focus Mode Build Plan: compatibility plan data (NOT CURRENTLY ADMITTED) ===
+schema_version: "1"                         # candidate lineage only; no current machine admission
+kfm_artifact: "focus_mode_build_plan"       # proposed semantic family
 area:
-  county: "<County Name>"                  # human-readable, e.g., "Ellsworth"
-  lane: "<county-slug>-county"             # kebab-case slug + "-county"; MUST match folder name
-  scope: "county"                          # one of: county | region | corridor (state lives in state-build-plan.md)
-status: "draft"                            # one of: planned | draft | validated | payload-ready | released | rolled-back | deprecated
-owner: "<OWNER>"                           # GitHub handle or steward role; do not leave blank
-priority: "P2"                             # P1 (Directory Rules v1.2 priority) | P2 (corpus draft) | P3 (later)
-last_reviewed: "YYYY-MM-DD"                # ISO date; updated each substantive revision
-plan_anchors:                              # CONFIRMED doctrine citations the plan rests on
-  - "directory-rules.md#67"                # Focus Modes placement contract
-  - "kfm_unified_doctrine_synthesis.md"    # cite-or-abstain + promotion gates
-  - "Master_MapLibre_Components-Functions-Features_v2_1_FULL.md#163"  # COUNTY-01..04
-ui_shell: "apps/explorer-web"              # MUST be apps/explorer-web (apps/web is drift per OPEN-DR-06)
-canonical_paths:                           # where artifacts from this plan land
-  ui_lane: "apps/explorer-web/src/focus-modes/<county-slug>-county/"
-  fixtures: "fixtures/focus_modes/<county-slug>-county/{valid,invalid}/"
-  source_descriptors: "data/catalog/sources/<county-slug>-county/source_descriptors.yaml"
-  published_payload: "data/published/api_payloads/focus-modes/<county-slug>-county.json"
-  release_manifest: "release/manifests/focus_modes/<county-slug>-county-v1.json"
-sensitivity_lanes:                         # per-lane outcome; defaults from docs/focus-mode/README.md §15
-  parcel_title: "ABSTAIN"                  # ABSTAIN | DENY (override only with justification)
+  county: "<County Name>"
+  lane: "<county-lane-after-path-decision>" # do not infer canonical placement from this template
+  scope: "county"
+status: "draft"                             # documentation state; not release state
+owner: "<OWNER>"
+priority: "<P1|P2|P3-or-governing-profile>"
+last_reviewed: "YYYY-MM-DD"
+plan_anchors:
+  - "docs/doctrine/directory-rules.md#124-geography-and-focus-mode"
+  - "docs/focus-mode/README.md"
+  - "docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+ui_shell: "apps/explorer-web"               # shell identity only; no per-county code path is inferred
+canonical_paths:                             # fill only from verified owning-root authority
+  ui_lane: "<NEEDS VERIFICATION>"
+  fixtures: "<NEEDS VERIFICATION>"
+  source_registry_refs: "<NEEDS VERIFICATION>"
+  published_payload: "<NEEDS VERIFICATION>"
+  release_manifest: "<NEEDS VERIFICATION>"
+sensitivity_lanes:                           # restrictive authoring candidates; bind accepted policy before use
+  parcel_title: "ABSTAIN"
   exact_archaeology: "DENY"
   burial_sacred: "DENY"
   rare_species_exact: "DENY"
@@ -373,117 +353,72 @@ sensitivity_lanes:                         # per-lane outcome; defaults from doc
   living_person_identifiers: "DENY"
   dna_genomic: "DENY"
   emergency_alert: "ABSTAIN"
-sensitivity_overrides: []                  # list any per-lane override; each entry requires:
-#  - lane: "parcel_title"
-#    new_outcome: "ANSWER"
-#    justification: "..."
-#    deny_fixture_path: "fixtures/focus_modes/<county-slug>-county/invalid/..."
-source_seed_families:                      # short list; full ledger in source-seed-list.md
-  - "County/City GIS"
-  - "KDOT projects"
-  - "FEMA / USGS floodplain administration"
-  - "KDA / NASS agriculture data"
-  - "KGS geology"
-  - "KHRI / Museum heritage"
-required_layers_min: 0                     # set when layer-registry.md is populated
-required_layers_with_policy_decision: 0    # MUST equal required_layers_min before validated
-evidence_refs_resolved: 0                  # claims with EvidenceRef that resolves to EvidenceBundle
-evidence_refs_total: 0                     # all claims in evidence-model.md; resolved/total MUST be 1.0 to advance past draft
+sensitivity_overrides: []                    # expected default; any exception needs separate authority and negatives
+source_seed_families: []                     # source IDs/roles belong in the authoritative registry
+required_layers_min: 0                       # planning counter only
+required_layers_with_policy_decision: 0      # planning counter only
+evidence_refs_resolved: 0                    # planning counter only
+evidence_refs_total: 0                       # zero is not closure for a claim-bearing plan
 release:
-  promotion_gates_passed: []               # subset of [A, B, C, D, E, F, G]; must be all seven to reach released
-  release_manifest_id: null                # set when MapReleaseManifest is signed
-  rollback_target_id: null                 # set when rollback target is recorded
-  correction_path: null                    # how a correction is filed for this slice
-adr_open_questions: []                     # any ADR triggers raised by this plan
-# === end structured plan data ===
+  promotion_gates_passed: []                 # do not populate from legacy labels without the bound profile
+  release_manifest_id: null
+  rollback_target_id: null
+  correction_path: null
+adr_open_questions:
+  - "FM-CONTROL-PLANE-GRAMMAR"               # remove only after accepted grammar and migration evidence
+# === end compatibility plan data ===
 ```
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## Appendix — glossary and template legend
+<a id="appendix--glossary-and-template-legend"></a>
+<a id="appendix-a-copy-and-review-checklist"></a>
 
-<details>
-<summary><strong>A.1 Key objects referenced by this template</strong></summary>
+## Appendix A. Copy-and-review checklist
 
-| Object | One-line role *(per `kfm_unified_doctrine_synthesis.md §10`, CONFIRMED)* |
-|---|---|
-| `SourceDescriptor` | Identity, role, authority class, rights, sensitivity precheck of a source. |
-| `RightsReviewRecord` | Resolved license / terms / contact / attribution obligations. |
-| `PolicyDecision` | `ALLOW` / `DENY` / `HOLD` with reason codes and obligations. |
-| `RedactionReceipt` | Record of a public-safe field or geometry transformation. |
-| `SchemaValidationReport` | PASS/FAIL across schema and API contract checks. |
-| `EvidenceRef` / `EvidenceBundle` | Reference that must resolve to a closed evidence package before public claim authority. |
-| `CitationValidationReport` | Pass/fail citation closure for the slice. |
-| `CatalogMatrixReport` | STAC / DCAT / PROV / graph closure across the slice. |
-| `PromotionReceipt` | Signed record of a `PromotionDecision`. |
-| `ReleaseManifest` | Authoritative record of what is `PUBLISHED`. |
-| `RollbackCard` | Rollback target preserving history while repointing current release state. |
-| `FocusModePayload` | The bounded, released, citation-closed evidence projection this plan ultimately produces. |
-| `MapContextEnvelope` | Bounded context (camera + layer IDs + feature IDs + temporal snapshot + release refs + selected evidence refs). |
+- [ ] Existing county claims, aliases, branches, and pull requests were checked for overlap.
+- [ ] The destination path has an accepted placement basis; otherwise creation remains on hold.
+- [ ] Template metadata was replaced with a county-plan identity without changing this template's identity.
+- [ ] Every placeholder and `PROPOSED — fill` prompt was resolved or kept visibly unresolved.
+- [ ] Scope, source roles, evidence, rights, sensitivity, audience, time, and limitations are explicit.
+- [ ] No protected coordinates, private payloads, credentials, signed URLs, or harmful precision were copied into docs.
+- [ ] Claims resolve through EvidenceRef to EvidenceBundle or surface the required negative state.
+- [ ] UI and AI paths use governed/released public-safe interfaces, not canonical/internal stores.
+- [ ] Positive and exact-negative fixtures cover evidence, policy, sensitivity, time, runtime, and correction failures.
+- [ ] The validation command actually covers the chosen path and data grammar at a pinned commit.
+- [ ] Reviewer, release, correction, withdrawal, and rollback evidence is referenced rather than inferred.
+- [ ] The plan makes no release, deployment, publication, or public-safety claim beyond evidence.
 
-</details>
+### What a passing documentation check does not prove
 
-<details>
-<summary><strong>A.2 Placeholder legend</strong></summary>
+A clean Markdown render, valid metadata block, resolving link set, parser success, or green pull-request check proves only the bounded check at the inspected revision. It does not prove source authority, evidence sufficiency, rights, privacy, cultural or sovereignty review, policy activation, runtime enforcement, independent approval, release, deployment, publication, correction propagation, or operational rollback.
 
-| Token in this template | Meaning | Replace with |
-|---|---|---|
-| `<County Name>` | Human-readable county name | e.g., `Ellsworth` |
-| `<county-slug>` | Kebab-case slug | e.g., `ellsworth` |
-| `<county-slug>-county` | Lane folder name | e.g., `ellsworth-county` |
-| `<OWNER>` | GitHub handle or steward role | e.g., `@<handle>` or `county-lane-steward` |
-| `<YYYY-MM-DD>` / `YYYY-MM-DD` | ISO date | e.g., `2026-05-24` |
-| `PROPOSED.` lines under §§1–10 | Author prompt | Slice-specific narrative; remove the `PROPOSED.` prefix only when the underlying claim is verified. |
-
-</details>
-
-<details>
-<summary><strong>A.3 Dual-block authoring (KFM Meta Block + §12 plan data)</strong></summary>
-
-When filling this template, two blocks need parallel updates:
-
-| Field in §12 plan data | Mirrors / drives field in KFM Meta Block v2 (top of file) |
-|---|---|
-| `area.county` | `title` (composed as `<County Name> County Focus Mode — Build Plan`) |
-| `area.lane` | `doc_id` slug (composed as `kfm://doc/<county-slug>-county-focus-mode-build-plan`) |
-| `owner` | `owners` |
-| `last_reviewed` | `updated` |
-| `status` (template vocab) | `status` (KFM vocab) — map: `planned`/`draft` → `draft`; `validated`/`payload-ready` → `review`; `released` → `published` |
-| `plan_anchors[]` + `canonical_paths.*` | `related[]` |
-| (none — template-specific) | `created` (set once, never changed) |
-| (none — template-specific) | `policy_label` (defaults to `public` for county-scale slices) |
-| (none — template-specific) | `tags` (defaults to `[kfm, focus-mode, build-plan, county-scale]`) |
-
-The validator may, in a future pass (PROPOSED), cross-check the KFM Meta Block against §12 for these mirrored fields. For now the cross-check is a reviewer responsibility.
-
-</details>
-
-<details>
-<summary><strong>A.4 Validator rejection signals (quick reference)</strong></summary>
-
-The validator at `tools/validators/validate_focus_mode_index.py` returns a `DecisionEnvelope` with `outcome ∈ {PASS, FAIL, ERROR}`. Common reject reasons:
-
-| Reason code (PROPOSED) | Likely cause |
-|---|---|
-| `placeholder_unresolved` | `<County Name>`, `<county-slug>`, `<OWNER>`, or `YYYY-MM-DD` still present in §12. |
-| `lane_folder_mismatch` | §12 `area.lane` does not match the parent folder name. |
-| `scope_value_invalid` | §12 `area.scope` not in `{county, region, corridor}`. |
-| `plan_data_block_missing` | No fenced ```yaml block found at §12 carrying the marker comment. |
-| `plan_data_block_duplicated` | More than one `yaml`-fenced block carrying the marker comment was found. |
-| `sensitivity_override_unsupported` | §12 `sensitivity_overrides[]` entry missing `justification`, `deny_fixture_path`, or (where required) `additional_reviewer`. |
-| `evidence_closure_open` | §12 `evidence_refs_resolved != evidence_refs_total` while `status` ≥ `validated`. |
-| `gate_letter_unknown` | §12 `release.promotion_gates_passed[]` contains a value outside `[A, B, C, D, E, F, G]`. |
-| `meta_block_missing` | KFM Meta Block v2 not present at top of file. |
-| `meta_plan_field_mismatch` | KFM Meta Block field disagrees with §12 mirrored field (e.g., `updated` ≠ `last_reviewed`). |
-
-</details>
+[Back to top](#top)
 
 ---
 
-**Related (mini)** · [`docs/focus-mode/README.md`](../../README.md) · [`docs/focus-mode/counties/COUNTY_INDEX.md`](../COUNTY_INDEX.md) · [`docs/focus-mode/state/STATE_INDEX.md`](../../state/STATE_INDEX.md) · [`directory-rules.md` §6.7](../../../../directory-rules.md) · [`kfm_unified_doctrine_synthesis.md` §8](../../../../kfm_unified_doctrine_synthesis.md) · [`Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` §16.3](../../../../Master_MapLibre_Components-Functions-Features_v2_1_FULL.md)
+<a id="appendix-b-truth-labels"></a>
 
-**Last updated:** see §12 plan data `last_reviewed` · **Plan-data schema:** `schema_version: "1"` (see §12) · **Path status:** PROPOSED *(canonical per directory-rules.md §6.7)*
+## Appendix B. Truth labels
 
-[↑ Back to top](#top)
+| Label | Use in a county plan |
+|---|---|
+| `CONFIRMED` | Verified in the current review from pinned repository evidence, a supplied admissible artifact, or a named authoritative source |
+| `PROPOSED` | Requested design, candidate source, path, mapping, behavior, or future state not established as current |
+| `UNKNOWN` | Evidence is unavailable or insufficient |
+| `NEEDS VERIFICATION` | A specific check can settle the claim but has not yet been completed strongly enough |
+| `HOLD` | A required authority, evidence, rights, sensitivity, policy, review, migration, or release dependency prevents the next transition |
+
+## Revision history
+
+| Date | Version | Change | Non-effect |
+|---|---|---|---|
+| 2026-05-23 | initial lineage | Created the county build-plan template | No county release or publication |
+| 2026-05-24 | v1 lineage | Added Focus control-plane paths and proposed validator data | Proposal only |
+| 2026-08-20 | v2.0-draft | Reconciled the template with current Directory Rules, Focus README, ADR-0027 status, schema inventory, validator behavior, and release boundary | No path migration, contract/schema/policy change, validator admission, release, deployment, or publication |
+
+---
+
+**Current path:** `docs/focus-mode/counties/_template/county-build-plan.md` · **Role:** compatibility-lane authoring aid · **Updated:** 2026-08-20 · [Back to top](#top)

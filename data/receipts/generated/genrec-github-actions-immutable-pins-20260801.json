@@ -1,0 +1,285 @@
+{
+  "receipt_id": "genrec-github-actions-immutable-pins-20260801",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/api-test.yml",
+    ".github/workflows/briefing-integration.yml",
+    ".github/workflows/codeql.yml",
+    ".github/workflows/connector-gate.yml",
+    ".github/workflows/contract-drift.yml",
+    ".github/workflows/contracts-validate.yml",
+    ".github/workflows/deny-test.yml",
+    ".github/workflows/dependency-scan.yml",
+    ".github/workflows/docs-build.yml",
+    ".github/workflows/docs-control-plane.yml",
+    ".github/workflows/domain-agriculture.yml",
+    ".github/workflows/domain-archaeology.yml",
+    ".github/workflows/domain-atmosphere.yml",
+    ".github/workflows/domain-fauna.yml",
+    ".github/workflows/domain-flora.yml",
+    ".github/workflows/domain-geology.yml",
+    ".github/workflows/domain-habitat.yml",
+    ".github/workflows/domain-hazards.yml",
+    ".github/workflows/domain-hydrology.yml",
+    ".github/workflows/domain-people-dna-land.yml",
+    ".github/workflows/domain-roads-rail-trade.yml",
+    ".github/workflows/domain-settlements-infrastructure.yml",
+    ".github/workflows/domain-soil.yml",
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/evidence-resolver.yml",
+    ".github/workflows/focus-mock-test.yml",
+    ".github/workflows/hydrology-proof-slice.yml",
+    ".github/workflows/infra-compose-smoke.yml",
+    ".github/workflows/link-check.yml",
+    ".github/workflows/maplibre-perf-governance.yml",
+    ".github/workflows/pmtiles-attestation.yml",
+    ".github/workflows/policy-boundary-guards.yml",
+    ".github/workflows/policy-test.yml",
+    ".github/workflows/promotion-gate.yml",
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/rollback-drill.yml",
+    ".github/workflows/schema-validation.yml",
+    ".github/workflows/source-descriptor-validate.yml",
+    ".github/workflows/telemetry-policy.yml",
+    ".github/workflows/ui-build.yml",
+    ".github/workflows/validator-suite.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:bae25b274ea427e189705f834a877d97f78e965063f30d12c17da6dd3e82f287",
+    ".github/workflows/api-test.yml": "sha256:d4d89d1da07846f4e0aa0e7042a14e088dac7d2fe59d89e6a37e454219aaa18d",
+    ".github/workflows/briefing-integration.yml": "sha256:04a2d693beffabd7bdfa50b1be125102caebadc53deb63c0036e498764440e1f",
+    ".github/workflows/codeql.yml": "sha256:4e9187b46985a7e528fe88b51197fd2923c57b022bafb3606752ba4b79235ca7",
+    ".github/workflows/connector-gate.yml": "sha256:18b96706532b68b703c99901bab4a85578e7502d14d8bb7dbbbe9a03fa5ea961",
+    ".github/workflows/contract-drift.yml": "sha256:36618014ce98da4b1cc3b9f0b542443534f6dec7aa461c34646f4a7c2aacaab8",
+    ".github/workflows/contracts-validate.yml": "sha256:585fa974fda41574ad2d79fedb14a1fe5252571a8422943117cd4093bc2a03e4",
+    ".github/workflows/deny-test.yml": "sha256:96f9352fc3dfff4fc79ac9669e45aa18f703445b2e32610012c7f60d21ba216b",
+    ".github/workflows/dependency-scan.yml": "sha256:eb56e704ee6254e80a0d936b4b6ada6d4e6f8b11d537eaa28719db73c9d8fafa",
+    ".github/workflows/docs-build.yml": "sha256:4f70a62967c412cc03cafee31768f3180a261b5a8f079c8077bcea73eaf00059",
+    ".github/workflows/docs-control-plane.yml": "sha256:aa76ca510fb8b4e68572cc6703886d8df764cb9ab2f5e6e6f4ce7a56a021f485",
+    ".github/workflows/domain-agriculture.yml": "sha256:1c8b5331e7d3695092668e18672d77149d6a20579d3e68c85e75b49a776cc6ea",
+    ".github/workflows/domain-archaeology.yml": "sha256:2f1009be9a812568b831fe21b4049c375415e8e1c55b5837cab48e165b321b38",
+    ".github/workflows/domain-atmosphere.yml": "sha256:bd88cae63a96b2a0cf9db21a0f510da86aa0d9bce748d1f092066636facc546c",
+    ".github/workflows/domain-fauna.yml": "sha256:25e7458de6357b4e25907f40c5e20867bb2b959fd56adbcf04ac4edefcd75608",
+    ".github/workflows/domain-flora.yml": "sha256:0c50641813d1971819204264dce3919eaa9bd74e560348edd502ee51be65c0f5",
+    ".github/workflows/domain-geology.yml": "sha256:4f171fc281361e9038f6a9d988c1c2f23235280e10eb3b35b6e149bbe339d413",
+    ".github/workflows/domain-habitat.yml": "sha256:913fb9803d5ebd8f06fd4187f3d92c6b4083031ffa04b6661ded5c3e6c0f24ee",
+    ".github/workflows/domain-hazards.yml": "sha256:6909257dfc63fc0980ca83fdbbab2f53cc009a0f93199d818272f0337a66fa6a",
+    ".github/workflows/domain-hydrology.yml": "sha256:d5791b45a9ccf16708b6786ea98464a19f1d9d55f70ac22e1bf490a8ecc953d9",
+    ".github/workflows/domain-people-dna-land.yml": "sha256:3e2de9861b93c699d718d16e26304df9c81b524d8eb736c1aec090c27ee2a7a6",
+    ".github/workflows/domain-roads-rail-trade.yml": "sha256:3edfc2b6fccc92b6149df3c1b5cc3bc40d02c3a9696e5ac80262eeca9a5625d2",
+    ".github/workflows/domain-settlements-infrastructure.yml": "sha256:0885cf2fd8ec2738087b9b79a9ab26c3ac00ff27d433f92704c7ea4d2b436426",
+    ".github/workflows/domain-soil.yml": "sha256:2bfe3acc92d77a1c4bc1bb78afa719005f9015b9884d9e1e9a50cf38ea9fec22",
+    ".github/workflows/e2e-smoke.yml": "sha256:5671222ac7cfe6c91b122d4aae87af398d5ce02efd9fb9bd71ed0bb82ea721fd",
+    ".github/workflows/evidence-resolver.yml": "sha256:dd71643f57c6fe9fb37178a350cdd05a5f78434335c58cb24945210db2decb72",
+    ".github/workflows/focus-mock-test.yml": "sha256:ccfe1c0d4a4f48fb6cd3b202a4efc8f72aba1e5e93a7a36b2e34b9fca4898e2b",
+    ".github/workflows/hydrology-proof-slice.yml": "sha256:dc9ff035a2a245a70b3dab849d62390fabfa3020ce6b2eea191a85f2ae3cb0c0",
+    ".github/workflows/infra-compose-smoke.yml": "sha256:8e9ab89931e10abf9af6774b1bef65a34e38ecc0a2da9a2b91d7bef6ee895929",
+    ".github/workflows/link-check.yml": "sha256:97fddf73333ab44321ad36997a880436dcdad75b00c8af4dd3685789f707bb47",
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:e3a7b44d342a1533215dacd0ab329e93a8948ff2bc8853f6ca4e1400f406fc4e",
+    ".github/workflows/pmtiles-attestation.yml": "sha256:ef228508aed4d1525a64e6a68522eea23e9ef2fa906942e9069bd51a8b01b50c",
+    ".github/workflows/policy-boundary-guards.yml": "sha256:0db44bac4cdfcca40808c94acd22427780d1f250c0493d7f5655ffbf24712316",
+    ".github/workflows/policy-test.yml": "sha256:edf3f5143b45caf0e8ae3bc6ffb7a1f07a0c7894e797acc9fa6d0719f5eb1b38",
+    ".github/workflows/promotion-gate.yml": "sha256:bbdb569690b522864be21fcfc5fe688449fd977999fe7f45063bc0b6c3f0a366",
+    ".github/workflows/release-dry-run.yml": "sha256:161a8e586b83313caf82e012797fa617abee2a1964d42adcad10d9f0ae006e52",
+    ".github/workflows/rollback-drill.yml": "sha256:4768dc2c7b329086b676bc766ce924236393d8a3edc4a75601084bcc57466791",
+    ".github/workflows/schema-validation.yml": "sha256:f14958d200d3f6c312bdfb2190f13ee100fdd8e9eb6299429b9ad190f5a14b5c",
+    ".github/workflows/source-descriptor-validate.yml": "sha256:9452593d65f954ba3c6417dc9f6ec1c713885fecff3bf7e4dec4e933e309dead",
+    ".github/workflows/telemetry-policy.yml": "sha256:37d15801a7c9ef15e22ecea4847ea1d21c900a64a6c822a37bc42c7aa80f844a",
+    ".github/workflows/ui-build.yml": "sha256:9a66e2761366db58701ccb92c2021183d0b311264237e0797c8d50e3bcab9f5b",
+    ".github/workflows/validator-suite.yml": "sha256:c2d422c44c7552eee6705847f43642cd00ce158fca8d1aa43ca81ab2837a6e33"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:9fd16ed793fc1843a6cc058fd55cfc385a32bcc4726c408bde3546973f59ca24",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository and Git inspection",
+      "GitHub connector",
+      "official upstream Git tag inspection",
+      "deterministic standard-library Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9fd16ed793fc1843a6cc058fd55cfc385a32bcc4726c408bde3546973f59ca24"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1905",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/46d0536017655e69b6de451fd57759a463f0d252",
+      "https://github.com/actions/checkout/releases/tag/v7.0.1",
+      "https://github.com/actions/setup-python/releases/tag/v7.0.0",
+      "https://github.com/actions/setup-node/releases/tag/v7.0.0",
+      "https://github.com/actions/upload-artifact/releases/tag/v7.0.1",
+      "https://github.com/github/codeql-action/releases/tag/v4.37.4",
+      "https://docs.github.com/en/actions/reference/security/secure-use",
+      "https://docs.github.com/code-security/dependabot/ecosystems-supported-by-dependabot/supported-ecosystems-and-repositories"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/api-test.yml": "PROPOSED",
+    ".github/workflows/briefing-integration.yml": "PROPOSED",
+    ".github/workflows/codeql.yml": "PROPOSED",
+    ".github/workflows/connector-gate.yml": "PROPOSED",
+    ".github/workflows/contract-drift.yml": "PROPOSED",
+    ".github/workflows/contracts-validate.yml": "PROPOSED",
+    ".github/workflows/deny-test.yml": "PROPOSED",
+    ".github/workflows/dependency-scan.yml": "PROPOSED",
+    ".github/workflows/docs-build.yml": "PROPOSED",
+    ".github/workflows/docs-control-plane.yml": "PROPOSED",
+    ".github/workflows/domain-agriculture.yml": "PROPOSED",
+    ".github/workflows/domain-archaeology.yml": "PROPOSED",
+    ".github/workflows/domain-atmosphere.yml": "PROPOSED",
+    ".github/workflows/domain-fauna.yml": "PROPOSED",
+    ".github/workflows/domain-flora.yml": "PROPOSED",
+    ".github/workflows/domain-geology.yml": "PROPOSED",
+    ".github/workflows/domain-habitat.yml": "PROPOSED",
+    ".github/workflows/domain-hazards.yml": "PROPOSED",
+    ".github/workflows/domain-hydrology.yml": "PROPOSED",
+    ".github/workflows/domain-people-dna-land.yml": "PROPOSED",
+    ".github/workflows/domain-roads-rail-trade.yml": "PROPOSED",
+    ".github/workflows/domain-settlements-infrastructure.yml": "PROPOSED",
+    ".github/workflows/domain-soil.yml": "PROPOSED",
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    ".github/workflows/evidence-resolver.yml": "PROPOSED",
+    ".github/workflows/focus-mock-test.yml": "PROPOSED",
+    ".github/workflows/hydrology-proof-slice.yml": "PROPOSED",
+    ".github/workflows/infra-compose-smoke.yml": "PROPOSED",
+    ".github/workflows/link-check.yml": "PROPOSED",
+    ".github/workflows/maplibre-perf-governance.yml": "PROPOSED",
+    ".github/workflows/pmtiles-attestation.yml": "PROPOSED",
+    ".github/workflows/policy-boundary-guards.yml": "PROPOSED",
+    ".github/workflows/policy-test.yml": "PROPOSED",
+    ".github/workflows/promotion-gate.yml": "PROPOSED",
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/rollback-drill.yml": "PROPOSED",
+    ".github/workflows/schema-validation.yml": "PROPOSED",
+    ".github/workflows/source-descriptor-validate.yml": "PROPOSED",
+    ".github/workflows/telemetry-policy.yml": "PROPOSED",
+    ".github/workflows/ui-build.yml": "PROPOSED",
+    ".github/workflows/validator-suite.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Merged PR #1905, current main@46d0536017655e69b6de451fd57759a463f0d252, the complete open-pull-request set, workflow tree, workflow governance README, Dependabot configuration, generated-receipt contract, and action consumers were inspected. No open pull request owned this slice; only a feature branch and draft pull request are authorized."
+    },
+    {
+      "gate": "official-upstream-tag-resolution",
+      "outcome": "PASS",
+      "reason": "Official upstream Git refs and release tags resolved checkout v7/v7.0.1 to 3d3c42e5aac5ba805825da76410c181273ba90b1, setup-python v7/v7.0.0 to 5fda3b95a4ea91299a34e894583c3862153e4b97, setup-node v7.0.0 to 820762786026740c76f36085b0efc47a31fe5020, upload-artifact v7/v7.0.1 to 043fb46d1a93c77aae656e7c1c64a875d1fc6a0a, and the annotated CodeQL v4/v4.37.4 tags to peeled commit f205ea1c3313d32999d8d6a48b4f6530d4437b38."
+    },
+    {
+      "gate": "complete-executable-action-inventory",
+      "outcome": "PASS",
+      "reason": "The 44-workflow base contained 160 floating external-action uses in 41 files plus one already-pinned checkout use. The proposed tree contains the same 161 executable uses at the verified full commits and zero floating executable references. Fourteen non-executing v4 references in fenced Markdown examples remain explicitly inventoried outside this executable slice."
+    },
+    {
+      "gate": "exact-workflow-transform-and-behavior-preservation",
+      "outcome": "PASS",
+      "reason": "Every one of the 44 proposed workflow files exactly equals its base bytes after applying only the six declared tag-to-full-SHA substitutions and same-line release comments. Exactly 41 workflow files change. Triggers, permissions, runners, workflow/job/check identities, inputs, commands, summaries, no-network semantics, artifact behavior, and release/publication boundaries are byte-identical."
+    },
+    {
+      "gate": "workflow-yaml-syntax-and-base-shape",
+      "outcome": "PASS",
+      "reason": "All 44 workflow files parsed with the available YAML BaseLoader without YAML 1.1 scalar coercion and retained on, permissions, and nonempty jobs keys. actionlint was unavailable locally and was not downloaded."
+    },
+    {
+      "gate": "focused-no-network-link-check-suite",
+      "outcome": "PASS",
+      "reason": "All 18 repository-owned standard-library documentation link-check tests passed, including network-denial and external-abstention cases."
+    },
+    {
+      "gate": "workflow-documentation-link-validation",
+      "outcome": "PASS",
+      "reason": "The repository-owned no-network link checker passed the updated workflow README with 79 local targets and 13 external occurrences classified as unverified and never requested."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check passed for the complete authored set."
+    },
+    {
+      "gate": "generated-receipt-json-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The receipt is excluded from its own artifact map; artifact_paths, artifact_hashes, and truth_labels cover the same 42 authored files. JSON parsing and final SHA-256 recomputation are required after emission."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The available Python runtimes lack the repository-declared jsonschema dependency and no compatible cached validator was found. No network install was performed; exact-head hosted schema validation remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted pull-request checks remain pending until the validated branch is pushed and the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pr-1905-action-pin-needs-verification",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1905"
+    },
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/46d0536017655e69b6de451fd57759a463f0d252"
+    },
+    {
+      "id": "checkout-v7.0.1",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/checkout/releases/tag/v7.0.1"
+    },
+    {
+      "id": "setup-python-v7.0.0",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/setup-python/releases/tag/v7.0.0"
+    },
+    {
+      "id": "setup-node-v7.0.0",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/setup-node/releases/tag/v7.0.0"
+    },
+    {
+      "id": "upload-artifact-v7.0.1",
+      "validated": true,
+      "evidence_ref": "https://github.com/actions/upload-artifact/releases/tag/v7.0.1"
+    },
+    {
+      "id": "codeql-v4.37.4",
+      "validated": true,
+      "evidence_ref": "https://github.com/github/codeql-action/releases/tag/v4.37.4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T00:45:11Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed executable GitHub Actions supply-chain hardening only. All 160 floating executable references are pinned to the exact commits their existing tags resolved to, while the pre-existing immutable checkout reference remains unchanged. No action version upgrade, workflow behavior, check identity, release, deployment, publication, promotion, or repository setting changes. Fourteen fenced Markdown example references and historical receipt/snapshot strings remain outside scope and explicitly inventoried. Roll back by closing the draft before merge or reverting the single commit after an authorized merge."
+}

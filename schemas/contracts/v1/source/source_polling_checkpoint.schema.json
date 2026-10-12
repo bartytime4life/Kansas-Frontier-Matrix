@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_polling_checkpoint.schema.json",
+  "title": "SourcePollingCheckpoint",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_string": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "etag": {
+          "$ref": "#/$defs/nullable_string"
+        },
+        "last_modified": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_length": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "representation_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/spec"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "etag",
+        "last_modified",
+        "content_length",
+        "representation_digest"
+      ]
+    },
+    "gov": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "network_attempted": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "fetch_executed": {
+          "const": false
+        },
+        "raw_write_allowed": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activated",
+        "fetch_executed",
+        "raw_write_allowed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SourcePollingCheckpoint"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source-polling-checkpoint.fixture.v1"
+    },
+    "checkpoint_id": {
+      "type": "string",
+      "pattern": "^kfm:source-polling-checkpoint:[a-f0-9]{24}$"
+    },
+    "checked_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "endpoint_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-endpoint:[a-z0-9][a-z0-9._:-]{2,180}$"
+    },
+    "prior_state": {
+      "$ref": "#/$defs/state"
+    },
+    "current_state": {
+      "$ref": "#/$defs/state"
+    },
+    "retrieval_outcome": {
+      "enum": [
+        "NOT_MODIFIED",
+        "MODIFIED",
+        "UNAVAILABLE",
+        "UNKNOWN",
+        "ERROR"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "NO_ACTION",
+        "FETCH_CANDIDATE",
+        "HOLD",
+        "ERROR"
+      ]
+    },
+    "candidate_fetch_ref": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^kfm:fetch-candidate:[a-z0-9][a-z0-9._:-]{2,180}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "VALIDATORS_UNCHANGED",
+          "VALIDATORS_CHANGED",
+          "SOURCE_UNAVAILABLE",
+          "SOURCE_STATE_UNKNOWN",
+          "POLLING_ERROR",
+          "FETCH_REVIEW_REQUIRED"
+        ]
+      }
+    },
+    "governance": {
+      "$ref": "#/$defs/gov"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "checkpoint_id",
+    "checked_at",
+    "source_id",
+    "source_descriptor_ref",
+    "endpoint_ref",
+    "prior_state",
+    "current_state",
+    "retrieval_outcome",
+    "decision",
+    "candidate_fetch_ref",
+    "reason_codes",
+    "governance",
+    "spec_hash"
+  ]
+}

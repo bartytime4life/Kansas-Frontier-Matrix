@@ -1,12 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/atlases/receipt-catalog
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Navigate the receipt families catalogued in Atlas v1.1 §24.2; a navigation aid, not receipt schema or emission authority.
+truth_posture: PROPOSED carrier; Atlas §24.2 is the anchor; receipt schema home PROPOSED under ADR-S-03; owners NEEDS VERIFICATION
 title: Receipt Catalog
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-10-12
 policy_label: public
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md

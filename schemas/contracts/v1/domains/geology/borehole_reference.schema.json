@@ -7,7 +7,7 @@
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/geology/FILE_SYSTEM_PLAN.md",
-    "contract_doc": "contracts/domains/geology/borehole_reference.md"
+    "contract_doc": "contracts/domains/geology/BoreholeReference.md"
   },
   "properties": {},
   "additionalProperties": true

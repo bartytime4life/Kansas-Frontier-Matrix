@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json",
+  "title": "NhdplusNetworkRevisionReport",
+  "description": "Fixture-only NHDPlus HR network revision review signal; never promotion or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "comparison_id",
+    "compared_at",
+    "prior_snapshot",
+    "current_snapshot",
+    "changes",
+    "required_actions",
+    "decision",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "NhdplusNetworkRevisionReport"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm.nhdplus-network-revision.synthetic.v1"
+    },
+    "comparison_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "compared_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prior_snapshot": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "current_snapshot": {
+      "$ref": "#/$defs/snapshot"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/change"
+      }
+    },
+    "required_actions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "RECOMPUTE_COMID_HUC12",
+          "REINDEX_NWM_FORECAST_ATTACHMENTS",
+          "REFRESH_LINEAR_REFERENCED_EVENTS",
+          "REVIEW_GEOMETRY_ALIGNMENT"
+        ]
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "NO_MATERIAL_CHANGE",
+            "PROPOSED_WORK_RECORD",
+            "ABSTAIN"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "enum": [
+              "NHDPLUS_NO_MATERIAL_CHANGE",
+              "NHDPLUS_NETWORK_REVISION",
+              "NHDPLUS_HIGH_IMPACT_NETWORK_REVISION"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steward_review_required",
+        "promotion_allowed",
+        "publication"
+      ],
+      "properties": {
+        "steward_review_required": {
+          "type": "boolean"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "publication": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network_spec_hash",
+        "retrieval_hash",
+        "product_version",
+        "record_count"
+      ],
+      "properties": {
+        "network_spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "retrieval_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "product_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comid",
+        "change_type",
+        "impact",
+        "changed_fields"
+      ],
+      "properties": {
+        "comid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "change_type": {
+          "enum": [
+            "COMID_ADDED",
+            "COMID_REMOVED",
+            "LINEAR_REFERENCE_CHANGE",
+            "HUC12_ASSIGNMENT_CHANGE",
+            "GEOMETRY_SHIFT",
+            "GEOMETRY_CORRECTION"
+          ]
+        },
+        "impact": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "changed_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "area_delta_pct": {
+          "type": "number",
+          "minimum": 0
+        },
+        "centroid_shift_m": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

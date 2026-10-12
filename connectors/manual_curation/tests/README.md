@@ -21,9 +21,6 @@ related:
   - ../src/README.md
   - ../src/manual_curation/README.md
   - ../src/manual_curation/__init__.py
-  - ../src/manual_curation/fetch.py
-  - ../src/manual_curation/admit.py
-  - ../src/manual_curation/descriptor.yaml
   - ../../../CONTRIBUTING.md
   - ../../../.github/CODEOWNERS
   - ../../../.github/workflows/connector-gate.yml
@@ -61,6 +58,9 @@ notes:
 <a id="top"></a>
 
 # Manual Curation Greenfield Test and Steward-Gate Proof Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/manual_curation/admit.py`, `src/manual_curation/descriptor.yaml` and `src/manual_curation/fetch.py` were removed from `connectors/manual_curation/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Repository-grounded test boundary for `connectors/manual_curation/tests/`. The lane currently contains documentation, not an executable suite. Its future job is to prove that manual-curation helper mechanics preserve steward review, source-role separation, rights and sensitivity uncertainty, evidence-reference non-closure, caller-owned candidate outputs, and KFM lifecycle/publication boundaries.
 
@@ -149,10 +149,7 @@ connectors/manual_curation/
 │   ├── README.md                          # source-layout boundary v0.2
 │   └── manual_curation/
 │       ├── README.md                      # package boundary v0.2
-│       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
-│       └── descriptor.yaml                # four-field placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # this test boundary
 ```
@@ -784,7 +781,7 @@ Passing tests must not upgrade package, source, policy, evidence, catalog, or re
 | Child package README v0.2 | **CONFIRMED** | Greenfield scaffold, candidate-only outputs, descriptor rejection, steward-gate and lifecycle boundaries. | Implemented package behavior. |
 | `pyproject.toml` | **CONFIRMED PLACEHOLDER** | Project name and `0.0.0`. | Build backend, dependencies, Python support, runner, or installability. |
 | `__init__.py`, `fetch.py`, `admit.py` | **CONFIRMED EMPTY / COMMENT-ONLY** | No named executable behavior in those files. | Absence of differently named implementation. |
-| `descriptor.yaml` | **CONFIRMED NONCONFORMING PLACEHOLDER** | Current minimal fields and unsafe unresolved posture. | Source authority or public safety. |
+| `descriptor.yaml` (removed 2026-09-29) | **CONFIRMED NONCONFORMING PLACEHOLDER** | Current minimal fields and unsafe unresolved posture. | Source authority or public safety. |
 | Root `tests/README.md` | **CONFIRMED DOCTRINE** | Canonical trust-spine testing responsibility. | This connector's executable coverage. |
 | `tests/fixtures/README.md` | **CONFIRMED DOCUMENTED** | Unit-test-scoped fixture posture and split from root `fixtures/`. | Manual-curation child fixture existence. |
 | Source authority register | **CONFIRMED EMPTY ENTRIES** | No machine source authority entry. | Future activation decisions. |

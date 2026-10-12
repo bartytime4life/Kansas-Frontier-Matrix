@@ -1,11 +1,10 @@
 {
-  "status": "PROPOSED",
+  "status": "DEPRECATED_COMPATIBILITY_POINTER",
   "path": "schemas/contracts/v1/source/drift-summary.json",
-  "source_docs": [
-    "docs/domains/fauna/SOURCE_REGISTRY.md",
-    "docs/domains/habitat/SOURCE_REGISTRY.md"
-  ],
+  "canonical_schema": "schemas/contracts/v1/source/drift_summary.schema.json",
+  "contract_doc": "contracts/source/drift_summary.md",
+  "writes_allowed": false,
   "notes": [
-    "Placeholder created from the current docs/domains markdown inventory."
+    "Legacy placeholder retained as a read-only pointer; it is not a JSON Schema and grants no authority."
   ]
 }

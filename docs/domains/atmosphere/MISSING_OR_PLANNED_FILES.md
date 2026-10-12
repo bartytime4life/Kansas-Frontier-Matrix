@@ -6,22 +6,25 @@ version: v2
 status: draft
 owners: TODO-atmosphere-domain-steward, TODO-docs-steward
 created: 2026-05-16
-updated: 2026-05-29
+updated: 2026-09-02
 policy_label: public
+owning_root: docs/
+responsibility: Record verified Atmosphere path presence, bounded implementation maturity, and dependency-gated future responsibilities without creating source, policy, release, or publication authority.
+truth_posture: CONFIRMED current-session paths and bounded executable evidence / PROPOSED dependency-gated capabilities / UNKNOWN operational state unless explicitly verified
 contract_version: 3.0.0
 related:
   - docs/domains/atmosphere/README.md
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/adr/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, atmosphere, air, planning, register, directory-rules, proposed-paths]
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent register.
-  - PROPOSED register. No mounted repo verified this session.
-  - Every path below is PROPOSED until inspected against current repo state.
+  - PROPOSED register reconciled against current repository state on 2026-09-02.
+  - Each row carries its own current truth label; unverified paths remain PROPOSED.
   - Companion to the Atmosphere/Air domain README and the cross-repo verification backlog.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
 [/KFM_META_BLOCK_V2] -->
@@ -36,9 +39,9 @@ notes:
 [![Lifecycle: RAW%20%E2%86%92%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-555)](#7-pipeline-shape-and-promotion-gates)
 [![Authority: Doctrine](https://img.shields.io/badge/authority-doctrine_grounded-blueviolet)](#4-verification-posture)
 [![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)](#)
-[![Last Reviewed: 2026-05-29](https://img.shields.io/badge/last_reviewed-2026--05--29-informational)](#footer)
+[![Last Reviewed: 2026-09-02](https://img.shields.io/badge/last_reviewed-2026--09--02-informational)](#footer)
 
-> **Status:** draft · **Owners:** TODO-atmosphere-domain-steward · TODO-docs-steward · **Updated:** 2026-05-29 · **CONTRACT_VERSION = "3.0.0"**
+> **Status:** draft · **Owners:** TODO-atmosphere-domain-steward · TODO-docs-steward · **Updated:** 2026-09-02 · **CONTRACT_VERSION = "3.0.0"**
 
 ---
 
@@ -336,7 +339,7 @@ All rows below are **PROPOSED**. Treat each table as a candidate path inventory 
 
 | Path | Test / fixture purpose | Truth label | Notes |
 |---|---|---|---|
-| `tests/domains/atmosphere/test_knowledge_character_registry.py` | Validate registry coverage and category distinctness. | PROPOSED | Atlas §11.K. |
+| `tests/domains/atmosphere/test_knowledge_character_registry.py` | Validate the frozen synthetic profile's character coverage and anti-collapse boundaries. | CONFIRMED bounded executable | Does not settle the canonical enum/registry, execute Rego policy, or validate live records; Atlas §11.K. |
 | `tests/domains/atmosphere/test_unit_normalization.py` | Round-trip unit conversions; reject ambiguous units. | PROPOSED | — |
 | `tests/domains/atmosphere/test_aqi_as_concentration_denied.py` | Negative test: AQI presented as concentration → DENY. | PROPOSED | — |
 | `tests/domains/atmosphere/test_aod_as_pm25_denied.py` | Negative test: AOD presented as PM2.5 → DENY. | PROPOSED | — |
@@ -361,7 +364,7 @@ All rows below are **PROPOSED**. Treat each table as a candidate path inventory 
 
 | Path | Validator | Truth label |
 |---|---|---|
-| `tools/validators/domains/atmosphere/validate_air_observation.py` | Run AirObservation schema + knowledge-character + unit checks; emit finite outcomes. | PROPOSED |
+| `tools/validators/domains/atmosphere/validate_air_observation.py` | Run the declared AirObservation schema plus the observed-versus-modeled semantic profile; emit bounded PASS / ABSTAIN / DENY / ERROR outcomes. | **CONFIRMED bounded executable** |
 | `tools/validators/domains/atmosphere/validate_aod_raster.py` | Validate AODRaster source-role tag and forbid PM2.5 aliasing. | PROPOSED |
 | `tools/validators/domains/atmosphere/validate_smoke_context.py` | Validate SmokeContext source role (HMS analysis vs HRRR-Smoke forecast). | PROPOSED |
 | `tools/validators/domains/atmosphere/validate_forecast_context.py` | Enforce model-vs-observation separation. | PROPOSED |
@@ -500,7 +503,7 @@ Recommended PR order, modeled on the cross-domain Encyclopedia roadmap and const
 | 3 | Add `schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json` + `parameter_registry.schema.json` | Backstops AQI / AOD / model denials. | Negative fixtures DENY. |
 | 4 | Add AirStation, AirObservation, PM2.5 Observation schemas + valid/invalid fixtures | Smallest object set to exercise gates. | Validators pass on valid, DENY on invalid. |
 | 5 | Add `policy/domains/atmosphere/aqi_is_not_concentration.rego`, `aod_is_not_pm25.rego`, `model_is_not_observation.rego`, `low_cost_sensor_caveats_required.rego`, `dryrun_no_live_fetch.rego` | Anti-collapse policy spine. | Policy tests fail closed. |
-| 6 | Add `tools/validators/domains/atmosphere/validate_air_observation.py` and friends | Validator entry points. | Round-trip + negative-path tests pass. |
+| 6 | Maintain `tools/validators/domains/atmosphere/validate_air_observation.py`; add remaining object-specific validators only when dependency-ready | AirObservation entry point is confirmed; adjacent validator entry points remain separately governed. | AirObservation schema, round-trip, abstention, and negative-path tests pass. |
 | 7 | Add `release/candidates/atmosphere/README.md` + `ReleaseManifest`/`RollbackCard` templates | Release machinery before any release. | Schema validates. |
 | 8 | Add `docs/runbooks/atmosphere/{SOURCE_REFRESH,VALIDATION,RELEASE,ROLLBACK,CORRECTION,STALE_STATE}_RUNBOOK.md` | Ops procedures before live data. | Runbook link check. |
 | 9 | Add `pipeline_specs/atmosphere/{normalize,validate,catalog,publish}.yaml` (dryrun-only) | Declarative spec wired to no-network fixtures. | Dryrun no-live-fetch test passes. |
@@ -652,8 +655,8 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related:** [README](./README.md) · [Domains Index](../README.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../../ai-build-operating-contract.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
+**Related:** [README](./README.md) · [Domains Index](../README.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-05-29 · **Version:** v2 · **Status:** draft · **CONTRACT_VERSION = "3.0.0"**
+**Last updated:** 2026-08-02 · **Version:** v2 · **Status:** draft · **CONTRACT_VERSION = "3.0.0"**
 
 [⤴ Back to top](#table-of-contents)

@@ -113,7 +113,7 @@ This lane is downstream. It should not admit raw source captures, work candidate
 | [`../../quarantine/atmosphere/`](../../quarantine/atmosphere/) | Held or unsafe material. | Never public-readable. |
 | [`../../processed/atmosphere/`](../../processed/atmosphere/) | Validated normalized candidates. | Upstream of catalog and release, not public by itself. |
 | [`../../catalog/domain/atmosphere/`](../../catalog/domain/atmosphere/) | Atmosphere catalog records. | Discovery/lineage carrier; not release authority. |
-| [`../../triplets/atmosphere/`](../../triplets/atmosphere/) | Atmosphere graph/triplet projection. | Upstream or sibling projection, not public by itself. |
+| `../../triplets/atmosphere/` (not present) | Atmosphere graph/triplet projection. | Upstream or sibling projection, not public by itself. |
 | [`../../proofs/atmosphere/`](../../proofs/atmosphere/) | Atmosphere proof support. | Evidence and proof support; not published carrier. |
 | [`../../proofs/validation_report/atmosphere/`](../../proofs/validation_report/atmosphere/) | Atmosphere validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran; they do not publish. |

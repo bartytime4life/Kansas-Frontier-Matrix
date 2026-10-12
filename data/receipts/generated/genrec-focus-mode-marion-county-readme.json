@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-focus-mode-marion-county-readme-84cc2c9c8c04",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/marion_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/marion_county/README.md": "sha256:NEEDS_VERIFICATION"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "sha256:NEEDS_VERIFICATION",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "github:docs/focus-mode/counties/marion_county/README.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "github:docs/focus-mode/counties/marion_county/marion_county_focus_mode_build_plan.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:93fa1a6627877941800183060672e3f76c61c736",
+      "github:docs/doctrine/directory-rules.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0027-county-focus-mode-control-plane.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "task-contract:kfm-focus-mode-marion-county-readme-20260821"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/marion_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main, confirmed the one-byte predecessor, inspected the complete sibling plan and governing ADRs, and reconciled the pre-existing Marion task branch rather than creating parallel work."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2 and supports same-path human documentation under docs/; ADR-0027 remains proposed, so migration was not inferred."
+    },
+    {
+      "gate": "material-no-loss-and-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Marion build plan was inspected; its dated external observations remain bounded as planning lineage while current repository presence and adopted Directory Rules authority were reconciled."
+    },
+    {
+      "gate": "markdown-structure-and-link-review",
+      "outcome": "PASS",
+      "reason": "The README was authored with one H1, explicit navigation, bounded relative links, truth labels, and rollback/currentness disclosures."
+    },
+    {
+      "gate": "security-rights-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, exact protected locations, live operational payloads, or present-tense health/advisory claims were introduced; reservoir operations, parcel/property, and health boundaries are fail-closed."
+    },
+    {
+      "gate": "artifact-sha256-integrity",
+      "outcome": "SKIPPED",
+      "reason": "The GitHub connector exposed the final Git blob identity but no byte-stream hashing primitive was available in this run; SHA-256 remains NEEDS VERIFICATION before relying on this receipt for artifact-integrity enforcement."
+    },
+    {
+      "gate": "full-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for repository-native validation; hosted CI is observed only after draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:docs/focus-mode/counties/marion_county/README.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "validated": true,
+      "evidence_ref": "blob:8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    {
+      "id": "github:docs/focus-mode/counties/marion_county/marion_county_focus_mode_build_plan.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "validated": true,
+      "evidence_ref": "blob:93fa1a6627877941800183060672e3f76c61c736"
+    },
+    {
+      "id": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T02:17:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring receipt for the Marion County README modernization. The receipt is intentionally non-authoritative and preserves pending human review. SHA-256 binding remains NEEDS VERIFICATION because no final-byte hashing primitive was available in this connector-only run."
+}

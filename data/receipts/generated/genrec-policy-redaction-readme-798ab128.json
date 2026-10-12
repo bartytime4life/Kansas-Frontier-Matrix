@@ -1,0 +1,224 @@
+{
+  "receipt_id": "genrec-policy-redaction-readme-798ab128",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/redaction/README.md",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "policy/redaction/README.md": "sha256:798ab12856ec7337fadb64f6c2924f1eba3b9318df5fb5e74032d614dc89b0ef",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:ea5c4b92df87994eb43786232ec46eb98f5ae908a30009e4f51c57231c37d46c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:d5c7bc1b01efb0abb7ac9da545afe2451ff827b6bec633e53410cb616b671f80",
+      "sha256:9ad2fc1e31127d923d977721d2ade3aa0e8c39309b234ecb7adbbfa368bab4a6",
+      "sha256:82565ed85bf776e5bd5812efa3785371dacc04e118a17a0108b6a2bf3fc8d22f",
+      "sha256:7cbc5edcddb365a94d12be3eb1d1a2f10996ee31cda957556a13d65b9c590077"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-131005).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:policy/redaction/profiles.yaml@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:policy/sensitivity/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:policy/sensitivity/profiles.yaml@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:policy/geoprivacy/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:policy/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/domains/habitat/CANONICAL_PATHS.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/doctrine/sensitivity.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/standards/REDACTION_PROFILES.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/standards/REDACTION_DETERMINISM.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/doctrine/directory-rules.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:control_plane/root_registry.yaml@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:contracts/shared/redaction_receipt.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:docs/intake/exploratory/redaction-receipt-v1-source-map.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:schemas/contracts/v1/receipts/redaction_receipt.schema.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:fixtures/contracts/v1/receipts/redaction_receipt/cases.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tools/validators/receipts/validate_redaction_receipt.py@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tests/validators/test_validate_redaction_receipt.py@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:.github/workflows/redaction-receipt.yml@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:packages/redaction/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:apps/explorer-web/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:release/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tools/validators/directory_governance/validate_repository_topology.py@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tools/validators/directory_governance/repository_topology_baseline.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tests/validators/directory_governance/test_validate_repository_topology.py@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:.github/CODEOWNERS@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:CONTRIBUTING.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80",
+      "repo:tools/validators/validate_generated_receipt.py@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    ]
+  },
+  "truth_labels": {
+    "policy/redaction/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, absent target README, existing profile placeholder and history, complete direct-child tree, exact branch and open-pull-request overlap, accepted Directory Rules and ADR-0029, parent policy authority, root projection, CODEOWNERS, catalog-path evidence, and directly related standards, receipt, package, application, release, validator, test, workflow, and topology evidence were inspected before authoring."
+    },
+    {
+      "gate": "catalog-home-conflict",
+      "outcome": "PASS",
+      "reason": "The README preserves the explicit unresolved policy/redaction versus policy/sensitivity catalog-home question, marks both placeholders inactive, and establishes a contributor convergence hold without selecting a canonical path or copying draft operational parameters."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, no unbalanced fences, no tabs or diff whitespace errors, UTF-8-compatible text, a final newline, and one valid KFM_META_BLOCK_V2 envelope. The metadata validator reports only the expected review-only registry-add candidate for this new document."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 68 local README targets and fragments; no external URL was added or checked."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 bounded local-link validator tests and all 24 metadata-block validator tests passed with no network access."
+    },
+    {
+      "gate": "redaction-receipt-related-evidence",
+      "outcome": "PASS",
+      "reason": "Seven unit tests and the complete sixteen-case PASS, ABSTAIN, ERROR, and DENY fixture suite passed using dependencies installed to an isolated temporary directory from the repository hash-locked test profile. The README preserves the receipt profile's fixture-only, no-policy, no-transform, no-restricted-input, no-release, and no-publication boundary."
+    },
+    {
+      "gate": "topology-readme-finding-and-baseline-transition",
+      "outcome": "PASS",
+      "reason": "The focused actual-path check reports no KFM-TOPO-018 finding once README.md and profiles.yaml are present; the focused synthetic rule test passed; and the baseline transition validator confirms removal of exactly fingerprint sha256:7d751ff55aef4f3915b8554b8f4e9f491b668ddca7fcd69bbdbd70a8313939a6 with no additions or modifications."
+    },
+    {
+      "gate": "full-repository-topology-scan",
+      "outcome": "SKIPPED",
+      "reason": "The partial checkout lacks some promisor Git objects and attempted an unavailable network fetch during the full live-index suite. No full-scan pass is claimed; the exact target rule and baseline transition were validated independently."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README and topology-baseline SHA-256 digests."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private records, restricted payloads, exact sensitive locations, operational redaction radii or thresholds, secret seeds, reversal material, production endpoints, hidden reasoning, or actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation, one stale topology-waiver removal, and provenance only; no profile entry, policy rule, contract, schema, fixture, validator, test, workflow, evaluator, transform, consumer, receipt instance beyond this authoring provenance, review record, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no catalog-path decision, profile acceptance, independent approval, merge authority, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "redaction-profile-placeholder-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/redaction/profiles.yaml@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "parallel-sensitivity-profile-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:policy/sensitivity/profiles.yaml@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "explicit-catalog-home-adr-gap",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/habitat/CANONICAL_PATHS.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "parent-policy-authority-and-non-effects",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "directory-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "draft-profile-design-and-path-conflict",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/REDACTION_PROFILES.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "draft-determinism-and-parameter-risk",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/REDACTION_DETERMINISM.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "fixture-only-redaction-receipt-profile",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/redaction-receipt-v1-source-map.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "greenfield-transform-package",
+      "validated": true,
+      "evidence_ref": "repo:packages/redaction/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "topology-missing-readme-finding",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/directory_governance/repository_topology_baseline.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "release-decision-authority",
+      "validated": true,
+      "evidence_ref": "repo:release/README.md@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f9b29f555f5c8075a832cb05deea575fd7b5ba80"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T13:58:33Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-led modernization of the previously undocumented policy/redaction boundary, plus removal of the exact stale KFM-TOPO-018 baseline waiver closed by the new README. The update records the five-line empty placeholder, unresolved catalog-home conflict, convergence hold, profile authoring envelope, parameter and sensitive-material exclusions, selector/executor/receipt/release separation, bounded validation evidence, and correction and rollback burdens. It changes no profile entry, policy rule, transform, schema, fixture, validator, test, workflow, evaluator, consumer, release, deployment, publication, or public behavior. This receipt is provenance and process memory rather than approval, proof, policy acceptance, catalog-path authority, independent review, release authority, or publication authority; authorized human review remains pending."
+}

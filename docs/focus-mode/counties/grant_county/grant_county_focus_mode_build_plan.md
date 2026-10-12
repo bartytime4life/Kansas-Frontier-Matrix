@@ -1,5 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION — <REGISTERED_KFM_DOC_ID>
+doc_id: kfm://doc/focus-mode/counties/grant-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+owning_root: docs/
+responsibility: Plan a public-safe Grant County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Grant County Focus Mode Build Plan — Subsurface Resource and Groundwater Context Without Operational, Environmental, Property, or Rights Verdicts
 type: county-focus-mode-build-plan
 version: v0.1-draft
@@ -9,7 +13,7 @@ owners:
   - NEEDS_VERIFICATION — <OWNER:geology-natural-resources-reviewer>
   - NEEDS_VERIFICATION — <OWNER:water-governance-reviewer>
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-10-12
 policy_label: public_draft
 county: Grant County, Kansas
 county_slug: grant

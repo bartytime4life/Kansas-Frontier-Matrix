@@ -1,0 +1,247 @@
+{
+  "receipt_id": "genrec-focus-mode-stevens-county-readme-5c73b6e77299",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/stevens_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/stevens_county/README.md": "sha256:5c73b6e77299b825af8c2694a8917ae0efa951ed18d0cd15a60c3e23f03745a1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:2e61da4a880b6dc56c469502d73bbddca60b247a2f9890cfe342bab967f19aef",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "deterministic Markdown and JSON validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2e61da4a880b6dc56c469502d73bbddca60b247a2f9890cfe342bab967f19aef",
+      "sha256:5c73b6e77299b825af8c2694a8917ae0efa951ed18d0cd15a60c3e23f03745a1"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county/stevens_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/sherman_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/.github/workflows/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/stevens_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2; verified the target as one LF byte, the Stevens sibling plan and two-file directory, the current county-index row, the Sherman duplicate directory, no open Stevens README pull request, and no matching task branch before mutation."
+    },
+    {
+      "gate": "path-scoped-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "AGENTS.md was absent at the repository root, docs/, docs/focus-mode/, and docs/focus-mode/counties/ on the pinned base; CONTRIBUTING.md, CODEOWNERS, Directory Rules, and applicable ADRs were inspected."
+    },
+    {
+      "gate": "same-path-compatibility-placement",
+      "outcome": "PASS",
+      "reason": "The existing README remains at docs/focus-mode/counties/stevens_county/ under docs/. Accepted ADR-0029 and adopted Directory Rules support docs/ ownership; proposed ADR-0027 does not authorize migration, and no parallel Focus tree, move, rename, or authority change is introduced."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target was exactly one UTF-8 line-feed byte. The replacement supplies complete planning-lane orientation, evidence limits, responsibilities, plan reconciliation, source-role and temporal rules, sensitive-domain boundaries, finite outcomes, validation, maintenance, migration, correction, and rollback."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete 56,016-byte Stevens build plan was inspected and left byte-unchanged. Current path and plan presence supersede only its old no-repository/no-plan uncertainty; its 2026-06-08 external observations and all proposed designs remain dated planning lineage."
+    },
+    {
+      "gate": "sherman-stevens-identity-defect",
+      "outcome": "PASS",
+      "reason": "The pinned index and direct directory reads confirm that Sherman and Stevens shared the one-byte README and byte-identical Stevens plan. The README surfaces this as identity drift, confines the change to Stevens, and does not claim Sherman repair. Replacing the Stevens README breaks exact tree equality on the branch but leaves the Sherman foreign-plan defect open."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The shared index records Stevens as README_1_BYTE and DUPLICATE_TREE. This leaf change makes those exact findings stale on the branch, but a partial high-churn inventory/count edit was not made; a separately pinned full current-main reconciliation is required."
+    },
+    {
+      "gate": "dated-source-and-temporal-fitness-boundary",
+      "outcome": "PASS",
+      "reason": "The README does not transform the plan's 2026-06-08 KGS and county observations, including older scientific/project material, into current repository, operational, property, environmental, regulatory, or emergency truth."
+    },
+    {
+      "gate": "operational-infrastructure-and-reconstruction-boundary",
+      "outcome": "PASS",
+      "reason": "The README denies exact or current wells, pipelines, plants, compressors, storage, pressure, production, condition, vulnerability, tactical relationships, and cross-layer reconstruction, without confirming withheld assets."
+    },
+    {
+      "gate": "property-mineral-rights-and-living-person-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no owner, title, mineral, lease, royalty, tax, value, access, zoning, living-person, or private-contact determination."
+    },
+    {
+      "gate": "groundwater-environmental-health-regulatory-and-emergency-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no contamination, drinking-water, private-well, methane, exposure, health, emissions, leak, causation, compliance, enforcement, incident, evacuation, shelter, or emergency conclusion."
+    },
+    {
+      "gate": "finite-outcome-boundary",
+      "outcome": "PASS",
+      "reason": "The authored document preserves exactly ANSWER, ABSTAIN, DENY, and ERROR as terminal outcomes; HOLD, DEFER, EXCLUDE, QUARANTINE, and NOT_RELEASED remain planning, lifecycle, or release dispositions."
+    },
+    {
+      "gate": "focus-surface-maturity-boundary",
+      "outcome": "PASS",
+      "reason": "Repository-present semantic contract, schema-family scaffolds, inactive Focus policy, and incompatible county validator are described within verified maturity limits and are not promoted into Stevens readiness or enforcement evidence."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The final remote README contains 56,656 UTF-8 bytes and 1,045 lines, one H1, one KFM metadata block, 19 unique explicit anchors including top, resolving same-document links, balanced HTML comments, no code fences, LF-only endings, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-closure",
+      "outcome": "PASS",
+      "reason": "All 15 distinct repository-relative targets were normalized from the Stevens README path and verified as repository-present at the pinned base; all same-document fragments resolve to unique explicit anchors."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Final remote README SHA-256 5c73b6e77299b825af8c2694a8917ae0efa951ed18d0cd15a60c3e23f03745a1; Git blob e3cfdca79e1d88c1abfe38909d46daa48f10f1bc; 56,656 UTF-8 bytes. Remote read-back and computed Git blob agree. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt satisfies the current generated_receipt.schema.json required fields, enums, patterns, object closures, artifact-map parity, canonical path form, citation shape, timestamp format, and pending human-review state."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "No workflow definitions are changed. Current workflow governance documents the workflow layer as a non-publisher and requires explicit threat review for privileged events; this branch performs documentation and provenance writes only, and exact-head hosted results are observed separately."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The index is a high-churn shared inventory whose row, duplicate-tree facts, and aggregate counts require a full current-main recomputation. The leaf README discloses stale findings rather than performing an isolated count edit."
+    },
+    {
+      "gate": "sherman-county-correction",
+      "outcome": "SKIPPED",
+      "reason": "Sherman identity reconstruction, foreign-plan removal or rename, reference repair, and rollback are a separate county correction boundary and were not authorized by the Stevens README request."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator targets docs/focus-modes/, kebab-case lanes, a different index grammar, and seven required files; it is not a valid passing gate for the current singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "external-source-currentness-rights-and-sensitive-review",
+      "outcome": "SKIPPED",
+      "reason": "The task is documentation-only. External sources, rights, current regulatory/operational data, infrastructure sensitivity, property/mineral records, environmental-health review, and public-use fitness remain explicit future gates."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created; their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not source, rights, security, infrastructure, property, environmental-health, regulatory, emergency, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-request",
+      "validated": true,
+      "evidence_ref": "sha256:2e61da4a880b6dc56c469502d73bbddca60b247a2f9890cfe342bab967f19aef"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county/README.md"
+    },
+    {
+      "id": "complete-stevens-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county/stevens_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "stevens-directory-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/stevens_county"
+    },
+    {
+      "id": "sherman-foreign-plan-duplicate",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/sherman_county"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8f0957a086d0c7ec30fd05d4e1ebc6fb046d6ca2/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T06:24:50Z",
+  "emitter": "ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation provenance only. The receipt binds the Stevens README bytes and validation observations; it does not validate external sources, repair Sherman County, activate policy, approve release, or authorize publication. The README deliberately surfaces the inherited Sherman/Stevens identity defect and preserves it as separate correction work."
+}

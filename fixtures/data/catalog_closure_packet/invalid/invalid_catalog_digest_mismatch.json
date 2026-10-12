@@ -1,0 +1,74 @@
+{
+  "object_type": "CatalogClosurePacket",
+  "schema_version": "1.0.0",
+  "closure_id": "catalog-closure:catalog-review-0001",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:34558dac3d5a6532889bc091a5a29a130dd5aab019c222a9f47c9a3c8a0f2a82",
+  "scope": {
+    "artifact_id": "kfm://artifact/catalog-synthetic-0001",
+    "artifact_digest": "sha256:42dd5f176a84da90455033cdf3bd2808d491dfad7b245b5f294a38194d8790f5",
+    "requested_transition": "CATALOG_REVIEW",
+    "audience": "INTERNAL"
+  },
+  "catalog_records": [
+    {
+      "record_type": "DCAT",
+      "record_ref": "kfm://catalog/dcat/synthetic-0001",
+      "artifact_id": "kfm://artifact/catalog-synthetic-0001",
+      "artifact_digest": "sha256:42dd5f176a84da90455033cdf3bd2808d491dfad7b245b5f294a38194d8790f5",
+      "release_candidate_ref": null,
+      "resolved": true
+    },
+    {
+      "record_type": "PROV",
+      "record_ref": "kfm://catalog/prov/synthetic-0001",
+      "artifact_id": "kfm://artifact/catalog-synthetic-0001",
+      "artifact_digest": "sha256:d9298a10d1b0735837dc4bd85dac641b0f3cef27a47e5d53a54f2f3f5b2fcffa",
+      "release_candidate_ref": null,
+      "resolved": true
+    },
+    {
+      "record_type": "STAC",
+      "record_ref": "kfm://catalog/stac/synthetic-0001",
+      "artifact_id": "kfm://artifact/catalog-synthetic-0001",
+      "artifact_digest": "sha256:42dd5f176a84da90455033cdf3bd2808d491dfad7b245b5f294a38194d8790f5",
+      "release_candidate_ref": null,
+      "resolved": true
+    }
+  ],
+  "source_descriptor_refs": [
+    "kfm://source/synthetic-catalog-source"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic-catalog-evidence"
+  ],
+  "validation_report_refs": [
+    "kfm://validation/synthetic-catalog-validation"
+  ],
+  "policy": {
+    "outcome": "ALLOW",
+    "policy_decision_ref": "kfm://policy-decision/synthetic-catalog-0001",
+    "rights_resolved": true,
+    "sensitivity_resolved": true
+  },
+  "review": {
+    "state": "NOT_REQUIRED",
+    "review_record_ref": null
+  },
+  "release": {
+    "release_candidate_ref": null,
+    "rollback_ref": null,
+    "correction_refs": []
+  },
+  "provenance": {
+    "run_receipt_ref": "kfm://run/catalog-closure-synthetic-0001",
+    "recorded_at": "2026-04-25T10:00:00Z"
+  },
+  "governance": {
+    "proof_closed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

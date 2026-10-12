@@ -135,7 +135,7 @@ Snapshot: `main@a31e2f84bed7300c3f8adb8a9640ad1591597144`, inspected on 2026-07-
 | Direct consumer of this parent path | **NOT ESTABLISHED IN BOUNDED EVIDENCE** | Treat payload admission as held until a consumer is linked |
 | Aggregate fixture-backed validators | **CONFIRMED configured at root scope** | `make schemas` invokes the configured aggregate validators, but target-specific coverage is not established |
 | Aggregate validation command | **CONFIRMED implemented** | `make validate` runs `make schemas` and schema/contract tests; it is not a full repository suite |
-| Fixture regeneration target | **CONFIRMED readiness marker only** | `make fixtures` prints `TODO: regenerate deterministic fixtures`; zero exit is not validation or regeneration proof |
+| Fixture regeneration target | **CONFIRMED readiness marker only** | `make fixtures` runs the `fixtures` readiness lane, which reports HOLD and exits 3; it is not validation or regeneration proof |
 | Required checks and branch protection | **NEEDS VERIFICATION** | Workflow or file presence does not prove enforcement |
 | Release, publication, or production parity | **DENIED as inference** | Synthetic fixture documentation and checks cannot establish public state |
 
@@ -351,7 +351,7 @@ Validation is layered. No single passing check proves the fixture is safe, corre
 | `make schemas` | Runs `python tools/validators/_common/run_all.py` against configured aggregate fixture-backed validators | Target-specific coverage for `fixtures/synthetic/` is not established |
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q` | Narrow schema and contract test scope; not a synthetic-lane suite |
 | `make validate` | Runs `make schemas` and `make test` | Partial aggregate validation, not a full repository or release suite |
-| `make fixtures` | Prints `TODO: regenerate deterministic fixtures` | Readiness marker only; zero exit is not generation or validation evidence |
+| `make fixtures` | Runs `tools/readiness/run_lane.py fixtures`, which reports HOLD and exits 3 | Readiness marker only; not generation or validation evidence |
 
 ### Required check classes
 

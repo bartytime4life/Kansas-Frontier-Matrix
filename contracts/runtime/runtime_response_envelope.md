@@ -2,18 +2,19 @@
 doc_id: kfm://doc/contracts-runtime-runtime-response-envelope
 title: contracts/runtime/runtime_response_envelope.md — RuntimeResponseEnvelope Contract
 type: contract
-version: v0.2
+version: v0.5
 status: draft; PROPOSED; schema-paired; api-facing-runtime-envelope; trust-membrane
 owners: OWNER_TBD — Runtime steward · API steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Correction steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
-policy_label: public; contracts; runtime; runtime-response-envelope; api-facing; finite-outcomes; evidence-refs; policy-state; freshness; correction-state; governed-runtime; no-internal-store-bypass
-tags: [kfm, contracts, runtime, runtime-response-envelope, governed-api, trust-membrane, answer, abstain, deny, error, evidence-refs, policy-state, freshness, correction-state, cite-or-abstain]
+updated: 2026-09-12
+policy_label: public; contracts; runtime; runtime-response-envelope; api-facing; finite-outcomes; evidence-refs; precision-disclosure; policy-state; freshness; correction-state; governed-runtime; no-internal-store-bypass
+tags: [kfm, contracts, runtime, runtime-response-envelope, governed-api, trust-membrane, answer, abstain, deny, error, evidence-refs, precision-actually-used, precision-disclosure, policy-state, freshness, correction-state, cite-or-abstain]
 related:
   - ./README.md
   - ./decision_envelope.md
   - ./run_receipt.md
   - ./ai_receipt.md
+  - ./precision_actually_used.md
   - ../policy/policy_decision.md
   - ../evidence/evidence_bundle.md
   - ../release/release_manifest.md
@@ -24,21 +25,26 @@ related:
   - ../../policy/runtime/
   - ../../fixtures/contracts/v1/runtime/runtime_response_envelope/
   - ../../tools/validators/validate_runtime_response_envelope.py
+  - ../../tests/contracts/test_runtime_response_contract_alignment.py
+  - ../../tests/runtime_proof/test_envelope_finite_outcomes.py
   - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/architecture/governed-ai.md
+  - ../../docs/architecture/governed-ai/README.md
 notes:
   - "Expanded from existing `contracts/runtime/runtime_response_envelope.md`."
   - "Paired schema verified at `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`; schema status is PROPOSED."
-  - "The schema requires id, spec_hash, version, issued_at, outcome, reason_code, evidence_refs, policy_state, freshness, and correction_state; additional properties are false."
+  - "The schema has ten unconditional required fields and conditionally requires `precision_actually_used` plus at least one top-level EvidenceRef for `ANSWER`; it forbids precision disclosure for the other three outcomes."
+  - "The structured precision semantics are owned by `contracts/runtime/precision_actually_used.md` and are implemented consistently by the schema, fixture, validator, candidate builder, and bounded proof tests."
+  - "v0.4 repairs the v0.3 prose omission without changing schema bytes, runtime behavior, provider/model integration, policy, release, deployment, or publication posture."
+  - "v0.5 defines a bounded operator-health interpretation before any endpoint naming; it does not add a health endpoint or change schema bytes."
   - "RuntimeResponseEnvelope is the governed API/client-facing response envelope. It is not raw evidence storage, not canonical lifecycle storage, not policy execution, not model truth, and not release approval."
-  - "Rollback target for this expansion is previous blob SHA `070e7f178f04bd1cf7577de1046aa3eaa3530edc`."
+  - "Rollback target for this correction is prior contract blob SHA `97ff95ba5527968f3db70cd710682176444e4cde`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # RuntimeResponseEnvelope Contract
 
-> `RuntimeResponseEnvelope` is the governed API-facing response object that tells a client what finite outcome it may render, which evidence refs support the response posture, what policy/freshness/correction state applies, and which contract/spec lineage produced the envelope. It is a trust-membrane envelope, not raw evidence, not canonical storage, and not public truth by itself.
+> `RuntimeResponseEnvelope` is the governed API-facing response object that tells a client what finite outcome it may render, which evidence refs support the response posture, what precision was actually supported for an answer, what policy/freshness/correction state applies, and which contract/spec lineage produced the envelope. It is a trust-membrane envelope, not raw evidence, not canonical storage, and not public truth by itself.
 
 <p>
   <img alt="Status: proposed" src="https://img.shields.io/badge/status-PROPOSED-yellow">
@@ -46,21 +52,23 @@ notes:
   <img alt="Family: runtime" src="https://img.shields.io/badge/family-runtime-0a7ea4">
   <img alt="Object: RuntimeResponseEnvelope" src="https://img.shields.io/badge/object-RuntimeResponseEnvelope-blueviolet">
   <img alt="Schema: paired" src="https://img.shields.io/badge/schema-paired-green">
+  <img alt="Precision: answer-only" src="https://img.shields.io/badge/precision-ANSWER--only-0a7ea4">
   <img alt="Client: governed" src="https://img.shields.io/badge/client-governed-critical">
 </p>
 
 **Status:** draft / PROPOSED  
 **Path:** `contracts/runtime/runtime_response_envelope.md`  
 **Paired schema:** `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`  
+**Precision semantics:** [`contracts/runtime/precision_actually_used.md`](./precision_actually_used.md)  
 **Schema status:** PROPOSED  
-**Validator path named by schema:** `tools/validators/validate_runtime_response_envelope.py` — existing file previously marked wired in this document; current implementation wiring still NEEDS VERIFICATION unless checked in this session  
+**Validator path named by schema:** `tools/validators/validate_runtime_response_envelope.py` — wired to the canonical schema and its positive/negative fixture root  
 **Policy authority:** `policy/runtime/`, not this contract  
 **Runtime/API authority:** implementation/API roots, not this contract  
-**Truth posture:** CONFIRMED schema pairing and required field surface · CONFIRMED finite outcome enum · CONFIRMED evidence refs use the EvidenceRef schema · CONFIRMED additional properties are closed · NEEDS VERIFICATION for validator wiring, fixtures, policy-state/freshness/correction-state vocabularies, public-client tests, and runtime implementation
+**Truth posture:** CONFIRMED schema pairing, precision-profile pairing, validator wiring, four-outcome schema fixtures, conditional `ANSWER` precision disclosure, EvidenceRef shape reference, and closed additional properties · NEEDS VERIFICATION for policy-state/freshness/correction-state vocabularies, semantic outcome selection, evidence resolution, public-client behavior, and governed runtime/API integration
 
 ## Quick jumps
 
-[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Field semantics](#field-semantics) · [Outcome semantics](#outcome-semantics) · [State semantics](#state-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
+[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Field semantics](#field-semantics) · [Outcome semantics](#outcome-semantics) · [Operator-health interpretation](#operator-health-interpretation) · [State semantics](#state-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
 
 ---
 
@@ -76,6 +84,7 @@ It answers:
 - whether the client receives `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`;
 - why that outcome was selected at a safe high level;
 - which evidence refs are attached;
+- for `ANSWER`, which spatial, temporal, and attribute precision was actually supported and disclosed;
 - what policy state applies;
 - whether the response is fresh or stale;
 - whether correction, withdrawal, or supersession posture affects the response.
@@ -85,6 +94,7 @@ It does not answer:
 - whether raw evidence can be read directly;
 - whether canonical/internal stores can be exposed;
 - whether the evidence refs actually resolve unless resolution is performed;
+- whether disclosed precision is fit for a use case, policy-approved, release-approved, or stronger than its cited evidence;
 - whether policy evaluation was correct;
 - whether AI output is true;
 - whether a release is approved;
@@ -103,13 +113,14 @@ request/context
   -> resolve released or policy-safe state
   -> evaluate policy and sensitivity
   -> resolve evidence refs or abstain
+  -> determine evidence-supported precision
   -> account for freshness/correction/withdrawal
   -> produce DecisionEnvelope / PolicyDecision / AIReceipt as applicable
   -> emit RuntimeResponseEnvelope
   -> client renders only what the envelope permits
 ```
 
-The envelope is not the payload store. It carries the governance posture needed for safe display and traceability.
+The envelope is not the payload store. It carries the governance posture needed for safe display and traceability. Requested resolution, map zoom, formatting precision, or model confidence must not be substituted for the evidence-supported precision actually used.
 
 ---
 
@@ -125,16 +136,24 @@ The paired schema currently confirms these fields:
 | `issued_at` | yes | date-time string | Emission timestamp. |
 | `outcome` | yes | enum: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Finite runtime response outcome. |
 | `reason_code` | yes | string | Primary reason classification. |
-| `evidence_refs` | yes | array of EvidenceRef objects | Evidence pointers attached to response posture. |
+| `evidence_refs` | yes; at least one item for `ANSWER` | array of EvidenceRef objects | Evidence pointers attached to response posture and the support set for answer precision. |
 | `policy_state` | yes | string | Policy state summary. |
 | `freshness` | yes | string | Freshness/staleness posture. |
 | `correction_state` | yes | string | Correction/withdrawal/supersession posture. |
+| `precision_actually_used` | conditional — required for `ANSWER`; forbidden otherwise | closed object with required `spatial`, `temporal`, `attribute`, `evidence_refs`, and `transform_receipt_refs`; optional `requested_precision` | Evidence-supported precision disclosed for an answer. |
 
 The schema also confirms:
 
 ```text
 additionalProperties: false
 ```
+
+Conditional shape rules are part of the same canonical schema, not a separate response profile:
+
+| Condition | Machine rule |
+|---|---|
+| `outcome == ANSWER` | `evidence_refs` has at least one item and `precision_actually_used` is required. |
+| `outcome != ANSWER` | `precision_actually_used` is forbidden. |
 
 ---
 
@@ -190,7 +209,24 @@ Reason codes should be safe to expose and should avoid leaking sensitive details
 
 Evidence references attached to the response posture.
 
-The schema makes `evidence_refs` required and uses the EvidenceRef schema for each item. Refs are not evidence closure unless they resolve to admissible evidence bundles or evidence records through governed interfaces.
+The schema makes `evidence_refs` required and uses the EvidenceRef schema for each item. It requires at least one item for `ANSWER`. Refs are not evidence closure unless they resolve to admissible evidence bundles or evidence records through governed interfaces.
+
+### `precision_actually_used`
+
+Structured disclosure of the precision actually supported by the evidence used for an `ANSWER`.
+
+The canonical semantic profile is [`precision_actually_used.md`](./precision_actually_used.md). The profile is required only for `ANSWER` and forbidden for `ABSTAIN`, `DENY`, and `ERROR`; it does not create a second RuntimeResponseEnvelope shape.
+
+| Nested field | Required | Meaning |
+|---|---:|---|
+| `spatial` | yes | Representation, resolution, accuracy statement, and whether outward generalization was applied. |
+| `temporal` | yes | Granularity, supported observation interval, and freshness class. |
+| `attribute` | yes | Measure, unit, significant precision, and optional classification granularity. |
+| `requested_precision` | no | Optional record of requested spatial, temporal, or attribute precision for an explicit requested-versus-actual comparison. |
+| `evidence_refs` | yes; nonempty | EvidenceRefs supporting the precision disclosure; every item must also occur in the envelope's top-level `evidence_refs`. |
+| `transform_receipt_refs` | yes; may be empty only when no generalization requires a receipt | Transform receipts supporting outward generalization or related precision-changing operations. |
+
+Actual precision controls the response. Requested precision, map zoom, formatting, or model confidence cannot upgrade it. A precision disclosure is not a quality score, policy decision, source-authority decision, fitness-for-use determination, release approval, or publication authority.
 
 ### `policy_state`
 
@@ -214,14 +250,39 @@ This tells clients whether the response lineage is normal, corrected, superseded
 
 ## Outcome semantics
 
-| Outcome | Runtime response meaning | Client posture |
-|---|---|---|
-| `ANSWER` | The system may present the requested response under current evidence, policy, rights, sensitivity, freshness, correction, and release constraints. | Render only with required evidence refs, notices, and obligations. |
-| `ABSTAIN` | The system refuses to answer because evidence, citation, rights, sensitivity, freshness, correction state, or context is insufficient or unsafe. | Show safe abstention reason; do not infer the answer. |
-| `DENY` | Access, render, export, capability, consent, or sensitivity policy blocks response delivery. | Do not render restricted payload; show safe denial. |
-| `ERROR` | Runtime could not complete safely or deterministically. | Show safe error; do not infer truth, permission, or availability. |
+| Outcome | Runtime response meaning | Precision posture | Client posture |
+|---|---|---|---|
+| `ANSWER` | The system may present the requested response under current evidence, policy, rights, sensitivity, freshness, correction, and release constraints. | Required. Disclose only the spatial, temporal, and attribute precision actually supported by the bound evidence. | Render only with required evidence refs, notices, and obligations. |
+| `ABSTAIN` | The system refuses to answer because evidence, citation, rights, sensitivity, freshness, correction state, or context is insufficient or unsafe. | Forbidden. Negative outcomes must not carry an answer-shaped precision disclosure. | Show safe abstention reason; do not infer the answer. |
+| `DENY` | Access, render, export, capability, consent, or sensitivity policy blocks response delivery. | Forbidden. | Do not render restricted payload; show safe denial. |
+| `ERROR` | Runtime could not complete safely or deterministically. | Forbidden. | Show safe error; do not infer truth, permission, or availability. |
 
 `ABSTAIN`, `DENY`, and `ERROR` are first-class governed outcomes.
+
+---
+
+## Operator-health interpretation
+
+Request outcome and operator health are related evidence, not aliases. A valid
+`ABSTAIN` or `DENY` proves that the trust membrane produced an intentional
+finite response; it does not prove that every dependency is healthy. An
+`ERROR` proves neither truth nor policy state and must not be converted into an
+answer.
+
+Before any health endpoint is named, a later internal operator projection must
+use only these bounded meanings:
+
+| Operator state | Minimum meaning | Safe evidence boundary |
+|---|---|---|
+| `READY` | The dispatcher can produce a closed finite envelope and all dependencies required for the selected operation passed their explicit preflight. | Exact revision, bounded check identifiers, and non-sensitive reason codes only. |
+| `DEGRADED` | The dispatcher still fails closed, but freshness, timeout, or an unavailable optional dependency prevents the requested answer. | Do not expose source payloads, private paths, credentials, stack traces, or protected geometry. |
+| `UNHEALTHY` | The runtime cannot guarantee a closed response envelope for the selected operation. | Emit a stable safe code and correlation identifier; preserve diagnostics only in an access-controlled operator sink. |
+| `UNKNOWN` | No current measurement proves one of the other states. | Absence of evidence must not be reported as ready. |
+
+This table does not authorize a URL, probe, metric, telemetry sink, deployment,
+or public disclosure. Any later endpoint needs a separate least-privilege
+contract, authentication/exposure decision, deterministic tests, and rollback
+plan.
 
 ---
 
@@ -268,25 +329,38 @@ These vocabularies are semantic recommendations only until schemas, policy regis
 
 ## Invariants
 
-CONFIRMED by paired schema:
+CONFIRMED by the paired schema:
 
-- `id`, `spec_hash`, `version`, `issued_at`, `outcome`, `reason_code`, `evidence_refs`, `policy_state`, `freshness`, and `correction_state` are required.
+- `id`, `spec_hash`, `version`, `issued_at`, `outcome`, `reason_code`, `evidence_refs`, `policy_state`, `freshness`, and `correction_state` are unconditionally required.
 - `id` must match `^[a-z][a-z0-9_:.-]*$`.
 - `spec_hash` must match `^sha256:[a-f0-9]{64}$`.
 - `issued_at` must be a date-time string.
 - `outcome` must be one of `ANSWER | ABSTAIN | DENY | ERROR`.
 - `evidence_refs` items must match the EvidenceRef schema ref declared by the runtime schema.
-- Additional properties are not allowed.
+- Every `ANSWER` requires at least one top-level EvidenceRef and a closed `precision_actually_used` object.
+- `ABSTAIN`, `DENY`, and `ERROR` forbid `precision_actually_used`.
+- The precision object requires `spatial`, `temporal`, `attribute`, `evidence_refs`, and `transform_receipt_refs`; `requested_precision` is optional.
+- `spatial`, `temporal`, and `attribute` are closed objects with the fields defined by the paired precision profile.
+- `attribute.significant_precision` is an integer from `0` through `12`.
+- Additional properties are not allowed at the envelope level or within the precision sub-objects.
 
-PROPOSED semantic invariants:
+CONFIRMED by the precision profile, validator, candidate builder, and focused proofs:
 
-- `ANSWER` should include at least one resolvable evidence ref unless the response is explicitly non-claim or policy-exempt.
-- `ABSTAIN`, `DENY`, and `ERROR` must not leak restricted details through `reason_code` or state fields.
-- Public clients must not render payloads when outcome is `DENY` or `ERROR`.
-- Public clients must not manufacture answers when outcome is `ABSTAIN`.
-- Correction/withdrawal/supersession state must override stale client assumptions.
-- Runtime responses must not imply direct access to RAW, WORK, QUARANTINE, unpublished candidate, canonical/internal, graph/vector, direct source-system, or direct model-runtime stores.
-- The envelope should be superseded rather than silently mutated when correction/freshness/policy posture changes.
+- precision-level `evidence_refs` must be nonempty and must be a subset of the envelope's top-level `evidence_refs`;
+- `spatial.generalization_applied: true` requires at least one `transform_receipt_refs` item;
+- `temporal.observation_interval.start` must not be after `end`;
+- optional `requested_precision` is informative only; actual precision remains controlling;
+- builders and selectors must preserve the structured disclosure without inventing evidence, precision, policy, or authority.
+
+PROPOSED runtime and client invariants:
+
+- a schema-valid EvidenceRef must resolve to admissible support before an `ANSWER` is authorized;
+- `ABSTAIN`, `DENY`, and `ERROR` must not leak restricted details through `reason_code` or state fields;
+- public clients must not render payloads when outcome is `DENY` or `ERROR`;
+- public clients must not manufacture answers when outcome is `ABSTAIN`;
+- correction/withdrawal/supersession state must override stale client assumptions;
+- runtime responses must not imply direct access to RAW, WORK, QUARANTINE, unpublished candidate, canonical/internal, graph/vector, direct source-system, or direct model-runtime stores;
+- the envelope should be superseded rather than silently mutated when correction/freshness/policy posture changes.
 
 ---
 
@@ -303,7 +377,7 @@ Typical roles:
 | Lifecycle / runtime point | Role of RuntimeResponseEnvelope |
 |---|---|
 | Runtime query | Carries finite outcome and safe display posture. |
-| Evidence-backed answer | Carries evidence refs and cite-or-abstain posture. |
+| Evidence-backed answer | Carries evidence refs, evidence-supported precision, and cite-or-abstain posture. |
 | Policy denial | Carries safe denial state without leaking restricted content. |
 | Stale or corrected content | Carries freshness/correction state to clients. |
 | AI-mediated answer | May be paired with AIReceipt and citation validation. |
@@ -315,10 +389,11 @@ Typical roles:
 
 | Boundary | Rule |
 |---|---|
+| RuntimeResponseEnvelope vs PrecisionActuallyUsed | RuntimeResponseEnvelope carries the answer-only field; [`precision_actually_used.md`](./precision_actually_used.md) owns its structured semantic profile. |
 | RuntimeResponseEnvelope vs DecisionEnvelope | DecisionEnvelope records finite decision context; RuntimeResponseEnvelope is the client-facing response envelope. |
 | RuntimeResponseEnvelope vs AIReceipt | AIReceipt records AI run accountability; RuntimeResponseEnvelope tells client rendering posture. |
 | RuntimeResponseEnvelope vs PolicyDecision | PolicyDecision records policy evaluation; RuntimeResponseEnvelope carries client-safe policy state. |
-| RuntimeResponseEnvelope vs EvidenceBundle | EvidenceBundle supports claims; envelope carries EvidenceRefs only. |
+| RuntimeResponseEnvelope vs EvidenceBundle | EvidenceBundle supports claims and precision; the envelope carries EvidenceRefs only. |
 | RuntimeResponseEnvelope vs ReleaseManifest | ReleaseManifest binds released artifacts; envelope references/reflects release-safe state. |
 | RuntimeResponseEnvelope vs runtime code | Envelope defines meaning; code executes elsewhere. |
 | RuntimeResponseEnvelope vs UI/map/API | Envelope informs downstream rendering; clients must still honor policy/obligations. |
@@ -327,14 +402,26 @@ Typical roles:
 
 ## Validation expectations
 
-NEEDS VERIFICATION in implementation:
+CONFIRMED contract/schema/fixture validation surface:
 
-- validator existence and current wiring for `tools/validators/validate_runtime_response_envelope.py`;
-- fixture coverage under `fixtures/contracts/v1/runtime/runtime_response_envelope/`;
+- `tools/validators/validate_runtime_response_envelope.py` targets the canonical schema and fixture root;
+- valid synthetic fixtures cover `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
+- the valid `ANSWER` fixture carries nonempty top-level EvidenceRefs and the structured precision profile;
+- invalid fixtures cover a missing required field, an extra property, an invalid identifier, and an unknown outcome;
+- the validator additionally fails closed on precision EvidenceRefs outside the top-level support set, generalized precision without a transform receipt, and inverted temporal intervals;
+- `tests/runtime_proof/test_envelope_finite_outcomes.py` checks the closed profile and Focus compatibility alias without network access;
+- `tests/packages/envelopes/test_runtime_response_candidate.py` proves the candidate builder emits the selected representation for `ANSWER` and forbids it for negative outcomes;
+- `tests/contracts/test_runtime_response_contract_alignment.py` checks that this contract documents every top-level schema property, points to the schema-selected precision profile, and preserves the schema's conditional outcome law.
+- `apps/governed-api/tests/test_api_failure_fixtures.py` exercises a deterministic, no-network negative-path adapter for synchronous exceptions, rejected asynchronous work, timeout, cancellation, invalid handler output, intentional `ABSTAIN`/`DENY` preservation, and correlation sanitization.
+
+NEEDS VERIFICATION in runtime and client implementation:
+
 - controlled vocabularies for `policy_state`, `freshness`, and `correction_state`;
-- required non-empty evidence refs for public `ANSWER` cases, if adopted;
 - safe reason-code vocabulary;
+- resolution of every `ANSWER` EvidenceRef to admissible support;
+- calculation of precision from governed evidence rather than caller assertion;
 - public client tests for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` behavior;
+- client rendering of requested-versus-actual precision without overstatement;
 - tests proving no public client reads RAW/WORK/QUARANTINE/canonical/internal stores;
 - correction/withdrawal/rollback propagation through runtime envelopes;
 - AIReceipt and citation-validation linkage where AI produces or shapes the response.
@@ -343,20 +430,29 @@ NEEDS VERIFICATION in implementation:
 
 ## Fixtures
 
-Minimum fixture set PROPOSED:
+Current synthetic schema fixtures:
 
 | Fixture | Purpose |
 |---|---|
-| `valid_answer_with_evidence.json` | Valid answer with evidence refs and allow policy state. |
-| `valid_abstain_no_evidence.json` | Valid abstention when evidence is insufficient. |
-| `valid_deny_sensitive.json` | Valid denial due to sensitivity/access policy. |
-| `valid_error_safe.json` | Valid safe runtime error envelope. |
+| `valid/valid_1.json` | Shape-valid `ABSTAIN` with no evidence refs and no precision disclosure. |
+| `valid/valid_2.json` | Shape-valid `ANSWER` with one synthetic EvidenceRef and structured requested-versus-actual precision disclosure. |
+| `valid/valid_3.json` | Shape-valid `DENY` without a restricted payload or precision disclosure. |
+| `valid/valid_4.json` | Shape-valid safe `ERROR` without internal diagnostics or precision disclosure. |
+| `invalid/invalid_1.json` | Missing required `id`. |
+| `invalid/invalid_2.json` | Disallowed extra property. |
+| `invalid/invalid_3.json` | Identifier pattern violation. |
+| `invalid/invalid_4.json` | Unknown outcome outside the finite enum. |
+
+Focused tests derive additional invalid precision cases from the valid `ANSWER` fixture so the canonical fixture family remains small and deterministic.
+
+Additional semantic/runtime fixture set PROPOSED:
+
+| Fixture | Purpose |
+|---|---|
 | `valid_stale_corrected.json` | Valid stale/corrected response posture. |
 | `valid_withdrawn.json` | Valid withdrawn/correction-state envelope. |
 | `invalid_missing_spec_hash.json` | Confirms required spec hash. |
 | `invalid_bad_spec_hash.json` | Confirms SHA-256 pattern. |
-| `invalid_unknown_outcome.json` | Confirms finite outcome enum. |
-| `invalid_extra_property.json` | Confirms additional properties are closed. |
 
 Fixtures must use synthetic/safe refs only.
 
@@ -365,8 +461,9 @@ Fixtures must use synthetic/safe refs only.
 ## Open questions
 
 - What is the accepted vocabulary for `policy_state`, `freshness`, and `correction_state`?
-- Should `evidence_refs` be required non-empty for every `ANSWER`?
-- Should the schema include explicit `obligations`, or should obligations remain in DecisionEnvelope/PolicyDecision and be summarized by policy_state?
+- Which governed component calculates the precision profile from resolved evidence, and which component independently verifies it?
+- How should public clients render requested-versus-actual precision and transform lineage without overstating fitness for use?
+- Should the schema include explicit `obligations`, or should obligations remain in DecisionEnvelope/PolicyDecision and be summarized by `policy_state`?
 - Should AI-mediated responses require an `ai_receipt_ref` field in a future version?
 - How should release/correction/withdrawal refs be represented without overloading `correction_state`?
 
@@ -374,8 +471,10 @@ Fixtures must use synthetic/safe refs only.
 
 ## Rollback
 
-Rollback is required if this contract is used as raw evidence storage, canonical lifecycle storage, executable runtime/API code, policy authority, AI truth, release approval, or permission for public clients to bypass governed interfaces.
+This v0.4 correction aligns contract prose with the existing schema-selected precision representation and adds no runtime, API, provider/model, policy, release, deployment, or publication behavior.
 
-Rollback target for this expansion: previous blob SHA `070e7f178f04bd1cf7577de1046aa3eaa3530edc`.
+Rollback is required if the contract again omits or contradicts the canonical conditional precision shape, if the alignment test becomes a shadow schema instead of an enforceability check, or if this contract is used as raw evidence storage, canonical lifecycle storage, executable runtime/API code, policy authority, AI truth, release approval, or permission for public clients to bypass governed interfaces.
+
+Rollback target: restore prior contract blob SHA `97ff95ba5527968f3db70cd710682176444e4cde` and remove the paired semantic-alignment test. Re-run the contract, schema, fixture, validator, and finite-envelope checks. No provider, model, source, lifecycle, release, deployment, or publication rollback is required because this correction creates none.
 
 <p align="right"><a href="#top">Back to top</a></p>

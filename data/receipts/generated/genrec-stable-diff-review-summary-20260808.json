@@ -1,0 +1,103 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/stable-diff-review-summary.yml": "sha256:fa9301d140ed5e394c7318b71e99614ee0557ab20e5a2ca401886abeed8da9ae",
+    "tests/diff/test_render_stable_diff_summary.py": "sha256:74ad86e5cc442ad404addbf6492c353d9b465636d6714dfde8d9ab06b831a802",
+    "tools/ci/render_stable_diff_summary.py": "sha256:d49481873ccf225828c8f49cfe32066064e841422a1b59444bb97e2d74f3a62f"
+  },
+  "artifact_paths": [
+    ".github/workflows/stable-diff-review-summary.yml",
+    "tests/diff/test_render_stable_diff_summary.py",
+    "tools/ci/render_stable_diff_summary.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0013",
+      "id": "attachment:pass6-stable-diff-review-summary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/diff/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:stable-diff-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T16:52:15Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0013",
+      "repo:tools/diff/stable_diff.py@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:tools/diff/README.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Deterministic presentation-only renderer for stable-diff reports. It creates no evidence, policy, review, proof, promotion, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:55ab76638262f9d718c99706ad3cdd050229aead03ea308cce03775c4960dc4c",
+  "receipt_id": "genrec-stable-diff-review-summary-20260808",
+  "truth_labels": {
+    ".github/workflows/stable-diff-review-summary.yml": "CONFIRMED",
+    "tests/diff/test_render_stable_diff_summary.py": "CONFIRMED",
+    "tools/ci/render_stable_diff_summary.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic renderer tests passed locally with no network access."
+    },
+    {
+      "gate": "stable-diff-handoff-smoke",
+      "outcome": "PASS",
+      "reason": "The existing stable-diff report envelope was consumed by the renderer in a deterministic local smoke run."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

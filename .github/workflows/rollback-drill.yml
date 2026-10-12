@@ -6,14 +6,17 @@
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
-#   is untrusted. The workflow has read-only repository permission, receives no
-#   release or signing secret, and performs no network-dependent installation.
+#   is untrusted. The workflow has read-only repository permission and receives
+#   no release or signing secret. Network use is limited to installing the
+#   dependencies declared by the root pyproject; no source or rollback network
+#   access occurs.
 #
 # Inputs:
-#   Rollback pipeline/apply/audit placeholders, RollbackCard contracts and
-#   schemas, declared fixture and validator paths, placeholder rollback-card
-#   records, drill-test inventory, rollback data lanes, published alias
-#   inventory, policy routing, and the proposed alias ADR.
+#   Rollback pipeline/audit placeholders, the generic synthetic apply rehearsal,
+#   the bounded Hazards rehearsal fixture, RollbackCard contracts and schemas,
+#   declared fixture and validator paths,
+#   placeholder rollback-card records, drill-test inventory, rollback data
+#   lanes, published alias inventory, policy routing, and the proposed alias ADR.
 #
 # Outputs and outcomes:
 #   Inspection output and job summaries only. Jobs confirm the bounded current
@@ -26,8 +29,8 @@
 #   `verify-published-aliases`; repository rules may refer to those check names.
 #
 # Rollback:
-#   Revert this file. Do not restore echo-only green jobs or invoke placeholder
-#   helpers as though they simulate a rollback or validate published aliases.
+#   Revert this file. Do not restore echo-only green jobs or invoke the bounded
+#   synthetic helper as though it authorizes production rollback or aliases.
 #
 # Placement:
 #   `.github/workflows/` owns CI orchestration. Rollback contracts, schemas,
@@ -52,6 +55,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
@@ -61,131 +66,224 @@ jobs:
   simulate-rollback:
     name: simulate-rollback
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Check out inspected revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up inspection Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Confirm rollback simulation remains an explicit hold
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import ast
           from pathlib import Path
           import json
+          import subprocess
+          import sys
+
+          release_schema_path = Path(
+              "schemas/contracts/v1/release/rollback_card.schema.json"
+          )
+          agriculture_schema_path = Path(
+              "schemas/contracts/v1/domains/agriculture/rollback_card.schema.json"
+          )
+          release_contract_path = Path("contracts/release/rollback_card.md")
+          generic_validator_path = Path("tools/validators/validate_rollback_card.py")
+          release_validator_path = Path(
+              "tools/validators/release/validate_rollback_card.py"
+          )
+          release_fixture_root = Path("fixtures/release/rollback_card")
+          rollback_pipeline_path = Path("pipelines/rollback/main.py")
+          rollback_apply_path = Path("tools/release/rollback_apply.py")
+          rehearsal_test_path = Path(
+              "tests/release/test_synthetic_rollback_rehearsal.py"
+          )
+          hazards_rehearsal_test_path = Path(
+              "tests/domains/hazards/test_synthetic_rollback_rehearsal.py"
+          )
+          hazards_rehearsal_fixture_root = Path(
+              "fixtures/domains/hazards/synthetic_rollback_rehearsal"
+          )
+          agriculture_drill_root = Path("tests/domains/agriculture/rollback_drill")
 
           required = [
-              Path("pipelines/rollback/main.py"),
-              Path("tools/release/rollback_apply.py"),
-              Path("tools/validators/validate_rollback_card.py"),
-              Path("contracts/release/rollback_card.md"),
-              Path("schemas/contracts/v1/release/rollback_card.schema.json"),
-              Path("schemas/contracts/v1/domains/agriculture/rollback_card.schema.json"),
-              Path("tests/domains/agriculture/rollback_drill/README.md"),
+              rollback_pipeline_path,
+              rollback_apply_path,
+              rehearsal_test_path,
+              hazards_rehearsal_test_path,
+              hazards_rehearsal_fixture_root / "README.md",
+              hazards_rehearsal_fixture_root
+              / "workspace/.kfm-synthetic-rollback-rehearsal",
+              hazards_rehearsal_fixture_root / "workspace/scenario.json",
+              generic_validator_path,
+              release_validator_path,
+              release_contract_path,
+              release_schema_path,
+              agriculture_schema_path,
+              agriculture_drill_root / "README.md",
               Path("release/rollback_cards/README.md"),
+              Path("release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"),
+              Path("release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"),
+              release_fixture_root / "README.md",
+              release_fixture_root / "valid/valid_prior_release_candidate.json",
+              release_fixture_root / "valid/valid_withdrawal_candidate.json",
+              release_fixture_root / "valid/valid_hold.json",
+              release_fixture_root / "invalid/expected_findings_manifest.json",
               Path("policy/release/README.md"),
               Path("policy/domains/agriculture/README.md"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required rollback-drill evidence is missing: {missing}"
 
-          placeholders = {
-              Path("pipelines/rollback/main.py"):
-                  "# rollback stage — greenfield placeholder",
-              Path("tools/release/rollback_apply.py"):
-                  "# Apply a signed rollback_card — greenfield placeholder",
-          }
-          for path, expected in placeholders.items():
-              actual = path.read_text(encoding="utf-8").strip()
-              assert actual == expected, (
-                  f"{path} has changed; wire its accepted interface, identity, target, "
-                  "signature/review, policy, receipt, invalidation, and no-write tests "
-                  "before retaining this readiness hold"
-              )
-
-          generic_validator = Path(
-              "tools/validators/validate_rollback_card.py"
-          ).read_text(encoding="utf-8")
-          expected_validator = """def main():
-              raise NotImplementedError("Greenfield placeholder")
-
-          if __name__ == '__main__':
-              main()
-          """
-          generic_validator_ast = ast.dump(
-              ast.parse(generic_validator, filename="tools/validators/validate_rollback_card.py"),
-              include_attributes=False,
-          )
-          expected_validator_ast = ast.dump(
-              ast.parse(expected_validator, filename="expected:validate_rollback_card.py"),
-              include_attributes=False,
-          )
-          assert generic_validator_ast == expected_validator_ast, (
-              "the generic RollbackCard validator is no longer the known placeholder; "
-              "inspect imports, helpers, classes, calls, and entrypoint semantics; then "
-              "reconcile it with the schema-declared validator paths and wire tests"
+          rollback_pipeline = rollback_pipeline_path.read_text(encoding="utf-8").strip()
+          assert rollback_pipeline == "# rollback stage — greenfield placeholder", (
+              "the production rollback pipeline changed; wire its accepted interface, "
+              "identity, target, signature/review, policy, receipt, invalidation, and "
+              "no-write tests before retaining this readiness hold"
           )
 
-          drill_root = Path("tests/domains/agriculture/rollback_drill")
+          rollback_apply = rollback_apply_path.read_text(encoding="utf-8")
+          assert "greenfield placeholder" not in rollback_apply, (
+              "rollback_apply.py regressed to an unimplemented placeholder"
+          )
+          helper_markers = [
+              ".kfm-synthetic-rollback-rehearsal",
+              "NON_SYNTHETIC_INPUT_DENIED",
+              '"public_state_mutated": False',
+          ]
+          missing_helper_markers = [
+              marker for marker in helper_markers if marker not in rollback_apply
+          ]
+          assert not missing_helper_markers, (
+              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
+              f"{missing_helper_markers}"
+          )
+
+          generic_validator = generic_validator_path.read_text(encoding="utf-8")
+          assert "NotImplementedError" not in generic_validator, (
+              "the generic RollbackCard compatibility entrypoint regressed to a placeholder"
+          )
+          assert (
+              "from tools.validators.release.validate_rollback_card import main as _canonical_main"
+              in generic_validator
+          ), "the generic RollbackCard entrypoint no longer delegates to the canonical validator"
+          assert "return _canonical_main(argv)" in generic_validator, (
+              "the generic RollbackCard entrypoint delegation call changed"
+          )
+
           drill_inventory = sorted(
-              path.name for path in drill_root.iterdir() if path.is_file()
+              path.name for path in agriculture_drill_root.iterdir() if path.is_file()
           )
           assert drill_inventory == [".gitkeep", "README.md"], (
               "executable agriculture rollback-drill material has appeared; run its "
               f"accepted test entry point deliberately: {drill_inventory}"
           )
 
-          schemas = {
-              "release": Path(
-                  "schemas/contracts/v1/release/rollback_card.schema.json"
-              ),
-              "agriculture": Path(
-                  "schemas/contracts/v1/domains/agriculture/rollback_card.schema.json"
-              ),
+          release_schema = json.loads(
+              release_schema_path.read_text(encoding="utf-8")
+          )
+          expected_release_metadata = {
+              "contract_doc": "contracts/release/rollback_card.md",
+              "fixtures_root": "fixtures/release/rollback_card/",
+              "validator": "tools/validators/release/validate_rollback_card.py",
+              "policy": "policy/release/",
+              "status": "PROPOSED",
+              "authority": "candidate_shape_and_local_consistency_only",
+              "non_effects": [
+                  "does_not_execute_rollback",
+                  "does_not_authorize_release_mutation",
+                  "does_not_erase_history",
+                  "does_not_publish",
+              ],
           }
-          expected_metadata = {
-              "release": {
-                  "contract_doc": "contracts/release/rollback_card.md",
-                  "fixtures_root": "fixtures/release/rollback_card/",
-                  "validator": "tools/validators/release/validate_rollback_card.py",
-                  "policy": "policy/release/",
-                  "status": "PROPOSED",
-              },
-              "agriculture": {
-                  "contract_doc": "contracts/domains/agriculture/rollback_card.md",
-                  "fixtures_root": "fixtures/domains/agriculture/rollback_card/",
-                  "validator": "tools/validators/domains/agriculture/validate_rollback_card.py",
-                  "policy": "policy/domains/agriculture/",
-                  "status": "PROPOSED",
-              },
-          }
-          loaded = {
-              name: json.loads(path.read_text(encoding="utf-8"))
-              for name, path in schemas.items()
-          }
-          for name, schema in loaded.items():
-              assert schema["x-kfm"] == expected_metadata[name], (
-                  f"{name} RollbackCard metadata changed; reconcile the accepted profile"
-              )
-              assert schema["required"] == ["id"]
-              assert schema["additionalProperties"] is True
+          assert release_schema["x-kfm"] == expected_release_metadata, (
+              "release RollbackCard metadata changed; reconcile the accepted profile"
+          )
+          assert "id" in release_schema["required"]
+          assert release_schema["additionalProperties"] is False
+          assert Path(expected_release_metadata["fixtures_root"]).is_dir()
+          assert Path(expected_release_metadata["validator"]).is_file()
 
-          release_metadata = loaded["release"]["x-kfm"]
-          agriculture_metadata = loaded["agriculture"]["x-kfm"]
-          assert Path(release_metadata["contract_doc"]).is_file()
-          assert not Path(release_metadata["fixtures_root"]).exists()
-          assert not Path(release_metadata["validator"]).exists()
-          assert not Path(agriculture_metadata["contract_doc"]).exists()
-          assert not Path(agriculture_metadata["fixtures_root"]).exists()
-          assert not Path(agriculture_metadata["validator"]).exists()
+          fixture_result = subprocess.run(
+              [sys.executable, release_validator_path.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert fixture_result.returncode == 0, (
+              fixture_result.stdout + fixture_result.stderr
+          )
+          assert '"outcome":"PASS"' in fixture_result.stdout
+          assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
+
+          compatibility_result = subprocess.run(
+              [sys.executable, generic_validator_path.as_posix(), "--fixtures"],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          assert compatibility_result.returncode == fixture_result.returncode, (
+              compatibility_result.stdout + compatibility_result.stderr
+          )
+          assert compatibility_result.stdout == fixture_result.stdout, (
+              "generic and canonical RollbackCard fixture output diverged"
+          )
+          assert compatibility_result.stderr == fixture_result.stderr, (
+              "generic and canonical RollbackCard diagnostics diverged"
+          )
+
+          rehearsal_result = subprocess.run(
+              [
+                  sys.executable,
+                  "-m",
+                  "unittest",
+                  "-q",
+                  "tests.release.test_synthetic_rollback_rehearsal",
+                  "tests.domains.hazards.test_synthetic_rollback_rehearsal",
+              ],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          rehearsal_output = rehearsal_result.stdout + rehearsal_result.stderr
+          assert rehearsal_result.returncode == 0, rehearsal_output
+          assert "Ran 0 tests" not in rehearsal_output, (
+              "synthetic rollback rehearsal test profile is vacuous"
+          )
+          assert "Ran 12 tests" in rehearsal_output and "OK" in rehearsal_output, (
+              "synthetic rollback rehearsal test result was not recognized"
+          )
+
+          agriculture_schema = json.loads(
+              agriculture_schema_path.read_text(encoding="utf-8")
+          )
+          expected_agriculture_metadata = {
+              "contract_doc": "contracts/domains/agriculture/rollback_card.md",
+              "fixtures_root": "fixtures/domains/agriculture/rollback_card/",
+              "validator": "tools/validators/domains/agriculture/validate_rollback_card.py",
+              "policy": "policy/domains/agriculture/",
+              "status": "PROPOSED",
+          }
+          assert agriculture_schema["x-kfm"] == expected_agriculture_metadata, (
+              "agriculture RollbackCard metadata changed; reconcile the scaffold boundary"
+          )
+          assert agriculture_schema["required"] == ["id"]
+          assert agriculture_schema["additionalProperties"] is True
+          assert not Path(expected_agriculture_metadata["contract_doc"]).exists()
+          assert not Path(expected_agriculture_metadata["fixtures_root"]).exists()
+          assert not Path(expected_agriculture_metadata["validator"]).exists()
 
           card_root = Path("release/rollback_cards")
           card_paths = sorted(card_root.glob("*.json"))
@@ -201,20 +299,23 @@ jobs:
               assert card.get("status") == "PROPOSED"
               assert card.get("path") == path.as_posix()
               assert "id" not in card, (
-                  f"{path} may now satisfy the thin schema; replace this hold with "
-                  "accepted profile, fixture, validator, policy, and review checks"
+                  f"{path} unexpectedly looks schema-admissible; review whether it has "
+                  "crossed from documentation inventory into governed rollback authority"
               )
               assert card.get("notes") == [
                   "Placeholder created from the current docs/domains markdown inventory."
               ]
 
-          print("CONFIRMED: rollback pipeline and apply helper remain comment-only placeholders.")
-          print("CONFIRMED: direct agriculture drill inventory contains guidance only.")
-          print("CONFIRMED: release and agriculture RollbackCard schemas remain PROPOSED, permissive, and id-only.")
-          print("CONFIRMED: declared fixture/validator paths are absent; the agriculture contract path is also absent.")
-          print(f"CONFIRMED: {len(card_paths)} root rollback-card JSON files remain non-conforming placeholder records.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback was simulated.")
-          print("WORKFLOW_HOLD: no accepted rollback profile, fixture, validator, engine, target, signature/review, invalidation plan, or receipt flow exists.")
+          print("CONFIRMED: the production rollback pipeline remains a placeholder while the generic RollbackCard entrypoint delegates to the canonical release validator.")
+          print("CONFIRMED: generic and canonical RollbackCard fixture execution is byte-identical.")
+          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
+          print("CONFIRMED: the generic and Hazards synthetic rollback rehearsal profiles ran 12 non-vacuous tests in isolated temporary roots.")
+          print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
+          print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
+          print("CONFIRMED: direct Agriculture drill inventory contains guidance only.")
+          print(f"CONFIRMED: {len(card_paths)} root rollback-card JSON files remain non-conforming documentation placeholders.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no production rollback was simulated.")
+          print("WORKFLOW_HOLD: no accepted production rollback engine, target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation exists.")
           print("No rollback card, receipt, proof, signature, release transition, or publication authority was created.")
           PY
 
@@ -225,9 +326,10 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the rollback pipeline and apply helper remain comment-only, and the agriculture drill lane contains guidance rather than an executable test."
-            echo "- Both RollbackCard schemas remain permissive PROPOSED id-only scaffolds; declared fixtures and validators are absent, and the agriculture contract path is absent."
-            echo "- Result: ${{ job.status }}. No rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the historical generic entrypoint delegates to the canonical validator with byte-identical fixture output, while the production pipeline remains a placeholder and rollback_apply.py is a marker-protected synthetic-only rehearsal covered by 12 non-vacuous generic and Hazards isolated-root tests."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
+            echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
+            echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
   verify-published-aliases:
@@ -238,12 +340,12 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out inspected revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up inspection Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
 

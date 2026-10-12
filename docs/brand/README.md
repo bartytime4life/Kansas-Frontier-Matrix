@@ -1,4 +1,19 @@
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/kfm-banner-brand-dark.svg" /><img src="readme/kfm-banner-brand.svg" alt="Brand banner: make trust legible." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # `docs/brand/` — Brand & Visual Language
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#docsbrand--brand--visual-language"><img src="https://img.shields.io/badge/brand-brand-8e5a2a?style=flat-square" alt="brand page" /></a>
+  <a href="#docsbrand--brand--visual-language"><img src="https://img.shields.io/badge/read-~15%20min-6b6b6b?style=flat-square" alt="About 15 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 > Human-facing style guide, voice & tone, and logo usage reference for the Kansas Frontier Matrix.
 > The verbal and visual rules that make **trust legible** on every KFM surface.
@@ -14,11 +29,19 @@
 
 > [!IMPORTANT]
 > **Status:** PROPOSED. This README documents the intended charter of `docs/brand/`. Whether the folder is already present in the mounted repo, and which assets currently live here vs. in [`packages/ui/`](../../packages/ui), is **NEEDS VERIFICATION**.
-> Per [Directory Rules §6.1](../doctrine/directory-rules.md#61-docs--the-human-facing-control-plane), `docs/brand/` is a **conditional** subfolder of `docs/` — it exists *only if brand material is not already centralized in `packages/ui/`*.
+> Per [Directory Rules §6.1](../doctrine/directory-rules.md), `docs/brand/` is a **conditional** subfolder of `docs/` — it exists *only if brand material is not already centralized in `packages/ui/`*.
 
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs--what-belongs-here) · [Exclusions](#exclusions--what-does-not-belong-here) · [Directory tree](#directory-tree-proposed) · [Diagram](#how-brand-fits-the-trust-membrane) · [Trust-state visuals](#trust-state-visual-conventions) · [Voice & tone](#voice--tone-summary) · [Accessibility](#accessibility-commitments) · [Task list](#definition-of-done-for-content-landing-here) · [FAQ](#faq) · [Open questions](#open-questions--needs-verification)
 
 ---
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="readme/kfm-layer-stack-dark.svg" /><img src="readme/kfm-layer-stack.svg" alt="One place, many layers: six stylized Kansas map layers on one shared clock." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Status
 
@@ -30,9 +53,9 @@
 | **Owners** | Docs steward + Design steward · *names PROPOSED — TODO* |
 | **Reviewers required for change** | Docs steward + Design steward; Accessibility reviewer for trust-state visuals |
 | **Lifecycle posture** | Reference — no lifecycle phase (not under `data/`) |
-| **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/architecture/map-shell.md`](../architecture/map-shell.md), [`docs/architecture/governed-api.md`](../architecture/governed-api.md) |
+| **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/architecture/map-shell.md`](../architecture/map-shell.md), [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) |
 | **Implementation home** | [`packages/ui/`](../../packages/ui) — design tokens, theme code, components |
-| **Consuming app** | [`apps/explorer-web/`](../../apps/explorer-web) |
+| **Consuming app** | `apps/explorer-web/` (retired) |
 | **Standards referenced** | [WCAG 2.1](https://www.w3.org/TR/WCAG21/) (target AA) — see [`docs/standards/`](../standards/) for the full conformance list |
 
 ---
@@ -73,12 +96,12 @@ docs/                       # human-facing control plane
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — *cite-or-abstain* governs voice.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — public surfaces use governed APIs only; brand must not visually contradict that.
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — the map is a *trust viewer*, not decoration.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) shape the language reference.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) shape the language reference.
 
 **Downstream of this folder (consumers of guidance):**
 
 - [`packages/ui/`](../../packages/ui) — design tokens, theme code, component library implement what is *described* here.
-- [`apps/explorer-web/`](../../apps/explorer-web) — KFM's primary public surface; consumes `packages/ui/`.
+- `apps/explorer-web/` (retired) — KFM's primary public surface; consumes `packages/ui/`.
 - [`packages/maplibre/`](../../packages/maplibre) — map style files PROPOSED to live here; layer styling honors brand color roles.
 
 **Sibling references:**
@@ -112,15 +135,15 @@ Brand documentation is **descriptive reference, not executable code or token dat
 
 | Not allowed here | Lives instead in | Why |
 | --- | --- | --- |
-| CSS files, SCSS, theme stylesheets | [`packages/ui/`](../../packages/ui) (or, if app-specific, [`apps/explorer-web/`](../../apps/explorer-web)) | `docs/` is human-facing reference, not shipped UI. |
+| CSS files, SCSS, theme stylesheets | [`packages/ui/`](../../packages/ui) (or, if app-specific, `apps/explorer-web/` (retired)) | `docs/` is human-facing reference, not shipped UI. |
 | Design-token JSON / TS / YAML consumed by build | [`packages/ui/`](../../packages/ui) | Tokens are an implementation contract; `docs/` does not get loaded by the app. |
-| Component source (React/TS/Vue/etc.) | [`packages/ui/`](../../packages/ui), [`apps/explorer-web/`](../../apps/explorer-web) | Code paths and tests are not documentation. |
-| MapLibre style JSON | [`packages/maplibre/`](../../packages/maplibre) (PROPOSED) or [`apps/explorer-web/`](../../apps/explorer-web) | Style files are versioned alongside tile artifacts; they are runtime, not reference. |
+| Component source (React/TS/Vue/etc.) | [`packages/ui/`](../../packages/ui), `apps/explorer-web/` (retired) | Code paths and tests are not documentation. |
+| MapLibre style JSON | [`packages/maplibre/`](../../packages/maplibre) (PROPOSED) or `apps/explorer-web/` (retired) | Style files are versioned alongside tile artifacts; they are runtime, not reference. |
 | Machine-readable governance registers | [`control_plane/`](../../control_plane) | `docs/` *explains*; `control_plane/` *indexes*. |
 | Rights, sensitivity, redaction, consent rules | [`policy/`](../../policy) | Rules are admissibility decisions, not visual style. |
 | Source-rights or licensing metadata for assets | [`data/registry/`](../../data/registry), [`policy/rights/`](../../policy/rights) | Rights enforcement is policy-bearing. |
 | Marketing site content / press kits | Not yet declared. **OPEN** — would require an ADR before adopting a home. | Avoid fabricating a home. |
-| Build output, generated docs, QA reports | [`artifacts/`](../../artifacts) (compatibility root, tightly scoped) | Per [Directory Rules §8.2](../doctrine/directory-rules.md#82-the-artifacts-rule). |
+| Build output, generated docs, QA reports | [`artifacts/`](../../artifacts) (compatibility root, tightly scoped) | Per [Directory Rules §8.2](../doctrine/directory-rules.md). |
 
 > [!WARNING]
 > **No parallel authority for trust signals.** `docs/brand/` describes how the trust badges *look and read*. The **truth** of `source_role`, `rights`, `sensitivity`, `review_state`, `freshness`, `release_state`, `correction_state` lives in `contracts/`, `schemas/`, `policy/`, and the resolved EvidenceBundle / DecisionEnvelope. Brand never invents a state, hides one, or implies a state the envelope does not carry.
@@ -286,7 +309,7 @@ When `docs/brand/` and `packages/ui/` materially disagree, the **implementation 
 <details>
 <summary><strong>Why isn't all brand material just inside <code>packages/ui/</code>?</strong></summary>
 
-It can be. [Directory Rules §6.1](../doctrine/directory-rules.md#61-docs--the-human-facing-control-plane) makes `docs/brand/` **conditional**: *"styles guides, logo, voice — only if not in `packages/ui/`."* The split this README assumes is:
+It can be. [Directory Rules §6.1](../doctrine/directory-rules.md) makes `docs/brand/` **conditional**: *"styles guides, logo, voice — only if not in `packages/ui/`."* The split this README assumes is:
 
 - **`packages/ui/`** owns the *implementation* — design tokens, theme code, components, types.
 - **`docs/brand/`** owns the *human-facing reference* — voice, visual language description, logo usage rules, accessibility commitments, microcopy patterns.
@@ -367,3 +390,18 @@ Asserting specific colors here without source evidence would create parallel aut
 ## Last reviewed
 
 `TODO — populate on first repo-mounted PR.` Per [Directory Rules §15](../doctrine/directory-rules.md), per-root READMEs older than six months are flagged for review.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

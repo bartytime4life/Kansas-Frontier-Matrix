@@ -1,0 +1,409 @@
+{
+  "profile": "kfm.map.georeference-control-point-evidence-assessment-fixtures.v1",
+  "source_idea_ids": ["KFM-P18-INV-317"],
+  "base": {
+    "object_type": "GeoreferenceControlPointEvidenceAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.map.georeference-control-point-evidence-assessment.fixture.v1",
+    "status": "PROPOSED_INACTIVE",
+    "assessment_id": "gcp-evidence-assessment:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_idea_id": "KFM-P18-INV-317",
+    "evaluated_at": "2026-08-12T00:57:54Z",
+    "control_point_set_ref": "kfm:georeference-gcp-set:sha256:9d9da050628e5efe57737fa791116066a1bab4921e28a98d70ec7603730a174a",
+    "coordinate_source": {
+      "method": "RTK_GNSS",
+      "status": "VERIFIED",
+      "reference_system_ref": "kfm:reference-system:synthetic-planar-meters-v1",
+      "evidence_ref": "kfm:evidence:gcp-coordinate-source:synthetic-set-v1"
+    },
+    "matching": {
+      "method": "AUTOMATED_WITH_MANUAL_REVIEW",
+      "status": "VERIFIED",
+      "image_observation_set_ref": "kfm:image-observation-set:synthetic-gcp-set-v1",
+      "evidence_ref": "kfm:evidence:gcp-image-matching:synthetic-set-v1"
+    },
+    "control_point_count": 5,
+    "control_points": [
+      {
+        "id": "gcp-01",
+        "visibility": "CLEAR",
+        "contrast": "HIGH",
+        "marker_scale": "ADEQUATE",
+        "match_status": "VERIFIED",
+        "evidence_ref": "kfm:evidence:gcp-point:gcp-01"
+      },
+      {
+        "id": "gcp-02",
+        "visibility": "CLEAR",
+        "contrast": "HIGH",
+        "marker_scale": "ADEQUATE",
+        "match_status": "VERIFIED",
+        "evidence_ref": "kfm:evidence:gcp-point:gcp-02"
+      },
+      {
+        "id": "gcp-03",
+        "visibility": "CLEAR",
+        "contrast": "ADEQUATE",
+        "marker_scale": "ADEQUATE",
+        "match_status": "VERIFIED",
+        "evidence_ref": "kfm:evidence:gcp-point:gcp-03"
+      },
+      {
+        "id": "gcp-04",
+        "visibility": "CLEAR",
+        "contrast": "ADEQUATE",
+        "marker_scale": "ADEQUATE",
+        "match_status": "VERIFIED",
+        "evidence_ref": "kfm:evidence:gcp-point:gcp-04"
+      },
+      {
+        "id": "gcp-05",
+        "visibility": "CLEAR",
+        "contrast": "HIGH",
+        "marker_scale": "ADEQUATE",
+        "match_status": "VERIFIED",
+        "evidence_ref": "kfm:evidence:gcp-point:gcp-05"
+      }
+    ],
+    "summary": {
+      "clear_visibility_count": 5,
+      "acceptable_contrast_count": 5,
+      "adequate_scale_count": 5,
+      "verified_match_count": 5
+    },
+    "evidence_refs": [
+      "kfm:evidence:gcp-coordinate-source:synthetic-set-v1",
+      "kfm:evidence:gcp-image-matching:synthetic-set-v1",
+      "kfm:evidence:gcp-point:gcp-01",
+      "kfm:evidence:gcp-point:gcp-02",
+      "kfm:evidence:gcp-point:gcp-03",
+      "kfm:evidence:gcp-point:gcp-04",
+      "kfm:evidence:gcp-point:gcp-05"
+    ],
+    "recommendation": "READY_FOR_REVIEW",
+    "review_state": "HOLD",
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "FIXTURE_ONLY_REFERENCES_UNRESOLVED",
+      "NO_IMAGE_OR_COORDINATE_DEREFERENCE",
+      "NO_ACCURACY_DISTRIBUTION_OR_TRANSFORM_DECISION",
+      "NO_POLICY_RELEASE_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "effects": {
+      "input_refs_resolved": false,
+      "imagery_opened": false,
+      "coordinate_accuracy_verified": false,
+      "distribution_evaluated": false,
+      "transform_quality_evaluated": false,
+      "policy_decided": false,
+      "human_review_approved": false,
+      "release_authorized": false,
+      "published": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "name": "complete_evidence_ready_for_review",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "coordinate_source_unknown",
+      "mutations": [
+        {"path": "/coordinate_source/method", "value": "UNKNOWN"},
+        {"path": "/coordinate_source/status", "value": "UNKNOWN"},
+        {"path": "/coordinate_source/reference_system_ref", "value": null},
+        {"path": "/coordinate_source/evidence_ref", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "COORDINATE_SOURCE_UNRESOLVED", "path": "/coordinate_source"}
+      ]
+    },
+    {
+      "name": "matching_unknown",
+      "mutations": [
+        {"path": "/matching/method", "value": "UNKNOWN"},
+        {"path": "/matching/status", "value": "UNKNOWN"},
+        {"path": "/matching/image_observation_set_ref", "value": null},
+        {"path": "/matching/evidence_ref", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "MATCHING_UNRESOLVED", "path": "/matching"}
+      ]
+    },
+    {
+      "name": "automated_matching_unreviewed",
+      "mutations": [
+        {"path": "/matching/method", "value": "AUTOMATED_UNREVIEWED"},
+        {"path": "/matching/status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "MATCHING_REVIEW_UNRESOLVED", "path": "/matching/method"},
+        {"code": "MATCHING_UNRESOLVED", "path": "/matching"}
+      ]
+    },
+    {
+      "name": "point_visibility_partial",
+      "mutations": [{"path": "/control_points/0/visibility", "value": "PARTIAL"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "POINT_VISIBILITY_PARTIAL", "path": "/control_points/0/visibility"}
+      ]
+    },
+    {
+      "name": "point_visibility_unknown",
+      "mutations": [{"path": "/control_points/0/visibility", "value": "UNKNOWN"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "POINT_VISIBILITY_UNKNOWN", "path": "/control_points/0/visibility"}
+      ]
+    },
+    {
+      "name": "point_contrast_unknown",
+      "mutations": [{"path": "/control_points/0/contrast", "value": "UNKNOWN"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "POINT_CONTRAST_UNKNOWN", "path": "/control_points/0/contrast"}
+      ]
+    },
+    {
+      "name": "marker_scale_unknown",
+      "mutations": [{"path": "/control_points/0/marker_scale", "value": "UNKNOWN"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "MARKER_SCALE_UNKNOWN", "path": "/control_points/0/marker_scale"}
+      ]
+    },
+    {
+      "name": "point_match_unverified",
+      "mutations": [{"path": "/control_points/0/match_status", "value": "UNVERIFIED"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {"code": "POINT_MATCH_UNRESOLVED", "path": "/control_points/0/match_status"}
+      ]
+    },
+    {
+      "name": "coordinate_source_invalid",
+      "mutations": [{"path": "/coordinate_source/status", "value": "INVALID"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "COORDINATE_SOURCE_INVALID", "path": "/coordinate_source/status"}
+      ]
+    },
+    {
+      "name": "matching_invalid",
+      "mutations": [{"path": "/matching/status", "value": "INVALID"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "MATCHING_INVALID", "path": "/matching/status"}
+      ]
+    },
+    {
+      "name": "point_visibility_obscured",
+      "mutations": [{"path": "/control_points/0/visibility", "value": "OBSCURED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "POINT_VISIBILITY_OBSCURED", "path": "/control_points/0/visibility"}
+      ]
+    },
+    {
+      "name": "point_contrast_low",
+      "mutations": [{"path": "/control_points/0/contrast", "value": "LOW"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "POINT_CONTRAST_LOW", "path": "/control_points/0/contrast"}
+      ]
+    },
+    {
+      "name": "marker_scale_inadequate",
+      "mutations": [{"path": "/control_points/0/marker_scale", "value": "INADEQUATE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "MARKER_SCALE_INADEQUATE", "path": "/control_points/0/marker_scale"}
+      ]
+    },
+    {
+      "name": "point_evidence_missing",
+      "mutations": [{"path": "/control_points/0/evidence_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "POINT_EVIDENCE_MISSING", "path": "/control_points/0/evidence_ref"}
+      ]
+    },
+    {
+      "name": "verified_source_evidence_missing",
+      "mutations": [{"path": "/coordinate_source/evidence_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VERIFIED_SOURCE_EVIDENCE_MISSING", "path": "/coordinate_source/evidence_ref"}
+      ]
+    },
+    {
+      "name": "verified_matching_evidence_missing",
+      "mutations": [{"path": "/matching/evidence_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VERIFIED_MATCHING_EVIDENCE_MISSING", "path": "/matching/evidence_ref"}
+      ]
+    },
+    {
+      "name": "verified_matching_input_missing",
+      "mutations": [{"path": "/matching/image_observation_set_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VERIFIED_MATCHING_INPUT_MISSING", "path": "/matching/image_observation_set_ref"}
+      ]
+    },
+    {
+      "name": "verified_reference_system_missing",
+      "mutations": [{"path": "/coordinate_source/reference_system_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "VERIFIED_REFERENCE_SYSTEM_MISSING", "path": "/coordinate_source/reference_system_ref"}
+      ]
+    },
+    {
+      "name": "source_evidence_reference_unbound",
+      "mutations": [{"path": "/coordinate_source/evidence_ref", "value": "kfm:evidence:unbound:source"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "EVIDENCE_REFERENCE_UNBOUND", "path": "/coordinate_source/evidence_ref"}
+      ]
+    },
+    {
+      "name": "evidence_references_not_canonical",
+      "mutations": [{
+        "path": "/evidence_refs",
+        "value": [
+          "kfm:evidence:gcp-image-matching:synthetic-set-v1",
+          "kfm:evidence:gcp-coordinate-source:synthetic-set-v1",
+          "kfm:evidence:gcp-point:gcp-01",
+          "kfm:evidence:gcp-point:gcp-02",
+          "kfm:evidence:gcp-point:gcp-03",
+          "kfm:evidence:gcp-point:gcp-04",
+          "kfm:evidence:gcp-point:gcp-05"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "EVIDENCE_REFERENCES_NOT_CANONICAL", "path": "/evidence_refs"}
+      ]
+    },
+    {
+      "name": "point_ids_not_canonical",
+      "mutations": [
+        {"path": "/control_points/0/id", "value": "gcp-02"},
+        {"path": "/control_points/1/id", "value": "gcp-01"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "POINT_IDS_NOT_CANONICAL", "path": "/control_points"}
+      ]
+    },
+    {
+      "name": "control_point_count_mismatch",
+      "mutations": [{"path": "/control_point_count", "value": 4}],
+      "recompute_summary": false,
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "CONTROL_POINT_COUNT_MISMATCH", "path": "/control_point_count"}
+      ]
+    },
+    {
+      "name": "summary_mismatch",
+      "mutations": [{"path": "/summary/clear_visibility_count", "value": 4}],
+      "recompute_summary": false,
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "SUMMARY_MISMATCH", "path": "/summary"}
+      ]
+    },
+    {
+      "name": "evaluated_at_not_utc",
+      "mutations": [{"path": "/evaluated_at", "value": "2026-08-11T19:57:54-05:00"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "EVALUATED_AT_NOT_UTC", "path": "/evaluated_at"}
+      ]
+    },
+    {
+      "name": "verified_coordinate_source_unknown_method",
+      "mutations": [{"path": "/coordinate_source/method", "value": "UNKNOWN"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "COORDINATE_SOURCE_STATUS_INCOHERENT", "path": "/coordinate_source"},
+        {"code": "COORDINATE_SOURCE_UNRESOLVED", "path": "/coordinate_source"}
+      ]
+    },
+    {
+      "name": "verified_automated_matching_unreviewed",
+      "mutations": [{"path": "/matching/method", "value": "AUTOMATED_UNREVIEWED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "MATCHING_REVIEW_UNRESOLVED", "path": "/matching/method"},
+        {"code": "MATCHING_STATUS_INCOHERENT", "path": "/matching"}
+      ]
+    },
+    {
+      "name": "recommendation_mismatch",
+      "recommendation_mode": "MISMATCH",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "RECOMMENDATION_MISMATCH", "path": "/recommendation"}
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "name": "assessment_id_mismatch",
+      "identity_mode": "MISMATCH_ID",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}
+      ]
+    },
+    {
+      "name": "unexpected_property",
+      "mutations": [{"path": "/unexpected", "value": true}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SCHEMA_INVALID", "path": "/"}
+      ]
+    },
+    {
+      "name": "invalid_control_point_set_reference",
+      "mutations": [{"path": "/control_point_set_ref", "value": "https://example.invalid/gcps"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SCHEMA_INVALID", "path": "/control_point_set_ref"}
+      ]
+    },
+    {
+      "name": "authority_effect_overclaim",
+      "mutations": [{"path": "/effects/published", "value": true}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SCHEMA_INVALID", "path": "/effects/published"}
+      ]
+    },
+    {
+      "name": "invalid_timestamp",
+      "mutations": [{"path": "/evaluated_at", "value": "not-a-time"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {"code": "SCHEMA_INVALID", "path": "/evaluated_at"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "object_type": "ArtifactDeltaReceiptCandidate",
+  "schema_version": "1.0.0",
+  "receipt_id": "artifact-delta-receipt:synthetic-approved-v1",
+  "recorded_at": "2026-08-06T02:30:00Z",
+  "change_kind": "PROMOTION",
+  "before": {
+    "run_receipt_ref": "run-receipt:synthetic-build-v1",
+    "artifact_ref": "artifact:synthetic-map-bundle-v1",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "release_ref": "release:synthetic-v1"
+  },
+  "after": {
+    "run_receipt_ref": "run-receipt:synthetic-build-v2",
+    "artifact_ref": "artifact:synthetic-map-bundle-v2",
+    "spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "artifact_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "release_ref": "release:synthetic-v2"
+  },
+  "decision": {
+    "policy_decision_ref": "policy-decision:synthetic-promotion-v2",
+    "outcome": "APPROVE",
+    "policy_version": "1.0.0",
+    "obligations": [
+      "PRESERVE_PRIOR_RELEASE",
+      "VERIFY_ATTESTATION"
+    ]
+  },
+  "review": {
+    "review_record_ref": "review-record:synthetic-promotion-v2",
+    "state": "APPROVED",
+    "actor_ref": "actor:synthetic-release-steward",
+    "steward_kid": "kfm:kid:ed25519:synthetic-steward-001"
+  },
+  "attestation": {
+    "format": "COSE_SIGN1",
+    "verification_state": "VERIFIED",
+    "attestation_ref": "attestation:synthetic-artifact-v2",
+    "signer_kid": "kfm:kid:ed25519:synthetic-signing-service-001",
+    "oci_referrer_uri": "oci://registry.invalid/kfm/synthetic@sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "rollback_target_ref": "rollback-card:synthetic-release-v1",
+  "correction_notice_ref": null,
+  "canonicalization": {
+    "profile": "RFC8785-JCS-SAFE-SUBSET-v1",
+    "hash_algorithm": "sha256",
+    "payload_digest": "sha256:51601f6e30a9a16aa9049a2f44817a32c82df0f2207ab05b326c5e167eab021f"
+  },
+  "governance": {
+    "candidate_only": true,
+    "cryptographic_verification_performed": false,
+    "policy_authority_created": false,
+    "review_authority_created": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

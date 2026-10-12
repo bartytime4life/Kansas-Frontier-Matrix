@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-fixtures-ui-readme
 title: UI Test Fixtures README
 type: test-fixture-readme
-version: v0.1
-status: draft; placeholder-replaced; PROPOSED / NEEDS VERIFICATION
+version: v0.2
+status: draft; bounded Evidence Drawer fixtures executable; broader lane PROPOSED / NEEDS VERIFICATION
 owners:
   - OWNER_TBD - UI steward
   - OWNER_TBD - Accessibility steward
@@ -11,7 +11,7 @@ owners:
   - OWNER_TBD - Fixture steward
   - OWNER_TBD - QA steward
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-08-02
 policy_label: public-doc; tests; fixtures; ui; synthetic-only; no-network; trust-visible; evidence-bounded; release-gated; accessibility-aware
 tags: [kfm, tests, fixtures, ui, evidence-drawer, focus-mode, trust-badges, accessibility, finite-outcomes, no-network, ANSWER, ABSTAIN, DENY, ERROR, rollback]
 related:
@@ -32,7 +32,8 @@ notes:
   - "This README replaces placeholder content at tests/fixtures/ui/README.md."
   - "This lane documents unit-test-scoped UI fixtures. It is not UI implementation, component source, contract authority, schema authority, policy authority, evidence storage, release approval, or public UI routing."
   - "UI fixtures must preserve trust-visible state, finite outcomes, evidence/citation posture, policy posture, release state, correction lineage, rollback posture, and accessibility expectations."
-  - "Executable tests, payload inventory, schema bindings, app/component wiring, accessibility checks, CI jobs, and pass rates remain NEEDS VERIFICATION."
+  - "evidence_drawer now contains six synthetic projection fixtures consumed by the Explorer Web Evidence Drawer tests."
+  - "Canonical schema bindings, broader payload inventory, browser interaction, complete accessibility checks, and production behavior remain NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,11 +51,15 @@ notes:
 </p>
 
 **Path:** `tests/fixtures/ui/README.md`  
-**Status:** draft / placeholder replaced / PROPOSED until executable tests are verified  
+**Status:** draft / bounded Evidence Drawer fixtures executable / broader lane PROPOSED
 **Owning root:** `tests/`  
 **Lane family:** `fixtures/ui`  
 **Default posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target file existed as placeholder content before replacement; CONFIRMED `tests/fixtures/` is unit-test-scoped by repo doctrine; CONFIRMED UI contracts and package docs preserve the boundary that UI consumes governed state and is not truth, policy, schema, release, or implementation authority; NEEDS VERIFICATION for fixture payload inventory, executable tests, schemas, app/component wiring, accessibility checks, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED six synthetic Evidence Drawer projection fixtures and their Explorer Web consumer tests; CONFIRMED `tests/fixtures/` is unit-test-scoped by repo doctrine; CONFIRMED UI consumes governed state and is not truth, policy, schema, or release authority; NEEDS VERIFICATION for canonical schema binding, broader UI fixture families, browser interaction, complete accessibility, and production behavior.
+
+## Current executable inventory
+
+`evidence_drawer/` contains fixture-only examples for supported `ANSWER`, stale `ABSTAIN`, sensitive `DENY`, upstream `ERROR`, an unknown-field rejection, and an `ANSWER` rejected for missing evidence/citations. They use toy identifiers and `example.invalid`; they perform no network access and do not represent real evidence, sources, releases, places, or people.
 
 ---
 

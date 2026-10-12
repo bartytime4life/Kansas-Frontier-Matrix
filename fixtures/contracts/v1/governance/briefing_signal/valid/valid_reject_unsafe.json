@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.2.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-08-04:6e012a28349c3b4d1b2021ce",
+  "event_cluster_id": "kfm:event-cluster:geospatial_source:3832f6c120dba61d980a05f2",
+  "briefing_date": "2026-08-04",
+  "status": "NEEDS_VERIFICATION",
+  "headline": "Synthetic source candidate rejected as unsafe for issue routing",
+  "story_type": "geospatial_source",
+  "domains": [
+    "spatial_foundation"
+  ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "fixture:authority:source-alpha",
+    "native_id_or_identity_key": "fixture:dataset:source-gamma",
+    "geography_identity": "state:kansas",
+    "durable_subject_key": "reusable-geospatial-source-gamma",
+    "signal_digest": "sha256:6e012a28349c3b4d1b2021ce846a97a1571f8397fbcf89ac17b07bff82fb0038"
+  },
+  "deduplication": {
+    "status": "UNIQUE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [],
+    "reason_codes": [
+      "NEW_CLUSTER"
+    ]
+  },
+  "materiality": {
+    "algorithm": "kfm-briefing-materiality-v1",
+    "threshold_profile": "kfm-briefing-thresholds-v1",
+    "dimensions": {
+      "public_safety": 0,
+      "repository_integrity": 0,
+      "geospatial_relevance": 4,
+      "recurrence": 3,
+      "reuse_value": 5,
+      "authority_quality": 4,
+      "time_sensitivity": 2,
+      "rights_sensitivity_risk": 0,
+      "identity_uncertainty": 1,
+      "implementation_readiness": 5
+    },
+    "raw_score": 35,
+    "priority": "P1",
+    "reason_codes": [
+      "GEOSPATIAL_RELEVANCE",
+      "RECURRENCE",
+      "REUSE_VALUE",
+      "AUTHORITY_QUALITY",
+      "TIME_SENSITIVITY",
+      "IDENTITY_UNCERTAINTY",
+      "IMPLEMENTATION_READINESS"
+    ],
+    "mandatory_override": {
+      "applied": false,
+      "reason_code": null
+    },
+    "rationale": "The synthetic source is reusable, Kansas-wide, authoritative enough for bounded discovery, and scores exactly P1."
+  },
+  "routing": {
+    "algorithm": "kfm-briefing-routing-v1",
+    "official_support": "UNRESOLVED",
+    "modeling_ready": true,
+    "dependency_state": "CLEAR",
+    "safety_state": "UNSAFE",
+    "issue_kind": "SOURCE_DISCOVERY",
+    "reason_codes": [
+      "UNSAFE_FOR_ROUTING"
+    ]
+  },
+  "geographic_scope": {
+    "kind": "statewide",
+    "identifiers": [
+      "state:Kansas"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "unresolved"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "A synthetic source candidate may support a reusable Kansas layer.",
+      "truth_label": "NEEDS_VERIFICATION",
+      "evidence_refs": []
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "other",
+      "authority_name": "Synthetic source authority",
+      "locator": "fixture:source:geospatial-alpha",
+      "observed_at": "2026-08-02T12:00:00Z",
+      "snapshot_status": "LOCATOR_ONLY"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [],
+    "pull_requests": [],
+    "paths": [],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "SourceDescriptor"
+  ],
+  "next_action": {
+    "disposition": "REJECT_UNSAFE",
+    "scope": "Reject the synthetic issue operation because the declared routing posture is unsafe.",
+    "idempotency_key": "sha256:35d6b44db4fb53baa94e5caa5ca9e335711bf572e8ad03bb01a390ec094d86cc",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "generation_receipt_ref": "fixture:receipt:briefing:unsafe-route",
+  "candidate_payload": {
+    "object_family": "SourceDescriptor",
+    "candidate_state": "NEEDS_VERIFICATION",
+    "authority_boundary": "Synthetic source-discovery fixture; no source activation or rights decision.",
+    "attributes": {
+      "source_candidate_id": "fixture:source:geospatial-alpha",
+      "activation_state": "not_requested"
+    }
+  },
+  "expires_at": "2026-08-05T12:00:00Z"
+}

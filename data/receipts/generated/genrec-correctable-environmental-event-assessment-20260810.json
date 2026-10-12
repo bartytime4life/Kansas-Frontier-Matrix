@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-correctable-environmental-event-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/correctable-environmental-event-assessment.yml",
+    "contracts/domains/atmosphere/correctable_environmental_event_assessment.md",
+    "docs/intake/exploratory/correctable-environmental-event-lifecycle-source-map.md",
+    "fixtures/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment/cases.json",
+    "schemas/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment.schema.json",
+    "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py",
+    "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/correctable-environmental-event-assessment.yml": "sha256:25a2037588fb892e19519f78d26982c5f4b812e4480885ae38c6403f442f1201",
+    "contracts/domains/atmosphere/correctable_environmental_event_assessment.md": "sha256:421f7e86dda50b530afd6dd82bb91903eaaf485250162e704f165285929cb7c9",
+    "docs/intake/exploratory/correctable-environmental-event-lifecycle-source-map.md": "sha256:2d044a5ec29f3764a8cbde07e1c3bd2bd4b4a64a1771a928f14bb5467fe412f3",
+    "fixtures/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment/cases.json": "sha256:9888545093ff634593ff078041601198cd394286d2f693643f305b7d0f14cf2e",
+    "schemas/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment.schema.json": "sha256:ad41ea7cc1736782b96dcff0210462924f764aaa76028b9dc825559aec095c67",
+    "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py": "sha256:37ed7e085c339a7d7c616f454c66c5dab1c5b95f1291bd8889f57473fa3e05b4",
+    "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py": "sha256:f87fd99fd616bc9a8af8ec6dd77f84bcbee0fe4e85b723350e29c20cd74b4c76"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:421f7e86dda50b530afd6dd82bb91903eaaf485250162e704f165285929cb7c9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "New Ideas 4-16-26",
+      "docs/intake/exploratory/new-ideas-4-16-source-map.md",
+      "docs/kfm_full_atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/intake/exploratory/new-ideas-4-16-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/kfm_full_atlas_seed_cards.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/correctable-environmental-event-assessment.yml": "CONFIRMED",
+    "contracts/domains/atmosphere/correctable_environmental_event_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/correctable-environmental-event-lifecycle-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment.schema.json": "PROPOSED",
+    "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-test-suite", "outcome": "PASS", "reason": "10 deterministic tests and 16 exact fixture cases passed."},
+    {"gate": "finite-outcome-polarity", "outcome": "PASS", "reason": "PASS, ABSTAIN, DENY, and ERROR are represented with exact findings."},
+    {"gate": "json-and-workflow-parse", "outcome": "PASS"},
+    {"gate": "no-network-and-no-live-source-boundary", "outcome": "PASS"},
+    {"gate": "observation-candidate-review-event-correction-separation", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "google-drive-new-ideas-4-16-26", "validated": true, "evidence_ref": "gdrive://1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc"},
+    {"id": "repository-new-ideas-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/intake/exploratory/new-ideas-4-16-source-map.md"},
+    {"id": "KFM-TRIAD-035", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/kfm_full_atlas_seed_cards.md"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:53:29Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only correctable environmental-event lifecycle assessment derived from the Drive idea corpus and repository-governed KFM-TRIAD-035. It keeps observation, candidate, review disposition, event, and correction identities distinct; binds baseline and source roles; and checks correction target, replacement identity, freshness, and time ordering without live feeds, thresholds, candidate promotion, real-world event declaration, applied correction, alerting, policy, review approval, release, deployment, or publication."
+}

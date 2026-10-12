@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/00000000-0000-0000-0000-000000000000
+doc_id: kfm://doc/docs-domains-agriculture-policy
 title: Agriculture — Policy
 type: standard
 version: v1
 status: draft
 owners: agriculture-stewards · sensitivity-steward (TODO confirm CODEOWNERS)
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Document the Agriculture lane's draft policy, rights, sensitivity, promotion, and release boundaries for human review.
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED domain semantics and paths unless current repository evidence is cited / NEEDS VERIFICATION implementation, validation, review, release, and publication
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/DOMAIN.md
   - docs/domains/agriculture/OBJECTS.md

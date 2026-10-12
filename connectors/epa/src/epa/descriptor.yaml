@@ -1,5 +1,7 @@
-# epa source descriptor — greenfield placeholder
+# epa connector descriptor: role and rights set by the repository owner on 2026-09-28
+# (EPA works; 17 U.S.C. 105). Releases candidate routing only; not a
+# SourceDescriptor, source activation, admission, sensitivity review, or release.
 name: epa
-role: TBD
-rights: TBD
+role: aggregate
+rights: public-domain-us-government-work
 sensitivity_floor: public

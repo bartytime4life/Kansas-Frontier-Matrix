@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; boundary-version; geometry-lineage; source-role-aware; metadata-public; release-gated
 tags: [kfm, contracts, geology, GeologyBoundaryVersion, boundary-version, geometry-lineage, map-units, geologic-unit, surficial-unit, topology, provenance, evidence, source-role, release, correction, rollback]
 related:
@@ -25,8 +25,8 @@ related:
   - ../../../docs/domains/geology/SCOPE.md
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
-  - ../../../docs/domains/geology/sublanes/surficial.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/surficial.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../schemas/contracts/v1/domains/geology/GeologyBoundaryVersion.schema.json
   - ../../../schemas/contracts/v1/domains/geology/
   - ../../../policy/domains/geology/
@@ -35,6 +35,8 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a GeologyBoundaryVersion semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/GeologyBoundaryVersion.schema.json was not found in this session. Object-family docs explicitly ask whether this warrants its own schema or remains metadata on GeologicUnit; schema shape remains NEEDS VERIFICATION."
   - "GeologyBoundaryVersion is a lineage/version object for geology boundary geometry and topology. It does not replace GeologicUnit, SurficialUnit, source maps, tiles, release manifests, correction notices, or public layer truth."
@@ -100,7 +102,7 @@ A boundary version is lineage and provenance support. It is not the geologic uni
 | Boundary-version meaning | `contracts/domains/geology/GeologyBoundaryVersion.md` | Owned here |
 | Machine schema shape | `schemas/contracts/v1/domains/geology/GeologyBoundaryVersion.schema.json` or metadata on accepted companion schema | NEEDS VERIFICATION; exact path not found |
 | Geologic unit contract | `contracts/domains/geology/GeologicUnit.md` | Unit identity and interpretation; boundary version is lineage support |
-| Surficial unit context | `docs/domains/geology/sublanes/surficial.md` and future contract homes | Surficial boundary-version use; not a separate release by itself |
+| Surficial unit context | `docs/domains/geology/surficial.md` and future contract homes | Surficial boundary-version use; not a separate release by itself |
 | Object-family reference | `docs/domains/geology/OBJECT_FAMILIES.md` | Confirms lineage grouping, T0 metadata posture, and schema-open question |
 | Geology scope | `docs/domains/geology/SCOPE.md` | Confirms Geology-owned families and adjacent-lane exclusions |
 | Source registry | `data/registry/sources/geology/` | Source identity, rights, cadence, authority limits |
@@ -353,7 +355,7 @@ Rollback artifacts should include affected GeologyBoundaryVersion IDs, geometry 
 - `contracts/domains/geology/GeologicUnit.md` — mapped unit meaning and unit identity.
 - `docs/domains/geology/OBJECT_FAMILIES.md` — object-family reference, lineage group, sensitivity table, and schema-open question.
 - `docs/domains/geology/SCOPE.md` — Geology owns/does-not-own boundary.
-- `docs/domains/geology/sublanes/surficial.md` — surficial boundary context.
+- `docs/domains/geology/surficial.md` — surficial boundary context.
 - `schemas/contracts/v1/domains/geology/` — expected machine-shape home or companion metadata home, pending verification.
 - `policy/domains/geology/` — expected policy home, pending verification.
 - `release/manifests/geology/` — expected release/rollback home, pending verification.

@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_role_use_request.schema.json",
+  "title": "SourceRoleUseRequest",
+  "description": "A non-authoritative request to assess downstream preservation of one admitted SourceDescriptor role and its admissibility limits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "descriptor",
+    "use",
+    "permissions",
+    "non_effects"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.source-role-use-request.v1"
+    },
+    "descriptor": {
+      "type": "object"
+    },
+    "use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "source_id",
+        "descriptor_version",
+        "role_origin",
+        "propagated_source_role",
+        "propagated_authority_rank",
+        "requested_claim_roles",
+        "consumer_surface",
+        "exposure",
+        "support_refs",
+        "role_change",
+        "authority_claims"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "pattern": "^kfm:source-role-use:[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "descriptor_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "role_origin": {
+          "type": "string",
+          "enum": [
+            "SOURCE_DESCRIPTOR",
+            "AI_INFERRED",
+            "FREE_TEXT",
+            "UNKNOWN"
+          ]
+        },
+        "propagated_source_role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "propagated_authority_rank": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "requested_claim_roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "consumer_surface": {
+          "type": "string",
+          "enum": [
+            "INTERNAL_PIPELINE",
+            "CATALOG",
+            "GRAPH",
+            "API",
+            "MAP",
+            "EXPORT",
+            "FOCUS_MODE",
+            "EMBEDDING",
+            "AI"
+          ]
+        },
+        "exposure": {
+          "type": "string",
+          "enum": [
+            "INTERNAL",
+            "STEWARD",
+            "PUBLIC"
+          ]
+        },
+        "support_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "evidence_refs",
+            "policy_decision_refs",
+            "review_refs",
+            "release_manifest_refs",
+            "correction_refs",
+            "rollback_refs"
+          ],
+          "properties": {
+            "evidence_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "policy_decision_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "review_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "release_manifest_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "correction_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "rollback_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            }
+          }
+        },
+        "role_change": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "lineage_refs"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "CORRECTION",
+                "SUPERSESSION",
+                "RETIREMENT"
+              ]
+            },
+            "lineage_refs": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            }
+          }
+        },
+        "authority_claims": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_truth",
+            "evidence_closure",
+            "policy_approval",
+            "release_approval",
+            "public_permission"
+          ],
+          "properties": {
+            "claim_truth": {
+              "type": "boolean"
+            },
+            "evidence_closure": {
+              "type": "boolean"
+            },
+            "policy_approval": {
+              "type": "boolean"
+            },
+            "release_approval": {
+              "type": "boolean"
+            },
+            "public_permission": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mutate_descriptor",
+        "activate_source",
+        "create_evidence",
+        "decide_policy",
+        "approve_review",
+        "promote",
+        "release",
+        "publish"
+      ],
+      "properties": {
+        "mutate_descriptor": {
+          "const": false
+        },
+        "activate_source": {
+          "const": false
+        },
+        "create_evidence": {
+          "const": false
+        },
+        "decide_policy": {
+          "const": false
+        },
+        "approve_review": {
+          "const": false
+        },
+        "promote": {
+          "const": false
+        },
+        "release": {
+          "const": false
+        },
+        "publish": {
+          "const": false
+        }
+      }
+    },
+    "non_effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor_mutated",
+        "source_activated",
+        "evidence_created",
+        "policy_decided",
+        "review_approved",
+        "release_created",
+        "publication_created"
+      ],
+      "properties": {
+        "descriptor_mutated": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "evidence_created": {
+          "const": false
+        },
+        "policy_decided": {
+          "const": false
+        },
+        "review_approved": {
+          "const": false
+        },
+        "release_created": {
+          "const": false
+        },
+        "publication_created": {
+          "const": false
+        }
+      }
+    }
+  }
+}

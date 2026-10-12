@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/archaeology/readme
 name: Archaeology Registry README
 path: data/registry/archaeology/README.md
 type: data-registry-domain-parent-readme
-version: v0.3.0
+version: v0.3.1
 status: draft
 owners:
   - "NEEDS VERIFICATION: registry steward"
@@ -12,13 +12,13 @@ owners:
   - "NEEDS VERIFICATION: rights and sensitivity reviewers"
   - "NEEDS VERIFICATION: policy and validation stewards"
 created: 2026-06-28
-updated: 2026-07-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: archaeology-domain-registry-compatibility-parent
-path_posture: confirmed-live-domain-first-parent; compatibility-boundary; independent-writes-denied; migration-needs-accepted-decision
+path_posture: confirmed-live-domain-first-parent; compatibility-boundary; independent-writes-denied; source-descriptors-migrated-2026-10-11
 sensitivity_posture: restricted-by-default; protected-location-deny-default; cultural-review-required; rights-and-current-terms-required-before-activation; no-public-path; release-blocked-until-redaction-review-release
 related:
   - ../README.md
@@ -74,6 +74,7 @@ evidence_snapshot:
   adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
   inspection_date: 2026-07-27
 notes:
+  - "2026-10-11 (v0.3.1): the sources/ child's three descriptor templates were migrated to data/registry/sources/archaeology/ under an owner decision; see sources/README.md Migration record. Other files directly under this parent are unchanged."
   - "This README preserves the stable identity of the existing domain-first Archaeology registry parent path."
   - "The source-descriptor writer is data/registry/sources/archaeology/ under adopted Directory Rules v2."
   - "The child data/registry/archaeology/sources/README.md is a read-only compatibility boundary and must not evolve independently."
@@ -147,7 +148,7 @@ Three registry surfaces are relevant:
 | Path | Verified repository state | Bounded posture |
 |---|---|---|
 | `data/registry/archaeology/` | This parent README and the `sources/` child | Domain-first compatibility parent; independent writes denied |
-| [`data/registry/archaeology/sources/`](sources/README.md) | Compatibility README; no descriptor payloads confirmed in that path | Read-only compatibility child; independent writes denied |
+| [`data/registry/archaeology/sources/`](sources/README.md) | Compatibility README plus a pointer-only `migration_crosswalk.yaml`; its three descriptor templates were migrated to the canonical lane on 2026-10-11 | Read-only compatibility child; independent writes denied |
 | [`data/registry/sources/archaeology/`](../sources/archaeology/README.md) | README, registry YAML files, and source-family descriptor records | Canonical subtype-first Archaeology source-registry lane under adopted Directory Rules v2 |
 
 Accepted ADR-0029 adopts the exact Directory Rules v2 bytes and makes `docs/doctrine/directory-rules.md` the placement authority. The adopted rules use subtype-first registry placement and prohibit compatibility or alternate paths from becoming independent writers.
@@ -185,7 +186,8 @@ The current parent confirms one direct child:
 data/registry/archaeology/
 ├── README.md
 └── sources/
-    └── README.md
+    ├── README.md
+    └── migration_crosswalk.yaml   # pointer-only crosswalk (2026-10-11 migration)
 ```
 
 | Child lane | Status | Purpose | Boundary |

@@ -12,13 +12,13 @@ related:
   - docs/sources/catalog/loc/README.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
-  - docs/sources/catalog/loc/IDENTITY.md
-  - docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/loc/_examples/stac-item-example.json
 tags: [kfm, docs, sources, catalog, loc, iiif]
 notes:
   - "PROPOSED product-page scaffold; placement and sibling-link presence remain NEEDS VERIFICATION against mounted repo."
   - "Grounded in KFM-P14-PROG-0009 (LoC IIIF STAC PROV ingestor) and C10-07 (Archives Stack)."
+owning_root: docs/
+responsibility: "Documentation for LOC IIIF Presentations; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # LOC IIIF Presentations
@@ -159,7 +159,7 @@ PROPOSED — KFM doctrine maps spatial and non-spatial artifacts through compati
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` (per Pass-10 **C4-02** suggested convention; see [`IDENTITY.md`](./IDENTITY.md)).
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` (per Pass-10 **C4-02** suggested convention; see `IDENTITY.md` (not present)).
 - PROPOSED namespace: `kfm:` (Pass-10 **C4-01**). The choice between `kfm:` and `ks-kfm:` is an **OPEN ATLAS QUESTION** (referenced here as **OPEN-DSC-03**); NEEDS VERIFICATION against the namespace declared in the live Collection summary.
 - PROPOSED asset roles: TBD — confirm against `schemas/contracts/v1/source/` and the STAC profile contract files (Pass-31 card **KFM-P31-PROG-0004**). NEEDS VERIFICATION.
 
@@ -346,8 +346,8 @@ PROPOSED — Each item below blocks promotion to `status: review` for this page.
 
 - [`docs/sources/catalog/loc/README.md`](./README.md) — family README for `loc`.
 - [`docs/sources/catalog/README.md`](../README.md) — catalog lane orientation.
-- [`docs/sources/catalog/loc/IDENTITY.md`](./IDENTITY.md) — collection-id and namespace conventions for the `loc` family.
-- [`docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — family-level rights/sensitivity map.
+- `docs/sources/catalog/loc/IDENTITY.md` (not present) — collection-id and namespace conventions for the `loc` family.
+- `docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — family-level rights/sensitivity map.
 - [`docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md) — placement doctrine.
 - [`docs/standards/STAC_KFM_PROFILE.md`](../../../../docs/standards/STAC_KFM_PROFILE.md) — STAC × `kfm:provenance` profile (PROPOSED; NEEDS VERIFICATION).
 - TODO — link to the LoC IIIF connector README at [`connectors/loc/README.md`](../../../../connectors/loc/README.md) once present.

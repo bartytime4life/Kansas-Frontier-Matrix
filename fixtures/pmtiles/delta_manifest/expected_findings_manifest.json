@@ -1,0 +1,79 @@
+{
+  "boundary": "Exact synthetic semantic findings only. This manifest does not inspect PMTiles archive bytes, Range hosting, signatures, evidence, policy, release, deployment, or publication.",
+  "cases": {
+    "invalid_archive_digest_placeholder.json": [
+      {
+        "code": "PMTILES_DELTA_ARCHIVE_DIGEST_PLACEHOLDER",
+        "path": "$.base_archive.archive_digest"
+      }
+    ],
+    "invalid_artifact_ref_digest_mismatch.json": [
+      {
+        "code": "PMTILES_DELTA_ARTIFACT_REF_DIGEST_MISMATCH",
+        "path": "$.base_archive.artifact_ref"
+      }
+    ],
+    "invalid_coverage_balance.json": [
+      {
+        "code": "PMTILES_DELTA_COVERAGE_BALANCE_INVALID",
+        "path": "$.tiles[0]"
+      }
+    ],
+    "invalid_duplicate_tile_identity.json": [
+      {
+        "code": "PMTILES_DELTA_TILE_DUPLICATE",
+        "path": "$.tiles"
+      }
+    ],
+    "invalid_internal_lifecycle_receipt_ref.json": [
+      {
+        "code": "PMTILES_DELTA_INTERNAL_LIFECYCLE_REF_DENIED",
+        "path": "$.tiles[0].run_receipt_ref"
+      }
+    ],
+    "invalid_modified_lineage_missing_prior.json": [
+      {
+        "code": "PMTILES_DELTA_MODIFIED_LINEAGE_INVALID",
+        "path": "$.tiles[1]"
+      }
+    ],
+    "invalid_qc_average_bytes_mismatch.json": [
+      {
+        "code": "PMTILES_DELTA_QC_AVERAGE_BYTES_MISMATCH",
+        "path": "$.qc.observed.average_tile_bytes"
+      }
+    ],
+    "invalid_qc_decision_mismatch.json": [
+      {
+        "code": "PMTILES_DELTA_QC_DECISION_MISMATCH",
+        "path": "$.qc.decision"
+      }
+    ],
+    "invalid_removed_lineage.json": [
+      {
+        "code": "PMTILES_DELTA_REMOVED_LINEAGE_INVALID",
+        "path": "$.tiles[2]"
+      }
+    ],
+    "invalid_spec_hash_mismatch.json": [
+      {
+        "code": "PMTILES_DELTA_MANIFEST_HASH_MISMATCH",
+        "path": "$.spec_hash"
+      }
+    ],
+    "invalid_tile_coordinate_out_of_range.json": [
+      {
+        "code": "PMTILES_DELTA_TILE_COORDINATE_INVALID",
+        "path": "$.tiles[2]"
+      }
+    ],
+    "invalid_tile_digest_placeholder.json": [
+      {
+        "code": "PMTILES_DELTA_TILE_DIGEST_PLACEHOLDER",
+        "path": "$.tiles[0].digest"
+      }
+    ]
+  },
+  "schema_version": "kfm.fixture-findings-manifest.v1",
+  "scope": "map.pmtiles_delta_manifest"
+}

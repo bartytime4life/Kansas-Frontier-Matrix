@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-pass18-after-image-reconstruction-record-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/after-image-reconstruction-record.yml",
+    "contracts/evidence/after_image_reconstruction_record.md",
+    "docs/intake/exploratory/pass-18-after-image-reconstruction-record-source-map.md",
+    "fixtures/contracts/v1/evidence/after_image_reconstruction_record/cases.json",
+    "schemas/contracts/v1/evidence/after_image_reconstruction_record.schema.json",
+    "tests/validators/evidence/test_validate_after_image_reconstruction_record.py",
+    "tools/validators/evidence/validate_after_image_reconstruction_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/after-image-reconstruction-record.yml": "sha256:a45b396b3d7a98c30d7ca4529cab71236c98a814c8c69bec623d67562bd2ae06",
+    "contracts/evidence/after_image_reconstruction_record.md": "sha256:c761e5827ae95cc6781715bc1663a6a22aa53129d74ee6b17dcb16fa385466ee",
+    "docs/intake/exploratory/pass-18-after-image-reconstruction-record-source-map.md": "sha256:da9bcc37fedbea714335fbd6a7b5bf235564a306090565d798950b2ff09865f4",
+    "fixtures/contracts/v1/evidence/after_image_reconstruction_record/cases.json": "sha256:8e0e33fa73b4f8369b68d1e3d242c8d8a9cf08a2dd8b2be1fa16e56d3ab7e3f4",
+    "schemas/contracts/v1/evidence/after_image_reconstruction_record.schema.json": "sha256:659a8f3674532c64cd476f2530b2c41b1b462226210c82b62869831108a3ea23",
+    "tests/validators/evidence/test_validate_after_image_reconstruction_record.py": "sha256:3446ffb6dbf0d2db7329157d9f7cfe5ea86a69bc371847c07107d5b51e9f59af",
+    "tools/validators/evidence/validate_after_image_reconstruction_record.py": "sha256:3c5c3ca72b3ddaef172f4dc1741ae23542d737f1067f80e5e0ab4f4537e089aa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:c761e5827ae95cc6781715bc1663a6a22aa53129d74ee6b17dcb16fa385466ee",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3f4884519a8f8000baff5347b1299775cd6e8774fd32191e3f93a01a3070f4dc",
+      "sha256:f06f7e9571ff7023e2baf0a52f84da39f0e5cfad1c0161dd54a76aa8180c60ec",
+      "sha256:175589456a78a78e3047162f138961a02ba5f5e1987e6030dc00c9dc7aa8d18e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; connected Drive file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5 was metadata-confirmed but byte identity was not asserted",
+      "Connected Drive Kansas Frontier Matrix — Connected-Dots Architecture Brief; private corpus used only as thematic corroboration"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-145",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/evidence/as_of_snapshot_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/correction/correction_impact_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/release/rollback_card.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/after-image-reconstruction-record.yml": "CONFIRMED",
+    "contracts/evidence/after_image_reconstruction_record.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-after-image-reconstruction-record-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/after_image_reconstruction_record/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/after_image_reconstruction_record.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_after_image_reconstruction_record.py": "CONFIRMED",
+    "tools/validators/evidence/validate_after_image_reconstruction_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-card-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical pages 92-93 / printed pages 89-90 were rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic after-image reconstruction record tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-eight exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-temporal-correction-and-rollback-regression",
+      "outcome": "PASS",
+      "reason": "Thirty-five adjacent tests and twenty-one subtests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred thirty-eight tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Forty-two CI-readiness tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks were valid; only expected review-only registry warnings were emitted."
+    },
+    {
+      "gate": "documentation-link-and-graph-profile",
+      "outcome": "PASS",
+      "reason": "Forty-two documentation tests, explicit local-link validation, and the bounded two-document graph check passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-after-image-reconstruction-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-145"
+    },
+    {
+      "id": "drive-pass18-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "as-of-snapshot-composed-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/evidence/as_of_snapshot_disclosure.md"
+    },
+    {
+      "id": "correction-impact-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/correction/correction_impact_assessment.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T18:59:18Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only after-image reconstruction record. It binds one tracking-log transition to reference-only, minimized, digest-only, or withheld after-image posture and explicit reconstruction, retention, minimization, sensitivity, and review declarations without storing state, reconstructing a report, writing history, applying a correction, mutating lifecycle state, or granting evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

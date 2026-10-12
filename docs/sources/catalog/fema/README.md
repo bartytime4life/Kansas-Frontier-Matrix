@@ -23,8 +23,7 @@ related:
   - contracts/domains/hydrology/
   - schemas/contracts/v1/source/source-descriptor.json
   - connectors/fema/
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/adr/ADR-S-04-source-role-vocabulary-v1.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 corpus_ids:
   - KFM-P2-IDEA-0026  # FEMA NFHL / USACE NLD,NID as flood/infrastructure authorities
   - KFM-P2-PROG-0008  # FEMA NFHL + USACE NLD/NID pipeline ingest spec
@@ -34,6 +33,9 @@ notes:
   - This page is the FEMA *family* catalog entry; each family member still requires its own SourceDescriptor.
   - File path `docs/sources/catalog/FEMA.md` is PROPOSED. `docs/sources/` is CONFIRMED at commit b6a279… per Directory Rules v1.2 §6.1; the `catalog/` subfolder convention is NEEDS VERIFICATION (no ADR observed).
   - All schema, registry, validator, fixture, and connector path claims remain PROPOSED until verified against mounted-repo evidence.
+owning_root: docs/
+responsibility: "Documentation for FEMA — Source Family (NFHL, OpenFEMA, MSC); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # FEMA — Source Family Catalog Entry
@@ -454,7 +456,7 @@ graph TD
 - [`contracts/domains/hydrology/`](../../../../contracts/domains/hydrology/) — Hydrology object-family meaning *(PROPOSED path)*
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) — SourceDescriptor schema (per ADR-0001) *(PROPOSED file)*
 - [`connectors/fema/`](../../../../connectors/fema/) — FEMA source-specific fetch + admission code *(root CONFIRMED at commit per Directory Rules v1.2 §7.3; module contents NEEDS VERIFICATION)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule *(PROPOSED path)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule *(PROPOSED path)*
 - `<TODO>` `docs/adr/ADR-S-04-source-role-vocabulary-v1.md` — Source-role enum vocabulary v1 *(PROPOSED in Domains Atlas §24.12)*
 - `<TODO>` `docs/sources/catalog/README.md` — Catalog landing page *(if/when the `catalog/` subfolder is formalized via ADR)*
 - `<TODO>` `docs/adr/ADR-####-fema-source-family-admission.md` — Admission ADR for the FEMA family

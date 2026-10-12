@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "case_id": "build-valid-tree",
+      "expected_findings": [],
+      "expected_manifest": "expected/valid_manifest.json",
+      "expected_outcome": "PASS",
+      "operation": "build",
+      "tree": "tree"
+    },
+    {
+      "case_id": "verify-valid-manifest",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "manifest": "expected/valid_manifest.json",
+      "operation": "verify",
+      "tree": "tree"
+    },
+    {
+      "case_id": "verify-tampered-manifest",
+      "expected_findings": [
+        "MANIFEST_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "manifest": "invalid/invalid_tampered_manifest.json",
+      "operation": "verify",
+      "tree": "tree"
+    },
+    {
+      "case_id": "build-missing-tileset",
+      "expected_findings": [
+        "TILESET_MISSING"
+      ],
+      "expected_outcome": "ERROR",
+      "operation": "build",
+      "tree": "invalid_tree_missing_tileset"
+    }
+  ]
+}

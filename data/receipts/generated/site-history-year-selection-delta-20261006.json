@@ -1,0 +1,190 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-06T18:31:10.741738+00:00",
+  "owning_root": "data/",
+  "responsibility": "Append-only source comparison and bounded validation record; no release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 162,
+  "site_base_commit": "93ab891b1b28cc7c1bd14a4f6e12ca14097fdcb9",
+  "site_candidate_commit": "6b5477617a0f30bd70b266e3e45d4d0616dcccf8",
+  "github_base_commit": "fc92589a3041a8d63ee79f72f70cf70f212049bb",
+  "destination": "apps/site/source",
+  "application_method": "Four-path bounded year-selection repair, including tests and documentation; no other Site source changes or deletions.",
+  "deployment": {
+    "site_version": 163,
+    "source_commit": "6b5477617a0f30bd70b266e3e45d4d0616dcccf8",
+    "deployment_id": "appgdep_6ac53d7131b08191b3ef4edd0f9bda48",
+    "status": "succeeded",
+    "completed_at": "2026-10-06T18:27:08Z",
+    "evidence": "Parent native Sites deployment readback."
+  },
+  "counts": {
+    "changed_paths": 4,
+    "updated_paths": 3,
+    "new_paths": 1,
+    "deleted_paths": 0
+  },
+  "files": {
+    "app/earth-engine-display.tsx": {
+      "github_base_sha256": "7bd25bbfcdafdef01e583ea428230dfa9a4b3003c784e67c9d19aae47181c481",
+      "github_result_sha256": "8a0107e264d5a2194b5d061e2d348f29f387bdf19d03738963cf59af2e1cedb8",
+      "site_source_sha256": "8a0107e264d5a2194b5d061e2d348f29f387bdf19d03738963cf59af2e1cedb8",
+      "relation": "identical_feature_file"
+    },
+    "app/page.tsx": {
+      "github_base_sha256": "6c5b216a514226719a3ea936f5b337d50207b37d4f066ad30a194d89b1704091",
+      "github_result_sha256": "bbd296d040956b4b68337cfba6600edbe70f14a3673a2fb50b5e348047d25203",
+      "site_source_sha256": "bbd296d040956b4b68337cfba6600edbe70f14a3673a2fb50b5e348047d25203",
+      "relation": "identical_feature_file"
+    },
+    "docs/history-comparison.md": {
+      "github_base_sha256": "d06bf2c9e880a2121dc9742523fc8a8d9eb088e4d5657b00f7d7868317994b2c",
+      "github_result_sha256": "4f29f063d4facea1edf4b794bbdc894083551876c59fc4d1dc4f08ca692b3f1e",
+      "site_source_sha256": "4f29f063d4facea1edf4b794bbdc894083551876c59fc4d1dc4f08ca692b3f1e",
+      "relation": "identical_feature_file"
+    },
+    "tests/earth-engine-display-years.test.mjs": {
+      "github_base_sha256": null,
+      "github_result_sha256": "674993bce1c0d6564577ca1238e578e68c9bbde0208404226a0ff7fe40fb6240",
+      "site_source_sha256": "674993bce1c0d6564577ca1238e578e68c9bbde0208404226a0ff7fe40fb6240",
+      "relation": "new_identical_feature_file"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "6b5477617a0f30bd70b266e3e45d4d0616dcccf8",
+    "source_dirty": false,
+    "mirrored_paths": 692,
+    "remaining_differences": 0
+  },
+  "prior_record": {
+    "path": "data/receipts/generated/site-history-acquisition-delta-20261006.json",
+    "sha256": "41bc806be765e8089b93c90c2e566710f3a2af17e01d9ee47378d9ebd663d769",
+    "unchanged": true,
+    "meaning": "Historical v162 comparison and validation checkpoint; not rewritten by this repair."
+  },
+  "validation": {
+    "node_version": "22.13.1",
+    "standalone_and_mirror": {
+      "production_build": "PASS",
+      "typescript": "PASS",
+      "node_tests": {
+        "passed": 545,
+        "failed": 0,
+        "skipped": 0,
+        "new_year_selection_tests": 5
+      },
+      "lint": {
+        "errors": 0,
+        "inherited_warnings": 46
+      },
+      "diff_check": "PASS"
+    },
+    "scope": "Rendered defaults, same-product installed selection, invalid events, explicit uninstalled choices, renderer year projection and previous raster removal. No Python or route contract changes; earlier raster and 53 HTTP smoke checks across 44 routes remain historical.",
+    "logs": [
+      {
+        "path": "/tmp/kfm-v163-repo-build.log",
+        "sha256": "486ca11f8be0b030ded57f4f647d2ec02fe0067bbb5147df06ab08d649e5cb39"
+      },
+      {
+        "path": "/tmp/kfm-v163-repo-types.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/kfm-v163-repo-node-tests.log",
+        "sha256": "c31a09945e7e8b731d6e6ede5ceccc4c0edb346a28118de903e6b2e4f8b94724"
+      },
+      {
+        "path": "/tmp/kfm-v163-repo-lint.log",
+        "sha256": "5fbadd66d6c8126cb98ba412b9ff31a363e6e2cd6ec3256732cf4ced9f084a3d"
+      },
+      {
+        "path": "/tmp/kfm-v163-site-build.log",
+        "sha256": "d66cc244eff75e23749fcb8cb1db1f7f112bff3533224e6f709124490a07d6a2"
+      },
+      {
+        "path": "/tmp/kfm-v163-site-types.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/kfm-v163-site-node-tests.log",
+        "sha256": "7c0a1cfc96e52cf1e7d21ec4fb58dde2164b9d059d7a357e850e3afa2aaa34b8"
+      },
+      {
+        "path": "/tmp/kfm-v163-site-lint.log",
+        "sha256": "0f76c952a878edc38d4352368432e1a9d6aa0d2c6b86c7a19c12482c29338fcc"
+      }
+    ]
+  },
+  "hosted_browser_acceptance": {
+    "scope": "Bounded owner-private v163 checks reported by parent; not whole-application equivalence.",
+    "confirmed": [
+      "Landsat 4 defaults to 1993 in dropdown, source text and preparation link.",
+      "Landsat 5 defaults to 2012.",
+      "Keyboard selection of 1991 then ArrowDown changes Landsat 4 to 1990 in text and link, with YEAR NOT INSTALLED; default restored to 1993.",
+      "Previously approved 2024 set remains installed.",
+      "Saved owner acquisition receipt retains 79 jobs and 500000000000-byte policy after publication."
+    ],
+    "evidence": "Parent browser DOM and screenshot /tmp/kfm-private-site-v163-year-repair-20261006.png",
+    "not_claimed": [
+      "New imagery activation",
+      "Usable Kansas pixels for source-only years",
+      "Scientific change measurement",
+      "Full hosted equivalence"
+    ]
+  },
+  "ci_attribution": {
+    "compared_base": "35a3dc29d7fdef1afbf523cd2d03ca6d2b594ebc",
+    "compared_head": "8bd4bcf8464576a882c890dfab4e11452c4cfca1",
+    "renderer_acquisition": {
+      "outcome": "INHERITED_FAILURE",
+      "findings_each": 12,
+      "outside_permitted_seam_each": 4,
+      "findings_and_reasons_identical": true,
+      "report_sha256": "b606a090c1e649020f0dac23b51e2ea593e67deaea48e11bccab7d002a7fac0b"
+    },
+    "docs_metadata": {
+      "runbook_fix": "Required policy_label and responsibility supplied; truth_posture made explicit.",
+      "outcome": "DOC_META_BLOCK_WARN",
+      "fail_findings": 0,
+      "inherited_warn_findings": 2000,
+      "report_digest": "sha256:296f92aac17d2c552d8b3e343532454fc8d1a46e67e6b3e8d757b34fb0e696f3",
+      "scope": "README.md,docs,tools/validators/docs"
+    },
+    "water_conformance": {
+      "outcome": "MIRROR_REVIEW_REQUIRED",
+      "inherited": true,
+      "checker_and_receipt_unchanged": true
+    },
+    "dependency_audits": {
+      "outcome": "INHERITED_FAILURE",
+      "base_head_manifests_locks_workflow_identical": true,
+      "base_head_classifier_reports_identical": true,
+      "root": "source-map-js 1.2.1: GHSA-68fv-2mgg-jv7q; patched 1.2.2; development dependency path",
+      "site_production": "sharp 0.35.4: GHSA-wq5f-xc86-pv6w; patched 0.35.5; production audit includes the optional dependency",
+      "limits": "No dependency mutation in this repair. Runtime reachability and exploitability are not established."
+    }
+  },
+  "mirror_review": "MIRROR_REVIEW_REQUIRED remains. Original v153 guard and historical receipts are unchanged. Source parity, deployment, browser acceptance, local installation, source admission and release approval remain separate.",
+  "local_runtime": {
+    "source_commit": "6b5477617a0f30bd70b266e3e45d4d0616dcccf8",
+    "installed_path": "/home/bartytime/Projects/KFM-Explorer-Site-v163",
+    "port": 4173,
+    "cutover": "CONFIRMED_BY_PARENT",
+    "install_receipt_sha256": "69786a88ed28aa4f29583bd287802e24d651af8e49d6c53fa8de03e6cfdd1891",
+    "browser_scope": "Confirmed Landsat 4/5 defaults and keyboard selection of 2011; actual approved CDL 2024 raster; uninstalled 2023 remains unavailable; one-installed-year comparison guard and Escape. Restored original five provider layers, crop off, 2D, 2026 and Places 0.",
+    "store_hash_comparison": {
+      "status": "PASS",
+      "sqlite_integrity_checks": 8,
+      "unchanged_blobs": 15840,
+      "unchanged_blob_bytes": 738852346,
+      "domain_row_counts_unchanged": true,
+      "physical_state_path_unchanged": true,
+      "actual_readback_sha256": "5e35d6cc87c08c436eba6926cd886f12fe1ec53ffc93abe82fc60d7bc4fdff65"
+    }
+  }
+}

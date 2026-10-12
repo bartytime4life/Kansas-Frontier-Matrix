@@ -18,7 +18,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md                   # v1.3
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0001-schema-home.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
@@ -610,7 +610,7 @@ This document is done enough to enter the repository when:
 - `docs/doctrine/lifecycle-law.md` — `RAW → PUBLISHED` law *(TODO — verify)*
 - `docs/doctrine/trust-membrane.md` — public-client posture *(TODO — verify)*
 - `docs/doctrine/directory-rules.md` — placement authority *(CONFIRMED in attached doctrine, v1.3)*
-- `docs/architecture/governed-api.md` — `ANSWER / ABSTAIN / DENY / ERROR` surface *(TODO — verify)*
+- `docs/architecture/governed-api/README.md` — `ANSWER / ABSTAIN / DENY / ERROR` surface *(TODO — verify)*
 - `docs/adr/ADR-0001-schema-home.md` — `schemas/contracts/v1/…` root as canonical *(referenced in attached doctrine)*
 - `docs/registers/VERIFICATION_BACKLOG.md` — global verification register *(TODO — verify)*
 - `docs/registers/DRIFT_REGISTER.md` — drift register (CDR-GEOL-01 lands here) *(TODO — verify)*

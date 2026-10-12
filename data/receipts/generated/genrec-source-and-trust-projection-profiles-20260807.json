@@ -1,0 +1,209 @@
+{
+  "receipt_id": "genrec-source-and-trust-projection-profiles-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-and-trust-projection-profiles.yml",
+    "contracts/release/trust_projection_manifest.md",
+    "contracts/source/source_probe_envelope.md",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/asset_mismatch_marked_verified.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/governance_change_missing_decision.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/review_packet_approval_authority.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/time_slice_missing_rollback.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/asset_integrity_verified.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/governance_change_record.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/review_packet_reference.json",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/time_slice_manifest.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/edna_population_inference.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/kgs_resource_inference.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/loc_activated.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/nass_field_level.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/edna_detection_signal.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/kgs_bedrock_changed.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/loc_deferred_hold.json",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/nass_aggregate_changed.json",
+    "schemas/contracts/v1/release/trust_projection_manifest.schema.json",
+    "schemas/contracts/v1/source/source_probe_envelope.schema.json",
+    "tests/release/test_trust_projection_manifest.py",
+    "tests/source/test_source_probe_envelope.py",
+    "tools/validators/release/validate_trust_projection_manifest.py",
+    "tools/validators/source_probe/validate_source_probe_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:4daa157133ff20b4dd46ce8533bc802a465a132eca0c2a3ce98b1fc0e3f00e68",
+    "contracts/release/trust_projection_manifest.md": "sha256:54d4890382a59dde9bb62e8efeed4e8f2a463053ce6df4cd9e58da881152a5cd",
+    "contracts/source/source_probe_envelope.md": "sha256:89e87753121e32f578f53df8a1a5f85a03d1ade1845e9b92ea5be0eb09f2cdff",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/asset_mismatch_marked_verified.json": "sha256:8da5ec373393761868a903764d7fe9cee9a371323edbd5e79ae00049c73baf81",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/governance_change_missing_decision.json": "sha256:f9e940d392f3634754dfae238285e668fcf514b81f69c615c2be019a80546dc3",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/review_packet_approval_authority.json": "sha256:5ac7edcff1006818781947bae42f252b69ced0c5b884cac3812e6114007a2a26",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/time_slice_missing_rollback.json": "sha256:baed5f95ee2eee9703172a9674a2b70179194789fd1930fd9436ef9043927c75",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/asset_integrity_verified.json": "sha256:29c3335e925c8f137c4a2c37c53e831fd778fb461ed940b5b82377227297b038",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/governance_change_record.json": "sha256:8ac5d1c39ac0ccd7c93b761240e901e18c89675cc8b2532714298453ac3cce87",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/review_packet_reference.json": "sha256:22a94e923bfa43661a4d918b7a9171683db6da69d915ccfc52c96a110f584530",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/time_slice_manifest.json": "sha256:f4d0509c4a1a7b630b1a55cfda8f0544397f0840c5bc52386d4bde2e0ae04381",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/edna_population_inference.json": "sha256:896001119acb3224a90083e37614b702c441def7f2c68fbb94dee9d0ea35f7f1",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/kgs_resource_inference.json": "sha256:89dd2a6b3e809d5ce441c97346b771eae8c6e8598ed358ae150fb590dc0dd6a1",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/loc_activated.json": "sha256:1eabcad473f859e6003363b4d8f4843ee6e08f8df6b34a016ee27c17c41b8f42",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/nass_field_level.json": "sha256:507b3a125450b527f79b51c43dc40c1edfa68d1aab6acb987f1d18dd44e306ac",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/edna_detection_signal.json": "sha256:a9e8d74be14bef1e112a4f187f7a8e8544a6e445e60c0101067cf58fc65d4f16",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/kgs_bedrock_changed.json": "sha256:38f5ad7095200a22e441f24e3680b5eaeb4e53ef9b5d16ad833f5e406ada010f",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/loc_deferred_hold.json": "sha256:c84e9c440e99cffe0e04dce8be2fb1f10e4f2299c705c1c57bb02e4f30d36850",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/nass_aggregate_changed.json": "sha256:2f1ed4261f3e3fc397161786eb50cacbabe9e91ee3060f8ffb8f586a180170e4",
+    "schemas/contracts/v1/release/trust_projection_manifest.schema.json": "sha256:46c5f48cf3bccf41c8339e5eafbbe29ee6f3f708a06cc2cc5fe3ce697bf97fb4",
+    "schemas/contracts/v1/source/source_probe_envelope.schema.json": "sha256:917cf50c9b5cccb0f66084c4f84108d39d2b255bd41fea4d447ac48571ba3725",
+    "tests/release/test_trust_projection_manifest.py": "sha256:ea237762d8cf7bcc96734abe79f59e94113a8e1d5e2f5d4385a40a0f4b7ec666",
+    "tests/source/test_source_probe_envelope.py": "sha256:68dda2ec196883b6d7a965ffd0d8ce3caeae6b6ca2a240f70aa9fbe819433f57",
+    "tools/validators/release/validate_trust_projection_manifest.py": "sha256:62bd52bb52abea3838397944bcce76630103793f293b4a0b4ff09e16c28ba04e",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "sha256:91c290580bde48c6d924d780201a782f547c50ad62b1a612c891ccce4ae3ee43"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:06c8b7d3ecc66bf6b94786b890eb87d100d6e3f96ddc109743d46fa0c94b4938",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-10-26.pdf",
+      "New Ideas 4-12-26.pdf",
+      "New Ideas 4-13-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-10-26.pdf#nass-edna-kgs-loc-source-profiles",
+      "attachment:New Ideas 4-12-26.pdf#asset-integrity-review-governance-projections",
+      "attachment:New Ideas 4-13-26.pdf#time-slice-and-review-proof-surfaces",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@93ea8d5f87a4e4d51bdef14a1e72d0562e89033a",
+      "repo:connectors/nass/README.md@93ea8d5f87a4e4d51bdef14a1e72d0562e89033a",
+      "repo:connectors/loc/README.md@93ea8d5f87a4e4d51bdef14a1e72d0562e89033a",
+      "repo:docs/domains/geology/SOURCE_REGISTRY.md@93ea8d5f87a4e4d51bdef14a1e72d0562e89033a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "PROPOSED",
+    "contracts/release/trust_projection_manifest.md": "PROPOSED",
+    "contracts/source/source_probe_envelope.md": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/asset_mismatch_marked_verified.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/governance_change_missing_decision.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/review_packet_approval_authority.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/invalid/time_slice_missing_rollback.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/asset_integrity_verified.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/governance_change_record.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/review_packet_reference.json": "PROPOSED",
+    "fixtures/contracts/v1/release/trust_projection_manifest/valid/time_slice_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/edna_population_inference.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/kgs_resource_inference.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/loc_activated.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/invalid/nass_field_level.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/edna_detection_signal.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/kgs_bedrock_changed.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/loc_deferred_hold.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_probe_envelope/valid/nass_aggregate_changed.json": "PROPOSED",
+    "schemas/contracts/v1/release/trust_projection_manifest.schema.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_probe_envelope.schema.json": "PROPOSED",
+    "tests/release/test_trust_projection_manifest.py": "PROPOSED",
+    "tests/source/test_source_probe_envelope.py": "PROPOSED",
+    "tools/validators/release/validate_trust_projection_manifest.py": "PROPOSED",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Eight deterministic source-profile and trust-projection tests passed locally."
+    },
+    {
+      "gate": "source-profile-matrix",
+      "outcome": "PASS",
+      "reason": "Four valid and four invalid SourceProbeEnvelope fixtures produced expected polarity."
+    },
+    {
+      "gate": "trust-projection-matrix",
+      "outcome": "PASS",
+      "reason": "Four valid and four invalid release-support fixtures produced expected polarity."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "Both Draft 2020-12 schemas passed schema checks."
+    },
+    {
+      "gate": "fixture-json-parse",
+      "outcome": "PASS",
+      "reason": "All sixteen fixture JSON files parsed."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Both validators and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "live-source-activation",
+      "outcome": "SKIPPED",
+      "reason": "No live NASS, USFWS, KGS, or LOC source access or activation is part of this fixture-first PR."
+    },
+    {
+      "gate": "public-ui-runtime",
+      "outcome": "SKIPPED",
+      "reason": "The PR adds contracts and validators, not public API, map, review-console, or browser behavior."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human and domain-steward review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:source-profiles",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-10-26.pdf#nass-edna-kgs-loc-source-profiles"
+    },
+    {
+      "id": "attachment:integrity-review",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-12-26.pdf#asset-integrity-review-governance-projections"
+    },
+    {
+      "id": "attachment:time-slice",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-13-26.pdf#time-slice-and-review-proof-surfaces"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T23:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds fixture-first anti-collapse source probe profiles for NASS aggregate, eDNA monitoring, KGS geology, and LOC deferred archival intake, plus non-authoritative PMTiles/COG integrity, time-slice, read-only review-packet, and governance-change projections. No source activation, lifecycle write, approval, release, deployment, or publication occurs."
+}

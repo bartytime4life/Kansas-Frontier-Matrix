@@ -87,7 +87,7 @@ notes:
   - "PolicyDecision and DecisionEnvelope have fielded proposed schemas and valid/invalid fixtures; generic schema tests cover both, while the dedicated PolicyDecision validator path is absent."
   - "DecisionEnvelope has an executable JSON Schema wrapper and is included in the shared validator aggregate; this proves shape only, not Fauna policy evaluation."
   - "The governed API has generic boundary guards and scaffolded ABSTAIN/NOT_IMPLEMENTED routes, but no Focus route is registered."
-  - "Policy, deny, Focus-mock, and Fauna workflows are TODO-only and do not establish denial enforcement."
+  - "The deny workflow's three existing jobs and the local aggregate target cover the same five app-owned structural guards; policy, Focus-mock, and Fauna workflows remain TODO-only, and none establish Fauna Focus denial enforcement."
   - "Directory Rules have duplicate live authority surfaces; both agree that this test lane belongs under tests/domains/fauna/focus/deny_sensitive. The authority-path conflict remains visible and unresolved."
 ] -->
 
@@ -223,11 +223,11 @@ The placement question remains unresolved. Both inspected artifacts agree that d
 | Generic browser/API guards | Executable tests prohibit internal-store path literals and forbidden direct runtime imports; route/method boundaries are checked. | `CONFIRMED` generic boundary coverage |
 | Focus fixture lane | `tests/fixtures/focus/README.md` documents proposed denial fixtures; checked `deny_restricted.valid.json` and `deny_sensitive_geometry.valid.json` paths are absent. | `CONFIRMED` README / payloads not established |
 | `make policy` | Emits `TODO: opa test policy/ -v`. | `CONFIRMED` placeholder |
-| `make deny-test` | Emits `TODO: tests/api deny suite`. | `CONFIRMED` placeholder |
+| `make deny-test` | At the pinned snapshot, emitted `TODO: tests/api deny suite`; the current local aggregate runs five app-owned route, method, manifest, internal-store-literal, and forbidden-import guards. | `CONFIRMED` historical placeholder / current bounded structural guards |
 | `make schemas` | Runs the shared validator aggregate, including `DecisionEnvelope` but not a dedicated `PolicyDecision` validator. | `CONFIRMED` |
 | `make test` | Runs schema and contract tests only; this lane is not included. | `CONFIRMED` |
 | `make boundary-guards-ci` | Runs command-bearing generic policy/API boundary tests with JUnit output. | `CONFIRMED` generic enforcement |
-| Policy/deny/Focus/Fauna workflows | `policy-test.yml`, `deny-test.yml`, `focus-mock-test.yml`, and `domain-fauna.yml` execute TODO echo steps. | `CONFIRMED` stubs |
+| Policy/deny/Focus/Fauna workflows | At the pinned snapshot, all four executed TODO echo steps. Currently, `deny-test.yml` keeps three jobs whose combined selectors cover the same five tests as the local aggregate; the other three workflows remain TODO-only. | `CONFIRMED` historical stubs / current split maturity |
 | Production Focus policy evaluation, reason codes, routes, reports, and pass rates | Not established by inspected evidence. | `UNKNOWN` |
 
 ### Safe current conclusion
@@ -455,7 +455,7 @@ A future live tier may exist only when separately named, explicitly triggered, e
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Contract/schema shape only; not this lane. |
 | `make schemas` | Runs five JSON Schema validators including `DecisionEnvelope`. | No dedicated `PolicyDecision` validator; no policy semantics. |
 | `make policy` | Echoes `TODO: opa test policy/ -v`. | No OPA test execution. |
-| `make deny-test` | Echoes `TODO: tests/api deny suite`. | No denial suite. |
+| `make deny-test` | Runs the app-owned five-test route, method, manifest, internal-store-literal, and forbidden-import guard module as one local aggregate. | Bounded generic structural proof; no Fauna sensitivity or Focus policy evaluation. |
 | `make governed-api-smoke` | Runs current governed-API tests. | Scaffold routes only; no Focus route. |
 | `make boundary-guards-ci` | Runs generic policy/API/store/import boundary tests with JUnit. | Real generic boundary proof; not Fauna sensitivity evaluation. |
 | Generic schema harness | Discovers policy/runtime valid and invalid fixture families. | Proves proposed object shape only. |
@@ -467,7 +467,7 @@ A future live tier may exist only when separately named, explicitly triggered, e
 | Workflow | Current steps | Interpretation |
 |---|---|---|
 | `policy-test.yml` | `echo TODO opa-test`; `echo TODO policy-fixture-coverage` | Stub only. |
-| `deny-test.yml` | TODO public-boundary, raw-leak, and model-runtime deny echoes. | Stub only. |
+| `deny-test.yml` | Three existing jobs collectively run the same five app-owned tests as the local aggregate target. | Bounded generic structural guards only; no Fauna sensitivity or Focus policy evaluation. |
 | `focus-mock-test.yml` | TODO Focus-flow and finite-envelope echoes. | Stub only. |
 | `domain-fauna.yml` | TODO validate/proof/publish-dry-run echoes. | Stub only. |
 
@@ -499,7 +499,7 @@ A policy-specific command may later include an accepted OPA test path, but `make
 | Browser/store boundary | Client/API avoids direct internal/model/store paths. | Generic executable guards exist. |
 | Safe projection/leak scan | Denial text, citations, logs, traces, receipts, telemetry, cache keys, and UI omit protected detail. | Needs dedicated fixtures/tests. |
 | No-network guard | No unexpected external request occurs. | Required future harness behavior. |
-| CI orchestration | Repository-native policy/denial tests run on relevant changes. | Policy/deny/Focus/Fauna workflows are TODO-only. |
+| CI orchestration | Repository-native policy/denial tests run on relevant changes. | `deny-test` runs bounded generic structural guards; policy, Focus-mock, and Fauna workflows remain TODO-only, so Fauna Focus denial enforcement is not established. |
 
 Test reporting should distinguish:
 
@@ -595,7 +595,7 @@ Update this README when:
 - Fauna sensitivity Rego/YAML scaffolds become operational;
 - `PolicyDecision` or `DecisionEnvelope` semantics/shapes change;
 - a Focus route or policy pre-check implementation is added;
-- policy, deny, Focus, or Fauna workflows graduate from TODO stubs;
+- policy, Focus, or Fauna workflows graduate from TODO stubs, or `deny-test` expands beyond its bounded generic structural guards;
 - fixture ownership between `tests/fixtures/focus/` and `fixtures/domains/fauna/` is resolved;
 - logging/telemetry/cache disclosure rules change; or
 - the Directory Rules authority-path conflict is resolved.
@@ -631,7 +631,7 @@ This lane is mature only when repository evidence supports all applicable criter
 - [ ] No model is invoked after a sufficient pre-check denial.
 - [ ] Fixtures are synthetic/public-safe, deterministic, no-network, and linked to consumers.
 - [ ] Generic schema/boundary checks are supplemented by Fauna-specific policy semantics.
-- [ ] TODO-only workflows are graduated to repository-native commands with reviewed triggers and permissions.
+- [ ] Remaining TODO-only policy, Focus-mock, and Fauna workflows are graduated, and bounded generic deny guards are supplemented by Fauna-specific policy semantics.
 - [ ] Zero collection, unexpected skips, unexpected network access, shape-only success, and default-deny-only success cannot be misreported as proof.
 - [ ] Human Fauna, Focus, policy, sensitivity, rights, API/UI, test, security, and docs review is recorded where required.
 - [ ] Coverage limits, correction behavior, rollback, and open authority conflicts remain documented.
@@ -667,8 +667,9 @@ At this evidence snapshot, these criteria remain open unless a separate executab
 | Governed API route registry and abstain tests | Only bootstrap/layers/evidence routes; safe scaffold `ABSTAIN / NOT_IMPLEMENTED`. |
 | Explorer/governed-API boundary guards | Generic direct-store/import/route boundary enforcement. |
 | Focus fixture README and checked absent denial payloads | Proposed scenarios; no checked payload implementation. |
-| Makefile | Policy/deny placeholders; real schema and generic boundary commands. |
-| Policy, deny, Focus-mock, and Fauna workflows | TODO-only CI scaffolds. |
+| Makefile | Policy placeholder; real schema, generic boundary, and five-test aggregate deny commands. |
+| `deny-test.yml` | Three existing jobs collectively cover the same five app-owned structural guards as the local aggregate target. |
+| Policy, Focus-mock, and Fauna workflows | TODO-only CI scaffolds. |
 
 [Back to top](#top)
 
@@ -688,7 +689,7 @@ At this evidence snapshot, these criteria remain open unless a separate executab
 | Which Focus route and service perform pre-checks? | `UNKNOWN` | Implemented route registry and governed-API tests. |
 | Which fixture root owns generic versus Fauna-reusable denial cases? | `NEEDS VERIFICATION` | Accepted fixture routing and consumers. |
 | Which policy/deny/Focus/Fauna checks are required by branch protection? | `UNKNOWN` | Repository ruleset evidence. |
-| When do policy-test, deny-test, focus-mock-test, and domain-fauna graduate from stubs? | `PROPOSED` work | Owners, commands, fixtures, permissions, outcomes, rollback. |
+| When do policy-test, focus-mock-test, and domain-fauna graduate from stubs, and when does deny-test gain Fauna/Focus policy coverage? | `PROPOSED` work | Owners, commands, fixtures, permissions, outcomes, rollback. |
 | Which Directory Rules copy becomes canonical? | `CONFLICTED` / `NEEDS VERIFICATION` | Accepted ADR and synchronized supersession/migration. |
 
 [Back to top](#top)
@@ -708,6 +709,6 @@ This is a documentation-only revision. Restore v0.1 by reverting the implementat
 
 ### Re-review triggers
 
-Re-review on the first executable deny-sensitive test, operational Fauna policy rule, policy fixture, dedicated policy validator, accepted decision carrier mapping, Focus route, safe reason registry, substantive policy/deny workflow, public denial projection, or Directory Rules authority resolution.
+Re-review on the first executable deny-sensitive test, operational Fauna policy rule, policy fixture, dedicated policy validator, accepted decision carrier mapping, Focus route, safe reason registry, substantive policy or Fauna/Focus-specific deny workflow coverage, public denial projection, or Directory Rules authority resolution.
 
 [Back to top](#top)

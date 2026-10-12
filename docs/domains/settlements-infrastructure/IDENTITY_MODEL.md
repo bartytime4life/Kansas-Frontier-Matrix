@@ -15,11 +15,14 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/standards/PROV.md
   - docs/standards/SIGNING.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, domain, settlements, infrastructure, identity, deterministic-id, spec-hash]
 notes:
   - "Settlement schema-home segment in atlas §24.13 is 'settlement/' (singular). docs/domains segment is 'settlements-infrastructure/'. Naming variance is OPEN-IDM-SI-01."
   - "All path and route claims under Implementation Surfaces are PROPOSED until verified against a mounted repository."
+owning_root: docs/
+responsibility: "Documentation for Settlements / Infrastructure — Identity Model; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Settlements / Infrastructure — Identity Model
@@ -403,7 +406,7 @@ These items are checkable but not yet checked at the level this contract require
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-surface boundary (NEEDS VERIFICATION)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance crosswalk (CONFIRMED authored prior session; corpus naming variance vs `PROVENANCE.md` flagged elsewhere)
 - [`docs/standards/SIGNING.md`](../../standards/SIGNING.md) — attestation, cosign (PROPOSED, not yet authored)
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — `schemas/contracts/v1/` canonical (CONFIRMED in corpus)
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — `schemas/contracts/v1/` canonical (CONFIRMED in corpus)
 - *(PROPOSED)* `docs/architecture/identity-and-spec-hash.md` — cross-domain identity primer
 
 ---

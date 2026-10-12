@@ -173,7 +173,7 @@ Repository evidence contains multiple Directory Rules artifacts, including:
 | Executable files in this lane | Code-index searches for the exact lane surfaced this README but no test module. This is not a complete recursive absence proof. | `NEEDS VERIFICATION` / not established |
 | Root Python test command | `make test` runs only `tests/schemas` and `tests/contracts`; it does not exercise this lane. | `CONFIRMED` |
 | Root validator command | `make schemas` runs the shared schema validator aggregate; it is not a Fauna accessibility check. | `CONFIRMED` |
-| Root JavaScript tooling | Root `package.json` declares Playwright, pixelmatch, and pngjs. No axe dependency or Fauna accessibility script surfaced. | `CONFIRMED` / bounded search |
+| Root JavaScript tooling | Root `package.json` declares no development dependencies. No axe dependency or Fauna accessibility script surfaced. | `CONFIRMED` / bounded search |
 | Explorer-web test script | `apps/explorer-web/package.json` defines `test` as `echo TODO`. | `CONFIRMED` placeholder |
 | Accessibility workflow | `.github/workflows/accessibility.yml` exists, triggers broadly, and currently runs `echo TODO axe` and `echo TODO keyboard-navigation`. | `CONFIRMED` stub; no enforcement claim |
 | Fauna workflow | `.github/workflows/domain-fauna.yml` exists, triggers broadly, and all observed jobs currently echo TODO commands. | `CONFIRMED` stub; no enforcement claim |

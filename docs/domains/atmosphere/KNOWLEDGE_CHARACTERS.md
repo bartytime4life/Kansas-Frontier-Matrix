@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: DOM-AIR steward + Docs steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-29
-updated: 2026-05-29
+updated: 2026-08-02
 policy_label: public
 related:
   - docs/domains/atmosphere/README.md            # PROPOSED — NEEDS VERIFICATION
@@ -31,9 +31,9 @@ notes:
 
 > **The controlled vocabulary that tags every Atmosphere object with *what kind of knowledge it is* — and the anti-collapse rule that forbids one kind from masquerading as another.**
 
-[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)](#) [![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)](#) [![Lane: atmosphere](https://img.shields.io/badge/lane-atmosphere-0aa)](#) [![Anti-collapse: acute](https://img.shields.io/badge/anti--collapse-acute-critical)](#) [![Contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](#) [![Last updated](https://img.shields.io/badge/last__updated-2026--05--29-lightgrey)](#)
+[![Status: Draft](https://img.shields.io/badge/status-draft-yellow)](#) [![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)](#) [![Implementation: bounded fixture proof](https://img.shields.io/badge/implementation-bounded__fixture__proof-blue)](#) [![Lane: atmosphere](https://img.shields.io/badge/lane-atmosphere-0aa)](#) [![Anti-collapse: acute](https://img.shields.io/badge/anti--collapse-acute-critical)](#) [![Contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)](#) [![Last updated](https://img.shields.io/badge/last__updated-2026--08--02-lightgrey)](#)
 
-**Status:** Draft · **Owners:** DOM-AIR steward + Docs steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-05-29 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
+**Status:** Draft · **Owners:** DOM-AIR steward + Docs steward *(PLACEHOLDER — NEEDS VERIFICATION)* · **Updated:** 2026-08-02 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!IMPORTANT]
 > **Knowledge character is a first-class, immutable identity attribute — not a display tag.** Every Atmosphere object carries one knowledge character; it participates in `object_role` for identity composition (see [`IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) §3, §5); it is set at admission; and it **cannot be edited in place**. Re-characterizing a record produces a *new* identity with a `CorrectionNotice`, never a mutation. Collapsing one knowledge character into another is a publication-blocking **DENY** condition and an AI-surface **ABSTAIN** condition.
@@ -60,7 +60,6 @@ notes:
 14. [Changelog](#14-changelog)
 15. [Definition of done](#15-definition-of-done)
 16. [Related docs](#16-related-docs)
-17. [Appendices](#17-appendices)
 
 ---
 
@@ -285,18 +284,18 @@ knowledge_characters:
 
 ## 9. Validators and deny tests
 
-The Atlas §11.K names the validator family; the table below maps each to the knowledge-character property it protects. **All PROPOSED — NEEDS VERIFICATION** against `tools/validators/...`, `tests/domains/atmosphere/`, and `policy/domains/atmosphere/`.
+The Atlas §11.K names the validator family; the table below maps each to the knowledge-character property it protects. The repository now has a **bounded synthetic fixture proof** at `tools/validators/domains/atmosphere/validate_knowledge_character.py` and `tests/domains/atmosphere/test_knowledge_character_registry.py`. That proof does not settle the canonical enum or registry, execute Rego policy, validate live records, or establish release authority.
 
 | Validator / test | Protects | Status |
 |---|---|---|
-| `knowledge-character-registry-tests` | Every object carries exactly one valid character; unknown / missing fails closed. | `PROPOSED` `[DOM-AIR]` §K |
-| `aqi-as-concentration-denial` | `PUBLIC_AQI_REPORT` cannot be cast as a concentration. | `PROPOSED` `[DOM-AIR]` §I |
-| `aod-as-pm25-denial` | `REMOTE_SENSING_MASK` (AOD) cannot be republished as a PM2.5 field. | `PROPOSED` `[DOM-AIR]` §I |
-| `model-as-observed-denial` | `ATMOSPHERIC_MODEL_FIELD` / forecast / fusion cannot be relabeled `OBSERVED_SENSOR`. | `PROPOSED` `[DOM-AIR]` §I |
+| `knowledge-character-registry-tests` | Every object carries exactly one valid character; unknown / missing fails closed. | `CONFIRMED` for the frozen fixture profile; canonical registry remains `OPEN` |
+| `aqi-as-concentration-denial` | `PUBLIC_AQI_REPORT` cannot be cast as a concentration. | `CONFIRMED` for the frozen fixture profile; policy/runtime enforcement remains `NEEDS VERIFICATION` |
+| `aod-as-pm25-denial` | `REMOTE_SENSING_MASK` (AOD) cannot be republished as a PM2.5 field. | `CONFIRMED` for the frozen fixture profile; policy/runtime enforcement remains `NEEDS VERIFICATION` |
+| `model-as-observed-denial` | `ATMOSPHERIC_MODEL_FIELD` / forecast / fusion cannot be relabeled `OBSERVED_SENSOR`. | `CONFIRMED` for the frozen fixture profile; policy/runtime enforcement remains `NEEDS VERIFICATION` |
 | `low-cost-sensor-caveat-tests` | `LOW_COST_SENSOR` public release requires correction + caveats + confidence + limitations. | `PROPOSED` `[DOM-AIR]` §I |
 | `aggregate-not-per-place-denial` | `CLIMATE_ANOMALY_CONTEXT` (aggregate) cannot be cited as a per-place reading. | `INFERRED` `[DOM-AIR]` |
 | `derived-fusion-lineage-tests` | `DERIVED_FUSION` carries per-input lineage + uncertainty + derivative label. | `INFERRED` `[DOM-AIR]` |
-| `advisory-not-alert-denial` | `ALERT_AND_ADVISORY_CONTEXT` never acts as the official alerting authority. | `INFERRED` `[DOM-AIR]` `[DOM-HAZ]` |
+| `advisory-not-alert-denial` | `ALERT_AND_ADVISORY_CONTEXT` never acts as the official alerting authority. | `CONFIRMED` for the frozen fixture profile; policy/runtime enforcement remains `NEEDS VERIFICATION` |
 | `re-characterization-creates-new-identity` | Changing a character produces a new `spec_hash`, not an in-place edit. | `INFERRED` `[DOM-AIR]` |
 
 > [!IMPORTANT]
@@ -376,7 +375,7 @@ Knowledge character is not just an internal tag — doctrine requires it be **ex
 | OQ-02 | Registry **home** — `data/registry/`, `control_plane/`, or schema-adjacent. | **OPEN** *(ADR-class per §2.4(5); Atlas ADR-S-03)* | Placement ADR + mounted file. |
 | OQ-03 | Per-family default knowledge character (the §10 map). | **NEEDS VERIFICATION** | `contracts/domains/atmosphere/` per-family declarations. |
 | OQ-04 | Exact `required_guards` / `forbidden` field shape for the registry. | **NEEDS VERIFICATION** | Mounted registry schema + golden fixtures. |
-| OQ-05 | Validator names and presence (the §9 list). | **NEEDS VERIFICATION** | `tools/validators/` + `tests/domains/atmosphere/` inspection. |
+| OQ-05 | Validator names and presence (the §9 list). | **PARTIALLY VERIFIED** | Bounded fixture validator/test are present; full policy/runtime validator family still needs implementation evidence. |
 | OQ-06 | `SmokeContext` shared-vs-projected modeling between Atmosphere and Hazards. | **OPEN** *(ADR-S-14)* | Cross-lane join policy ADR. |
 | OQ-07 | Radar-derived `Precipitation Observation` character (`OBSERVED_SENSOR` vs. `ATMOSPHERIC_MODEL_FIELD`). | **OPEN** | Atmosphere contract or ADR (mirrors IDENTITY_MODEL OQ-12). |
 | OQ-08 | **Filename reconciliation** — sibling docs reference this file as both `KNOWLEDGE_CHARACTERS.md` and `KNOWLEDGE_CHARACTER_REGISTRY.md`. | **NEEDS VERIFICATION** | Pick one canonical filename; update the four sibling docs + a single drift entry. |
@@ -414,7 +413,7 @@ This document is done enough to enter the repository when:
 - a DOM-AIR steward and a docs steward review it; `CODEOWNERS` confirmed (OQ-09);
 - the canonical enum (OQ-01) and registry home (OQ-02) are settled by ADR and the machine registry is mounted;
 - it is linked from `docs/domains/atmosphere/README.md` and cross-links the identity model, file-system plan, backlog, and expansion plan;
-- the §9 validators exist in `tools/validators/` and are exercised by `tests/domains/atmosphere/`;
+- the bounded §9 fixture validator exists in `tools/validators/` and is exercised by `tests/domains/atmosphere/`; full policy/runtime enforcement remains open;
 - the `GENERATED_RECEIPT.json` planned for this artifact is wired into CI;
 - future changes follow the operating contract's §37 lifecycle.
 
@@ -431,8 +430,8 @@ This document is done enough to enter the repository when:
 - [`docs/domains/atmosphere/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — sequenced roadmap *(companion)*
 - [`docs/domains/atmosphere/SOURCES.md`](./SOURCES.md) — source families and descriptors *(PROPOSED — TODO)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules §12, §13.5 *(CONFIRMED — this project)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — default schema home *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- [`ADR-0001`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — default schema home *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
 - `policy/domains/atmosphere/` — admissibility / anti-collapse bundles *(PROPOSED — NEEDS VERIFICATION)*
 - `tests/domains/atmosphere/` + `fixtures/domains/atmosphere/` — validator tests + fixtures *(PROPOSED — NEEDS VERIFICATION)*
 

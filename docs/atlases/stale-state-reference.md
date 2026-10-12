@@ -1,22 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-stale-state-reference
 title: Stale-State and Supersession Reference (Atlas v1.1 §24.8 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (docs steward; release/correction steward; sensitivity reviewer)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 stale-state and supersession doctrine without becoming runtime, correction, policy, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED UI, schema, policy, and validator surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/atlases/source-role-anti-collapse.md
-  - docs/atlases/decision-outcome-envelope.md
-  - docs/atlases/master-api-surface.md
-  - docs/adr/ADR-S-10-stale-state-propagation.md
-  - docs/adr/ADR-S-08-frontier-matrix-cell-semantics.md
-  - docs/adr/ADR-S-15-atlas-supplement-lifecycle.md
+  - docs/atlas/master-api-surface.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - contracts/source/source_descriptor.md
@@ -24,7 +23,7 @@ related:
   - contracts/correction/correction_notice.md
   - contracts/release/release_manifest.md
   - contracts/release/rollback_card.md
-  - contracts/governance/review_record.md
+  - contracts/governance/ReviewRecord.md
   - contracts/runtime/ai_receipt.md
   - schemas/contracts/v1/
   - policy/
@@ -34,9 +33,9 @@ tags: [kfm, atlas, register, stale-state, supersession, lineage, correction, rol
 notes:
   - "Authority basis: faithful extraction of Atlas v1.1 §24.8. Atlas v1.1 explicitly states Chapter 24 tables are NAVIGATIONAL, not authoritative."
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
-  - "Implementation depth (UI badges, validators, policy packages, schema header syntax) is PROPOSED throughout and requires mounted-repo verification."
+  - "Implementation depth (UI badges, validators, policy packages, schema header syntax) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
   - "ADR-S-10 (stale-state propagation across lanes) remains OPEN per Atlas v1.1 §24.12; this register surfaces but does not resolve it."
-  - "Owner, doc_id, exact ADR filenames are placeholders pending mounted-repo inspection and ADR acceptance."
+  - "Owner and exact ADR filenames remain placeholders pending accountable assignment and ADR acceptance; doc_id is resolved by the current same-path identity repair."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -56,10 +55,10 @@ notes:
 > **Status:** `draft`.
 > **Authority:** Navigational extract. `CONFIRMED` doctrine for the §24.8 register body (extracted faithfully). Implementation surface is `PROPOSED` throughout. `EvidenceBundle`, source dossiers, and `schemas/contracts/v1/…` remain canonical for any specific claim *(Atlas v1.1 Ch. 24 preamble)*.
 > **Truth posture:** `CONFIRMED` doctrine framing (stale vs wrong; 8 markers; 8 supersession object classes; AIReceipt non-retroactivity) / `PROPOSED` UI signals, validator wiring, schema headers, ADR filenames / `NEEDS VERIFICATION` mounted-repo presence of every contract, schema, policy, validator, and ADR named below / `UNKNOWN` repo implementation depth.
-> **Open ADR:** [`ADR-S-10`](../adr/ADR-S-10-stale-state-propagation.md) — cross-lane stale-state propagation rules.
+> **Open ADR:** `ADR-S-10` (not present) — cross-lane stale-state propagation rules.
 > **Owner:** `OWNER_TBD`.
 
-**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Stale-state markers](#2-stale-state-markers-§2481) · [Supersession lineage](#3-supersession-lineage-§2482) · [AIReceipt non-retroactivity](#4-aireceipt-non-retroactivity) · [Stale-state on public surfaces](#5-stale-state-on-public-surfaces) · [Correction vs stale](#6-correction-vs-stale-when-to-emit-correctionnotice) · [Cross-lane propagation](#7-cross-lane-propagation-adr-s-10-open) · [Lineage artifacts inventory](#8-lineage-artifacts-inventory) · [Implementation surface](#9-implementation-surface-proposed) · [Validators required](#10-validators-required) · [Cross-references](#11-cross-references) · [Verification checklist](#12-verification-checklist) · [Open questions](#13-open-questions-and-verification-backlog)
+**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Stale-state markers](#2-stale-state-markers-2481) · [Supersession lineage](#3-supersession-lineage-2482) · [AIReceipt non-retroactivity](#4-aireceipt-non-retroactivity) · [Stale-state on public surfaces](#5-stale-state-on-public-surfaces) · [Correction vs stale](#6-correction-vs-stale-when-to-emit-correctionnotice) · [Cross-lane propagation](#7-cross-lane-propagation-adr-s-10-open) · [Lineage artifacts inventory](#8-lineage-artifacts-inventory) · [Implementation surface](#9-implementation-surface-proposed) · [Validators required](#10-validators-required) · [Cross-references](#11-cross-references) · [Verification checklist](#12-verification-checklist) · [Open questions](#13-open-questions-and-verification-backlog)
 
 ---
 
@@ -401,13 +400,13 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 |---|---|
 | [`docs/atlases/source-role-anti-collapse.md`](./source-role-anti-collapse.md) *(extract of §24.1)* | Source role is fixed at admission; supersession does not upgrade roles. Marker 1 + 7 + lineage row 1 interact directly with `SourceDescriptor`. |
 | Atlas v1.1 §24.2 Master Receipt Catalog | Defines the 16 receipt types referenced in §9.4 above. |
-| [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | Stale-state markers and supersession events both produce finite outcomes via the Decision Outcome Envelope vocabulary (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD`). |
+| `docs/atlases/decision-outcome-envelope.md` (not present) *(extract of §24.3)* | Stale-state markers and supersession events both produce finite outcomes via the Decision Outcome Envelope vocabulary (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD`). |
 | Atlas v1.1 §24.5 Sensitivity / Rights Tier Reference | Marker 6 (Review aged out) and marker 7 (Rights status changed) interact directly with the tier scheme. |
 | Atlas v1.1 §24.6 Pipeline Gate Reference (RAW → PUBLISHED) | §6 of this register implements the Correction and Rollback transitions from §24.6.1. |
 | Atlas v1.1 §24.7 Reviewer Role and Separation-of-Duties Matrix | Correction reviewer and release authority must be separate when materiality applies (§24.7.2). |
 | Atlas v1.1 §24.9.2 Trust-membrane anti-patterns | "Release without `ReleaseManifest` or rollback target" — release-discipline failure mode adjacent to §6. |
 | Atlas v1.1 §24.11.5 Documentation and drift indicator "Atlas / supplement lineage clarity" | Health indicator: "Each Atlas/supplement carries a current supersession entry. 100%." |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | The six governed API families must surface stale-state in their DTOs. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | The six governed API families must surface stale-state in their DTOs. |
 
 ### 11.2 Atlas v1.0 anchors (retained verbatim in v1.1)
 
@@ -490,7 +489,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | *KFM Repository Structure Guiding Document* — `data/receipts/`, `release/`, `policy/`, `contracts/` root contracts | `CONFIRMED doctrine` | Lineage-artifact placement in §8. | Doctrine, not implementation. |
 | ADR-S-02 (open) | `Open` | Justifies this file's placement at `docs/atlases/` rather than `docs/atlas/`. | ADR acceptance status `NEEDS VERIFICATION`. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 

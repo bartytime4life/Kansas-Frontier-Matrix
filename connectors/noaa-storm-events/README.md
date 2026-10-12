@@ -6,9 +6,9 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Hazards steward · Rights reviewer · Sensitivity reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-14
+updated: 2026-09-26
 policy_label: public-doctrine; connector-boundary; noaa; storm-events; historical-event; narrative-sensitive; placement-conflicted; not-life-safety; no-publication
-truth_posture: CONFIRMED README-only hyphenated sibling / CONFLICTED placement and source identity / INACTIVE source authority / IMPLEMENTATION NEEDS VERIFICATION
+truth_posture: CONFIRMED README-only hyphenated sibling / CONFLICTED placement and source identity / dotted descriptor ADMITTED 2026-10-12 for the Kansas details-file pilot (ADR-0047) / lane IMPLEMENTATION NEEDS VERIFICATION
 evidence_snapshot: main@8fad3427a5f8ca6a8093217c1fa0a6fcc6a74401
 related:
   - ../README.md
@@ -31,7 +31,7 @@ tags: [kfm, connectors, noaa, ncei, storm-events, hazards, historical-event, eve
 notes:
   - "This file documents a proposed connector boundary; it does not prove executable NOAA Storm Events connector code."
   - "A second README-only boundary exists at connectors/noaa_storm_events/; this README does not settle hyphenated, underscored, or NOAA-nested placement."
-  - "The two Storm Events registry YAMLs are PROPOSED placeholders with dotted-versus-underscored identity drift; neither establishes activation."
+  - "The dotted registry record (data/registry/sources/hazards/noaa.storm_events.yaml) became a full SourceDescriptor and was admitted by the repository owner on 2026-10-12 for the Kansas details-file pilot; the underscored record remains a PROPOSED placeholder, so dotted-versus-underscored identity drift remains."
   - "Historical event records retain source file, table, row, event, episode, time, geography, narrative, magnitude, casualty, damage, quality, and correction context."
   - "A historical event record is not a current warning, direct scalar measurement, flood-inundation extent, tornado damage footprint, disaster declaration, insurance determination, or proof that an unrecorded hazard did not occur."
   - "Connector output is limited to RAW or QUARANTINE handoff and never grants downstream publication authority."
@@ -52,8 +52,14 @@ notes:
   <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
 </p>
 
+> [!NOTE]
+> **Implementation placed in the NOAA family package (2026-09-26), following the USGS earthquake precedent. This lane stays README-only; the placement conflict is not resolved by this code.** `connectors/noaa/src/noaa/storm_events.py` validates NCEI details-file URLs and vintages (`StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz`) and parses *already supplied* gzip bytes into frozen per-event candidates without opening a socket. It rejects a file whole on header drift, duplicate columns or event IDs, ragged rows, rows outside the data year, malformed identity/time/coordinates, and gzip corruption or decompression beyond the byte bound. Damage strings (`10.00K`) parse exactly to nominal event-year USD beside the verbatim source string; blank stays unreported, distinct from zero. UTC times are derived only when `CZ_TIMEZONE` carries an offset. Magnitude and F/EF scale stay source strings. Unreadable damage or casualty values and end-before-begin route to `QUARANTINE_CANDIDATE`; missing episode IDs, pre-directive event labels, zone-only support, and unknown offsets are flags. Every narrative is `unreviewed`, `finalized_state` is `NOT_DETERMINED`, and the parser itself admits nothing. `select_state()` filters on NCEI's `STATE_FIPS` (Kansas = 20) and is not a spatial join; `compare_vintages()` names added, removed, and changed event IDs between two vintages of a data year so corrections become new source states, never overwrites. Synthetic tests: `connectors/noaa/tests/test_storm_events.py`, run by `.github/workflows/noaa-storm-events-offline.yml`. This is not source activation, finalization review, narrative sensitivity review, or admission.
+
+> [!NOTE]
+> **Pilot capture and admission (2026-10-12).** `connectors/noaa/src/noaa/storm_events_capture.py` fetches the NCEI `csvfiles/` listing and the newest details file it names for one data year, host-locked, size-bounded and without redirects. `pipelines/domains/hazards/storm_events_{normalize,validate}.py` build and check a closed Kansas candidate with no narrative text (`contracts/domains/hazards/storm_event_record.md`). The repository owner admitted the source on 2026-10-12 (`data/registry/sources/hazards/noaa.storm_events.yaml`) and accepted [ADR-0047](../../docs/adr/ADR-0047-owner-self-release-for-admitted-public-storm-events-data.md) for owner self-release; `tools/release/storm_events_release.py` prepares month-bundled packages and writes release decisions. Nothing here serves or publishes, and this lane remains README-only.
+
 > [!IMPORTANT]
-> **Truth posture:** `CONFIRMED` README-only hyphenated sibling · `CONFLICTED` hyphen/underscore/nested placement and dotted/underscored source identity · source authority `INACTIVE / NOT ESTABLISHED` · product runtime `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` README-only hyphenated sibling · `CONFLICTED` hyphen/underscore/nested placement and dotted/underscored source identity · dotted descriptor `ADMITTED` (2026-10-12, Kansas details-file pilot scope only; see the note above) · product runtime `NEEDS VERIFICATION`.
 
 > [!CAUTION]
 > Storm Events is a historical record surface. A record does not become a current warning, a direct scalar measurement, an inundation polygon, a tornado damage footprint, a disaster declaration, an insurance determination, or an all-clear merely because it was admitted.
@@ -115,6 +121,9 @@ The two Directory Rules copies agree on the connector lifecycle limit but differ
 
 ## 3. Status
 
+> [!NOTE]
+> This table and the [Evidence ledger](#evidence-ledger) record the 2026-07-14 snapshot (main@8fad3427). The registry, pipeline and release rows are updated below for the 2026-10-12 admission; the other rows remain as observed then.
+
 | Question | Evidence-backed status |
 |---|---|
 | Does `connectors/noaa-storm-events/README.md` exist? | **CONFIRMED.** The lane contains this README at the inspected snapshot. |
@@ -122,11 +131,11 @@ The two Directory Rules copies agree on the connector lifecycle limit but differ
 | Does an underscore Storm Events lane exist? | **Yes.** `connectors/noaa_storm_events/README.md` is a separate README-only compatibility candidate. |
 | Does an implemented NOAA-nested Storm Events lane exist? | **Not in bounded probes.** Neither `connectors/noaa/storm-events/README.md` nor `connectors/noaa/ncei-storm-events/README.md` was found. |
 | Is the NOAA family package ready? | **No.** It is version `0.0.0`; its initializer is empty, fetch/admit modules are placeholder comments, its local descriptor retains `TBD` role and rights, and no product module was found at the probed path. |
-| Are Storm Events registry records present? | **Two `PROPOSED` placeholders are present.** One uses a dotted filename under `data/registry/sources/hazards/`; the other declares underscored `id: noaa_storm_events` under `data/registry/hazards/sources/` and retains `TBD` authority, rights, cadence, and access fields. |
-| Is Storm Events active in the source-authority register? | **No.** The register is `PROPOSED` and its `entries` list is empty. |
-| Is a Storm Events pipeline implemented? | **Not proven.** The named pipeline spec is a `PROPOSED` placeholder, while the inspected Hazards ingest/normalize/validate modules are one-line greenfield comments. |
+| Are Storm Events registry records present? | **Yes; the dotted record is admitted.** Since 2026-10-12, `data/registry/sources/hazards/noaa.storm_events.yaml` is a schema-valid SourceDescriptor (`kfm://source/noaa-storm-events`), approved and active for the Kansas details-file pilot. The underscored `data/registry/hazards/sources/noaa_storm_events.yaml` remains a `PROPOSED` placeholder with `TBD` fields. |
+| Is Storm Events active in the source-authority register? | **No.** The register is `PROPOSED` and its `entries` list is empty. Admission is recorded in the descriptor, which `pipelines/domains/hazards/storm_events_admission.py` reads; the register is not consulted. |
+| Is a Storm Events pipeline implemented? | **Yes, for the pilot (2026-10-12).** `pipelines/domains/hazards/storm_events_{normalize,validate,package}.py` build, validate and package the Kansas candidate; `pipeline_specs/hazards/noaa_storm_events.yaml` remains a `PROPOSED` inventory placeholder and is not bound to them. |
 | Is a Storm Events watcher implemented? | **Not proven.** The watcher folder documents a proposed boundary; bounded probes found no initializer, `watch.py`, or `main.py`. |
-| Is a released Storm Events slice proven? | **CONFLICTED.** The Hazards release index describes a released Storm Events thin slice, while the corresponding inspected manifest and promotion-decision YAMLs are only `PROPOSED` inventory placeholders. The placeholders do not prove release. |
+| Is a released Storm Events slice proven? | **No.** `tools/release/storm_events_release.py` can prepare packages and write ADR-0047 decisions, but no real package has been released. The Hazards release index's thin-slice description and its `PROPOSED` manifest and promotion-decision placeholders still conflict and prove nothing. |
 | Are Hazards contracts and schemas present? | **Generic Hazards artifacts are present.** A draft domain-observation contract and a compact schema exist, but they do not prove Storm Events parsing, table linkage, source activation, fixtures, or release closure. |
 | Is the topology conflict recorded in the drift register? | **No matching entry was found in the bounded Storm Events probe.** The conflict remains visible in connector READMEs and Hazards documentation. |
 
@@ -321,7 +330,7 @@ The inspected `CODEOWNERS` file provides only the global `@kfm/maintainers` fall
 | [`docs/sources/catalog/noaa/storm-events.md`](../../docs/sources/catalog/noaa/storm-events.md) | Draft product doctrine and anti-collapse guidance; not runtime or current external-source proof. |
 | [`docs/domains/hazards/SOURCE_ROLE_MATRIX.md`](../../docs/domains/hazards/SOURCE_ROLE_MATRIX.md) | Hazards source-role mapping; must be reconciled with descriptor and catalog vocabulary before activation. |
 | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Source activation register; inspected entries are empty. |
-| [`data/registry/sources/hazards/noaa.storm_events.yaml`](../../data/registry/sources/hazards/noaa.storm_events.yaml) | Minimal dotted-name `PROPOSED` inventory placeholder. |
+| [`data/registry/sources/hazards/noaa.storm_events.yaml`](../../data/registry/sources/hazards/noaa.storm_events.yaml) | Admitted SourceDescriptor (2026-10-12) for the Kansas details-file pilot. |
 | [`data/registry/hazards/sources/noaa_storm_events.yaml`](../../data/registry/hazards/sources/noaa_storm_events.yaml) | Underscored greenfield descriptor template with unresolved authority, rights, cadence, and access. |
 | [`pipeline_specs/hazards/noaa_storm_events.yaml`](../../pipeline_specs/hazards/noaa_storm_events.yaml) | `PROPOSED` pipeline-spec inventory placeholder, not an executable spec. |
 | [`pipelines/domains/hazards/`](../../pipelines/domains/hazards/README.md) | Generic Hazards pipeline boundary; inspected core modules are greenfield comments. |
@@ -376,7 +385,7 @@ data/registry/sources/hazards/noaa.storm_events.yaml
 data/registry/hazards/sources/noaa_storm_events.yaml
 ```
 
-The first is a minimal inventory placeholder. The second declares `id: noaa_storm_events` but leaves its authority, rights, cadence, and access posture unresolved. The empty source-authority register activates neither. This README therefore does not select a path or source ID.
+The first is the admitted pilot SourceDescriptor (`kfm://source/noaa-storm-events`, since 2026-10-12). The second declares `id: noaa_storm_events` but leaves its authority, rights, cadence, and access posture unresolved. The source-authority register lists neither. This README does not retire the second record or settle connector placement.
 
 The general drift register did not contain a matching Storm Events entry in the bounded probe. The visible conflict should be recorded or resolved through the appropriate governance workflow before implementation.
 
@@ -503,7 +512,7 @@ Retry only transient, bounded failures. Do not retry authentication or authoriza
 | NOAA family README/package | Family README calls `connectors/noaa/` canonical; package is `0.0.0` with placeholder runtime files. | Source-family placement posture and greenfield scaffold. | Storm Events parser, endpoint, tests, or readiness. |
 | Hazards connector README | Explicitly records hyphen/underscore/possible nested conflict. | Conflict is already visible in adjacent documentation. | A resolved path or active source. |
 | Draft Storm Events product page | Detailed identity, anti-collapse, source-role, geometry, narrative, casualty, damage, and correction proposals. | Candidate product doctrine and verification questions. | Current endpoints, formats, cadence, rights, or implementation. |
-| Dotted registry YAML | Minimal `PROPOSED` inventory placeholder. | One candidate registry path. | Source ID fields, mature descriptor, or activation. |
+| Dotted registry YAML | Admitted SourceDescriptor since 2026-10-12 (was a `PROPOSED` placeholder at this snapshot). | The admitted pilot source identity and rights. | Admission beyond the Kansas details-file scope, or connector placement. |
 | Underscored registry YAML | Greenfield descriptor with `id: noaa_storm_events` and multiple `TBD` fields. | A second candidate source identity and registry path. | Approved authority, rights, cadence, access, or activation. |
 | Source-authority register | `PROPOSED`; `entries: []`. | No repository-level Storm Events activation at snapshot. | Future activation status. |
 | Pipeline spec | Minimal `PROPOSED` inventory placeholder. | A named candidate pipeline-spec path. | Executable steps, schema, schedule, or validation. |
@@ -614,6 +623,10 @@ In all states:
 ---
 
 ## Changelog
+
+### v0.3 — 2026-10-12
+
+- Recorded the pilot capture and the owner's admission of the dotted descriptor (ADR-0047), and updated the status, related-folder and evidence rows it superseded. The rest of the 2026-07-14 snapshot is kept as observed then.
 
 ### v0.2 — 2026-07-14
 

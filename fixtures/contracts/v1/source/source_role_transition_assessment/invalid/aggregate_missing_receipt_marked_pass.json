@@ -1,0 +1,48 @@
+{
+  "object_type": "SourceRoleTransitionAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:source-role:aggregate-no-receipt:v1",
+  "operation": "AGGREGATE",
+  "inputs": [
+    {
+      "source_ref": "kfm:source:mesonet:station-a",
+      "source_role": "OBSERVED",
+      "evidence_bundle_ref": "kfm:evidence-bundle:mesonet:station-a"
+    },
+    {
+      "source_ref": "kfm:source:model:soil-moisture-v1",
+      "source_role": "MODELED",
+      "evidence_bundle_ref": "kfm:evidence-bundle:model:soil-moisture-v1"
+    }
+  ],
+  "output": {
+    "artifact_ref": "kfm:artifact:county-soil-moisture-summary:v1",
+    "source_role": "AGGREGATE",
+    "lineage_roles": [
+      "MODELED",
+      "OBSERVED"
+    ]
+  },
+  "receipts": {
+    "aggregation_receipt_ref": null,
+    "model_run_receipt_ref": null,
+    "representation_receipt_ref": null,
+    "reality_boundary_note_ref": null
+  },
+  "outcome": "PASS",
+  "reason_codes": [],
+  "obligations": [],
+  "validator_error_ref": null,
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "source_activation": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:d561e553594be9ab4f8da1d7dc6ff34456b87f32c672e7ba8d3dc4fe591feaac"
+}

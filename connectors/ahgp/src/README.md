@@ -2,16 +2,17 @@
 doc_id: kfm://doc/connectors-ahgp-src-readme
 title: connectors/ahgp/src/ — AHGP Connector Source Tree
 type: readme; directory-readme; implementation-source-root
-version: v0.1
+version: v0.2
+prior_version: v0.1
 status: draft; repository-grounded; implementation-placeholder; activation-unknown
 owners: OWNER_TBD — Connector steward · Source steward · People/Genealogy steward · Validation steward · Docs steward
 created: 2026-07-16
-updated: 2026-07-16
+updated: 2026-08-29
 policy_label: public; implementation-bearing; source-admission-only; no-network-on-import; raw-or-quarantine
 owning_root: connectors/
 current_path: connectors/ahgp/src/README.md
 base_ref: main
-base_commit: 975291ccc1342f323bb23ce723e7f5e4b1f44ddc
+base_commit: 64e875bd2f98502adca9d73e5bb70ff2983b18cd
 related:
   - ../README.md
   - ../pyproject.toml
@@ -26,9 +27,10 @@ related:
   - ../../../.github/workflows/policy-boundary-guards.yml
 tags: [kfm, connectors, ahgp, python, source-tree, placeholder, import-safe, no-network, raw, quarantine, governance]
 notes:
-  - "Repository snapshot is bounded to main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc."
+  - "Repository snapshot is bounded to main@64e875bd2f98502adca9d73e5bb70ff2983b18cd."
   - "The child package currently contains an empty __init__.py, comment-only admit.py and fetch.py placeholders, a descriptor.yaml placeholder, and a package README."
   - "The pyproject declares kfm-connector-ahgp version 0.0.0 only; build backend, dependencies, package discovery, installation, activation, and runtime behavior are not established."
+  - "The sibling tests directory now documents its empty, unindexed, no-network boundary; no executable AHGP test or fixture is added."
   - "This README documents the source-tree boundary; it does not activate AHGP, implement a fetch, admit a record, or claim validation results."
 [/KFM_META_BLOCK_V2] -->
 
@@ -66,7 +68,7 @@ This README is descriptive. It cannot make the child descriptor authoritative, a
 
 **CONFIRMED path and bounded inventory; implementation, activation, installation, and runtime behavior UNKNOWN or placeholder.**
 
-The following inventory was inspected at `main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc`:
+The following inventory was inspected at `main@64e875bd2f98502adca9d73e5bb70ff2983b18cd`:
 
 | Path | Observed state | Safe conclusion |
 |---|---|---|
@@ -76,7 +78,7 @@ The following inventory was inspected at `main@975291ccc1342f323bb23ce723e7f5e4b
 | [`ahgp/fetch.py`](./ahgp/fetch.py) | One comment identifying a fetcher placeholder. | No endpoint, network client, authentication, cadence, retry, or fetch behavior is implemented. |
 | [`ahgp/descriptor.yaml`](./ahgp/descriptor.yaml) | `name: ahgp`, `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. | The file is incomplete and must not be treated as an admitted SourceDescriptor or activation decision. Unresolved role and rights require fail-closed handling. |
 | [`ahgp/README.md`](./ahgp/README.md) | Draft package-level boundary document. | Documents intended constraints; does not prove executable behavior. |
-| [`../tests/README.md`](../tests/README.md) | Says only `Greenfield stub.` | No AHGP-specific test modules, fixtures, coverage, or results are established by that folder. |
+| [`../tests/README.md`](../tests/README.md) | Repository-grounded routing and safety boundary; no other file is present | No executable AHGP test, fixture, collection index, source-specific workflow binding, coverage, or result is established by that folder. |
 
 Because the executable Python files are empty or comment-only in this snapshot, no connector operation is present to activate, validate, or rely on. Generated, ignored, branch-local, externally deployed, or dynamically supplied behavior was not established by this bounded repository inspection.
 
@@ -153,10 +155,11 @@ A connector output is a source-intake artifact, not proof that the source conten
 The commands below are **review commands**, not claims that this README, the AHGP connector, or CI currently passes them:
 
 ```bash
-git diff --check -- connectors/ahgp/src/README.md
+git diff --check -- connectors/ahgp/src/README.md connectors/ahgp/tests/README.md
 python -m compileall -q connectors/ahgp/src/ahgp
 PYTHONPATH=connectors/ahgp/src python -c "import ahgp; import ahgp.admit; import ahgp.fetch"
-python -m pytest -q tests/policy/test_pipeline_connector_non_publisher.py
+python -m pytest tests/policy/test_pipeline_connector_non_publisher.py \
+  -q --strict-config --strict-markers
 python tools/validators/_common/run_all.py
 ```
 
@@ -165,21 +168,23 @@ Interpret them narrowly:
 - `compileall` checks syntax only; it does not prove package discovery, installation, network safety, or connector behavior.
 - the explicit `PYTHONPATH` import is a local import-safety probe only; the `pyproject.toml` does not establish installation metadata.
 - [`test_pipeline_connector_non_publisher.py`](../../../tests/policy/test_pipeline_connector_non_publisher.py) statically rejects connector/pipeline write contexts near `data/catalog`, `data/published`, or `release/`; it does not prove RAW/QUARANTINE routing or AHGP functionality.
-- [`tools/validators/_common/run_all.py`](../../../tools/validators/_common/run_all.py) runs five registered top-level schema validators; it does not include an AHGP connector validator.
+- [`tools/validators/_common/run_all.py`](../../../tools/validators/_common/run_all.py) runs the registered top-level validator suite; it does not include an AHGP connector validator.
 
 Current workflow posture:
 
 | Workflow | Observed behavior | Limitation |
 |---|---|---|
-| [`connector-gate.yml`](../../../.github/workflows/connector-gate.yml) | Contains `connector-output-gate` and `ingest-receipt-presence` jobs. | Both jobs only echo `TODO`; no enforcement is established. |
+| [`connector-gate.yml`](../../../.github/workflows/connector-gate.yml) | Runs connector-core, SourceAdapter, injected-transport, artifact-handoff, generic non-publisher, and IngestReceipt prerequisite checks. | No live or AHGP-specific connector is imported or run; connector-emitted receipt presence remains held. |
 | [`policy-boundary-guards.yml`](../../../.github/workflows/policy-boundary-guards.yml) | Triggers for `connectors/**` changes and runs `make boundary-guards-ci`. | Generic boundary suite; no AHGP-specific fetch, import, descriptor, or lifecycle test is named. |
-| [`link-check.yml`](../../../.github/workflows/link-check.yml) | Defines a documentation link-check job. | Job only echoes `TODO`; link validation is not established by the workflow. |
 
 Before activation, reviewers should require dedicated no-network fixtures and tests for import safety, explicit configuration, source-role and rights refusal, success/failure/timeout/rate-limit behavior, RAW/QUARANTINE-only routing, receipt construction, and denial of all later lifecycle writes.
 
 ## Review burden
 
-[`CODEOWNERS`](../../../.github/CODEOWNERS) has no connector-specific or AHGP-specific rule in the inspected snapshot. Its repository fallback assigns `*` to `@kfm/maintainers`; that is the only confirmed code-owner coverage for this path.
+[`CODEOWNERS`](../../../.github/CODEOWNERS) routes both `*` and
+`/connectors/` to `@bartytime4life`. This repository routing does not
+establish the source, genealogy, rights, sensitivity, privacy, test, or
+independent-review roles needed for AHGP activation.
 
 Until named ownership is established, changes should also receive human review from the connector/source steward and, when genealogy or living-person material is affected, the People/Genealogy, rights, sensitivity, and privacy reviewers. Those additional roles are governance needs, not confirmed CODEOWNERS enforcement.
 
@@ -189,7 +194,7 @@ Changes that activate a source, add network behavior, change lifecycle destinati
 
 - [`../`](../README.md) — AHGP connector-lane boundary.
 - [`ahgp/`](./ahgp/README.md) — child Python package contract and current placeholder files.
-- [`../tests/`](../tests/README.md) — connector-local test lane, currently a greenfield stub.
+- [`../tests/`](../tests/README.md) — documentation-only test-routing and safety boundary; executable placement remains held.
 - [`../../../docs/sources/catalog/ahgp/`](../../../docs/sources/catalog/ahgp/README.md) — AHGP source-family documentation; documentation is not activation authority.
 - [`../../../data/registry/sources/`](../../../data/registry/sources/README.md) — governed source-registry surface.
 - [`../../../data/raw/`](../../../data/raw/README.md) — allowed admitted-source handoff surface.
@@ -212,6 +217,9 @@ Rollback for this documentation-only addition is removal or revision of `connect
 
 ## Last reviewed
 
-2026-07-16 — repository-grounded documentation review at `main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc`. Re-review by 2027-01-16 or sooner if package metadata, child modules, tests, workflows, SourceDescriptor state, activation state, or lifecycle routing changes.
+2026-08-29 — repository-grounded documentation review at
+`main@64e875bd2f98502adca9d73e5bb70ff2983b18cd`. Re-review when package
+metadata, child modules, tests, workflows, SourceDescriptor state, activation
+state, or lifecycle routing changes.
 
 <p align="right"><a href="#top">Back to top</a></p>

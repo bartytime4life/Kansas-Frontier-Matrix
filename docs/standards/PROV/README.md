@@ -1,484 +1,272 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/standard/duo-profile
-title: GA4GH Data Use Ontology (DUO) — KFM Standards Profile
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + consent/sensitivity lead>
+doc_id: kfm://doc/standards/prov-family-readme
+title: docs/standards/PROV/ — W3C PROV Family Boundary
+type: readme/boundary-readme
+version: v1.0.0
+status: active; repository-grounded; reconciliation-boundary; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS route; accountable provenance stewardship and independent review remain NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-14
 policy_label: public
-related: [
-  docs/standards/PROV.md,
-  docs/standards/SENSITIVITY_RUBRIC.md,
-  docs/standards/REDACTION_DETERMINISM.md,
-  docs/standards/SIGNING.md,
-  docs/policy/living_persons_geoprivacy.md,
-  contracts/v1/consent/,
-  schemas/contracts/v1/consent/,
-  policy/consent/
-]
-tags: [kfm, standard, consent, ga4gh, duo, sensitivity, governance, policy-as-code]
-notes: [
-  "External standards profile — DUO is an OBO Foundry / GA4GH ontology, not a KFM-internal object.",
-  "Companion to docs/standards/SIGNING.md (Passport visa fingerprinting) and SENSITIVITY_RUBRIC.md.",
-  "Filename casing diverges from the hyphenated external-standard convention (DUO.md); see Directory Rules §6.1.a OPEN-DR-04."
-]
+owning_root: docs/
+scope_id: w3c-prov-family
+responsibility: "Route KFM's W3C PROV guidance, disclose overlapping provenance documents and implementation boundaries, and prevent this nested lane from becoming parallel semantic, schema, policy, catalog, receipt, release, or publication authority."
+truth_posture: "CONFIRMED current path, history, duplicate DUO bytes, parent standards inventory, related provenance documents, accepted Directory Rules authority, CODEOWNERS route, selected repository boundaries, and dated W3C PROV references / PROPOSED document-role convergence and future application-profile decisions / UNKNOWN complete producer, consumer, runtime, release, and public-conformance behavior / NEEDS VERIFICATION accountable stewardship, canonical semantic-profile identity, PAV binding, machine profile, validator coverage, migration, and supersession"
+evidence_snapshot: "main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b; target and DUO_PROFILE prior blob a4283dac33ec9f2c182a8be0cb0d23a3e1ba13e0; standards README blob a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b; PROV.md blob e69e4e9ee9a9771d0ad33aecfbb7ce91bd60867f; PROV-O.md blob 919452dbd8abe1ff1079a7235d43b211de6fae54; PROVENANCE.md blob cddd69eeb49ccc65481137e2d65dcafe1abe2ebf"
+related:
+  - docs/standards/README.md
+  - docs/standards/PROV.md
+  - docs/standards/PROV-O.md
+  - docs/standards/PROVENANCE.md
+  - docs/standards/OPENLINEAGE_FACETS.md
+  - docs/standards/EVIDENCE_BUNDLE.md
+  - docs/standards/RUN_RECEIPT.md
+  - docs/standards/SIGNING.md
+  - docs/standards/STAC.md
+  - docs/standards/DCAT.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - data/catalog/prov/README.md
+  - data/prov/README.md
+  - contracts/README.md
+  - schemas/README.md
+  - policy/README.md
+  - release/README.md
+tags: [kfm, standards, provenance, w3c-prov, prov-o, boundary, reconciliation, cite-or-abstain]
+notes:
+  - "Same-path correction: the prior body was byte-identical to docs/standards/DUO_PROFILE.md and described GA4GH DUO rather than W3C PROV."
+  - "The legitimate DUO profile remains at docs/standards/DUO_PROFILE.md."
+  - "This README does not select a canonical winner between PROV.md and PROV-O.md or collapse semantic and supply-chain provenance."
+  - "No contract, schema, policy, validator, fixture, data, receipt, proof, release, runtime, source, deployment, or publication state changes."
 [/KFM_META_BLOCK_V2] -->
 
-# GA4GH Data Use Ontology (DUO) — KFM Standards Profile
+<a id="top"></a>
 
-> Conformance and crosswalk profile for the **Global Alliance for Genomics and Health Data Use Ontology** — the controlled vocabulary KFM adopts to encode data-use conditions on any record involving human-subject data.
+# `docs/standards/PROV/` — W3C PROV Family Boundary
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: standards profile](https://img.shields.io/badge/type-standards--profile-informational)](#)
-[![governance: cite-or-abstain](https://img.shields.io/badge/governance-cite--or--abstain-blueviolet)](#)
-[![external standard: GA4GH DUO](https://img.shields.io/badge/external-GA4GH%20DUO-9cf)](https://www.ga4gh.org/product/data-use-ontology-duo/)
-[![license: profile CC--BY--4.0](https://img.shields.io/badge/license-profile%20CC--BY--4.0-green)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> Route readers through KFM's provenance guidance while keeping W3C semantic provenance, operational lineage, process receipts, supply-chain attestations, catalog projections, evidence, policy, and release authority distinct.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + consent/sensitivity lead_ | 2026-05-24 |
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Authority and standing](#2-authority-and-standing)
-- [3. Scope of KFM adoption](#3-scope-of-kfm-adoption)
-- [4. KFM conformance posture](#4-kfm-conformance-posture)
-- [5. Canonical vocabulary fragment](#5-canonical-vocabulary-fragment)
-- [6. Identity, versioning, mirror](#6-identity-versioning-mirror)
-- [7. Integration with KFM trust membrane](#7-integration-with-kfm-trust-membrane)
-- [8. Consent input crosswalks](#8-consent-input-crosswalks)
-- [9. Failure modes and deny-by-default](#9-failure-modes-and-deny-by-default)
-- [10. Tensions and known limits](#10-tensions-and-known-limits)
-- [11. Open questions](#11-open-questions)
-- [12. Related docs](#12-related-docs)
-- [Appendix A — ConsentSidecar worked example](#appendix-a--consentsidecar-worked-example)
-- [Appendix B — Verification checklist](#appendix-b--verification-checklist)
-
----
-
-## 1. Purpose
-
-DUO — the **Data Use Ontology**, a GA4GH-approved technical standard maintained as an OBO Foundry ontology — provides a machine-readable controlled vocabulary for **data-use conditions**. CONFIRMED in KFM doctrine (Pass-10 C9-04): KFM adopts the GA4GH suite (AAI, Passports, **DUO**, and MRCG) as **the canonical access-control and consent framework for any record that involves human-subject data**, with every consent token carrying DUO codes that the policy-as-code layer reads to gate publication.
-
-This profile defines:
-
-1. **What DUO is** as an external standard, and which release lineage KFM tracks.
-2. **Which KFM records** must carry DUO annotations.
-3. **How DUO codes flow** through KFM's trust membrane — from `SourceDescriptor` to `ConsentSidecar`, into the OPA render gate, and onto the `RunReceipt` and `EvidenceBundle`.
-4. **How non-DUO consent inputs** (free-text releases, oral-history forms, partner-specific scopes) are normalized upward into DUO codes via a documented mapping layer.
+[![Status: repository-grounded](https://img.shields.io/badge/status-repository--grounded-d4a72c?style=flat-square)](#status-and-evidence-boundary)
+[![Authority: navigation only](https://img.shields.io/badge/authority-navigation%20only-0969da?style=flat-square)](#authority-and-negative-authority)
+[![Convergence: held](https://img.shields.io/badge/profile%20convergence-HELD-b42318?style=flat-square)](#open-verification-register)
 
 > [!IMPORTANT]
-> This document is a **conformance profile**, not a fork. KFM does **not** redefine DUO terms or mint KFM-prefixed equivalents. KFM references DUO term IRIs by their canonical PURLs, pins to a dated release, and adds only the integration and crosswalk surface that doctrine requires.
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Authority and standing
-
-| Aspect | Value | Label |
-|---|---|---|
-| Standard name | Data Use Ontology (DUO) | EXTERNAL |
-| Maintaining body | GA4GH Data Use and Researcher Identities (DURI) Work Stream | EXTERNAL |
-| Standards status | GA4GH-approved technical standard | EXTERNAL |
-| Ontology family | OBO Foundry (BFO upper-level, OWL) | EXTERNAL |
-| Canonical PURL | `http://purl.obolibrary.org/obo/duo.owl` | EXTERNAL |
-| Dated release PURL pattern | `http://purl.obolibrary.org/obo/duo/releases/YYYY-MM-DD/duo.owl` | EXTERNAL |
-| Source repository | `https://github.com/EBISPOT/DUO` | EXTERNAL |
-| License (ontology) | CC BY 4.0 International | EXTERNAL |
-| Companion standard | GA4GH Passport / AAI (data-access authorization) | EXTERNAL |
-| KFM doctrine anchor | Pass-10 C9-04 (GA4GH AAI, Passports, DUO, MRCG) | CONFIRMED |
-| KFM filename divergence | Path uses `_PROFILE` suffix vs. hyphenated external-standard convention (`DUO.md`) — see Directory Rules §6.1.a and OPEN-DR-04 | NEEDS VERIFICATION (ADR) |
-
-DUO sits at the same authority tier in KFM as ISO 19115, OAI-PMH, OGC API — Tiles, and PMTiles: it is an external conformance reference, not a KFM-canonical object family. `EvidenceBundle`, `ConsentSidecar`, and policy decisions remain governed under `contracts/`, `schemas/`, and `policy/` respectively; DUO supplies the **vocabulary** they reference, not the structures that hold the references.
-
-> [!NOTE]
-> Pass-10 C9-04 lists *"Author the DUO compatibility profile and align it with the policy bundle version pin"* as suggested future work. This file is the first instance of that profile; binding it to a specific policy-bundle version is **PROPOSED** and tracked in §6 and §11.
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Scope of KFM adoption
-
-### 3.1 When DUO codes are required
-
-DUO codes are **required** on every KFM artifact where consent governs admissibility. INFERRED from C9-04, C6-07, and the People/DNA/Land domain object families.
-
-| Source family | DUO codes required? | Rationale |
-|---|---|---|
-| FamilySearch API responses (C9-02) | **REQUIRED** | OAuth2 scope maps directly to DUO codes; CONFIRMED dependency in C9-02. |
-| DTC raw genomic exports — 23andMe, AncestryDNA, MyHeritage (C9-03) | **REQUIRED** | High-sensitivity human-subject data; consent posture is the gating concern. |
-| GEDCOM / GEDCOM-X uploads referencing living people (C9-01) | **REQUIRED** | Living-person assertions trigger consent-bound restrictions. |
-| Oral histories with named living subjects | **REQUIRED** (via crosswalk; §8) | Free-text consent is normalized into DUO. |
-| Vital / cemetery / obituary / probate records covering deceased individuals only | _Conditional_ | Decedent-only records may not need DUO if no living-person derivative exists; sensitivity rubric still applies. |
-| Biodiversity occurrences with no human-subject component | **NOT REQUIRED** | DUO is human-subject-specific; sensitivity governs through other profiles. |
-| Archaeological site coordinates | **NOT REQUIRED for DUO** | Cultural-sensitivity controls (CARE / steward review) govern; DUO is out of scope. |
-
-### 3.2 What DUO does **not** govern in KFM
-
-> [!CAUTION]
-> DUO codes are not a substitute for any other gate. The render-time policy fails closed unless **all** of the following are satisfied — DUO alone cannot allow publication.
-
-- **Sensitivity rubric** (`SENSITIVITY_RUBRIC.md`, C6-01) — independent rank that must be satisfied irrespective of DUO permission.
-- **Living-person geoprivacy** (k-anonymity, C6-06) — applies independent of DUO codes.
-- **Embargo and revocation** (C6-08) — temporal gates that override permission.
-- **Rights and license** (separate from consent) — a DUO `general-research-use` permission does not grant a redistribution license.
-- **Cultural and sovereignty review** (CARE) — DUO does not encode CARE principles; archaeology, sacred-site, and Indigenous-data records go through separate steward review even when no DUO code applies.
-
-[Back to top](#quick-jump)
-
----
-
-## 4. KFM conformance posture
-
-PROPOSED — implementation NEEDS VERIFICATION against mounted-repo evidence (no mounted repo this session). Conformance level is stated against external usage profiles, not against repo state.
-
-| Conformance level | Description | KFM target |
-|---|---|---|
-| **Consume** | Resolve DUO term IRIs, treat them as opaque controlled-vocabulary codes, never republish DUO content. | **REQUIRED** for every consent-bearing record. |
-| **Mirror** | Maintain a versioned, integrity-checked local copy of the DUO OWL release for offline / CI use. | **REQUIRED** (per C9-04 dependencies: *"a DUO vocabulary mirror"*). |
-| **Crosswalk** | Map non-DUO consent inputs (free-text, partner-specific) to DUO codes with documented rules. | **REQUIRED** for non-GA4GH-aware upstreams (C9-04 expansion direction). |
-| **Contribute** | Propose new terms upstream to `EBISPOT/DUO`. | **NOT in scope.** KFM is a consumer; upstream contribution is allowed but not part of the trust path. |
-| **Override** | Change DUO term meanings locally. | **PROHIBITED.** DUO term semantics are external; any divergence would silently break interoperability. |
-
-DUO term IRIs **MUST** be carried verbatim (e.g., `http://purl.obolibrary.org/obo/DUO_0000004` for *"no restriction"*). KFM **MUST NOT** rewrite, alias, or shorten them in ways that lose round-trip identity to the canonical PURL.
-
-[Back to top](#quick-jump)
-
----
-
-## 5. Canonical vocabulary fragment
-
-DUO terms split into two top-level categories: **data use permissions** (what a dataset may be used for) and **data use modifiers** (additional conditions that constrain those permissions). The table below illustrates the slice KFM most frequently encounters; it is **illustrative**, not exhaustive, and the dated DUO release pinned in §6 is authoritative.
-
-> [!NOTE]
-> The DUO IRIs and labels below are paraphrased from the canonical ontology and are **EXTERNAL** facts. The KFM-side notes are **PROPOSED** integration guidance. If a label below conflicts with the pinned dated release, the pinned release wins; this table is not a fork.
-
-### 5.1 Selected data use permissions (illustrative)
-
-| DUO IRI (CURIE) | Label (paraphrased) | Typical KFM trigger | KFM note |
-|---|---|---|---|
-| `DUO:0000004` | No restriction | Public-domain records with explicit broad consent. | Necessary but not sufficient — sensitivity and rights gates still apply. |
-| `DUO:0000042` | General research use | Most academic genealogy / genomic research workflows. | Default for FamilySearch responses where the user grants broad-scope OAuth. |
-| `DUO:0000006` | Health, medical, biomedical research only | Research-scope DTC data uses. | Gates non-health derivative pipelines. |
-| `DUO:0000007` | Disease-specific research | Disease-focused cohorts within DTC ingestions. | Requires Mondo Disease Ontology mapping; see §11 item 6. |
-| `DUO:0000011` | Population / ancestry-only research | Ancestry analytics where individual-level inference is restricted. | Pairs with k-anonymity and DP aggregates. |
-
-### 5.2 Selected data use modifiers (illustrative)
-
-| DUO IRI (CURIE) | Label (paraphrased) | Typical KFM trigger | KFM note |
-|---|---|---|---|
-| `DUO:0000015` | No general methods research | Constrains downstream method-development pipelines. | OPA must check modifier alongside permission. |
-| `DUO:0000019` | Publication required | Standard for many research grants. | Required-disclosure obligation flows into the release manifest. |
-| `DUO:0000020` | Collaboration required | Some institutional consents require named PI collaboration. | Surfaces as an obligation in the `ConsentDecision`. |
-| `DUO:0000028` | Institution-specific restrictions | Where an upstream restricts use to named institutions. | OPA gate checks actor institution against allow-list. |
-| `DUO:0000045` | Not-for-profit, non-commercial use only | Common in academic upstreams. | OPA gate checks audience class. |
-| `DUO:0000046` | Geographic / ethnic restriction | Where consent is region- or population-scoped. | Triggers geoprivacy posture re-check. |
-
-> [!CAUTION]
-> The label paraphrases above are intentionally generic to avoid copying DUO text verbatim. **Implementations MUST resolve the IRI against the pinned dated release**, not against this table. Numeric IDs are stable per OBO Foundry deprecation policy ("IDs are never deleted"); labels and definitions may be revised across releases.
-
-[Back to top](#quick-jump)
-
----
-
-## 6. Identity, versioning, mirror
-
-### 6.1 Version pinning
-
-DUO is versioned by date (OBO Foundry principle 4). PROPOSED KFM conformance:
-
-- A specific **dated DUO release** (e.g., `http://purl.obolibrary.org/obo/duo/releases/YYYY-MM-DD/duo.owl`) is pinned per **policy-bundle version**.
-- The policy bundle's `spec_hash` covers the DUO mirror's content digest; promoting a new DUO release is therefore a governed state transition, not a silent dependency bump.
-- Every `RunReceipt` for a consent-bearing record **MUST** record the DUO version IRI in use at fetch time.
-- Every `EvidenceBundle` carrying DUO codes **MUST** reference the dated DUO PURL, not the bare ontology PURL.
-
-### 6.2 Mirror posture
-
-A KFM-local DUO mirror (PROPOSED home: `data/registry/vocabularies/duo/`; NEEDS VERIFICATION) holds:
-
-1. The dated `duo.owl` file, content-addressed by digest.
-2. A `MANIFEST.json` recording: dated PURL, content hash (JCS-canonicalized SHA-256 over a normalized term table), retrieval time, retrieval `RunReceipt`, mirror's own `spec_hash`.
-3. A `CHANGELOG.md` recording prior versions and the policy-bundle version they were pinned against.
-4. A `tombstones/` subdirectory recording deprecated terms KFM still resolves for historical records.
-
-> [!IMPORTANT]
-> OBO Foundry's deprecation policy is *"once created, IDs are never deleted."* KFM mirrors this posture: a DUO term that is deprecated upstream remains resolvable in KFM's mirror, with the deprecation note carried in the `tombstones/` subdirectory and surfaced in any `RunReceipt` that resolves it.
-
-### 6.3 Term-IRI integrity rule
-
-Every consent record that references a DUO term **MUST**:
-
-1. Resolve to the dated PURL of the pinned release (not the bare PURL).
-2. Round-trip identity-stable: a record canonicalized via JCS today and tomorrow must produce the same `spec_hash`, even if a newer DUO release is available, **so long as the pinned policy bundle has not advanced**.
-3. Fail closed if the mirror cannot satisfy the resolution.
-
-[Back to top](#quick-jump)
-
----
-
-## 7. Integration with KFM trust membrane
-
-### 7.1 Flow
-
-```mermaid
-flowchart LR
-  subgraph Source["Upstream"]
-    A1[FamilySearch OAuth grant]
-    A2[DTC raw export + user consent form]
-    A3[Free-text release - oral history]
-  end
-
-  subgraph Quarantine["RAW → WORK / QUARANTINE"]
-    B1[SourceDescriptor + ConsentInput]
-    B2[Crosswalk to DUO codes]
-  end
-
-  subgraph Processed["PROCESSED"]
-    C1[ConsentSidecar - DUO permissions + modifiers]
-    C2[Mirror lookup - dated DUO PURL]
-    C3[RunReceipt records Passport fingerprint + DUO version]
-  end
-
-  subgraph Catalog["CATALOG / TRIPLET"]
-    D1[EvidenceBundle binds ConsentSidecar + spec_hash]
-  end
-
-  subgraph Published["PUBLISHED"]
-    E1[OPA policy.consent.render]
-    E2{ConsentDecision: ALLOW / DENY / ABSTAIN / ERROR}
-    E3[Render-time gate]
-  end
-
-  A1 --> B1
-  A2 --> B1
-  A3 --> B1
-  B1 --> B2 --> C1
-  C2 --> C1
-  C1 --> C3 --> D1 --> E1 --> E2 --> E3
-
-  style E1 fill:#fff4cc,stroke:#b58900
-  style E2 fill:#fff4cc,stroke:#b58900
-```
-
-PROPOSED — diagram reflects doctrine in C6-07, C6-08, C9-02, C9-04, and KFM-P5-PROG-0007 (`ConsentDecision` render gate). Object names align with attached doctrine; route-level implementation NEEDS VERIFICATION.
-
-### 7.2 Object touchpoints
-
-| KFM object | DUO involvement | Reference |
-|---|---|---|
-| `SourceDescriptor` | Records the upstream's stated consent posture and any DUO-aware native fields (e.g., FamilySearch OAuth scopes). | C9-02 |
-| `ConsentInput` (PROPOSED) | The raw consent capture before crosswalk. | C9-04 expansion direction |
-| `ConsentSidecar` | Carries the **normalized DUO codes**, the obligations they imply, the dated DUO PURL, the revocation endpoint, and the consent-history hash. | C6-07, KFM-P5-PROG-0007 |
-| `EvidenceBundle` | Holds `ConsentSidecar` by reference and includes the DUO mirror's content hash in its inputs section. | C6-07, C8-04, KFM-P26-PROG-0004 |
-| `EvidenceRef` | Resolves to the bundle and to the DUO version pin; mismatches force abstention. | C6-07, KFM-P26-IDEA-0002 |
-| `RunReceipt` | Records the GA4GH Passport fingerprint used at fetch time and the DUO version pin. | C9-02, C9-04 |
-| `policy.consent.render` (OPA package) | Reads DUO codes alongside Passport visa, embargo, k-anonymity, scope, and audience to emit a `ConsentDecision`. | KFM-P5-PROG-0007 |
-| `tombstone` | When consent is revoked or a record is withdrawn, a signed tombstone is issued and caches are invalidated. | C5-09, C6-08 |
-
-### 7.3 The five-check render rule
-
-PROPOSED. A render-time `ConsentDecision = ALLOW` requires **all** of:
-
-1. The Passport visa is valid (DSSE envelope check passes).
-2. The consent token is not revoked (Bitstring Status List or RFC 7662 introspection succeeds).
-3. The **DUO codes carried on the `ConsentSidecar` permit the requested scope** under the pinned policy bundle.
-4. `now < retention.expires_at` (no embargo or retention violation).
-5. Any sensitivity-rubric profile attached to the record is satisfied (k-anonymity, redaction profile, DP aggregation).
-
-Any failure → **DENY**. Any unresolved input → **ABSTAIN**. Any system error in the resolver → **ERROR** (which is itself fail-closed). The decision is recorded in the audit ledger and surfaces in the Evidence Drawer.
-
-[Back to top](#quick-jump)
-
----
-
-## 8. Consent input crosswalks
-
-> [!IMPORTANT]
-> C9-04 explicitly directs KFM to *"build a normalization layer that translates non-GA4GH consent (e.g., a free-text consent in an oral-history release) into DUO codes via a documented mapping."* This section is the spec for that layer; the implementation lives outside this document.
-
-### 8.1 Crosswalk inputs
-
-PROPOSED crosswalk surface — implementation NEEDS VERIFICATION.
-
-| Input class | Source artifact | Target DUO terms | Notes |
-|---|---|---|---|
-| FamilySearch OAuth scopes | OAuth `scope` claim | Per-scope DUO mapping (PROPOSED home: `policy/consent/mappings/familysearch.yaml`) | C9-02 names this dependency directly. |
-| DTC vendor consent forms | Vendor-specific consent capture | Per-vendor mapping per release of vendor T&Cs | C9-03 warns vendor T&Cs change without long deprecation; mapping is versioned per vendor release date. |
-| Free-text oral-history release | Curator-reviewed release form | Curator-applied DUO codes + obligations | Requires steward review (separation of duties, §9.2). |
-| Partner-DAC consent letter | Free-text legal letter | Curator-applied DUO codes; conservative defaults if ambiguous | Default is the most-restrictive interpretation when curator is uncertain (cite-or-abstain). |
-| Implicit / inferred consent | _Not accepted._ | _None._ | KFM does not accept consent inferred from data context alone (C9-04 doctrine). |
-
-### 8.2 Crosswalk integrity rules
-
-1. Every crosswalk row is itself a **claim candidate** — it carries an `EvidenceBundle` recording the source consent text, the curator, the review decision, and the resulting DUO code set.
-2. Crosswalks are **versioned**; a mapping change is a breaking change for records produced under the old mapping. The old mapping is preserved under `policy/consent/mappings/_archive/` (PROPOSED).
-3. When the upstream's consent semantics are ambiguous, the curator **MUST default to the more restrictive DUO interpretation**, document the ambiguity in the bundle, and surface it in steward review.
-
-### 8.3 Reverse crosswalk
-
-KFM does not generate human-language consent text from DUO codes. The flow is one-way: input → DUO codes. Any human-language description of a record's permissions is sourced from a curator note in the `ConsentSidecar`, not synthesized from the codes.
-
-[Back to top](#quick-jump)
-
----
-
-## 9. Failure modes and deny-by-default
-
-### 9.1 Default-deny enumeration
-
-PROPOSED. The OPA package fails closed for each of the following:
-
-| Trigger | Decision |
-|---|---|
-| DUO codes missing on a record that requires them (§3.1) | **DENY** |
-| DUO code resolves to an unknown IRI not in the pinned release | **DENY** (and log a drift candidate) |
-| Mirror lookup fails (transient or otherwise) | **ERROR** (fail-closed) |
-| Crosswalk has not been applied to a non-GA4GH input | **DENY** until curator review |
-| Policy bundle and DUO mirror version are unaligned | **DENY** (bundle promotion required) |
-| DUO permission allows but a modifier denies | **DENY** (modifiers are restrictive in combination) |
-| Revocation has been issued since promotion | **DENY** and trigger tombstone propagation (C6-08) |
-
-### 9.2 Separation of duties
-
-For consent-bearing records, the curator who applies the crosswalk **SHOULD NOT** be the same actor who approves the `PromotionDecision` that publishes the derivative. Where the team is too small to fully separate the roles, the second-actor approval is a documented compensating control recorded in the release manifest.
+> This is a **human-readable family boundary**, not the canonical KFM W3C PROV application profile. A document, valid graph, receipt, signature, passing check, pull request, or merge does not establish evidence closure, policy permission, review, release, or KFM publication.
 
 > [!WARNING]
-> A single actor who can **both** mint DUO codes from free text **and** promote a record to PUBLISHED is a trust-membrane bypass. The doctrine in C9-04 explicitly treats consent as policy that the gates enforce, not as text that the same actor curates and approves.
+> Provenance can expose people, private systems, restricted sources, internal paths, exact locations, embargo state, timestamps, dependency relationships, signed URLs, or security-sensitive build details. Public-bound provenance must be minimum-necessary, policy-safe, reviewed, and release-approved.
 
-[Back to top](#quick-jump)
+**Quick navigation:** [Purpose](#purpose-and-inherited-parent) · [Authority](#authority-and-negative-authority) · [Status](#status-and-evidence-boundary) · [Upstream](#w3c-prov-upstream) · [Map](#repository-provenance-map) · [Belongs](#what-belongs-here) · [Prohibited](#what-does-not-belong-here) · [Inputs/outputs](#inputs-and-outputs) · [Exposure](#exposure-mutation-and-retention) · [Validation](#validation-and-review) · [Convergence](#convergence-protocol) · [Open items](#open-verification-register) · [Rollback](#correction-rollback-and-history)
 
----
+## Purpose and inherited parent
 
-## 10. Tensions and known limits
+This lane inherits the [`docs/standards/` boundary](../README.md) and accepted Directory Rules authority through [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md).
 
-| Tension | Source | KFM posture |
+Its responsibility is to:
+
+- explain the W3C PROV family at a dated evidence point;
+- route readers to existing KFM provenance surfaces;
+- preserve the unresolved overlap between semantic-provenance documents;
+- distinguish semantic claim provenance from operational and supply-chain provenance; and
+- prevent a nested documentation lane from becoming parallel contract, schema, policy, catalog, receipt, release, or public-serving authority.
+
+Directory Rules assign an object-family boundary the `BOUNDARY_COMPACT` README profile. This same-path correction creates no root, path migration, profile adoption, or authority transition.
+
+## Authority and negative authority
+
+| Question | Owning authority | This README may do |
 |---|---|---|
-| Not every Kansas-first authority is GA4GH-aware. | C9-04 | The crosswalk in §8 absorbs the asymmetry; DUO is the internal normalization target regardless of upstream awareness. |
-| DUO version updates can change the interpretation of long-running consent grants. | C9-04 open question | Records pinned to an older DUO release stay pinned; promotion to a newer DUO release is a governed transition, not a silent upgrade. See §6.1. |
-| Curator judgement is required for free-text consent normalization. | §8.1 | Crosswalks are claim candidates with `EvidenceBundle`s; ambiguity defaults to the more restrictive code. |
-| DUO does not encode CARE / Indigenous data sovereignty. | DUO scope | CARE is governed by separate steward review (`docs/policy/cultural_sovereignty.md`, PROPOSED). DUO codes do not substitute. |
-| Mondo Disease Ontology mappings carry their own version drift. | DUO ↔ Mondo coupling | The Mondo version is also pinned per policy bundle; a separate `MONDO.md` profile is **PROPOSED but not yet authored**. |
-| DUO is human-subject-focused; KFM also handles archaeology, rare-species, infrastructure. | DUO scope | DUO applies only where consent governs; other sensitivity controls govern elsewhere. See §3.2. |
+| Where standards guidance belongs | Directory Rules and [`docs/standards/`](../README.md) | Explain placement and drift |
+| What W3C PROV means | Authoritative W3C specifications | Link and summarize; never redefine |
+| What KFM provenance objects mean | [`contracts/`](../../../contracts/README.md) | Route to semantic authority |
+| What machine shape is valid | [`schemas/`](../../../schemas/README.md) | Route to schemas; never substitute prose |
+| What is allowed, withheld, or public | [`policy/`](../../../policy/README.md) and authorized review | Explain posture; never decide |
+| Where catalog-stage PROV records belong | [`data/catalog/prov/`](../../../data/catalog/prov/README.md) | Route; never store payloads here |
+| What process or build occurred | [`RUN_RECEIPT.md`](../RUN_RECEIPT.md), [`SIGNING.md`](../SIGNING.md), receipts and attestations | Distinguish process evidence from claim provenance |
+| Whether STAC/DCAT/PROV agree | Current contracts, schemas, validators, evidence, and accepted decisions | Report bounded status; [`ADR-0022`](../../adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) remains proposed |
+| Whether an artifact may release | [`release/`](../../../release/README.md), evidence, policy, review, correction, and rollback | Explain prerequisites; never approve |
+| Whether KFM conforms | Exact producers, consumers, profiles, fixtures, validators, interoperability evidence, and reviewed release scope | Cite the verified boundary or abstain |
 
-[Back to top](#quick-jump)
+A provenance edge explains lineage; it does not prove the underlying claim. `prov:wasGeneratedBy`, a `RunReceipt`, and a signature answer different questions and do not replace `EvidenceRef → EvidenceBundle`, source role, rights, sensitivity, policy, review, release, correction, or rollback.
 
----
+## Status and evidence boundary
 
-## 11. Open questions
+The following is pinned to `main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b`.
 
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR or repo evidence.
+| Surface | CONFIRMED observation | Bounded conclusion |
+|---|---|---|
+| This path | Created empty on 2026-05-24, updated on 2026-05-25 | The directory exists, but history alone does not establish its intended role |
+| Prior body | Blob `a4283dac33ec9f2c182a8be0cb0d23a3e1ba13e0` is byte-identical to [`DUO_PROFILE.md`](../DUO_PROFILE.md) and declares GA4GH DUO identity and scope | Path/content mismatch; legitimate DUO content remains at its proper tracked path |
+| Parent index | [`docs/standards/README.md`](../README.md) records four provenance surfaces and the PROV/DUO byte collision | Reconciliation is known work, not silently resolved here |
+| Semantic guidance | [`PROV.md`](../PROV.md) and [`PROV-O.md`](../PROV-O.md) overlap materially | Canonical semantic-profile identity is **CONFLICTED / NEEDS VERIFICATION** |
+| Supply-chain guidance | [`PROVENANCE.md`](../PROVENANCE.md) covers SLSA, in-toto, DSSE, cosign/Sigstore, and SPDX | Complementary build provenance; not a synonym for semantic PROV |
+| Catalog and compatibility | [`data/catalog/prov/`](../../../data/catalog/prov/README.md) is the documented catalog-stage lane; [`data/prov/`](../../../data/prov/README.md) identifies itself as compatibility/routing | Neither path proves released PROV conformance |
+| Review route | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes default review to `@bartytime4life` | Routing is not stewardship, independent review, policy, or release approval |
+| Machine realization | No canonical profile, context, validator suite, producer/consumer matrix, or released PROV catalog was established by this documentation review | Implementation and interoperability remain **UNKNOWN** |
 
-1. **Which dated DUO release will KFM v1 pin?** Pending decision; releases are tracked at `https://github.com/EBISPOT/DUO/releases/`. Decision is a §2.4-class question (policy-bundle dependency) per Directory Rules.
-2. **How are DUO version updates handled in long-running consent grants?** Pass-10 C9-04 open question, not yet resolved. PROPOSED posture: records stay pinned to the DUO release in effect at consent capture; re-grant is required for upgrade.
-3. **Filename casing — `DUO.md` vs `DUO_PROFILE.md`.** Directory Rules §6.1.a OPEN-DR-04. The current file uses the `_PROFILE` suffix on the assumption that this document is a KFM-coined topical wrapper around the external standard; strict reading of the external-standard naming rule would prefer `DUO.md`. Resolution by `docs/standards/README.md` or one-line ADR.
-4. **OPA package home for DUO checks.** PROPOSED: `policy/consent/duo.rego`. NEEDS VERIFICATION against mounted-repo structure.
-5. **Mirror placement.** PROPOSED: `data/registry/vocabularies/duo/`. Alternative under consideration: `policy/consent/vocabularies/duo/` (closer to the policy bundle). Decision pending Directory Rules consultation.
-6. **Mondo Disease Ontology profile.** Disease-specific DUO terms (`DUO:0000007`) require a Mondo crosswalk. A separate `MONDO.md` standards profile is PROPOSED.
-7. **GA4GH Passport visa fingerprinting.** Recorded in `RunReceipt` per C9-02 / C9-04. The signing surface is governed by `SIGNING.md` (PROPOSED in Pass-10 C1-03, not yet authored). DUO usage assumes Passport verification is in place; if it is not, the gate fails closed.
-8. **Cache TTL and revocation latency.** Pass-10 C6-07 open question; affects DUO-aware gates but is a consent-token property, not a DUO property.
-9. **Whether the Bitstring Status List or RFC 7662 introspection (or both) is canonical.** KFM-P5-PROG-0007 references both; ADR likely needed.
-
-[Back to top](#quick-jump)
-
----
-
-## 12. Related docs
-
-PROPOSED links — verify all paths against mounted repo before publishing.
-
-- [`docs/standards/PROV.md`](./PROV.md) — provenance profile (W3C PROV-O / PAV).
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) — _PROPOSED, not yet authored._ Sensitivity rank that pairs with DUO permission.
-- [`docs/standards/REDACTION_DETERMINISM.md`](./REDACTION_DETERMINISM.md) — _PROPOSED, not yet authored._ Seeded jitter for living-people overlays.
-- [`docs/standards/SIGNING.md`](./SIGNING.md) — _PROPOSED, not yet authored._ Cosign / Rekor / DSSE; covers Passport visa verification.
-- [`docs/standards/OAI-PMH.md`](./OAI-PMH.md) — harvest protocol profile.
-- [`docs/standards/PMTILES.md`](./PMTILES.md) — published-tile profile.
-- [`docs/policy/living_persons_geoprivacy.md`](../policy/living_persons_geoprivacy.md) — _PROPOSED placement._ k-anonymity rule, OPA fixtures.
-- `policy/consent/render.rego` — _PROPOSED implementation home._ OPA render-time gate.
-- `policy/consent/mappings/familysearch.yaml` — _PROPOSED implementation home._ Crosswalk inputs.
-- `data/registry/vocabularies/duo/` — _PROPOSED mirror home._
-- `contracts/v1/consent/consent_sidecar.md` — _PROPOSED contract home._ Object meaning.
-- `schemas/contracts/v1/consent/consent_sidecar.schema.json` — _PROPOSED schema home._ Field shape.
-
-[Back to top](#quick-jump)
-
----
-
-<details>
-<summary><strong>Appendix A — ConsentSidecar worked example</strong></summary>
-
-A worked example for a hypothetical FamilySearch response promoted from RAW through to PUBLISHED. **All fields are illustrative**; do not copy as a contract.
-
-```json
-{
-  "consent_sidecar": {
-    "ref_id": "kfm://consent/<HEX>",
-    "duo_version_iri": "http://purl.obolibrary.org/obo/duo/releases/<YYYY-MM-DD>/duo.owl",
-    "duo_mirror_digest": "blake3:<HEX>",
-    "permissions": [
-      "http://purl.obolibrary.org/obo/DUO_0000042"
-    ],
-    "modifiers": [
-      "http://purl.obolibrary.org/obo/DUO_0000045"
-    ],
-    "obligations": {
-      "publication_required": false,
-      "named_collaborator_required": false,
-      "audience_class_allowlist": ["academic"]
-    },
-    "passport_fingerprint": "jwk-thumbprint:<base64url>",
-    "revocation_endpoint": "https://<TBD>/.well-known/consent-revocation",
-    "consent_history_hash": "sha256:<HEX>",
-    "issued_at": "<ISO-8601>",
-    "expires_at": "<ISO-8601>",
-    "crosswalk_evidence_bundle": "kfm://bundle/<HEX>"
-  }
-}
+```text
+docs/standards/PROV/
+└── README.md    # this boundary and reconciliation guide
 ```
 
-Notes:
+## W3C PROV upstream
 
-- `duo_version_iri` is the **dated** PURL, never the bare PURL.
-- `duo_mirror_digest` covers the local mirror's normalized term-table digest; this is what gives the policy-bundle `spec_hash` a stable hand on the DUO surface.
-- `passport_fingerprint` is a JWK thumbprint, **not** the raw Passport (the raw Passport is treated as a credential, not as evidence).
-- `crosswalk_evidence_bundle` is **required** when the consent originated outside the GA4GH ecosystem and was normalized by a curator.
+Checked against official W3C material on 2026-08-14:
 
-</details>
+- namespace: `http://www.w3.org/ns/prov#`; suggested prefix: `prov`;
+- PROV-DM: data model;
+- PROV-O: OWL2 ontology;
+- PROV-N: compact notation;
+- PROV-CONSTRAINTS: constraints, inferences, and validity considerations; and
+- PROV errata: correction/currentness surface.
 
-<details>
-<summary><strong>Appendix B — Verification checklist</strong></summary>
+These upstream facts do not prove KFM adoption, profile completeness, JSON-LD behavior, validator coverage, or interoperability.
 
-For each consent-bearing record under review, a reviewer SHOULD be able to confirm:
+## Repository provenance map
 
-- [ ] DUO codes are present on records identified by §3.1.
-- [ ] All DUO IRIs resolve against the mirror at the pinned version.
-- [ ] The `ConsentSidecar` carries permissions, modifiers, dated DUO PURL, and consent-history hash.
-- [ ] The `RunReceipt` records the Passport fingerprint used at fetch time.
-- [ ] The `EvidenceBundle` references the `ConsentSidecar` and the DUO mirror digest.
-- [ ] Crosswalk rows (§8) carry their own `EvidenceBundle` with the source consent capture.
-- [ ] OPA `policy.consent.render` returns `ALLOW` only when the five checks of §7.3 all pass.
-- [ ] Tombstones are issued on revocation, and downstream caches are invalidated (C6-08).
-- [ ] Separation of duties between curator and promoter is documented in the release manifest.
+| Surface | Role | Boundary |
+|---|---|---|
+| [`PROV/README.md`](./README.md) | Family boundary | Navigation only |
+| [`PROV.md`](../PROV.md) | Broad PROV-O/PAV guidance | Draft; overlaps `PROV-O.md` |
+| [`PROV-O.md`](../PROV-O.md) | Detailed PROV-O profile guidance | Draft; overlaps `PROV.md` |
+| [`PROVENANCE.md`](../PROVENANCE.md) | Supply-chain/build provenance | Separate concern |
+| [`OPENLINEAGE_FACETS.md`](../OPENLINEAGE_FACETS.md) | Operational-lineage guidance | Job/event lineage is not automatically claim provenance |
+| [`RUN_RECEIPT.md`](../RUN_RECEIPT.md) | Process-receipt profile | Process memory, not claim truth |
+| [`EVIDENCE_BUNDLE.md`](../EVIDENCE_BUNDLE.md) | Evidence-bundle profile | Evidence and provenance are linked but distinct |
+| [`SIGNING.md`](../SIGNING.md) | Signature/verification guidance | Integrity/authenticity, not semantic truth |
+| [`STAC.md`](../STAC.md), [`DCAT.md`](../DCAT.md) | Catalog interoperability | Agreement requires governed closure |
+| [`data/catalog/prov/`](../../../data/catalog/prov/README.md) | Catalog-stage projections | Candidate carrier; release-gated |
+| [`data/prov/`](../../../data/prov/README.md) | Compatibility/routing | No new trust-bearing writes |
 
-</details>
+### Responsibility split
 
----
+| Concern | Question answered | Carrier |
+|---|---|---|
+| Source provenance | Where did source material originate, under what role, rights, time, and retrieval state? | SourceDescriptor, intake/retrieval receipt, evidence references |
+| Semantic provenance | Which entity/activity/agent relations explain a claim or derived entity? | W3C PROV profile and EvidenceBundle/catalog projection |
+| Authoring/versioning | Who authored or curated which version? | Reviewed PAV or equivalent mapping |
+| Operational lineage | Which job or event consumed and emitted operational resources? | OpenLineage/runtime events and receipts |
+| Process receipt | What ran, with which inputs, tools, hashes, outcomes, and failures? | RunReceipt and specialized receipts |
+| Supply-chain provenance | Who built an artifact, from which materials, under which attestation? | SLSA/in-toto/DSSE/cosign-style attestations |
+| Catalog provenance | Which lineage projection supports discovery and catalog closure? | `data/catalog/prov/` after governed profile and validation |
+| Release/correction lineage | Which release, correction, withdrawal, or rollback governs use? | Release and correction object families |
+| UI/AI explanation | What trace can a user inspect for this released claim? | Governed API resolving evidence and release metadata |
 
-### Footer
+## What belongs here
 
-> **Standard kind:** External standards profile · **Trust class:** External reference, KFM-pinned · **Lifecycle:** Authored draft; not yet bound to a policy-bundle version.
+- This direct-child inventory and boundary.
+- A reviewed family-level source ledger or no-loss comparison.
+- Bounded migration, redirect, tombstone, or deprecation guidance after authority exists.
+- Family-level verification and correction notes that remain documentation only.
 
-| | |
+A future child requires a distinct responsibility, not merely a related filename.
+
+## What does not belong here
+
+| Prohibited content | Owning surface |
 |---|---|
-| **Related** | [PROV.md](./PROV.md) · [OAI-PMH.md](./OAI-PMH.md) · [OGC-API-TILES.md](./OGC-API-TILES.md) · [PMTILES.md](./PMTILES.md) · _SIGNING.md (PROPOSED)_ · _SENSITIVITY_RUBRIC.md (PROPOSED)_ |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
+| A third independently editable PROV application profile | Reconcile `PROV.md` and `PROV-O.md` |
+| Schemas, contexts, SHACL/OWL resources, or namespace registries | [`schemas/`](../../../schemas/README.md), registry, package, or governed data lane |
+| Semantic contracts | [`contracts/`](../../../contracts/README.md) |
+| Policy, redaction, access, or public-minimization rules | [`policy/`](../../../policy/README.md) |
+| Emitters, adapters, validators, scripts, tests, or fixtures | Owning implementation, `tools/`, `tests/`, or `fixtures/` root |
+| PROV catalog payloads | [`data/catalog/prov/`](../../../data/catalog/prov/README.md) |
+| New trust-bearing payloads in compatibility | Deny writes to [`data/prov/`](../../../data/prov/README.md) absent a governed migration |
+| Receipts, proofs, attestations, or signatures | Their owning trust-object families |
+| Release, correction, withdrawal, or rollback decisions | [`release/`](../../../release/README.md) |
+| Public APIs, graphs, maps, indexes, or AI stores | Governed delivery/runtime after release |
+| Secrets, private endpoints, signed URLs, or harmful-precision metadata | Approved restricted systems |
 
-[Back to top](#quick-jump)
+## Inputs and outputs
+
+**Permitted inputs:** official W3C specifications and errata; accepted KFM doctrine and ADRs; exact repository history; contracts, schemas, policy, fixtures, validators, tests, reports, and consumers tied to a revision; sensitivity review; and correction/migration evidence.
+
+**Permitted outputs:** human navigation, scope clarification, a bounded conflict register, a no-loss comparison or migration plan, truth labels, and links to owning surfaces.
+
+**Not emitted:** PROV payloads, evidence conclusions, source admission, policy decisions, review approval, release decisions, public artifacts, or publication authority.
+
+## Exposure, mutation, and retention
+
+| Axis | Contract |
+|---|---|
+| Exposure | Public repository documentation; no restricted payload or sensitive operational detail |
+| Mutation | Versioned replacement through reviewed pull requests |
+| Retention | Durable documentation and Git history; preserve correction and supersession lineage |
+| Public-client dependency | None; this is not a runtime or policy source |
+| Deletion | HOLD until redundancy, consumers, links, history retention, and reviewed retirement are proven |
+
+## Validation and review
+
+For this README:
+
+- parse `KFM_META_BLOCK_V2`;
+- preserve one H1, logical headings, balanced fences, valid tables, and final newline;
+- resolve every introduced repository-relative link and internal fragment;
+- check official W3C references at a dated point;
+- scan for unsupported adoption, conformance, CI, security, release, or publication claims;
+- scan for secrets and sensitive detail;
+- bind final bytes in a generated authoring receipt; and
+- keep the diff to this file plus direct authoring dependencies.
+
+A future profile change must additionally prove machine-profile bindings, positive and negative fixtures, deterministic validation, producer/consumer round trips, sensitivity tests, release/rollback evidence, and exact-scope interoperability.
+
+The verified CODEOWNERS route is `@bartytime4life`; accountable standards, evidence, catalog, security/privacy, release, and correction stewardship remains **NEEDS VERIFICATION**.
+
+## Convergence protocol
+
+This README does not select a canonical winner. A future dependency-closed reconciliation should:
+
+1. pin the three profile documents, this README, inbound links, contracts, schemas, validators, data lanes, and consumers;
+2. separate semantic PROV, PAV, OpenLineage, supply-chain provenance, receipts, catalog projections, and release lineage;
+3. build a no-loss matrix of unique, overlapping, stale, contradicted, and unsupported content;
+4. choose one semantic-profile identity through reviewed authority, not an implicit rename;
+5. preserve compatibility only for verified consumers;
+6. align contracts, schemas, contexts, mappings, fixtures, validators, tests, workflows, registries, and emitters;
+7. prove fail-closed behavior for missing evidence, invalid PROV, unknown namespaces, sensitive leakage, stale correction state, and unresolved receipt references;
+8. migrate links and consumers without breaking stable identity; and
+9. record correction and rollback evidence.
+
+Until then, consolidation, rename, or deletion remains **HOLD**.
+
+## Open verification register
+
+| ID | State | Required resolution |
+|---|---|---|
+| `PROV-OPEN-001` | **NEEDS VERIFICATION** | Canonical semantic-profile identity: `PROV.md`, `PROV-O.md`, or reviewed synthesis |
+| `PROV-OPEN-002` | **NEEDS VERIFICATION** | Whether this nested directory remains needed after convergence |
+| `PROV-OPEN-003` | **NEEDS VERIFICATION** | Adopted PAV subset, currentness posture, and namespace treatment |
+| `PROV-OPEN-004` | **UNKNOWN** | Authoritative contexts, schemas, SHACL/OWL resources, and namespace registry |
+| `PROV-OPEN-005` | **UNKNOWN** | Current PROV producers, consumers, validators, APIs, graphs, maps, indexes, and AI uses |
+| `PROV-OPEN-006` | **NEEDS VERIFICATION** | Identity-preserving OpenLineage ↔ RunReceipt ↔ PROV ↔ catalog mapping |
+| `PROV-OPEN-007` | **NEEDS VERIFICATION** | Public redaction, aggregation, delay, and access rules for provenance fields |
+| `PROV-OPEN-008` | **PROPOSED** | Stable KFM namespace and extension governance without redefining W3C predicates |
+| `PROV-OPEN-009` | **UNKNOWN** | Writer/consumer closure for `data/prov/` migration or retirement |
+| `PROV-OPEN-010` | **PROPOSED** | Finite conformance outcomes and reason codes |
+| `PROV-OPEN-011` | **NEEDS VERIFICATION** | W3C errata and revision-watch procedure |
+| `PROV-OPEN-012` | **NEEDS VERIFICATION** | Accountable reviewers for material profile change |
+
+## Correction, rollback, and history
+
+When inaccurate, pin the affected bytes and contradicting evidence, classify the correction, update the smallest responsible documentation set, preserve stable identity/anchors, refresh the authoring receipt, and record downstream implications.
+
+Before merge, close the draft pull request and abandon the branch. After an authorized merge, revert the merge commit or restore prior blob:
+
+```text
+a4283dac33ec9f2c182a8be0cb0d23a3e1ba13e0
+```
+
+That blob is the exact DUO duplicate and is rollback history—not valid PROV-family guidance. Restoring it reopens the path/content defect.
+
+| Date | Change | State |
+|---|---|---|
+| 2026-05-24 | Empty README created | **CONFIRMED** |
+| 2026-05-25 | README replaced with bytes identical to `DUO_PROFILE.md` | **CONFIRMED** |
+| 2026-08-14 | Same-path boundary correction and convergence register | **PROPOSED until reviewed and merged** |
+
+No target-specific PROV content is lost: legitimate DUO content remains at [`DUO_PROFILE.md`](../DUO_PROFILE.md), history remains recoverable, and the overlapping provenance profiles remain visible.
+
+`next_action: REVIEW_BOUNDARY_THEN_DECIDE_PROFILE_CONVERGENCE_SEPARATELY`
+
+[Back to top](#top)

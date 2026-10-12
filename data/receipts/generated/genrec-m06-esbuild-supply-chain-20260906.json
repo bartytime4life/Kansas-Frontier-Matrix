@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-m06-esbuild-supply-chain-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "package.json",
+    "pnpm-lock.yaml"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:421b918ca1a33fd40460042b72a7f2194597079f4ad9587fcd55b6028ccde70f",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:441e0fa75d0c40b1a27e96fb309259c1d55d175df1d875b193d2c09d1e0fa985",
+    "package.json": "sha256:ba87ac31f360a237fe00152d4d393b4caa7b82818d0d3735e622b8a239e3da96",
+    "pnpm-lock.yaml": "sha256:4287a21a611d1a0144d671d69dd16e23d945c9055e038dd120a046c53e786aae"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:8e282cb1b7a9b63691525063375b3c04ca367871494444af988a61cb15527ca4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector",
+      "bounded lockfile transformation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8e282cb1b7a9b63691525063375b3c04ca367871494444af988a61cb15527ca4"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@ee62cdd243301dd8cf848771076a422e989c746c",
+      "repo:issue/3366",
+      "repo:pnpm-workspace.yaml@main@ee62cdd243301dd8cf848771076a422e989c746c",
+      "repo:pnpm-lock.yaml@main@ee62cdd243301dd8cf848771076a422e989c746c",
+      "notion:KFM Repository Workbench@read-only",
+      "google-drive:KFM Contributor Reliability System@read-only",
+      "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "https://github.com/drizzle-team/drizzle-orm/issues/5481"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "PROPOSED",
+    "package.json": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-overlap-readback",
+      "outcome": "PASS",
+      "reason": "The exact base commit was re-read; no open pull requests or same-scope branch was present."
+    },
+    {
+      "gate": "manifest-json-parse",
+      "outcome": "PASS",
+      "reason": "Both changed package manifests round-tripped as JSON with the scoped override present."
+    },
+    {
+      "gate": "lockfile-static-graph",
+      "outcome": "PASS",
+      "reason": "The pnpm and npm lock records point the deprecated core-utils edge to esbuild 0.25.12; no esbuild 0.18.20 resolution remains."
+    },
+    {
+      "gate": "build-policy-preservation",
+      "outcome": "PASS",
+      "reason": "pnpm-workspace.yaml and its version-specific allowBuilds decisions were not changed."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the four final non-receipt artifact bytes."
+    },
+    {
+      "gate": "native-install-and-cli",
+      "outcome": "SKIPPED",
+      "reason": "A local checkout/install and drizzle-kit command were not run in this session."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human dependency/security/toolchain review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:main@ee62cdd243301dd8cf848771076a422e989c746c"
+    },
+    {
+      "id": "issue-3366",
+      "validated": true,
+      "evidence_ref": "repo:issue/3366"
+    },
+    {
+      "id": "esbuild-advisory",
+      "validated": true,
+      "evidence_ref": "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    {
+      "id": "drizzle-upstream-dependency-report",
+      "validated": true,
+      "evidence_ref": "https://github.com/drizzle-team/drizzle-orm/issues/5481"
+    },
+    {
+      "id": "notion-workbench",
+      "validated": true,
+      "evidence_ref": "notion:KFM Repository Workbench@read-only"
+    },
+    {
+      "id": "drive-contributor-reliability",
+      "validated": true,
+      "evidence_ref": "google-drive:KFM Contributor Reliability System@read-only"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T04:45:18.162Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded M06 supply-chain remediation. The scoped override preserves drizzle-kit 0.31.10 and the existing migration command while replacing its nested esbuild 0.18.20 resolution with 0.25.12 in both lockfile lanes. The deprecated @esbuild-kit packages remain for follow-up upstream replacement; this receipt does not claim complete audit closure. Native installs, exact-head hosted checks, human review, merge, release, deployment, publication, and public-use authority remain pending. The reviewed base was refreshed to the unrelated current main commit before branch update."
+}

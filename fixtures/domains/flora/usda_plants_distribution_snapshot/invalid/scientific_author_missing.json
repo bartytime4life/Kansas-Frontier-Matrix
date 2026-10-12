@@ -1,0 +1,120 @@
+{
+  "distribution_states": [
+    {
+      "county_fips": "20041",
+      "first_observed": null,
+      "interpretation": "administrative_presence_claim",
+      "plants_symbol": "ACMI2",
+      "source_row_present": true,
+      "state": "reported_present"
+    },
+    {
+      "county_fips": "20053",
+      "first_observed": null,
+      "interpretation": "administrative_presence_claim",
+      "plants_symbol": "ACMI2",
+      "source_row_present": true,
+      "state": "reported_present"
+    },
+    {
+      "county_fips": "20041",
+      "first_observed": null,
+      "interpretation": "administrative_absence_claim",
+      "plants_symbol": "ASCA11",
+      "source_row_present": true,
+      "state": "reported_absent"
+    },
+    {
+      "county_fips": "20053",
+      "first_observed": null,
+      "interpretation": "no_claim",
+      "plants_symbol": "ASCA11",
+      "source_row_present": false,
+      "state": "not_reported"
+    }
+  ],
+  "domain": "flora",
+  "evidence_refs": [
+    "kfm://evidence/flora/usda-plants/synthetic-2026-04-30@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  ],
+  "fixture_only": true,
+  "missing_row_policy": "NO_SOURCE_ROW_IS_NO_CLAIM_NOT_ABSENCE",
+  "object_type": "USDAPlantsDistributionSnapshotCandidate",
+  "provenance": {
+    "input_digests": {
+      "counties": "sha256:a4d2457bb2f63a4d9a0baa2a99d326324307ba342710f0df5ef68c9dd1bdd435",
+      "distribution": "sha256:272ae3b346d279c65be28c1852a276751c5f218b043700df8f6efbd3b7a1de04",
+      "taxa": "sha256:6e8d03dfb56fd8aaf9d4180dadada537cb9ee0d7597b612824bce2cfb1ec1c42"
+    },
+    "input_profile": "kfm.synthetic.usda-plants-distribution-csv.v1",
+    "normalizer": "kfm-usda-plants-distribution-normalizer@1.0.0"
+  },
+  "review": {
+    "holds": [
+      "SOURCE_RIGHTS_CURRENTNESS_UNVERIFIED",
+      "RARE_PLANT_SENSITIVITY_UNASSESSED"
+    ],
+    "release": "HOLD",
+    "rights": "NEEDS_VERIFICATION",
+    "sensitivity": "NEEDS_VERIFICATION"
+  },
+  "schema_version": "kfm.flora.usda-plants-distribution-snapshot.v1",
+  "scope": {
+    "counties": [
+      {
+        "fips": "20041",
+        "name": "Dickinson"
+      },
+      {
+        "fips": "20053",
+        "name": "Ellsworth"
+      }
+    ],
+    "state": "KS"
+  },
+  "snapshot_date": "2026-04-30",
+  "snapshot_id": "kfm://candidate/flora/usda-plants/distribution/ks/2026-04-30",
+  "source_ref": "kfm://source/flora/usda-plants@2026-04-30",
+  "source_role": "administrative",
+  "source_rows": [
+    {
+      "county_fips": "20041",
+      "normalized_presence": "present",
+      "plants_symbol": "ACMI2"
+    },
+    {
+      "county_fips": "20053",
+      "normalized_presence": "present",
+      "plants_symbol": "ACMI2"
+    },
+    {
+      "county_fips": "20041",
+      "normalized_presence": "absent",
+      "plants_symbol": "ASCA11"
+    }
+  ],
+  "source_uri": "https://plants.sc.egov.usda.gov/downloads",
+  "spec_hash": "sha256:f36eb6fce4bea024a4eba13987f8a3c9f10d6202b9a8b56040b8c27c7c14e55b",
+  "summary": {
+    "cell_count": 4,
+    "county_count": 2,
+    "not_evaluated": 0,
+    "not_reported": 1,
+    "reported_absent": 1,
+    "reported_present": 2,
+    "source_row_count": 3,
+    "taxon_count": 2
+  },
+  "taxa": [
+    {
+      "family": "Asteraceae",
+      "plants_symbol": "ACMI2",
+      "scientific_name": "Achillea millefolium"
+    },
+    {
+      "family": "Apocynaceae",
+      "plants_symbol": "ASCA11",
+      "scientific_name": "Asclepias syriaca L."
+    }
+  ]
+}

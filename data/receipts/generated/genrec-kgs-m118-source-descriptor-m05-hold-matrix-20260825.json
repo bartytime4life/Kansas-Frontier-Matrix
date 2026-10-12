@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/kgs-m118-source-descriptor.yml",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md",
+    "tests/schemas/test_kgs_m118_source_descriptor.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "sha256:90df4da5820c2542025133519b467ba2357abaa8d8214b95d61990ac0a2faa33",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "sha256:ad899cafaf5c334e85602d11647686071ed7c20e7cd932d182a2cc5f6c8e23cf",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "sha256:739b41fba541300bd8ef0b3cb89ce8c7ab4e2a725bea2cbc62b8f91ab54f3d0d",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "sha256:77e83315d7007e1756d8cfe537e1e7bf40f1ef68b8f1edbb5268f05165aaabe7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-25"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connected repository inspection and draft pull-request delivery",
+      "uploaded KFM document inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "sha256:6466c775299be35a1066ef05e2182eb8e927f74c4716365425e2f340bf086e06"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=source-registry-and-onboarding-plan",
+      "repo:main@218363515d5f477cb4005491e22945130b84eebc",
+      "repo:data/registry/sources/geology/kgs-m118-surficial-geology.source.json@218363515d5f477cb4005491e22945130b84eebc",
+      "repo:data/receipts/generated/genrec-kgs-m118-source-descriptor-20260814.json@218363515d5f477cb4005491e22945130b84eebc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@218363515d5f477cb4005491e22945130b84eebc"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "CONFIRMED",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "PROPOSED",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "CONFIRMED",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "m05-source-assessment-matrix",
+      "outcome": "PASS",
+      "reason": "Nine deterministic focused tests passed, including explicit identity, authority-role, rights, terms, cadence, precision, sensitivity, public-safety, correction, rollback, disable, review, and release assertions."
+    },
+    {
+      "gate": "repository-owned-source-descriptor-schema",
+      "outcome": "PASS",
+      "reason": "The unchanged proposed inactive KGS M-118 descriptor passed the repository-owned SourceDescriptor validator."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The focused checks used repository bytes only and performed no source retrieval."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-14 authoring receipt remains unchanged as historical process memory; this successor binds the current M05 hold-matrix bytes."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the four finalized non-self artifacts named by this successor receipt."
+    },
+    {
+      "gate": "aggregate-schema-and-contract-validation",
+      "outcome": "PASS",
+      "reason": "The exact base passed with 493 tests and 53 subtests; the branch passed with 494 tests and 53 subtests."
+    },
+    {
+      "gate": "boundary-guards",
+      "outcome": "PASS",
+      "reason": "The exact base and branch each passed all 18 boundary-guard tests."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "The exact base and branch share the same pre-existing KFM-TOPO-016 failure fingerprint and stale baseline fingerprint. The branch adds one tracked receipt path and no new finding."
+    },
+    {
+      "gate": "source-retrieval-or-admission",
+      "outcome": "SKIPPED",
+      "reason": "No source bytes were retrieved, admitted, transformed, activated, or published."
+    },
+    {
+      "gate": "qualified-rights-review",
+      "outcome": "SKIPPED",
+      "reason": "Rights and current terms remain unresolved; public release stays denied."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after a draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "geology-source-registry-plan",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=source-registry-and-onboarding-plan"
+    },
+    {
+      "id": "exact-base-source-descriptor",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/geology/kgs-m118-surficial-geology.source.json@218363515d5f477cb4005491e22945130b84eebc"
+    },
+    {
+      "id": "historical-kgs-m118-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-kgs-m118-source-descriptor-20260814.json@218363515d5f477cb4005491e22945130b84eebc"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@218363515d5f477cb4005491e22945130b84eebc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-26T02:18:53Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor current-byte binding for the bounded M05 KGS M-118 source-assessment hold matrix. The historical 2026-08-14 receipt remains unchanged. This receipt changes no SourceDescriptor value and grants no source identity approval, rights or terms resolution, source contact, connector activation, content admission, evidence, policy, review, lifecycle, release, deployment, promotion, publication, or public-use authority. Rollback is a branch or pull-request revert of the test, workflow receipt target, and this successor receipt."
+}

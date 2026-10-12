@@ -1,0 +1,28 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:water-answer-001",
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "title": "Synthetic unselected water feature",
+  "summary": "The payload is individually valid but refers to evidence outside the selected soil feature.",
+  "evidence_refs": [
+    "evidence:water:wbd"
+  ],
+  "citations": [
+    {
+      "label": "Synthetic water fixture",
+      "href": "https://example.invalid/kfm/evidence/water-wbd"
+    }
+  ],
+  "limitations": [
+    "Fixture-only admission proof; not a live soil claim."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ALLOW",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "CURRENT",
+    "correction": "NONE"
+  }
+}

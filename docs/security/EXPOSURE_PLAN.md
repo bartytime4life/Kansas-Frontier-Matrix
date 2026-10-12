@@ -11,7 +11,7 @@ policy_label: public
 related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/deployment-topology.md
   - docs/runbooks/
   - infra/README.md
@@ -504,7 +504,7 @@ This document is policy-significant. Changes follow the same discipline KFM impo
 
 - `docs/doctrine/trust-membrane.md` — the doctrinal definition of the boundary this plan operationalizes *(PROPOSED path; NEEDS VERIFICATION).*
 - `docs/doctrine/directory-rules.md` — placement law for `docs/security/`, `infra/`, `apps/governed-api/`, and friends *(CONFIRMED home per §6.1).*
-- `docs/architecture/governed-api.md` — the API surface this plan defends *(PROPOSED).*
+- `docs/architecture/governed-api/README.md` — the API surface this plan defends *(PROPOSED).*
 - `docs/architecture/deployment-topology.md` — host, network, and deployment shape *(PROPOSED).*
 - `docs/runbooks/` — security incident, rollback drill, validation runs, secret rotation *(PROPOSED).*
 - `infra/README.md` — deny-by-default, least-privilege deployment posture per Directory Rules §10.2 *(PROPOSED).*

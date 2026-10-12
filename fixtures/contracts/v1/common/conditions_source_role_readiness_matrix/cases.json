@@ -1,0 +1,294 @@
+{
+  "schema_version": "kfm.conditions-source-role-readiness-matrix-fixtures.v1",
+  "profile": "kfm.common.conditions-source-role-readiness-matrix.v1",
+  "description": "One reusable partial-readiness base with isolated role, binding, authority, path, and identity mutations.",
+  "bases": {
+    "partial": {
+      "profile": "kfm.common.conditions-source-role-readiness-matrix.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "source_requirements_ref": "attachment://connected-briefing-to-system-integration-architecture#conditions-framework",
+      "base_ref": "463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "matrix_outcome": "PARTIAL_READY",
+      "bindings": [
+        {
+          "role": "AGGREGATE",
+          "readiness": "HOLD",
+          "intended_support_type": "AGGREGATE_STATISTIC",
+          "contract_ref": null,
+          "schema_ref": null,
+          "validator_ref": null,
+          "fixture_ref": null,
+          "native_source_role": null,
+          "native_support_type": null,
+          "common_source_role": null,
+          "common_support_type": null,
+          "temporal_basis": "AGGREGATION_WINDOW",
+          "scale_basis": "AGGREGATION_SCOPE",
+          "reason_codes": [
+            "NO_SELECTED_COMPATIBLE_PROFILE"
+          ]
+        },
+        {
+          "role": "CLASSIFICATION",
+          "readiness": "BOUND",
+          "intended_support_type": "DERIVED_CLASSIFICATION",
+          "contract_ref": "contracts/common/classification_release.md",
+          "schema_ref": "schemas/contracts/v1/common/classification_release.schema.json",
+          "validator_ref": "tools/validators/validate_classification_release.py",
+          "fixture_ref": "fixtures/contracts/v1/common/classification_release/cases.json",
+          "native_source_role": "CLASSIFICATION",
+          "native_support_type": "DERIVED_CLASSIFICATION",
+          "common_source_role": "CLASSIFICATION",
+          "common_support_type": "DERIVED_CLASSIFICATION",
+          "temporal_basis": "RELEASE_AND_VALID_INTERVAL",
+          "scale_basis": "RELEASE_GEOGRAPHY",
+          "reason_codes": []
+        },
+        {
+          "role": "FORECAST",
+          "readiness": "BOUND",
+          "intended_support_type": "PREDICTION",
+          "contract_ref": "contracts/common/forecast_product.md",
+          "schema_ref": "schemas/contracts/v1/common/forecast_product.schema.json",
+          "validator_ref": "tools/validators/validate_forecast_product.py",
+          "fixture_ref": "fixtures/contracts/v1/common/forecast_product/cases.json",
+          "native_source_role": "FORECAST",
+          "native_support_type": "PREDICTION",
+          "common_source_role": "FORECAST",
+          "common_support_type": "PREDICTION",
+          "temporal_basis": "ISSUE_AND_VALID_INTERVAL",
+          "scale_basis": "RELEASE_GEOGRAPHY",
+          "reason_codes": []
+        },
+        {
+          "role": "MODEL",
+          "readiness": "HOLD",
+          "intended_support_type": "MODELED_ESTIMATE",
+          "contract_ref": null,
+          "schema_ref": null,
+          "validator_ref": null,
+          "fixture_ref": null,
+          "native_source_role": null,
+          "native_support_type": null,
+          "common_source_role": null,
+          "common_support_type": null,
+          "temporal_basis": "MODEL_RUN_AND_VALID_INTERVAL",
+          "scale_basis": "MODEL_GRID_OR_GEOMETRY",
+          "reason_codes": [
+            "NO_SELECTED_COMPATIBLE_PROFILE"
+          ]
+        },
+        {
+          "role": "OBSERVATION",
+          "readiness": "BOUND",
+          "intended_support_type": "DIRECT_MEASUREMENT",
+          "contract_ref": "contracts/domains/soil/domain_observation.md",
+          "schema_ref": "schemas/contracts/v1/domains/soil/domain_observation.schema.json",
+          "validator_ref": "tools/validators/domains/soil/validate_domain_observation.py",
+          "fixture_ref": "fixtures/domains/soil/domain_observation/cases.json",
+          "native_source_role": "direct_observation_measurement",
+          "native_support_type": "station_soil_moisture",
+          "common_source_role": "OBSERVATION",
+          "common_support_type": "DIRECT_MEASUREMENT",
+          "temporal_basis": "OBSERVED_TIME",
+          "scale_basis": "OBSERVATION_SUPPORT",
+          "reason_codes": []
+        },
+        {
+          "role": "SURVEY",
+          "readiness": "HOLD",
+          "intended_support_type": "SURVEY_PRODUCT",
+          "contract_ref": null,
+          "schema_ref": null,
+          "validator_ref": null,
+          "fixture_ref": null,
+          "native_source_role": null,
+          "native_support_type": null,
+          "common_source_role": null,
+          "common_support_type": null,
+          "temporal_basis": "SURVEY_VINTAGE",
+          "scale_basis": "SURVEY_COVERAGE",
+          "reason_codes": [
+            "NO_SELECTED_COMPATIBLE_PROFILE"
+          ]
+        }
+      ],
+      "limitations": [
+        "Bound paths are fixture-only and do not establish adoption.",
+        "Model, survey, and aggregate interoperability profiles remain held.",
+        "No source, evidence, policy, release, or public-use authority is created."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "profile_adopted": false,
+        "lifecycle_written": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_partial_readiness",
+      "base": "partial",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "role_support_mapping_invalid",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/1/intended_support_type",
+          "value": "DIRECT_MEASUREMENT"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ROLE_SUPPORT_MAPPING_INVALID"
+      ]
+    },
+    {
+      "name": "bound_dependency_incomplete",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/2/validator_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "BOUND_DEPENDENCY_INCOMPLETE"
+      ]
+    },
+    {
+      "name": "hold_binding_overclaim",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/3/contract_ref",
+          "value": "contracts/common/unselected_model_profile.md"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "HOLD_BINDING_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "hold_reason_required",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/5/reason_codes",
+          "value": []
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "HOLD_REASON_REQUIRED"
+      ]
+    },
+    {
+      "name": "observation_common_mapping_invalid",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/4/common_source_role",
+          "value": "CLASSIFICATION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "BOUND_COMMON_MAPPING_INVALID"
+      ]
+    },
+    {
+      "name": "matrix_outcome_mismatch",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/matrix_outcome",
+          "value": "FULLY_READY"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "MATRIX_OUTCOME_MISMATCH"
+      ]
+    },
+    {
+      "name": "role_set_invalid",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/5/role",
+          "value": "OBSERVATION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "ROLE_SET_INVALID"
+      ]
+    },
+    {
+      "name": "bound_path_missing",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/bindings/1/fixture_ref",
+          "value": "fixtures/contracts/v1/common/classification_release/not-present.json"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "BOUND_PATH_MISSING"
+      ]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/effects/released",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "partial",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "partial",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    }
+  ]
+}

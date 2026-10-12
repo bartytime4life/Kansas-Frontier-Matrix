@@ -6,24 +6,42 @@ version: v0.2
 status: draft
 owners: <Geology domain steward — TODO confirm>; <Natural-Resources reviewer — TODO confirm>; <rights reviewer — TODO confirm>
 created: 2026-05-17
-updated: 2026-06-03
+updated: 2026-10-12
 policy_label: restricted
+owning_root: docs/
+responsibility: Describe the Geology Domain geology sublane scope, boundaries, and sensitivity posture; documentation only, not schema, policy, or release authority.
+truth_posture: PROPOSED sublane doctrine; repository paths, owners, and implementation NEEDS VERIFICATION
 related:
-  - docs/domains/geology/README.md                       # PROPOSED — verify exists
-  - docs/domains/README.md                                # PROPOSED — verify exists
-  - docs/domains/geology/sublanes/bedrock_geology.md      # PROPOSED sibling
-  - docs/domains/geology/sublanes/boreholes-wells.md      # PROPOSED sibling (shared subsurface objects)
-  - docs/domains/geology/sublanes/geochemistry.md         # PROPOSED sibling (assay ≠ deposit)
-  - docs/domains/geology/sublanes/geophysics.md           # PROPOSED sibling (anomaly ≠ deposit)
-  - directory-rules.md                                    # §12 Domain Placement Law, §5 Canonical Root Tree
-  - ai-build-operating-contract.md                        # canonical operating contract
-  - docs/doctrine/trust-membrane.md                       # PROPOSED — verify exists
-  - docs/doctrine/lifecycle-law.md                        # PROPOSED — verify exists
-  - docs/architecture/contract-schema-policy-split.md     # PROPOSED — verify exists
-  - docs/sources/source-roles.md                          # PROPOSED — verify path
-  - docs/registers/DRIFT_REGISTER.md                      # terminology + naming-convention routing
+  - docs/domains/geology/README.md
+  - docs/domains/README.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
+  - docs/domains/geology/sublanes/boreholes-wells.md
+  - docs/domains/geology/sublanes/geochemistry.md
+  - docs/domains/geology/sublanes/geophysics.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/sources/source-roles.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+related_notes:
+  - "docs/domains/geology/README.md — PROPOSED — verify exists"
+  - "docs/domains/README.md — PROPOSED — verify exists"
+  - "docs/domains/geology/SUBLANE-BEDROCK.md — PROPOSED sibling"
+  - "docs/domains/geology/sublanes/boreholes-wells.md — PROPOSED sibling (shared subsurface objects)"
+  - "docs/domains/geology/sublanes/geochemistry.md — PROPOSED sibling (assay ≠ deposit)"
+  - "docs/domains/geology/sublanes/geophysics.md — PROPOSED sibling (anomaly ≠ deposit)"
+  - "docs/doctrine/trust-membrane.md — PROPOSED — verify exists"
+  - "docs/doctrine/lifecycle-law.md — PROPOSED — verify exists"
+  - "docs/architecture/contract-schema-policy-split.md — PROPOSED — verify exists"
+  - "docs/sources/source-roles.md — PROPOSED — verify path"
+  - "docs/registers/DRIFT_REGISTER.md — terminology + naming-convention routing"
+  - "docs/doctrine/directory-rules.md — §12 Domain Placement Law, §5 Canonical Root Tree"
+  - "docs/doctrine/ai-build-operating-contract.md — canonical operating contract"
 tags: [kfm, domain, geology, natural-resources, sublane]
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal); required owning_root, responsibility, and truth_posture added; related entries split into resolvable paths, related_notes (former inline comments), and related_unresolved"
   - "CONTRACT_VERSION = 3.0.0 pinned per ai-build-operating-contract.md."
   - "v0.2 reconciliation: FaultStructure -> StructureFeature (Atlas §10C/E canonical; prior v0.1 used the drift form). Object names aligned to Atlas object-family casing: 'Mineral Occurrence', 'Resource Deposit', 'ResourceEstimate', 'Extraction Site', 'Reclamation Record', 'Geochemistry SampleReference', 'Well LogReference', 'BoreholeReference', 'Core Sample', 'Geophysical Observation', 'Hydrostratigraphic Unit'. Prior bare-CamelCase forms were drift; routed to DRIFT_REGISTER."
   - "v0.2 path normalization: schema/contract/policy homes use the Directory Rules §12 'domains/' segment (schemas/contracts/v1/domains/geology/, contracts/domains/geology/, policy/domains/geology/). Prior v0.1 mixed 'geology/' and 'contracts/geology/' forms; corrected and flagged."
@@ -131,7 +149,7 @@ Directory Rules **§12 (Domain Placement Law)** shows the canonical lane segment
 |---|---|---|
 | Upstream (authority) | Inherits scope from the Geology domain lane | `docs/domains/geology/README.md` (PROPOSED) |
 | Upstream (doctrine) | Bound by lifecycle, trust membrane, truth-posture, Directory Rules | `directory-rules.md`, `ai-build-operating-contract.md`, `docs/doctrine/*.md` |
-| Sibling (sublane) | Bedrock / surficial / structural geology sublane | `docs/domains/geology/sublanes/bedrock_geology.md` (PROPOSED) |
+| Sibling (sublane) | Bedrock / surficial / structural geology sublane | `docs/domains/geology/SUBLANE-BEDROCK.md` |
 | Sibling (sublane) | Subsurface point evidence (shared objects) | `docs/domains/geology/sublanes/boreholes-wells.md` (PROPOSED) |
 | Downstream (objects) | Object-family definitions | `contracts/domains/geology/{mineral_occurrence,resource_deposit,resource_estimate,extraction_site,reclamation_record}.md` (PROPOSED) |
 | Downstream (shape) | Field shape | `schemas/contracts/v1/domains/geology/...` (PROPOSED — Directory Rules §12) |
@@ -530,7 +548,7 @@ CONFIRMED doctrine: AI is interpretive, not the root truth source. `EvidenceBund
 PROPOSED links — verify after repo mount.
 
 - `../README.md` — Geology domain landing
-- `./bedrock_geology.md` — sibling sublane (bedrock / stratigraphy / structures)
+- [`../SUBLANE-BEDROCK.md`](../SUBLANE-BEDROCK.md) — bedrock sublane (absorbed `bedrock_geology.md` on 2026-10-12) (bedrock / stratigraphy / structures)
 - `./boreholes-wells.md` — sibling sublane (shared subsurface objects)
 - `./geochemistry.md` — sibling sublane (assay ≠ deposit)
 - `./geophysics.md` — sibling sublane (anomaly ≠ deposit)

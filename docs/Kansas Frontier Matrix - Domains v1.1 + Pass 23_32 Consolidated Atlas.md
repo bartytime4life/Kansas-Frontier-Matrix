@@ -12,46 +12,105 @@ related_drive_sources:
   - "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
   - "KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf  (prior atlas for Pass 23)"
   - "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf  (prior atlas for Pass 32)"
+repository_reconciliation:
+  reviewed_on: "2026-08-31"
+  repository: "bartytime4life/Kansas-Frontier-Matrix"
+  default_branch: "main"
+  base_commit: "5d835798e09a4dd14735779cb44206a8a3e8b2d3"
+  prior_target_blob: "c3a47a6a7582374a0ea801ee1624fc3e98e786d9"
+  scope: "reader contract, navigation, Markdown rendering, path reconciliation, and source-boundary clarification"
 notes: |
   This Markdown is a polished, un-escaped, navigable rendering of the upstream
   ChatGPT-generated PDF→MD conversion. The upstream conversion stopped at roughly
-  page 286 of the 1279-page source PDF. The polish step retains every line of the
-  upstream conversion verbatim from page 1 through the truncation point, then
-  splices in a structurally complete "Conversion Continuity" tail synthesized from
-  the Pass 23 / Pass 32 source PDFs available in Google Drive and from
-  project-knowledge excerpts of the same consolidated atlas. The tail is clearly
-  labeled and never asserts implementation maturity not in the source.
+  page 286 of the 1279-page source PDF. The polish step retained the extracted
+  source wording through the truncation point, then spliced in a clearly labeled
+  "Conversion Continuity" skeleton synthesized from the Pass 23 / Pass 32 source
+  PDFs available in Google Drive and from project-knowledge excerpts of the same
+  consolidated atlas. The 2026-08-31 repository reconciliation preserves that
+  lineage while repairing navigation and rendering; it does not promote source
+  proposals, conversion-time statements, or external workspace material into
+  current repository fact.
 ---
 
-<!-- ============================================================ -->
-<!-- KFM Atlas Meta Block — added by polish pass                 -->
-<!-- ============================================================ -->
+<a id="top"></a>
 
 # Kansas Frontier Matrix — Domains v1.1 + Pass 23/32 Consolidated Atlas
 
-> **Polished edition.** Un-escaped, structurally normalized, and extended at the
-> truncated tail with a clearly-labeled Conversion Continuity section. The
-> upstream PDF→Markdown conversion (`KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf`,
-> 1,279 pages) was preserved verbatim through page ~286 and then truncated
-> mid-register; this edition splices in a structural tail drawn from the same
-> source PDFs available in Google Drive.
+> [!IMPORTANT]
+> This is a **source-derived lineage carrier**, not a current implementation
+> inventory and not a machine authority. It preserves a May 2026 PDF conversion,
+> including conversion-time statements such as “no mounted repo was inspected.”
+> For current repository implementation, verify the exact repository surfaces
+> linked below. Runtime, release, deployment, and publication claims require
+> their own corresponding evidence.
 
-## Authority & Truth Posture
+**Quick navigation:** [Reader contract](#reader-contract) · [Repository reconciliation](#current-repository-reconciliation) · [Atlas map](#atlas-map) · [Conversion provenance](#conversion-provenance) · [Preserved payload](#preserved-payload-boundary) · [Navigation carrier](atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md)
+
+## Reader contract
+
+Use this file when retained source-conversion wording, page markers, stable card
+IDs, or May 2026 atlas lineage matters. Verify consequential source wording
+against the source PDF. Use current repository authority for repository
+implementation and the corresponding governed evidence for runtime, release,
+deployment, or publication claims.
+
+| Need | Use |
+|---|---|
+| Concise atlas orientation | [KFM Domains v1.1 + Pass 23/32 navigation carrier](atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md) |
+| Atlas-lane placement and naming status | [`docs/atlases/` lane README](atlases/README.md) |
+| Adopted placement law | [Directory Rules v2](doctrine/directory-rules.md) and [accepted ADR-0029](adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Human domain guidance | [`docs/domains/`](domains/README.md) |
+| Machine domain projection | [`control_plane/domain_lane_register.yaml`](../control_plane/domain_lane_register.yaml) — projection only; it does not create or remove domains |
+| Current repository meaning, shape, admissibility, and verification surfaces | [`contracts/`](../contracts/README.md), [`schemas/`](../schemas/README.md), [`policy/`](../policy/README.md), and [`tests/`](../tests/README.md) |
+| Governed release records | [`release/`](../release/README.md); repository presence does not by itself prove release, deployment, or publication |
+| Open drift or verification work | [`DRIFT_REGISTER.md`](registers/DRIFT_REGISTER.md) and [`VERIFICATION_BACKLOG.md`](registers/VERIFICATION_BACKLOG.md) |
+
+> [!CAUTION]
+> A `CONFIRMED` label inside the preserved payload confirms only what that source
+> edition says it confirmed. It does not automatically confirm current code,
+> schemas, policy, tests, runtime behavior, review, release, deployment,
+> promotion, or publication.
+
+## Current repository reconciliation
+
+This wrapper was reconciled on 2026-08-31 against
+`bartytime4life/Kansas-Frontier-Matrix` default branch
+`main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`. The target's prior Git blob was
+`c3a47a6a7582374a0ea801ee1624fc3e98e786d9`.
+
+| Check | Result |
+|---|---|
+| Current file path | `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md` — retained in place for compatibility and reversibility |
+| Atlas collection placement | Directory Rules v2, adopted by ADR-0029, names `docs/atlases/` as the proposed canonical collection; this current root path has not been migrated or deprecated |
+| Navigation | The concise carrier is [under `docs/atlases/`](atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md); related atlas documents are repaired to point back to this actual full-text path |
+| Implementation maturity | Not classified globally. The repository contains bounded contracts, schemas, policy, fixtures, validators, and domain work at different maturity levels; each claim requires exact-path evidence |
+| Referenced sidecars | `manifest-pass-23.jsonl`, `manifest-pass-32.jsonl`, `index-pass-23.json`, and `index-pass-32.json` are named by the source edition but are not present under those filenames in this repository snapshot |
+| GitHub | Current `main` is repository and implementation evidence within the exact checked paths and commit |
+| Google Drive | Consulted read-only as source-lineage material; it does not become repository authority |
+| Notion | Consulted read-only as coordination and navigation context; it does not become repository authority |
+| Move or rename | Held. This edit does not choose among overlapping atlas names, create a new carrier, move the file, or imply an accepted migration decision |
+
+The repository check resolves the earlier blanket “no mounted repo” limitation
+for this wrapper only. It does **not** retroactively reclassify the thousands of
+source claims in the preserved payload. Those claims retain their original
+labels until individually reconciled against current evidence.
+
+## Authority and truth posture
 
 | Field | Value |
 |---|---|
-| **Document role** | Downstream carrier / consolidated atlas |
-| **Authority** | Carrier only — neither this Markdown nor the source PDF promotes any repo state |
-| **Truth labels** | `CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN` (KFM standard four) |
+| **Document role** | Source-derived full-text carrier and incomplete conversion |
+| **Authority** | Human-readable lineage only; neither this Markdown nor its source PDF can create evidence, policy, approval, release, or publication state |
+| **Truth labels** | `CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, and `UNKNOWN`, interpreted within each source section's evidence boundary |
 | **Operating posture** | Evidence-first, cite-or-abstain, fail-closed |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Implementation maturity** | `UNKNOWN` — no mounted repo, runtime, workflow, dashboard, or branch state was inspected |
-| **Proposed file home** | `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` (per Directory Rules §5 / §6.1) — **`NEEDS VERIFICATION`** |
+| **Lifecycle invariant carried by the source** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED; promotion is a governed transition, not a file move |
+| **Current implementation claims** | Verify per claim against current repository contracts, schemas, policy, tests, and exact implementation surfaces; runtime, release, deployment, and publication need corresponding evidence |
+| **Path posture** | Current location is confirmed; canonical filename, migration, and supersession disposition remain `HOLD pending decision` |
 
-## How to Read This Atlas
+## How to read this atlas
 
 This is a **carrier** document, not implementation guidance. It bundles two
-upstream artifacts that are independent in authority:
+upstream artifacts with separate roles:
 
 1. **Source A — Kansas Frontier Matrix Domains Culmination Atlas, v1.1**
    (177 pages). A domain-doctrine atlas covering chapters 1–24 and appendices.
@@ -67,6 +126,22 @@ upstream artifacts that are independent in authority:
 > policy, review state, source authority, or release state. `EvidenceBundle`
 > and the governing dossiers remain authoritative.
 
+## Atlas map
+
+The source payload keeps its embedded document titles as H1 headings. Those
+additional H1s are intentional source-module boundaries, not a claim that this
+wrapper has multiple competing titles.
+
+| Module | Status in this Markdown | Jump |
+|---|---|---|
+| Consolidation wrapper | Extracted source wording | [Open](#source-consolidation-wrapper) |
+| Source A — Domains Culmination Atlas v1.1 | Retained conversion | [Open](#kansas-frontier-matrix-domains-culmination-atlas-v11) |
+| Source A — v1.0 retained interior | Retained conversion | [Open](#source-a-v1-0) |
+| Source A — Chapter 24 extended master atlases | Retained conversion | [Open](#source-a-chapter-24) |
+| Source A — Appendix G lineage | Retained conversion | [Open](#source-a-appendix-g) |
+| Source B — Pass 23 + Pass 32 consolidated atlas | Retained conversion through the upstream truncation | [Open](#source-b-pass-23-32) |
+| Conversion Continuity | Synthesized structural tail; per-card completeness is not claimed | [Open](#conversion-continuity) |
+
 ## Conversion Provenance
 
 | Property | Value |
@@ -76,7 +151,8 @@ upstream artifacts that are independent in authority:
 | Upstream converter | ChatGPT (sequential pass extraction) |
 | Upstream conversion status | **Truncated** at approximately page 286 / 1279 (~22% body coverage) |
 | Polish pass | Un-escape, denoise, restructure, splice continuity tail |
-| Polish posture | Preserve retained content verbatim; clearly label all added structural skeleton |
+| Polish posture | Preserve retained source wording; clearly label added structural skeleton |
+| Repository reconciliation | Reader contract, actual-path routing, stable anchors, and two code-fence repairs; no source card is reclassified |
 | Source A bytes / chars | 520,385 / 369,575 |
 | Source B bytes / chars | 7,899,514 / 6,541,257 |
 | Alignment thresholds (upstream) | EXACT: identical normalized SHA-256, ≥50 chars; NEAR: token-set ≥0.92; PARTIAL: substring ≥100 chars |
@@ -84,11 +160,22 @@ upstream artifacts that are independent in authority:
 | `UNIQUE_A` lines | 5,550 |
 | `UNIQUE_B` lines | 96,322 |
 
----
+Page counts, byte counts, alignment results, and source-sidecar hashes in this
+document are source-edition assertions. They were not recomputed from the
+original PDFs or absent sidecars during this repository-only edit.
 
-<!-- ============================================================ -->
-<!-- End of polish-pass header. Upstream content begins below.   -->
-<!-- ============================================================ -->
+## Preserved payload boundary
+
+> [!WARNING]
+> The content below this marker is the May 2026 source-conversion payload. Its
+> repository-status statements are historical context. This reconciliation
+> repairs Markdown fences, adds stable module anchors, and corrects the
+> polish-added path note; it otherwise preserves source wording and stable IDs.
+
+<!-- ================================================================ -->
+<!-- Preserved source-conversion payload begins below this marker.     -->
+<!-- Current repository implementation needs exact-path repo evidence. -->
+<!-- ================================================================ -->
 
 ## Table of Contents
 
@@ -106,6 +193,8 @@ upstream artifacts that are independent in authority:
 <!-- pass 1: pages 1–11 -->
 
 <!-- page: 1 -->
+
+<a id="source-consolidation-wrapper"></a>
 
 <a id="kansas-frontier-matrix-domains-v11-plus-pass-23-32-consolidated-atlas"></a>
 
@@ -330,6 +419,8 @@ Location key: ‘front’ = this front-matter section; ‘v1.0’ = the v1.0 int
 <!-- pass 2: pages 12–30 -->
 
 <!-- page: 12 -->
+
+<a id="source-a-v1-0"></a>
 
 # Kansas Frontier Matrix Domains Culmination Atlas, v1.0
 
@@ -3776,6 +3867,8 @@ CONFIRMED doctrine: KFM is a governed spatial evidence and publication system: e
 
 <!-- page: 151 -->
 
+<a id="source-a-chapter-24"></a>
+
 ## Chapter 24 - Extended Master Atlases
 
 CONFIRMED chapter scope: Chapter 24 is the v1.1 extension to the Master Atlases of Atlas v1.0 (ch. 20). v1.0 ch. 20 covers five master atlases — Viewing Mode, Capability/Action, API Surface, Validator/Test, and Deny-by-Default + Sensitivity. Chapter 24 adds fourteen further registers that consolidate doctrine already present in v1.0 and the source dossiers but scattered across per-domain sections, the Validator Catalogue, and the figure-to-generate list. No section in Chapter 24 introduces a new domain, lifecycle phase, authority root, or object family. [ENCY] [DIRRULES]
@@ -4508,6 +4601,8 @@ PROPOSED matrix: which domains own each cross-cutting object family and which ot
 
 <!-- page: 181 -->
 
+<a id="source-a-appendix-g"></a>
+
 ## Appendix G — v1.0 → v1.1 Lineage and Supersession Record
 
 CONFIRMED purpose: Appendix G is the formal lineage record for the supersession of the Kansas Frontier Matrix Domains Culmination Atlas, v1.0 (2026-05-11) by v1.1 (this document, 2026-05-12). It complements and does not replace v1.0’s own Appendix E. v1.0 Appendix E remains the lineage record for everything that v1.0 itself superseded; Appendix G records only the v1.0 → v1.1 step. [ENCY] [DIRRULES]
@@ -4610,6 +4705,8 @@ End of Appendix G. End of v1.1 back matter. The v1.0 interior of this document (
 
 <!-- page: 184 -->
 
+<a id="source-b-pass-23-32"></a>
+
 # Kansas Frontier Matrix - Pass 23 + Pass 32 Consolidated Deduplicated Atlas
 
 Generated UTC: 2026-05-18T19:05:25Z
@@ -4628,8 +4725,8 @@ Alignment threshold: NEAR when normalized statement token/sequence similarity >=
 
 <!-- ============================================================ -->
 <!-- SOURCE B — KFM Pass 23 + Pass 32 Consolidated Atlas         -->
-<!-- Original source pages 1–1095 retained as converted above.   -->
-<!-- Upstream conversion truncated at approximately page 286.    -->
+<!-- Source B conversion retained only through the upstream truncation. -->
+<!-- Upstream conversion truncated at approximately page 286.          -->
 <!-- ============================================================ -->
 
 ## Table of Contents
@@ -6110,8 +6207,6 @@ Reading-time estimate: 2 to 4 hours for full PDF navigation; sidecar JSONL is th
 machine surface for scripted review.
 8. Category Atlas
 ANA - Analysis, Indicators, Statistics, Machine Learning, Model Interpretation: 120 cards; overview page 33
-```
-
 <!-- page: 210 -->
 
 ```text
@@ -10280,6 +10375,16 @@ UNCHANGED, EXPANDED, or
 QUARANTINED. Pass 32 source entries appear as addenda when they safely refine prior ideas. New active cards use KFM-P32-IDEA/FEAT/PROG
 identifiers. Quarantined
 cards are retained for review and not adopted. Source IDs resolve in the Source Attribution Table.
+```
+
+> [!NOTE]
+> **Repository reconciliation (2026-08-31):** the source edition names
+> `manifest-pass-23.jsonl`, `manifest-pass-32.jsonl`, `index-pass-23.json`, and
+> `index-pass-32.json` as co-versioned machine surfaces. Files with those names
+> are not present in `main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`.
+> “Canonical” sidecar language below is therefore scoped to the source edition,
+> not to current repository machine authority.
+
 ### 5. Machine-Readable Index — Pass 32
 
 > **`CONFIRMED`** Pass 32 stable-ID inventory: **1,607** cards across **13** categories. Reorganized from a PDF-page-broken pipe-delimited dump into per-category tables. Card metadata is unchanged; no stable IDs were added, removed, or renumbered. The canonical machine surface remains the co-versioned `manifest-pass-32.jsonl` sidecar.
@@ -12088,6 +12193,8 @@ order.
 <!-- Conversion Continuity (synthesized from Google Drive sources) -->
 <!-- ============================================================ -->
 
+<a id="conversion-continuity"></a>
+
 # Conversion Continuity — Pages 287–1279 of the Source PDF
 
 > **`CONFIRMED`** that the upstream PDF→Markdown conversion stopped at
@@ -12289,14 +12396,18 @@ The following items are unresolved by this polish pass and remain
 
 1. **Per-card body completeness for pages 287–1,279.** The polish pass did
    *not* re-extract per-card bodies from the source PDFs. For any specific
-   stable ID, the canonical body is in the consolidated PDF or in
-   `manifest-pass-32.jsonl`. **`NEEDS VERIFICATION`** before this Markdown is
-   used as a per-card reference.
+   stable ID, check the consolidated source PDF first. The source edition also
+   names `manifest-pass-32.jsonl`, but that sidecar is absent from the current
+   repository snapshot and remains **`NEEDS VERIFICATION`** before this
+   Markdown is used as a per-card reference.
 2. **PROV.md vs. PROVENANCE.md naming.** Standards-doc naming discrepancy
    flagged previously; resolution belongs in an ADR, not in this carrier.
-3. **Proposed file home.** `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` is
-   per Directory Rules §5 / §6.1 but is **`NEEDS VERIFICATION`** until
-   confirmed against mounted-repo state.
+3. **Path and filename disposition.** The full-text carrier currently exists at
+   `docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md`.
+   Directory Rules v2 names `docs/atlases/` as the proposed canonical
+   collection, but overlapping carrier names and an unresolved naming/migration
+   decision prevent this edit from declaring a canonical filename or moving the
+   file.
 4. **PDF/UA tagging of the source PDF.** Carried forward from the upstream
    conversion notes: formal PDF/UA conformance is `NEEDS VERIFICATION`; the
    polish pass does not alter this.
@@ -12312,5 +12423,7 @@ The following items are unresolved by this polish pass and remain
 *End of polished Markdown. Source carrier integrity preserved through page ~286;
 structural skeleton synthesized for pages 287–1,279 from the upstream source
 PDFs available in Google Drive and from project-knowledge excerpts of the same
-consolidated atlas. No claim of implementation maturity is asserted by this
-document.*
+consolidated atlas. This document asserts no global implementation maturity;
+current repository implementation must be verified per claim against exact-path
+evidence, while runtime, release, deployment, and publication need their own
+corresponding evidence.*

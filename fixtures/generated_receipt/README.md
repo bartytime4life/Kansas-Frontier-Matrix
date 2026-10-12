@@ -2,17 +2,17 @@
 
 `fixtures/generated_receipt/`
 
-Status: draft / fixture parent index / generated-receipt synthetic examples.
+Status: repository-grounded / executable synthetic fixture family.
 
-This directory is the parent lane for small synthetic generated-receipt fixtures. Use it to organize positive-path and fail-closed toy examples for receipt shape, finite outcomes, evidence refs, citation refs, policy refs, replay refs, integrity refs, persistence refs, public-summary refs, correction refs, rollback refs, and expected outputs.
+This directory is the parent lane for small synthetic `GENERATED_RECEIPT` fixtures. It exercises repository-artifact provenance shape and local integrity without storing actual receipts.
 
 These files are examples only. They are not actual receipts, EvidenceBundles, SourceDescriptors, policy decisions, promotion decisions, release manifests, proof packs, signed envelopes, public API material, public map material, public tiles, release state, source authority, evidence authority, policy authority, proof authority, release authority, AI authority, or published artifacts.
 
 ## Fixture parent posture
 
-Generated-receipt fixtures support bounded checking and documentation for receipt-like runtime accountability objects. A fixture may imitate a receipt shape or expected validation result, but it must remain synthetic and must not be treated as sealed process memory, proof material, release evidence, or public truth.
+Generated-receipt fixtures support bounded schema, cross-field, repository-path, and artifact-hash checks. A fixture may imitate a receipt and bind a synthetic local artifact, but it must not be treated as sealed process memory, proof material, review approval, release evidence, or public truth.
 
-KFM receipt doctrine treats an AIReceipt as a runtime accountability record, not the answer and not a substitute for EvidenceBundle. Valid fixtures may demonstrate complete toy receipts; invalid fixtures should demonstrate fail-closed behavior. Neither path proves validator implementation, policy enforcement, persistence, signing, replay, public projection, release integration, or CI coverage by itself.
+`GENERATED_RECEIPT` is the AI-assisted repository-authoring provenance family. It is separate from runtime `AIReceipt`. Valid fixtures demonstrate bounded acceptance; invalid fixtures demonstrate fail-closed rejection. Neither result establishes factual truth, policy permission, human review, merge approval, release, or publication.
 
 ## Placement basis
 
@@ -22,12 +22,13 @@ The root fixture README says `fixtures/` is for runtime fixture inputs and separ
 
 ## Child lane inventory
 
-The following child lanes have populated README coverage. This table is a navigation index, not proof that payload files, validators, governed API routes, persistence checks, signing checks, policy bundles, release manifests, proof stores, or CI coverage exist.
+The following child lanes and synthetic artifact are consumed by `tools/validators/validate_generated_receipt.py` and its focused tests.
 
 | Child lane | Purpose | Expected posture |
 |---|---|---|
-| `valid/` | Synthetic positive-path generated-receipt examples with complete toy receipt fields and expected pass posture. | Validation pass, policy pass, replay pass, persistence pass, projection pass, release-ready, `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, or expected output. |
-| `invalid/` | Synthetic fail-closed generated-receipt examples for bad receipt shape, bad outcome logic, citation gaps, policy drift, replay drift, receipt-family collapse, or unsafe projection. | `DENY`, `ERROR`, validation failure, policy failure, replay failure, blocked persistence, blocked projection, release-readiness failure, or expected output. |
+| `artifacts/minimal.txt` | Local synthetic artifact used to prove SHA-256 binding. | Fixture input only. |
+| `valid/` | Positive `GENERATED_RECEIPT` candidates with complete shape and resolvable SHA-256 bindings. | Validator exit `0`. |
+| `invalid/` | One-defect fail-closed candidates. | Validator nonzero for the named defect. |
 
 ## Relationship to receipt governance
 
@@ -36,12 +37,13 @@ The following child lanes have populated README coverage. This table is a naviga
 | `../README.md` | Root fixture rules; this lane must remain synthetic and non-authoritative. |
 | `valid/README.md` | Positive-path sibling lane. |
 | `invalid/README.md` | Fail-closed sibling lane. |
-| `../../docs/architecture/governed-ai/AI_RECEIPTS.md` | Governs AIReceipt meaning, finite outcomes, lifecycle, validator expectations, receipt-family boundaries, and replay posture. |
-| `../../contracts/runtime/ai_receipt.md` | Expected canonical contract home if present; fixtures do not define contracts. |
-| `../../schemas/contracts/v1/runtime/ai_receipt.schema.json` | Expected machine-shape home if present; fixtures do not define schemas. |
-| `../../policy/runtime/ai_receipts.rego` | Expected runtime receipt policy home if present; fixtures do not decide policy. |
-| `../../tools/validators/ai/` | Expected validator home if present; fixtures do not implement validators. |
-| `../../data/receipts/ai/` | Proposed actual AIReceipt persistence home; fixtures do not store sealed receipts. |
+| `../../schemas/contracts/v1/receipts/generated_receipt.schema.json` | Machine shape for this fixture family. |
+| `../../docs/doctrine/ai-build-operating-contract.md` | Repository-authoring receipt and integrity requirements. |
+| `../../policy/ai_builder/operating_contract.rego` | Separate AI-builder policy surface; fixture validation does not replace policy evaluation. |
+| `../../tools/validators/validate_generated_receipt.py` | No-network shape, cross-field, path, SHA-256-prefix, citation-presence, and optional declared-review-claim checker; it authenticates no authority. |
+| `../../tests/validators/test_validate_generated_receipt.py` | Focused synthetic behavior and CLI proof. |
+| `../../data/receipts/generated/` | Actual generated-work process-memory lane; fixtures never belong there. |
+| `../contracts/v1/runtime/ai_receipt/` | Separate runtime `AIReceipt` fixture family. |
 | `../../data/proofs/` | Proof home; fixtures do not create proof authority. |
 | `../../release/signatures/` | Signature home if present; fixtures do not create signing authority. |
 | `../../release/manifests/` | Release home; fixtures do not publish. |
@@ -51,7 +53,7 @@ The following child lanes have populated README coverage. This table is a naviga
 This parent lane and its children may contain:
 
 - small synthetic `*.input.json`, `*.valid.json`, `*.invalid.json`, `*.positive.json`, `*.negative.json`, `*.expected.json`, `*.json`, `*.jsonl`, `*.yaml`, `*.yml`, `*.svg`, or `*.md` examples;
-- toy generated-receipt examples for complete receipt shapes, incomplete receipt shapes, finite outcomes, evidence refs, citation refs, policy refs, replay refs, integrity refs, signing refs, persistence refs, public-summary refs, correction refs, rollback refs, and expected outputs;
+- toy generated-receipt examples for complete or deliberately incomplete shape, artifact-map parity, local paths, SHA-256 integrity, review posture, and receipt-family separation;
 - positive-path examples in `valid/`;
 - fail-closed examples in `invalid/`;
 - paired expected outputs when behavior becomes stable.
@@ -64,8 +66,8 @@ Do not use this lane for actual receipts, signed envelopes, EvidenceBundles, Sou
 
 - Keep examples synthetic, compact, deterministic, reviewable, and public-safe.
 - Use toy IDs, toy refs, toy digests, toy timestamps, toy model IDs, toy policy refs, toy evidence refs, toy citation refs, toy output refs, toy error refs, and toy signature refs.
-- Make fixture posture explicit: valid, invalid, positive, negative, expected output, evidence-resolved, evidence-missing, citation-ready, citation-failed, policy-pass, policy-fail, replay-pass, replay-fail, persistence-pass, persistence-blocked, projection-pass, projection-blocked, release-ready, release-blocked, correction-visible, rollback-ready, or review-required.
-- Make expected outcome explicit when known: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, validation pass, validation failure, policy pass, policy failure, replay pass, replay failure, blocked persistence, blocked projection, release-readiness failure, or expected output.
+- Make fixture posture explicit: valid, invalid, schema failure, integrity failure, non-mergeable, or review-required.
+- Keep every negative payload focused on one primary defect when practical.
 - Pair each stable input with an expected output when practical.
 - Keep schema validity, semantic validity, outcome validity, reason-code validity, evidence state, citation state, policy state, replay state, signature state, persistence state, public-projection state, release state, correction state, rollback state, and expected-output state separate.
 - Do not treat fixture success or failure as receipt storage proof, proof authority, policy approval, validator implementation proof, API implementation proof, release state, public-map authority, public-summary authority, or published output.
@@ -74,33 +76,26 @@ Do not use this lane for actual receipts, signed envelopes, EvidenceBundles, Sou
 
 | Scenario family | Preferred child lane | Expected posture |
 |---|---|---|
-| Minimal complete `ABSTAIN`, `DENY`, or `ERROR` receipt | `valid/` | Validation pass or policy pass. |
-| Complete `ANSWER` receipt with evidence and citation refs | `valid/` | Validation pass, policy pass, or replay-ready. |
-| Deterministic replay example | `valid/` | Replay pass or expected output. |
-| Missing outcome or invalid outcome enum | `invalid/` | Schema failure or `ERROR`. |
-| `ANSWER` without evidence refs or passing citation validation | `invalid/` | Policy failure or `DENY`. |
-| Stale policy bundle hash | `invalid/` | `ERROR`. |
+| Complete pending-review receipt with a matching local SHA-256 | `valid/` | Integrity-valid but not merge-authorizing. |
+| Approved-review or override declaration | `valid/` or focused test | Optional review-claim gate passes without authenticating authority. |
+| Missing required schema field | `invalid/` | Schema failure. |
+| Artifact path/hash/truth-label key mismatch | `invalid/` or focused test | Cross-field failure. |
+| Missing, escaping, symlinked, self-referential, or hash-mismatched artifact | `invalid/` or focused test | Integrity failure. |
+| BLAKE3 without an admitted implementation dependency | focused test | Fail closed as unsupported. |
 | Receipt-family collapse | `invalid/` | Validation failure or review-required. |
-| Raw receipt exposed as public surface | `invalid/` | Blocked projection. |
-| Stable expected output is ready to compare | Documented pair or future expected-output lane | Deterministic expected output, not release. |
 
 ## Maintenance notes
 
 - Update this README when child lanes, payload files, validators, tests, helper scripts, expected-output names, or consumer contracts are added.
-- Link each stable fixture to the exact schema check, policy check, replay check, governed-API test, public-projection check, release-readiness check, correction check, rollback check, or documentation example that consumes it.
+- Link each stable fixture to the exact validator and focused test that consume it.
 - If expected behavior stabilizes, update the paired input, expected output, consumer notes, child README, and this parent index together.
 - Keep payloads small enough for normal code review.
 - If a fixture accidentally includes actual receipts, proof material, release material, source exports, or lifecycle data, move it out of this lane, quarantine it through the governed lifecycle or security process, and record the correction path.
 
 ## Verification status
 
-- Target README: replaced blank placeholder content.
-- Child README inventory: PARTIALLY VERIFIED against populated `valid/README.md` and `invalid/README.md` fetched during this update.
-- Fixture payload inventory: no payload files verified under this parent during this update.
-- Valid fixture alignment: PARTIALLY VERIFIED against `valid/README.md`.
-- Invalid fixture alignment: PARTIALLY VERIFIED against `invalid/README.md`.
-- AI receipt doctrine alignment: PARTIALLY VERIFIED against `docs/architecture/governed-ai/AI_RECEIPTS.md` from recent preceding updates.
-- Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
-- Contract/schema/policy alignment: NEEDS VERIFICATION against live `contracts/runtime/`, `schemas/contracts/v1/runtime/`, and `policy/runtime/` files.
-- Consumer alignment: NEEDS VERIFICATION against validators, policy checks, replay checks, signing checks, persistence checks, public-projection checks, governed-API tests, release-readiness checks, correction checks, rollback checks, schema checks, policy checks, and CI implementation.
-- Tests and validators: NOT RUN.
+- Payload inventory: one valid JSON candidate, one one-defect invalid JSON candidate, and one bound synthetic artifact.
+- Schema alignment: confirmed against `schemas/contracts/v1/receipts/generated_receipt.schema.json`.
+- Consumer alignment: confirmed for the bounded no-network validator, focused `unittest` suite, and `validator-suite` workflow wiring.
+- Integrity posture: SHA-256 is implemented; BLAKE3 fails closed until an explicit dependency decision is made.
+- Remaining non-scope: policy evaluation, evidence/citation resolution, automatic review-state updates, merge enforcement, persistence, release, and publication remain separate or `NEEDS VERIFICATION`.

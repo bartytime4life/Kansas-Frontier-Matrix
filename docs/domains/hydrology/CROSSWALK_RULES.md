@@ -290,6 +290,24 @@ The corpus card suggests a `tools/probes/comid_huc12/` + `data/spatial/comid_huc
 
 ## 11. Validators, fixtures & the release gate
 
+### Implemented bounded waterbody crosswalk profile
+
+Current repository evidence now includes a separate fixture-only profile for
+the 2026 USGS NHDPlusHR/NHDPlusV2 **waterbody** identifier crosswalk:
+
+- semantic contract: `contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md`;
+- schema: `schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json`;
+- synthetic fixtures: `fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/`;
+- validator: `tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py`;
+- tests: `tests/domains/hydrology/test_nhdplus_hr_ambiguity.py`.
+
+This implemented profile is narrower than the proposed COMID-to-HUC12 recipe
+in this document. It maps NHDPlusHR waterbody Permanent Identifiers to
+NHDPlusV2 waterbody COMIDs by spatial overlap, preserves many-to-many
+cardinality, and abstains on every non-exact lookup. It does not apply to
+flowlines, reaches, catchments, HUC12 assignments, or geometry equality, and it
+contains no USGS source rows.
+
 `CONFIRMED` recipe (KFM-P5-PROG-0008, KFM-P28-IDEA-0010, KFM-P24-PROG-0047). The crosswalk is enforceable only through validators, a negative-fixture set, and a release gate.
 
 **Required negative fixtures** (each MUST fail closed):
@@ -351,6 +369,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Bound the recipe to KFM-P5-PROG-0008 + companion cards | gap closure | Makes the fail-closed crosswalk an explicit lane rule with stable card IDs. |
 | Surfaced the `*/spatial/` vs `*/domains/hydrology/` path divergence | clarification | Path-home conflict requires an ADR (OQ-HYD-XW-04), not a silent pick. |
 | Recorded `alignment_score` cutoffs as PROPOSED + tunable | clarification | Corpus explicitly flags the threshold as needing tuning; not asserted as constant. |
+| Added the bounded NHDPlus waterbody crosswalk profile | implementation alignment | Separates the verified 2026 USGS waterbody overlap release from the broader proposed COMID-to-HUC12 and reach-identity recipes. |
 
 > **Backward compatibility.** New file; no anchors broken elsewhere. Internal anchors route to a stable `#top` (the leading 💧 changes the GitHub auto-anchor, so navigation uses `#top`).
 

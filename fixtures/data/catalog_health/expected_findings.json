@@ -1,0 +1,21 @@
+{
+  "hold_remote_unverified.json": [
+    "CAT_ASSET_REMOTE_UNVERIFIED"
+  ],
+  "invalid_checksum_mismatch.json": [
+    "CAT_ASSET_DIGEST_MISMATCH"
+  ],
+  "invalid_missing_governance.json": [
+    "CAT_STAC_LICENSE_MISSING",
+    "CAT_STAC_PROVIDERS_MISSING",
+    "CAT_STAC_TIMESTAMP_MISSING"
+  ],
+  "invalid_missing_provenance_links.json": [
+    "CAT_STAC_PROVENANCE_REL_MISSING"
+  ],
+  "invalid_path_escape.json": [
+    "CAT_ASSET_PATH_ESCAPE"
+  ],
+  "valid_embargoed_item.json": [],
+  "valid_local_item.json": []
+}

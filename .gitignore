@@ -7,6 +7,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.hypothesis/
 
 # Node
 node_modules/
@@ -42,3 +43,4 @@ receipts/
 
 # Local/CI test artifacts
 artifacts/qa/*.xml
+/apps/explorer-web/test-results/

@@ -1,0 +1,324 @@
+#!/usr/bin/env python3
+"""Run or describe one bounded KFM readiness lane."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+from typing import Any, Iterable, Sequence
+
+from jsonschema import Draft202012Validator
+
+ROOT = Path(__file__).resolve().parents[2]
+REGISTRY = ROOT / "control_plane" / "readiness" / "lanes.json"
+SCHEMA = (
+    ROOT
+    / "schemas"
+    / "contracts"
+    / "v1"
+    / "governance"
+    / "readiness_lanes.schema.json"
+)
+LANE_IDS = ("policy", "fixtures", "proof-slice", "catalog")
+MAX_OUTPUT = 65_536
+
+
+class ReadinessError(ValueError):
+    """A deterministic lane configuration failure."""
+
+
+def read_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ReadinessError(f"unreadable registry input: {path}") from exc
+
+
+def _normalized_basename(value: str) -> str:
+    return Path(value).name or ""
+
+
+def _validate_exec_list(command: Sequence[str], *, allowed_basenames: Iterable[str]) -> list[str]:
+    if not command:
+        raise ReadinessError("command cannot be empty")
+    cleaned: list[str] = []
+    allowed = {str(name) for name in allowed_basenames}
+    for index, item in enumerate(command):
+        if not isinstance(item, str):
+            raise ReadinessError(f"command[{index}] is not a string")
+        if "\x00" in item:
+            raise ReadinessError(f"command[{index}] contains NUL bytes")
+        if item in {"", ".", ".."}:
+            raise ReadinessError(f"command[{index}] is not a valid executable or argument")
+        cleaned.append(item)
+    exec_name = _normalized_basename(cleaned[0])
+    if exec_name not in allowed:
+        raise ReadinessError(f"executable is not allowlisted: {exec_name!r}")
+    for index, item in enumerate(cleaned[1:], start=1):
+        if any(token in item for token in (";", "&", "|", "&&", "||", "`", "$(", ">", "<")):
+            raise ReadinessError(f"command[{index}] contains shell metacharacters")
+    return cleaned
+
+
+def _validate_repo_script(command: Sequence[str], *, allowed_basenames: Iterable[str]) -> list[str]:
+    cleaned = _validate_exec_list(command, allowed_basenames=allowed_basenames)
+    if len(cleaned) < 2:
+        raise ReadinessError("script command is missing the target script")
+    script = Path(cleaned[1])
+    if script.is_absolute():
+        resolved = script.resolve(strict=False)
+    else:
+        resolved = (ROOT / script).resolve(strict=False)
+    try:
+        resolved.relative_to(ROOT)
+    except ValueError as exc:
+        raise ReadinessError(f"script path escapes repository root: {script}") from exc
+    if resolved.suffix != ".py":
+        raise ReadinessError(f"script path is not a Python file: {script}")
+    return cleaned
+
+
+def load_registry() -> dict[str, Any]:
+    registry = read_json(REGISTRY)
+    schema = read_json(SCHEMA)
+    errors = sorted(
+        Draft202012Validator(schema).iter_errors(registry),
+        key=lambda error: tuple(str(part) for part in error.absolute_path),
+    )
+    if errors:
+        raise ReadinessError("registry schema validation failed")
+    ids = tuple(item["id"] for item in registry["lanes"])
+    if ids != LANE_IDS:
+        raise ReadinessError(f"lane order must be {LANE_IDS!r}")
+    for lane in registry["lanes"]:
+        if lane["status"] == "IMPLEMENTED":
+            if lane["command"] is None or lane["hold_reason"] is not None:
+                raise ReadinessError(f"{lane['id']}: invalid implemented state")
+        elif lane["command"] is not None or lane["hold_reason"] is None:
+            raise ReadinessError(f"{lane['id']}: invalid hold state")
+    return registry
+
+
+def lane_by_id(registry: dict[str, Any], lane_id: str) -> dict[str, Any]:
+    return next(item for item in registry["lanes"] if item["id"] == lane_id)
+
+
+def digest(raw: bytes) -> str:
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
+
+
+def result(lane: dict[str, Any], status: str, reason: str, **extra: Any) -> dict[str, Any]:
+    payload = {
+        "schema_version": "kfm.readiness-lane-result/v1",
+        "lane": lane["id"],
+        "status": status,
+        "reason": reason,
+        "scope": lane["scope"],
+        "authority_boundary": lane["authority_boundary"],
+        "effects": {
+            "source_admitted": False,
+            "reviewed_fixture_overwritten": False,
+            "catalog_published": False,
+            "release_authorized": False,
+            "deployment_performed": False,
+        },
+    }
+    payload.update(extra)
+    return payload
+
+
+def required_paths(lane: dict[str, Any]) -> list[str]:
+    return [path for path in lane["required_paths"] if not (ROOT / path).is_file()]
+
+
+def run_policy(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    missing = required_paths(lane)
+    if missing:
+        return 3, result(
+            lane,
+            "HOLD",
+            "REQUIRED_PATH_MISSING",
+            missing_paths=missing,
+        )
+
+    configured = os.environ.get("OPA_BIN")
+    binary = configured or shutil.which("opa")
+    if not binary:
+        return 3, result(
+            lane,
+            "HOLD",
+            "OPA_BINARY_UNAVAILABLE",
+            command=lane["command"],
+        )
+
+    try:
+        command = _validate_exec_list([binary, *lane["command"][1:]], allowed_basenames={"opa"})
+    except ReadinessError as exc:
+        return 2, result(lane, "ERROR", "OPA_COMMAND_INVALID", detail=str(exc))
+
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "KFM_NO_NETWORK": "1",
+            "PYTHONHASHSEED": "0",
+            "TZ": "UTC",
+        }
+    )
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 2, result(lane, "ERROR", "OPA_EXECUTION_ERROR")
+
+    stdout = completed.stdout[: MAX_OUTPUT + 1]
+    stderr = completed.stderr[: MAX_OUTPUT + 1]
+    if len(stdout) > MAX_OUTPUT or len(stderr) > MAX_OUTPUT:
+        return 2, result(lane, "ERROR", "OPA_OUTPUT_LIMIT")
+    receipt = {
+        "command": ["opa", *lane["command"][1:]],
+        "exit_code": completed.returncode,
+        "stdout_bytes": len(stdout),
+        "stdout_sha256": digest(stdout),
+        "stderr_bytes": len(stderr),
+        "stderr_sha256": digest(stderr),
+    }
+    if completed.returncode != 0:
+        return 1, result(lane, "FAIL", "OPA_TEST_FAILED", receipt=receipt)
+    return 0, result(lane, "PASS", "BOUNDED_REGO_PAIR_PASSED", receipt=receipt)
+
+
+def run_proof_slice(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    missing = required_paths(lane)
+    if missing:
+        return 3, result(
+            lane,
+            "HOLD",
+            "REQUIRED_PATH_MISSING",
+            missing_paths=missing,
+        )
+
+    try:
+        command = _validate_repo_script(
+            [sys.executable, *lane["command"][1:]],
+            allowed_basenames={sys.executable and Path(sys.executable).name or "python"},
+        )
+    except ReadinessError as exc:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_COMMAND_INVALID", detail=str(exc))
+
+    environment = os.environ.copy()
+    guard = str(ROOT / "tools" / "ci" / "kfm_no_network")
+    environment.update(
+        {
+            "KFM_NO_NETWORK": "1",
+            "PYTHONHASHSEED": "0",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONPATH": os.pathsep.join(
+                [guard, *filter(None, [environment.get("PYTHONPATH")])]
+            ),
+            "TZ": "UTC",
+        }
+    )
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 2, result(lane, "ERROR", "PROOF_SLICE_EXECUTION_ERROR")
+
+    stdout = completed.stdout[: MAX_OUTPUT + 1]
+    if len(stdout) > MAX_OUTPUT or len(completed.stderr) > MAX_OUTPUT:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_OUTPUT_LIMIT")
+    receipt = {
+        "command": ["python", *lane["command"][1:]],
+        "exit_code": completed.returncode,
+        "record_sha256": digest(stdout),
+    }
+    try:
+        record = json.loads(stdout)
+    except json.JSONDecodeError:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_OUTPUT_INVALID", receipt=receipt)
+    if completed.returncode != 0 or record.get("outcome") != "PASS":
+        return 1, result(lane, "FAIL", "PROOF_SLICE_FAILED", receipt=receipt)
+    return 0, result(
+        lane,
+        "PASS",
+        "SYNTHETIC_PROOF_SLICE_PASSED",
+        receipt=receipt,
+        cases=len(record["cases"]),
+        record_spec_hash=record["spec_hash"]["value"],
+    )
+
+
+def run_lane(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    if lane["status"] == "HOLD":
+        return 3, result(
+            lane,
+            "HOLD",
+            lane["hold_reason"],
+            missing_paths=required_paths(lane),
+        )
+    if lane["id"] == "policy":
+        return run_policy(lane)
+    if lane["id"] == "proof-slice":
+        return run_proof_slice(lane)
+    raise ReadinessError(f"no runner for implemented lane: {lane['id']}")
+
+
+def canonical(value: dict[str, Any]) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+    parser.add_argument("lane", choices=LANE_IDS)
+    parser.add_argument(
+        "--describe",
+        action="store_true",
+        help="validate and print lane configuration without executing it",
+    )
+    args = parser.parse_args()
+    try:
+        registry = load_registry()
+        lane = lane_by_id(registry, args.lane)
+        if args.describe:
+            print(canonical({"schema_version": registry["schema_version"], "lane": lane}))
+            return 0
+        code, payload = run_lane(lane)
+    except ReadinessError as exc:
+        print(
+            canonical(
+                {
+                    "schema_version": "kfm.readiness-lane-result/v1",
+                    "lane": args.lane,
+                    "status": "ERROR",
+                    "reason": str(exc),
+                }
+            )
+        )
+        return 2
+    print(canonical(payload))
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

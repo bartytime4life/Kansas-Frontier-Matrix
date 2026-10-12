@@ -1,0 +1,59 @@
+# KFM gap scan.
+#
+# Fails when tracked structured data stops parsing outside declared negative
+# fixtures, when a tests/ package shadows an imported repository root, or when
+# the broken-local-link or unratcheted-placeholder census rises above
+# tools/qa/gap_scan_baseline.json. A green run proves only that those counts did
+# not grow; it grants no readiness, release, or publication authority.
+name: gap-scan
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gap-scan-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gap-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      TZ: UTC
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install hash-locked test profile
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Test the gap scan on synthetic trees
+        run: python -m pytest -q -p no:cacheprovider tests/qa/test_gap_scan.py
+
+      - name: Compare gap census with the reviewed baseline
+        run: python tools/qa/gap_scan.py --check
+
+      - name: Record gap-scan scope
+        if: always()
+        run: |
+          {
+            echo "## gap-scan"
+            echo
+            echo "Parse, test-package shadow, broken local link, and unratcheted placeholder census."
+            echo "It is a review aid; it grants no readiness, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/goes-abi-aod.md
   - docs/sources/catalog/noaa/hms-fire-smoke.md
   - docs/sources/catalog/noaa/hrrr-smoke.md
@@ -21,7 +19,7 @@ related:
   - docs/domains/atmosphere/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, nws, alerts, advisories, warnings, watches, forecasts, hazards, atmosphere-air, regulatory-context, life-safety-sensitive]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -30,6 +28,9 @@ notes:
   - "MULTI-COMPONENT product. Default per component: forecasts = modeled; warnings/advisories/watches = regulatory-context (contextual only); station observations (where NWS API exposes them) = observation. Components MUST be admitted separately."
   - "Freshness state and issue/expiry windows are LOAD-BEARING — stale warnings cannot appear as live warnings (CONFIRMED DOM-HAZ §I doctrine)."
   - "CAP (Common Alerting Protocol) is the message format; CAP joins to other products per KFM-P13-PROG-0015 (HMS↔CAP)."
+owning_root: docs/
+responsibility: "Documentation for NOAA NWS API; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA NWS API
@@ -208,8 +209,8 @@ PROPOSED freshness vocabulary for NWS warning/advisory/watch records:
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation; this product is one slice. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling** | [`hms-fire-smoke.md`](./hms-fire-smoke.md) | Structural parallel — also multi-component, multi-role within a single feed. Cross-product join via CAP per KFM-P13-PROG-0015. |
 | **Sibling** | [`hrrr-smoke.md`](./hrrr-smoke.md) | Forecast sibling (NWS forecasts share the `modeled` + `not-an-observation` framing). |
 | **Sibling** | [`goes-abi-aod.md`](./goes-abi-aod.md) | Satellite-retrieval sibling. |
@@ -281,7 +282,7 @@ PROPOSED — the descriptor(s) for this slice should at minimum carry:
 - `source_role` — `modeled` (forecasts), `regulatory-context` (warnings/advisories), or `observation` (station obs) per component.
 - `role_authority` — **NOAA NWS** is the authoritative issuer; KFM is **not**. This distinction must be visible in every public-facing render.
 - `rights` — license, redistribution terms, attribution. NWS API content is generally a U.S. government work in the public domain, but **per-product rights and current API terms of use remain NEEDS VERIFICATION**.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md); life-safety-sensitive class applies.
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present); life-safety-sensitive class applies.
 - `cadence` — near-real-time for alerts; routine cycles for forecasts; per-station for observations. NEEDS VERIFICATION.
 - `ingest_hash` — content-addressable digest of the admitted feed.
 - `official_source_url` — canonical NWS URL for redirect (AC-6 requirement).
@@ -484,7 +485,7 @@ PROPOSED — NWS API items carry quality and confidence information that differs
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product. This is the **most life-safety-sensitive product** in the NOAA family.
 
@@ -730,19 +731,19 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./hms-fire-smoke.md`](./hms-fire-smoke.md) — Multi-component structural sibling; CAP-join partner per KFM-P13-PROG-0015.
 - [`./hrrr-smoke.md`](./hrrr-smoke.md) — Forecast sibling.
 - [`./goes-abi-aod.md`](./goes-abi-aod.md) — Satellite-retrieval sibling.
 - [`./noaa-uscrn.md`](./noaa-uscrn.md) — Reference-grade observation sibling.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Primary domain (WarningContext, AdvisoryContext, HazardEvent, HazardObservation; life-safety red line).
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Co-primary domain (ForecastContext, AdvisoryContext, WeatherObservation).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/nws-api` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `WarningContext` / `AdvisoryContext` schemas once domain-home decided (OPEN-NWS-15).

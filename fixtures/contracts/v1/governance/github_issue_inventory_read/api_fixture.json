@@ -1,0 +1,9 @@
+{
+  "repository": {"id": 1059091169, "full_name": "bartytime4life/Kansas-Frontier-Matrix", "default_branch": "main"},
+  "ref": {"ref": "refs/heads/main", "object": {"sha": "e3cbe37d6024fb3bfc32cd3bedf4ec713d956d6a"}},
+  "issues": [
+    {"number": 1647, "state": "open", "updated_at": "2026-08-07T20:00:00Z"},
+    {"number": 1675, "state": "closed", "updated_at": "2026-08-07T21:00:00Z"}
+  ],
+  "headers": {"x-ratelimit-remaining": "4998", "x-ratelimit-reset": "1786158000"}
+}

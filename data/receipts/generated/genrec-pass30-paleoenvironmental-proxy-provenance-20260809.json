@@ -1,0 +1,70 @@
+{
+  "receipt_id": "genrec-pass30-paleoenvironmental-proxy-provenance-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/paleoenvironmental-proxy-provenance.yml",
+    "contracts/evidence/paleoenvironmental_proxy_provenance.md",
+    "docs/intake/exploratory/pass-30-paleoenvironmental-proxy-provenance-source-map.md",
+    "fixtures/contracts/v1/evidence/paleoenvironmental_proxy_provenance/cases.json",
+    "schemas/contracts/v1/evidence/paleoenvironmental_proxy_provenance.schema.json",
+    "tests/validators/evidence/test_paleoenvironmental_proxy_provenance.py",
+    "tools/validators/evidence/validate_paleoenvironmental_proxy_provenance.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/paleoenvironmental-proxy-provenance.yml": "sha256:e7eb9c92f407cffc69db0291949b2d006eecefcbd4f3beddb2565bf71d36ab54",
+    "contracts/evidence/paleoenvironmental_proxy_provenance.md": "sha256:ff8c3d12fe5b071466b583ef81b7759daa88a25de5d3ae88f2c8735963accbcb",
+    "docs/intake/exploratory/pass-30-paleoenvironmental-proxy-provenance-source-map.md": "sha256:f305c8384fb519ed3b5dffe0e2319d700cc53470fa77ffed07d399c5de072c3f",
+    "fixtures/contracts/v1/evidence/paleoenvironmental_proxy_provenance/cases.json": "sha256:6598211e806b06e2ef8eb76fa009afbdf1cad8df8d06d9c6f42c09a926e2d03f",
+    "schemas/contracts/v1/evidence/paleoenvironmental_proxy_provenance.schema.json": "sha256:1b965a6e1d2cedf8d55443aa7c7c72238f7997c40b431e034d060e17e19eef04",
+    "tests/validators/evidence/test_paleoenvironmental_proxy_provenance.py": "sha256:db9b5706ebde16dd8333b394e4e28ef2204d12eeb671b1000a7b8e6e6e07b82c",
+    "tools/validators/evidence/validate_paleoenvironmental_proxy_provenance.py": "sha256:75189ac9397626bc91e457e333d7ed9a870825ee895458c17dc7f17c83bea647"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:e8a6f5d91f4d34b09db11d47c6bd44c117fb69833ad61e2d8abf428a4e29d6bd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0029",
+      "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d",
+      "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d:contracts/evidence/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/paleoenvironmental-proxy-provenance.yml": "PROPOSED",
+    "contracts/evidence/paleoenvironmental_proxy_provenance.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-paleoenvironmental-proxy-provenance-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/paleoenvironmental_proxy_provenance/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/paleoenvironmental_proxy_provenance.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_paleoenvironmental_proxy_provenance.py": "PROPOSED",
+    "tools/validators/evidence/validate_paleoenvironmental_proxy_provenance.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Card KFM-P30-PROG-0029 was resolved in the consolidated atlas and remained active and unchanged through Pass 32."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card ID, title, branch, and proposed contract/schema paths were absent at the recorded base."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Evidence meaning, machine shape, fixtures, validator, tests, workflow, source adaptation, and authoring receipt are separated by responsibility root."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Seven tests and eleven positive/negative fixture cases passed without network, source, coordinate, reconstruction, release, or publication access."},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P30-PROG-0029", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0029-PASS32-UNCHANGED", "validated": true, "evidence_ref": "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-09T21:17:30Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed profile. It performs no source access, coordinate disclosure, reconstruction, policy evaluation, evidence mutation, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}

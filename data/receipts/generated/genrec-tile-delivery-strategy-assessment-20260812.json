@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-tile-delivery-strategy-assessment-20260812",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/tile-delivery-strategy-assessment.yml",
+    "contracts/release/tile_delivery_strategy_assessment.md",
+    "docs/intake/exploratory/tile-delivery-strategy-assessment-source-map.md",
+    "fixtures/contracts/v1/release/tile_delivery_strategy_assessment/cases.json",
+    "schemas/contracts/v1/release/tile_delivery_strategy_assessment.schema.json",
+    "tests/release/test_tile_delivery_strategy_assessment.py",
+    "tools/validators/release/validate_tile_delivery_strategy_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/tile-delivery-strategy-assessment.yml": "sha256:05847cb675278ba26b5b7c3ba774d2e8d0fbb99d85bdca405dc5027ede632023",
+    "contracts/release/tile_delivery_strategy_assessment.md": "sha256:fa30ecd95c17529765e485999df39d053278f8d895bed618b452d6699e7a8edb",
+    "docs/intake/exploratory/tile-delivery-strategy-assessment-source-map.md": "sha256:cb868268ab04618d65dc59ea0790026c403711bf6fdbfa2ac94763ba417c8e62",
+    "fixtures/contracts/v1/release/tile_delivery_strategy_assessment/cases.json": "sha256:a779d4aff1dddbcc2f48d45a4ef4093e225f945519f5b25fcaa3478bc5fb7e9d",
+    "schemas/contracts/v1/release/tile_delivery_strategy_assessment.schema.json": "sha256:11bb98f33b84d27131a49b37ff52f1e997688fe8590e943ffa2831b4642bc374",
+    "tests/release/test_tile_delivery_strategy_assessment.py": "sha256:b841c1a9aec4a699e6c07a612b16affd33407adbbe66ff87332354ef2fc8e7c5",
+    "tools/validators/release/validate_tile_delivery_strategy_assessment.py": "sha256:0df54795ef2b8f51e7b8d8617e48061243d6a04570a2358162d762a82a99e9ca"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "Codex Work session 2026-08-12"
+  },
+  "prompt_or_contract": "sha256:962af4eebd14854d065d979bdf2d9e52dc391423eff372a7082e8748a75709bb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local git",
+      "Poppler PDF extraction",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#New-Ideas-5-19-26",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pdf-pages-3-5-9-14",
+      "repo:contracts/source/map_service_protocol_assessment.md@bff35f5ddf00ef623eacf96be13a743e134f482f",
+      "repo:contracts/release/tile_artifact_manifest.md@bff35f5ddf00ef623eacf96be13a743e134f482f",
+      "repo:docs/doctrine/directory-rules.md@bff35f5ddf00ef623eacf96be13a743e134f482f"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/tile-delivery-strategy-assessment.yml": "PROPOSED",
+    "contracts/release/tile_delivery_strategy_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/tile-delivery-strategy-assessment-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/tile_delivery_strategy_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/release/tile_delivery_strategy_assessment.schema.json": "PROPOSED",
+    "tests/release/test_tile_delivery_strategy_assessment.py": "PROPOSED",
+    "tools/validators/release/validate_tile_delivery_strategy_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Eleven focused tests and twenty-four subtests passed in an isolated environment using the repository-declared test dependencies."
+    },
+    {
+      "gate": "fixture-polarity-and-no-network",
+      "outcome": "PASS",
+      "reason": "Twenty cases replayed exactly: four PASS, eight HOLD, seven DENY, and one ERROR; deterministic replay passed with socket access denied."
+    },
+    {
+      "gate": "schema-parser-and-workflow-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema meta-validation, JSON parsing, Python compilation, workflow YAML parsing, and git whitespace checks passed."
+    },
+    {
+      "gate": "repository-aggregate-validation",
+      "outcome": "PASS",
+      "reason": "make validate passed: all eight registered aggregate validators passed and the repository schema/contract suite completed with 471 tests and 29 subtests passing."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#New-Ideas-5-19-26"
+    },
+    {
+      "id": "attachment:maplibre-operating-manual",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pdf-pages-3-5-9-14"
+    },
+    {
+      "id": "repository:map-service-protocol-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/map_service_protocol_assessment.md@bff35f5ddf00ef623eacf96be13a743e134f482f"
+    },
+    {
+      "id": "repository:tile-artifact-manifest",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/tile_artifact_manifest.md@bff35f5ddf00ef623eacf96be13a743e134f482f"
+    },
+    {
+      "id": "repository:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@bff35f5ddf00ef623eacf96be13a743e134f482f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T18:09:53Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed inactive assessment for declaring PMTiles archive, XYZ service, Martin/PostGIS mediation, or local MBTiles strategy without operational effects. This receipt grants no network, artifact, service, database, cache, rights, sensitivity, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

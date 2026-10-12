@@ -1,0 +1,35 @@
+{
+  "invalid_spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_catalog_records_not_canonical.json": [
+    "CATALOG_RECORDS_NOT_CANONICAL"
+  ],
+  "invalid_catalog_family_incomplete.json": [
+    "CATALOG_FAMILY_INCOMPLETE"
+  ],
+  "invalid_catalog_identity_mismatch.json": [
+    "CATALOG_IDENTITY_MISMATCH"
+  ],
+  "invalid_catalog_digest_mismatch.json": [
+    "CATALOG_DIGEST_MISMATCH"
+  ],
+  "invalid_unresolved_catalog_record.json": [
+    "CATALOG_RECORD_UNRESOLVED"
+  ],
+  "invalid_policy_allow_without_closure.json": [
+    "POLICY_ALLOW_INCONSISTENT"
+  ],
+  "invalid_release_review_without_rollback.json": [
+    "RELEASE_READINESS_INCOMPLETE"
+  ],
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "invalid_review_approved_without_record.json": [
+    "REVIEW_STATE_INCONSISTENT"
+  ],
+  "invalid_noncanonical_refs.json": [
+    "REFS_NOT_CANONICAL"
+  ]
+}

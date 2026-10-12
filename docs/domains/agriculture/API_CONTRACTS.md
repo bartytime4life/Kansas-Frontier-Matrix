@@ -18,7 +18,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
@@ -32,7 +32,6 @@ related:
   - contracts/domains/agriculture/
   - policy/domains/agriculture/
   - policy/sensitivity/agriculture/
-  - policy/release/agriculture/
   - apps/governed-api/
 tags: [kfm, domain, agriculture, api, contracts, decision-envelope, aggregation-receipt, audience-class, fail-closed, contract-v3]
 notes:
@@ -41,6 +40,9 @@ notes:
   - v2 integrates with the agriculture domain-aspect README family: `policy/README.md`, `runbooks/README.md`, `sublanes/README.md`, `sublanes/cropland.md`.
   - All repo paths, route names, and DTO names are PROPOSED until mounted-repo verification.
   - Schema home defaults to `schemas/contracts/v1/` per Directory Rules §7.4 / ADR-0001.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — API Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -290,7 +292,7 @@ The correction-submit surface returns workflow outcomes that **do not** publish 
 | `DENY` | The candidate is malformed, unsupported, or duplicates a closed correction. | Refusal record. |
 | `ERROR` | The submission infrastructure cannot evaluate (schema validation failure, queue unavailable). | Error envelope. |
 
-A correction that reaches publication produces a `CorrectionNotice` (per [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)) and, where required, a `RollbackCard` execution record.
+A correction that reaches publication produces a `CorrectionNotice` (per [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)) and, where required, a `RollbackCard` execution record.
 
 ### 4.4 UI negative states (rendering vocabulary)
 
@@ -777,7 +779,7 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) — AI behavior at the runtime surface. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 
 **Agriculture domain orientation (created this session)**
 

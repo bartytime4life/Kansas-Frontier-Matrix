@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: <atmosphere-domain-stewards>  # PLACEHOLDER — assign before review
 created: 2026-05-16
-updated: 2026-05-29
+updated: 2026-08-02
 policy_label: public
 related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, docs/domains/atmosphere/UBIQUITOUS_LANGUAGE.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/doctrine/directory-rules.md, contracts/domains/atmosphere/, schemas/contracts/v1/domains/atmosphere/, policy/domains/atmosphere/, data/registry/sources/atmosphere/, release/candidates/atmosphere/, ai-build-operating-contract.md]
 tags: [kfm, domain, atmosphere, air, climate, verification, backlog, governance]
@@ -22,16 +22,16 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # domain-scoped companion to docs/register
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![authority](https://img.shields.io/badge/authority-canonical%20register-blue)
 ![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success)
-![implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
+![implementation](https://img.shields.io/badge/implementation-bounded__fixture__proof-blue)
 ![sensitivity](https://img.shields.io/badge/sensitivity-public-green)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-success)
 ![source--rights](https://img.shields.io/badge/source--rights-NEEDS%20VERIFICATION-red)
-![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--08--02-informational)
 
 > [!NOTE]
 > Badge targets are placeholder Shields.io endpoints. Replace with live endpoints once CI, registry, and release surfaces are wired.
 
-**Status:** draft · **Owners:** TBD (atmosphere-domain-stewards) · **Updated:** 2026-05-29 · `CONTRACT_VERSION = "3.0.0"`
+**Status:** draft · **Owners:** TBD (atmosphere-domain-stewards) · **Updated:** 2026-08-02 · `CONTRACT_VERSION = "3.0.0"`
 
 ---
 
@@ -174,17 +174,22 @@ flowchart LR
 
 The Atmosphere lane carries an **acute source-role anti-collapse requirement**: an `OBSERVED_SENSOR` reading, a `PUBLIC_AQI_REPORT`, a `REGULATORY_ARCHIVE` record, an `ATMOSPHERIC_MODEL_FIELD` cell, and a `LOW_COST_SENSOR` value **are not epistemically interchangeable**. Public output must label knowledge character and freshness. The Atlas §24.13 explicitly flags this lane: *"Source-role anti-collapse for observed/regulatory/modeled/aggregate is acute."* [DOM-AIR] [ENCY §24.13]
 
+The repository now executes one frozen, synthetic six-character fixture profile.
+That profile closes only the listed fixture cases; the canonical enum and
+registry, source-descriptor enforcement, Rego policy, live data, evidence,
+review, release, and public-surface behavior remain open or held.
+
 | ID | Item to verify | Evidence that would settle it | Status |
 |---|---|---|---|
 | ATM-KC-001 | Knowledge-character enum defined in atmosphere contract / schema. | `contracts/domains/atmosphere/knowledge_character.md` + `schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json` exist with the eleven CONFIRMED terms. | NEEDS VERIFICATION |
 | ATM-KC-002 | Every source descriptor names exactly one `knowledge_character`. | Registry validator denies descriptors with missing or multi-valued knowledge character. | NEEDS VERIFICATION |
-| ATM-KC-003 | `AQI` vs concentration distinction enforced by validator. | Negative fixture: descriptor that maps AQI value into a concentration field → DENY. | PROPOSED [DOM-AIR] [ENCY] |
-| ATM-KC-004 | `AOD` vs PM2.5 distinction enforced by validator. | Negative fixture: AOD raster routed as PM2.5 surface → DENY. | PROPOSED [DOM-AIR] [ENCY] |
-| ATM-KC-005 | Model field vs observation distinction enforced by validator. | Negative fixture: HRRR-Smoke surface promoted as observed smoke → DENY. | PROPOSED [DOM-AIR] [ENCY] |
+| ATM-KC-003 | `AQI` vs concentration distinction enforced by validator. | Negative fixture: descriptor that maps AQI value into a concentration field → DENY. | CONFIRMED for frozen fixture profile; policy/live enforcement NEEDS VERIFICATION |
+| ATM-KC-004 | `AOD` vs PM2.5 distinction enforced by validator. | Negative fixture: AOD raster routed as PM2.5 surface → DENY. | CONFIRMED for frozen fixture profile; policy/live enforcement NEEDS VERIFICATION |
+| ATM-KC-005 | Model field vs observation distinction enforced by validator. | Negative fixture: HRRR-Smoke surface promoted as observed smoke → DENY. | CONFIRMED for frozen fixture profile; policy/live enforcement NEEDS VERIFICATION |
 | ATM-KC-006 | Low-cost sensor caveats required on public release. | Validator: published payload from `LOW_COST_SENSOR` lacking correction/caveats/confidence/limitations → DENY; FILTER-style QA label present. | PROPOSED [C10-02] [KFM-P27-PROG-0021] |
-| ATM-KC-007 | Advisory-context products kept distinct from operational alerts. | Validator: `ALERT_AND_ADVISORY_CONTEXT` payloads never carry life-safety instructions; redirect to official source instead. | PROPOSED [DOM-HAZ] |
+| ATM-KC-007 | Advisory-context products kept distinct from operational alerts. | Validator: `ALERT_AND_ADVISORY_CONTEXT` payloads never carry life-safety instructions; redirect to official source instead. | CONFIRMED for frozen fixture profile; policy/live enforcement NEEDS VERIFICATION |
 | ATM-KC-008 | Derived fusion products record their input knowledge characters and the policy for the fusion. | `DERIVED_FUSION` payload carries a `fusion_basis` array with per-input `knowledge_character`. | PROPOSED |
-| ATM-KC-009 | Network/site context kept distinct from any observation derived from it. | `NETWORK_AND_SITE_CONTEXT` payloads do not carry observation values. | PROPOSED |
+| ATM-KC-009 | Network/site context kept distinct from any observation derived from it. | `NETWORK_AND_SITE_CONTEXT` payloads do not carry observation values. | CONFIRMED for frozen generalized fixture; policy/live enforcement NEEDS VERIFICATION |
 | ATM-KC-010 | Climate normals / anomalies record reference period and aggregation basis. | `CLIMATE_ANOMALY_CONTEXT` records baseline window and method; comparison surfaces show both. | PROPOSED |
 
 [Back to top ↑](#top)

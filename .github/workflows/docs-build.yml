@@ -11,8 +11,28 @@ name: docs-build
 
 on:
   pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docusaurus.config.*"
+      - "docs/requirements.txt"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs-build.yml"
   push:
     branches: [main]
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docusaurus.config.*"
+      - "docs/requirements.txt"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs-build.yml"
   workflow_dispatch:
 
 permissions:
@@ -29,7 +49,7 @@ jobs:
 
     steps:
       - name: Check out documentation sources
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -93,7 +113,7 @@ jobs:
 
     steps:
       - name: Check out preview boundaries
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 

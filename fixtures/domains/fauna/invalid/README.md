@@ -77,4 +77,4 @@ Do not use this lane for:
 - Target README: updated for the bounded alias/free-form hardening slice.
 - Payload inventory: PARTIALLY VERIFIED — the five JSON fixtures above are accepted only for the bounded fixture-safety slice; other lane maturity remains NEEDS VERIFICATION.
 - Consumer alignment: CONFIRMED only for `validate_public_safe_fixture.py`, `test_fauna_smoke.py`, and `validate-fauna`.
-- Tests and validator: the accepted seven-test standard-library suite passed locally on 2026-07-25; repository-native CI remains pending for the focused draft pull request.
+- Tests and validator: the accepted eight-test standard-library suite passed locally on 2026-08-14; repository-native CI remains pending for the focused draft pull request.

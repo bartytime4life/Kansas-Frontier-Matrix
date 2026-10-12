@@ -1,11 +1,12 @@
-# KFM Hazards domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Hazards validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Hazards bounded validation and readiness workflow.
+# Status: executable synthetic USDM materiality validation is established,
+# plus the NOAA Storm Events Kansas pilot candidate tests;
+# governed proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
-# - This workflow inspects repository maturity without consuming live hazard
-#   feeds or issuing warnings, evacuation instructions, regulatory decisions,
-#   emergency guidance, or other life-safety direction.
+# - This workflow exercises committed synthetic fixtures without consuming live
+#   hazard feeds or issuing warnings, evacuation instructions, regulatory
+#   decisions, emergency guidance, or other life-safety direction.
 # - It does not validate current conditions, build an EvidenceBundle or
 #   ProofPack, admit sources, apply policy, promote lifecycle artifacts, approve
 #   release, write published data, deploy, or publish.
@@ -25,26 +26,34 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TZ: UTC
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
+  TZ: UTC
 
 jobs:
   validate-hazards:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out Hazards boundaries
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
 
-      - name: Evaluate Hazards validation readiness
+      - name: Install declared Hazards validation dependencies
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Validate bounded Hazards materiality lane
         shell: bash
         run: |
           set -euo pipefail
@@ -56,59 +65,77 @@ jobs:
             "contracts/domains/hazards/README.md"
             "schemas/contracts/v1/domains/hazards/README.md"
             "fixtures/domains/hazards/README.md"
+            "fixtures/domains/hazards/drought_declaration/valid/valid_1.json"
+            "fixtures/domains/hazards/drought_observation/valid/valid_1.json"
+            "fixtures/domains/hazards/drought_obs_decl_relationship/valid/valid_1.json"
+            "fixtures/domains/hazards/usdm_materiality/cases.json"
             "policy/domains/hazards/README.md"
             "tests/domains/hazards/README.md"
+            "tests/domains/hazards/test_hazards_smoke.py"
+            "tests/domains/hazards/test_validate_usdm_materiality.py"
             "tools/validators/domains/hazards/README.md"
+            "tools/validators/domains/hazards/validate_usdm_materiality.py"
             "data/registry/sources/hazards/README.md"
             "release/candidates/hazards/README.md"
+            "Makefile"
           )
 
           for required_path in "${required_paths[@]}"; do
             if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required Hazards boundary is missing: $required_path"
+              echo "::error::Required Hazards validation boundary is missing: $required_path"
               exit 1
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Hazards" \
-            --test-root tests/domains/hazards \
-            --validator-root tools/validators/domains/hazards \
-            --validator-root tools/validators/air-hazards \
-            --validator-root tools/validators/atmosphere_hazards \
-            --validator-root tools/validators/hydrology-hazards
-
-          if grep -Eq '^(hazards-validate|validate-hazards):' Makefile; then
-            echo "::error::A Hazards validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+          if ! grep -Eq '^hazards-validate:' Makefile; then
+            echo "::error::The bounded Hazards validation target is missing from Makefile."
             exit 1
           fi
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-hazards"
-          echo "WORKFLOW_HOLD: executable Hazards validation is not established"
+          python -m unittest -v tests.domains.hazards.test_hazards_smoke
+          make hazards-validate
+          echo "HAZARDS_VALIDATION_PASS: drought-fixture-polarity usdm-materiality"
 
-      - name: Record Hazards validation hold
+      - name: Prove hosted Hazards workflow binding
+        run: >-
+          python -m unittest
+          tests.domains.hazards.test_domain_hazards_workflow_binding
+          -v
+
+      # The Storm Events pilot uses the shared capture, hashing and release
+      # packages, so it installs the hash-locked water-pilot profile (same lock).
+      - name: Install Storm Events pilot dependencies
+        run: python tools/ci/install_python_ci.py water-pilot
+
+      - name: Run the Storm Events pilot candidate tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Admitted NOAA Storm Events descriptor (ADR-0047): must stay schema-valid.
+          python tools/validators/domains/hazards/validate_source_descriptor.py data/registry/sources/hazards/noaa.storm_events.yaml
+          python -m pytest -q \
+            tests/domains/hazards/test_storm_events_candidate.py \
+            tests/tools/test_storm_events_pilot.py \
+            tests/tools/test_storm_events_release.py \
+            tests/tools/test_storm_events_serving.py \
+            tests/tools/test_storm_events_hosted.py
+          # The Site's storm events fixtures must still be what the Python release code produces.
+          python tools/fixtures/storm_events_site_fixtures.py
+
+      - name: Record Hazards validation scope
         if: always()
         shell: bash
         run: |
-          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
-          ### Hazards validation status
-
-          `WORKFLOW_SKIPPED_EXPLICIT`
-
-          `WORKFLOW_HOLD: executable Hazards validation is not established`
-
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
-
-          Current repository evidence is documentation-heavy: sampled Hazards
-          test modules are placeholders, and the inspected per-domain and
-          cross-domain validator lanes are README-backed rather than accepted
-          executable validators.
-
-          This check does not establish current hazard conditions, warning
-          validity, regulatory status, source freshness, EvidenceBundle closure,
-          policy approval, release readiness, or emergency/life-safety authority.
-          EOF
+          {
+            echo "### Hazards validation status"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Executed commands: \`python -m unittest -v tests.domains.hazards.test_hazards_smoke\`, \`make hazards-validate\`, and \`python -m unittest tests.domains.hazards.test_domain_hazards_workflow_binding -v\`."
+            echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity; USDM material-change unit tests and exact synthetic fixture polarity; and the hosted trigger, environment, command, proof-hold, and release-hold workflow bindings."
+            echo "- Storm Events pilot: \`tests/domains/hazards/test_storm_events_candidate.py\` and \`tests/tools/test_storm_events_pilot.py\` on synthetic NCEI details-file fixtures with no network, \`tests/tools/test_storm_events_release.py\` (ADR-0047 packages and release decisions in a temporary store), \`tests/tools/test_storm_events_serving.py\` (loopback /v1/storm-events/* from a temporary serving store), \`tests/tools/test_storm_events_hosted.py\` (hosted staging and cycle against a fake Site), the Site fixture parity check \`tools/fixtures/storm_events_site_fixtures.py\`, plus validation of the admitted \`data/registry/sources/hazards/noaa.storm_events.yaml\` descriptor. Nothing is staged, activated or published."
+            echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
+            echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
+          } >> "$GITHUB_STEP_SUMMARY"
 
   build-proof-hazards:
     runs-on: ubuntu-latest
@@ -116,7 +143,7 @@ jobs:
 
     steps:
       - name: Check out Hazards proof boundaries
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -194,7 +221,7 @@ jobs:
 
     steps:
       - name: Check out Hazards release boundaries
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 

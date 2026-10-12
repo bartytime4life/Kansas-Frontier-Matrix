@@ -1,7 +1,5 @@
 package kfm.doctrine_artifact_required
 
-default deny := []
-
 required := {
   "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
   "Master_MapLibre_Components-Functions-Features.pdf",

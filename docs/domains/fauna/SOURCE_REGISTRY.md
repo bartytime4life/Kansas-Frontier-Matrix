@@ -14,13 +14,14 @@ related:
   - docs/domains/fauna/README.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
-  - kfm://schema/source/source-descriptor
-  - kfm://schema/source/source-intake-record
 tags: [kfm, domain, fauna, sources, registry, governance]
 notes:
   - All concrete paths are PROPOSED until verified against mounted-repo evidence.
   - Rights and current terms for every listed source family are NEEDS VERIFICATION.
   - Deny-by-default sensitivity posture for nests, dens, roosts, hibernacula, spawning sites is CONFIRMED doctrine.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna Domain — Source Registry
@@ -597,7 +598,7 @@ This doc explains *what the registry is*. The [Fauna source refresh runbook](../
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — metadata crosswalk
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — harvest governance
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — public-tile delivery (used downstream of admitted Fauna sources)
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — default schema home *(PROPOSED — TODO verify presence)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — default schema home *(PROPOSED — TODO verify presence)*
 - [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) — cross-domain source-authority register *(PROPOSED)*
 
 ---

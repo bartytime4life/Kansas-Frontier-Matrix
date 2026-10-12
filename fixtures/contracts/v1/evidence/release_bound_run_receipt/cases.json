@@ -1,0 +1,235 @@
+{
+  "object_type": "ReleaseBoundRunReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.release-bound-run-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "ReleaseBoundRunReceipt",
+    "schema_version": "1.0.0",
+    "profile": "kfm.release-bound-run-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:999d07e3a077825118f3048b04fafa098e20e594b25fbd2145f1499e28ac0336",
+    "observed_at": "2026-08-09T00:45:00Z",
+    "actor": {
+      "kind": "workflow",
+      "id": "github-actions:release-candidate-validation"
+    },
+    "started_at": "2026-08-09T00:40:00Z",
+    "finished_at": "2026-08-09T00:44:00Z",
+    "runtime_receipt_binding": {
+      "run_receipt_ref": "kfm:run-receipt:hydrology:2026-08-09:001",
+      "run_id": "hydrology:release-candidate:001",
+      "stage": "release_candidate",
+      "outcome": "SUCCESS",
+      "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "inputs": [
+        "kfm:artifact:processed:hydrology:001"
+      ],
+      "outputs": [
+        "kfm:artifact:published-candidate:hydrology:001"
+      ]
+    },
+    "input_artifacts": [
+      {
+        "uri": "kfm:artifact:processed:hydrology:001",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "media_type": "application/vnd.apache.parquet"
+      }
+    ],
+    "output_artifacts": [
+      {
+        "uri": "kfm:artifact:published-candidate:hydrology:001",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "media_type": "application/vnd.pmtiles"
+      }
+    ],
+    "attestations": [
+      {
+        "type": "COSIGN_BUNDLE",
+        "uri": "oci://registry.example.invalid/kfm/hydrology@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "verification_status": "VERIFIED"
+      }
+    ],
+    "evidence_refs": [
+      "kfm:evidence-bundle:hydrology:001"
+    ],
+    "release_binding": {
+      "release_candidate_ref": "kfm:release-candidate:hydrology:2026-08-09:001",
+      "candidate_zone": "PUBLISHED_CANDIDATE",
+      "evidence_status": "RESOLVED",
+      "policy_status": "ALLOW",
+      "policy_decision_ref": "kfm:policy-decision:hydrology:001",
+      "review_status": "APPROVED",
+      "review_ref": "kfm:review:hydrology:001",
+      "signature_status": "VERIFIED",
+      "correction_status": "READY",
+      "correction_path_ref": "kfm:correction-path:hydrology:001",
+      "rollback_status": "READY",
+      "rollback_ref": "kfm:rollback:hydrology:001"
+    },
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_release_bound_profile",
+      "patch": {},
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "abstain_unverified_attestation",
+      "patch": {
+        "profile_spec_hash": "sha256:8463026114b1a4211a684263a018ea717c15443cf6067f8bf9699d991193d53d",
+        "attestations": [
+          {
+            "type": "COSIGN_BUNDLE",
+            "uri": "oci://registry.example.invalid/kfm/hydrology@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+            "verification_status": "UNVERIFIED"
+          }
+        ],
+        "release_binding": {
+          "signature_status": "PENDING"
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "ATTESTATION_UNVERIFIED",
+          "SIGNATURE_PENDING"
+        ]
+      }
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {
+        "profile_spec_hash": "sha256:b40d39629c53d962e3df3b5806403f98944b65945c0eadeeaab2673eb0d5eded",
+        "release_binding": {
+          "review_status": "PENDING"
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "REVIEW_PENDING"
+        ]
+      }
+    },
+    {
+      "name": "deny_failed_attestation",
+      "patch": {
+        "profile_spec_hash": "sha256:5490ebb18480c3a25cef0c4d6f9fe8fd102a2b40182dbe39316385e391e3353d",
+        "attestations": [
+          {
+            "type": "COSIGN_BUNDLE",
+            "uri": "oci://registry.example.invalid/kfm/hydrology@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+            "verification_status": "FAILED"
+          }
+        ],
+        "release_binding": {
+          "signature_status": "FAILED"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "ATTESTATION_FAILED",
+          "SIGNATURE_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "deny_policy",
+      "patch": {
+        "profile_spec_hash": "sha256:6a9deb9d3a10540ff771b182e90e2f662d5fd99c577421bbe6972f334ca2b79e",
+        "release_binding": {
+          "policy_status": "DENY"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "POLICY_DENIED"
+        ]
+      }
+    },
+    {
+      "name": "deny_profile_spec_hash_mismatch",
+      "patch": {
+        "profile_spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PROFILE_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_output_binding_mismatch",
+      "patch": {
+        "profile_spec_hash": "sha256:c674f7c5345d650dde3d2c85573fd20e8b2f5771bab3cfa8383215a66d114475",
+        "runtime_receipt_binding": {
+          "outputs": [
+            "kfm:artifact:published-candidate:hydrology:other"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "OUTPUT_BINDING_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_authority_overclaim",
+      "patch": {
+        "authority_claims": {
+          "release_authority": true
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "deny_mutable_release_ref",
+      "patch": {
+        "release_binding": {
+          "release_candidate_ref": "kfm:release-candidate:hydrology:latest"
+        }
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "error_missing_actor",
+      "patch": {
+        "actor": null
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}

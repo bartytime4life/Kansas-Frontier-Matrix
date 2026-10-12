@@ -1,0 +1,90 @@
+{
+  "object_type": "UsgsWaterApiCutoverAssessment",
+  "schema_version": "1.0.0",
+  "assessed_at": "2026-08-06T20:20:00Z",
+  "connector_ref": "connectors/usgs/water_data",
+  "source_descriptor_ref": "source:usgs-water-data-fixture",
+  "source_descriptor_state": "RESOLVED",
+  "governance": {
+    "fixture_only": true,
+    "production_activation": false,
+    "promotion_allowed": false,
+    "public_use_allowed": false
+  },
+  "assessment_id": "usgs-water-dual-run-hold-20260806",
+  "target_mode": "dual_run",
+  "endpoint_profiles": [
+    {
+      "endpoint_id": "legacy-continuous",
+      "family": "legacy_waterservices",
+      "role": "continuous",
+      "base_uri": "https://fixture.example.invalid/usgs-water/legacy-continuous",
+      "active": true,
+      "response_schema_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "fixture_ref": "fixture://usgs-water/legacy-continuous"
+    },
+    {
+      "endpoint_id": "modern-continuous",
+      "family": "modern_waterdata",
+      "role": "continuous",
+      "base_uri": "https://fixture.example.invalid/usgs-water/modern-continuous",
+      "active": true,
+      "response_schema_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "fixture_ref": "fixture://usgs-water/modern-continuous"
+    },
+    {
+      "endpoint_id": "modern-daily",
+      "family": "modern_waterdata",
+      "role": "daily",
+      "base_uri": "https://fixture.example.invalid/usgs-water/modern-daily",
+      "active": true,
+      "response_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "fixture_ref": "fixture://usgs-water/modern-daily"
+    },
+    {
+      "endpoint_id": "modern-monitoring-locations",
+      "family": "modern_waterdata",
+      "role": "monitoring_locations",
+      "base_uri": "https://fixture.example.invalid/usgs-water/modern-monitoring-locations",
+      "active": true,
+      "response_schema_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "fixture_ref": "fixture://usgs-water/modern-monitoring-locations"
+    },
+    {
+      "endpoint_id": "modern-site-metadata",
+      "family": "modern_waterdata",
+      "role": "site_metadata",
+      "base_uri": "https://fixture.example.invalid/usgs-water/modern-site-metadata",
+      "active": true,
+      "response_schema_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "fixture_ref": "fixture://usgs-water/modern-site-metadata"
+    }
+  ],
+  "migration": {
+    "required_roles": [
+      "continuous",
+      "daily",
+      "monitoring_locations",
+      "site_metadata"
+    ],
+    "modern_coverage": [
+      "continuous",
+      "daily",
+      "monitoring_locations",
+      "site_metadata"
+    ],
+    "rewrite_map_complete": false,
+    "legacy_dependency_count": 2,
+    "dual_run_reconciliation": "MISSING",
+    "reconciliation_evidence_refs": []
+  },
+  "decision": {
+    "outcome": "HOLD",
+    "reasons": [
+      "DUAL_RUN_RECONCILIATION_MISSING",
+      "LEGACY_DEPENDENCIES_REMAIN",
+      "REWRITE_MAP_INCOMPLETE"
+    ]
+  },
+  "spec_hash": "sha256:91d65cf2134aee414c60213fdfb2ea2b9477ebcd3acc1f654b166aa56dd66874"
+}

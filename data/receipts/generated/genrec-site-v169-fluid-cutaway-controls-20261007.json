@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec-site-v169-fluid-cutaway-controls-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "apps/site/README.md",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+    "apps/site/source/app/aquifer-volume-view.tsx",
+    "apps/site/source/app/cutaway-camera.ts",
+    "apps/site/source/app/cutaway-locator.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/subsurface.module.css",
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/tests/aquifer-view-session.test.mjs",
+    "apps/site/source/tests/cutaway-camera.test.mjs",
+    "apps/site/source/tests/cutaway-locator.test.mjs",
+    "data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:250083a29c4922cdff8b0744d2068716bc98c31d52a68bbedabe1738028d9b04",
+    "apps/site/README.md": "sha256:ade44c3203e831c528186c99703d9facac68cec9f217200842d026a77b9c50ba",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "sha256:820d2f664ed3be599ca64269321a925869811cdd48668b6ab05d4b1e380911f5",
+    "apps/site/source/app/aquifer-volume-view.tsx": "sha256:99cc5f5dae444aed989df31441562a143a219bb2049a49dc9c4f15f607dfcb8c",
+    "apps/site/source/app/cutaway-camera.ts": "sha256:1a062f0acb6110e1731689a81f27db872708494ca577f86790ae03ed3c9d5e09",
+    "apps/site/source/app/cutaway-locator.ts": "sha256:c44514d25930c81a0347fe248b225f1cbd8edd8cb9f091898f6fd39053a10cfa",
+    "apps/site/source/app/globals.css": "sha256:6a59710ecb2d7f1be5124ffd3a66bdfad1978407e5e972685c8287f36dc3d9e9",
+    "apps/site/source/app/page.tsx": "sha256:e98b123514be981f0067393f6aaa7da8ea3860fc749b68984121d0a885f7dacd",
+    "apps/site/source/app/subsurface.module.css": "sha256:df6bb1882db6ff228e1ee1182a2194bafe5067aad5d98b8996ee88270304fa28",
+    "apps/site/source/app/underground-panel.tsx": "sha256:ad2fb20acb6e353c9b97e9e493968859e75b9bd40c98440680911411d055a305",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:9b34e98e1983fdb0ecb181a4447078253bee376ad98a4ede1c59c204f97dd3bf",
+    "apps/site/source/docs/underground-explorer.md": "sha256:7c6d2b03849fdc2352d898f76cab848224a5268733622dd49f076158bb9427a9",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "sha256:a0dc5205d465311e2c78ef9e743c6ce7fb81c9fac69bd41f026eb490fafdfdd8",
+    "apps/site/source/tests/cutaway-camera.test.mjs": "sha256:56b509069dd251cc16524bcc89b38614001dfb7d68eb33d60f96652b1be10405",
+    "apps/site/source/tests/cutaway-locator.test.mjs": "sha256:24e98043c8a1b78630cb58849936e589e1ea8aded44bf9bf7710d458d60c1b26",
+    "data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json": "sha256:d05d1ae49e3632223800323c8d1a559c7b28aaccb7e132746c953e4e8970a4ff"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-readback",
+      "parent-Sites-browser-readback"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:b94e002002f16351c532386bd7cb73dfa725ec21",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631@82c73327119909f9b034976bbf7cfb5f727b6caf",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "apps/site/README.md": "CONFIRMED",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "CONFIRMED",
+    "apps/site/source/app/aquifer-volume-view.tsx": "CONFIRMED",
+    "apps/site/source/app/cutaway-camera.ts": "CONFIRMED",
+    "apps/site/source/app/cutaway-locator.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/app/subsurface.module.css": "CONFIRMED",
+    "apps/site/source/app/underground-panel.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/docs/underground-explorer.md": "CONFIRMED",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/cutaway-camera.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/cutaway-locator.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact705-path source parity",
+      "outcome": "PASS",
+      "reason": "All705 source paths match final immutable Site source."
+    },
+    {
+      "gate": "Application build, TypeScript and tests",
+      "outcome": "PASS",
+      "reason": "Final standalone source: 575 tests, zero failures/skips, and 30 independent focused tests; exact mirror permits explicit reuse."
+    },
+    {
+      "gate": "Bounded browser/design checks",
+      "outcome": "PASS",
+      "reason": "Desktop/mobile preview interactions and independent design review pass; full accessibility, device and long-session acceptance remain separate."
+    },
+    {
+      "gate": "Local runtime and data preservation",
+      "outcome": "PASS",
+      "reason": "Exact v169 receipt/readback verified; eight SQLite stores and 15,840 R2 blobs preserved."
+    },
+    {
+      "gate": "Repository topology and historical mirror review",
+      "outcome": "FAIL",
+      "reason": "Six inherited KFM-TOPO-017 findings and MIRROR_REVIEW_REQUIRED remain; no waivers."
+    },
+    {
+      "gate": "Independent human acceptance and exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "No approval supplied; final-head hosted checks after push are separate evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T06:11:40.875361+00:00",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, binding final authored artifact bytes except this self-referential record. No prompts, secrets, private payloads, hidden reasoning or review approvals. Source, deployment, runtime, browser and dataset-release states remain separate."
+}

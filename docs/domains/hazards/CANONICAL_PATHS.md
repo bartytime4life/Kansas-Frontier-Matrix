@@ -10,14 +10,10 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../../directory-rules.md
+  - ../../doctrine/directory-rules.md
   - ./ARCHITECTURE.md
-  - ./api-contracts.md
   - ./BLUEPRINT.md
   - ../README.md
-  - kfm://standard/directory-rules
-  - kfm://atlas/v1.1/section-24.13
-  - kfm://encyclopedia/section-7.1
 tags: [kfm, domains, hazards, directory-rules, canonical-paths]
 notes:
   # CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -29,6 +25,9 @@ notes:
   # Directory Rules is at v1.3 (Cesium retired; packages/maplibre-runtime/). Section refs are kept
   #   but NOT pinned to a specific subsection number unless verifiable.
   # All implementation paths remain PROPOSED until verified against a mounted repo.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Canonical Paths; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Canonical Paths
@@ -375,9 +374,9 @@ The following are points of friction or PROPOSED state that may surface during r
 
 ## 12. Related docs
 
-- [`docs/doctrine/directory-rules.md`](../../../directory-rules.md) — root authority for placement, lifecycle, and trust membrane (v1.3). (CONFIRMED authority)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — root authority for placement, lifecycle, and trust membrane (v1.3). (CONFIRMED authority)
 - [`docs/domains/hazards/ARCHITECTURE.md`](./ARCHITECTURE.md) — what the Hazards lane is.
-- [`docs/domains/hazards/api-contracts.md`](./api-contracts.md) — governed API surfaces + decision envelopes.
+- `docs/domains/hazards/api-contracts.md` (not present) — governed API surfaces + decision envelopes.
 - [`docs/domains/hazards/BLUEPRINT.md`](./BLUEPRINT.md) — lane implementation build plan.
 - [`docs/domains/hazards/README.md`](./README.md) — domain landing page. *(TODO: confirm existence in mounted repo.)*
 - [`docs/domains/README.md`](../README.md) — domains index. *(TODO: confirm.)*

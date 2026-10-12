@@ -1,0 +1,11 @@
+{
+  "release_scope": "public",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "evidence_refs": [],
+  "sensitivity": {"reviewed": true, "class": "PUBLIC"},
+  "attestation": {"required": true, "verified": true, "ref": "attestation:sha256:bbbb"},
+  "review": {"state": "REVIEWED", "review_ref": "review:pass12:001"},
+  "release_manifest_ref": "release:manifest:pass12:001",
+  "correction_ref": "correction:path:pass12:001",
+  "rollback_ref": "rollback:path:pass12:001"
+}

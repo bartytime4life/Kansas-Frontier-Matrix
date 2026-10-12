@@ -1,219 +1,212 @@
-# `schemas/maplibre/` — MapLibre Performance Schema Compatibility Lane
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-maplibre-readme
-title: schemas/maplibre/ — MapLibre Performance Schema Compatibility Lane
-type: readme; schema-compatibility-index; migration-guardrail; performance-governance-boundary
-version: v0.2
-status: draft; compatibility-lane; eight-permissive-placeholders; workflow-hold; placement-conflicted; NEEDS VERIFICATION
-owners: OWNER_TBD — Schema steward · Contract steward · MapLibre steward · Performance steward · Validation steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — README existed before v0.1 expansion
-updated: 2026-07-22
-policy_label: public; schemas; maplibre; performance; compatibility; no-parallel-authority; no-publication-by-validation
+title: schemas/maplibre/ — MapLibre Performance-Schema Compatibility and Readiness Boundary
+type: README
+version: v0.4
+status: draft; repository-grounded; transitional-compatibility-lane; one-closed-config-schema; seven-permissive-placeholders; workflow-held; migration-unresolved; non-authoritative; non-release
+owner: NEEDS VERIFICATION — CODEOWNERS routes /schemas/ to @bartytime4life, but routing is not accepted stewardship or independent approval
+created: 2026-07-05
+updated: 2026-09-08
+policy_label: public
+owning_root: schemas/
 current_path: schemas/maplibre/README.md
-truth_posture: CONFIRMED eight individually opened accept-any-object JSON Schema 2020-12 placeholders and current static readiness workflow at the pinned snapshot / PROPOSED schema semantics and migration destinations / CONFLICTED root-topic compatibility placement versus the proposed versioned schema-home decision / UNKNOWN owners, consumers, accepted contracts, fixture coverage, runtime behavior, current CI conclusion, release use, and migration schedule / NEEDS VERIFICATION before any schema promotion or consumer binding
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 459b41d7ec91240742d8b2d3e5d9eb4dbd248df7
-  prior_blob: 2dda90174ec219fd08edce155f8d151427e92ddb
+responsibility: Preserve a bounded compatibility index for eight unversioned MapLibre performance schemas, enforce the repository-owned PerfEnvelope v1 configuration shape, bound the seven remaining placeholders, and route future canonical machine-shape work without claiming runtime, release, or publication maturity.
+truth_posture: CONFIRMED closed PerfEnvelope v1 machine constraints, tracked-config validation, synthetic fixture polarity, focused tests, and CI binding; CONFIRMED seven adjacent placeholders; PROPOSED or UNKNOWN canonical destinations, ownership, benchmark semantics, runtime activation, migration, release, and retirement
+evidence_snapshot: base main@b30210971c41073a9a2e36b5a0d7d451ef43d592; current checkout and bounded offline validation on 2026-09-08
 related:
-  - ../README.md
-  - ../contracts/v1/map/README.md
-  - ../contracts/v1/layers/README.md
-  - ../../docs/architecture/directory-rules.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
-  - ../../docs/quality/maplibre-perf-governance.md
-  - ../../configs/maplibre/README.md
-  - ../../packages/maplibre/README.md
-  - ../../tools/validators/maplibre/README.md
-  - ../../tests/maplibre/README.md
-  - ../../tests/fixtures/maplibre/README.md
-  - ../../.github/workflows/maplibre-perf-governance.yml
+  - schemas/README.md
+  - schemas/contracts/v1/map/README.md
+  - schemas/contracts/v1/layers/README.md
+  - configs/maplibre/README.md
+  - contracts/README.md
+  - policy/README.md
+  - tools/validators/maplibre/README.md
+  - tests/maplibre/README.md
+  - tests/fixtures/maplibre/README.md
+  - tests/fixtures/maplibre/perf-envelope/README.md
+  - tests/maplibre/test_perf_envelope_contract.py
+  - packages/maplibre/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/quality/maplibre-perf-governance.md
+  - .github/workflows/maplibre-perf-governance.yml
+  - .github/workflows/schema-validation.yml
+tags: [kfm, schemas, maplibre, performance, compatibility, readiness, validation, migration, evidence]
 notes:
-  - "v0.2 preserves the prior compatibility boundary and replaces partial inventory claims with exact per-file inspection at the pinned base."
-  - "All eight direct schema files contain the same three-key accept-any-object placeholder and share blob SHA 511e7f34ca84390fd5d000326ab33c46c3050fc4."
-  - "ADR-0001 is present but proposed; it does not yet prove an accepted migration destination for every MapLibre performance object family."
-  - "The current MapLibre performance workflow detects placeholder and readiness drift, runs syntax checks and three scalar negative paths, then records WORKFLOW_HOLD; it does not run browser performance, render-diff, attestation, proof, release, correction, or rollback stages."
-  - "This README change does not modify schemas, contracts, policy, fixtures, validators, tests, workflows, runtime behavior, artifacts, release records, or KFM publication state."
+  - The PerfEnvelope v1 schema is closed and executable; the other seven direct schemas retain the historical Draft 2020-12 accept-any-object shape.
+  - The MapLibre performance workflow retains WORKFLOW_HOLD for browser/runtime stages; schema validity is not readiness, release, or publication evidence.
+  - ADR-0029, ADR-0006, and ADR-0007 are accepted. ADR-0001 and object-family migration remain proposed or unresolved.
+  - This dependency-closed slice changes one schema, its validator/fixtures/tests, two workflow bindings, and boundary documentation; it changes no runtime threshold value, renderer, release, or publication state.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
+# `schemas/maplibre/` — MapLibre Performance-Schema Compatibility and Readiness Boundary
+
 > [!IMPORTANT]
-> `schemas/maplibre/` is a **non-authoritative compatibility lane** inside the canonical `schemas/` responsibility root. Its eight JSON files are syntactically valid, permissive placeholders. They do not establish semantic contracts, meaningful validation, evidence closure, policy approval, performance, release readiness, rollback capability, or publication safety.
+> **2026-09-29 removal update.** The seven accept-any placeholder schemas
+> (`perf-receipt`, `render-diff-report`, `perf-proof-pack`, `perf-rollback-plan`,
+> `perf-failure-bundle`, `perf-release-manifest`, `perf-correction-notice`) were
+> removed with the legacy harness that was their only consumer. Only the closed
+> `perf-envelope.schema.json` remains; later references to "seven placeholders"
+> are historical.
 
-> [!WARNING]
-> Do not add fields, bind new consumers, or treat the current `$id`-less paths as stable contracts. The proposed repository-wide schema-home decision favors versioned families under `schemas/contracts/v1/`, but the final family for each performance envelope, receipt, report, proof, release, correction, failure, or rollback object still requires review.
+> **One-line purpose.** Enforce the tracked PerfEnvelope v1 machine shape, keep seven historical trust-output placeholders visible and bounded, and prevent green checks from being mistaken for runtime readiness, release approval, or publication authority.
 
-## Quick navigation
+<kbd>TRANSITIONAL COMPATIBILITY</kbd> <kbd>1 CLOSED CONFIG SCHEMA</kbd> <kbd>7 PLACEHOLDERS</kbd> <kbd>RUNTIME: HOLD</kbd> <kbd>PUBLISHER: NO</kbd>
 
-[Purpose](#purpose) · [Status](#status) · [Boundary](#boundary) · [Repository fit](#repository-fit) · [Inventory](#current-inventory) · [Placeholder shape](#verified-placeholder-shape) · [Responsibilities](#object-family-and-authority-routing) · [Compatibility](#compatibility-rules) · [Consumers](#consumer-rules) · [Validation](#validation) · [Workflow](#current-workflow-boundary) · [Migration](#migration-and-promotion-gates) · [Review](#review-burden) · [Done](#definition-of-done) · [Questions](#open-questions) · [Evidence](#evidence-ledger) · [Correction](#correction-and-rollback)
+> [!IMPORTANT]
+> `schemas/maplibre/` is a transitional lane beneath the canonical
+> [`schemas/`](../README.md) machine-shape root. `perf-envelope.schema.json`
+> now validates the exact repository-owned v1 configuration identity, fields,
+> numeric domains, and notes shape. The other seven JSON files still accept any
+> object. None defines benchmark authority, evidence, policy, promotion, release,
+> or safe-presentation rules.
+
+> [!CAUTION]
+> Do not add consumers to the seven placeholders or infer runtime readiness from
+> the closed configuration schema. Canonical migration and any trust-output
+> implementation still require object-family routing, reviewed contracts,
+> fixtures, validators, consumer evidence, and separate release governance.
+
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-and-inheritance) · [Status](#status-and-evidence) · [Map](#current-directory-map) · [Inventory](#complete-schema-inventory) · [Shape](#verified-schema-shapes) · [Routing](#object-family-and-authority-routing) · [Flow](#governed-responsibility-flow) · [Boundaries](#what-belongs-here) · [Interfaces](#inputs-outputs-writers-and-consumers) · [Validation](#validation-and-negative-checks) · [CI](#current-ci-and-readiness-boundary) · [Migration](#compatibility-migration-and-retirement) · [Review](#review-burden-and-escalation) · [Done](#definition-of-done) · [Open items](#open-verification-register) · [Evidence](#evidence-ledger) · [Correction](#correction-and-rollback)
 
 ---
 
 ## Purpose
 
-`schemas/maplibre/` documents and temporarily retains eight MapLibre performance-governance schema placeholders while KFM resolves their semantic contracts, object-family ownership, canonical versioned schema placement, consumers, fixtures, validators, policy boundaries, and release relationships.
+This directory retains eight historical, unversioned filenames. One has a
+bounded current consumer: the repository-owned `PerfEnvelope` v1 configuration.
+Canonical placement and semantics for that object, and all shape/authority work
+for the other seven objects, remain subject to reviewed migration decisions.
 
-This lane exists to make unresolved compatibility visible. It must not become a second canonical schema system merely because scripts or validators currently reference its files.
+This compatibility lane exists to:
+
+- make the exact current bytes and their limitations discoverable;
+- stop unversioned file paths from quietly becoming stable public contracts;
+- preserve migration context without creating a parallel schema authority;
+- separate machine shape from meaning, evidence, policy, configuration, runtime rendering, and release state;
+- provide fail-closed contribution and review rules; and
+- record the evidence required before any placeholder can be promoted, redirected, deprecated, tombstoned, or removed.
+
+It does **not** make the filenames canonical, the schemas meaningful, the workflow operational, the MapLibre adapter implemented, or any result safe to publish.
 
 The durable responsibility split is:
 
-```text
-contracts/                    semantic meaning and invariants
-schemas/                      machine-checkable shape
-policy/                       allow / deny / restrict / abstain
-fixtures/ and tests/          examples and enforceability proof
-tools/validators/             executable validation
-configs/                      commit-safe thresholds and defaults
-data/receipts/ and proofs/    emitted audit and proof records
-release/                      promotion, correction, withdrawal, rollback
-packages/ and apps/           renderer adapter and governed UI behavior
-```
-
-MapLibre remains a renderer and interaction surface downstream of those authorities. A schema in this directory cannot make a rendered result true, cited, rights-cleared, sensitive-safe, reviewed, released, or public.
-
-[Back to top](#top)
-
----
-
-## Status
-
-| Surface | Status at the pinned snapshot | Safe conclusion |
+| Responsibility root | Owns | Does not gain authority from this README |
 |---|---|---|
-| This README | **CONFIRMED** | Existing compatibility index; v0.2 expands its evidence and migration boundary. |
-| Eight named `*.schema.json` files | **CONFIRMED** | Each was opened individually at the pinned commit. |
-| JSON syntax | **CONFIRMED** | Each file parses as JSON and declares JSON Schema 2020-12. |
-| Machine constraints | **CONFIRMED permissive placeholder** | Every schema accepts any JSON object and declares no fields or required keys. |
-| `$id`, title, version, KFM metadata | **ABSENT in the opened files** | Identity, registry, and version posture are not established. |
-| Semantic contracts | **UNKNOWN** | Filenames suggest object roles; the schema files do not define meaning. |
-| Canonical placement | **PROPOSED / CONFLICTED** | ADR-0001 proposes `schemas/contracts/v1/`; it remains proposed and no versioned MapLibre README exists at the checked path. |
-| Schema wrappers | **CONFIRMED present** | Eight wrappers route to the common JSON Schema runner, but permissive schemas impose no meaningful field validation. |
-| Governance validators | **CONFIRMED placeholders** | The current readiness workflow deliberately checks that seven broader verifiers remain placeholders. |
-| Executable MapLibre tests | **CONFIRMED narrow** | Three direct negative tests cover only invalid scalar fixture values. |
-| Current workflow definition | **CONFIRMED static readiness gate** | It runs syntax and three negative paths, detects maturity drift, and records an explicit `WORKFLOW_HOLD`. |
-| Current workflow run result | **UNKNOWN** | No current Actions conclusion is asserted by source inspection alone. |
-| Browser performance, render diff, proof, release, correction, rollback | **NOT EXECUTED by the inspected workflow** | No operational or publication claim follows from this lane. |
-| Owners and accepted migration schedule | **NEEDS VERIFICATION** | No accountable assignment or approved schedule was established. |
+| `contracts/` | Semantic meaning, invariants, lifecycle, and cross-object relationships | Machine shape, policy execution, or release approval |
+| `schemas/` | Machine-checkable shape and versioned schema identity | Truth, rights, sensitivity, review, or publication |
+| `policy/` | Allow, deny, restrict, abstain, and escalation logic | Schema validity or artifact release by itself |
+| `configs/` | Commit-safe thresholds and defaults | Evidence, promotion, or release records |
+| `fixtures/` and `tests/` | Representative examples, counterexamples, and enforceability proof | Runtime production behavior unless explicitly exercised |
+| `tools/validators/` | Executable checks with bounded inputs and finite outcomes | Authority to waive failed policy or release gates |
+| `data/receipts/`, proof, and evidence surfaces | Append-oriented records about evaluated events | Retroactive truth or automatic publication |
+| `release/` | Promotion, release, correction, withdrawal, and rollback governance | Semantic contract authorship or renderer implementation |
+| `packages/` and `apps/` | Adapter, renderer, governed API, and UI behavior | Canonical schema or policy authority |
 
-### Truth labels
+MapLibre is downstream of these authorities. It renders reviewed, released, public-safe carriers; it does not become a source of truth because an object can be displayed.
 
-| Label | Meaning in this README |
+## Authority and inheritance
+
+### Governing authority
+
+| Source | Status at the evidence snapshot | Effect here |
+|---|---|---|
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Adopts the exact Directory Rules v2 bytes and their responsibility-root, README, placement, compatibility, and change-control rules. |
+| [Directory Rules v2](../../docs/doctrine/directory-rules.md) | **ADOPTED BY ADR-0029**; its pinned internal header still records its original proposal posture | Defines `schemas/` as machine shape, requires the contracts/schemas/policy split, and defaults new schema families to `schemas/contracts/v1/<family>/` unless an accepted ADR establishes another versioned profile. |
+| [`schemas/README.md`](../README.md) | **CURRENT ROOT CONTRACT** | Supplies parent machine-shape and maturity rules. Its earlier all-permissive description is superseded locally by the current one-closed/seven-placeholder inventory and should be reconciled separately. |
+| [`control_plane/root_registry.yaml`](../../control_plane/root_registry.yaml) | **MACHINE PROJECTION ONLY** | Registers `root.schemas`. It does not accept a child-family destination, activate a schema, or create independent authority. |
+| [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Describes stronger schema-home canonicalization and migration intent; it is useful design context, not accepted migration authority. |
+| [ADR-0004](../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | **DRAFT source / effectively PROPOSED** | Describes the governed API trust-membrane design. It does not prove that the trust membrane or these object flows are implemented. |
+| MapLibre adapter and renderer decisions | **ACCEPTED ARCHITECTURE** | ADR-0006 accepts the package seam and ADR-0007 accepts the renderer family; neither turns configuration validation into runtime readiness. |
+
+### Local authority statement
+
+This README may document observed repository state, route contributors, preserve compatibility facts, and name unresolved decisions. It must not:
+
+- accept, supersede, or silently implement an ADR;
+- assign a canonical versioned family to any object without review;
+- create a second writable schema authority;
+- define contract semantics, policy decisions, evidence requirements, or release gates in prose;
+- use schema validity to activate a package, adapter, API, renderer, release, or public map;
+- authorize promotion, release, publication, correction, withdrawal, rollback execution, tombstoning, or deletion; or
+- convert placeholders into implemented artifacts by relabeling them.
+
+`CODEOWNERS` routes `/schemas/` review to `@bartytime4life`. That is review routing only. It does not prove an accepted schema steward, object-family owner, independent approver, separation of duties, branch protection, or release authority.
+
+### Authority precedence
+
+When sources disagree, apply the following fail-closed order:
+
+1. accepted ADRs and the exact adopted doctrine bytes they identify;
+2. current responsibility-root contracts and accepted versioned-family rules;
+3. machine projections and executable validators within their declared scope;
+4. local compatibility documentation;
+5. architecture lineage and proposals.
+
+File proximity, age, naming, import history, or workflow success does not override accepted authority.
+
+## Status and evidence
+
+The following statements use base `main@b30210971c41073a9a2e36b5a0d7d451ef43d592`
+and the current reviewed change unless a historical hosted run is named separately.
+
+| Question | Evidence-backed answer | Truth label |
+|---|---|---|
+| Is this directory tracked? | Yes; it contains one README and eight direct schema files. | **CONFIRMED** |
+| Were all direct schema files inspected? | Yes; the inventory and current content were compared. | **CONFIRMED** |
+| Are the eight schema files distinct implementations? | One (`perf-envelope`) is closed; the other seven retain the common placeholder shape. | **CONFIRMED** |
+| Do they parse and declare a JSON Schema draft? | Yes. Each declares `https://json-schema.org/draft/2020-12/schema`. | **CONFIRMED** |
+| Do they validate meaningful fields? | `perf-envelope` validates exact v1 identity/posture, a closed five-threshold object, numeric domains, and bounded notes. The other seven do not validate filename-implied fields. | **CONFIRMED MIXED MATURITY** |
+| Do they define stable canonical `$id` values? | No. `perf-envelope` has a title/description and payload version constant but deliberately does not claim a canonical schema URI at this transitional path. | **CONFIRMED / MIGRATION HOLD** |
+| Is `schemas/` the correct responsibility root for machine shape? | Yes, under accepted ADR-0029 and Directory Rules v2. | **CONFIRMED** |
+| Is this unversioned child the accepted final home? | No accepted decision assigning these eight objects here was verified. | **NEEDS VERIFICATION / HOLD** |
+| Is one `map` family the correct destination for all eight objects? | Not established. Receipts, proofs, release manifests, correction notices, failure bundles, and rollback plans cross semantic and lifecycle boundaries. | **UNKNOWN / NEEDS OBJECT-FAMILY REVIEW** |
+| Are wrapper validators present? | Yes; all eight use the common runner. The envelope wrapper now binds reviewed fixtures and resolves schema/fixture paths independently of the caller's working directory. | **CONFIRMED** |
+| Are broader performance-governance verifiers implemented? | No. The inspected workflow asserts that seven remain placeholders. | **CONFIRMED HOLD** |
+| Are there executable negative tests? | Yes; fourteen envelope fixtures cover identity, version, posture, field closure, types, timing domains, pixel ratio, and notes, alongside the separate three scalar tests. | **CONFIRMED** |
+| Is MapLibre runtime readiness proved here? | No. Package/runtime evidence is owned elsewhere and the readiness classifier remains `HOLD` with runtime probes pending. | **CONFIRMED HOLD** |
+| Did a historical MapLibre performance run pass? | Run `31654973078` concluded `success` while explicitly recording `WORKFLOW_HOLD`; exact-head hosted results for this change remain pending. | **HISTORICAL SUCCESS + CURRENT HOLD** |
+| Does that run prove browser performance, render parity, proof, release, rollback, or publication? | No. Those stages were not executed by the inspected workflow. | **CONFIRMED NON-PROOF** |
+| Are owner, consumer set, migration schedule, and retirement criteria accepted? | No complete accepted record was verified. | **NEEDS VERIFICATION** |
+
+### Truth labels used here
+
+| Label | Meaning |
 |---|---|
-| **CONFIRMED** | Verified in the pinned repository snapshot or named attached doctrine. |
-| **PROPOSED** | Intended design or future state not accepted and verified as current. |
-| **UNKNOWN** | Available evidence does not establish the claim. |
-| **NEEDS VERIFICATION** | A concrete repository, governance, test, or runtime check is still required. |
-| **CONFLICTED** | Current surfaces point to incompatible authority or placement postures. |
+| **CONFIRMED** | Directly observed in the pinned Git tree, file bytes, workflow definition, hosted run, or adopted authority. |
+| **INFERRED** | A bounded conclusion from confirmed evidence; the inference and its limits are stated. |
+| **PROPOSED** | Declared design or candidate state that is not accepted or active. |
+| **UNKNOWN** | Available evidence does not establish the answer. |
+| **NEEDS VERIFICATION** | A specific repository, governance, test, runtime, or consumer check remains open. |
+| **HOLD** | Do not rely, migrate, activate, release, publish, retire, or delete until the named gates close. |
 
-[Back to top](#top)
+## Current directory map
 
----
-
-## Boundary
-
-This directory is under `schemas/`, so its only potential authority is machine-checkable shape. At the inspected snapshot, even that authority is intentionally weak because every direct schema is an accept-any-object placeholder.
-
-### This lane may
-
-- retain the eight existing placeholder files while migration is unresolved;
-- document their exact current shape and limitations;
-- point to paired contracts, policies, fixtures, validators, tests, configuration, evidence, and release surfaces;
-- carry reviewed compatibility, deprecation, redirect, and migration notes; and
-- expose drift without silently normalizing it.
-
-### This lane must not
-
-- define semantic meaning that belongs in `contracts/`;
-- encode policy, rights, sensitivity, review, or release decisions;
-- store configuration instances, fixtures, runtime data, screenshots, metrics, receipts, proofs, manifests, corrections, or rollback records;
-- implement validators, scripts, APIs, UI, MapLibre adapters, or browser behavior;
-- authorize a source, layer, style, tile, plugin, export, or public map;
-- turn a valid payload into an EvidenceBundle, PolicyDecision, PromotionDecision, or PUBLISHED artifact; or
-- evolve independently as a parallel schema authority.
-
-Schema validity constrains bytes. It does not establish truth, evidence support, source role, rights, sensitivity, freshness, review state, release state, or safe presentation.
-
-[Back to top](#top)
-
----
-
-## Repository fit
+Directory Rules `DIR-README-003` requires this map to show the current directory and direct children only.
 
 ```text
-schemas/
+schemas/maplibre/
 ├── README.md
-├── maplibre/                                  # this compatibility lane
-│   ├── README.md                              # this file
-│   ├── perf-envelope.schema.json              # permissive placeholder
-│   ├── perf-receipt.schema.json               # permissive placeholder
-│   ├── render-diff-report.schema.json          # permissive placeholder
-│   ├── perf-proof-pack.schema.json             # permissive placeholder
-│   ├── perf-rollback-plan.schema.json           # permissive placeholder
-│   ├── perf-failure-bundle.schema.json          # permissive placeholder
-│   ├── perf-release-manifest.schema.json        # permissive placeholder
-│   └── perf-correction-notice.schema.json       # permissive placeholder
-└── contracts/
-    └── v1/
-        ├── map/                               # inspected versioned map family index
-        └── layers/                            # inspected versioned layer family index
-
-configs/maplibre/                              # performance-envelope instance and config boundary
-tools/validators/maplibre/                     # wrappers and readiness verifiers
-tests/maplibre/                                # narrow executable negative tests
-tests/fixtures/maplibre/                       # documented fixture lanes; payload maturity held
-packages/maplibre/                             # transitional package scaffold
-docs/quality/maplibre-perf-governance.md       # design and governance lineage
-.github/workflows/maplibre-perf-governance.yml # current static readiness HOLD
+└── perf-envelope.schema.json
 ```
 
-The checked path `schemas/contracts/v1/maplibre/README.md` does not exist at the pinned snapshot. The current contribution guide points to [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) for placement preflight while the repository also retains a doctrine-path edition. That authority and placement graph remains **CONFLICTED**. Both editions describe a versioned MapLibre family as proposed architecture, and ADR-0001 proposes the general versioned schema-home rule. None of those facts authorizes a silent move or lets this README invent final destinations for the eight objects.
+No nested directory is present in the inspected target tree. The inventory is exact for the pinned snapshot; it is not a claim about later commits.
 
-### Placement basis
+## Complete schema inventory
 
-- `schemas/` is the correct responsibility root for machine-checkable shape.
-- The repository carries multiple Directory Rules artifacts; their lineage and canonical document home remain unresolved, so this README cites the current contribution-preflight target and preserves the doctrine-path companion.
-- The current `schemas/maplibre/` topic lane is transitional and must not become parallel authority.
-- ADR-0001 is a **proposed** schema-home decision, not accepted migration proof.
-- Receipt, proof, release, correction, failure, and rollback names cross object-family boundaries; each requires semantic and lifecycle review before placement.
-- Any move must preserve consumers, `$id`/identity decisions, fixtures, validator bindings, compatibility windows, correction lineage, and rollback.
+| File | Confirmed machine behavior | Filename-implied concern only | Canonical destination |
+|---|---|---|---|
+| [`perf-envelope.schema.json`](./perf-envelope.schema.json) | Closed `PerfEnvelope` v1 configuration shape with exact identity/posture, five numeric thresholds, and bounded notes | Repository-owned threshold configuration, not a measurement or release object | **TRANSITIONAL PATH; CANONICAL DESTINATION NEEDS VERIFICATION** |
 
-[Back to top](#top)
+The third column is vocabulary suggested by filenames, not confirmed semantics. Do not use it to generate payloads, APIs, schemas, validators, or release logic without an accepted contract and object-family review.
 
----
+## Verified schema shapes
 
-## Current inventory
-
-The eight schema paths below were individually read at the pinned evidence snapshot and verified unaffected by the later base movement to `459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`. All eight contain identical bytes and share blob SHA `511e7f34ca84390fd5d000326ab33c46c3050fc4`.
-
-| Path | Current status | Filename-level intent only |
-|---|---|---|
-| [`perf-envelope.schema.json`](perf-envelope.schema.json) | **CONFIRMED permissive placeholder** | Performance threshold/envelope shape is PROPOSED. |
-| [`perf-receipt.schema.json`](perf-receipt.schema.json) | **CONFIRMED permissive placeholder** | Performance receipt shape and receipt-family relationship are PROPOSED. |
-| [`render-diff-report.schema.json`](render-diff-report.schema.json) | **CONFIRMED permissive placeholder** | Render comparison report shape and proof relationship are PROPOSED. |
-| [`perf-proof-pack.schema.json`](perf-proof-pack.schema.json) | **CONFIRMED permissive placeholder** | Proof-pack shape and proof-family relationship are PROPOSED. |
-| [`perf-rollback-plan.schema.json`](perf-rollback-plan.schema.json) | **CONFIRMED permissive placeholder** | Rollback-plan shape and release-family relationship are PROPOSED. |
-| [`perf-failure-bundle.schema.json`](perf-failure-bundle.schema.json) | **CONFIRMED permissive placeholder** | Failure-bundle shape, lifecycle, and evidence relationship are PROPOSED. |
-| [`perf-release-manifest.schema.json`](perf-release-manifest.schema.json) | **CONFIRMED permissive placeholder** | Release-manifest shape and relation to canonical release objects are PROPOSED. |
-| [`perf-correction-notice.schema.json`](perf-correction-notice.schema.json) | **CONFIRMED permissive placeholder** | Correction-notice shape and relation to canonical correction objects are PROPOSED. |
-
-The descriptions above derive only from filenames and nearby design documentation. They do not establish accepted contracts, fields, identity, lifecycle state, consumers, or publication authority.
-
-### Inventory completeness boundary
-
-Exact reads confirm this README and the eight named schema files. The workflow source also treats those eight filenames as the expected exact schema set and fails its readiness inspection if the set changes. A successful current workflow run or a complete API tree listing was not inspected, so this README does not upgrade that expected set into a claim about every possible unlisted path.
-
-[Back to top](#top)
-
----
-
-## Verified placeholder shape
-
-Every direct schema currently contains:
+The seven trust-output schemas retain exactly this machine shape:
 
 ```json
 {
@@ -223,347 +216,551 @@ Every direct schema currently contains:
 }
 ```
 
-### What this proves
+The envelope schema is distinct. It closes top-level and threshold objects,
+requires the six known top-level members and five known threshold members,
+constrains identity/posture to current v1 constants, requires positive timing
+numbers, limits the pixel-delta ratio to `[0, 1]`, and bounds notes.
 
-- the file is valid JSON;
-- it declares JSON Schema draft 2020-12;
-- it accepts JSON objects; and
-- undeclared properties are allowed.
+### What the seven placeholder shapes prove
+
+- their bytes parse as JSON;
+- their declared meta-schema URI is Draft 2020-12;
+- non-object instances are rejected by the `type` keyword; and
+- object instances with any property set are accepted by those seven schemas.
 
 ### What this does not prove
 
-- stable schema identity or `$id`;
-- object title, description, version, or owner;
-- required fields, types, ranges, formats, enums, or references;
-- compatibility with `configs/maplibre/perf-envelope.v1.json`;
-- semantic agreement with a contract;
-- valid and invalid fixture polarity;
-- validator rejection of malformed domain content;
-- evidence, policy, review, signing, provenance, integrity, release, correction, or rollback closure;
-- browser performance, render stability, visual equivalence, accessibility, or public safety; or
-- readiness for runtime or public consumers.
+- canonical URI or final versioned-family placement;
+- accepted benchmark units, sampling, environment, or threshold authority;
+- source, layer, style, tile, renderer, browser, device, or environment identity;
+- deterministic measurement method, sample size, baseline, tolerance, or comparison rules;
+- evidence lineage, citations, hashes, signatures, review, or separation of duties;
+- rights, sensitivity, consent, public-safety, or access-policy outcomes;
+- promotion, release, rollback, correction, withdrawal, or publication state;
+- compatibility with a consumer, API, package, adapter, workflow, or UI; or
+- that any filename-implied object exists at runtime.
 
-Because these schemas accept any object, a passing wrapper invocation would prove only that the input is an object. It would not prove that the object is a meaningful performance envelope, receipt, proof pack, release manifest, correction notice, failure bundle, rollback plan, or render-diff report.
-
-[Back to top](#top)
-
----
+The common runner now gives meaningful machine assurance for `PerfEnvelope` v1
+and only structural object assurance for the other seven files. Neither outcome
+is runtime, evidence, policy, release, or publication assurance.
 
 ## Object-family and authority routing
 
-Final destinations remain **NEEDS VERIFICATION**. Review each object by responsibility and lifecycle rather than moving all eight together because they share a MapLibre prefix.
+Accepted Directory Rules provide a default versioned pattern, not an automatic destination for every historical filename. Each object must be routed according to its semantic aggregate and lifecycle boundaries.
 
-| Concern | Owning authority surface | Required separation |
+### Adjacent versioned families
+
+| Surface | Confirmed state | Safe use here |
 |---|---|---|
-| Performance-object meaning | accepted Markdown contract family under `contracts/` | Define semantics and invariants before hardening shape. |
-| Machine shape | accepted versioned family under `schemas/contracts/v1/` or an ADR-backed exception | Do not maintain divergent canonical definitions. |
-| Threshold values and commit-safe defaults | [`configs/maplibre/`](../../configs/maplibre/README.md) | Configuration instances are not schemas or policy. |
-| Allow, deny, restrict, abstain, sensitivity, and public-surface decisions | `policy/` | Schema validation cannot grant admission or release. |
-| Valid, invalid, boundary, stale, denied, and error examples | `fixtures/` or the accepted MapLibre fixture lane | Fixtures are proof inputs, not authority. |
-| Validator implementation | [`tools/validators/maplibre/`](../../tools/validators/maplibre/README.md) | Validators consume accepted schemas; they do not define object meaning. |
-| Executable proof | [`tests/maplibre/`](../../tests/maplibre/README.md) and accepted integration lanes | Tests prove only exercised behavior. |
-| Emitted receipts and proofs | accepted `data/receipts/` and `data/proofs/` lanes | Never store emitted records beside schemas. |
-| Release, correction, withdrawal, and rollback decisions | `release/` and accepted release contracts/schemas | Candidate objects do not publish themselves. |
-| Renderer adapter and UI behavior | `packages/`, `apps/explorer-web/`, governed APIs | Standard clients consume released, policy-safe artifacts. |
+| [`schemas/contracts/v1/map/`](../contracts/v1/map/README.md) | README plus 17 schema files; mixed maturity | Candidate adjacency for machine shapes whose accepted semantic aggregate is `map`, not a blanket destination for performance, proof, receipt, or release objects. |
+| `map/layer_manifest.schema.json` | Proposed accept-any scaffold | No stronger than a placeholder for semantic assurance. |
+| `map/style_manifest.schema.json` | Proposed accept-any scaffold | Does not prove style compilation, safety, or release. |
+| `map/tile_artifact_manifest.schema.json` | Proposed accept-any scaffold | Does not prove tile generation, integrity, or publication. |
+| `map/map_release_manifest.schema.json` | Substantive, strict, fixture-first `PROPOSED_INACTIVE` profile | Demonstrates a stronger machine-backed profile while explicitly denying activation. It does not absorb all MapLibre performance objects. |
+| [`schemas/contracts/v1/layers/`](../contracts/v1/layers/README.md) | Shared layer schemas with permissive scaffolds and overlapping domain profiles | Requires bounded ownership and overlap review before any routing. |
+
+### Required routing questions
+
+Before moving or replacing any of the eight transitional schemas, reviewers must establish:
+
+1. the semantic aggregate and canonical contract path;
+2. the versioned schema family and stable `$id` policy;
+3. the difference between configuration, observation, receipt, proof, decision, and release record;
+4. the authoritative writer and authorized mutation model;
+5. intended readers and actual existing consumers;
+6. applicable rights, consent, sensitivity, security, and public-safety policy;
+7. fixtures, validators, negative tests, and compatibility expectations;
+8. promotion, release, correction, withdrawal, and rollback relationships;
+9. retention and redaction requirements; and
+10. migration, redirect, deprecation, and retirement evidence.
 
 ### Cross-family caution
 
-The filename prefix `perf-` does not make every object a member of one schema family. Receipt, proof, release, correction, rollback, and failure objects may need to extend or reference existing cross-cutting KFM families. Review reuse and composition before introducing MapLibre-specific duplicates.
+The filename prefix `perf-` and the renderer name `maplibre` are not sufficient domain boundaries. A receipt may belong to a generic evaluation or evidence family; a proof pack may be evidence infrastructure; a release manifest, correction notice, and rollback plan may be release-governance objects. **INFERRED:** forcing all eight into one map-specific family would risk coupling renderer compatibility to cross-cutting trust and release semantics. Final placement remains **NEEDS VERIFICATION**.
 
-[Back to top](#top)
+## Governed responsibility flow
 
----
+```mermaid
+flowchart LR
+  C[Contracts<br/>meaning and invariants] --> S[Reviewed versioned schemas<br/>machine shape]
+  S --> V[Fixtures + validators + tests<br/>enforceability evidence]
+  P[Policy<br/>allow / deny / restrict / abstain] --> G[Governed API + release gates]
+  V --> G
+  G --> R[Released, public-safe carriers]
+  R --> M[MapLibre renderer and UI]
+  L[schemas/maplibre/<br/>transitional schemas] -. compatibility and migration only .-> S
+```
+
+This diagram is a responsibility model. It is not proof that the proposed governed API, release gates, carrier pipeline, or MapLibre adapter are currently implemented.
+
+### Renderer boundary
+
+MapLibre may consume released styles, sources, tiles, overlays, interaction metadata, and public-safe presentation carriers. It must not independently decide:
+
+- whether a source is authoritative or merely contextual;
+- whether a claim is sufficiently evidenced;
+- whether rights, consent, sensitivity, or disclosure policy permit exposure;
+- whether a draft or reviewed object is promoted or released;
+- whether a correction, withdrawal, or rollback is required; or
+- whether an AI-generated suggestion is factual, approved, or publishable.
+
+Those decisions belong upstream and require explicit records. Rendering is presentation, not governance.
+
+## Source, layer, style, and performance separation
+
+These concepts must remain distinguishable even when one workflow or UI touches all of them.
+
+| Concern | Primary question | Required evidence before reliance |
+|---|---|---|
+| Source metadata | What is the source, lineage, role, rights posture, freshness, and access boundary? | Source contract, metadata schema, validation, and policy result |
+| Layer definition | What geographic or thematic object is represented, at what scale and geometry? | Layer contract, versioned schema, fixtures, topology checks, and domain review |
+| Style or presentation | How may released data be symbolized and interacted with? | Style contract, accessibility, disclosure, renderer compatibility, and release review |
+| Tile or artifact | What generated carrier is addressed, hashed, bounded, and released? | Deterministic build evidence, integrity, provenance, and release manifest |
+| Performance observation | Under which reproducible environment were metrics measured? | Identified environment, method, samples, baselines, tolerances, and raw evidence |
+| Render comparison | What images or scene states were compared and under which deterministic rules? | Baseline identity, captured output, algorithm, thresholds, and reviewed result |
+| Receipt or proof | What evaluation occurred, against which inputs and rules, with what outcome? | Immutable identifiers, hashes, validator version, finite outcome, and reviewer trace |
+| Release or correction | What changed operational state, who authorized it, and how can it be reversed? | Accepted gate result, separation of duties, release record, correction/rollback path |
+
+Passing one concern must not silently satisfy another.
 
 ## What belongs here
 
-- This compatibility README.
-- The eight existing placeholders while ownership and migration remain unresolved.
-- Minimal, reviewed compatibility or deprecation metadata.
-- Links to accepted contracts, versioned schemas, fixtures, validators, tests, policy, evidence, release, correction, and rollback surfaces.
-- A migration note that preserves old-path consumers and rollback when a destination is accepted.
+While this transitional lane remains tracked, acceptable changes are limited to:
+
+- this evidence-bounded README;
+- reviewed compatibility notes tied to exact source and destination identities;
+- explicit deprecation or redirect metadata authorized by an accepted migration;
+- dependency-closed constraints for a verified existing repository-owned
+  configuration consumer, with fixtures, tests, workflow checks, and explicit
+  non-authority boundaries;
+- temporary compatibility schemas only when an accepted decision requires them and their authority is clearly subordinate; and
+- machine-verifiable exit criteria and removal evidence.
+
+Any retained compatibility file must state its status, canonical destination,
+allowed readers, write prohibition, sunset criteria, and rollback plan. The seven
+placeholders do not yet satisfy that future standard; the closed envelope schema
+still has unresolved canonical destination and migration criteria.
 
 ## What does not belong here
 
-- New canonical schema families or a new version hierarchy.
-- Semantic contracts, policy rules, threshold instances, runtime records, receipts, proofs, manifests, correction records, or rollback records.
-- Source, layer, style, tile, plugin, or map data.
-- Fixtures, validator code, test code, browser scripts, package code, UI components, API handlers, screenshots, baselines, or build artifacts.
-- Secrets, credentials, private data, sensitive locations, or rights-restricted material.
-- Claims that schema validity establishes performance, evidence, safety, approval, release, or publication.
+Do not place or author the following in this directory:
 
-[Back to top](#top)
+- semantic contracts or prose that creates contract meaning;
+- normative policy bundles or allow/deny decisions;
+- configuration instances, thresholds, environment profiles, or secrets;
+- fixtures, snapshots, screenshots, golden images, metrics, traces, or runtime logs;
+- validators, test code, workflows, browser harnesses, or benchmark runners;
+- source, layer, style, tile, or release payload instances;
+- receipts, proof packs, evidence bundles, attestations, signatures, or audit logs;
+- release manifests, correction notices, withdrawal records, or rollback executions;
+- generated artifacts, public exports, tiles, reports, dashboards, or map applications; or
+- executable package, adapter, API, renderer, or UI code.
 
----
+The presence of similarly named schema placeholders is not a precedent for storing their instances here.
 
 ## Compatibility rules
 
-| Rule | Requirement |
-|---|---|
-| Freeze canonical growth | Do not add fields or new schema families here before contract and placement review. |
-| Do not bind new production consumers | New code, APIs, pipelines, validators, or UI features must not adopt these paths as stable canonical contracts. |
-| Preserve existing references | Inventory all path and prospective `$id` consumers before moving, renaming, redirecting, or deleting a file. |
-| Keep identities explicit | A new `$id`, version, title, or family assignment requires collision, registry, and compatibility review. |
-| Avoid copy-based migration | Do not leave independently editable old and new schema definitions. Use a reviewed compatibility strategy. |
-| Keep meaning separate | Pair each meaningful schema with an accepted semantic contract. |
-| Treat permissiveness as a blocker | `additionalProperties: true` with no declared properties is not an operational validation boundary. |
-| Preserve finite outcomes | Validation and policy outcomes must remain distinct; schema success must not be translated into release approval. |
-| Fail safely | Missing evidence, rights, sensitivity, review, or release state must narrow, hold, abstain, deny, generalize, or quarantine as appropriate. |
-| Preserve auditability | Migration must record source path, destination, decision, consumers, fixtures, validation, compatibility window, correction path, and rollback target. |
-
-[Back to top](#top)
-
----
+1. **Single-write authority.** New authoritative schema work goes to the reviewed versioned family. This lane must not evolve independently.
+2. **No new binding to placeholders.** New code, workflows, contracts, or APIs
+   must not bind to the seven open shapes. New consumers of the envelope require
+   compatibility and canonical-placement review.
+3. **Dual-read only when approved.** A migration may temporarily read old and new shapes only when an accepted plan defines precedence, telemetry, error handling, duration, and exit criteria.
+4. **No silent coercion.** Unknown or invalid legacy fields must fail closed or produce a bounded migration error; they must not be silently reinterpreted.
+5. **Identity before redirect.** A redirect or compatibility `$ref` requires stable source and destination identities, version rules, cycle checks, and fixture-backed validation.
+6. **No schema copy drift.** Copying a versioned schema into this lane creates parallel authority unless the compatibility mechanism is explicitly generated and checked.
+7. **No maturity laundering.** Renaming a placeholder, adding a `$id`, or making CI green does not make semantics accepted or runtime implemented.
+8. **Consumer closure before retirement.** Deletion requires exact reference search, runtime and workflow consumer evidence, documentation repair, rollback, and accepted change control.
 
 ## Consumer rules
 
 ### New consumers
 
-Do not bind new production consumers to `schemas/maplibre/*.schema.json` as canonical contracts. A documentation link may identify the compatibility lane, but it must not imply accepted field semantics or runtime maturity.
+New consumers are prohibited for the seven permissive placeholders. Any new
+envelope consumer must either bind to a reviewed versioned schema or explicitly
+close the transitional compatibility obligations with:
+
+- an accepted semantic contract;
+- stable identity and version rules;
+- valid and invalid fixtures;
+- executable validation and negative tests;
+- explicit unknown-field and forward-compatibility behavior;
+- finite outcomes and fail-closed policy behavior;
+- evidence and release relationships; and
+- an accountable owner and review path.
 
 ### Existing consumers
 
-For every consumer discovered:
+The complete existing consumer set is **UNKNOWN**. Before changing a filename or shape, search at minimum:
 
-1. record its repository path, owner, execution role, schema path, and expected object family;
-2. determine whether it parses a schema, validates an instance, generates code, creates an artifact, or only links documentation;
-3. identify the exact valid, invalid, boundary, and negative fixtures it exercises;
-4. preserve current behavior until an accepted replacement and parity plan exist;
-5. validate old and new paths during a bounded compatibility window;
-6. fail closed on unresolved identity, semantics, policy, evidence, or release state; and
-7. retain a transparent rollback mapping until downstream parity is proven.
+- source code and package imports;
+- scripts, validators, tests, fixtures, and configuration;
+- workflow path filters and command lines;
+- docs, ADRs, root registries, catalogs, and generated indexes;
+- release, evidence, receipt, and artifact builders; and
+- externally documented APIs or integration instructions.
+
+Reference presence is not consumer proof, and absence from a simple text search is not sufficient closure. Dynamic path construction, generated code, workflow matrices, and external clients may require separate evidence.
 
 ### Public and runtime clients
 
-Public and standard UI clients must use governed APIs and released projections. They must never read this schema directory as a runtime data source or treat schema presence as permission to load a source, draw a layer, expose precise geometry, export content, or answer an evidence-dependent question.
+Browser, API, and MapLibre clients must receive only governed, released, public-safe carriers. They must not consume draft schema repositories as content stores or use local schema validity as an authorization result.
 
-[Back to top](#top)
+## Inputs, outputs, writers, and consumers
 
----
+This directory currently describes machine-shape placeholders; it is not an event-processing component.
 
-## Validation
-
-Use repository-native checks when the full repository is available. The commands below are structural and intentionally bounded.
-
-### JSON and meta-schema structure
-
-```bash
-find schemas/maplibre -maxdepth 1 -type f -print | sort
-
-find schemas/maplibre -maxdepth 1 -name '*.schema.json' -print0 \
-  | xargs -0 -r -n1 python -m json.tool >/dev/null
-
-python - <<'PY'
-import json
-from pathlib import Path
-
-from jsonschema import Draft202012Validator
-
-for path in sorted(Path("schemas/maplibre").glob("*.schema.json")):
-    Draft202012Validator.check_schema(json.loads(path.read_text(encoding="utf-8")))
-    print(f"meta-schema valid: {path}")
-PY
-```
-
-These checks prove JSON and meta-schema structure only. They do not make the placeholders meaningful.
-
-### Narrow executable tests
-
-```bash
-python -m pytest -q tests/maplibre/test_perf_governance_negative_paths.py
-```
-
-At the pinned snapshot, those tests cover three scalar failure cases: zero frame budget, negative memory budget, and a tile-error rate outside `[0, 1]`. They do not exercise the eight schema files, a browser, MapLibre, render diffs, evidence resolution, policy, attestation, proof construction, release, correction, or rollback.
-
-### Wrapper checks
-
-The eight named schema wrappers use the repository's common JSON Schema runner. Do not interpret successful wrapper execution as semantic validation until the schemas declare meaningful fields and reviewed fixtures demonstrate both acceptance and rejection.
-
-[Back to top](#top)
-
----
-
-## Current workflow boundary
-
-[`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) is path-scoped to this directory and related MapLibre surfaces. A pull request that changes this README is expected to trigger it.
-
-### Confirmed workflow posture
-
-| Property | Current definition |
+| Interface | Current evidence-backed posture |
 |---|---|
-| Permissions | `contents: read` only |
-| Checkout credentials | `persist-credentials: false` |
-| Runner | GitHub-hosted Ubuntu |
-| Runtime setup | Node 22 and Python 3.12 |
-| Network/runtime stage | Not run by the current workflow after action bootstrap |
-| Executed checks | JavaScript syntax, Python AST parsing, three deterministic negative-path functions, and readiness-state inspection |
-| Schema treatment | Confirms all eight schemas still equal the reviewed placeholder object; fails when maturity changes without deliberate wiring |
-| Validator treatment | Confirms eight wrappers and seven placeholder verifiers remain in the reviewed state |
-| Outputs | Job conclusion, logs, annotations, and step summary only |
-| Final gate | `WORKFLOW_HOLD` with browser, performance, render, trust, and publication stages explicitly skipped |
+| Inputs | Repository commits and reviews that change these nine tracked files. No runtime payload input is authorized here. |
+| Outputs | JSON Schema bytes and this documentation. Validating an object against the current schema can only establish that it is an object. |
+| Writers | Git contributors subject to repository review. Accepted stewardship and independent approval remain **NEEDS VERIFICATION**. |
+| Readers | Validators, workflows, tests, scripts, docs, and potential external clients may reference these paths; the complete set is **UNKNOWN**. |
+| Mutations | Git history only. Runtime mutation, in-place evidence edits, or generated artifact writes do not belong here. |
+| Side effects | None are authorized. A schema read or validation result must not promote, release, publish, delete, notify, or mutate external state. |
 
-### Held conditions recorded by the workflow
+### Non-effects contract
 
-- no accepted dependency lockfile;
-- no executable MapLibre fixture payloads or local runtime style fixtures;
-- live-CDN dependencies remain in the dormant smoke script;
-- all eight schemas remain permissive placeholders;
-- broader governance verifiers remain placeholders;
-- the aggregate governance command remains unwired for accepted inputs;
-- attestation remains unsigned;
-- proof/release builders still target an unaccepted artifact posture; and
-- browser, screenshot, receipt, proof, release, correction, rollback, failure-bundle, and artifact-upload stages remain disabled.
+Neither this README nor any current schema in this directory may be used as sufficient evidence that:
 
-This workflow is a readiness drift detector and explicit safety hold. It is not a performance benchmark, schema coverage suite, proof pack, release gate, or publication decision.
+- a payload is truthful, authoritative, complete, current, or fit for use;
+- a benchmark ran or passed;
+- a render diff was captured or reviewed;
+- an evidence bundle, proof pack, or receipt is trustworthy;
+- rights, consent, sensitivity, or security checks passed;
+- an object was promoted, released, published, corrected, withdrawn, or rolled back; or
+- a MapLibre view is safe for public access.
 
-### Workflow-trigger safety
+## Security, privacy, exposure, and retention
 
-The inspected pull-request workflow has read-only contents permission, disables persisted checkout credentials, declares no secrets, OIDC, deployment, signing, release, comment, or repository-write authority, and emits no uploaded artifacts. That bounded definition does not prove every repository workflow or future revision is equally safe.
+Schema repositories are public and must not contain secrets, credentials, access tokens, private endpoints, personal data, restricted coordinates, unpublished vulnerabilities, signed private evidence, or production traces.
 
-[Back to top](#top)
+Any future object family must explicitly classify:
 
----
+- identifier sensitivity and linkability;
+- location precision and re-identification risk;
+- source licensing, consent, and redistribution limits;
+- environment and device fingerprints;
+- screenshot or render contents;
+- failure details and security-sensitive diagnostics;
+- signature, attestation, and key-reference handling;
+- retention, correction, withdrawal, legal hold, and deletion rules; and
+- public, restricted, and internal projections.
 
-## Migration and promotion gates
+Schema shape must not embed policy outcomes as defaults. Exposure decisions require policy evaluation and release-state evidence outside this directory.
 
-Migration is a governed compatibility change, not a file move. Complete these gates separately for each object unless an accepted family decision explicitly groups them.
+## Validation and negative checks
 
-- [ ] Assign accountable schema, contract, MapLibre, performance, validation, policy, evidence, release, and documentation reviewers.
-- [ ] Inventory repository path consumers, generated references, command bindings, workflow references, and any proposed `$id` consumers.
-- [ ] Define or identify the accepted semantic contract and object-family relationship.
-- [ ] Decide whether the object extends a cross-cutting receipt, proof, release, correction, rollback, or validation family.
-- [ ] Record canonical placement in an accepted ADR, migration decision, or authority register.
-- [ ] Define stable filename, title, version, `$id`, dialect, reference, and compatibility rules.
-- [ ] Replace the permissive placeholder with a bounded schema whose constraints match the contract.
-- [ ] Add public-safe valid, invalid, boundary, stale, denied, abstained, and error fixtures as applicable.
-- [ ] Bind wrappers and aggregate validators to deterministic inputs and finite outcomes.
-- [ ] Add tests that prove expected acceptance and rejection without external network dependence.
-- [ ] Separate temporary QA output from trust-bearing receipts, proofs, release objects, corrections, and rollback records.
-- [ ] Verify policy, evidence, source role, rights, sensitivity, review, signing, provenance, release, correction, and rollback boundaries.
-- [ ] Update workflow checks only after the new maturity state is reviewed; do not bypass the intentional readiness tripwire.
-- [ ] Document old-path behavior, compatibility window, correction path, and rollback target.
-- [ ] Migrate consumers without leaving divergent definitions.
-- [ ] Retire or freeze the compatibility file only after parity, references, and release dependencies are cleared.
+Validation is layered. A green lower layer must not be reported as a green higher layer.
 
-Until applicable gates pass, retain the files as compatibility placeholders and keep the workflow `HOLD` visible.
+| Layer | Required check | Current posture |
+|---|---|---|
+| Inventory | Exactly one README plus the eight named direct schemas | **CONFIRMED** at the pinned tree |
+| JSON syntax | Parse each schema as JSON | **CONFIRMED** |
+| Meta-schema | Validate each schema against Draft 2020-12 | **CONFIRMED by source/workflow posture** |
+| Identity | Unique stable `$id`, version, title, status, and metadata | Envelope payload version/title implemented; canonical `$id` and seven placeholder identities **HOLD** |
+| Semantic shape | Required fields, constraints, cross-field rules, units, and outcomes | Envelope machine shape implemented; benchmark semantics and seven trust-output shapes **HOLD** |
+| Fixtures | Representative valid, invalid, edge, privacy, and migration cases | Envelope has two valid and fourteen invalid synthetic cases; broader families **HOLD** |
+| Validator | Bounded executable validator with finite outcomes | Eight runner entrypoints; envelope has cwd-independent fixture binding; broader verifiers held |
+| Negative paths | Demonstrate rejection of invalid and unsafe inputs | Envelope contract suite plus fourteen negative fixtures; separate scalar tests retained |
+| Runtime | Browser, renderer, device, network, and environment execution | **NOT EXECUTED by the inspected perf workflow** |
+| Evidence | Hashes, provenance, logs, receipts, signatures, and review | **NOT PRODUCED for these schemas by the inspected workflow** |
+| Policy and release | Governed decision, separation of duties, promotion, correction, rollback | **NOT ESTABLISHED** |
 
-[Back to top](#top)
+### Documentation checks for this README
 
----
+Run from repository root:
 
-## Review burden
+```bash
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . --profile required schemas/maplibre/README.md
 
-Any edit to a JSON Schema file in this lane is outside a README-only change and should receive review proportional to its object family and consumers.
+python tools/validators/docs/stale-scan/check_stale_docs.py \
+  --repo-root . --as-of 2026-09-08 --profile bounded-required \
+  schemas/maplibre/README.md
 
-At minimum, reviewers should verify:
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . schemas/maplibre/README.md
+```
 
-- [ ] semantic contract and final responsibility family;
-- [ ] Directory Rules and ADR basis;
-- [ ] identity, versioning, `$id`, and compatibility behavior;
-- [ ] field constraints, references, and failure behavior;
-- [ ] valid, invalid, boundary, and negative fixtures;
-- [ ] wrapper, aggregate validator, and test wiring;
-- [ ] config-instance compatibility where relevant;
-- [ ] evidence, source-role, policy, rights, sensitivity, review, and stale-state handling;
-- [ ] receipt, proof, release, correction, withdrawal, and rollback separation;
-- [ ] consumer and generated-reference migration;
-- [ ] workflow-trigger and supply-chain impact;
-- [ ] proof that no public path bypasses governed APIs or released artifacts; and
-- [ ] transparent correction and rollback instructions.
+Also verify:
 
-[Back to top](#top)
+- exactly one H1 and a monotonic heading structure;
+- the metadata block is first and complete;
+- every relative link resolves at the reviewed commit;
+- the direct-child map matches the Git tree;
+- all eight schema contents and current identities are rechecked;
+- Markdown renders without broken tables, alerts, code fences, anchors, or Mermaid syntax; and
+- the no-loss and evidence ledgers are updated.
 
----
+### Schema and wrapper checks
+
+All eight entrypoints exercise the common JSON Schema runner. The envelope
+entrypoint additionally binds reviewed positive/negative fixture lanes and uses
+repository-rooted paths; the other seven still validate only the placeholder
+object shape. This distinction is enforced by workflow inventory checks.
+
+Future schema promotion must add, at minimum:
+
+- a stable `$id` and version policy;
+- an accepted paired contract;
+- strict or explicitly justified unknown-field behavior;
+- valid, invalid, boundary, malicious, privacy-sensitive, compatibility, and rollback fixtures;
+- tests that prove every normative constraint rejects counterexamples;
+- deterministic output and finite validator outcomes;
+- no-network or explicitly bounded-network execution;
+- consumer compatibility evidence; and
+- promotion and release checks separate from validation.
+
+## Current CI and readiness boundary
+
+### MapLibre performance-governance workflow
+
+The inspected [workflow](../../.github/workflows/maplibre-perf-governance.yml) includes `schemas/maplibre/**` in its path filters. It currently:
+
+- checks JavaScript syntax for seven MapLibre scripts;
+- parses the MapLibre Python validator surface;
+- invokes three scalar negative-path, three retirement, and three package-export tests directly;
+- checks readiness-inventory drift;
+- checks one closed envelope schema/config/fixture inventory and seven exact placeholder schemas;
+- asserts that eight schema wrappers and seven broader placeholder verifiers retain their expected maturity;
+- reviews the exact `maplibre-gl` 6.6.0 package and workspace lock posture; and
+- emits explicit skip and hold records.
+
+The general `schema-validation` workflow installs declared Python dependencies,
+validates the tracked envelope plus both fixture polarities, and runs the nine
+focused contract tests. This closes machine validation without adding a browser
+or changing the performance hold.
+
+It does **not** install a browser, start a server, exercise a MapLibre renderer, capture screenshots, measure frames or memory, compare renders, validate a real receipt or proof pack, sign an attestation, upload governed artifacts, promote a release, publish a map, issue a correction, or execute rollback.
+
+### Latest applicable hosted run
+
+Historical [run `31654973078`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31654973078)
+concluded `success` while recording `WORKFLOW_SKIPPED_EXPLICIT` and
+`WORKFLOW_HOLD`. Exact-head hosted results for this change are pending.
+
+Safe conclusion:
+
+```text
+workflow definition and readiness guard executed successfully
+≠ browser benchmark executed
+≠ performance envelope satisfied
+≠ render parity established
+≠ proof or attestation accepted
+≠ release approved
+≠ artifact published
+```
+
+The hold is a designed outcome, not a hidden failure and not permission to bypass missing stages.
+
+### Adjacent workflows
+
+- Historical source-metadata run `30958539690` validates a separate local
+  projection; it does not establish envelope or trust-output semantics.
+- Historical schema/validator run IDs in v0.3 remain provenance only. Current
+  local results and exact-head PR checks must be evaluated independently.
+
+Those current-main failures are repository-level preflight evidence. A change to this README must still run its own PR checks, and any failure must be compared by exact job, log, and fingerprint before it is called inherited. Documentation must not normalize, conceal, or relabel a failing required check.
+
+## Safe change workflow
+
+1. Pin the current base commit, target tree, README blob, and all eight schema contents.
+2. Search open pull requests and active branches for overlapping target changes.
+3. Re-read accepted ADR-0029, the exact adopted Directory Rules bytes, the schema-root README, and relevant proposed ADRs.
+4. Classify every assertion as **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, **NEEDS VERIFICATION**, or **HOLD**.
+5. Identify the semantic aggregate and object-family owner before proposing a schema destination.
+6. Inspect existing consumers, workflows, validators, tests, fixtures, configuration, evidence builders, release tooling, and docs.
+7. Keep validation separate from policy, promotion, release, publication, correction, and rollback.
+8. Update one focused branch with the README and its traceability receipt only.
+9. Run metadata, staleness, link, structure, rendering, and repository-specific checks.
+10. Open a draft pull request; inspect every PR check and disclose held or inherited failures precisely.
+11. Require explicit review before any schema, consumer, workflow, runtime, or migration change.
+
+If evidence is incomplete or authority conflicts, stop at **HOLD**.
+
+## Compatibility, migration, and retirement
+
+### Required migration sequence
+
+1. **Inventory:** prove the old paths, exact bytes, references, consumers, writers, readers, and generated dependencies.
+2. **Contract:** accept the semantic aggregate, invariants, lifecycle, evidence, and correction model.
+3. **Placement:** approve the versioned schema family and identity/version strategy.
+4. **Implementation:** author machine shape, fixtures, validators, negative tests, and documentation.
+5. **Consumer proof:** demonstrate intended consumers on the new version and characterize legacy behavior.
+6. **Compatibility:** if required, implement bounded dual-read/single-write behavior with telemetry and expiry.
+7. **Promotion:** run separate policy and release gates; validation alone cannot promote.
+8. **Redirect or tombstone:** preserve discoverability and fail clearly for unsupported use.
+9. **Retirement:** remove only after reference, runtime, workflow, documentation, and rollback closure.
+
+### Promotion gates
+
+No placeholder may be described as implemented or promoted until all of the following are recorded:
+
+- accepted semantic contract and versioned placement;
+- accountable owner and independent review path;
+- non-permissive machine constraints or an explicit, reviewed reason for extensibility;
+- stable identity and compatibility rules;
+- representative positive and negative fixtures;
+- executable validators and tests with deterministic outcomes;
+- security, privacy, rights, consent, sensitivity, and retention review;
+- real consumer and runtime evidence where applicable;
+- evidence and receipt design that does not self-attest;
+- release, correction, withdrawal, and rollback controls; and
+- a decision record that changes maturity without rewriting history.
+
+### Retirement gates
+
+Deletion remains **HOLD** until an accepted record proves:
+
+- the canonical destination for every object;
+- no unauthorized writes remain;
+- all consumers migrated or were intentionally retired;
+- no workflow, tool, fixture, config, doc, or external integration requires the old path;
+- redirects or tombstones satisfy compatibility needs;
+- release and rollback procedures are tested; and
+- documentation, registries, catalogs, and receipts are repaired.
+
+## Review burden and escalation
+
+| Change | Minimum review burden |
+|---|---|
+| README wording only | Schema-root documentation review; verify truth labels, links, inventory, non-effects, and no-loss ledger |
+| Placeholder metadata or `$id` | Schema steward, contract steward, identity/version review, consumer search, fixtures, validators, and negative tests |
+| Field or constraint change | Accepted contract evidence, schema review, compatibility analysis, consumer tests, migration and rollback plan |
+| New or changed receipt/proof shape | Evidence and security review; prevent self-attestation and distinguish observation from decision |
+| Release/correction/rollback object | Release governance, separation of duties, policy review, immutable history, and tested reversal path |
+| Validator or workflow change | Validator, CI, security, and domain review; prove finite outcomes and distinguish success from hold |
+| Runtime or MapLibre binding | Adapter, governed API, renderer, accessibility, privacy, policy, release, and operational review |
+| Redirect, tombstone, or deletion | Accepted migration decision, consumer closure, reference closure, documentation repair, and rollback evidence |
+
+Escalate when object-family ownership conflicts, a compatibility reader could become a writer, public exposure is possible, a receipt can authorize its own action, a workflow masks skipped stages, or a proposed change weakens a fail-closed outcome.
 
 ## Definition of done
 
 ### This README revision
 
-- [x] Preserves the existing purpose, status, boundary, inventory, placement, validation, and open-question anchors.
-- [x] Identifies the lane as non-authoritative compatibility guidance.
-- [x] Records all eight individually verified schemas and their exact placeholder shape.
-- [x] Separates schema shape from contracts, policy, config, fixtures, validators, evidence, runtime, release, correction, and rollback.
-- [x] Documents the current workflow's executed checks and explicit `WORKFLOW_HOLD`.
-- [x] Prevents wrapper presence from being mistaken for meaningful schema enforcement.
-- [x] Preserves unresolved migration, consumer, correction, and rollback work.
+- [x] Metadata block updated with a current evidence snapshot.
+- [x] Accepted ADR-0029 distinguished from proposed ADRs.
+- [x] Exact direct-child tree and all eight files recorded.
+- [x] One closed envelope schema and seven shared placeholder shapes recorded.
+- [x] Semantic, policy, evidence, release, and renderer non-effects stated.
+- [x] Adjacent map and layer families described without assigning all objects to them.
+- [x] Workflow success distinguished from `WORKFLOW_HOLD` and unexecuted stages.
+- [x] Contributor, migration, review, correction, and rollback controls preserved and strengthened.
+- [x] Open verification and no-loss ledgers included.
+- [ ] Human review and acceptance of this documentation change.
 
 ### Executable and migration maturity
 
-- [ ] Owners and required reviewers are assigned.
-- [ ] ADR-0001 and any object-family decisions are accepted, amended, superseded, or explicitly declined.
-- [ ] Consumer and prospective `$id` references are inventoried.
-- [ ] Semantic contracts and final schema families are accepted.
-- [ ] Non-permissive schemas, fixtures, validators, and tests are wired.
-- [ ] Hermetic browser/performance and render-diff evidence exists where required.
-- [ ] Evidence, policy, rights, sensitivity, review, signing, provenance, release, correction, and rollback gates are proven.
-- [ ] Compatibility mappings and rollback have been exercised.
-- [ ] A reviewed workflow transition replaces the readiness hold.
-- [ ] Current evidence supports redirecting, migrating, freezing, or retiring each compatibility path.
+- [ ] Accepted semantic contract exists for each object.
+- [ ] Canonical versioned family and stable identity are approved.
+- [ ] Accountable owner, consumers, and separation of duties are recorded.
+- [x] Strict machine constraints are implemented for the bounded envelope configuration only.
+- [x] Positive, boundary, and negative envelope fixtures exist; privacy, migration, and rollback fixtures for trust-output families remain held.
+- [x] The envelope validator and tests prove its normative machine constraints; the other seven families remain held.
+- [ ] Browser, renderer, benchmark, and render-diff stages run where applicable.
+- [ ] Evidence, proof, receipt, attestation, and reviewer boundaries are implemented without self-approval.
+- [ ] Policy, promotion, release, correction, withdrawal, and rollback gates are separate and tested.
+- [ ] Compatibility readers, telemetry, exit criteria, and retirement evidence are complete.
 
-Completing this README does not complete any executable, migration, performance, evidence, policy, release, correction, rollback, or publication gate.
+The first checklist can complete while the second remains entirely held. Documentation quality does not imply implementation maturity.
 
-[Back to top](#top)
+## Open verification register
 
----
+| ID | Question | Required evidence | Current action |
+|---|---|---|---|
+| MAPLIBRE-SCHEMA-001 | Who is accountable for this compatibility lane and each destination family? | Accepted ownership record and review path | **HOLD new authority claims** |
+| MAPLIBRE-SCHEMA-002 | Which semantic contract owns each of the eight objects? | Contract inventory and accepted aggregate mapping | **HOLD schema promotion** |
+| MAPLIBRE-SCHEMA-003 | Which versioned schema family is canonical for each object? | Accepted placement decision and stable `$id` plan | **HOLD migration** |
+| MAPLIBRE-SCHEMA-004 | Which code, workflows, tools, fixtures, docs, or external clients consume the old paths? | Repository-wide and integration consumer inventory | **HOLD rename or deletion** |
+| MAPLIBRE-SCHEMA-005 | What is configuration versus observation versus receipt versus proof versus release record? | Lifecycle model with writers, readers, immutability, and correction rules | **HOLD payload authoring** |
+| MAPLIBRE-SCHEMA-006 | Which benchmark environments, baselines, tolerances, and sampling rules are accepted? | Reproducible performance contract and fixtures | **HOLD performance claims** |
+| MAPLIBRE-SCHEMA-007 | What constitutes an accepted render comparison? | Deterministic capture and diff protocol with reviewed baselines | **HOLD parity claims** |
+| MAPLIBRE-SCHEMA-008 | Which rights, consent, sensitivity, privacy, and public-safety controls apply? | Policy profiles, tests, decisions, and public projections | **HOLD exposure** |
+| MAPLIBRE-SCHEMA-009 | How are proof and receipt records protected from self-attestation or mutation? | Evidence architecture, signer/reviewer boundaries, hashes, and append-only correction | **HOLD trust claims** |
+| MAPLIBRE-SCHEMA-010 | What promotes, releases, corrects, withdraws, and rolls back a MapLibre artifact? | Accepted release workflow and tested records | **HOLD release** |
+| MAPLIBRE-SCHEMA-011 | When can the old paths be redirected, tombstoned, or removed? | Consumer closure, compatibility expiry, documentation repair, and rollback evidence | **HOLD retirement** |
+| MAPLIBRE-SCHEMA-012 | Do current PR checks reproduce or change the known topology failures? | PR run IDs, job logs, fingerprints, and base comparison | **VERIFY on every PR** |
 
-## Open questions
+## Review checklist
 
-| Item | Status | Evidence or decision needed |
-|---|---|---|
-| Accountable owners for this lane | **NEEDS VERIFICATION** | Reviewed ownership and CODEOWNERS/steward assignment. |
-| Complete current directory inventory | **NEEDS VERIFICATION beyond exact named reads** | Non-truncated tree listing or successful current readiness run. |
-| ADR-0001 authority | **PROPOSED** | Required steward approvals or a superseding schema-home decision. |
-| Versioned MapLibre schema family | **NOT PRESENT at checked README path** | Accepted family decision and created canonical index, if approved. |
-| Contract for each of the eight objects | **UNKNOWN** | Accepted semantic definitions and object-family relationships. |
-| Repository path and `$id` consumers | **UNKNOWN** | Code-aware and generated-reference inventory plus owner confirmation. |
-| Fixture polarity for the eight schemas | **NOT ESTABLISHED** | Valid, invalid, boundary, and negative fixture families. |
-| Meaningful schema enforcement | **NOT ESTABLISHED** | Non-permissive shapes plus deterministic rejection tests. |
-| Current Actions conclusion | **UNKNOWN** | Workflow run tied to the resulting commit and job conclusion. |
-| Browser performance and render-diff maturity | **HELD** | Lockfile, hermetic fixtures, accepted network posture, deterministic baselines, and measured runs. |
-| Receipt, proof, release, correction, and rollback placement | **CONFLICTED / NEEDS VERIFICATION** | Cross-family contract review, Directory Rules decision, and accepted output roots. |
-| Runtime or public use | **UNKNOWN** | Governed route, policy enforcement, evidence resolution, release record, and audit proof. |
-| Migration and deprecation window | **NOT DEFINED** | Accepted mapping, parity criteria, downstream rollout, correction path, and rollback drill. |
+- [ ] The base commit, target tree, prior README blob, and eight schema contents were rechecked immediately before publication.
+- [ ] No open pull request overlaps `schemas/maplibre/README.md`.
+- [ ] Relative links resolve against the proposed commit.
+- [ ] The direct-child map still matches the target tree.
+- [ ] No proposed ADR is presented as accepted.
+- [ ] No architecture source is presented as current implementation proof.
+- [ ] No filename-implied semantics are presented as confirmed contract meaning.
+- [ ] No workflow conclusion is presented without its explicit skipped and held stages.
+- [ ] No owner, consumer, schema destination, runtime behavior, release state, or publication claim is invented.
+- [x] The bounded schema/validator/fixture/test/workflow changes are disclosed; runtime code, artifacts, policy, and release state are unchanged.
+- [ ] Documentation and traceability checks pass or are disclosed precisely.
+- [ ] Human reviewers confirm the evidence snapshot and non-effects contract.
 
-[Back to top](#top)
+## No-loss ledger
 
----
+| Prior concern | v0.4 disposition |
+|---|---|
+| Purpose and non-authoritative compatibility posture | Preserved and strengthened with accepted Directory Rules authority. |
+| Status and truth labels | Preserved; added **INFERRED** and **HOLD**, current Git and hosted-run evidence, and removed the obsolete placement conflict. |
+| Boundary: may and must not | Preserved across `What belongs here`, `What does not belong here`, compatibility rules, and non-effects. |
+| Repository fit and placement basis | Preserved as direct-child map, authority inheritance, adjacent versioned families, and responsibility routing. |
+| Exact inventory and completeness boundary | Preserved and upgraded to the exact target-tree inventory. |
+| Verified schema shape | Reconciled to one closed envelope schema and seven byte-identical placeholders, with proof/non-proof limits preserved. |
+| Object-family and cross-family caution | Preserved; made explicit that `map` is adjacency rather than a blanket destination. |
+| Compatibility and consumer rules | Preserved; added single-write, dual-read constraints, identity, telemetry, and consumer closure. |
+| Validation, narrow tests, and wrappers | Preserved; separated structural, semantic, runtime, evidence, policy, and release layers. |
+| Current workflow boundary and held conditions | Updated for mixed schema maturity and exact-head checks while preserving explicit runtime/performance holds. |
+| Migration and promotion gates | Preserved; expanded into ordered migration, promotion, and retirement gates. |
+| Review burden | Preserved and expanded by change class and escalation trigger. |
+| Definition of done | Preserved; split documentation completion from executable and migration maturity. |
+| Open questions | Preserved as a numbered verification register with required evidence and hold action. |
+| Evidence ledger | Preserved and updated to the current repository, workflow, implementation, and supplied-reference snapshot. |
+| Correction and rollback | Preserved and expanded below. |
+
+No v0.2 operational capability is removed because v0.2 documented boundaries rather than implemented capabilities. Statements made stale by accepted ADR-0029 or newly available run evidence are corrected explicitly rather than silently carried forward.
 
 ## Evidence ledger
 
-Repository evidence was reviewed against `bartytime4life/Kansas-Frontier-Matrix@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`. The movement from the initial inspection commit changed only `fixtures/invalid/README.md`; it did not intersect this README's path, cited MapLibre surfaces, Directory Rules, ADR-0001, or validation configuration.
-
-| Evidence | Status | Supports | Does not prove |
-|---|---|---|---|
-| Prior `schemas/maplibre/README.md` blob `2dda90174ec219fd08edce155f8d151427e92ddb` | **CONFIRMED** | Existing compatibility purpose, boundaries, eight named schemas, and open placement questions. | Current completeness, consumer inventory, or implementation maturity. |
-| Eight direct schema files, shared blob `511e7f34ca84390fd5d000326ab33c46c3050fc4` | **CONFIRMED permissive placeholders** | Exact three-key JSON shape and absence of meaningful constraints. | Accepted semantics, identity, fixtures, performance, or release readiness. |
-| [`schemas/README.md`](../README.md) | **CONFIRMED root guidance** | Machine-shape responsibility and separation from contracts, policy, fixtures, validators, data, and release. | Acceptance or completeness of this compatibility lane. |
-| [Current contribution-preflight Directory Rules](../../docs/architecture/directory-rules.md) and [doctrine-path companion](../../docs/doctrine/directory-rules.md) | **CONFIRMED files / CONFLICTED authority graph** | Responsibility-root placement, compatibility discipline, schema-home direction, and renderer-as-downstream boundary. | A resolved canonical document home or accepted destination for each performance object. |
-| [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **CONFIRMED file / PROPOSED decision** | Proposed versioned schema-home rule and prohibition on divergent authority. | Accepted migration or final family mapping. |
-| Checked `schemas/contracts/v1/maplibre/README.md` | **NOT FOUND** | No versioned MapLibre family README exists at that exact path in the pinned snapshot. | Absence of every MapLibre-related schema elsewhere. |
-| [`configs/maplibre/README.md`](../../configs/maplibre/README.md) and `perf-envelope.v1.json` | **CONFIRMED configuration lane** | Separate config responsibility and one performance-envelope instance. | Schema conformance, accepted thresholds, or runtime use. |
-| [`tools/validators/maplibre/README.md`](../../tools/validators/maplibre/README.md), wrappers, and placeholder verifiers | **CONFIRMED bounded implementation** | Validator routing, eight common-runner wrappers, and held broader verifier maturity. | Meaningful validation or successful current runs. |
-| [`tests/maplibre/test_perf_governance_negative_paths.py`](../../tests/maplibre/test_perf_governance_negative_paths.py) | **CONFIRMED narrow test source / not run during API-only drafting** | Three invalid scalar cases. | Schema, browser, render, evidence, policy, or release coverage. |
-| [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | **CONFIRMED workflow definition** | Read-only static checks, placeholder drift tripwires, and explicit `WORKFLOW_HOLD`. | A current passing run or release-grade performance governance. |
-| [`docs/quality/maplibre-perf-governance.md`](../../docs/quality/maplibre-perf-governance.md) | **CONFIRMED design lineage / implementation-stale** | Intended object relationships and governance concerns. | Current workflow behavior or accepted object placement. |
-| Attached MapLibre operating manual, Master MapLibre report, Directory Rules, and unified implementation manual | **CONFIRMED supplied lineage/doctrine inputs** | Renderer-downstream rule, EvidenceBundle priority, proof/release separation, policy gates, and correction/rollback expectations. | Current repository implementation beyond the pinned evidence above. |
-
-[Back to top](#top)
-
----
+| Evidence | Observation used | Limits |
+|---|---|---|
+| `main@b30210971c41073a9a2e36b5a0d7d451ef43d592` | Pinned implementation base for this revision | Later commits require re-verification |
+| Repository tree `2e648bd3db2ee9891eec31c897cf71cff08f06bb` | Base tree identity | Does not independently explain semantics |
+| Target tree `510adad583cedefd90c116e44e85a5e35f5e61d3` | Exact README-plus-eight-schema inventory | Direct target only |
+| Prior README blob `9560ed016077964b56988d7fb4c02fe34e42fb28` | v0.2 source preserved through no-loss review | Prior claims may be stale |
+| Historical shared schema blob `511e7f34ca84390fd5d000326ab33c46c3050fc4` | Pre-change all-placeholder baseline; seven files retain this shape | Historical comparison, not semantic maturity |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted doctrine blob `fd49a0b83e55cef52c1124281f093e263526898d` | Accepted responsibility and placement rules | Does not choose every object family |
+| [`schemas/README.md`](../README.md) | Parent classification of this lane and maturity posture | Documentation, not runtime proof |
+| [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Proposed schema-home and migration context | Not accepted |
+| [ADR-0004](../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Proposed governed API boundary | Not accepted implementation proof |
+| [`schemas/contracts/v1/map/`](../contracts/v1/map/README.md) and [`layers/`](../contracts/v1/layers/README.md) | Adjacent versioned families with mixed maturity | Do not absorb all eight objects automatically |
+| `packages/maplibre/package.json` and workspace lock | Exact package-owned MapLibre GL JS 6.6.0 dependency | Dependency closure, not runtime readiness |
+| [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | Static readiness, mixed schema maturity, fixture classification, explicit skip and hold | No browser or release execution |
+| Hosted run `31654973078`, job `94307343990` | Latest applicable reviewed main run: success plus explicit hold | Snapshot in time; not a release receipt |
+| Hosted source-metadata run `30958539690` | Separate projection checks succeeded | Does not validate the performance-envelope contract |
+| Hosted current-main runs `31758530911` and `31758530894` | Repository-topology ratchet failed after earlier checks | Must be compared with PR runs before calling inherited |
+| `configs/maplibre/perf-envelope.v1.json` historical blob `2833f99b5316df91e71c0f8913bb06d70917abcf` | Threshold values remain unchanged and now pass the closed v1 schema | Machine validity only |
+| MapLibre validator, fixture, and test trees | Envelope fixture-bound runner and focused tests; seven held verifiers; separate scalar/source/readiness lanes | Mixed scope; no runtime proof |
+| Supplied MapLibre operating manual | Architecture lineage: MapLibre downstream of governance and release | Corpus source only; not repository implementation evidence |
+| Supplied MapLibre component atlas | Separates confirmed source evidence from proposed implementation and denies publication by file presence | Corpus source only; not acceptance or runtime proof |
 
 ## Correction and rollback
 
-Correct this README when:
+If this README is wrong, stale, or overclaims maturity:
 
-- a Directory Rules edition or ADR resolves the schema-home or MapLibre family question;
-- any placeholder gains fields, `$id`, title, version, contract pointer, or KFM metadata;
-- a consumer, fixture, validator, test, policy binding, runtime route, evidence link, release role, correction role, or rollback role is added or removed;
-- the readiness workflow begins running browser, performance, render-diff, attestation, proof, release, correction, rollback, or artifact-upload stages;
-- the workflow's permissions, secret access, runner, network, signing, or publication posture changes;
-- a compatibility path is redirected, migrated, deprecated, frozen, or retired; or
-- any current-state statement no longer matches the repository.
+1. stop new reliance on the disputed statement or path;
+2. open a focused correction that identifies the exact claim, evidence, and affected consumers;
+3. restore the last reviewed documentation bytes when that is the safest reversible action;
+4. do not rewrite or delete receipts, workflow logs, release records, or Git history;
+5. add a superseding correction record when an append-oriented evidence surface is involved;
+6. re-run metadata, staleness, link, inventory, schema, and relevant CI checks;
+7. reassess any migration, consumer binding, promotion, release, publication, or retirement decision that depended on the claim; and
+8. keep runtime rollback, data correction, release withdrawal, and schema compatibility as distinct procedures.
 
-Before merge, rollback means closing or abandoning the unmerged review branch. After merge, create a transparent revert of the documentation commit and re-run applicable Markdown, link, schema-structure, and MapLibre readiness checks. Do not force-push shared history.
+Rolling back this README restores documentation only. It does not roll back schema bytes, consumers, validators, workflows, packages, adapters, releases, public artifacts, or external integrations.
 
-Reverting this README changes documentation only. It does not restore or alter schema behavior, contracts, policy, configuration, fixtures, validators, tests, workflows, runtime behavior, evidence, receipts, proofs, release state, corrections, rollback records, deployments, public interfaces, or KFM publication state.
+---
+
+**Last evidence review:** 2026-09-08 · **Document version:** v0.4 · **Implementation posture:** one closed configuration schema; seven placeholders; migration and runtime readiness held
 
 [Back to top](#top)

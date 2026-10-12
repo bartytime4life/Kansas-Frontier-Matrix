@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/runtime_verification/digest.schema.json",
+  "title": "RuntimeVerificationDigest",
+  "description": "Explicit SHA-256 digest representation used by runtime verification receipts and proofs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "algorithm",
+    "encoding",
+    "value"
+  ],
+  "properties": {
+    "algorithm": {
+      "const": "sha256"
+    },
+    "encoding": {
+      "type": "string",
+      "enum": [
+        "hex",
+        "base64"
+      ]
+    },
+    "value": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "encoding": {
+            "const": "hex"
+          }
+        },
+        "required": [
+          "encoding"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "encoding": {
+            "const": "base64"
+          }
+        },
+        "required": [
+          "encoding"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "pattern": "^[A-Za-z0-9+/]{43}=$"
+          }
+        }
+      }
+    }
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/runtime/runtime_verification.md",
+    "authority": "sha256_representation_shape_only"
+  }
+}

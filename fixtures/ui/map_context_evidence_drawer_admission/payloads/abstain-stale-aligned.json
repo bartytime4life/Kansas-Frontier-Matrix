@@ -1,0 +1,23 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:soil-stale-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "STALE_EVIDENCE",
+  "title": "Synthetic stale selected soil feature",
+  "summary": "The selected synthetic feature is intentionally stale and cannot support a current claim.",
+  "evidence_refs": [
+    "evidence:soil:mukey:123"
+  ],
+  "citations": [],
+  "limitations": [
+    "The fixture is intentionally stale."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "STALE",
+    "correction": "NONE"
+  }
+}

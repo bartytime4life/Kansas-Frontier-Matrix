@@ -69,6 +69,17 @@ FORBIDDEN_LOCATION_KEYS = frozenset(
 )
 
 SAFE_SPATIAL_KINDS = frozenset({"withheld"})
+SAFE_SENSITIVITY_STATES = frozenset(
+    {
+        "public-safe-synthetic",
+        "public-safe-after-withholding-synthetic",
+    }
+)
+SENSITIVE_WITHHELD_STATE = "public-safe-after-withholding-synthetic"
+SENSITIVE_WITHHELD_GEOPRIVACY_STATE = "withheld-transform-fixture"
+SENSITIVE_WITHHELD_CAVEAT = (
+    "Synthetic sensitive-location scenario; exact precision withheld."
+)
 
 ALLOWED_TOP_LEVEL_KEYS = frozenset(
     {
@@ -80,6 +91,7 @@ ALLOWED_TOP_LEVEL_KEYS = frozenset(
         "public_caveats",
         "reality_boundary",
         "record_type",
+        "redaction_receipt_ref",
         "rights_state",
         "sensitivity_state",
         "source_descriptor_ref",
@@ -393,8 +405,28 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     if candidate.get("taxonomy_state") != "synthetic-resolved":
         _add(findings, "TAXONOMY_UNRESOLVED", "$.taxonomy_state")
 
-    if candidate.get("sensitivity_state") != "public-safe-synthetic":
+    sensitivity_state = candidate.get("sensitivity_state")
+    if sensitivity_state not in SAFE_SENSITIVITY_STATES:
         _add(findings, "SENSITIVITY_NOT_PUBLIC_SAFE", "$.sensitivity_state")
+
+    is_sensitive_withheld = sensitivity_state == SENSITIVE_WITHHELD_STATE
+    redaction_receipt_ref = candidate.get("redaction_receipt_ref")
+    if is_sensitive_withheld:
+        _validate_identifier(
+            findings,
+            redaction_receipt_ref,
+            path="$.redaction_receipt_ref",
+            required_prefix="fixture:receipt:redaction:fauna:",
+            missing_code="REDACTION_RECEIPT_REF_MISSING",
+            prefix_code="REDACTION_RECEIPT_REF_NOT_SYNTHETIC",
+            format_code="REDACTION_RECEIPT_REF_FORMAT_INVALID",
+        )
+    elif redaction_receipt_ref is not None:
+        _add(
+            findings,
+            "REDACTION_RECEIPT_REF_UNEXPECTED",
+            "$.redaction_receipt_ref",
+        )
 
     spatial_support = candidate.get("spatial_support")
     if not isinstance(spatial_support, Mapping):
@@ -458,6 +490,21 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
                     _add(findings, "PUBLIC_CAVEAT_INVALID", path)
                 elif len(caveat) > MAX_CAVEAT_LENGTH:
                     _add(findings, "PUBLIC_CAVEAT_TOO_LONG", path)
+            if (
+                is_sensitive_withheld
+                and SENSITIVE_WITHHELD_CAVEAT not in public_caveats
+            ):
+                _add(
+                    findings,
+                    "SENSITIVE_WITHHOLDING_CAVEAT_REQUIRED",
+                    "$.public_caveats",
+                )
+    elif is_sensitive_withheld:
+        _add(
+            findings,
+            "SENSITIVE_WITHHOLDING_CAVEAT_REQUIRED",
+            "$.public_caveats",
+        )
 
     governance = candidate.get("governance")
     if not isinstance(governance, Mapping):
@@ -479,7 +526,9 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
                 "POLICY_STATE_UNRESOLVED",
             ),
             "geoprivacy_state": (
-                "not-applicable-no-location",
+                SENSITIVE_WITHHELD_GEOPRIVACY_STATE
+                if is_sensitive_withheld
+                else "not-applicable-no-location",
                 "GEOPRIVACY_STATE_UNRESOLVED",
             ),
             "review_state": ("fixture-only", "REVIEW_STATE_NOT_FIXTURE_ONLY"),

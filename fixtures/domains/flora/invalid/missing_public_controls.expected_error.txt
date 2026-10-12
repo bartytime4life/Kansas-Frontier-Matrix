@@ -1,0 +1,4 @@
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+GOVERNANCE_STATE_INVALID	$.governance.release_state
+PUBLIC_REPRESENTATION_INVALID	$.public_representation.redaction_receipt_ref
+PUBLIC_REPRESENTATION_INVALID	$.public_representation.review_record_ref

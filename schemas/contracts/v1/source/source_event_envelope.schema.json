@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_event_envelope.schema.json",
+  "title": "SourceEventEnvelopeCandidate",
+  "description": "Fixture-only, CloudEvents-shaped source-edge notification candidate. It creates no source activation, RAW write, evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "execution_mode",
+    "specversion",
+    "event_id",
+    "source_descriptor_ref",
+    "source_role_ref",
+    "event_type",
+    "subject",
+    "occurred_at",
+    "received_at",
+    "producer",
+    "payload",
+    "routing",
+    "governance",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source_event_envelope_candidate.v1"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "specversion": {
+      "const": "1.0"
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^kfm:source-event:sha256:[0-9a-f]{64}$"
+    },
+    "source_descriptor_ref": {
+      "$ref": "#/$defs/source_descriptor_ref"
+    },
+    "source_role_ref": {
+      "type": "string",
+      "minLength": 18,
+      "maxLength": 640,
+      "pattern": "^(?:kfm://source/|src:)[^\\s#]+#/source_role$"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "OBJECT_CREATED",
+        "OBJECT_UPDATED",
+        "OBJECT_DELETED",
+        "SCHEDULED_POLL",
+        "MANUAL_REPLAY"
+      ]
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "occurred_at": {
+      "$ref": "#/$defs/aware_datetime"
+    },
+    "received_at": {
+      "$ref": "#/$defs/aware_datetime"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "payload": {
+      "$ref": "#/$defs/payload"
+    },
+    "routing": {
+      "$ref": "#/$defs/routing"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    }
+  },
+  "$defs": {
+    "nonempty": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "\\S"
+    },
+    "nullable_nonempty": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonempty"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullable_hash": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hash"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^(?:kfm://source/|src:)[^\\s#]+$"
+    },
+    "reference_array": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/nonempty"
+      },
+      "uniqueItems": true
+    },
+    "reason_code_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+      },
+      "uniqueItems": true
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_ref",
+        "native_id",
+        "media_type",
+        "content_digest",
+        "byte_count",
+        "etag",
+        "last_modified"
+      ],
+      "properties": {
+        "subject_ref": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "native_id": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160,
+          "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+;-]+$"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/nullable_hash"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000000
+        },
+        "etag": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "last_modified": {
+          "$ref": "#/$defs/nullable_datetime"
+        }
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producer_id",
+        "kind",
+        "version"
+      ],
+      "properties": {
+        "producer_id": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "CONNECTOR",
+            "WATCHER",
+            "MANUAL_FIXTURE"
+          ]
+        },
+        "version": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "payload_value": {
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 2048
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "payload_spec_hash",
+        "attributes"
+      ],
+      "properties": {
+        "payload_spec_hash": {
+          "$ref": "#/$defs/hash"
+        },
+        "attributes": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 32,
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,95}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/payload_value"
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "reason_codes",
+        "review_required",
+        "source_activation_allowed",
+        "raw_write_allowed",
+        "publication_allowed"
+      ],
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "PROPOSE_SOURCE_ADMISSION",
+            "PROPOSE_QUARANTINE",
+            "NO_ACTION"
+          ]
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_code_array"
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "source_activation_allowed": {
+          "const": false
+        },
+        "raw_write_allowed": {
+          "const": false
+        },
+        "publication_allowed": {
+          "const": false
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_state",
+        "sensitivity_state",
+        "evidence_refs",
+        "policy_refs"
+      ],
+      "properties": {
+        "rights_state": {
+          "type": "string",
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "CONFLICTED"
+          ]
+        },
+        "sensitivity_state": {
+          "type": "string",
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "CONFLICTED"
+          ]
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_array"
+        },
+        "policy_refs": {
+          "$ref": "#/$defs/reference_array"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_identity",
+        "idempotent_replay",
+        "cloudevents_core_attributes_present",
+        "cloudevents_conformance_claimed",
+        "network_access_performed",
+        "authority_created",
+        "source_activated",
+        "lifecycle_write_performed",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "deterministic_identity": {
+          "const": true
+        },
+        "idempotent_replay": {
+          "const": true
+        },
+        "cloudevents_core_attributes_present": {
+          "const": true
+        },
+        "cloudevents_conformance_claimed": {
+          "const": false
+        },
+        "network_access_performed": {
+          "const": false
+        },
+        "authority_created": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_event_envelope.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_event_envelope/",
+    "validator": "tools/validators/validate_source_event_envelope.py",
+    "tests": "tests/validators/test_validate_source_event_envelope.py",
+    "authority": "fixture_only_source_event_candidate",
+    "non_effects": [
+      "no_source_activation",
+      "no_raw_write",
+      "no_policy_evaluation",
+      "no_release",
+      "no_publication"
+    ]
+  }
+}

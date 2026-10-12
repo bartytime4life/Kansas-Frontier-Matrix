@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/geology/readme
-name: Geology Raw README
+title: Geology Raw README
 path: data/raw/geology/README.md
 type: data-raw-domain-index-readme
-version: v0.1.0
+version: v0.2.0
+prior_version: v0.1.0
 status: draft
 owners:
   - <geology-domain-steward>
@@ -13,13 +14,14 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked Geology RAW compatibility and reference index without treating this domain subtree as a physical source-first capture home or duplicating RAW bytes.
 domain: geology
-artifact_family: immutable-geology-source-capture
+artifact_family: geology-raw-compatibility-reference-index
 sensitivity_posture: raw-internal; source-role-preserving; no-public-path; exact-subsurface-points-deny-by-default; rights-needs-verification; release-blocked
 related:
   - ../README.md
@@ -31,6 +33,7 @@ related:
   - ../../published/layers/geology/README.md
   - ../../published/pmtiles/geology/README.md
   - ../../registry/sources/README.md
+  - ../hydrology/usgs_3dep/README.md
   - ../../../docs/domains/geology/README.md
   - ../../../docs/domains/geology/SOURCE_REGISTRY.md
   - ../../../docs/domains/geology/SOURCES.md
@@ -53,19 +56,22 @@ tags:
   - private-well
   - no-public-path
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
   - "This README replaces the greenfield stub at `data/raw/geology/README.md`."
   - "No child source-family README lanes under `data/raw/geology/` were confirmed during this edit."
   - "The source-family backlog below is derived from current Geology source-registry doctrine and is not evidence of existing RAW payloads or child directories."
-  - "Geology RAW records remain source captures until governed downstream lifecycle transitions close."
+  - "Source-first captures that support Geology remain RAW until governed downstream lifecycle transitions close; this domain index is compatibility/reference documentation, not a capture home."
   - "Payload presence, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI enforcement, sensitivity controls, and release readiness remain UNKNOWN or NEEDS VERIFICATION unless separately verified."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Geology RAW
 
-Parent RAW lifecycle index for immutable Geology and Natural Resources source captures and source-admission sidecars.
+Compatibility and reference index for legacy Geology and Natural Resources RAW documentation; not a physical source-capture home.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -79,15 +85,15 @@ Parent RAW lifecycle index for immutable Geology and Natural Resources source ca
 **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Confirmed child lanes](#confirmed-child-lanes) · [Source-family backlog](#source-family-backlog) · [RAW source posture](#raw-source-posture) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
-> `data/raw/geology/` is a no-public-path RAW lifecycle lane. It is not processed Geology truth, catalog truth, proof, receipt authority, source registry authority, rights authority, sensitivity policy authority, release authority, public API/UI material, legal/title authority, resource-reserve authority, exact public borehole/well-log authority, or generated-answer authority. Public clients, normal UI surfaces, and AI surfaces must not read this lane directly.
+> `data/raw/geology/` is a no-public-path compatibility/reference index inside the RAW lifecycle boundary. Accepted Directory Rules require one source-first capture identity, so this domain subtree and any children are not default physical capture homes and must not receive duplicate RAW payloads. It is not processed Geology truth, catalog truth, proof, receipt authority, source registry authority, rights authority, sensitivity policy authority, release authority, public API/UI material, legal/title authority, resource-reserve authority, exact public borehole/well-log authority, or generated-answer authority. Public clients, normal UI surfaces, and AI surfaces must not read this lane directly.
 
 ---
 
 ## Scope
 
-This directory indexes immutable RAW source captures and source-admission sidecars for the Geology and Natural Resources domain.
+This directory indexes tracked Geology and Natural Resources-facing source documentation and legacy domain-scoped RAW topology. It may reference one governed source-first capture, but it does not establish where that capture is stored.
 
-RAW exists for preservation, replay, and audit. It records what was admitted, where it came from, what source role it carried, and which identifiers, times, rights, citations, geometry/support metadata, source role, sensitivity posture, hashes, and caveats must travel with it.
+The canonical RAW boundary exists for preservation, replay, and audit. A governed source-first capture records what was admitted, where it came from, what source role it carried, and which identifiers, times, rights, citations, geometry/support metadata, source role, sensitivity posture, hashes, and caveats must travel with it.
 
 RAW does not decide what a source means, whether rights permit reuse, whether a record can publish, whether a mineral occurrence is a deposit, whether a deposit is a reserve, whether a permit proves operation, whether a geologic map is observed fact, or whether a downstream claim is true.
 
@@ -101,10 +107,10 @@ RAW does not decide what a source means, whether rights permit reuse, whether a 
 | Responsibility root | `data/` |
 | Lifecycle phase | `raw/` |
 | Domain lane | `geology` |
-| Artifact role | Parent RAW domain index for Geology source captures and RAW-local sidecars |
+| Artifact role | Compatibility/reference index for Geology-facing source documentation and unresolved legacy RAW topology |
 | Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Upstream | Accepted connector/source-admission output only |
-| Downstream | `data/work/geology/` or `data/quarantine/geology/` after governed admission/triage |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION** |
+| Downstream | Governed Geology WORK or QUARANTINE procedures consume references or approved handoffs, not assumed domain-local copies |
 | Release authority | `release/`, not this directory |
 | Proof authority | `data/proofs/`, not this directory |
 | Receipt authority | `data/receipts/`, not this directory |
@@ -116,7 +122,7 @@ RAW does not decide what a source means, whether rights permit reuse, whether a 
 
 ## Confirmed child lanes
 
-No child source-family README lanes under `data/raw/geology/` were confirmed during this edit.
+No child source-family README lanes under `data/raw/geology/` were confirmed during this edit or at `main@9e8bf3e6`. Any future child README would be compatibility/reference documentation only, never a payload destination or source-first capture home.
 
 This statement confirms only the current edit boundary. It does **not** prove that no directories or payloads exist elsewhere, and it does not prove connector, registry, validator, receipt, CI, or release state.
 
@@ -124,7 +130,7 @@ This statement confirms only the current edit boundary. It does **not** prove th
 
 ## Source-family backlog
 
-The source families below are admitted or proposed by current Geology source-registry doctrine. They are listed here as RAW lane planning targets only; child README files, payloads, SourceDescriptors, connectors, validators, fixtures, receipts, and release readiness remain unverified unless separately confirmed.
+The source families below are admitted or proposed by current Geology source-registry doctrine. They are listed here as source-routing and planning references only, not as authorization to create Geology-scoped RAW folders; child README files, payloads, SourceDescriptors, connectors, validators, fixtures, receipts, and release readiness remain unverified unless separately confirmed.
 
 | Source family | Indicative role posture | RAW boundary |
 |---|---|---|
@@ -136,7 +142,7 @@ The source families below are admitted or proposed by current Geology source-reg
 | KGS / KDHE WWC5 water-well program | observed · regulatory · administrative | Private-well exact locations default to restricted/generalized posture. |
 | KGS LAS digital well logs and well tops | observed · modeled | Exact well-log points and interpreted tops require sensitivity, rights, and role gates. |
 | USGS MRDS | aggregate · observed · administrative | Occurrence records do not become deposit, reserve, or production claims by default. |
-| 3DEP terrain | observed · modeled | Public-safe at standard resolutions, but geomorphology derivatives still require source-role and transform receipts. |
+| 3DEP terrain | observed · modeled | Public-safe at standard resolutions, but geomorphology derivatives still require source-role and transform receipts. 3DEP is also documented by [`../hydrology/usgs_3dep/README.md`](../hydrology/usgs_3dep/README.md); both lanes must reference the same single source-first capture, never two copies. |
 | Non-KGS borehole / well-log repositories | observed | Rights and exact-point sensitivity fail closed until verified. |
 | Geophysics and geochemistry sources | observed | Sample sites and lab/field evidence need provenance, sensitivity, and citation closure. |
 | Mining / reclamation program records | regulatory · administrative | Site-level exposure and public derivatives require review and release gates. |
@@ -147,7 +153,9 @@ The source families below are admitted or proposed by current Geology source-reg
 
 | Rule | Handling |
 |---|---|
-| RAW is immutable source capture | Payloads or payload references must be hash-bound and should not be overwritten in place. |
+| Capture identity is source-first | Register one `source_id` and preserve one immutable capture identity; domain references may support Geology without duplicating RAW bytes. |
+| Physical placement is held | Do not infer `data/raw/geology/` or a child directory as the capture home. Use only an accepted writer/path contract; none is established by this README. |
+| RAW is immutable source capture | Payloads or payload references at the accepted source-first home must be hash-bound and should not be overwritten in place. |
 | Source role is preserved | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not be flattened. |
 | Knowledge characters stay distinct | Occurrence, deposit, estimate, permit, operation, production, reserve, map, model, and legal/title claims are separate. |
 | Exact subsurface points fail closed | Borehole points, well-log points, sample points, private wells, and sensitive mineral occurrence points default to restricted or generalized public geometry. |
@@ -158,14 +166,17 @@ The source families below are admitted or proposed by current Geology source-reg
 
 ## Accepted material
 
-Accepted content is limited to source-capture material and RAW-local sidecars:
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
 
-- source-reference manifests;
-- raw payloads or raw payload references;
-- SourceDescriptor references or admission-ticket references;
-- source role, source identity, geologic/mineral/well identifiers, source time, retrieval time, version, quality fields, geometry/support metadata, aggregation unit where applicable, model-run reference where applicable, citation, rights, attribution, sensitivity hints, and digest sidecars;
-- source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums;
-- local README or index sidecars that help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, public artifact, legal/title authority, reserve authority, or answer authority.
+- this README;
+- links to canonical SourceDescriptor, source-admission, rights, sensitivity, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads;
+- an optional local documentation index only after its schema, producer, owner, and non-authoritative role are accepted.
+
+The source-first capture or its governed reference must carry, where material: source-reference manifests; raw payloads or raw payload references; SourceDescriptor references or admission-ticket references; source role, source identity, geologic/mineral/well identifiers, source time, retrieval time, version, quality fields, geometry/support metadata, aggregation unit where applicable, model-run reference where applicable, citation, rights, attribution, sensitivity hints, and digest sidecars; and source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums. Any README or index sidecar must help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, public artifact, legal/title authority, reserve authority, or answer authority.
+
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Geology. Exact physical placement and legacy migration remain **HOLD**.
 
 ---
 
@@ -173,6 +184,7 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 | Do not place here | Correct authority home |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | Product and source-family doctrine | `docs/sources/catalog/` or `docs/domains/geology/` |
 | Geology source-registry doctrine | `docs/domains/geology/SOURCE_REGISTRY.md` |
 | Geology sensitivity doctrine | `docs/domains/geology/SENSITIVITY.md` |
@@ -196,13 +208,12 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 ```text
 data/raw/geology/
-├── README.md
-├── <future-source-family>/
-│   └── README.md
-└── index.local.json
+└── README.md
 ```
 
-`index.local.json` is optional and must remain RAW-local. It is not a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, legal/title authority, resource authority, rights authority, geoprivacy authority, public-output authority, or retrieval source for generated answers.
+This is the confirmed documentation topology, not a storage specification. Do not add a future source directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role.
+
+Any optional RAW-local index (previously sketched in this map as a local JSON index file) is a proposed shape for a future accepted source-first home or documentation contract, not this subtree. If accepted, it is not a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, legal/title authority, resource authority, rights authority, geoprivacy authority, public-output authority, or retrieval source for generated answers.
 
 ---
 
@@ -210,10 +221,10 @@ data/raw/geology/
 
 | Exit route | Minimum requirement |
 |---|---|
-| Stay RAW | Source was admitted and captured, but no downstream normalization decision has been made. |
-| Quarantine | Source role, rights, sensitivity, model basis, aggregation unit, geometry/support, attribution, citation, digest, schema, or source activation is unresolved. |
-| Return / reject | Admission decision or steward review says the source should not be retained in this RAW lane. |
-| Move to work | SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, and minimal validation support are sufficient for normalization. |
+| Remain at the source-first RAW home | Source was admitted and captured, but no downstream normalization decision has been made. This index may retain a governed reference only. |
+| Quarantine | Source role, rights, sensitivity, model basis, aggregation unit, geometry/support, attribution, citation, digest, schema, source activation, or physical placement is unresolved. |
+| Return / reject | Admission decision or steward review says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure. |
+| Move to work | A governed reference or approved handoff may enter Geology WORK only when SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, and minimal validation support are sufficient for normalization. |
 | Promote downstream | Only after later WORK/PROCESSED/CATALOG/RELEASE gates close with receipts, EvidenceBundle support, model/aggregation/generalization receipts where required, correction path, rollback target, and release manifest where applicable. |
 
 ---
@@ -221,7 +232,7 @@ data/raw/geology/
 ## Forbidden shortcut
 
 ```text
-data/raw/geology/
+source-first RAW capture (physical path NEEDS VERIFICATION)
 → data/processed/geology/
 → data/catalog/ or data/triplets/
 → data/published/
@@ -234,8 +245,8 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ## Required checks before use
 
-- [ ] Confirm the source belongs to the Geology lane.
-- [ ] Confirm the correct source-family subfolder or create a documented child README before adding payloads.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Geology-scoped copy.
+- [ ] Treat this README (and any source-named child README) as compatibility/reference documentation only; do not create a child directory as a payload destination.
 - [ ] Confirm a SourceDescriptor or admission ticket identifies source ID, source family, source role, rights, cadence, citation, sensitivity posture, and hash posture.
 - [ ] Confirm observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, context, and interpretation outputs are not collapsed into one source role.
 - [ ] Confirm occurrence, deposit, reserve estimate, production, permit, operation, compiled map, model, ownership, lease, and title claims are not collapsed.
@@ -258,8 +269,11 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | The source-family backlog in this README is derived from Geology source-registry doctrine, not from confirmed RAW child directories. | **CONFIRMED authored** |
 | Geology source-registry doctrine says source role, rights, sensitivity, freshness, and activation gates must be recorded before connector/watcher activation. | **CONFIRMED by GitHub contents API during this edit** |
 | Geology source-registry doctrine says borehole/well-log/private-well/sensitive-resource exact geometry defaults to restricted or generalized public posture. | **CONFIRMED by GitHub contents API during this edit** |
-| Actual Geology RAW payloads exist under this subtree. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, geoprivacy controls, and downstream receipts are wired for this exact parent lane. | **NEEDS VERIFICATION** |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| Actual Geology RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
+| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, geoprivacy controls, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, legal/title authority, reserve authority, public artifact authority, or generated-answer authority. | **DENY** |
 
 ---
@@ -275,6 +289,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 - [`../../published/layers/geology/README.md`](../../published/layers/geology/README.md)
 - [`../../published/pmtiles/geology/README.md`](../../published/pmtiles/geology/README.md)
 - [`../../registry/sources/README.md`](../../registry/sources/README.md)
+- [`../hydrology/usgs_3dep/README.md`](../hydrology/usgs_3dep/README.md)
 - [`../../../docs/domains/geology/README.md`](../../../docs/domains/geology/README.md)
 - [`../../../docs/domains/geology/SOURCE_REGISTRY.md`](../../../docs/domains/geology/SOURCE_REGISTRY.md)
 - [`../../../docs/domains/geology/SOURCES.md`](../../../docs/domains/geology/SOURCES.md)
@@ -286,6 +301,6 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ---
 
-KFM rule: this directory is a Geology RAW domain index for source capture only. It is not source-family doctrine, source registry authority, rights authority, sensitivity policy authority, proof authority, receipt authority, release authority, catalog authority, legal/title authority, resource-reserve authority, exact public borehole/well-log authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+KFM rule: this directory is a Geology-facing compatibility/reference index. One governed source-first capture may support Geology without duplicated RAW bytes; this subtree does not establish physical placement. It is not source-family doctrine, source registry authority, rights authority, sensitivity policy authority, proof authority, receipt authority, release authority, catalog authority, legal/title authority, resource-reserve authority, exact public borehole/well-log authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
 
 [Back to top](#top)

@@ -14,6 +14,17 @@ A release review records whether a candidate, manifest, correction, notice, or r
 
 A review is not a release. Review prose does not make an output public. Release requires governed records, validation support, steward decision, manifest readiness, correction path, and reversal posture where applicable.
 
+The fixture-only validator at `tools/validators/validate_review_record.py` checks
+synthetic Gate G projections for separation of duties, declared actor authority,
+canonical identity syntax and issuance by review time, a supplied authority
+interval covering evaluation, an empty approving-review obligations list,
+a declared valid-until interval, an explicit self-declared supersession marker,
+scope, subject, and hash binding. It does not resolve live authority,
+obligations, or current-review state; determine the role qualified as release
+authority; create a record in this lane; authenticate a reviewer; grant
+authority; or change release state. This lane still contains guidance only; no
+parent-level governed release ReviewRecord is established by the fixture proof.
+
 ## Status & authority
 
 | Field | Value |
@@ -209,6 +220,6 @@ Examples:
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-03 |
-| Review status | Draft README replacing blank file |
+| Last reviewed | 2026-08-03 |
+| Review status | Guidance-only lane updated for fixture-only Gate G validation; no governed ReviewRecord present |
 | Next review trigger | First parent-level release review, new domain sublane, manifest handoff, validation receipt update, policy review, correction, or changelog integration |

@@ -39,6 +39,8 @@ def parse_entries(path: Path) -> list[dict[str, str]]:
 def run(path: Path, require_all_validated: bool = False) -> int:
     entries = parse_entries(path)
     errors: list[str] = []
+    if not entries:
+        errors.append("normalized_summary_consumers must contain at least one consumer")
     seen: set[str] = set()
     for e in entries:
         for f in REQUIRED_FIELDS:

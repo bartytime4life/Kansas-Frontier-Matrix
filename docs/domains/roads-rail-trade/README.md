@@ -15,16 +15,18 @@ related:
   - ./PIPELINE.md
   - ../../doctrine/directory-rules.md
   - ../../adr/
-  - ../../../contracts/transport/                        # CONFIRMED slug (Atlas Ch.24.13 / ENCY §7.11); presence NEEDS VERIFICATION
-  - ../../../schemas/contracts/v1/transport/             # CONFIRMED slug (Atlas Ch.24.13 / ENCY §7.11); presence NEEDS VERIFICATION
-  - ../../../policy/sensitivity/transport/               # PROPOSED, NEEDS VERIFICATION
-  - ../../../ai-build-operating-contract.md
+  - ../../../contracts/transport/
+  - ../../../schemas/contracts/v1/transport/
+  - ../../../policy/sensitivity/transport/
 tags: [kfm, domain, roads, rail, trade-routes, transport]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent README."
   - "CORRECTION v1.0→v1.1: schema/contract homes are schemas/contracts/v1/transport/ and contracts/transport/ per Atlas Ch.24.13 row 13 and Encyclopedia §7.11 — NOT domains/roads-rail-trade/. Lane segment slug roads-rail-trade applies to docs/, policy/, tests/, fixtures/, data/, pipelines/, release/; schema+contract use the transport/ segment. Documented divergence tracked as OQ-RRT-01."
   - "Folder-level README per Directory Rules §15."
   - "Doctrine grounded in Atlas Ch. 13 [DOM-ROADS]; implementation-layer presence is PROPOSED pending repo verification."
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Domain Dossier README; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🛣️ Roads, Rail & Trade Routes — Domain Dossier
@@ -46,7 +48,7 @@ notes:
 | **Authority**  | Canonical — `docs/` root, domain segment per Directory Rules §3, §12                         |
 | **Owners**     | TODO — `CODEOWNERS` entry NEEDS VERIFICATION                                                 |
 | **Updated**    | 2026-06-07                                                                                   |
-| **Supersedes** | v1.0-draft (schema/contract-slug correction; see [Changelog](#changelog-v10draft--v11draft)) |
+| **Supersedes** | v1.0-draft (schema/contract-slug correction; see [Changelog](#changelog-v10-draft--v11-draft)) |
 | **Primary src**| Atlas Ch. 13 (`KFM_Domains_v1_1` Pt.1, pp. 83–89) [DOM-ROADS]; Atlas Ch. 24.13; ENCY §7.11; Directory Rules §6.1, §12 |
 
 > [!IMPORTANT]
@@ -83,7 +85,7 @@ notes:
 - [21. FAQ](#21-faq)
 - [22. Related folders & docs](#22-related-folders--docs)
 - [23. ADRs](#23-adrs)
-- [Changelog](#changelog-v10draft--v11draft)
+- [Changelog](#changelog-v10-draft--v11-draft)
 - [Appendix A — Glossary deltas](#appendix-a--glossary-deltas)
 - [Appendix B — Source-attribution map](#appendix-b--source-attribution-map)
 - [Last reviewed · Back to top](#-last-reviewed)
@@ -287,7 +289,7 @@ docs/domains/roads-rail-trade/
 ├── cross-lane-relations.md                # PROPOSED — joins to Settlements, Hydrology, Hazards, Archaeology
 ├── viewing-products.md                    # PROPOSED — MapLibre layers and Evidence Drawer surfaces
 ├── sensitivity-and-publication.md         # PROPOSED — Indigenous corridors, critical facilities posture
-├── governed-ai.md                         # PROPOSED — Focus Mode behavior for this domain
+├── governed-ai/README.md                         # PROPOSED — Focus Mode behavior for this domain
 ├── verification-backlog.md                # PROPOSED — domain-specific NEEDS VERIFICATION items
 └── adr-index.md                           # PROPOSED — ADRs that govern this domain
 ```
@@ -374,7 +376,7 @@ flowchart LR
 The full lane lifecycle, gates A–G, and receipt-by-phase mapping live in the sibling
 [`./PIPELINE.md`](./PIPELINE.md).
 
-[↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
+↑ Back to top
 
 ---
 
@@ -480,7 +482,7 @@ entry — see [§20](#20-verification-backlog--open-questions).
 Source: Atlas Ch. 13 §F and the Cross-Lane Relation Atlas (Atlas Ch. 24.4, edges owned by Roads/Rail/Trade).
 [DOM-ROADS] [DOM-SETTLE] [DOM-HYD] [DOM-HAZ] [DOM-ARCH] [ENCY]
 
-[↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
+↑ Back to top
 
 ---
 
@@ -686,10 +688,10 @@ KDOT / FHWA / county / state authoritative records. — [DOM-ROADS §D, §K]
 | Parent index             | [`../README.md`](../README.md)                                                           | `docs/domains/` index             |
 | Doctrine                 | [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md)                 | Placement law, README contract    |
 | Doctrine                 | [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)                     | RAW → PUBLISHED gates             |
-| Architecture             | [`../../architecture/governed-api.md`](../../architecture/governed-api.md)               | Public-path discipline            |
+| Architecture             | [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md)               | Public-path discipline            |
 | Architecture             | [`../../architecture/map-shell.md`](../../architecture/map-shell.md)                     | MapLibre + Evidence Drawer        |
 | ADR home                 | [`../../adr/`](../../adr/)                                                               | ADR-0001 (schema home), more      |
-| Operating contract       | [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md)     | `CONTRACT_VERSION = "3.0.0"`       |
+| Operating contract       | `../../../ai-build-operating-contract.md` (held: DOC-DOC-002)     | `CONTRACT_VERSION = "3.0.0"`       |
 | Atlases                  | `../../atlases/` (NEEDS VERIFICATION)                                                    | Versioned domain atlases          |
 | Registers                | `../../registers/VERIFICATION_BACKLOG.md` (NEEDS VERIFICATION)                           | Backlog mirror                    |
 | Registers                | `../../registers/DRIFT_REGISTER.md` (NEEDS VERIFICATION)                                 | For naming-variance entries       |
@@ -715,7 +717,7 @@ KDOT / FHWA / county / state authoritative records. — [DOM-ROADS §D, §K]
 ADRs listed as *proposed* are entries on the Atlas v1.1 Open-ADR Backlog (Ch. 24.12). They have not been
 accepted in this session.
 
-[↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
+↑ Back to top
 
 ---
 
@@ -786,4 +788,4 @@ Per Directory Rules §15, this README is due for re-review when **(a)** Atlas Ch
 responsibility-root path is created for this domain, **(d)** `OQ-RRT-01` is resolved by ADR, or **(e)** six
 months elapse — whichever comes first.
 
-[↑ Back to top](#%EF%B8%8F-roads-rail--trade-routes--domain-dossier)
+↑ Back to top

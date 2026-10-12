@@ -1,691 +1,664 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/cross-lane-join-policy
-title: Cross-Lane Join Policy — Architectural Foundation
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + governance lead + each domain steward (16)>
+title: Cross-Lane Join Policy — Architecture and Current Implementation Boundary
+type: architecture
+version: v2.0.0
+status: draft; repository-grounded; implementation-partial; policy-inactive; non-publisher
+owners:
+  - "@bartytime4life"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-18
 policy_label: public
-related: [
-  docs/architecture/TRUST_MEMBRANE.md,
-  docs/architecture/critical-asset-exposure.md,
-  docs/architecture/cross-domain-invasives.md,
-  docs/architecture/system-context.md,
-  docs/architecture/governed-api.md,
-  docs/architecture/map-shell.md,
-  docs/architecture/ui/CONTINUITY_NOTES.md,
-  docs/standards/MAP_TRUST_STATES.md,
-  docs/standards/EVIDENCE_BUNDLE.md,
-  docs/standards/RELEASE_MANIFEST.md,
-  docs/standards/PROV/README.md,
-  docs/standards/DUO_PROFILE.md,
-  docs/standards/SENSITIVITY_RUBRIC.md,
-  contracts/v1/source/,
-  schemas/contracts/v1/source/,
-  policy/joins/,
-  policy/sensitivity/
-]
-tags: [kfm, architecture, cross-lane-join, source-role, anti-collapse, sensitivity, most-restrictive-tier, governance, adr-s-14]
-notes: [
-  "Architectural foundation for cross-lane joins in KFM. Consolidates Atlas §24.1 (Master Source-Role Anti-Collapse Register), Atlas §24.4 (Cross-Lane Relation Atlas), and kfm_unified_doctrine_synthesis.md §17 (Cross-lane relations and source-role anti-collapse).",
-  "Sister architecture docs (critical-asset-exposure.md, cross-domain-invasives.md) defer to this document for the cross-lane-join admissibility rules.",
-  "ADR-S-14 (open) is the doctrinal placeholder for this document's normative content: 'Cross-lane join policy: which joins require steward review, which are denied, which are open.' See §15 item 1."
-]
+owning_root: docs/
+responsibility: Explain how KFM preserves endpoint authority, source role, evidence, sensitivity, and release boundaries when records from independently governed domain lanes are evaluated together.
+base_commit: f287d7e1501229ebde23737aba98c07279684dbc
+prior_blob: 521007752082798a285db0204faf3ee091a3894a
+directory_governance: ADR-0029 adopts docs/doctrine/directory-rules.md as the writable Directory Rules authority; this existing same-path architecture page remains explanatory only.
+truth_posture: CONFIRMED current repository evidence; PROPOSED policy architecture; UNKNOWN production enforcement unless explicitly identified below
+related:
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ./TRUST_MEMBRANE.md
+  - ./cross-domain/cross-lane-relations.md
+  - ./cross-domain/source-role-anti-collapse.md
+  - ../../control_plane/cross_domain_seam_register.yaml
+  - ../../control_plane/policy_gate_register.yaml
+  - ../../contracts/joins/cross_lane_join_assessment.md
+  - ../../contracts/source/source_role_transition_assessment.md
+  - ../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json
+  - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../policy/joins/README.md
+  - ../../tools/joins/join_candidates.py
+  - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
+  - ../../tests/joins/test_join_candidates.py
+  - ../../.github/workflows/cross-lane-join-assessment.yml
+tags: [kfm, architecture, cross-lane, joins, source-role, evidence, sensitivity, policy-boundary, non-publisher]
+notes:
+  - "@bartytime4life is the verified CODEOWNERS review route. Join-policy stewardship, affected-domain review, and independent release authority remain NEEDS VERIFICATION."
+  - "The current executable proof is a deterministic, fixture-only candidate assessment. It is not a policy evaluator, relationship-truth authority, review decision, release decision, or publication path."
+  - "OPEN / STEWARD-REVIEW / DENIED remain proposed policy postures while ADR-S-14 is unresolved; they must not be inferred from helper ALLOW / ABSTAIN / DENY / ERROR outcomes."
 [/KFM_META_BLOCK_V2] -->
 
-# Cross-Lane Join Policy — Architectural Foundation
+<a id="top"></a>
 
-> The architecture of how KFM admits, denies, or steward-gates **joins across domain lanes** — and the seven source roles, five admissibility checks, and three default postures that compose to produce a finite, auditable answer for every cross-lane join the system attempts.
+# Cross-Lane Join Policy — Architecture and Current Implementation Boundary
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: architecture foundation](https://img.shields.io/badge/type-architecture--foundation-informational)](#)
-[![scope: all cross-lane joins](https://img.shields.io/badge/scope-all%20cross--lane%20joins-blueviolet)](#)
-[![rule: source-role fixed at admission](https://img.shields.io/badge/rule-source--role%20fixed%20at%20admission-critical)](#)
-[![rule: most-restrictive tier wins](https://img.shields.io/badge/rule-most--restrictive%20tier%20wins-critical)](#)
-[![governance: ADR--S--14 open](https://img.shields.io/badge/governance-ADR--S--14%20open-yellow)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> **Operating rule.** A cross-lane operation may produce a reviewable candidate only while every endpoint keeps its own domain authority, source role, evidence reference, temporal and spatial support, and strictest applicable sensitivity. A candidate result is never relationship truth, policy approval, release approval, or publication.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + governance lead + each domain steward_ | 2026-05-24 |
+![status](https://img.shields.io/badge/status-draft-orange)
+![repository evidence](https://img.shields.io/badge/repository--evidence-CONFIRMED-2ea44f)
+![implementation](https://img.shields.io/badge/implementation-fixture--first-blue)
+![policy](https://img.shields.io/badge/join--policy-inactive-yellow)
+![publication](https://img.shields.io/badge/publication-DENIED-lightgrey)
 
----
-
-> [!CAUTION]
-> **This document is the architectural foundation, not the per-join policy code.** The OPA rules that mechanically admit, deny, or gate joins live in `policy/joins/` (PROPOSED home). Per-domain sensitivity rules live in `policy/sensitivity/<domain>/`. The `SourceDescriptor.source_role` enum and its schema live in `contracts/v1/source/` and `schemas/contracts/v1/source/`. This document defines the **vocabulary, admissibility checks, default postures, and verification points** that those canonical homes implement. See §2.
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Scope and repo fit](#2-scope-and-repo-fit)
-- [3. Authority and standing](#3-authority-and-standing)
-- [4. The seven canonical source roles](#4-the-seven-canonical-source-roles)
-- [5. Allowed downstream-role transitions](#5-allowed-downstream-role-transitions)
-- [6. The five join-admissibility checks](#6-the-five-join-admissibility-checks)
-- [7. The cross-lane relation atlas — consolidated](#7-the-cross-lane-relation-atlas--consolidated)
-- [8. The three default postures — OPEN, STEWARD-REVIEW, DENIED](#8-the-three-default-postures--open-steward-review-denied)
-- [9. What promotion never does](#9-what-promotion-never-does)
-- [10. Join-evaluation architecture](#10-join-evaluation-architecture)
-- [11. The anti-collapse failure modes](#11-the-anti-collapse-failure-modes)
-- [12. Render-time and AI enforcement](#12-render-time-and-ai-enforcement)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Tensions and known limits](#14-tensions-and-known-limits)
-- [15. Open questions](#15-open-questions)
-- [16. Related docs](#16-related-docs)
-- [Appendix A — Join admissibility matrix](#appendix-a--join-admissibility-matrix)
-- [Appendix B — Source-role transition cheatsheet](#appendix-b--source-role-transition-cheatsheet)
-
----
-
-## 1. Purpose
-
-CONFIRMED — Atlas §24.1:
-
-> *"KFM treats source role as a first-class identity attribute. An observed reading is not interchangeable with a modeled estimate; a regulatory determination is not interchangeable with an administrative compilation; an aggregate publication is not interchangeable with candidate evidence; synthetic content is never the same thing as observed reality. The lifecycle and the governed API both fail closed when these roles are conflated."*
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §17:
-
-> *"Cross-lane joins create the most powerful KFM views — and the most dangerous source-role collisions. A join is permitted only when each side preserves its `EvidenceBundle`, source role, sensitivity tier, and release state."*
->
-> *"**Source-role collapse is the most common silent failure.** A modeled value cited as an observation, an aggregate cited as a per-place observation, a synthetic surface presented as reality — these are doctrine violations even when the underlying data are correct."*
-
-These two passages, taken together, name the architectural concern this document is the foundation of. KFM's most powerful outputs come from joining records across domain lanes — hydrology × hazards × settlements, fauna × flora × habitat, archaeology × roads × settlements, frontier-matrix × everything. Those same joins are the structural failure mode that produces KFM's most consequential silent failures: a modeled value rendered as if observed, an aggregate plotted as if per-place, a regulatory designation cited as if it were evidence of presence.
-
-This document collects the rules that prevent those failures into one architectural foundation. It is **not** a domain doctrine, **not** an external standards profile, **not** a sensitivity rubric, and **not** policy code. It is the **architecture of the admissibility decision itself** — the vocabulary, checks, postures, and verification points that determine whether a proposed cross-lane join can produce a release-eligible derivative.
-
-Two prior-session-authored sibling documents apply this foundation to specific cases:
-
-- [`docs/architecture/critical-asset-exposure.md`](./critical-asset-exposure.md) §9 — cross-lane risks when one side is a critical-asset class.
-- [`docs/architecture/cross-domain-invasives.md`](./cross-domain-invasives.md) §7 — cross-lane joins when one side is an invasive-record class.
-
-Both defer to this document for the underlying rules. Other applications (cross-domain hazards composition, frontier-matrix cell composition, etc.) defer here as well.
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Scope and repo fit
-
-### 2.1 What this document is
-
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | KFM cross-cutting architectural foundation | CONFIRMED per Directory Rules §6.1 (`docs/architecture/`) |
-| Proposed path | `docs/architecture/cross-lane-join-policy.md` | PROPOSED; casing matches sibling architecture-folder convention |
-| Sibling architecture docs | `system-context.md`, `governed-api.md`, `map-shell.md`, `maplibre-3d.md`, `contract-schema-policy-split.md`, `TRUST_MEMBRANE.md`, `critical-asset-exposure.md`, `cross-domain-invasives.md`, `ui/CONTINUITY_NOTES.md` | CONFIRMED per Directory Rules §6.1 (mounted-repo presence NEEDS VERIFICATION) |
-| Primary doctrine anchors | `kfm_unified_doctrine_synthesis.md` §17; Atlas §24.1 (Source-Role Anti-Collapse Register), §24.1.2 (Anti-collapse failure modes), §24.1.3 (Roles to source-descriptor fields), §24.4 (Cross-Lane Relation Atlas), §24.9.3 (Governance-process anti-patterns), §24.12 ADR-S-14 (Cross-lane join policy — open ADR) | CONFIRMED |
-| Authority NOT held | Doctrine; the source-role enum schema; OPA join-policy code; per-domain sensitivity rules; per-join steward chains; the per-domain F. cross-lane tables | CONFIRMED |
-
-### 2.2 What this document is NOT
-
-| If the content is about… | …it lives at | …not here |
-|---|---|---|
-| The `source_role` enum vocabulary itself | `contracts/v1/source/source_descriptor.md` (PROPOSED home) + ADR-S-04 | this doc |
-| The `SourceDescriptor` JSON Schema | `schemas/contracts/v1/source/source_descriptor.schema.json` (PROPOSED home) | this doc |
-| The OPA rules that admit/deny per-join | `policy/joins/<domain-pair>/` (PROPOSED homes) | this doc |
-| Per-domain sensitivity tier defaults | `policy/sensitivity/<domain>/` (PROPOSED homes per Atlas §24.13 crosswalk) | this doc |
-| The full sensitivity-tier vocabulary (T0–T4) | `docs/standards/SENSITIVITY_RUBRIC.md` (PROPOSED, not yet authored) + ADR-S-05 | this doc |
-| Per-domain object families and cross-lane edges (F. tables) | Per-domain contracts at `contracts/v1/<domain>/` | this doc |
-| The full anti-collapse register row text | Atlas §24.1.2 (this doc preserves the table verbatim with cross-references) | this doc |
-| Promotion-gate sequence | `policy/release/` + `docs/architecture/TRUST_MEMBRANE.md` §5.3 | this doc |
-| Render-time policy code | `policy/render/` + `packages/maplibre-runtime/src/verifier/` | this doc |
-| AI-runtime policy code | `policy/ai/` + `packages/governed-ai/` | this doc |
-| Tests and fixtures | `tests/joins/`, `fixtures/joins/` (PROPOSED homes) | this doc |
-| Per-domain join runbooks | `docs/runbooks/joins/` (PROPOSED home) | this doc |
-
-What this document **does** own:
-
-- The architectural definition of the seven source roles (§4).
-- The allowed downstream-role-transition table (§5).
-- The five join-admissibility checks (§6).
-- The consolidated cross-lane relation atlas (§7).
-- The three default postures — OPEN, STEWARD-REVIEW, DENIED (§8) — the heart of ADR-S-14.
-- The promotion-never-upgrades-role rule (§9).
-- The join-evaluation architecture (§10).
-- The anti-collapse failure-mode register (§11), preserving Atlas §24.1.2 verbatim with cross-references to the architectural enforcement.
-- The render-time and AI enforcement specification (§12).
-- The anti-pattern register (§13).
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Authority and standing
-
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | KFM architecture foundation (cross-cutting) | CONFIRMED per Directory Rules §6.1 |
-| Canonical path | `docs/architecture/cross-lane-join-policy.md` | PROPOSED |
-| Primary doctrine anchor | **Atlas §24.1** — Master Source-Role Anti-Collapse Register | CONFIRMED |
-| Cross-lane register anchor | **Atlas §24.4** — Cross-Lane Relation Atlas (per owning domain) | CONFIRMED |
-| Anti-collapse failure-mode anchor | **Atlas §24.1.2** — Anti-collapse failure modes (DENY conditions) | CONFIRMED |
-| Source-descriptor anchor | **Atlas §24.1.3** — Roles to source-descriptor fields (PROPOSED schema home) | CONFIRMED-as-PROPOSED |
-| Architectural composition | **`kfm_unified_doctrine_synthesis.md` §17** — Cross-lane relations and source-role anti-collapse; **§29.3** — governance-process anti-patterns ("source role is fixed at admission; never upgraded by promotion") | CONFIRMED |
-| ADR placeholder | **ADR-S-14** — "Cross-lane join policy: which joins require steward review, which are denied, which are open. Cross-lane joins are inference-risk multipliers." | CONFIRMED open ADR |
-| Companion ADRs | **ADR-S-04** (Source-role enum), **ADR-S-05** (Sensitivity tier scheme) | CONFIRMED open ADRs |
-| Sister architecture | [`docs/architecture/critical-asset-exposure.md`](./critical-asset-exposure.md), [`docs/architecture/cross-domain-invasives.md`](./cross-domain-invasives.md), [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) | CONFIRMED authored (prior session) |
-| Authority NOT held | Source-role enum vocabulary itself, schema, OPA code, per-domain sensitivity, contracts, tests, deployment topology | CONFIRMED |
-
-[Back to top](#quick-jump)
-
----
-
-## 4. The seven canonical source roles
-
-CONFIRMED verbatim from **Atlas §24.1.1** *Canonical source-role classes*. KFM treats source role as a first-class identity attribute on every `SourceDescriptor`. The enum is set at admission and **never edited in-place**; corrections produce a new descriptor and a `CorrectionNotice` (CONFIRMED — Atlas §24.1.3).
-
-| # | Role | Definition (CONFIRMED) | Typical example | Allowed downstream role |
-|---|---|---|---|---|
-| 1 | **Observed** | A direct reading, measurement, or first-hand evidentiary record tied to a place and time. | Stream-gauge stage reading; soil pedon description; air-quality monitor sample; ground archaeological observation. | May feed modeled or aggregate products; **never relabeled** as 'regulatory' or 'administrative'. |
-| 2 | **Regulatory** | An authoritative determination by a regulatory or governing body with legal or administrative force. | NFHL flood-zone designation; air-quality non-attainment ruling; designated critical habitat unit; protected-species listing. | Cite as regulatory context; **never** labeled an 'observed' event or a 'modeled' estimate. |
-| 3 | **Modeled** | A derived product from inputs, assumptions, or fitted parameters; uncertainty and provenance of inputs must be preserved. | Hydrograph reconstruction; smoke-trajectory model; suitability raster; population-estimation surface; AODRaster. | Cite with model identity, run receipt, and bounds; **never** labeled an observation. |
-| 4 | **Aggregate** | A published summary, total, or average over a unit (county, year, watershed); irreversible loss of individual record fidelity. | USDA crop county totals; Census tract aggregates; decadal climate normal; resource-estimate summary. | Cite with `AggregationReceipt`; **never** treated as a per-place record. |
-| 5 | **Administrative** | A compiled record produced by an agency for administration, registration, or accounting purposes — not necessarily an observation or a regulation. | Land office tract book; deed-index compilation; county incorporation record; transport-facility roster. | Cite as administrative context; **never** collapsed with observation or regulation. |
-| 6 | **Candidate** | A record that has not yet been promoted to PROCESSED — typically in WORK / QUARANTINE pending validation, review, or evidence resolution. | Source-watcher output; PR-submitted record before review; freshly-ingested raw fixture. | **Never** exposed on a public surface; promotion gate must close before any downstream role applies. |
-| 7 | **Synthetic** | Reconstructed, generated, or simulated content — including AI-drafted text, 3D reconstructions of partially-observed scenes, and synthetic surfaces. | AI-drafted narrative summary; 3D reconstruction of a historic site from partial evidence; synthetic terrain. | Cite with `RepresentationReceipt` and `RealityBoundaryNote`; **never** labeled as observed reality. |
-
-### 4.1 Why seven, not fewer
-
-The corpus is explicit (Atlas §24.1) that these seven are **not collapsible**. A naïve simplification would collapse Observed and Administrative ("they're both records that exist"), or Modeled and Aggregate ("they're both derived"), or Candidate and Synthetic ("they're both not-yet-real"). Each of these collapses is the failure mode the doctrine exists to prevent. The seven roles are doctrinal vocabulary, governed by ADR-S-04, and changes to the enum require ADR review.
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@f287d7e1501229ebde23737aba98c07279684dbc` |
+| **Architecture page** | **CONFIRMED** at this path; explanatory authority only |
+| **Candidate assessment** | **CONFIRMED** contract, schema, helper, 19-case synthetic fixture matrix, focused tests, and a read-only workflow |
+| **Join-policy source** | **CONFIRMED** documented at `policy/joins/`; **inactive** — no accepted local bundle, evaluator, selector, or decision emitter is established |
+| **Policy postures** | `OPEN`, `STEWARD-REVIEW`, and `DENIED` are **PROPOSED** while ADR-S-14 remains unresolved |
+| **Public/release path** | **UNKNOWN / not proven complete** for generic cross-lane joins; no candidate outcome authorizes it |
+| **Review route** | `@bartytime4life` through `CODEOWNERS`; stewardship and independent approval remain **NEEDS VERIFICATION** |
 
 > [!IMPORTANT]
-> The source-role enum is **doctrinal vocabulary**, not a configuration setting. A pipeline that invents a new role at admission ("partially-observed," "semi-modeled," "quasi-regulatory") is a doctrine violation regardless of how reasonable the new label sounds.
+> **Do not read this page as activated policy.** The current repository proves a bounded, no-network candidate-assessment slice. It does not prove an accepted generic join policy, `PolicyDecision` family for joins, EvidenceBundle resolution, accountable review, release integration, governed public consumption, or correction propagation for all cross-lane derivatives.
 
-[Back to top](#quick-jump)
+> [!CAUTION]
+> `ALLOW` from the fixture helper means only **“emit a reviewable `CANDIDATE_RELATION` report.”** It does not mean `OPEN`, `ANSWER`, evidence closure, relation truth, policy permission, review approval, release, or publication.
+
+**Quick navigation:** [Purpose](#1-purpose-and-non-effects) · [Evidence](#2-current-repository-evidence) · [Responsibility split](#3-responsibility-and-authority-split) · [Invariants](#4-keystone-invariants) · [Source roles](#5-source-role-preservation) · [Candidate assessment](#6-current-candidate-assessment) · [Five checks](#7-five-architecture-level-admissibility-controls) · [Outcomes](#8-outcome-vocabularies-must-not-collapse) · [Seams](#9-current-cross-domain-seam-projection) · [Policy boundary](#10-current-policy-boundary) · [Lifecycle](#11-governed-evaluation-and-release-flow) · [Public surfaces](#12-api-map-search-export-and-ai-boundaries) · [Failure modes](#13-failure-mode-register) · [Validation](#14-validation-and-acceptance) · [Correction](#15-correction-revocation-and-rollback) · [Open decisions](#16-open-decisions-and-verification-backlog) · [References](#17-related-repository-surfaces)
 
 ---
 
-## 5. Allowed downstream-role transitions
+## 1. Purpose and non-effects
 
-CONFIRMED — Atlas §24.1.1 *Allowed downstream role* column + §29.3 governance-process anti-pattern *"Promotion that 'upgrades' a source role (modeled → observed): **Source role is fixed at admission; never upgraded by promotion.**"*
+This page explains the cross-cutting architecture for evaluating a declared relationship candidate between objects owned by different KFM domain lanes. It reconciles the original anti-collapse design with the repository's current fixture-first implementation and inactive policy boundary.
 
-A **transition** is the act of producing a downstream artifact from an upstream record. KFM permits some transitions (an observation may feed an aggregate; a model may produce a derived surface) and prohibits others (a model output may never be relabeled an observation).
+It answers four questions:
 
-| From role | May produce | May NOT produce | Why |
-|---|---|---|---|
-| Observed | Modeled (when fed into a model); Aggregate (when summarized); cited evidence in any derivative | Regulatory; Administrative | Observation is the highest-trust role; "promotion" to regulatory or administrative would invent authority KFM does not have |
-| Regulatory | Cited regulatory context in any derivative | Observed; Modeled; Aggregate; Administrative | Regulatory determination is its own role; transformation breaks the authority |
-| Modeled | Aggregate (when summarized); cited modeled context | Observed; Regulatory; Administrative | The model's predictive nature is irreducible; relabeling erases it |
-| Aggregate | Higher-level aggregate (with new `AggregationReceipt`); cited aggregate context | Observed; Per-place anything | Aggregation is one-way; per-place fidelity is irrecoverable |
-| Administrative | Cited administrative context in any derivative | Observed; Regulatory; Modeled | Administrative records are documentary, not evidentiary |
-| Candidate | Any role **only after promotion** completes (RAW → WORK → PROCESSED) | Any role in PUBLISHED before promotion | Candidate is by definition pre-promotion |
-| Synthetic | Cited synthetic context (with `RealityBoundaryNote`) | Observed; Regulatory; Modeled; Aggregate; Administrative | Synthetic content is interpretive; cannot become evidence |
+1. What must remain separate when endpoints are evaluated together?
+2. What does the current candidate helper actually prove?
+3. Which additional controls are required before a join can become a governed derivative?
+4. Where do meaning, shape, policy, tooling, evidence, review, release, and public delivery belong?
+
+This page does **not**:
+
+- define endpoint or relationship truth;
+- choose a canonical identity for either endpoint;
+- activate `policy/joins/` or accept ADR-S-14;
+- create an `EvidenceBundle`, `PolicyDecision`, `ReviewRecord`, receipt, proof, release manifest, or rollback card;
+- authorize lifecycle writes, source activation, public use, release, deployment, promotion, or publication;
+- lower rights, consent, sensitivity, geoprivacy, cultural, living-person, infrastructure, or location protections;
+- turn a matching key, overlap, proximity, validator pass, workflow success, or helper `ALLOW` into authoritative knowledge.
+
+The document belongs at the existing `docs/architecture/` path because it explains how several responsibility roots compose. Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes [Directory Rules v2](../doctrine/directory-rules.md) the placement authority; the path does not make this prose policy or implementation authority.
+
+[Back to top](#top)
+
+---
+
+## 2. Current repository evidence
+
+The table below is the strongest safe current-state statement for this architecture at the pinned base commit.
+
+| Surface | Confirmed repository state | Safe interpretation |
+|---|---|---|
+| This page | Existing architecture file, prior blob `521007752082798a285db0204faf3ee091a3894a` | Same-path modernization; no new authority home is created. |
+| Directory governance | ADR-0029 is accepted and pins `docs/doctrine/directory-rules.md` as the writable Directory Rules authority | Placement is settled for this change; policy acceptance is not. |
+| Seam projection | [`control_plane/cross_domain_seam_register.yaml`](../../control_plane/cross_domain_seam_register.yaml) is `PROPOSED`, partial, navigational/review-only, and records five high-risk seams as `HOLD_UNRESOLVED` | The register helps reviewers find risk; it does not authorize a join. |
+| Semantic profile | [`CrossLaneJoinAssessment`](../../contracts/joins/cross_lane_join_assessment.md) is proposed, fixture-first, dry-run, local-only, and non-authoritative | Meaning is bounded to candidate assessment, not generic relation truth. |
+| Machine shape | [`cross_lane_join_assessment.schema.json`](../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json) is a closed Draft 2020-12 profile, version `0.1.0` | The current fixture assessment has an enforceable shape. |
+| Helper | [`tools/joins/join_candidates.py`](../../tools/joins/join_candidates.py) performs parameterized in-memory exact-key SQL and synthetic spatial-temporal comparison | Deterministic candidate computation exists; no real geometry engine or network source is involved. |
+| Fixtures | [`cases.json`](../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json) supplies a synthetic base and 19 finite cases | Test coverage is fixture-bounded and public-safe by construction. |
+| Focused tests | [`test_join_candidates.py`](../../tests/joins/test_join_candidates.py) contains ten focused tests covering schema, polarity, SQL handling, outcomes, tamper, interval/identity checks, symlink/duplicate-key rejection, and no-network/no-write properties | Tests prove the declared local profile only. |
+| Dedicated workflow | [`cross-lane-join-assessment.yml`](../../.github/workflows/cross-lane-join-assessment.yml) runs with `KFM_NO_NETWORK=1`, pinned actions, the fixture matrix, focused tests, and generated-receipt validation | The workflow validates candidate-assessment artifacts; it does not execute join policy. |
+| Policy boundary | [`policy/joins/README.md`](../../policy/joins/README.md) documents two pair-routing children and explicitly reports no local Rego module, accepted bundle, selector, evaluator, or decision emitter | The lane exists but is inactive. |
+| Outward policy shape | [`policy_decision.schema.json`](../../schemas/contracts/v1/policy/policy_decision.schema.json) permits six families and does not include `joins` | `policy_family: joins` is not a valid current `PolicyDecision`. |
+| Policy gate register | [`control_plane/policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) is `PROPOSED` with an empty `entries` list | No active generic join policy gate is registered. |
+| Public/release integration | No complete generic flow was established by the inspected contract, schema, helper, policy README, gate register, tests, or workflow | Remains **UNKNOWN / NEEDS VERIFICATION**; do not infer maturity from adjacent files. |
+
+### 2.1 Evidence strength
+
+- **CONFIRMED:** file presence, pinned bytes, closed fixture schema, deterministic helper behavior expressed in code, synthetic fixture count, focused test assertions, workflow commands, policy-lane inactivity, and the empty proposed policy-gate register.
+- **PROPOSED:** the complete five-check policy model, three join postures, pair-profile activation rules, outward decision normalization, and public-surface obligations.
+- **UNKNOWN / NEEDS VERIFICATION:** accepted join-policy stewardship, an evaluator/bundle binding, required-check coupling, real-source or real-geometry behavior, EvidenceRef-to-EvidenceBundle closure for join relations, review/release/correction integration, and deployed consumers.
+
+[Back to top](#top)
+
+---
+
+## 3. Responsibility and authority split
+
+A cross-lane feature touches many roots, but every artifact keeps one authority owner. The join does not create a new sovereign layer above the participating domains.
+
+| Concern | Owning surface | This architecture consumes it but must not replace it |
+|---|---|---|
+| Endpoint and domain meaning | Participating domain contracts and domain documentation | Each domain retains authority for its own object, identity, interpretation, and correction. |
+| Relationship meaning | [`contracts/joins/`](../../contracts/joins/) or an accepted domain/cross-domain contract | Policy and tooling cannot invent semantics. |
+| Machine shape | [`schemas/contracts/v1/joins/`](../../schemas/contracts/v1/joins/) or an accepted relation/domain profile | Schema validity is not relation truth. |
+| Source-role transformation grammar | [`contracts/source/source_role_transition_assessment.md`](../../contracts/source/source_role_transition_assessment.md) plus domain source-role matrices | Promotion and joins cannot launder source role. |
+| Candidate computation | [`tools/joins/`](../../tools/joins/) and bounded pair-specific validators | A helper may propose; it may not decide policy or publish. |
+| Join admissibility source | [`policy/joins/`](../../policy/joins/) after acceptance and binding | Current lane is documented but inactive. |
+| Evidence and provenance | Evidence, registry, receipt, proof, and catalog authorities | A join needs endpoint support and independent relationship support; policy cannot invent either. |
+| Review | Governed review records and accountable reviewer routes | CODEOWNERS routing is not review proof or release authority. |
+| Release, correction, rollback | [`release/`](../../release/) and the relevant lifecycle/accountability roots | No helper or policy outcome substitutes for release closure. |
+| Public API, maps, search, export, AI | Governed released-carrier surfaces | Public clients consume released, obligation-compliant derivatives only. |
+
+> [!IMPORTANT]
+> **Endpoint validity, relationship validity, policy admissibility, review approval, and release are five different claims.** Proving one never proves the others.
+
+[Back to top](#top)
+
+---
+
+## 4. Keystone invariants
+
+Every binary or n-ary cross-lane operation must preserve these invariants. Missing context fails closed; it is not filled from plausibility, proximity, a domain label, model memory, or a passing workflow.
+
+1. **Domain authority remains separate.** A relation points to domain-owned endpoints; it does not transfer ownership or let one lane rewrite another lane's facts.
+2. **Source role remains explicit.** Each endpoint retains its role, and the derivative never upgrades or collapses it.
+3. **Sensitivity is monotonic and composition-aware.** The result inherits at least the strictest endpoint posture and may become more restrictive when the combination creates a new protected inference.
+4. **Evidence remains separable.** Endpoint evidence and independent relationship support remain separately resolvable; one endpoint's evidence cannot substitute for the relation.
+5. **Time, space, scale, precision, cardinality, and uncertainty remain part of the claim.** A join key or overlap does not erase support limits.
+6. **Candidate status remains visible.** A helper result is a candidate report, not a graph edge of record, policy decision, review decision, or released carrier.
+7. **Rights and consent do not transfer by adjacency.** Permission for one endpoint, purpose, or audience does not silently authorize the other endpoint or the derivative.
+8. **Corrections propagate through dependencies.** A corrected, withdrawn, superseded, or newly restricted input invalidates dependent assessments and any later governed derivative.
+9. **Public clients remain behind the trust membrane.** No candidate, internal policy input, sensitive reason, or unreleased relationship becomes a normal public path.
+
+The first four are the durable anti-collapse spine. The remaining five make the spine operational across modern KFM surfaces.
+
+[Back to top](#top)
+
+---
+
+## 5. Source-role preservation
+
+### 5.1 Current seven-role vocabulary
+
+The current fixture schema constrains each endpoint to seven values. That is **CONFIRMED for the `CrossLaneJoinAssessment` profile**. Global adoption and evolution of the vocabulary remain a governance decision; domain source-role matrices may add lane-specific interpretation without changing these values silently.
+
+| Role | Bounded meaning | Cross-lane guardrail |
+|---|---|---|
+| `OBSERVED` | Direct measurement, reading, or first-hand evidentiary record tied to stated support | Preserve observation time, method, scale, and uncertainty; do not let another role become observed by association. |
+| `REGULATORY` | Determination or designation with administrative or legal force | Present as regulatory context, not an observed event or measurement. |
+| `MODELED` | Derived output from inputs, assumptions, parameters, or fitted methods | Preserve model identity, bounds, input lineage, and run support; never label as observed. |
+| `AGGREGATE` | Summary over a unit, interval, or population with loss of record-level fidelity | Preserve aggregation scope; never project to a person, parcel, point, or single event without separate support. |
+| `ADMINISTRATIVE` | Compiled record for registration, accounting, administration, or documentation | Preserve documentary caveats; do not present as observation, regulation, title, residence, or causation. |
+| `CANDIDATE` | Unresolved or pre-authority record requiring additional evidence, validation, or review | Never expose as released truth; lifecycle movement does not manufacture a stronger role. |
+| `SYNTHETIC` | Generated, reconstructed, simulated, or representational content | Preserve the reality boundary and representation support; never present as observed reality. |
+
+### 5.2 Promotion never upgrades role
+
+[`SourceRoleTransitionAssessment`](../../contracts/source/source_role_transition_assessment.md) makes the shared minimum explicit:
+
+| Operation | Allowed output role | Required support |
+|---|---|---|
+| `PASSTHROUGH` or `GENERALIZE` | Same role as the input | Input evidence linkage and preserved limits |
+| `PROMOTE_LIFECYCLE` | Same role; unresolved candidate inputs stay on hold | Promotion changes lifecycle state, not authority class |
+| `AGGREGATE` | `AGGREGATE` | Aggregation receipt reference |
+| `MODEL` | `MODELED` | Model-run receipt reference |
+| `SYNTHESIZE` | `SYNTHETIC` | Representation receipt and reality-boundary note references |
+
+A field observation that later validates a model is a new observed record that may cite the model as context. It is not a relabeled model. An unresolved candidate that later gains support is re-admitted through the governed source/domain process; a lifecycle transition alone does not make it observed.
+
+### 5.3 The current helper's bounded role check
+
+The generic fixture helper preserves both endpoint roles and always emits `output_role: CANDIDATE_RELATION`. Its current compatibility rule abstains when mixed roles include `MODELED`, `AGGREGATE`, or `CANDIDATE`. That is a deliberately narrow fixture rule, not a complete accepted source-role compatibility matrix for every domain pair.
+
+[Back to top](#top)
+
+---
+
+## 6. Current candidate assessment
+
+The implemented slice is a **deterministic candidate-assessment helper**. It provides useful proof without pretending to solve the full join-policy problem.
+
+### 6.1 Mechanics
+
+| Predicate | Current behavior | Explicit limitation |
+|---|---|---|
+| `EXACT_KEY` | Parameterized one-row-per-side join in in-memory SQLite | Values are synthetic fixture inputs; a key match does not prove identity or relation truth. |
+| `SPATIAL_TEMPORAL` | Compares declared synthetic spatial-cell references and timezone-aware validity intervals with bounded tolerance | It is not a geometry engine and proves no real-world spatial relationship. |
+
+Identity is deterministic: the helper computes RFC 8785/SHA-256-bound assessment and candidate identifiers through the repository hashing package. It validates stored decisions against re-derived decisions and fails closed on identity or decision tamper.
+
+### 6.2 Six-rule fixture vector
+
+The assessment emits one non-negative failure count for each rule:
+
+1. `DEPENDENCIES_READY`
+2. `EVIDENCE_REFS_PRESENT`
+3. `JOIN_PREDICATE_MATCHED`
+4. `LIVING_PERSON_SAFE`
+5. `SENSITIVITY_SAFE`
+6. `SOURCE_ROLES_COMPATIBLE`
+
+These checks are inspectable and deterministic. They are not a complete accepted policy input profile.
+
+### 6.3 Finite helper outcomes
+
+| Helper outcome | Status examples | Exact authority |
+|---|---|---|
+| `ALLOW` | `JOIN_CANDIDATE` | May emit a reviewable local candidate report only. |
+| `ABSTAIN` | `NO_JOIN_CANDIDATE`, `EVIDENCE_REF_MISSING`, `SOURCE_ROLE_REVIEW_REQUIRED`, `SENSITIVITY_REVIEW_REQUIRED` | The helper cannot safely emit an unrestricted candidate under the declared inputs. |
+| `DENY` | `LIVING_PERSON_JOIN_DENIED`, `GEOMETRY_PRECISION_BLOCKED` | Candidate emission is refused by the bounded fixture profile. |
+| `ERROR` | `VALIDATOR_SYSTEM_ERROR` | A dependency or system condition failed; no candidate assertion is made. |
+
+### 6.4 Effects are schema-fixed to false
+
+Every assessment declares all of these effects as `false`:
+
+- lifecycle write;
+- EvidenceBundle creation;
+- policy-decision creation;
+- review-decision creation;
+- release-decision creation;
+- publication; and
+- public-use authorization.
+
+The governance block is likewise fixture-only, dry-run, no-network, and non-authoritative for identity, relationship truth, policy, review, release, or publication.
+
+### 6.5 What the implementation does not yet do
+
+- resolve `EvidenceRef` to `EvidenceBundle` or prove relationship evidence;
+- execute real geometry or source adapters;
+- evaluate rights, consent, caller capability, purpose limitation, or full uncertainty composition;
+- emit an accepted join `PolicyDecision`;
+- produce transform, aggregation, review, release, correction, or rollback records;
+- write lifecycle state, catalog/triplet state, or public carriers;
+- activate a pair profile or prove n-ary safety.
+
+[Back to top](#top)
+
+---
+
+## 7. Five architecture-level admissibility controls
+
+The draft policy architecture preserves five controls. They are the target governance model, not a claim that the current helper closes them.
+
+| Control | Required result | Current generic implementation status |
+|---|---|---|
+| **Source-role preservation** | Every endpoint role remains explicit; no role is upgraded, merged, or stripped from the derivative | **PARTIAL:** endpoint roles and `CANDIDATE_RELATION` are preserved; the generic conflict rule is intentionally narrow. |
+| **Most-restrictive posture** | The derivative uses at least the strictest endpoint sensitivity and escalates for join-induced risk | **PARTIAL:** the helper computes the strictest of `PUBLIC_SAFE`, `INTERNAL`, `RESTRICTED`, `PROHIBITED`; broader rights/consent/composition policy is absent. |
+| **Evidence composition** | Endpoint support and independent relationship support remain separately resolvable; no flattening or substitution | **NOT CLOSED:** the helper checks EvidenceRef presence only and creates no EvidenceBundle. |
+| **Receipt and process memory** | Accepted transform, aggregation, policy, review, release, correction, and rollback records are emitted in their owning roots | **NOT IMPLEMENTED BY HELPER:** all decision/evidence/release effects are fixed false. |
+| **Authority preservation** | Domains, tools, validators, policy, reviewers, and consumers claim only their assigned authority | **PARTIAL:** endpoint domain/role fields remain visible and all authority effects are false; full reviewer/evaluator/release binding is absent. |
+
+All five compose conservatively. A future accepted evaluator must also receive explicit relationship semantics, time, space, scale, precision, cardinality, uncertainty, rights, consent, sensitivity, review, release, correction, rollback, caller, purpose, audience, and policy identity. The five labels are not a complete machine input schema.
+
+### 7.1 Why the six fixture rules and five policy controls differ
+
+The six-rule vector validates a small candidate-computation profile. The five controls govern whether a relationship derivative is admissible for an operation and audience. They answer different questions and must not be collapsed:
+
+```text
+six fixture rules
+  -> can the helper emit a bounded candidate report?
+
+five architecture controls + complete governed context
+  -> could an accepted policy evaluate a declared derivative?
+
+review + evidence + release + rollback closure
+  -> may a governed carrier be exposed to an audience?
+```
+
+[Back to top](#top)
+
+---
+
+## 8. Outcome vocabularies must not collapse
+
+KFM currently has several finite vocabularies at different layers. Similar words do not make them interchangeable.
+
+| Vocabulary | Current status | Meaning |
+|---|---|---|
+| Candidate assessment: `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` | **CONFIRMED implemented** for the fixture profile | Whether the helper emits a bounded candidate report. |
+| Proposed join posture: `OPEN`, `STEWARD-REVIEW`, `DENIED` | **PROPOSED** while ADR-S-14 is unresolved | Architecture vocabulary for future operation/audience-specific policy posture. |
+| `PolicyDecision`: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | **CONFIRMED schema vocabulary** for six existing families | Outward policy result for a supported family; `joins` is not currently enumerated. |
+| Validation: `PASS` / `FAIL` and findings | **CONFIRMED in focused validation** | Whether an artifact conforms to its declared profile. |
+| Review state | **Separate authority** | Accountable approval, requested changes, hold, or rejection. |
+| Release/publication state | **Separate authority** | Whether a reviewed derivative is included in a governed release and exposed to an audience. |
+
+Forbidden translations include:
+
+- helper `ALLOW` → proposed `OPEN`;
+- helper `ALLOW` → `PolicyDecision.ANSWER`;
+- validator `PASS` → relation truth;
+- workflow success → review approval;
+- review approval → release;
+- release filename or location → publication;
+- any finite outcome → source-role upgrade.
 
 > [!WARNING]
-> **The "never upgraded" rule is absolute** (Atlas §29.3). A modeled value does not become observed because the model was good. An aggregate does not become per-place because the cell is small. A candidate does not become observed because it passed validation. The role is fixed at admission; promotion changes the lifecycle phase, not the role.
+> The current `PolicyDecision` schema does not permit `policy_family: joins`. A future implementation must either adopt a versioned schema change or compose accepted existing-family decisions through a separate accepted contract. It must not emit schema-invalid join decisions under a familiar filename.
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 6. The five join-admissibility checks
+## 9. Current cross-domain seam projection
 
-PROPOSED — synthesizing the §17 architectural rules into a five-check structure. Every cross-lane join MUST pass all five checks before any downstream artifact may be admitted to PROCESSED, much less PUBLISHED.
+The proposed [`cross_domain_seam_register.yaml`](../../control_plane/cross_domain_seam_register.yaml) is a navigational and review projection, not an allowlist. Its defaults preserve each participant's EvidenceBundle, source role, strictest sensitivity/policy posture, and release requirement. It grants no mutation or publication authority.
 
-| # | Check | What it verifies | What fails it |
-|---|---|---|---|
-| 1 | **Source-role preservation** | Each contributing record's role travels intact into the join derivative. | An observation joined with a model, where the output is labeled "observation," collapses roles. |
-| 2 | **Most-restrictive tier** | The join's sensitivity tier is the most-restrictive of any contributing record (Atlas §24.5; `MAP_TRUST_STATES.md` §6.2). | A T4 critical-asset joined with a T0 hydrology layer producing a T0 output. |
-| 3 | **EvidenceBundle composition** | The join produces a new `EvidenceBundle` that references each contributing bundle by `EvidenceRef`; it does not flatten them. | A join that silently inherits one side's bundle and discards the other. |
-| 4 | **Receipt emission** | The join emits its own receipt — `TransformReceipt` for the join logic, `AggregationReceipt` if the join produces summaries, `PolicyDecision` recording the cross-lane check. | A join that produces output without recording how the output was produced. |
-| 5 | **Authority preservation** | The join does not transfer authority from one domain to another. | Identity claimed by the wrong domain (e.g., Agriculture asserting species identity without citing Fauna as the taxonomic source). |
+At the pinned baseline, all five registered seams are `HOLD_UNRESOLVED`, `public_join_allowed: false`, and have no bound seam contract path.
 
-### 6.1 The composition rule
+| Seam | Preserved authority | Prohibited inference |
+|---|---|---|
+| Agriculture × Soil — suitability context | Agriculture owns agricultural observations; Soil owns map units/components/properties | Private farm/operator/parcel/yield join; soil property presented as observed crop yield |
+| Archaeology × Roads/Rail/Trade — historic corridor context | Archaeology owns site identity, sensitivity, provenience; Roads/Rail/Trade owns corridor identity and route uncertainty | Corridor inflection treated as site location; historic route treated as archaeological evidence |
+| Atmosphere × Hazards — condition/advisory context | Atmosphere owns observations/models/forecast context; Hazards owns event and official-advisory context | Advisory presented as measurement; model/forecast presented as observed condition |
+| Fauna × Hydrology — aquatic occurrence context | Fauna owns occurrence/taxon/sensitivity; Hydrology owns unit/reach/water context | Occurrence treated as established population; public HUC used to imply precise sensitive occurrence |
+| Hazards × Settlements/Infrastructure — exposure context | Hazards owns hazard/exposure context; Settlements/Infrastructure owns asset/settlement identity and sensitivity | Exposure summary used to reveal precise asset location; hazard geometry treated as infrastructure identity |
 
-Checks 1–5 compose: a join that passes any subset of them but fails one of the others is still inadmissible. There is no "mostly passing" — failure is failure.
+New or unregistered seam shapes must remain fail-closed. Adding a row to a proposed register is not policy acceptance, and pairwise-safe seams do not prove an n-ary composition safe.
+
+[Back to top](#top)
+
+---
+
+## 10. Current policy boundary
+
+### 10.1 Verified local tree and status
+
+```text
+policy/joins/
+├── README.md
+├── habitat-fauna/
+└── habitat-hydrology/
+```
+
+The parent and pair children document routing, risks, inputs, and future authoring requirements. The inspected parent reports:
+
+- no local `.rego` module;
+- no accepted policy bundle;
+- no selector or evaluator binding;
+- no decision emitter;
+- no native join-policy tests;
+- no active entry in the proposed policy-gate register; and
+- no complete runtime, release, or public-consumer flow.
+
+The two current pair children are documentation boundaries. Their presence does not prove either pair `OPEN`, accepted, or active.
+
+### 10.2 Proposed posture model
+
+The architecture's three postures remain useful as a target, but they have no current generic evaluator:
+
+| Proposed posture | Bounded future meaning | Required handling |
+|---|---|---|
+| `OPEN` | An accepted profile supports the exact operation and audience with complete inputs and enforceable obligations | Continue only to downstream evidence, review, lifecycle, and release gates; never infer publication. |
+| `STEWARD-REVIEW` | Accountable domain/specialist judgment is required | Hold or abstain; preserve reasons; do not expose publicly. |
+| `DENIED` | The operation is prohibited or cannot be made safe under the declared profile | Stop and record only bounded, public-safe reasons in an accepted process lane. |
+
+No current pair is proven `OPEN` by the inspected policy lane. Novel, ambiguous, unsupported, unregistered, rights-unclear, consent-unclear, sensitive, or n-ary profiles must fail closed until accepted policy and accountable review say otherwise.
+
+### 10.3 Activation requirements
+
+A future child policy profile must identify and pin at least:
+
+- participating domains, orientation, predicate, direction, cardinality, operation, purpose, audience, and caller class;
+- semantic contract and canonical machine profile;
+- endpoint, relationship, and EvidenceBundle requirements;
+- time, space, scale, precision, uncertainty, rights, consent, sensitivity, geoprivacy, and correction inputs;
+- policy package, version, entrypoint, bundle digest, evaluator identity, and accepted decision mapping;
+- finite outcomes, public-safe reasons, enforceable obligations, and consumer capabilities;
+- positive, abstain, deny, error, leakage, revocation, stale-decision, cache, and rollback fixtures;
+- accountable domain and specialist review routes; and
+- decision, receipt, release, correction, withdrawal, and rollback homes.
+
+[Back to top](#top)
+
+---
+
+## 11. Governed evaluation and release flow
+
+The safe end-to-end model keeps candidate computation, policy, review, release, and public delivery visibly separate.
 
 ```mermaid
 flowchart LR
-  IN[Candidate cross-lane join]
+  A["Domain A endpoint"] --> J["Declared relationship candidate"]
+  B["Domain B endpoint"] --> J
+  C["Semantic contract + schema"] --> J
 
-  IN --> C1{1. Source-role<br/>preservation?}
-  C1 -- no --> DENY[DENY join]
-  C1 -- yes --> C2{2. Most-restrictive<br/>tier honored?}
-  C2 -- no --> DENY
-  C2 -- yes --> C3{3. EvidenceBundle<br/>composes correctly?}
-  C3 -- no --> DENY
-  C3 -- yes --> C4{4. Receipts<br/>emitted?}
-  C4 -- no --> DENY
-  C4 -- yes --> C5{5. Authority<br/>preserved?}
-  C5 -- no --> DENY
-  C5 -- yes --> POSTURE{Default<br/>posture §8}
-  POSTURE -- OPEN --> ADMIT[Admit derivative<br/>to PROCESSED]
-  POSTURE -- STEWARD --> REVIEW[Hold for<br/>steward review]
-  POSTURE -- DENIED --> DENY
+  J --> V["Deterministic candidate assessment\nCONFIRMED fixture-first"]
+  V --> Q{"ALLOW / ABSTAIN / DENY / ERROR"}
 
-  style DENY fill:#ffe4e1,stroke:#a04545
-  style ADMIT fill:#d9eaff,stroke:#2c5282
-  style REVIEW fill:#fff4cc,stroke:#b58900
+  Q -->|ALLOW candidate only| PV["Pair-specific validation\nPARTIAL / profile-specific"]
+  Q -->|ABSTAIN / DENY / ERROR| STOP["Stop or hold with bounded reason"]
+
+  PV --> E["Endpoint + relationship evidence resolution\nNEEDS VERIFICATION generically"]
+  E --> P["Accepted join-policy evaluation\nPROPOSED / inactive"]
+  P --> R["Accountable review + release gates\nNEEDS VERIFICATION generically"]
+  R --> U["Governed released carrier\nUNKNOWN for generic joins"]
+
+  U -. correction / revocation / withdrawal .-> E
+
+  classDef confirmed fill:#d9f2e1,stroke:#1f6f43,color:#0b2e1a;
+  classDef proposed fill:#fff4cc,stroke:#b58900,color:#3b2a00;
+  classDef stop fill:#ffe4e1,stroke:#a04545,color:#3b0b0b;
+  class V,Q confirmed;
+  class PV,E,P,R,U proposed;
+  class STOP stop;
 ```
 
-PROPOSED — diagram composes the §6 checks with the §8 default-posture decision. Tooling and route names NEEDS VERIFICATION.
+### 11.1 Lifecycle interpretation
 
-[Back to top](#quick-jump)
+- Candidate assessment is read-only and does not write RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED.
+- A future admitted relationship record must enter the owning lifecycle through an accepted contract and policy path; a helper report is not copied into PUBLISHED.
+- Evidence closure and policy posture must be known before release assembly.
+- Release remains a governed state transition with review, correction, withdrawal, and rollback support appropriate to the consequence.
+- Watchers, tools, validators, workflows, maps, search, and AI remain non-publishers.
 
----
-
-## 7. The cross-lane relation atlas — consolidated
-
-CONFIRMED — preserved from **`kfm_unified_doctrine_synthesis.md` §17** with cross-references to per-domain Atlas §24.4.x edges. This is the doctrinal join register; per-domain extensions live in `contracts/v1/<domain>/` F. (cross-lane) tables.
-
-| # | Join | Most-restrictive applicable rule | Failure mode if violated | Default posture (§8) |
-|---|---|---|---|---|
-| 1 | **Hydrology × Fauna** (aquatic species) | Species sensitivity sets tier; HUC stays T0. | Sensitive occurrence implied from joined geometry. | STEWARD-REVIEW |
-| 2 | **Soil × Agriculture** | Aggregation tier; **no farm/operator × parcel × yield join** for public release. | Private business detail exposed. | OPEN for aggregate; DENIED for farm/operator detail |
-| 3 | **Archaeology × Roads / Rail** | Historical route may publish; **site coordinates do not**. | Site location inferred from corridor inflection. | STEWARD-REVIEW |
-| 4 | **Hazards × Settlements** | Public exposure summary OK; **critical-asset precise locations DENY**. | Adversary mapping. | STEWARD-REVIEW for summary; DENIED for critical-asset precise |
-| 5 | **People × Land** | Deceased, historical assertions allowed at T1; **living-person × parcel DENY**. | Privacy / identity exposure. | OPEN for deceased historical; DENIED for living-person |
-| 6 | **Atmosphere × Hazards** | Source-role anti-collapse: observed/modeled/regulatory/aggregate must remain distinct. | Modeled forecast read as observed measurement. | OPEN with source-role surfaced; DENIED for collapse |
-| 7 | **Frontier matrix × all** | Named definition + uncertainty + source-role preservation. | One "frontier score" treated as universal truth. | STEWARD-REVIEW |
-
-PROPOSED extensions (from sister architecture docs):
-
-| # | Join | Most-restrictive applicable rule | Failure mode if violated | Default posture (§8) | Source |
-|---|---|---|---|---|---|
-| 8 | **Fauna × Flora** (invasive context) | Identity preservation; framing-not-instruction (Atlas §24.4.6) | Management instruction inferred from cross-lane composition. | STEWARD-REVIEW | `cross-domain-invasives.md` §7 |
-| 9 | **Fauna × Habitat** | Public-safe occurrences only; restricted occurrences never cross. | Restricted occurrence implied via habitat-quality model. | OPEN for public-safe; DENIED for restricted | `cross-domain-invasives.md` §7 |
-| 10 | **Flora × Archaeology** | Ethnobotanical context (steward-reviewed); never overrides cultural-heritage authority. | Site location inferred from ethnobotanical detail. | STEWARD-REVIEW | `cross-domain-invasives.md` §7 |
-| 11 | **Critical-asset × Hazards** | Critical-asset rules dominate; precise locations DENY. | Adversary mapping (parallel to row 4). | DENIED for precise; STEWARD-REVIEW for summary | `critical-asset-exposure.md` §10 |
-| 12 | **Planetary/3D × any sensitive class** | Scene admission gate; `RealityBoundaryNote` required. | Reconstruction read as observation. | STEWARD-REVIEW | `critical-asset-exposure.md` §12 |
-
-### 7.1 What the table is and isn't
-
-The table is the **doctrinal join register** — the rows that ADR-S-14 will canonicalize when it closes. It is not exhaustive: new cross-lane joins discovered in practice produce new rows, each gated by steward review on first admission and elevated to the table once the policy is stable. The per-domain F. tables in `contracts/v1/<domain>/` may add row-level detail that this consolidated view does not capture.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 8. The three default postures — OPEN, STEWARD-REVIEW, DENIED
+## 12. API, map, search, export, and AI boundaries
 
-PROPOSED — the heart of **ADR-S-14**. The corpus open ADR specifically asks: *"which joins require steward review, which are denied, which are open."* This document's normative content for ADR-S-14 is that **every cross-lane join falls into one of three default postures**, and the architectural enforcement differs per posture.
+Joined data can create a protected fact even when each endpoint appears public. Controls must apply to the complete derivative and every carrier, not only to the input rows.
 
-### 8.1 OPEN
-
-A join with all of:
-
-- All five §6 admissibility checks pass mechanically.
-- All contributing records are public-safe (T0 or T1 with prior `RedactionReceipt`).
-- No row in the §7 atlas requires steward review or denial.
-- Source roles are non-collapsing (e.g., aggregate × aggregate at consistent geometry scope).
-
-→ admitted at PROCESSED without per-join human review; subject only to the standard promotion gates (`docs/architecture/TRUST_MEMBRANE.md` §5).
-
-Example: aggregate county-level hydrology × aggregate county-level agriculture, both at T0, both with `AggregationReceipt` — produces a county-summary derivative; OPEN.
-
-### 8.2 STEWARD-REVIEW
-
-A join with one or more of:
-
-- A row in the §7 atlas marked STEWARD-REVIEW.
-- A T2 or T3 input that requires reviewer-class audience-class projection.
-- A novel join shape not previously seen (per-join history is tracked).
-- A `RealityBoundaryNote`-class element (synthetic or 3D reconstruction) on either side.
-- A consent-bearing record on either side.
-- A source-role combination that has not been pre-approved (e.g., the first time a Modeled × Regulatory join is attempted).
-
-→ held at PROCESSED with `audience_class=denied` for public; a `ReviewRecord` is required before promotion; the steward chain is per-domain.
-
-Example: Fauna × Flora invasive context for a cross-county management-framing layer — STEWARD-REVIEW because the framing-not-instruction rule applies and both domain stewards must sign off.
-
-### 8.3 DENIED
-
-A join with one or more of:
-
-- A row in the §7 atlas marked DENIED.
-- A T4 input on at least one side that no transform can demote in the join context.
-- A source-role collapse that no receipt can repair (e.g., Modeled labeled as Observed).
-- An instruction-class output where doctrine permits only framing (`cross-domain-invasives.md` §10).
-- An adversary-mapping shape (`critical-asset-exposure.md` §10).
-- A living-person × identifiable-location join.
-
-→ refused at the CATALOG → PUBLISHED boundary; may exist in CATALOG with `audience_class=denied` for all audiences; no transform can promote it.
-
-Example: A precise-location join of critical infrastructure × hazard exposure for adversary-mapping shape — DENIED regardless of receipt scaffolding.
-
-### 8.4 Posture is per-join, not per-domain
-
-The three postures attach to **joins**, not to domains. The same Fauna domain participates in OPEN joins (public range polygon × ecological system), STEWARD-REVIEW joins (occurrence × habitat with sensitive occurrence), and DENIED joins (precise sensitive-occurrence × precise habitat). The posture is computed at the join level from the inputs.
-
-[Back to top](#quick-jump)
-
----
-
-## 9. What promotion never does
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §29.3:
-
-> *"Promotion that 'upgrades' a source role (modeled → observed) — **Source role is fixed at admission; never upgraded by promotion.**"*
-
-CONFIRMED — Atlas §24.9.3 (same rule, governance-process anti-pattern):
-
-> *"Source role is fixed at admission; never upgraded by promotion."*
-
-This is the most consequential single architectural rule in cross-lane join policy. Promotion (the governed state transition from CATALOG → PUBLISHED) **changes the lifecycle phase, not the role**. A record admitted as Modeled remains Modeled forever; a record admitted as Candidate must close out as a specific other role only at admission of a *new* descriptor, not by promotion.
-
-### 9.1 The three things promotion changes
-
-1. **Lifecycle phase** — RAW → WORK → PROCESSED → CATALOG/TRIPLET → PUBLISHED.
-2. **Audience class** — internal/steward → public via the audience-class projection.
-3. **Release state** — candidate → released, eventually → withdrawn or superseded.
-
-### 9.2 The three things promotion never changes
-
-1. **Source role** — Modeled stays Modeled; Aggregate stays Aggregate; Synthetic stays Synthetic.
-2. **Source identity** — the `SourceDescriptor.source_id` is content-addressed; promotion does not rewrite it.
-3. **Source-role-derived authority** — a model does not become an observation by virtue of being promoted; an aggregate does not become per-place by virtue of being summarized further.
-
-### 9.3 What happens if the underlying truth needs to change
-
-If a Modeled record later proves to have observed validation (e.g., the model's predictions were field-confirmed), the architectural answer is **a new SourceDescriptor for the field observation** that cites the modeled record as context — not a relabeling of the modeled record.
-
-If a Candidate record turns out to be a high-quality observation, the architectural answer is **a new SourceDescriptor that admits the same data as Observed** — not a promotion of the Candidate.
-
-> [!IMPORTANT]
-> Promotion is **never a rebranding operation**. It is a release transition. The doctrine line is absolute: "Source role is fixed at admission; never upgraded by promotion."
-
-[Back to top](#quick-jump)
-
----
-
-## 10. Join-evaluation architecture
-
-PROPOSED — where in the lifecycle each of the §6 checks is mechanically enforced.
-
-| Lifecycle phase | What is checked here | Who fails closed |
+| Surface | Required architecture | Fail-closed condition |
 |---|---|---|
-| Admission (External → PRE-RAW) | `source_role` is set on every incoming `SourceDescriptor` | Source-watcher; if role is missing/invalid, record goes to QUARANTINE |
-| WORK → PROCESSED | Per-record validity; role-preservation checks on per-domain transforms | Validators; `policy/sensitivity/<domain>/` |
-| PROCESSED → CATALOG (the join boundary) | All five §6 checks; the cross-lane join evaluation; default-posture computation | `policy/joins/<domain-pair>/`; cross-lane validator |
-| CATALOG → PUBLISHED (promotion gate, the inner mouth) | Default-posture-OPEN admits to PUBLISHED; STEWARD-REVIEW requires `ReviewRecord`; DENIED fails closed | Promotion gate; release authority |
-| Governed API (the outer mouth) | Audience-class projection per join derivative | Governed API; OPA `policy/api/audience-class.rego` |
-| Render time | Generalization-floor; re-check of release state | Render-time verifier |
-| AI runtime | Source-role qualification in any answer that traverses a cross-lane join | Governed AI; AIReceipt evaluator |
+| Catalog / graph | Declared relation profile, endpoint refs, roles, evidence, uncertainty, visibility, correction lineage | Unsupported or sensitive candidate becomes discoverable truth. |
+| Governed API / search | Released DTO, server-side obligation enforcement, field allowlist, visibility filter, stale-index invalidation | Candidate, internal policy state, or restricted fields leak through raw responses or snippets. |
+| Map / tiles | Generalization floor, audience projection, role labels, release state, dependency-aware cache invalidation | Zoom, style, overlay, or stale cache reconstructs protected precision or hides role distinctions. |
+| Export / screenshot | Explicit permission, quantity and precision limits, field allowlist, surface-aware suppression | Bulk or visual composition defeats per-record controls. |
+| Embeddings / retrieval | Public-safe corpus, visibility metadata, correction/deletion propagation | Similarity search preserves or reconstructs a withdrawn or restricted relationship. |
+| Focus Mode / AI | Resolve released evidence, preserve endpoint roles and limitations, cite or abstain, emit a bounded runtime outcome | Generated language invents, strengthens, homogenizes, or retains an unsupported relation. |
 
-### 10.1 The join-evaluation point is at the CATALOG boundary
+AI may summarize a released cross-lane derivative only after the underlying evidence and policy context close. It must identify modeled, aggregate, regulatory, administrative, candidate, or synthetic support rather than flattening it into fluent prose. It must not use model memory to repair an unresolved EvidenceRef or generate management, legal, ownership, alert, or operational conclusions beyond the released evidence scope.
 
-PROPOSED. Cross-lane joins are evaluated at **PROCESSED → CATALOG**, not at promotion (which is later). This is so that:
+Current production enforcement of these generic join controls remains **UNKNOWN / NEEDS VERIFICATION**. This section defines the architectural burden; it does not claim deployed behavior.
 
-1. The join's `EvidenceBundle` is composed before promotion is even attempted.
-2. Default-posture computation is finalized before any audience-class projection.
-3. The receipt chain is complete by the time the release manifest is constructed.
-4. A failed join is held at PROCESSED with a clear receipt, not silently absorbed into a release.
-
-### 10.2 What the cross-lane validator emits
-
-For every join attempted, the cross-lane validator MUST emit:
-
-- A `PolicyDecision` recording which of the five §6 checks passed, which failed, and the default posture computed.
-- A `TransformReceipt` recording the join's logic (which two or more sources, which join operation, which receipts produced).
-- (When the join admits) a new `EvidenceBundle` composing the contributing bundles by `EvidenceRef`.
-- (When the join is STEWARD-REVIEW) a `ReviewRecord` placeholder requiring sign-off before promotion.
-- (When the join is DENIED) a `PolicyDecision` with `reason_code` recording why; this record is auditable evidence that the join was considered and refused.
-
-> [!NOTE]
-> A failed join with no audit record is itself a doctrine violation. The architectural answer is "denied joins are recorded as denied," not "denied joins disappear."
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 11. The anti-collapse failure modes
+## 13. Failure-mode register
 
-CONFIRMED verbatim from **Atlas §24.1.2** *Anti-collapse failure modes (DENY conditions)*. This is the load-bearing failure-mode register; every row names a real collapse pattern that has occurred or could occur, the DENY surface that mechanically refuses it, and the required guardrail.
+| Failure mode | Why it is unsafe | Required bounded response |
+|---|---|---|
+| Modeled or forecast material presented as observed | Launders derivation and uncertainty into apparent measurement | Candidate `ABSTAIN`; future policy/public surface `ABSTAIN` or `DENY`. |
+| Regulatory designation presented as an observed event | Converts authority context into event evidence | Keep roles separate; deny homogeneous presentation. |
+| Aggregate projected to person, parcel, point, or single event | Invents fidelity the aggregate does not contain | Abstain or deny; preserve aggregation support and precision. |
+| Administrative record presented as observation, residence, title, heirship, or causation | Overstates documentary evidence and may create legal/privacy harm | Preserve administrative caveats; deny unsupported conclusion. |
+| Candidate exposed as released truth | Bypasses evidence, policy, review, and release | Deny public path; keep candidate report internal. |
+| Synthetic reconstruction presented as reality | Hides representation and may expose inferred sensitive context | Require reality-boundary support; abstain or deny. |
+| Evidence present on endpoints but absent for the relationship | Treats adjacency as proof | Abstain; require independent relation support. |
+| Public inputs combined into a living-person, rare-species, archaeology, or critical-asset inference | Join-induced sensitivity creates a new protected fact | Deny or generalize under accepted policy and specialist review. |
+| Pairwise-safe links combined into unsafe n-ary reconstruction | Pair checks miss whole-set harm | Re-evaluate the complete set; fail closed. |
+| Workflow success represented as policy or release approval | Confuses conformance evidence with authority | Keep validation, policy, review, and release objects distinct. |
+| Denied join renamed as context, enrichment, integration, crosswalk, or convenience | Evades controls through vocabulary | Evaluate structure, effect, and audience rather than filename. |
+| Corrected or withdrawn endpoint survives in graph, tile, search, export, or AI cache | Public state becomes stale and misleading | Invalidate dependent assessments, decisions, carriers, and caches. |
+| Failure reason echoes identity, coordinates, private review notes, or exploit detail | Denial path leaks the protected fact | Emit stable public-safe codes; keep sensitive detail in restricted review evidence. |
 
-| Collapse pattern | Domains most at risk | Denied outcome | Required guardrail |
+[Back to top](#top)
+
+---
+
+## 14. Validation and acceptance
+
+### 14.1 Current executable proof commands
+
+The dedicated workflow runs the following no-network checks for the candidate-assessment slice:
+
+```bash
+python tools/ci/install_python_ci.py project-test
+python tools/joins/join_candidates.py --fixtures
+python -m pytest tests/joins/test_join_candidates.py -q --strict-config --strict-markers
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260809.json \
+  --repo-root .
+```
+
+These commands validate the existing contract/schema/helper/fixture/test slice. They do not validate or activate `policy/joins/`.
+
+### 14.2 Documentation acceptance for this page
+
+A review of this page should prove:
+
+- every current-state claim is pinned to a repository surface named in §2;
+- proposed policy and public behavior remain visibly proposed or unknown;
+- helper `ALLOW` is never equated with policy, review, release, or publication;
+- current paths use accepted responsibility roots and do not create a parallel home;
+- source role, sensitivity, evidence, domain authority, lifecycle, and correction remain separate;
+- relative links resolve at the branch head;
+- headings and local anchors are unique;
+- Mermaid describes status honestly and does not imply implementation where none is proven;
+- no owner, steward, approval, required check, or deployment state is invented.
+
+### 14.3 Workflow coupling note
+
+The dedicated `cross-lane-join-assessment` workflow currently watches the contract, schema, helper, fixture, test, source-map, receipt, and workflow paths. This architecture page is not in that workflow's path filter. A future behavioral change must close its own dependency set and update workflow filters when the documentation is a required contract companion; a prose-only update must not force unrelated behavioral CI merely to obtain a badge.
+
+[Back to top](#top)
+
+---
+
+## 15. Correction, revocation, and rollback
+
+Cross-lane derivatives depend on more than two endpoint rows. Their dependency graph includes endpoint identity and versions, source roles, evidence, time/space support, rights, consent, sensitivity, relationship profile, policy, reviews, release, and every public carrier.
+
+A mature implementation must:
+
+1. bind assessments and decisions to immutable or versioned endpoint and profile identities;
+2. expire or recompute when any bound input changes;
+3. propagate source corrections, consent revocation, rights changes, sensitivity escalation, policy supersession, review withdrawal, and release withdrawal;
+4. invalidate catalog/graph projections, API/search indexes, map/tile caches, exports, embeddings, and AI retrieval state;
+5. preserve prior decisions and bounded reason codes for audit without leaking protected details; and
+6. retain a rollback target for every material released derivative.
+
+Current generic correction and rollback closure for join derivatives is **NEEDS VERIFICATION**. The candidate helper creates no lifecycle or release state, so reverting its bounded implementation or this documentation update has no direct publication effect.
+
+**Rollback for this page:** revert the single documentation commit. No contract, schema, policy source, fixture, test, data, receipt, release, or public artifact is changed by this update.
+
+[Back to top](#top)
+
+---
+
+## 16. Open decisions and verification backlog
+
+| Priority | Decision or verification item | Current status | Closure evidence |
 |---|---|---|---|
-| Modeled product labeled or queried as observed | Air; Hydrology; Habitat; Agriculture; 3D | DENY at publication; ABSTAIN at AI surface | `RunReceipt` + uncertainty surface + role-preserving DTO field |
-| Regulatory zone labeled as an observed flood / event | Hydrology; Hazards; Air | DENY publication of regulatory layer as event evidence | Separate regulatory-layer and observed-event lanes; banner in UI |
-| Aggregate cited as a per-place truth | Agriculture; People; Geology; Air | DENY join from aggregate cell to single record; ABSTAIN at AI | `AggregationReceipt`; geometry-scope guard; matrix-cell semantics |
-| Administrative compilation cited as observation | People/Land; Settlements; Roads | DENY publication of compilation as observed event timeline | Source-role tag preserved; named `LifeEvent` / `AdminEvent` types |
-| Candidate record exposed on a public surface | All | DENY at trust membrane; route to QUARANTINE | Promotion gate; no PUBLISHED edge to WORK / QUARANTINE |
-| Synthetic content presented as observed reality | Planetary/3D; AI; Archaeology; Habitat | DENY publication; HOLD for steward review; ABSTAIN at AI | `RealityBoundaryNote`; `RepresentationReceipt`; UI badge |
-| AI text treated as evidence | All Focus Mode surfaces | DENY publication; ABSTAIN at Focus Mode; `AIReceipt` mandatory | Cite-or-abstain rule; `AIReceipt`; release state required |
+| P0 | Replace the lineage placeholder ADR-S-14 with an accepted numbered decision, or explicitly reject/revise the three-posture model | `PROPOSED / unresolved` | Accepted ADR with exact scope, non-effects, migration, tests, correction, and rollback. |
+| P0 | Decide the outward join-policy result contract | `CONFLICTED / open` | Versioned decision: add a `joins` family to `PolicyDecision`, compose existing families through a separate accepted contract, or adopt another finite object without parallel authority. |
+| P0 | Bind an accepted policy bundle, evaluator, selector, input profile, and decision emitter | `ABSENT in inspected lane` | Pinned policy source, evaluator identity, fixtures, native tests, register entry, and governed consumer tests. |
+| P0 | Resolve endpoint and relationship evidence separately | `NOT CLOSED generically` | EvidenceRef-to-EvidenceBundle resolver behavior plus independent relationship support, negative fixtures, and correction propagation. |
+| P0 | Establish accountable join-policy, domain, privacy/rights, sensitivity, security, review, and release roles | `NEEDS VERIFICATION` | Verified assignments and separation-of-duties record; CODEOWNERS alone is insufficient. |
+| P1 | Reconcile sensitivity vocabularies (`PUBLIC_SAFE` / `INTERNAL` / `RESTRICTED` / `PROHIBITED`, T0–T4 lineage, and domain-specific profiles) | `NEEDS DECISION` | Accepted crosswalk with monotonic and join-induced-risk rules plus compatibility fixtures. |
+| P1 | Resolve join/relation/domain machine-profile placement and aliases | `CONFLICTED / open` | Accepted contract/schema placement decision and migration/compatibility plan. |
+| P1 | Define pair-profile registry, orientation, slug grammar, inheritance, and first-admission review | `PARTIAL documentation only` | Machine register, schema, validator, pair fixtures, owner review, and no-silent-inheritance tests. |
+| P1 | Define n-ary and joint-coherence evaluation | `UNKNOWN` | Whole-set algorithm, reconstruction-risk fixtures, deterministic identity, and fail-closed tests. |
+| P1 | Define transform, aggregation, policy, review, correction, and release receipt bindings | `NOT IMPLEMENTED by generic helper` | Canonical object references, schemas, validators, and replay tests. |
+| P1 | Prove governed public consumers enforce every obligation | `UNKNOWN` | API/map/search/export/AI contract tests, negative leakage fixtures, cache invalidation, and withdrawal replay. |
+| P2 | Couple required hosted checks to accepted risk-significant changes | `NEEDS VERIFICATION` | Exact-head hosted runs and repository required-check evidence without weakening gates. |
+| P2 | Define bounded public-safe reason-code and audit-detail separation | `PROPOSED` | Accepted reason registry, sensitive-output tests, reviewer guidance, and correction semantics. |
 
-> [!CAUTION]
-> The Atlas §24.1.2 table is **authoritative**. This document preserves it verbatim and cross-references each row to the architectural enforcement point (§10). New collapse patterns observed in practice go into the Atlas (or a successor doctrine doc), not into this file.
+Until these close, the safe system claim is narrow: **KFM can deterministically assess synthetic cross-lane candidates under one fixture profile; generic join-policy and public-release closure remain incomplete.**
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 12. Render-time and AI enforcement
+## 17. Related repository surfaces
 
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §17, §20; `docs/architecture/TRUST_MEMBRANE.md` §6. The join's posture is computed at the CATALOG boundary (§10); render-time and AI runtime are the **second and third lines of enforcement** that catch what the catalog-side validator would otherwise miss.
+### Governing placement and trust
 
-### 12.1 Render-time
+- [Directory Rules v2](../doctrine/directory-rules.md) — accepted placement law through ADR-0029.
+- [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — adoption and compatibility-migration decision.
+- [Trust Membrane](./TRUST_MEMBRANE.md) — broader public/internal architecture.
+- [Cross-Lane Relations](./cross-domain/cross-lane-relations.md) — earlier four-invariant synthesis; treat current implementation claims there as lineage unless reverified.
+- [Source-Role Anti-Collapse](./cross-domain/source-role-anti-collapse.md) — detailed role-collapse doctrine lineage.
 
-| Check | What it refuses | Reference |
-|---|---|---|
-| Audience-class re-check | A tile fetched by an audience the join was not released for | `docs/architecture/TRUST_MEMBRANE.md` §6 row 1 |
-| Generalization-floor | A zoom level that would defeat the join's aggregation or generalization | `docs/architecture/critical-asset-exposure.md` §11 |
-| Source-role chip presence | A rendered layer that elides the source-role chip when role surfaces would be required (e.g., modeled-spread, synthetic) | `MAP_TRUST_STATES.md` §7.3 (separate-chip rule for `RealityBoundaryNote`-class elements) |
-| Cross-lane derivative provenance | A tile from a join that does not resolve back through its `EvidenceBundle` to all contributing source descriptors | `docs/standards/EVIDENCE_BUNDLE.md` |
+### Current machine and executable evidence
 
-### 12.2 AI runtime
+- [CrossLaneJoinAssessment contract](../../contracts/joins/cross_lane_join_assessment.md)
+- [CrossLaneJoinAssessment schema](../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json)
+- [SourceRoleTransitionAssessment](../../contracts/source/source_role_transition_assessment.md)
+- [Candidate helper](../../tools/joins/join_candidates.py)
+- [Synthetic fixture matrix](../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json)
+- [Focused tests](../../tests/joins/test_join_candidates.py)
+- [Dedicated workflow](../../.github/workflows/cross-lane-join-assessment.yml)
 
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §20 *"AI is interpretive, not the root truth source."*
+### Policy and control-plane boundaries
 
-| AI may do | AI MUST NOT do |
+- [Join policy boundary](../../policy/joins/README.md)
+- [Habitat–Fauna pair routing](../../policy/joins/habitat-fauna/README.md)
+- [Habitat–Hydrology pair routing](../../policy/joins/habitat-hydrology/README.md)
+- [Cross-domain seam register](../../control_plane/cross_domain_seam_register.yaml)
+- [Policy gate register](../../control_plane/policy_gate_register.yaml)
+- [PolicyDecision schema](../../schemas/contracts/v1/policy/policy_decision.schema.json)
+
+---
+
+## Appendix A — Candidate-assessment interpretation card
+
+| Question | Safe answer from the current helper |
 |---|---|
-| Summarize a cross-lane join's resolved `EvidenceBundle` with full source-role qualification ("Based on a modeled spread prediction" vs "Based on an APHIS-confirmed survey") | Collapse source-role distinctions in prose ("Asian carp is in this watershed," without specifying the source role of the supporting evidence) |
-| ABSTAIN when the join's `EvidenceBundle` does not close | Answer from raw model memory when the join's bundle is incomplete |
-| Qualify any join-derived claim with the most-restrictive contributing source role | Cite an aggregate cell as a per-place observation |
-| Refuse to produce instruction-class output where the join's framing-not-instruction posture (`cross-domain-invasives.md` §10) applies | Generate management recommendations from invasive cross-lane data |
-| Surface the `RealityBoundaryNote` when any contributing record is Synthetic | Quietly elide the synthetic origin of a 3D reconstruction in a narrative summary |
+| Did the declared exact key or synthetic spatial-temporal predicate match? | Yes/no, deterministically, within the fixture profile. |
+| Were both EvidenceRef fields present? | Yes/no; presence only, not resolution. |
+| Did the bounded living-person or geometry-precision rule block candidate emission? | Yes/no, under the fixture values. |
+| Were endpoint source roles retained? | Yes; both remain visible and output is `CANDIDATE_RELATION`. |
+| Was strictest fixture sensitivity inherited? | Yes, across the four profile values. |
+| Is the relationship true? | **Not established.** |
+| Is the join allowed by accepted policy? | **Not established.** |
+| Was review completed? | **No authority to say.** |
+| Is the derivative released or public-safe? | **No. Every effect is fixed false.** |
 
-### 12.3 Why three lines of defense
+## Appendix B — Reviewer stop conditions
 
-The catalog-side validator can be bypassed by a bug; render-time can be bypassed by a cached tile that survives invalidation; AI runtime can be bypassed by a prompt that frames the question to evade citation. **All three are required** because each catches what the others can miss. The architectural cost is acceptable; the failure cost is not.
+Stop and return `ABSTAIN`, `DENY`, `ERROR`, `HOLD`, or an equivalent accepted fail-closed result when any of these remains unresolved for the requested operation and audience:
 
-[Back to top](#quick-jump)
+- endpoint identity, owner, lifecycle state, source role, or correction posture;
+- relationship semantics, direction, cardinality, or independent evidence;
+- valid/observation time, geography, scale, precision, uncertainty, or tolerance;
+- rights, consent, purpose limitation, sensitivity, geoprivacy, cultural, living-person, genomic, archaeology, rare-species, or infrastructure posture;
+- policy identity, bundle, evaluator, reason/obligation mapping, or caller capability;
+- required review, release reference, correction path, withdrawal behavior, or rollback target; or
+- consumer ability to enforce every obligation across API, map, search, export, cache, embedding, and AI surfaces.
 
----
+## Appendix C — Lineage join-risk examples
 
-## 13. Anti-patterns
+The prior edition collected the examples below from atlas and sibling-document lineage. They remain useful for threat modeling, but they are **not an accepted pair registry, posture allowlist, or proof of implementation**. Where a row overlaps the current seam register, the register state in §9 controls the current navigational projection; otherwise the row remains `LINEAGE / PROPOSED` until repository and governance evidence establishes a profile.
 
-CONFIRMED — synthesized from Atlas §24.1.2, §24.9.2 (trust-membrane), §24.9.3 (governance-process), `kfm_unified_doctrine_synthesis.md` §17, §20.
-
-| Anti-pattern | What goes wrong | DENY surface |
+| Example composition | Primary risk to preserve | Safe default before an accepted profile |
 |---|---|---|
-| **Modeled labeled as Observed** | Source-role collapse — the canonical failure (§4, §11) | Validator; AI ABSTAIN |
-| **Aggregate plotted at precise location** | Source-role collapse — "the aggregate cell becomes a point" (§11) | Validator; render-time generalization-floor |
-| **Regulatory cited as observed event** | Source-role collapse — "the zone becomes a hazard event" (§11) | Validator; UI banner |
-| **Administrative compilation cited as observation** | Source-role collapse — "the deed record becomes an event timeline" (§11) | Validator |
-| **Candidate exposed on public surface** | Promotion gate bypassed; trust membrane breach (§11, `TRUST_MEMBRANE.md` §6 row 1) | Trust membrane; promotion gate |
-| **Synthetic content as observed** | Reality boundary violated (§11) | Scene admission gate; `RepresentationReceipt` validator |
-| **AI text as evidence** | Cite-or-abstain broken (§11) | Focus Mode; `AIReceipt` |
-| **Promotion that upgrades a source role** | §9 absolute rule violated | Promotion gate |
-| **Join admits without all five §6 checks passing** | §6 admissibility check bypassed | Cross-lane validator |
-| **OPEN posture applied when STEWARD-REVIEW is required** | Steward chain bypassed | Cross-lane validator |
-| **DENIED join repackaged under a different name** | Doctrine evasion ("we called it 'integration' instead of 'join'") | Cross-lane validator (joins are structural, not nominal) |
-| **Join derivative without its own `EvidenceBundle`** | Audit chain broken (§6 check 3) | Validator; promotion gate |
-| **Join derivative without `TransformReceipt`** | Reproducibility broken (§6 check 4) | Validator |
-| **Per-domain authority transferred via join** | Authority preservation broken (§6 check 5) | Cross-lane validator |
-| **Source-role-stripped DTO returned by governed API** | Cross-lane outcome rendered without the role qualification needed to interpret it | Governed API contract; client cannot interpret |
-| **AI answer collapses source roles in prose** | §12.2 violation | Governed AI runtime; ABSTAIN |
-| **Withdrawn join derivative survives in cache** | Cache-invalidation broken (C6-08) | Render-time verifier |
-| **"Per-jurisdiction harmonization" smuggled as a join** | Cross-jurisdiction source-role collapse (§14 item 6) | Cross-lane validator |
-| **Failed join with no audit record** | §10.2 violation — denied joins are recorded as denied | Validator (must emit `PolicyDecision` with reason) |
+| Hydrology × Fauna | Public hydrologic geometry may narrow a sensitive aquatic occurrence | Hold for fauna/geoprivacy review; never infer precise occurrence or established population. |
+| Soil × Agriculture | Aggregate context may be joined to private farm, operator, parcel, or yield detail | Permit only separately supported aggregate context; deny private-identifying composition. |
+| Archaeology × Roads/Rail | Corridor geometry may reveal or appear to prove a site location | Hold; preserve archaeology authority and withhold precise site support. |
+| Hazards × Settlements/Infrastructure | Exposure context may reveal critical-asset precision | Separate public summary from operational detail; deny exploit-enabling precision. |
+| People × Land | Historical administration may be mistaken for living-person residence, title, or ownership | Deny living-person/location inference; preserve documentary and legal caveats. |
+| Atmosphere × Hazards | Observation, model, forecast, advisory, and regulatory context may collapse | Preserve each role and time; abstain or deny homogeneous presentation. |
+| Frontier Matrix × any domain | One named classification may be presented as universal truth | Require versioned definition, geography/time, uncertainty, and source-role-visible support. |
+| Fauna × Flora | Invasive or ecological context may become unsupported management instruction | Frame evidence and uncertainty; do not generate instruction-class conclusions. |
+| Fauna × Habitat | A modeled habitat surface may imply a restricted occurrence | Permit only separately released public-safe support; deny reconstruction of sensitive occurrence. |
+| Flora × Archaeology | Ethnobotanical context may reveal cultural or site information | Hold for qualified cultural/domain review and preserve exact-location restrictions. |
+| Critical asset × Hazards | Combined access, topology, hazard, and asset detail may enable adversary mapping | Deny precise public composition; allow only reviewed generalized summaries. |
+| Planetary/3D × sensitive domain | Reconstruction may be read as observation or expose hidden precision | Require an explicit reality boundary, representation support, and sensitivity review. |
 
-[Back to top](#quick-jump)
+These examples should migrate into accepted pair or seam profiles only through the owning contract, schema, policy, fixture, validator, review, and correction path. Repetition in architecture prose does not activate them.
 
 ---
 
-## 14. Tensions and known limits
+> **Document boundary:** explanatory cross-cutting architecture · **Current proof:** deterministic, synthetic, no-network candidate assessment · **Current join-policy state:** documented but inactive · **Publication authority:** none.
 
-| # | Tension | Source | KFM posture |
-|---|---|---|---|
-| 1 | **ADR-S-14 is open** — this document is its proposed normative content but does not close it. | Atlas §24.12 | Surfaced as §15 item 1. The three-posture model (§8) is the load-bearing proposal. |
-| 2 | **The seven source roles are a doctrinal floor**, but real source classes sometimes blur (e.g., a regulatory document that compiles observations). | §4.1 | The descriptor records the role with the highest doctrinal authority; ambiguity goes to QUARANTINE for steward review. |
-| 3 | **Cross-jurisdiction "harmonization" pressure** — partners may push for a unified view across state lines that masks source-role distinctions. | §13 anti-pattern | Architecturally: no. Cross-jurisdiction joins preserve each side's role; "harmonization" without role preservation is a collapse. |
-| 4 | **OPEN posture is rare in practice** — most cross-lane joins have at least one input with non-trivial sensitivity. | §8 | This is correct. STEWARD-REVIEW is the working default; OPEN is reserved for joins with verifiably low-risk inputs. |
-| 5 | **The §7 atlas is non-exhaustive** — new join shapes emerge as KFM grows. | §7.1 | New joins enter as STEWARD-REVIEW until promoted (after pattern review) to OPEN or DENIED. |
-| 6 | **Performance: five checks per join is expensive** | §6 | Pre-compute the per-domain-pair posture at the join definition; per-record evaluation is then a single posture lookup plus a per-record receipt check. |
-| 7 | **Per-domain F. tables (Atlas §24.4.x)** can drift from the §7 consolidated view here. | Atlas §24.4 | The consolidated view here is the union; per-domain detail in contracts is the canonical source for join shape within a domain. |
-| 8 | **ADR-S-04 (source-role enum) and ADR-S-05 (sensitivity tier) are open** — this document depends on both being closed. | Atlas §24.12 | Surfaced as §15 items 2–3; this document anchors on the corpus-CONFIRMED enum and tier defaults. |
-| 9 | **AI runtime can be subverted by clever prompting** — a question that does not name the join can still produce a collapse. | §12.2 | The AI runtime's denial surface (§12.2) inspects the cited bundles, not the question shape; collapse fails closed regardless of prompt. |
-| 10 | **A complex multi-way join may pass each pairwise check yet fail an overall coherence check** — e.g., A × B is OPEN, B × C is OPEN, but A × B × C produces a collapse C alone would not. | §6 | Multi-way joins evaluate each contributing pair AND the joint posture; the most-restrictive across all pairs wins, with an additional joint-collapse check. |
-| 11 | **The framing-not-instruction rule** (§13 row) is specific to invasive joins per `cross-domain-invasives.md` §10, but is structurally similar to the alert-authority prohibition in Hazards. | `cross-domain-invasives.md` §10 | The two are instances of a broader pattern: KFM observes and frames; it does not instruct or alert. Per-domain rules concretize the pattern. |
-| 12 | **Receipt fan-out** — a multi-way join produces multiple receipts; storage and resolver cost scales with the join's contributing-record count. | §10.2 | Cost is acceptable; receipts are the audit chain. Truncating receipts to "summarize" is itself an anti-pattern. |
-
-[Back to top](#quick-jump)
-
----
-
-## 15. Open questions
-
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR or mounted-repo evidence.
-
-1. **ADR-S-14 closure** — adopt the three-posture model (§8) as the normative content, or revise. Highest-priority open question this document raises.
-2. **ADR-S-04 closure** — adopt the seven-role enum (§4) verbatim or revise (e.g., split Administrative or merge Candidate with WORK-stage marker).
-3. **ADR-S-05 closure** — sensitivity tier scheme T0–T4. This document defers; closure unblocks `docs/standards/SENSITIVITY_RUBRIC.md`.
-4. **`policy/joins/` as a new policy folder** — PROPOSED throughout this document; needs ADR or Directory Rules update.
-5. **Per-domain-pair join policy files** — `policy/joins/hydrology-hazards/`, `policy/joins/fauna-flora/`, etc. (PROPOSED). How granular should the policy files be?
-6. **OPEN vs STEWARD-REVIEW threshold** — what verifiable signal admits a previously-STEWARD-REVIEW join to OPEN? Pattern-review history is one option; corpus-pin is another.
-7. **Multi-way join evaluation** (§14 item 10) — does the system evaluate every pairwise plus the joint, or some other strategy?
-8. **Per-jurisdiction join evaluation** (§14 item 3) — how does the system handle multi-jurisdiction sources whose sensitivity rules differ?
-9. **Receipt fan-out limits** (§14 item 12) — when a join references twelve contributing records, does the resolver enforce a fan-out budget?
-10. **Cross-lane validator implementation home** — `packages/cross-lane-validator/` (PROPOSED); should it be one package or per-domain-pair?
-11. **AI prompt-shape detection** (§14 item 9) — should the AI runtime detect prompts that *seek* a known collapse, beyond inspecting cited bundles?
-12. **Posture-recompute trigger** — when a contributing source descriptor's role or sensitivity changes (rare but possible per §9.3), do existing derivative posture decisions need recomputation?
-13. **Joint-coherence check** (§14 item 10) — concrete shape of the check beyond pairwise.
-14. **Test-harness location** — `tests/joins/` PROPOSED; needs fixtures for every row in the §11 anti-collapse register.
-
-[Back to top](#quick-jump)
-
----
-
-## 16. Related docs
-
-PROPOSED links — verify all paths against mounted repo before publishing.
-
-### Architecture
-
-- [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — the membrane through which join derivatives pass; §5.3 inner mouth is where join admissibility is enforced.
-- [`docs/architecture/critical-asset-exposure.md`](./critical-asset-exposure.md) — applies this document's rules to critical-asset joins; §9–§10 are the canonical adversary case.
-- [`docs/architecture/cross-domain-invasives.md`](./cross-domain-invasives.md) — applies this document's rules to invasive joins; §7 is the cross-lane register.
-- [`docs/architecture/system-context.md`](./system-context.md) — _PROPOSED placement._
-- [`docs/architecture/governed-api.md`](./governed-api.md) — _PROPOSED placement._
-- [`docs/architecture/map-shell.md`](./map-shell.md) — _PROPOSED placement._
-- [`docs/architecture/ui/CONTINUITY_NOTES.md`](./ui/CONTINUITY_NOTES.md) — join derivatives traverse the seven continuity axes.
-- [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) — the rule that keeps this document out of `contracts/`, `schemas/`, and `policy/`.
-
-### Doctrine
-
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — the membrane invariants.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — the lifecycle this document's join-evaluation point sits in.
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — the authority preservation rule (§6 check 5).
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain enforcement (§12.2).
-
-### Standards
-
-- [`docs/standards/MAP_TRUST_STATES.md`](../standards/MAP_TRUST_STATES.md) — most-restrictive-tier rule (§6 check 2).
-- [`docs/standards/EVIDENCE_BUNDLE.md`](../standards/EVIDENCE_BUNDLE.md) — bundle composition for join derivatives (§6 check 3).
-- [`docs/standards/RELEASE_MANIFEST.md`](../standards/RELEASE_MANIFEST.md) — release-side handling.
-- [`docs/standards/PROV/README.md`](../standards/PROV/README.md) — provenance threading.
-- [`docs/standards/DUO_PROFILE.md`](../standards/DUO_PROFILE.md) — consent gates for consent-bearing inputs.
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) — _PROPOSED, not yet authored._ T0–T4 vocabulary.
-
-### Open ADRs this document depends on
-
-- **ADR-S-04** — Source-role enum canonical vocabulary, evolution rule.
-- **ADR-S-05** — Sensitivity tier scheme (T0–T4) adoption.
-- **ADR-S-14** — Cross-lane join policy. This document is the proposed normative content.
-
-### Implementation homes (canonical)
-
-- [`contracts/v1/source/`](../../contracts/v1/source/) — `SourceDescriptor` object meaning; `source_role` field.
-- [`schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/) — `SourceDescriptor` JSON Schema.
-- [`policy/joins/`](../../policy/joins/) — _PROPOSED home._ Per-join-pair OPA rules.
-- [`policy/sensitivity/<domain>/`](../../policy/sensitivity/) — per-domain sensitivity rules.
-- [`packages/cross-lane-validator/`](../../packages/cross-lane-validator/) — _PROPOSED._ Join-evaluation point implementation.
-- [`packages/governed-api/`](../../packages/governed-api/) — _PROPOSED._ Audience-class projection for join DTOs.
-- [`packages/governed-ai/`](../../packages/governed-ai/) — _PROPOSED._ AI source-role qualification.
-
-### Tests / runbooks
-
-- [`tests/joins/`](../../tests/joins/) — _PROPOSED._ One fixture per row in §11 anti-collapse register.
-- [`fixtures/joins/`](../../fixtures/joins/) — _PROPOSED._ Inputs.
-- [`docs/runbooks/joins/`](../runbooks/joins/) — _PROPOSED home._ Steward how-to for STEWARD-REVIEW joins.
-
-[Back to top](#quick-jump)
-
----
-
-<details>
-<summary><strong>Appendix A — Join admissibility matrix</strong></summary>
-
-PROPOSED consolidated matrix for the twelve canonical join shapes (§7 rows 1–7 from corpus + rows 8–12 from sister documents).
-
-| Join | Default posture | Most-restrictive tier rule | Source-role concern | Reference |
-|---|---|---|---|---|
-| Hydrology × Fauna (aquatic species) | STEWARD-REVIEW | Species sensitivity sets tier; HUC stays T0 | Observed occurrence + Regulatory HUC | §17 row 1 |
-| Soil × Agriculture | OPEN aggregate / DENIED farm-operator | Aggregation tier | Aggregate + Aggregate; Observed × Administrative for joins involving operator identity | §17 row 2 |
-| Archaeology × Roads/Rail | STEWARD-REVIEW | T4 site coords; T0 historical route | Observed × Administrative | §17 row 3 |
-| Hazards × Settlements | STEWARD-REVIEW summary / DENIED critical-asset precise | T4 critical-asset precise | Observed Hazard × Observed Infrastructure × Regulatory designation | §17 row 4 |
-| People × Land | OPEN deceased historical / DENIED living-person | T4 living-person | Administrative People × Administrative Land | §17 row 5 |
-| Atmosphere × Hazards | OPEN with role surfaced / DENIED for collapse | Source-role anti-collapse | Observed × Modeled × Regulatory × Aggregate (highest-risk for collapse) | §17 row 6 |
-| Frontier-matrix × all | STEWARD-REVIEW | Named definition + uncertainty | All seven roles potentially contribute | §17 row 7 |
-| Fauna × Flora (invasive) | STEWARD-REVIEW | Identity preservation; framing-not-instruction | Mixed source roles per `cross-domain-invasives.md` §8 | `cross-domain-invasives.md` §7 |
-| Fauna × Habitat | OPEN public-safe / DENIED restricted | Public-safe occurrences only | Observed Fauna × Modeled Habitat | `cross-domain-invasives.md` §7 |
-| Flora × Archaeology | STEWARD-REVIEW | Ethnobotanical context steward-reviewed | Observed Flora × Observed Archaeology (steward chain) | `cross-domain-invasives.md` §7 |
-| Critical-asset × Hazards | DENIED precise / STEWARD-REVIEW summary | Critical-asset rules dominate | Observed Infrastructure × Observed Hazard | `critical-asset-exposure.md` §10 |
-| Planetary/3D × sensitive class | STEWARD-REVIEW | `RealityBoundaryNote` required | Synthetic × Observed/Regulatory/etc. | `critical-asset-exposure.md` §12 |
-
-</details>
-
-<details>
-<summary><strong>Appendix B — Source-role transition cheatsheet</strong></summary>
-
-A compact lookup for §5. Read "row → column" as "may a record in role X produce a downstream derivative in role Y?"
-
-| From ↓ / To → | Observed | Regulatory | Modeled | Aggregate | Administrative | Candidate | Synthetic |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| **Observed** | (no transform needed) | ✗ | ✓ (model input) | ✓ (summary) | ✗ | n/a | ✓ (representation input) |
-| **Regulatory** | ✗ | (no transform needed) | ✗ | ✗ | ✗ | n/a | ✗ |
-| **Modeled** | ✗ | ✗ | (no transform needed) | ✓ (summary) | ✗ | n/a | ✓ (representation input) |
-| **Aggregate** | ✗ | ✗ | ✗ | ✓ (higher-level aggregate) | ✗ | n/a | ✗ |
-| **Administrative** | ✗ | ✗ | ✗ | ✗ | (no transform needed) | n/a | ✗ |
-| **Candidate** | only via new admission | only via new admission | only via new admission | only via new admission | only via new admission | (lifecycle phase, not transform) | only via new admission |
-| **Synthetic** | ✗ | ✗ | ✗ | ✗ | ✗ | n/a | (no transform needed) |
-
-Legend:
-
-- ✓ — permitted derivation; new artifact carries appropriate receipt
-- ✗ — prohibited; doctrine violation if attempted
-- "no transform needed" — the role itself is the target; identity output
-- "only via new admission" — Candidate cannot be "promoted" to a different role by transform; the architectural answer is a new `SourceDescriptor` for the same data admitted at the desired role
-
-**The most consequential cells**:
-
-- **Modeled → Observed: ✗** — the canonical collapse (§11 row 1).
-- **Aggregate → Observed: ✗** — and Aggregate → any per-place role is ✗ (§11 row 3).
-- **Synthetic → any other role: ✗** — reality boundary (§11 row 6).
-- **Candidate → any role on PUBLISHED: ✗** without going through promotion (§11 row 5).
-
-</details>
-
----
-
-### Footer
-
-> **Document class:** Cross-cutting architecture foundation · **Scope:** Vocabulary, admissibility checks, default postures, and verification points for all cross-lane joins in KFM · **Authority NOT held:** the source-role enum schema, OPA join-policy code, per-domain sensitivity rules, per-domain F. cross-lane tables, deployment topology.
-
-| | |
-|---|---|
-| **Open ADR** | **ADR-S-14** — Cross-lane join policy. This document is the proposed normative content. |
-| **Companion open ADRs** | **ADR-S-04** Source-role enum · **ADR-S-05** Sensitivity tier scheme |
-| **Membrane** | [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — the broader architecture this document's joins traverse |
-| **Applications** | [`critical-asset-exposure.md`](./critical-asset-exposure.md) · [`cross-domain-invasives.md`](./cross-domain-invasives.md) |
-| **Sibling architecture** | [system-context.md](./system-context.md) · [governed-api.md](./governed-api.md) · [map-shell.md](./map-shell.md) · [ui/CONTINUITY_NOTES.md](./ui/CONTINUITY_NOTES.md) |
-| **Companion standards** | [MAP_TRUST_STATES.md](../standards/MAP_TRUST_STATES.md) · [EVIDENCE_BUNDLE.md](../standards/EVIDENCE_BUNDLE.md) · [RELEASE_MANIFEST.md](../standards/RELEASE_MANIFEST.md) · [PROV/](../standards/PROV/README.md) · [DUO_PROFILE.md](../standards/DUO_PROFILE.md) |
-| **Canonical implementation homes** | Meaning → [`contracts/v1/source/`](../../contracts/v1/source/) · Shape → [`schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/) · Rules → [`policy/joins/`](../../policy/joins/) · Sensitivity → [`policy/sensitivity/`](../../policy/sensitivity/) · Validator → [`packages/cross-lane-validator/`](../../packages/cross-lane-validator/) |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
-
-[Back to top](#quick-jump)
+[Back to top](#top)

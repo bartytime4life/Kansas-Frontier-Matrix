@@ -46,9 +46,9 @@ Reusable crosswalk helpers for geology and natural-resource data, keeping source
 - [Finite outcomes](#finite-outcomes)
 - [Validation and quality gates](#validation-and-quality-gates)
 - [Development rules](#development-rules)
-- [Definition of done](#definition-of-done)
-- [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Definition of done
+- Verification checklist
+- Rollback
 
 ---
 

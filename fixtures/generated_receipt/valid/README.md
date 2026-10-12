@@ -2,19 +2,19 @@
 
 `fixtures/generated_receipt/valid/`
 
-Status: draft / valid fixture lane / generated-receipt positive-path examples.
+Status: repository-grounded / executable positive fixture lane.
 
-This directory is for small synthetic valid generated-receipt examples. Use it for toy receipt cases that should pass schema validation, policy validation, replay checks, receipt-family checks, citation-closure checks, integrity checks, persistence checks, public-projection checks, or release-readiness checks when paired with the appropriate validator and expected output.
+This directory contains small synthetic `GENERATED_RECEIPT` candidates that should pass the bounded repository-authoring provenance validator.
 
 These files are examples only. They are not actual receipts, EvidenceBundles, SourceDescriptors, policy decisions, promotion decisions, release manifests, proof packs, signed envelopes, public API material, public map material, public tiles, release state, source authority, evidence authority, policy authority, proof authority, release authority, AI authority, or published artifacts.
 
 ## Valid fixture posture
 
-Generated-receipt valid fixtures exist to demonstrate the positive path for bounded receipt objects. They may show complete toy receipt shapes, finite outcomes, evidence refs, citation refs, policy refs, replay refs, integrity refs, signature refs, persistence refs, public-summary refs, correction refs, rollback refs, and expected outputs.
+Generated-receipt valid fixtures demonstrate complete schema shape, exact artifact-map parity, canonical repository-relative paths, and matching local SHA-256 bytes.
 
-KFM receipt doctrine treats an AIReceipt as a runtime accountability record, not the answer and not a substitute for EvidenceBundle. A valid generated-receipt fixture may show that a toy receipt is complete and admissible, but it does not make the answer true, does not close evidence, does not approve policy, does not publish release state, and does not prove runtime implementation.
+`GENERATED_RECEIPT` records AI-assisted repository-artifact provenance. It is separate from runtime `AIReceipt`. A valid fixture does not prove factual truth, evidence closure, policy permission, human review, merge approval, release state, or publication.
 
-A fixture can describe a desired valid case before validators, policies, schema checks, replay checks, signing checks, persistence checks, public-projection checks, release integration, or CI coverage exist. Fixture success is not implementation proof by itself.
+The current `minimal.json` binds `../artifacts/minimal.txt` through SHA-256 and keeps human review pending. Its success proves only the validator behaviors exercised by the fixture and focused tests.
 
 ## Placement basis
 
@@ -26,26 +26,24 @@ The root fixture README says `fixtures/` is for runtime fixture inputs and separ
 
 | Lane or document | Relationship |
 |---|---|
-| `../../docs/architecture/governed-ai/AI_RECEIPTS.md` | Governs AIReceipt meaning, finite outcomes, lifecycle, validator expectations, receipt-family boundaries, and replay posture. |
+| `../../../schemas/contracts/v1/receipts/generated_receipt.schema.json` | Machine shape for `GENERATED_RECEIPT`. |
+| `../../../docs/doctrine/ai-build-operating-contract.md` | Repository-authoring receipt and integrity requirements. |
 | `../invalid/README.md` | Sibling fail-closed lane for generated-receipt cases that must be rejected or blocked. |
-| `../README.md` | Parent generated-receipt fixture root; currently blank at the time this valid README is authored. |
-| `../../contracts/runtime/ai_receipt.md` | Expected canonical contract home if present; fixtures do not define contracts. |
-| `../../schemas/contracts/v1/runtime/ai_receipt.schema.json` | Expected machine-shape home if present; fixtures do not define schemas. |
-| `../../policy/runtime/ai_receipts.rego` | Expected runtime receipt policy home if present; fixtures do not decide policy. |
-| `../../tools/validators/ai/` | Expected validator home if present; fixtures do not implement validators. |
-| `../../data/receipts/ai/` | Proposed actual AIReceipt persistence home; fixtures do not store sealed receipts. |
-| `../../data/proofs/` | Proof home; valid generated-receipt fixtures do not create proof authority. |
-| `../../release/signatures/` | Signature home if present; fixtures do not create signing authority. |
-| `../../release/manifests/` | Release home; fixtures do not publish. |
+| `../README.md` | Parent generated-receipt fixture root and family boundary. |
+| `../../../tools/validators/validate_generated_receipt.py` | Bounded no-network fixture consumer. |
+| `../../../tests/validators/test_validate_generated_receipt.py` | Focused validator proof. |
+| `../../../data/receipts/generated/` | Actual provenance process-memory lane; fixtures are never emitted records. |
+| `../../../data/proofs/` | Proof home; valid generated-receipt fixtures do not create proof authority. |
+| `../../../release/signatures/` | Signature home if present; fixtures do not create signing authority. |
+| `../../../release/manifests/` | Release home; fixtures do not publish. |
 
 ## Accepted material
 
 This lane may contain:
 
 - small synthetic `*.valid.json`, `*.positive.json`, `*.input.json`, `*.expected.json`, `*.json`, `*.jsonl`, `*.yaml`, `*.yml`, `*.svg`, or `*.md` examples;
-- toy generated-receipt examples with complete required fields, valid finite outcomes, valid reason codes, evidence refs where required, citation-validation refs where required, policy refs, policy bundle hashes, replay keys, model identity refs, output refs, error refs, denial refs, abstention refs, digest fields, schema URI refs, domain constraints, signature refs, or public-summary refs;
-- toy examples for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` outcomes when each outcome is complete and policy-admissible for its role;
-- toy public-projection examples where a bounded summary is exposed instead of a raw receipt object;
+- toy generated-receipt examples with complete required fields, exact path/hash/truth-label maps, canonical paths, digest fields, validation-gate records, and truthful review state;
+- small synthetic artifacts whose bytes can be recomputed locally;
 - toy correction or supersession examples that preserve append-only receipt posture;
 - paired expected positive outputs when behavior becomes stable.
 
@@ -56,9 +54,9 @@ Do not use this lane for actual receipts, signed envelopes, EvidenceBundles, Sou
 ## Shared fixture design rules
 
 - Keep examples synthetic, compact, deterministic, reviewable, and public-safe.
-- Use toy IDs, toy refs, toy digests, toy timestamps, toy model IDs, toy policy refs, toy evidence refs, toy citation refs, toy output refs, toy error refs, and toy signature refs.
+- Use toy IDs, toy digests, toy timestamps, model identities, policy refs, evidence refs, citations, and reviewer IDs.
 - Make the valid condition explicit in the file name, payload, expected output, and consumer notes.
-- Make expected outcome explicit when known: validation pass, policy pass, replay pass, persistence pass, projection pass, release-ready, `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, or expected output.
+- Make expected validator outcome, review state, and declared-review-claim posture explicit.
 - Pair each stable valid input with an expected positive output when practical.
 - Keep schema validity, semantic validity, outcome validity, reason-code validity, evidence state, citation state, policy state, replay state, signature state, persistence state, public-projection state, release state, correction state, rollback state, and expected-output state separate.
 - Do not treat fixture success as receipt storage proof, proof authority, policy approval, validator implementation proof, API implementation proof, release state, public-map authority, public-summary authority, or published output.
@@ -67,32 +65,23 @@ Do not use this lane for actual receipts, signed envelopes, EvidenceBundles, Sou
 
 | Scenario family | Expected posture | Notes |
 |---|---|---|
-| Minimal complete `ABSTAIN` receipt | Validation pass or policy pass | Evidence may be absent when abstention reason is present. |
-| Minimal complete `DENY` receipt | Validation pass or policy pass | Denial reason and policy refs remain visible. |
-| Minimal complete `ERROR` receipt | Validation pass or policy pass | Error refs remain structured. |
-| Complete `ANSWER` receipt with evidence and citation refs | Validation pass, policy pass, or replay-ready | `ANSWER` remains evidence-subordinate. |
-| Deterministic replay example | Replay pass or expected output | Digest identity must remain stable for the toy case. |
-| Public receipt summary projection | Projection pass | Summary is bounded and not raw receipt authority. |
-| Correction or supersession example | Review-ready | Old receipt posture remains append-only. |
-| Stable valid output is ready to compare | Expected output | Deterministic expected output, not release. |
+| Pending review with matching local SHA-256 | Validation pass, non-mergeable | Current `minimal.json` case. |
+| Approved-review declaration | Validation and optional review-claim-gate pass | Covered by focused synthetic tests; reviewer authority is not authenticated. |
+| Schema-valid override declaration | Validation and optional review-claim-gate pass | Covered by focused synthetic tests; approver authority, scope, expiry, policy, and merge authority remain separate. |
+| Multiple canonical artifacts | Validation pass | Future fixture when a stable need exists. |
 
 ## Maintenance notes
 
 - Update this README when generated-receipt child lanes, payload files, validators, tests, helper scripts, expected-output names, or consumer contracts are added.
-- Link each valid fixture to the exact schema check, policy check, replay check, governed-API test, public-projection check, release-readiness check, correction check, rollback check, or documentation example that consumes it.
+- Link each valid fixture to the exact validator/test behavior it exercises.
 - If expected valid behavior stabilizes, update the paired input, expected output, consumer notes, parent README, sibling invalid README, and this index together.
 - Keep payloads small enough for normal code review.
 - If a fixture accidentally includes actual receipts, proof material, release material, source exports, or lifecycle data, move it out of this lane, quarantine it through the governed lifecycle or security process, and record the correction path.
 
 ## Verification status
 
-- Target README: replaced blank placeholder content.
-- Parent generated-receipt README: fetched and found blank during the recent sibling invalid update.
-- Fixture payload inventory: no payload files verified under this valid lane during this update.
-- Generated-receipt child inventory: NOT VERIFIED during this update.
-- Invalid generated-receipt alignment: PARTIALLY VERIFIED against `fixtures/generated_receipt/invalid/README.md`.
-- AI receipt doctrine alignment: PARTIALLY VERIFIED against `docs/architecture/governed-ai/AI_RECEIPTS.md` from recent preceding updates.
-- Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md` from recent preceding updates.
-- Contract/schema/policy alignment: NEEDS VERIFICATION against live `contracts/runtime/`, `schemas/contracts/v1/runtime/`, and `policy/runtime/` files.
-- Consumer alignment: NEEDS VERIFICATION against validators, policy checks, replay checks, signing checks, persistence checks, public-projection checks, governed-API tests, release-readiness checks, correction checks, rollback checks, schema checks, policy checks, and CI implementation.
-- Tests and validators: NOT RUN.
+- Direct payload: `minimal.json` plus `../artifacts/minimal.txt`.
+- Schema family: `schemas/contracts/v1/receipts/generated_receipt.schema.json`; runtime `AIReceipt` remains separate.
+- Consumer: `tools/validators/validate_generated_receipt.py` in default integrity mode and `--fixtures` mode.
+- Focused proof: `tests/validators/test_validate_generated_receipt.py` and `validator-suite` workflow wiring.
+- Boundary: policy evaluation, evidence/citation resolution, approval, merge, persistence, release, and publication remain outside fixture success.

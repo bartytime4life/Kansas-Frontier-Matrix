@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" role="img" aria-labelledby="t d">
+  <title id="t">Register · Verification Backlog — Know it, propose it, or check it.</title>
+  <desc id="d">Banner: three columns — needs verification, proposed, confirmed — with separate, fixed cards; no status transition is asserted.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="218" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="220" fill="#FAF7F0"/>
+<rect width="1280" height="6" fill="#5E6E7C"/>
+    <text x="48" y="60" class="lbl" fill="#5E6E7C">REGISTER · VERIFICATION BACKLOG</text>
+    <text x="48" y="112" class="serif" font-size="40" fill="#0E1F3A">Know it, propose it, or check it.</text>
+    <text x="48" y="150" class="sans" font-size="16.5" fill="#4A4A4A">CONFIRMED · PROPOSED · NEEDS VERIFICATION · UNKNOWN</text><text x="48" y="172" class="sans" font-size="16.5" fill="#4A4A4A">Kept separate on every row.</text>
+    <g transform="translate(48,202)" class="sans" font-size="12" fill="#6B6B6B"><circle cx="5" cy="-4" r="4" fill="#5E6E7C"/><text x="16" y="0">Kansas Frontier Matrix</text></g>
+    <line x1="776" y1="34" x2="776" y2="186" stroke="#D9CFBD"/>
+<rect x="800" y="34" width="136" height="152" rx="10" fill="#F6F1E7" stroke="#D9CFBD"/><text x="810" y="48" class="sans" font-size="10.5" font-weight="800" letter-spacing=".8" fill="#5E6E7C">NEEDS</text><text x="810" y="61" class="sans" font-size="10.5" font-weight="800" letter-spacing=".8" fill="#5E6E7C">VERIFICATION</text><rect x="810" y="66" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#5E6E7C" stroke-opacity=".5"/><rect x="818" y="76" width="70" height="5" rx="2" fill="#E3DACB"/><rect x="818" y="86" width="50" height="5" rx="2" fill="#E3DACB"/><rect x="810" y="106" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#5E6E7C" stroke-opacity=".5"/><rect x="818" y="116" width="54" height="5" rx="2" fill="#E3DACB"/><rect x="818" y="126" width="60" height="5" rx="2" fill="#E3DACB"/><rect x="950" y="34" width="136" height="152" rx="10" fill="#F6F1E7" stroke="#D9CFBD"/><text x="960" y="54" class="sans" font-size="10.5" font-weight="800" letter-spacing=".8" fill="#4A6FA5">PROPOSED</text><rect x="960" y="66" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#4A6FA5" stroke-opacity=".5"/><rect x="968" y="76" width="70" height="5" rx="2" fill="#E3DACB"/><rect x="968" y="86" width="50" height="5" rx="2" fill="#E3DACB"/><rect x="960" y="106" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#4A6FA5" stroke-opacity=".5"/><rect x="968" y="116" width="54" height="5" rx="2" fill="#E3DACB"/><rect x="968" y="126" width="60" height="5" rx="2" fill="#E3DACB"/><rect x="1100" y="34" width="136" height="152" rx="10" fill="#F6F1E7" stroke="#D9CFBD"/><text x="1110" y="54" class="sans" font-size="10.5" font-weight="800" letter-spacing=".8" fill="#3B7A57">CONFIRMED</text><rect x="1110" y="66" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#3B7A57" stroke-opacity=".5"/><rect x="1118" y="76" width="70" height="5" rx="2" fill="#E3DACB"/><rect x="1118" y="86" width="50" height="5" rx="2" fill="#E3DACB"/><rect x="1110" y="106" width="116" height="30" rx="6" fill="#FFFFFF" stroke="#3B7A57" stroke-opacity=".5"/><rect x="1118" y="116" width="54" height="5" rx="2" fill="#E3DACB"/><rect x="1118" y="126" width="60" height="5" rx="2" fill="#E3DACB"/>
+  </g>
+  <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
+</svg>

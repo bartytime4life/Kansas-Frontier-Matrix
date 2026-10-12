@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-focus-mode-marshall-county-readme-262e3f04364c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/marshall_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/marshall_county/README.md": "sha256:262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded repository inspection",
+      "deterministic Markdown/JSON validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81",
+      "sha256:262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/marshall_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/marshall_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 9656da3c88b9a21b844179ecc97a52136bb5799d; verified one-byte target, 105,947-byte sibling plan, two-file directory, stale index row, no matching open PR, no matching branch, and no path-scoped AGENTS.md."
+    },
+    {
+      "gate": "same-path-directory-governance",
+      "outcome": "PASS",
+      "reason": "Existing docs/ path retained under accepted ADR-0029 and adopted Directory Rules; proposed ADR-0027 did not authorize migration, rename, or parallel authority."
+    },
+    {
+      "gate": "plan-reconciliation-and-truth-labels",
+      "outcome": "PASS",
+      "reason": "The complete sibling plan was inspected and left unchanged. Its 2026-05-22 external observations and product designs remain dated PROPOSED lineage."
+    },
+    {
+      "gate": "sensitive-domain-boundaries",
+      "outcome": "PASS",
+      "reason": "README denies grave prediction, archaeology/artifact prospecting, fragile-feature targeting, unsupported cultural-authority claims, live river/flood safety advice, property determinations, historical-science currentness overclaim, private inference, sensitive ecology, and infrastructure vulnerability."
+    },
+    {
+      "gate": "finite-outcomes",
+      "outcome": "PASS",
+      "reason": "Exactly ANSWER, ABSTAIN, DENY, and ERROR are defined as terminal outcomes; planning/lifecycle dispositions remain non-terminal."
+    },
+    {
+      "gate": "markdown-and-link-validation",
+      "outcome": "PASS",
+      "reason": "48,549 UTF-8 bytes; one H1; one metadata block; 19 unique explicit anchors; all same-document fragments and 15 distinct repository-relative targets resolved; balanced HTML comments; LF-only; final newline; no tabs or trailing whitespace."
+    },
+    {
+      "gate": "artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198; Git blob 94db08c71e9e380d973968e4e30573283a13076c; remote read-back matched. Artifact path, hash key, and truth-label key are identical."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Required fields, enums, hash patterns, closed-object fields, citation records, ISO timestamp, path/hash parity, and pending review state conform to the current generated receipt schema."
+    },
+    {
+      "gate": "county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The shared index is a high-churn aggregate inventory and requires a separately pinned full recount rather than an isolated Marshall row/count edit."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator targets the proposed plural, kebab-case, seven-file control plane rather than the current singular, snake_case, two-file compatibility lane."
+    },
+    {
+      "gate": "external-source-rights-currentness-and-specialist-review",
+      "outcome": "SKIPPED",
+      "reason": "External sources, rights, site-manager review, heritage/burial/archaeology review, cultural-authority relationships, river/flood currentness, property, ecology, and public-use fitness remain future gates."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observed only after PR creation; human review remains pending and CODEOWNERS routing is not specialist, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81"
+    },
+    {
+      "id": "pinned-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d"
+    },
+    {
+      "id": "prior-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/README.md"
+    },
+    {
+      "id": "sibling-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/marshall_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T05:34:00Z",
+  "emitter": "ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only. This receipt does not validate external claims, admit sources, establish rights or cultural authority, activate policy, approve sensitive-detail handling, authorize merge, or create release, deployment, promotion, or publication state."
+}

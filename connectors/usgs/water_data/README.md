@@ -2,14 +2,20 @@
 doc_id: kfm://doc/connectors-usgs-water-data-readme
 title: connectors/usgs/water_data/ — USGS Water Data Connector Lane
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · USGS steward · Water Data steward · Hydrology steward · Hazards steward · Data steward · Validation steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-08-10
 policy_label: public; nested-lane; water-data; nwis; time-series; source-admission-only; raw-quarantine-only
+owning_root: connectors/
+responsibility: Bound USGS Water Data / NWIS product-specific request planning and captured source normalization to source-admission support without hydrologic, policy, release, or publication authority.
+truth_posture: CONFIRMED captured-input-only county planner/normalizer and synthetic enforcement packet / PROPOSED product-sublane placement and future admission helpers / UNKNOWN live transport, activation, rights, lifecycle, evidence, release, and production behavior
 related:
   - ../README.md
+  - ./nwis_county_capture.py
+  - ../../../contracts/domains/hydrology/nwis_county_capture.md
+  - ../../../schemas/contracts/v1/domains/hydrology/nwis_county_capture_manifest.schema.json
   - ../../../docs/sources/catalog/usgs/README.md
   - ../../../docs/sources/catalog/usgs/nwis-water.md
   - ../../../pipelines/domains/hydrology/ingest_usgs_water/README.md
@@ -32,6 +38,7 @@ notes:
   - "Modern api.waterdata.usgs.gov and legacy waterservices.usgs.gov / NWIS endpoints require cutover discipline until the SourceDescriptor closes migration posture."
   - "USGS Water Data is scientific/informational source material, not flood warning authority, dam-operation authority, water-rights enforcement, safety guidance, or release approval."
   - "Connector output may enter raw or quarantine admission lanes only."
+  - "v0.2 records one executable captured-input-only county request planner/normalizer; it performs no transport, credential read, source activation, or lifecycle write."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +71,7 @@ notes:
 > **Owner:** `OWNER_TBD`  
 > **Path:** `connectors/usgs/water_data/`  
 > **Mode:** nested product connector lane  
-> **Truth posture:** `CONFIRMED` file path and README content; connector code, source descriptors, endpoint configuration, fixtures, tests, CI wiring, emitted receipts, and release behavior remain `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` file path, README content, and captured-input-only `nwis_county_capture.py` with synthetic tests and scoped CI; live transport, source descriptors/activation, credential and rate-limit handling, lifecycle writes, ingest receipts, rights, evidence, release, and production behavior remain `NEEDS VERIFICATION`.
 
 ---
 
@@ -87,7 +94,8 @@ connectors/
     ├── nhdplus_hr/
     │   └── README.md
     └── water_data/
-        └── README.md
+        ├── README.md
+        └── nwis_county_capture.py  # captured-input-only; no transport
 ```
 
 Related responsibility roots:
@@ -251,7 +259,7 @@ NOT HERE:
 |---|---|---|---|
 | `docs/sources/catalog/usgs/nwis-water.md` | `CONFIRMED` | Product identity, endpoint migration posture, observed/aggregate/administrative source-role split, provisional/approved lifecycle, and non-operational disclaimer. | Does not prove connector implementation exists. |
 | `pipelines/domains/hydrology/ingest_usgs_water/README.md` | `CONFIRMED` | Downstream executable pipeline boundary and anti-collapse rules for provisional/approved, observed/aggregate, site metadata, and public release. | Pipeline README does not make connector active. |
-| `connectors/usgs/water_data/README.md` before this edit | `CONFIRMED` | Target file existed but was blank. | No implementation proof. |
+| `connectors/usgs/water_data/nwis_county_capture.py` | `CONFIRMED` bounded implementation | Modern credential-free request planning and strict normalization of already captured county/site and daily-value FeatureCollections. | No transport, source activation, RAW write, live-response proof, or publication authority. |
 
 ---
 
@@ -262,10 +270,10 @@ Before relying on this connector, verify:
 - nested `connectors/usgs/water_data/` placement is ratified or recorded in the drift/open-question register;
 - SourceDescriptor records exist and validate;
 - current modern and legacy endpoint behavior, access constraints, cadence/freshness, parameter-code enumeration, rate limits, and rights terms are verified;
-- site ID, parameter code, timestamp, approval state, qualifier, unit, and source-role gates are implemented;
+- site ID, parameter code, timestamp, approval state, qualifier, unit, and source-role gates are implemented for the captured-input profile; live transport remains unverified;
 - observed vs aggregate vs administrative separation is enforced;
 - provisional vs approved state is enforced;
-- no-network fixtures exist for tests;
+- no-network fixtures and focused tests exist for the captured-input profile;
 - run receipts are emitted for successful, failed, denied, skipped, no-op, and rate-limited probes;
 - outputs are limited to raw or quarantine admission lanes;
 - downstream work, processed, catalog, triplet, proof, and release artifacts are produced only outside connectors;
@@ -285,18 +293,18 @@ Rollback target: initial blank file content SHA `8b137891791fe96927ad78e64b0aad7
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Connector placement and product sublane convention are resolved or recorded as open drift.
-- [ ] Actual connector contents are inventoried.
+- [x] Captured-input-only county planner/normalizer is inventoried; other connector contents remain unimplemented or unverified.
 - [ ] SourceDescriptor IDs, product identities, source roles, rights, sensitivity, cadence, endpoint behavior, parameter codes, site IDs, approval-state handling, and activation state are verified.
 - [ ] Tests prevent provisional/approved substitution, IV/DV/statistics collapse, site-metadata/observation collapse, NHDPlus/Water Data collapse, operational-guidance overclaim, rights bypass, sensitivity bypass, and release misuse.
 - [ ] Outputs are verified to enter raw or quarantine admission lanes only.
 - [ ] Run receipts exist for successful, failed, denied, skipped, no-op, and rate-limited source probes.
 - [ ] No source-family, product, domain, processed, catalog, triplet, published, release, schema, policy, proof, registry, fixture, API, UI, or public-claim authority lives here.
-- [ ] Tests, fixtures, and CI behavior are verified or marked `NEEDS VERIFICATION`.
+- [x] Captured-input profile tests, fixture, and scoped CI are present; hosted exact-head and production behavior remain `NEEDS VERIFICATION`.
 
 ---
 
 ## Status summary
 
-`connectors/usgs/water_data/` is a draft nested USGS Water Data / NWIS source-admission lane. It is not the canonical Water Data connector home unless ratified. It is not USGS Water product doctrine, hydrologic truth, flood-warning authority, dam-operation authority, water-rights enforcement, SourceDescriptor authority, policy authority, schema authority, catalog/triplet authority, proof closure, release authority, public map authority, public API behavior, public UI behavior, or pipeline authority.
+`connectors/usgs/water_data/` is a draft nested USGS Water Data / NWIS source-admission lane with one captured-input-only county planner/normalizer. It performs no live transport or lifecycle write. It is not USGS Water product doctrine, hydrologic truth, flood-warning authority, dam-operation authority, water-rights enforcement, SourceDescriptor authority, policy authority, schema authority, catalog/triplet authority, proof closure, release authority, public map authority, public API behavior, public UI behavior, or pipeline authority.
 
 <p align="right"><a href="#top">Back to top</a></p>

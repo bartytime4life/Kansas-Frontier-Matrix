@@ -24,6 +24,9 @@ notes:
   - "PROPOSED scaffold; sibling-link presence verified in a prior Claude Code session, not in this session."
   - "ADR numbers from v0.1 (ADR-0011, ADR-0013, ADR-0015, ADR-0017, ADR-0018) were NOT located in the doctrine corpus this session — all relabeled NEEDS VERIFICATION. Doctrine synthesis ADR backlog uses ADR-S-NN identifiers (ADR-S-01..ADR-S-15)."
   - "Atlas anchors used: Atlas v1.1 Appendix A (Glossary), §24.1.3 (source-role descriptor), §24.2.1 (Master Receipt Catalog); Pass-10 C1-02 (spec_hash via JCS+SHA-256), C4-01 (kfm:provenance), C4-04 (Evidence-Bundle JSON-LD), C5-01 (Gate Matrix A–G), C15-01..03 (CARE)."
+owning_root: docs/
+responsibility: "Documentation for Source catalog glossary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source catalog glossary
@@ -167,7 +170,7 @@ This glossary is a **navigation aid** for the source-catalog documentation lane.
 
 | Term | One-line meaning (PROPOSED) | Authority anchor | Truth label |
 |---|---|---|---|
-| **`kfm:provenance`** | STAC `properties` extension block carrying KFM provenance fields: `spec_hash`, `evidence_bundle_ref`, `run_record_ref`, `audit_ref`, `policy_digest`. Per-asset integrity uses `file:checksum`. | Pass-10 C4-01 (STAC Item with `kfm:provenance` namespace); [`docs/standards/STAC.md`](../../../standards/STAC.md) *(PROPOSED standards profile)* | **CONFIRMED doctrine** |
+| **`kfm:provenance`** | STAC `properties` extension block carrying KFM provenance fields: `spec_hash`, `evidence_bundle_ref`, `run_record_ref`, `audit_ref`, `policy_digest`. Per-asset integrity uses `file:checksum`. | Pass-10 C4-01 (STAC Item with `kfm:provenance` namespace); [`docs/standards/STAC.md`](../../standards/STAC.md) *(PROPOSED standards profile)* | **CONFIRMED doctrine** |
 | **`kfm:care`** | STAC / DCAT extension block surfacing MetaBlock v2 CARE fields in catalog vocabularies. Trigger field for default-deny: non-empty `authority_to_control` → DENY on publication until consent grant present + valid + unrevoked. | Pass-10 C15-02 (DCAT and STAC `kfm:care` extension namespace); C15-03 (OPA default-deny on CARE-tagged); [`CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) | **CONFIRMED doctrine** |
 | **`file:checksum`** | Per-asset integrity digest from the STAC `file` extension. Used for catalog closure and tamper detection. | STAC `file` extension; Pass-10 C4-01 references | **CONFIRMED — EXTERNAL standard** |
 | **`ConsentSidecar` / `ConsentDecision`** | `ConsentSidecar` = immutable content-addressed JSON pairing a holder VC + DSSE-signed consent receipt + Bitstring Status List entry; `ConsentDecision` = the OPA render-gate envelope (`ALLOW` / `DENY` / `ABSTAIN` / `ERROR`). | KFM-P5-PROG-0005; KFM-P5-PROG-0007; [`CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) | **CONFIRMED doctrine** *(implementation NEEDS VERIFICATION)* |
@@ -292,10 +295,10 @@ flowchart LR
 - [`docs/sources/catalog/CROSSWALKS.md`](./CROSSWALKS.md) — cross-format mappings register *(PROPOSED)*
 - [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — per-family rights summary *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§6 governance layer separation; §6.1.a standards lane; §8.3 compatibility roots)*
-- [`docs/standards/STAC.md`](../../../standards/STAC.md) — STAC profile *(authority for `kfm:provenance`)*
-- [`docs/standards/DCAT.md`](../../../standards/DCAT.md) — DCAT profile
-- [`docs/standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
-- [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — ISO 19115 geographic metadata crosswalk profile
+- [`docs/standards/STAC.md`](../../standards/STAC.md) — STAC profile *(authority for `kfm:provenance`)*
+- [`docs/standards/DCAT.md`](../../standards/DCAT.md) — DCAT profile
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
+- [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 geographic metadata crosswalk profile
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries
 - [`docs/adr/`](../../adr/) — ADRs *(active ledger needed to resolve OPEN-GLOSS-02)*
 

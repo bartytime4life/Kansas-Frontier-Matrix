@@ -16,7 +16,7 @@ related:
   - docs/domains/habitat/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
   - docs/architecture/map-shell.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROVENANCE.md
   - docs/standards/PMTILES.md
   - docs/standards/OGC-API-TILES.md
@@ -580,7 +580,7 @@ These items are inherited from `[DOM-HAB §N]` and from the trust-membrane verif
 - `docs/domains/habitat/IDENTITY_MODEL.md` — identity & spec_hash discipline <!-- PROPOSED -->
 - `docs/domains/fauna/MAP_UI_CONTRACTS.md` — adjacent lane; relevant for sensitive-occurrence joins <!-- TODO: confirm presence -->
 - `docs/architecture/map-shell.md` — cross-cutting map shell architecture <!-- TODO: confirm presence -->
-- `docs/architecture/governed-api.md` — trust membrane architecture <!-- TODO: confirm presence -->
+- `docs/architecture/governed-api/README.md` — trust membrane architecture <!-- TODO: confirm presence -->
 - `docs/architecture/habitat-fauna-thin-slice.md` — cross-lane thin-slice doctrine (non-domain home) <!-- PROPOSED -->
 - `docs/standards/PMTILES.md` — PMTiles governance profile
 - `docs/standards/OGC-API-TILES.md` — Tiles delivery profile
@@ -670,6 +670,6 @@ Habitat's owned and cited object families, scoped to map and UI surfaces. Identi
 
 ---
 
-**Related docs:** [Habitat README](./README.md) · [Habitat Source Ledger](./HABITAT_SOURCE_LEDGER.md) · [Habitat Sensitivity Profile](./HABITAT_SENSITIVITY_PROFILE.md) · [Map Shell Architecture](../../architecture/map-shell.md) · [Governed API Architecture](../../architecture/governed-api.md)
+**Related docs:** [Habitat README](./README.md) · [Habitat Source Ledger](./HABITAT_SOURCE_LEDGER.md) · [Habitat Sensitivity Profile](./HABITAT_SENSITIVITY_PROFILE.md) · [Map Shell Architecture](../../architecture/map-shell.md) · [Governed API Architecture](../../architecture/governed-api/README.md)
 **Last updated:** 2026-06-05 · `CONTRACT_VERSION = "3.0.0"`
 [Back to top](#contents)

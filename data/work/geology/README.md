@@ -329,7 +329,7 @@ is also forbidden for rights-unknown material, source-role collapse, resource-cl
 - [`../../catalog/domain/geology/README.md`](../../catalog/domain/geology/README.md)
 - [`../../published/layers/geology/README.md`](../../published/layers/geology/README.md)
 - [`../../published/pmtiles/geology/README.md`](../../published/pmtiles/geology/README.md)
-- [`../../proofs/validation_report/geology/README.md`](../../proofs/validation_report/geology/README.md)
+- `../../proofs/validation_report/geology/README.md` (not present)
 - [`../../receipts/README.md`](../../receipts/README.md)
 - [`../../registry/sources/geology/README.md`](../../registry/sources/geology/README.md)
 - [`../../../docs/domains/geology/README.md`](../../../docs/domains/geology/README.md)

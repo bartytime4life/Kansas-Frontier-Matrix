@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-domains-hazards-feature-resolver-readme
 title: Hazards Feature Resolver Test README
 type: test-readme
-version: v0.1
-status: draft; placeholder-expanded; feature-resolver-test-lane; PROPOSED / NEEDS VERIFICATION before promotion
+version: v0.2
+status: draft; documentation-only Hazards feature-resolver lane; proposed contracts and scaffolds are not executable proof
 owners:
   - OWNER_TBD — Hazards domain steward
   - OWNER_TBD — Governed API steward
@@ -13,9 +13,12 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
   - OWNER_TBD — QA steward
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-07-05
+created: 2026-07-05
+updated: 2026-08-30
 policy_label: public-doc; tests; hazards; feature-resolver; no-network; governed-api; planning-context; evidence-bound; policy-filtered; release-gated; finite-outcomes; rollback-aware
+owning_root: tests/
+responsibility: Document the Hazards feature-resolver test lane and its verified non-executable state without creating contract, schema, policy, release, runtime, or publication authority.
+truth_posture: "CONFIRMED documentation-only Hazards lane; CONFIRMED proposed semantic contracts and permissive schema scaffolds; CONFIRMED deny-by-default policy stub; NEEDS VERIFICATION accepted feature-resolver shape, synthetic fixtures, validator, executable tests, stewardship, runtime coupling, and promotion enforcement"
 tags: [kfm, tests, hazards, feature-resolver, governed-api, EvidenceDrawerPayload, EvidenceBundle, EvidenceRef, PolicyDecision, RuntimeResponseEnvelope, ReleaseManifest, CorrectionNotice, RollbackCard, trust-membrane, ABSTAIN, DENY, ERROR]
 related:
   - ../../../README.md
@@ -24,10 +27,14 @@ related:
   - ../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md
   - ../../../../docs/architecture/ui/EVIDENCE_DRAWER.md
   - ../../../../contracts/ui/evidence_drawer_payload.md
+  - ../../../../contracts/domains/hazards/hazards_decision_envelope.md
+  - ../../../../contracts/domains/hazards/domain_feature_identity.md
   - ../../../../contracts/runtime/runtime_response_envelope.md
   - ../../../../contracts/policy/policy_decision.md
   - ../../../../contracts/release/release_manifest.md
   - ../../../../schemas/contracts/v1/domains/hazards/
+  - ../../../../schemas/contracts/v1/domains/hazards/hazards_decision_envelope.schema.json
+  - ../../../../schemas/contracts/v1/domains/hazards/domain_feature_identity.schema.json
   - ../../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
   - ../../../../fixtures/domains/hazards/feature_resolver/
   - ../../../../policy/domains/hazards/
@@ -37,6 +44,8 @@ notes:
   - "This is a test-lane README only. It does not define Hazards doctrine, governed API routes, resolver contracts, schemas, fixtures, lifecycle records, EvidenceBundles, policy rules, release decisions, public API material, public map material, public tiles, or published artifacts."
   - "The tested invariant is that Hazards feature-resolver tests verify governed click or feature resolution for released or fixture-scoped hazards features: feature identity, layer identity, evidence refs, policy state, freshness state, context labels, release relationship, correction, and rollback remain visible without turning the resolver into source truth, policy authority, release authority, public-layer truth, or AI/UI truth."
   - "Default posture is deterministic and no-network. Live source checks, real source exports, lifecycle data, and public tiles do not belong in this lane."
+  - "Current inventory is documentation-only: this test directory and its paired fixture directory each contain only a README and .gitkeep; the documented pytest command collects zero tests and exits 5."
+  - "Existing Hazards resolver contracts and schemas remain PROPOSED scaffolds, and the policy file remains deny-by-default; their presence is not executable feature-resolver proof."
   - "Rollback target for this replacement is previous blank blob SHA 8b137891791fe96927ad78e64b0aad7bded08bdc."
 [/KFM_META_BLOCK_V2] -->
 
@@ -56,12 +65,12 @@ notes:
 </p>
 
 **Path:** `tests/domains/hazards/feature_resolver/README.md`  
-**Status:** draft / placeholder-expanded / PROPOSED until executable tests are verified  
+**Status:** draft / DOCUMENTATION_ONLY / NOT_VALIDATION
 **Owning root:** `tests/`  
 **Domain segment:** `hazards`  
 **Test lane:** `feature_resolver`  
 **Default execution posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target was a blank placeholder before this expansion · CONFIRMED `tests/` is the canonical root for enforceability proof · CONFIRMED Hazards map/UI contracts describe a governed flow from released layer to governed API to Evidence Drawer and Focus Mode · CONFIRMED Hazards surfaces must carry planning/context boundary labels · NEEDS VERIFICATION for executable test modules, fixture payload inventory, schema enforcement, validator behavior, route behavior, policy runtime, release integration, UI behavior, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED target was a blank placeholder before its v0.1 expansion · CONFIRMED this lane currently contains no executable tests and its paired fixture lane contains no fixture payloads · CONFIRMED proposed Hazards resolver contracts and permissive schema scaffolds exist · CONFIRMED the policy stub is deny-by-default · NEEDS VERIFICATION for an accepted feature-resolver shape, executable test modules, fixture payloads, validator behavior, route behavior, policy runtime, release integration, UI behavior, CI coverage, and promotion enforcement.
 
 ---
 
@@ -148,7 +157,7 @@ tests/domains/hazards/feature_resolver/
 pytest tests/domains/hazards/feature_resolver
 ```
 
-Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pytest` is the accepted test runner and that executable test modules exist. This README does not claim the command currently passes.
+Status of the command above: **DOCUMENTATION_ONLY / NOT_VALIDATION**. The directory contains only `.gitkeep` and this README; pytest collects zero tests and exits `5`.
 
 ---
 
@@ -160,7 +169,9 @@ Status of the command above: **PROPOSED / NEEDS VERIFICATION**. It assumes `pyte
 | `tests/README.md` | CONFIRMED | `tests/` is enforceability proof and failure should block promotion where trust-spine checks fail. | Does not prove this lane's modules or pass rate. |
 | `docs/domains/hazards/MAP_UI_CONTRACTS.md` | CONFIRMED doctrine | Hazards content reaches public UI through released layer, governed API, EvidenceBundle, Evidence Drawer, and Focus Mode flow with context labeling. | Concrete route names, validators, fixtures, and pass rates remain NEEDS VERIFICATION. |
 | `tests/domains/hazards/drawer/README.md` | CONFIRMED adjacent lane | Drawer tests cover downstream EvidenceDrawerPayload projection behavior. | Does not prove resolver behavior. |
-| Repo search | CONFIRMED | No dedicated feature-resolver Hazards doc was found in searched terms before this replacement. | Search is not proof of absence. |
+| Hazards lane inventory | CONFIRMED | This directory contains only `.gitkeep` and this README; the paired fixture directory also contains only `.gitkeep` and its README. | Establishes documentation-only status, not future ownership or behavior. |
+| Proposed Hazards resolver contracts and schemas | CONFIRMED scaffold state | `HazardsDecisionEnvelope` and `DomainFeatureIdentity` semantic documents and schema paths exist. | Both contracts remain proposed; the schemas are permissive scaffolds and do not establish an accepted request/response shape or enforcement. |
+| `policy/domains/hazards/feature_resolver.rego` | CONFIRMED fail-closed stub | The current policy denies by default. | It does not implement accepted feature-resolution policy or prove runtime coupling. |
 
 ---
 

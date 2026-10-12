@@ -1,0 +1,129 @@
+{
+  "bases": {
+    "corrected": {
+      "profile": "CORRECTABLE_ENVIRONMENTAL_EVENT_ASSESSMENT_V1",
+      "assessment_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "assessment_state": "COMPLETE",
+      "lifecycle_scope": "EVENT_CORRECTED",
+      "subject": {
+        "observation_ref": "kfm:environmental-observation:synthetic-air-001",
+        "candidate_ref": "kfm:event-candidate:synthetic-air-001",
+        "candidate_basis_observation_refs": ["kfm:environmental-observation:synthetic-air-001"],
+        "baseline_snapshot_ref": "kfm:baseline-snapshot:synthetic-air-001",
+        "review_disposition_ref": "kfm:event-review-disposition:synthetic-air-001",
+        "event_ref": "kfm:environmental-event:synthetic-air-001",
+        "event_basis_candidate_ref": "kfm:event-candidate:synthetic-air-001",
+        "correction_ref": "kfm:event-correction:synthetic-air-001",
+        "correction_of_event_ref": "kfm:environmental-event:synthetic-air-001",
+        "replacement_event_ref": "kfm:environmental-event:synthetic-air-002",
+        "observed_at": "2026-08-01T12:00:00Z",
+        "candidate_at": "2026-08-01T13:00:00Z",
+        "reviewed_at": "2026-08-01T14:00:00Z",
+        "event_at": "2026-08-01T15:00:00Z",
+        "corrected_at": "2026-08-02T12:00:00Z",
+        "source_roles": [
+          {"role": "BASELINE_SOURCE", "source_ref": "kfm:source:synthetic-baseline-001", "evidence_refs": ["evidence:synthetic-baseline-001"]},
+          {"role": "CORROBORATION_SOURCE", "source_ref": "kfm:source:synthetic-corroboration-001", "evidence_refs": ["evidence:synthetic-corroboration-001"]},
+          {"role": "OBSERVATION_SOURCE", "source_ref": "kfm:source:synthetic-observation-001", "evidence_refs": ["evidence:synthetic-observation-001"]}
+        ]
+      },
+      "integrity": {"source_state": "AVAILABLE", "freshness": "FRESH"},
+      "assessment": {"outcome": "CORRECTION_CHAIN_CONFIRMED", "reason_code": "CORRECTION_LINEAGE_CONFIRMED"},
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "live_feed_read": false,
+        "numeric_threshold_computed": false,
+        "source_data_mutated": false,
+        "candidate_promoted": false,
+        "review_approved": false,
+        "real_world_event_declared": false,
+        "correction_applied": false,
+        "event_withdrawn": false,
+        "alert_issued": false,
+        "health_advice_issued": false,
+        "regulatory_compliance_decided": false,
+        "policy_decided": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    }
+  },
+  "cases": [
+    {"case_id": "corrected-pass", "base": "corrected", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "event-pass", "base": "corrected", "mutations": [
+      {"path": "/lifecycle_scope", "value": "EVENT_DECLARED"},
+      {"path": "/subject/correction_ref", "value": null},
+      {"path": "/subject/correction_of_event_ref", "value": null},
+      {"path": "/subject/replacement_event_ref", "value": null},
+      {"path": "/subject/corrected_at", "value": null}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "candidate-only-hold", "base": "corrected", "mutations": [
+      {"path": "/lifecycle_scope", "value": "CANDIDATE_ONLY"},
+      {"path": "/subject/review_disposition_ref", "value": null},
+      {"path": "/subject/event_ref", "value": null},
+      {"path": "/subject/event_basis_candidate_ref", "value": null},
+      {"path": "/subject/correction_ref", "value": null},
+      {"path": "/subject/correction_of_event_ref", "value": null},
+      {"path": "/subject/replacement_event_ref", "value": null},
+      {"path": "/subject/reviewed_at", "value": null},
+      {"path": "/subject/event_at", "value": null},
+      {"path": "/subject/corrected_at", "value": null},
+      {"path": "/subject/source_roles", "value": [
+        {"role": "BASELINE_SOURCE", "source_ref": "kfm:source:synthetic-baseline-001", "evidence_refs": ["evidence:synthetic-baseline-001"]},
+        {"role": "OBSERVATION_SOURCE", "source_ref": "kfm:source:synthetic-observation-001", "evidence_refs": ["evidence:synthetic-observation-001"]}
+      ]}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "EVENT_LIFECYCLE_HELD", "path": "/assessment/outcome"}]},
+    {"case_id": "stale-hold", "base": "corrected", "mutations": [
+      {"path": "/integrity/freshness", "value": "STALE"}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "EVENT_LIFECYCLE_HELD", "path": "/assessment/outcome"}]},
+    {"case_id": "upstream-error", "base": "corrected", "mutations": [
+      {"path": "/assessment_state", "value": "ERROR"},
+      {"path": "/integrity/source_state", "value": "ERROR"}
+    ], "expected_outcome": "ERROR", "expected_findings": [{"code": "EVENT_LIFECYCLE_UPSTREAM_ERROR", "path": "/assessment/outcome"}]},
+    {"case_id": "source-role-collapse", "base": "corrected", "mutations": [
+      {"path": "/subject/source_roles/2/source_ref", "value": "kfm:source:synthetic-baseline-001"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SOURCE_ROLE_COLLAPSE", "path": "/subject/source_roles"}]},
+    {"case_id": "corroboration-missing", "base": "corrected", "mutations": [
+      {"path": "/subject/source_roles", "value": [
+        {"role": "BASELINE_SOURCE", "source_ref": "kfm:source:synthetic-baseline-001", "evidence_refs": ["evidence:synthetic-baseline-001"]},
+        {"role": "OBSERVATION_SOURCE", "source_ref": "kfm:source:synthetic-observation-001", "evidence_refs": ["evidence:synthetic-observation-001"]}
+      ]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SOURCE_ROLE_INCOMPLETE", "path": "/subject/source_roles"}]},
+    {"case_id": "reference-role-collapse", "base": "corrected", "mutations": [
+      {"path": "/subject/replacement_event_ref", "value": "kfm:environmental-event:synthetic-air-001"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_REFERENCE_ROLE_COLLAPSE", "path": "/subject"}]},
+    {"case_id": "correction-target-mismatch", "base": "corrected", "mutations": [
+      {"path": "/subject/correction_of_event_ref", "value": "kfm:environmental-event:synthetic-air-099"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_CORRECTION_TARGET_MISMATCH", "path": "/subject/correction_of_event_ref"}]},
+    {"case_id": "time-order-invalid", "base": "corrected", "mutations": [
+      {"path": "/subject/corrected_at", "value": "2026-08-01T14:30:00Z"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_TIME_ORDER_INVALID", "path": "/subject"}]},
+    {"case_id": "scope-shape-mismatch", "base": "corrected", "mutations": [
+      {"path": "/lifecycle_scope", "value": "EVENT_DECLARED"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SCOPE_MISMATCH", "path": "/subject"}]},
+    {"case_id": "event-without-review", "base": "corrected", "mutations": [
+      {"path": "/lifecycle_scope", "value": "EVENT_DECLARED"},
+      {"path": "/subject/review_disposition_ref", "value": null},
+      {"path": "/subject/reviewed_at", "value": null},
+      {"path": "/subject/correction_ref", "value": null},
+      {"path": "/subject/correction_of_event_ref", "value": null},
+      {"path": "/subject/replacement_event_ref", "value": null},
+      {"path": "/subject/corrected_at", "value": null}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SCOPE_MISMATCH", "path": "/subject"}]},
+    {"case_id": "source-role-order-invalid", "base": "corrected", "mutations": [
+      {"path": "/subject/source_roles", "value": [
+        {"role": "OBSERVATION_SOURCE", "source_ref": "kfm:source:synthetic-observation-001", "evidence_refs": ["evidence:synthetic-observation-001"]},
+        {"role": "CORROBORATION_SOURCE", "source_ref": "kfm:source:synthetic-corroboration-001", "evidence_refs": ["evidence:synthetic-corroboration-001"]},
+        {"role": "BASELINE_SOURCE", "source_ref": "kfm:source:synthetic-baseline-001", "evidence_refs": ["evidence:synthetic-baseline-001"]}
+      ]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SOURCE_ROLE_ORDER_INVALID", "path": "/subject/source_roles"}]},
+    {"case_id": "assessment-mismatch", "base": "corrected", "assessment_override": {"outcome": "EVENT_CHAIN_CONFIRMED", "reason_code": "EVENT_TRANSITION_CONFIRMED"}, "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "identity-corrupt", "base": "corrected", "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "authority-overreach", "base": "corrected", "mutations": [
+      {"path": "/governance/real_world_event_declared", "value": true}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "EVENT_LIFECYCLE_SCHEMA_INVALID", "path": "/governance/real_world_event_declared"}]}
+  ]
+}

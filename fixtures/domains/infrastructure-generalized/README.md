@@ -86,7 +86,7 @@ Do not use this lane for real records, real source exports, lifecycle data, Sour
 ## Verification status
 
 - Target README: replaced blank placeholder content.
-- Fixture payload inventory: no payload files verified under this root during this update.
+- Fixture payload inventory: `valid/` and `invalid/` child lanes were added with small synthetic, public-safe generalized-infrastructure and sensitivity-tier examples — see [`valid/README.md`](valid/README.md) and [`invalid/README.md`](invalid/README.md). Payloads follow the "Generalized infrastructure asset marker," "Generalized facility service area," and "Sensitive exact geometry included" scenario families above; no other scenario family in the table has a payload yet.
 - Exact prior fixture precedent for `fixtures/domains/infrastructure-generalized/`: NOT FOUND in repository search during this update.
 - Settlements/Infrastructure alignment: PARTIALLY VERIFIED against `docs/domains/settlements-infrastructure/sublanes/infrastructure.md`.
 - Roads/Rail/Trade sensitivity alignment: PARTIALLY VERIFIED against `docs/domains/roads-rail-trade/SENSITIVITY.md`.

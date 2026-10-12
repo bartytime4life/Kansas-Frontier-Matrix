@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/domains/hazards/ARCHITECTURE.md
-  - docs/domains/hazards/api-contracts.md
+  - docs/domains/hazards/API_CONTRACTS.md
   - docs/domains/hazards/BLUEPRINT.md
   - docs/domains/hazards/CANONICAL_PATHS.md
   - docs/standards/PROV.md
@@ -32,6 +32,9 @@ notes:
   #   (Deny-by-Default register) and Sec 24.4.10 / 24.4.12 (edge registers).
   # Schema-home form set to the FLAT crosswalk form schemas/contracts/v1/hazards/ (Atlas Sec 24.13 and
   #   Encyclopedia Sec 7.1 converge); the /domains/hazards/ segment form is CONFLICTED pending ADR-S-01 / ADR-0001.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Continuity Inventory; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Continuity Inventory
@@ -346,7 +349,7 @@ The corpus enumerates seven canonical validator families for Hazards. Each is `P
 
 ## 11. API, DTO & Schema Surfaces
 
-Hazards API surfaces follow the finite-outcome contract: `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. The four-surface set and outcome grammar are **CONFIRMED** (Atlas Hazards §J); **exact routes are `UNKNOWN`** and DTO field shapes are `PROPOSED`. Schema home is `schemas/contracts/v1/hazards/` (flat crosswalk form) per ADR-0001 *(segment form CONFLICTED — §17)*. The full surface-by-surface contract lives in the companion [`api-contracts.md`](./api-contracts.md).
+Hazards API surfaces follow the finite-outcome contract: `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. The four-surface set and outcome grammar are **CONFIRMED** (Atlas Hazards §J); **exact routes are `UNKNOWN`** and DTO field shapes are `PROPOSED`. Schema home is `schemas/contracts/v1/hazards/` (flat crosswalk form) per ADR-0001 *(segment form CONFLICTED — §17)*. The full surface-by-surface contract lives in the companion [`api-contracts.md`](API_CONTRACTS.md).
 
 | # | Surface | DTO / schema | Outcomes | Classification | Truth label |
 |---|---|---|---|---|---|

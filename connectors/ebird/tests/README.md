@@ -34,6 +34,9 @@ notes:
 
 # eBird Connector Tests
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ebird/admit.py` and `src/ebird/fetch.py` were removed from `connectors/ebird/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > Test-lane contract for eBird source admission across API, Basic Dataset, and Sampling Event Data products—offline by default, fixture-safe, fail-closed, and unable to publish.
 
 <p>
@@ -103,9 +106,7 @@ connectors/ebird/
 │   └── ebird/
 │       ├── README.md
 │       ├── __init__.py             # empty
-│       ├── admit.py                # greenfield placeholder
-│       ├── descriptor.yaml         # greenfield placeholder; conflicts noted below
-│       └── fetch.py                # greenfield placeholder
+│       └── descriptor.yaml         # greenfield placeholder; conflicts noted below
 └── tests/
     └── README.md                   # this test-lane contract
 ```

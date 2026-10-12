@@ -1,1187 +1,768 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/joins
-title: Cross-Domain Join Admissibility Policy Boundary and Composition Contract
-type: policy-readme
-version: v0.1
-status: draft; repository-grounded; empty-target-completion; cross-domain-join-admissibility; composition-boundary; pair-policy-routing; evaluator-unbound; ADR-S-14-open; fail-closed; non-semantic; non-schema; non-release; non-publication
-owner: NEEDS VERIFICATION — join policy steward, cross-domain architecture steward, affected domain stewards, source steward, evidence steward, rights reviewer, sensitivity reviewer, consent/privacy reviewer, validation steward, governed-API maintainer, release reviewer, docs steward
+title: policy/joins/ — Cross-Domain Join Admissibility Policy Boundary
+type: readme
+version: v0.2
+status: draft; BOUNDARY_COMPACT; repository-grounded; proposed-inactive; pair-routing-documented; candidate-assessments-implemented; evaluator-unbound; ADR-S-14-open; non-semantic; non-schema; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ changes to @bartytime4life; no accepted join-policy steward or independent release authority was established
 created: 2026-07-24
-updated: 2026-07-24
-policy_label: repository-facing; joins; cross-domain; cross-lane; relation-admissibility; source-role-anti-collapse; most-restrictive-posture; evidence-bound; rights-aware; consent-aware; sensitivity-monotonic; time-aware; spatially-bounded; correction-aware; fail-closed; no-public-bypass
+updated: 2026-08-13
+policy_label: repository-facing; policy; joins; cross-domain; source-role-preserving; most-restrictive; evidence-bound; rights-aware; consent-aware; sensitivity-monotonic; correction-aware; proposed-inactive; non-release; non-publication
 current_path: policy/joins/README.md
 owning_root: policy/
-canonical_relationship: PROPOSED cross-domain join admissibility and policy-composition boundary; semantic join meaning remains under contracts/joins/ or an accepted relation contract home, machine shape remains under accepted schemas/contracts/v1/ join or relation profiles, and current PolicyDecision schema does not include a joins family
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  policy_root_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
-  policy_data_readme_blob: 4d0f03755e788fd6fbd7fea14f5a46babb688460
-  cross_lane_architecture_blob: 521007752082798a285db0204faf3ee091a3894a
-  joins_contract_index_blob: e31c295b48b41a4da3e861d4536a07f2bbe1660e
-  joins_schema_index_blob: 6b8ff3f4c82a7ab256b86d31c33c27d0cf0cf959
-  relations_schema_index_blob: 28678976c1cdaa215fc824627baa476d17dd3bbf
-  joins_validator_index_blob: c67c66136b3c16857f1957f5d72ff61f6235372d
-  cross_domain_validator_blob: 06873dea443c02aa0b70425a981a66b5cd79f365
-  agriculture_soil_validator_blob: d6f3cf61e0e5ac1fc15ae508e9168b4f25c2a3a2
-  person_parcel_validator_blob: a3d491b6cb2910b1729185ec746eb252847008a2
-  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
-  open_overlapping_pull_requests_found: "0"
+responsibility: Define the local policy-source boundary and child routing contract for operation-specific cross-domain join admissibility without defining relation meaning or shape, computing joins, creating evidence or decisions, executing policy, approving release, or publishing derivatives.
+base_commit: ad31275429d715ad92002f8f2e160299193c9f50
+prior_blob: 2d2736cb33bf9ede95e00cffb2fd45914106aea2
+prior_tree: e31073337547b53f0dd075c1d244dabd91684131
+directory_governance: ADR-0029 accepts Directory Rules v2 and singular policy/ placement; ADR-S-14 remains an open backlog item rather than an accepted join-policy decision
+truth_posture: CONFIRMED accepted policy-root placement, exact three-entry direct-child tree, two substantive pair-routing children, no executable policy source in this lane, two separate fixture-first join candidate assessments with 39 synthetic cases and dedicated read-only workflows, README-only generic and pair-validator routing lanes, closed PolicyDecision family enum without joins, and empty PROPOSED policy-gate register / PROPOSED BOUNDARY_COMPACT contract, five-check architecture, three-posture model, child-lane authoring requirements, reason and obligation vocabulary, and future conservative composition / CONFLICTED joins-versus-relations-versus-domain schema placement / NEEDS VERIFICATION accepted lane standing, steward assignments, pair registry and slug rules, policy input profile, bundle and evaluator binding, native policy tests, decision normalization, governed consumers, required-check enforcement, correction propagation, release integration, and production operation
 related:
   - ../README.md
-  - ../data/README.md
-  - ../geoprivacy/README.md
   - ../access/README.md
   - ../consent/README.md
   - ../sensitivity/README.md
+  - ../geoprivacy/README.md
   - ../promotion/README.md
   - ../bundles/README.md
+  - ./habitat-fauna/README.md
+  - ./habitat-hydrology/README.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/architecture/cross-lane-join-policy.md
   - ../../docs/architecture/cross-domain/cross-lane-relations.md
   - ../../docs/architecture/cross-domain/source-role-anti-collapse.md
-  - ../../docs/architecture/cross-domain/shared-kernel.md
-  - ../../docs/architecture/cross-domain/trust-membrane.md
   - ../../contracts/joins/README.md
-  - ../../contracts/crosswalks/README.md
-  - ../../contracts/policy/policy_input_bundle.md
+  - ../../contracts/joins/cross_lane_join_assessment.md
+  - ../../contracts/joins/historical_network_proximity_assessment.md
   - ../../contracts/policy/policy_decision.md
   - ../../schemas/contracts/v1/joins/README.md
   - ../../schemas/contracts/v1/relations/README.md
-  - ../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
   - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../tools/joins/README.md
   - ../../tools/validators/joins/README.md
   - ../../tools/validators/cross-domain-joins/README.md
-  - ../../tools/validators/joins/agriculture-soil/README.md
-  - ../../tools/validators/joins/person-parcel/README.md
-  - ../../data/registry/sources/README.md
-  - ../../data/proofs/
-  - ../../data/receipts/
-  - ../../apps/governed-api/README.md
-  - ../../release/README.md
-tags: [kfm, policy, joins, cross-domain, cross-lane, relations, source-role, evidence-bundle, sensitivity, consent, rights, geoprivacy, correction, rollback, fail-closed]
-truth_posture: CONFIRMED empty tracked target, singular policy root, draft cross-lane architecture, join semantic contract index, overlapping join/relation schema-family guardrails, join validator indexes, pair-specific validator READMEs, closed PolicyDecision family enum without joins, and unproved evaluator/bundle/runtime/release integration / PROPOSED parent join-policy routing contract, explicit input profile, five-check composition, posture normalization, reason codes, obligations, child-lane contract, tests, review, correction, and rollback / CONFLICTED join-versus-relation schema authority and open ADR-S-14 placement/standing / UNKNOWN accepted join policy family, active pair policy modules, native tests, bundle selector, runtime composer, decision receipts, public-surface enforcement, branch-protection requirements, and production operation
-notes:
-  - "This revision completes an existing empty README in place. It creates no join contract, relation schema, policy rule, policy family, fixture, validator, EvidenceBundle, receipt, graph edge, runtime route, release object, or publication state."
-  - "The current PolicyDecision schema permits promotion, access, render, capability, consent, and sensitivity only; policy_family=joins is schema-invalid at the inspected snapshot."
-  - "Join endpoint validity is not relation validity, and a valid relation is not automatically admissible for a requested audience, surface, lifecycle transition, or public use."
-  - "A join may be more restrictive than every input because composition can create inference, re-identification, geoprivacy, title, critical-infrastructure, cultural, or source-role risks that no input exposes alone."
-  - "No exact sensitive locations, living-person linkages, private parcel associations, credentials, restricted identifiers, or reverse-engineering thresholds belong in this repository-facing README or public fixtures."
+  - ../../tests/joins/README.md
+  - ../../control_plane/policy_gate_register.yaml
+tags: [kfm, policy, joins, cross-domain, cross-lane, relation-admissibility, source-role, evidence, sensitivity, consent, rights, geoprivacy, correction, rollback, fail-closed]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="cross-domain-join-admissibility-policy-boundary"></a>
 
-# Cross-Domain Join Admissibility Policy Boundary
+# policy :: joins
 
-> **One-line purpose.** `policy/joins/` documents how KFM decides whether a proposed binary or multi-way relationship across independently governed domains is admissible for a named operation and audience—without becoming relation truth, a join schema, a validator, a graph authority, a lifecycle store, a release decision, or a publication path.
-
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence)
-[![Scope: cross-domain joins](https://img.shields.io/badge/scope-cross--domain%20joins-0969da?style=flat-square)](#purpose)
-[![Posture: most restrictive wins](https://img.shields.io/badge/posture-most%20restrictive%20wins-b42318?style=flat-square)](#sensitivity-and-composition-risk)
-[![Decision family: composed](https://img.shields.io/badge/decision%20family-composed-d97706?style=flat-square)](#policydecision-compatibility)
-[![Default: fail closed](https://img.shields.io/badge/default-fail%20closed-b42318?style=flat-square)](#join-posture-model)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Scope](#scope-and-bounded-context) · [Separation](#join-concept-separation) · [Invariants](#keystone-invariants) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input-profile) · [Checks](#five-join-admissibility-checks) · [Relation validity](#endpoint-validity-is-not-relation-validity) · [Risk](#sensitivity-and-composition-risk) · [Postures](#join-posture-model) · [Compatibility](#policydecision-compatibility) · [Composition](#decision-composition) · [Outcomes](#normalized-outcomes) · [Reasons](#reason-code-vocabulary) · [Obligations](#obligation-vocabulary) · [Child lanes](#child-join-policy-contract) · [Surfaces](#public-surface-controls) · [Lifecycle](#governed-lifecycle-and-trust-flow) · [Threats](#threat-model) · [Validation](#validation-and-acceptance) · [Review](#review-burden) · [Rollback](#correction-revocation-and-rollback) · [Open work](#open-verification-register)
+`policy/joins/` is KFM's local policy-source boundary for deciding whether a
+declared relationship candidate between independently governed domains is
+admissible for a named operation and audience. It inherits the authority and
+limitations of [`policy/`](../README.md).
 
 > [!IMPORTANT]
-> **Join permission is not relation truth.** A join policy decision may say whether a declared relationship candidate may be evaluated, retained, reviewed, rendered, exported, promoted, or released for one bounded use. It cannot prove either endpoint, prove the relation, transfer domain authority, create evidence, clear rights, infer consent, or approve publication.
+> **Safe current conclusion:** this lane is documented but inactive. It has two
+> substantive pair-routing children and no Rego module, accepted policy bundle,
+> selector, evaluator, or decision emitter. Separate tooling implements two
+> deterministic, synthetic, non-publishing join assessments; those assessments
+> emit candidate or validation results, not join-policy decisions.
+
+The strongest current implementation evidence is therefore candidate
+assessment and validation evidence outside this directory—not active policy
+enforcement inside it.
 
 > [!CAUTION]
-> **The current `PolicyDecision` contract has no `joins` policy family.** The inspected schema permits only `promotion`, `access`, `render`, `capability`, `consent`, and `sensitivity`. This README therefore treats join policy as a composition and routing boundary over applicable existing families unless a versioned contract/schema migration is reviewed, tested, and adopted.
+> A matching key, spatial overlap, proximity result, schema-valid relation,
+> validator `PASS`, candidate `ALLOW`, workflow success, or filename cannot
+> prove either endpoint, prove the relationship, clear rights, infer consent,
+> downgrade sensitivity, approve release, or authorize publication.
 
-> [!WARNING]
-> **A join can create a new sensitive fact.** Two individually public records can become restricted when combined. Location inference, living-person linkage, private land association, rare-species inference, archaeology inference, infrastructure exposure, source-role laundering, or identity narrowing must be evaluated on the produced relationship and every derivative surface—not only on the source rows.
-
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) ·
+[Status](#status-and-evidence) · [Map](#current-direct-child-map) ·
+[Scope](#scope-and-bounded-context) · [Separation](#join-concept-separation) ·
+[Invariants](#keystone-invariants) · [Belongs](#what-belongs-here) ·
+[Prohibited](#what-does-not-belong-here) · [Inputs](#explicit-policy-input-profile) ·
+[Checks](#five-join-admissibility-checks) · [Risk](#sensitivity-and-composition-risk) ·
+[Postures](#join-posture-model) · [Decisions](#policydecision-compatibility) ·
+[Children](#child-join-policy-contract) · [Surfaces](#public-surface-controls) ·
+[Evidence](#related-contracts-schemas-tools-tests-and-workflows) ·
+[Validation](#validation-and-acceptance) · [Contributing](#contributor-contract) ·
+[Correction](#correction-revocation-and-rollback) ·
+[Verification](#open-verification-register) · [No-loss review](#evidence-review-and-no-loss-ledger)
 
 ## Purpose
 
-`policy/joins/` exists to answer one bounded question:
+This boundary may hold reviewed, versioned policy source for operation-specific
+join admissibility. A mature rule family could evaluate whether explicit
+endpoint references, declared relationship semantics, source roles, evidence,
+rights, consent, sensitivity, time, space, cardinality, uncertainty, review,
+release, correction, and rollback context support a bounded use.
 
-> Given explicit endpoint references, a declared relation profile, source-role and evidence posture, rights, consent, sensitivity, identity, cardinality, temporal and spatial scope, uncertainty, requested operation, audience, lifecycle state, review state, release state, correction lineage, and evaluator context, may this join be used—and under which enforceable obligations?
+The policy question is:
 
-A mature join-policy boundary should:
+> Given a declared relationship candidate and complete governed context, may
+> this caller evaluate, retain, review, render, export, promote, or release the
+> derivative for this operation and audience—and which restrictions,
+> abstentions, denials, or obligations apply?
 
-- prevent cross-domain relationships from laundering authority;
-- preserve every endpoint's owning domain, identity, source role, evidence, and caveats;
-- require independent support for the relation assertion itself;
-- compute sensitivity and exposure risk on the composed result;
-- distinguish low-risk joins from steward-gated and denied joins;
-- normalize multiple required policy-family decisions into one finite caller posture;
-- require obligations that callers can actually enforce;
-- preserve corrections, revocations, source changes, and rollback dependencies;
-- keep public APIs, maps, graphs, exports, search, tiles, screenshots, embeddings, and AI inside the governed trust membrane.
-
-This README documents the boundary and convergence target. It does not activate a rule bundle or claim runtime enforcement.
-
-[Back to top](#top)
-
----
+This README documents the boundary and convergence target. It does not activate
+a rule, accept a pair profile, create a relationship, emit a `PolicyDecision`,
+or authorize a lifecycle or publication effect.
 
 ## Authority level
 
-`policy/joins/` is a **proposed cross-cutting admissibility lane under the singular `policy/` responsibility root**.
-
-| Concern | Authority home | Role of `policy/joins/` |
+| Concern | Owning surface | Relationship to this lane |
 |---|---|---|
-| Join or relation semantic meaning | [`contracts/joins/`](../../contracts/joins/README.md), [`contracts/crosswalks/`](../../contracts/crosswalks/README.md), or an accepted relation contract | Consume declared meaning; never redefine it here. |
-| Endpoint object meaning | Owning domain contracts and doctrine | Preserve endpoint authority; never merge domains. |
-| Join/relation machine shape | Accepted profile under [`schemas/contracts/v1/joins/`](../../schemas/contracts/v1/joins/README.md), [`schemas/contracts/v1/relations/`](../../schemas/contracts/v1/relations/README.md), or an accepted domain lane | Require a pinned shape; never choose a schema home by prose alone. |
-| Admissibility and exposure | `policy/` | Document and eventually own reviewed join-specific policy composition if placement is accepted. |
-| Endpoint source identity and role | Source contracts and `data/registry/sources/` | Require resolved source context; never invent or upgrade roles. |
-| Evidence and proof | Evidence/proof roots | Require endpoint and relation support; never create evidence truth here. |
-| Join validation | `tools/validators/cross-domain-joins/`, `tools/validators/joins/`, pair validators | Depend on deterministic validation; never substitute README prose for checks. |
-| Joined lifecycle materialization | Governed `data/` phase roots | Policy decides admissibility; it does not store joined records. |
-| Graph, map, search, vector, export, API, and AI delivery | Governed application/runtime roots | Consume released, obligation-compliant results only. |
-| Release, correction, withdrawal, rollback | `release/` | Require governed references; never approve or publish. |
+| Join-policy source and admissibility | [`policy/`](../README.md) and this lane if accepted | May own operation-specific rule source; does not own evaluated instances. |
+| Endpoint meaning and authority | Participating domain contracts and doctrine | Consume stable references; never merge or transfer domain authority. |
+| Relationship meaning | [`contracts/joins/`](../../contracts/joins/README.md), crosswalk contracts, or an accepted domain contract | Consume declared semantics; never redefine them in policy. |
+| Machine shape | [`schemas/contracts/v1/joins/`](../../schemas/contracts/v1/joins/README.md), [`relations/`](../../schemas/contracts/v1/relations/README.md), or an accepted domain profile | Require a pinned shape; prose here cannot settle schema placement. |
+| Candidate computation | [`tools/joins/`](../../tools/joins/README.md) or a bounded implementation lane | Compute inspectable candidates; never infer policy permission. |
+| Validation | [`tools/validators/joins/`](../../tools/validators/joins/README.md), [`cross-domain-joins/`](../../tools/validators/cross-domain-joins/README.md), and pair validators | Test declared behavior; a pass is not relation truth or policy approval. |
+| Evidence, source identity, and rights | Evidence, proof, registry, and rights-owning roots | Policy consumes resolvable context; it cannot invent support or clear terms. |
+| Evaluation mechanics | An accepted policy evaluator and runtime | Execute accepted source; no such local binding is established here. |
+| Decision, review, and release instances | Governed process and [`release/`](../../release/README.md) lanes | May cite policy identity; must not be stored beside policy source. |
+| Public maps, APIs, search, exports, graphs, and AI | Governed application and released-carrier surfaces | Consume released, obligation-compliant derivatives only. |
 
-Directory Rules place admissibility under `policy/`, contracts under `contracts/`, machine shape under `schemas/`, validators under `tools/`, lifecycle data under `data/`, and release decisions under `release/`. This parent path is therefore responsibility-aligned **only as a policy boundary**. It must not become a second contract, schema, graph, evidence, or release home.
+Accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+makes [Directory Rules v2](../../docs/doctrine/directory-rules.md) effective for
+placement. Directory Rules §9.3 separates semantic contracts, machine schemas,
+and policy source. The machine [root registry](../../control_plane/root_registry.yaml)
+projects `policy/` as canonical policy-rule authority and prohibits data
+instances, release decisions, and schemas. That projection records adopted
+governance; it does not activate this child lane.
 
-[Back to top](#top)
-
----
+CODEOWNERS routes `/policy/` changes to `@bartytime4life`. Routing does not prove
+join-policy stewardship, affected-domain review, independence, qualification,
+policy acceptance, or release authority.
 
 ## Status and evidence
 
-### Current repository state
+All observations in this section are pinned to
+`main@ad31275429d715ad92002f8f2e160299193c9f50`.
 
-| Surface | Status | Safe conclusion |
-|---|---:|---|
-| `policy/joins/README.md` | **CONFIRMED empty before this revision** | This update completes the tracked parent README in place. |
-| Singular `policy/` root | **CONFIRMED** | Admissibility belongs under `policy/`; implementation maturity remains mixed. |
-| Cross-lane architecture | **CONFIRMED draft** | Defines source-role preservation, most-restrictive sensitivity, EvidenceBundle composition, receipt expectations, authority preservation, and OPEN / STEWARD-REVIEW / DENIED postures; ADR-S-14 remains open. |
-| `contracts/joins/README.md` | **CONFIRMED draft** | Semantic join-contract lane exists and points to `policy/joins/` for admissibility. |
-| Join schema family | **CONFIRMED mixed / PROPOSED** | `schemas/contracts/v1/joins/` contains guardrails and one permissive Habitat–Fauna scaffold. |
-| Relation schema family | **CONFIRMED guardrail / placement-conflicted** | `relations/` overlaps `joins/`; canonical placement is unresolved. |
-| Generic join validator | **CONFIRMED README-only direct lane** | No direct executable, dedicated tests, fixtures, or workflow were established by its bounded inspection. |
-| Pair-specific validator index | **CONFIRMED README** | Agriculture–Soil and Person–Parcel child validator READMEs exist; executable behavior remains unproved. |
-| `PolicyDecision` schema | **CONFIRMED closed / PROPOSED** | Outcomes are `ANSWER | ABSTAIN | DENY | ERROR`; policy families do not include `joins`. |
-| Active join policy modules | **NOT SURFACED by bounded search** | No active pair rule set, accepted bundle, selector, or evaluator is established here. |
-| Runtime composer, receipts, release integration | **UNKNOWN / NEEDS VERIFICATION** | Documentation and validator READMEs do not prove operational enforcement. |
+| Surface | Confirmed state | Safe interpretation |
+|---|---|---|
+| Target README | Substantive v0.1 draft, blob `2d2736cb33bf9ede95e00cffb2fd45914106aea2` | This v0.2 update modernizes an existing boundary; the target is not an empty stub. |
+| Local tree | Tree `e31073337547b53f0dd075c1d244dabd91684131`; README plus two direct child directories | The local navigation surface is known exactly. |
+| Local policy source | No `.rego`, executable, bundle manifest, selector, evaluator binding, or native policy test under `policy/joins/` | The lane is documentation-only and inactive. |
+| Habitat–Fauna child | Substantive draft [`habitat-fauna/README.md`](./habitat-fauna/README.md) | Pair-specific routing and risk guidance exists; no active pair rule is established. |
+| Habitat–Hydrology child | Substantive draft [`habitat-hydrology/README.md`](./habitat-hydrology/README.md) with a documented `riparian/` child | Pair-wide and riparian guidance exists; no active pair rule is established. |
+| Cross-lane architecture | Draft [architectural foundation](../../docs/architecture/cross-lane-join-policy.md) records five checks and three postures | It identifies ADR-S-14 as open; it is design evidence, not accepted runtime policy. |
+| Join contracts | Draft parent plus proposed `CrossLaneJoinAssessment`, inactive historical proximity profile, and people-settlements lane | Meaning exists in bounded profiles; candidate meaning does not establish general relationship truth. |
+| Join and relation schemas | Concrete assessment schemas, one permissive Habitat–Fauna scaffold, and multiple README-only guardrails | `joins/` versus `relations/` versus domain placement remains unresolved. |
+| Generic candidate tooling | Two deterministic Python helpers under `tools/joins/` | They implement bounded candidate assessment, not policy evaluation. |
+| Synthetic evidence | 19 cross-lane cases plus 20 historical-proximity cases and 20 focused test functions | Passing proves the documented fixture profiles only. |
+| Dedicated workflows | Read-only cross-lane and historical-proximity workflows use pinned actions, install declared test dependencies, and run the helpers under `KFM_NO_NETWORK=1` | They validate those profile paths; neither workflow is a join-policy evaluator. |
+| Validator routing lanes | Generic, Agriculture–Soil, and Person–Parcel validator directories contain READMEs and marker files only | Their detailed invariants are guidance; direct executable behavior remains absent. |
+| `PolicyDecision` | Closed proposed schema with `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; families are `promotion`, `access`, `render`, `capability`, `consent`, `sensitivity` | `policy_family: joins` is schema-invalid at this baseline. |
+| Policy-gate register | [`PROPOSED`](../../control_plane/policy_gate_register.yaml) with an empty `entries` list | No active join gate, bundle, evaluator, required check, or consumer is registered. |
+| Runtime, decision receipts, release integration | No complete local flow established | Production enforcement, replay, correction propagation, and public-surface binding remain unverified. |
 
-### Evidence boundary
+The current candidate tools materially improve the July evidence baseline, but
+they do not close the policy gap. This README must not claim that ADR-S-14 is
+accepted, a join policy family is active, a pair is OPEN, a decision is
+authentic, or a joined derivative is released.
 
-This README may state repository facts verified above and doctrine carried by the inspected cross-lane architecture. It must not claim:
+## Current direct-child map
 
-- ADR-S-14 is accepted;
-- `policy/joins/` is an active rule family;
-- a join evaluator or decision composer is deployed;
-- join contracts and schemas have converged on one canonical family;
-- any pair-specific join is automatically OPEN, reviewed, valid, or public-safe;
-- the current join validators execute or pass;
-- required reviews, branch protection, decision receipts, or rollback drills are operational;
-- any joined graph edge, map layer, API payload, export, or AI answer is released.
+The map is verified from the complete direct-child tree at the pinned baseline.
+It shows this directory and direct children only, as required by Directory
+Rules `DIR-README-003` through `DIR-README-005`.
 
-Those claims remain `UNKNOWN` or `NEEDS VERIFICATION` until current implementation evidence proves them.
+```text
+policy/joins/
+├── README.md                # this parent boundary and contributor contract
+├── habitat-fauna/           # pair-routing documentation; no local executable policy
+└── habitat-hydrology/       # pair-routing documentation; owns its nested child index
+```
 
-[Back to top](#top)
+[`habitat-hydrology/`](./habitat-hydrology/README.md) documents its nested
+`riparian/` lane. The nested path is intentionally omitted from this
+direct-child map; parent navigation must not flatten grandchildren into a
+speculative topology.
 
----
+Path presence establishes routing, not acceptance or activation. Neither child
+may weaken parent invariants or become a parallel contract, schema, evidence,
+decision, release, or publication authority.
 
 ## Scope and bounded context
 
 ### In scope
 
-- policy-relevant composition of binary and n-ary cross-domain relations;
-- endpoint ownership, identity, source role, rights, consent, sensitivity, evidence, time, space, and uncertainty checks;
-- operation- and audience-specific admissibility;
-- OPEN, STEWARD-REVIEW, and DENIED posture routing;
-- normalization to finite runtime-facing outcomes;
-- pair-specific policy routing and inheritance rules;
-- public-surface exposure controls;
-- join-induced inference and reconstruction risk;
-- dependency tracking, correction propagation, revocation, withdrawal, and rollback;
-- synthetic, no-network fixtures and deterministic negative-path testing.
+- operation- and audience-specific admissibility of binary and n-ary joins;
+- endpoint authority, identity, source-role, and lifecycle preservation;
+- independent endpoint and relationship evidence requirements;
+- rights, consent, sensitivity, geoprivacy, and composition-risk evaluation;
+- temporal, spatial, cardinality, uncertainty, and contradiction posture;
+- conservative composition of applicable policy families;
+- pair-specific routing and no-silent-inheritance rules;
+- enforceable public-surface obligations; and
+- correction, revocation, withdrawal, dependency invalidation, and rollback.
 
 ### Out of scope
 
-- defining what a relationship means;
-- choosing or creating join/relation schemas;
-- computing the join;
-- resolving domain identities or canonical records;
-- issuing credentials, consent, evidence, receipts, reviews, manifests, or release approvals;
-- writing RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED data;
-- storing graph edges, vector indexes, tiles, screenshots, or caches;
-- publishing joined claims or allowing public clients to read internal stores;
-- treating AI-generated relationships as evidence.
-
-[Back to top](#top)
-
----
+- defining relationship semantics or domain truth;
+- choosing a canonical join, relation, or domain schema home by prose;
+- computing a join or resolving canonical identity;
+- creating evidence, receipts, review records, decisions, manifests, or
+  rollback cards;
+- writing RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED
+  records;
+- storing graph edges, tiles, indexes, exports, screenshots, or caches;
+- authenticating actors or resolving private credentials; and
+- releasing, serving, deploying, promoting, or publishing a derivative.
 
 ## Join concept separation
 
-The word **join** is overloaded. KFM must keep the following concepts separate.
+| Concept | Bounded meaning | Must not be collapsed into |
+|---|---|---|
+| Endpoint | Domain-owned object, observation, assertion, feature, or event | A join-derived replacement for another domain's object. |
+| Relationship contract | Semantic statement of what a link means | Evidence that the link is true or permission to use it. |
+| Join/relation schema | Machine constraints on a relationship object | Semantic authority, validation success, or release approval. |
+| Candidate assessment | Deterministic report that a declared predicate matched or could not safely proceed | Canonical identity, relationship truth, or policy allow. |
+| Validator result | Conformance finding against declared rules and inputs | Evidence closure, policy decision, reviewer authority, or publication. |
+| Join-policy evaluation | Operation-specific admissibility result under accepted policy | Computation of the relationship or approval of downstream release. |
+| `PolicyDecision` | Finite outward record for one accepted policy family | Join contract, evaluator, review, or release record. |
+| Released derivative | Governed carrier after complete trust and release closure | A direct copy of internal candidate or policy state. |
 
-| Concept | What it is | What it is not | Owning surface |
-|---|---|---|---|
-| Endpoint object | A domain-owned entity, observation, assertion, feature, event, or record | A join-derived replacement for another domain's object | Domain contracts and schemas |
-| Relation assertion | A claim that two or more endpoints stand in a declared relationship | Proof merely because endpoints exist | Join/relation semantic contract + evidence |
-| Join profile | The accepted meaning, direction, cardinality, temporal/spatial semantics, and allowed uses | Policy permission or runtime result | Contract/profile authority |
-| Join schema | Machine shape of a relation object | Relation truth or public safety | Accepted schema family |
-| Join candidate | A computed or proposed relationship instance | Released graph truth | Governed lifecycle data |
-| Join validator result | Deterministic findings against configured rules | Policy approval, EvidenceBundle, or release approval | `tools/validators/` and report roots |
-| Join policy posture | Admissibility for a named operation and audience | Endpoint truth or relation truth | `policy/` |
-| EvidenceBundle | Support for endpoint and relation claims | Policy permission | Evidence/proof roots |
-| Transform or aggregation receipt | Record of how a derivative was produced | Proof the relationship is true or safe | Receipt roots |
-| ReviewRecord | Steward review of a bounded candidate/use | Automatic publication | Governance/review roots |
-| ReleaseManifest | Approved release binding for a public-safe artifact | Semantic meaning or policy source | `release/` |
-| Graph/map/search/vector projection | A downstream representation | Sovereign truth | Governed application/data projection roots |
-| AI narrative | Interpretation of released evidence | Evidence, relation creation, or permission | Governed AI runtime |
+### Endpoint validity is not relation validity
 
-Collapsing any two rows silently is a trust failure.
+Two valid endpoints do not prove a relationship. A schema-valid relationship
+does not prove its evidence, currentness, rights, consent, or admissibility. An
+admissible use does not authorize every other operation or audience, and a
+policy result does not approve release.
 
-[Back to top](#top)
-
----
+Each layer must retain its own identity, version, support, reviewer posture,
+and correction path. Callers must not infer a stronger layer from a weaker one.
 
 ## Keystone invariants
 
-1. **Endpoint ownership remains intact.** A joined record cannot transfer canonical authority from one domain to another.
-2. **Endpoint validity is not relation validity.** Each endpoint may be valid while the asserted relation is unsupported, ambiguous, stale, or false.
-3. **Source roles never collapse.** Observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, and public-safe roles remain distinguishable for every endpoint and derivative.
-4. **Promotion never upgrades source role.** Lifecycle movement cannot relabel modeled as observed, aggregate as per-place, or candidate as verified.
-5. **Sensitivity is monotonic across composition.** The output is at least as restrictive as the most restrictive input and may be stricter because of join-induced inference risk.
-6. **Rights compose independently.** Every source's terms, attribution, redistribution, export, and derivative restrictions remain applicable; permissive rights on one side do not erase restrictions on another.
-7. **Consent is explicit, scoped, current, and revocable.** Consent on one endpoint does not imply consent for the relation, audience, purpose, derivative, or downstream reuse.
-8. **Evidence supports endpoints and the relation.** Consequential joins require resolvable endpoint evidence plus support for the relation method or assertion.
-9. **Time is explicit.** Observation, validity, relationship, retrieval, review, release, and correction time must not be collapsed into one timestamp.
-10. **Space is explicit.** Geometry precision, support scale, aggregation unit, spatial predicate, coordinate reference, and generalization state remain visible.
-11. **Cardinality and uncertainty are explicit.** A many-to-many probabilistic relation cannot be presented as a single deterministic fact.
-12. **No hidden fetches.** Policy evaluates the explicit bundle and governed references; missing context never becomes an unlogged resolver call or model assumption.
-13. **No lifecycle bypass.** A policy result, validator pass, graph edge, schema pass, or join receipt cannot move a candidate directly to PUBLISHED.
-14. **Obligations are enforceable or the operation fails closed.** A caller that cannot redact, generalize, withhold, audit, review, invalidate, or limit export must not proceed.
-15. **Corrections propagate through dependency edges.** Endpoint withdrawal, rights change, consent revocation, sensitivity escalation, stale evidence, or relation correction invalidates affected derivatives, caches, indexes, and answers.
-16. **Public clients use governed interfaces only.** They do not read policy source, internal join candidates, source registries, proofs, receipts, or non-released graph stores directly.
-17. **AI is interpretive.** It may summarize released join evidence with qualifications; it may not create relation truth or repair missing support.
-18. **Denied joins remain auditable.** A refusal is recorded through safe reason codes and governed references rather than disappearing without trace.
-
-[Back to top](#top)
-
----
+1. **Domains retain authority.** A join never transfers endpoint ownership or
+   lets one domain assert another domain's truth.
+2. **Source roles remain separate.** Observed, regulatory, modeled, aggregate,
+   administrative, candidate, and synthetic roles do not merge or upgrade.
+3. **Support is independent.** Endpoint evidence and relationship evidence are
+   resolved separately; one side's support cannot stand in for the other.
+4. **Composition may become stricter.** The derivative inherits the most
+   restrictive applicable posture and may escalate further when the join
+   creates a new inference or re-identification risk.
+5. **Rights and consent do not transfer.** Permission for an input, purpose, or
+   audience does not silently authorize a new relationship or derivative.
+6. **Time, space, scale, and uncertainty travel with the claim.** Proximity is
+   not connectivity; overlap is not causation; an aggregate is not per-place
+   truth.
+7. **Obligations are mandatory.** A caller that cannot enforce a restriction,
+   attribution, generalization, review, correction, or rollback obligation must
+   fail closed.
+8. **Public use remains release-gated.** No candidate, validator result, policy
+   source file, policy outcome, workflow, commit, or pull request publishes a
+   derivative.
 
 ## What belongs here
 
-Good fits for `policy/joins/` include:
+Subject to accepted contracts, schemas, policy conventions, and evaluator
+binding, this lane may contain:
 
-- this parent README;
-- reviewed declarative rules for join-specific admissibility after placement and evaluator acceptance;
-- operation-specific composition rules for required policy families;
-- pair-specific child lanes that tighten the parent invariants;
-- join-posture registries or rule-source inputs only after a canonical machine home is accepted;
-- stable reason-code and obligation vocabularies paired with contracts, schemas, fixtures, tests, and consumers;
-- policies for source-role preservation, sensitivity escalation, rights/consent composition, review routing, public-safe transforms, and derivative invalidation;
-- policy references to accepted join profiles, validators, evidence, reviews, receipts, and release records;
-- synthetic native tests if the repository accepts a colocated policy-test convention.
+- declarative policy source whose primary responsibility is cross-domain join
+  admissibility;
+- generic rules that preserve endpoint authority, source role, evidence,
+  rights, consent, sensitivity, temporal/spatial support, review, and release
+  boundaries;
+- pair- or profile-specific child policy source that inherits the parent
+  contract without weakening it;
+- finite native outcomes, public-safe reason codes, and obligations with an
+  accepted normalization and consumer contract;
+- policy package, entrypoint, version, effective-time, supersession, and
+  correction metadata; and
+- narrowly paired native policy tests when an accepted convention establishes
+  their placement and execution.
 
-A file belongs here because its primary responsibility is **admissibility of a join use**, not because it mentions two domains.
-
-[Back to top](#top)
-
----
+A file belongs here because it evaluates **admissibility**, not merely because
+it mentions joins, relationships, crosswalks, graphs, domains, privacy, or
+release.
 
 ## What does not belong here
 
-| Do not put in `policy/joins/` | Correct responsibility |
+| Prohibited material or claim | Owning surface or required action |
 |---|---|
-| Join or relation semantic definitions | `contracts/joins/`, `contracts/crosswalks/`, or accepted contract lane |
-| Join/relation JSON Schemas, DTOs, enums, or field shapes | Accepted `schemas/contracts/v1/` family |
-| Domain object meaning or identity rules | Owning domain docs/contracts/schemas |
-| Join computation, resolvers, graph builders, ETL, or spatial engines | `packages/`, `pipelines/`, `apps/`, or `tools/` by responsibility |
-| Validator code and validation reports | `tools/validators/` and accepted report roots |
-| Source descriptors and registry instances | `data/registry/sources/` |
-| EvidenceBundles and proof packs | Evidence/proof roots |
-| TransformReceipts, AggregationReceipts, decision receipts, review records | Accepted receipt/review roots |
-| Joined RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data | Governed `data/` phase roots |
-| Graph edges, vector indexes, map tiles, screenshots, exports, search indexes | Governed projection/delivery roots |
-| Release manifests, correction notices, withdrawal records, rollback cards | `release/` |
-| Secrets, credentials, private keys, bearer tokens, restricted endpoint identifiers | Approved secure systems, never repository-facing policy docs |
-| Real sensitive join fixtures | Synthetic or safely generalized fixtures only |
-| A universal “joins are allowed” grant | Operation-, audience-, profile-, evidence-, and release-specific decisions only |
-| A second policy outcome contract | `contracts/policy/` and paired schemas |
-| AI-generated relationship assertions | Governed evidence intake and review, not policy source |
-
-[Back to top](#top)
-
----
+| Endpoint or relationship meaning | Participating domain contracts and [`contracts/joins/`](../../contracts/joins/README.md). |
+| JSON Schema, DTO, enum, or field shape | [`schemas/`](../../schemas/README.md). |
+| Join computation, SQL, geometry, matching, or candidate helper | [`tools/joins/`](../../tools/joins/README.md), packages, or pipelines by responsibility. |
+| Generic validator implementation | [`tools/validators/`](../../tools/validators/README.md). |
+| Source descriptors, rights records, or credentials | Governed registry, rights, identity, and secret-management systems. |
+| EvidenceBundles, proofs, citations, or claim truth | Evidence and proof roots. |
+| Evaluated decisions, reviews, receipts, manifests, corrections, withdrawals, or rollback cards | Their governed process, data, proof, or release object families. |
+| Lifecycle data or joined records | Applicable `data/` lifecycle lane. |
+| Reusable generic fixtures and tests | Root [`fixtures/`](../../fixtures/README.md) and [`tests/`](../../tests/README.md), except an accepted native-policy convention. |
+| API, UI, graph, map, search, export, vector, cache, or AI implementation | Governed application, package, runtime, or released-carrier surface. |
+| Real sensitive coordinates, living-person links, DNA/genomic content, private parcel associations, protected cultural records, or exploit-enabling infrastructure detail | Keep out of Git, policy reasons, fixtures, logs, documentation, and generated receipts; use synthetic or governed references. |
+| A candidate `ALLOW`, validator `PASS`, schema-valid object, workflow, review comment, merge, or deployment presented as policy or publication proof | Resolve the complete governed decision and release chain instead. |
 
 ## Explicit policy input profile
 
-A join-policy evaluation should receive an explicit, immutable `PolicyInputBundle` or accepted equivalent. The current schema is permissive and does not enforce the complete profile below.
+An operational evaluation must receive explicit, normalized, versioned context
+and must not silently fetch or infer missing facts.
 
-### Evaluation identity
+| Input family | Minimum governed context | Fail-closed trigger |
+|---|---|---|
+| Evaluation | Stable request, operation, purpose, audience, caller class, evaluation time, and policy identity | Anonymous, broad, unsupported, stale, or non-replayable evaluation. |
+| Endpoints | Stable refs, owning domains, object versions/digests, source roles, lifecycle states, and correction posture | Unresolved identity, wrong domain, role collapse, withdrawn object, or mutable ref. |
+| Relationship | Accepted semantic profile, predicate, direction, cardinality, schema/profile version, and candidate identity | Missing or ambiguous meaning, unsupported direction, unsafe cardinality, or unpinned shape. |
+| Evidence | Endpoint EvidenceRefs plus independent relationship support, resolution state, provenance, and freshness | Missing, unresolved, stale, contradictory, or one-sided support. |
+| Time and space | Valid and observation times, geometry/support refs, CRS/geography version, precision, scale, tolerance, and uncertainty | Incompatible time, scale, geography, precision, or hidden uncertainty. |
+| Rights and consent | Terms, derivative-use posture, purpose limitation, consent applicability, scope, expiry, dispute, and revocation state | Unknown, expired, inherited, contradicted, revoked, or out-of-scope permission. |
+| Sensitivity and harm | Endpoint classifications, join-induced inference risk, geoprivacy, living-person, cultural, infrastructure, and reconstruction context | Missing classification, downgrade, harmful precision, or unreviewed new sensitive fact. |
+| Governance | Validation refs, required reviews, release/correction/rollback refs, obligations, and consumer capabilities | Missing review, unaccepted policy, unsupported obligation, or absent rollback target. |
 
-- input bundle ID and version;
-- canonical content hash where practical;
-- evaluation request ID;
-- join candidate ID or immutable reference;
-- accepted join-profile ID, version, and digest;
-- evaluator, bundle, entrypoint, and rule digest;
-- evaluation time and timeout posture.
-
-### Requested operation and audience
-
-- operation such as `compute`, `retain`, `review`, `catalog`, `graph`, `render`, `query`, `answer`, `export`, `promote`, `release`, `correct`, `withdraw`, or `rollback`;
-- audience class such as internal, steward, restricted reviewer, partner, public, export consumer, map runtime, search runtime, or governed AI;
-- intended surface and purpose;
-- requested precision, fields, geometry, time window, and quantity;
-- requested lifecycle transition, if any.
-
-### Endpoint context
-
-For every endpoint:
-
-- endpoint label and position in the relation;
-- owning domain and object family;
-- immutable object reference and digest;
-- identity-resolution status;
-- source descriptor reference and source role;
-- evidence references and resolver status;
-- rights, access, citation, and redistribution posture;
-- sensitivity and public-safe transform state;
-- consent or living-person posture where applicable;
-- observation/validity/retrieval/release/correction times;
-- geometry reference, precision, support scale, and generalization state;
-- lifecycle, review, release, supersession, correction, and withdrawal state.
-
-### Relation assertion context
-
-- controlled predicate or relation type;
-- directionality and endpoint order;
-- cardinality;
-- assertion method: identifier, crosswalk, reviewed manual, temporal, spatial, derived, modeled, aggregate, or another accepted profile value;
-- relation evidence references;
-- temporal overlap and validity interval;
-- spatial predicate, tolerance/profile reference, and coordinate context;
-- uncertainty, confidence, alternatives, and contradiction state;
-- relation-specific caveats and prohibited interpretations;
-- pairwise and joint-coherence status for multi-way joins.
-
-### Dependency and governance context
-
-- required policy-family decisions or inputs;
-- review records and reviewer classes;
-- transform and aggregation receipt references;
-- correction, revocation, withdrawal, and rollback references;
-- downstream derivative, cache, tile, graph, search, export, embedding, and AI dependency references;
-- prior join decisions and supersession links;
-- public-safe explanation profile and sensitive-detail minimization rules.
-
-Missing, stale, ambiguous, contradicted, untrusted, or schema-incompatible context fails closed.
-
-[Back to top](#top)
-
----
+No accepted join-specific `PolicyInputBundle` profile is established by this
+lane. The table is a future authoring requirement, not a claim that current
+code consumes these fields.
 
 ## Five join-admissibility checks
 
-The inspected cross-lane architecture proposes five load-bearing checks. ADR-S-14 remains open, so this README records them as the current doctrine-backed target rather than claiming accepted executable policy.
+The draft cross-lane architecture proposes five controls. This README preserves
+them as design requirements without claiming acceptance or execution.
 
-| # | Check | Required policy posture | Blocking condition |
-|---|---|---|---|
-| 1 | **Source-role preservation** | Every endpoint role and derivative role remain explicit and non-collapsed. | Modeled becomes observed, aggregate becomes per-place, administrative becomes event evidence, candidate becomes public truth, or synthetic becomes reality. |
-| 2 | **Most-restrictive sensitivity** | Output posture is at least the strictest input and may escalate for composition risk. | Join downgrades, averages, or omits sensitivity, or treats aggregation as automatic permission. |
-| 3 | **EvidenceBundle composition** | Required endpoint and relation evidence resolve; support remains separable by endpoint and assertion. | One side's evidence is missing, flattened, stale, unresolved, contradicted, or substituted with generated text. |
-| 4 | **Receipt readiness** | Required transform/aggregation/review/decision references and reproducibility metadata are present before governed transition. | Join logic or derivative cannot be replayed, audited, corrected, or invalidated. |
-| 5 | **Authority preservation** | No domain, source, model, aggregate, or joined derivative acquires authority it did not hold before composition. | Join transfers identity, title, taxonomy, regulatory, legal, life-safety, cultural, or release authority. |
+| Check | Required result | Failure example |
+|---|---|---|
+| Source-role preservation | Every contributing role remains explicit on the derivative. | Modeled context is presented as observation. |
+| Most-restrictive tier | The result uses the strictest applicable input posture and escalates for join-induced risk. | Restricted detail becomes public because the other endpoint is public. |
+| EvidenceBundle composition | Endpoint and relationship support remain separately resolvable; support is referenced rather than flattened. | One endpoint's evidence silently substitutes for the relation. |
+| Receipt and process memory | Required transform, aggregation, policy, review, and release records are produced in accepted homes. | A derivative appears without reproducible process identity. |
+| Authority preservation | No domain, validator, tool, policy result, or consumer claims authority it does not own. | Agriculture asserts Fauna identity without Fauna authority. |
 
-All five must pass for an OPEN posture. Pair-specific policy may add stricter checks but cannot weaken these.
-
-### Additional relation mechanics
-
-The generic validator boundary also requires explicit checks for:
-
-- endpoint identity and referential integrity;
-- relation-profile validity;
-- direction and cardinality;
-- temporal coherence;
-- spatial coherence and scale compatibility;
-- uncertainty and contradiction;
-- lifecycle, review, release, correction, and rollback references;
-- public-surface reconstruction risk;
-- joint coherence for n-ary joins.
-
-A mechanically valid endpoint pair does not satisfy these relation-level requirements automatically.
-
-[Back to top](#top)
-
----
-
-## Endpoint validity is not relation validity
-
-A join policy must distinguish at least four questions:
-
-1. **Do the referenced endpoints exist and conform to their own contracts?**
-2. **Is the asserted relationship supported under the declared method and profile?**
-3. **Is that relationship admissible for the requested operation and audience?**
-4. **Is a specific derivative released and safe for the intended public surface?**
-
-Possible states include:
-
-| Endpoint state | Relation state | Policy posture | Safe conclusion |
-|---|---|---|---|
-| Both valid | Unsupported relation | `ABSTAIN` or `DENY` | Do not manufacture the relation. |
-| One unresolved | Relation cannot be evaluated | `ABSTAIN` or `ERROR` | Resolve or quarantine; no public use. |
-| Both valid | Supported low-risk relation | Potential `ANSWER` with obligations | Still requires operation, audience, lifecycle, and release checks. |
-| Both valid | Supported but sensitive relation | `ABSTAIN` for review or `DENY` for public | Relation truth does not imply exposure permission. |
-| Both valid | Relation contradicted | `DENY` or `ABSTAIN` | Preserve contradictions and alternatives. |
-| Both valid | Relation valid but stale | `ABSTAIN` | Re-evaluate freshness and dependencies. |
-| Both valid | Relation valid and released, but obligation cannot be enforced | `DENY` or `ERROR` | Caller must not proceed. |
-
-[Back to top](#top)
-
----
+All five compose conservatively: failing or lacking one required control blocks
+the operation. Operational policy must additionally evaluate relationship
+validity, time, space, uncertainty, rights, consent, caller capability, and
+release context rather than treating the five labels as a complete input
+schema.
 
 ## Sensitivity and composition risk
 
-### Most-restrictive baseline
+A join can create a protected fact even when each input is public. Policy must
+evaluate the produced relationship and every derivative surface, not merely the
+source rows.
 
-The join inherits at least the most restrictive applicable endpoint posture. It must never average sensitivity downward.
+| Composition risk | Required posture |
+|---|---|
+| Living-person, residence, parcel, family, or genomic narrowing | Deny ordinary public use unless a reviewed, consent-compatible, purpose-limited profile explicitly supports a safer derivative. |
+| Rare species, habitat, hydrology, roads, or terrain reconstruction | Withhold or generalize exact support; route material inference risk to geoprivacy and specialist review. |
+| Archaeological, burial, sacred, or cultural location inference | Restrict by default and require accountable cultural/specialist review. |
+| Critical infrastructure plus hazard, access, or topology detail | Deny exploit-enabling precision; separate public summary from operational detail. |
+| Assessor, tax, parcel, probate, or genealogy context | Preserve administrative/evidentiary caveats; never emit title, residence, heirship, or legal conclusions. |
+| Aggregate or modeled context joined to a point, person, parcel, or event | Preserve support scale and role; abstain or deny per-place overclaim. |
+| Pairwise-safe n-way composition | Re-evaluate the complete set; pairwise permission cannot authorize jointly unsafe reconstruction. |
 
-### Join-induced escalation
-
-A join may require a stricter posture when the composition creates new information, including:
-
-- a public habitat layer that narrows a restricted occurrence location;
-- a public parcel geometry joined to a living-person assertion;
-- public roads joined to archaeology clues that reveal a site;
-- public hazard summaries joined to precise infrastructure assets;
-- separate public records that re-identify an individual or family;
-- an aggregate value joined to a point or parcel that falsely creates per-place precision;
-- modeled and observed records combined in a way that hides role distinctions;
-- historical or administrative sources joined into an unsupported legal or title conclusion;
-- multiple low-risk pairwise relations that form a high-risk multi-way inference.
-
-### Sensitivity composition rule
-
-**PROPOSED:**
-
-```text
-effective_join_posture = max(
-  endpoint_postures,
-  relation_profile_floor,
-  operation_and_audience_floor,
-  join_induced_inference_risk,
-  unresolved_rights_or_consent_floor,
-  correction_or_revocation_floor
-)
-```
-
-The formula is semantic guidance, not an accepted executable enum or implementation.
-
-### Rights and consent remain independent
-
-- Rights permission on one endpoint does not grant derivative rights over another endpoint.
-- Public availability is not redistribution permission.
-- Consent for one purpose, audience, field, precision, or time window does not cover a joined derivative automatically.
-- Revocation, expiry, dispute, or representative-authority change invalidates dependent uses.
-- Unknown rights or consent do not become implicit permission.
-
-[Back to top](#top)
-
----
+Rights, consent, sensitivity, geoprivacy, and security are independent gates.
+Passing one does not satisfy another. Unknown or conflicting context must not be
+silently converted into OPEN.
 
 ## Join posture model
 
-The inspected architecture proposes three join postures. They describe **join governance posture**, not the canonical `PolicyDecision.outcome` enum.
+The architecture's three postures remain **PROPOSED** while ADR-S-14 is open.
 
-### OPEN
-
-Appropriate only when:
-
-- all required checks pass;
-- all required evidence resolves;
-- endpoint and relation rights/consent/sensitivity are public-safe for the operation;
-- no pair-specific rule requires review or denial;
-- no novel or joint-coherence risk remains;
-- required receipts and obligations can be satisfied;
-- later promotion and release gates remain available.
-
-OPEN means the join may proceed to the next governed stage for the evaluated operation. It does **not** mean published.
-
-### STEWARD-REVIEW
-
-Appropriate when:
-
-- a known pair policy requires review;
-- the join is novel or its profile is unaccepted;
-- T2/T3, consent-bearing, culturally sensitive, title-sensitive, rare-species, archaeology, infrastructure, or other specialist review applies;
-- source-role combinations or multi-way composition are not pre-approved;
-- public-safe transformation might exist but is not yet reviewed;
-- contradictions, uncertainty, or rights questions require accountable judgment.
-
-The candidate remains non-public. Runtime-facing policy normally maps unresolved required review to `ABSTAIN`; a public request may map to `DENY` while restricted review remains possible.
-
-### DENIED
-
-Appropriate when:
-
-- a pair rule explicitly denies the requested use;
-- a T4 or equivalent protected input cannot be made safe for the join context;
-- source-role collapse cannot be repaired;
-- a living-person × identifiable-location relation is requested publicly;
-- the join enables adversary mapping, re-identification, looting, targeting, title overclaim, or other prohibited inference;
-- required consent is revoked or absent with no lawful/accepted alternative;
-- required obligations cannot be enforced;
-- a denied join is repackaged under a different label.
-
-DENIED is operation- and audience-specific where possible, but some relation forms may be denied for all ordinary public uses.
-
-### New join default
-
-Until ADR-S-14 and pair-specific policy are accepted, a novel join should default to **STEWARD-REVIEW or fail-closed abstention**, not OPEN.
-
-[Back to top](#top)
-
----
-
-## `PolicyDecision` compatibility
-
-The current schema defines:
-
-```text
-outcome = ANSWER | ABSTAIN | DENY | ERROR
-policy_family = promotion | access | render | capability | consent | sensitivity
-```
-
-It does not define `joins`, `relation`, or `cross-domain` as a policy family.
-
-### Current compatible posture
-
-Until a reviewed migration changes the contract, join admissibility should be represented through the applicable existing families:
-
-| Join concern | Existing policy family candidate | Boundary |
+| Posture | Bounded meaning | Required handling |
 |---|---|---|
-| Sensitivity and composition risk | `sensitivity` | Can block or obligate generalization/withholding; does not prove relation truth. |
-| Consent applicability | `consent` | Applies where subjects, representatives, living-person data, DNA, or consent-bearing records participate. |
-| Who may compute, inspect, export, or administer a join | `access` or `capability` | Capability-specific and purpose-bound; access is not publication. |
-| Map, tile, popup, search, screenshot, or public projection | `render` | Enforces public-surface obligations and reconstruction limits. |
-| Lifecycle advancement | `promotion` | Decides whether a supported candidate may advance; does not repair join defects. |
+| `OPEN` | An accepted profile supports the exact operation and audience with complete inputs and enforceable obligations. | Continue only to downstream review, lifecycle, and release gates; never infer publication. |
+| `STEWARD-REVIEW` | Accountable judgment or specialist review is required before the operation can proceed. | Hold or abstain; preserve reasons and do not expose the candidate publicly. |
+| `DENIED` | The operation is prohibited or cannot be made safe under the declared profile. | Stop the operation; record only bounded, non-sensitive reasons in an accepted process lane. |
 
-A governed join coordinator may compose these decisions. The coordinator must not silently emit `policy_family=joins` while the schema rejects it.
+No pair in this directory is proven OPEN. Novel, unregistered, ambiguous, or
+unsupported profiles fail closed to review, abstention, denial, or error under
+the applicable accepted policy; documentation cannot choose that final mapping.
 
-### Deliberate migration option
+## PolicyDecision compatibility
 
-Adding a new family would require, at minimum:
+The current proposed `PolicyDecision` schema is closed. It permits:
 
-1. accepted semantic rationale and ADR/decision;
-2. updated `PolicyDecision` contract and schema version;
-3. valid and invalid fixtures;
-4. validator updates;
-5. policy runtime, bundle, selector, and entrypoint updates;
-6. consumer and obligation-interpreter migration;
-7. receipt/replay and audit updates;
-8. compatibility period and rollback plan;
-9. observed CI and integration evidence.
+- outcomes `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; and
+- families `promotion`, `access`, `render`, `capability`, `consent`, and
+  `sensitivity`.
 
-This README performs none of those changes.
+It does **not** permit `policy_family: joins`. Until a reviewed versioned change
+is adopted, join-specific policy must either compose applicable existing-family
+decisions through an accepted contract or remain an engine-native/internal
+result that is not mislabeled as `PolicyDecision`.
 
-[Back to top](#top)
+### Decision composition
 
----
+Conservative composition should preserve each required family result, reason,
+obligation, evaluator identity, input identity, and effective time. Decisions
+must not be averaged. An allow from one family cannot erase a denial, abstention,
+error, or unmet obligation from another.
 
-## Decision composition
+No accepted composer, native-to-outward mapping, or join decision emitter is
+established here.
 
-**PROPOSED compatibility algorithm:**
+### Normalized outcomes
 
-1. Identify every policy family required by the join profile, operation, audience, endpoint classes, and intended surface.
-2. Evaluate each required family against the same immutable input snapshot or explicitly linked snapshots.
-3. Preserve every decision ID, family, evaluator version, reasons, obligations, and evaluation time.
-4. Compose the caller posture using fail-closed precedence.
-5. Union compatible obligations without weakening any family.
-6. Treat obligation conflicts, stale decisions, or mismatched input hashes as `ERROR` or `DENY` according to the accepted contract.
-7. Record the composition through a governed receipt or decision-envelope mechanism once such a mechanism is accepted.
+| Current or proposed vocabulary | Boundary |
+|---|---|
+| Candidate assessment `ALLOW` | May emit a reviewable candidate only; it is not `PolicyDecision.ANSWER`. |
+| Candidate assessment `ABSTAIN`, `DENY`, `ERROR` | Bounded helper outcome; policy and runtime normalization remain separate. |
+| Proposed posture `OPEN`, `STEWARD-REVIEW`, `DENIED` | Architecture vocabulary awaiting ADR and policy acceptance. |
+| `PolicyDecision.ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Closed outward vocabulary for the six currently enumerated families. |
+| Release or publication state | Never inferred from any vocabulary above. |
 
-### Proposed precedence
+### Reason-code vocabulary
 
-```text
-required ERROR   -> ERROR
-else any DENY    -> DENY
-else any ABSTAIN -> ABSTAIN
-else all ANSWER  -> ANSWER with union of obligations
-```
+The v0.1 README proposed a broad reason vocabulary. It remains unregistered and
+non-authoritative. A future accepted profile should use stable, public-safe
+codes in these categories:
 
-This precedence applies only to **required** families. Optional informational decisions must not override required policy.
+| Category | Representative proposed codes |
+|---|---|
+| Input and profile | `PROFILE_UNKNOWN`, `OPERATION_UNSUPPORTED`, `REQUIRED_CONTEXT_MISSING` |
+| Endpoint and authority | `ENDPOINT_INVALID`, `DOMAIN_AUTHORITY_COLLAPSE`, `SOURCE_ROLE_COLLAPSE` |
+| Relationship and evidence | `RELATION_PROFILE_MISSING`, `RELATION_EVIDENCE_UNRESOLVED`, `RELATION_CONTRADICTED` |
+| Time, space, and uncertainty | `TEMPORAL_MISMATCH`, `SPATIAL_SUPPORT_MISMATCH`, `CARDINALITY_UNSAFE`, `UNCERTAINTY_UNSUPPORTED` |
+| Rights, consent, and sensitivity | `RIGHTS_UNRESOLVED`, `CONSENT_UNRESOLVED`, `JOIN_INDUCED_SENSITIVITY`, `GEOPRIVACY_RISK` |
+| Review and lifecycle | `REVIEW_REQUIRED`, `RELEASE_REFERENCE_MISSING`, `ROLLBACK_TARGET_MISSING`, `DECISION_STALE` |
+| System and caller | `OBLIGATION_UNSUPPORTED_BY_CALLER`, `EVALUATOR_UNAVAILABLE`, `POLICY_BUNDLE_UNACCEPTED` |
 
-### Obligation composition
+Reasons must not echo protected identities, coordinates, predicates, private
+review notes, credentials, hidden thresholds, or exploit-relevant details.
 
-- Obligations accumulate; permissive families cannot remove restrictive obligations.
-- `withhold_exact_location` cannot be canceled by `allow_render`.
-- `no_export` cannot be canceled by general access permission.
-- `require_steward_review` blocks public action until review is resolved.
-- `attach_source_role` and `attach_limitations` remain mandatory across API, UI, export, and AI surfaces.
-- A caller that cannot interpret an obligation must fail closed.
-- Conflicting obligations must surface as an error or escalation, not silent preference.
+### Obligation vocabulary
 
-### Freshness and binding
+Proposed obligations fall into four non-collapsible groups:
 
-Every composed decision should bind to:
+- preserve endpoint references, domains, source roles, relationship profile,
+  evidence, uncertainty, time, space, and attribution;
+- restrict exposure through withholding, generalization, aggregation, field
+  allowlists, export denial, delay, or public-safe explanation;
+- require accountable domain, privacy, rights, sensitivity, cultural,
+  security, release, and separation-of-duties review; and
+- register dependencies and propagate source, consent, rights, sensitivity,
+  policy, correction, withdrawal, cache, index, export, and AI invalidation.
 
-- the same join candidate or a declared compatible version;
-- the same endpoint and relation evidence snapshot;
-- the same requested operation and audience;
-- the same policy bundle/evaluator versions;
-- current rights, consent, sensitivity, review, release, and correction state.
-
-Reusing a decision outside that scope is prohibited.
-
-[Back to top](#top)
-
----
-
-## Normalized outcomes
-
-| Outcome | Meaning for a join request | Typical routing |
-|---|---|---|
-| `ANSWER` | All required policy families allow the exact operation and obligations can be enforced. | Proceed only to the next governed stage; not automatic release. |
-| `ABSTAIN` | Support, identity, relation profile, rights, consent, sensitivity, review, freshness, or evaluator context is unresolved. | Hold, review, resolve, or quarantine; do not manufacture a relation or public answer. |
-| `DENY` | Policy blocks the operation or audience. | Stop the requested use; preserve safe audit/correction references. |
-| `ERROR` | Invalid input, schema conflict, evaluator failure, stale/mismatched decision, obligation conflict, timeout, or process-integrity failure. | Stop and route to governed error/quarantine handling. |
-
-### Outcome does not equal lifecycle state
-
-A runtime outcome and an operational state remain distinct:
-
-- `ABSTAIN` may correspond to a review hold in PROCESSED or QUARANTINE.
-- `DENY` may prohibit public use while retaining a restricted internal candidate.
-- `ANSWER` may allow review or cataloging but not promotion or release.
-- `ERROR` may require retry, correction, quarantine, or withdrawal.
-
-[Back to top](#top)
-
----
-
-## Reason-code vocabulary
-
-The codes below are **PROPOSED**. They must not be treated as canonical until contracts, schemas, policy modules, fixtures, validators, and consumers agree.
-
-### Profile and identity
-
-- `JOIN_PROFILE_MISSING`
-- `JOIN_PROFILE_UNACCEPTED`
-- `JOIN_PROFILE_HASH_MISMATCH`
-- `ENDPOINT_REFERENCE_MISSING`
-- `ENDPOINT_IDENTITY_UNRESOLVED`
-- `ENDPOINT_OWNER_UNRESOLVED`
-- `ENDPOINT_DOMAIN_MISMATCH`
-- `RELATION_PREDICATE_UNSUPPORTED`
-- `RELATION_DIRECTION_INVALID`
-- `CARDINALITY_UNSUPPORTED`
-- `JOINT_COHERENCE_UNRESOLVED`
-
-### Source role and authority
-
-- `SOURCE_ROLE_MISSING`
-- `SOURCE_ROLE_COLLAPSE`
-- `SOURCE_ROLE_UPGRADE_ATTEMPT`
-- `AGGREGATE_TO_PLACE_COLLAPSE`
-- `MODELED_TO_OBSERVED_COLLAPSE`
-- `ADMINISTRATIVE_TO_EVENT_COLLAPSE`
-- `SYNTHETIC_TO_REALITY_COLLAPSE`
-- `AUTHORITY_TRANSFER_ATTEMPT`
-- `DOMAIN_OWNERSHIP_COLLAPSE`
-
-### Evidence and uncertainty
-
-- `ENDPOINT_EVIDENCE_UNRESOLVED`
-- `RELATION_EVIDENCE_UNRESOLVED`
-- `EVIDENCE_SNAPSHOT_MISMATCH`
-- `EVIDENCE_STALE`
-- `RELATION_CONTRADICTED`
-- `UNCERTAINTY_MISSING`
-- `ALTERNATIVE_RELATION_OMITTED`
-- `RECEIPT_REQUIREMENT_UNSATISFIED`
-
-### Rights, consent, and sensitivity
-
-- `RIGHTS_UNRESOLVED`
-- `DERIVATIVE_RIGHTS_DENIED`
-- `ATTRIBUTION_OBLIGATION_MISSING`
-- `CONSENT_REQUIRED`
-- `CONSENT_SCOPE_MISMATCH`
-- `CONSENT_EXPIRED`
-- `CONSENT_REVOKED`
-- `SENSITIVITY_POSTURE_MISSING`
-- `SENSITIVITY_DOWNGRADE_ATTEMPT`
-- `JOIN_INFERENCE_RISK_ESCALATION`
-- `REIDENTIFICATION_RISK`
-- `GEOPRIVACY_RISK`
-- `LIVING_PERSON_LOCATION_JOIN_DENIED`
-- `CRITICAL_ASSET_PRECISION_DENIED`
-- `CULTURAL_OR_ARCHAEOLOGY_EXPOSURE_DENIED`
-
-### Time, space, and use
-
-- `TEMPORAL_SCOPE_MISSING`
-- `TEMPORAL_SCOPE_INCOMPATIBLE`
-- `SPATIAL_PROFILE_MISSING`
-- `SPATIAL_SCOPE_INCOMPATIBLE`
-- `PRECISION_EXCEEDS_POLICY`
-- `SUPPORT_SCALE_COLLAPSE`
-- `AUDIENCE_UNRESOLVED`
-- `PURPOSE_UNRESOLVED`
-- `PUBLIC_SURFACE_UNSAFE`
-- `EXPORT_NOT_ALLOWED`
-- `INSTRUCTION_CLASS_OUTPUT_DENIED`
-
-### Governance, lifecycle, and runtime
-
-- `REQUIRED_POLICY_FAMILY_MISSING`
-- `JOIN_POLICY_FAMILY_UNRESOLVED`
-- `REVIEW_REQUIRED`
-- `REVIEW_STALE`
-- `RELEASE_REFERENCE_MISSING`
-- `ROLLBACK_TARGET_MISSING`
-- `CORRECTION_DEPENDENCY_UNRESOLVED`
-- `WITHDRAWN_ENDPOINT_DEPENDENCY`
-- `DECISION_INPUT_HASH_MISMATCH`
-- `DECISION_STALE`
-- `OBLIGATION_UNSUPPORTED_BY_CALLER`
-- `OBLIGATION_CONFLICT`
-- `EVALUATOR_UNAVAILABLE`
-- `EVALUATOR_TIMEOUT`
-- `POLICY_BUNDLE_UNACCEPTED`
-
-Public explanations should map these to bounded language without revealing protected locations, person identities, infrastructure details, sensitive predicates, or attack thresholds.
-
-[Back to top](#top)
-
----
-
-## Obligation vocabulary
-
-The obligations below are **PROPOSED** and require an accepted interpreter before callers rely on them.
-
-### Preserve meaning and support
-
-- `preserve_endpoint_references`
-- `preserve_endpoint_domains`
-- `preserve_source_roles`
-- `preserve_relation_profile`
-- `attach_endpoint_evidence_refs`
-- `attach_relation_evidence_refs`
-- `surface_uncertainty`
-- `surface_cardinality`
-- `surface_temporal_scope`
-- `surface_spatial_support`
-- `attach_limitations`
-- `attach_source_attribution`
-
-### Restrict exposure
-
-- `withhold_exact_location`
-- `generalize_geometry`
-- `aggregate_output`
-- `reduce_precision`
-- `delay_publication`
-- `suppress_sensitive_predicate`
-- `deny_public_render`
-- `deny_public_search`
-- `deny_public_graph_edge`
-- `deny_export`
-- `deny_embedding`
-- `deny_ai_answer`
-- `restricted_audience_only`
-- `no_cache`
-- `short_cache_ttl`
-
-### Require governance
-
-- `require_join_steward_review`
-- `require_each_domain_steward_review`
-- `require_privacy_review`
-- `require_rights_review`
-- `require_sensitivity_review`
-- `require_cultural_review`
-- `require_security_review`
-- `require_release_review`
-- `require_separation_of_duties`
-- `require_transform_receipt`
-- `require_aggregation_receipt`
-- `require_review_record`
-- `require_release_manifest`
-- `require_rollback_target`
-
-### Preserve correction and revocation
-
-- `register_dependency_edges`
-- `recompute_on_endpoint_change`
-- `recompute_on_policy_change`
-- `invalidate_graph_projection`
-- `invalidate_tiles_and_caches`
-- `invalidate_search_and_vector_indexes`
-- `invalidate_exports`
-- `invalidate_ai_citations`
-- `propagate_consent_revocation`
-- `propagate_rights_change`
-- `propagate_sensitivity_escalation`
-- `withdraw_public_derivative`
-- `preserve_supersession_lineage`
-
-An obligation is mandatory. If a caller cannot enforce it, the operation cannot proceed.
-
-[Back to top](#top)
-
----
+An obligation is mandatory. If a consumer cannot interpret and enforce every
+applicable obligation, the operation cannot proceed.
 
 ## Child join policy contract
 
-No executable child join-policy lane was established by the bounded search used for this revision. References to pair-specific policy homes exist in architecture and contract documentation, but path mention is not implementation evidence.
+Current direct child lanes are documentation and routing boundaries:
 
-A future child lane under `policy/joins/<pair-or-profile>/` must:
-
-1. identify the accepted pair/profile and owning domains;
-2. reference the semantic join contract and canonical schema profile;
-3. inherit every parent invariant without weakening it;
-4. declare endpoint source-role, rights, consent, sensitivity, evidence, time, space, and uncertainty requirements;
-5. define OPEN, STEWARD-REVIEW, and DENIED posture conditions;
-6. map its posture to existing `PolicyDecision` families or a reviewed migrated contract;
-7. define stable reason codes and obligations;
-8. define public-safe transformations and forbidden outputs;
-9. require synthetic valid, invalid, abstain, deny, error, correction, and rollback fixtures;
-10. identify validators, runtime consumers, receipt destinations, review owners, and release gates;
-11. preserve pair orientation and slug conventions;
-12. include deprecation, correction, supersession, and rollback behavior.
-
-### Pair-specific validator evidence
-
-| Validator lane | Confirmed documentation posture | Policy implication |
+| Child | Current posture | Parent requirement |
 |---|---|---|
-| Agriculture × Soil | Shared validator README preserves Soil ownership, MUKEY/COKEY/CHKEY identity, support type, source role, aggregation, evidence, release, and correction boundaries. | A future policy lane may tighten field/operator, private business, geometry-scope, and derivative-exposure rules; it must not redefine Soil or Agriculture meaning. |
-| Person × Parcel | Shared validator README applies fail-closed living-person, consent, privacy, title-sensitive, parcel-sensitive, DNA/genealogy, and public-surface controls. | A future policy lane must deny or tightly gate identifiable living-person/parcel relationships and cannot turn assessor/tax or parcel geometry into title truth. |
-| Generic cross-domain | Generic validator README preserves ownership, source role, sensitivity, evidence, time, space, uncertainty, lifecycle, correction, and public boundaries. | Every pair lane must inherit generic outcomes and may only become stricter. |
+| [`habitat-fauna/`](./habitat-fauna/README.md) | Draft, evaluator-unbound, sensitive-ecology and geoprivacy aware | Preserve Habitat and Fauna authority, endpoint versus relation support, join-induced sensitivity, and no-public-bypass rules. |
+| [`habitat-hydrology/`](./habitat-hydrology/README.md) | Draft pair parent with one documented riparian child | Preserve Habitat product roles, Hydrology source roles, topology and scale limits, and non-regulatory/non-life-safety boundaries. |
 
-### Example posture register
+A child under `policy/joins/<pair-or-profile>/` must:
 
-The draft cross-lane architecture records representative postures, including:
+1. identify its accepted pair/profile, orientation, purpose, and owning domains;
+2. reference the semantic contract and canonical machine profile;
+3. inherit every parent invariant without weakening or silently replacing it;
+4. declare complete endpoint, relationship, evidence, rights, consent,
+   sensitivity, time, space, uncertainty, review, release, and rollback inputs;
+5. define finite native outcomes, stable reasons, enforceable obligations, and
+   accepted normalization;
+6. name its package, version, entrypoint, bundle, evaluator, tests, consumers,
+   decision/receipt homes, supersession, and correction behavior;
+7. use synthetic, no-network positive and negative fixtures, including
+   abstain, deny, error, revocation, leakage, and rollback cases; and
+8. remain non-semantic, non-schema, non-evidence, non-release, and
+   non-publication authority.
 
-- aggregate Soil × Agriculture may be OPEN when scope and roles align, while farm/operator detail is DENIED for public release;
-- living-person × parcel is DENIED for public use, while bounded deceased historical context may be lower risk;
-- Hazards × Settlements summary may require steward review, while precise critical-asset exposure is DENIED;
-- Hydrology × Fauna generally requires steward review because joined geometry may reveal sensitive occurrence context;
-- Atmosphere × Hazards may be OPEN only when observed, modeled, regulatory, and aggregate roles remain explicit;
-- novel Frontier Matrix compositions default to steward review.
-
-These are doctrine-backed orientation examples, not proof of active pair rules.
-
-[Back to top](#top)
-
----
+No silent inheritance is allowed. A child may tighten a parent boundary but
+must not omit it, replace it with a filename, or infer acceptance from an
+adjacent contract, schema, validator, workflow, or pair README.
 
 ## Public surface controls
 
-A join's risk must be evaluated on every derivative surface.
+Joined risk must be evaluated on every derivative surface. Client-side hiding
+is not a safety boundary.
 
 | Surface | Required controls | Fail-closed condition |
 |---|---|---|
-| Catalog/triplet | Relation profile, endpoint refs, evidence, source roles, uncertainty, sensitivity, policy and review state | Unsupported relation or missing posture enters discovery as truth |
-| Graph | Edge predicate, direction, confidence, provenance, visibility, correction lineage | Sensitive or unsupported edge becomes traversable or authoritative |
-| Map/tile | Generalization floor, audience projection, source-role labels, release state, cache invalidation | Zoom, styling, combination, or cached tiles reconstruct protected detail |
-| API | Governed DTO, obligations enforced server-side, no internal-store access | Raw candidate, policy source, proof store, or restricted relation leaks |
-| Search | Visibility filter, safe snippets, predicate suppression, stale-index invalidation | Search reveals hidden relationship or precise location |
-| Export/download | Explicit export permission, rights/consent, field allowlist, quantity and precision limits | Bulk export enables reconstruction or prohibited redistribution |
-| Focus Mode/evidence drawer | Resolved evidence, source-role qualification, limitations, bounded explanation | Generated narrative overstates or omits caveats |
-| Screenshot/print | Render policy, watermark/labels where required, sensitive-overlay suppression | Visual composition reveals what API fields individually hide |
-| Embedding/vector retrieval | Public-safe corpus only, visibility metadata, deletion/revocation propagation | Vector search reconstructs withheld relationships |
-| AI answer | Cite-or-abstain, resolved released evidence, source-role qualification, no instruction/alert overreach | Model memory or raw join context substitutes for evidence or policy |
-| Cache/CDN | Decision-bound keying, short TTL where needed, revocation and withdrawal invalidation | Old allowed derivative survives a blocking change |
+| Catalog and graph | Declared predicate, endpoint refs, roles, evidence, uncertainty, visibility, correction lineage | Unsupported or sensitive relationship becomes discoverable truth. |
+| Map and tiles | Generalization floor, audience projection, source-role labels, release state, cache invalidation | Zoom, style, overlay, or cached tiles reconstruct protected detail. |
+| API and search | Governed DTO, server-side obligation enforcement, visibility filter, safe snippets, stale-index invalidation | Candidate or hidden relationship leaks through raw fields or search. |
+| Export and screenshot | Explicit permission, field allowlist, quantity/precision limits, surface-aware suppression | Bulk or visual composition defeats controls applied to individual records. |
+| Embeddings and retrieval | Public-safe corpus, visibility metadata, deletion and revocation propagation | Vector similarity reconstructs or preserves a withdrawn relationship. |
+| Focus Mode and AI | Cite-or-abstain, resolved released evidence, role qualification, bounded explanation | Generated language invents, strengthens, or retains a relationship. |
+| Cache and CDN | Decision-bound keys, bounded retention, correction and withdrawal invalidation | A previously allowed derivative survives a blocking change. |
 
-Client-side concealment is never sufficient. Sensitive data must be excluded, transformed, or denied before ordinary public delivery.
-
-[Back to top](#top)
-
----
-
-## Governed lifecycle and trust flow
+### Governed lifecycle and trust flow
 
 ```mermaid
 flowchart LR
-  A[Domain A candidate] --> VA[Domain A validation]
-  B[Domain B candidate] --> VB[Domain B validation]
-  VA --> J[Declared join candidate]
-  VB --> J
-  J --> C[Semantic join profile]
-  J --> E[Endpoint + relation evidence resolution]
-  J --> V[Generic + pair-specific join validation]
-  C --> P[Join policy composition]
+  A[Domain A endpoint] --> J[Declared relationship candidate]
+  B[Domain B endpoint] --> J
+  C[Semantic contract and schema] --> J
+  J --> V[Deterministic candidate assessment and validation]
+  A --> E[Endpoint and relationship evidence]
+  B --> E
+  V --> P[Proposed join-policy composition]
   E --> P
-  V --> P
-  P --> O{ANSWER / ABSTAIN / DENY / ERROR}
-  O -->|ANSWER + obligations| R[Review / promotion / release gates]
-  O -->|ABSTAIN| H[Hold or quarantine for resolution]
-  O -->|DENY| D[Record bounded denial]
-  O -->|ERROR| X[Stop and govern error]
-  R --> M[ReleaseManifest + rollback target]
-  M --> G[Governed public API / map / graph / search / AI]
-  H -. correction or new evidence .-> J
-  G -. revocation / correction / withdrawal .-> P
+  P --> O{Finite outcome}
+  O -->|allow or answer plus obligations| R[Accountable review and release gates]
+  O -->|abstain or review| H[Hold for resolution]
+  O -->|deny or error| X[Stop with bounded reason]
+  R --> U[Governed released carrier]
+  U -. correction or revocation .-> P
 ```
 
-Rules:
-
-- join evaluation does not replace endpoint-domain validation;
-- policy composition does not compute the join;
-- `ANSWER` does not bypass promotion or release;
-- review and release records live outside this directory;
-- public surfaces consume only released, obligation-compliant derivatives;
-- correction and withdrawal re-enter policy evaluation and invalidate downstream carriers.
-
-[Back to top](#top)
-
----
+The candidate assessment nodes are partly implemented in bounded fixture
+profiles. The policy composer, complete decision flow, and public enforcement
+shown here are convergence targets and remain unverified.
 
 ## Threat model
 
-| Threat | Failure | Required posture |
+| Threat | Failure | Required defense |
 |---|---|---|
-| Source-role laundering | Model, aggregate, administrative, candidate, or synthetic content is presented as observed truth | Preserve roles; deny collapse; surface qualifications |
-| Authority laundering | One domain's object or reviewer is treated as authority for another domain | Preserve domain ownership and specialist review |
-| Proximity-as-identity | Spatial closeness becomes identity, residence, ownership, occurrence, or causation | Require accepted spatial predicate and relation evidence |
-| Temporal collapse | Records from incompatible times become a current relationship | Require explicit intervals and overlap rules |
-| Scale collapse | County/tract/grid aggregate becomes parcel, point, person, or site truth | Preserve support scale; deny or aggregate |
-| Re-identification | Public records combine into living-person or protected identity linkage | Escalate sensitivity; deny or tightly restrict |
-| Geoprivacy inference | Habitat, roads, hydrology, or other context reveals a protected occurrence/site | Evaluate produced geometry and derivative surfaces |
-| Title/legal overclaim | Parcel, assessor, tax, genealogy, or instrument context becomes legal ownership truth | Preserve assertion/caveat posture; deny legal conclusion |
-| Critical-asset exposure | Joined infrastructure and hazard details enable adversary mapping | Deny precision; allow only reviewed summary where appropriate |
-| Cultural/archaeology exposure | Public context reveals sacred, burial, cultural, or archaeological locations | Specialist review; generalize, stage, or deny |
-| Consent scope expansion | Consent for one record or purpose is reused for a new joined derivative | Re-evaluate exact operation, audience, purpose, fields, time, and derivative |
-| Rights laundering | Open rights on one input hide restrictions on another | Apply all relevant rights and derivative terms |
-| Pairwise-safe / jointly-unsafe | Each pair passes but an n-way join creates a prohibited inference | Require joint-coherence and aggregate risk evaluation |
-| Policy-family omission | Join coordinator evaluates only one of several required families | Determine required family set from profile and operation; fail closed |
-| Stale decision replay | Old policy result is reused after source, consent, sensitivity, or release change | Bind decisions to hashes and invalidate dependencies |
-| Obligation stripping | API, UI, export, or AI drops required limitations or restrictions | Enforce obligations server-side and test consumers |
-| Cache persistence | Withdrawn join remains in tiles, graph, search, vector, export, or AI caches | Dependency-aware invalidation and rollback drill |
-| Denied-join renaming | Prohibited relation is called integration, enrichment, crosswalk, or context | Evaluate structure and effect, not label |
-| AI relation fabrication | Model invents a relation from plausible context | Require relation evidence; abstain without closure |
+| Authority laundering | One domain, tool, or model becomes authority for another endpoint | Stable domain refs, independent support, and domain review. |
+| Source-role collapse | Modeled, aggregate, regulatory, administrative, candidate, or synthetic context is presented as observation | Preserve every role and deny upgrade-by-join. |
+| Proximity inflation | Nearness or overlap becomes connectivity, causation, service, ownership, or membership | Explicit predicate, limitations, uncertainty, and relation evidence. |
+| Scale collapse | Aggregate or generalized support becomes point, parcel, person, or site truth | Preserve support scale; abstain, aggregate, generalize, or deny. |
+| Re-identification | Public inputs combine into a protected identity or location | Evaluate join-induced sensitivity and every derivative surface. |
+| Rights or consent laundering | Permission on one input is reused for another purpose or derivative | Compose all terms and exact purpose/audience consent; fail closed. |
+| Pairwise-safe n-way inference | Individually safe links produce a prohibited combined fact | Require whole-set coherence and reconstruction testing. |
+| Obligation stripping | API, UI, export, or AI drops required restrictions | Server-side enforcement and consumer contract tests. |
+| Stale decision replay | Old posture survives source, policy, consent, review, or release change | Bind inputs and versions; expire and invalidate dependencies. |
+| Cache persistence | Withdrawn relation remains in tiles, graph, search, vector, export, or AI | Dependency-aware correction, withdrawal, and rollback drills. |
+| Denied-join renaming | A prohibited join reappears as enrichment, context, integration, or crosswalk | Evaluate structure and effect rather than labels. |
+| AI fabrication | Plausible generated text creates or strengthens a relationship | Require resolved relationship support; cite or abstain. |
 
-[Back to top](#top)
+## Related contracts, schemas, tools, tests, and workflows
 
----
+| Surface | Current evidence | Boundary preserved here |
+|---|---|---|
+| [`contracts/joins/`](../../contracts/joins/README.md) | Draft semantic lane with people-settlements and two bounded assessment profiles | Contract meaning is not policy permission. |
+| [`cross_lane_join_assessment.md`](../../contracts/joins/cross_lane_join_assessment.md) | Proposed fixture-first, exact-key and synthetic spatial-temporal candidate profile | `ALLOW` emits a candidate report only. |
+| [`historical_network_proximity_assessment.md`](../../contracts/joins/historical_network_proximity_assessment.md) | Proposed inactive proximity profile | Distance and time overlap do not prove relationship, route use, causation, or authority. |
+| [`schemas/contracts/v1/joins/`](../../schemas/contracts/v1/joins/README.md) | Mixed concrete assessment schemas and guardrail lanes | Shape does not prove truth, policy, or release. |
+| [`schemas/contracts/v1/relations/`](../../schemas/contracts/v1/relations/README.md) | README-only relation guardrails with join overlap | Placement remains conflicted; no parallel schema authority is created. |
+| [`join_candidates.py`](../../tools/joins/join_candidates.py) | Parameterized in-memory SQLite and synthetic spatial-temporal helper | No network, file write, identity authority, policy decision, release, or publication. |
+| [`historical_network_proximity.py`](../../tools/joins/historical_network_proximity.py) | Deterministic synthetic proximity validator | No real coordinates, geometry execution, source resolution, relationship truth, or release. |
+| [`tests/joins/`](../../tests/joins/README.md) | 20 focused test functions over 39 cases | Tests prove bounded fixture behavior, not external source or public fitness. |
+| [`cross-lane-join-assessment.yml`](../../.github/workflows/cross-lane-join-assessment.yml) | Read-only, pinned-action workflow; installs declared dependencies and runs tests with `KFM_NO_NETWORK=1` | Does not execute this policy lane. |
+| [`historical-network-proximity-assessment.yml`](../../.github/workflows/historical-network-proximity-assessment.yml) | Read-only, pinned-action workflow; installs declared dependencies and runs tests with `KFM_NO_NETWORK=1` | Does not establish a historical relation or policy permission. |
+| [`tools/validators/joins/`](../../tools/validators/joins/README.md) | README index with Agriculture–Soil and Person–Parcel documentation children | Direct executable registration remains absent. |
+| [`tools/validators/cross-domain-joins/`](../../tools/validators/cross-domain-joins/README.md) | Generic validator design README and marker only | Design guidance is not an implemented generic validator. |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Proposed semantic contract with closed paired schema | No `joins` family and no accepted join normalization. |
 
 ## Validation and acceptance
 
 ### Current validation posture
 
-- Generic and pair-specific validator READMEs exist.
-- The generic direct validator lane reported no established executable, dedicated tests, fixtures, or workflow in its bounded inspection.
-- Join and relation schema families overlap and remain placement-conflicted.
-- The current `PolicyDecision` shape is concrete but has no join family.
-- The policy root remains evaluator-unbound and bundle-unaccepted.
+The local lane contains documentation only. The repository does have executable
+candidate-assessment evidence, but it remains separate from policy execution.
 
-Therefore, this README cannot claim active join-policy enforcement.
+Current focused commands are:
 
-### Minimum synthetic fixture matrix
+```bash
+# Generic exact-key and synthetic spatial-temporal candidate profile.
+python tools/joins/join_candidates.py --fixtures
+python -m pytest tests/joins/test_join_candidates.py \
+  -q --strict-config --strict-markers
 
-| Fixture | Expected posture |
-|---|---|
-| Public aggregate × public aggregate at compatible support scale, all evidence resolved | Candidate OPEN / normalized `ANSWER` with attribution and limitations |
-| Modeled × observed with roles preserved and clear uncertainty | Pair-policy dependent; often review; never relabel output as observed |
-| Modeled labeled as observed | `DENY` |
-| Aggregate joined to individual parcel/person | `DENY` or `ABSTAIN` depending operation; public use denied |
-| Living-person × identifiable parcel | `DENY` for public use |
-| Deceased historical person × settlement with evidence and low sensitivity | Candidate OPEN or review per accepted profile |
-| Restricted species occurrence × public habitat | `DENY` or steward review with public-safe derivative only |
-| Public habitat that reconstructs restricted occurrence | `DENY` for unsafe surface |
-| Critical infrastructure × precise hazard | `DENY` for adversary-mapping use |
-| Public hazard summary × generalized settlement | Steward review or OPEN only under accepted profile |
-| Endpoint evidence resolved but relation evidence missing | `ABSTAIN` |
-| Relation contradicted by another source | `ABSTAIN` or `DENY`; contradiction remains visible |
-| Rights unknown on one endpoint | `ABSTAIN` or `DENY` |
-| Consent revoked after prior join release | New use `DENY`; trigger invalidation/withdrawal obligations |
-| Pairwise-safe three-way join producing re-identification | `DENY` or steward review after joint-coherence check |
-| Required review missing | `ABSTAIN`; public request may be `DENY` |
-| Evaluator unavailable or bundle hash mismatch | `ERROR` |
-| Caller cannot enforce no-export/generalization obligation | `DENY` or `ERROR` |
-| Endpoint withdrawn after release | Re-evaluation, derivative withdrawal, cache invalidation |
+# Historical place/route proximity profile.
+python tools/joins/historical_network_proximity.py --fixtures
+python tests/joins/test_historical_network_proximity.py --verbose
 
-Fixtures must be synthetic, no-network, non-secret, and free of real sensitive locations or living-person linkages.
+# This README's repository-native documentation checks.
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . --profile required --format text policy/joins/README.md
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . --format text policy/joins/README.md
+```
 
-### Required test families
-
-1. Contract/schema pairing and canonical path tests.
-2. Valid/invalid join-shape tests.
-3. Endpoint ownership and referential-integrity tests.
-4. Source-role anti-collapse tests.
-5. Evidence endpoint-plus-relation closure tests.
-6. Rights, consent, sensitivity, and geoprivacy composition tests.
-7. Temporal, spatial, cardinality, uncertainty, and contradiction tests.
-8. OPEN / STEWARD-REVIEW / DENIED posture tests.
-9. `PolicyDecision` family-compatibility and composition tests.
-10. Obligation union, conflict, and unsupported-caller tests.
-11. Pair-specific Agriculture–Soil and Person–Parcel negative-path tests.
-12. Multi-way joint-coherence tests.
-13. Catalog, graph, map, API, search, export, screenshot, embedding, and AI leakage tests.
-14. Correction, revocation, withdrawal, cache invalidation, and rollback tests.
-15. No-network, read-only CI and deterministic replay tests.
+Passing these checks can prove deterministic fixture polarity, schema and
+identity coherence for the bounded assessment profiles, no-network/no-write
+guards tested by those suites, and README metadata/link integrity. It cannot
+prove endpoint truth, real geometry, relationship truth, rights, consent,
+policy acceptance, evaluator operation, reviewer authority, release, rollback
+execution, public safety, or production enforcement.
 
 ### Activation gates
 
-Before executable join policy is treated as active, require:
+Before this lane or a child is described as active, require:
 
-- accepted standing for `policy/joins/` and closure or replacement of ADR-S-14;
-- accepted join/relation contract and schema placement rules;
-- accepted `PolicyInputBundle` profile for joins;
-- deliberate decision on composed existing families versus a versioned join family;
-- accepted evaluator, immutable bundle, selector, and entrypoint;
-- pair-policy registry and one authoritative child home per join profile;
-- native valid/invalid/abstain/deny/error fixtures and tests;
-- generic and pair-specific validator integration;
-- obligation interpreter in every governed consumer;
-- decision receipt/replay, safe audit, and dependency graph;
-- review ownership and separation of duties;
-- release dry run and public-surface leakage tests;
-- correction, revocation, withdrawal, cache invalidation, and rollback drill;
-- observed required-check success and branch-protection evidence.
+- accepted lane standing and closure or replacement of ADR-S-14;
+- accepted contract and schema placement with migration rules for overlaps;
+- accepted policy input and native/outward outcome contracts;
+- stable package, version, entrypoint, bundle, selector, evaluator, and digest
+  binding;
+- native positive, review, abstain, deny, error, sensitive, correction, and
+  rollback tests;
+- generic and pair-specific validator registration without duplicate logic;
+- governed consumers that reject unknown reasons and obligations;
+- decision and receipt emission, replay, expiry, supersession, and safe audit;
+- accountable owners, affected-domain review, and separation of duties;
+- release dry run, public-surface leakage tests, and correction/rollback drill;
+  and
+- observed required-check enforcement at the exact accepted head.
 
-[Back to top](#top)
+## Contributor contract
 
----
+Before adding or changing join-policy source or a child lane:
+
+1. pin the current base, target bytes, local tree, governing decisions, and
+   overlapping work;
+2. identify the exact operation, pair/profile, orientation, owning domains,
+   semantic contract, schema, policy input, evaluator, consumer, and outcome
+   vocabulary;
+3. keep semantic, schema, evidence, lifecycle, decision, receipt, review,
+   release, and publication artifacts in their owning roots;
+4. preserve source roles and independent endpoint/relationship support;
+5. model rights, consent, sensitivity, geoprivacy, time, space, scale,
+   uncertainty, contradiction, correction, and rollback explicitly;
+6. use synthetic, deterministic, no-network fixtures with representative
+   allow/review/abstain/deny/error and unsafe-composition cases;
+7. provide native policy tests plus consumer/obligation and leakage tests;
+8. document package, version, entrypoint, bundle, evaluator, normalization,
+   reasons, obligations, effective time, supersession, and migration;
+9. inspect triggered automation for secrets, elevated permissions, external
+   effects, deployment, release, promotion, or publication; and
+10. never treat a green check, approval comment, merge, deployment, or file
+    presence as relationship truth or public authorization.
+
+README-only clarification may update this file and its generated authoring
+receipt. Behavioral changes require the smallest dependency-closed slice across
+policy source, native tests, fixtures, contracts/schemas when their meaning or
+shape changes, evaluator wiring, consumers, workflows, and documentation.
 
 ## Review burden
 
 | Change class | Minimum review posture |
 |---|---|
-| README-only boundary clarification | Policy-aware maintainer + docs review |
-| Generic join rule | Join policy + cross-domain architecture + validator reviewer |
-| Pair-specific rule | Both/all affected domain stewards + join policy + validator reviewer |
-| Source-role or authority rule | Source steward + affected domains + policy reviewer |
-| Contract/schema placement or shape | Contract + schema + join + domain + migration reviewers |
-| Rights or derivative-use rule | Rights reviewer + affected source/domain owners |
-| Living-person, consent, DNA, genealogy, parcel/title | Privacy/consent + People/DNA/Land + policy + release review |
-| Rare species, habitat, archaeology, cultural, or sensitive location | Relevant specialist + sensitivity/geoprivacy + policy + release review |
-| Critical infrastructure or life-safety context | Security/infrastructure/hazards + policy + release review |
-| Outcome normalization or decision-family change | Contracts + schemas + policy runtime + consumers + migration review |
-| Bundle, selector, signing, or activation | Policy runtime + supply-chain/security + validation + release review |
-| Public map/API/search/export/AI obligation | Application owner + policy + privacy/security + release review |
-| Correction, revocation, withdrawal, rollback | Policy + evidence/proof + release + operations, with separation of duties |
+| README-only boundary clarification | Policy-aware maintainer plus docs review. |
+| Generic join rule or native test | Join-policy, cross-domain architecture, and validation review. |
+| Pair-specific rule | Every affected domain steward plus join-policy and validation review. |
+| Contract/schema placement or shape | Contract, schema, domain, policy, migration, and compatibility review. |
+| Source-role or authority rule | Source steward, affected domains, policy, and architecture review. |
+| Rights, consent, living-person, DNA, genealogy, parcel, or title context | Rights/privacy/consent, People/DNA/Land, policy, security, and release review. |
+| Rare species, habitat, archaeology, cultural, or sensitive location | Relevant specialist, sensitivity/geoprivacy, policy, and release review. |
+| Critical infrastructure or life-safety context | Security/infrastructure/hazards, policy, and release review. |
+| Outcome, family, reason, or obligation change | Contracts, schemas, policy runtime, every governed consumer, and migration review. |
+| Bundle, selector, evaluator, signing, or activation | Policy runtime, supply chain/security, validation, operations, and release review. |
+| Public-surface or correction/rollback behavior | Application owner, policy, privacy/security, evidence/proof, release, and operations review. |
 
-A reviewer of endpoint A should not automatically approve endpoint B's domain meaning or the relation assertion. Material public releases should separate rule authoring, validation, domain review, and release approval as maturity permits.
-
-[Back to top](#top)
-
----
+A reviewer for one endpoint does not automatically approve the other endpoint,
+the relationship, policy composition, or release. Material public effects
+should separate rule authoring, validation, domain judgment, and release
+approval as accepted controls permit.
 
 ## Correction, revocation, and rollback
 
-### Dependency registration
+### Documentation correction
 
-Every admitted joined derivative should identify:
+If a repository fact in this README becomes wrong, correct the claim, evidence
+pin, related links, direct-child map, no-loss ledger, and generated receipt in
+one reviewable change. Do not rewrite historical receipts or imply that a docs
+correction changes prior runtime state.
 
-- endpoint object and source references;
-- endpoint and relation EvidenceBundle references;
-- join profile and schema version;
-- policy decisions and evaluator/bundle hashes;
-- transform/aggregation/review/release records;
-- downstream catalog, graph, map, tile, search, export, vector, screenshot, cache, and AI references;
-- correction, withdrawal, supersession, and rollback targets.
+### Future policy correction and supersession
 
-### Re-evaluation triggers
+An accepted join-policy change should preserve the prior source, version,
+effective interval, evaluator and bundle identity, affected profiles and
+consumers, superseding rule, migration posture, and reason for change. A
+blocking endpoint, evidence, rights, consent, sensitivity, review, policy, or
+release change should stop new uses, stale prior decisions, re-evaluate
+dependents, and propagate restriction or withdrawal through graph, map, tile,
+search, export, vector, cache, screenshot, and AI carriers.
 
-- endpoint correction, withdrawal, supersession, or deletion;
-- source descriptor role, rights, access, cadence, or sensitivity change;
-- consent expiry, suspension, dispute, or revocation;
-- new evidence or contradiction;
-- relation-profile or schema change;
-- policy bundle or evaluator change;
-- review expiry or reversal;
-- release correction or withdrawal;
-- discovery of reconstruction, re-identification, or obligation failure.
+Prior decisions and receipts remain audit history. Correction must not silently
+rewrite them to appear current.
 
-### Required response
+### Repository rollback
 
-1. Stop new affected uses.
-2. Mark prior decisions stale or superseded.
-3. Re-evaluate the join against current inputs.
-4. Withdraw or restrict affected public derivatives when required.
-5. Invalidate caches, graph/search/vector indexes, exports, screenshots where controllable, and AI retrieval/citation references.
-6. Preserve prior receipts and decisions for audit; do not silently rewrite history.
-7. Emit correction, supersession, withdrawal, and rollback records in their accepted homes.
-8. Verify public surfaces no longer expose the blocked relation.
+Before merge, abandon or close the draft branch/PR rather than rewriting shared
+history. After merge, revert the exact modernization commit or use a reviewed
+forward fix. Reverting this README restores the substantive v0.1 boundary at
+blob `2d2736cb33bf9ede95e00cffb2fd45914106aea2`; it does **not** restore an empty
+file and cannot undo any future policy, decision, release, or public effect.
 
-### Documentation rollback
-
-Reverting this README restores the prior empty tracked file. That rollback changes documentation only; it cannot undo any future executable rule, contract, schema, data, receipt, release, or public artifact. Operational rollback must follow the dependency and release procedures above.
-
-[Back to top](#top)
-
----
+Operational rollback must follow the dependency, correction, withdrawal, and
+release procedures for the affected artifacts; a Git revert alone may be
+insufficient after public reliance.
 
 ## Open verification register
 
-| ID | Question | Status | Closure evidence |
+| ID | Question | Current state | Closure evidence |
 |---|---|---|---|
-| `JOIN-POL-001` | Is `policy/joins/` an accepted canonical policy lane, a routing index, or a transitional path? | **NEEDS VERIFICATION** | accepted ADR or policy-root decision |
-| `JOIN-POL-002` | Will ADR-S-14 adopt OPEN / STEWARD-REVIEW / DENIED or another posture model? | **NEEDS VERIFICATION** | accepted ADR and migration notes |
-| `JOIN-POL-003` | Is join policy represented by composed existing families or a new versioned family? | **UNKNOWN** | contract/schema/runtime decision |
-| `JOIN-POL-004` | Which join/relation semantic contract family is canonical? | **NEEDS VERIFICATION** | contract registry and migration decision |
-| `JOIN-POL-005` | Which schema family is canonical: `joins/`, `relations/`, domain lane, or profile-specific placement? | **CONFLICTED** | ADR/schema migration and compatibility tests |
-| `JOIN-POL-006` | Which accepted join profile fields are required? | **UNKNOWN** | contract, schema, fixtures, validator |
-| `JOIN-POL-007` | Which source-role vocabulary and transition rules are canonical? | **NEEDS VERIFICATION** | accepted source contract/schema/ADR |
-| `JOIN-POL-008` | Which sensitivity vocabulary and composition algorithm are canonical? | **NEEDS VERIFICATION** | accepted rubric, policy, fixtures |
-| `JOIN-POL-009` | Which rights and derivative-rights composition rules are accepted? | **UNKNOWN** | rights contract/policy and tests |
-| `JOIN-POL-010` | Which consent applicability and revocation rules govern joined derivatives? | **UNKNOWN** | consent profile, policy, synthetic tests |
-| `JOIN-POL-011` | Which endpoint and relation EvidenceBundle requirements are canonical? | **NEEDS VERIFICATION** | evidence contract and join fixtures |
-| `JOIN-POL-012` | Which transform, aggregation, decision, and review receipts are required? | **NEEDS VERIFICATION** | accepted receipt contracts/schemas |
-| `JOIN-POL-013` | Which generic reason codes and obligations are canonical? | **PROPOSED** | contract/schema/consumer review |
-| `JOIN-POL-014` | Which pair-specific join policy lanes currently exist and are authoritative? | **UNKNOWN** | recursive inventory and ownership review |
-| `JOIN-POL-015` | Which pair slug and orientation convention is accepted? | **UNKNOWN** | naming ADR and migration tests |
-| `JOIN-POL-016` | Which evaluator, bundle, selector, and entrypoint are accepted? | **UNKNOWN** | pinned runtime and observed native tests |
-| `JOIN-POL-017` | Which join validators execute and which are required checks? | **UNKNOWN** | executable inventory, workflow runs, ruleset evidence |
-| `JOIN-POL-018` | How are pair-specific validators registered with the generic validator? | **UNKNOWN** | registry/config plus tests |
-| `JOIN-POL-019` | How are n-ary joint-coherence checks implemented beyond pairwise checks? | **UNKNOWN** | algorithm, fixtures, performance tests |
-| `JOIN-POL-020` | Which join posture is the default for novel profiles? | **NEEDS VERIFICATION** | accepted ADR and policy tests |
-| `JOIN-POL-021` | Which governed service composes policy-family decisions? | **UNKNOWN** | implementation and contract tests |
-| `JOIN-POL-022` | Which audit/receipt sink records denied and abstained joins safely? | **UNKNOWN** | threat-reviewed contract and tests |
-| `JOIN-POL-023` | Which dependency graph supports correction and revocation cascades? | **UNKNOWN** | implementation and drill evidence |
-| `JOIN-POL-024` | Which graph, map, search, export, vector, screenshot, and AI surfaces enforce obligations? | **UNKNOWN** | consumer inventory and leakage tests |
-| `JOIN-POL-025` | How are tile, graph, search, vector, export, and AI caches invalidated? | **UNKNOWN** | operational contract and drill |
-| `JOIN-POL-026` | Which sensitive join classes are always denied for ordinary public use? | **NEEDS VERIFICATION** | specialist-reviewed pair policies |
-| `JOIN-POL-027` | Which joins can move from steward review to OPEN, and on what evidence? | **UNKNOWN** | pattern-history and approval contract |
-| `JOIN-POL-028` | How are jurisdiction-specific rules composed without harmonization collapse? | **UNKNOWN** | jurisdiction policy profile and tests |
-| `JOIN-POL-029` | What receipt fan-out and resolver budgets apply to large joins? | **UNKNOWN** | resource-bound contract and benchmarks |
-| `JOIN-POL-030` | Who owns join policy, architecture, schemas, validation, domains, privacy/security, and release approval? | **NEEDS VERIFICATION** | accepted stewardship and separation-of-duties record |
-| `JOIN-POL-031` | Has an end-to-end admit/review/deny/release/correct/rollback join drill succeeded? | **UNKNOWN** | signed drill report and verified state |
-| `JOIN-POL-032` | Are fixtures, logs, reasons, and receipts free of protected relationship details? | **NEEDS VERIFICATION** | secret/sensitivity scans and log tests |
-| `JOIN-POL-033` | Are denied joins prevented from being reintroduced under crosswalk, enrichment, integration, or context labels? | **UNKNOWN** | structural policy tests and runtime guards |
-| `JOIN-POL-034` | Are endpoint validity, relation validity, policy admissibility, and release approval distinct in every contract and consumer? | **UNKNOWN** | contract tests and architecture guards |
+| `JOIN-POL-001` | Is this lane canonical, routing-only, or transitional? | **NEEDS VERIFICATION** | Accepted ADR or policy-root decision closing ADR-S-14. |
+| `JOIN-POL-002` | Which three-posture model and default for novel profiles is accepted? | **NEEDS VERIFICATION** | Accepted ADR, policy source, fixtures, and migration notes. |
+| `JOIN-POL-003` | Are join decisions composed from existing families or represented by a versioned new family? | **CONFLICTED / UNKNOWN** | Contract, schema, evaluator, and consumer decision. |
+| `JOIN-POL-004` | Which relationship contract and schema placement is canonical? | **CONFLICTED** | Registry/ADR plus compatibility and migration tests. |
+| `JOIN-POL-005` | Which join input profile, reason codes, and obligations are accepted? | **PROPOSED / NEEDS VERIFICATION** | Accepted contracts, schemas, fixtures, and interpreters. |
+| `JOIN-POL-006` | Which pair orientation, slug, registry, and child-home rules apply? | **UNKNOWN** | Naming/registry decision and duplicate-authority checks. |
+| `JOIN-POL-007` | Who owns generic policy, each pair, privacy/security review, and release approval? | **NEEDS VERIFICATION** | Accepted stewardship and separation-of-duties records. |
+| `JOIN-POL-008` | Which bundle, selector, evaluator, entrypoint, and normalization are accepted? | **UNKNOWN** | Pinned implementation and native/outward contract tests. |
+| `JOIN-POL-009` | How do candidate tools and generic/pair validators register without becoming policy? | **UNKNOWN** | Registry/configuration plus integration and negative tests. |
+| `JOIN-POL-010` | How are n-way coherence and reconstruction risk evaluated beyond pairwise checks? | **UNKNOWN** | Algorithm, synthetic fixtures, limits, and performance tests. |
+| `JOIN-POL-011` | Which rights, derivative-use, consent, sensitivity, and geoprivacy profiles are canonical? | **NEEDS VERIFICATION** | Accepted profiles, specialist review, and revocation tests. |
+| `JOIN-POL-012` | Which endpoint, relationship, transform, aggregation, decision, review, and release records are mandatory? | **NEEDS VERIFICATION** | Accepted object-family contracts and closure tests. |
+| `JOIN-POL-013` | Which governed service enforces obligations on every derivative surface? | **UNKNOWN** | Consumer inventory, conformance, and leakage tests. |
+| `JOIN-POL-014` | Which dependency graph propagates correction, revocation, withdrawal, and cache invalidation? | **UNKNOWN** | Implementation plus successful rollback drill. |
+| `JOIN-POL-015` | Which workflows are required checks and what independent review is enforced? | **UNKNOWN** | Current ruleset and exact-head hosted evidence. |
+| `JOIN-POL-016` | Has an end-to-end admit/review/deny/release/correct/rollback exercise succeeded? | **UNKNOWN** | Signed drill report with verified state. |
+| `JOIN-POL-017` | Are fixtures, logs, reasons, decisions, and receipts free of protected relationship detail? | **NEEDS VERIFICATION** | Secret, privacy, sensitivity, and harmful-precision tests. |
+| `JOIN-POL-018` | Are denied relationships blocked when renamed as context, enrichment, integration, or crosswalk? | **UNKNOWN** | Structural policy and consumer tests. |
 
-[Back to top](#top)
+## Evidence review and no-loss ledger
 
----
+This modernization reviewed the complete v0.1 target and its current direct
+dependencies. Material elements received these dispositions:
+
+| Baseline element | Disposition | Result in v0.2 |
+|---|---|---|
+| Path, `doc_id`, created date, and policy-root identity | **KEEP** | Same path, stable ID, lineage, and parent authority. |
+| Purpose, scope, exclusions, and non-publication boundary | **CLARIFY** | Shorter responsibility-first language with explicit current non-effects. |
+| July “empty target” and README-only ecosystem claims | **REPAIR** | Replaced with current blob/tree evidence, substantive children, two implemented assessment profiles, tests, and workflows. |
+| Five architectural checks and three postures | **KEEP / SURFACE_CONFLICT** | Preserved as proposed while ADR-S-14 remains open. |
+| Endpoint validity versus relationship validity | **KEEP** | Preserved as a distinct compatibility anchor and layered authority rule. |
+| Most-restrictive and join-induced sensitivity | **KEEP / ENRICH** | Preserved with current composition-risk and derivative-surface guidance. |
+| PolicyDecision incompatibility | **KEEP / CLARIFY** | Reverified against the closed family enum and separated from candidate `ALLOW`. |
+| Long reason-code and obligation lists | **CONSOLIDATE** | Preserved by category with representative proposed tokens and interpreter requirements. |
+| Child-lane contract and pair examples | **REPAIR / ENRICH** | Bound to the two current direct children and no-silent-inheritance rule. |
+| Public surfaces, lifecycle flow, and threat model | **CONSOLIDATE** | Preserved in compact tables and one evidence-labeled Mermaid flow. |
+| Validation, review, correction, revocation, and rollback | **REPAIR / ENRICH** | Added verified current commands, proof limits, contributor gates, and correct rollback target. |
+| Thirty-four-item open register | **CONSOLIDATE** | Reduced to 18 decision-oriented items without converting unknowns into facts. |
+| External badge wall | **REMOVE_WITH_EVIDENCE** | Removed as decorative/external dependency; status remains in metadata and prose. |
+| Stable heading anchors | **KEEP** | Material v0.1 headings remain headings or explicit compatibility anchors. |
+
+Other than the separately validated generated authoring receipt, no contract,
+schema, rule, fixture, validator, helper, test, workflow, registry, bundle,
+evaluator, consumer, operational decision or receipt, review, release,
+deployment, rollback execution, publication, or public behavior changes in
+this slice.
 
 ## Last reviewed
 
-**2026-07-24 — initial repository-grounded completion of the previously empty parent README.**
+**2026-08-13 — repository-grounded BOUNDARY_COMPACT modernization at
+`main@ad31275429d715ad92002f8f2e160299193c9f50`.**
 
-This review confirms the documented repository surfaces, current schema incompatibility with `policy_family=joins`, and the open architecture/placement questions described above. It does not accept ADR-S-14, activate join rules, prove a relation, approve a pair lane, create a graph edge, authorize a public surface, approve release, or create publication state.
-
----
+This review confirms the exact local tree, current candidate-assessment
+implementation and its limits, README-only validator routing lanes, closed
+`PolicyDecision` family enum, open ADR-S-14 posture, and unresolved operational
+policy flow. It does not accept the lane or a pair, activate a policy, prove a
+relationship, authenticate support or review, authorize release, or create
+publication state.
 
 ## Maintainer checklist
 
-Before adding executable join policy or child lanes:
+Before adding executable policy or another child:
 
-- [ ] resolve `policy/joins/` standing and ADR-S-14;
-- [ ] settle join/relation/domain contract and schema placement;
-- [ ] identify one authoritative pair/profile home and slug convention;
-- [ ] preserve endpoint domain ownership and source roles;
-- [ ] require endpoint and relation evidence separately;
-- [ ] implement most-restrictive and join-induced sensitivity evaluation;
+- [ ] resolve lane standing, ADR-S-14, and ownership;
+- [ ] settle semantic and schema placement without parallel authority;
+- [ ] register one pair/profile home and orientation;
+- [ ] preserve endpoint domains, source roles, evidence, and correction state;
+- [ ] evaluate rights, consent, sensitivity, geoprivacy, time, space, scale,
+      uncertainty, and n-way reconstruction risk;
 - [ ] decide composed existing families versus a versioned join family;
-- [ ] harden `PolicyInputBundle` with explicit non-secret join context;
-- [ ] define reason codes and enforceable obligations through contracts/schemas;
-- [ ] use synthetic, no-network fixtures only;
-- [ ] test endpoint, relation, pairwise, and n-ary joint coherence;
-- [ ] test rights, consent, sensitivity, geoprivacy, re-identification, title, cultural, and infrastructure risks;
-- [ ] test Agriculture–Soil and Person–Parcel negative paths;
-- [ ] bind generic and pair-specific validators;
-- [ ] bind governed consumers and reject unknown obligations;
-- [ ] register dependencies and prove invalidation across graph, map, search, export, vector, caches, screenshots, and AI;
-- [ ] prove correction, revocation, withdrawal, and rollback;
-- [ ] keep semantic meaning, machine shape, evidence, receipts, lifecycle data, release approval, and publication outside this directory.
+- [ ] bind accepted inputs, outcomes, reasons, obligations, bundle, evaluator,
+      and consumers;
+- [ ] add synthetic allow/review/abstain/deny/error and rollback tests;
+- [ ] prove obligation enforcement and public-surface non-leakage;
+- [ ] register dependencies and prove correction, withdrawal, cache
+      invalidation, and rollback; and
+- [ ] keep relationship meaning, machine shape, evidence, lifecycle data,
+      decisions, receipts, release approval, and publication outside this lane.
 
-> **Final boundary:** domains own endpoints; contracts define relation meaning; schemas constrain shape; validators test declared behavior; join policy decides bounded admissibility by composing independent gates; evidence supports claims; review resolves accountable judgment; release governs publication; and public clients consume only released, obligation-compliant derivatives through governed interfaces.
+> **Final boundary:** domains own endpoints; contracts define relationship
+> meaning; schemas constrain shape; tools compute candidates; validators test
+> declared behavior; policy decides bounded admissibility; evidence supports
+> claims; accountable review resolves judgment; release governs publication;
+> and public clients consume only released, obligation-compliant derivatives
+> through governed interfaces.
 
 [Back to top](#top)

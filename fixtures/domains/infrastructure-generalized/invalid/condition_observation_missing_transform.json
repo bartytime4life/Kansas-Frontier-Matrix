@@ -1,0 +1,10 @@
+{
+  "fixture_id": "infra-gen-invalid-002",
+  "fixture_posture": "synthetic; public-safe; invalid; release-precheck",
+  "object_family": "ConditionObservation",
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/condition-obs-001",
+  "claimed_sensitivity_tier": "T1",
+  "public_safe_summary": "status-only",
+  "aggregation_receipt_ref": null,
+  "review_ref": "kfm://fixture/synthetic/review-record/infra-gen-003"
+}

@@ -1,0 +1,3 @@
+EVALUATION_STATE_INVALID	$.calibration.evaluation.metric_names
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+UNDECLARED_ASSESSMENT_FIELD	$.assessment.trust_score

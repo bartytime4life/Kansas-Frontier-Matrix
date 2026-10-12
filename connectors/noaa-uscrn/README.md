@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Atmosphere steward · Soil steward · Agriculture liaison · Rights reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-14
+updated: 2026-09-27
 policy_label: public-doctrine; connector-boundary; noaa; uscrn; station-observation; depth-aware; placement-open; not-life-safety; no-publication
 truth_posture: CONFIRMED README-only sibling / PROPOSED placement / INACTIVE source authority / IMPLEMENTATION NEEDS VERIFICATION
 evidence_snapshot: main@92ddac60a5dd7ec4c1f4704c651bd173423afbaf
@@ -31,7 +31,7 @@ tags: [kfm, connectors, noaa, uscrn, climate-reference-network, weather-station,
 notes:
   - "This file documents a proposed connector boundary; it does not prove executable NOAA USCRN connector code."
   - "The repository also contains connectors/noaa/uscrn/ under the declared NOAA family lane; this README does not settle sibling versus nested placement."
-  - "The two domain-specific noaa-uscrn registry YAMLs are PROPOSED inventory placeholders, not mature active SourceDescriptors."
+  - "Update 2026-10-11: data/registry/sources/soil/noaa-uscrn.yaml is an admitted (approved, active) SourceDescriptor for the USCRN daily01 Kansas soil pilot, implemented in connectors/noaa/src/noaa/uscrn_daily.py and uscrn_daily_capture.py; release follows ADR-0046. The agriculture YAML remains a PROPOSED placeholder."
   - "USCRN station records remain point observations with station, variable, unit, time, cadence, quality, depth, product-vintage, and raw/derived distinctions intact."
   - "A station observation is not county, watershed, regional, raster, soil-column, regulatory, forecast, alert, or life-safety truth."
   - "Connector output is limited to RAW or QUARANTINE handoff and never grants downstream publication authority."
@@ -51,6 +51,9 @@ notes:
   <img alt="Area truth: denied" src="https://img.shields.io/badge/area__truth-denied-red">
   <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
 </p>
+
+> [!NOTE]
+> **Offline USCRN hourly02 parser (2026-09-27); this flat lane stays README-only.** `connectors/noaa/src/noaa/uscrn_hourly.py` parses *supplied* USCRN hourly02 station-year files under one versioned profile (`uscrn-hourly02-v1`, 38 columns). It never fetches. A line with a different field count is `SCHEMA_DRIFT` and rejects the file, as do mixed stations, out-of-order or duplicate hours, records outside the file year, and malformed values. Each measurement keeps its source token beside an exact `Decimal`, its unit, its derivation (`calculated_last_5_min`, `hourly_average`, `hourly_max`, `hourly_min`, `hourly_total`), its soil depth in cm, and its raw QC flag. Missing sentinels (`-9999.0`; `-99.000` for soil moisture only) stay missing, never zero. Unknown QC flags or surface-temperature types quarantine the record; missing hours are counted, not filled. Synthetic tests: `connectors/noaa/tests/test_uscrn_hourly.py`, run by `.github/workflows/noaa-uscrn-offline.yml`. Code sits in the central NOAA package per this lane's recommended reversible posture; the nested-vs-flat placement ADR remains open and this is not source activation, station-metadata review, or admission.
 
 > [!IMPORTANT]
 > **Truth posture:** `CONFIRMED` README-only sibling · `PROPOSED` placement · source authority `INACTIVE / NOT ESTABLISHED` · product-specific runtime `NEEDS VERIFICATION`.
@@ -121,8 +124,8 @@ The two Directory Rules copies agree on the connector lifecycle limit but differ
 | Is executable code proven in this exact lane? | **No.** Bounded probes found no package file, source root, client, parser, initializer, or test README. |
 | Does a nested USCRN connector boundary exist? | **Yes.** `connectors/noaa/uscrn/README.md` exists and is also README-only in bounded implementation probes. |
 | Is the NOAA family lane canonical? | **Yes, as repository doctrine.** `connectors/noaa/README.md` declares the family lane canonical while preserving this sibling as migration-pending. |
-| Does the NOAA package prove USCRN runtime support? | **No.** It is version `0.0.0`; the initializer is empty, fetch/admit files are placeholder comments, the local descriptor has `TBD` role and rights, and the proposed `products/uscrn.py` file was not found. |
-| Are USCRN registry records present? | **Two placeholders are present.** Soil and Agriculture each contain a minimal `PROPOSED` `noaa-uscrn.yaml`; neither carries mature descriptor fields or establishes activation. |
+| Does the NOAA package prove USCRN runtime support? | **Yes, for the daily01 soil pilot only (2026-10-11).** `connectors/noaa/src/noaa/uscrn_daily.py` and `uscrn_daily_capture.py` capture the two Kansas stations' CRND0103 files behind a pinned 28-field profile checked against NCEI `headers.txt`. Other USCRN products remain unimplemented. |
+| Are USCRN registry records present? | **Yes.** The Soil `noaa-uscrn.yaml` is an admitted SourceDescriptor for the daily01 pilot (owner admission 2026-10-11, ADR-0046). The Agriculture `noaa-uscrn.yaml` remains a minimal `PROPOSED` placeholder. |
 | Is USCRN active in the source-authority register? | **No.** The register is `PROPOSED` and its `entries` list is empty. |
 | Is the named Soil ingest pipeline implemented? | **Not proven.** Its README describes an intended executable lane, but bounded probes found no initializer, pipeline module, or documented declarative spec. |
 | Is an enforceable Soil moisture schema proven? | **No.** The draft soil-moisture observation contract explicitly reports its paired schema missing. |
@@ -322,7 +325,7 @@ Changes here require review proportional to their effect:
 | [`../../docs/sources/catalog/noaa/noaa-uscrn.md`](../../docs/sources/catalog/noaa/noaa-uscrn.md) | Draft USCRN product doctrine and open questions. |
 | [`../../docs/sources/catalog/noaa/station-climate-products.md`](../../docs/sources/catalog/noaa/station-climate-products.md) | Broader draft station/climate product boundary; distinct from USCRN. |
 | [`../../docs/architecture/source-roles.md`](../../docs/architecture/source-roles.md) | Source-role vocabulary and anti-collapse context. |
-| [`../../data/registry/sources/soil/noaa-uscrn.yaml`](../../data/registry/sources/soil/noaa-uscrn.yaml) | Minimal `PROPOSED` Soil inventory placeholder, not active descriptor proof. |
+| [`../../data/registry/sources/soil/noaa-uscrn.yaml`](../../data/registry/sources/soil/noaa-uscrn.yaml) | Admitted SourceDescriptor for the USCRN daily01 Kansas soil pilot (approved, active; release under ADR-0046). |
 | [`../../data/registry/sources/agriculture/noaa-uscrn.yaml`](../../data/registry/sources/agriculture/noaa-uscrn.yaml) | Minimal `PROPOSED` Agriculture inventory placeholder, not active descriptor proof. |
 | [`../../pipelines/domains/soil/uscrn_ingest/README.md`](../../pipelines/domains/soil/uscrn_ingest/README.md) | Draft downstream Soil ingest boundary; executable behavior remains unproven. |
 | [`../../contracts/domains/soil/soil_moisture_observation.md`](../../contracts/domains/soil/soil_moisture_observation.md) | Draft depth/unit/QC-aware semantic contract; paired schema reported missing. |
@@ -378,7 +381,7 @@ Two domain-specific YAML paths exist:
 
 | Registry path | Observed content | Safe interpretation |
 |---|---|---|
-| `data/registry/sources/soil/noaa-uscrn.yaml` | `PROPOSED` plus path/source-doc/placeholder notes. | Inventory scaffold, not a conforming active descriptor. |
+| `data/registry/sources/soil/noaa-uscrn.yaml` | Approved, active SourceDescriptor for the daily01 soil pilot (2026-10-11). | Admits only the two stations, two variables and five depths it names; each release still needs a passing soil release decision. |
 | `data/registry/sources/agriculture/noaa-uscrn.yaml` | `PROPOSED` plus path/source-doc/placeholder notes. | Inventory scaffold, not a conforming active descriptor. |
 
 Neither record contains mature identity, source role, rights, cadence, retrieval, citation, hash, review, or activation fields. Their coexistence does not establish separate source truth by domain. Resolve whether USCRN has one source-family descriptor with domain projections or another governed topology; do not duplicate source authority in this connector.

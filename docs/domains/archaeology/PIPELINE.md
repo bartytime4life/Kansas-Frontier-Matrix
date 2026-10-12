@@ -6,30 +6,37 @@
 doc_id: kfm://doc/archaeology-pipeline
 title: Archaeology — Pipeline
 type: standard
-version: v1
+version: v1.0.2
 status: draft
 owners: TODO — archaeology domain steward; pipeline owner; release reviewer; docs steward
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the Archaeology RAW to PUBLISHED pipeline stages, gates, required artifacts, and fail-closed sensitive-site handling for human readers; not evidence, policy, release, or publication authority."
+truth_posture: "Mixed: CONFIRMED lifecycle and gate doctrine; PROPOSED implementation and paths; RAW physical placement HOLD; repository implementation UNKNOWN unless separately verified."
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md         # PROPOSED
+  - data/raw/README.md
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
-  - docs/domains/archaeology/SENSITIVITY.md    # PROPOSED
-  - pipelines/domains/archaeology/             # PROPOSED — executable code
-  - pipeline_specs/archaeology/                # PROPOSED — declarative specs
-  - schemas/contracts/v1/archaeology/          # PROPOSED — Atlas v1.1 §2.1
-  - policy/sensitivity/archaeology/            # PROPOSED — Atlas v1.1 §2.1
-  - policy/release/archaeology/                # PROPOSED
-  - data/registry/archaeology/                 # PROPOSED — source ledger
+  - docs/domains/archaeology/SENSITIVITY.md
+  - pipelines/domains/archaeology/
+  - pipeline_specs/archaeology/
+  - schemas/contracts/v1/archaeology/
+  - policy/sensitivity/archaeology/
+  - data/registry/sources/archaeology/
+  - data/registry/archaeology/
 tags: [kfm, domain, archaeology, pipeline, lifecycle, gates, sensitivity, doctrine]
 notes:
+  - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
+  - "2026-10-11: removed policy/release/archaeology/ from related because no tracked target exists yet; inline status comments were dropped from related entries so each entry resolves as a path."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY)
   - All repo-state and path claims are PROPOSED until repo is mounted
   - Companion to docs/domains/archaeology/OBJECT_FAMILIES.md
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
@@ -39,9 +46,9 @@ notes:
 ![gates: A–G](https://img.shields.io/badge/gates-A%E2%80%93G-1f6feb)
 ![default tier: T4](https://img.shields.io/badge/default__tier-T4_DENY-b30000)
 ![watcher: non-publisher](https://img.shields.io/badge/watcher-non--publisher-purple)
-![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey)
+![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology steward; pipeline owner; release reviewer; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-05-28
+**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology steward; pipeline owner; release reviewer; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** (per `docs/doctrine/ai-build-operating-contract.md`).
 
 > [!CAUTION]
@@ -87,7 +94,7 @@ It does **not** define:
 - Object **meaning** — see [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md).
 - Field-level **shape** — see `schemas/contracts/v1/archaeology/` (PROPOSED).
 - Allow / deny / restrict / abstain **rules** — see `policy/sensitivity/archaeology/` and `policy/release/archaeology/` (PROPOSED).
-- Source identity, rights, and sensitivity **at admission** — see `data/registry/archaeology/` and the cross-cutting `SourceDescriptor` contract.
+- Source identity, rights, and sensitivity **at admission** — see the canonical SourceDescriptor lane `data/registry/sources/archaeology/` (`DIR-SOURCE-003`) and the cross-cutting `SourceDescriptor` contract. `data/registry/archaeology/sources/` is a read-only compatibility view, not a writer (`DIR-SOURCE-004`).
 - Detailed sovereignty review **process** — see `docs/domains/archaeology/SENSITIVITY.md` (PROPOSED) and `policy/consent/archaeology/` (PROPOSED).
 
 > [!IMPORTANT]
@@ -183,7 +190,7 @@ Watchers monitor archaeology source endpoints (SHPO catalogs, NRHP feeds, lab po
 | **Required artifacts** | `EventEnvelope`, `EventRunReceipt`, HTTP-validator evidence (ETag / Last-Modified / content-length / manifest checksum) where applicable. |
 | **Gate (transition to RAW)** | **Gate A · Source identity** — `SourceDescriptor` must exist, with archaeology source role, authority, rights, sensitivity, cadence, and limitations populated. |
 | **Failure-closed outcome** | Source not admitted; event logged as candidate awaiting steward review; no `RAW` write. |
-| **Anti-pattern** | A watcher silently writing to `data/raw/archaeology/` or, worse, `data/published/`. This collapses the admission gate and breaks the trust membrane (`kfm_unified_doctrine_synthesis.md` §29; Atlas v1.1 §24.9.2). |
+| **Anti-pattern** | A watcher silently writing to RAW (the source-first capture or the legacy `data/raw/archaeology/` lane) or, worse, `data/published/`. This collapses the admission gate and breaks the trust membrane (`kfm_unified_doctrine_synthesis.md` §29; Atlas v1.1 §24.9.2). |
 
 **PROPOSED placement** (Directory Rules §7.3 / §7.4):
 
@@ -212,11 +219,13 @@ The `RAW` stage captures the immutable source payload (or a stable reference) to
 | **Failure-closed outcomes** | Unresolved rights → **HOLD** at RAW with `RIGHTS_UNKNOWN`. Unresolved or elevated sensitivity → route to **QUARANTINE** with reason code (`SENSITIVITY_UNRESOLVED`, `SOVEREIGNTY_REVIEW_PENDING`, `SACRED_SITE_FLAG`, `HUMAN_REMAINS_FLAG`, etc.). |
 | **Trust-membrane rule** | No public client, no normal UI surface, and no released AI surface MAY reach RAW (Atlas v1.1 §24.6.2). |
 
-**PROPOSED placement:**
+**PROPOSED placement** (RAW path **HOLD**): capture identity is source-first under a `source_id` registered once (Directory Rules §12.3 `DIR-SOURCE-001`); the exact physical RAW path awaits an accepted placement decision. `data/raw/archaeology/` is a compatibility/reference lane and MUST NOT receive payloads.
 
 ```text
-data/raw/archaeology/<source_id>/<run_id>/
-data/registry/archaeology/sources/
+<accepted-source-first-raw-home>/<source_id>/<run_id>/   # HOLD — physical source-first placement undecided
+data/raw/archaeology/README.md               # compatibility/reference lane; no payloads
+data/registry/sources/archaeology/           # canonical SourceDescriptor writer (DIR-SOURCE-003)
+data/registry/archaeology/sources/           # read-only compatibility view; never an independent writer (DIR-SOURCE-004)
 policy/sensitivity/archaeology/              # gate C decision logic
 ```
 
@@ -534,8 +543,9 @@ policy/release/archaeology/                  # PROPOSED — staged release
 policy/consent/archaeology/                  # PROPOSED — oral history / cultural
 tests/domains/archaeology/                   # PROPOSED
 fixtures/domains/archaeology/                # PROPOSED — no-network fixtures
-data/registry/archaeology/                   # PROPOSED — source ledger
-data/raw/archaeology/                        # PROPOSED — lifecycle
+data/registry/sources/archaeology/           # canonical source ledger (DIR-SOURCE-003)
+data/registry/archaeology/                   # domain-first compatibility parent; no independent source writes (DIR-SOURCE-004)
+data/raw/archaeology/README.md               # compatibility/reference lane; no payloads (source-first RAW placement HOLD)
 data/work/archaeology/                       # PROPOSED — lifecycle
 data/quarantine/archaeology/                 # PROPOSED — lifecycle
 data/processed/archaeology/                  # PROPOSED — lifecycle
@@ -570,7 +580,7 @@ data/rollback/archaeology/                   # PROPOSED — rollback records
 
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
-1. Mounted-repo inspection of `pipelines/domains/archaeology/`, `pipeline_specs/archaeology/`, `connectors/archaeology/`, `policy/sensitivity/archaeology/`, `policy/release/archaeology/`, `tests/domains/archaeology/`, and `data/registry/archaeology/`.
+1. Mounted-repo inspection of `pipelines/domains/archaeology/`, `pipeline_specs/archaeology/`, `connectors/archaeology/`, `policy/sensitivity/archaeology/`, `policy/release/archaeology/`, `tests/domains/archaeology/`, and `data/registry/sources/archaeology/` (canonical) and the `data/registry/archaeology/` compatibility parent.
 2. Inspection of CI workflows that gate archaeology promotions (Gate D / E / F / G).
 3. Confirmation that `EventEnvelope` and `EventRunReceipt` are implemented for archaeology watchers and that watchers cannot publish.
 4. Confirmation of steward authority and confidentiality posture for archaeology (Atlas v1.1 §15.N item 1).
@@ -587,6 +597,8 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Adopted `pipelines/domains/<domain>/` and `pipeline_specs/<domain>/` placements. | clarification | Aligns with Directory Rules §4 Step 3 path examples and the repository-structure guiding document; flagged as drift against Atlas v1.1 §2.1 row 15 in `OQ-ARCH-PIPE-01`. |
 | Made the Pre-RAW watcher signal stage explicit. | gap closure | Atlas v1.1 §15.H starts at RAW; KFM-P1-PROG-0008 and the Build Manual §7.1 object map make Pre-RAW a first-class phase. |
 | Pinned each gate (A–G) to a stage transition and to the failure-closed reason codes. | gap closure | Atlas v1.1 §24.6.3 names reason codes; §15.H names stages; this file binds them per-stage for archaeology. |
+| **v1.0.1 (2026-10-11):** §6 RAW placement now shows source-first capture with path **HOLD** and keeps `data/raw/archaeology/README.md` as a compatibility/reference lane; §17 tree updated likewise; §5 watcher anti-pattern generalized to RAW (source-first capture or legacy lane); required `owning_root` / `responsibility` / `truth_posture` metadata added; `data/raw/README.md` added to `related`. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted. Gates A–G, reason codes, T4 default, and every sensitivity, sovereignty, and cultural-review rule are unchanged. Documentation only. |
+| **v1.0.2 (2026-10-11):** §1 scope, §6 RAW placement tree, and §17 path tree now name `data/registry/sources/archaeology/` as the canonical SourceDescriptor writer; `data/registry/archaeology/` and its `sources/` child are labelled a read-only compatibility view; `related` adds the canonical lane. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
 
 > **Backward compatibility.** This is a new file; no anchors are at risk. Future edits SHOULD preserve anchors under §1–§17 to keep cross-links stable. The lifecycle invariant `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` and gate letters A–G MUST NOT be renamed without an accepted ADR.
 
@@ -608,7 +620,8 @@ This document is done enough to enter the repository when:
 ## Related docs
 
 - `docs/doctrine/ai-build-operating-contract.md` — v3.0 operating law (`CONTRACT_VERSION = "3.0.0"`).
-- `docs/doctrine/directory-rules.md` — Placement law; §4 Step 3 governs the `domains/<domain>/` segmentation.
+- `docs/doctrine/directory-rules.md` — Placement law; §4 Step 3 governs the `domains/<domain>/` segmentation; §12.3 `DIR-SOURCE-001`–`004` governs source-first capture identity.
+- `data/raw/README.md` — source-first RAW contract; physical placement HOLD; `data/raw/archaeology/` is a compatibility/reference lane.
 - `docs/domains/archaeology/OBJECT_FAMILIES.md` — Companion register of identity-bearing archaeology objects.
 - `docs/domains/archaeology/README.md` — *PROPOSED* domain overview and entry point.
 - `docs/domains/archaeology/SENSITIVITY.md` — *PROPOSED* tier matrix + transform catalogue.
@@ -622,6 +635,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-_Last updated: 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`_
+_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"`_
 
 [Back to top ↑](#archaeology--pipeline)

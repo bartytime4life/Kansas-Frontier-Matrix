@@ -1,0 +1,19 @@
+{
+  "run_id": "run-receipt:fixture:mrts-05",
+  "stage": "fixture_validation",
+  "inputs": [
+    "evidence-bundle:fixture:mrts-05"
+  ],
+  "outputs": [
+    "validation-report:fixture:mrts-05"
+  ],
+  "code_ref": "tools/validators/governance/validate_trust_spine_fixture_slice.py",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "source_descriptor_refs": [
+    "source-descriptor:src:fixture/mrts-05-public-safe:1.0.0"
+  ],
+  "validation_refs": [
+    "validation-report:fixture:mrts-05"
+  ],
+  "outcome": "SUCCESS"
+}

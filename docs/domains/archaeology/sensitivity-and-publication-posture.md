@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-sensitivity-and-publication-posture
 title: Archaeology — Sensitivity and Publication Posture
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: <archaeology-domain-steward> + <rights-reviewer> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/governed-ai-behavior.md, docs/domains/archaeology/cross-lane-relations.md, ai-build-operating-contract.md, policy/sensitivity/archaeology/]
+owning_root: docs/
+responsibility: "Describe the fail-closed Archaeology sensitivity, rights, release, publication, correction, withdrawal, and rollback posture for human readers."
+truth_posture: "Mixed: confirmed fail-closed doctrine and current repository placement; proposed disposition defaults and implementation; unresolved rights, cultural and sovereignty review, release, and publication authority."
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/pipeline-shape.md, docs/domains/archaeology/governed-ai-behavior.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md, policy/sensitivity/archaeology/]
 tags: [kfm, archaeology, sensitivity, publication, rights, sovereignty, sensitive-domain]
-notes: [CONTRACT_VERSION = "3.0.0" pinned; fail-closed posture CONFIRMED doctrine, §23.2 defaults PROPOSED, paths PROPOSED, repo not mounted this session]
+notes: [CONTRACT_VERSION = "3.0.0" pinned; fail-closed posture CONFIRMED doctrine; §23.2 defaults PROPOSED; repository paths observed; file presence does not activate policy, authorize review, release, or publication]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,10 +29,10 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; fail-closed posture CONFIRMED doctrin
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![repo--state](https://img.shields.io/badge/defaults_&_paths-PROPOSED-lightgrey)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<rights-reviewer>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<rights-reviewer>` (PLACEHOLDER) · **Updated:** 2026-08-28
 
 > [!CAUTION]
-> **Sensitive domain — fail closed.** Exact archaeological locations, burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private landowner details, and looting-risk exposure **fail closed**. This document describes the posture; it does **not** loosen it. Disposition is governed by `ai-build-operating-contract.md` §23.2; the most restrictive applicable row applies until stewards ratify defaults.
+> **Sensitive domain — fail closed.** Exact archaeological locations, burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private landowner details, and looting-risk exposure **fail closed**. This document describes the posture; it does **not** loosen it. Disposition is governed by `docs/doctrine/ai-build-operating-contract.md` §23.2; the most restrictive applicable row applies until stewards ratify defaults.
 
 ---
 
@@ -58,7 +61,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; fail-closed posture CONFIRMED doctrin
 This document specifies the **sensitivity and publication posture** for the Archaeology / Cultural Heritage domain: what categories of material fail closed, what conditions block public promotion, what transforms and reviews a release must carry, and how corrections and rollbacks work.
 
 > [!NOTE]
-> **Truth labels in this doc.** The fail-closed list and the universal blocking rule are `CONFIRMED` doctrine (Atlas §15.I). The §23.2 disposition defaults are `CONFIRMED` doctrine but `PROPOSED` as specific values until steward ratification. Publication/correction/rollback requirements are `CONFIRMED` doctrine / `PROPOSED` implementation (Atlas §15.M). All repo paths are `PROPOSED` (no repository mounted).
+> **Truth labels in this doc.** The fail-closed list and the universal blocking rule are `CONFIRMED` doctrine (Atlas §15.I). The §23.2 disposition defaults are `CONFIRMED` doctrine but `PROPOSED` as specific values until steward ratification. Publication/correction/rollback requirements are `CONFIRMED` doctrine / `PROPOSED` implementation (Atlas §15.M). Repository placement below is grounded in current GitHub evidence; file presence does not establish policy activation, reviewer authority, release, or publication.
 
 [↑ Back to top](#top)
 
@@ -68,12 +71,12 @@ This document specifies the **sensitivity and publication posture** for the Arch
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/sensitivity-and-publication-posture.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/sensitivity-and-publication-posture.md` | `CONFIRMED` placement; document remains `draft` |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
-| Policy counterpart (decisions) | `policy/sensitivity/archaeology/` | `PROPOSED` |
-| Release counterpart | `release/` — `ReleaseManifest`, `CorrectionNotice`, `RollbackCard` | `PROPOSED` |
-| Upstream (governs this doc) | `ai-build-operating-contract.md` §23.1–§23.2; `[ENCY]` publication doctrine | `CONFIRMED` rule / `PROPOSED` presence |
+| Policy counterpart (decisions) | `policy/sensitivity/archaeology/` | `CONFIRMED` rule lane; activation and authority unresolved |
+| Release counterpart | `release/` — `ReleaseManifest`, `CorrectionNotice`, `RollbackCard` | `CONFIRMED` root; object and release readiness remain unresolved |
+| Upstream (governs this doc) | `docs/doctrine/ai-build-operating-contract.md` §23.1–§23.2; `[ENCY]` publication doctrine | `CONFIRMED` repository path / mixed doctrine maturity |
 
 **Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The **decisions** themselves (allow / deny / restrict / abstain / review) live under `policy/`; **release** artifacts live under `release/`. This doc is navigational — the machine-readable policy and release objects govern actual decisions.
 
@@ -121,7 +124,7 @@ This document specifies the **sensitivity and publication posture** for the Arch
 
 ## 5. The §23.2 disposition row
 
-`CONFIRMED` doctrine; specific defaults `PROPOSED` until steward ratification (`ai-build-operating-contract.md` §23.2). The Archaeology — site locations row:
+`CONFIRMED` doctrine; specific defaults `PROPOSED` until steward ratification (`docs/doctrine/ai-build-operating-contract.md` §23.2). The Archaeology — site locations row:
 
 | Field | Value |
 |---|---|
@@ -248,7 +251,7 @@ flowchart TD
 
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
-1. Confirm `policy/sensitivity/archaeology/` exists and encodes the fail-closed list.
+1. Confirm the current `policy/sensitivity/archaeology/` rule lane is bound to an accepted evaluator and accountable review path; file presence alone is not activation.
 2. Confirm the §23.2 Archaeology defaults are ratified (currently `PROPOSED`).
 3. Confirm `RedactionReceipt`, `MapReleaseManifest`, `RollbackCard`, `CorrectionNotice` schema homes.
 4. Verify steward authority and confidentiality posture.
@@ -260,14 +263,15 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 |---|---|---|
 | Initial draft of Archaeology sensitivity & publication posture | new | Synthesizes Atlas §15.I, §15.M, §20.5, §24.6.1–§24.6.3 + contract §23.2 |
 | Pinned `CONTRACT_VERSION = "3.0.0"` | clarification | Doctrine-adjacent doc requirement |
+| Reconciled document identity and repository placement without changing policy or authority | compatibility | Remove duplicate placeholder identity and stale repository-unavailable claims |
 
 > **Backward compatibility.** New document; no prior anchors to preserve. Section anchors are stable for future revisions.
 
 ## Definition of done
 
-This document is done enough to enter the repository when:
+This document is done enough for accountable review at its current repository location when:
 
-- it is placed according to Directory Rules (`docs/domains/archaeology/`);
+- its current Directory Rules placement (`docs/domains/archaeology/`) is retained;
 - a docs steward, the archaeology domain steward, and a rights/cultural reviewer review it;
 - it is linked from the archaeology lane README and the doctrine/sensitivity index;
 - it does not conflict with accepted ADRs;
@@ -279,13 +283,13 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- `docs/domains/archaeology/README.md` — archaeology lane landing page (`PROPOSED`)
-- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (`PROPOSED`)
-- `docs/domains/archaeology/governed-ai-behavior.md` — sibling governed-AI doc (`PROPOSED`)
-- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`PROPOSED`)
-- `ai-build-operating-contract.md` — §23.1–§23.2 sensitive-domain matrix (canonical)
-- `policy/sensitivity/archaeology/` — fail-closed policy home (`PROPOSED`)
+- `docs/domains/archaeology/README.md` — archaeology lane landing page (current repository path)
+- `docs/domains/archaeology/pipeline-shape.md` — sibling lifecycle doc (current repository path; draft)
+- `docs/domains/archaeology/governed-ai-behavior.md` — sibling governed-AI doc (current repository path; draft)
+- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (current repository path; draft)
+- `docs/doctrine/ai-build-operating-contract.md` — §23.1–§23.2 sensitive-domain matrix (current repository path)
+- `policy/sensitivity/archaeology/` — current fail-closed rule lane; evaluator binding and activation unresolved
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)

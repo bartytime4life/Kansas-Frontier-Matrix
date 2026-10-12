@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/drift_register_triage_assessment.schema.json",
+  "title": "DriftRegisterTriageAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "dateTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm:[A-Za-z0-9._:/-]{3,240}$"
+    },
+    "refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "ownerRoles": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{2,63}$"
+      }
+    },
+    "paths": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "^[A-Za-z0-9._@+/-]+$"
+      }
+    },
+    "adrPath": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^docs/adr/ADR-[0-9]{4}-[A-Za-z0-9._-]+\\.md$"
+        },
+        {"type": "null"}
+      ]
+    },
+    "correctionRef": {
+      "oneOf": [
+        {"type": "string", "pattern": "^kfm:correction:[A-Za-z0-9._:/-]{3,220}$"},
+        {"type": "null"}
+      ]
+    },
+    "resolutionRef": {
+      "oneOf": [
+        {"type": "string", "pattern": "^kfm:resolution:[A-Za-z0-9._:/-]{3,220}$"},
+        {"type": "null"}
+      ]
+    },
+    "rollbackRef": {
+      "oneOf": [
+        {"type": "string", "pattern": "^kfm:rollback:[A-Za-z0-9._:/-]{3,220}$"},
+        {"type": "null"}
+      ]
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "drift_id": {
+          "type": "string",
+          "pattern": "^DRIFT-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{3}$"
+        },
+        "category": {
+          "enum": ["PATH_AUTHORITY", "PARALLEL_AUTHORITY", "SCHEMA_HOME", "PROVENANCE", "READINESS", "COMPATIBILITY", "OTHER"]
+        },
+        "severity": {"enum": ["LOW", "MODERATE", "HIGH", "CRITICAL"]},
+        "state": {
+          "enum": ["OPEN", "ACKNOWLEDGED", "BLOCKED_ADR", "CORRECTION_IN_PROGRESS", "RESOLVED", "WITHDRAWN"]
+        },
+        "owner_roles": {"$ref": "#/$defs/ownerRoles"},
+        "affected_paths": {"$ref": "#/$defs/paths"},
+        "evidence_refs": {"$ref": "#/$defs/refs"},
+        "candidate_adr_ref": {"$ref": "#/$defs/adrPath"},
+        "correction_ref": {"$ref": "#/$defs/correctionRef"},
+        "resolution_ref": {"$ref": "#/$defs/resolutionRef"},
+        "rollback_ref": {"$ref": "#/$defs/rollbackRef"},
+        "next_review_at": {
+          "oneOf": [
+            {"$ref": "#/$defs/dateTime"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": [
+        "drift_id",
+        "category",
+        "severity",
+        "state",
+        "owner_roles",
+        "affected_paths",
+        "evidence_refs",
+        "candidate_adr_ref",
+        "correction_ref",
+        "resolution_ref",
+        "rollback_ref",
+        "next_review_at"
+      ]
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.drift-register-triage-assessment.fixture.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:drift-register-triage:[a-f0-9]{64}$"
+    },
+    "observed_at": {"$ref": "#/$defs/dateTime"},
+    "snapshot_ref": {"$ref": "#/$defs/ref"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 999,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["COMPLETE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/refs"}
+      },
+      "required": ["state", "record_refs"]
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "changes_register": {"type": "boolean"},
+        "inspects_paths": {"type": "boolean"},
+        "assigns_owner": {"type": "boolean"},
+        "approves_adr": {"type": "boolean"},
+        "executes_correction": {"type": "boolean"},
+        "resolves_drift": {"type": "boolean"},
+        "promotes": {"type": "boolean"},
+        "releases": {"type": "boolean"},
+        "publishes": {"type": "boolean"}
+      },
+      "required": [
+        "changes_register",
+        "inspects_paths",
+        "assigns_owner",
+        "approves_adr",
+        "executes_correction",
+        "resolves_drift",
+        "promotes",
+        "releases",
+        "publishes"
+      ]
+    }
+  },
+  "required": ["profile", "assessment_id", "observed_at", "snapshot_ref", "entries", "review", "effects"]
+}

@@ -2,11 +2,11 @@
 doc_id: kfm://contract/domains/archaeology/candidate-feature
 title: contracts/domains/archaeology/candidate_feature.md — CandidateFeature Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Archaeology steward · Contract steward · Evidence steward · Schema steward · Policy steward · Review steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-01
 policy_label: public; contracts; domains; archaeology; candidate-feature; semantic-contract; sensitive-lane
 tags: [kfm, contracts, archaeology, candidate-feature, candidate, evidence, review, policy, sensitivity, lifecycle, governance]
 related:
@@ -29,7 +29,7 @@ related:
   - ../../../release/
 notes:
   - "Expanded from a planned-file scaffold into the object-level CandidateFeature semantic contract."
-  - "The paired schema is currently a PROPOSED scaffold with empty properties and additionalProperties enabled."
+  - "The paired schema now has a bounded draft projection for candidate identity, governed references, review/lifecycle posture, and fail-closed inline-location and confirmed-site claim denial; the full proposed contract remains open."
   - "This contract preserves the candidate-vs-confirmed boundary and does not authorize public release or exact-location disclosure."
   - "CandidateFeature is a review candidate, not a confirmed ArchaeologicalSite."
 [/KFM_META_BLOCK_V2] -->
@@ -46,7 +46,7 @@ notes:
   <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-8a6d3b">
   <img alt="Family: candidate" src="https://img.shields.io/badge/family-candidate-blue">
   <img alt="Sensitivity: fail closed" src="https://img.shields.io/badge/sensitivity-fail__closed-red">
-  <img alt="Schema: scaffold" src="https://img.shields.io/badge/schema-scaffold-orange">
+  <img alt="Schema: bounded draft" src="https://img.shields.io/badge/schema-bounded__draft-orange">
 </p>
 
 `contracts/domains/archaeology/candidate_feature.md`
@@ -141,19 +141,21 @@ The paired schema found for this contract is:
 schemas/contracts/v1/domains/archaeology/candidate_feature.schema.json
 ```
 
-Current schema evidence:
+Current bounded schema evidence:
 
 | Schema fact | Status |
 |---|---|
-| Schema file exists | `CONFIRMED` |
-| Schema title is `Candidate Feature` | `CONFIRMED` |
-| Schema status is `PROPOSED` | `CONFIRMED` |
-| Schema properties are empty | `CONFIRMED` |
-| `additionalProperties` is `true` | `CONFIRMED` |
-| Schema `contract_doc` points to this contract | `CONFIRMED` |
-| Validator implementation | `UNKNOWN / NOT FOUND IN THIS TASK` |
+| Schema file exists and identifies `CandidateFeature` | `CONFIRMED` |
+| `object_type` is fixed to `CandidateFeature` | `CONFIRMED / ENFORCED` |
+| `truth_state` is fixed to `CANDIDATE` | `CONFIRMED / ENFORCED` |
+| Inline geometry, coordinates, latitude/longitude, bounding boxes, geohashes, and WKT | `DENIED` by the bounded validator and closed schema properties |
+| Confirmed-site identity or confirmation claim fields | `DENIED` by the bounded validator and closed schema properties |
+| Source references | At least one governed `kfm://` reference is required |
+| Candidate lifecycle | Limited to `WORK`, `QUARANTINE`, `PROCESSED`, or `CATALOG`; `PUBLISHED` is denied |
+| Fixtures and deterministic validation | Synthetic positive and expected-fail fixtures plus standard-library unit tests are present |
+| Full proposed field vocabulary, EvidenceBundle closure, policy behavior, review workflow, release workflow, API behavior, and UI behavior | `NOT IMPLEMENTED / NEEDS VERIFICATION` |
 
-This contract therefore defines semantic expectations for future schema and validator work. It does not claim that machine validation currently enforces those expectations.
+This is a bounded draft projection, not full contract completion. It establishes only the executable candidate discriminator, governed-reference minimum, and fail-closed inline-location/site-claim boundary. It does not authorize public exposure, candidate-to-site promotion, cultural review, EvidenceBundle closure, release, or publication.
 
 ---
 
@@ -196,17 +198,17 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 
 | Field | Meaning |
 |---|---|
-| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity. |
+| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity using a strict end-of-input grammar; terminal line breaks cannot become part of identity. |
 | `candidate_type` | Candidate class such as surface feature, subsurface feature, structure, artifact scatter, earthwork, landscape trace, anomaly, or context lead. |
 | `origin_method` | How the candidate was identified: survey, archival, map comparison, remote sensing, LiDAR, geophysics, report extraction, cross-domain analysis, steward submission, or other reviewed source. |
-| `source_refs` | SourceDescriptor/source record references. |
+| `source_refs` | Source, SourceDescriptor, or source-record references; evidence, observation, correction, and geometry families cannot substitute. |
 | `source_roles` | Source roles supporting, contextualizing, or contesting the candidate. |
-| `evidence_refs` | EvidenceRef/EvidenceBundle references where available. |
-| `observation_refs` | RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, field observation, or archival observation references. |
-| `candidate_geometry_ref` | Internal geometry/support-scope reference, with public-safe generalization required before public exposure. |
+| `evidence_refs` | Evidence, EvidenceRef, or EvidenceBundle references with a non-empty opaque identity where available; source references and bare family paths cannot substitute. |
+| `observation_refs` | Observation-family references for RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, field observation, or archival observation records; when present, the binding must contain at least one governed reference. |
+| `candidate_geometry_ref` | Internal geometry/support-scope reference whose opaque identifier must not encode latitude, longitude, bounding-box, coordinate-system, or similar locator tokens, including compact digit-suffixed forms such as `lat39`; public-safe generalization remains required before public exposure. |
 | `spatial_precision_class` | Precision bucket or generalization class; exact coordinate handling must be policy-gated. |
 | `temporal_scope` | Valid/observed/source/retrieval/review time context where material. |
-| `confidence_statement` | Bounded confidence or uncertainty note; must not be treated as confirmation. |
+| `confidence_statement` | Bounded confidence or uncertainty note containing at least one portable, non-surrogate BMP content code point outside the schema's Unicode 15.0 Cc/Cf/separator and Default-Ignorable deny set; supplementary characters may accompany that content but cannot alone satisfy the field; must not be treated as confirmation. |
 | `review_state` | Intake, needs review, under review, rejected, retained, promoted, superseded, or quarantined candidate state. |
 | `review_refs` | StewardReview, CulturalReview, or other review record references. |
 | `policy_state` | Policy posture or policy-decision reference. |
@@ -214,8 +216,8 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `site_lineage_refs` | References to any promoted ArchaeologicalSite or rejected/superseded candidate lineage. |
 | `lifecycle_state` | RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED posture where used. |
 | `release_refs` | Release/candidate linkage where applicable. |
-| `correction_refs` | Correction/supersession/rollback lineage. |
-| `spec_hash` | Integrity pin for the representation. |
+| `correction_refs` | Correction, correction-notice, or rollback lineage references. |
+| `spec_hash` | Lowercase SHA-256 integrity pin using a strict end-of-input grammar; terminal line breaks are denied. |
 
 ---
 
@@ -227,6 +229,9 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - a candidate confidence score or analyst note is not proof;
 - candidate-to-site promotion requires governed review, evidence closure, and policy checks;
 - exact or sensitive location exposure fails closed unless policy and review authorize a specific public-safe transform;
+- governed-reference paths cannot serve as an alternate channel for protected locator material, including compact locator-token-plus-digit forms;
+- governed references must bind to the object family required by their field, carry a non-empty segmented opaque identity, and end strictly without terminal line-break material;
+- optional observation bindings must be omitted when absent and non-empty when present;
 - supporting observations remain distinct from the candidate object;
 - supporting context from other domains can inform but cannot independently confirm archaeology truth;
 - schema validity is not evidence proof;
@@ -278,7 +283,7 @@ Before relying on this contract, verify:
 | Source | Status | Supports | Limits |
 |---|---|---|---|
 | Prior `candidate_feature.md` scaffold | `CONFIRMED` | Target file existed and was sourced from the planned-files ledger. | Scaffold did not define authoritative semantics. |
-| `candidate_feature.schema.json` | `CONFIRMED scaffold` | Schema exists, is `PROPOSED`, has empty properties, and points to this contract. | Does not enforce full candidate semantics. |
+| `candidate_feature.schema.json` and bounded validator/tests | `CONFIRMED bounded draft projection` | Enforce candidate-only identity, governed source references, non-published lifecycle, and denial of inline location and confirmed-site claims with synthetic no-network fixtures. | Do not implement the full proposed contract, EvidenceBundle closure, policy/cultural review, candidate-to-site promotion, release, or publication. |
 | `OBJECT_MAP.md` | `CONFIRMED current map` | Maps `CandidateFeature` to `candidate_feature.md` and `candidate_feature.schema.json`; preserves candidate/confirmed distinction. | Map marks rows `NEEDS VERIFICATION`. |
 | `README.md` in this directory | `CONFIRMED current boundary` | States this directory defines semantic meaning only and preserves candidate-versus-confirmed boundaries. | Does not prove schema, validator, policy, or release behavior. |
 | `CANONICAL_PATHS.md` | `CONFIRMED path doctrine / PROPOSED path realizations` | Reconciles archaeology contract/schema path form to `contracts/domains/archaeology/` and `schemas/contracts/v1/domains/archaeology/`; marks sensitive-lane posture. | Does not authorize release or prove all paths exist. |
@@ -299,9 +304,9 @@ Rollback target: prior scaffold blob SHA `ad91f1da2594d4963aa5638d10078bec89987e
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Candidate type vocabulary is reviewed by the Archaeology steward.
 - [ ] Candidate-to-site promotion rule is accepted and linked.
-- [ ] Paired JSON Schema is expanded from scaffold status.
-- [ ] Valid and invalid fixtures cover candidate, rejected, quarantined, retained, promoted, and superseded states.
-- [ ] Validator enforces required evidence, source-role, precision, sensitivity, and review fields.
+- [x] Paired JSON Schema has a bounded candidate discriminator, governed-reference minimum, closed field set, and inline-location/site-claim denial; the full proposed field vocabulary remains open.
+- [ ] Valid and invalid fixtures cover candidate, rejected, quarantined, retained, promoted, and superseded states; the current synthetic pair covers one valid candidate and one inline-location denial.
+- [x] A standard-library validator enforces the bounded candidate identity, source-reference, review/lifecycle, sensitivity, and denial invariants; full source-role, EvidenceBundle, policy, and promotion validation remains open.
 - [ ] Exact-location public exposure is tested as `DENY` unless a public-safe transform and release record are present.
 - [ ] EvidenceBundle, PolicyDecision, ReviewRecord, PublicationTransformReceipt, ReleaseManifest, CorrectionNotice, and RollbackCard references are validated where required.
 - [ ] API/UI surfaces prove they cannot treat candidate objects as confirmed sites.

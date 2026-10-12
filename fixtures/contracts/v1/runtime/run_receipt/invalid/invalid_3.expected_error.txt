@@ -1,1 +1,1 @@
-enum|pattern|date-time
+{"kind":"schema","field":"/run_id","keyword":"pattern","contains":"does not match"}

@@ -6,16 +6,14 @@ version: v1
 status: draft
 owners: <hydrology-domain-steward> + <docs-steward>  # placeholders — confirm in repo
 created: 2026-05-17
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 related:
-  - directory-rules.md                                  # placement law (root file; docs/doctrine/ mirror is PROPOSED)
+  - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/maplibre-3d.md                    # sole-renderer doctrine (v1.3)
-  - docs/adr/ADR-0001-schema-home.md
-  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
   - control_plane/domain_lane_register.yaml
@@ -27,6 +25,9 @@ notes:
   - Governed by Directory Rules §12 (Domain Placement Law) and §6–9.
   - Renderer home corrected to packages/maplibre-runtime/ (Directory Rules v1.3); packages/maplibre/ is the frozen v1.2 historical name (anti-pattern §13.5 #27). Cesium retired.
   - Possible filename collision with docs/domains/hydrology/canonical-paths/README.md — tracked as OQ-HYD-CP-01.
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — Canonical Paths; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -43,7 +44,7 @@ notes:
 [![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-orange)](#)
 [![Build](https://img.shields.io/badge/CI-TODO-lightgrey)](#) <!-- TODO: replace with real CI badge -->
 
-**Status:** Draft · **Owners:** Hydrology domain steward + Docs steward *(placeholders — confirm)* · **Updated:** 2026-06-06 · **`CONTRACT_VERSION = "3.0.0"`**
+**Status:** Draft · **Owners:** Hydrology domain steward + Docs steward *(placeholders — confirm)* · **Updated:** 2026-07-30 · **`CONTRACT_VERSION = "3.0.0"`**
 
 > [!IMPORTANT]
 > **Repository not mounted in this session.** The lane *pattern* (Directory Rules §12) is CONFIRMED doctrine; whether any concrete path below is materialized in the current repo is **PROPOSED / NEEDS VERIFICATION**. Treat every concrete path as a *target* the lane may legitimately occupy, not as evidence the file exists. Memory and prior plans are not evidence.
@@ -63,7 +64,7 @@ notes:
    - [4.5 `tests/domains/hydrology/` and `fixtures/domains/hydrology/`](#45-testsdomainshydrology-and-fixturesdomainshydrology--enforceability-proof)
    - [4.6 `packages/domains/hydrology/`](#46-packagesdomainshydrology--shared-libraries-scoped-to-hydrology)
    - [4.7 `pipelines/domains/hydrology/` and `pipeline_specs/hydrology/`](#47-pipelinesdomainshydrology-and-pipeline_specshydrology--pipeline-logic-and-config)
-   - [4.8 `data/<phase>/hydrology/` lifecycle lanes](#48-datasephasehydrology-lifecycle-lanes)
+   - 4.8 `data/<phase>/hydrology/` lifecycle lanes
    - [4.9 `data/catalog/domain/hydrology/` and `data/published/layers/hydrology/`](#49-datacatalogdomainhydrology-and-datapublishedlayershydrology)
    - [4.10 `data/registry/sources/hydrology/`](#410-dataregistrysourceshydrology--source-registry-for-hydrology-sources)
    - [4.11 `release/candidates/hydrology/`](#411-releasecandidateshydrology--release-decisions-for-hydrology-artifacts)
@@ -230,7 +231,9 @@ Each subsection enumerates a responsibility root the hydrology lane touches, the
 | `contracts/domains/hydrology/flow_observation.md` | `FlowObservation` semantic contract (discharge, cfs). | PROPOSED |
 | `contracts/domains/hydrology/water_level_observation.md` | `WaterLevelObservation` semantic contract. | PROPOSED |
 | `contracts/domains/hydrology/water_quality_observation.md` | `WaterQualityObservation` semantic contract. | PROPOSED |
-| `contracts/domains/hydrology/groundwater_well.md` | `GroundwaterWell` / `AquiferObservation`. | PROPOSED |
+| `contracts/domains/hydrology/groundwater_well.md` | `GroundwaterWell` site identity. | PROPOSED |
+| `contracts/domains/hydrology/aquifer_observation.md` | `AquiferObservation` measurement semantics. | PROPOSED / bounded closed schema |
+| `contracts/domains/hydrology/aquifer_context_link.md` | `AquiferContextLink` typed Geology seam. | PROPOSED / bounded closed schema |
 | `contracts/domains/hydrology/nfhl_zone.md` | `NFHLZone` — regulatory flood-context only, **not** observed inundation. | PROPOSED |
 
 **MUST NOT contain:** JSON Schema files. If a `contracts/domains/hydrology/<x>.schema.json` exists, it is **CONFLICTED** per Directory Rules §13.1 and must migrate to `schemas/contracts/v1/domains/hydrology/` under ADR-0001.
@@ -249,7 +252,9 @@ Each subsection enumerates a responsibility root the hydrology lane touches, the
 | `schemas/contracts/v1/domains/hydrology/flow_observation.schema.json` | `FlowObservation` JSON Schema. | PROPOSED |
 | `schemas/contracts/v1/domains/hydrology/water_level_observation.schema.json` | `WaterLevelObservation` JSON Schema. | PROPOSED |
 | `schemas/contracts/v1/domains/hydrology/water_quality_observation.schema.json` | `WaterQualityObservation` JSON Schema. | PROPOSED |
-| `schemas/contracts/v1/domains/hydrology/groundwater_well.schema.json` | `GroundwaterWell` / `AquiferObservation` schemas. | PROPOSED |
+| `schemas/contracts/v1/domains/hydrology/groundwater_well.schema.json` | `GroundwaterWell` schema scaffold. | PROPOSED |
+| `schemas/contracts/v1/domains/hydrology/aquifer_observation.schema.json` | Closed `AquiferObservation` measurement shape. | PROPOSED / bounded validation |
+| `schemas/contracts/v1/domains/hydrology/aquifer_context_link.schema.json` | Closed `AquiferContextLink` relation shape. | PROPOSED / bounded validation |
 | `schemas/contracts/v1/domains/hydrology/nfhl_zone.schema.json` | `NFHLZone` JSON Schema. | PROPOSED |
 | `schemas/contracts/v1/domains/hydrology/hydrograph.schema.json` | `Hydrograph` derived-time-series schema. | PROPOSED |
 | `schemas/tests/valid/domains/hydrology/` | Schema-valid sample documents (per schema). | PROPOSED |
@@ -463,7 +468,7 @@ flowchart LR
 
 Each hydrology object family from the encyclopedia and Atlas v1.1 has a corresponding **contract**, **schema**, and **fixture** home. The matrix below pins each one to its expected path triplet.
 
-| Object family | Contract (`contracts/domains/hydrology/`) | Schema (`schemas/contracts/v1/domains/hydrology/`) | Golden fixture (`fixtures/domains/hydrology/golden/`) | Status |
+| Object family | Contract (`contracts/domains/hydrology/`) | Schema (`schemas/contracts/v1/domains/hydrology/`) | Fixture lane (`fixtures/domains/hydrology/`) | Status |
 |---|---|---|---|---|
 | `Watershed` | `watershed.md` | `watershed.schema.json` | `watershed/*.json` | PROPOSED |
 | `HUCUnit` | `huc_unit.md` | `huc_unit.schema.json` | `huc_unit/*.json` | PROPOSED |
@@ -473,7 +478,9 @@ Each hydrology object family from the encyclopedia and Atlas v1.1 has a correspo
 | `FlowObservation` | `flow_observation.md` | `flow_observation.schema.json` | `flow_observation/*.json` | PROPOSED |
 | `WaterLevelObservation` | `water_level_observation.md` | `water_level_observation.schema.json` | `water_level_observation/*.json` | PROPOSED |
 | `WaterQualityObservation` | `water_quality_observation.md` | `water_quality_observation.schema.json` | `water_quality_observation/*.json` | PROPOSED |
-| `GroundwaterWell` / `AquiferObservation` | `groundwater_well.md` | `groundwater_well.schema.json` | `groundwater_well/*.json` | PROPOSED |
+| `GroundwaterWell` | `groundwater_well.md` | `groundwater_well.schema.json` | `groundwater_well/*.json` | PROPOSED scaffold |
+| `AquiferObservation` | `aquifer_observation.md` | `aquifer_observation.schema.json` | `aquifer_observation/*.json` | PROPOSED / bounded validation |
+| `AquiferContextLink` | `aquifer_context_link.md` | `aquifer_context_link.schema.json` | `aquifer_context_link/*.json` | PROPOSED / bounded validation |
 | `NFHLZone` | `nfhl_zone.md` | `nfhl_zone.schema.json` | `nfhl_zone/*.json` | PROPOSED |
 | `Hydrograph` *(derived)* | `hydrograph.md` | `hydrograph.schema.json` | `hydrograph/*.json` | PROPOSED |
 | `UpstreamTrace` *(derived)* | `upstream_trace.md` | `upstream_trace.schema.json` | `upstream_trace/*.json` | PROPOSED |
@@ -536,7 +543,7 @@ These items remain **NEEDS VERIFICATION** (or **OPEN**) until mounted-repo evide
 | OQ-HYD-CP-03 | Is `fixtures/domains/hydrology/` or `tests/fixtures/domains/hydrology/` the authority? | NEEDS VERIFICATION | Settle the rule in `tests/README.md` and `fixtures/README.md`. |
 | OQ-HYD-CP-04 | Are any hydrology schemas already authored under `contracts/domains/hydrology/<x>.schema.json` (drift §13.1)? | NEEDS VERIFICATION | Inspect; if found, open ADR-0001 migration entry. |
 | OQ-HYD-CP-05 | Which hydrology connectors are activated (USGS, FEMA, NOAA, NRCS, state) and what are their rights/terms? | NEEDS VERIFICATION | Check `data/registry/sources/hydrology/` and connector READMEs. |
-| OQ-HYD-CP-06 | Does `apps/governed-api/` already expose hydrology routes, and under what shape? | NEEDS VERIFICATION | Inspect routes; record under `docs/architecture/governed-api.md`. |
+| OQ-HYD-CP-06 | Does `apps/governed-api/` already expose hydrology routes, and under what shape? | NEEDS VERIFICATION | Inspect routes; record under `docs/architecture/governed-api/README.md`. |
 | OQ-HYD-CP-07 | Renderer rename acceptance (`packages/maplibre/` → `packages/maplibre-runtime/`) and Cesium-retirement ADR. | NEEDS VERIFICATION | OPEN-DR-10 (sole-renderer ADR), OPEN-DR-12 (rename). |
 | OQ-HYD-CP-08 | Are hydrology release candidates currently produced under `release/candidates/hydrology/`? | NEEDS VERIFICATION | Inspect `release/`. |
 | OQ-HYD-CP-09 | Is there an ADR governing the hydrology-specific NFHL vs observed vs forecast separation? | NEEDS VERIFICATION | Search `docs/adr/`. |
@@ -569,8 +576,8 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed-API boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contracts vs schemas vs policy.
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine (v1.3).
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine (v1.3).
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"` (canonical path NEEDS VERIFICATION).
 - [`docs/domains/README.md`](../README.md) — domains index.
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology landing page.
@@ -618,4 +625,4 @@ All cross-lane relations MUST preserve ownership, source role, sensitivity, and 
 
 ---
 
-<sub><strong>Last updated:</strong> 2026-06-06 · <strong>Version:</strong> v1 (draft) · <strong><code>CONTRACT_VERSION = "3.0.0"</code></strong> · <strong>Authority:</strong> Directory Rules §12 + §6–9 (CONFIRMED) · Path-as-applied (PROPOSED) · <a href="#top">⬆ Back to top</a></sub>
+<sub><strong>Last updated:</strong> 2026-07-30 · <strong>Version:</strong> v1 (draft) · <strong><code>CONTRACT_VERSION = "3.0.0"</code></strong> · <strong>Authority:</strong> Directory Rules §12 + §6–9 (CONFIRMED) · Path-as-applied (PROPOSED) · <a href="#top">⬆ Back to top</a></sub>

@@ -1,0 +1,8 @@
+{
+  "case_id": "11-answer-stale",
+  "thin_slice_assertion": null,
+  "description": "Stale observations answer with a visible stale obligation.",
+  "overrides": {
+    "scenario_id": "stale"
+  }
+}

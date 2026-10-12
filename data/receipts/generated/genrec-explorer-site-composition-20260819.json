@@ -1,0 +1,183 @@
+{
+  "receipt_id": "genrec-explorer-site-composition-20260819",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/index.html",
+    "apps/explorer-web/src/main.ts",
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/catalog.ts",
+    "apps/explorer-web/src/site/mountExplorerSite.ts",
+    "apps/explorer-web/src/site/site-foundation-a.css",
+    "apps/explorer-web/src/site/site-foundation-b.css",
+    "apps/explorer-web/src/site/site-map.css",
+    "apps/explorer-web/src/site/site-catalog.css",
+    "apps/explorer-web/src/site/site-responsive.css",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/index.html": "sha256:e8c21e67ab62f00ed7bb8ccccde90bef94d87f722b344e680d61c98f7075aff0",
+    "apps/explorer-web/src/main.ts": "sha256:c17991c9a0644ae1ac907e11749dc97d88029ae2f42daa428faed5ae43ff9e25",
+    "apps/explorer-web/src/site/README.md": "sha256:863084523e6e02c9f4790c226946279a1c88c28cad220a494777f80e0367bfe1",
+    "apps/explorer-web/src/site/catalog.ts": "sha256:90ed9330f198354a4ed60fdff63d9f2c229a395a6c7c5db5f206631d1f546459",
+    "apps/explorer-web/src/site/mountExplorerSite.ts": "sha256:fcd38d2e4d569f78eb357bc863a3b6f13234394e3da51255494ca2f99236d421",
+    "apps/explorer-web/src/site/site-foundation-a.css": "sha256:1c7939693f034e1adafff199ca69aee88342c267708ce350d6fad6f8d6406279",
+    "apps/explorer-web/src/site/site-foundation-b.css": "sha256:2379e9294e5e912b842f61a3f25a4d0df9715dbc74d634efbdab5529f83bf09d",
+    "apps/explorer-web/src/site/site-map.css": "sha256:fb217e42c978ddab294fd3aebdee583919019032c6dab9b1740693f6871c7bf4",
+    "apps/explorer-web/src/site/site-catalog.css": "sha256:a52ba1d2f6fdd37fb3fc0eacde4ccc7f60f2fa1d717c50bb84c1b7a644d4d3ba",
+    "apps/explorer-web/src/site/site-responsive.css": "sha256:054e5bd713f2b5c7557bd999f2062c05c39afe8b96c0553e7ed2284cec5300be",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "sha256:d89c1c52709cb2918f90c59e8cd3e064ad692b5b04313b74b06cefe4ed7d9a34"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:62ef7faf3734bf57567b148b63e21bd2e0284b08776eb7b696423ddc258d1641",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic TypeScript validation",
+      "local catalog and boundary validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM-Explorer-Site-Update-main-66fa565.zip — prior prepared update bundle"
+    ],
+    "evidence_refs": [
+      "repo:main@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:apps/explorer-web/index.html@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:apps/explorer-web/src/main.ts@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:apps/explorer-web/src/features@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:apps/explorer-web/src/features/map_runtime/index.tsx@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:packages/maplibre/package.json@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa",
+      "repo:issues/2957@2026-08-19",
+      "repo:pull/3017@93c58960fa18214148e576901adfdcc93f1bd5f7"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/index.html": "PROPOSED",
+    "apps/explorer-web/src/main.ts": "PROPOSED",
+    "apps/explorer-web/src/site/README.md": "PROPOSED",
+    "apps/explorer-web/src/site/catalog.ts": "PROPOSED",
+    "apps/explorer-web/src/site/mountExplorerSite.ts": "PROPOSED",
+    "apps/explorer-web/src/site/site-foundation-a.css": "PROPOSED",
+    "apps/explorer-web/src/site/site-foundation-b.css": "PROPOSED",
+    "apps/explorer-web/src/site/site-map.css": "PROPOSED",
+    "apps/explorer-web/src/site/site-catalog.css": "PROPOSED",
+    "apps/explorer-web/src/site/site-responsive.css": "PROPOSED",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-refresh",
+      "outcome": "PASS",
+      "reason": "Immediately before commit assembly, main was confirmed at 67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa; the replaced Explorer blobs and the direct feature inventory remained unchanged."
+    },
+    {
+      "gate": "open-overlap-recheck",
+      "outcome": "PASS",
+      "reason": "Open pull-request searches for Explorer Web and the exact new site path returned no overlapping pull request."
+    },
+    {
+      "gate": "repository-feature-inventory",
+      "outcome": "PASS",
+      "reason": "The catalog contains all 37 current direct Explorer feature families plus the governed packages/maplibre runtime gate, for 38 unique entries; all 13 current Explorer domain directories are represented."
+    },
+    {
+      "gate": "strict-typescript",
+      "outcome": "PASS",
+      "reason": "The proposed entrypoint, catalog, and composition compiled under strict ES2022 DOM Bundler settings against the current shell and map-runtime public export signatures."
+    },
+    {
+      "gate": "catalog-invariants",
+      "outcome": "PASS",
+      "reason": "Deterministic checks proved 38 unique feature IDs and paths, 13 unique domains, eight trust principles, filtering behavior, sensitive-domain default-deny wording, and pinned repository links."
+    },
+    {
+      "gate": "html-css-accessibility-structure",
+      "outcome": "PASS",
+      "reason": "The entry document, semantic landmarks, skip link, keyboard-focused domain detail, responsive layouts, visible focus, finite-state labels, evidence-drawer styling, and reduced-motion rule passed static checks."
+    },
+    {
+      "gate": "trust-boundary-and-no-leak",
+      "outcome": "PASS",
+      "reason": "No direct maplibre-gl acquisition, forbidden lifecycle-store literal, protected fixture canary, live source call, model-runtime call, or publication path was introduced."
+    },
+    {
+      "gate": "maplibre-hold-preservation",
+      "outcome": "PASS",
+      "reason": "The site records MapLibre GL JS 6.4.0 only as a readiness candidate and keeps dependencyAdmitted=false, runtimeImplemented=false, and the catalog maturity HOLD."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over all eleven finalized non-self artifacts named by this receipt."
+    },
+    {
+      "gate": "locked-workspace-build-and-browser-suite",
+      "outcome": "SKIPPED",
+      "reason": "This environment did not contain the complete locked repository checkout and browser dependency closure; the existing PR workflows remain the authoritative exact-head build, unit, and browser evidence."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks start after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt records authorship and validation scope but is not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "explorer-baseline-entrypoint",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/main.ts@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa"
+    },
+    {
+      "id": "renderer-neutral-map-bridge",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/index.tsx@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa"
+    },
+    {
+      "id": "evidence-drawer-boundary",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@67cf9bcd8d4044beb2f7ec4ec17e1bf162ca30aa"
+    },
+    {
+      "id": "maplibre-governance-hold",
+      "validated": true,
+      "evidence_ref": "repo:issues/2957@2026-08-19"
+    },
+    {
+      "id": "maplibre-readiness-candidate",
+      "validated": true,
+      "evidence_ref": "repo:pull/3017@93c58960fa18214148e576901adfdcc93f1bd5f7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T05:42:52Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Composes the existing Explorer feature slices into a repository-grounded, synthetic, map-first public-facing shell. It does not admit or import maplibre-gl, activate sources, call a model, expose internal lifecycle stores, accept ADR-0006/0007, release data, deploy, publish, or change repository settings."
+}

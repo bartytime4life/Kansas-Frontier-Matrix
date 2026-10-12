@@ -6,22 +6,23 @@ version: v1
 status: draft
 owners: <hydrology lane steward> + <docs steward>   # placeholders — resolve via CODEOWNERS
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
   - docs/domains/hydrology/OBJECT_FAMILIES.md
   - docs/domains/hydrology/GLOSSARY.md
-  - docs/domains/hydrology/identity-model.md
 tags: [kfm, domain, hydrology, object-map, relationships, cross-lane, governance]
 notes:
   - SCOPE — this is the object RELATIONSHIP map (edges, cardinality, direction, cross-lane citations). Per-family attributes live in OBJECT_FAMILIES.md; term meanings in GLOSSARY.md; identity machinery in identity-model.md. This doc does not restate them.
   - Cross-lane edges (§4) are CONFIRMED from Atlas §F and §24.14 (relation type + citing domains + sensitivity tier). Intra-lane edges (§3) are INFERRED from object purposes — labeled PROPOSED.
   - No mounted repo this session; all field/path/cardinality claims are PROPOSED or NEEDS VERIFICATION.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Object Map (Relationships); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Object Map (Relationships)
@@ -35,7 +36,7 @@ notes:
 ![Intra-lane](https://img.shields.io/badge/intra--lane_edges-PROPOSED-orange)
 ![Policy](https://img.shields.io/badge/policy_label-public-lightgrey)
 
-**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06
+**Status:** draft · **Owners:** `<hydrology lane steward>` + `<docs steward>` · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-07-30
 
 ---
 
@@ -128,7 +129,7 @@ flowchart TB
 |---|---|---|---|---|
 | `HUCUnit` | nests within | `HUCUnit` / `Watershed` | many → 1 (parent HUC) | HUC nesting (HUC12 ⊂ HUC10 ⊂ … ) |
 | `ReachIdentity` | is the stable identity for | `HydroFeature` | 1 → 1..n | reach identity vs generic feature |
-| `ReachIdentity` | crosswalks to | `HUCUnit` (HUC12) | n → 1 (or ranked n→m for braided) | COMID↔HUC12 crosswalk; see [`identity-model.md`](./identity-model.md) §6 |
+| `ReachIdentity` | crosswalks to | `HUCUnit` (HUC12) | n → 1 (or ranked n→m for braided) | COMID↔HUC12 crosswalk; see `identity-model.md` (not present) §6 |
 | `GaugeSite` | emits | `FlowObservation` | 1 → many | site is identity; readings are separate objects |
 | `GaugeSite` | emits | `WaterLevelObservation` | 1 → many | same |
 | `GroundwaterWell` | emits | `WaterLevelObservation` | 1 → many | well level readings |
@@ -137,7 +138,7 @@ flowchart TB
 | `ReachIdentity` | seeds | `UpstreamTrace` | 1 → 1 (resolves a reach set) | network traversal |
 
 > [!CAUTION]
-> **The crosswalk edge is the lane's highest-risk join.** `ReachIdentity → HUCUnit` (COMID↔HUC12) is deterministic only via the fallback ladder, carries an `alignment_score`, and **ABSTAINs** on ambiguous/braided geometry. It is the one intra-lane edge with its own validator and policy bundle (home CONFLICTED — ADR-S-CWV-01). Detail: [`identity-model.md`](./identity-model.md).
+> **The crosswalk edge is the lane's highest-risk join.** `ReachIdentity → HUCUnit` (COMID↔HUC12) is deterministic only via the fallback ladder, carries an `alignment_score`, and **ABSTAINs** on ambiguous/braided geometry. It is the one intra-lane edge with its own validator and policy bundle (home CONFLICTED — ADR-S-CWV-01). Detail: `identity-model.md` (not present).
 
 ## 4. Cross-lane edges (who cites hydrology)
 
@@ -191,19 +192,19 @@ Every edge in this map — intra- or cross-lane — obeys these (CONFIRMED) [DOM
 | OQ-HYD-MAP-01 | Intra-lane cardinalities (§3) are INFERRED — confirm against the schemas once authored. | NEEDS VERIFICATION |
 | OQ-HYD-MAP-02 | Is `FloodContext` a node distinct from `NFHLZone`, and does it take its own edges? (Atlas pairs them.) | OPEN |
 | OQ-HYD-MAP-03 | Does `ReachIdentity → HUCUnit` become `ReachIdentity → 3DHP id → HUCUnit` once 3DHP supersedes v2.1? | CONFLICTED (corpus-open) |
-| OQ-HYD-MAP-04 | Cross-lane link objects (`AquiferObservation`, `WaterUseLink`, `DroughtLink`, `IrrigationLink`) — are they edges in this map or nodes in OBJECT_FAMILIES? | OPEN (cross-ref OQ-HYD-OBJ-02) |
+| OQ-HYD-MAP-04 | `AquiferObservation` is a measurement node and `AquiferContextLink` is its Geology edge; placement of `WaterUseLink`, `DroughtLink`, and `IrrigationLink` remains open. | PARTIALLY RESOLVED (cross-ref OQ-HYD-OBJ-02) |
 | OQ-HYD-MAP-05 | §F lists 4 neighboring lanes; §24.14 adds Habitat/Fauna/Flora/Frontier as citers — confirm the citer set is complete. | NEEDS VERIFICATION |
 
 ## 8. Related docs
 
 - [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — **per-family nodes** (this map's companion; attributes live there, not here).
 - [`GLOSSARY.md`](./GLOSSARY.md) — term meanings for every node.
-- [`identity-model.md`](./identity-model.md) — identity rule + the COMID↔HUC12 crosswalk edge in detail.
+- `identity-model.md` (not present) — identity rule + the COMID↔HUC12 crosswalk edge in detail.
 - [`README.md`](./README.md) · [`INDEX.md`](./INDEX.md) — lane landing page / navigation.
 - [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — how objects (and their edges) move `Pre-RAW → PUBLISHED`.
 - [`MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) — how these objects and edges surface on the map.
-- [`directory-rules.md`](../../../directory-rules.md) · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — placement law; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) · `ai-build-operating-contract.md` (held: DOC-DOC-002) — placement law; `CONTRACT_VERSION = "3.0.0"`.
 
 ---
 
-<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Object **relationship** map (companion to OBJECT_FAMILIES.md) · Last updated: 2026-06-06 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>
+<sub>Status: draft · Version: v1 · Contract: CONTRACT_VERSION = "3.0.0" · Lane: hydrology · Object **relationship** map (companion to OBJECT_FAMILIES.md) · Last updated: 2026-07-30 · Owners: `<hydrology lane steward>` + `<docs steward>`</sub>

@@ -1,4 +1,20 @@
-# connectors/fema pyproject — greenfield placeholder
+# Package metadata for the FEMA connector source tree under src/fema.
+# Runtime needs only the standard library and the in-repository connectors-core
+# package (packages/connectors-core); no distribution or release is implied.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kfm-connector-fema"
 version = "0.0.0"
+description = "OpenFEMA declarations keyset planning, injected-transport retrieval episodes, and candidate routing"
+requires-python = ">=3.11"
+dependencies = ["kfm-connectors-core"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["fema"]
+
+[tool.setuptools.package-data]
+fema = ["descriptor.yaml"]

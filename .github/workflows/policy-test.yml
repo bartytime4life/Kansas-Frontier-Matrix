@@ -31,26 +31,39 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out repository without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Select deterministic Python runtime
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
 
-      - name: Confirm OPA lane remains an explicit hold
+      - name: Confirm bounded Rego lane and preserve the broader OPA hold
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import json
           import re
           import tomllib
 
+          release_gate_packet = [
+              Path("policy/rego/release_gate_v1.rego"),
+              Path("policy/rego/release_gate_v1_test.rego"),
+              Path("policy/bundles/pass12-release-gate-v1/README.md"),
+              Path("fixtures/policy/release_gate_v1/allow_public.json"),
+              Path("fixtures/policy/release_gate_v1/deny_missing_evidence.json"),
+              Path("fixtures/policy/release_gate_v1/deny_missing_sensitivity.json"),
+              Path("fixtures/policy/release_gate_v1/deny_missing_attestation.json"),
+              Path(".github/workflows/pass12-release-policy-v1.yml"),
+          ]
           required = [
               Path("Makefile"),
+              Path("control_plane/readiness/lanes.json"),
+              Path("tools/readiness/run_lane.py"),
               Path("policy/README.md"),
               Path("policy/bundles/README.md"),
               Path("policy/fixtures/README.md"),
@@ -61,6 +74,7 @@ jobs:
               Path("packages/policy-runtime/src/policy_runtime/core.py"),
               Path("tools/validators/policy/README.md"),
               Path("docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"),
+              *release_gate_packet,
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required policy readiness evidence is missing: {missing}"
@@ -71,9 +85,33 @@ jobs:
               path for path in rego_files
               if path.name.endswith("_test.rego") or "tests" in path.parts
           ]
-          assert not rego_tests, (
-              "Rego test modules have appeared; replace this readiness hold with the accepted "
-              f"OPA test command and reviewed assertions: {[p.as_posix() for p in rego_tests]}"
+          expected_rego_tests = [Path("policy/rego/release_gate_v1_test.rego")]
+          assert rego_tests == expected_rego_tests, (
+              "the separately governed Rego test inventory changed; review each lane and its "
+              f"dedicated workflow explicitly: {[p.as_posix() for p in rego_tests]}"
+          )
+
+          release_workflow = Path(
+              ".github/workflows/pass12-release-policy-v1.yml"
+          ).read_text(encoding="utf-8")
+          release_workflow_markers = [
+              "name: pass12-release-policy-v1",
+              "https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static",
+              "1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  /tmp/opa",
+              "/tmp/opa fmt --fail policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego",
+              "/tmp/opa test policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego",
+              "fixtures/policy/release_gate_v1/allow_public.json",
+              "MISSING_EVIDENCE",
+              "MISSING_SENSITIVITY_REVIEW",
+              "MISSING_REQUIRED_ATTESTATION",
+          ]
+          for marker in release_workflow_markers:
+              assert marker in release_workflow, (
+                  f"the separately governed release-policy workflow lost required marker: {marker}"
+              )
+          assert "--fail-defined" not in release_workflow, (
+              "OPA --fail-defined treats a defined deny-reason result as workflow failure; "
+              "use --fail so only undefined/empty results fail the deterministic reason check"
           )
 
           # Documentation may grow without making a bundle executable. Any non-doc
@@ -100,37 +138,78 @@ jobs:
           assert (namespace / "__init__.py").read_text(encoding="utf-8") == "", (
               "policy_runtime exports have appeared without a verified policy-test lane"
           )
-          assert (namespace / "core.py").read_text(encoding="utf-8").strip() == (
-              "# policy-runtime core — greenfield placeholder"
-          ), "policy_runtime/core.py is no longer the confirmed comment-only placeholder"
+          # Water admission consumes trusted owner decisions; it is not a Rego
+          # evaluator. Its executable denial/review tests have a separate lane.
+          water_lane = Path(".github/workflows/water-pilot.yml").read_text()
+          assert "tests/packages/release" in water_lane
+          assert Path("tests/packages/release/test_water_snapshot.py").is_file()
+          package = tomllib.loads(Path("packages/policy-runtime/pyproject.toml").read_text())
+          assert package["project"]["name"] == "kfm-policy-runtime"
+          assert package["project"]["requires-python"] == ">=3.11"
+          assert package["project"]["dependencies"] == ["kfm-connectors-core"]
 
-          package = tomllib.loads(
-              Path("packages/policy-runtime/pyproject.toml").read_text(encoding="utf-8")
-          )
-          assert package == {
-              "project": {"name": "kfm-policy-runtime", "version": "0.0.0"}
-          }, (
-              "policy-runtime packaging metadata has changed; establish build, dependency, "
-              "API, evaluator, and package-test evidence before treating it as executable"
+          # Policy validators are not OPA evaluators. Allow additive, fixture-only
+          # validator helpers only when each has a dedicated no-network test and
+          # workflow. Unexpected executable payloads still fail closed.
+          policy_validator_root = Path("tools/validators/policy")
+          policy_python_validators = sorted(policy_validator_root.glob("validate_*.py"))
+          validator_support_gaps = []
+          for validator in policy_python_validators:
+              profile = validator.stem.removeprefix("validate_")
+              test_path = Path("tests/validators") / f"test_{validator.name}"
+              workflow_path = Path(".github/workflows") / f"{profile.replace('_', '-')}.yml"
+              if not test_path.is_file():
+                  validator_support_gaps.append(
+                      f"{validator.as_posix()} missing {test_path.as_posix()}"
+                  )
+              if not workflow_path.is_file():
+                  validator_support_gaps.append(
+                      f"{validator.as_posix()} missing {workflow_path.as_posix()}"
+                  )
+          assert not validator_support_gaps, (
+              "policy validator helpers require dedicated no-network tests and workflow wiring: "
+              f"{validator_support_gaps}"
           )
 
-          validator_payloads = [
-              path for path in Path("tools/validators/policy").rglob("*")
-              if path.is_file() and path.suffix.lower() in {".py", ".sh", ".rego"}
+          unexpected_validator_payloads = [
+              path for path in policy_validator_root.rglob("*")
+              if path.is_file()
+              and path.suffix.lower() in {".py", ".sh", ".rego"}
+              and path not in policy_python_validators
           ]
-          assert not validator_payloads, (
-              "policy validator executables have appeared; review and invoke their accepted "
-              f"entry point instead of preserving the hold: {[p.as_posix() for p in validator_payloads]}"
+          assert not unexpected_validator_payloads, (
+              "unexpected policy validator/evaluator payloads have appeared; review their "
+              "authority and wire the accepted OPA lane deliberately: "
+              f"{[p.as_posix() for p in unexpected_validator_payloads]}"
           )
+
+          readiness = json.loads(
+              Path("control_plane/readiness/lanes.json").read_text(encoding="utf-8")
+          )
+          policy_lanes = [lane for lane in readiness["lanes"] if lane["id"] == "policy"]
+          assert len(policy_lanes) == 1, "policy readiness lane must be unique"
+          policy_lane = policy_lanes[0]
+          assert policy_lane["status"] == "IMPLEMENTED", (
+              "policy readiness lane is no longer the reviewed bounded implementation"
+          )
+          assert policy_lane["command"] == [
+              "opa",
+              "test",
+              "policy/rego/release_gate_v1.rego",
+              "policy/rego/release_gate_v1_test.rego",
+              "-v",
+          ], "policy readiness lane command changed; review the bounded Rego scope"
+          assert policy_lane["hold_reason"] is None
+          assert "repository-wide evaluator" in policy_lane["authority_boundary"]
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^policy:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile policy target is missing"
           assert target.group("body").splitlines() == [
-              '\t@echo "TODO: opa test policy/ -v"'
+              '\t$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py policy'
           ], (
-              "Makefile policy target has changed; invoke and verify the accepted command "
-              "instead of leaving this readiness hold green"
+              "Makefile policy target must execute the reviewed repository-owned "
+              "bounded readiness lane"
           )
 
           forbidden_candidates = [
@@ -148,9 +227,9 @@ jobs:
           )
 
           print(f"CONFIRMED: {len(rego_files)} Rego source files are present.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no Rego test modules or accepted OPA command exist.")
-          print("WORKFLOW_HOLD: no accepted bundle payload, evaluator binding, or executable runtime is established.")
-          print("No policy rule was evaluated and no PolicyDecision was emitted.")
+          print("CONFIRMED: one separately governed release-gate Rego test lane is wired to its dedicated workflow.")
+          print("WORKFLOW_HOLD: no accepted repository-wide bundle manifest, evaluator binding, or executable policy runtime is established.")
+          print("This broad guard evaluated no policy and emitted no PolicyDecision.")
           PY
 
       - name: Record OPA readiness outcome
@@ -160,9 +239,9 @@ jobs:
           {
             echo "### OPA test readiness"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** Rego sources exist, but no accepted Rego test modules, OPA command, bundle payload/manifest, evaluator binding, or executable policy runtime is established."
-            echo "- Documentation-only growth is allowed; executable bundle, validator, or runtime candidates fail the guard and require deliberate graduation."
-            echo "- This job evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
+            echo "- **CONFIRMED (bounded lane):** the separately governed Pass 12 release-gate Rego source, native test, fixtures, and checksum-pinned workflow are present."
+            echo "- **WORKFLOW_HOLD:** no accepted repository-wide bundle manifest, evaluator binding, policy-runtime implementation, or general OPA command is established."
+            echo "- This broad job performed static wiring checks only; it evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
           } >> "$GITHUB_STEP_SUMMARY"
 
   policy-fixture-coverage:
@@ -171,12 +250,12 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out repository without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Select deterministic Python runtime
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
 
@@ -287,7 +366,7 @@ jobs:
 
           harness_text = common_harness.read_text(encoding="utf-8")
           for marker in (
-              'FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release"]',
+              'FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release", "receipts"]',
               "def _schema_cases():",
               '@pytest.mark.parametrize("family,name,schema_path,fixture_dir", _schema_cases())',
           ):
@@ -313,9 +392,9 @@ jobs:
 
           print(f"CONFIRMED: {len(valid_files)} valid and {len(invalid_files)} invalid PolicyDecision JSON fixtures are inventoried.")
           print("CONFIRMED: the common schema harness discovers the policy schema-fixture directory.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: dedicated validator and evaluator-backed fixtures are absent.")
-          print("WORKFLOW_HOLD: shape fixtures do not prove policy inputs, rules, reasons, obligations, or bundle identity.")
-          print("No policy rule was evaluated and no PolicyDecision was emitted.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: dedicated PolicyDecision validator and evaluator-backed fixtures are absent.")
+          print("WORKFLOW_HOLD: shape fixtures do not prove PolicyDecision inputs, reasons, obligations, or bundle identity.")
+          print("No PolicyDecision was emitted by this shape-only readiness job.")
           PY
 
       - name: Record fixture readiness outcome
@@ -326,7 +405,7 @@ jobs:
             echo "### Policy fixture coverage readiness"
             echo
             echo "- **CONFIRMED (shape only):** baseline valid and invalid PolicyDecision fixtures remain present and discoverable by the separate common schema harness."
-            echo "- **ADDITIVE-SAFE DRIFT GUARD:** documentation and semantic fixture growth no longer fails an exact historical inventory snapshot; executable evaluator/test payloads still trigger deliberate graduation."
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no dedicated PolicyDecision validator, canonical evaluator binding, policy input matrix, reason/obligation semantics, bundle identity, or evaluated policy cases are established."
-            echo "- This job evaluated no policy and emitted no PolicyDecision, receipt, proof, release, or publication authority."
+            echo "- **ADDITIVE-SAFE DRIFT GUARD:** documentation and semantic fixture growth no longer fails an exact historical inventory snapshot; executable PolicyDecision evaluator/test payloads still trigger deliberate graduation."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no dedicated PolicyDecision validator, canonical evaluator binding, PolicyDecision input matrix, reason/obligation semantics, bundle identity, or evaluated PolicyDecision cases are established."
+            echo "- This job emitted no PolicyDecision, receipt, proof, release, or publication authority."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-control-source-redirect-denial-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/repository_control/fetch_bounded_issue_comments.py",
+    "tests/validators/test_repository_control_input_bounds.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/repository_control/fetch_bounded_issue_comments.py": "sha256:5298d1f800d6d4ec10f2087ea6367af44de92ae3169e6a66e1e4697da16d46bd",
+    "tests/validators/test_repository_control_input_bounds.py": "sha256:d8a814f081c600ec915330c3c143e56f0c2ff89266af26cb7b36dae46f51e7d6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tools/validators/repository_control/fetch_bounded_issue_comments.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tests/validators/test_repository_control_input_bounds.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/5bbfae05970acd4357a08135ff340284585039f4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/repository_control/fetch_bounded_issue_comments.py": "PROPOSED",
+    "tests/validators/test_repository_control_input_bounds.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused repository-control source and transition tests",
+      "outcome": "PASS",
+      "reason": "Python3.12.14 / pytest9.1.1:67 passed,zero skipped; fifteen synthetic redirects denied before a second request, direct200 remains available."
+    },
+    {
+      "gate": "Redirect regression sensitivity",
+      "outcome": "PASS",
+      "reason": "Offline mutation substituting standard redirect handling makes all15 refusal cases fail as expected. This is test sensitivity, not a live canary."
+    },
+    {
+      "gate": "Broader repository-control test suite",
+      "outcome": "FAIL",
+      "reason": "108passed/1failed: historical incident1789 tracked-projection SHA mismatch also fails on exactbase(92passed/1failed); inherited and outside this change."
+    },
+    {
+      "gate": "Exact-head hosted and accountable independent acceptance",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN; delivery remains VALIDATED_BRANCH_ONLY under open4024. No PR or administration transition authorized by this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tools/validators/repository_control/fetch_bounded_issue_comments.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tools/validators/repository_control/fetch_bounded_issue_comments.py"
+    },
+    {
+      "id": "tests/validators/test_repository_control_input_bounds.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tests/validators/test_repository_control_input_bounds.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T15:37:00.311052Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Bounded existing-helper transport hardening only. All fixtures use synthetic metadata, no live credentials or sockets. A moved endpoint now needs explicit configuration review; initial API URL, token scopes, workflow/check name, source status shape, parser and resource limits are unchanged. Existing tools/tests roots and generated-receipt lane follow accepted ADR-0029 Directory Rules7.2,10.1,11.3. No source admission, data download, catalog/baseline mutation, scheduler, settings, canary, PR, ready/merge, release, deployment, promotion or publication. Accountable review remains pending. No observed credential exposure is claimed. Rollback: abandon unaccepted branch; after separately authorized integration prefer a reviewed fail-closed correction rather than restoring redirects; preserve history."
+}

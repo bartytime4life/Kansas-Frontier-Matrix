@@ -1,19 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/sources/source_descriptor.schema.json",
-  "title": "Source Descriptor",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
-  "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "title": "Source Descriptor compatibility schema",
+  "description": "PROPOSED compatibility alias for the currently implemented rich SourceDescriptor schema. This file adds no independent source-admission, rights, policy, review, release, or publication authority.",
+  "$ref": "https://schemas.kfm.local/contracts/v1/source/source_descriptor.schema.json",
   "x-kfm": {
     "status": "PROPOSED",
     "path": "schemas/contracts/v1/sources/source_descriptor.schema.json",
+    "canonical_implementation_schema": "schemas/contracts/v1/source/source_descriptor.schema.json",
+    "contract_doc": "contracts/source/source_descriptor.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_descriptor/",
+    "validator": "tools/validators/sources/validate_source_descriptor.py",
+    "compatibility_role": "Declared plural-path alias only; the referenced rich schema remains the single implementation shape.",
     "source_docs": [
       "docs/domains/atmosphere/IDENTITY_MODEL.md",
       "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
       "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md"
-    ],
-    "contract_doc": null
+    ]
   }
 }

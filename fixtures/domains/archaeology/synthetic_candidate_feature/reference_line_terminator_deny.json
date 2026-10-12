@@ -1,0 +1,23 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-deny-013",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "origin_method": "ARCHIVAL",
+  "source_refs": [
+    "kfm://source/synthetic/line-break\n"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic/line-break\n"
+  ],
+  "observation_refs": [
+    "kfm://observation/synthetic/line-break\n"
+  ],
+  "candidate_geometry_ref": "kfm://geometry/synthetic/line-break\n",
+  "spatial_precision_class": "WITHHELD",
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "lifecycle_state": "WORK",
+  "correction_refs": [
+    "kfm://correction/synthetic/line-break\n"
+  ]
+}

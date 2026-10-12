@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-oldest-processed-hydrology-guides-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/processed/README.md",
+    "data/processed/hydrology/README.md"
+  ],
+  "artifact_hashes": {
+    "data/processed/README.md": "sha256:cbf8bf7ff18b73f01795b718c46b2d56d531be9ed9e741104a450a5bd37451df",
+    "data/processed/hydrology/README.md": "sha256:4e7c2826a9e9a38b8711f6db03eff52569b015cdbde2615d9ec359243ac476b6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:e3859543e5d387330c56aa969ee5d0c09c3e5d89ba2bef4ad9be5ffa652a3ef5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "documentation validators",
+      "focused WBD candidate tests"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@57d153cd6b5572f9bda8536a79831b232f0326b6",
+      "data/processed/README.md",
+      "data/processed/hydrology/README.md",
+      "data/processed/hydrology/wbd/README.md",
+      "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py",
+      "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py"
+    ]
+  },
+  "truth_labels": {
+    "data/processed/README.md": "CONFIRMED",
+    "data/processed/hydrology/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused documentation link check",
+      "outcome": "PASS",
+      "reason": "Both Markdown files passed local target checks; external badge targets were not requested."
+    },
+    {
+      "gate": "required metadata blocks",
+      "outcome": "PASS",
+      "reason": "Both blocks are valid with no fail findings; inherited unsupported-nesting warnings remain in the processed parent."
+    },
+    {
+      "gate": "bounded stale-document scan",
+      "outcome": "PASS",
+      "reason": "Both files had no fail findings; inherited nested metadata produced advisory warnings."
+    },
+    {
+      "gate": "focused WBD candidate tests",
+      "outcome": "PASS",
+      "reason": "Nine fixture-first candidate tests passed locally."
+    },
+    {
+      "gate": "hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch push and pull request."
+    },
+    {
+      "gate": "independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending reviewer action; validation does not imply approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tracked-hydrology-processed-inventory",
+      "validated": true,
+      "evidence_ref": "main@57d153cd6b5572f9bda8536a79831b232f0326b6:data/processed/hydrology/"
+    },
+    {
+      "id": "wbd-fixture-candidate-boundary",
+      "validated": true,
+      "evidence_ref": "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py"
+    },
+    {
+      "id": "wbd-negative-path-tests",
+      "validated": true,
+      "evidence_ref": "tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T04:36:48Z",
+  "emitter": "Codex GPT-6 documentation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Reconciles old PROCESSED guides with current tracked Hydrology and fixture candidate evidence. No source admission, lifecycle transition, release, deployment, or publication is authorized or claimed."
+}

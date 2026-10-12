@@ -6,6 +6,7 @@
   "location_ref": null,
   "geometry_confidence": "unresolved",
   "planning_region_ref": null,
+  "planning_region_resolution_status": "unresolved",
   "source_publication_time": null,
   "source_ref": "kwo:grant-programs:swigp:fy2027:project:synthetic-001"
 }

@@ -1,0 +1,185 @@
+{
+  "receipt_id": "genrec-public-map-followup-20261008-a52175226630c589",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/smoke-local.sh",
+    "apps/site/source/app/public-map-browser.module.css",
+    "apps/site/source/app/public-map-catalog.json",
+    "apps/site/source/docs/public-map-validation-20261008.md",
+    "tests/local_data/test_public_map_downloads.py",
+    "tools/local_data/catalogs/public-maps/README.md",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json",
+    "tools/local_data/public_map_downloads.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/smoke-local.sh": "sha256:39febd19ab5792907a593c23d10045e612bf39a30bd1bc803d9a51b8db3fbf34",
+    "apps/site/source/app/public-map-browser.module.css": "sha256:8b7b8f191d64f7a1151205707b33dd320cdcb47ba4246644357eec7f25c00e51",
+    "apps/site/source/app/public-map-catalog.json": "sha256:60326c64ea2a089e5fd8b71dec120a30eabf67ab8ca19f741ea80983129f3538",
+    "apps/site/source/docs/public-map-validation-20261008.md": "sha256:cac818a89d4575d948b78e0fdffda3fcaf2d6b44882f145a766a2c65356f84c6",
+    "tests/local_data/test_public_map_downloads.py": "sha256:4b9965fbf95797f57367faca88897c34fae26ef71c80c7d164cfbcda14f560e8",
+    "tools/local_data/catalogs/public-maps/README.md": "sha256:041c97458c264eebcd4d3cda650301652d13dcefbe7a9746b8e7cbef4eec0d2d",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json": "sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2",
+    "tools/local_data/public_map_downloads.py": "sha256:dd303022b1cdac695910dc1d70c1cd841dda54e79b1f7beb16e0760034c6ab81"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model build version not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "functions.exec",
+      "exec_command",
+      "apply_patch",
+      "cua_repl",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
+      "sha256:71f5864baca732a96e32181dd5f10f67782366e2d32f9827bb0d4559c98ce5b7",
+      "sha256:cac818a89d4575d948b78e0fdffda3fcaf2d6b44882f145a766a2c65356f84c6",
+      "sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2",
+      "sha256:fa415b35ce7745760c0d009a336d927f2dc802ccd3c1285f263e1b1353ba3f44",
+      "sha256:8499791a2c5d7acb0ea35d3f19a1bde52873f84d48b2ef3b789a27077f4e1523",
+      "sha256:a0800c0ad7998947665dd0afd8150f72c02011484b8154b96b0bd983ffefeab2"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "data/receipts/generated/README.md@sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
+      "data/receipts/generated/genrec-public-map-library-20261008-5cf43f0b7c907ddf.json@sha256:71f5864baca732a96e32181dd5f10f67782366e2d32f9827bb0d4559c98ce5b7",
+      "apps/site/source/docs/public-map-validation-20261008.md@sha256:cac818a89d4575d948b78e0fdffda3fcaf2d6b44882f145a766a2c65356f84c6",
+      "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2"
+    ],
+    "evidence_refs": [
+      "git-commit:d22e013a9024894cb1374d34b414e9dd189d16b3",
+      "artifact-basis:current-workspace",
+      "local-validation-log:kfm-public-maps-final-build.log@sha256:fa415b35ce7745760c0d009a336d927f2dc802ccd3c1285f263e1b1353ba3f44",
+      "local-validation-log:kfm-public-maps-final-tests.log@sha256:8499791a2c5d7acb0ea35d3f19a1bde52873f84d48b2ef3b789a27077f4e1523",
+      "local-validation-log:kfm-public-map-smoke-final.log@sha256:a0800c0ad7998947665dd0afd8150f72c02011484b8154b96b0bd983ffefeab2"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/smoke-local.sh": "PROPOSED",
+    "apps/site/source/app/public-map-browser.module.css": "PROPOSED",
+    "apps/site/source/app/public-map-catalog.json": "PROPOSED",
+    "apps/site/source/docs/public-map-validation-20261008.md": "PROPOSED",
+    "tests/local_data/test_public_map_downloads.py": "PROPOSED",
+    "tools/local_data/catalogs/public-maps/README.md": "PROPOSED",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json": "PROPOSED",
+    "tools/local_data/public_map_downloads.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "follow-up-artifact-inventory-and-sha256",
+      "outcome": "PASS",
+      "reason": "Bound the eight modified follow-up files to their final current workspace bytes relative to d22e013a9024894cb1374d34b414e9dd189d16b3. This receipt excludes itself; prior receipts are preserved."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS",
+      "reason": "git diff --check completed with exit 0 after the validation document was finalized."
+    },
+    {
+      "gate": "site-typescript-and-production-build",
+      "outcome": "PASS",
+      "reason": "Final TypeScript and production build passed, as reported by the coordinating agent and recorded in the bound validation document. The final local build log is hash-referenced in inputs."
+    },
+    {
+      "gate": "final-site-test-suite",
+      "outcome": "PASS",
+      "reason": "Final follow-up full Site rerun passed 709 tests. Coordinating-agent result is recorded in the bound validation document and final local test log is hash-referenced in inputs."
+    },
+    {
+      "gate": "final-focused-python-suite",
+      "outcome": "PASS",
+      "reason": "Final follow-up checks passed 45 tests and 80 subtests: 18 catalog, 21 download-manager, three control, and three smoke-runner startup tests. The coordinating agent reported the combined result; this emitter also independently ran the three smoke-runner startup tests successfully."
+    },
+    {
+      "gate": "final-local-site-smoke",
+      "outcome": "PASS",
+      "reason": "Actual local Site smoke run passed 57 checks across 47 routes, with nine provider-only routes listed. Reported by the coordinating agent; final local smoke log is hash-referenced in inputs."
+    },
+    {
+      "gate": "final-bounded-local-browser-verification",
+      "outcome": "PASS",
+      "reason": "Coordinating agent verified final r4 installation: catalog returned 1695 records and four provider MD5 metadata values; MapLibre zoom controls computed white rgb(255,255,255), 44 by 44 pixels, zero padding; KGS preview loaded five features with source attribution."
+    },
+    {
+      "gate": "prior-broader-backend-regression",
+      "outcome": "SKIPPED",
+      "reason": "Prior implementation evidence retains 63 tests and 96 subtests passed. That broader backend selection was not rerun for this follow-up; the final focused 45-test result is recorded separately."
+    },
+    {
+      "gate": "provider-checksum-verification",
+      "outcome": "SKIPPED",
+      "reason": "Four ScienceBase MD5 values are retained as metadata in the seed and subsequent capture receipts, with providerChecksumVerified false. Limon/Lamar ZIPs were not downloaded for this correction. Local SHA-256 and stored-byte readback are separate capture-integrity evidence."
+    },
+    {
+      "gate": "inherited-repository-ci-gates",
+      "outcome": "SKIPPED",
+      "reason": "Four inherited failures remain: repository gap scan, water MIRROR_REVIEW_REQUIRED, missing People documentation-only marker, and changed soil release index. Baseline/main run evidence is linked in the bound validation document; this receipt does not clear these gates."
+    },
+    {
+      "gate": "comprehensive-browser-and-geological-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Bounded local checks do not establish comprehensive accessibility, mobile/touch acceptance, provider availability, spatial accuracy, or geological acceptance."
+    },
+    {
+      "gate": "source-admission-release-and-hosted-publication",
+      "outcome": "SKIPPED",
+      "reason": "No source admission, release, hosted Site publication, or audience change performed. External RAW test captures remain candidate-only; KGS rights hold and unknown NMMR inventory remain."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending; no approval, override, or merge authorization claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "generated-receipt-operating-contract",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/ai-build-operating-contract.md@sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    },
+    {
+      "id": "prior-public-map-implementation-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-public-map-library-20261008-5cf43f0b7c907ddf.json@sha256:71f5864baca732a96e32181dd5f10f67782366e2d32f9827bb0d4559c98ce5b7; artifact-git-ref:d22e013a9024894cb1374d34b414e9dd189d16b3"
+    },
+    {
+      "id": "final-local-public-map-validation",
+      "validated": true,
+      "evidence_ref": "apps/site/source/docs/public-map-validation-20261008.md@sha256:cac818a89d4575d948b78e0fdffda3fcaf2d6b44882f145a766a2c65356f84c6"
+    },
+    {
+      "id": "augmented-public-map-discovery-receipt",
+      "validated": true,
+      "evidence_ref": "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-08T18:34:31Z",
+  "emitter": "codex/gpt-6/generated-work-receipt",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Append-only supplemental provenance for the final public-map follow-up: readable scoped MapLibre controls, preservation of provider MD5 metadata in selected-original capture receipts, preview-route smoke inventory coverage, related manager tests, and final validation evidence. Artifact hashes bind the final eight-file working-tree follow-up; the input base is d22e013a9024894cb1374d34b414e9dd189d16b3. Original implementation receipt and unused untracked draft receipts remain unchanged. Exact model build and sampling parameters were not exposed and have not been invented. All artifacts remain PROPOSED pending human review. Final combined test, installation, and browser observations are coordinating-agent reports recorded in the bound validation document; this emitter independently checked the artifact inventory, hashes, diff check, and three startup tests. Citation validation means repository evidence exists and its bytes were hashed, not that provider claims, rights, or inherited gates were accepted. No prompt text, hidden reasoning, secrets, private RAW payloads, or provider log contents are included."
+}

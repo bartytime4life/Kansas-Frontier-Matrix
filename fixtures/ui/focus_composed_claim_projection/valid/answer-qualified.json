@@ -1,0 +1,68 @@
+{
+  "profile": "kfm.explorer.focus-composed-claim.public-safe.v1",
+  "request_id": "request:focus:soil-context-qualified-001",
+  "claim_id": "claim:synthetic:soil-context-002",
+  "outcome": "ANSWER",
+  "reason_code": "COMPOSED_CLAIM_QUALIFIED",
+  "closure_id": "kfm:closure:synthetic:soil-context-qualified-001",
+  "closure_outcome": "QUALIFIED",
+  "answer": "The synthetic static-survey claim is supported, while optional station-observation support is unavailable.",
+  "evidence_refs": [
+    "kfm:evidence:synthetic:soil-static-002"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "kfm:evidence:synthetic:soil-static-002",
+      "label": "Synthetic static soil survey fixture",
+      "href": "https://example.invalid/kfm/evidence/soil-static-002"
+    }
+  ],
+  "resolved_roles": [
+    "STATIC_SURVEY"
+  ],
+  "unavailable_roles": [
+    "STATION_OBSERVATION"
+  ],
+  "limitations": [
+    "Optional station-observation support is unavailable.",
+    "Fixture-only demonstration; it is not a current soil-moisture reading."
+  ],
+  "policy": "ALLOW",
+  "review": "REVIEWED",
+  "release": "RELEASED",
+  "freshness": "CURRENT",
+  "ai_receipt_ref": "kfm:receipt:ai:synthetic:focus-qualified-001",
+  "evidence_drawer": {
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "id": "kfm:ui:evidence-drawer:focus-soil-qualified-001",
+    "outcome": "ANSWER",
+    "reason_code": "SUPPORTED",
+    "title": "Qualified synthetic soil support",
+    "summary": "The static-survey fixture supports the bounded claim; optional station support is unavailable.",
+    "evidence_refs": [
+      "kfm:evidence:synthetic:soil-static-002"
+    ],
+    "citations": [
+      {
+        "label": "Synthetic static soil survey fixture",
+        "href": "https://example.invalid/kfm/evidence/soil-static-002"
+      }
+    ],
+    "limitations": [
+      "Optional station-observation support is unavailable.",
+      "Fixture-only demonstration; it is not a current soil-moisture reading."
+    ],
+    "trust_state": {
+      "source_role": "official",
+      "policy": "ALLOW",
+      "review": "REVIEWED",
+      "release": "RELEASED",
+      "freshness": "CURRENT",
+      "correction": "NONE"
+    },
+    "history": {
+      "negative_outcomes": [],
+      "corrections": []
+    }
+  }
+}

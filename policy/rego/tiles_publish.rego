@@ -55,6 +55,7 @@ deny[msg] if {
   msg := "Rollback manifest is missing"
 }
 
-deny[msg] if unresolved_policy {
+deny[msg] if {
+  unresolved_policy
   msg := "Policy posture unresolved or not approved"
 }

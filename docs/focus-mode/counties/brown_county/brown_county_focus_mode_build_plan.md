@@ -1,6 +1,7 @@
 <!--
 KFM_META_BLOCK_V2
- doc_id: NEEDS_VERIFICATION — assign stable kfm://doc/<uuid> only through the governed document registry
+doc_id: kfm://doc/focus-mode/counties/brown-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
  title: Brown County Focus Mode Build Plan — Sovereign Waters, Working Landscapes, and Public-Safe County Evidence
  type: standard
  version: v1

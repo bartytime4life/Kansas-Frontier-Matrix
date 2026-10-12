@@ -2,13 +2,409 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json",
   "title": "Occurrence Evidence",
+  "description": "Draft closed machine shape for one source-bound Fauna occurrence-evidence record before the public/restricted sensitivity split. A valid instance is not publication authority.",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json. Fields are to be defined by the owning domain steward.",
-  "x-kfm": {
-    "status": "PROPOSED",
-    "source_doc": "docs/domains/fauna/CANONICAL_PATHS.md",
-    "contract_doc": "contracts/domains/fauna/occurrence_evidence.md"
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "spec_hash",
+    "occurrence_evidence_id",
+    "source_record_id",
+    "source_family",
+    "source_role",
+    "taxon",
+    "observation",
+    "geometry",
+    "rights",
+    "sensitivity",
+    "provenance",
+    "validation"
+  ],
+  "properties": {
+    "object_type": { "const": "occurrence_evidence" },
+    "schema_version": { "const": "v1" },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "occurrence_evidence_id": {
+      "type": "string",
+      "pattern": "^kfm://occurrence/[0-9a-f]{64}$"
+    },
+    "source_record_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s]+$"
+    },
+    "source_family": {
+      "enum": ["ebird", "inat", "gbif", "bison", "eddmaps", "other"]
+    },
+    "source_role": {
+      "enum": [
+        "observed",
+        "regulatory",
+        "modeled",
+        "aggregate",
+        "administrative",
+        "candidate",
+        "synthetic"
+      ]
+    },
+    "taxon": { "$ref": "#/$defs/taxon" },
+    "observation": { "$ref": "#/$defs/observation" },
+    "geometry": { "$ref": "#/$defs/geometry" },
+    "rights": { "$ref": "#/$defs/rights" },
+    "sensitivity": { "$ref": "#/$defs/sensitivity" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "validation": { "$ref": "#/$defs/validation" }
   },
-  "properties": {},
-  "additionalProperties": true
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "geometry": {
+            "properties": { "precision_class": { "const": "withheld" } },
+            "required": ["precision_class"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "geometry": {
+            "properties": {
+              "public_safe_geometry": {
+                "type": "object",
+                "properties": { "geometry_type": { "const": "withheld" } },
+                "required": ["geometry_type"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "sensitivity": {
+            "properties": { "generalization_required": { "const": true } },
+            "required": ["generalization_required"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "geometry": {
+            "properties": {
+              "public_safe_geometry": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "sensitivity": {
+            "properties": { "withhold_required": { "const": true } },
+            "required": ["withhold_required"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "geometry": {
+            "properties": {
+              "public_safe_geometry": {
+                "type": "object",
+                "properties": { "geometry_type": { "const": "withheld" } },
+                "required": ["geometry_type"]
+              }
+            }
+          },
+          "sensitivity": {
+            "properties": { "exact_location_public_safe": { "const": false } }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"],
+      "maxLength": 1024
+    },
+    "taxon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scientific_name",
+        "accepted_scientific_name",
+        "common_name",
+        "taxon_rank"
+      ],
+      "properties": {
+        "scientific_name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "accepted_scientific_name": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "common_name": { "$ref": "#/$defs/nullableString" },
+        "taxon_rank": {
+          "enum": [
+            "kingdom",
+            "phylum",
+            "class",
+            "order",
+            "family",
+            "genus",
+            "species",
+            "subspecies",
+            "variety",
+            "other"
+          ]
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_date", "basis_of_record", "observation_method"],
+      "properties": {
+        "event_date": { "type": "string", "format": "date" },
+        "event_time": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "basis_of_record": {
+          "enum": [
+            "human_observation",
+            "machine_observation",
+            "preserved_specimen",
+            "material_sample",
+            "living_specimen",
+            "fossil_specimen",
+            "literature_record",
+            "administrative_record",
+            "regulatory_record",
+            "aggregate_summary",
+            "model_output",
+            "candidate_report",
+            "synthetic_reconstruction"
+          ]
+        },
+        "observation_method": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "observed_by": { "$ref": "#/$defs/nullableString" },
+        "individual_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "publicSafeGeometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geometry_type",
+        "coordinates",
+        "precision_class",
+        "generalization_method"
+      ],
+      "properties": {
+        "geometry_type": { "enum": ["point", "grid", "county", "withheld"] },
+        "coordinates": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "prefixItems": [
+                { "type": "number", "minimum": -180, "maximum": 180 },
+                { "type": "number", "minimum": -90, "maximum": 90 }
+              ],
+              "items": false
+            }
+          ]
+        },
+        "precision_class": {
+          "enum": ["exact", "generalized_point", "grid", "county", "withheld"]
+        },
+        "generalization_method": { "$ref": "#/$defs/nullableString" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "geometry_type": { "const": "withheld" } },
+            "required": ["geometry_type"]
+          },
+          "then": {
+            "properties": {
+              "coordinates": { "type": "null" },
+              "precision_class": { "const": "withheld" }
+            }
+          }
+        }
+      ]
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latitude",
+        "longitude",
+        "precision_class",
+        "geoprivacy_status",
+        "public_safe_geometry"
+      ],
+      "properties": {
+        "latitude": {
+          "type": ["number", "null"],
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": ["number", "null"],
+          "minimum": -180,
+          "maximum": 180
+        },
+        "precision_class": {
+          "enum": ["exact", "generalized_point", "grid", "county", "withheld"]
+        },
+        "geoprivacy_status": {
+          "enum": ["open", "obscured", "private", "withheld", "unknown"]
+        },
+        "public_safe_geometry": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/publicSafeGeometry" }
+          ]
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license",
+        "redistribution_allowed",
+        "commercial_use_allowed",
+        "attribution_required"
+      ],
+      "properties": {
+        "license": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "redistribution_allowed": { "type": ["boolean", "null"] },
+        "commercial_use_allowed": { "type": ["boolean", "null"] },
+        "attribution_required": { "type": ["boolean", "null"] }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sensitive_species_flag",
+        "exact_location_public_safe",
+        "generalization_required",
+        "withhold_required",
+        "review_required"
+      ],
+      "properties": {
+        "sensitive_species_flag": { "type": "boolean" },
+        "exact_location_public_safe": { "type": "boolean" },
+        "generalization_required": { "type": "boolean" },
+        "withhold_required": { "type": "boolean" },
+        "review_required": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_uri",
+        "retrieved_at",
+        "publisher",
+        "ingestion_run_id",
+        "raw_artifact_ref",
+        "source_descriptor_ref",
+        "evidence_refs"
+      ],
+      "properties": {
+        "source_uri": { "type": "string", "format": "uri", "maxLength": 2048 },
+        "retrieved_at": { "type": "string", "format": "date-time" },
+        "publisher": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "ingestion_run_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "raw_artifact_ref": {
+          "type": ["string", "null"],
+          "maxLength": 1024
+        },
+        "source_descriptor_ref": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 1024 }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validator_result",
+        "reason_codes",
+        "checks",
+        "evidence_strength",
+        "validator_version",
+        "validated_at"
+      ],
+      "properties": {
+        "validator_result": { "enum": ["pass", "quarantine", "deny", "error"] },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(schema|identity|prov|rights|geom|sens|taxon|obs)\\.[a-z0-9_]+$"
+          }
+        },
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_valid",
+            "provenance_complete",
+            "rights_resolved",
+            "sensitivity_evaluated",
+            "geometry_public_safe",
+            "taxonomy_normalized",
+            "spec_hash_stable"
+          ],
+          "properties": {
+            "schema_valid": { "type": "boolean" },
+            "provenance_complete": { "type": "boolean" },
+            "rights_resolved": { "type": "boolean" },
+            "sensitivity_evaluated": { "type": "boolean" },
+            "geometry_public_safe": { "type": "boolean" },
+            "taxonomy_normalized": { "type": "boolean" },
+            "spec_hash_stable": { "type": "boolean" }
+          }
+        },
+        "evidence_strength": {
+          "enum": ["unreviewed", "single_source", "corroborated", "steward_reviewed"]
+        },
+        "validator_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "validated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "DRAFT_SCHEMA",
+    "source_card": "KFM-P3-PROG-0001",
+    "contract_doc": "contracts/domains/fauna/occurrence_evidence.md",
+    "validator": "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py",
+    "fixtures_root": "fixtures/domains/fauna/occurrence_evidence/",
+    "canonicalization_profile": "RFC8785-JCS",
+    "hash_algorithm": "SHA-256",
+    "authority_boundary": "Schema/validator conformance is not source admission, evidence closure, policy approval, release, or publication authority."
+  }
 }

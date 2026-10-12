@@ -1,647 +1,446 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/evidence-correction
 title: Evidence Correction Runbook
-type: standard
-version: v1
-status: draft
-owners: [docs-steward, correction-reviewer]  # NEEDS VERIFICATION — confirm against CODEOWNERS / governance register
+type: runbook
+version: v2.0
+prior_state: proposal-heavy May 2026 procedure with stale paths and implementation claims that no longer matched current repository evidence
+status: draft; repository-grounded; CORRECTION_INTAKE_AND_CANDIDATE_GUIDANCE; BOUNDED_SHAPE_VALIDATION_ONLY; OPERATIONAL_CORRECTION_WITHDRAWAL_AND_ROLLBACK_HELD; NON_RELEASE; NON_DEPLOYMENT; NON_PUBLICATION
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable correction, evidence, domain, rights, sensitivity, review, release, withdrawal, rollback, and public-interface assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-30
+policy_label: public; correction-aware; fail-closed; sensitive-details-private
+current_path: docs/runbooks/EVIDENCE_CORRECTION.md
+owning_root: docs/
+responsibility: human intake, classification, candidate preparation, bounded validation, and accountable-review handoff for suspected defects in released or release-facing KFM material
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, evidence, policy, review, release records, signatures, receipts, proofs, competent authorities, and current runtime evidence
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 8adad6a887fbda0d3ca499aff94d144352d49916
+  target_before_update_blob: aa0d1237150f149dd0cc49b8b1c3d86b2fd921c8
+  runbook_index_blob: 46d0adb2a23fed7bf844d691770be9596cf6a5f8
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  object_family_register_blob: 03bba0769738d29bbc4c9481ba34c6c7b8366941
+  correction_notice_contract_blob: 4716f2bc6e714ad2ab873d95144417d7855f5beb
+  paired_correction_notice_schema_blob: 8f260eb5a5adba0b4966adfeffebfbcf6960277d
+  correction_notice_validator_blob: 00b7335a39efdc6b12d180acb40a27fe682b8ade
+  correction_notice_tests_blob: 49934e6a7674d8b94ae4c1f1ac61dd4275dca84b
+  review_duties_blob: df9848c324cbb1b7a3d63b32bd5e2fcf929ff4e9
+  generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
+  open_pull_requests_touching_target: 0
 related:
-  - docs/runbooks/README.md
-  - docs/runbooks/ROLLBACK.md                  # NEEDS VERIFICATION — exact filename
-  - docs/governance/SEPARATION_OF_DUTIES.md    # NEEDS VERIFICATION
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/registers/DRIFT_REGISTER.md
-  - contracts/correction/correction_notice.md  # NEEDS VERIFICATION
-  - schemas/contracts/v1/correction/correction_notice.schema.json  # PROPOSED
-  - release/                                   # release decisions & rollback targets
-tags: [kfm, runbook, correction, evidence, governance, supersession, lifecycle]
+  - ./README.md
+  - ./INCIDENT_RESPONSE.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../doctrine/directory-rules.md
+  - ../doctrine/lifecycle-law.md
+  - ../doctrine/trust-membrane.md
+  - ../doctrine/corrections-first-class.md
+  - ../governance/REVIEW_DUTIES.md
+  - ../architecture/publication/rollback-and-correction.md
+  - ../registers/DRIFT_REGISTER.md
+  - ../registers/VERIFICATION_BACKLOG.md
+  - ../../.github/ISSUE_TEMPLATE/evidence_correction.md
+  - ../../SECURITY.md
+  - ../../control_plane/object_family_register.yaml
+  - ../../contracts/correction/correction_notice.md
+  - ../../schemas/contracts/v1/correction/correction_notice.schema.json
+  - ../../fixtures/correction/correction_notice/
+  - ../../tools/validators/correction/validate_correction_notice.py
+  - ../../tests/validators/test_validate_correction_notice.py
+  - ../../release/README.md
+  - ../../release/correction_notices/README.md
+  - ../../release/withdrawal_notices/README.md
+  - ../../release/rollback_cards/README.md
 notes:
-  - Status PROPOSED until validators, schemas, CI gates, and CorrectionNotice schema land in repo evidence.
-  - Doctrine is CONFIRMED from attached corpus; operational paths, validator IDs, and CI commands remain PROPOSED until mounted-repo inspection.
+  - "v2.0 replaces proposal-era execution language with a repository-grounded intake, candidate, validation, review, and transition-boundary procedure."
+  - "The current CorrectionNotice family is CONFLICTED across four schema candidates. The paired validator checks only one permissive proposed schema plus bounded JSON safety."
+  - "No dedicated correction workflow or policy binding is registered in the current object-family index."
+  - "No operational correction, withdrawal, rollback, cache invalidation, public notice route, release transition, deployment, or publication is established by this runbook."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Evidence Correction Runbook
 
-> Governed procedure for correcting a **PUBLISHED** KFM claim, layer, catalog record, artifact, or AI answer when a defect is detected — without silently mutating the original release.
-
-<p align="center">
-  <b>Kansas Frontier Matrix — Evidence First · Cite or Abstain · Fail Closed · Reversible by Design</b>
-</p>
-
-<p align="center">
-  <img alt="Lifecycle" src="https://img.shields.io/badge/lifecycle-PUBLISHED%E2%86%92PUBLISHED'-blue">
-  <img alt="Posture" src="https://img.shields.io/badge/posture-fail--closed-red">
-  <img alt="Required" src="https://img.shields.io/badge/required-CorrectionNotice-orange">
-  <img alt="Separation of duties" src="https://img.shields.io/badge/SoD-author%E2%89%A0reviewer-purple">
-  <img alt="Status" src="https://img.shields.io/badge/status-draft-lightgrey">
-  <img alt="Doctrine" src="https://img.shields.io/badge/doctrine-CONFIRMED-green">
-  <img alt="Implementation" src="https://img.shields.io/badge/implementation-PROPOSED-yellow">
-</p>
-
-| Field | Value |
-|---|---|
-| **Status** | Draft (PROPOSED implementation; CONFIRMED doctrine) |
-| **Owners** | Docs steward · Correction reviewer · Release authority *(roles per Atlas §24.7; concrete owners NEEDS VERIFICATION)* |
-| **Last updated** | 2026-05-12 |
-| **Authority** | Lifecycle law · Trust membrane · Directory Rules §6.1 (`docs/runbooks/`) |
-| **Audience** | Stewards, reviewers, release authorities, defect detectors, on-call docs steward |
-
----
-
-## Quick links
-
-- [1 · Purpose & scope](#1--purpose--scope)
-- [2 · When to use this runbook](#2--when-to-use-this-runbook)
-- [3 · Stale vs. wrong — the critical distinction](#3--stale-vs-wrong--the-critical-distinction)
-- [4 · Defect classification matrix](#4--defect-classification-matrix)
-- [5 · Roles and separation of duties](#5--roles-and-separation-of-duties)
-- [6 · The correction procedure (step by step)](#6--the-correction-procedure-step-by-step)
-- [7 · CorrectionNotice contract](#7--correctionnotice-contract)
-- [8 · Supersession lineage](#8--supersession-lineage)
-- [9 · Derivative invalidation](#9--derivative-invalidation)
-- [10 · Gate failures and reason codes](#10--gate-failures-and-reason-codes)
-- [11 · End-to-end flow (diagram)](#11--end-to-end-flow-diagram)
-- [12 · Worked examples (illustrative)](#12--worked-examples-illustrative)
-- [13 · Health indicators](#13--health-indicators)
-- [14 · Anti-patterns](#14--anti-patterns)
-- [15 · Related docs](#15--related-docs)
-- [16 · Appendix: checklists & references](#16--appendix-checklists--references)
-
----
-
-## 1 · Purpose & scope
+Use this runbook to report, contain, classify, and prepare a reviewable response to a suspected defect in released or release-facing KFM material. It preserves prior records, keeps sensitive details private, and separates candidate preparation from any later correction, supersession, withdrawal, rollback, or publication transition.
 
 > [!IMPORTANT]
-> **Correction is a publication requirement, not an afterthought.** A released claim, layer, catalog record, artifact, or AI answer must have a **visible correction path and a rollback target** before it is treated as safely publishable.
-> — *CONFIRMED doctrine: BLD-GREEN §20; BLD-COMP §§21-22; IMPL-PIPE §21; Atlas §24.6.1.*
-
-This runbook describes how KFM **corrects** a `PUBLISHED` claim when a defect is detected. It governs the lifecycle transition **`PUBLISHED → PUBLISHED'`** — the issuance of a *superseding* release.
-
-It is the operational companion to:
-
-- the **CorrectionNotice** object family (`contracts/correction/`, `schemas/contracts/v1/correction/`),
-- the **ReleaseManifest** and **RollbackCard** objects in `release/`,
-- the **review** flow that produces `ReviewRecord`s, and
-- the separation-of-duties policy in Atlas §24.7.
-
-### Out of scope
-
-| Concern | Where to look |
-|---|---|
-| Hard rollback to a prior release (no superseding fix yet) | `docs/runbooks/ROLLBACK.md` *(NEEDS VERIFICATION — exact filename)* |
-| Stale-state marking only (claim not wrong, just aged) | §3 below; UI stale-source badge guidance |
-| Source-level admission / rights changes | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` *(PROPOSED)* |
-| Policy bundle change | ADR + `policy/<lane>/` |
-| Schema migration | ADR-class change; `migrations/` |
-
-[Back to top](#top)
-
----
-
-## 2 · When to use this runbook
-
-Use this runbook whenever **any** of the following is detected against content already in `PUBLISHED`:
-
-- An **EvidenceBundle** referenced by a public claim no longer resolves, is wrong, or no longer supports the claim.
-- A **source role** was mis-classified (e.g., a *modeled* output was treated as *observed*).
-- **Rights** or **license** posture for a referenced source has changed.
-- **Sensitivity** disclosure has occurred (e.g., a sensitive geometry leaked through a tile, popup, or AI text channel).
-- A **geometry** or **temporal** error is present in a released artifact.
-- A **PolicyDecision** referenced by the release was superseded or evaluated against an outdated bundle.
-- A **validator** would now FAIL the release if re-run on current evidence.
-- A **rendering** or **API** defect changes the public meaning of the claim.
-- An **AI answer** was emitted in violation of cite-or-abstain or denied-class policy.
-- A **catalog** closure (proof, manifest, digest) is no longer intact.
-
-> [!TIP]
-> If the published surface is *aged* but not *wrong*, you may not need a correction — you may only need a **stale marker**. See §3.
+> **This runbook is not correction authority.** It can guide intake, evidence collection, candidate preparation, bounded validation, and reviewer handoff. It cannot approve evidence, decide policy, authenticate reviewers, change a release, invalidate a public cache, withdraw an artifact, execute rollback, deploy, or publish.
 
 > [!CAUTION]
-> If sensitivity, rights, sovereignty, living-person/DNA, archaeology, infrastructure, or precise location exposure is involved, **default to immediate public-surface disablement first** (fail-closed), then proceed with the correction. Never let polish or process lag protect a sensitive leak. *(CONFIRMED doctrine: Build Manual defect-class table; Atlas §24.5.)*
+> **Use the private route first for active exposure.** Do not put credentials, exploit details, exact sensitive locations, restricted source payloads, living-person records, DNA or genomic material, private-land detail, or critical-infrastructure vulnerability information in a public issue or pull request. Follow [`SECURITY.md`](../../SECURITY.md) and the [Incident Response Runbook](./INCIDENT_RESPONSE.md).
 
-[Back to top](#top)
+**Quick navigation:** [purpose](#purpose-and-authority-boundary) · [current capability](#current-repository-capability) · [when to use](#when-to-use-this-runbook) · [classification](#classification) · [roles](#roles-and-separation-of-duties) · [procedure](#procedure) · [`CorrectionNotice`](#correctionnotice-candidate) · [withdrawal and rollback](#withdrawal-and-rollback) · [derivatives](#derivative-propagation-and-invalidation) · [validation](#validation) · [closure](#closure-and-record-retention) · [open verification](#open-verification-backlog)
 
----
+## Purpose and authority boundary
 
-## 3 · Stale vs. wrong — the critical distinction
+Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the [Directory Rules](../doctrine/directory-rules.md). Those rules place human operational procedures under `docs/runbooks/`, so this same-path update remains in the `docs/` responsibility root.
 
-KFM separates these states deliberately. *(CONFIRMED doctrine: Atlas §24.8.)*
-
-| State | Meaning | First action | Correction required? |
-|---|---|---|---|
-| **Stale** | Evidence, source freshness, dependent data, or context has aged past its declared tolerance. The claim **was** supportable. | Apply the appropriate **stale-state marker** in the Evidence Drawer; trigger steward review. | Only if review finds substance is also wrong. |
-| **Wrong** | The substance of the claim is incorrect, no longer supported, or violates policy/rights/sensitivity. | Disable affected surface where required; open this runbook. | **Yes** — emit `CorrectionNotice` and supersede. |
-
-### Stale-state markers (no `CorrectionNotice` required)
-
-| Marker | Triggered by | Required action |
+| Concern | Owning surface | This runbook's limit |
 |---|---|---|
-| Source freshness expired | `SourceDescriptor` cadence passed without new admission | Re-admit or supersede; mark dependent claims stale |
-| Schema version drift | Schema upgraded past the published claim's schema version | Migrate, re-validate, re-release; or mark stale |
-| Geography version drift | `GeographyVersion` replaced; published claim still bound to prior | Rebind & re-release; or mark stale |
-| Time-scope outside support | Claim's temporal scope outside current data support window | Mark stale; do not silently refresh |
-| Model version superseded | `ModelRunReceipt` references older model than current | Re-run; supersede; or mark stale |
-| Review aged out | `ReviewRecord` older than review-cycle tolerance | Trigger steward review; potentially downgrade tier |
-| Rights status changed | Rights change in `SourceDescriptor` | Re-evaluate tier; **emit `CorrectionNotice` if necessary** |
-| Policy version changed | Policy referenced by `PolicyDecision` was superseded | Re-run gate; potentially supersede release |
+| Human intake, classification, and handoff | `docs/runbooks/` and the [evidence-correction issue template](../../.github/ISSUE_TEMPLATE/evidence_correction.md) | Explain the procedure and preserve a review boundary |
+| Correction meaning | [`contracts/correction/correction_notice.md`](../../contracts/correction/correction_notice.md) | Cite the draft semantic contract; do not redefine it |
+| Machine shape | CorrectionNotice schemas under `schemas/contracts/v1/` | Report the current conflict; do not select authority by prose |
+| Admissibility and public exposure | `policy/`, rights and sensitivity records, and accountable review | Missing or unresolved support fails closed |
+| Release-plane decisions and notices | [`release/`](../../release/README.md) | Require governed records; do not manufacture a decision from documentation |
+| Public-safe carriers | `data/published/` and governed APIs | Never read or mutate internal lifecycle stores from this runbook |
+| Receipts and proofs | `data/receipts/` and `data/proofs/` | Reference them; do not treat a receipt as proof or approval |
+| Execution | Verified operators, workflows, and runtime services | No operational correction executor was established in this inspection |
 
-> [!NOTE]
-> "Rights status changed" and "policy version changed" sit on the boundary. If the change inverts the public posture of the claim (e.g., it is no longer releasable), treat it as **wrong** and proceed with full correction.
+The lifecycle remains:
 
-[Back to top](#top)
-
----
-
-## 4 · Defect classification matrix
-
-Classify the defect using the canonical class set. This decides correction posture **and** rollback posture. *(CONFIRMED doctrine: Build Manual defect-class table; BLD-GREEN §20; IMPL-PIPE §§21, 27; BLD-COMP §§21-23.)*
-
-| Defect class | Correction posture | Rollback posture |
-|---|---|---|
-| **Evidence gap** | `ABSTAIN` on the claim, or withdraw the unsupported claim entirely | Restore prior evidence-supported release |
-| **Source-role mis-classification** | Restore the correct source role; refuse upcast (e.g., modeled → observed) | Restore prior release if downstream cascaded |
-| **Rights defect** | `DENY` public use; quarantine source / artifact | Withdraw affected artifacts |
-| **Sensitivity leak** | Redact / generalize and notify stewards | **Immediate public disablement** |
-| **Geometry defect** | Rebuild derivative layer and evidence payload | Restore previous digest-pinned artifact |
-| **Temporal defect** | Correct `valid` / `source` / `retrieval` / `release` time | Mark stale until rebuilt |
-| **Policy defect** | Re-run policy and `DecisionEnvelope` | Disable route / layer if gate failed |
-| **Validation defect** | Re-run validators; emit corrected `ValidationReport` | Restore prior `ValidationReport`-pinned release |
-| **Rendering defect** | Fix renderer / style / tile pipeline; re-publish layer | Restore prior `MapReleaseManifest` |
-| **API defect** | Patch governed-API contract; re-emit `DecisionEnvelope` | Disable affected route; restore prior contract |
-| **AI answer defect** | Invalidate `AIReceipt` and `RuntimeResponseEnvelope` | Remove answer; **preserve EvidenceBundle** |
-| **Catalog defect** | Re-emit catalog closure after proof repair | Restore previous catalog state |
-
-> [!IMPORTANT]
-> Correction is a **state transition**, not a file edit. The original release record is **preserved**; a *superseding* release is issued. Silent mutation of a published artifact is a doctrine violation. *(CONFIRMED: Atlas §24.8.2 supersession lineage; Build Manual rollback model.)*
-
-[Back to top](#top)
-
----
-
-## 5 · Roles and separation of duties
-
-*(CONFIRMED doctrine: Atlas §24.7.)*
-
-| Role | Responsibility in correction |
-|---|---|
-| **Detector / author** | Files the defect; assembles initial evidence and proposed correction class |
-| **Domain steward** | Confirms classification; owns the corrected EvidenceBundle and any contract/schema implications |
-| **Sensitivity reviewer** | Required when the defect involves sensitivity, redaction, generalization, or tier reassignment |
-| **Rights-holder representative** | Required when sovereignty, cultural heritage, or consent-based release is affected |
-| **Correction reviewer** | Reviews the `CorrectionNotice` and `RollbackCard` before they amend a `PUBLISHED` claim |
-| **Release authority** | Authorizes the superseding release; signs `ReleaseManifest`; names the rollback target |
-| **AI surface steward** | Required when an `AIReceipt` is invalidated or Focus Mode template/policy binding changes |
-| **Docs steward** | Confirms the public correction surface (UI banner, drawer note, manifest entry) and updates registers |
-
-### Separation-of-duties matrix (correction-specific)
-
-| Action | May author also approve? | Required separation |
-|---|---|---|
-| Routine correction (non-material) | Yes | Author + correction reviewer |
-| Steward-significant correction | **No** | Author / detector + correction reviewer + release authority |
-| Sensitive-lane correction (archaeology, fauna, flora, living-person/DNA, infrastructure) | **No** | Author + sensitivity reviewer + release authority + rights-holder rep |
-| AI-answer correction (template / policy binding) | **No** | AI surface steward + docs steward |
-
-> [!NOTE]
-> **Maturity note.** Atlas §24.7 and Directory Rules §2 treat separation of duties as *maturity-dependent*. Early-stage doctrine work may be authored and approved by the same actor when materiality is low. As the public trust surface expands, separation MUST be enforced through tooling — not custom. This runbook documents the destination posture; current enforcement is `PROPOSED`.
-
-[Back to top](#top)
-
----
-
-## 6 · The correction procedure (step by step)
-
-The procedure preserves the original release record, identifies the defect, classifies it, emits a `CorrectionNotice`, updates the relevant `EvidenceBundle` and `ReleaseManifest`, and **publishes a superseding release** rather than silently mutating the old one. *(CONFIRMED doctrine: BLD-GREEN §20; IMPL-PIPE §§21, 27; BLD-COMP §§21-23.)*
-
-### Step 0 — Triage (within 1 working day of detection)
-
-1. **Confirm the defect** against current `PUBLISHED` surfaces (Evidence Drawer, Focus Mode, layer manifest, governed-API response).
-2. **Decide stale vs. wrong** using §3.
-3. **Sensitivity check.** If sensitivity / rights / sovereignty / living-person / DNA / archaeology / infrastructure / precise location is implicated, **disable the affected public surface immediately** (fail-closed) before proceeding. Record the disablement.
-4. **Open a tracking entry** in the correction queue (system of record `PROPOSED`; today, an issue or `docs/registers/DRIFT_REGISTER.md` entry).
-
-> [!WARNING]
-> Steps 1–3 happen **before** classification refinement. Sensitive leaks do not wait for a tidy classification.
-
-### Step 1 — Classify
-
-Pick exactly one primary defect class from the matrix in §4. If the defect spans classes, pick the **most release-blocking** class as primary and record the others as secondary.
-
-### Step 2 — Quarantine affected public surfaces
-
-Depending on class and severity:
-
-- **Sensitivity / rights leak** → disable layer, popup field, Focus Mode template, or governed-API route.
-- **Evidence gap / catalog defect** → `ABSTAIN` or `DENY` on the specific claim while leaving non-affected surfaces live.
-- **AI answer defect** → invalidate `AIReceipt`; remove the answer from any cached surface; preserve the underlying `EvidenceBundle`.
-- **Geometry / temporal / rendering defect** → mark layer stale; keep prior digest-pinned artifact live if safer than removal.
-
-Record the quarantine action so it can be unwound by the superseding release.
-
-### Step 3 — Gather corrected evidence
-
-- Pull the **affected `EvidenceBundle`(s)** by `spec_hash` / `bundle_id`.
-- Identify the **upstream `SourceDescriptor`** and confirm rights / sensitivity / cadence.
-- If new evidence is needed, route through normal admission (`— → RAW → WORK → …`). The correction lane does **not** bypass the gates.
-- If no replacement evidence is available, the correction posture becomes **`ABSTAIN` / withdraw** rather than re-state.
-
-### Step 4 — Build the superseding artifacts
-
-For each affected object class, produce the corrected artifact via the **same governed pipeline**:
-
-| Class | Corrected artifact(s) |
-|---|---|
-| Evidence | New `EvidenceBundle` with fresh `spec_hash`; old bundle retained for audit |
-| Geometry / layer | Rebuilt layer + `LayerManifest` + tile / COG / PMTiles artifacts with new digests |
-| Policy | Re-evaluated `PolicyDecision`; new `DecisionEnvelope` |
-| AI surface | Invalidated `AIReceipt`; corrected Focus Mode template / policy binding |
-| Catalog | Re-emitted `CatalogRecord` after proof repair |
-
-Each rebuild MUST emit its own `RunReceipt` and pass its lifecycle gates fail-closed. *(CONFIRMED doctrine: Atlas §24.6.1.)*
-
-### Step 5 — Emit the `CorrectionNotice`
-
-The `CorrectionNotice` is the **public record of the change**. It links the prior release, the defect class, the corrected artifacts, and the invalidated derivatives. See §7 for the contract.
-
-### Step 6 — Review (separation of duties)
-
-Route through the required reviewers per §5. Reviewer outcomes:
-
-- **APPROVE** → proceed to Step 7.
-- **HOLD** → release stays at prior state; reviewer note recorded; no public claim change.
-- **REJECT** → defect re-classified or evidence insufficient; loop to Step 1 or Step 3.
-
-> [!IMPORTANT]
-> A reviewer rejection **does not silently undo the quarantine** in Step 2. Sensitivity disablement remains in effect until either (a) the superseding release is published or (b) a rollback runbook is invoked.
-
-### Step 7 — Release the superseding version
-
-- The **release authority** (distinct from the author when materiality applies) signs the new `ReleaseManifest`.
-- The new manifest names a **valid rollback target** (the prior release).
-- The `CorrectionNotice` is **attached** to the new release and made visible on the affected public claim (banner, drawer note, manifest entry).
-- The original release record is **preserved**, marked as superseded, with a forward link to the new release.
-
-### Step 8 — Invalidate derivatives
-
-See §9. This is not optional — corrections that fail to name and invalidate downstream derivatives leave silent stale claims in the system.
-
-### Step 9 — Audit & close
-
-- Update `docs/registers/DRIFT_REGISTER.md` if the defect originated in drift.
-- Record **correction lead time** (detection → `CorrectionNotice`) for the health indicators in §13.
-- File a post-mortem if the defect was sensitivity-related, sovereignty-related, or required immediate disablement.
-
-[Back to top](#top)
-
----
-
-## 7 · CorrectionNotice contract
-
-> [!NOTE]
-> The `CorrectionNotice` object is defined in `contracts/correction/` *(PROPOSED home; verify against `directory-rules.md §6.3`)*. Its machine schema lives at `schemas/contracts/v1/correction/correction_notice.schema.json` *(PROPOSED)*. The fields below reflect CONFIRMED doctrine from the Atlas and Encyclopedia.
-
-### Required fields (CONFIRMED doctrine; field names PROPOSED until schema lands)
-
-| Field | Meaning |
-|---|---|
-| `claim_ref` | Reference to the published claim (catalog record, layer, AI answer, etc.) being corrected |
-| `prior_release_ref` | The `ReleaseManifest` of the release being superseded |
-| `defect_class` | One of the canonical classes in §4 |
-| `change_summary` | Plain-language description of what changed and why |
-| `invalidates[]` | Derivatives, indexes, exports, tiles, AI answers, search summaries invalidated by this correction |
-| `evidence_bundle_refs[]` | Old and new `EvidenceBundle` references |
-| `review_ref` | `ReviewRecord` from the correction reviewer (and rights-holder rep when required) |
-| `release_manifest_ref` | The **new** `ReleaseManifest` carrying the superseding release |
-| `rollback_target` | The release to restore if the superseding release itself fails |
-| `time` | ISO-8601 UTC timestamp of the notice |
-
-### Illustrative example (PROPOSED — not a binding schema)
-
-<details>
-<summary>Show example <code>CorrectionNotice</code></summary>
-
-```json
-{
-  "schema_version": "v1",
-  "object_type": "CorrectionNotice",
-  "notice_id": "kfm://correction/<uuid>",
-  "claim_ref": "kfm://claim/<id>",
-  "prior_release_ref": "kfm://release/manifest/<prior-id>",
-  "defect_class": "geometry",
-  "change_summary": "Layer X reprojected; prior CRS metadata understated planar error by ~3.2m at scale 1:24k.",
-  "invalidates": [
-    "kfm://layer/X/tiles@<digest>",
-    "kfm://export/storysnapshot/<snapshot-id>"
-  ],
-  "evidence_bundle_refs": [
-    {"role": "prior", "spec_hash": "sha256:<old>"},
-    {"role": "current", "spec_hash": "sha256:<new>"}
-  ],
-  "review_ref": "kfm://review/<reviewrecord-id>",
-  "release_manifest_ref": "kfm://release/manifest/<new-id>",
-  "rollback_target": "kfm://release/manifest/<prior-id>",
-  "time": "2026-05-12T17:00:00Z"
-}
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-> **Status:** Illustrative only. Field names, URI schemes, and the exact JSON shape are `PROPOSED` until the `correction_notice.schema.json` is verified in the repo.
+A correction does not bypass that path. Public clients continue to use governed interfaces and released public-safe carriers; they do not gain access to RAW, WORK, QUARANTINE, canonical or internal stores, unreleased candidates, or direct model output.
 
-</details>
+## Current repository capability
 
-### What a CorrectionNotice does **not** do
+The conclusions below are bound to the evidence snapshot in the metadata block. Re-inspect them before relying on this runbook at another revision.
 
-- It does **not** publish. The new `ReleaseManifest` publishes.
-- It does **not** approve itself. Review precedes emission.
-- It does **not** replace the prior release's record — the prior record stays, marked superseded.
-- It does **not** suppress audit. Old `EvidenceBundle`s are retained.
-
-[Back to top](#top)
-
----
-
-## 8 · Supersession lineage
-
-Every object class has a supersession rule. *(CONFIRMED doctrine: Atlas §24.8.2.)*
-
-| Object class | Supersession rule | Required lineage artifact |
+| Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `SourceDescriptor` | Replaced by newer descriptor; old retained with `superseded_by` link | Supersession entry in source register |
-| `EvidenceBundle` | Replaced when corrected; old bundle retained for audit | `EvidenceBundle` + `CorrectionNotice` + supersession link |
-| `GeographyVersion` | Replaced by newer version; both remain queryable for time-bound claims | Version register entry + crosswalk |
-| Schema (`schemas/contracts/v1/...`) | Replaced via ADR; old schema retained | ADR + supersession link in schema header |
-| Policy | Replaced via accepted ADR; old policy retained | ADR + supersession link |
-| `ReleaseManifest` | Replaced by next release; rollback target remains valid | Manifest history + rollback chain |
-| `AIReceipt` | **Never** superseded retroactively. Old answer retained; new answer is a new receipt | Two distinct `AIReceipt`s with cross-reference |
-| Atlas / supplement | Superseded by ADR-recorded new version; lineage retained | Atlas / supplement supersession appendix |
-
-> [!IMPORTANT]
-> **`AIReceipt` is special.** AI answers are never rewritten in place. A correction produces a **new** `AIReceipt` with a cross-reference to the prior one. This preserves the audit trail of what the system said when, even after the system says something different.
-
-[Back to top](#top)
-
----
-
-## 9 · Derivative invalidation
-
-A correction MUST identify and invalidate downstream derivatives, or it leaves stale claims live on public surfaces. *(CONFIRMED doctrine: Atlas §24.11.2 "Derivative-invalidation coverage".)*
-
-### Typical derivatives to check
-
-| Derivative | Where to invalidate | Notes |
-|---|---|---|
-| Vector / raster tiles (MVT / PMTiles / COG) | `MapReleaseManifest`, CDN cache, tile artifact registry | Rebuild from corrected source; new digest |
-| Catalog records / search indexes | `CatalogRecord`, `SearchIndexManifest` | Search indexes are **derivative**; re-emit, don't trust |
-| Graph / triplet projections | `Triplet`, `GraphDelta` | Graph is derivative of canonical / catalog truth |
-| AI answers and exports | `AIReceipt`, `StorySnapshot`, `ExportReceipt` | Replace with new receipts; never silently rewrite |
-| Evidence Drawer payloads | `EvidenceDrawerPayload` cache | Rebuild against corrected `EvidenceBundle` |
-| Crosswalks / overlays | `Crosswalk`, `OverlayReceipt` | Cross-domain joins amplify defects — invalidate liberally |
-
-### CDN / cache discipline
-
-> [!CAUTION]
-> Public tile, COG, and PMTiles surfaces are commonly served through caches. A correction without a **cache-invalidation step** leaves the prior bytes reachable. Treat the cache invalidation as part of release, not a follow-up chore.
-
-[Back to top](#top)
-
----
-
-## 10 · Gate failures and reason codes
-
-If a correction itself fails a gate, fail closed. *(CONFIRMED doctrine: Atlas §24.6.3 — PROPOSED reason-code catalog.)*
-
-| Failure family | Reason code (PROPOSED) | Gate(s) where it fires | Recovery path |
-|---|---|---|---|
-| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Validation / Catalog / Release | Re-emit missing receipt; re-run review; re-validate |
-| Schema / contract mismatch | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | Normalization / Validation | Schema fix and/or ADR; re-run validator |
-| Rights / sensitivity unresolved | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED` | Admission / Validation / Catalog / Release | Steward review; rights resolution; tier reassignment |
-| Source-role collapse risk | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN` | Validation / Catalog / Release | Restore source role; refuse upcast |
-| Review state inadequate | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Catalog / Release | Run required review; supply `ReviewRecord` |
-| Release infrastructure error | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING` | Release | Manifest fix; supply rollback target |
-| Correction lineage broken | `CORRECTION_DERIVATIVES_UNRESOLVED`, `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Resolve derivatives; supersession entry |
-
-> [!NOTE]
-> A correction that triggers `CORRECTION_DERIVATIVES_UNRESOLVED` is **not** publishable. Either complete §9 (Derivative invalidation) or narrow the correction scope.
-
-[Back to top](#top)
-
----
-
-## 11 · End-to-end flow (diagram)
-
-```mermaid
-flowchart TD
-    A[Defect detected] --> B{Stale or wrong?}
-    B -- Stale only --> S[Apply stale-state marker<br/>trigger steward review]
-    S --> Sx[Close: no CorrectionNotice]
-    B -- Wrong --> T[Triage Step 0]
-    T --> Q{Sensitivity / rights /<br/>sovereignty implicated?}
-    Q -- Yes --> D[Immediate public disablement<br/>fail-closed]
-    Q -- No --> C[Classify defect §4]
-    D --> C
-    C --> QU[Quarantine affected<br/>public surfaces]
-    QU --> E[Gather corrected evidence<br/>via governed pipeline]
-    E --> R[Rebuild superseding artifacts<br/>EvidenceBundle / Layer / Policy /<br/>AIReceipt / Catalog]
-    R --> N[Emit CorrectionNotice §7]
-    N --> RV{Review per §5}
-    RV -- Approve --> P[Release authority signs<br/>new ReleaseManifest<br/>names rollback target]
-    RV -- Hold --> H[Hold at prior state<br/>no public claim change]
-    RV -- Reject --> RJ[Re-classify or<br/>re-gather evidence]
-    RJ --> C
-    P --> I[Invalidate derivatives §9<br/>tiles · indexes · graphs ·<br/>AI answers · caches]
-    I --> AU[Audit & close §6.9<br/>record correction lead time]
-    AU --> END[PUBLISHED']
-
-    classDef danger fill:#fde2e2,stroke:#b00020,color:#900;
-    classDef ok fill:#e6f4ea,stroke:#1b5e20,color:#0b3d12;
-    classDef hold fill:#fff4cc,stroke:#a67c00,color:#5a3d00;
-    class D,RJ danger;
-    class P,END,Sx ok;
-    class H,RV hold;
-```
-
-> [!NOTE]
-> Diagram reflects the CONFIRMED doctrinal flow. Operational tooling (issue templates, validators, CI hooks, cache-purge automation) that would *enforce* this flow is `PROPOSED` until verified in the mounted repo.
-
-[Back to top](#top)
-
----
-
-## 12 · Worked examples (illustrative)
-
-> All examples below are **illustrative**. They use fictional IDs and shapes; no specific historical defect is being described.
-
-### Example A — Evidence gap (Hydrology layer)
-
-A reviewer notices a Hydrology layer claim was anchored to an `EvidenceBundle` whose underlying gauge record has been re-classified as *modeled* rather than *observed*.
-
-- **Class:** Evidence gap + Source-role mis-classification.
-- **Posture:** `ABSTAIN` on the affected claim; restore correct source role; refuse upcast.
-- **Artifacts:** New `EvidenceBundle` with corrected role; `CorrectionNotice` invalidates the layer's prior tile digest; rebuilt `LayerManifest`.
-- **Reviewers:** Domain steward + correction reviewer + release authority.
-- **Derivatives:** Vector tiles, Evidence Drawer cache, any Focus Mode answer that cited the bundle.
-
-### Example B — Sensitivity leak (Archaeology popup)
-
-A clicked feature exposed an exact archaeological coordinate through a popup attribute that should have been generalized.
-
-- **Class:** Sensitivity leak.
-- **Posture:** **Immediate public disablement** of the layer's popup field (Step 2 quarantine *before* full classification finalized); redact and generalize; notify stewards.
-- **Artifacts:** `RedactionReceipt`; new `LayerManifest` with allowlisted popup fields; `CorrectionNotice`.
-- **Reviewers:** Author + sensitivity reviewer + release authority + rights-holder representative (sensitive lane — no author-only approval).
-- **Derivatives:** Tiles (rebuilt with field allowlist), Focus Mode answers (any `AIReceipt` referencing the feature invalidated and re-emitted as `DENY`), search indexes, exports.
-
-### Example C — AI answer defect (Focus Mode)
-
-A Focus Mode answer was emitted with a citation that no longer resolves to a published `EvidenceBundle`.
-
-- **Class:** AI answer defect (uncited claim → cite-or-abstain violation).
-- **Posture:** Invalidate the `AIReceipt`; remove the answer from any cached surface; **preserve the underlying `EvidenceBundle`** (it is not the defect).
-- **Artifacts:** New `AIReceipt` with cross-reference to prior; `CorrectionNotice`; updated `CitationValidationReport`.
-- **Reviewers:** AI surface steward + docs steward (policy binding) + correction reviewer.
-- **Derivatives:** No tile rebuild required, but any `StorySnapshot` or `ExportReceipt` that embedded the answer must be re-emitted.
-
-[Back to top](#top)
-
----
-
-## 13 · Health indicators
-
-Track these signals to know whether KFM's correction posture is healthy. None of these is a *sufficient* condition for trust; together they describe a healthy posture. *(CONFIRMED doctrine: Atlas §24.11.2. Indicators are reported, not enforced — enforcement is the validator's job.)*
-
-| Indicator | What it measures | Healthy posture (PROPOSED) |
-|---|---|---|
-| **Release with rollback target** | % of `PUBLISHED` releases naming a valid rollback target | **100%** |
-| **Correction lead time** | Median time from defect detection to `CorrectionNotice` | Visibly tracked; trend not regressing |
-| **Derivative-invalidation coverage** | % of corrections that name and invalidate downstream derivatives | Approaches **100%** as coverage matures |
-| **Rollback rehearsal rate** | Rehearsed rollbacks per release window | Non-zero; periodic, scheduled |
-| **Supersession lineage gap** | Supersessions without a forward link | **Zero** |
-| **Sensitive-lane fail-closed rate** | % of unauthorized sensitive-lane requests that `DENY` at the first gate | **100%** at the first gate |
-| **EvidenceRef resolution rate** | % of public-surface `EvidenceRef`s that resolve to an `EvidenceBundle` | **> 99.9%** over the trailing release window |
-| **Cite-or-abstain compliance** | % of Focus Mode answers with non-empty, resolving evidence citations | **100%** (any miss is a defect to investigate) |
-
-[Back to top](#top)
-
----
-
-## 14 · Anti-patterns
+| Public intake | [`.github/ISSUE_TEMPLATE/evidence_correction.md`](../../.github/ISSUE_TEMPLATE/evidence_correction.md) collects identity, stale-versus-wrong posture, materiality, outcome, evidence, overlap, and rollback boundaries | Public-safe intake exists; submitting an issue does not confirm a defect or authorize a transition |
+| Semantic contract | The [`CorrectionNotice` contract](../../contracts/correction/correction_notice.md) is a draft v0.2 meaning document | The family has useful semantics, but no accepted operational profile is established |
+| Object-family registry | [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) marks `correction_notice` `CONFLICTED` and lists four schema candidates | Do not call one CorrectionNotice schema canonical without a governing decision |
+| Paired schema | [`schemas/contracts/v1/correction/correction_notice.schema.json`](../../schemas/contracts/v1/correction/correction_notice.schema.json) is a permissive proposed placeholder that requires only `id` | Schema-valid does not mean operationally complete |
+| Alternate schemas | Additional proposed candidates exist under `corrections/`, `release/`, and `review/` | The vocabulary and authority split remain unresolved |
+| Fixtures and validator | Positive and negative fixtures plus [`validate_correction_notice.py`](../../tools/validators/correction/validate_correction_notice.py) provide bounded no-network JSON/schema checks | The validator does not resolve evidence, policy, review, release, withdrawal, rollback, or public state |
+| Tests | [`test_validate_correction_notice.py`](../../tests/validators/test_validate_correction_notice.py) covers schema validity, minimal valid and invalid documents, duplicate keys, non-object roots, non-finite values, alias parity, and CLI behavior | Bounded executable support exists for the paired schema and input safety only |
+| Workflow and policy | The object-family register lists both as absent | No dedicated correction workflow or evaluator-bound policy path is established |
+| Release notices | Correction, withdrawal, and rollback-card indexes exist under `release/` | They are guidance and communication surfaces, not transition authority |
+| Public runtime | No correction route, emitter, consumer, cache invalidator, or deployed public read-back was verified | Operational correction, withdrawal, rollback, and propagation remain `UNKNOWN` or held |
 
 > [!WARNING]
-> The following are **doctrine violations**. If you find yourself doing one, stop and re-read §1.
+> `CORRECTION_NOTICE_VALID` means only that the input passed the current paired schema and bounded JSON checks. It is not a `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, proof, withdrawal, rollback, publication event, or confirmation that the notice is true.
 
-- **Silent in-place mutation** of a published artifact, claim, or AI answer.
-- **Skipping the `CorrectionNotice`** because the change "feels small."
-- **Re-using the prior `ReleaseManifest` ID** for the corrected release.
-- **Republishing without naming a rollback target.**
-- **Letting AI-generated correction text stand in for review** — AI is interpretive, not the root truth source.
-- **Treating the search index, graph projection, vector index, or tile cache as sovereign truth.** They are derivatives; rebuild them.
-- **Author-approves-self on a sensitive-lane correction.**
-- **Marking a sensitive defect "stale" to avoid the harder correction path.** If exposure occurred, it is a leak, not staleness.
-- **Closing the correction before §9 (derivative invalidation) is complete.**
-- **Polishing a `CorrectionNotice` before disabling the leaking surface.** Disable first.
+## When to use this runbook
 
-[Back to top](#top)
+Use it when material believed to be released or release-facing may be wrong, unsupported, misleading, unlawfully exposed, overspecific, stale in a way that changes meaning, or inconsistent across public carriers. Typical triggers include:
 
----
+- an `EvidenceRef` no longer resolves or its `EvidenceBundle` no longer supports the claim;
+- an observation, model, forecast, classification, aggregate, regulation, context source, or synthetic fixture was assigned the wrong source role;
+- rights, consent, sovereignty, privacy, or sensitivity posture changed;
+- geometry, time, attribution, identity, units, uncertainty, or provenance are materially wrong;
+- a validation, policy, review, manifest, signature, proof, or release reference no longer closes;
+- an API, map, tile, search result, export, report, graph, or AI response conveys a different meaning from the released record; or
+- a public artifact must be superseded, withdrawn, or considered for rollback.
 
-## 15 · Related docs
+Do not use this runbook to make routine pre-release edits in `RAW`, `WORK`, `QUARANTINE`, or candidate material. Use the normal owning workflow unless the defect also reached a released or release-facing surface.
 
-| Doc | Role |
+### Immediate containment boundary
+
+When exposure is active or harmful, do not wait for a polished notice. Use the private incident route and seek an authorized fail-closed containment action. Preserve identifiers, timestamps, digests, and audit records without copying the sensitive payload into public coordination. Containment does not itself approve a correction or authorize republication.
+
+## Classification
+
+Classify two independent things: the observed state and the proposed next outcome.
+
+### Observed state
+
+| State | Meaning | Initial posture |
+|---|---|---|
+| `STALE` | Support aged beyond a declared tolerance, but the prior claim may still describe what was known at release time | Show stale state and trigger review; do not silently refresh |
+| `WRONG` | Meaning, support, rights, sensitivity, identity, geometry, time, or release posture is materially incorrect | Contain when necessary and prepare correction, narrowing, denial, supersession, withdrawal, or rollback review |
+| `DISPUTED` | Credible evidence or authority conflicts and no resolution is yet accepted | Preserve the dispute; narrow or abstain when consequence requires it |
+| `UNCLEAR` | Evidence is insufficient to decide stale, wrong, or disputed | `HOLD`, `ABSTAIN`, or `DENY` rather than guessing |
+
+A rights or policy change that makes formerly public material no longer releasable is not merely a freshness issue. Treat the public posture as wrong and route it through rights, sensitivity, policy, and release review.
+
+### Candidate outcomes
+
+The issue template currently uses the following human-routing vocabulary. It is not a canonical machine enum:
+
+| Candidate outcome | Intended use |
 |---|---|
-| `docs/doctrine/lifecycle-law.md` | The `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` invariant |
-| `docs/doctrine/trust-membrane.md` | Why public surfaces never reach RAW / WORK / QUARANTINE / canonical stores |
-| `docs/doctrine/truth-posture.md` | Cite-or-abstain default |
-| `docs/runbooks/ROLLBACK.md` *(NEEDS VERIFICATION — exact filename)* | Hard rollback when no superseding fix is yet available |
-| `docs/runbooks/governed_ai_VALIDATION.md` *(PROPOSED)* | Focus Mode evidence / citation / policy validation |
-| `docs/governance/SEPARATION_OF_DUTIES.md` *(NEEDS VERIFICATION)* | Role definitions, reviewer matrix |
-| `docs/registers/DRIFT_REGISTER.md` | Drift entries linked to corrections |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Open verification items spawned by corrections |
-| `contracts/correction/correction_notice.md` *(PROPOSED)* | Object meaning |
-| `schemas/contracts/v1/correction/correction_notice.schema.json` *(PROPOSED)* | Object shape |
-| `release/` | `ReleaseManifest`, `PromotionDecision`, `RollbackCard` homes |
-| `policy/` | Policy bundles re-evaluated during correction |
+| `NO_ACTION` | Current material remains supportable; close with evidence |
+| `CLARIFY` | Improve wording or context without changing the underlying released meaning |
+| `MARK_STALE` | Preserve prior release while making stale state visible |
+| `CORRECT` | Prepare a superseding evidence or release candidate |
+| `NARROW` / `ABSTAIN` | Remove unsupported scope or decline to restate the claim |
+| `DENY` / `REDACT` / `GENERALIZE` | Prevent unsafe or unauthorized exposure before delivery |
+| `SUPERSEDE` | Replace the current public identity with a reviewed successor while preserving lineage |
+| `WITHDRAW` | Remove the affected public item under a governed decision while retaining the allowed audit trail |
+| `ROLLBACK_REVIEW` | Evaluate re-pointing public state to a verified prior safe release |
+| `HOLD` | Stop because an evidence, rights, sensitivity, review, policy, identity, overlap, or rollback prerequisite is unresolved |
+| `ERROR` | The procedure or supporting system could not produce a trustworthy result |
 
-[Back to top](#top)
+### Defect families
 
----
+Record the primary defect and any material secondary defects: evidence closure, source role, rights or consent, sensitivity or harmful precision, identity or lineage, spatial representation, temporal representation, policy, validation, API/runtime, renderer/carrier, AI/citation, catalog/index, release integrity, or operational integrity. Do not invent a stable reason code when the governing profile does not define one.
 
-## 16 · Appendix: checklists & references
+## Roles and separation of duties
 
-<details>
-<summary><b>Appendix A — Detector / author checklist</b></summary>
+| Role | Responsibility | Current status |
+|---|---|---|
+| Detector or reporter | Preserve the observation, affected identity, time, and public-safe reproduction | Any contributor may report; sensitive material stays private |
+| Triage coordinator | Classify immediate risk, coordinate containment, and keep the record current | Assignment `NEEDS VERIFICATION` |
+| Domain or evidence steward | Assess source role, evidentiary support, spatial/temporal meaning, and corrected candidate | Assignment `NEEDS VERIFICATION` |
+| Rights, sensitivity, privacy, or sovereignty reviewer | Review restricted-use and public-safe transformation decisions | Required when applicable; assignments `NEEDS VERIFICATION` |
+| Correction reviewer | Evaluate classification, lineage, evidence, propagation, and notice candidate | Operational roster `NEEDS VERIFICATION` |
+| Policy reviewer | Supply or verify applicable policy results | Dedicated correction binding is not established |
+| Release or rollback authority | Decide a later governed transition and verify rollback support | Operational authority not established here |
+| Documentation steward | Keep public-safe explanation, runbooks, registers, and navigation accurate | Concrete assignment `NEEDS VERIFICATION` |
 
-- [ ] Defect reproduced on a live `PUBLISHED` surface (cite the surface + URL or ID).
-- [ ] Stale vs. wrong distinction made (§3).
-- [ ] Sensitivity / rights / sovereignty check performed.
-- [ ] Affected surfaces enumerated (claim, layer, tile, popup, AI answer, export, index).
-- [ ] Primary defect class selected from §4.
-- [ ] Tracking entry opened.
-- [ ] Required reviewers identified per §5.
+[`CODEOWNERS`](../../.github/CODEOWNERS) routes review to `@bartytime4life`. That is a verified GitHub route, not proof of domain expertise, independence, approval, a `StewardshipAssignment`, a `ReviewRecord`, or release authority. Follow [Review Duties](../governance/REVIEW_DUTIES.md) and keep authoring, review, policy decision, release, and publication separate when materiality requires it.
 
-</details>
+## Procedure
 
-<details>
-<summary><b>Appendix B — Correction reviewer checklist</b></summary>
+### 1. Choose public or private intake
 
-- [ ] Classification matches evidence.
-- [ ] Quarantine actions in Step 2 are appropriate for class and severity.
-- [ ] Corrected evidence routed through governed pipeline (not bypassed).
-- [ ] `CorrectionNotice` fields complete; supersession links resolve.
-- [ ] Derivative invalidation list (§9) appears complete.
-- [ ] Sensitivity reviewer / rights-holder rep present where required.
-- [ ] No author-approves-self violation.
-- [ ] Rollback target named and valid.
+Use the [evidence-correction issue template](../../.github/ISSUE_TEMPLATE/evidence_correction.md) only when the report can be safely public. Use `SECURITY.md` and incident coordination for vulnerabilities, active exposure, restricted material, harmful precision, or details that would make the problem easier to exploit.
 
-</details>
+### 2. Pin the affected state
 
-<details>
-<summary><b>Appendix C — Release-authority checklist</b></summary>
+Record exact identifiers where available: repository commit, release or manifest ID, artifact digest, claim or evidence reference, layer/export/report identity, public URL, place/time scope, first and latest observation times, and the public-safe reproduction. Distinguish the source record from every derivative carrier.
 
-- [ ] New `ReleaseManifest` signed.
-- [ ] Rollback target verifiably resolves to a prior safe release.
-- [ ] Prior release record preserved and marked superseded with forward link.
-- [ ] `CorrectionNotice` attached and visible on the public claim.
-- [ ] Cache / CDN invalidation step scheduled or executed.
-- [ ] `AIReceipt`s (if any) cross-reference predecessors.
-- [ ] Health-indicator entries updated (correction lead time, derivative-invalidation coverage).
+### 3. Search for overlap
 
-</details>
+Check current correction records, issues, branches, pull requests, incident references, changelog entries, and release notices. Reuse or reconcile the same work when safe; do not create competing correction histories or overwrite another contributor's branch.
 
-<details>
-<summary><b>Appendix D — Doctrinal sources for this runbook</b></summary>
+### 4. Contain active harm
 
-| Topic | Source (CONFIRMED) |
+For an active rights, sensitivity, privacy, security, or integrity exposure, seek authorized containment before broad diagnosis. The safe posture may be denial, redaction, generalization, route/layer hold, cache isolation, or full withdrawal review. Record what was requested and what was actually confirmed; do not claim unverified invalidation.
+
+### 5. Classify state, defects, and materiality
+
+Choose `STALE`, `WRONG`, `DISPUTED`, or `UNCLEAR`; identify primary and secondary defect families; and record the consequence of leaving the surface unchanged. When several correction paths are possible, use the least expansive path that closes the defect without erasing audit history.
+
+### 6. Resolve evidence and source role
+
+Trace the affected claim to current admissible evidence and source records. Record whether evidence resolves, the role each source can support, relevant rights and sensitivity posture, spatial and temporal limits, uncertainty, and conflicts. Maps, indexes, summaries, AI output, and repeated prose do not replace an `EvidenceBundle`.
+
+### 7. Bound consumers and derivatives
+
+Inventory direct and plausible consumers: canonical object, catalog/triplet projection, governed API, map/tile/raster/3D carrier, Evidence Drawer, search index, graph/vector index, report/export/story, AI receipt or cached answer, CDN/object-store alias, and offline bundle. Classify each as affected, not affected with evidence, `UNKNOWN`, or held.
+
+### 8. Select the candidate outcome
+
+Choose one primary candidate outcome from the table above and record alternatives considered. A candidate is not an approved decision. If replacement evidence is absent, prefer narrowing, abstention, denial, withdrawal review, or hold over unsupported restatement.
+
+### 9. Build through owning roots
+
+Prepare changes through the normal lifecycle and responsibility roots. Keep semantic contract, machine schema, policy, fixtures/tests, receipts/proofs, release records, notices, and public artifacts separate. Preserve prior immutable releases and records; a correction is not an in-place overwrite.
+
+### 10. Prepare the `CorrectionNotice` candidate
+
+Name the semantic contract, selected schema profile, prior and proposed identities, affected releases or assets, public-safe reason and summary, evidence references, review and policy prerequisites, derivative disposition, supersession or withdrawal relationships, and rollback or forward-fix boundary. See the current conflict below.
+
+### 11. Validate and hand off
+
+Run proportionate no-network checks, record exact commands and outputs, and separate performed, failed, skipped, unavailable, inherited, and hosted checks. Route the candidate to accountable reviewers. A schema-valid candidate remains a candidate until evidence, policy, review, and release gates close.
+
+### 12. Execute only under separate authority
+
+Correction, public notice publication, derivative invalidation, withdrawal, rollback, release, deployment, promotion, publication, and external writes are later governed transitions. This runbook does not authorize them. After an authorized transition, verify public read-back and retain correction, review, decision, receipt, proof, manifest, notice, and rollback lineage.
+
+## `CorrectionNotice` candidate
+
+### Current conflict
+
+The object-family register lists four proposed schema candidates:
+
+1. `schemas/contracts/v1/correction/correction_notice.schema.json` — paired with the current validator and fixtures; permissive placeholder requiring only `id`.
+2. `schemas/contracts/v1/corrections/correction_notice_candidate.schema.json` — permissive candidate scaffold.
+3. `schemas/contracts/v1/release/correction_notice.schema.json` — permissive release-lane scaffold.
+4. `schemas/contracts/v1/review/correction_notice.schema.json` — permissive review-lane scaffold.
+
+The draft semantic contract is richer than all four. Until a governing decision and migration establish one profile, name the exact schema used and do not imply cross-profile compatibility.
+
+### Candidate review packet
+
+At minimum, provide:
+
+| Field | Requirement |
 |---|---|
-| Correction and rollback are publication requirements | BLD-GREEN §20; BLD-COMP §§21-22; IMPL-PIPE §21 |
-| Correction flow (preserve, classify, notice, supersede) | BLD-GREEN §20; IMPL-PIPE §§21, 27; BLD-COMP §§21-23 |
-| Defect-class × correction × rollback matrix | Build Manual defect-class table |
-| Lifecycle gates (incl. Correction & Rollback) | Atlas §24.6.1 |
-| Reason-code catalog | Atlas §24.6.3 (PROPOSED) |
-| Reviewer roles | Atlas §24.7.1 |
-| Separation-of-duties matrix | Atlas §24.7.2 |
-| Stale vs. wrong | Atlas §24.8.1 |
-| Supersession lineage | Atlas §24.8.2 |
-| Health indicators | Atlas §24.11.1, §24.11.2 |
-| `CorrectionNotice` object | Encyclopedia capability table; Atlas §24.2 receipts catalog |
-| Finite outcomes (ANSWER / ABSTAIN / DENY / ERROR / HOLD) | Atlas §24.3 |
-| `docs/runbooks/` placement | `directory-rules.md` §6.1 |
+| Identity | Stable candidate ID and affected object/release identifiers |
+| State and reason | Observed state, defect family, materiality, public-safe explanation |
+| Evidence | Resolvable references, source roles, scope, limitations, conflicts |
+| Prior and successor state | Prior identity/digest, proposed identity/digest, supersession or withdrawal relation |
+| Rights and sensitivity | Review status, obligations, transforms, withheld-detail note |
+| Review and policy | Required roles, records, outcomes, unresolved prerequisites |
+| Derivatives | Consumer inventory and invalidate/rebuild/retain/hold disposition |
+| Release boundary | Candidate release or withdrawal relationship; no prose-only transition |
+| Recovery | Verified rollback target or forward-fix boundary, or explicit hold |
+| Audit | Receipts, proofs, validation reports, timestamps, and public read-back plan |
 
-</details>
+Do not copy a hypothetical JSON example into production as though it were canonical. Use the selected schema, current fixtures, and semantic contract, and identify any field not represented by the selected machine shape.
+
+## Withdrawal and rollback
+
+Correction, withdrawal, and rollback solve different problems:
+
+| Path | Use when | Result | Required caution |
+|---|---|---|---|
+| Forward correction / supersession | A reviewed successor can replace the affected meaning | New governed state points forward; prior state remains inspectable | Complete evidence, policy, review, release, lineage, and derivatives |
+| Withdrawal | Material must no longer be publicly served and no immediate replacement is approved | Public access is removed or held; public-safe notice and audit lineage remain as allowed | Rights, privacy, sovereignty, security, or lawful erasure duties can limit public explanation |
+| Rollback review | Current public state has an operational/integrity defect and a verified prior safe release may be restored | Candidate re-pointing to an immutable prior release | Do not assume the prior release is safe, compatible, authorized, or available |
+| Hold / deny / abstain | Prerequisites are unresolved | No higher transition | Preserve the reason and the evidence needed to continue |
+
+The [Rollback Runbook](./ROLLBACK_RUNBOOK.md), [correction-notice index](../../release/correction_notices/README.md), [withdrawal-notice index](../../release/withdrawal_notices/README.md), and [rollback-card index](../../release/rollback_cards/README.md) are guidance surfaces. Their presence does not prove an operational executor or authorized transition.
+
+## Derivative propagation and invalidation
+
+A correction is incomplete when an affected downstream carrier still presents the old meaning as current. For each derivative, record identity, prior digest/version, owner or resolver, action, verification method, and final state.
+
+| Derivative family | Typical action | Evidence needed before closure |
+|---|---|---|
+| Catalog/triplet/graph projections | Rebuild or mark superseded | New identity/digest and lineage to corrected canonical support |
+| Governed API and Evidence Drawer | Refresh released projection and correction state | Exact response/read-back from the governed public path |
+| MVT, PMTiles, COG, raster, scene, or 3D asset | Rebuild, withdraw, or re-point immutable artifact | Manifest/digest parity and public-safe spatial checks |
+| Search/vector indexes | Rebuild or remove stale entries | Query-based read-back showing no unsupported current result |
+| AI answers and caches | Invalidate affected receipt/answer and generate a new bounded result or abstention | New receipt/citation validation; old receipt retained for audit where allowed |
+| Reports, exports, stories, and offline bundles | Reissue, supersede, withdraw, or visibly mark stale | Inventory closure and public-safe notice/linkage |
+| CDN, object-store aliases, browser/service-worker caches | Purge or re-point under authorized operations | Provider/operator receipt plus external read-back |
+
+When the inventory cannot be bounded, stop at `HOLD` or narrow the correction. Client-side hiding is not sufficient redaction or invalidation.
+
+## Validation
+
+### Current bounded validator
+
+From a repository checkout with the declared dependencies installed:
+
+```bash
+python tools/validators/correction/validate_correction_notice.py --fixtures
+python -m pytest -q tests/validators/test_validate_correction_notice.py
+```
+
+Validate a candidate file explicitly:
+
+```bash
+python tools/validators/correction/validate_correction_notice.py path/to/candidate.json
+```
+
+The compatibility entry point is `tools/validators/validate_correction_notice.py`. The current validator emits these stable input/schema findings: `INPUT_NOT_FILE`, `INPUT_TOO_LARGE`, `JSON_DUPLICATE_KEY`, `JSON_INVALID`, `INPUT_UNREADABLE`, `JSON_ROOT_INVALID`, and `SCHEMA_INVALID`.
+
+### Required checks by affected surface
+
+- Confirm the selected schema and semantic contract are named.
+- Run schema/input tests and relevant positive and negative fixtures.
+- Resolve evidence references independently of shape validation.
+- Re-evaluate rights, sensitivity, consent, sovereignty, and policy where applicable.
+- Verify review records and actor authority rather than relying on names in prose.
+- Rebuild and verify every affected derivative.
+- Verify immutable digests, manifests, supersession/withdrawal links, and rollback target.
+- Test governed public read-back, including stale, abstain, deny, withdrawn, superseded, and error behavior where material.
+- Record network access and external side effects; default repository validation should remain no-network.
+
+For Markdown-only changes to this runbook:
+
+```bash
+git diff --check -- docs/runbooks/EVIDENCE_CORRECTION.md
+```
+
+Also verify one H1, heading order, anchors, tables, code fences, relative links, final newline, and absence of sensitive material. No canonical repository-wide Markdown link checker was verified at the evidence snapshot.
+
+### Interpretation limits
+
+A schema or validator pass proves only its implemented checks. A workflow pass proves only the exact head, trigger, inputs, and steps run. A notice proves communication, not the underlying correction. A receipt records process memory; it is not evidence closure or proof. A pull request or merge proves repository history, not a correction, withdrawal, rollback, release, deployment, promotion, or publication event.
+
+## Public interface behavior
+
+No dedicated correction API route was verified. Treat route names, response fields, and UI component names as `UNKNOWN` unless current implementation evidence establishes them.
+
+Where a governed public surface represents correction state, it should provide only the public-safe subset needed to understand whether the item is current, stale, disputed, corrected, superseded, withdrawn, denied, or unavailable; which released identity replaces it when public; when the state changed; a safe summary and limitation; resolvable public evidence or notice references; and how to report another discrepancy.
+
+It must not expose internal evidence, restricted reasons, private review notes, exact sensitive geometry, unreleased candidates, credentials, or model-runtime internals.
+
+## Closure and record retention
+
+A correction is closed only when all applicable items are supported:
+
+- [ ] The affected identity, release, place, time, and public surface are pinned.
+- [ ] Classification and materiality are supported.
+- [ ] Evidence resolves or the outcome explicitly narrows, abstains, denies, or withdraws.
+- [ ] Rights, consent, sovereignty, and sensitivity review is complete where applicable.
+- [ ] The exact contract and schema profile are named; validation limits are recorded.
+- [ ] Accountable review, policy, and release decisions are present where required.
+- [ ] Prior records and immutable artifacts remain inspectable where legally and ethically allowed.
+- [ ] Supersession, correction, withdrawal, or rollback lineage resolves in both directions where supported.
+- [ ] Direct derivatives are invalidated, rebuilt and verified, or explicitly held.
+- [ ] Governed public read-back matches the approved state.
+- [ ] Public notice is visible when required and does not disclose restricted detail.
+- [ ] Remaining unknowns name the evidence needed and first blocked transition.
+
+Preserve the issue or private incident reference, candidate changes, review and policy records, release decisions, notices, receipts, proofs, manifests, changelog entries, and validation results under their owning roots. Do not copy restricted incident material into public correction records.
+
+## Stop conditions
+
+Stop and return `HOLD`, `DENY`, `ABSTAIN`, or `ERROR` as appropriate when the affected release or identity cannot be resolved; required evidence does not resolve; source role, rights, consent, sovereignty, or sensitivity is unclear; the response would expose restricted detail; overlapping work cannot be reconciled safely; the selected schema profile is ambiguous for the intended transition; accountable review, policy, or release authority is absent; derivative impact cannot be bounded; no safe recovery boundary exists; public read-back contradicts the intended correction; or the action requires an unauthorized release, deployment, promotion, publication, external write, or administrative bypass.
+
+## Worked scenarios
+
+These examples are illustrative; they do not assert deployed KFM behavior.
+
+### Unsupported public claim
+
+A report cites an `EvidenceRef` that no longer resolves to a released `EvidenceBundle`. Pin the report, claim, release, and unresolved reference; classify the meaning as unsupported rather than merely stale; narrow or abstain while replacement evidence is reviewed; prepare a candidate through the normal lifecycle; inventory API, map, search, export, report, and AI consumers; and stop before republication unless evidence, policy, review, release, and derivative closure are complete.
+
+### Sensitive location in a derivative
+
+A map export contains harmful precision that should have been generalized. Use the private incident route; seek authorized containment of the export and its derivative copies; preserve digest and audit identity without preserving public access; route sensitivity, rights, and domain review; rebuild the public-safe carrier before rendering rather than hiding it in the client; and publish only a safe notice.
+
+## Anti-patterns
+
+- Silently editing or replacing an already released artifact.
+- Calling a CorrectionNotice schema canonical because one validator imports it.
+- Treating `CORRECTION_NOTICE_VALID` as evidence, approval, or release readiness.
+- Inventing owners, routes, fields, reason codes, deadlines, or completed invalidation.
+- Reporting sensitive details in a public correction issue.
+- Letting notice prose substitute for evidence or a release decision.
+- Correcting the map while leaving the API, search index, export, or AI cache stale.
+- Reusing an immutable ID for materially different bytes or meaning.
+- Deleting the prior record to make the current state look clean.
+- Allowing AI-generated language to approve its own correction.
+- Using a pull request merge as a release, withdrawal, rollback, or publication event.
+- Closing while a known affected derivative remains unclassified.
+
+## Open verification backlog
+
+| Item | Current status | First blocked transition |
+|---|---|---|
+| CorrectionNotice schema authority across four candidates | `CONFLICTED` | Canonical machine profile and interoperable instance production |
+| Correction policy binding | `ABSENT` in the object-family registry | Policy-backed correction or release decision |
+| Dedicated correction workflow | `ABSENT` in the object-family registry | Repeatable repository-orchestrated candidate validation |
+| Operational emitter and consumer inventory | `NOT INSPECTED` / `UNKNOWN` | End-to-end correction production and public parity |
+| WithdrawalNotice machine contract, schema, validator, and execution path | `NEEDS VERIFICATION` | Governed withdrawal |
+| Authenticated reviewers and independent release authority | `NEEDS VERIFICATION` | Steward-significant correction, withdrawal, or rollback |
+| Stable public notice and correction-state API surface | `UNKNOWN` | Public visibility and read-back |
+| External cache, alias, search, export, and AI invalidation | `UNKNOWN` | Verified operational propagation |
+| Correction and rollback rehearsal against a real governed release | `UNKNOWN` | Operational readiness |
+| Lawful deletion or erasure boundary distinct from audit-preserving withdrawal | `NEEDS VERIFICATION` | Any retention exception that cannot preserve the normal audit record |
+
+Track cross-cutting items in the [Verification Backlog](../registers/VERIFICATION_BACKLOG.md) or [Drift Register](../registers/DRIFT_REGISTER.md) under their governing rules. This runbook does not create or close those records.
+
+## Related documentation
+
+| Resource | Role |
+|---|---|
+| [Runbook index](./README.md) | Parent navigation and runbook authority boundary |
+| [Evidence-correction issue template](../../.github/ISSUE_TEMPLATE/evidence_correction.md) | Public-safe intake and triage worksheet |
+| [`SECURITY.md`](../../SECURITY.md) | Private-first security and sensitive-disclosure route |
+| [Incident Response Runbook](./INCIDENT_RESPONSE.md) | Active containment and incident coordination |
+| [Rollback Runbook](./ROLLBACK_RUNBOOK.md) | Rollback readiness and review procedure |
+| [Corrections Are First-Class](../doctrine/corrections-first-class.md) | Draft correction doctrine and lineage |
+| [Publication rollback and correction](../architecture/publication/rollback-and-correction.md) | Architecture comparison of forward correction and rollback |
+| [Review Duties](../governance/REVIEW_DUTIES.md) | Repository-grounded review and separation guidance |
+| [`CorrectionNotice` contract](../../contracts/correction/correction_notice.md) | Draft semantic meaning |
+| [Object-family register](../../control_plane/object_family_register.yaml) | Current navigational maturity and conflict index |
+| [Correction-notice index](../../release/correction_notices/README.md) | Release-plane notice guidance |
+| [Withdrawal-notice index](../../release/withdrawal_notices/README.md) | Release-plane withdrawal notice guidance |
+| [Release root](../../release/README.md) | Canonical append-only release-decision responsibility |
+
+## Documentation rollback
+
+This update changes documentation and its generated provenance receipt only. Roll back by reverting the focused commit or applying a forward documentation fix that restores the prior blob. Reverting this runbook does not roll back a KFM release, correction, withdrawal, public artifact, deployment, or publication.
 
 [Back to top](#top)
-
----
-
-> [!NOTE]
-> **Implementation maturity.** Operational tooling that would *enforce* this runbook — `CorrectionNotice` JSON schema, validator (`tools/validators/correction/...`), CI gates, cache-purge automation, correction queue UI, reviewer routing — is `PROPOSED` / `NEEDS VERIFICATION` until verified against mounted-repo evidence. The **doctrine** in this runbook is `CONFIRMED` from the attached corpus.
-
----
-
-**Related docs:** [Lifecycle Law](../doctrine/lifecycle-law.md) · [Trust Membrane](../doctrine/trust-membrane.md) · [Rollback Runbook](./ROLLBACK.md) · [Drift Register](../registers/DRIFT_REGISTER.md)
-
-**Last updated:** 2026-05-12 · **Version:** v1 (draft) · [Back to top](#top)

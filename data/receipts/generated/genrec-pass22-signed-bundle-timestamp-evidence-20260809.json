@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-pass22-signed-bundle-timestamp-evidence-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/signed-bundle-timestamp-evidence.yml",
+    "contracts/release/signed_bundle_timestamp_evidence.md",
+    "docs/intake/exploratory/pass-22-signed-bundle-timestamp-evidence-source-map.md",
+    "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/cases.json",
+    "schemas/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json",
+    "tests/release/test_signed_bundle_timestamp_evidence.py",
+    "tools/validators/release/validate_signed_bundle_timestamp_evidence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/signed-bundle-timestamp-evidence.yml": "sha256:5ef75ce8e61eedbdc80b9f0373554fc768d295fb232af93d94225d8ac6564b31",
+    "contracts/release/signed_bundle_timestamp_evidence.md": "sha256:88434e62ce261994e612a4ccd9f8bcb271a8c27cdd11c91be9dcacb548eca174",
+    "docs/intake/exploratory/pass-22-signed-bundle-timestamp-evidence-source-map.md": "sha256:40b082655da98962f4e5788c9dcd970f3984347c188311660748c79ce5d03999",
+    "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/cases.json": "sha256:69553f6838a406c8b5a4ec3b91ea4c7181414a089a22a802e666dffe87933e8a",
+    "schemas/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json": "sha256:5fa7b94358bb619b5b00c2bc6c2e7f969cebe02f50922b75b56fa02ee618c3de",
+    "tests/release/test_signed_bundle_timestamp_evidence.py": "sha256:7ca61713d74d27f31c4cf76eed028a822f79179940280a1e94a3a2362a63f81a",
+    "tools/validators/release/validate_signed_bundle_timestamp_evidence.py": "sha256:b3c71ed698dd0f493b914d56ddd07017a956a43592f4108bca148c294e5174a0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b6dd0a3181ddfecfee30c8356eb5be30d0b5c8a448242c37c1df9450e74bec8b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "PDF extraction and rendering",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W#KFM-P22-PROG-0033",
+      "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W#KFM-P22-PROG-0052",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#consolidated-pages-997-998",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/signed-bundle-timestamp-evidence.yml": "PROPOSED",
+    "contracts/release/signed_bundle_timestamp_evidence.md": "PROPOSED",
+    "docs/intake/exploratory/pass-22-signed-bundle-timestamp-evidence-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/cases.json": "PROPOSED",
+    "schemas/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json": "PROPOSED",
+    "tests/release/test_signed_bundle_timestamp_evidence.py": "PROPOSED",
+    "tools/validators/release/validate_signed_bundle_timestamp_evidence.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-assay",
+      "outcome": "PASS",
+      "reason": "Pass 22 cards KFM-P22-PROG-0033 and KFM-P22-PROG-0052 were resolved in Drive and remained unchanged in the Pass 23-Pass 32 consolidated atlas."
+    },
+    {
+      "gate": "repository-gap-assay",
+      "outcome": "PASS",
+      "reason": "Exact card IDs, RFC3161 references, and proposed object name were absent from current main and open pull requests at the recorded base."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Contract, schema, fixtures, validator, tests, workflow, source map, and receipt follow the accepted responsibility-root mapping."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-local-tests",
+      "outcome": "PASS",
+      "reason": "Seven tests and fourteen positive/negative fixture cases passed without network access."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting an authorized repository reviewer."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P22-PROG-0033",
+      "validated": true,
+      "evidence_ref": "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W"
+    },
+    {
+      "id": "KFM-P22-PROG-0052",
+      "validated": true,
+      "evidence_ref": "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W"
+    },
+    {
+      "id": "KFM-P22-PROG-0033-0052-PASS32-UNCHANGED",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#consolidated-pages-997-998"
+    },
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T20:28:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only proposed profile. It performs no TSA, Cosign, Rekor, network, cryptographic, policy, release, or publication action. Rollback is deletion of the eight files introduced by the draft change."
+}

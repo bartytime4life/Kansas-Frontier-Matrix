@@ -2,16 +2,15 @@
 doc_id: kfm://doc/docs-sources-catalog-nrcs-gssurgo
 title: gSSURGO
 type: product-page
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for nrcs>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/sources/catalog/nrcs/README.md
   - docs/sources/catalog/nrcs/ssurgo.md
-  - docs/sources/catalog/nrcs/gnatsgo.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -25,10 +24,14 @@ related:
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, nrcs, soil, agriculture, observed, raster, ssurgo, gssurgo, mukey]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "Source role at admission is observed (gridded raster of the canonical SSURGO survey)."
   - "Annual refresh expectation tracks SSURGO release cycle (per Idea Index card KFM-P24-PROG-0004)."
   - "Silent resampling that conflates resolutions across gSSURGO / gNATSGO / SoilGrids / SMAP is a named anti-pattern."
+owning_root: docs/
+responsibility: "Documentation for gSSURGO; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌱 gSSURGO
@@ -55,7 +58,7 @@ notes:
 | **Primary domain** | Soil (`[DOM-SOIL]`) |
 | **Secondary domain** | Agriculture (`[DOM-AG]`) (joins via `SoilMapUnit` and suitability ratings) |
 | **Joins back to** | SSURGO tabular via `MUKEY` (CONFIRMED Agriculture term) |
-| **Sibling products** | [`ssurgo`](./ssurgo.md) (vector form) · [`gnatsgo`](./gnatsgo.md) (national-scale grid) |
+| **Sibling products** | [`ssurgo`](./ssurgo.md) (vector form) · `gnatsgo` (not present) (national-scale grid) |
 | **Owners** | _PLACEHOLDER — Docs steward + Source steward for nrcs_ |
 | **Last reviewed** | 2026-05-22 |
 
@@ -93,9 +96,9 @@ notes:
 | Admission decision (allow / restrict / deny / hold) | ❌ | `SourceActivationDecision` under `policy/sources/` |
 | Machine shape | ❌ | `schemas/contracts/v1/...` (ADR-0001) |
 | Fetch + admission code | ❌ | `connectors/nrcs/` (Directory Rules §7.3) |
-| Lifecycle data | ❌ | `data/raw/soil/nrcs.gssurgo/<run_id>/` |
+| Lifecycle data | ❌ | Source-first capture for `nrcs.gssurgo` (physical source-first RAW placement **HOLD** under `DIR-SOURCE-001`; `data/raw/soil/` is a compatibility/reference lane, not a payload destination) |
 | Vector counterpart | ❌ | [`./ssurgo.md`](./ssurgo.md) |
-| National-scale gridded counterpart | ❌ | [`./gnatsgo.md`](./gnatsgo.md) |
+| National-scale gridded counterpart | ❌ | `./gnatsgo.md` (not present) |
 
 > [!NOTE]
 > This is a **product page**, not a `SourceDescriptor`. The family-level overview lives in [`./README.md`](./README.md); identity rules in [`../IDENTITY.md`](../IDENTITY.md); rights and sensitivity guidance in [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). Do not duplicate descriptor or policy fields here.
@@ -123,7 +126,7 @@ PROPOSED scaffold. **NEEDS VERIFICATION**: exact cadence per release, current en
 - ❌ Not a regulatory determination.
 - ❌ Not a soil-moisture or soil-condition product. Soil moisture comes from SCAN / SMAP / Kansas Mesonet; soil condition is `SoilMoistureObservation`.
 - ❌ Not a substitute for SSURGO when tabular component / horizon attributes are needed at full fidelity — those join via `MUKEY` from the SSURGO/SDA product family.
-- ❌ Not a national-scale gridded soil product where SSURGO is absent — that is **gNATSGO** (see [`./gnatsgo.md`](./gnatsgo.md)).
+- ❌ Not a national-scale gridded soil product where SSURGO is absent — that is **gNATSGO** (see `./gnatsgo.md` (not present)).
 
 [↥ Back to top](#-gssurgo)
 
@@ -294,7 +297,7 @@ flowchart LR
     CGATE["Connector gate<br/>(fail-closed;<br/>no silent resample)"]
   end
   subgraph LIFECYCLE["KFM lifecycle"]
-    RAW["data/raw/soil/<br/>nrcs.gssurgo/&lt;run_id&gt;/"]
+    RAW["RAW: source-first capture<br/>nrcs.gssurgo (placement HOLD)"]
     WQ["WORK / QUARANTINE<br/>(reprojection declared,<br/>not silent)"]
     PROC["PROCESSED<br/>(SoilMapUnit raster +<br/>MUKEY join keys)"]
     CAT["CATALOG / TRIPLET"]
@@ -368,7 +371,7 @@ Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema
 | **Silent resampling** that conflates resolutions across gSSURGO / gNATSGO / SoilGrids / SMAP | A composite view joins layers at different native cell sizes without declaring resampling | Record `resampling_method` and target resolution in provenance; fail closed if undeclared |
 | **Sub-map-unit precision claim** | A gSSURGO cell cited as a per-point soil observation | Preserve mapping precision of the source survey; surface `SoilTimeCaveat` |
 | **Role collapse: gSSURGO-derived suitability cited as observed soil** | A public layer labels a `modeled` raster as `observed` | Preserve `source_role`; require `role_model_run_ref`; AI ABSTAIN if role missing |
-| **Connector publishes** | `connectors/nrcs/` writes under `data/processed/`, `data/catalog/`, or `data/published/` | Move output to `data/raw/soil/nrcs.gssurgo/<run_id>/`; connectors do not publish |
+| **Connector publishes** | `connectors/nrcs/` writes under `data/processed/`, `data/catalog/`, or `data/published/` | Emit only to the accepted source-first RAW home (path HOLD) or QUARANTINE, never to `data/raw/soil/` as a payload lane; connectors do not publish |
 | **Lifecycle skip** | A pipeline writes to `data/published/` directly from `data/raw/` | All lifecycle phases run; promotion is a governed state transition |
 | **Aggregate cited as per-place truth** | A county-aggregated gSSURGO attribute is cited as a single-field observation | DENY join from aggregate cell to single record; `AggregationReceipt`; geometry-scope guard |
 | **Private field-level publication** | gSSURGO joined to operator-identifiable field detail and published | DENY by default; aggregation; permissions; policy review |
@@ -421,6 +424,6 @@ See [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json)
 
 ---
 
-<sub>**Status:** draft (PROPOSED, v0.2). **Owners:** _PLACEHOLDER — Docs steward + Source steward for nrcs_. **Last reviewed:** 2026-05-22 *(Claude Code product-page scaffold session)*. This file is human-readable product-page documentation and does not decide source admission. For activation, see the source registry.</sub>
+<sub>**Status:** draft (PROPOSED, v0.2.1; updated 2026-10-11). **Owners:** _PLACEHOLDER — Docs steward + Source steward for nrcs_. **Last reviewed:** 2026-05-22 *(Claude Code product-page scaffold session)*. This file is human-readable product-page documentation and does not decide source admission. For activation, see the source registry.</sub>
 
 [↥ Back to top](#-gssurgo)

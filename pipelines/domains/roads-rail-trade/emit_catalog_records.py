@@ -1,6 +1,21 @@
-"""PROPOSED placeholder generated from the current docs/domains inventory.
+"""Roads/Rail/Trade catalog emission is held until CatalogMatrix, STAC, DCAT, and PROV closure semantics are reviewed.
 
-Path: pipelines/domains/roads-rail-trade/emit_catalog_records.py
-Sources:
-- docs/domains/roads-rail-trade/MISSING_OR_PLANNED_FILES.md
+This entry point reads no PROCESSED artifact and writes no CATALOG or TRIPLET record.
+Planned in docs/domains/roads-rail-trade/MISSING_OR_PLANNED_FILES.md.
 """
+from __future__ import annotations
+
+import json
+
+
+def main() -> int:
+    print(json.dumps({
+        "outcome": "HOLD",
+        "reason_code": "CATALOG_NOT_IMPLEMENTED",
+        "catalog_emission_authorized": False,
+    }, sort_keys=True, separators=(",", ":")))
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

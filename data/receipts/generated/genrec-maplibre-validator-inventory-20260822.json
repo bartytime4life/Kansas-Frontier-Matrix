@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-maplibre-validator-inventory-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/maplibre-acquisition-inventory.yml",
+    ".github/workflows/maplibre-perf-governance.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/maplibre-acquisition-inventory.yml": "sha256:6a156dc1cd8810e61b9759078180b705801c84e01138a5ca705824d290677b92",
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:d18a971b6488d5134c0089b59aa81a4cf0064298910c0bc8516e1ffeb4354826"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Python unittest",
+      "workflow YAML parser",
+      "generated-receipt validator"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/32607461803",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/.github/workflows/maplibre-perf-governance.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/.github/workflows/maplibre-acquisition-inventory.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/tests/maplibre/test_assess_acquisition_inventory.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/tools/validators/maplibre/assess_acquisition_inventory.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/architecture/map-master/RENDERER_BOUNDARY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/doctrine/ai-build-operating-contract.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/maplibre-acquisition-inventory.yml": "PROPOSED",
+    ".github/workflows/maplibre-perf-governance.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-failure-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Bound the correction to current main 101f9ca6983ffb8427855db60b9b4b30c82cb164 and MapLibre Perf Governance run 32607461803, whose only reported readiness-step rejection was the unclassified assess_acquisition_inventory.py validator."
+    },
+    {
+      "gate": "repository-owned-lane-classification",
+      "outcome": "PASS",
+      "reason": "Confirmed the acquisition inventory already has a dedicated read-only workflow, seven-test suite, validator, architecture references, finite PASS/HOLD/FAIL/ERROR outcomes, and no authority, dependency-admission, renderer-selection, release, deployment, or publication effect."
+    },
+    {
+      "gate": "reciprocal-workflow-trigger-closure",
+      "outcome": "PASS",
+      "reason": "Both pull_request and main-push path filters now make the performance and acquisition workflows watch each other, so a future classification change cannot obtain exact-head evidence from only one of the two coupled lanes."
+    },
+    {
+      "gate": "exact-runtime-readiness-step",
+      "outcome": "PASS",
+      "reason": "Parsed the workflow YAML and executed the exact Evaluate governed runtime readiness shell step. It classified all existing validator lanes, including the acquisition inventory, and retained every explicit MapLibre hold boundary."
+    },
+    {
+      "gate": "acquisition-inventory-tests",
+      "outcome": "PASS",
+      "reason": "All seven existing acquisition-inventory unit tests passed, including PASS, HOLD, FAIL, ERROR, candidate-seam, outside-seam, and summary-redaction behavior."
+    },
+    {
+      "gate": "current-acquisition-assessment",
+      "outcome": "PASS",
+      "reason": "The current no-network assessment completed without truncation or input error and returned the dedicated lane's reviewed HOLD outcome (exit 3) for three existing structural findings. This is not renderer readiness or dependency admission."
+    },
+    {
+      "gate": "workflow-yaml-and-security-ratchet",
+      "outcome": "PASS",
+      "reason": "The final workflow parsed as YAML; all 19 workflow-security tests passed; the validator reported 479 workflows with zero invariant findings, new drift, baselined warnings, or stale baseline entries; git diff --check passed."
+    },
+    {
+      "gate": "changed-area-repository-topology",
+      "outcome": "FAIL",
+      "reason": "The changed-area profile passed workflow-security and rejected the repository-wide topology state. A detached exact-base comparison showed identical counts (125 baselined warnings, nine new-drift failures, zero invariant failures), identical failed fingerprints, and zero failures introduced by this slice."
+    },
+    {
+      "gate": "hosted-exact-head-maplibre",
+      "outcome": "SKIPPED",
+      "reason": "A draft pull-request head and hosted run do not yet exist. The workflow's exact-head result remains NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "maplibre-failing-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/32607461803"
+    },
+    {
+      "id": "acquisition-inventory-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/.github/workflows/maplibre-acquisition-inventory.yml"
+    },
+    {
+      "id": "acquisition-inventory-tests",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/tests/maplibre/test_assess_acquisition_inventory.py"
+    },
+    {
+      "id": "acquisition-inventory-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/tools/validators/maplibre/assess_acquisition_inventory.py"
+    },
+    {
+      "id": "renderer-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/architecture/map-master/RENDERER_BOUNDARY.md"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ai-build-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/101f9ca6983ffb8427855db60b9b4b30c82cb164/docs/doctrine/ai-build-operating-contract.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T00:53:12Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded process-memory receipt for classifying an already separately governed MapLibre acquisition-inventory validator in the performance readiness gate and making the two coupled workflows trigger each other symmetrically. The change does not execute the browser performance hold, accept ADR-0006 or ADR-0007, admit a renderer dependency, select a renderer, weaken workflow safety, change application code, approve review, alter settings, release, deploy, promote, or publish. Human review and hosted exact-head evidence remain pending. Rollback is the single workflow correction commit."
+}

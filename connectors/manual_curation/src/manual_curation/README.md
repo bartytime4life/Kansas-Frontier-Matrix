@@ -21,9 +21,6 @@ related:
   - ../../pyproject.toml
   - ../../tests/README.md
   - ./__init__.py
-  - ./fetch.py
-  - ./admit.py
-  - ./descriptor.yaml
   - ../../../../CONTRIBUTING.md
   - ../../../../.github/CODEOWNERS
   - ../../../../.github/workflows/connector-gate.yml
@@ -60,6 +57,9 @@ notes:
 <a id="top"></a>
 
 # Manual Curation Greenfield Package and Steward-Gate Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/manual_curation/admit.py`, `src/manual_curation/descriptor.yaml` and `src/manual_curation/fetch.py` were removed from `connectors/manual_curation/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Repository-grounded boundary for `connectors/manual_curation/src/manual_curation/`. The namespace exists, but the inspected package is a non-operational `0.0.0` scaffold. It does not currently fetch, parse, curate, admit, quarantine, persist, activate, catalog, release, or publish source material.
 
@@ -142,10 +142,7 @@ connectors/manual_curation/
 │   ├── README.md
 │   └── manual_curation/
 │       ├── README.md                      # this file
-│       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
-│       └── descriptor.yaml                # four-field placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # documentation contract only
 ```
@@ -167,9 +164,9 @@ These absence statements are bounded to the exact paths and pinned commit. Diffe
 |---|---|---|
 | `pyproject.toml` | Name and `0.0.0` only. | Buildability, installability, Python support, dependencies, commands, and package discovery are unknown. |
 | `__init__.py` | Empty. | No public import API or initialization behavior. |
-| `fetch.py` | Comment-only. | No retrieval, packet assembly, hashing, source-head, retry, or staging behavior. |
-| `admit.py` | Comment-only. | No validation, policy call, review routing, disposition, receipt, or handoff behavior. |
-| `descriptor.yaml` | `name`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, or release evidence. |
+| `fetch.py` (removed 2026-09-29) | Comment-only. | No retrieval, packet assembly, hashing, source-head, retry, or staging behavior. |
+| `admit.py` (removed 2026-09-29) | Comment-only. | No validation, policy call, review routing, disposition, receipt, or handoff behavior. |
+| `descriptor.yaml` (removed 2026-09-29) | `name`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, or release evidence. |
 | Tests | README-only at named probes. | Collection, coverage, pass state, negative-case enforcement, and fixture safety are unknown. |
 | Workflows | TODO-only. | A green run would prove workflow execution only. |
 
@@ -604,7 +601,7 @@ A mature package should expose non-sensitive signals such as run/candidate ID, o
 | This path and prior README blob | **CONFIRMED** | Package README exists and previously contained a proposed module map. | Runtime behavior or current module implementation. |
 | `pyproject.toml` | **CONFIRMED** | Distribution name and `0.0.0`. | Buildability, installability, dependencies, commands, or Python support. |
 | `__init__.py`, `fetch.py`, `admit.py` | **CONFIRMED** | Empty/comment-only scaffold. | Any executable connector or curation behavior. |
-| `descriptor.yaml` | **CONFIRMED** | Four-field placeholder with unresolved role/rights and public sensitivity alias. | SourceDescriptor conformance, activation, or public safety. |
+| `descriptor.yaml` (removed 2026-09-29) | **CONFIRMED** | Four-field placeholder with unresolved role/rights and public sensitivity alias. | SourceDescriptor conformance, activation, or public safety. |
 | Exact test probes | **CONFIRMED NOT FOUND AT NAMED PATHS** | Conventional files were absent at the pinned base. | Absence of differently named or later-added tests. |
 | Parent, source-layout, and test READMEs | **CONFIRMED** | Intended helper and no-publication boundaries. | Code, tests, or CI success. |
 | Manual-curation methodology/workflow docs | **CONFIRMED docs** | Manual curation is a steward process applied to sources and does not own a source family. | Implemented workflow or accepted package placement. |

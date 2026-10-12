@@ -1,0 +1,175 @@
+{
+  "receipt_id": "77eb934a-8ad5-5d34-b29a-cd2a358761c7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/policy/sensitivity/README.md",
+    "docs/policy/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/policy/sensitivity/README.md": "sha256:e5889456960b3cb6b3721d314fe1e8ddbcd310567419022eda4f7f62db9bb407",
+    "docs/policy/README.md": "sha256:e4b3486902096233de55fa0279d66741a58d2244a25535e88221d495ea4a52f2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-23-session"
+  },
+  "prompt_or_contract": "sha256:c141d420db483855fe6f921b11aa8ab17a7cf90a00b7136a3599e396156a7257",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c141d420db483855fe6f921b11aa8ab17a7cf90a00b7136a3599e396156a7257"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/sensitivity/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/sensitivity/fauna.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#policy/sensitivity/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#policy/sensitivity/fauna/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#policy/domains/fauna/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/domains/fauna/IDENTITY_MODEL.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#contracts/policy/sensitivity_label.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#tests/policy/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix#pull/3448"
+    ]
+  },
+  "truth_labels": {
+    "docs/policy/sensitivity/README.md": "PROPOSED",
+    "docs/policy/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap",
+      "outcome": "PASS",
+      "reason": "Pinned authoring base main@565af2021254c27ea3626724106ad6b1eae800df; exact-target open-PR search returned no current claimant before branch creation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 support same-path containment under docs/ while executable sensitivity policy remains under policy/; no path move or authority expansion occurs."
+    },
+    {
+      "gate": "complete-baseline-and-direct-child-inventory",
+      "outcome": "PASS",
+      "reason": "Read the complete one-newline target, the complete fauna scaffold, the parent containment contract, the exact direct-child tree, and the relevant canonical policy, contract, test, runtime, and release boundaries."
+    },
+    {
+      "gate": "authority-separation",
+      "outcome": "PASS",
+      "reason": "The documents route human fauna and security guidance, policy source, contracts, schemas, fixtures, tests, validators, runtime evaluation, decisions, receipts, proofs, and release records to distinct owning roots."
+    },
+    {
+      "gate": "public-safety-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The changed documents contain no real personal, genomic, consent, protected-location, private-land, infrastructure, credential, restricted-evidence, or reconstruction-enabling payloads and explicitly prohibit them."
+    },
+    {
+      "gate": "metadata-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "Deterministic authoring checks found one H1 per document, balanced metadata/fences, no heading-level jumps, no duplicate heading slugs or explicit anchors, no tabs or trailing whitespace, and final newlines."
+    },
+    {
+      "gate": "local-fragment-resolution",
+      "outcome": "PASS",
+      "reason": "Every local table-of-contents fragment in both changed documents resolves under GitHub-style heading normalization."
+    },
+    {
+      "gate": "repository-relative-link-destinations",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for repository-native link traversal; selected destinations were individually inspected through GitHub and hosted link-check remains pending."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "Final branch bytes are bound to docs/policy/sensitivity/README.md=sha256:e5889456960b3cb6b3721d314fe1e8ddbcd310567419022eda4f7f62db9bb407 and docs/policy/README.md=sha256:e4b3486902096233de55fa0279d66741a58d2244a25535e88221d495ea4a52f2; computed Git blobs match the connector-returned content SHAs."
+    },
+    {
+      "gate": "repository-native-local-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; repository-native docs and topology commands are deferred to hosted exact-head workflows."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Receipt emitted before pull-request creation; hosted exact-head status is reported separately after the final branch head exists."
+    },
+    {
+      "gate": "release-and-publication-side-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes two explanatory READMEs and one generated authorship receipt only; no policy, data, source, runtime, route, release, deployment, promotion, publication, or repository setting changes."
+    }
+  ],
+  "policy_decisions": [
+    "directory-rules:PLACE:same-path containment under docs/ while current references may exist",
+    "directory-rules:HOLD:no substantive docs/policy/sensitivity growth or structural migration without authority and consumer closure",
+    "authority:SINGULAR:executable sensitivity-policy source remains under policy/sensitivity/",
+    "public-safety:DENY:no real protected payloads or reconstruction-enabling examples in repository-public documentation",
+    "truth:CITE_OR_ABSTAIN:documentation and tests do not establish policy activation, release, or publication",
+    "delivery:DRAFT_PR_ONLY:no merge, release, deployment, promotion, publication, or settings action"
+  ],
+  "citations": [
+    {
+      "id": "target-prior-bytes",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/sensitivity/README.md"
+    },
+    {
+      "id": "parent-containment-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/README.md"
+    },
+    {
+      "id": "fauna-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/policy/sensitivity/fauna.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "sensitivity-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#policy/sensitivity/README.md"
+    },
+    {
+      "id": "fauna-identity-model",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#docs/domains/fauna/IDENTITY_MODEL.md"
+    },
+    {
+      "id": "sensitivity-label-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#contracts/policy/sensitivity_label.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@565af2021254c27ea3626724106ad6b1eae800df#schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-23T17:16:54Z",
+  "emitter": "OpenAI ChatGPT GitHub implementation session",
+  "notes": "Generated authorship provenance only. It does not approve the documents, authenticate review, establish policy enforcement, or authorize merge, release, deployment, promotion, or publication."
+}

@@ -19,7 +19,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, habitat, ecoregions, biophysical, regionalization, omernik, level-iii, level-iv, public-safe]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned (doctrine-adjacent)."
@@ -28,6 +28,9 @@ notes:
   - "Multi-zoom render anchor (ML-E-057) is NEEDS VERIFICATION; could not confirm the exact ID this session."
   - "Sublane introduces a /sublanes/ subfolder under docs/domains/habitat/ -- PROPOSED structural convention; see §15."
   - "All implementation-layer claims remain PROPOSED until verified against a mounted repo."
+owning_root: docs/
+responsibility: "Documentation for Habitat — Ecoregions Sublane; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🗺️ Habitat — Ecoregions Sublane
@@ -87,7 +90,7 @@ notes:
 
 The sublane treats ecoregion polygons as **regionalization geometry plus authoritative attribution** — a *context* layer that other Habitat sublanes (patches, suitability, connectivity, restoration, stewardship) and adjacent domains (Fauna, Flora, Soil/Hydrology, Hazards, Agriculture) consume through governed joins. The polygons themselves are not Habitat truth about *what lives where*; they are truth about *which biophysical region a place is in*, as classified by a named authority at a named version. This matches the corpus directive that the habitat source suite (NLCD, NWI, PAD-US, GAP/LANDFIRE, NEON) be treated as **versioned context layers, not sovereign truth roots.** `[KFM-P25-IDEA-0004]`
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -118,7 +121,7 @@ The sublane treats ecoregion polygons as **regionalization geometry plus authori
 | Watershed boundaries (HUC*), NHD reaches | **Hydrology** | Hydrologic units have their own authority. |
 | Land ownership, parcel boundaries, jurisdictions | **People / Land** and **Settlements / Infrastructure** | Administrative truth lives elsewhere. |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -143,7 +146,7 @@ The sublane treats ecoregion polygons as **regionalization geometry plus authori
 > [!TIP]
 > **Naming discipline.** Use `EcologicalSystem` for the *Habitat object family* and `Ecoregion` / `EcoregionSnapshot` for the *regionalization concept within this sublane*. Do not collapse the two; the Habitat lane vocabulary is fixed by `[DOM-HAB]`.
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -165,7 +168,7 @@ The sublane treats ecoregion polygons as **regionalization geometry plus authori
 > [!CAUTION]
 > **Source-role anti-collapse.** EPA Ecoregions and USFS Bailey are *parallel* `authority` frameworks, not a single canonical region scheme. Picking one as KFM's default is an **ADR-class decision**, not a sublane decision. Until that ADR lands, both frameworks must be kept addressable side-by-side with framework-level `SourceDescriptor` separation. The corpus is explicit that ecoregions, PLSS, and WBD HUC12 are **catalogued as landscape context layers with source roles rather than treated as interchangeable geometry truth.** `[KFM-P25-IDEA-0011]`
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -186,7 +189,7 @@ The sublane treats ecoregion polygons as **regionalization geometry plus authori
 > [!NOTE]
 > The USNVC crosswalk linkage is anchored by `[KFM-P25-PROG-0025]`: a USNVC metadata crosswalk **preserves ecological system, USNVC group, ruderal/natural status, class labels, and source version.** *(CONFIRMED card / PROPOSED implementation.)*
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -205,7 +208,7 @@ The sublane treats ecoregion polygons as **regionalization geometry plus authori
 | Habitat / Ecoregions | **Atmosphere / Climate** | Climate-normal departure by ecoregion as a derived context. | Observation vs. model vs. aggregate roles must remain visible on the receipt. `[DOM-AIR]` |
 | Habitat / Ecoregions | **Spatial Foundation** | CRS, generalization, basemap, scale-support profile. | Spatial Foundation owns reference geometry; ecoregions do not redefine it. |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -278,7 +281,7 @@ flowchart LR
   class FAU,FLO,HYD,HAZ,AG,AIR adj;
 ```
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -299,7 +302,7 @@ flowchart LR
 > [!TIP]
 > **PMTiles attribute discipline.** Per `[ML-E-061]`, ecoregion PMTiles must trim attributes to an **explicit include-list** declared in the `LayerManifest`. Default-deny on attributes; default-deny on raw geometry where generalization is required. Vector-tile attribute whitelisting prevents attribute leakage. `[ML-061-132]` *(CONFIRMED MapLibre-master ideas.)*
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -322,7 +325,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 > [!WARNING]
 > **Lifecycle skip is a violation.** A direct write from `data/raw/habitat/ecoregions/...` to `data/published/layers/habitat/...` bypasses validators, policy gates, evidence-bundle creation, catalog closure, and release-decision recording. The invariant is **governance, not storage organization**. `[DIRRULES §9]`
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -343,7 +346,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 > [!CAUTION]
 > **Publication gate.** Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks public promotion**. There is no "publish first, gate later." Per the operating contract's §23.2 matrix, when no row clearly matches, the **most restrictive applicable row applies**. `[ENCY]` `[DIRRULES]` `[DOM-HAB §I]` `[Operating Contract §23.2]`
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -364,7 +367,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 > [!NOTE]
 > **Trust membrane.** Public surfaces consume **governed APIs**, never `data/processed/`, `data/catalog/`, or raw stores directly. The MapLibre shell receives `LayerManifest` pointers; it does not parse RAW source files. `[DIRRULES]`
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -391,7 +394,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 > [!TIP]
 > **Fixture-first.** A `PR-00`-style controlled fixture for one Kansas-coverage ecoregion snapshot (e.g., Level III + Level IV, single framework) is the strongest near-term proof artifact, mirroring the Habitat–Fauna thin-slice pattern in `[DOM-HF]`.
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -406,7 +409,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 | **DENY** | Direct `RAW/WORK/QUARANTINE` access; sensitive-location exposure via ecoregion-shaped queries; uncited authoritative claims; emergency-alerting framing built on ecoregion overlays. |
 | **Receipt** | Every Focus Mode response emits `AIReceipt` and `RuntimeResponseEnvelope` with outcome `ANSWER / ABSTAIN / DENY / ERROR`, `evidence_refs`, `policy_decision`, and `citation_validation`. |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -424,7 +427,7 @@ RAW  →  WORK / QUARANTINE  →  PROCESSED  →  CATALOG / TRIPLET  →  PUBLIS
 | Stale-state rule | Stale snapshots surface a stale badge and may force `ABSTAIN` in Focus Mode. |
 | Rollback target | Prior `ReleaseManifest` plus `RollbackCard` retained per Habitat lane. |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -465,7 +468,7 @@ The sublane is a **named area inside the Habitat lane**, not a root folder. The 
 | Public route reads canonical store | **Refused.** All public reads go through `apps/governed-api/`. |
 | Connector publishes | **Refused.** Ecoregion connectors emit to `data/raw/` or `data/quarantine/`. |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -485,7 +488,7 @@ The sublane is a **named area inside the Habitat lane**, not a root folder. The 
 | Confirm sensitivity classes for `EcoregionContextJoin` per related lane. | Joint sensitivity matrix across Fauna / Flora / Archaeology / Hazards / People. | `NEEDS VERIFICATION` |
 | Confirm Evidence Drawer panel slot for ecoregion features. | UI shell `LayerCatalog` and `EvidenceDrawer` panel registry. | `UNKNOWN` |
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -511,7 +514,7 @@ The sublane is a **named area inside the Habitat lane**, not a root folder. The 
 - `docs/adr/ADR-0001-schema-home.md` — schema-home rule _(TODO link)_
 - `control_plane/domain_lane_register.yaml` — lane register entry (Habitat / ecoregions sublane)
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -607,7 +610,7 @@ release/candidates/habitat/ecoregions/<release_id>/
 
 </details>
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)
 
 ---
 
@@ -615,4 +618,4 @@ release/candidates/habitat/ecoregions/<release_id>/
 
 **Last updated:** 2026-06-04 · **Status:** `draft` · **Version:** `v0.2` · **Maturity:** `CONFIRMED doctrine / PROPOSED implementation` · `CONTRACT_VERSION = "3.0.0"` · **Repo state:** `UNKNOWN` (no mounted repo this session)
 
-[⬆ Back to top](#️-habitat--ecoregions-sublane)
+[⬆ Back to top](#-habitat--ecoregions-sublane)

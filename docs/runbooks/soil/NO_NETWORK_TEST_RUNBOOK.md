@@ -1,457 +1,500 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/soil/no-network-test-runbook
-title: Soil — No-Network Test Runbook
-type: standard
-version: v1
-status: draft
-owners: <Docs steward + Soil domain owner — PLACEHOLDER>
+title: Soil No-Network Test Runbook
+type: runbook
+version: v2.0
+prior_version: v1
+prior_state: proposal-heavy planning document with unverified commands, fixture paths, receipt paths, and runner-wide isolation claims
+status: DRAFT_REPOSITORY_GROUNDED; FOUR_BOUNDED_SYNTHETIC_NO_NETWORK_SUITES_EXECUTABLE; RUNNER_WIDE_AND_NON_PYTHON_EGRESS_DENIAL_HELD; SOIL_TRUTH_PROOF_RELEASE_AND_PUBLICATION_HELD
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Soil, source, scientific, evidence, QA, policy, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; validation-sensitive; synthetic-fixtures; no-network; potentially sensitive land and station context; fail-closed
+current_path: docs/runbooks/soil/NO_NETWORK_TEST_RUNBOOK.md
+owning_root: docs/
+responsibility: Human procedure for reproducing and interpreting the Soil lane's current bounded fixture-only no-network checks without claiming runner-wide isolation, live-source truth, evidence closure, policy approval, proof, promotion, release, deployment, or publication.
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, source and evidence authority, executable validators and tests, workflow definitions, policy, review, lifecycle, proof, release, correction, rollback, and qualified official authorities
+current_disposition: BOUNDED_TEST_LEVEL_PYTHON_NETWORK_GUARDS_AVAILABLE / RUNNER_WIDE_NON_PYTHON_EGRESS_AND_BROADER_TRUST_SPINE_HELD
+reason_codes:
+  - SOIL_NO_NETWORK_EXACT_SHA_REQUIRED
+  - SOIL_NO_NETWORK_TEST_LEVEL_PYTHON_GUARDS_ONLY
+  - SOIL_NO_NETWORK_RUNNER_EGRESS_NEEDS_VERIFICATION
+  - SOIL_NO_NETWORK_SYNTHETIC_FIXTURES_ONLY
+  - SOIL_NO_NETWORK_LIVE_SOURCE_AND_LIFECYCLE_HELD
+  - SOIL_NO_NETWORK_PROOF_RELEASE_AND_PUBLICATION_HELD
+  - SOIL_NO_NETWORK_CONSEQUENTIAL_USE_DENIED
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: a0fcc311577512b23c9ed69ed32a72132f06a773
+  target_prior_blob: d42e18386911dcc008a9045c38e052ce673bfda4
+  lane_readme_blob: d50303c8f4edc6a9427d61135ba2048b0ba01a03
+  domain_workflow_blob: e009e00d5743d907461289c1c6571cab69ea2672
+  soil_smoke_test_blob: 348e00757d198ec77cc9af0cc75355807ccfb123
+  soil_moisture_test_blob: 9388fbcca647b4d5daf32dc62a05b8aba5ae136e
+  smap_l4_test_blob: eaabd01221e8fde8ad1d6a280d8d82c2490dd40c
+  ssurgo_test_readme_blob: 59267164c947b3789ffc6c37944dd4fc06a64f59
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/domains/soil/README.md
-  - docs/runbooks/ROLLBACK.md
-  - schemas/contracts/v1/source/source-descriptor.json
-  - tests/fixtures/domains/soil/
-  - policy/domains/soil/
-tags: [kfm, runbook, soil, testing, no-network, phase-0]
-notes:
-  - "Path is PROPOSED until verified against mounted repo and Directory Rules §12."
-  - "Implementation status of every referenced validator, schema, and fixture remains PROPOSED."
-  - "Replaces no prior runbook in this session; treat as Phase-0 'Build first' deliverable."
+  - README.md
+  - ../../domains/soil/README.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/workflows/domain-soil.yml
+  - ../../../tests/domains/soil/README.md
+  - ../../../tests/domains/soil/test_soil_smoke.py
+  - ../../../tests/domains/soil/test_soil_moisture_qc.py
+  - ../../../tests/domains/soil/test_smap_l4_anti_collapse.py
+  - ../../../tests/ingest/ssurgo_watch/README.md
+  - ../../../tests/ingest/ssurgo_watch/test_ssurgo_watch.py
+  - ../../../tools/validators/domains/soil/README.md
+  - ../../../fixtures/domains/soil/README.md
+  - ../../../data/registry/sources/soil/README.md
+  - ../../../data/proofs/soil/README.md
+  - ../../../release/candidates/soil/README.md
+non_effects:
+  - does_not_contact_live_sources
+  - does_not_establish_runner_wide_egress_denial
+  - does_not_establish_non_python_egress_denial
+  - does_not_read_credentials
+  - does_not_activate_or_admit_sources
+  - does_not_write_raw_work_quarantine_processed_catalog_triplet_or_published_state
+  - does_not_resolve_real_evidence_refs
+  - does_not_create_evidence_receipts_or_proofs
+  - does_not_approve_policy_review_promotion_or_release
+  - does_not_deploy_or_publish
+  - does_not_authorize_agronomic_engineering_regulatory_or_other_consequential_use
 [/KFM_META_BLOCK_V2] -->
 
-# 🌱 Soil — No-Network Test Runbook
+<a id="top"></a>
 
-> Deterministic, evidence-first procedure for exercising the **Soil** trust spine against synthetic fixtures, with **zero outbound network traffic**, before any live-source code is admitted.
+# Soil No-Network Test Runbook
 
-![status: draft](https://img.shields.io/badge/status-draft-yellow)
-![lane: docs/runbooks/soil](https://img.shields.io/badge/lane-docs%2Frunbooks%2Fsoil-blue)
-![phase: 0 — build-first](https://img.shields.io/badge/phase-0%20build--first-informational)
-![truth: cite-or-abstain](https://img.shields.io/badge/truth-cite--or--abstain-success)
-![network: deny-by-default](https://img.shields.io/badge/network-deny--by--default-critical)
-![updated: 2026-05-12](https://img.shields.io/badge/updated-2026--05--12-lightgrey)
-
-| | |
-|---|---|
-| **Status** | `draft` · PROPOSED implementation |
-| **Owners** | Docs steward + Soil domain owner — *placeholder, NEEDS VERIFICATION* |
-| **Last reviewed** | 2026-05-12 |
-| **Authority of these rules** | CONFIRMED doctrine (derived from KFM Encyclopedia, Domains Atlas, Unified Manual) |
-| **Authority of every concrete path / fixture name** | **PROPOSED** until mounted-repo evidence confirms it |
-| **Supersedes** | None — first runbook in `docs/runbooks/soil/` |
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Why this runbook exists first](#2-why-this-runbook-exists-first)
-- [3. Path placement & Directory Rules basis](#3-path-placement--directory-rules-basis)
-- [4. Preconditions](#4-preconditions)
-- [5. Trust spine the test must prove](#5-trust-spine-the-test-must-prove)
-- [6. Inputs — synthetic Soil fixtures](#6-inputs--synthetic-soil-fixtures)
-- [7. Procedure](#7-procedure)
-- [8. Validators invoked](#8-validators-invoked)
-- [9. Pass / fail / abstain / deny outcomes](#9-pass--fail--abstain--deny-outcomes)
-- [10. Soil-specific assertions](#10-soil-specific-assertions)
-- [11. Failure modes and rollback](#11-failure-modes-and-rollback)
-- [12. CI binding](#12-ci-binding)
-- [13. Open verification items](#13-open-verification-items)
-- [14. FAQ](#14-faq)
-- [Related docs](#related-docs)
-
----
-
-## 1. Purpose
-
-This runbook describes how an operator **runs the deterministic, no-network test suite for the Soil domain** against synthetic fixtures. It is the *first* test gate in the Soil lane — it must pass before any live SSURGO, SDA, Kansas Mesonet, SCAN, USCRN, or SMAP connector is admitted, before any catalog record is emitted, and before any layer is promoted to a release candidate.
-
-The procedure exercises — without touching the network — the same trust spine that production Soil publication will eventually exercise: source admission → lifecycle state → validation → evidence resolution → policy decision → catalog/proof closure → release decision → governed API/UI payload → correction → rollback.
+Repository-grounded procedure for reproducing and interpreting the Soil lane's
+current deterministic, fixture-only checks at an exact repository revision.
+The accepted command surface contains three bounded Soil validator suites and
+one fixture-only SSURGO package-drift comparator.
 
 > [!IMPORTANT]
-> **No-network is not a performance optimization.** It is a *governance* invariant. If this runbook's steps require outbound traffic to pass, the test has crossed the trust membrane and the result is not admissible as proof.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 2. Why this runbook exists first
-
-The KFM Encyclopedia lists **"Soil source registry + no-network fixture"** under the *Build first* group of the Soil feature backlog (PROPOSED). The Unified Manual's PROPOSED test pyramid puts deterministic no-network fixture tests at the **base** of the test pyramid — ahead of schema, contract, validator, policy, evidence-resolution, lifecycle-state, receipt/proof, release-manifest, governed-API-envelope, UI-trust-state, and live-source tests.
-
-The Encyclopedia's Phase-0 PR plan likewise opens with `PR-00 no-network fixture` — "*create synthetic fixtures for SourceDescriptor, EvidenceBundle, LayerManifest, ReleaseManifest and one [domain] object*". For Soil, this runbook is the operator-facing surface of that PR.
-
-| Source (doctrine) | What it establishes | Confidence |
-|---|---|---|
-| KFM Encyclopedia §K — Tests and validators | `no-network fixtures` is a required validator family | **CONFIRMED doctrine** |
-| KFM Encyclopedia §L — Soil feature backlog | "Soil source registry + no-network fixture" is *Build first* | **CONFIRMED doctrine** / PROPOSED implementation |
-| Unified Manual §26 — Testing strategy | No-network fixture tests sit at the base of the test pyramid | **CONFIRMED doctrine** / PROPOSED implementation |
-| Encyclopedia §14 — Implementation Roadmap | `PR-00 no-network fixture` is the first reversible PR | **CONFIRMED doctrine** |
-| Domains Atlas §Soil.H — Pipeline shape | Soil follows `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` | **CONFIRMED doctrine** |
-
-> [!NOTE]
-> Every concrete validator name, fixture path, CI job name, or schema home referenced below remains **PROPOSED** until inspected against the mounted repository. Doctrine is the load-bearing claim; implementation depth is not asserted by this runbook.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 3. Path placement & Directory Rules basis
-
-- **Owning root:** `docs/` — the canonical, human-facing control plane that owns doctrine, ADRs, runbooks, and registers (Directory Rules §5).
-- **Lane within root:** `docs/runbooks/` — established by the Whole-UI / Governed-AI expansion register (e.g., `docs/runbooks/ui_LOCAL_DEV.md`, `governed_ai_VALIDATION.md`).
-- **Domain segment:** `soil/` — per Directory Rules §12 (Domain Placement Law), a domain MUST appear as a **segment inside a responsibility root**, never as a root folder.
-- **Filename:** `NO_NETWORK_TEST_RUNBOOK.md` — `SCREAMING_SNAKE_CASE` matches the runbook precedent (`ui_LOCAL_DEV.md`, `ui_VALIDATION.md`).
-
-> [!WARNING]
-> An **alternative flat form** — `docs/runbooks/soil_NO_NETWORK_TEST_RUNBOOK.md` — would also be Directory-Rules-conformant and matches the verbatim precedent from the Whole-UI report. The folder-segment form chosen here keeps Soil's growing runbook set (validation, rollback, correction drill, etc.) collected. If the mounted repo already uses the flat form, file a `docs/registers/DRIFT_REGISTER.md` entry rather than silently mirror it. **Placement is PROPOSED until verified.**
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 4. Preconditions
-
-```text
-[ ] Local workspace checked out at a known commit (CONFIRMED requirement; commit SHA = NEEDS VERIFICATION)
-[ ] No environment variables present that point validators at live sources
-    (NRCS_SDA_URL, KSMESONET_KEY, AIRNOW_KEY, SMAP_TOKEN, etc.)
-[ ] Outbound network blocked at the test-runner level (firewall, container netns,
-    or pytest plugin — implementation choice PROPOSED)
-[ ] The Soil synthetic fixture set is present at the path listed in §6
-[ ] All schema files referenced in §8 resolve from disk (no remote $ref pulls)
-[ ] No cached HTTP responses are reachable from the test process
-```
+> `KFM_NO_NETWORK=1` records the intended posture but does not, by itself, block
+> traffic. The current suites install targeted Python test-level guards around
+> named socket, DNS, and `urllib` paths. They do **not** prove operating-system,
+> container, namespace, job-wide, non-Python, dependency-install, or arbitrary
+> untested network isolation.
 
 > [!CAUTION]
-> If the test runner can reach the public internet **at all** during execution, the run is invalid regardless of its pass/fail signal. The no-network constraint is enforced **at the runner boundary**, not by good intentions inside test code.
+> These checks are not soil-survey authority and must not be used for agronomic,
+> engineering, conservation-compliance, land-value, regulatory, emergency, or
+> other consequential determinations. Use the responsible official source and
+> qualified professional for those decisions.
 
-[↑ Back to top](#-soil--no-network-test-runbook)
+**Quick navigation:** [Scope](#1-purpose-authority-and-scope) ·
+[Current evidence](#2-current-executable-evidence) ·
+[Preflight](#3-preflight) · [Run](#4-execution-procedure) ·
+[Interpret](#5-expected-results-and-interpretation) ·
+[Failures](#6-failure-classification-and-stop-conditions) ·
+[Record](#7-result-record) · [CI](#8-ci-binding-and-held-jobs) ·
+[Safety](#9-rights-sensitivity-and-scientific-boundaries) ·
+[Maintenance](#10-maintenance-and-documentation-rollback)
 
----
+## 1. Purpose, authority, and scope
 
-## 5. Trust spine the test must prove
+Use this runbook to answer four bounded questions:
 
-```mermaid
-flowchart LR
-    A["Synthetic<br/>SourceDescriptor"] --> B["Source admission<br/>& rights check"]
-    B --> C["Lifecycle state<br/>RAW → WORK"]
-    C --> D["Schema +<br/>contract validation"]
-    D --> E["EvidenceRef →<br/>EvidenceBundle"]
-    E --> F["Policy decision<br/>(allow / deny / abstain)"]
-    F --> G["Catalog / proof<br/>closure"]
-    G --> H["ReleaseManifest<br/>(dry-run)"]
-    H --> I["Governed API<br/>envelope"]
-    I --> J["Correction +<br/>rollback drill"]
+1. Did the three named Soil validator suites and the SSURGO comparator execute
+   at the exact revision under review?
+2. Did valid and expected-invalid fixtures preserve their recorded polarity?
+3. Did the tests' named Python network guards remain unused or reject attempted
+   access as designed?
+4. Which broader claims remain held even when every command is green?
 
-    classDef gate fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px;
-    classDef trust fill:#fff8e1,stroke:#f57f17,stroke-width:1px;
-    class B,D,F,G,H gate;
-    class E,I,J trust;
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+and the adopted [Directory Rules](../../doctrine/directory-rules.md) place human
+procedures under `docs/runbooks/`. Executable checks remain under `tests/` and
+`tools/validators/`; fixtures under `fixtures/`; semantic meaning under
+`contracts/`; machine shape under `schemas/`; policy under `policy/`; source
+identity and admission under governed source surfaces; evidence, receipts, and
+proofs under their owning data roots; and release decisions under `release/`.
 
-    X(("✕ Network<br/>egress<br/>BLOCKED")):::deny
-    X -.-> B
-    X -.-> E
-    X -.-> H
-    classDef deny fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#c62828;
-```
+This runbook explains current executable evidence. It does not create or amend a
+contract, schema, SourceDescriptor, source-admission decision, validator,
+policy, EvidenceBundle, receipt, ProofPack, PromotionDecision, ReleaseManifest,
+CorrectionNotice, rollback object, deployment, or publication state.
 
-> [!NOTE]
-> The diagram is illustrative of the **doctrinal** trust spine. The names and exact ordering of validator stages are **PROPOSED** and may be adjusted to match repo evidence once mounted.
+### In scope
 
-[↑ Back to top](#-soil--no-network-test-runbook)
+- The four commands currently invoked by `.github/workflows/domain-soil.yml`.
+- Synthetic public-safe fixtures and exact expected-error sidecars named by the
+  current tests.
+- Test-level Python guards for the socket, DNS, and `urllib` call paths each
+  suite explicitly patches or replaces.
+- Deterministic finding order, bounded parsers, fixture inventory closure,
+  valid/invalid polarity, non-echoing CLI behavior, and exit-code contracts.
+- Exact-SHA result identity and truthful classification of skipped or held jobs.
 
----
+### Out of scope
 
-## 6. Inputs — synthetic Soil fixtures
+- Live NRCS SSURGO or Soil Data Access requests, Kansas Mesonet, SCAN/AWDB,
+  USCRN, SMAP, SoilGrids, map services, object stores, or any other remote
+  source.
+- Credentials, source activation, source admission, rights acceptance, or
+  endpoint authorization.
+- Runner-wide firewall, namespace, container, operating-system, or non-Python
+  egress proof.
+- Writes to `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`,
+  receipt, proof, release, or `PUBLISHED` stores.
+- Soil truth, live-source currentness, real EvidenceRef resolution,
+  EvidenceBundle closure, policy approval, proof production, promotion,
+  rollback execution, release, deployment, or publication.
 
-Per the Unified Manual's PROPOSED fixture rule, every major Soil object family receives **five** fixtures: valid, invalid, denied, abstention, and rollback/correction. Sensitive lanes use *public-safe transformed* fixtures — never real exact farm-owner or pedon coordinates.
+[Back to top](#top)
 
-| Object family | Fixture root *(PROPOSED)* | Valid | Invalid | Denied | Abstain | Rollback |
-|---|---|:-:|:-:|:-:|:-:|:-:|
-| `SoilMapUnit` | `tests/fixtures/domains/soil/map_unit/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `SoilComponent` | `tests/fixtures/domains/soil/component/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `Horizon` | `tests/fixtures/domains/soil/horizon/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `SoilProperty` | `tests/fixtures/domains/soil/property/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `HydrologicSoilGroup` | `tests/fixtures/domains/soil/hsg/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `SoilMoistureObservation` | `tests/fixtures/domains/soil/moisture/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `Pedon` | `tests/fixtures/domains/soil/pedon/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `ComponentHorizonJoin` | `tests/fixtures/domains/soil/chj/` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `LayerManifest` (Soil layer) | `tests/fixtures/domains/soil/layer_manifest/` | ✅ | ✅ | ✅ | — | ✅ |
-| `ReleaseManifest` (Soil) | `tests/fixtures/domains/soil/release_manifest/` | ✅ | ✅ | ✅ | — | ✅ |
-| `EvidenceBundle` (Soil) | `tests/fixtures/domains/soil/evidence_bundle/` | ✅ | ✅ | — | ✅ | ✅ |
+## 2. Current executable evidence
 
-> [!IMPORTANT]
-> The KFM Encyclopedia names the **canonical Soil thin slice**: *"one county SSURGO fixture with map units, components, horizons, HSG, one soil-moisture station sample, profile view and EvidenceBundle-backed layer manifest."* The fixtures above MUST collectively realize that slice — but must do so with **synthesized** identifiers and **public-safe** geometry, not a verbatim county extract.
+The current [Soil workflow](../../../.github/workflows/domain-soil.yml) uses
+Python 3.11 and runs the following bounded surfaces without installing project
+dependencies in the job.
 
-The synthetic fixture set MUST include at least one example per *source role* enumerated in the SourceDescriptor schema — `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, `synthetic` — even where the role is implausible for Soil in production, so that source-role-mismatch denial is exercisable.
+| Surface | Local inputs and enforcement | Bounded conclusion | Not established |
+|---|---|---|---|
+| [`test_soil_smoke.py`](../../../tests/domains/soil/test_soil_smoke.py) | `fixtures/domains/soil/valid/` and `invalid/`; exact expected-error sidecars; patches `socket.connect`, `connect_ex`, `create_connection`, `getaddrinfo`, and `urllib.request.urlopen` | Public-safe fixture shape, closed fields, support-type profile, location-field denial, parser bounds, deterministic findings, non-echoing output, and exit codes for this frozen profile | Soil object-family schemas, live source admission, scientific validity, evidence closure, policy, proof, or release |
+| [`test_soil_moisture_qc.py`](../../../tests/domains/soil/test_soil_moisture_qc.py) | `fixtures/domains/soil/soil_moisture/{valid,invalid}/`; exact sidecars; patches the same named socket, DNS, and URL-open paths | Synthetic station-series identity, depth, measurement bounds, canonical UTC, source timezone, QC/deduplication, public-safe spatial support, deterministic findings, and CLI polarity | Live station identity, freshness, sensor calibration, scientific fitness, source rights, policy, proof, or release |
+| [`test_smap_l4_anti_collapse.py`](../../../tests/domains/soil/test_smap_l4_anti_collapse.py) | `fixtures/domains/soil/soil_moisture/smap_l4/{valid,invalid}/`; exact sidecars; replaces `socket.socket` and `urllib.request.urlopen` in its no-network assertion | Frozen synthetic SMAP L4 surface/root-zone profile, NRT/standard-quality distinction, model/grid/station/field anti-collapse, temporal order, uncertainty, parser bounds, governance hold, and CLI polarity | Live SMAP retrieval or product identity, production cadence, model fitness, ground truth, source admission, policy, proof, or release |
+| [`test_ssurgo_watch.py`](../../../tests/ingest/ssurgo_watch/test_ssurgo_watch.py) | Test-local synthetic prior/current sidecars and optional spatial diffs; patches `socket.create_connection`, `getaddrinfo`, and `urllib.request.urlopen` | Deterministic fixture-only comparison of package, schema, table, constraint, geometry, chronology, profile, and materiality drift with review-only finite outcomes | Live package retrieval, current NRCS metadata, SSURGO rights, actual survey-area geometry, canonical thresholds, source admission, Soil truth, evidence, promotion, or publication |
 
-[↑ Back to top](#-soil--no-network-test-runbook)
+### 2.1 Frozen fixture inventory
 
----
+The three domain suites close their direct JSON inventory so new fixture files
+cannot silently enter the accepted profile.
 
-## 7. Procedure
+| Suite | Valid fixtures | Expected-invalid fixtures |
+|---|---:|---:|
+| Public-safe Soil smoke | 1 | 8 |
+| Station soil-moisture QC | 2 | 6 |
+| SMAP L4 anti-collapse | 2 | 8 |
 
-> [!NOTE]
-> Commands below are **illustrative**. Concrete test commands depend on the chosen test runner (`pytest`, `vitest`, `go test`, etc.), which is **UNKNOWN** in this session. Adapt to the repo's actual `Makefile` / `package.json` / `pyproject.toml` once mounted.
+Each expected-invalid JSON fixture has a matching `.expected_error.txt` sidecar,
+and the tests require exact, sorted findings. The SSURGO lane separately defines
+11 synthetic prior/current comparison cases in its
+[test boundary](../../../tests/ingest/ssurgo_watch/README.md).
 
-### Step 1 — Confirm network is denied
+### 2.2 What the current no-network claim means
 
-```bash
-# Illustrative — verify the runner cannot reach common Soil endpoints.
-# Each MUST fail (non-zero exit) before proceeding.
-curl --max-time 2 https://sdmdataaccess.nrcs.usda.gov/ && echo "FAIL: network reachable"
-curl --max-time 2 https://mesonet.k-state.edu/ && echo "FAIL: network reachable"
-```
+The current evidence is **test-level Python-process denial for named APIs**, not
+a general sandbox:
 
-If either succeeds, **abort the run** and re-establish the runner's no-network boundary.
+- the public-safe and station suites patch socket connect, connection creation,
+  DNS resolution, and `urllib` URL opening;
+- the SMAP suite asserts that its validator does not construct a socket or open
+  a URL during the selected validation call;
+- the SSURGO suite patches connection creation, DNS resolution, and URL opening;
+- each suite contains an assertion that validation does not use its installed
+  network mocks or that an attempted route is denied.
 
-### Step 2 — Resolve schemas from disk
+Do not add `curl` or another real endpoint probe and call that stronger proof.
+Such a probe intentionally attempts egress, is not part of the active Soil
+workflow, and still would not establish that every process or protocol is
+blocked. Runner-wide isolation requires a separately reviewed operating-system,
+container, namespace, firewall, or equivalent control plus negative probes for
+all relevant runtimes.
 
-```bash
-# Illustrative — validators MUST load schemas from local paths only.
-export KFM_SCHEMA_ROOT="$(pwd)/schemas/contracts/v1"   # PROPOSED per ADR-0001
-export KFM_DISABLE_NET_FETCH=1                          # PROPOSED env var
-```
+[Back to top](#top)
 
-### Step 3 — Run the deterministic suite
+## 3. Preflight
 
-```bash
-# Illustrative — replace with the repo's actual invocation.
-make test-soil-no-network
-# or, equivalently:
-pytest tests/domains/soil/no_network/ -m "no_network"
-```
+Run from a clean checkout at the exact branch-head or commit SHA being assessed.
 
-### Step 4 — Inspect the generated receipt
+1. Record the repository, full `HEAD` SHA, base SHA, merge base, changed paths,
+   and whether the checkout is a branch head or a generated pull-request merge
+   ref.
+2. Confirm the revision:
 
-A passing run MUST emit a deterministic, signable receipt at a **PROPOSED** local-only location, e.g.:
+   ```bash
+   git rev-parse --verify HEAD
+   git status --short
+   ```
 
-```text
-data/proofs/test/soil/no_network/<run_id>/run_receipt.json
-data/proofs/test/soil/no_network/<run_id>/validation_report.json
-```
+   Stop if the working tree contains unrelated changes or the recorded SHA does
+   not match the intended review target.
+3. Use Python 3.11 to match the active workflow. Do not load a local `.env`,
+   source credentials, or endpoint configuration.
+4. Set the workflow's current deterministic posture:
 
-The `run_id` MUST be derived from `(spec_hash, fixture_set_hash, tool_versions)` — never from `time.now()` — so that re-running on identical inputs produces identical receipts (cross-run determinism).
+   ```bash
+   export KFM_NO_NETWORK=1
+   export PYTHONDONTWRITEBYTECODE=1
+   export PYTHONUNBUFFERED=1
+   export TZ=UTC
+   ```
 
-### Step 5 — Diff against the golden receipt
+5. Confirm the following paths exist at the recorded SHA:
 
-```bash
-# Illustrative.
-diff -u \
-  tests/fixtures/domains/soil/golden/no_network_receipt.json \
-  data/proofs/test/soil/no_network/<run_id>/run_receipt.json
-```
+   ```text
+   .github/workflows/domain-soil.yml
+   tests/domains/soil/test_soil_smoke.py
+   tests/domains/soil/test_soil_moisture_qc.py
+   tests/domains/soil/test_smap_l4_anti_collapse.py
+   tests/ingest/ssurgo_watch/test_ssurgo_watch.py
+   tools/validators/domains/soil/validate_public_safe_fixture.py
+   tools/validators/domains/soil/moisture/validate_soil_moisture.py
+   tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py
+   tools/ingest/ssurgo_watch/ssurgo_watch.py
+   fixtures/domains/soil/
+   tests/ingest/ssurgo_watch/fixtures/
+   ```
 
-Any diff is a **failure**, even if every individual assertion passed. Determinism is part of the test.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 8. Validators invoked
-
-The runbook exercises — at minimum — every validator family the KFM Encyclopedia §K names as required.
-
-| Validator family *(per Encyclopedia §K)* | Exercised by | Expected outcome on `*_invalid` fixtures |
-|---|---|---|
-| Schema validation | Every fixture | **deny** (schema error) |
-| Source descriptor validation | `SourceDescriptor.*` fixtures | **deny** for unknown source / role / rights |
-| Rights validation | Fixtures with missing/ambiguous license | **deny** (rights-unknown) |
-| Sensitivity validation | Fixtures with farm-owner / pedon coords | **deny** until generalized |
-| Evidence closure | `EvidenceBundle.*` fixtures | **abstain** when `EvidenceRef` unresolved |
-| Temporal logic | Fixtures crossing `observed/valid/retrieval` boundaries | **deny** on improper collapse |
-| Geometry validity | `SoilMapUnit.*` fixtures | **deny** on invalid topology |
-| Policy deny | Sensitive / unreleased fixtures | **deny** (policy outcome) |
-| Citation validation | `EvidenceBundle.*` fixtures | **deny** on uncited claim |
-| Release manifest validation | `ReleaseManifest.*` fixtures | **deny** on missing proof / rollback target |
-| Rollback drill | `rollback.*` fixtures | **must successfully replay prior manifest** |
-| **No-network fixtures** | The runbook itself | **all of the above, with zero egress** |
-| Non-regression | Golden receipts | **byte-identical** to prior recorded state |
-
-> [!TIP]
-> The PROPOSED Soil-specific validators — `MUKEY/COKEY/CHKEY` lineage tests, horizon-depth sanity, soil-moisture unit/depth/QC, support-type separation denial, dual-hash stability, catalog closure and Evidence Drawer tests — plug into the families above. They are **domain refinements**, not replacements for the standard set.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 9. Pass / fail / abstain / deny outcomes
-
-Every Soil test assertion resolves to **one of four** finite outcomes — the same set the governed API envelope uses in production. Any other state (silent skip, "warning", "TODO") is a runbook failure.
-
-| Outcome | Meaning in this runbook | Example trigger |
-|---|---|---|
-| **ANSWER** | Trust spine closed: schema OK, evidence resolved, policy allow, catalog closed, manifest dry-runnable. | `SoilMapUnit_valid_county.json` |
-| **ABSTAIN** | Inputs syntactically valid but evidence is missing, stale, or ambiguous. | `EvidenceBundle_unresolved_ref.json` |
-| **DENY** | Policy, rights, sensitivity, or source-role forbids progression. | `SoilMoistureObservation_owner_geometry.json` |
-| **ERROR** | Something the test cannot adjudicate — treat as failure. | Schema file missing, runner crashed, network reached. |
-
-> [!IMPORTANT]
-> **`DENY` is a passing test outcome** when the fixture is a `*_denied.json` or `*_invalid.json` case. The runbook fails when a *denied* fixture *answers*, or a *valid* fixture *errors*. Negative-path coverage is mandatory.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 10. Soil-specific assertions
-
-Each MUST be exercised by at least one fixture in §6.
-
-1. **MUKEY / COKEY / CHKEY lineage**. Map-unit, component, and component-horizon keys MUST chain consistently; broken lineage is a `DENY`.
-2. **Horizon depth sanity**. `hzdept_r < hzdepb_r` for every horizon; overlapping horizons within a component is a `DENY`.
-3. **Soil-moisture unit / depth / QC**. Volumetric water content carries units, depth (cm), and a QA flag; mixed units across a station series is a `DENY`.
-4. **Support-type separation**. Static survey, gridded derivative, station reading, satellite grid, pedon evidence, and interpretation MUST NOT be presented as a single surface — attempting to do so is a `DENY`.
-5. **Dual-hash stability**. Canonical row hash + tile/bundle hash MUST be reproducible across runs given identical inputs (cross-run determinism).
-6. **Catalog closure**. Every `release candidate` fixture MUST carry an `EvidenceBundle`, a `ValidationReport`, a digest, and a rollback target — missing any one is a `DENY`.
-7. **Source-role mismatch denial**. A `regulatory` SourceDescriptor used as an `observed` source MUST `DENY` at admission.
-8. **Public-safe transformation**. Fixtures containing farm-specific, owner-specific, or operational sensor geometry MUST be generalized/redacted before release — un-generalized fixtures `DENY` at the publication gate.
-9. **Stale-state handling**. A fixture flagged stale beyond its source cadence MUST surface a stale badge **and** still produce a finite outcome.
-10. **Non-regression for prior lineage**. Renaming or re-keying any Soil object MUST be accompanied by a continuity entry; bare rename `DENY`s.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 11. Failure modes and rollback
-
-| Failure mode | Likely cause | Action |
-|---|---|---|
-| Test runner can reach `*.usda.gov`, `*.k-state.edu`, etc. | Network isolation not enforced | Re-establish runner boundary; **discard the run** |
-| `golden/no_network_receipt.json` diff | Non-determinism in run_id / tool versions / clock | Pin tool versions; remove time-based identity; re-run |
-| `EvidenceRef` resolves to nothing | Synthetic fixture missing companion `EvidenceBundle` | Add the bundle fixture; rerun |
-| Schema `$ref` fetch attempt | Schema authored with remote `$ref` | Localize the `$ref` to `schemas/contracts/v1/...`; rerun |
-| Valid fixture returns `DENY` | Policy bundle over-restrictive **or** fixture under-spec'd | File `docs/registers/VERIFICATION_BACKLOG.md` entry; do **not** weaken policy |
-| Denied fixture returns `ANSWER` | Policy gate not wired | **Block the PR.** Open a drift entry and fail the build |
-
-### Rollback path
-
-This runbook produces **no** public artifacts. Rollback for a failed run is:
-
-1. Discard the run's `run_id` directory under `data/proofs/test/soil/no_network/`.
-2. Do not promote any fixture, schema, or policy change merged in a PR whose no-network run failed.
-3. Open a `docs/registers/DRIFT_REGISTER.md` entry if the failure indicates a schema/policy/contract drift rather than a fixture bug.
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## 12. CI binding
+6. Inspect the active workflow before copying commands from this runbook. Stop
+   if the workflow inventory, Python version, fixture roots, validator paths,
+   or hold semantics differ. The workflow is current implementation evidence;
+   this prose must be corrected when it drifts.
 
 > [!NOTE]
-> The exact CI job name, workflow file, and reviewer policy are **UNKNOWN** in this session. Names below are **PROPOSED**.
+> The current `domain-soil` workflow installs no project dependencies before
+> these commands. A future dependency-install step would be a separate network
+> and supply-chain boundary and must not be silently included in a claim that
+> the whole job was no-network.
 
-PROPOSED CI shape (illustrative `.github/workflows/test-soil-no-network.yml`):
+[Back to top](#top)
+
+## 4. Execution procedure
+
+### 4.1 Run the current bounded Soil suites
+
+Run the exact commands from the repository root:
+
+```bash
+set -euo pipefail
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_smoke.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_soil_moisture_qc.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch --verbose
+```
+
+Expected process result: every command exits `0`. A green command means its
+frozen local positive and expected-negative cases behaved as encoded. It does
+not mean every embedded candidate outcome is an approval; expected denial,
+abstention, stale, geometry-drift, error, and review-routing cases can be part
+of a passing test suite.
+
+### 4.2 Reproduce only one lane when diagnosing
+
+Use the individual command for the failing lane. Do not replace the full
+four-command result with a narrower rerun in the final record. After repair,
+rerun all four commands at the same branch head.
+
+### 4.3 Compare with hosted execution
+
+Opening or updating a pull request triggers `domain-soil`. Record the workflow
+run URL, attempt number, event type, tested SHA, and each job conclusion.
+Distinguish a pull-request merge result from the source branch head. A hosted
+run against a generated merge ref is useful integration evidence but is not an
+exact-head result unless the reported SHA matches the branch head.
+
+[Back to top](#top)
+
+## 5. Expected results and interpretation
+
+### 5.1 Domain-suite polarity
+
+| Condition | Expected behavior |
+|---|---|
+| Named valid fixture | Validator returns no findings; test remains green |
+| Named expected-invalid fixture | Exact sorted findings match its sidecar; test remains green |
+| Missing, extra, or renamed direct fixture | Closed-inventory assertion fails |
+| Duplicate key, non-finite number, oversized or structurally unbounded input | Parser rejects the input with the profile's bounded finding |
+| Candidate value placed in a failing input | CLI output must not echo the candidate value |
+| Validator called with valid/invalid/no input | Current CLI contracts exercise exit codes `0`, `1`, and `2` where the suite defines them |
+| Named network mock is used unexpectedly | Test fails or the installed denial raises |
+
+### 5.2 SSURGO comparator outcomes
+
+The SSURGO tests can remain green while confirming these embedded outcomes:
+
+| Outcome | Meaning inside the fixture-only comparator | Promotion/publication effect |
+|---|---|---|
+| `NO_MATERIAL_CHANGE` | The frozen profile found no review-triggering drift, including its strict threshold cases | None |
+| `PROPOSED_WORK_RECORD` | Synthetic schema, table, constraint, or material spatial-label drift requires review-only work | No promotion or publication |
+| `GEOMETRY_DRIFT` | Geometry fingerprint changed and materiality math is not treated as sufficient | Review required; no promotion |
+| `STALE_INPUT` | Synthetic publication chronology regressed | Blocked from progression |
+| `ABSTAIN` | Materiality, extraction, or geometry profile drift prevents a comparable decision | No progression |
+| `ERROR` | Derived state changed without the supporting source/profile change or another invalid state occurred | Blocking failure state |
+
+These are comparator results, not KFM-wide policy decisions, SourceDescriptor
+admission states, ProofPacks, or release decisions.
+
+### 5.3 What a green four-command run proves
+
+**CONFIRMED at the tested SHA:** the four frozen synthetic profiles, local
+validators/helpers, exact fixture inventories, expected-negative polarity,
+selected Python network guards, deterministic findings, and encoded CLI or
+comparator behavior executed successfully.
+
+**Still held or unknown:** live source access and rights, actual SSURGO or soil
+moisture currentness, scientific representativeness, MUKEY/COKEY/CHKEY closure
+outside the tested profile, canonical cross-repository support vocabulary,
+EvidenceRef-to-EvidenceBundle resolution, policy evaluation, proof production,
+promotion, correction/withdrawal execution, release, deployment, publication,
+and safe consequential use.
+
+[Back to top](#top)
+
+## 6. Failure classification and stop conditions
+
+| Observation | Classification | Required response |
+|---|---|---|
+| A command exits nonzero | `FAIL` | Preserve output, isolate the changed lane, and do not report a passing Soil validation result |
+| A valid fixture is rejected | `FAIL` | Verify fixture and validator changed together intentionally; do not weaken a guard merely to restore green |
+| An expected-invalid fixture is accepted | `DENY` / blocking `FAIL` | Stop the pull request; repair the fail-closed path before delivery beyond draft |
+| Expected-error sidecar differs | `FAIL` | Determine whether behavior or expectation changed; update both only with evidence and review |
+| Fixture inventory changed without workflow/test review | `HOLD` | Reconcile the new file's authority, sensitivity, support type, and expected polarity |
+| A named network mock records use or raises | `FAIL` | Remove the attempted access or redesign the test around local data; do not whitelist a live endpoint |
+| A live URL, credential, source payload, or lifecycle write enters the test path | `DENY` | Remove it from this lane and route it through governed source/lifecycle controls |
+| Hosted job tests a different SHA than recorded | `ERROR` | Re-run or relabel the evidence accurately; do not call it exact-head proof |
+| `build-proof-soil` remains an explicit hold | `HOLD` | Report the hold exactly; do not describe it as proof generation |
+| `publish-dry-run-soil` remains an explicit hold | `HOLD` | Report the hold exactly; do not describe it as release readiness |
+| A proof or release implementation appears while the hold job still says none exists | `HOLD` / workflow repair required | Stop and replace the stale hold through a separately reviewed wiring change |
+| Rights, precision, source role, support type, scientific fitness, or intended use is unresolved | `ABSTAIN`, `DENY`, or `ESCALATE` | Preserve the narrower result and route to the accountable authority |
+
+Do not repair unrelated inherited failures inside a documentation-only change.
+Classify them separately and preserve the exact changed-area result.
+
+[Back to top](#top)
+
+## 7. Result record
+
+Store the run result in the pull-request handoff, review record, or other
+accepted coordination surface. This example is a human-readable record, not a
+receipt or proof object:
 
 ```yaml
-name: test-soil-no-network
-on:
-  pull_request:
-    paths:
-      - 'tests/fixtures/domains/soil/**'
-      - 'schemas/contracts/v1/**'
-      - 'policy/domains/soil/**'
-      - 'docs/runbooks/soil/NO_NETWORK_TEST_RUNBOOK.md'
-jobs:
-  no-network:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deny network egress
-        run: |
-          sudo iptables -A OUTPUT -m owner --uid-owner $(id -u) -j REJECT \
-            || echo "PROPOSED: choose network-isolation strategy"
-      - name: Run soil no-network suite
-        env:
-          KFM_DISABLE_NET_FETCH: "1"
-        run: make test-soil-no-network
-      - name: Verify golden receipt
-        run: |
-          diff -u tests/fixtures/domains/soil/golden/no_network_receipt.json \
-                  data/proofs/test/soil/no_network/*/run_receipt.json
+soil_no_network_result:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_sha: "<full base SHA>"
+  head_sha: "<full branch-head SHA>"
+  tested_sha: "<full SHA actually executed>"
+  checkout_kind: "branch-head | pull-request-merge-ref"
+  python: "3.11.x"
+  commands:
+    soil_smoke: "PASS | FAIL | NOT_RUN"
+    soil_moisture_qc: "PASS | FAIL | NOT_RUN"
+    smap_l4_anti_collapse: "PASS | FAIL | NOT_RUN"
+    ssurgo_watch: "PASS | FAIL | NOT_RUN"
+  network_claim: "targeted test-level Python guards only"
+  hosted_workflow:
+    url: "<workflow run URL or null>"
+    attempt: "<integer or null>"
+    validate_soil: "PASS | FAIL | PENDING | NOT_RUN"
+    build_proof_soil: "HOLD | FAIL | PENDING | NOT_RUN"
+    publish_dry_run_soil: "HOLD | FAIL | PENDING | NOT_RUN"
+  changed_paths:
+    - "<path>"
+  conclusion: "PASS | FAIL | HOLD | ERROR"
+  limitations:
+    - "no runner-wide or non-Python egress proof"
+    - "synthetic fixtures only"
+    - "no source admission, evidence closure, policy, proof, promotion, release, or publication effect"
+  recorded_by: "<reviewer or operator>"
+  recorded_at: "<UTC timestamp>"
 ```
 
-The CI job MUST be a **required check** on PRs that touch any of the paths above. Without that branch-protection binding, the runbook documents a wish, not an enforced gate.
+Do not derive identity from `recorded_at`; the timestamp records observation
+only. Keep full SHAs, exact commands, and workflow attempt numbers so another
+reviewer can reconstruct the claim.
 
-[↑ Back to top](#-soil--no-network-test-runbook)
+[Back to top](#top)
 
----
+## 8. CI binding and held jobs
 
-## 13. Open verification items
+The current [`domain-soil` workflow](../../../.github/workflows/domain-soil.yml)
+has three jobs with deliberately different meanings:
 
-| # | Item | Evidence that would settle it | Status |
-|---|---|---|---|
-| 1 | Confirm chosen test runner (pytest / vitest / go test / …) for Soil. | Mounted repo `Makefile` or runner config. | NEEDS VERIFICATION |
-| 2 | Confirm Soil fixture root path (`tests/fixtures/domains/soil/` vs alternative). | Mounted repo evidence; Directory Rules §4 application. | NEEDS VERIFICATION |
-| 3 | Confirm the SourceDescriptor schema home (`schemas/contracts/v1/source/source-descriptor.json` per ADR-0001). | Mounted repo + accepted ADR-0001. | NEEDS VERIFICATION |
-| 4 | Confirm whether `docs/runbooks/soil/<NAME>.md` (folder) or `docs/runbooks/soil_<NAME>.md` (flat) is the local convention. | Mounted repo `docs/runbooks/` listing. | NEEDS VERIFICATION |
-| 5 | Identify the deterministic `run_id` formula in use (PROPOSED: `(spec_hash, fixture_set_hash, tool_versions)`). | Mounted repo validator code. | NEEDS VERIFICATION |
-| 6 | Confirm the network-isolation strategy (iptables / netns / pytest-socket / container). | Mounted repo CI config. | NEEDS VERIFICATION |
-| 7 | Verify Kansas Mesonet, NRCS SCAN, USCRN, SMAP, SSURGO/SDA rights for any *eventual* live ingest. | Source registry entries with rights notes. | NEEDS VERIFICATION |
-| 8 | Confirm reviewer identity for Soil runbook PRs (CODEOWNERS). | `.github/CODEOWNERS`. | NEEDS VERIFICATION |
+| Job | Current behavior | Truthful interpretation |
+|---|---|---|
+| `validate-soil` | Runs the three domain suites, then the SSURGO fixture comparator | Bounded synthetic validation at the workflow's tested SHA |
+| `build-proof-soil` | Verifies required boundary files, checks that no accepted proof artifact or command has silently appeared, and emits `WORKFLOW_HOLD: no accepted Soil proof producer or deterministic proof command` | Explicit readiness hold, not a proof |
+| `publish-dry-run-soil` | Verifies release boundary files, checks that no candidate/command has silently appeared, and emits `WORKFLOW_HOLD: no accepted Soil release dry-run command or candidate manifest contract` | Explicit release hold, not a dry-run release |
 
-[↑ Back to top](#-soil--no-network-test-runbook)
+The workflow performs no live fetch, source admission, EvidenceBundle assembly,
+policy decision, promotion, manifest assembly, lifecycle write, deployment, or
+publication. This runbook does not assert that `domain-soil` is a required
+branch-protection or ruleset check; verify enforcement separately before relying
+on that claim.
 
----
+[Back to top](#top)
 
-## 14. FAQ
+## 9. Rights, sensitivity, and scientific boundaries
 
-<details>
-<summary><strong>Why no real SSURGO data, even read-only from a local cache?</strong></summary>
+Use only repository-approved synthetic, public-safe fixtures in this procedure.
+Do not add:
 
-Because the no-network runbook is also a *governance* runbook. Even a local cache of SSURGO is a non-synthetic artifact with rights, vintage, and sensitivity considerations that must be carried through a SourceDescriptor. The synthetic fixtures let the trust spine close *without* pulling those obligations into a unit test. The cached-SSURGO scenario belongs in a later **integration** runbook, not this one.
+- credentials, tokens, temporary links, live endpoint responses, or cached
+  source payloads;
+- real farm, owner, parcel, field, private station, operational sensor, or
+  sensitive precise-location data;
+- restricted or unreviewed Indigenous, Tribal, cultural, archaeological, or
+  land-context material;
+- generated assertions that present static survey, station observation,
+  satellite/model grid, pedon/profile, interpretation, or suitability output as
+  one interchangeable authority surface.
 
-</details>
+Synthetic success does not establish that live data is accurate, current,
+representative, rights-cleared, policy-approved, or fit for a public or
+consequential decision. When support type, source role, time, depth, units, QC,
+uncertainty, precision, provenance, rights, or intended use is unresolved,
+prefer `ABSTAIN`, `DENY`, `HOLD`, or specialist escalation over a broader claim.
 
-<details>
-<summary><strong>Can a fixture include real Kansas county geometry?</strong></summary>
+[Back to top](#top)
 
-Real *administrative* geometry (county outlines from Census TIGER) is generally public-safe and may be used. Real **soil polygon** geometry tied to a real survey area is also generally public-safe — but combining it with farm-owner names, operational sensor coordinates, or anything that re-identifies a parcel is **not**. When in doubt, generalize and label the fixture as transformed.
+## 10. Maintenance and documentation rollback
 
-</details>
+Update this runbook whenever any of the following changes:
 
-<details>
-<summary><strong>What if a validator legitimately needs a remote vocabulary (e.g., a SKOS file)?</strong></summary>
+- `.github/workflows/domain-soil.yml` changes Python version, commands, job
+  names, hold semantics, or network controls;
+- any of the three domain test inventories, fixture roots, validators, finding
+  contracts, or CLI exit codes changes;
+- the SSURGO comparator's cases, profiles, thresholds, finite outcomes, output
+  contract, or write boundary changes;
+- a shared runner-wide no-network guard is accepted and actually wired;
+- proof production, EvidenceBundle resolution, policy evaluation, promotion,
+  release dry run, rollback drill, deployment, or publication becomes
+  executable; or
+- rights, sensitivity, source-role, support-type, public-safe scale, or
+  scientific-use guidance changes.
 
-Vendor the vocabulary into `schemas/contracts/v1/vocab/` (PROPOSED path) and version it. The no-network runbook does not relax to accommodate "but it's just a vocabulary"; remote `$ref` and remote vocabulary fetches are equally disqualifying.
+This change is documentation-only. Before merge, close the draft pull request or
+revert its commit. After merge, use an ordinary reviewed revert or corrective
+follow-up. Documentation rollback does not roll back data, source activation,
+evidence, policy, lifecycle state, release, deployment, or publication.
 
-</details>
+## Related responsibility roots
 
-<details>
-<summary><strong>How does this runbook interact with the Soil Evidence Drawer and Focus Mode runbooks?</strong></summary>
+- [Soil runbook boundary](./README.md)
+- [Soil domain boundary](../../domains/soil/README.md)
+- [Soil tests](../../../tests/domains/soil/README.md)
+- [SSURGO comparator tests](../../../tests/ingest/ssurgo_watch/README.md)
+- [Soil validators](../../../tools/validators/domains/soil/README.md)
+- [Soil fixtures](../../../fixtures/domains/soil/README.md)
+- [Soil source registry](../../../data/registry/sources/soil/README.md)
+- [Soil proof boundary](../../../data/proofs/soil/README.md)
+- [Soil release candidates](../../../release/candidates/soil/README.md)
+- [Soil workflow](../../../.github/workflows/domain-soil.yml)
 
-This runbook is **upstream** of both. The Evidence Drawer inspector and Focus Mode mock-adapter runbooks (each PROPOSED, not yet present) consume the fixtures and golden receipts produced here. A break in the no-network suite invalidates any downstream UI/AI fixture run that depended on it.
+These links locate responsibility boundaries. Their presence does not prove
+substantive implementation, source activation, acceptance, review, readiness,
+or publication.
 
-</details>
-
-<details>
-<summary><strong>Is "no-network" the same as "offline"?</strong></summary>
-
-No. "Offline" usually means "the *user's* machine is disconnected." "No-network" here means the *test process* cannot reach any external endpoint — including loopback proxies that might tunnel out. The constraint is enforced at the runner boundary so it survives a developer's local environment.
-
-</details>
-
-[↑ Back to top](#-soil--no-network-test-runbook)
-
----
-
-## Related docs
-
-- `docs/doctrine/directory-rules.md` — placement authority for this file (CONFIRMED rule; presence PROPOSED).
-- `docs/domains/soil/README.md` — Soil domain index *(PROPOSED — NEEDS VERIFICATION)*.
-- `docs/runbooks/soil/VALIDATION.md` — Soil validation runbook *(PROPOSED, not yet created)*.
-- `docs/runbooks/soil/ROLLBACK.md` — Soil rollback drill runbook *(PROPOSED, not yet created)*.
-- `docs/adr/ADR-0001-schema-home.md` — schema-home authority *(PROPOSED — NEEDS VERIFICATION)*.
-- `docs/registers/DRIFT_REGISTER.md` — where to log placement/convention drift.
-- `docs/registers/VERIFICATION_BACKLOG.md` — where to log open verification items.
-- `schemas/contracts/v1/source/source-descriptor.json` — canonical SourceDescriptor schema *(PROPOSED)*.
-- `tests/fixtures/domains/soil/` — Soil fixture root *(PROPOSED)*.
-- `policy/domains/soil/` — Soil policy bundle *(PROPOSED)*.
-
----
-
-**Last updated:** 2026-05-12  ·  **Status:** `draft`  ·  **Authority:** CONFIRMED doctrine / PROPOSED implementation
-
-[↑ Back to top](#-soil--no-network-test-runbook)
+[Back to top](#top)

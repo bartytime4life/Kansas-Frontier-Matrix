@@ -1,0 +1,34 @@
+{
+  "bundle_id": "evidence-bundle:fixture:mrts-05",
+  "claim_scope": "Synthetic MRTS-05 trust-spine closure only",
+  "evidence_refs": [
+    {
+      "ref": "evidence:observation:fixture:mrts-05",
+      "kind": "artifact",
+      "bundle_ref": "evidence-bundle:fixture:mrts-05"
+    }
+  ],
+  "source_records": [
+    "source-descriptor:src:fixture/mrts-05-public-safe:1.0.0"
+  ],
+  "citations": [
+    "citation:fixture:mrts-05"
+  ],
+  "rights": {
+    "license": "CC0-1.0 synthetic fixture"
+  },
+  "sensitivity": {
+    "level": "public",
+    "reason": "Wholly synthetic fixture with no real people, locations, or source payloads.",
+    "applied_at": "2026-08-22T00:00:00Z"
+  },
+  "transforms": [
+    "identity_fixture_transform"
+  ],
+  "checksums": {
+    "synthetic_payload": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "spec_hash": {
+    "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  }
+}

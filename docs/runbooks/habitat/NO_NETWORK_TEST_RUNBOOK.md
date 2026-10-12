@@ -1,497 +1,1042 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/habitat/no-network-test
 title: Habitat — No-Network Test Runbook
-type: standard
-version: v1
-status: draft
-owners: Habitat domain steward · Docs steward · Test/CI owner (TODO confirm CODEOWNERS)
+type: runbook; operational-procedure; domain-lane; sensitive-domain; non-authoritative
+version: v0.2
+prior_version: v1 planning-oriented draft
+status: draft; repository-grounded; one-bounded-no-live-source-profile-executable; broader-habitat-source-evidence-policy-proof-release-and-publication-held; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+owner_status: "Habitat, land-cover, source, rights, sensitivity/geoprivacy, evidence, policy, validation, proof, review, release, correction, rollback, security, CI, and operations assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
-related: [
-  docs/domains/habitat/README.md,
-  docs/runbooks/README.md,
-  docs/doctrine/lifecycle-law.md,
-  docs/doctrine/truth-posture.md,
-  docs/doctrine/trust-membrane.md,
-  docs/doctrine/directory-rules.md,
-  schemas/contracts/v1/domains/habitat/,
-  policy/domains/habitat/,
-  tests/fixtures/domains/habitat/
-]
-tags: [kfm, runbook, habitat, fixtures, no-network, ci, tests, governance, validators]
-notes: [
-  "Path PROPOSED — domain segment under docs/runbooks/ follows Directory Rules §12 lane pattern but diverges from existing flat docs/runbooks/<topic>_<purpose>.md convention; confirm choice in ADR or per-root README.",
-  "All commands and module names below are PROPOSED — repo not mounted; the actual test/CI surface is UNKNOWN.",
-  "Treat all reproduction details as illustrative until tests/, fixtures/, schemas/, and policy/ are inspected."
-]
+updated: 2026-08-25
+policy_label: public-review; habitat; land-cover; no-network; synthetic-fixtures; sensitive-location; fail-closed; non-release
+current_path: docs/runbooks/habitat/NO_NETWORK_TEST_RUNBOOK.md
+owning_root: docs/
+responsibility: "Document the exact bounded Habitat no-live-source procedure currently supported by the inactive land-cover materiality profile, deterministic synthetic fixtures, focused validator tests, and read-only workflows, while keeping live sources, Habitat truth, species occurrences, rights, geoprivacy, evidence closure, policy, proof, review, release, deployment, promotion, publication, and public authority outside the test boundary."
+truth_posture: cite-or-abstain
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 434195e8727e6e8649fd6a9e7de06808c3e15261
+  target_prior_blob: e7c9bba0025ea2c24db530dd0bf498e472af5727
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  habitat_source_refresh_runbook_blob: 80a91eedd27b369963ebe7a12d9ef5a0e75aa769
+  domain_habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab
+  focused_materiality_workflow_blob: fd73a098c1dbf8fd07135ce3cdab04b280b30904
+  materiality_contract_blob: c7ad48b435d8cc7fcdcf2910fb675e9c9778e7e7
+  materiality_profile_schema_blob: 9857ead389deaf0a8306d143fe72900303d7e4cc
+  materiality_profile_blob: 8553fc03da35e2d86d254d362392ca414bdf73af
+  habitat_materiality_validator_blob: 931677daf9d4d54150cd10aadf8285c7ef8ae93e
+  shared_material_change_validator_blob: 0e7810c9dacd55ae79e3d445fa023902f557020e
+  habitat_materiality_test_blob: 4f322c8107d74447d64afea38f42a941a43eb8d5
+  valid_fixture_manifest_blob: 68dc6948b8a1c3b12fd11ee7ac52602aeecf29a3
+  invalid_fixture_manifest_blob: db47ee07c8e98661930be1bfd145b52a2ff34089
+  habitat_fixture_index_blob: 674c5acf8c2f1739762625e392616ce1034de0e6
+  habitat_tests_index_blob: 4503de9bcb1c92db45012d897d647fb39a9f7172
+  habitat_proof_readme_blob: be4e0a82a86f12972de6f78e82fd3ca051618077
+  habitat_release_candidate_readme_blob: e55b9344cda673e069bce5525937f5a50666bf63
+drive_sources:
+  - title: kfm_habitat_architecture_pdf_only_blueprint_2026-04-21.pdf
+    file_id: 1Ys9Z_AYfEz6oStxY0YqZjih9DFHc5GA6
+    role: planning lineage; fixture-first, source-role, evidence, sensitivity, and no-network principles; not current repository implementation proof
+  - title: KFM_Habitat_Fauna_Thin_Slice_Extended_Pro_Blueprint.pdf
+    file_id: 1KU3Z_KkqbKAkv3E7oyulTAQlN4f1Gz5w
+    role: cross-domain thin-slice planning lineage; not proof of current executable closure or release state
+inspection_boundary: "Current-session GitHub reads of the target, accepted Directory Rules decision, CODEOWNERS, Habitat source-refresh boundary, two Habitat workflows, materiality contract/profile/schema, domain and shared validators, focused tests, fixture manifests, parent fixture/test indexes, proof lane, and release-candidate lane; plus connected Google Drive planning sources. A mounted repository checkout and repository-native commands were not available during authoring. No live source, credential, real Habitat record, exact sensitive geometry, species occurrence, policy evaluator, evidence resolver, proof producer, release service, deployed consumer, or public carrier was exercised."
+related:
+  - docs/runbooks/README.md
+  - docs/runbooks/habitat/README.md
+  - docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md
+  - docs/runbooks/habitat/PROMOTION_RUNBOOK.md
+  - docs/runbooks/habitat/ROLLBACK_RUNBOOK.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/domains/habitat/README.md
+  - contracts/domains/habitat/land_cover/materiality_profile.md
+  - schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json
+  - schemas/contracts/v1/data/material_change_assessment.schema.json
+  - pipeline_specs/habitat/land_cover/materiality_profile.v1.json
+  - fixtures/domains/habitat/land_cover/materiality/
+  - tools/validators/domains/habitat/validate_land_cover_materiality.py
+  - tools/validators/validate_material_change_assessment.py
+  - tests/validators/domains/habitat/test_land_cover_materiality.py
+  - tests/domains/habitat/README.md
+  - data/proofs/habitat/README.md
+  - release/candidates/habitat/README.md
+  - .github/workflows/domain-habitat.yml
+  - .github/workflows/habitat-land-cover-materiality.yml
+tags: [kfm, habitat, land-cover, runbook, no-network, no-live-source, synthetic-fixtures, validation, materiality, sensitive-location, fail-closed]
+notes:
+  - "v0.2 replaces the no-mounted-repository assumption, hypothetical full Habitat validator/policy/release chain, proposed fixture tree, invented receipt path, and unverified egress-lockdown claims with the exact current bounded executable profile and explicit holds."
+  - "The retained operating principle is fixture-first, deterministic, synthetic, no-live-source, fail-closed, and reversible. Current implementation proves only the inactive Habitat land-cover materiality adapter against reviewed local fixtures and the shared MaterialChangeAssessment shape."
+  - "The focused test does not install a socket, DNS, HTTP, or operating-system egress guard. The domain workflow sets KFM_NO_NETWORK=1 as a convention; checkout, Python setup, and dependency installation may still use network services. Strong no-egress proof therefore requires separately recorded environment enforcement."
+  - "The inspected top-level tests/domains/habitat Python files are proposal placeholders except for one tautological smoke test; they are not the substantive no-network profile documented here."
+  - "The domain workflow intentionally holds Habitat proof production and release dry-run execution. A green held job is readiness evidence, not proof, review, release, deployment, promotion, or publication."
+  - "This document changes no source, contract, schema, profile, fixture, validator, test, workflow, evidence object, operational receipt, proof, candidate, lifecycle state, runtime, deployment, promotion, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Habitat — No-Network Test Runbook
 
-> Run the Habitat lane's full validator and policy suite against deterministic fixtures, **with the network turned off**, and prove the lane fails closed before any live source is wired in.
+> **Run and interpret the Habitat lane's current synthetic land-cover materiality profile without contacting a live Habitat source, exposing sensitive ecological locations, or confusing fixture conformance with Habitat truth, evidence closure, policy approval, proof, release, or publication.**
 
-![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
-![scope: habitat](https://img.shields.io/badge/scope-habitat-2e8b57)
-![lifecycle: no--network](https://img.shields.io/badge/lifecycle-no--network-blue)
-![truth: PROPOSED](https://img.shields.io/badge/truth-PROPOSED-orange)
-![policy: deny--by--default](https://img.shields.io/badge/policy-deny--by--default-critical)
-![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft &nbsp;·&nbsp; **Owners:** Habitat domain steward · Docs steward · Test/CI owner (TODO) &nbsp;·&nbsp; **Last updated:** 2026-05-12
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Why no-network is the *first* gate](#2-why-no-network-is-the-first-gate)
-- [3. Scope](#3-scope)
-- [4. Audience and actors](#4-audience-and-actors)
-- [5. Doctrine anchors](#5-doctrine-anchors)
-- [6. Preflight checklist](#6-preflight-checklist)
-- [7. Fixture matrix](#7-fixture-matrix)
-- [8. Procedure](#8-procedure)
-- [9. No-network test flow](#9-no-network-test-flow)
-- [10. Expected outcomes per object family](#10-expected-outcomes-per-object-family)
-- [11. Pass / fail criteria](#11-pass--fail-criteria)
-- [12. Failure modes and triage](#12-failure-modes-and-triage)
-- [13. Cleanup and rollback](#13-cleanup-and-rollback)
-- [14. Related docs](#14-related-docs)
-- [Appendix A — PROPOSED habitat fixture tree](#appendix-a--proposed-habitat-fixture-tree)
-- [Appendix B — Open verification items](#appendix-b--open-verification-items)
-
----
-
-## 1. Purpose
-
-This runbook is the operational procedure for running Habitat's full **schema → evidence → rights → sensitivity → policy → release** validator chain against deterministic, on-disk fixtures **with no outbound network access**. It is the lane's *first* enforceable gate: it proves that Habitat's contracts, schemas, validators, and policy bundles are internally consistent and **fail closed** before any live connector, source endpoint, or steward decision is wired in.
-
-A passing no-network run is a *necessary* condition for promoting Habitat fixtures or candidate artifacts forward in the KFM lifecycle. It is **not** a sufficient condition for publication. Publication still requires resolved source rights, sensitivity review, EvidenceBundle closure, ReleaseManifest, and a rollback target. CONFIRMED doctrine. [kfm_encyclopedia §K · Tests and validators]
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-posture)
+[![Executable profile: one bounded](https://img.shields.io/badge/profile-one%20bounded-1a7f37?style=flat-square)](#current-executable-profile)
+[![Input: synthetic local fixtures](https://img.shields.io/badge/input-synthetic%20local%20fixtures-0969da?style=flat-square)](#fixture-inventory-and-frozen-invariants)
+[![Network: no live source](https://img.shields.io/badge/network-no%20live%20source-b42318?style=flat-square)](#no-network-contract)
+[![Proof and release: held](https://img.shields.io/badge/proof%20and%20release-HOLD-d4a72c?style=flat-square)](#current-holds-and-graduation-gates)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-placement)
 
 > [!IMPORTANT]
-> A no-network run that **passes** without exercising every fixture class in the matrix below has *not* exercised Habitat's deny-by-default posture. Pass requires that invalid, denied, and abstention fixtures produce the correct closed-loop outcomes — not just that valid fixtures parse.
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Why no-network is the *first* gate
-
-CONFIRMED doctrine. KFM treats no-network fixtures as a standing test class — listed alongside schema validation, policy deny tests, citation validation, release manifest validation, and rollback drill in the encyclopedia's Tests and validators inventory. [kfm_encyclopedia §K]
-
-CONFIRMED doctrine. The implementation roadmap's first reversible PR (**PR-00 no-network fixture**) explicitly creates synthetic fixtures for `SourceDescriptor`, `EvidenceBundle`, `LayerManifest`, and `ReleaseManifest` under `tests/fixtures + schemas`, with the acceptance criterion *"Fixture validation passes; no network access."* [kfm_encyclopedia §14]
-
-CONFIRMED doctrine / NEW evidence. The MapLibre master corpus records the pattern more broadly: *"A dry-run stack emits receipts and validates structure without live ports or network side effects … First implementation can be no-network and deterministic."* [Master MapLibre Components ML-063-057]
-
-For Habitat specifically, this gate matters even more than for a low-sensitivity lane:
-
-| Risk if Habitat is wired to live sources before no-network passes | Mitigation the no-network gate provides |
-|---|---|
-| Sensitive occurrence joins leak exact geometry before the geoprivacy transform is verified. | Denied fixtures with sensitive joins prove the policy bundle returns `DENY` deterministically. |
-| Modeled habitat outputs get treated as critical-habitat regulatory authority. | Source-role mismatch fixtures prove the source-role registry refuses the cross-classification. |
-| Released layer manifests reference unresolved `EvidenceRef` values. | Abstention fixtures prove the resolver returns `ABSTAIN` rather than synthesizing a bundle. |
-| A network flake in CI masks a validator bug as an environment issue. | Egress denied at the test boundary makes any network attempt itself a failure signal. |
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Scope
-
-### 3.1 In scope
-
-- Validating Habitat fixtures (valid, invalid, denied, abstention, rollback/correction) against the canonical Habitat schemas under `schemas/contracts/v1/domains/habitat/` (PROPOSED home; see §6).
-- Exercising the Habitat policy bundle under `policy/domains/habitat/` (PROPOSED home) including sensitivity, rights, and source-role checks.
-- Asserting **finite outcomes** — `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` — for every fixture, mediated by Habitat's `DecisionEnvelope` / `RuntimeResponseEnvelope` contracts.
-- Emitting and verifying receipts (`RunReceipt`, `ValidationReport`, redaction receipt where applicable) without publication side effects.
-- Confirming no outbound network call was attempted during the test run.
-
-### 3.2 Out of scope
-
-- Live connector activation against NLCD, NatureServe, KDWP, USFWS ECOS, NWI, GAP/LANDFIRE, PAD-US, GBIF, or iNaturalist. Those belong in a separate, connector-scoped runbook **after** no-network passes. CONFIRMED doctrine. [KFM Domains Atlas §D · Key source families]
-- Promotion to `data/processed/`, `data/catalog/`, `data/published/`, or `release/manifests/`. Promotion is a governed state transition that requires gates beyond no-network. CONFIRMED doctrine. [Directory Rules §9.1; kfm_encyclopedia §H]
-- Browser, MapLibre rendering, and Evidence Drawer integration. Covered separately by `docs/runbooks/ui_VALIDATION.md` (PROPOSED, in Whole-UI report).
-- Governed AI / Focus Mode behavior over Habitat bundles. Covered by `docs/runbooks/governed_ai_VALIDATION.md` (PROPOSED).
-- Production secrets, identity, or auth tests. Configs must contain no real secrets in any environment — runbook entry on the security incident posture lives in `docs/runbooks/` (general). CONFIRMED doctrine. [Directory Rules §10.3]
-
-[Back to top](#quick-jump)
-
----
-
-## 4. Audience and actors
-
-| Actor | What they do in this runbook |
-|---|---|
-| **Habitat lane developer** | Author and update Habitat fixtures, schemas, and validators; run the no-network suite locally before opening a PR. |
-| **Habitat domain steward** | Approve the fixture matrix; review sensitivity, source-role, and geoprivacy classes; sign off on the deny-by-default surface. |
-| **Test / CI owner** | Maintain the no-network CI job, the egress lockdown, and the receipt-collection job. |
-| **Docs steward** | Keep this runbook synchronized with Habitat schemas, policy bundle, and the lifecycle invariant. |
-| **Release reviewer (downstream)** | Treat a passing no-network run as a prerequisite signal, not a release decision. |
-
-[Back to top](#quick-jump)
-
----
-
-## 5. Doctrine anchors
-
-This runbook does not invent governance — it operationalizes existing doctrine. The non-negotiable anchors below apply to every step.
-
-> [!NOTE]
-> The lifecycle invariant is governance, not storage organization:
-> **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**.
-> Promotion is a governed state transition, **not a file move**. [Directory Rules §9.1 · kfm_encyclopedia §H]
-
-| Anchor | What it means here |
-|---|---|
-| **Cite-or-abstain** | Any Habitat answer claiming evidence must resolve `EvidenceRef → EvidenceBundle`; if it cannot, the answer is `ABSTAIN`. CONFIRMED doctrine. [kfm_encyclopedia · Governed AI] |
-| **Deny by default** | Unreviewed exact sensitive Habitat geometry, sensitive occurrence joins, and source-role mismatches deny. CONFIRMED doctrine. [DOM-HAB · L · Feature backlog "DENY by default"] |
-| **Finite outcomes** | The runtime/validator/policy surfaces return one of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` — never a soft "best effort." CONFIRMED doctrine. [Governed AI dossier] |
-| **Trust membrane** | Public clients consume governed APIs only; nothing in this runbook publishes to `data/published/` or `release/manifests/`. CONFIRMED doctrine. [Directory Rules §7.1 · §9.2] |
-| **Watcher-as-non-publisher** | Validators, watchers, and workers emit receipts and candidate decisions only. They do not rewrite catalog or publish. CONFIRMED doctrine. [Directory Rules §19 · Glossary] |
-| **Schema-home rule** | Default machine-schema home is `schemas/contracts/v1/...` per **ADR-0001**. PROPOSED for Habitat: `schemas/contracts/v1/domains/habitat/`. NEEDS VERIFICATION in mounted repo. [Directory Rules §6.4 · §18] |
-
-[Back to top](#quick-jump)
-
----
-
-## 6. Preflight checklist
-
-Run through this list before executing the procedure. Each item that fails preflight is a stop-and-fix, not a stop-the-runbook.
-
-- [ ] **No mounted-repo overrides.** Read the latest `directory-rules.md`, `docs/adr/ADR-0001-schema-home.md`, and any Habitat ADR. If repo state has drifted from doctrine, open a `docs/registers/DRIFT_REGISTER.md` entry and pause. CONFIRMED process. [Directory Rules §2.5]
-- [ ] **Habitat schemas present.** PROPOSED home: `schemas/contracts/v1/domains/habitat/`. Confirms `HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, `HabitatQualityScore`, `SuitabilityModel`, `ConnectivityEdge`, `Corridor`, `RestorationOpportunity`, `StewardshipZone`, `ModelRunReceipt`, `UncertaintySurface`. NEEDS VERIFICATION. [kfm_encyclopedia §7.4 C · DOM-HAB §E]
-- [ ] **Habitat policy bundle present.** PROPOSED home: `policy/domains/habitat/`. NEEDS VERIFICATION.
-- [ ] **Habitat fixture suite present** under `tests/fixtures/domains/habitat/` (or `fixtures/domains/habitat/` if the lane has chosen the cross-cutting home — pick one and document it). PROPOSED. [Directory Rules §6.6]
-- [ ] **Egress denied.** The test environment denies outbound network. CI: deny-by-default firewall or sandboxed runner with network egress allowlist empty for this job. Local: airplane mode, `/etc/hosts` lockdown, or a no-net container. PROPOSED implementation. [KFM Components Pass 10 · C12-05 sandboxed runners; ML-063-057]
-- [ ] **No secrets sourced from env.** `configs/` and the active runtime config contain no real secrets — Habitat tests do not pull credentials. CONFIRMED doctrine. [Directory Rules §10.3]
-- [ ] **Receipts directory writable.** PROPOSED home for run output: `data/receipts/validation/habitat/<run_id>/` (test-mode flag set so receipts are tagged as no-network and not promotable). NEEDS VERIFICATION.
-- [ ] **Clock is fixed or recorded.** Deterministic runs require the run time to be either pinned or written into every receipt. PROPOSED.
+> **A green local or hosted result proves only the inactive synthetic Habitat land-cover materiality profile at the tested revision.** It does not establish land-cover truth, habitat condition, species presence, critical-habitat status, source admission, rights clearance, geoprivacy, an `EvidenceBundle`, a `PolicyDecision`, proof, review, release, deployment, promotion, publication, or public use.
 
 > [!WARNING]
-> If the runbook executor cannot verify the egress denial — for example, a CI runner whose network policy is unset — treat the run as **invalid**, not "probably fine." A silent network success is the failure mode this runbook exists to prevent.
-
-[Back to top](#quick-jump)
-
----
-
-## 7. Fixture matrix
-
-Every major Habitat object family **MUST** be represented by at least the five fixture classes below. PROPOSED rule, drawn from the Unified Build Manual's fixture rule. [BLD-COMP §§20, 30 → KFM Unified Build Manual 5.3]
-
-| Class | Purpose | Expected finite outcome | Habitat example (illustrative) |
-|---|---|---|---|
-| **Valid** | Schema-clean, evidence-closed, policy-passing fixture. | `ANSWER` | `HabitatPatch` derived from NLCD land cover for a Kansas tile, with resolvable `EvidenceRef` and a public-safe `LayerManifest`. |
-| **Invalid** | Required field missing, geometry malformed, version mismatch, or unresolved identifier. | `ERROR` (schema or geometry validator fails closed) | `HabitatPatch` with no `source_id`; `SuitabilityModel` missing `model_run_receipt`; geometry self-intersection. |
-| **Denied** | Schema-clean but **policy** refuses release: sensitive occurrence join, source-role mismatch, rights gap, or sensitivity class. | `DENY` | Sensitive fauna occurrence joined to a habitat patch at exact geometry; modeled habitat presented as **critical habitat** authority (source-role mismatch). |
-| **Abstention** | Schema-clean but `EvidenceRef` does not resolve, citation chain incomplete, or source descriptor unresolved. | `ABSTAIN` | `HabitatPatch` whose `evidence_ref` points to a `data/proofs/evidence_bundle/` id that is absent from the fixture set. |
-| **Rollback / correction** | A previously released candidate is corrected or withdrawn; the prior release is preserved as lineage. | Successful `RollbackCard` emission; superseding release records the correction. | Public generalized habitat tile withdrawn because the redaction receipt under-generalized a sensitive species join. |
-
-> [!TIP]
-> The thin-slice example in `kfm_encyclopedia §7.4 N` is: *"One NLCD-derived Kansas habitat patch fixture plus one fauna occurrence association and uncertainty/citation report, public generalized tile only."* That gives the **valid** anchor; the other four classes are mutations of it.
-
-### 7.1 Sensitivity & geoprivacy fixtures (Habitat-specific)
-
-Habitat is a *medium-sensitivity* lane that becomes *high-sensitivity* the moment it joins to Fauna occurrence records, sensitive ecological zones, or stewardship locations. The fixture suite **MUST** include:
-
-- A **sensitive-join denial fixture** — exact occurrence point joined to a habitat patch. Expected outcome: `DENY`, with a written `policy_decision.reason_code` referencing the geoprivacy class. CONFIRMED doctrine. [DOM-FAUNA §§12-13 · DOM-HAB §I]
-- A **generalization success fixture** — same join, but with a `geoprivacy_transform` applied (e.g., aggregation to a coarser unit) and a `Redaction Receipt` co-resident. Expected outcome: `ANSWER`, the receipt validates against `schemas/contracts/v1/correction/redaction_receipt.schema.json` (PROPOSED location).
-- A **modeled-as-critical denial fixture** — a `SuitabilityModel` output that has been mislabeled as a regulatory critical-habitat source. Expected outcome: `DENY`, source-role registry refuses the cross-classification. CONFIRMED doctrine. [DOM-HAB §K]
-
-[Back to top](#quick-jump)
-
----
-
-## 8. Procedure
-
-The procedure is grouped into five phases. Each phase ends with a verifiable receipt or report — nothing in this runbook should produce un-receipted state.
-
-### Phase 1 — Lockdown
-
-1. Disable outbound network on the test environment (CI sandbox firewall, local airplane mode, or no-net container).
-2. Confirm DNS resolution either fails closed or is restricted to a static, local-only resolver.
-3. Record the lockdown configuration into the run metadata that every receipt will reference.
-
-### Phase 2 — Schema validation
-
-1. Run schema validation across the Habitat fixture suite. PROPOSED command shape:
-
-```bash
-   # PROPOSED — actual validator command depends on tooling not yet inspected.
-   kfm-validate schema \
-     --schema-root schemas/contracts/v1/domains/habitat \
-     --fixtures   tests/fixtures/domains/habitat \
-     --report-out data/receipts/validation/habitat/$RUN_ID/schema.report.json \
-     --no-network
-```
-
-2. Confirm every **valid** fixture passes and every **invalid** fixture fails — the **negative tests fail closed**. This is the same posture PR-03 establishes for the cross-cutting validator suite (`negative tests fail closed`). CONFIRMED doctrine. [kfm_encyclopedia §14]
-
-### Phase 3 — Evidence, rights, sensitivity, source-role
-
-1. Resolve every `EvidenceRef` declared by a valid or abstention fixture against the on-disk EvidenceBundle store under `data/proofs/evidence_bundle/` (PROPOSED).
-2. Apply the rights, sensitivity, and source-role validators.
-3. Confirm the abstention fixtures return `ABSTAIN` rather than synthesizing a bundle.
-4. Confirm the denial fixtures return `DENY` with a structured `reason_code` and no leaked payload.
+> **Never place real, exact, or reverse-engineerable sensitive ecological locations in this procedure.** Rare-species, rare-plant, nest, den, roost, hibernaculum, breeding, spawning, stewardship, cultural, archaeological, private-land, infrastructure-adjacent, transform-secret, restricted-source, or credential detail does not belong in fixtures, logs, workflow summaries, issues, pull requests, screenshots, or review packets.
 
 > [!CAUTION]
-> A validator that *silently* substitutes a default when an `EvidenceRef` is missing is a failure of the cite-or-abstain posture — even if the substituted default is a placeholder. The correct behavior is `ABSTAIN` with the unresolved ref logged in the receipt. CONFIRMED doctrine. [kfm_encyclopedia · Governed AI]
+> **“No network” is bounded, not magical.** The current adapter reads local files and performs no intentional source request. Its focused tests do not patch socket, DNS, HTTP, or `urllib`, and the workflows do not establish an operating-system egress sandbox. Checkout, Python setup, and dependency installation can use network services before the focused commands run. Use the finite evidence grades in this runbook; do not report stronger no-egress proof than the environment actually supplies.
 
-### Phase 4 — Policy bundle and finite outcomes
-
-1. Run the Habitat policy bundle over each fixture; collect a `policy_decision` per fixture.
-2. Wrap each result in a `DecisionEnvelope` (Habitat-flavored) and confirm the envelope is exactly one of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`.
-3. Assert the **expected outcome table** in §10 matches the actual outcomes per fixture.
-
-### Phase 5 — Receipts, rollback drill, no-network proof
-
-1. Confirm a `RunReceipt` was emitted for every fixture, including denials and abstentions. CONFIRMED doctrine — receipts attach to all five finite outcomes including QUARANTINE-equivalent paths. [New Ideas 5-8-26 · "Receipts everywhere"]
-2. Execute the **rollback / correction fixture**: load a prior release candidate, verify a `RollbackCard` is produced, verify the prior release record is preserved as lineage (not overwritten).
-3. Assert the run produced **zero** outbound network attempts (test-side counter, CI egress log, or sandbox audit log).
-4. Stamp the run summary as **no-network: pass** or **no-network: fail** and write it next to the receipts.
-
-[Back to top](#quick-jump)
+**Quick navigation:** [Purpose](#purpose-and-terminal-boundary) · [Authority](#authority-and-placement) · [Posture](#current-repository-posture) · [Profile](#current-executable-profile) · [Network](#no-network-contract) · [Fixtures](#fixture-inventory-and-frozen-invariants) · [Preflight](#preconditions-and-stop-conditions) · [Local run](#local-procedure) · [CI](#hosted-ci-procedure) · [Results](#finite-outcomes-and-result-interpretation) · [Failures](#failure-diagnosis) · [Sensitivity](#sensitivity-rights-and-security) · [Receipts](#evidence-receipts-and-proof-boundary) · [Handoff](#review-handoff) · [Holds](#current-holds-and-graduation-gates) · [Rollback](#correction-and-document-rollback) · [References](#related-current-surfaces) · [Checklist](#operator-checklist) · [Lineage](#v1-lineage-and-superseded-assumptions) · [Non-effects](#non-effects)
 
 ---
 
-## 9. No-network test flow
+<a id="purpose-and-terminal-boundary"></a>
 
-The diagram below shows the deterministic shape of the run. It is intentionally simple: every fixture passes through the same chain, and every chain ends in either a finite outcome assertion or a fail-closed receipt.
+## Purpose and terminal boundary
 
-```mermaid
-flowchart LR
-    subgraph FIX["tests/fixtures/domains/habitat/ (PROPOSED)"]
-      V[valid]
-      I[invalid]
-      D[denied]
-      A[abstention]
-      R[rollback / correction]
-    end
-
-    FIX --> SCH{Schema<br/>validators}
-    SCH -->|shape ok| ER{EvidenceRef<br/>resolves?}
-    SCH -->|shape fail| ERR1[ERROR<br/>+ RunReceipt]
-    ER -->|yes| POL{Policy bundle<br/>rights · sensitivity · source-role}
-    ER -->|no| ABS[ABSTAIN<br/>+ RunReceipt]
-    POL -->|allow| ANS[ANSWER<br/>+ RunReceipt]
-    POL -->|deny| DEN[DENY<br/>+ RunReceipt]
-    POL -->|policy error| ERR2[ERROR<br/>+ RunReceipt]
-
-    R --> RB{Rollback drill}
-    RB -->|prior release preserved| RBOK[RollbackCard<br/>+ RunReceipt]
-    RB -->|prior release mutated| RBFAIL[FAIL<br/>integrity error]
-
-    ANS --> ASSERT{Assert vs<br/>expected outcome<br/>table §10}
-    ABS --> ASSERT
-    DEN --> ASSERT
-    ERR1 --> ASSERT
-    ERR2 --> ASSERT
-    RBOK --> ASSERT
-    RBFAIL --> ASSERT
-
-    ASSERT -->|match + no egress| PASS([NO-NETWORK PASS])
-    ASSERT -->|drift or egress| FAIL([NO-NETWORK FAIL CLOSED])
-```
-
-> [!NOTE]
-> Diagram shape is doctrine-grounded; the exact validator and policy module names inside the chain are **PROPOSED** until the repo is inspected. NEEDS VERIFICATION.
-
-[Back to top](#quick-jump)
-
----
-
-## 10. Expected outcomes per object family
-
-This table is the single source of truth for what the assertion step compares against. Update it whenever the fixture suite or schema set changes — and require the matching docs propagation under the Whole-UI update matrix.
-
-| Habitat object family | Valid expected | Invalid expected | Denied expected | Abstention expected | Notes |
-|---|---|---|---|---|---|
-| `HabitatPatch` | `ANSWER` | `ERROR` (geometry / source_id) | `DENY` (sensitive join) | `ABSTAIN` (unresolved evidence_ref) | Thin-slice anchor object; NLCD-derived. [kfm_encyclopedia §7.4 N] |
-| `LandCoverObservation` | `ANSWER` | `ERROR` (missing source_role) | `DENY` (rights unresolved) | `ABSTAIN` (unresolved citation) | Observation source role only — not authority. [DOM-HAB §B] |
-| `EcologicalSystem` | `ANSWER` | `ERROR` (schema) | `DENY` (rights gap) | `ABSTAIN` (citation chain incomplete) | NatureServe / GAP / LANDFIRE family. [DOM-HAB §D] |
-| `HabitatQualityScore` | `ANSWER` | `ERROR` (missing UncertaintySurface) | `DENY` (over-precise) | `ABSTAIN` (model unsupported) | Score must carry uncertainty + support. [DOM-HAB §D] |
-| `SuitabilityModel` | `ANSWER` | `ERROR` (missing ModelRunReceipt) | `DENY` (modeled-as-critical role mismatch) | `ABSTAIN` (unresolved evidence) | Model vs observation label MUST stay visible. [DOM-HAB §D · §K] |
-| `ConnectivityEdge` | `ANSWER` | `ERROR` (graph integrity) | `DENY` (sensitive endpoint join) | `ABSTAIN` (one endpoint unresolved) | Edges may reveal sensitive stewardship paths. |
-| `Corridor` | `ANSWER` | `ERROR` (geometry) | `DENY` (corridor crosses sensitive zone unredacted) | `ABSTAIN` (provenance unresolved) | Generalization expected by default. |
-| `RestorationOpportunity` | `ANSWER` | `ERROR` (schema) | `DENY` (rights gap or steward review required) | `ABSTAIN` (citation gap) | Steward review required before public answer. [DOM-HAB §F] |
-| `StewardshipZone` | `ANSWER` | `ERROR` (geometry / rights) | `DENY` (steward-only by default) | `ABSTAIN` (consent record unresolved) | Treat as steward-restricted by default. |
-| `ModelRunReceipt` | `ANSWER` | `ERROR` (missing input digest) | `DENY` (forbidden provider) | `ABSTAIN` (input EvidenceBundle unresolved) | First-class input to release/cache invalidation. [ML-063-054] |
-| `UncertaintySurface` | `ANSWER` | `ERROR` (alignment) | `DENY` (over-precise on sensitive area) | `ABSTAIN` (parent model unresolved) | Required companion of any modeled product. |
-
-[Back to top](#quick-jump)
-
----
-
-## 11. Pass / fail criteria
-
-The run is **PASS** if and only if every condition in §11.1 holds. The run is **FAIL CLOSED** if any condition in §11.2 fires — even if everything else passed.
-
-### 11.1 Pass conditions
-
-| # | Condition | Why it matters |
-|---|---|---|
-| 1 | Every fixture's actual outcome equals its expected outcome in §10. | The validator chain is internally consistent. |
-| 2 | Every fixture produced a `RunReceipt`, including denials and abstentions. | Receipts are non-optional, including for closed paths. [New Ideas 5-8-26] |
-| 3 | The rollback / correction fixture emitted a `RollbackCard` and preserved the prior release record. | Rollback is auditable, not a hidden file copy. [Unified Build Manual §5.4] |
-| 4 | The run summary records **zero** outbound network attempts. | A silent network success is the failure mode this runbook exists to prevent. |
-| 5 | No fixture wrote into `data/published/`, `release/manifests/`, `release/promotion_decisions/`, or `data/catalog/`. | Publication is a governed transition outside this runbook. |
-| 6 | No secret value appears in any receipt, log, or report. | Configs must not source real secrets. [Directory Rules §10.3] |
-
-### 11.2 Fail-closed triggers
-
-| # | Trigger | Required action |
-|---|---|---|
-| 1 | Any outbound network attempt detected. | Mark **FAIL**; investigate connector or HTTP client wiring; do not retry until the leak is fixed. |
-| 2 | An invalid fixture passed schema. | Mark **FAIL**; schema is too permissive — open a schema bug. |
-| 3 | A denied fixture returned `ANSWER` or `ABSTAIN`. | Mark **FAIL**; policy bundle is under-restrictive — open a policy bug; **do not** "fix" the fixture. |
-| 4 | An abstention fixture returned `ANSWER` with a synthesized bundle. | Mark **FAIL**; cite-or-abstain is broken — open a resolver bug. |
-| 5 | A `RunReceipt` is missing for any outcome. | Mark **FAIL**; receipts are mandatory. |
-| 6 | Rollback drill mutated or deleted the prior release record. | Mark **FAIL**; rollback must preserve lineage. |
-| 7 | A real secret appears in a receipt or log. | Treat as a **security incident**: rotate, audit, file an incident runbook entry. [Directory Rules §10.3] |
-
-[Back to top](#quick-jump)
-
----
-
-## 12. Failure modes and triage
-
-<details>
-<summary><strong>Common no-network failure modes (click to expand)</strong></summary>
-
-| Symptom | Likely cause | First action |
-|---|---|---|
-| All fixtures `ERROR`. | Schemas not found at PROPOSED home; lookup path or version mismatch. | Verify `schemas/contracts/v1/domains/habitat/` exists; check schema-home ADR. |
-| Valid fixture `ABSTAIN`. | EvidenceBundle absent from `data/proofs/evidence_bundle/`; resolver path mis-set. | Re-inventory the fixture's `EvidenceRef`; do not stub a bundle to make the test green. |
-| Denied fixture `ANSWER`. | Policy bundle not loaded for Habitat; sensitivity class missing; source-role registry not consulted. | Inspect policy bundle activation; verify Habitat appears in `policy/domains/`. |
-| Network attempt detected. | A connector module imported at validator boot; HTTP client default points at a live host; DNS resolver leak. | Run the static `no_forbidden_browser_calls`-style import boundary test from the Whole-UI plan. [KFM Whole-UI Expansion §20] |
-| Receipt missing for a `DENY`. | Receipt emitter wired only on `ANSWER` path. | Treat as critical bug; receipts attach to *every* finite outcome. |
-| Rollback drill modified prior release record in place. | Promotion logic doing a file move instead of a governed state transition. | Stop and audit: this is a lifecycle invariant violation. [Directory Rules §9.1] |
-| Run is non-deterministic across two consecutive executions. | Time, UUID, or hash function not pinned; uncanonicalized JSON serialization. | Adopt JCS canonicalization for the affected receipts. [ML-063-053] |
-| All denials share the same `reason_code`. | Policy bundle returning a generic deny without reason routing. | Reason codes must be structured per gate (rights, sensitivity, source-role, evidence). |
-
-</details>
-
-> [!IMPORTANT]
-> When triaging a failure, never adjust a fixture to make a denial disappear. The fixture is the specification of the behavior under test; the bug is somewhere else. If the policy is wrong, fix the policy under ADR and review — do not soften the fixture.
-
-[Back to top](#quick-jump)
-
----
-
-## 13. Cleanup and rollback
-
-The no-network runbook is, by design, side-effect-light. Cleanup is mostly about preserving evidence and not promoting anything by accident.
-
-1. **Archive the run receipts** under `data/receipts/validation/habitat/<run_id>/`. Mark them `policy_label: internal` and `release_state: none`.
-2. **Do not** copy any artifact from this run into `data/processed/`, `data/catalog/`, `data/published/`, or `release/manifests/`. Promotion requires a separate governed flow.
-3. **If the run produced a candidate rollback record** (from the rollback drill fixture), keep it under `release/rollback_cards/` with a `mode: drill` flag; otherwise it could be mistaken for a real rollback decision. PROPOSED; verify against `release/` README.
-4. **Restore network** at the test environment boundary only after receipts are written and run is closed. A run is not "closed" until its no-network proof is committed.
-5. **If a fail-closed trigger fired**, file a follow-up issue with the receipt id, the trigger number from §11.2, and the affected fixture(s). Do not re-run until the root cause is addressed.
-
-> [!TIP]
-> A clean no-network pass is itself an artifact. Reference the run id from any downstream Habitat PR that touches schemas, policy, fixtures, or the source registry — it is the lane's standing proof that internal consistency was checked before live wiring.
-
-[Back to top](#quick-jump)
-
----
-
-## 14. Related docs
-
-The links below are **PROPOSED** until inspected against the mounted repo. Replace `TODO` placeholders with real paths once verified.
-
-- `docs/domains/habitat/README.md` — Habitat domain overview. PROPOSED.
-- `docs/runbooks/README.md` — Index of KFM runbooks. PROPOSED.
-- `docs/doctrine/lifecycle-law.md` — Lifecycle invariant and promotion law. PROPOSED.
-- `docs/doctrine/truth-posture.md` — Cite-or-abstain posture. PROPOSED.
-- `docs/doctrine/trust-membrane.md` — Trust membrane and governed API boundary. PROPOSED.
-- `docs/doctrine/directory-rules.md` — Directory Rules (this file's placement basis). CONFIRMED present in project doctrine.
-- `docs/adr/ADR-0001-schema-home.md` — Schema-home decision. NEEDS VERIFICATION.
-- `schemas/contracts/v1/domains/habitat/` — Habitat machine schemas. PROPOSED.
-- `policy/domains/habitat/` — Habitat policy bundle. PROPOSED.
-- `tests/fixtures/domains/habitat/` — Fixture suite consumed by this runbook. PROPOSED.
-- `docs/registers/VERIFICATION_BACKLOG.md` — Place to log open NEEDS VERIFICATION items uncovered while running this. PROPOSED.
-- `docs/registers/DRIFT_REGISTER.md` — Place to log doctrine ↔ repo conflicts uncovered while running this. PROPOSED.
-
-[Back to top](#quick-jump)
-
----
-
-## Appendix A — PROPOSED habitat fixture tree
-
-The tree below is **PROPOSED**; treat it as a scaffolding suggestion, not a repo claim. Use it as the starting structure for the fixture matrix in §7. NEEDS VERIFICATION.
+Use this runbook to execute and review the exact Habitat fixture profile currently wired by the repository:
 
 ```text
-tests/fixtures/domains/habitat/          # PROPOSED home (Directory Rules §6.6)
-├── README.md                            # declares fixture class boundaries
-├── valid/
-│   ├── habitat_patch.nlcd_kansas.json
-│   ├── land_cover_observation.json
-│   ├── ecological_system.json
-│   ├── habitat_quality_score.json
-│   ├── suitability_model.json
-│   ├── connectivity_edge.json
-│   ├── corridor.generalized.json
-│   ├── restoration_opportunity.json
-│   ├── stewardship_zone.steward_only.json
-│   ├── model_run_receipt.json
-│   ├── uncertainty_surface.json
-│   └── layer_manifest.public_safe.json
-├── invalid/
-│   ├── habitat_patch.missing_source_id.json
-│   ├── habitat_patch.bad_geometry.json
-│   ├── suitability_model.missing_model_run_receipt.json
-│   └── connectivity_edge.broken_graph.json
-├── denied/
-│   ├── sensitive_occurrence_join_exact.json    # → DENY (geoprivacy)
-│   ├── modeled_as_critical_habitat.json        # → DENY (source-role mismatch)
-│   ├── habitat_patch.unresolved_rights.json    # → DENY (rights gap)
-│   └── stewardship_zone.public_request.json    # → DENY (steward-only)
-├── abstention/
-│   ├── habitat_patch.unresolved_evidence_ref.json
-│   ├── suitability_model.uncited.json
-│   └── corridor.unresolved_provenance.json
-└── rollback/
-    ├── habitat_release.candidate.json
-    ├── habitat_release.rollback_card.json
-    └── habitat_release.correction_notice.json
+inactive county land-cover materiality profile
+  + seven valid synthetic comparison fixtures
+  + six invalid synthetic comparison fixtures
+  + deterministic domain adapter
+  + shared MaterialChangeAssessment validation
+  + nine focused unittest methods
+  + read-only hosted orchestration
+  -> bounded fixture conformance or stable fail-closed findings
+  -> exact-revision review handoff
+  -/> live source access or source admission
+  -/> Habitat, land-cover, species, or regulatory truth
+  -/> rights, sensitivity, geoprivacy, evidence, policy, proof, or review authority
+  -/> lifecycle mutation, release, deployment, promotion, or publication
 ```
 
-Co-located evidence (PROPOSED):
+The KFM lifecycle remains:
 
 ```text
-data/proofs/evidence_bundle/test/habitat/<run_id>/
-├── eb.habitat_patch.nlcd_kansas.json
-├── eb.suitability_model.json
-└── eb.restoration_opportunity.json
-
-data/receipts/validation/habitat/<run_id>/
-├── schema.report.json
-├── policy.decisions.jsonl
-├── runs.jsonl
-└── no_network_proof.json
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED
 ```
 
-> [!NOTE]
-> Whether the fixture root is `tests/fixtures/domains/habitat/` or `fixtures/domains/habitat/` is a per-lane choice that **MUST** be documented in the affected README and **MUST NOT** be both. CONFIRMED rule. [Directory Rules §6.6]
+This procedure does not enter, advance, or mutate that lifecycle. It reads repository-owned synthetic files and emits console test or validator output only.
 
-[Back to top](#quick-jump)
+### In scope
+
+- `contracts/domains/habitat/land_cover/materiality_profile.md`;
+- `schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json`;
+- `schemas/contracts/v1/data/material_change_assessment.schema.json`;
+- `pipeline_specs/habitat/land_cover/materiality_profile.v1.json`;
+- `fixtures/domains/habitat/land_cover/materiality/valid/` and `invalid/`;
+- `tools/validators/domains/habitat/validate_land_cover_materiality.py`;
+- `tools/validators/validate_material_change_assessment.py`;
+- `tests/validators/domains/habitat/test_land_cover_materiality.py`;
+- `.github/workflows/domain-habitat.yml` and `.github/workflows/habitat-land-cover-materiality.yml`;
+- profile schema/hash checks, inactive-governance checks, bounded input validation, deterministic outcome mapping, expected fixture polarity, shared assessment validation, CLI behavior, and exact-revision handoff.
+
+### Out of scope
+
+- live NLCD, NWI, GAP, LANDFIRE, PAD-US, USFWS ECOS, KDWP, NatureServe, GBIF, iNaturalist, iDigBio, field-survey, remote-sensing, or other source requests;
+- source admission, activation, endpoint verification, authentication, retrieval, cadence, rights review, or source health;
+- real habitat polygons, land-cover exports, occurrence records, stewardship records, source-native restricted payloads, or protected joins;
+- general Habitat schema coverage beyond the named profile;
+- the proposal-placeholder modules under `tests/domains/habitat/`;
+- active Habitat policy evaluation or sensitivity/geoprivacy adjudication;
+- `EvidenceRef` resolution to a real `EvidenceBundle`;
+- proof construction, release-candidate assembly, release dry run, deployment, publication, correction execution, withdrawal execution, cache invalidation, or operational rollback;
+- public API, map, tile, export, search, graph, Evidence Drawer, Focus Mode, or AI-answer behavior;
+- scientific adoption of the materiality thresholds.
+
+**Maximum result:** a bounded validation handoff for the exact inactive synthetic profile at an exact repository revision.
+
+[Back to top](#top)
 
 ---
 
-## Appendix B — Open verification items
+<a id="authority-and-placement"></a>
 
-These items are explicitly **not resolved** by this runbook. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md` and resolved by ADR, per-root README, or repo inspection.
+## Authority and placement
 
-- **NEEDS VERIFICATION** — Whether Habitat schemas live at `schemas/contracts/v1/domains/habitat/` (per ADR-0001 default) or another path in the current mounted repo. [Directory Rules §6.4 · §18]
-- **NEEDS VERIFICATION** — Whether the Habitat policy bundle exists under `policy/domains/habitat/` or under the compatibility `policies/` mirror. [Directory Rules §8.1]
-- **NEEDS VERIFICATION** — The actual validator command surface (Python, Node, Go, or other) and its CLI flag names. All commands in §8 are PROPOSED.
-- **NEEDS VERIFICATION** — The exact CI job and workflow that runs the no-network suite; the egress denial mechanism (firewall, sandboxed runner, network namespace). [ML-063-057]
-- **NEEDS VERIFICATION** — The fixture-root choice (`tests/fixtures/domains/habitat/` vs `fixtures/domains/habitat/`) and the README that declares it. [Directory Rules §6.6]
-- **NEEDS VERIFICATION** — Whether `release/rollback_cards/` accepts a `mode: drill` flag, or whether drill output should land in a separate sibling under `data/receipts/` or `data/rollback/`. [Directory Rules §18 · OPEN]
-- **OPEN** — Path placement of this runbook itself: domain segment `docs/runbooks/habitat/` (used here) vs flat `docs/runbooks/habitat_NO_NETWORK_TEST.md` (matches existing visible runbook naming such as `ui_LOCAL_DEV.md`). Both align with Directory Rules; pick one in a per-root README or ADR.
+### Directory Rules result
 
-[Back to top](#quick-jump)
+**`PLACE` — confirmed for this same-path update.**
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). A human operational procedure belongs under `docs/runbooks/`, with `habitat/` as the domain segment. The tracked target therefore remains:
+
+```text
+docs/runbooks/habitat/NO_NETWORK_TEST_RUNBOOK.md
+```
+
+This update creates no new root, parallel runbook authority, contract home, schema home, policy home, source registry, fixture lane, proof lane, release lane, or public path.
+
+| Responsibility | Owning surface | This runbook's role |
+|---|---|---|
+| Human procedure | `docs/runbooks/habitat/` | Explain exact execution, interpretation, stops, and handoff |
+| Habitat meaning | `docs/domains/habitat/`, `contracts/domains/habitat/` | Cite; do not redefine ecological or regulatory truth |
+| Machine shape | `schemas/contracts/v1/domains/habitat/`, shared data schemas | Document only the schemas invoked by the bounded profile |
+| Declarative profile | `pipeline_specs/habitat/land_cover/` | Require exact inactive profile bytes and hash |
+| Synthetic inputs | `fixtures/domains/habitat/land_cover/materiality/` | Consume only the reviewed valid and invalid profiles named here |
+| Validator implementation | `tools/validators/domains/habitat/`, shared validator home | Document exact entry points and bounded finding contracts |
+| Executable tests | `tests/validators/domains/habitat/` | Document assertions without expanding their proof |
+| Workflow orchestration | `.github/workflows/` | Bind results to a revision; do not infer release authority |
+| Source admission | source registry and source-authority controls | Require separately accepted records; this procedure activates none |
+| Policy and sensitivity | `policy/domains/habitat/` and accepted geoprivacy controls | Record the hold; this procedure does not evaluate them |
+| Evidence and proof | evidence contracts and `data/proofs/habitat/` | Keep fixture references distinct from evidence closure |
+| Candidate and release | `release/candidates/habitat/`, shared release roots | Preserve holds; do not assemble or approve |
+| Public clients | governed APIs and released public-safe artifacts | Outside this procedure |
+
+`CODEOWNERS` routes repository review to `@bartytime4life`. It does not establish Habitat stewardship, policy authority, sensitivity review, independent approval, release authority, or publication authority.
+
+[Back to top](#top)
 
 ---
 
-**Related docs:** [§14](#14-related-docs) · **Last updated:** 2026-05-12 · [Back to top](#quick-jump)
+<a id="current-repository-posture"></a>
+
+## Current repository posture
+
+The observations below are pinned to `main@434195e8727e6e8649fd6a9e7de06808c3e15261`.
+
+| Surface | Confirmed repository evidence | Bounded conclusion |
+|---|---|---|
+| Requested target | This tracked runbook exists at prior blob `e7c9bba0025ea2c24db530dd0bf498e472af5727` | Same-path reconciliation is appropriate |
+| Materiality contract | Declares one county land-cover adapter for the shared `MaterialChangeAssessment` object | Scope is one domain adapter, not the whole Habitat lane |
+| Profile | `status: PROPOSED_INACTIVE`; all governance flags are false and `release_ref` is null | The profile is fixture-first and non-authorizing |
+| Domain adapter | Reads local JSON/profile/schema files, validates exact fields, limits file size to 1 MiB, verifies hashes, emits finite classifications, and performs no intentional source request | Local deterministic comparison is implemented; source access is not |
+| Focused executable tests | `tests/validators/domains/habitat/test_land_cover_materiality.py` contains nine substantive `unittest` methods | This is the current executable no-live-source test surface |
+| Valid fixture manifest | Seven expected fixtures: unchanged, byte-only, semantic non-material, two material triggers, and two holds | Expected positive and hold polarity is explicit |
+| Invalid fixture manifest | Six expected finding profiles: missing metric, negative area, noncanonical refs, invalid time order, unknown field, and zero digest | Fail-closed negative polarity is explicit |
+| Shared validation | Every emitted assessment is passed to the shared `MaterialChangeAssessment` validator in focused tests | Shape and local consistency are checked; evidence and policy are not |
+| Domain workflow | `validate-habitat` runs the profile; `build-proof-habitat` and `publish-dry-run-habitat` are explicit readiness holds | Green workflow status includes held non-execution for proof and release |
+| Focused workflow | Runs only when materiality profile files change or by manual dispatch | A docs-only runbook PR normally does not trigger this path-filtered workflow |
+| Top-level Habitat tests | Seven inspected files are proposal docstring placeholders; `test_habitat_smoke.py` only asserts `True` | `pytest tests/domains/habitat` is not current substantive Habitat conformance proof |
+| Habitat fixtures parent | Documents many synthetic child lanes but says payload inventory and consumers remain only partly verified | Do not generalize the one materiality profile to every documented fixture lane |
+| Habitat proof lane | Retains “Implementation depth remains UNKNOWN” and no accepted proof producer | Proof production remains held |
+| Habitat candidate lane | No non-README candidate record or active Habitat candidate is established | Release readiness is not established |
+| Source refresh boundary | Current repository-grounded runbook reports no active Habitat source-refresh path and only this inactive synthetic comparison profile | This runbook must not fetch or imply source activation |
+| Accountable stewardship | Only the GitHub review route is verified | Domain, policy, sensitivity, proof, release, and independent-review roles remain `NEEDS VERIFICATION` |
+
+### Safe current determination
+
+```text
+Executable Habitat no-live-source profile: one
+Profile state: PROPOSED_INACTIVE
+Valid fixture cases: seven
+Invalid fixture cases: six
+Focused substantive unittest methods: nine
+Live source access: none in the profile
+Habitat-wide policy/evidence/proof/release closure: not established
+Public release or publication: not established
+```
+
+[Back to top](#top)
+
+---
+
+<a id="current-executable-profile"></a>
+
+## Current executable profile
+
+### Profile identity
+
+| Field | Current value |
+|---|---|
+| Profile ID | `kfm://materiality-profile/habitat/land-cover/county-change-v1` |
+| Profile version | `1.0.0` |
+| Profile status | `PROPOSED_INACTIVE` |
+| Domain / sublane | `habitat` / `land_cover` |
+| Analysis unit | `county` |
+| Canonicalization | `kfm-canonical-json-v1` |
+| Digest | SHA-256 |
+| Combination | `ANY` trigger may classify a semantic change as material |
+| Source activated | `false` |
+| Policy evaluated | `false` |
+| Promotion authorized | `false` |
+| Public use allowed | `false` |
+| Release reference | `null` |
+
+### Declared synthetic triggers
+
+The profile carries two strict-greater-than triggers:
+
+1. `reclassification_fraction > 0.02`; or
+2. `max_net_class_delta_ha > max(250 ha, analysis_unit_area_ha * 0.0015)`.
+
+These thresholds are executable fixture parameters. They are not established here as scientifically, legally, operationally, or steward-approved thresholds for live Habitat data.
+
+### Outcome mapping
+
+| Input state | Change class | Adapter outcome | Interpretation |
+|---|---|---|---|
+| Identical baseline and candidate digests | `UNCHANGED` | `NON_EVENT` | No material-change candidate |
+| Byte change with declared no semantic change | `BYTE_ONLY` | `NON_EVENT` | Byte drift only |
+| Semantic change below both thresholds | `SEMANTIC_NON_MATERIAL` | `NON_EVENT` | Bounded profile says no material candidate |
+| Semantic change above either threshold | `MATERIAL` | `PROMOTION_CANDIDATE` | Candidate for later governed inspection only |
+| Semantic state unavailable or analysis unit unsupported | `UNDETERMINED` | `HOLD` | Do not infer a result |
+| Invalid profile or candidate | No assessment | Findings and nonzero file result | Fail closed |
+
+`PROMOTION_CANDIDATE` is a materiality classification. It is not source admission, policy approval, a promotion decision, release approval, or publication authority.
+
+### Focused assertions
+
+The nine substantive tests currently verify:
+
+1. profile JSON Schema validity and canonical `spec_hash`;
+2. all seven valid fixtures match their reviewed change classes and outcomes;
+3. all six invalid fixtures match their reviewed finding-code sets;
+4. repeated evaluation is deterministic;
+5. thresholds are strictly greater than, not greater-than-or-equal;
+6. profile tampering fails with `PROFILE_HASH_MISMATCH`;
+7. the fixture CLI exits successfully, emits a material-candidate outcome, and omits one specific example-county identifier from stdout;
+8. duplicate JSON object keys fail with `JSON_DUPLICATE_KEY`; and
+9. non-finite JSON numbers fail with `JSON_NONFINITE_NUMBER`.
+
+The example-identifier assertion is narrow. It does not prove universal log redaction or geoprivacy enforcement.
+
+[Back to top](#top)
+
+---
+
+<a id="no-network-contract"></a>
+
+## No-network contract
+
+Use one of the following evidence grades. Record the grade explicitly in every handoff.
+
+| Grade | Requirements | What may be claimed |
+|---|---|---|
+| `NO_LIVE_SOURCE_PASS` | Exact local profile/fixtures; focused commands exit as expected; no connector, endpoint, credential, or live payload is invoked | The bounded repository profile passed without intentional live-source access |
+| `NO_EGRESS_ENVIRONMENT_PASS` | All `NO_LIVE_SOURCE_PASS` requirements plus separately verified operating-system, container, runner, proxy, or network-policy egress denial during the focused commands | The bounded profile passed while the execution environment denied outbound egress |
+| `HOSTED_ORCHESTRATION_PASS` | Exact workflow revision is green and logs show the intended job/commands | Hosted orchestration passed at that revision; network isolation remains limited to what the workflow proves |
+| `NOT_PROVEN` | Revision, fixture set, commands, environment, or logs cannot be verified | Do not claim no-network success |
+
+### What current repository code proves
+
+- The adapter uses local filesystem, JSON, hashing, time parsing, and JSON Schema validation.
+- The profile and fixture paths are repository-local.
+- The adapter does not call a Habitat connector or live source.
+- The focused test imports the adapter and shared local validator, creates temporary local files, and runs the local CLI.
+
+### What current repository code does not prove
+
+- The focused test does not monkeypatch socket, DNS, HTTP clients, or `urllib`.
+- `KFM_NO_NETWORK=1` in `domain-habitat.yml` is a convention; the adapter does not use it as an active firewall.
+- `habitat-land-cover-materiality.yml` does not set `KFM_NO_NETWORK`.
+- Both workflows use checkout and Python setup actions; dependency installation may contact approved package infrastructure.
+- Neither workflow defines an operating-system firewall, network namespace, deny proxy, or runner-level egress policy.
+
+### Dependency preparation is outside the focused no-egress claim
+
+The hosted workflows install declared project runtime dependencies with:
+
+```bash
+python tools/ci/install_python_ci.py project-runtime
+```
+
+That step may require network access. For a strong no-egress rehearsal, prepare the environment first, record the dependency source and lock/revision evidence, then enforce egress denial before running the focused commands. Do not include package installation in a claim that the entire job had no network access unless the environment proves it.
+
+[Back to top](#top)
+
+---
+
+<a id="fixture-inventory-and-frozen-invariants"></a>
+
+## Fixture inventory and frozen invariants
+
+### Valid fixture manifest
+
+| Fixture | Expected change class | Expected adapter outcome |
+|---|---|---|
+| `valid_unchanged.json` | `UNCHANGED` | `NON_EVENT` |
+| `valid_byte_only.json` | `BYTE_ONLY` | `NON_EVENT` |
+| `valid_semantic_non_material.json` | `SEMANTIC_NON_MATERIAL` | `NON_EVENT` |
+| `valid_material_net_area.json` | `MATERIAL` | `PROMOTION_CANDIDATE` |
+| `valid_material_reclassification.json` | `MATERIAL` | `PROMOTION_CANDIDATE` |
+| `valid_hold_metric_unavailable.json` | `UNDETERMINED` | `HOLD` |
+| `valid_hold_wrong_analysis_unit.json` | `UNDETERMINED` | `HOLD` |
+
+### Invalid fixture manifest
+
+| Fixture | Expected finding code |
+|---|---|
+| `invalid_missing_metric.json` | `METRIC_MISSING` |
+| `invalid_negative_area.json` | `ANALYSIS_UNIT_AREA_INVALID` |
+| `invalid_noncanonical_refs.json` | `REFS_NOT_CANONICAL` |
+| `invalid_time_order.json` | `BASELINE_AFTER_CANDIDATE` |
+| `invalid_unknown_field.json` | `INPUT_FIELD_UNKNOWN` |
+| `invalid_zero_digest.json` | `DIGEST_PLACEHOLDER` |
+
+### Frozen invariants
+
+Stop and re-review this runbook if any of these change:
+
+- profile ID, version, `spec_hash`, canonicalization profile, digest algorithm, or trigger semantics;
+- `PROPOSED_INACTIVE` status or any false/null governance field;
+- valid or invalid fixture manifest membership or expected polarity;
+- shared `MaterialChangeAssessment` schema version or outcome vocabulary;
+- file-size limit, duplicate-key behavior, non-finite-number behavior, canonical-ref rules, or timing rules;
+- validator CLI contract or path;
+- focused test count or assertions;
+- workflow paths, job names, required-path checks, dependency installer, or hold conditions;
+- proof, candidate, policy, source, or public-carrier state.
+
+A fixture name or test pass is not scientific evidence. Fixtures are synthetic test inputs and expected outputs only.
+
+[Back to top](#top)
+
+---
+
+<a id="preconditions-and-stop-conditions"></a>
+
+## Preconditions and stop conditions
+
+### Required preconditions
+
+- [ ] The repository is `bartytime4life/Kansas-Frontier-Matrix`.
+- [ ] The exact revision under test is recorded.
+- [ ] The working tree is clean or every unrelated change is excluded from the result.
+- [ ] Python 3.11 or a repository-approved compatible interpreter is active.
+- [ ] Declared runtime dependencies are installed from the reviewed project configuration.
+- [ ] Every required profile, schema, fixture manifest, validator, and test path exists.
+- [ ] The profile remains `PROPOSED_INACTIVE` with all governance flags false and `release_ref: null`.
+- [ ] Fixtures are synthetic, compact, public-safe, and contain no real restricted source material.
+- [ ] The intended no-network evidence grade and environmental enforcement are recorded before execution.
+- [ ] Output will be stored outside canonical lifecycle, proof, receipt, candidate, release, or published roots.
+
+### Required paths
+
+The domain workflow currently requires:
+
+```text
+contracts/domains/habitat/land_cover/materiality_profile.md
+schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json
+pipeline_specs/habitat/land_cover/materiality_profile.v1.json
+fixtures/domains/habitat/land_cover/materiality/valid/expected_outputs_manifest.json
+fixtures/domains/habitat/land_cover/materiality/invalid/expected_findings_manifest.json
+tools/validators/domains/habitat/validate_land_cover_materiality.py
+tests/validators/domains/habitat/test_land_cover_materiality.py
+schemas/contracts/v1/data/material_change_assessment.schema.json
+tools/validators/validate_material_change_assessment.py
+```
+
+### Stop immediately when
+
+- repository identity, revision, or profile identity is ambiguous;
+- profile hash, version, status, or governance posture does not match the reviewed contract;
+- a required path is missing, duplicated into a parallel authority, or unexpectedly generated;
+- a fixture contains real source bytes, real occurrence coordinates, restricted joins, credentials, or transform secrets;
+- the adapter or test introduces source, socket, DNS, HTTP, browser, cloud, database, or external-service access;
+- expected fixture polarity changes without contract, fixture, test, and documentation review;
+- a proof producer, release target, active candidate, live source, or public carrier appears where the workflows currently expect a hold;
+- a command would write lifecycle, evidence, proof, receipt, release, or published state;
+- the execution environment cannot support the evidence grade being claimed;
+- output may expose sensitive or identifying detail.
+
+A stop is `HOLD` or `DENY`, not permission to weaken the guardrail.
+
+[Back to top](#top)
+
+---
+
+<a id="local-procedure"></a>
+
+## Local procedure
+
+### 1. Freeze repository state
+
+From the repository root:
+
+```bash
+set -euo pipefail
+
+git rev-parse --show-toplevel
+git remote -v
+git rev-parse HEAD
+git status --short
+```
+
+Record the exact commit. Do not combine this result with an unreviewed dirty tree.
+
+### 2. Verify required paths
+
+```bash
+set -euo pipefail
+
+required_paths=(
+  "contracts/domains/habitat/land_cover/materiality_profile.md"
+  "schemas/contracts/v1/domains/habitat/land_cover/materiality_profile.schema.json"
+  "pipeline_specs/habitat/land_cover/materiality_profile.v1.json"
+  "fixtures/domains/habitat/land_cover/materiality/valid/expected_outputs_manifest.json"
+  "fixtures/domains/habitat/land_cover/materiality/invalid/expected_findings_manifest.json"
+  "tools/validators/domains/habitat/validate_land_cover_materiality.py"
+  "tests/validators/domains/habitat/test_land_cover_materiality.py"
+  "schemas/contracts/v1/data/material_change_assessment.schema.json"
+  "tools/validators/validate_material_change_assessment.py"
+)
+
+for required_path in "${required_paths[@]}"; do
+  test -f "$required_path" || {
+    printf 'missing required path: %s\n' "$required_path" >&2
+    exit 1
+  }
+done
+```
+
+### 3. Verify inactive governance before execution
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+
+path = Path("pipeline_specs/habitat/land_cover/materiality_profile.v1.json")
+profile = json.loads(path.read_text(encoding="utf-8"))
+assert profile["status"] == "PROPOSED_INACTIVE"
+assert profile["governance"] == {
+    "source_activated": False,
+    "policy_evaluated": False,
+    "promotion_authorized": False,
+    "public_use_allowed": False,
+    "release_ref": None,
+}
+print(profile["profile_id"])
+print(profile["profile_version"])
+print(profile["spec_hash"])
+PY
+```
+
+Any assertion failure is a `HOLD`. Do not edit the profile merely to make the runbook pass.
+
+### 4. Prepare dependencies separately
+
+Use an already provisioned environment, or run the repository's reviewed installer before claiming no-egress execution:
+
+```bash
+python tools/ci/install_python_ci.py project-runtime
+```
+
+Record whether this step used network access. It is not part of the focused profile's no-live-source assertion.
+
+### 5. Establish deterministic execution settings
+
+```bash
+export KFM_NO_NETWORK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=0
+export PYTHONUNBUFFERED=1
+export TZ=UTC
+```
+
+These variables improve reproducibility and communicate intent. They do not enforce egress denial. Apply the approved operating-system, container, runner, proxy, or network-policy control separately when claiming `NO_EGRESS_ENVIRONMENT_PASS`.
+
+### 6. Run focused tests
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/domains/habitat \
+  --pattern 'test_land_cover_materiality.py' \
+  --verbose
+```
+
+Expected current result when the reviewed bytes and dependencies are intact:
+
+```text
+Ran 9 tests
+OK
+```
+
+The count is tied to the current test file. A different count requires review; it is not automatically a failure or success.
+
+### 7. Run the fixture CLI
+
+```bash
+python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+```
+
+Expected current result:
+
+- process exit code `0`;
+- thirteen compact JSON lines, one for each reviewed valid or invalid fixture;
+- valid fixtures report adapter `outcome: PASS` and their expected `change_class` / `assessment_outcome`;
+- invalid fixtures report per-file `outcome: FAIL` with the expected finding codes;
+- no `FIXTURE_POLARITY_ERROR` line.
+
+The per-file `FAIL` on an invalid fixture is expected negative-path behavior. The overall command passes only when the invalid result matches the reviewed finding manifest.
+
+### 8. Capture a non-authoritative result packet
+
+Store temporary output outside governed object-family roots:
+
+```bash
+result_dir="$(mktemp -d)"
+revision="$(git rev-parse HEAD)"
+
+python -m unittest discover \
+  --start-directory tests/validators/domains/habitat \
+  --pattern 'test_land_cover_materiality.py' \
+  --verbose \
+  >"$result_dir/unittest.stdout" \
+  2>"$result_dir/unittest.stderr"
+
+python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures \
+  >"$result_dir/fixtures.jsonl" \
+  2>"$result_dir/fixtures.stderr"
+
+printf '%s\n' "$revision" >"$result_dir/revision.txt"
+sha256sum \
+  "$result_dir/unittest.stdout" \
+  "$result_dir/unittest.stderr" \
+  "$result_dir/fixtures.jsonl" \
+  "$result_dir/fixtures.stderr" \
+  >"$result_dir/output.sha256"
+
+printf 'temporary result packet: %s\n' "$result_dir"
+```
+
+This directory is operator evidence only. It is not automatically a canonical `RunReceipt`, `ValidationReport`, proof, review record, release record, or published artifact. Do not commit it without an accepted object contract and owning-path decision.
+
+### 9. Confirm the test made no repository write
+
+```bash
+git status --short
+```
+
+Any unexpected tracked or untracked output requires investigation. Do not move test output into lifecycle or release roots by convenience.
+
+[Back to top](#top)
+
+---
+
+<a id="hosted-ci-procedure"></a>
+
+## Hosted CI procedure
+
+### `domain-habitat`
+
+`.github/workflows/domain-habitat.yml` runs on pull requests, pushes to `main`, and manual dispatch. It has three jobs:
+
+| Job | Current role | Correct green interpretation |
+|---|---|---|
+| `validate-habitat` | Executes the bounded synthetic land-cover materiality tests and CLI | Profile conformance at the tested revision |
+| `build-proof-habitat` | Verifies required proof-boundary docs and confirms no accepted proof producer or payload has appeared | Explicit proof `HOLD` remains intact |
+| `publish-dry-run-habitat` | Verifies release-boundary docs and confirms no active candidate or accepted release dry-run target has appeared | Explicit release `HOLD` remains intact |
+
+A successful held job does not mean proof or release occurred. If the hold job fails because new proof/candidate/target material surfaced, stop and reconcile the owning contracts, schemas, policy, validators, access controls, review state, correction path, and rollback before changing the workflow or this runbook.
+
+### `habitat-land-cover-materiality`
+
+`.github/workflows/habitat-land-cover-materiality.yml` is path-filtered to the materiality contract, schema, profile, fixtures, validator, test, and workflow itself. It runs the same focused test and CLI commands.
+
+A change only to this runbook is outside that workflow's current path filter. Report the focused workflow as `NOT_APPLICABLE` unless manually dispatched or triggered by an in-scope file change. Do not claim it passed merely because another workflow passed.
+
+### Hosted network boundary
+
+Both workflows check out repository bytes and set up Python. Dependency installation can use package infrastructure. The domain workflow sets `KFM_NO_NETWORK=1`; the focused workflow does not. Neither workflow establishes an operating-system egress block. Hosted results therefore support `HOSTED_ORCHESTRATION_PASS` and bounded no-live-source behavior, not an unqualified whole-job no-egress claim.
+
+### Review exact-head status
+
+For the pull-request head under review, record:
+
+- workflow name and run URL;
+- exact head SHA;
+- job conclusion;
+- whether the job was triggered, skipped, pending, cancelled, or not applicable;
+- the tested command and fixture/profile scope;
+- any inherited or unrelated failure separately from changed-path failure;
+- proof and release holds as holds, not successful publication states.
+
+[Back to top](#top)
+
+---
+
+<a id="finite-outcomes-and-result-interpretation"></a>
+
+## Finite outcomes and result interpretation
+
+| Procedure outcome | Conditions | Required action |
+|---|---|---|
+| `PASS_BOUNDED` | Exact focused tests and CLI pass; profile/fixtures match; no unexpected repository write | Record exact revision, commands, evidence grade, and bounded conclusion |
+| `PASS_NO_EGRESS` | `PASS_BOUNDED` plus independently verified egress denial during focused execution | Record the environmental enforcement and supporting evidence |
+| `HOLD` | Unsupported analysis unit, unavailable semantic state, changed profile posture, unresolved revision, surfaced proof/release work, or incomplete environment evidence | Preserve state; route to accountable review |
+| `ABSTAIN` | Asked to infer Habitat truth, species presence, regulatory status, rights, public safety, or evidence closure from this profile | State that the profile cannot support the claim |
+| `DENY` | Real sensitive data, credentials, live source access, unsafe logging, lifecycle write, proof/release shortcut, or publication attempt enters the procedure | Stop, contain, remove unsafe material through governed correction, and escalate |
+| `FAIL` | Unit test or fixture CLI exits nonzero, expected polarity differs, or required path is missing | Diagnose; do not promote or weaken assertions |
+| `ERROR` | Interpreter, dependency, filesystem, checkout, or orchestration failure prevents a reliable result | Fix environment or rerun at a clean exact revision; do not treat as content failure without evidence |
+
+### What `PASS_BOUNDED` means
+
+It means the reviewed inactive profile, fixtures, adapter, shared assessment validator, and focused tests agree at one revision.
+
+### What `PASS_BOUNDED` does not mean
+
+It does not mean:
+
+- the profile thresholds are approved for live use;
+- any source is admitted, current, accurate, complete, or rights-cleared;
+- any habitat, land-cover, species, wetland, or critical-habitat claim is true;
+- exact geometry is safe;
+- geoprivacy or sensitivity policy ran;
+- `EvidenceRef` resolved to `EvidenceBundle`;
+- policy, stewardship, independent review, proof, candidate, release, deployment, promotion, publication, correction, withdrawal, or rollback completed.
+
+[Back to top](#top)
+
+---
+
+<a id="failure-diagnosis"></a>
+
+## Failure diagnosis
+
+| Symptom | Likely boundary | Safe response |
+|---|---|---|
+| `ModuleNotFoundError: jsonschema` | Declared runtime dependency is not installed | Prepare the reviewed environment; do not add an ad hoc dependency in this docs task |
+| Required-path error | Wrong revision, partial checkout, rename, or incomplete dependency set | Freeze exact head and inspect the owning change; do not invent a replacement path |
+| `PROFILE_HASH_MISMATCH` | Profile changed without matching canonical hash | Review version/hash change; do not recompute silently |
+| `PROFILE_NOT_INACTIVE` | Profile status changed | `HOLD`; source, policy, promotion, public-use, and release implications need separate review |
+| `PROFILE_GOVERNANCE_VIOLATION` | One or more non-authorizing governance fields changed | `DENY` this runbook as authority; route to governing source/policy/release review |
+| `SCHEMA_UNAVAILABLE` or emitted-assessment schema failure | Profile/shared schema is missing, invalid, or incompatible | Repair the contract/schema/adapter slice together and rerun |
+| `FIXTURE_POLARITY_ERROR` | Actual result differs from reviewed manifest | Inspect fixture, manifest, profile, and adapter; do not update expected output merely to green CI |
+| Unexpected `MATERIAL` / `PROMOTION_CANDIDATE` | Threshold or fixture semantics changed | Treat only as a candidate classification; review change and preserve non-authorizing posture |
+| Invalid fixture prints `outcome: FAIL` but command exits `0` | Expected negative fixture matched its reviewed finding set | Correct behavior; distinguish per-file polarity from run status |
+| Network attempt or external request observed | No-live-source boundary was violated | Stop, record `DENY`, remove or quarantine unsafe behavior, and require a separately governed integration tier |
+| Sensitive identifier or location appears in logs | Logging/geoprivacy boundary failed | Stop distribution, contain the output, follow correction and sensitivity escalation, and add a negative test |
+| `build-proof-habitat` fails because implementation surfaced | Readiness hold is stale | Do not remove the hold mechanically; establish proof contract, fixtures, validator, policy/access controls, review, and rollback |
+| `publish-dry-run-habitat` fails because candidate/target surfaced | Release boundary changed | Do not treat new files as release; reconcile candidate identity, evidence, policy, review, correction, and rollback |
+| `pytest tests/domains/habitat` is green | Placeholder smoke/docs may have passed | Do not report Habitat conformance; use the focused validator suite in this runbook |
+| Hosted job cancelled or pending | No settled conclusion | Report `PENDING` or `CANCELLED`; do not infer pass/fail |
+
+A repair should be the smallest dependency-closed change that preserves the fixture's intended polarity and the trust boundary.
+
+[Back to top](#top)
+
+---
+
+<a id="sensitivity-rights-and-security"></a>
+
+## Sensitivity, rights, and security
+
+### Data allowed in this profile
+
+- compact synthetic county-comparison records;
+- toy identifiers, timestamps, hashes, refs, metrics, and evidence pointers;
+- reviewed expected-output and expected-finding manifests;
+- public repository paths and non-sensitive validation output.
+
+### Data forbidden in this profile or ordinary handoff
+
+- real occurrence coordinates or source-native restricted geometry;
+- exact rare-species, rare-plant, nest, den, roost, breeding, spawning, hibernaculum, stewardship, cultural, archaeological, private-land, or infrastructure-adjacent locations;
+- reversible redaction offsets, generalization secrets, transform parameters, hidden joins, or decryption material;
+- credentials, tokens, signed URLs, private endpoints, cookies, API keys, or account identifiers;
+- unreviewed source exports or copyrighted/restricted payloads;
+- claims that a model, classification, or materiality result is regulatory or observational truth.
+
+### Source-role anti-collapse
+
+This profile evaluates declared change metrics. It does not assign or upgrade source roles. In particular:
+
+- modeled habitat is not regulatory critical habitat;
+- land-cover classification is not species occurrence;
+- a material change is not ecological significance;
+- a public map carrier is not evidence authority;
+- a fixture evidence reference is not an `EvidenceBundle`;
+- `PROMOTION_CANDIDATE` is not a promotion decision.
+
+### Rights and terms
+
+Synthetic fixtures avoid live source terms, but that does not clear any future source. Live-source use requires a separately admitted `SourceDescriptor`, current rights/terms review, citation obligations, sensitivity classification, access control, and review state.
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-receipts-and-proof-boundary"></a>
+
+## Evidence, receipts, and proof boundary
+
+The current commands emit console evidence. They do not create canonical accountability objects.
+
+| Artifact | Current status in this procedure | What it proves |
+|---|---|---|
+| `unittest` output | Operator/CI execution evidence | Named test methods ran at a revision |
+| Fixture CLI JSONL | Operator/CI execution evidence | Each fixture matched or failed its local validator contract |
+| Git commit SHA | Byte identity anchor | Which repository revision was tested |
+| Output SHA-256 | Integrity aid for the captured packet | Captured bytes did not change after hashing |
+| GitHub workflow log | Hosted orchestration evidence | Hosted steps and conclusions at an exact head |
+| `RunReceipt` | Not produced by the current adapter | Nothing unless a separately accepted producer emits one |
+| `ValidationReport` | Not produced as a governed object by this procedure | Console success is not automatically a canonical report |
+| `EvidenceBundle` | Not resolved or produced | Fixture refs are not evidence closure |
+| `ProofPack` / Habitat proof object | Explicitly held | No accepted proof producer is established |
+| `PromotionDecision` / `ReleaseManifest` | Not produced | No release state is created |
+
+Do not rename a temporary result packet to make it look like a governed receipt or proof. Establish the object contract, deterministic identity, owning path, producer, validator, review state, correction path, and rollback before admitting a new accountability object.
+
+[Back to top](#top)
+
+---
+
+<a id="review-handoff"></a>
+
+## Review handoff
+
+A review packet should contain only non-sensitive, exact-revision evidence.
+
+### Required fields
+
+```yaml
+repository: bartytime4life/Kansas-Frontier-Matrix
+revision: <exact commit SHA>
+profile_id: kfm://materiality-profile/habitat/land-cover/county-change-v1
+profile_version: 1.0.0
+profile_spec_hash: <exact spec_hash>
+evidence_grade: NO_LIVE_SOURCE_PASS | NO_EGRESS_ENVIRONMENT_PASS | HOSTED_ORCHESTRATION_PASS | NOT_PROVEN
+commands:
+  - python -m unittest discover --start-directory tests/validators/domains/habitat --pattern test_land_cover_materiality.py --verbose
+  - python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+unit_test_result: PASS | FAIL | ERROR | NOT_RUN
+unit_test_count: 9 | <actual reviewed count>
+fixture_cli_result: PASS | FAIL | ERROR | NOT_RUN
+valid_fixture_count: 7 | <actual reviewed count>
+invalid_fixture_count: 6 | <actual reviewed count>
+output_digests: [<sha256 values or empty>]
+hosted_checks:
+  domain_habitat: PASS | FAIL | PENDING | CANCELLED | NOT_RUN | UNKNOWN
+  focused_materiality: PASS | FAIL | PENDING | CANCELLED | NOT_APPLICABLE | NOT_RUN | UNKNOWN
+network_enforcement: <exact bounded description>
+repository_writes: none | <exact unexpected paths>
+sensitive_data_observed: false | true-and-contained
+proof_state: HOLD
+release_state: HOLD
+publication_effect: none
+limitations: [<explicit bounded limitations>]
+review_route: "@bartytime4life — GitHub routing only"
+accountable_stewardship: NEEDS_VERIFICATION
+```
+
+### Reviewer decisions
+
+The reviewer should decide only whether:
+
+1. the documented command/path/profile inventory matches the branch;
+2. the fixture manifests and focused tests support the claimed bounded result;
+3. the network evidence grade is truthful;
+4. no sensitive or real source material entered the path;
+5. the inactive governance and no-publication boundaries remain intact;
+6. failures are introduced, inherited, environmental, expected negative polarity, or unrelated;
+7. documentation remains synchronized with workflows and executable code.
+
+This review does not approve live source use, scientific thresholds, geoprivacy, policy, proof, release, deployment, promotion, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="current-holds-and-graduation-gates"></a>
+
+## Current holds and graduation gates
+
+### Current holds
+
+| Capability | Current state | Required before graduation |
+|---|---|---|
+| Live Habitat source use | `HOLD` | Accepted source identity, role, rights, terms, connector, cadence, credentials boundary, fixtures, and activation decision |
+| Habitat-wide schemas and validators | `HOLD` beyond one profile | Accepted contracts/schemas, substantive fixtures, validators, negative tests, and bounded consumers for each object family |
+| Active Habitat policy | `HOLD` | Accepted policy source, bundle, selector, evaluator, tests, finite outcomes, reviewers, and versioned decisions |
+| Sensitivity/geoprivacy execution | `HOLD` | Accepted transforms, public-safe fixtures, redaction/generalization receipts, negative tests, access controls, and accountable review |
+| Evidence closure | `HOLD` | Deterministic `EvidenceRef -> EvidenceBundle` resolution, citation validation, and bounded consumer |
+| Habitat proof production | Explicit workflow `HOLD` | Accepted proof contract/schema/profile, producer, validator, public-safe fixtures, policy/access binding, receipts, correction, and rollback |
+| Release dry run | Explicit workflow `HOLD` | Candidate identity, immutable artifact pointer, evidence/rights/sensitivity closure, policy, review, validation receipts, correction, withdrawal, and rollback |
+| Public API/map/AI consumption | `HOLD` | Governed API over released public-safe artifacts with evidence, policy, stale/correction state, and no direct internal path |
+| Strong no-egress CI proof | `NEEDS VERIFICATION` | Runner/environment egress control and auditable evidence for the focused execution window |
+| Accountable and independent review roles | `NEEDS VERIFICATION` | Verified assignments beyond CODEOWNERS routing |
+
+### Graduation rule
+
+Do not broaden this runbook merely because new files appear. A new profile belongs here only after:
+
+- its contract, schema, deterministic profile, synthetic valid/invalid fixtures, validator, and focused tests are present;
+- the profile's source, evidence, policy, sensitivity, proof, release, and public-use non-effects are explicit;
+- network behavior is classified and tested in proportion to risk;
+- the domain workflow deliberately wires the profile or records a clear separate entry point;
+- rollback and correction are defined;
+- the runbook is updated in the same dependency-closed review slice.
+
+[Back to top](#top)
+
+---
+
+<a id="correction-and-document-rollback"></a>
+
+## Correction and document rollback
+
+### Before merge
+
+- close the draft pull request or restore the target file on the feature branch;
+- do not force-push or write directly to `main`;
+- no source, lifecycle, proof, candidate, release, deployment, or publication rollback is required because this is documentation-only.
+
+### After merge
+
+Revert the documentation commit or restore prior blob:
+
+```text
+e7c9bba0025ea2c24db530dd0bf498e472af5727
+```
+
+Use a reviewed correction pull request. Record why the current procedure was inaccurate, which executable/profile/workflow revision controls, and whether any operator relied on the incorrect text.
+
+### When executable behavior changes
+
+Do not roll back code by editing this runbook. Revert or correct the owning contract, schema, profile, fixture, validator, test, or workflow through its own reviewed change, then synchronize this document. Preserve profile version/hash lineage and do not silently rewrite reviewed fixture polarity.
+
+### Sensitive-output correction
+
+If a log or packet contains protected detail:
+
+1. stop sharing and preserve a restricted incident record;
+2. remove public exposure through the authorized platform process;
+3. rotate credentials if applicable;
+4. identify the producing path and affected revisions/runs;
+5. add a fail-closed negative test or logging guard;
+6. issue the appropriate correction/withdrawal record through owning systems;
+7. rerun only after the sensitivity boundary is reviewed.
+
+[Back to top](#top)
+
+---
+
+<a id="related-current-surfaces"></a>
+
+## Related current surfaces
+
+| Surface | Relationship |
+|---|---|
+| [`docs/runbooks/README.md`](../README.md) | Parent operational-procedure boundary |
+| [`docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | Source-head inspection only; no fetch or activation |
+| [`docs/runbooks/habitat/PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | Downstream proposal-era promotion procedure; does not become authority through this pass |
+| [`docs/runbooks/habitat/ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | Domain rollback documentation; no rollback is executed here |
+| [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Adopted placement doctrine via ADR-0029 |
+| [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted Directory Rules decision |
+| [`docs/domains/habitat/README.md`](../../domains/habitat/README.md) | Habitat bounded-context and source-role doctrine |
+| [`contracts/domains/habitat/land_cover/materiality_profile.md`](../../../contracts/domains/habitat/land_cover/materiality_profile.md) | Semantic contract for the one current profile |
+| [`pipeline_specs/habitat/land_cover/materiality_profile.v1.json`](../../../pipeline_specs/habitat/land_cover/materiality_profile.v1.json) | Inactive deterministic profile |
+| [`tools/validators/domains/habitat/validate_land_cover_materiality.py`](../../../tools/validators/domains/habitat/validate_land_cover_materiality.py) | Domain adapter |
+| [`tools/validators/validate_material_change_assessment.py`](../../../tools/validators/validate_material_change_assessment.py) | Shared emitted-object validator |
+| [`tests/validators/domains/habitat/test_land_cover_materiality.py`](../../../tests/validators/domains/habitat/test_land_cover_materiality.py) | Substantive focused tests |
+| [`fixtures/domains/habitat/land_cover/materiality/`](../../../fixtures/domains/habitat/land_cover/materiality/) | Synthetic valid and invalid fixture profile |
+| [`data/proofs/habitat/README.md`](../../../data/proofs/habitat/README.md) | Explicit proof-support boundary and hold |
+| [`release/candidates/habitat/README.md`](../../../release/candidates/habitat/README.md) | No-active-candidate boundary |
+| [`.github/workflows/domain-habitat.yml`](../../../.github/workflows/domain-habitat.yml) | Domain validation plus proof/release readiness holds |
+| [`.github/workflows/habitat-land-cover-materiality.yml`](../../../.github/workflows/habitat-land-cover-materiality.yml) | Path-filtered focused profile validation |
+
+[Back to top](#top)
+
+---
+
+<a id="operator-checklist"></a>
+
+## Operator checklist
+
+### Before
+
+- [ ] Repository identity and exact revision recorded.
+- [ ] Working tree state recorded and unrelated changes excluded.
+- [ ] Required paths present.
+- [ ] Profile status is `PROPOSED_INACTIVE`.
+- [ ] All governance flags are false and `release_ref` is null.
+- [ ] Fixture manifests contain seven valid and six invalid cases or the changed inventory has been reviewed.
+- [ ] Dependency preparation is separated from the focused no-egress claim.
+- [ ] Evidence grade and environmental network enforcement are declared.
+- [ ] No real or sensitive source material is present.
+
+### During
+
+- [ ] Run the exact focused `unittest` discovery command.
+- [ ] Run the exact fixture CLI command.
+- [ ] Preserve exit codes and stdout/stderr separately.
+- [ ] Treat expected invalid fixture `FAIL` lines as fixture polarity, not overall failure.
+- [ ] Stop on sensitive output, live access, unexpected writes, profile governance change, or polarity drift.
+
+### After
+
+- [ ] Confirm repository status is unchanged.
+- [ ] Record exact revision, profile hash, commands, counts, and evidence grade.
+- [ ] Hash captured output if retained.
+- [ ] Report hosted checks as pass/fail/pending/not-run/not-applicable/unknown.
+- [ ] Preserve proof and release as `HOLD`.
+- [ ] Do not commit temporary output as a receipt or proof.
+- [ ] Do not imply review, release, deployment, promotion, publication, or public safety.
+
+[Back to top](#top)
+
+---
+
+<a id="v1-lineage-and-superseded-assumptions"></a>
+
+## v1 lineage and superseded assumptions
+
+The prior v1 document was a useful planning artifact written without current repository evidence. This v0.2 retains its safe intent and supersedes its unverified current-state claims.
+
+### Retained principles
+
+- start with deterministic synthetic fixtures before live source activation;
+- fail closed on invalid or unsupported inputs;
+- keep sensitive ecological locations and credentials out of fixtures and logs;
+- preserve source-role distinctions;
+- treat a green test as necessary but insufficient for publication;
+- keep promotion, release, correction, and rollback separate from test execution;
+- make the procedure reproducible and reversible.
+
+### Superseded as current procedure
+
+| v1 assumption | Current repository-grounded correction |
+|---|---|
+| No mounted repository and unknown test/CI surface | Current profile, validator, fixtures, tests, and workflows are directly inspected |
+| Full Habitat schema → evidence → rights → sensitivity → policy → release chain is runnable | Only the inactive land-cover materiality adapter is substantively executable |
+| Every Habitat object family has five fixture classes | Current reviewed profile has seven valid and six invalid materiality fixtures only |
+| `tests/fixtures/domains/habitat/` is the active fixture home | The current profile uses `fixtures/domains/habitat/land_cover/materiality/` |
+| `tests/domains/habitat/` is the substantive suite | Inspected top-level modules are placeholders or a tautological smoke; substantive tests live under `tests/validators/domains/habitat/` |
+| Habitat policy bundle is executed | Active Habitat policy evaluation is not established |
+| `EvidenceBundle`, finite public runtime outcomes, receipts, and release manifests are produced | The profile emits bounded `MaterialChangeAssessment` data to stdout; governed evidence, receipts, proof, and release remain held |
+| Environment egress is proven by the procedure | Current tests/workflows do not establish operating-system egress denial |
+| A passing run is a promotion prerequisite for all Habitat artifacts | The pass applies only to this inactive synthetic profile and creates no promotion authority |
+
+This lineage section preserves the planning record without allowing repetition to become implementation proof.
+
+[Back to top](#top)
+
+---
+
+<a id="non-effects"></a>
+
+## Non-effects
+
+Updating or following this runbook does not:
+
+- admit, activate, suspend, refresh, or withdraw a source;
+- fetch or transform source bytes;
+- create or mutate RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or PUBLISHED state;
+- establish Habitat, land-cover, species, wetland, stewardship, or regulatory truth;
+- clear rights, terms, sensitivity, geoprivacy, or public-safe precision;
+- create an `EvidenceBundle`, `PolicyDecision`, `ReviewRecord`, proof, candidate, `PromotionDecision`, `ReleaseManifest`, correction notice, withdrawal notice, or rollback card;
+- approve, release, deploy, promote, publish, or expose a public carrier;
+- change a repository setting, branch protection, ruleset, secret, environment, workflow permission, or external connector;
+- replace accountable human review.
+
+The durable conclusion is intentionally narrow: **one inactive, synthetic, local Habitat land-cover materiality profile can be tested deterministically and handed off without being mistaken for the rest of the Habitat trust path.**
+
+[Back to top](#top)

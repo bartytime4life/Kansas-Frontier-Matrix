@@ -20,6 +20,9 @@ notes:
   - The `docs/sources/catalog/` subdirectory is itself a PROPOSED convention not yet ratified by Directory Rules §6.1; the term `catalog` collides with the lifecycle phase noun and the `data/catalog/` root — see §11.
   - All vendor-specific operational facts (products, formats, terms, ownership, retention) are NEEDS VERIFICATION until confirmed at admission time.
   - No data are admitted by this document. Admission requires a completed SourceDescriptor, rights resolution, sensitivity tagging, and steward review.
+owning_root: docs/
+responsibility: "Documentation for Source Catalog — Family Tree DNA (FTDNA); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source Catalog — Family Tree DNA (FTDNA)
@@ -402,12 +405,12 @@ This document carries deliberate gaps. Each item below blocks promotion of this 
 
 ## 14. Related Docs
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement and lifecycle invariants (canonical home; CONFIRMED in current edition)
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — descriptor field set and conventions *(TODO — file presence NEEDS VERIFICATION)*
-- [`docs/domains/people-dna-land/README.md`](../../domains/people-dna-land/README.md) — domain doctrine for People, Genealogy, DNA, and Land Ownership *(path PROPOSED)*
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](../../standards/SENSITIVITY_RUBRIC.md) — Pass-10 `C6-01` 0–5 rubric *(PROPOSED in corpus; not yet authored per Directory Rules tree)*
-- [`docs/standards/REDACTION_DETERMINISM.md`](../../standards/REDACTION_DETERMINISM.md) — Pass-10 `C6-03` seeded jitter *(PROPOSED in corpus; not yet authored)*
-- [`docs/runbooks/revocation.md`](../../runbooks/revocation.md) — tombstone, embargo, cache-invalidation runbook *(PROPOSED — referenced in `C5-09` / `C6-08` expansion directions)*
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants (canonical home; CONFIRMED in current edition)
+- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` (not present) — descriptor field set and conventions *(TODO — file presence NEEDS VERIFICATION)*
+- `docs/domains/people-dna-land/README.md` (not present) — domain doctrine for People, Genealogy, DNA, and Land Ownership *(path PROPOSED)*
+- `docs/standards/SENSITIVITY_RUBRIC.md` (not present) — Pass-10 `C6-01` 0–5 rubric *(PROPOSED in corpus; not yet authored per Directory Rules tree)*
+- `docs/standards/REDACTION_DETERMINISM.md` (not present) — Pass-10 `C6-03` seeded jitter *(PROPOSED in corpus; not yet authored)*
+- `docs/runbooks/revocation.md` (not present) — tombstone, embargo, cache-invalidation runbook *(PROPOSED — referenced in `C5-09` / `C6-08` expansion directions)*
 - `control_plane/source_authority_register.yaml` — source-of-truth for source identity, rights, and steward assignments *(path PROPOSED)*
 - ADR-0001 — schema-home rule *(referenced in Directory Rules §0; CONFIRMED authority, file presence NEEDS VERIFICATION)*
 

@@ -1,540 +1,933 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-sources-readme
-title: docs/sources — Source-Descriptor Standards and Source Families
-type: standard
-version: v1
-status: draft
-owners: TODO — Source Steward + Docs Steward (per Directory Rules §15 review burden)
-created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+title: docs/sources/ — Human Source Governance and Catalog Documentation
+type: readme; directory-readme; source-guidance-index; documentation-lane-boundary
+version: v1.1
+prior_version: v1
+status: active; repository-grounded; documentation-only; mixed-maturity; source-admission-authority-held
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route; source, rights, policy, and independent stewardship assignments NEEDS VERIFICATION"
+created: 2026-05-08
+updated: 2026-08-14
+policy_label: repository-facing
+current_path: docs/sources/README.md
+owning_root: docs/
+responsibility: >-
+  Index and bound KFM's human-readable source guidance, source-admission
+  documentation, citation and rights guidance, source-role discussion, and
+  source-to-catalog documentation without taking over semantic contracts,
+  machine schemas, policy, source registries, connectors, receipts, lifecycle
+  data, release decisions, or public delivery.
+truth_posture: >-
+  CONFIRMED current path, direct-child inventory, adopted Directory Rules,
+  current documentation companions, SourceDescriptor validation surfaces,
+  empty source-authority register, registry-package placeholder state, and
+  partial connector-gate evidence / PROPOSED unresolved source-admission and
+  vocabulary decisions / UNKNOWN live-source activation, populated registry,
+  operational policy evaluation, universal connector adoption, and public
+  source effects / NEEDS VERIFICATION independent stewardship, source-role
+  convergence, rights decisions, active-source inventory, and end-to-end
+  admission, correction, rollback, and release behavior.
+authority_class: documentation-lane-boundary
+authority_rank: >-
+  Subordinate to the adopted Directory Rules, accepted ADRs, docs/ root
+  contract, semantic contracts, machine schemas, policy, evidence, review,
+  lifecycle, and release authority.
+canonical_relationship: >-
+  Same-path README update under the canonical docs/ responsibility root; no
+  new lane, source, registry entry, connector, schema, policy, receipt,
+  lifecycle object, release object, or public interface is created.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: cbee7add137b9738b3d123b17d41ac3d44d9745b
+  target_prior_blob: 389ca581b4ad0bfd906b58d158c21add764e153e
+  docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  admission_process_blob: ab27618a4b1b0e6775d18bedca37aa7d6c514e6e
+  citation_guidance_blob: 073bc7348903b550c98f6fa5674bd1c7378dfc0e
+  rights_guidance_blob: 215d49b112a3e08f12cce5f92ba25dd8c3751a10
+  source_descriptor_standard_blob: 4327c603f76e5b5a76fa058fe24ac2af91e496d8
+  source_roles_blob: c528d517503aca2952164b45701246c5abae751c
+  source_catalog_tree: 7edacb30d8caa950ac73947f69e43dbb64fb2d04
+  source_catalog_readme_blob: 5bb8a37bf487aaef6d5eed8cc1bb8e395777017f
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  source_descriptor_alias_schema_blob: 42da54b28a527850cce88ad89f68921c101fc56b
+  source_authority_register_blob: 82c23722520922f5ca0dad7f37ed794d1c2edf81
+  source_registry_package_blob: 6df77a248c72a17ddaeb5d701baf6e4d9db38eab
+  connectors_readme_blob: a28336f6c15e0234241a7844e5683a52c2fd5024
+  source_descriptor_workflow_blob: 6d3f900efcddc17d24a528a92190544fc350b63b
 related:
+  - docs/README.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0001-schema-home.md
-  - contracts/source/
-  - schemas/contracts/v1/source/
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-0017-source-descriptor-admission-process.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/sources/ADMISSION_PROCESS.md
+  - docs/sources/CITATION_GUIDANCE.md
+  - docs/sources/RIGHTS_GUIDANCE.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/sources/source-roles.md
+  - docs/sources/catalog/README.md
+  - contracts/source/README.md
+  - schemas/contracts/v1/source/README.md
   - control_plane/source_authority_register.yaml
-  - connectors/
-  - data/raw/
-tags: [kfm, sources, source-descriptor, source-role, governance, docs]
+  - data/registry/sources/README.md
+  - packages/source-registry/README.md
+  - connectors/README.md
+  - tools/validators/connector_gate/README.md
+  - .github/workflows/source-descriptor-validate.yml
+tags:
+  - kfm
+  - docs
+  - sources
+  - source-guidance
+  - source-descriptor
+  - source-admission
+  - source-role
+  - rights
+  - citation
+  - catalog
+  - trust-membrane
+  - cite-or-abstain
 notes:
-  - PROPOSED location; repo not mounted in current session.
-  - Source-role doctrine is CONFIRMED; SourceDescriptor field shape is PROPOSED.
-  - Per Directory Rules §15 README contract.
+  - "The lane contains six direct files and one direct child directory at the pinned snapshot."
+  - "ADR-0029 is accepted; ADR-0017 and ADR-0001 remain proposed."
+  - "SourceDescriptor shape validation is implemented and fixture-only; it does not admit or activate a source."
+  - "The machine source-authority register exists but has zero entries at the pinned snapshot."
+  - "This revision retires the prior README's unsupported no-mounted-repo and canonical-seven claims without deciding the unresolved source-role vocabulary."
+supersedes:
+  - "v1 at the same path"
+superseded_by: []
 [/KFM_META_BLOCK_V2] -->
 
-# `docs/sources/`
+<a id="top"></a>
+<a id="docssources"></a>
 
-> **Human-facing home for KFM source doctrine** — source-descriptor standards, source-role anti-collapse rules, source-family indexes, and the cross-domain admission flow that gates every byte before it shapes a public claim.
+# `docs/sources/` — Human Source Governance and Catalog Documentation
 
-[![Status](https://img.shields.io/badge/status-PROPOSED-yellow)](#status)
-[![Authority](https://img.shields.io/badge/authority-canonical%20%E2%80%94%20docs-blue)](#authority-level)
-[![Policy](https://img.shields.io/badge/policy_label-public-brightgreen)](#policy-posture)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%2FQUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%E2%86%92PUBLISHED-informational)](#repo-fit)
-[![Schema-Home](https://img.shields.io/badge/schema--home-ADR--0001-lightgrey)](#adrs)
-[![Build](https://img.shields.io/badge/docs--lint-TODO-lightgrey)](#validation)
-[![Last Updated](https://img.shields.io/badge/last_updated-2026--05--13-blue)](#last-reviewed)
+> **One-line purpose.** Index and bound the repository's human-readable source guidance so contributors can move from source discovery to reviewed KFM work without mistaking documentation, schema validity, connector presence, or catalog prose for source authority, admission, release, or public truth.
 
-| Field | Value |
-|---|---|
-| **Status** | `draft` · PROPOSED (no mounted-repo verification this session) |
-| **Owners** | TODO — Source Steward + Docs Steward |
-| **Updated** | 2026-05-13 |
-| **Reviewed** | TODO (target cadence: every 6 months, per Directory Rules §15) |
-| **Policy label** | `public` |
-
----
-
-## Quick jump
-
-- [Purpose](#purpose)
-- [Authority level](#authority-level)
-- [Status](#status)
-- [What belongs here](#what-belongs-here)
-- [What does NOT belong here](#what-does-not-belong-here)
-- [Inputs](#inputs)
-- [Outputs](#outputs)
-- [Repo fit](#repo-fit)
-- [Source-role anti-collapse register](#source-role-anti-collapse-register-confirmed-doctrine)
-- [SourceDescriptor surface](#sourcedescriptor-surface-proposed-shape)
-- [Source-family index](#source-family-index)
-- [Source admission flow](#source-admission-flow)
-- [Validation](#validation)
-- [Review burden](#review-burden)
-- [Related folders](#related-folders)
-- [ADRs](#adrs)
-- [FAQ](#faq)
-- [Appendix](#appendix)
-- [Last reviewed](#last-reviewed)
+[![status: active docs lane](https://img.shields.io/badge/status-active%20docs%20lane-1a7f37?style=flat-square)](#status)
+[![authority: documentation only](https://img.shields.io/badge/authority-documentation%20only-1f6feb?style=flat-square)](#authority-level)
+[![direct children: 7](https://img.shields.io/badge/direct%20children-7-8250df?style=flat-square)](#current-direct-child-map)
+[![source register: 0 entries](https://img.shields.io/badge/source%20register-0%20entries-b42318?style=flat-square)](#status)
+[![admission ADR: proposed](https://img.shields.io/badge/ADR--0017-proposed-d4a72c?style=flat-square)](#adrs)
+[![public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#outputs)
 
 > [!IMPORTANT]
-> `docs/sources/` **explains**. It does not own machine schemas, policy bundles, source registers, or connector code. The truth-bearing homes for those are `schemas/contracts/v1/source/`, `policy/`, `control_plane/source_authority_register.yaml`, and `connectors/` respectively. Treat doctrine here as input to those layers, not as a substitute for them.
+> **This lane explains source governance; it does not perform it.** A page under `docs/sources/`, a schema-valid `SourceDescriptor`, a connector directory, a passing workflow, a catalog profile, or a pull request cannot make a source authoritative, rights-cleared, active, evidence-sufficient, released, or public.
+
+> [!CAUTION]
+> **The source-role vocabulary is not fully converged.** Current repository surfaces use different vocabularies: the human [`source-roles.md`](./source-roles.md), the executable SourceDescriptor schema, older seven-role guidance, and proposed ADR-0017 do not constitute one accepted enum. This README preserves the anti-collapse rule and places vocabulary changes on `HOLD` until the owning contract, schema, policy, and decision records agree.
+
+> [!WARNING]
+> **Repository-facing is not confidential.** Do not put credentials, signed URLs, private endpoints, restricted source payloads, living-person records, genomic data, exact rare-species or archaeology locations, sensitive infrastructure detail, private land information, or protected denial reasons in this lane.
+
+<a id="quick-jump"></a>
+
+## Quick navigation
+
+[Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Current tree](#current-direct-child-map) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Reader routes](#reader-routes) · [Inputs](#inputs) · [Outputs](#outputs) · [Repo fit](#repo-fit) · [Source roles](#source-role-anti-collapse-register-confirmed-doctrine) · [SourceDescriptor](#sourcedescriptor-surface-proposed-shape) · [Catalog](#source-family-index) · [Admission](#source-admission-flow) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Correction](#correction-supersession-and-rollback) · [FAQ](#faq) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger) · [Review date](#last-reviewed)
 
 ---
+
+<a id="purpose"></a>
 
 ## Purpose
 
-`docs/sources/` is the **human-facing control plane** for source admission and source-role doctrine inside KFM. It explains, in prose, what a source is, what role it plays, how it enters the lifecycle, what rights and sensitivity posture it carries, what families KFM admits, and where its machine-bearing counterparts live. CONFIRMED placement per Directory Rules §6.1, which lists `docs/sources/` as the home for "source-descriptor standards, source families."
+At `main@cbee7add137b9738b3d123b17d41ac3d44d9745b`, `docs/sources/` is a real, populated documentation lane. It contains six direct files and one direct child directory. Its job is to help humans understand and review:
 
-Per KFM's four-layer governance split, this folder sits on the `docs/` side of the split: **`docs/` explains; `control_plane/` indexes; `contracts/` defines meaning; `schemas/` defines shape.** CONFIRMED doctrine (Directory Rules §6.1). These four are different layers of the same governance function and must not collapse into one another.
+- what KFM means by a source, source descriptor, source role, source family, source admission, citation obligation, rights posture, and source-to-catalog relationship;
+- which repository authority owns meaning, shape, admissibility, registry instances, acquisition, receipts, evidence, lifecycle state, release, and public delivery;
+- what is implemented, partial, proposed, conflicted, or unknown in the current source-governance stack;
+- where to begin when adding, reviewing, correcting, restricting, superseding, or retiring source guidance.
 
-[Back to top](#quick-jump)
+The lane is **not** a bibliography and is not an activation console. Its durable contribution is a trustworthy human index over the source-governance system.
+
+### Current outcome
+
+- **CONFIRMED:** the documentation lane, its direct children, SourceDescriptor validation workflow, rich schema, compatibility alias, fixtures, validators, and partial connector-gate controls exist.
+- **CONFIRMED:** the source-authority register exists with `entries: []`.
+- **PROPOSED:** ADR-0017's full source-admission decision and ADR-0001's dedicated schema-routing package.
+- **UNKNOWN:** any complete active-source inventory, operational source-admission service, universal connector enforcement, production policy evaluation, or live-source public effect.
+- **HOLD:** claims that a provider, catalog page, connector, schema, or workflow is an admitted source or publication authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="policy-posture"></a>
+<a id="authority-level"></a>
 
 ## Authority level
 
-**Canonical** within `docs/`.
+`docs/sources/` is a **subordinate documentation lane under the canonical `docs/` responsibility root**. It owns human-readable explanation and navigation for source governance. It does not own any adjacent trust object.
 
-`docs/sources/` is canonical for the **documented, human-readable** form of source doctrine. It is **not** authoritative for any of the following — pointers, not authority, are what lives here:
-
-| Concern | Authoritative home | Authority class |
+| Question | Owning surface | Relationship of this README |
 |---|---|---|
-| Source object **meaning** (semantic contract) | `contracts/source/` | Canonical |
-| Source object **machine shape** | `schemas/contracts/v1/source/` (per ADR-0001) | Canonical |
-| Source **admission policy** (allow/deny/restrict/abstain) | `policy/` | Canonical |
-| **Source-authority register** (machine-readable index) | `control_plane/source_authority_register.yaml` | Canonical |
-| **Connector** implementations and source-specific fetch logic | `connectors/<vendor>/` | Canonical |
-| **Source-registry** shared package | `packages/source-registry/` | Canonical |
-| **RAW** capture and **quarantine** holding | `data/raw/`, `data/quarantine/` | Canonical |
-| **Validators** for SourceDescriptor and admission | `tools/validators/source_descriptor/`, `tools/validators/connector_gate/` | Canonical |
-| **Test fixtures** for source admission | `tests/fixtures/source/` (PROPOSED) | Canonical |
+| Where does human source guidance belong? | [`docs/`](../README.md), under the adopted Directory Rules | Records the lane boundary and current index |
+| What does a source object mean? | [`contracts/source/`](../../contracts/source/README.md) | Links and explains; does not redefine |
+| What machine shape is validated? | [`schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/README.md) and reviewed aliases | Reports current shape and drift; does not choose a new schema |
+| Is a source admissible, restricted, or denied? | `policy/`, source-specific review, and accepted decision records | Describes the process; does not decide |
+| Which source instances are registered? | [`data/registry/sources/`](../../data/registry/sources/README.md) and accepted machine indexes | Does not create or populate registry records |
+| What does the machine governance index say? | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Reports that the current register is proposed and empty |
+| How are source bytes acquired? | [`connectors/`](../../connectors/README.md) | Points to implementation; does not fetch |
+| Where may connector output land? | Governed RAW, QUARANTINE, and receipt lanes | Does not store source payloads |
+| What supports a consequential claim? | `EvidenceRef` resolved to `EvidenceBundle`, with policy and release state | Source documentation alone is insufficient |
+| Who releases, corrects, withdraws, or rolls back public state? | [`release/`](../../release/README.md) and the owning evidence/accountability families | No release authority |
 
-CONFIRMED rule (Directory Rules §13): documenting a change is **not** validating it. Anything that enforces, indexes, validates, or admits must live in one of the homes above.
+### Directory Rules basis
 
-[Back to top](#quick-jump)
+ADR-0029 accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). Those rules make a path an authority claim, keep `docs/` human-readable, prohibit parallel writable authorities, and require a README to narrow rather than expand its parent root.
+
+This same-path update does not create a new authority boundary. It aligns an existing direct child of `docs/` with the current parent contract and current repository evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="status"></a>
 
 ## Status
 
-**PROPOSED.**
+### Current repository evidence
 
-- **CONFIRMED** — the location `docs/sources/` is named in Directory Rules §6.1 and in the proposed `docs/` tree of the Whole-UI + Governed AI Expansion Report (Appendix A).
-- **CONFIRMED doctrine** — the seven-role source-role anti-collapse register and the source admission flow are CONFIRMED in the Domains Culmination Atlas v1.1 §24.1 and the Unified Implementation Architecture Build Manual §3.6.
-- **PROPOSED** — concrete files inside this folder (e.g., `SOURCE_DESCRIPTOR_STANDARD.md`, per-family pages, source-role anti-collapse diagram) are PROPOSED until repo evidence confirms them.
-- **NEEDS VERIFICATION** — current implementation maturity of `SourceDescriptor` schema, `SourceActivationDecision`, and the source-authority register is UNKNOWN. The repository is not mounted in this session.
+| Surface | Current evidence at the pinned snapshot | Safe conclusion |
+|---|---|---|
+| `docs/sources/` | Six files plus `catalog/` | Populated human-guidance lane |
+| Parent `docs/` root | Active, repository-grounded README | Source guidance may live here, but docs are not sovereign truth |
+| Directory Rules | Exact bytes adopted by accepted ADR-0029 | Placement authority is current |
+| CODEOWNERS | Default route is `@bartytime4life`; no `docs/sources/` override | Review routing exists; source stewardship and approval remain separate |
+| SourceDescriptor semantic guidance | Contract and standard files exist | Meaning is documented, with mixed maturity and naming drift |
+| SourceDescriptor shape | Rich singular schema plus plural `$ref` alias | One executable shape is validated through two paths |
+| Descriptor validation | Two CWD-independent entrypoints, fixtures, tests, read-only workflow, receipt check | Shape validation is implemented; admission is not |
+| ADR-0017 | `proposed`, updated 2026-08-14 | Full admission authority remains held |
+| Source authority register | Present, status `PROPOSED`, `entries: []` | No active source authority is established by the register |
+| `packages/source-registry/` | Repository-grounded `0.0.0` placeholder with no supported exports | No operational registry client or resolver is established |
+| `connectors/` | Canonical root, 104 direct connector directories at its pinned evidence snapshot, bounded internal core, partial gate enforcement | Broad implementation surface exists; active-source and end-to-end admission remain unproved |
+| Connector gate | Bounded static and receipt prerequisites; full admission report/runtime unestablished | Partial readiness checking only |
+| Source-role vocabulary | Human docs, schema enum, older seven-role prose, and proposed ADR do not fully agree | Vocabulary remains `CONFLICTED`; do not declare a canonical enum here |
+| Public release | No source activation, release, or public effect was performed or proven by this review | Public status remains unchanged |
 
-[Back to top](#quick-jump)
+### Truth-label split
+
+| Label | Applies to |
+|---|---|
+| `CONFIRMED` | Paths, direct children, current blobs, accepted Directory Rules, descriptor validation assets, empty register, package placeholder state, and partial connector evidence |
+| `PROPOSED` | Full admission decision, source-role convergence, registry mechanics, operational policy, and future source-family additions |
+| `UNKNOWN` | Active sources, deployed admission services, production policy decisions, external storage, live connector health, and public consumers |
+| `NEEDS VERIFICATION` | Independent owners, source-by-source rights/currentness, catalog maintenance, complete consumer inventory, and correction/rollback drills |
+| `CONFLICTED` | Source-role vocabulary, several singular/plural and case/path conventions, and residual source-governance naming |
+| `HOLD` | Treating documentation, schema validity, catalog pages, connector presence, or workflow success as admission or release |
+
+[Back to top](#top)
 
 ---
+
+<a id="current-direct-child-map"></a>
+
+## Current direct-child map
+
+```text
+docs/sources/
+├── ADMISSION_PROCESS.md
+├── CITATION_GUIDANCE.md
+├── README.md
+├── RIGHTS_GUIDANCE.md
+├── SOURCE_DESCRIPTOR_STANDARD.md
+├── catalog/
+└── source-roles.md
+```
+
+| Direct child | Current role | Current posture |
+|---|---|---|
+| [`ADMISSION_PROCESS.md`](./ADMISSION_PROCESS.md) | Human description of the pre-RAW admission membrane and staged gate sequence | Draft standard; authority remains subordinate to ADRs, contracts, schemas, policy, and review |
+| [`CITATION_GUIDANCE.md`](./CITATION_GUIDANCE.md) | Cite-or-abstain behavior and downstream citation obligations | Draft standard; some vocabulary and path claims require reconciliation |
+| [`RIGHTS_GUIDANCE.md`](./RIGHTS_GUIDANCE.md) | Human rights, terms, attribution, redistribution, privacy, sovereignty, and sensitivity guidance | Draft and stale in places; not a source-specific rights decision |
+| [`SOURCE_DESCRIPTOR_STANDARD.md`](./SOURCE_DESCRIPTOR_STANDARD.md) | Human SourceDescriptor field and intake guidance | Draft standard; current repository now has richer implementation evidence than its original no-repo boundary |
+| [`source-roles.md`](./source-roles.md) | Human source-role reference | Proposed vocabulary; not synchronized with every other role surface |
+| [`catalog/`](./catalog/README.md) | Human source-family and source-to-catalog documentation, profiles, crosswalks, templates, examples, and open questions | Populated draft companion lane; provider pages do not admit providers |
+| `README.md` | Lane boundary and current navigation | This file |
+
+The tree is an inventory, not a maturity claim. A child file may be extensive while its underlying contract, policy, registry, runtime, or source decision remains proposed or absent.
+
+[Back to top](#top)
+
+---
+
+<a id="what-belongs-here"></a>
 
 ## What belongs here
 
-Files that **describe**, in human-readable form, the doctrine, vocabulary, and conventions of source admission. Examples (PROPOSED filenames; final names TBD):
+Content belongs here when its primary responsibility is **human-readable cross-domain source guidance**:
 
-- `SOURCE_DESCRIPTOR_STANDARD.md` — the prose standard for `SourceDescriptor`: identity, source role, authority, rights posture, sensitivity class, cadence, freshness, access method, attribution.
-- `SOURCE_ROLE_ANTI_COLLAPSE.md` — the canonical seven-role register (observed, regulatory, modeled, aggregate, administrative, candidate, synthetic) with collapse-pattern guardrails.
-- `SOURCE_FAMILIES.md` (or per-family pages: `families/usgs.md`, `families/fema.md`, `families/noaa.md`, `families/nrcs.md`, `families/kansas.md`, `families/gbif.md`, …) — the index of canonical source families and which domains each one feeds.
-- `SOURCE_ACTIVATION_FLOW.md` — the documented admission flow (descriptor → review → activation decision → connector enablement).
-- `RIGHTS_AND_SENSITIVITY.md` — the doctrine narrative for rights, license, attribution, redistribution, CARE handling, deny-by-default classes (as documentation; the **enforcement** lives in `policy/`).
-- `SOURCE_DESCRIPTOR_FIELDS.md` — the **prose** field reference for SourceDescriptor (mirrors the schema in `schemas/contracts/v1/source/`; never the only place a field is defined).
-- `README.md` — this file.
+- the lane README and navigation;
+- source-admission, citation, rights, attribution, and source-role guidance;
+- human SourceDescriptor documentation linked to the owning contract and schema;
+- source-family and source-product catalog pages that clearly disclose their documentation-only role;
+- human-readable catalog profiles, naming guidance, crosswalk explanations, coverage notes, glossary, templates, and illustrative examples;
+- current-state reconciliation and open verification items for the documentation lane;
+- public-safe correction, supersession, and maintenance guidance for source documentation.
 
-[Back to top](#quick-jump)
+### Admission criteria for a new child
+
+Before adding a new file or directory here:
+
+1. Confirm that its primary responsibility is human explanation, not machine authority or source data.
+2. Search the current lane, `docs/domains/`, `docs/standards/`, ADRs, registers, and generated/mirror surfaces for an existing owner.
+3. Identify the owning source family or cross-domain concern.
+4. Bind consequential claims to current authoritative evidence or mark them `NEEDS VERIFICATION`.
+5. State rights, sensitivity, currentness, writer, correction, and review posture.
+6. Link the machine-bearing sibling only when it exists; do not invent an implementation path.
+7. Avoid empty scaffolding and duplicate provider pages.
+8. Add validation and rollback behavior appropriate to the change.
+
+A source-family page is documentation. It does not create a `SourceDescriptor`, registry entry, connector, policy decision, evidence bundle, or release.
+
+[Back to top](#top)
 
 ---
 
-## What does NOT belong here
+<a id="what-does-not-belong-here"></a>
 
-> [!WARNING]
-> The "do not put X here" list is as important as the "do put Y here" list (Directory Rules §15). The following items are **common mistakes** that drift into a `docs/` folder when contributors confuse documentation with truth-bearing artifacts.
+## What does not belong here
 
-| Out of place | Where it actually belongs | Why |
+| Do not place here as writable authority | Owning surface | Why |
 |---|---|---|
-| JSON Schema files (`*.schema.json`) for SourceDescriptor or related | `schemas/contracts/v1/source/` (per ADR-0001) | `docs/` is prose; `schemas/` is machine shape. Parallel schema homes require an ADR. |
-| Markdown semantic contract for `SourceDescriptor` / `IngestReceipt` (the object **meaning**) | `contracts/source/` | `contracts/` owns meaning. `docs/sources/` may link to it and explain it for humans, but the canonical meaning lives in `contracts/`. |
-| Rego/OPA policy bundles for source admission | `policy/bundles/` (or its equivalent) | `policy/` decides allow/deny/restrict/abstain. `docs/` describes; it never decides. |
-| The **source-authority register** (machine-readable list of approved/retired/quarantined sources) | `control_plane/source_authority_register.yaml` | `control_plane/` indexes "what governs what." A YAML register is not docs. |
-| Per-connector implementation code, retrieval scripts, or vendor-specific fetch logic | `connectors/<vendor>/` | Connectors are code with admission outputs. Their READMEs reference but do not replace the source standard. |
-| `SourceActivationDecision` records (operational gate outputs) | `data/receipts/` or `release/` (per Directory Rules §13 trust-content placement) | Decisions are auditable trust content, not documentation. |
-| Test fixtures (valid / invalid `SourceDescriptor` samples) | `tests/fixtures/source/` or `fixtures/source/` | Fixtures are proof material; docs may reference them, never house them. |
-| Source-specific datasets, captured payloads, ingest receipts | `data/raw/<domain>/<source_id>/<run_id>/` or `data/quarantine/...` | RAW capture is data, not documentation. |
-| **Domain-internal** source narratives that only matter to one domain | `docs/domains/<domain>/` | Per Directory Rules §4 Step 3, domains appear as **segments**, never as roots. `docs/sources/` is cross-cutting; per-domain detail goes under `docs/domains/`. |
-| External standards documentation (STAC, DCAT, PROV, FAIR/CARE specs as KFM conforms to them) | `docs/standards/` | `docs/standards/` is the sibling for external-standard conformance; `docs/sources/` is about KFM source doctrine. |
-| ADRs about source schema homes, role taxonomy, or registry architecture | `docs/adr/` | ADRs are governance decisions; they live in their own home. `docs/sources/` references them. |
+| Source semantic contracts | [`contracts/source/`](../../contracts/source/README.md) | Contracts define meaning |
+| Source JSON Schemas or compatibility aliases | [`schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/README.md) and accepted schema aliases | Schemas define machine shape |
+| Source-admission, rights, sensitivity, or release policy source | `policy/` | Policy decides admissibility |
+| Source registry instances and vocabularies | [`data/registry/sources/`](../../data/registry/sources/README.md) or an accepted successor | Registry records are machine/lifecycle objects |
+| Machine source-authority index | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Machine projection is not prose |
+| Connector or watcher implementation | [`connectors/`](../../connectors/README.md), `tools/`, `pipelines/`, or `packages/` selected by execution role | Documentation does not execute |
+| Credentials, API keys, signed URLs, private endpoints, or secret-bearing examples | Never tracked documentation | Exposure risk |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLETS, or PUBLISHED data instances | `data/` lifecycle lanes | Data instances remain lifecycle-scoped |
+| Receipts, proofs, evidence bundles, review records, or policy decisions | Their governed accountability and decision families | Trust objects must retain identity and owner |
+| Release manifests, corrections, withdrawals, or rollback cards | [`release/`](../../release/README.md) and paired accountability lanes | A source page cannot release or correct public state |
+| Domain-only source guidance | `docs/domains/<domain>/` when the concern is not cross-domain | Domain remains a segment inside `docs/` |
+| External-standard conformance authority | `docs/standards/` and the owning contract/schema/policy | Source guidance may link, not replace |
+| A second source-role enum or SourceDescriptor field list | Update the owning contract/schema/decision and then reconcile docs | Prevents parallel vocabulary authority |
+| Current endpoint, terms, cadence, license, or availability claims without current evidence | Verify from the official source and record date/limitations | Volatile facts cannot be inferred from old prose |
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
+
+<a id="reader-routes"></a>
+
+## Reader routes
+
+| Need | Start here | Then inspect |
+|---|---|---|
+| Understand the lane boundary | This README | Parent [`docs/README.md`](../README.md) and Directory Rules |
+| Add or review a source candidate | [`ADMISSION_PROCESS.md`](./ADMISSION_PROCESS.md) | ADR-0017, contracts, schemas, policy, registry, connector gate |
+| Understand SourceDescriptor fields | [`SOURCE_DESCRIPTOR_STANDARD.md`](./SOURCE_DESCRIPTOR_STANDARD.md) | Source contract, rich schema, alias schema, fixtures, validator workflow |
+| Cite a source or evidence-backed claim | [`CITATION_GUIDANCE.md`](./CITATION_GUIDANCE.md) | `EvidenceRef`/`EvidenceBundle`, policy, release state, correction state |
+| Review rights, terms, attribution, or sensitivity | [`RIGHTS_GUIDANCE.md`](./RIGHTS_GUIDANCE.md) | Current source terms, rights/sensitivity policy, qualified review record |
+| Understand source-role language | [`source-roles.md`](./source-roles.md) | Current schema enum, contract, ADR-0017, and the conflict note below |
+| Find source-family documentation | [`catalog/INDEX.md`](./catalog/INDEX.md) | Family/product page, current official source, descriptor/registry evidence |
+| Understand catalog profiles and crosswalks | [`catalog/README.md`](./catalog/README.md) | `PROFILES.md`, `CROSSWALKS.md`, `IDENTITY.md`, standards profiles |
+| Find unresolved catalog questions | [`catalog/OPEN-QUESTIONS.md`](./catalog/OPEN-QUESTIONS.md) | Drift and verification registers where cross-lane significance exists |
+| Inspect current acquisition boundaries | [`connectors/README.md`](../../connectors/README.md) | Source-specific connector, descriptor, gate, fixtures, receipts |
+| Inspect machine source authority | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Current entries, owner, review, policy, and registry records |
+
+[Back to top](#top)
+
+---
+
+<a id="inputs"></a>
 
 ## Inputs
 
-The doctrine documented here is derived from, and must stay synchronized with:
+This lane may explain only evidence appropriate to the claim:
 
-1. **KFM doctrine** — Directory Rules; the Domain and Capability Encyclopedia; the Domains Culmination Atlas v1.1 (especially §24.1 source-role anti-collapse register and §24.2 receipt catalog); the Unified Implementation Architecture Build Manual §3.6 (source-registry architecture).
-2. **ADRs** — `docs/adr/ADR-0001-schema-home.md` (CONFIRMED reference); any future ADR that relocates the SourceDescriptor schema home or revises the source-role taxonomy.
-3. **Machine-bearing siblings** — `contracts/source/`, `schemas/contracts/v1/source/`, `policy/`, `control_plane/source_authority_register.yaml`. When those change materially, this folder updates or explicitly notes the divergence.
-4. **External standards** — STAC core and extensions, DCAT, PROV-O, FAIR + CARE principles. These are referenced via `docs/standards/` and inline citations, never reproduced as authority here.
+- accepted doctrine and ADRs;
+- current repository contracts, schemas, policy, registry records, connector code, validators, fixtures, tests, workflows, receipts, and release objects;
+- current official source documentation for endpoints, products, identifiers, terms, licenses, cadence, and limitations;
+- source-specific steward, legal, privacy, cultural, sovereignty, security, or domain review where consequence requires it;
+- historical reports and atlases as lineage or proposal material, never as current implementation proof.
 
-[Back to top](#quick-jump)
+### Input binding rules
+
+- Pin repository claims to a commit or blob when material.
+- Date external currentness and terms checks.
+- Distinguish provider identity from product identity and source role.
+- Preserve valid, observed, source, retrieval, release, and correction time where material.
+- Mark old or unverified source-family facts `NEEDS VERIFICATION`.
+- Resolve `EvidenceRef` to `EvidenceBundle` before a consequential public claim.
+- Do not copy restricted payloads into documentation to make a point.
+
+[Back to top](#top)
 
 ---
+
+<a id="outputs"></a>
 
 ## Outputs
 
-`docs/sources/` emits **only documentation**. Specifically:
+`docs/sources/` emits human-readable guidance and navigation only:
 
-- A consistent, citable **vocabulary** for source role, source family, rights posture, sensitivity class, and admission state — usable by every other root.
-- A **navigation surface** that points contributors to the right truth-bearing home (`contracts/`, `schemas/`, `policy/`, `control_plane/`, `connectors/`, `data/`, `tools/`).
-- A **review surface** for steward-facing changes to source doctrine, since prose changes here often precede or accompany schema or policy changes elsewhere.
+- a source-governance landing page;
+- source-admission, SourceDescriptor, citation, rights, and role guidance;
+- source-family and source-to-catalog documentation;
+- maintenance, correction, and open-verification records;
+- links to owning machine and operational surfaces.
 
-`docs/sources/` does **not** emit receipts, decisions, validation reports, manifests, or any other trust-bearing object. CONFIRMED rule (Directory Rules §19, anti-pattern: "Documentation as truth"): if a `docs/` page is being cited as the source of a canonical decision, the decision must be promoted to an ADR or a `control_plane/` register.
+It does **not** emit or authorize:
 
-[Back to top](#quick-jump)
+- a source admission or activation decision;
+- a source registry entry;
+- a connector invocation;
+- a RAW or QUARANTINE capture;
+- a receipt, proof, or `EvidenceBundle`;
+- a policy or review decision;
+- a lifecycle promotion;
+- a release, correction, withdrawal, rollback, deployment, or publication;
+- a public API, map layer, export, or AI answer.
+
+A green documentation check proves only the check's bounded behavior.
+
+[Back to top](#top)
 
 ---
+
+<a id="repo-fit"></a>
 
 ## Repo fit
 
-```
-docs/
-├── doctrine/          # authority ladder, truth posture, trust membrane, lifecycle law, directory rules
-├── architecture/      # system context, deployment topology, governed API, map shell
-├── adr/               # decisions — including ADR-0001 schema-home
-├── domains/           # per-domain narrative (hydrology, soil, fauna, …)
-├── sources/           ← THIS FOLDER — source-descriptor standards, source families
-├── standards/         # external standards KFM conforms to (STAC, DCAT, PROV, …)
-├── runbooks/          # ops procedures
-├── governance/        # roles, review burden, separation of duties
-├── registers/         # AUTHORITY_LADDER, CANONICAL_LINEAGE_EXPLORATORY, DRIFT_REGISTER, …
-└── …
-```
-
-PROPOSED placement per Directory Rules §6.1. CONFIRMED that `docs/sources/` is at the doc root next to `docs/domains/` and `docs/standards/`, **not** nested inside a domain folder. Source doctrine is cross-cutting; placing it inside one domain would violate Directory Rules §4 Step 3 ("the domain appears as a segment inside the responsibility root, never as a root itself").
-
 ```mermaid
 flowchart LR
-  DOCS["docs/sources/<br/><i>explains</i>"] -->|describes| CONTRACTS["contracts/source/<br/><i>defines meaning</i>"]
-  DOCS -->|describes| SCHEMAS["schemas/contracts/v1/source/<br/><i>defines shape</i>"]
-  DOCS -->|describes| POLICY["policy/<br/><i>decides</i>"]
-  DOCS -->|describes| CP["control_plane/<br/>source_authority_register.yaml<br/><i>indexes</i>"]
-  CONTRACTS -.->|paired with| SCHEMAS
-  SCHEMAS -.->|enforced via| POLICY
-  CP -.->|tracks state for| CONNECTORS["connectors/<br/><i>fetches</i>"]
-  CONNECTORS -->|writes to| RAW["data/raw/<br/>or data/quarantine/"]
+    DOCS["docs/sources/<br/>human guidance and index"]
+    CONTRACT["contracts/source/<br/>semantic meaning"]
+    SCHEMA["schemas/contracts/v1/source/<br/>rich machine shape"]
+    ALIAS["schemas/contracts/v1/sources/<br/>bounded compatibility alias"]
+    POLICY["policy/<br/>admissibility"]
+    REGISTER["data/registry/sources/<br/>registry instances"]
+    CP["control_plane/<br/>machine index"]
+    CONNECTOR["connectors/<br/>source-edge implementation"]
+    GATE["validators + fixtures + workflows<br/>bounded checks"]
+    DATA["RAW / QUARANTINE + receipts"]
+    DOWNSTREAM["evidence + policy + review + release<br/>governed public delivery"]
 
-  classDef docs fill:#fef3c7,stroke:#d97706,color:#78350f;
-  classDef canonical fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
-  classDef data fill:#dcfce7,stroke:#16a34a,color:#14532d;
-  class DOCS docs;
-  class CONTRACTS,SCHEMAS,POLICY,CP,CONNECTORS canonical;
-  class RAW data;
+    DOCS -. "explains" .-> CONTRACT
+    DOCS -. "explains" .-> SCHEMA
+    DOCS -. "navigates" .-> POLICY
+    DOCS -. "navigates" .-> REGISTER
+    DOCS -. "navigates" .-> CP
+    CONTRACT --> SCHEMA
+    ALIAS -. "delegates to" .-> SCHEMA
+    SCHEMA --> GATE
+    POLICY --> GATE
+    REGISTER --> GATE
+    GATE -. "when separately authorized" .-> CONNECTOR
+    CONNECTOR --> DATA
+    DATA --> DOWNSTREAM
 ```
 
-> [!NOTE]
-> Diagram is illustrative of CONFIRMED authority relationships per Directory Rules §6. Exact arrow semantics (e.g., generation, validation, lookup) are PROPOSED until verified against mounted-repo conventions.
+The dashed relationships are explanatory or conditional. They are not a write-capability grant.
 
-[Back to top](#quick-jump)
+### Current boundary summary
+
+- `docs/sources/` is the human surface.
+- `contracts/source/` and source schemas are current machine/semantic companions with naming and maturity debt.
+- The rich singular schema is the implementation shape; the plural schema is a `$ref` compatibility alias.
+- Descriptor validation is executable and no-network.
+- ADR-0017 is still proposed, so validation does not create admission authority.
+- The machine authority register is empty.
+- The reusable source-registry package remains a placeholder.
+- Connectors have substantial repository surface and partial enforcement, but public/source activation claims remain unproved.
+
+[Back to top](#top)
 
 ---
 
-## Source-role anti-collapse register (CONFIRMED doctrine)
+<a id="source-role-anti-collapse-register-confirmed-doctrine"></a>
 
-CONFIRMED (Domains Culmination Atlas v1.1 §24.1): KFM treats **source role** as a **first-class identity attribute**. An observed reading is not interchangeable with a modeled estimate; a regulatory determination is not interchangeable with an administrative compilation; an aggregate publication is not interchangeable with candidate evidence; synthetic content is never the same thing as observed reality. The lifecycle and the governed API both **fail closed** when these roles are conflated.
+## Source-role anti-collapse posture
 
-### The canonical seven
+<a id="anti-collapse-failure-modes-deny-conditions"></a>
 
-| Role | One-line definition | Typical example | Allowed citation pattern |
-|---|---|---|---|
-| **observed** | A direct reading, measurement, or first-hand evidentiary record tied to place and time. | Stream-gauge stage reading; soil pedon description; air-quality monitor sample; ground archaeological observation. | May feed modeled or aggregate products; **never** relabeled as "regulatory" or "administrative." |
-| **regulatory** | An authoritative determination by a regulatory or governing body with legal or administrative force. | NFHL flood-zone designation; air-quality non-attainment ruling; designated critical-habitat unit; protected-species listing. | Cite as regulatory context; **never** labeled an "observed" event or "modeled" estimate. |
-| **modeled** | A derived product from inputs, assumptions, or fitted parameters; uncertainty and provenance of inputs must be preserved. | Hydrograph reconstruction; smoke trajectory model; suitability raster; population estimation surface. | Cite with model identity, run receipt, and bounds; **never** labeled an observation. |
-| **aggregate** | A published summary, total, or average over a unit (county, year, watershed); irreversible loss of individual-record fidelity. | USDA crop county totals; Census tract aggregates; decadal climate normal; resource-estimate summary. | Cite with `AggregationReceipt`; **never** treated as a per-place record. |
-| **administrative** | A compiled record produced by an agency for administration, registration, or accounting purposes — not necessarily an observation or a regulation. | Land office tract book; deed index; county incorporation record; transport facility roster. | Cite as administrative context; **never** collapsed with observation or regulation. |
-| **candidate** | A proposed record awaiting validation, evidence resolution, deduplication, or steward review; not yet authoritative. | Quarantined connector output; unresolved person assertion; duplicate site candidate; unmerged crop observation. | May be cited as candidate evidence in WORK / QUARANTINE; **must not** appear in PUBLISHED without promotion. |
-| **synthetic** | Content generated by simulation, reconstruction, AI, or interpolation that has no underlying first-hand observation. | Synthetic terrain surface; reconstructed historical scene; AI-drafted summary of an `EvidenceBundle`. | Carries `RealityBoundaryNote` and `RepresentationReceipt`; **never** presented or queried as observed reality. |
+### Stable rule
 
-CONFIRMED reading rule: the role of a source is **set at admission** in the `SourceDescriptor` and is **preserved through every promotion**. Promotion does not upgrade an observation to a regulation, a model to an aggregate, or a candidate to a verified record — those are separate governed transitions with their own evidence and review requirements.
+Regardless of the final enum, KFM must preserve these invariants:
 
-### Anti-collapse failure modes (deny conditions)
+1. A source role is explicit and claim-scoped; it is not inferred from provider name.
+2. Observation, model, regulatory/legal context, aggregate, administrative record, candidate signal, synthetic/fixture content, and corroborating/context use are not interchangeable.
+3. Promotion cannot silently upgrade a source's role or authority.
+4. A candidate, fixture, model, aggregate, or synthetic carrier cannot be represented as direct observed or legal truth.
+5. Missing or incompatible role support yields `ABSTAIN`, `DENY`, `HOLD`, `QUARANTINE`, or `ERROR`, not a plausible claim.
+6. AI text, catalog prose, map pixels, connector success, and schema validity are never evidence by themselves.
 
-| Collapse pattern | Denied outcome | Required guardrail |
+<a id="the-canonical-seven"></a>
+
+### Current vocabulary conflict
+
+| Surface | Current role model | Authority consequence |
 |---|---|---|
-| Modeled product labeled or queried as observed. | DENY at publication; ABSTAIN at AI surface. | `ModelRunReceipt` + uncertainty surface + role-preserving DTO field. |
-| Regulatory zone labeled as an observed flood / event. | DENY publication of regulatory layer as event evidence. | Separate regulatory-layer and observed-event lanes; UI banner. |
-| Aggregate cited as a per-place truth. | DENY join from aggregate cell to single record; ABSTAIN at AI. | `AggregationReceipt`; geometry-scope guard; matrix-cell semantics. |
-| Administrative compilation cited as observation. | DENY publication of compilation as observed event timeline. | Source-role tag preserved; named `LifeEvent` / `AdminEvent` types. |
-| Candidate record exposed on a public surface. | DENY at trust membrane; route to QUARANTINE. | Promotion gate; no PUBLISHED edge to WORK / QUARANTINE. |
-| Synthetic content presented as observed reality. | DENY publication; HOLD for steward review; ABSTAIN at AI. | `RealityBoundaryNote`; `RepresentationReceipt`; UI badge. |
-| AI text treated as evidence. | DENY publication; ABSTAIN at Focus Mode; `AIReceipt` mandatory. | Cite-or-abstain rule; `AIReceipt`; release state required. |
+| [`source-roles.md`](./source-roles.md) | Human categories such as primary evidence, corroborating evidence, context, regulatory context, legal authority, and administrative record | Useful explanatory reference; not accepted machine enum |
+| [`CITATION_GUIDANCE.md`](./CITATION_GUIDANCE.md) and prior README material | Seven-role framing: observed, regulatory, modeled, aggregate, administrative, candidate, synthetic | Doctrine lineage; not synchronized with current schema |
+| Rich SourceDescriptor schema | Sixteen machine values including `authoritative_for_claim`, `observation`, `aggregator`, `model_context`, `candidate_signal`, `citation_source`, and `fixture_only` | Current executable validation vocabulary; schema metadata still says `PROPOSED` |
+| ADR-0017 | Proposed staged admission decision | Cannot settle the vocabulary until accepted and aligned |
+| Source contracts and policies | Multiple related terms and compatibility surfaces | Require bounded reconciliation before a breaking vocabulary change |
 
-[Back to top](#quick-jump)
+**Current finite outcome:** `HOLD_VOCABULARY_CONVERGENCE`.
+
+This README does not choose one vocabulary. A future change must identify consumers, stable IDs, aliases, fixtures, policy behavior, generated artifacts, migration, and rollback before changing role values.
+
+### Contributor rule
+
+Use the exact vocabulary required by the current owning contract/schema for the object being changed. In prose, define the term and avoid implying that another vocabulary is an alias unless a current crosswalk proves it.
+
+[Back to top](#top)
+
+---
+
+<a id="sourcedescriptor-surface-proposed-shape"></a>
+
+## SourceDescriptor surface
+
+The prior README carried an illustrative field table. The current repository now has a stronger, inspectable packet:
+
+| Surface | Current role | Effect |
+|---|---|---|
+| [`contracts/source/`](../../contracts/source/README.md) | Semantic source-object family | Defines meaning; draft/mixed maturity |
+| [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) | Rich closed SourceDescriptor implementation schema | Current executable shape; metadata status `PROPOSED` |
+| [`schemas/contracts/v1/sources/source_descriptor.schema.json`](../../schemas/contracts/v1/sources/source_descriptor.schema.json) | Plural-path `$ref` compatibility alias | Delegates to the rich singular schema; no second shape |
+| [`fixtures/contracts/v1/source/source_descriptor/`](../../fixtures/contracts/v1/source/source_descriptor/README.md) | Positive and negative fixture family | Proves bounded schema polarity |
+| [`tools/validators/validate_source_descriptor.py`](../../tools/validators/validate_source_descriptor.py) | Repository-anchored generic entrypoint | Local shape validation only |
+| `tools/validators/sources/validate_source_descriptor.py` | Declared compatibility/consumer entrypoint | Runs the same bounded shape |
+| [`source-descriptor-validate.yml`](../../.github/workflows/source-descriptor-validate.yml) | Read-only, fixture-only workflow | Checks path convergence, rights-presence conditions, entrypoints, tests, and receipt integrity |
+| [`ADR-0017`](../adr/ADR-0017-source-descriptor-admission-process.md) | Proposed decision | Holds admission and activation authority separate from shape validation |
+| [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Proposed machine index | Empty at the pinned snapshot |
+
+### What validation currently proves
+
+It proves that selected candidate objects conform to the current rich schema and that compatibility entrypoints converge over reviewed fixtures. The schema itself encodes fail-closed conditions for unknown or denied rights, sensitive defaults, fixture-only sources, and public-release review.
+
+It does not prove:
+
+- that the descriptor is accurate or current;
+- that the source role is accepted for a claim;
+- that rights, consent, sovereignty, sensitivity, or terms were reviewed by qualified authority;
+- that a source is active;
+- that a connector may run;
+- that a captured record is evidence-sufficient;
+- that a source is released or public.
+
+### Correction rule
+
+Do not edit a released or relied-on source identity in place to conceal changed rights, role, terms, endpoint, cadence, or authority. Use the owning contract's versioning and correction/supersession model, preserve prior identity, invalidate affected derivatives, and route public-state changes through release/correction controls.
+
+[Back to top](#top)
 
 ---
 
-## SourceDescriptor surface (PROPOSED shape)
-
-> [!NOTE]
-> The fields below are **PROPOSED** per the Domains Culmination Atlas v1.1 §24.1.3. The canonical schema home defaults to `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 and ADR-0001, unless an accepted ADR relocates it. **NEEDS VERIFICATION**: actual file presence and field names are not asserted here. Field names below are an illustrative shape; an ADR or schema PR is the authoritative resolution.
-
-| Field | Type / vocabulary | Required? | Notes |
-|---|---|---|---|
-| `source_id` | string (stable identifier) | MUST | Set at admission; never edited in-place. |
-| `source_role` | enum: `observed` \| `regulatory` \| `modeled` \| `aggregate` \| `administrative` \| `candidate` \| `synthetic` | MUST | Set at admission. Corrections produce a **new** descriptor and a `CorrectionNotice`; the role never mutates in place. |
-| `role_authority` | string (issuing body / model identity / steward) | MUST when `source_role ∈ {regulatory, modeled, aggregate}` | Disambiguates the authoring authority for downstream cite text. |
-| `role_aggregation_unit` | geometry-scope token (county, HUC, tract, year, decade, …) | MUST when `source_role = aggregate` | Prevents geometry-scope drift on join. |
-| `role_model_run_ref` | `EvidenceRef` → `ModelRunReceipt` | MUST when `source_role = modeled` | Pins the inputs, parameters, and version that produced the value. |
-| `role_synthetic_basis` | structured: `{ method, inputs, reality_boundary_note_ref }` | MUST when `source_role = synthetic` | Records what is and is not real in the carrier. |
-| `role_candidate_disposition` | enum: `pending` \| `merged` \| `rejected` \| `quarantined` | MUST when `source_role = candidate` | Tracks promotion state; PUBLISHED edge forbidden until `merged`. |
-| `rights_status` | enum (license-class) + structured terms | MUST | Unknown rights **fail closed** per Encyclopedia §13. |
-| `sensitivity_class` | enum (per `policy/sensitivity/`) | MUST | Drives the deny-by-default register (rare species, archaeology, living persons, DNA/genomics, sacred sites, critical infrastructure, …). |
-| `access_method` | string (URL pattern, API, file drop, …) | MUST | How the connector reaches the source. |
-| `cadence` | structured (frequency, retrieval window) | MUST | Drives freshness checks and stale-state badges. |
-| `steward` | string or structured reference | MUST | Who owns the relationship with the provider. |
-| `attribution` | string (required citation text) | MUST when terms require it | Carried through to public layers, exports, and Focus Mode citations. |
-| `citation` | structured (URL / DOI / archival reference) | MUST | Resolves to `EvidenceBundle` context. |
-| `ingest_hash` | content-hash | MUST | Set at RAW capture; pairs with `RawCaptureReceipt`. |
-| `time` | `TemporalScope` (observed, valid, source, retrieval, release, correction times kept distinct) | MUST | Per Encyclopedia Appendix E: temporal modeling fail-closed on missing material scope. |
-
-[Back to top](#quick-jump)
-
----
+<a id="source-family-index"></a>
 
 ## Source-family index
 
-CONFIRMED (Encyclopedia Appendix D): each KFM domain admits a bounded set of canonical **source families**. The table below lists the headline families currently named in doctrine. PROPOSED: full per-family pages with descriptors, rights posture, role mapping, and freshness expectations will land alongside this README.
+The current source-family documentation lives under [`docs/sources/catalog/`](./catalog/README.md), which includes:
 
-| Family | Primary domains served | Typical role(s) | Rights / sensitivity (NEEDS VERIFICATION per family) |
-|---|---|---|---|
-| **USGS** (3DEP, Water, NHDPlus, NWIS, Earthquakes, geologic maps) | Hydrology · Geology · Spatial Foundation · Hazards | observed · modeled · regulatory | Public; verify current terms. |
-| **FEMA** (NFHL, MSC, OpenFEMA, disaster declarations) | Hydrology · Hazards | regulatory · administrative | Public; verify current terms. |
-| **NOAA / NWS** (Storm Events, NWS API, NCEI, HMS, climate normals) | Hazards · Atmosphere · Hydrology | observed · regulatory · context · model | Public; not-for-life-safety disclaimer. |
-| **NRCS** (SSURGO, gSSURGO, SDA, SCAN, Web Soil Survey) | Soil · Agriculture · Hydrology | observed · authority · model | Public; verify current terms. |
-| **NASA** (FIRMS, SMAP, HLS, MAIAC AOD) | Hazards · Habitat · Agriculture · Atmosphere | observed · modeled | Public; verify current terms. |
-| **USDA NASS** (CDL, QuickStats, Crop Progress) | Agriculture | aggregate · observed | Public; aggregation rules. |
-| **EPA** (AQS, AirData, AirNow) | Atmosphere | observed · regulatory · model | Public; verify current terms. |
-| **USFWS / NatureServe** (ECOS, critical habitat, conservation status) | Fauna · Flora · Habitat | regulatory · authority | Public + restricted; geoprivacy fail-closed for rare-species locations. |
-| **GBIF / iNaturalist / EDDMapS / eBird** | Fauna · Flora · Habitat | observed · candidate · aggregate | Public + license-bearing; community-science source ≠ legal-status authority. |
-| **Census / TIGER / GNIS** | Settlements · Roads · People · Frontier Matrix | administrative · aggregate · authority | Public. |
-| **Kansas state** (KDOT, KDWP, KGS, Kansas Mesonet, state GIS, KSHS) | All domains (state slice) | observed · regulatory · administrative · steward | Public + steward-restricted; cultural-corridor sensitivity. |
-| **KDWP / state historic preservation / tribal steward** | Fauna · Flora · Archaeology · Roads | regulatory · steward | Restricted; deny-by-default on sensitive locations; cultural review required. |
-| **Local upload / steward submission** | All domains | candidate | DENY until source role, rights, sensitivity, and review state are recorded. |
+- an [`INDEX.md`](./catalog/INDEX.md);
+- identity, naming, profile, crosswalk, coverage, rights/sensitivity, CARE, glossary, and open-question guidance;
+- templates and illustrative STAC/DCAT/PROV examples;
+- provider and product documentation across federal, state, archival, scientific, community, commercial, and local source families.
 
-> [!CAUTION]
-> Source-family membership does **not** confer a fixed role. The same provider can host observed, modeled, regulatory, and aggregate products. Role is set per `SourceDescriptor` at admission, never inferred from provider name. CONFIRMED cross-domain rule (Unified Implementation Architecture Build Manual §3.6): "source role cannot be inferred from convenience."
+### Catalog boundary
 
-[Back to top](#quick-jump)
+A source-family or source-product page may document:
+
+- provider and product identity;
+- possible KFM roles and prohibited claim uses;
+- official identifiers and current verification date;
+- access method, cadence, known limitations, rights, attribution, and sensitivity;
+- candidate connector, registry, domain, catalog, and evidence relationships;
+- correction and deprecation notes.
+
+It may not:
+
+- declare a source admitted or active;
+- make current rights or availability claims without current official evidence;
+- substitute for a `SourceDescriptor`, registry entry, activation decision, receipt, or policy review;
+- copy source payloads or secrets into Git;
+- infer a single role for every product from a provider;
+- publish a source merely because a catalog page exists.
+
+### Maintenance rule
+
+Update a provider/product page from current authoritative source evidence, state the access date and limits, and preserve history. When external facts cannot be rechecked, mark them `NEEDS VERIFICATION` rather than copying old tables into this README.
+
+[Back to top](#top)
 
 ---
+
+<a id="source-admission-flow"></a>
 
 ## Source admission flow
 
-CONFIRMED admission posture (Unified Implementation Architecture Build Manual §3.6 + Encyclopedia §3): the source registry is **an admission and authority-control surface, not a bibliography.** Connectors and watchers stay inactive until a `SourceActivationDecision` is recorded and fixtures, validators, and policy gates exist.
+### Current bounded flow
 
 ```mermaid
 flowchart TD
-  A["Source candidate identified<br/>(steward / connector author / domain need)"] --> B["Draft SourceDescriptor<br/>id · role · authority · rights · sensitivity · cadence · access · steward · citation"]
-  B --> C{"Review:<br/>role · rights · sensitivity · cadence · access<br/>per docs/sources/ + policy/"}
-  C -->|missing or unclear| Q["QUARANTINE<br/>or HOLD for steward review"]
-  C -->|complete| D["Issue SourceActivationDecision<br/>allowed · restricted · denied · needs-review"]
-  D -->|allowed / restricted| E["Connector enabled<br/>under approved descriptor"]
-  D -->|denied| X["No fetch · documented denial"]
-  D -->|needs-review| Q
-  E --> F["Fetch → data/raw/&lt;domain&gt;/&lt;source_id&gt;/&lt;run_id&gt;/<br/>+ RawCaptureReceipt + checksums"]
-  F --> G["WORK / normalization<br/>TransformReceipt"]
-  G --> H{"Promotion gate<br/>schema · evidence · policy · sensitivity · rights"}
-  H -->|pass| I["PROCESSED → CATALOG → PUBLISHED<br/>EvidenceBundle resolves · LayerManifest · ReleaseManifest"]
-  H -->|fail| Q
+    A["Candidate source need<br/>human or watcher signal"]
+    B["Draft SourceDescriptor candidate"]
+    C["Shape validation<br/>implemented, fixture-only"]
+    D["Role, rights, sensitivity, access,<br/>cadence, citation, source-head review"]
+    E["SourceActivationDecision candidate<br/>fixture-first profile"]
+    F["Authority resolution<br/>ADR-0017 proposed; register empty"]
+    G["Connector readiness gate<br/>partial"]
+    H["RAW / QUARANTINE candidate<br/>plus receipt-ready metadata"]
+    I["Record admission, evidence, policy,<br/>review, catalog, release, correction"]
+    X["DENY / HOLD / QUARANTINE / ABSTAIN / ERROR"]
 
-  classDef docs fill:#fef3c7,stroke:#d97706,color:#78350f;
-  classDef gate fill:#fee2e2,stroke:#dc2626,color:#7f1d1d;
-  classDef ok fill:#dcfce7,stroke:#16a34a,color:#14532d;
-  classDef hold fill:#e0e7ff,stroke:#4f46e5,color:#312e81;
-  class B docs;
-  class C,H gate;
-  class E,F,G,I ok;
-  class Q,X hold;
+    A --> B --> C --> D
+    C -->|invalid| X
+    D -->|missing or conflicted| X
+    D --> E --> F
+    F -->|unresolved| X
+    F -->|separately authorized| G
+    G -->|fail| X
+    G --> H --> I
 ```
 
-CONFIRMED invariant (Directory Rules §0, §10): **public clients and normal UI surfaces use governed interfaces, not canonical/internal stores.** Browsers, AI surfaces, and Focus Mode never read from RAW, WORK, or QUARANTINE.
+### Current evidence by stage
 
-[Back to top](#quick-jump)
+| Stage | Current state |
+|---|---|
+| Human guidance | Present in this lane |
+| Descriptor contract/schema | Present; rich singular shape plus bounded plural alias |
+| Descriptor fixtures/validator/workflow | Implemented and no-network |
+| Activation-decision profile | Fixture-first contract/schema/test evidence exists |
+| Admission authority | Held because ADR-0017 remains proposed |
+| Machine authority register | Empty |
+| Registry mechanics | Placeholder package; no supported operational API |
+| Connector readiness | Partial bounded checks and receipt prerequisites |
+| Live source activation | `UNKNOWN`; not inferred from connector paths |
+| RAW/QUARANTINE persistence | Source-edge boundary exists; end-to-end universal enforcement not established here |
+| Promotion/publication | Separate and not performed |
+
+### Fail-closed rule
+
+Any missing, stale, conflicted, expired, unsupported, or unreviewed identity, role, rights, sensitivity, access, cadence, citation, source-head, review, activation, evidence, or release condition narrows the outcome. It never defaults to public use.
+
+### Watcher rule
+
+Watchers and briefings may produce candidate signals, source-intake observations, issues, or receipts. They do not admit, activate, promote, release, or publish sources.
+
+[Back to top](#top)
 
 ---
+
+<a id="validation"></a>
 
 ## Validation
 
-Validation **of source admission** is enforced outside this folder. `docs/sources/` is itself subject to **documentation hygiene** validation.
+<a id="validation-that-applies-to-this-folder"></a>
 
-### Validation that enforces source admission (outside this folder)
+### Documentation checks for this lane
 
-| Check | Where it lives | What it asserts |
+| Check | Current responsibility | Boundary |
 |---|---|---|
-| `SourceDescriptor` schema validation | `tools/validators/source_descriptor/` (PROPOSED) | The descriptor matches `schemas/contracts/v1/source/source-descriptor.json`. |
-| Connector gate | `tools/validators/connector_gate/` (PROPOSED) | A connector cannot fetch without an active `SourceActivationDecision`. |
-| Source-role policy parity | `policy/` + fixtures | Anti-collapse rules deny the seven collapse patterns above. |
-| Rights / sensitivity unknown-blocks-release | `policy/rights/`, `policy/sensitivity/` | Unknown rights or sensitivity fail closed before any public release. |
-| Stale-source / cadence | `tools/validators/...` (PROPOSED) | Stale `source_head` or missing freshness emits a visible stale state; Focus Mode abstains. |
+| `docs-meta-block` | Parse bounded metadata and produce review-only registry comparison | Does not assign authority or mutate the registry |
+| `link-check` | Validate supported local links and fragments | Does not validate external currentness or source terms |
+| `docs-document-graph` | Build a review-only relationship projection | Does not decide canonicality or source admission |
+| `docs-stale-scan` | Surface stale metadata and verification debt | Does not correct or approve content |
+| `docs-build` | Hold until an accepted documentation generator and preview handoff exist | A green hold means no site was built or published |
+| Secret/rights/sensitivity review | Prevent unsafe repository disclosure | Human and policy review remain necessary |
 
-### Validation that applies to *this* folder
+<a id="validation-that-enforces-source-admission-outside-this-folder"></a>
 
-| Check | Status | Note |
+### Source-governance checks outside this lane
+
+| Check | Current state | What it does not prove |
 |---|---|---|
-| Markdown lint / link check | TODO | Verify all internal links resolve once siblings are in place. |
-| KFM terminology preservation (e.g., `EvidenceBundle`, `EvidenceRef`, lifecycle phases, source roles) | TODO | Drift register entry if a doc renames a KFM-specific term to a generic equivalent. |
-| ADR cross-link integrity (ADR-0001) | TODO | Verify the schema-home ADR remains the cited authority. |
-| `README.md` contract (Directory Rules §15) | TODO — this file is being drafted to satisfy it | Sections required: Purpose, Authority level, Status, What belongs / does not belong, Inputs, Outputs, Validation, Review burden, Related folders, ADRs, Last reviewed. |
-| Last-reviewed cadence ≤ 6 months | TODO | Flag for review per Directory Rules §15. |
+| SourceDescriptor schema/fixtures/entrypoints | Implemented | Source accuracy, admission, or activation |
+| Rights-presence and fail-closed schema conditions | Workflow-covered | Qualified rights decision |
+| SourceActivationDecision fixture-first profile | Implemented evidence, ADR still proposed | Decision-authority authentication or runtime enforcement |
+| Connector output-path canary and IngestReceipt prerequisite | Partial | Full connector-run receipt or universal source admission |
+| Source authority register | File present, zero entries | Active sources |
+| Source-registry package | Placeholder | Operational resolver or persisted registry |
+| Policy/source and policy/intake | Partial or documentation-only | Production policy execution |
+| Release and correction | Separate roots | Public source use |
 
-[Back to top](#quick-jump)
+### Negative checks
+
+A change to this README or lane should fail or be held when it:
+
+- claims a source is active, approved, public, or authoritative from documentation alone;
+- declares one source-role enum canonical while current authorities conflict;
+- adds an endpoint, license, cadence, or terms claim without current official evidence;
+- places machine schemas, policy, registry instances, source payloads, receipts, or release objects under `docs/`;
+- exposes credentials, restricted content, or harmful precision;
+- creates a second provider/product page without identity and inbound-link reconciliation;
+- hand-edits generated examples or indexes when an owning generator exists;
+- weakens cite-or-abstain, rights, sensitivity, quarantine, correction, or rollback behavior;
+- treats a passing workflow as source admission or publication.
+
+[Back to top](#top)
 
 ---
+
+<a id="review-burden"></a>
 
 ## Review burden
 
-PROPOSED ownership (NEEDS VERIFICATION against repo `CODEOWNERS`):
+`.github/CODEOWNERS` routes this path through the repository default owner, `@bartytime4life`. That is the only verified executable review identity. It is not a source-steward appointment, rights decision, policy approval, independent review, release approval, or proof that review occurred.
 
-- **Primary owners** — Source Steward (cross-domain source admission) + Docs Steward (documentation hygiene).
-- **Required reviewers when changing source-role taxonomy or anti-collapse rules** — Source Steward + Architecture lead + at least one domain steward whose lane the change touches; ADR required per Directory Rules §2.4.
-- **Required reviewers when changing rights / sensitivity narrative** — Source Steward + Policy admin + the relevant domain steward.
-- **Required reviewers when adding or retiring a source family entry** — Source Steward + the affected domain steward(s).
+| Change | Minimum review posture |
+|---|---|
+| README wording, navigation, or current-state reconciliation | Documentation-root review and source-guidance review |
+| SourceDescriptor meaning or required fields | Contract/schema owners, source review, compatibility analysis, fixtures, and tests |
+| Source-role vocabulary | Architecture, source, policy, evidence, affected-domain, migration, and ADR review |
+| Rights, terms, attribution, consent, sovereignty, or sensitivity guidance | Qualified rights/policy/domain or cultural review appropriate to consequence |
+| New provider/product page | Current official source verification, identity review, rights/sensitivity review, and catalog maintenance review |
+| Source admission or activation behavior | ADR-0017-class decision, policy, registry, connector, fixture, validator, receipt, and rollback evidence |
+| Public source use | Evidence, policy, review, release, correction, withdrawal, and rollback closure |
 
-CONFIRMED governance rule (Encyclopedia §10, Master Action Matrix): separation of duties — review authority is distinct from author; a single contributor cannot self-approve a release-relevant doctrine change.
+No independent source steward, rights steward, policy steward, domain steward, or release approver was verified for this lane at the pinned snapshot.
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
+
+<a id="related-docs-footer"></a>
+<a id="related-folders"></a>
 
 ## Related folders
 
-PROPOSED relative links; verify paths once the repo is mounted.
+### Human guidance
 
-- [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law that governs this folder.
-- [`../adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home convention; the authority for where `source-descriptor.json` lives.
-- [`../domains/README.md`](../domains/README.md) — per-domain narratives; each domain has its own source-family bindings under `../domains/<domain>/`.
-- [`../standards/README.md`](../standards/README.md) — external standards (STAC, DCAT, PROV, FAIR + CARE) that KFM conforms to.
-- [`../governance/README.md`](../governance/README.md) — roles, review burden, separation of duties.
-- [`../registers/AUTHORITY_LADDER.md`](../registers/AUTHORITY_LADDER.md) (PROPOSED) — canonical authority order across doctrine, repo, source, and runtime evidence.
-- [`../../contracts/source/`](../../contracts/source/) — semantic meaning of source objects.
-- [`../../schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/) — machine shape (per ADR-0001).
-- [`../../policy/`](../../policy/) — admissibility, rights, sensitivity, release.
-- [`../../control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) — machine-readable register.
-- [`../../connectors/README.md`](../../connectors/README.md) — source-specific fetch and admission code.
+- [`../README.md`](../README.md) — parent documentation responsibility.
+- [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — adopted placement authority.
+- [`../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted adoption decision.
+- [`../adr/ADR-0017-source-descriptor-admission-process.md`](../adr/ADR-0017-source-descriptor-admission-process.md) — proposed admission decision.
+- [`../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — proposed dedicated schema-routing ADR; adopted Directory Rules already set the default schema route.
+- [`../registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — cross-document or implementation drift.
+- [`../registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — checkable unresolved work.
+- [`../standards/README.md`](../standards/README.md) — external-standard guidance.
+- [`../domains/README.md`](../domains/README.md) — domain-specific source use.
 
-[Back to top](#quick-jump)
+### Meaning, shape, policy, registry, and implementation
+
+- [`../../contracts/source/README.md`](../../contracts/source/README.md) — semantic source contracts.
+- [`../../schemas/contracts/v1/source/README.md`](../../schemas/contracts/v1/source/README.md) — source schema family and drift.
+- [`../../control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) — current proposed, empty machine index.
+- [`../../data/registry/sources/README.md`](../../data/registry/sources/README.md) — registry-instance boundary.
+- [`../../packages/source-registry/README.md`](../../packages/source-registry/README.md) — placeholder reusable mechanics.
+- [`../../connectors/README.md`](../../connectors/README.md) — canonical source-edge implementation root.
+- [`../../tools/validators/connector_gate/README.md`](../../tools/validators/connector_gate/README.md) — partial connector readiness boundary.
+- [`../../release/README.md`](../../release/README.md) — release, correction, withdrawal, and rollback decision plane.
+
+Do not select or create a new path from this list by convenience. Recheck the exact object responsibility and current authority first.
+
+[Back to top](#top)
 
 ---
+
+<a id="adrs"></a>
 
 ## ADRs
 
-| ADR | Topic | Relevance to this folder |
+| Decision | Current status | Effect on this lane |
 |---|---|---|
-| **ADR-0001 — Schema home** (CONFIRMED in Directory Rules §6.4 / §7.4) | Default machine-schema home is `schemas/contracts/v1/...`. | Sets where `source-descriptor.schema.json` lives. Any divergence requires an ADR. |
-| ADR — Source-role taxonomy (PROPOSED, not yet authored) | Records the canonical seven roles and the migration rule (role set at admission, never upgraded by promotion). | Would formalize Atlas v1.1 §24.1 doctrine in an ADR. |
-| ADR — Source-authority register home (PROPOSED, not yet authored) | Confirms `control_plane/source_authority_register.yaml` as the canonical register. | Would formalize Directory Rules §6.2 placement. |
+| [ADR-0029 — Adopt Directory Governance Standard v2](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | Adopts the exact Directory Rules bytes and constrains this lane to human explanation |
+| [ADR-0017 — Source Descriptor Admission Process](../adr/ADR-0017-source-descriptor-admission-process.md) | `proposed` | Records a staged, fail-closed admission design; cannot activate a source while proposed |
+| [ADR-0001 — Schema Home](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | `proposed` | Dedicated routing/migration record remains proposed; accepted Directory Rules already establish the default `schemas/contracts/v1/<family>/` route |
+| ADR-0012 — Connector outputs to RAW or QUARANTINE only | Check the current ADR source before relying on status | Constrains source-edge writes; this README does not restate or amend it |
+| ADR-0018 — Promotion gate sequence | Check the current ADR source before relying on status | Promotion remains downstream of admission |
 
-[Back to top](#quick-jump)
+A proposed ADR, schema, or documentation page cannot bootstrap its own acceptance. This README records current status but does not accept, reject, supersede, or amend any ADR.
+
+[Back to top](#top)
 
 ---
+
+<a id="correction-supersession-and-rollback"></a>
+
+## Correction, supersession, and rollback
+
+### Documentation correction
+
+When a source page is wrong or stale:
+
+1. identify the exact claim, source evidence, page identity, and affected consumers;
+2. verify the current official source or owning repository authority;
+3. correct the owning page and preserve a change note when the correction is material;
+4. update indexes, crosswalks, citations, and inbound links;
+5. flag related descriptors, registry records, policy, connectors, evidence, or releases for governed review rather than editing them from docs;
+6. preserve prior Git history and any explicit supersession relationship.
+
+### Source-state correction
+
+A documentation correction does not correct a registered source or public artifact. Source-state correction may require:
+
+- a new descriptor version or superseding identity;
+- rights/sensitivity re-review;
+- connector disablement or quarantine;
+- evidence invalidation;
+- catalog and graph recompile;
+- release correction or withdrawal;
+- cache, search, map, export, and AI-consumer invalidation;
+- rollback to a still-valid released state.
+
+### Rollback for this README
+
+Revert the commit that introduces v1.1. No source, connector, schema, policy, registry entry, receipt, lifecycle object, release object, or public state is created by this documentation-only change, so rollback requires no data migration.
+
+[Back to top](#top)
+
+---
+
+<a id="faq"></a>
 
 ## FAQ
 
-> [!TIP]
-> **"Where does my new source go?"** — Start with the family table above. If your provider is named there, use that family's page (PROPOSED) and the matching `connectors/<vendor>/` subtree. If it is not, propose a new family entry here and a new connector subtree under `connectors/`, with a `SourceDescriptor` drafted before any fetch attempt.
+### Does a page under `docs/sources/catalog/` mean that provider is admitted?
 
-**Q. Why isn't the `SourceDescriptor` JSON Schema in this folder?**
-A. `docs/sources/` is part of the human-facing control plane (Directory Rules §6.1). Machine shape lives in `schemas/contracts/v1/source/` per ADR-0001. Two homes for the same definition would violate the parallel-authority rule (Directory Rules §13).
+No. It means repository documentation exists. Admission requires the owning descriptor, review, policy, activation, registry, connector, receipt, and downstream evidence/release controls appropriate to the operation.
 
-**Q. Can a source's role change over time?**
-A. No. The role is set at admission and is **preserved through every promotion**. If a source begins emitting a different role of content (e.g., a provider starts publishing both observed and modeled products), admit a **new** `SourceDescriptor` for the new role; do not edit the old one. Corrections produce a new descriptor and a `CorrectionNotice`. CONFIRMED (Atlas v1.1 §24.1.1).
+### Which source-role vocabulary should a contributor use?
 
-**Q. What happens to a source with unknown rights?**
-A. It fails closed. Unknown rights / source-role unknown for public use → DENY at the trust membrane (Encyclopedia §13, Sensitive / Deny-by-Default Register). The descriptor may still exist with `source_role = candidate` and `role_candidate_disposition = pending` while rights are resolved.
+Use the vocabulary required by the current owning contract/schema for the object being changed and define it in prose. Do not invent aliases. The cross-surface vocabulary remains conflicted and requires a governed convergence change.
 
-**Q. Where do source-family pages live — here, or under `docs/domains/<domain>/`?**
-A. Both, with different responsibilities. `docs/sources/families/<family>.md` (PROPOSED) owns the **cross-domain** view of that family — what it is, what roles it can play, what rights and cadence apply. `docs/domains/<domain>/sources.md` (PROPOSED) owns the **domain-specific** view — which family members the domain uses, with what role bindings, for which object families.
+### Does a valid SourceDescriptor activate a connector?
 
-**Q. Is a community-science occurrence (e.g., GBIF) "observed" or "candidate"?**
-A. Depends on the descriptor at admission. The raw record is `observed` from the contributor's perspective and may enter KFM as `observed` or `candidate` depending on review state, deduplication, and the domain's policy. CONFIRMED cross-domain rule: a community-science occurrence source is **not** a legal-status authority.
+No. Shape validation and source activation are separate. ADR-0017 remains proposed, the authority register is empty, and connector readiness is only partially enforced.
 
-[Back to top](#quick-jump)
+### Can a provider have more than one role?
+
+Yes, at the product or claim level. Provider identity does not fix role. Separate descriptors or explicit role bindings may be required; follow the owning contract/schema and review decision.
+
+### Where do current rights and terms belong?
+
+The factual source-specific decision belongs in the source descriptor/registry and policy/review evidence. Human explanation may live here. Recheck official terms before activation or release.
+
+### Can a source page include an API key or example signed URL?
+
+No. Use symbolic placeholders and secret-manager references. Never commit resolved credentials or bearer material.
+
+### Can AI draft a source page or descriptor?
+
+AI may draft a candidate from cited evidence. It cannot infer source authority, rights, sensitivity, activation, or release. A human or qualified governed process must review the candidate.
+
+### What does a green `source-descriptor-validate` run prove?
+
+It proves the bounded shape, fixture, path-convergence, rights-presence, test, and receipt checks declared by the workflow. It does not admit a source or prove current source facts.
+
+### Where does a source-specific domain narrative go?
+
+Use `docs/domains/<domain>/` when the material is domain-specific. Keep cross-domain provider/product guidance and source-governance documentation in this lane when its responsibility is genuinely shared.
+
+### Should this README repeat every provider and SourceDescriptor field?
+
+No. It should index the owning documents and report current boundaries. Repeating large volatile tables here creates drift and parallel prose authority.
+
+[Back to top](#top)
 
 ---
 
-## Appendix
+<a id="open-verification-register"></a>
 
-<details>
-<summary><strong>A. Glossary (selected terms used in this folder)</strong></summary>
+## Open verification register
 
-| Term | Definition |
+| ID | Question | Status | Evidence needed |
+|---|---|---:|---|
+| `SRC-DOC-001` | Which source-role vocabulary and aliases are accepted across contract, schema, policy, citations, and runtime? | `HOLD` | Accepted ADR or contract decision, consumer inventory, fixtures, migration and rollback |
+| `SRC-DOC-002` | Who is assigned source, rights, sensitivity, catalog, and independent review responsibility? | `NEEDS VERIFICATION` | Verified stewardship and CODEOWNERS-compatible identities |
+| `SRC-DOC-003` | Which source descriptors are active or approved? | `UNKNOWN` | Populated reviewed registry and authority records; current register is empty |
+| `SRC-DOC-004` | Is there an operational source-registry resolver or service? | `UNKNOWN` | Supported package API, consumers, tests, runtime evidence, persisted records |
+| `SRC-DOC-005` | Is source admission enforced for every connector invocation? | `NEEDS VERIFICATION` | End-to-end negative tests, receipts, logs, and connector coverage |
+| `SRC-DOC-006` | Which provider/product pages are current, duplicated, stale, or superseded? | `NEEDS VERIFICATION` | Recursive catalog inventory, official-source checks, inbound links, ownership |
+| `SRC-DOC-007` | Are source-specific rights, terms, attribution, and redistribution decisions current? | `NEEDS VERIFICATION` | Dated official terms and qualified review per source |
+| `SRC-DOC-008` | Are source-family pages safely separated from domain source registries and external standards profiles? | `NEEDS VERIFICATION` | Responsibility and inbound-reference audit |
+| `SRC-DOC-009` | Do correction, withdrawal, cache invalidation, and rollback propagate from source changes to public consumers? | `UNKNOWN` | Drill evidence across evidence, catalog, release, API, map, export, and AI |
+| `SRC-DOC-010` | Which child documents still carry stale no-mounted-repo, placeholder-owner, path, or review claims? | `NEEDS VERIFICATION` | Child-by-child metadata, link, graph, and current-repository reconciliation |
+| `SRC-DOC-011` | Are all documentation examples clearly non-authoritative and non-secret? | `NEEDS VERIFICATION` | Example inventory, secret scan, rights/sensitivity review |
+| `SRC-DOC-012` | Which hosted source and documentation workflows are required checks and what are their exact-head results? | `NEEDS VERIFICATION` | Current ruleset/branch settings and hosted run evidence |
+
+Unknowns narrow claims and block higher-risk transitions. They do not authorize plausible defaults.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix"></a>
+<a id="no-loss-ledger"></a>
+
+## No-loss ledger
+
+| Prior README material | v1.1 disposition |
 |---|---|
-| **SourceDescriptor** | Machine-readable record of source identity, role, authority, rights, sensitivity, cadence, access, steward, attribution, citation, and admission state. Anchors every downstream receipt. |
-| **SourceActivationDecision** | Gate record declaring `allowed` · `restricted` · `denied` · `needs-review` use of a source. Connectors stay inactive until issued. |
-| **IngestReceipt** / **RawCaptureReceipt** | Records that a source's RAW input was captured immutably, with checksum and time. No public RAW access. |
-| **EvidenceRef → EvidenceBundle** | Stable reference that must resolve to a structured evidence package before any public claim. `EvidenceBundle` outranks generated text. |
-| **CorrectionNotice** | Structured record of an admitted error; lists invalidated derivatives. Required when correcting a released claim, including any source-role correction. |
-| **Source family** | A bounded set of sources sharing provider, format, or governance posture (e.g., USGS, FEMA, NOAA). Membership does not fix role. |
-| **Source role** | The first-class identity attribute distinguishing observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic content. Set at admission. |
-| **RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED** | The KFM lifecycle invariant. Sources enter at RAW or QUARANTINE; public surfaces consume PUBLISHED through the governed API. |
-| **Trust membrane** | The governed boundary between canonical/internal stores and public surfaces. Public clients never reach across it directly. |
+| Human source-doctrine purpose | Preserved and grounded in the current populated lane |
+| `docs/` / `control_plane/` / `contracts/` / `schemas/` split | Preserved and reconciled with current parent/root evidence |
+| “What belongs / does not belong” tables | Preserved with current paths and fewer speculative claims |
+| Large proposed child-file list | Replaced by the verified direct-child tree |
+| Source-role anti-collapse principle | Preserved; unsupported “canonical seven” claim removed because current vocabularies conflict |
+| Seven-role table | Retained in child lineage such as citation guidance; not duplicated as accepted enum here |
+| Illustrative SourceDescriptor field table | Replaced by links to the current rich schema, contract, fixtures, validators, and workflow |
+| Source-family provider table | Replaced by the populated catalog index and currentness rules |
+| Admission-flow diagram | Preserved and updated with implemented, proposed, empty, partial, and held states |
+| Validation TODOs | Replaced by current documentation and source-validation workflows plus explicit non-effects |
+| Placeholder owners and six-month timer | Replaced by verified CODEOWNERS routing and event/risk-based review triggers |
+| Old ADR-0001 filename | Corrected to the current path and proposed status |
+| “Repo not mounted” and “concrete files proposed” claims | Corrected from current repository evidence |
+| Rights/sensitivity deny-by-default posture | Preserved without duplicating the full child guidance |
+| FAQ and glossary concepts | Consolidated into current FAQ, reader routes, and linked child docs |
+| Public/release effect | Remains none |
 
-</details>
-
-<details>
-<summary><strong>B. Deny-by-default classes that interact with source admission</strong></summary>
-
-CONFIRMED (Encyclopedia §13, Sensitive / Deny-by-Default Register). Each class shapes the `sensitivity_class` and `rights_status` fields of a `SourceDescriptor`, and each one defaults to DENY for public exposure unless explicit controls are recorded.
-
-| Class | Default outcome | Required controls |
-|---|---|---|
-| Living persons | DENY public exact/identifying output unless legal basis + consent/review + release state proven. | Privacy review; redaction; aggregate; staged access. |
-| DNA / genomics | DENY by default; restricted steward/research only with policy approval. | Separate restricted store; no public AI inference. |
-| Rare species (exact locations) | DENY public exact location; generalized products only. | Geoprivacy transform receipt; steward review. |
-| Archaeology (exact coordinates) | DENY exact public location by default. | Cultural / steward review; suppression / generalization. |
-| Sacred / culturally sensitive places | DENY until steward review and access class approve. | Consultation record; sensitivity transform. |
-| Critical infrastructure | RESTRICT / DENY public precision. | Public-safe aggregation; role-based access. |
-| Private landowner-sensitive data | DENY exact / public if private or rights unclear. | Aggregation; permissions; policy review. |
-| Emergency / life-safety alerting | DENY life-safety replacement; contextual-only with official redirection. | Not-for-life-safety disclaimer; freshness controls. |
-| Source-rights-limited records | DENY public release until terms resolved. | Rights register; attribution; no public derivative if barred. |
-
-</details>
-
-<details>
-<summary><strong>C. Anti-patterns to flag when reviewing changes to source doctrine</strong></summary>
-
-| Anti-pattern | What goes wrong | Counter-rule |
-|---|---|---|
-| Treating a `docs/sources/` page as the canonical decision on a source | Documentation drifts from `policy/` and `control_plane/`; review by-passes the actual gate. | Promote to ADR or `control_plane/` register if a decision is at stake. Docs explain; they do not decide. |
-| Renaming a KFM-specific source-role term to a generic industry term | Anti-collapse register breaks; downstream validators stop catching the seven collapse patterns. | Preserve `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, `synthetic` exactly. |
-| Adding a new source role without an ADR | New axis appears in the descriptor without policy or schema support. | Open an ADR per Directory Rules §2.4. |
-| Inferring source role from provider name | A federal agency hosts observed + modeled + regulatory + aggregate products under one banner; the inference is unsafe. | Role is set per `SourceDescriptor` at admission, not by provider. |
-| Documenting a source family but skipping the connector + descriptor scaffolding | Source becomes citable in prose but cannot enter the lifecycle. | Family pages must reference the matching `connectors/<vendor>/` and descriptor schema location. |
-| Promotion "upgrading" a source role (e.g., modeled → observed) | Trust posture collapses silently. | Role is fixed at admission. Corrections produce a new descriptor + `CorrectionNotice`. |
-
-</details>
-
-<details>
-<summary><strong>D. External standards relevant to source admission (referenced, not authoritative here)</strong></summary>
-
-External standards are documented under `docs/standards/`, not here. The following are commonly referenced from `docs/sources/` content:
-
-- **STAC** (SpatioTemporal Asset Catalog) — for spatiotemporal source catalog records and provenance extensions. STAC's core JSON model defines required fields (id, stac_version, type, geometry/bbox, properties.datetime, assets, links) that make any dataset indexable by space and time; extensions like the Processing Extension add structured provenance fields, and after using any extension the extension's identifier URL must appear in the stac_extensions array so validators apply the right schemas. EXTERNAL.
-- **DCAT** — for non-spatial dataset catalog records.
-- **PROV-O / W3C PROV** — for lineage and activity records.
-- **FAIR + CARE** — paired principles (FAIR for the data-engineering substrate, CARE for community authority); CARE applies particularly to Indigenous-data and sensitive-cultural sources.
-- **schema.org** — used selectively for cross-catalog discoverability.
-
-When a `SourceDescriptor` field intentionally aligns with a field in one of these standards, the alignment is documented in the relevant `families/<family>.md` page or in `SOURCE_DESCRIPTOR_FIELDS.md`. Conflicts between external standards and KFM doctrine are flagged in `docs/registers/DRIFT_REGISTER.md`, not silently smoothed.
-
-</details>
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
+
+<a id="last-reviewed"></a>
 
 ## Last reviewed
 
-**2026-05-13** — initial draft. Next review target: **2026-11-13** (6 months, per Directory Rules §15). Flag for review if not updated by that date.
+- **Date:** 2026-08-14
+- **Base:** `main@cbee7add137b9738b3d123b17d41ac3d44d9745b`
+- **Prior target blob:** `389ca581b4ad0bfd906b58d158c21add764e153e`
+- **Review type:** same-path semantic and repository-evidence modernization
+- **Direct-child inspection:** complete for the seven direct children at the pinned snapshot
+- **Bounded adjacent inspection:** parent docs root, adopted Directory Rules/ADR, CODEOWNERS, source ADR/schema/alias/fixtures/validator/workflow, empty authority register, registry package, connector root, and connector gate
+- **Not inspected:** every nested provider page, every domain source document, live source endpoints, source-specific terms, external storage, deployments, public consumers, and complete hosted required-check posture
+- **Release or public state changed:** none
+
+Re-review when:
+
+- ADR-0017 or a source-role decision changes status;
+- the source-role vocabulary, SourceDescriptor contract/schema, or compatibility aliases change;
+- the machine authority register gains, changes, or removes entries;
+- a live source or connector is activated, suspended, quarantined, retired, or corrected;
+- catalog identity, templates, profiles, or provider/product ownership changes;
+- source rights, terms, sensitivity, sovereignty, or attribution changes;
+- a source correction reaches evidence, catalog, release, API, map, export, or AI consumers;
+- a child lane is moved, generated, mirrored, deprecated, or retired;
+- documentation validation or current source workflows change materially.
+
+Review is event- and risk-based. This README does not create a calendar-only approval rule.
+
+### Change history
+
+#### v1.1 — 2026-08-14
+
+- reconciled the lane against current `main`, the accepted Directory Rules decision, and the parent `docs/` contract;
+- recorded the verified seven-child direct inventory;
+- indexed current admission, citation, rights, descriptor, source-role, and catalog companions;
+- separated implemented descriptor shape validation from proposed source admission and empty source authority;
+- surfaced source-role vocabulary conflict instead of declaring a canonical enum;
+- replaced speculative field/provider tables with current owning surfaces and maintenance rules;
+- added current validation, correction, rollback, review, open-verification, and no-loss sections;
+- preserved legacy anchors where practical;
+- changed documentation only.
+
+#### v1 — 2026-05-08 through 2026-05-14
+
+Initial source-guidance landing page and expanded doctrine draft. Retained through Git history and the no-loss ledger above.
+
+[Back to top](#top)
 
 ---
 
-### Related docs · footer
-
-- [Directory Rules](../doctrine/directory-rules.md) — placement law
-- [ADR-0001 Schema home](../adr/ADR-0001-schema-home.md) — schema-home convention
-- [`docs/standards/`](../standards/) — external standards (STAC, DCAT, PROV, FAIR + CARE)
-- [`docs/domains/`](../domains/) — per-domain narrative
-- [`contracts/source/`](../../contracts/source/) · [`schemas/contracts/v1/source/`](../../schemas/contracts/v1/source/) · [`policy/`](../../policy/) · [`control_plane/`](../../control_plane/) · [`connectors/`](../../connectors/)
-
-**Status:** PROPOSED · **Owners:** TODO — Source Steward + Docs Steward · **Updated:** 2026-05-13 · [Back to top ↑](#quick-jump)
+<sub>This README is a human navigation and boundary document. It does not admit a source, activate a connector, create evidence, decide policy, promote lifecycle state, release data, or publish KFM material.</sub>

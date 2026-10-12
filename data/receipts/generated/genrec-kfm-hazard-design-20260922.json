@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-kfm-hazard-design-20260922",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md",
+    "docs/runbooks/explorer-context-feed-repair.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "sha256:7f306fc01c7bbee9280b5310c27c8344aa3779fb8ef6056f5fa7834e468af29e",
+    "docs/runbooks/explorer-context-feed-repair.md": "sha256:ca3bc73ee19e4b2f6e0f734e64a0d5ce6528ff61d4b79dc4a979b156f336a1e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:03a16be1f3fe159c4d15ec77dffb33a35942b052d67ef64974a5875c0809b28f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Firemap_Inspired_Hazard_Workspace_2026-09-22.md",
+      "REPAIR_HANDOFF.md",
+      "KFM_Explorer_Feed_Repair_Candidate_2026-09-22.zip"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c4e5ebe54cba9d7ca9bbee108b442bdf68763f58",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418#issuecomment-5748226637"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "PROPOSED",
+    "docs/runbooks/explorer-context-feed-repair.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Changed Markdown metadata, structure and relative links",
+      "outcome": "PASS",
+      "reason": "2 documents; 7 local links resolved to new files or inspected exact-base paths. Local projection, not repository-native docs validator."
+    },
+    {
+      "gate": "Changed-file UTF-8, whitespace and artifact SHA-256 bindings",
+      "outcome": "PASS",
+      "reason": "Final authored files parsed and hashed; receipt excludes its own bytes."
+    },
+    {
+      "gate": "Repository-native validators and full application build/suite",
+      "outcome": "SKIPPED",
+      "reason": "No complete local checkout or installed locked workspace; outbound container DNS unavailable. No inherited failure was waived."
+    },
+    {
+      "gate": "Exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch/PR delivery; must inspect final-head results separately."
+    },
+    {
+      "gate": "Active-Site source parity, route integration and browser/WebGL acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Current hosted source and authenticated browser were not available; no deployment or provider health claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855"
+    },
+    {
+      "id": "usgs-nodata-contract",
+      "validated": true,
+      "evidence_ref": "https://earthquake.usgs.gov/fdsnws/event/1/"
+    },
+    {
+      "id": "firemap-reference",
+      "validated": true,
+      "evidence_ref": "https://www.firemap.live/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T00:15:48Z",
+  "emitter": "ChatGPT repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Authoring provenance only. CONFIRMED code labels apply to local candidate bytes and focused behavior, not active Site integration. The monorepo app, standalone v40 mirror and recorded Site v53 are not equivalent. No ready, merge, source admission, activation, settings, release, deployment or publication authorization. Human review and #4024/#4228 boundaries remain separate. Canonical receipt schema fields were inspected; repository-native receipt validation remains not run."
+}

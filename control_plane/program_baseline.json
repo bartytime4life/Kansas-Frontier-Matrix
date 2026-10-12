@@ -1,0 +1,302 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.program-baseline.m01.v1",
+  "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "projection_status": "PROPOSED",
+  "implementation_status": "PARTIAL",
+  "authority_mode": "evidence_projection_only",
+  "observed_at": "2026-08-22T23:45:05Z",
+  "base": {
+    "branch": "main",
+    "sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+    "milestone_number": 2,
+    "milestone_issue_number": 3365,
+    "milestone_title": "M01 - Authority, Directory Rules & Program Baseline",
+    "open_pull_requests": []
+  },
+  "placement": {
+    "owner": "@bartytime4life",
+    "responsibility_root": "control_plane/",
+    "canonical_path": "control_plane/program_baseline.json",
+    "adjacent_readme_path": "control_plane/README.md",
+    "base_path_status": "ABSENT",
+    "slice_status": "PARTIAL",
+    "consumer_paths": [
+      ".github/workflows/program-baseline.yml",
+      "Makefile",
+      "contracts/governance/program_baseline.md",
+      "control_plane/README.md",
+      "schemas/contracts/v1/governance/program_baseline.schema.json",
+      "tests/validators/test_validate_program_baseline.py",
+      "tools/validators/control_plane/validate_program_baseline.py"
+    ],
+    "alias_paths": []
+  },
+  "authority_snapshot": {
+    "directory_rules": {
+      "path": "docs/doctrine/directory-rules.md",
+      "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "decision_ref": "ADR-0029",
+      "implementation_status": "IMPLEMENTED"
+    },
+    "adr_index": {
+      "path": "docs/adr/INDEX.md",
+      "sha256": "sha256:27e5cb40b23964e63302c5c7eeef9f213e18c0d9ed58b1051b026ff2c99fbf91",
+      "accepted_ids": [
+        "ADR-0006",
+        "ADR-0007",
+        "ADR-0029"
+      ],
+      "accepted_count": 3,
+      "proposed_count": 33,
+      "unassigned_scaffold_count": 12,
+      "implementation_status": "IMPLEMENTED"
+    },
+    "codeowners": {
+      "path": ".github/CODEOWNERS",
+      "sha256": "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "owner": "@bartytime4life",
+      "implementation_status": "IMPLEMENTED"
+    },
+    "root_registry": {
+      "path": "control_plane/root_registry.yaml",
+      "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "owner": "@bartytime4life",
+      "implementation_status": "IMPLEMENTED"
+    }
+  },
+  "tracked_surfaces": [
+    {
+      "id": "adjacent_control_plane_readme",
+      "path": "control_plane/README.md",
+      "sha256": "sha256:1fcfc75b8d3ddd6a55aafc14905c1eb05bcd41dd1ec4861ee06afae132a2ea12",
+      "implementation_status": "PARTIAL",
+      "reason": "snapshot_text_is_pinned_to_prior_milestone_base"
+    },
+    {
+      "id": "historical_repository_control_state",
+      "path": "control_plane/repository_control_state.yaml",
+      "sha256": "sha256:d2c733202183b1ec408ecb1935b7f6fbfb4896d1fd226a37499106dc3b1ed208",
+      "implementation_status": "PARTIAL",
+      "reason": "historical_control_observation_is_not_current_authority"
+    },
+    {
+      "id": "historical_trust_spine_baseline",
+      "path": "control_plane/trust_spine_baseline.yaml",
+      "sha256": "sha256:b97d613dac363112e3d535e30ea368d8fe100b16973ed5753ef34b0bb0f4a7c4",
+      "implementation_status": "IMPLEMENTED",
+      "reason": "bounded_historical_snapshot_remains_valid"
+    },
+    {
+      "id": "object_family_catalog",
+      "path": "control_plane/object_family_register.yaml",
+      "sha256": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c",
+      "implementation_status": "PARTIAL",
+      "reason": "catalog_has_all_nineteen_entries_but_workflow_watch_tests_fail"
+    },
+    {
+      "id": "path_alias_projection",
+      "path": "control_plane/path_alias_register.yaml",
+      "sha256": "sha256:4721fd4c2df986dbc63b2174feec1863034d96326775ed000b4cfbf9fe57f5a2",
+      "implementation_status": "IMPLEMENTED",
+      "reason": "declared_alias_projection_validates"
+    },
+    {
+      "id": "root_registry_projection",
+      "path": "control_plane/root_registry.yaml",
+      "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "implementation_status": "IMPLEMENTED",
+      "reason": "declared_root_projection_validates"
+    }
+  ],
+  "tracker_snapshot": [
+    {
+      "number": 2768,
+      "state": "OPEN",
+      "role": "program_tracker",
+      "updated_at": "2026-08-22T18:19:34Z",
+      "recorded_baseline_sha": "131b605163bfbca1880014a10d9f41cd00ff564f",
+      "implementation_status": "PARTIAL",
+      "stale_at_base": true,
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
+    },
+    {
+      "number": 2874,
+      "state": "OPEN",
+      "role": "source_corpus_tracker",
+      "updated_at": "2026-08-16T05:20:20Z",
+      "recorded_baseline_sha": "8a83530686c6df4752021377daf564758018d39c",
+      "implementation_status": "PARTIAL",
+      "stale_at_base": true,
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
+    },
+    {
+      "number": 3365,
+      "state": "OPEN",
+      "role": "milestone_checkpoint",
+      "updated_at": "2026-08-22T18:16:30Z",
+      "recorded_baseline_sha": "f86fcddb553217f7ffadafd80f20e95d635180b1",
+      "implementation_status": "PARTIAL",
+      "stale_at_base": true,
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
+    }
+  ],
+  "drive_lineage": [
+    {
+      "file_id": "1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY",
+      "title": "Kansas Frontier Matrix Repository Structure Guiding Document",
+      "modified_at": "2026-07-12T17:07:10.166Z",
+      "role": "advisory_repository_structure",
+      "url": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
+      "repository_authority": false,
+      "mutated": false
+    },
+    {
+      "file_id": "1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "title": "Kansas Frontier Matrix — Connected-Dots Architecture Brief",
+      "modified_at": "2026-07-12T17:05:41.600Z",
+      "role": "doctrine_synthesis_not_implementation_evidence",
+      "url": "https://docs.google.com/document/d/1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM/edit",
+      "repository_authority": false,
+      "mutated": false
+    },
+    {
+      "file_id": "1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs",
+      "title": "Kansas Frontier Matrix — AI Build Operating Contract",
+      "modified_at": "2026-07-12T17:11:00.231Z",
+      "role": "advisory_operating_contract",
+      "url": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit",
+      "repository_authority": false,
+      "mutated": false
+    }
+  ],
+  "validation_observations": [
+    {
+      "id": "adr_index",
+      "command": "python tools/validators/validate_adr_index.py",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "thirty_six_numbered_records_and_twelve_scaffolds"
+    },
+    {
+      "id": "adr_index_tests",
+      "command": "python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "eight_focused_adr_index_tests"
+    },
+    {
+      "id": "control_plane_registry_packet",
+      "command": "make control-plane-registry-packet",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "seven_required_registry_projections_and_fourteen_tests"
+    },
+    {
+      "id": "exact_main_hosted_checks",
+      "command": "GitHub Actions run search for head_sha 6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "run_state": "NOT_RUN",
+      "outcome": "NOT_RUN",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "no_hosted_runs_observed_for_exact_merge_commit"
+    },
+    {
+      "id": "object_family_register",
+      "command": "python tools/validators/control_plane/validate_object_family_register.py",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "nineteen_structurally_registered_object_families"
+    },
+    {
+      "id": "object_family_workflow_watch_tests",
+      "command": "python -m pytest tests/validators/test_validate_object_family_register.py -q --strict-config --strict-markers",
+      "run_state": "EXECUTED",
+      "outcome": "FAIL",
+      "failure_class": "INHERITED",
+      "finding_count": 9,
+      "scope": "nine_declared_paths_missing_from_both_workflow_filters"
+    },
+    {
+      "id": "path_alias_register",
+      "command": "python tools/validators/directory_governance/validate_path_alias_register.py",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "declared_path_alias_projection"
+    },
+    {
+      "id": "repository_topology",
+      "command": "python tools/validators/directory_governance/validate_repository_topology.py --format json",
+      "run_state": "EXECUTED",
+      "outcome": "FAIL",
+      "failure_class": "INHERITED",
+      "finding_count": 9,
+      "scope": "nine_unbaselined_findings_and_thirteen_stale_fingerprints"
+    },
+    {
+      "id": "root_registry",
+      "command": "python tools/validators/directory_governance/validate_root_registry.py",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "declared_root_projection"
+    },
+    {
+      "id": "trust_spine_baseline",
+      "command": "make trust-spine-baseline",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "historical_pinned_snapshot_eleven_tests_and_fixture_polarity"
+    }
+  ],
+  "unresolved_items": [
+    "control_plane_readme_snapshot_precedes_current_main",
+    "exact_main_hosted_checks_not_run",
+    "human_review_pending",
+    "object_family_workflow_watch_coverage_has_nine_failures",
+    "repository_topology_has_nine_unbaselined_findings",
+    "six_required_control_plane_registers_remain_empty",
+    "tracker_2768_requires_current_delta",
+    "tracker_2874_requires_current_delta"
+  ],
+  "non_effects": [
+    "does_not_accept_or_supersede_adrs",
+    "does_not_activate_or_admit_sources",
+    "does_not_approve_policy_or_human_review",
+    "does_not_change_repository_settings",
+    "does_not_expand_or_waive_drift_baselines",
+    "does_not_mutate_data_lifecycle_state",
+    "does_not_release_deploy_promote_or_publish",
+    "does_not_replace_repository_evidence_with_drive_guidance",
+    "does_not_self_authorize",
+    "does_not_turn_not_run_or_skipped_into_pass"
+  ],
+  "correction": {
+    "method": "same_path_forward_fix_or_reviewed_git_revert",
+    "rollback_target": "git:6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+    "external_correction": "append_corrective_issue_comment",
+    "stale_triggers": [
+      "accepted_adr_status_changes",
+      "authority_digest_changes",
+      "base_branch_advances",
+      "issue_state_or_body_changes",
+      "open_pull_request_queue_changes",
+      "workflow_or_validator_outcome_changes"
+    ],
+    "receipt_history": "append_only"
+  }
+}

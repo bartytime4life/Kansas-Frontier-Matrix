@@ -1,0 +1,232 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-reno-county-readme-d0c4275176e9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/reno_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/reno_county/README.md": "sha256:d0c4275176e95b8e751dc1a2d5dcb0d489d1e2133f38ac062603b17760b90450"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:201353fb65fecbf37cef82cf80cbc6867f91b4f22f83d858ae85dde0a7846b39",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "deterministic local Markdown structure and link validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:201353fb65fecbf37cef82cf80cbc6867f91b4f22f83d858ae85dde0a7846b39",
+      "sha256:d0c4275176e95b8e751dc1a2d5dcb0d489d1e2133f38ac062603b17760b90450"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/131b605163bfbca1880014a10d9f41cd00ff564f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/reno_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/reno_county/reno_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/.github/workflows/docs-meta-block.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/.github/workflows/docs-stale-scan.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/.github/workflows/validator-suite.yml"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/reno_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 131b605163bfbca1880014a10d9f41cd00ff564f; read the complete predecessor README and complete Reno build plan; exact open-PR search found no overlapping Reno README pull request."
+    },
+    {
+      "gate": "task-branch-reconciliation",
+      "outcome": "PASS",
+      "reason": "The pre-existing agent/reno-county-readme-20260821 branch was initially identical to current main and had no open pull request; the branch was reused without force-push or history rewrite, and later writes used exact blob compare-and-swap semantics."
+    },
+    {
+      "gate": "same-path-placement-and-directory-authority",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under docs/focus-mode/counties/reno_county/. ADR-0029 is accepted and adopts Directory Rules v2 at docs/doctrine/directory-rules.md; proposed ADR-0027 cannot authorize a move, rename, parallel Focus tree, or authority-root change."
+    },
+    {
+      "gate": "compact-predecessor-modernization",
+      "outcome": "PASS",
+      "reason": "The predecessor's purpose, sibling-plan link, proposed status, KFM truth posture, and parent navigation are preserved and expanded; compatibility anchors for the prior H1, Contents, and About this plan headings remain."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Reno build plan was reviewed and remains byte-unchanged at blob b45c08c05ab7d6d8a2f098da73323655adca9a2e. Its repository-unknown statements are narrowed only for current path and file presence; external claims and implementation designs remain dated planning evidence, PROPOSED, UNKNOWN, or NEEDS VERIFICATION."
+    },
+    {
+      "gate": "county-index-direct-dependency-closure",
+      "outcome": "PASS",
+      "reason": "The current county index already classifies Reno as TRACKED_PAIR because the expected README and plan filename are present and substantive. This same-path modernization preserves that classification, so no partial shared-index edit is required."
+    },
+    {
+      "gate": "mining-subsurface-and-infrastructure-boundary",
+      "outcome": "PASS",
+      "reason": "The README exposes no restricted underground geometry, shafts, utilities, operational mine detail, infrastructure vulnerability, current operation, precise hazard prediction, or property-specific structural conclusion."
+    },
+    {
+      "gate": "water-ecology-agriculture-and-private-data-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no flood warning, water-right, private-well, drinking-water, public-health, exact sensitive-species, private-farm, household, owner, or parcel-title determination."
+    },
+    {
+      "gate": "space-history-event-and-current-safety-boundary",
+      "outcome": "PASS",
+      "reason": "The README separates public-history interpretation from artifact provenance and rights, and excludes event security, non-public emergency procedures, real-time safety judgments, access guarantees, and operational response detail."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The 36,891-byte README has one H1, one complete KFM metadata block, 19 unique explicit anchors, 11 internally consistent tables, balanced fences, valid GFM alerts, LF endings, no tabs or trailing whitespace, no conflict markers, and a final newline."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All 15 distinct repository-relative targets were normalized from the README path and resolved through current-session GitHub reads; every same-document fragment resolves to a unique explicit anchor. No external network request was required."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 d0c4275176e95b8e751dc1a2d5dcb0d489d1e2133f38ac062603b17760b90450; predicted and remote Git blob c801f18e554f3eaa3fbf1fc92679926245592457; 36,891 UTF-8 bytes."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the current GENERATED_RECEIPT field, type, enum, digest, path-map parity, citation, timestamp, and pending-review constraints; final remote artifact integrity will be rechecked after commit."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "docs-meta-block, docs-stale-scan, and validator-suite use GitHub-hosted runners, bounded timeouts, immutable action pins, and read-only contents permission. No pull_request_target, workflow_run, self-hosted runner, OIDC, secret-bearing execution, deployment, release, publication, or administrative mutation was found in the inspected workflow boundaries."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current validator targets docs/focus-modes/, kebab-case lanes, and seven required files; it is not a valid passing gate for the singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "external-source-refresh",
+      "outcome": "SKIPPED",
+      "reason": "The sibling plan's 2026-05-21 external source candidates, source terms, rights, currentness, and factual claims were not rechecked; all such claims remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created; their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not geology, mining, hydrology, ecology, infrastructure-security, public-health, rights, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-request",
+      "validated": true,
+      "evidence_ref": "sha256:201353fb65fecbf37cef82cf80cbc6867f91b4f22f83d858ae85dde0a7846b39"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/131b605163bfbca1880014a10d9f41cd00ff564f"
+    },
+    {
+      "id": "prior-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/reno_county/README.md"
+    },
+    {
+      "id": "complete-reno-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/reno_county/reno_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "focus-compatibility-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/README.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-payload-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-schema-family",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "inactive-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/policy/focus/README.md"
+    },
+    {
+      "id": "county-index-validator-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/tools/validators/validate_focus_mode_index.py"
+    },
+    {
+      "id": "repository-review-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/.github/CODEOWNERS"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T04:34:22Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "notes": "Documentation-only same-path update plus generated provenance receipt. The Reno build plan, county index, contracts, schemas, policy, validators, workflows, lifecycle data, release state, deployment state, and publication state are unchanged. External source candidates in the plan were not refreshed."
+}

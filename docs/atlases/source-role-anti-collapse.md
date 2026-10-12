@@ -1,28 +1,27 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-source-role-anti-collapse
 title: Source-Role Anti-Collapse Register (Atlas v1.1 §24.1 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (docs steward; source steward; sensitivity reviewer)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 source-role anti-collapse doctrine without becoming SourceDescriptor, evidence, policy, validator, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED field names and implementation surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/atlases/stale-state-reference.md
-  - docs/atlases/decision-outcome-envelope.md
-  - docs/atlases/master-api-surface.md
-  - docs/adr/ADR-S-04-source-role-vocabulary-v1.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/atlas/master-api-surface.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - contracts/source/source_descriptor.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - policy/
-  - tests/policy/source_role/
-  - fixtures/source_role/
   - tools/validators/
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
@@ -31,8 +30,8 @@ notes:
   - "Authority basis: faithful extraction of Atlas v1.1 §24.1. Atlas v1.1 explicitly states Chapter 24 tables are NAVIGATIONAL, not authoritative."
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
   - "Source-role vocabulary v1 (7 canonical classes) is doctrine-CONFIRMED; ADR-S-04 governs evolution."
-  - "Implementation depth (validator wiring, policy packages, contract/schema authoring) is PROPOSED throughout and requires mounted-repo verification."
-  - "Owner, doc_id, exact ADR filenames are placeholders pending mounted-repo inspection and ADR acceptance."
+  - "Implementation depth (validator wiring, policy packages, contract/schema authoring) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
+  - "Owner and exact ADR filenames remain placeholders pending accountable assignment and ADR acceptance; doc_id is resolved by the current same-path identity repair."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -53,10 +52,10 @@ notes:
 > **Status:** `draft`.
 > **Authority:** Navigational extract. `CONFIRMED` doctrine for the §24.1 register body (extracted faithfully). Implementation surface is `PROPOSED` throughout. `EvidenceBundle`, source dossiers, and `schemas/contracts/v1/…` remain canonical for any specific claim *(Atlas v1.1 Ch. 24 preamble)*.
 > **Truth posture:** `CONFIRMED` doctrine framing (role-as-identity, seven canonical classes, role immutability, seven DENY conditions) / `PROPOSED` field names, schema paths, policy packages, validator wiring / `NEEDS VERIFICATION` mounted-repo presence of every contract, schema, policy, validator, and ADR named below / `UNKNOWN` repo implementation depth.
-> **Open ADR:** [`ADR-S-04`](../adr/ADR-S-04-source-role-vocabulary-v1.md) — Source-role vocabulary v1 and evolution rule.
+> **Open ADR:** `ADR-S-04` (not present) — Source-role vocabulary v1 and evolution rule.
 > **Owner:** `OWNER_TBD`.
 
-**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Canonical source-role classes](#2-canonical-source-role-classes-§2411) · [Role immutability](#3-role-immutability) · [Anti-collapse failure modes](#4-anti-collapse-failure-modes-deny-conditions-§2412) · [Roles to descriptor fields](#5-roles-to-source-descriptor-fields-§2413) · [Per-domain risk map](#6-per-domain-risk-map) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
+**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Canonical source-role classes](#2-canonical-source-role-classes-2411) · [Role immutability](#3-role-immutability) · [Anti-collapse failure modes](#4-anti-collapse-failure-modes-deny-conditions-2412) · [Roles to descriptor fields](#5-roles-to-source-descriptor-fields-2413) · [Per-domain risk map](#6-per-domain-risk-map) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
 
 ---
 
@@ -201,7 +200,7 @@ Editing the existing `SourceDescriptor.source_role` in place is `DENY` at admiss
 
 ### 4.1 Outcome vocabulary cross-reference
 
-The collapse outcomes (`DENY` / `ABSTAIN` / `HOLD`) are drawn from the [Decision Outcome Envelope](./decision-outcome-envelope.md) vocabulary *(Atlas v1.1 §24.3)*. The mapping in §4 is exact:
+The collapse outcomes (`DENY` / `ABSTAIN` / `HOLD`) are drawn from the Decision Outcome Envelope (not present) vocabulary *(Atlas v1.1 §24.3)*. The mapping in §4 is exact:
 
 - `DENY` — used at publication and at the trust membrane (collapse patterns 1–6).
 - `ABSTAIN` — used at the AI surface and at the citation evaluator (collapse patterns 1, 3, 6, 7).
@@ -403,8 +402,8 @@ Until ADR-S-04 is accepted, the vocabulary is `CONFIRMED doctrinally` (seven cla
 | Register | Relationship to this register |
 |---|---|
 | [`docs/atlases/stale-state-reference.md`](./stale-state-reference.md) *(extract of §24.8)* | `SourceDescriptor` is the subject of supersession-lineage row 1 (`Replaced by a newer descriptor; old descriptor retained with superseded_by link`). §3.2 of this register details the in-place-edit prohibition; stale-state markers 1 and 7 surface on `SourceDescriptor` fields. |
-| [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | §4 of this register uses `DENY` / `ABSTAIN` / `HOLD` from the envelope vocabulary. |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | The "Source summary resolver" API family (§20.3 row 1) carries `SourceDescriptor` projection and is the public-surface enforcement point for §4 collapse patterns. |
+| `docs/atlases/decision-outcome-envelope.md` (not present) *(extract of §24.3)* | §4 of this register uses `DENY` / `ABSTAIN` / `HOLD` from the envelope vocabulary. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | The "Source summary resolver" API family (§20.3 row 1) carries `SourceDescriptor` projection and is the public-surface enforcement point for §4 collapse patterns. |
 
 ### 10.2 Other Atlas v1.1 Chapter 24 registers
 
@@ -487,7 +486,7 @@ Until ADR-S-04 is accepted, the vocabulary is `CONFIRMED doctrinally` (seven cla
 ### 12.4 Cross-register coherence
 
 - Validator coverage gap: Atlas v1.1 §24.10 row "Source role mislabeling at admission" notes "Validator coverage may not include every role-pair; periodic audit needed." The validator list in §8 should be audited against the seven canonical classes × seven canonical classes role-pair matrix to confirm coverage.
-- AI text as evidence (§4 row 7) cross-cuts with [`decision-outcome-envelope.md`](./decision-outcome-envelope.md) `ABSTAIN` requirements and `AIReceipt` mandate; verify these registers remain consistent on cite-or-abstain framing.
+- AI text as evidence (§4 row 7) cross-cuts with `decision-outcome-envelope.md` (not present) `ABSTAIN` requirements and `AIReceipt` mandate; verify these registers remain consistent on cite-or-abstain framing.
 
 [↑ back to top](#top)
 
@@ -513,7 +512,7 @@ Until ADR-S-04 is accepted, the vocabulary is `CONFIRMED doctrinally` (seven cla
 | *KFM Repository Structure Guiding Document* | `CONFIRMED doctrine` | Grounds §7 enforcement-surface paths and §9 implementation-surface paths. | Doctrine, not implementation. |
 | `docs/atlas/source-role-anti-collapse.md` (prior turn, this session) | `CONFIRMED pointer-page status` | The deprecated-lane pointer page that redirects to this canonical-lane file. | Pointer; not authority. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 

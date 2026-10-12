@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/water_release_decision.schema.json",
+  "title": "water_release_decision",
+  "description": "Only trusted operator-store metadata is a serving input. Clients cannot approve by submitting this shape; independent identities and temporal ordering are semantic checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "package_id",
+    "decision",
+    "reviewed_at",
+    "released_at",
+    "expires_at",
+    "correction_state",
+    "correction_ref",
+    "reviewer",
+    "releaser",
+    "source_admission_ref",
+    "rights_ref",
+    "sensitivity_ref",
+    "policy_ref",
+    "review_ref",
+    "release_ref"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.water-release-decision/v1"
+    },
+    "package_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "decision": {
+      "enum": [
+        "APPROVED",
+        "DENIED"
+      ]
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "released_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "correction_state": {
+      "enum": [
+        "ACTIVE",
+        "CORRECTED",
+        "SUPERSEDED",
+        "WITHDRAWN"
+      ]
+    },
+    "correction_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "releaser": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "source_admission_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    },
+    "rights_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    },
+    "sensitivity_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    },
+    "policy_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    },
+    "review_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    },
+    "release_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{1,240}$"
+    }
+  }
+}

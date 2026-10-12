@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/map/renderer_plugin_admission_assessment.schema.json",
+  "title": "RendererPluginAdmissionAssessment candidate profile",
+  "description": "Inactive fixture-only renderer plugin evidence assessment with no admission, install, policy, release, or runtime authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "assessment_id",
+    "version",
+    "spec_hash",
+    "plugin",
+    "assessment_scope",
+    "checks",
+    "evidence_refs",
+    "limitations",
+    "recommendation",
+    "review_state",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/ref" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ref" }
+    }
+  },
+  "properties": {
+    "profile": { "const": "kfm.map.renderer-plugin-admission-assessment.v1" },
+    "status": { "const": "PROPOSED_INACTIVE" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^renderer-plugin-assessment:[a-f0-9]{24}$"
+    },
+    "version": { "const": "1.0.0" },
+    "spec_hash": { "$ref": "#/$defs/sha256" },
+    "plugin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_name",
+        "ecosystem",
+        "version",
+        "artifact_digest",
+        "package_origin_ref"
+      ],
+      "properties": {
+        "package_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$"
+        },
+        "ecosystem": { "enum": ["NPM", "PYPI", "VENDORED"] },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "artifact_digest": { "$ref": "#/$defs/sha256" },
+        "package_origin_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "assessment_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_ref", "runtime_boundary_ref", "admitted_for"],
+      "properties": {
+        "adapter_ref": { "$ref": "#/$defs/ref" },
+        "runtime_boundary_ref": { "$ref": "#/$defs/ref" },
+        "admitted_for": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^layer-class:[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version_pinned",
+        "integrity_verified",
+        "lockfile_bound",
+        "lockfile_ref",
+        "origin_status",
+        "dependency_origin_policy_ref",
+        "attestation_status",
+        "attestation_ref",
+        "sbom_status",
+        "sbom_ref",
+        "license_status",
+        "license_evidence_ref",
+        "vulnerability_status",
+        "vulnerability_evidence_ref",
+        "adapter_boundary_status",
+        "adapter_evidence_ref",
+        "network_behavior_status",
+        "network_behavior_ref",
+        "removal_status",
+        "removal_test_ref",
+        "rollback_status",
+        "rollback_ref"
+      ],
+      "properties": {
+        "version_pinned": { "type": "boolean" },
+        "integrity_verified": { "type": "boolean" },
+        "lockfile_bound": { "type": "boolean" },
+        "lockfile_ref": { "$ref": "#/$defs/nullable_ref" },
+        "origin_status": { "enum": ["PASS", "ABSTAIN", "DENY"] },
+        "dependency_origin_policy_ref": { "$ref": "#/$defs/nullable_ref" },
+        "attestation_status": { "enum": ["VERIFIED", "UNKNOWN", "INVALID"] },
+        "attestation_ref": { "$ref": "#/$defs/nullable_ref" },
+        "sbom_status": { "enum": ["VERIFIED", "UNKNOWN", "INVALID"] },
+        "sbom_ref": { "$ref": "#/$defs/nullable_ref" },
+        "license_status": { "enum": ["VERIFIED", "UNKNOWN", "DENIED"] },
+        "license_evidence_ref": { "$ref": "#/$defs/nullable_ref" },
+        "vulnerability_status": { "enum": ["CLEAR", "UNKNOWN", "AFFECTED"] },
+        "vulnerability_evidence_ref": { "$ref": "#/$defs/nullable_ref" },
+        "adapter_boundary_status": { "enum": ["VERIFIED", "UNKNOWN", "VIOLATED"] },
+        "adapter_evidence_ref": { "$ref": "#/$defs/nullable_ref" },
+        "network_behavior_status": { "enum": ["DECLARED", "UNKNOWN", "VIOLATED"] },
+        "network_behavior_ref": { "$ref": "#/$defs/nullable_ref" },
+        "removal_status": { "enum": ["VERIFIED", "UNKNOWN", "FAILED"] },
+        "removal_test_ref": { "$ref": "#/$defs/nullable_ref" },
+        "rollback_status": { "enum": ["VERIFIED", "UNKNOWN", "FAILED"] },
+        "rollback_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "evidence_refs": { "$ref": "#/$defs/ref_array" },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    },
+    "recommendation": { "enum": ["READY_FOR_REVIEW", "HOLD", "DENY"] },
+    "review_state": { "enum": ["HOLD", "APPROVED"] },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_queried",
+        "package_downloaded",
+        "plugin_installed",
+        "plugin_imported",
+        "renderer_booted",
+        "network_probed",
+        "lockfile_mutated",
+        "policy_decided",
+        "human_review_approved",
+        "release_authorized",
+        "deployed",
+        "published"
+      ],
+      "properties": {
+        "registry_queried": { "type": "boolean" },
+        "package_downloaded": { "type": "boolean" },
+        "plugin_installed": { "type": "boolean" },
+        "plugin_imported": { "type": "boolean" },
+        "renderer_booted": { "type": "boolean" },
+        "network_probed": { "type": "boolean" },
+        "lockfile_mutated": { "type": "boolean" },
+        "policy_decided": { "type": "boolean" },
+        "human_review_approved": { "type": "boolean" },
+        "release_authorized": { "type": "boolean" },
+        "deployed": { "type": "boolean" },
+        "published": { "type": "boolean" }
+      }
+    }
+  }
+}

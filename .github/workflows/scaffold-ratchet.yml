@@ -1,0 +1,52 @@
+# KFM scaffold ratchet.
+#
+# Fails when a placeholder, blank, stub, vacuous-test, TODO-echo, or TBD-descriptor
+# file appears on the scripting, automation, data-processing, or contract surfaces
+# without being implemented, and when a resolved entry is left in the baseline.
+# A green run proves only that tools/qa/scaffold_baseline.json matches the tree.
+name: scaffold-ratchet
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scaffold-ratchet-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scaffold-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      TZ: UTC
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Compare scaffold inventory with the reviewed baseline
+        run: python tools/qa/scaffold_inventory.py --check
+
+      - name: Record scaffold ratchet scope
+        if: always()
+        run: |
+          {
+            echo "## scaffold-ratchet"
+            echo
+            echo "Standard-library inventory of tracked placeholder, stub, blank, and vacuous files."
+            echo "It is a review aid; it grants no readiness, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"

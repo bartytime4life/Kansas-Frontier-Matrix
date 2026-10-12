@@ -2,16 +2,18 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v1.4
+version: v2.7
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-05-09
-updated: 2026-07-26
+updated: 2026-10-12
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-facing ADR operating guidance and inventory summary derived from the canonical docs/adr/INDEX.md without independent decision-status authority.
 authority_surface: human-facing architecture decision records
 related:
   - docs/adr/INDEX.md
@@ -25,60 +27,73 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
-  - "Ratification is prepared from main@67f1d7eac9baabd69da997ba569de54c6b7c1d11; ADR-0029 transitions to accepted only through the synchronized source/index change and becomes effective on merge."
-  - "File presence does not accept a decision. ADR-0029 is accepted through explicit owner ratification and a matching source/index transition; the other 28 numbered ADRs remain proposed."
+  - "v2.7 records ADR-0048 as accepted by the repository owner on 2026-10-12 and refreshes every snapshot counter and badge (64 direct files; 48 numbered; source metadata 27 proposed, 11 draft, 10 accepted; 10 accepted, 38 proposed effective)."
+  - "v2.6 registers ADR-0048 as a proposed Directory Rules §13.2 wording decision for names inside receipt-pinned external byte mirrors; registration does not amend Directory Rules, change its adopted digest, or alter ADR-0029."
+  - "v2.5 registers ADR-0043 as a proposed People/DNA/Land genealogy policy tooling-placement decision, the policy-root sibling of ADR-0042, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
+  - "v2.4 registers ADR-0042 as a proposed People/DNA/Land genealogy validator tooling-placement decision, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
+  - "v2.3 registers ADR-0041 as a proposed, non-authorizing inherited-hold classification after normalizing the extensionless source path introduced by PR #4632."
+  - "v2.2 records the explicit bounded owner acceptance of ADR-0040 while preserving proposed, unbound register entries, the Stage 1B hold, and Stage 2 prohibition."
+  - "ADR-0038 is accepted only for its stated Stage 1 trusted-base correction mechanism; it does not authorize a Stage 2 topology transition."
+  - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
+  - "ADR-0040 accepts only seven exact catalog redirect-document target blobs; it does not bind or consume corrections or authorize a topology-baseline transition."
+  - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 are accepted in their stated scopes; the other 38 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/adr/` — Architecture Decision Records
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
-[![inventory](https://img.shields.io/badge/numbered_ADRs-29-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-1_accepted_%7C_28_proposed-1a7f37)](./INDEX.md)
+[![inventory](https://img.shields.io/badge/numbered_ADRs-48-0969da)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-10_accepted_%7C_38_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
-Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, and rollback.
+Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, validation, correction, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically accepted. ADR-0029 is the first accepted numbered record through explicit project-owner ratification and a synchronized source/index transition; ADR-0001 through ADR-0028 remain proposed. This status summary does not independently promote any decision.
+> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 carry matching accepted source/index status in their stated scopes; the other 38 numbered records remain proposed. This summary does not independently promote any decision.
 
-**Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory contract](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open governance work](#open-governance-work)
+**Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [ADR triggers](#when-an-adr-is-required) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open work](#open-governance-work)
 
 ---
 
 ## Verified snapshot
 
-The ratification base is `main@67f1d7eac9baabd69da997ba569de54c6b7c1d11`. PR #1763 added ADR-0029 as proposed; the current synchronized ratification change records it as the first accepted numbered ADR.
+The current inventory snapshot is recounted against `main@4fee3f97` plus the ADR-0048 acceptance (2026-10-12).
 
 | Surface | Verified state | Meaning |
-| --- | ---: | --- |
-| Direct Markdown files | 46 | Complete direct-child inventory for this snapshot |
-| Numbered records | 29 | Unique, contiguous IDs `ADR-0001` through `ADR-0029` |
-| Numbered source metadata | 15 `proposed`; 12 `draft`; 1 legacy `PROPOSED`; 1 `accepted` | The first three classes normalize to `proposed`; ADR-0029 normalizes to `accepted` |
-| Verified accepted decisions | 1 | ADR-0029 carries matching source/index `accepted` status and explicit owner-ratification evidence |
+|---|---:|---|
+| Direct Markdown files | 64 | Complete direct-child inventory in the proposed tree |
+| Numbered records | 48 | Unique, contiguous IDs `ADR-0001` through `ADR-0048` |
+| Numbered source metadata | 27 `proposed`; 11 `draft`; 10 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for ten records |
+| Verified accepted decisions | 10 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
-| Index and support documents | 5 | This README, canonical index, two assessment/checklist documents, and `_next_move_log.md` |
+| Index and other support documents | 3 | This README, canonical index, and normalized-summary checklist |
 
 The exact numbered records and unassigned scaffolds are listed in the [canonical ADR index](./INDEX.md). The human cross-register at [`docs/registers/ADR_INDEX.md`](../registers/ADR_INDEX.md) points to that inventory without maintaining a competing table.
 
+### Currentness reconciliation — 2026-09-14
+
+This v2.0 summary refreshes only the README's index-derived snapshot, badges, operating notes, and open-work counts. It does not change `docs/adr/INDEX.md`, any ADR status, the validator, review evidence, implementation, release, deployment, promotion, or publication state.
+
 ## Authority and boundaries
 
-Directory Rules §6.1 assigns Architecture Decision Records to `docs/adr/` inside the human-facing control plane. Authority resolves in this order:
+Directory Rules §9.1 assigns Architecture Decision Records to `docs/adr/` inside the human-facing control plane. Authority resolves in this order:
 
 1. KFM core invariants and doctrine.
 2. Accepted ADRs that explicitly amend Directory Rules.
 3. Directory Rules.
 4. Per-root READMEs such as this file.
 5. Domain dossiers and planning lineage.
-6. Repository convention, which is evidence of implementation—not placement authority when it conflicts with the rules.
+6. Repository convention, which is implementation evidence—not placement authority when it conflicts with the rules.
 
 This directory owns decision records and their human inventory. It does not own:
 
 | Responsibility | Canonical home |
-| --- | --- |
+|---|---|
 | Object meaning | [`contracts/`](../../contracts/) |
 | Machine-checkable shape | [`schemas/`](../../schemas/) |
 | Allow, deny, restrict, or abstain rules | [`policy/`](../../policy/) |
@@ -96,15 +111,15 @@ An ADR may direct changes in those homes, but it does not replace their contract
 The three human surfaces have distinct responsibilities:
 
 | Path | Responsibility | Must not do |
-| --- | --- | --- |
+|---|---|---|
 | [`README.md`](./README.md) | Operating rules for authoring, review, status, and validation | Duplicate the full record table |
 | [`INDEX.md`](./INDEX.md) | Canonical human inventory of numbered records and unassigned scaffolds | Grant decision authority merely because a file is present |
 | [`../registers/ADR_INDEX.md`](../registers/ADR_INDEX.md) | Cross-register pointer, ownership, consumers, and validation boundary | Maintain a second ADR row set |
 
-The canonical index records two different facts:
+The canonical index records:
 
-- **Source metadata** reports what each file currently says: `proposed`, `draft`, or legacy unstructured `PROPOSED`.
-- **Effective decision status** uses the Directory Rules vocabulary: `proposed`, `accepted`, `superseded`, or `rejected`.
+- **Source metadata** — what each file currently says: `proposed`, `draft`, legacy `PROPOSED`, `accepted`, `superseded`, or `rejected`.
+- **Effective decision status** — conservative Directory Rules status: `proposed`, `accepted`, `superseded`, or `rejected`.
 
 `draft` and legacy `PROPOSED` normalize to `proposed`. A row may move to `accepted`, `superseded`, or `rejected` only when the record itself carries matching reviewed status evidence. The index cannot promote a decision independently.
 
@@ -112,31 +127,35 @@ The canonical index records two different facts:
 
 ```mermaid
 flowchart LR
-    P["proposed"] -->|review accepts| A["accepted"]
-    P -->|review rejects| R["rejected"]
-    A -->|successor accepted| S["superseded"]
-    S -->|forward link| N["successor ADR"]
+    P["proposed"] -->|explicit reviewed transition| A["accepted"]
+    P -->|explicit reviewed transition| R["rejected"]
+    A -->|accepted successor| S["superseded"]
+    S --> N["successor ADR retained and linked"]
 ```
 
-- **`proposed`** — under consideration; not binding.
-- **`accepted`** — explicitly reviewed and in force for the decision it records.
-- **`superseded`** — replaced by a later accepted ADR; retained with a forward link.
+- **`proposed`** — under consideration; not binding. A merged proposal remains proposed.
+- **`accepted`** — explicitly reviewed and in force for the decision's stated scope.
+- **`superseded`** — replaced by a later accepted ADR; retained with reciprocal links.
 - **`rejected`** — considered and not adopted; retained as decision history.
 
 Accepted, superseded, and rejected records are never deleted. A material change to an accepted decision requires a successor ADR rather than rewriting history.
 
 ## When an ADR is required
 
-Directory Rules §2.4 requires an ADR before:
+Directory Rules require an accepted ADR before implementation that:
 
-- adding, removing, or renaming a canonical root;
-- promoting a compatibility root to canonical or deprecating a canonical root;
-- changing the schema-home rule;
-- splitting or merging a lifecycle phase;
-- creating a parallel home for schemas, contracts, policy, sources, registries, releases, proofs, or receipts;
-- bending a KFM core invariant.
+- adds a canonical, conditional, or compatibility root;
+- renames, merges, splits, retires, promotes, or reclassifies a root;
+- changes lifecycle, evidence, release, or public-boundary authority;
+- changes an object family's authority owner;
+- creates or preserves parallel writable authority;
+- bends a KFM trust, evidence, sensitivity, correction, or rollback invariant;
+- makes a semantic identity or compatibility change that cannot be treated as local refinement;
+- changes adopted Directory Rules or another accepted architecture decision.
 
-Use an ADR for other cross-component choices when code, schema, or policy alone cannot preserve the rationale. Do not use an ADR for routine typo fixes, local refactors, runbooks, release decisions, or machine-shape changes that do not alter architecture.
+An ADR is strongly recommended when a choice spans several roots or bounded contexts, changes public/governed interfaces, changes deterministic identity or replay, changes AI/runtime/provider boundaries, changes source roles or sensitivity, introduces a long-lived compatibility profile, or is likely to be re-litigated.
+
+Do not create an ADR merely for typo repair, local refactoring, runbooks, release instances, or machine-shape changes that do not alter architecture.
 
 ## Naming and numbering
 
@@ -149,25 +168,38 @@ ADR-NNNN-kebab-case-slug.md
 Rules:
 
 - `NNNN` is a permanent four-digit repository-wide ID.
-- Claim the next number only after checking the canonical index, open pull requests, and active branches.
+- Claim the next number only after checking the canonical index, open pull requests, active branches, and recent merges.
 - The H1 must contain the same `ADR-NNNN` as the filename.
 - New records use the current template and begin with effective status `proposed`.
-- `ADR-NNNN-*` and `ADR-XXXX-*` filenames are placeholders, not reserved numeric decisions.
-- Slug-only `ADR-*.md` scaffolds remain unassigned until a reviewed PR gives them a unique numeric ID.
+- `ADR-NNNN-*`, `ADR-XXXX-*`, and slug-only files are unassigned scaffolds until reviewed assignment.
+- Proposed [`ADR-0035`](./ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md) would make the repository-wide identity and pointer-only domain-index model binding; it remains under review.
+- Proposed [`ADR-0036`](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) would admit one planning-encyclopedia lane and one chapter-source/generated-mirror model; it remains under review.
+- Proposed [`ADR-0037`](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) would select UI-family authority and retained compatibility projections for `EvidenceDrawerPayload`; it remains under review and authorizes no migration.
+- Accepted [`ADR-0038`](./ADR-0038-trusted-base-topology-correction-transitions.md) is limited to its stated Stage 1 trusted-base correction mechanism; it does not authorize its Stage 2 topology transition.
+- Proposed [`ADR-0039`](./ADR-0039-layer-manifest-frame-contract-home.md) would keep `LayerManifest` and `LayerFrame` in the existing data contract/schema family; it remains under review and authorizes no migration.
+- Accepted [`ADR-0040`](./ADR-0040-catalog-redirect-metadata-corrections.md) selects seven exact catalog redirect-document target blobs while keeping every register entry proposed and unbound, Stage 1B held, and Stage 2 unauthorized.
+- Proposed [`ADR-0041`](./ADR-0041-proportional-handling-of-inherited-repository-holds.md) would classify only byte-identical inherited holds for unrelated changes; it remains under review and changes no validator, workflow, or merge authority.
+- Proposed [`ADR-0042`](./ADR-0042-people-dna-land-genealogy-validator-tooling-home.md) would make `tools/validators/domains/people-dna-land/` the sole home for People/DNA/Land genealogy validator tooling and retire `tools/validators/genealogy/`; it remains under review and authorizes no migration or implementation.
+- Proposed [`ADR-0043`](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) would make `policy/domains/people-dna-land/` the sole home for People/DNA/Land genealogy policy scaffolding and retire `policy/genealogy/`, the policy-root sibling of ADR-0042; it remains under review and authorizes no migration or implementation.
+- Accepted [`ADR-0044`](./ADR-0044-owner-self-release-for-admitted-public-water-data.md) lets one person review and release a governed water package only when every evidence bundle is public and carries an admitted public-domain license; every other package keeps two-person review.
+- Accepted [`ADR-0045`](./ADR-0045-owner-self-release-for-admitted-public-weather-data.md) applies the same rule to the GHCN-Daily weather gate, with its own license list; it does not widen water self-release.
+- Accepted [`ADR-0046`](./ADR-0046-owner-self-release-for-admitted-public-soil-data.md) applies the same rule to the USCRN daily soil gate, with its own license list; it does not widen water or weather self-release.
+- Accepted [`ADR-0047`](./ADR-0047-owner-self-release-for-admitted-public-storm-events-data.md) applies the same rule to the NOAA Storm Events gate, with its own license list; it does not widen water, weather or soil self-release.
 
-Two tracked numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). They remain indexed exactly as tracked. Renaming them is deferred because it requires inbound-link and history analysis; this convergence pass does not perform that migration.
+Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 
 ## Authoring workflow
 
 1. Read Directory Rules and confirm the change is ADR-class.
-2. Inspect [`INDEX.md`](./INDEX.md), open ADR PRs, and active ADR branches for collisions.
-3. Copy [`ADR-template.md`](./ADR-template.md) to the next `ADR-NNNN-kebab-case-slug.md` path.
-4. Keep status `proposed`; identify owners, affected roots, evidence, alternatives, migration, and rollback.
+2. Inspect [`INDEX.md`](./INDEX.md), open ADR PRs, active ADR branches, and recent merges for collisions.
+3. Copy [`ADR-template.md`](./ADR-template.md) to a collision-free `ADR-NNNN-kebab-case-slug.md` path.
+4. Keep status `proposed`; identify owners, affected roots, evidence, alternatives, migration, validation, correction, and rollback.
 5. Link any superseded ADRs in both directions.
 6. Update [`INDEX.md`](./INDEX.md) in the same change.
-7. Run the ADR validator and its tests.
-8. Request the reviewers required by the affected roots. CODEOWNERS routing is not proof that review occurred.
-9. On a reviewed status transition, update the record and index together; never let the index promote the record independently.
+7. Update this summary and the cross-register when inventory counts or open-work posture changes.
+8. Run the ADR validator and negative-path tests.
+9. Request reviewers required by affected roots. CODEOWNERS routing is not proof that review occurred.
+10. On a reviewed status transition, update the record and index together; never let the index promote the record independently.
 
 ## Validation
 
@@ -183,46 +215,51 @@ The validator checks:
 - unique numbered IDs and exact index coverage;
 - filename, H1, link target, and index-ID agreement;
 - allowed effective status values and conservative source-status normalization;
-- separation and complete inventory of explicit placeholders and slug-only scaffolds;
-- non-duplicating canonical pointer behavior in `docs/registers/ADR_INDEX.md`;
-- reciprocal supersession links when a record is marked `superseded` or names a predecessor.
+- complete separation and inventory of explicit and slug-only scaffolds;
+- non-duplicating pointer behavior in `docs/registers/ADR_INDEX.md`;
+- reciprocal supersession links.
 
-The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-control-plane.yml) runs the validator and its negative-path tests. A green result proves index coherence for the checked revision. It does not accept a decision, prove architecture implementation, approve policy, authorize release, or publish data.
+The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-control-plane.yml) runs the validator and its negative-path tests. A green result proves checked-revision coherence only. It does not accept a decision, prove architecture implementation, authorize release, or publish data.
 
 ## Review and supersession
 
 | Change | Required review posture |
-| --- | --- |
+|---|---|
 | New proposed ADR | Architecture steward plus affected subsystem owner |
 | `proposed` → `accepted` | Explicit decision review from all named owners; implementation and migration gates as specified by the ADR |
 | `proposed` → `rejected` | Explicit architecture review; retain the record |
-| `accepted` → `superseded` | Accepted successor, forward/back links, and reviewed transition plan |
+| `accepted` → `superseded` | Accepted successor, reciprocal links, and reviewed transition plan |
 | Index or README maintenance | Docs and architecture review route |
 
-[`CODEOWNERS`](../../.github/CODEOWNERS) currently routes `docs/adr/`, `docs/registers/`, `tools/validators/`, and `tests/` to `@bartytime4life`. That is a verified GitHub review route, not a `ReviewRecord`, acceptance decision, separation-of-duties proof, release approval, or publication authority.
+[`CODEOWNERS`](../../.github/CODEOWNERS) currently routes `docs/adr/`, `docs/registers/`, `tools/validators/`, and `tests/` to `@bartytime4life`. That is a verified review route, not a `ReviewRecord`, acceptance decision, separation-of-duties proof, release approval, or publication authority.
 
 ## Open governance work
 
-The following remain unresolved and are not silently normalized by this README:
-
-- Human acceptance review for the remaining 28 proposed numbered ADRs; ADR-0029's single-owner bootstrap exception retains a later independent-review trigger.
-- Metadata normalization for 12 `draft` records and legacy ADR-0007 without changing their conservative `proposed` status.
+- Human acceptance review for the remaining 38 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
+- Metadata normalization for 11 `draft` records without changing conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.
-- Resolution of repo-wide versus domain-local ADR placement where domain documents still describe competing patterns.
-- Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md), which remains proposed and therefore does not yet unlock `artifacts/release/` migration.
-- `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
+- Acceptance or rejection of ADR-0035 before repository-wide numbering and domain-indexing guidance becomes binding.
+- Acceptance or rejection of ADR-0036 before the encyclopedia scaffold is admitted or populated.
+- Acceptance or rejection of ADR-0037 before any `EvidenceDrawerPayload` authority or compatibility migration.
+- Acceptance or rejection of ADR-0039 before any `LayerManifest` or `LayerFrame` authority, schema-home, or compatibility migration.
+- Separate review of ADR-0040 Stage 1B batch semantics before any machine binding; topology-baseline transition remains a later unauthorized Stage 2.
+- Acceptance or rejection of ADR-0041 before any inherited-hold classifier or required-check behavior changes.
+- Acceptance or rejection of ADR-0042 before any migration of `screen_living_persons.py` or implementation of the three pending genealogy validator stubs.
+- Acceptance or rejection of ADR-0043 before any migration of `policy/genealogy/publication.rego`.
+- Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) before `artifacts/release/` migration.
+- Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
-Until each remaining proposal is reviewed, inventory the file, keep that decision `proposed`, preserve reversibility, and do not grant authority by implication. Treat ADR-0029 as accepted only within its explicit digest, supersession, migration, and deletion boundaries.
+Until each proposal is reviewed, inventory the file, keep the decision `proposed`, preserve reversibility, and do not grant authority by implication.
 
 ## Maintenance checklist
 
-- [ ] Update `INDEX.md` whenever a numbered ADR or unassigned scaffold is added, removed through reviewed cleanup, assigned, or status-transitioned.
+- [ ] Update `INDEX.md` whenever a numbered ADR or unassigned scaffold is added, assigned, removed through reviewed cleanup, or status-transitioned.
 - [ ] Preserve unique IDs and exact filename/H1 agreement.
-- [ ] Keep source metadata and effective decision status separate.
+- [ ] Keep source metadata and effective status separate.
 - [ ] Require reciprocal supersession links.
 - [ ] Run the validator and negative-path tests.
-- [ ] Update `updated:` and the verified snapshot when the inventory changes.
+- [ ] Update `updated:` and the verified snapshot when inventory changes.
 - [ ] Keep accepted and historical ADRs append-only.
 - [ ] Record placement conflicts in the drift register instead of normalizing them.
 - [ ] Keep receipts, proofs, policy, schemas, contracts, release objects, and data in their owning roots.

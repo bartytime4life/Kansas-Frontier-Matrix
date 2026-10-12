@@ -160,7 +160,7 @@ Records may be documentation examples only when clearly labeled synthetic and no
 | Executable validators and regression proof | [`tools/validators/domains/habitat/`](../../../../tools/validators/domains/habitat/README.md), [`tests/domains/habitat/`](../../../../tests/domains/habitat/README.md), and [`fixtures/domains/habitat/`](../../../../fixtures/domains/habitat/README.md) |
 | Pipeline implementation or declarative execution specs | [`pipelines/domains/habitat/`](../../../../pipelines/domains/habitat/README.md) and [`pipeline_specs/habitat/`](../../../../pipeline_specs/habitat/README.md) |
 | STAC, DCAT, or PROV-specific Habitat records | Accepted child lanes under `data/catalog/stac/`, `data/catalog/dcat/`, or `data/catalog/prov/`; Habitat child lanes do not exist at the pinned baseline |
-| Triplet/graph projections | `data/triplets/` after singular/plural path disposition and README coverage are resolved |
+| Triplet/graph projections | `data/triplets/` (the singular lane was removed on 2026-09-29) after Habitat child README coverage is resolved |
 | Evidence bundles and proof artifacts | [`data/proofs/habitat/`](../../../proofs/habitat/README.md) or the accepted proof family |
 | Process-memory receipts | [`data/receipts/habitat/`](../../../receipts/habitat/README.md) or the accepted receipt family |
 | Release decisions or candidate approval | [`release/`](../../../../release/README.md) and [`release/candidates/habitat/`](../../../../release/candidates/habitat/README.md) |
@@ -265,7 +265,7 @@ Changes to this lane are high-burden documentation changes because they describe
 | DCAT family root | [`data/catalog/dcat/`](../../dcat/README.md) | Habitat child absent at the pinned baseline |
 | PROV family root | [`data/catalog/prov/`](../../prov/README.md) | Habitat child absent at the pinned baseline |
 | Plural triplet root | [`data/triplets/`](../../../triplets/README.md) | Directory Rules-preferred projection family; Habitat child is marker-only |
-| Singular Habitat triplet lane | [`data/triplet/habitat/`](../../../triplet/habitat/README.md) | Existing compatibility/conflict surface; disposition unresolved |
+| Singular Habitat triplet lane | `data/triplet/habitat/` (removed 2026-09-29) | Retired compatibility pointer; use `data/triplets/` |
 | Habitat doctrine | [`docs/domains/habitat/`](../../../../docs/domains/habitat/README.md) | Domain scope, objects, lifecycle, sources, sensitivity, and backlog |
 | Semantic contracts | [`contracts/domains/habitat/`](../../../../contracts/domains/habitat/README.md) | Own object meaning |
 | Machine schemas | [`schemas/contracts/v1/domains/habitat/`](../../../../schemas/contracts/v1/domains/habitat/README.md) | Own machine-checkable shape |
@@ -400,7 +400,7 @@ Public-safe representation may include generalized patches, aggregates, coarse g
 | `data/catalog/dcat/habitat/` | Not present | No Habitat DCAT closure claim |
 | `data/catalog/prov/habitat/` | Not present | No Habitat PROV closure claim |
 | `data/triplets/habitat/` | `.gitkeep` only; no README | Plural path is not a verified projection lane |
-| `data/triplet/habitat/` | README plus marker under singular compatibility root | Conflict/disposition requires governance; not closure |
+| `data/triplet/habitat/` | Removed 2026-09-29 | Singular compatibility pointer retired; `data/triplets/` is the only triplet lane |
 | `release/candidates/habitat/` | Parent/child READMEs; `NO_ACTIVE_CANDIDATE` | Review structure exists; no candidate or release |
 | `data/published/layers/habitat/` | Parent plus ecoregions/land-cover guidance | Publication boundary exists; emitted released bytes not established |
 

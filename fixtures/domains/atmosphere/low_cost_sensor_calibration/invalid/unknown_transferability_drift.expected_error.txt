@@ -1,0 +1,3 @@
+DRIFT_STATE_INVALID	$.calibration.applicability.drift_state
+TRANSFER_STATE_INVALID	$.calibration.applicability.transfer_state
+

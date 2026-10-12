@@ -1,0 +1,252 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "sha256:9deef711d961fee0bb03e9164588b8ab74885d2de25443648212ce6c1e3f1caf"
+  },
+  "artifact_paths": [
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-architecture-ui-map-context-evidence-drawer-admission-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/CODEOWNERS@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-github-CODEOWNERS",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-adr-ADR-0029-adopt-directory-governance-standard-v2-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-doctrine-directory-rules-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/README.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-architecture-ui-README-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/BOUNDARIES.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-architecture-ui-BOUNDARIES-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-architecture-ui-EVIDENCE-DRAWER-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-docs-architecture-ui-MAP-RUNTIME-BOUNDARY-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/ui/map_context_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-contracts-ui-map-context-envelope-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/ui/evidence_drawer_payload.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-contracts-ui-evidence-drawer-payload-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/runtime/decision_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-contracts-runtime-decision-envelope-md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-schemas-contracts-v1-ui-map-context-envelope-schema-json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-schemas-contracts-v1-ui-evidence-drawer-payload-schema-json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-schemas-contracts-v1-runtime-decision-envelope-schema-json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/map_context_evidence_drawer.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-packages-envelopes-src-envelopes-map-context-evidence-drawer-py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/__init__.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-packages-envelopes-src-envelopes-init-py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:fixtures/ui/map_context_evidence_drawer_admission/cases.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-fixtures-ui-map-context-evidence-drawer-admission-cases-json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/ui/validate_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-tools-validators-ui-validate-map-context-evidence-drawer-admission-py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tests/packages/envelopes/test_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-tests-packages-envelopes-test-map-context-evidence-drawer-admission-py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/workflows/map-context-evidence-drawer-admission.yml@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-github-workflows-map-context-evidence-drawer-admission-yml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-data-receipts-generated-genrec-map-context-evidence-drawer-admission-20260807-json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/GovernedClient.ts@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "id": "KFM-apps-explorer-web-src-adapters-GovernedClient-ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "id": "KFM-repository-build-agent-v6",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:pull/2105@a889f8b596e0ddcac0955cfb4227f9b0c87625f9",
+      "id": "KFM-feature-PR-2105",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-19T20:03:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:.github/CODEOWNERS@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/doctrine/directory-rules.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/README.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/BOUNDARIES.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/ui/map_context_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/ui/evidence_drawer_payload.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:contracts/runtime/decision_envelope.md@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:packages/envelopes/src/envelopes/map_context_evidence_drawer.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:packages/envelopes/src/envelopes/__init__.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:fixtures/ui/map_context_evidence_drawer_admission/cases.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:tools/validators/ui/validate_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:tests/packages/envelopes/test_map_context_evidence_drawer_admission.py@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:.github/workflows/map-context-evidence-drawer-admission.yml@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts@0764316bfb920d076219a26c06ce1e335dbaf9fd",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "github:pull/2105@a889f8b596e0ddcac0955cfb4227f9b0c87625f9"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-19"
+  },
+  "notes": "Same-path, documentation-only modernization of docs/architecture/ui/map-context-evidence-drawer-admission.md against main@0764316bfb920d076219a26c06ce1e335dbaf9fd. The document preserves its path, document identity, H1, and legacy section fragments while replacing proposal-era brevity with current repository evidence, finite candidate behavior, explicit no-leak rules, runtime-integration HOLD, validation limits, graduation gates, and rollback. No contract, schema, policy, fixture, validator, test, workflow, application, package, runtime, source, lifecycle state, release, deployment, publication, or repository setting is changed. The original 2026-08-07 feature receipt remains immutable.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic Markdown and metadata validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:01ca7eb9a562a0af9b7902dff21bee21744f2cdb2865810f57641a8718bf5192",
+  "receipt_id": "genrec-map-context-evidence-drawer-admission-doc-9deef711d961",
+  "truth_labels": {
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, accepted ADR-0029, Directory Rules v2, CODEOWNERS, adjacent UI architecture, contracts, schemas, helper, fixtures, validator, tests, workflow, original receipt, current symbol references, and exact open-PR overlap were inspected at main@0764316bfb920d076219a26c06ce1e335dbaf9fd; no open pull request owned the exact target."
+    },
+    {
+      "gate": "repository-current-state-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current repository evidence supports a bounded helper/export/fixture/validator/test/workflow slice and a runtime-integration HOLD; unsupported deployed, policy, evidence-resolution, release, or public-operation claims were not admitted."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 keep this human architecture explanation at its existing docs/architecture/ui path. The update changes no authority owner, root, lifecycle family, compatibility path, or canonical/generated relationship."
+    },
+    {
+      "gate": "markdown-and-metadata-structure",
+      "outcome": "PASS",
+      "reason": "The KFM metadata block parsed as YAML; markdown-it-py parsed the full GFM-compatible source; heading hierarchy, code fences, final newline, and one-H1 structure passed local checks."
+    },
+    {
+      "gate": "anchor-and-navigation-closure",
+      "outcome": "PASS",
+      "reason": "Thirty-seven headings had unique generated slugs; all 38 internal fragment links resolved, and the prior H1 plus original section-heading fragments were retained."
+    },
+    {
+      "gate": "repository-relative-link-inventory",
+      "outcome": "PASS",
+      "reason": "All introduced repository-relative targets were reconciled to current repository files or directories at the pinned base; no speculative route, contract, schema, policy, or runtime path was introduced."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The final Markdown bytes hash to sha256:9deef711d961fee0bb03e9164588b8ab74885d2de25443648212ce6c1e3f1caf; the computed Git blob is 5f7a740ef276e15ed756792160f91ddb06b0061e."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available in this connector-first operation. The documentation changes no executable behavior; hosted exact-head repository-native checks remain pending after delivery."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks are pending until the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending. This receipt is authoring provenance, not approval, merge authority, release, deployment, or publication."
+    }
+  ]
+}

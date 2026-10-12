@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-hydrology-readme
 title: data/processed/hydrology/README.md — Hydrology Processed Data README
-version: v0.1
-type: readme; data-lifecycle-domain-lane; processed-stage-guide; hydrology-domain-root; watershed-gauge-regulatory-context-lane-index
-status: draft; PROPOSED; data-root; processed-stage; hydrology; watershed; HUC; hydrography; gauges; water-observations; groundwater; NFHL; hydrograph; source-role-aware; evidence-first; release-gated
+version: v0.2
+type: data-lifecycle-readme
+status: repository-grounded draft; proposed future lanes; payload and release state unverified
 authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
 owners: OWNER_TBD — Hydrology steward · Watershed/HUC steward · Gauge/observation steward · Source-role steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
+created: 2025-09-27
+updated: 2026-09-24
 policy_label: public-doc; data; processed; hydrology; lifecycle; governed; source-role-aware; vintage-aware; release-gated
+owning_root: data/
+responsibility: Index the Hydrology PROCESSED lane, distinguish tracked guides and fixture candidate code from processed payloads, and preserve source-role and release boundaries.
+truth_posture: CONFIRMED tracked guide inventory and fixture-only WBD candidate implementation; PROPOSED future child lanes; UNKNOWN payload, admission, production enforcement, and release state.
 tags: [kfm, data, processed, hydrology, watershed, HUCUnit, WBD, hydrofeature, reach-identity, gauge-site, flow-observation, water-level-observation, water-quality-observation, groundwater-well, aquifer-observation, NFHLZone, hydrograph, upstream-trace, water-use-link, drought-link, irrigation-link, source-role, authority, observation, regulatory-context, model, aggregate, administrative, candidate, synthetic, SourceDescriptor, EvidenceBundle, ValidationReport, PolicyDecision, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
 related:
   - ../README.md
@@ -44,7 +47,7 @@ related:
   - ../../../tools/validators/
   - wbd/README.md
 notes:
-  - "This file replaces a greenfield stub at `data/processed/hydrology/README.md`."
+  - "This guide now separates the tracked processed-data tree from proposed future child lanes and links the fixture-only WBD candidate implementation."
   - "This is the parent PROCESSED-stage domain lane for Hydrology artifacts. It is not RAW source storage, WORK scratch, QUARANTINE holding, CATALOG, TRIPLET, PUBLISHED, proof storage, receipt storage, source registry, policy authority, release authority, public API/UI output, public map/tile output, flood-warning surface, operational water-management instruction, property-rights evidence, engineering certification, or life-safety guidance."
   - "Hydrology processed artifacts must preserve source role, rights, sensitivity posture, object-family distinction, temporal semantics, evidence linkage, validation state, digest closure, catalog readiness, release state, correction path, and rollback target before public use."
   - "Source-role anti-collapse is mandatory: authority geography, observations, regulatory context, modeled hydrographs, aggregate rollups, administrative records, candidates, and synthetic summaries are not interchangeable."
@@ -69,18 +72,30 @@ notes:
   <img alt="Exposure: not public" src="https://img.shields.io/badge/exposure-not__public-critical">
 </p>
 
-**Status:** draft / PROPOSED  
+**Status:** repository-grounded draft; processed payloads and public release unverified
 **Owners:** OWNER_TBD — Hydrology steward · Watershed/HUC steward · Gauge/observation steward · Source-role steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward  
 **Path:** `data/processed/hydrology/README.md`  
 **Owning root:** `data/processed/`  
 **Domain segment:** `hydrology`  
 **Lifecycle stage:** `PROCESSED`  
 **Exposure posture:** not public by default; any public use requires governed catalog, EvidenceBundle, source-role and rights posture, temporal disclosure, sensitivity/policy review, ValidationReport, PolicyDecision where applicable, ReleaseManifest, correction path, and rollback target.  
-**Truth posture:** CONFIRMED target was a greenfield stub · CONFIRMED parent `data/processed/` is upstream of catalog/triplet/publication and is not a normal public surface · CONFIRMED Hydrology owns watersheds/HUCs, hydrofeatures/reaches, gauges/wells, observations, regulatory flood context, hydrographs, upstream traces, and water-use/drought/irrigation links · CONFIRMED NFHL is regulatory context and not observed flooding · CONFIRMED emergency/life-safety warning use is denied · PROPOSED parent-lane details and child-lane index · NEEDS VERIFICATION for actual child inventory, validators, fixtures, source descriptors, access-control enforcement, receipt families, policy enforcement, release linkage, and governed route behavior.
+**Truth posture:** CONFIRMED tracked tree contains this README and `wbd/README.md`, with no tracked processed Hydrology payload · CONFIRMED fixture-only WBD candidate producer, focused tests, schemas, policy files, and source descriptor files exist elsewhere in the repo · PROPOSED other processed child lanes below · NEEDS VERIFICATION for local or external payloads, source activation, production enforcement, emitted receipts and proofs, release linkage, and governed route behavior.
 
-**Quick jumps:** [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Lane index](#lane-index) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Hydrology processed requirements](#hydrology-processed-requirements) · [Source-role and publication guardrails](#source-role-and-publication-guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
+**Quick jumps:** [Current repo state](#current-repo-state) · [Purpose](#purpose) · [Lifecycle boundary](#lifecycle-boundary) · [Repo fit](#repo-fit) · [Lane index](#lane-index) · [Accepted contents](#accepted-contents) · [Exclusions](#exclusions) · [Hydrology processed requirements](#hydrology-processed-requirements) · [Source-role and publication guardrails](#source-role-and-publication-guardrails) · [Evidence ledger](#evidence-ledger) · [Validation checklist](#validation-checklist) · [Rollback](#rollback)
 
 ---
+
+## Current repo state
+
+At `main@57d153cd6b55` (2026-09-24), the tracked `data/processed/hydrology/` tree contains only this guide and [`wbd/README.md`](wbd/README.md). A tracked README establishes a lane boundary; it is not a processed dataset. This bounded Git inventory does not cover ignored or external local data.
+
+| What is present | What it establishes | What it does not establish |
+|---|---|---|
+| [`wbd/README.md`](wbd/README.md) | Documented processed WBD/HUC lane. | Processed WBD bytes, accepted vintage, or public layer. |
+| [WBD HUC12 candidate producer](../../../pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py) and [tests](../../../tests/pipelines/domains/hydrology/test_wbd_huc12_ingest_candidate.py) | Deterministic fixture-based candidate handling, including no-change, raw-candidate, and fail-closed cases. | Source fetch, source activation, lifecycle write, promotion, or publication. |
+| [Hydrology schemas](../../../schemas/contracts/v1/domains/hydrology/README.md), [policy](../../../policy/domains/hydrology/README.md), [source registry](../../registry/sources/hydrology/README.md), and [validators](../../../tools/validators/domains/hydrology/README.md) | Concrete repository surfaces for shape, admissibility, source description, and checks. | Accepted source rights, production execution, emitted proof, or release approval. |
+
+The practical next gate is to inventory actual candidate bytes and source status, then bind source edition, identity, role, rights, validation, evidence, and reviewer decision before any promotion. Keep unadmitted local material in its current hold or source-first state; this guide authorizes no move.
 
 ## Purpose
 
@@ -121,12 +136,12 @@ flowchart LR
   PROC --> TRIP[data/triplets/.../hydrology]
   PROC -. supports .-> PROOF[data/proofs]
   PROC -. emits / references .-> RECEIPT[data/receipts]
-  CAT --> PUBLISHED[data/published/.../hydrology]
-  STAC --> PUBLISHED
-  DCAT --> PUBLISHED
-  PROV --> PUBLISHED
-  TRIP --> PUBLISHED
-  PUBLISHED --> REL[release]
+  CAT --> REL[release review and decision]
+  STAC --> REL
+  DCAT --> REL
+  PROV --> REL
+  TRIP --> REL
+  REL --> PUBLISHED[data/published/.../hydrology]
 ```
 
 `data/processed/hydrology/` is upstream of catalog, triplet, publication, and release. It must not be used as a normal public map/API/UI/AI source.
@@ -155,11 +170,11 @@ flowchart LR
 
 ## Lane index
 
-Known or intended child lanes under `data/processed/hydrology/` are listed below. Treat entries as **PROPOSED** unless current child READMEs, validators, fixtures, policies, receipts, access controls, and CI enforcement have been verified in the same implementation pass.
+The tracked child index contains only `wbd/README.md`. Other rows below are **proposed placements**, not existing processed subtrees or evidence of source admission. Creating a lane or passing a fixture check would still leave promotion and release gates open.
 
 | Lane | Family | Purpose | Hard boundary |
 |---|---|---|---|
-| `wbd/` | Watershed / HUCUnit | WBD/HUC boundary polygons, HUC identity, hierarchy, topology, and vintage context. | WBD/HUC is authority watershed geography, not gauge observation, NFHL, flood event, or warning. |
+| [`wbd/`](wbd/README.md) — tracked guide | Watershed / HUCUnit | WBD/HUC boundary polygons, HUC identity, hierarchy, topology, and vintage context. | WBD/HUC is authority watershed geography, not gauge observation, NFHL, flood event, or warning. |
 | `nhdplus/` | HydroFeature / ReachIdentity | Hydrographic features, reach identity, network context, and NHD/3DHP derivatives. | Reach identity ambiguity must fail closed or ABSTAIN. |
 | `gauges/` | GaugeSite | Monitoring-site metadata, datum/unit/site context, and source metadata. | Gauge site is not the observation value itself. |
 | `observations/flow/` | FlowObservation | Observed discharge readings and QA/context sidecars. | Observation is not model, forecast, or water-rights proof. |
@@ -202,7 +217,7 @@ Do not store these under `data/processed/hydrology/`:
 
 ## Hydrology processed requirements
 
-PROPOSED until concrete validators, policies, fixtures, receipts, and access-control enforcement are verified:
+These are the lane requirements. Individual schemas, policy files, validators, and fixtures exist, while full PROCESSED-lane admission, receipt, access-control, and release enforcement remains unverified:
 
 | Requirement | Meaning |
 |---|---|
@@ -248,13 +263,14 @@ PROPOSED until concrete validators, policies, fixtures, receipts, and access-con
 | `data/processed/README.md` | CONFIRMED | PROCESSED data is upstream of catalog, triplets, publication, and release and is not the normal public surface. | Does not prove Hydrology child inventory or enforcement. |
 | `docs/domains/hydrology/README.md` | CONFIRMED doctrine / PROPOSED implementation | Hydrology owns watersheds/HUCs, hydrofeatures/reaches, gauges/wells, observations, NFHL, hydrographs, traces, and water-use/drought/irrigation links; source-role anti-collapse, lifecycle, cross-lane boundaries, and release gates are defined. | Implementation maturity remains NEEDS VERIFICATION. |
 | `data/processed/hydrology/wbd/README.md` | CONFIRMED child README | WBD/HUC processed lane separates authority watershed geography from observations, NFHL, models, and emergency context. | Does not prove validators. |
+| `git ls-files data/processed/hydrology/` at `main@57d153cd6b55` | CONFIRMED tracked inventory | This README and `wbd/README.md` are the only tracked files in the subtree. | Does not inspect ignored or external payloads. |
+| WBD candidate producer and focused tests | CONFIRMED code and fixtures | Fixture-only candidate outputs and negative cases are implemented. | Does not write lifecycle state, fetch source data, activate a source, or approve publication. |
 | `docs/domains/hydrology/PUBLICATION_POSTURE.md` | NEEDS VERIFICATION | Named companion doc for publication posture. | This task did not inspect its contents. |
-| `policy/domains/hydrology/` | NEEDS VERIFICATION | Expected admissibility home. | Current policy files and enforcement were not verified in this task. |
-| `contracts/domains/hydrology/` and `schemas/contracts/v1/domains/hydrology/` | NEEDS VERIFICATION | Expected object contract/schema homes for Hydrology families. | Specific object files and validators were not verified in this task. |
+| `policy/domains/hydrology/`, `contracts/domains/hydrology/`, and `schemas/contracts/v1/domains/hydrology/` | CONFIRMED files present | Policy, meaning, and machine-shape homes contain concrete files. | Presence does not establish accepted policy execution or production admission. |
 
 ## Validation checklist
 
-- [ ] Confirm actual child directories under `data/processed/hydrology/` and reconcile missing, duplicate, alias, legacy, or compatibility lanes.
+- [x] Confirm tracked child files under `data/processed/hydrology/` at `main@57d153cd6b55`: this README and `wbd/README.md`; reconcile any ignored or external payloads separately.
 - [ ] Confirm accepted processed Hydrology path convention for WBD/HUC, NHD/reaches, gauges, flow observations, water-level observations, water-quality observations, groundwater, NFHL, hydrographs, traces, water-use links, drought links, irrigation links, public-candidate, and restricted lanes.
 - [ ] Confirm each child lane has README, owner, purpose, accepted contents, exclusions, guardrails, validation checklist, and rollback target.
 - [ ] Confirm Hydrology object contracts and schema paths for Watershed, HUCUnit, HydroFeature, ReachIdentity, GaugeSite, FlowObservation, WaterLevelObservation, WaterQualityObservation, GroundwaterWell, AquiferObservation, NFHLZone, Hydrograph, UpstreamTrace, WaterUseLink, DroughtLink, and IrrigationLink.

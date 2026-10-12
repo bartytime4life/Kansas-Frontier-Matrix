@@ -1,0 +1,77 @@
+{
+  "geometry": {
+    "geoprivacy_status": "private",
+    "latitude": null,
+    "longitude": null,
+    "precision_class": "withheld",
+    "public_safe_geometry": {
+      "coordinates": null,
+      "generalization_method": "withheld by synthetic sensitivity fixture",
+      "geometry_type": "withheld",
+      "precision_class": "withheld"
+    }
+  },
+  "object_type": "occurrence_evidence",
+  "observation": {
+    "basis_of_record": "human_observation",
+    "event_date": "2026-01-15",
+    "event_time": "2026-01-15T12:00:00Z",
+    "individual_count": 1,
+    "observation_method": "synthetic fixture record",
+    "observed_by": null
+  },
+  "occurrence_evidence_id": "kfm://occurrence/0246c8f1306663367091bdfe7ee695e160d4eab046a9049772c4f28826948c90",
+  "provenance": {
+    "evidence_refs": [
+      "fixture:evidence:fauna:occurrence:002"
+    ],
+    "ingestion_run_id": "fixture:run:fauna:occurrence:002",
+    "publisher": "KFM synthetic fixture",
+    "raw_artifact_ref": "fixture:raw:fauna:occurrence:002",
+    "retrieved_at": "2026-08-08T00:00:00Z",
+    "source_descriptor_ref": "fixture:source:fauna:occurrence",
+    "source_uri": "urn:kfm:fixture:fauna:sensitive-held-001"
+  },
+  "rights": {
+    "attribution_required": false,
+    "commercial_use_allowed": true,
+    "license": "CC0-1.0",
+    "redistribution_allowed": true
+  },
+  "schema_version": "v1",
+  "sensitivity": {
+    "exact_location_public_safe": false,
+    "generalization_required": true,
+    "review_required": true,
+    "sensitive_species_flag": true,
+    "withhold_required": true
+  },
+  "source_family": "other",
+  "source_record_id": "fixture:fauna:sensitive-held-001",
+  "source_role": "observed",
+  "spec_hash": "sha256:0246c8f1306663367091bdfe7ee695e160d4eab046a9049772c4f28826948c90",
+  "taxon": {
+    "accepted_scientific_name": "Specimen fictivus",
+    "common_name": "Synthetic fixture animal",
+    "scientific_name": "Specimen fictivus",
+    "taxon_rank": "species"
+  },
+  "validation": {
+    "checks": {
+      "geometry_public_safe": true,
+      "provenance_complete": true,
+      "rights_resolved": true,
+      "schema_valid": true,
+      "sensitivity_evaluated": true,
+      "spec_hash_stable": true,
+      "taxonomy_normalized": true
+    },
+    "evidence_strength": "unreviewed",
+    "reason_codes": [
+      "sens.steward_review_required"
+    ],
+    "validated_at": "2026-08-08T00:00:00Z",
+    "validator_result": "quarantine",
+    "validator_version": "1.0.0"
+  }
+}

@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/ness-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Ness County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Ness County Focus Mode Build Plan
 type: county-focus-mode-build-plan
 version: v0.1-proposed
@@ -9,21 +14,21 @@ county_name: Ness County
 county_slug: ness
 lane_slug: ness-county
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-10-12
 owners:
-  focus_mode_owner: NEEDS_VERIFICATION
-  evidence_steward: NEEDS_VERIFICATION
-  agriculture_reviewer: NEEDS_VERIFICATION
-  energy_geology_reviewer: NEEDS_VERIFICATION
-  oil_gas_regulatory_reviewer: NEEDS_VERIFICATION
-  heritage_architecture_reviewer: NEEDS_VERIFICATION
-  municipal_water_reviewer: NEEDS_VERIFICATION
-  privacy_property_reviewer: NEEDS_VERIFICATION
-  infrastructure_security_reviewer: NEEDS_VERIFICATION
-  rights_reviewer: NEEDS_VERIFICATION
-  correction_steward: NEEDS_VERIFICATION
-  rollback_owner: NEEDS_VERIFICATION
-  release_approver: NEEDS_VERIFICATION
+  - focus_mode_owner: NEEDS_VERIFICATION
+  - evidence_steward: NEEDS_VERIFICATION
+  - agriculture_reviewer: NEEDS_VERIFICATION
+  - energy_geology_reviewer: NEEDS_VERIFICATION
+  - oil_gas_regulatory_reviewer: NEEDS_VERIFICATION
+  - heritage_architecture_reviewer: NEEDS_VERIFICATION
+  - municipal_water_reviewer: NEEDS_VERIFICATION
+  - privacy_property_reviewer: NEEDS_VERIFICATION
+  - infrastructure_security_reviewer: NEEDS_VERIFICATION
+  - rights_reviewer: NEEDS_VERIFICATION
+  - correction_steward: NEEDS_VERIFICATION
+  - rollback_owner: NEEDS_VERIFICATION
+  - release_approver: NEEDS_VERIFICATION
 unverified_homes:
   canonical_human_plan_path: PROPOSED / NEEDS_VERIFICATION
   contract_home: PROPOSED / NEEDS_VERIFICATION

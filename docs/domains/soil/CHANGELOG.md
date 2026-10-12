@@ -1,3 +1,47 @@
-# soil — CHANGELOG.md
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/domains/soil/changelog
+title: Soil - Documentation Changelog
+type: domain-changelog
+version: v1.1.3
+prior_version: v1.1.2
+status: active; append-only-summary
+owners:
+  - OWNER_TBD - Soil domain steward
+  - OWNER_TBD - Documentation steward
+created: 2026-05-19
+updated: 2026-10-11
+policy_label: public
+owning_root: docs/
+responsibility: Human summary of material Soil documentation changes; not a receipt, proof, release log, or Git history replacement
+truth_posture: CONFIRMED current documentation changes and preserved lineage / UNKNOWN operational effects unless separately evidenced
+related:
+  - docs/domains/soil/README.md
+  - docs/domains/soil/VERIFICATION_BACKLOG.md
+  - docs/domains/soil/MISSING_OR_PLANNED_FILES.md
+  - docs/domains/soil/EXPANSION_BACKLOG.md
+tags: [kfm, soil, changelog, documentation, correction]
+[/KFM_META_BLOCK_V2] -->
 
-Greenfield placeholder.
+# Soil documentation changelog
+
+This file records material changes to the human Soil documentation surface.
+Git remains the exact byte history. Receipts, proofs, policy decisions, release
+records, corrections, withdrawals, and rollback records remain in their owning
+families.
+
+| Date | Version | Change | Evidence and limits |
+|---|---|---|---|
+| 2026-10-11 | `v1.1.3` | Reconciled Soil documentation drift recorded as `DLC-03`: `CANONICAL_PATHS.md` (v1.2) now places catalog projections subtype-first under `data/catalog/domains/soil/` and rollback under `release/rollback_cards/` plus `data/receipts/rollback/` (`DIR-RELEASE-003`), with `data/catalog/domain/soil/` a migration candidate and `data/rollback/soil/` deprecated (`DIR-RELEASE-004`), both disposition HOLD and tracked as `OPEN-SOIL-10`; the `data/work/soil/` (v0.1.1), `data/processed/soil/` (v0.1.1) and `data/registry/sources/soil/` (v0.2.1) READMEs draw RAW as a source-first capture with placement HOLD; `SOURCE_REGISTRY.md` (v1.2.0) records the admitted `noaa-uscrn.yaml` while the other eight records stay `PROPOSED` placeholders; `data/proofs/soil/README.md` (v0.2.1) matches the current `domain-soil.yml` jobs; `DATA_LIFECYCLE.md` (v2.0.1) marks `DLC-03` resolved | Directory Rules §12.3, `DIR-RELEASE-003`/`004`, `DIR-SOURCE-001`; `noaa-uscrn.yaml` and ADR-0046 read at `main@b2f62f6f`; documentation only; no file moved or deleted; no source, payload, writer, workflow, or release state changed; admission is not release activation or publication |
+| 2026-10-11 | `v1.1.2` | Rewrote `DATA_LIFECYCLE.md` (v2.0.0): the placeholder body, a verbatim copy of `CONTINUITY_INVENTORY.md`, is replaced with Soil lifecycle doctrine — phase contracts and gates, trust objects and their homes, support-type and knowledge-character rules, receipt-bearing Soil transforms (component and depth weighting, resampling, station QC, yearly diff), the bounded USCRN daily pilot, freshness and supersession, correction and rollback, rights posture, anti-patterns and verification status; placeholder note removed | Grounded in Lifecycle Law, Directory Rules §§11–12, ADR-0046 and inspected pilot, validator, contract and data-lane files; documentation only; no source, payload, lifecycle, policy, release or publication state changed; RAW placement remains HOLD; `CONTINUITY_INVENTORY.md` remains the authoritative inventory and the two files now carry distinct `doc_id`s and content |
+| 2026-10-11 | `v1.1.1` | Aligned RAW placement wording in `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `DATA_LIFECYCLE.md`, and `docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md` to accepted `DIR-SOURCE-001`: RAW capture is source-first under one registered `source_id`; physical source-first placement is HOLD; `data/raw/soil/` is a compatibility/reference lane, not a payload destination; connector, lifecycle-skip, and public-read prohibitions kept and generalized; runbook RAW targets replaced with a HOLD placeholder | Accepted Directory Rules §12.3; no placement decision accepted as of `main@9e8bf3e6`; documentation only; no payload, path, writer, connector, or release state changed; pre-existing duplicate `doc_id` between `CONTINUITY_INVENTORY.md` and `DATA_LIFECYCLE.md` not resolved |
+| 2026-10-08 | `v1.1` | Replaced thin source, glossary, cross-lane, completion, expansion, placement, map/UI, preservation and release guides; expanded catalog-closure guidance and reconciled README navigation | Inspected source at `ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`; retained historical snapshots and separated fixture declarations, Site context, admission, evidence resolution and release; no runtime or governance transition |
+| 2026-08-28 | `v1.0` | Replaced the greenfield placeholders for the verification backlog, missing/planned-file register, expansion backlog, and changelog with repository-grounded control surfaces | Pinned to `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`; documentation-only; no source activation, lifecycle mutation, proof, release, deployment, promotion, or publication |
+| 2026-08-03 | `v0.x lineage` | Soil README was replaced with a repository-grounded entry point and three bounded fixture profiles | Preserved as prior document history; later Soil profiles require a new exact-main reconciliation |
+| 2026-05-19 | `greenfield lineage` | Initial Soil document family and placeholders were established from planning sources | Design lineage only; did not establish implementation |
+
+## Correction rule
+
+Append a new row when a material Soil documentation claim changes. Do not
+rewrite prior rows to imply that implementation, review, source admission,
+release, deployment, promotion, or publication existed earlier than its exact
+evidence.

@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-site-v165-sync-20261006",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "apps/site/source/README.md",
+    "apps/site/source/app/knowledge/record/page.tsx",
+    "apps/site/source/app/persistent-select-menus.tsx",
+    "apps/site/source/app/snapshot-map.tsx",
+    "apps/site/source/docs/explorer-reliability-review-2026-10-06.md",
+    "apps/site/source/docs/site-synchronization-2026-10-06.md",
+    "apps/site/source/tests/component-harness.mjs",
+    "apps/site/source/tests/knowledge-record-retry.test.mjs",
+    "apps/site/source/tests/persistent-select-menus.test.mjs",
+    "apps/site/source/tests/snapshot-map-state.test.mjs",
+    "data/receipts/generated/site-v165-source-reconciliation-20261006.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:f685efb7f55837843946c0d448fec77630346c74022e0d0bfdbc83d765a2c18f",
+    "apps/site/source/README.md": "sha256:175dee9c1e3cf0cf9ae226885d08e01c59387ead7dc1a85ec3c07d04ecd58a74",
+    "apps/site/source/app/knowledge/record/page.tsx": "sha256:0b125b0d2022c2626d426c533286dacfef324b5b2738fd95527d70f90d996dee",
+    "apps/site/source/app/persistent-select-menus.tsx": "sha256:99217c8c530d17aed74f383a0b3f5058184871989b23873430a158762c45fceb",
+    "apps/site/source/app/snapshot-map.tsx": "sha256:8ae6fabfcdc9bd47c06e2f23764ff52caa35bf1539d84ed25734bad004cd782a",
+    "apps/site/source/docs/explorer-reliability-review-2026-10-06.md": "sha256:8dcde4629dc7ecd1ddbd69b4fe6b89f19458e232d52dbc00afddb728cffdea1e",
+    "apps/site/source/docs/site-synchronization-2026-10-06.md": "sha256:d2b947ee2eec0a8296e94618c3d92c3fedcf485595356c6f5db254aff1718269",
+    "apps/site/source/tests/component-harness.mjs": "sha256:a122aa3e787df2a956cfb3350767678788a015c821fb276fbcf0e45522b65f67",
+    "apps/site/source/tests/knowledge-record-retry.test.mjs": "sha256:d50983f716eaccaa7ff668f3e4e0d2973f42cd562f3f56ce7e98fed41f9c5a75",
+    "apps/site/source/tests/persistent-select-menus.test.mjs": "sha256:548ccb394fce86f23da4a782967c7aff1b961b1a3cc110b5be4f779d30914750",
+    "apps/site/source/tests/snapshot-map-state.test.mjs": "sha256:2e53df2beb0686fbbf52e9d71802a4b410a3e5e1f533c785460a8cf082799d01",
+    "data/receipts/generated/site-v165-source-reconciliation-20261006.json": "sha256:4d8a8716600293bfd58ff61068944da96e5d74242e82b762138dbf821191bde2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub",
+      "Sites-readback"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:07e6b26c3ba0cd1c689de29fa2c07d0a30c26ae5",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631@64ee0a61e577a0455fd1180fd18d346c017876bf",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "apps/site/source/README.md": "CONFIRMED",
+    "apps/site/source/app/knowledge/record/page.tsx": "CONFIRMED",
+    "apps/site/source/app/persistent-select-menus.tsx": "CONFIRMED",
+    "apps/site/source/app/snapshot-map.tsx": "CONFIRMED",
+    "apps/site/source/docs/explorer-reliability-review-2026-10-06.md": "CONFIRMED",
+    "apps/site/source/docs/site-synchronization-2026-10-06.md": "CONFIRMED",
+    "apps/site/source/tests/component-harness.mjs": "CONFIRMED",
+    "apps/site/source/tests/knowledge-record-retry.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/persistent-select-menus.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/snapshot-map-state.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v165-source-reconciliation-20261006.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Site build and TypeScript",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Node suite",
+      "outcome": "PASS",
+      "reason": "552 passed, no skipped or failed tests."
+    },
+    {
+      "gate": "Lint",
+      "outcome": "PASS",
+      "reason": "Zero errors; 46 inherited warnings retained."
+    },
+    {
+      "gate": "Local Worker smoke",
+      "outcome": "PASS",
+      "reason": "53 checks across 44 routes; 9 provider-only routes unprobed."
+    },
+    {
+      "gate": "Changed-area topology",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Historical mirror check",
+      "outcome": "FAIL",
+      "reason": "Inherited MIRROR_REVIEW_REQUIRED reproduced on exact base and candidate."
+    },
+    {
+      "gate": "Clean source MapLibre acquisition",
+      "outcome": "SKIPPED",
+      "reason": "Assessment ran and retained the same HOLD/RENDERER_ACQUISITION_PRESENT on base and candidate; HOLD is not a PASS."
+    },
+    {
+      "gate": "Independent human review and full browser/WebGL acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not established by source comparison or automated checks."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v165-source-reconciliation-20261006.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T00:04:34.718934Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only. Covers final authored artifact bytes other than this self-referential receipt. No prompt text, credentials, hidden reasoning, private payloads or approval claim included. Source comparison and validation do not grant merge or release authority."
+}

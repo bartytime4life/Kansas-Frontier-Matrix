@@ -1,0 +1,729 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json",
+  "title": "DemSourceAssetCandidate",
+  "description": "Exact fixture-only DEM asset candidate. Conformance grants no source, evidence, lifecycle, runtime, release, deployment, publication, engineering, survey, legal, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "candidate_id",
+    "source_identity",
+    "assets",
+    "evidence_captures",
+    "evidence_capture_session",
+    "temporal_identity",
+    "spatial_coverage",
+    "delivered_crs",
+    "vertical_reference",
+    "raster_grid",
+    "vertical_accuracy",
+    "lineage",
+    "inspection_sample",
+    "blockers",
+    "review",
+    "effects",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "DemSourceAssetCandidate"},
+    "profile": {"const": "kfm.spatial-foundation.dem-source-asset-candidate.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "authority": {"const": "NONE"},
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^kfm:dem-source-asset-candidate:[0-9a-f]{64}$"
+    },
+    "source_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "organization",
+        "program",
+        "product_family",
+        "project_id",
+        "project_numeric_id",
+        "tile_id",
+        "source_role",
+        "product_role",
+        "rights",
+        "rights_evidence",
+        "sensitivity"
+      ],
+      "properties": {
+        "organization": {"const": "U.S. Geological Survey"},
+        "program": {"const": "3D Elevation Program"},
+        "product_family": {"const": "USGS_3DEP_STANDARD_1_METER_DEM"},
+        "project_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,159}$"},
+        "project_numeric_id": {"type": "integer", "minimum": 1},
+        "tile_id": {"type": "string", "pattern": "^USGS_1M_[A-Za-z0-9][A-Za-z0-9._-]{2,180}$"},
+        "source_role": {"const": "MODELED"},
+        "product_role": {"const": "BARE_EARTH_ELEVATION_SURFACE"},
+        "rights": {"const": "PUBLIC_DOMAIN_WITH_USGS_METADATA_CONSTRAINTS"},
+        "rights_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "classification", "evidence_asset_ref", "evidence_content_sha256", "public_domain_xpath", "public_domain_assertion", "access_constraints_xpath", "access_constraints_assertion", "use_constraints_xpath", "use_constraints_assertion"],
+          "properties": {
+            "status": {"const": "VERIFIED"},
+            "classification": {"const": "PUBLIC_DOMAIN_WITH_USGS_METADATA_CONSTRAINTS"},
+            "evidence_asset_ref": {"const": "assets.metadata_xml"},
+            "evidence_content_sha256": {"$ref": "#/$defs/sha256"},
+            "public_domain_xpath": {"const": "/metadata/idinfo/descript/abstract"},
+            "public_domain_assertion": {"const": "ALL_3DEP_PRODUCTS_PUBLIC_DOMAIN"},
+            "access_constraints_xpath": {"const": "/metadata/idinfo/accconst"},
+            "access_constraints_assertion": {"const": "NONE_SUBJECT_TO_USGS_STANDARD_DISCLAIMER"},
+            "use_constraints_xpath": {"const": "/metadata/idinfo/useconst"},
+            "use_constraints_assertion": {"const": "NO_ACCURACY_WARRANTY_AND_NO_ENDORSEMENT_IMPLICATION"}
+          }
+        },
+        "sensitivity": {"const": "PUBLIC_NON_SENSITIVE"}
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raster_tiff", "metadata_xml"],
+      "properties": {
+        "raster_tiff": {"$ref": "#/$defs/raster_asset"},
+        "metadata_xml": {"$ref": "#/$defs/metadata_asset"}
+      }
+    },
+    "evidence_captures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["three_dep_index_query", "census_state_point_query", "census_county_point_query", "census_states_layer_metadata"],
+      "properties": {
+        "three_dep_index_query": {"$ref": "#/$defs/three_dep_index_capture"},
+        "census_state_point_query": {"$ref": "#/$defs/census_state_point_capture"},
+        "census_county_point_query": {"$ref": "#/$defs/census_county_point_capture"},
+        "census_states_layer_metadata": {"$ref": "#/$defs/census_states_metadata_capture"}
+      }
+    },
+    "evidence_capture_session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture_completed_at", "candidate_frozen_at", "clock", "all_capture_times_equal_completed"],
+      "properties": {
+        "capture_completed_at": {"$ref": "#/$defs/date_time"},
+        "candidate_frozen_at": {"$ref": "#/$defs/date_time"},
+        "clock": {"const": "UTC"},
+        "all_capture_times_equal_completed": {"const": true}
+      }
+    },
+    "temporal_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tile_publication_date", "tile_metadata_temporal_range", "source_observation_interval"],
+      "properties": {
+        "tile_publication_date": {"$ref": "#/$defs/date"},
+        "tile_metadata_temporal_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end", "currentness_basis", "treated_as_source_observation_interval"],
+          "properties": {
+            "start": {"$ref": "#/$defs/date"},
+            "end": {"$ref": "#/$defs/date"},
+            "currentness_basis": {"type": "string", "minLength": 3, "maxLength": 120},
+            "treated_as_source_observation_interval": {"const": false}
+          }
+        },
+        "source_observation_interval": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "start", "end", "scope", "evidence_capture_ref"],
+          "properties": {
+            "status": {"const": "VERIFIED"},
+            "start": {"$ref": "#/$defs/date"},
+            "end": {"$ref": "#/$defs/date"},
+            "scope": {"const": "SOLE_INTERSECTING_SOURCE_WORK_UNIT"},
+            "evidence_capture_ref": {"const": "evidence_captures.three_dep_index_query"}
+          }
+        }
+      }
+    },
+    "spatial_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wgs84_bbox", "wgs84_bbox_source_asset", "nominal_projected_bounds", "coordinate_transform", "kansas_state_point_intersection", "ellsworth_county_point_intersection", "public_safe_pilot_point"],
+      "properties": {
+        "wgs84_bbox": {"$ref": "#/$defs/wgs84_bbox"},
+        "wgs84_bbox_source_asset": {"const": "metadata_xml"},
+        "nominal_projected_bounds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x_min", "y_min", "x_max", "y_max", "units"],
+          "properties": {
+            "x_min": {"type": "number", "minimum": 100000, "maximum": 900000},
+            "y_min": {"type": "number", "minimum": 0, "maximum": 10000000},
+            "x_max": {"type": "number", "minimum": 100000, "maximum": 900000},
+            "y_max": {"type": "number", "minimum": 0, "maximum": 10000000},
+            "units": {"const": "metre"}
+          }
+        },
+        "coordinate_transform": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_crs", "target_crs", "method", "datum_operation", "implementation_version", "point_tolerance_m", "bbox_tolerance_degrees"],
+          "properties": {
+            "source_crs": {"const": "EPSG:4326"},
+            "target_crs": {"const": "EPSG:26914"},
+            "method": {"const": "GRS80_TRANSVERSE_MERCATOR_FORWARD_INVERSE_SERIES"},
+            "datum_operation": {"const": "NAD83_WGS84_NULL_APPROXIMATION"},
+            "implementation_version": {"const": "KFM_PURE_PYTHON_UTM_V1"},
+            "point_tolerance_m": {"const": 0.001},
+            "bbox_tolerance_degrees": {"const": 1e-8}
+          }
+        },
+        "kansas_state_point_intersection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "method", "evidence_capture_ref", "state_geoid", "state_abbreviation", "state_name", "boundary_vintage"],
+          "properties": {
+            "status": {"const": "VERIFIED"},
+            "method": {"const": "AUTHORITATIVE_CENSUS_TIGERWEB_POINT_IN_POLYGON"},
+            "evidence_capture_ref": {"const": "evidence_captures.census_state_point_query"},
+            "state_geoid": {"const": "20"},
+            "state_abbreviation": {"const": "KS"},
+            "state_name": {"const": "Kansas"},
+            "boundary_vintage": {"const": "2026-01-01"}
+          }
+        },
+        "ellsworth_county_point_intersection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "method", "evidence_capture_ref", "county_geoid", "state_code", "county_code", "county_name"],
+          "properties": {
+            "status": {"const": "VERIFIED"},
+            "method": {"const": "AUTHORITATIVE_CENSUS_TIGERWEB_POINT_IN_POLYGON"},
+            "evidence_capture_ref": {"const": "evidence_captures.census_county_point_query"},
+            "county_geoid": {"const": "20053"},
+            "state_code": {"const": "20"},
+            "county_code": {"const": "053"},
+            "county_name": {"const": "Ellsworth County"}
+          }
+        },
+        "public_safe_pilot_point": {"$ref": "#/$defs/wgs84_point"}
+      }
+    },
+    "delivered_crs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "authority", "code", "name", "datum", "realization_status", "axis_units", "evidence_asset", "evidence_method"],
+      "properties": {
+        "status": {"const": "VERIFIED"},
+        "authority": {"const": "EPSG"},
+        "code": {"const": 26914},
+        "name": {"const": "NAD83 / UTM zone 14N"},
+        "datum": {"const": "North American Datum of 1983"},
+        "realization_status": {"const": "BOUND_BY_EPSG_IDENTITY"},
+        "axis_units": {"const": "metre"},
+        "evidence_asset": {"const": "raster_tiff"},
+        "evidence_method": {"const": "GEOTIFF_TAGS_AND_LOCAL_RASTER_INSPECTION"}
+      }
+    },
+    "vertical_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["datum_status", "datum_name", "datum_authority", "datum_code", "units", "tile_metadata_asset", "delivered_tile_geoid", "source_work_unit_geoid"],
+      "properties": {
+        "datum_status": {"const": "VERIFIED"},
+        "datum_name": {"const": "NAVD88"},
+        "datum_authority": {"const": "EPSG"},
+        "datum_code": {"const": 5703},
+        "units": {"const": "metre"},
+        "tile_metadata_asset": {"const": "metadata_xml"},
+        "delivered_tile_geoid": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "model", "scope", "evidence"],
+          "properties": {
+            "status": {"const": "UNRESOLVED"},
+            "model": {"type": "null"},
+            "scope": {"const": "DELIVERED_TILE"},
+            "evidence": {"type": "null"}
+          }
+        },
+        "source_work_unit_geoid": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "model", "scope", "evidence_capture_ref"],
+          "properties": {
+            "status": {"const": "VERIFIED"},
+            "model": {"type": "string", "minLength": 3, "maxLength": 120},
+            "scope": {"const": "SOURCE_WORK_UNIT_ONLY"},
+            "evidence_capture_ref": {"const": "evidence_captures.three_dep_index_query"}
+          }
+        }
+      }
+    },
+    "raster_grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cell_size_x", "cell_size_y", "units", "width", "height", "band_count", "data_type", "pixel_interpretation", "affine_transform", "storage_bounds", "nodata"],
+      "properties": {
+        "cell_size_x": {"const": 1},
+        "cell_size_y": {"const": 1},
+        "units": {"const": "metre"},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "band_count": {"const": 1},
+        "data_type": {"const": "Float32"},
+        "pixel_interpretation": {"const": "AREA"},
+        "affine_transform": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "number", "minimum": -1000, "maximum": 1000},
+            {"type": "number", "minimum": -1000, "maximum": 1000},
+            {"type": "number", "minimum": 100000, "maximum": 900000},
+            {"type": "number", "minimum": -1000, "maximum": 1000},
+            {"type": "number", "minimum": -1000, "maximum": 1000},
+            {"type": "number", "minimum": 0, "maximum": 10000000}
+          ],
+          "items": false,
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "storage_bounds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x_min", "y_min", "x_max", "y_max", "units"],
+          "properties": {
+            "x_min": {"type": "number", "minimum": 100000, "maximum": 900000},
+            "y_min": {"type": "number", "minimum": 0, "maximum": 10000000},
+            "x_max": {"type": "number", "minimum": 100000, "maximum": 900000},
+            "y_max": {"type": "number", "minimum": 0, "maximum": 10000000},
+            "units": {"const": "metre"}
+          }
+        },
+        "nodata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value", "verified_from", "verified_asset"],
+          "properties": {
+            "kind": {"const": "NUMERIC"},
+            "value": {"type": "number"},
+            "verified_from": {"const": "GEOTIFF_GDAL_NODATA_TAG"},
+            "verified_asset": {"const": "raster_tiff"}
+          }
+        }
+      }
+    },
+    "vertical_accuracy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "statistic", "value", "units", "scope", "authoritative_evidence", "applicability", "available_project_report"],
+      "properties": {
+        "status": {"const": "UNRESOLVED"},
+        "method": {"type": "null"},
+        "statistic": {"type": "null"},
+        "value": {"type": "null"},
+        "units": {"type": "null"},
+        "scope": {"const": "UNRESOLVED"},
+        "authoritative_evidence": {"type": "null"},
+        "applicability": {"const": "NOT_ESTABLISHED"},
+        "available_project_report": {"$ref": "#/$defs/accuracy_project_report"}
+      }
+    },
+    "lineage": {"$ref": "#/$defs/verified_lineage"},
+    "inspection_sample": {"$ref": "#/$defs/inspection_sample"},
+    "blockers": {
+      "const": [
+        "GEOID_MODEL_UNRESOLVED",
+        "HUMAN_REVIEW_REQUIRED",
+        "VERTICAL_ACCURACY_UNRESOLVED"
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "human_review", "reviewer", "reviewed_at"],
+      "properties": {
+        "outcome": {"const": "HOLD"},
+        "human_review": {"const": "PENDING_HUMAN_REVIEW"},
+        "reviewer": {"type": "null"},
+        "reviewed_at": {"type": "null"}
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_created",
+        "source_activated",
+        "source_admitted",
+        "runtime_load_allowed",
+        "runtime_sample_authorized",
+        "evidence_bundle_resolved",
+        "lifecycle_write_allowed",
+        "promotion_allowed",
+        "release_allowed",
+        "deployment_allowed",
+        "publication_allowed",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "source_descriptor_created": {"const": false},
+        "source_activated": {"const": false},
+        "source_admitted": {"const": false},
+        "runtime_load_allowed": {"const": false},
+        "runtime_sample_authorized": {"const": false},
+        "evidence_bundle_resolved": {"const": false},
+        "lifecycle_write_allowed": {"const": false},
+        "promotion_allowed": {"const": false},
+        "release_allowed": {"const": false},
+        "deployment_allowed": {"const": false},
+        "publication_allowed": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_fetch_or_store_remote_dem_bytes",
+        "does_not_create_or_activate_a_source_descriptor",
+        "does_not_admit_or_promote_lifecycle_state",
+        "does_not_enable_maplibre_terrain_or_runtime_sampling",
+        "does_not_resolve_evidence_or_accuracy",
+        "does_not_release_deploy_publish_or_authorize_public_use"
+      ]
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "date": {"type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "date_time": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "https_uri": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "projection_snapshot_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_path", "content_sha256", "byte_length", "json_pointer"],
+      "properties": {
+        "repository_path": {"const": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "json_pointer": {"type": "string", "pattern": "^/projections/[a-z0-9_]+$"}
+      }
+    },
+    "raster_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "filename", "media_type", "content_sha256", "byte_length", "retrieved_at", "http_last_modified"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "filename": {"type": "string", "pattern": "^USGS_1M_.+\\.tif$"},
+        "media_type": {"const": "image/tiff"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "http_last_modified": {"$ref": "#/$defs/date_time"}
+      }
+    },
+    "metadata_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "filename", "media_type", "content_sha256", "byte_length", "retrieved_at", "http_last_modified"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "filename": {"type": "string", "pattern": "^USGS_1M_.+\\.xml$"},
+        "media_type": {"const": "application/xml"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "http_last_modified": {"$ref": "#/$defs/date_time"}
+      }
+    },
+    "three_dep_index_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "media_type", "content_sha256", "byte_length", "retrieved_at", "raw_response_stored", "remote_byte_identity_scope", "projection_snapshot", "captured_projection"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "media_type": {"const": "application/json;charset=UTF-8"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "raw_response_stored": {"const": false},
+        "remote_byte_identity_scope": {"const": "AUTHOR_TIME_OBSERVATION_ONLY"},
+        "projection_snapshot": {"$ref": "#/$defs/projection_snapshot_ref"},
+        "captured_projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feature_count", "query_envelope", "project", "project_id", "work_unit", "work_unit_id", "collection_start", "collection_end", "quality_level", "specification", "acquisition_method", "dem_gsd_meters", "horizontal_crs_code", "vertical_crs_code", "geoid", "source_dem_publication_date", "one_meter_category"],
+          "properties": {
+            "feature_count": {"const": 1},
+            "query_envelope": {"$ref": "#/$defs/wgs84_bbox"},
+            "project": {"type": "string", "minLength": 3, "maxLength": 160},
+            "project_id": {"type": "integer", "minimum": 1},
+            "work_unit": {"type": "string", "minLength": 3, "maxLength": 160},
+            "work_unit_id": {"type": "integer", "minimum": 1},
+            "collection_start": {"$ref": "#/$defs/date"},
+            "collection_end": {"$ref": "#/$defs/date"},
+            "quality_level": {"const": "QL 2"},
+            "specification": {"type": "string", "minLength": 3, "maxLength": 160},
+            "acquisition_method": {"type": "string", "minLength": 3, "maxLength": 120},
+            "dem_gsd_meters": {"type": "number", "exclusiveMinimum": 0},
+            "horizontal_crs_code": {"type": "integer", "minimum": 1},
+            "vertical_crs_code": {"type": "integer", "minimum": 1},
+            "geoid": {"type": "string", "minLength": 3, "maxLength": 120},
+            "source_dem_publication_date": {"$ref": "#/$defs/date"},
+            "one_meter_category": {"const": "Meets"}
+          }
+        }
+      }
+    },
+    "census_state_point_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "media_type", "content_sha256", "byte_length", "retrieved_at", "raw_response_stored", "remote_byte_identity_scope", "projection_snapshot", "captured_projection"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "media_type": {"const": "application/json;charset=UTF-8"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "raw_response_stored": {"const": false},
+        "remote_byte_identity_scope": {"const": "AUTHOR_TIME_OBSERVATION_ONLY"},
+        "projection_snapshot": {"$ref": "#/$defs/projection_snapshot_ref"},
+        "captured_projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feature_count", "longitude", "latitude", "state_geoid", "state_code", "state_abbreviation", "state_name"],
+          "properties": {
+            "feature_count": {"const": 1},
+            "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+            "latitude": {"type": "number", "minimum": -90, "maximum": 90},
+            "state_geoid": {"const": "20"},
+            "state_code": {"const": "20"},
+            "state_abbreviation": {"const": "KS"},
+            "state_name": {"const": "Kansas"}
+          }
+        }
+      }
+    },
+    "census_county_point_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "media_type", "content_sha256", "byte_length", "retrieved_at", "raw_response_stored", "remote_byte_identity_scope", "projection_snapshot", "captured_projection"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "media_type": {"const": "application/json;charset=UTF-8"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "raw_response_stored": {"const": false},
+        "remote_byte_identity_scope": {"const": "AUTHOR_TIME_OBSERVATION_ONLY"},
+        "projection_snapshot": {"$ref": "#/$defs/projection_snapshot_ref"},
+        "captured_projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feature_count", "longitude", "latitude", "county_geoid", "state_code", "county_code", "county_name"],
+          "properties": {
+            "feature_count": {"const": 1},
+            "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+            "latitude": {"type": "number", "minimum": -90, "maximum": 90},
+            "county_geoid": {"const": "20053"},
+            "state_code": {"const": "20"},
+            "county_code": {"const": "053"},
+            "county_name": {"const": "Ellsworth County"}
+          }
+        }
+      }
+    },
+    "census_states_metadata_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "media_type", "content_sha256", "byte_length", "retrieved_at", "raw_response_stored", "remote_byte_identity_scope", "projection_snapshot", "captured_projection"],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "media_type": {"const": "text/plain;charset=UTF-8"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "raw_response_stored": {"const": false},
+        "remote_byte_identity_scope": {"const": "AUTHOR_TIME_OBSERVATION_ONLY"},
+        "projection_snapshot": {"$ref": "#/$defs/projection_snapshot_ref"},
+        "captured_projection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["layer_id", "layer_name", "geometry_type", "description", "source", "vintage"],
+          "properties": {
+            "layer_id": {"const": 0},
+            "layer_name": {"const": "States"},
+            "geometry_type": {"const": "esriGeometryPolygon"},
+            "description": {"const": "States (or statistically equivalent entities); January 1, 2026 vintage"},
+            "source": {"const": "U.S. Census Bureau"},
+            "vintage": {"const": "2026-01-01"}
+          }
+        }
+      }
+    },
+    "wgs84_bbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["west", "south", "east", "north"],
+      "properties": {
+        "west": {"type": "number", "minimum": -180, "maximum": 180},
+        "south": {"type": "number", "minimum": -90, "maximum": 90},
+        "east": {"type": "number", "minimum": -180, "maximum": 180},
+        "north": {"type": "number", "minimum": -90, "maximum": 90}
+      }
+    },
+    "wgs84_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["longitude", "latitude", "label", "sensitivity"],
+      "properties": {
+        "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+        "latitude": {"type": "number", "minimum": -90, "maximum": 90},
+        "label": {"type": "string", "minLength": 3, "maxLength": 160},
+        "sensitivity": {"const": "PUBLIC_NON_SENSITIVE"}
+      }
+    },
+    "verified_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "match_method", "matched_feature_count", "evidence_capture_ref", "work_unit", "work_unit_id", "collection_start", "collection_end", "quality_level", "specification", "acquisition_method", "dem_gsd_meters", "source_horizontal_crs", "source_vertical_crs", "source_geoid", "source_dem_publication_date", "vertical_accuracy_status"],
+      "properties": {
+        "status": {"const": "VERIFIED_SOURCE_WORK_UNIT"},
+        "match_method": {"const": "EXACT_PROJECT_AND_TILE_ENVELOPE_INTERSECTION"},
+        "matched_feature_count": {"const": 1},
+        "evidence_capture_ref": {"const": "evidence_captures.three_dep_index_query"},
+        "work_unit": {"type": "string", "minLength": 3, "maxLength": 160},
+        "work_unit_id": {"type": "integer", "minimum": 1},
+        "collection_start": {"$ref": "#/$defs/date"},
+        "collection_end": {"$ref": "#/$defs/date"},
+        "quality_level": {"enum": ["QL0", "QL1", "QL2", "QL3"]},
+        "specification": {"type": "string", "minLength": 3, "maxLength": 160},
+        "acquisition_method": {"type": "string", "minLength": 3, "maxLength": 120},
+        "dem_gsd_meters": {"type": "number", "exclusiveMinimum": 0},
+        "source_horizontal_crs": {"const": {"authority": "EPSG", "code": 3744, "name": "NAD83(HARN) / UTM zone 14N"}},
+        "source_vertical_crs": {"const": {"authority": "EPSG", "code": 5703, "name": "NAVD88 height"}},
+        "source_geoid": {"const": "GEOID12B"},
+        "source_dem_publication_date": {"$ref": "#/$defs/date"},
+        "vertical_accuracy_status": {"const": "UNRESOLVED"}
+      }
+    },
+    "crs_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "code", "name"],
+      "properties": {
+        "authority": {"const": "EPSG"},
+        "code": {"type": "integer", "minimum": 1},
+        "name": {"type": "string", "minLength": 4, "maxLength": 200}
+      }
+    },
+    "accuracy_project_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "locator",
+        "content_sha256",
+        "byte_length",
+        "retrieved_at",
+        "http_last_modified",
+        "scope",
+        "reported_units",
+        "normalized_units",
+        "normalization",
+        "nva_checkpoint_count",
+        "nva_rmsez",
+        "nva_accuracy_95",
+        "vva_checkpoint_count",
+        "vva_percentile_95",
+        "includes_source_work_unit",
+        "applicability_to_delivered_tile"
+      ],
+      "properties": {
+        "locator": {"$ref": "#/$defs/https_uri"},
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retrieved_at": {"$ref": "#/$defs/date_time"},
+        "http_last_modified": {"$ref": "#/$defs/date_time"},
+        "scope": {"const": "PROJECT_UTM14_MULTI_WORK_UNIT"},
+        "reported_units": {"const": "centimetre"},
+        "normalized_units": {"const": "metre"},
+        "normalization": {"const": "CENTIMETRE_TO_METRE_DIVIDE_BY_100"},
+        "nva_checkpoint_count": {"type": "integer", "minimum": 1},
+        "nva_rmsez": {"type": "number", "minimum": 0},
+        "nva_accuracy_95": {"type": "number", "minimum": 0},
+        "vva_checkpoint_count": {"type": "integer", "minimum": 1},
+        "vva_percentile_95": {"type": "number", "minimum": 0},
+        "includes_source_work_unit": {"type": "boolean"},
+        "applicability_to_delivered_tile": {"const": "NOT_ESTABLISHED"}
+      }
+    },
+    "inspection_sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "sampling_method", "coordinate_transform_ref", "longitude", "latitude", "projected_x", "projected_y", "row", "column", "source_elevation", "fixture_encoding", "display_default_exaggeration", "reported_value_exaggerated", "runtime_sample_authorized"],
+      "properties": {
+        "role": {"const": "PUBLIC_SAFE_OFFLINE_INSPECTION_FIXTURE"},
+        "sampling_method": {"const": "NEAREST_CELL"},
+        "coordinate_transform_ref": {"const": "spatial_coverage.coordinate_transform"},
+        "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+        "latitude": {"type": "number", "minimum": -90, "maximum": 90},
+        "projected_x": {"type": "number"},
+        "projected_y": {"type": "number"},
+        "row": {"type": "integer", "minimum": 0},
+        "column": {"type": "integer", "minimum": 0},
+        "source_elevation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "units", "vertical_datum", "nodata"],
+          "properties": {
+            "value": {"type": "number"},
+            "units": {"const": "metre"},
+            "vertical_datum": {"const": "NAVD88"},
+            "nodata": {"const": false}
+          }
+        },
+        "fixture_encoding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["encoding", "rgb", "decoded_value_m", "quantization_error_m", "source_nodata_value", "validity_mask_method", "validity_mask_value"],
+          "properties": {
+            "encoding": {"const": "TERRARIUM"},
+            "rgb": {
+              "type": "array",
+              "prefixItems": [
+                {"type": "integer", "minimum": 0, "maximum": 255},
+                {"type": "integer", "minimum": 0, "maximum": 255},
+                {"type": "integer", "minimum": 0, "maximum": 255}
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "decoded_value_m": {"type": "number"},
+            "quantization_error_m": {"type": "number", "minimum": 0, "maximum": 0.00390625},
+            "source_nodata_value": {"type": "number"},
+            "validity_mask_method": {"const": "SOURCE_NODATA_COMPARISON_BEFORE_ENCODING"},
+            "validity_mask_value": {"const": 1}
+          }
+        },
+        "display_default_exaggeration": {"const": 1},
+        "reported_value_exaggerated": {"const": false},
+        "runtime_sample_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "contract_doc": "contracts/spatial-foundation/dem_source_asset_candidate.md",
+    "fixtures_root": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/",
+    "validator": "tools/validators/validate_dem_source_asset_candidate.py",
+    "tests": "tests/validators/test_validate_dem_source_asset_candidate.py"
+  }
+}

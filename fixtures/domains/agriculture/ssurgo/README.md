@@ -126,7 +126,7 @@ Fixtures should be synthetic, deterministic, compact, public-safe, and reviewabl
 | Source registry records | `data/registry/sources/` and source descriptor roots | Out of scope. |
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Published layers and release decisions | `data/published/` and `release/` roots | Out of scope. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 

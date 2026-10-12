@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "kfm:source-snapshot:44f9abe54a1d776dc0d3aeaffdb9e7dc46c17ea7e7293ec397cbcb5945731dfd",
+  "source_id": "source:demo-official",
+  "source_url": "https://example.gov/demo.json",
+  "retrieved_at": "2026-08-08T01:30:00Z",
+  "http_status": 200,
+  "media_type": "application/json",
+  "etag": "demo-v1",
+  "last_modified": "2026-08-08T01:00:00Z",
+  "retrieval_outcome": "CAPTURED",
+  "content_sha256": "751e55482b209cb83aa97377cc6827233b47389b8c4086bc2ced7e85f3991b45",
+  "content_length": 49,
+  "source_activation_authorized": false,
+  "evidence_bundle_emitted": false,
+  "public_use_allowed": false
+}

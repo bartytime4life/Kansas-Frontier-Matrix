@@ -6,16 +6,21 @@ version: v0.2
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for census>
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-09-12
 policy_label: public
+owning_root: docs/
+responsibility: human-facing TIGER/Line product doctrine and source-role boundaries; no source admission, registry, policy, evidence, release, publication, or runtime authority
+truth_posture: "CONFIRMED current product-page path and related KFM doctrine / PROPOSED product mappings, source roles, feature-class gates, and implementation paths / NEEDS VERIFICATION ownership, current access, rights, activation, admission, and consumer closure"
 related:
   - docs/sources/catalog/census/README.md
-  - docs/sources/catalog/census/IDENTITY.md
-  - docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md
+  - docs/sources/catalog/IDENTITY.md
+  - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/census/decennial-counts.md
   - docs/sources/catalog/census/decennial-microdata.md
   - docs/sources/catalog/census/acs-estimates.md
   - docs/sources/catalog/census/nhgis-compilations.md
+  - docs/sources/catalog/census/tiger-line-2025-kansas-core-reference.md
+  - connectors/census/tiger-line-2025-kansas-core.source-reference.json
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -102,6 +107,12 @@ This cross-domain breadth makes TIGER doctrinally distinct from the other `censu
 > [!NOTE]
 > NEEDS VERIFICATION: ingest path (Census Bureau FTP, TIGERweb REST services, geopandas / pygris pull, third-party mirrors), current pinned vintage(s), Kansas-relevant feature classes (places, MCDs, ZCTAs, tracts, block groups, blocks, water, roads, etc.), license terms (federal public-domain inheritance is presumed; verify any aggregator overlay), and ingest cadence (TIGER updates annually; the watcher should anticipate the calendar-year cycle). Resolution belongs in the authoritative `SourceDescriptor`.
 
+> [!NOTE]
+> A [checksum-bound 2025 Kansas core source-reference candidate](./tiger-line-2025-kansas-core-reference.md)
+> now records one exact, externally held acquisition for steward review. It is
+> `PROPOSED / INACTIVE` and does not resolve the feature-class allow-list,
+> SourceDescriptor, admission, rights, sensitivity, release, or runtime gates.
+
 [Back to top](#top)
 
 ---
@@ -131,8 +142,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, **source role = Administrative (with Authority for federal-statistical GEOID definition)**, rights, vintage pin, feature-class allow-list, sensitivity | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `census` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, CARE applicability for tribal areas, release class | **No** — see map |
+| Collection identity rules | [`../IDENTITY.md`](../IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, CARE applicability for tribal areas, release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/spatial-foundation/` | JSON-schema for descriptor + `GeographyVersion` / `LayerManifest` shapes | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **Administrative** in the general sense (CONFIRMED Atlas §24.1.1: *"A compiled record produced by an agency for administration, registration, or accounting purposes — not necessarily an observation or a regulation. Cite as administrative context; never collapsed with observation or regulation."*) — paired with **Authority** specifically for the federal-statistical GEOID definition that joins the rest of the census family. Both roles travel with the record.
@@ -190,7 +201,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](../IDENTITY.md) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per **vintage year** (e.g., `tiger-2020`, `tiger-2024`); within each Collection, Items per feature class (counties, places, tracts, etc.). NEEDS VERIFICATION.
 - Asset roles (counties-shapefile, places-shapefile, tracts-shapefile, block-groups-shapefile, blocks-shapefile, mcds-shapefile, zctas-shapefile, areal-water-shapefile, linear-water-shapefile, roads-shapefile, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/spatial-foundation/`.
@@ -357,7 +368,7 @@ PROPOSED diagram — relationships reflect KFM doctrine; specific join paths per
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -517,8 +528,8 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/census/README.md`](./README.md) — `census` family landing page.
-- [`docs/sources/catalog/census/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census` (CARE applicability for AIANNH).
+- [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace rules for the family.
+- [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census` (CARE applicability for AIANNH).
 - [`docs/sources/catalog/census/decennial-counts.md`](./decennial-counts.md) — Sibling: decennial aggregate tables (joins to TIGER by GEOID).
 - [`docs/sources/catalog/census/decennial-microdata.md`](./decennial-microdata.md) — Sibling: per-person historic enumeration (uses TIGER for modern geocode; AHCB for historical).
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS attribute tables (joins to TIGER by GEOID).

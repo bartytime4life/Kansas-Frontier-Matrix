@@ -12,8 +12,26 @@ name: docs-control-plane
 
 on:
   pull_request:
+    paths:
+      - "control_plane/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/validate_adr_index.py"
+      - "tests/policy/test_control_plane_register_meta_contract.py"
+      - "tests/validators/test_validate_adr_index.py"
+      - ".github/workflows/docs-control-plane.yml"
   push:
     branches: [main]
+    paths:
+      - "control_plane/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/validate_adr_index.py"
+      - "tests/policy/test_control_plane_register_meta_contract.py"
+      - "tests/validators/test_validate_adr_index.py"
+      - ".github/workflows/docs-control-plane.yml"
   workflow_dispatch:
 
 permissions:
@@ -36,19 +54,19 @@ jobs:
 
     steps:
       - name: Check out control-plane sources
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
 
       - name: Install pinned YAML parser
-        run: python -m pip install "PyYAML==6.0.3"
+        run: python tools/ci/install_python_ci.py test-dependencies
 
       - name: Parse every control-plane YAML file
         shell: bash
@@ -129,19 +147,19 @@ jobs:
 
     steps:
       - name: Check out register contracts
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
 
       - name: Install repository test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Enforce register meta contract
         run: >-
@@ -175,19 +193,19 @@ jobs:
 
     steps:
       - name: Check out ADR control-plane sources
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
 
       - name: Install repository test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Validate the canonical ADR inventory
         run: python tools/validators/validate_adr_index.py

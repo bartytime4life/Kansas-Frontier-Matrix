@@ -10,7 +10,7 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/ebird/README.md
-  - docs/sources/catalog/ebird/ebird-ebd.md
+  - docs/sources/catalog/ebird/ebird-basic-dataset.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
   - docs/sources/catalog/PROFILES.md
@@ -18,7 +18,6 @@ related:
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/doctrine/directory-rules.md
-  - policy/sensitivity/sensitive-species.rego
 tags: [kfm, docs, sources, catalog, ebird, fauna, biodiversity, citizen-science, sensitive-species]
 notes:
   - "PROPOSED product-page scaffold for the eBird API (Cornell Lab). The eBird Basic Dataset (EBD) is a separate product — see sibling page ebird-ebd.md."
@@ -26,6 +25,9 @@ notes:
   - "eBird-as-canonical-avian-authority is CONFIRMED KFM doctrine (KFM-P2-IDEA-0020). Sensitive-species deny-by-default posture is PROPOSED KFM doctrine (KFM-P24-IDEA-0002, KFM-P24-PROG-0013)."
   - "External attribution: Cornell Lab of Ornithology / eBird API 2.0; API key required per ebird.org/api/keygen; rate-limit discipline required. [EXTERNAL]"
   - "All repo paths, identity strings, and catalog-profile yes/no assignments are PROPOSED until mounted-repo inspection, SourceDescriptor admission, and per-product validation runs."
+owning_root: docs/
+responsibility: "Documentation for eBird API — product page; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # eBird API
@@ -74,7 +76,7 @@ notes:
 | Field | Value | Status |
 |---|---|---|
 | Product | eBird API 2.0 — programmatic access to recent / regional / hotspot / notable observation views | EXTERNAL |
-| Distinct from | eBird Basic Dataset (EBD) — monthly research-grade dump; see sibling page [`ebird-ebd.md`](./ebird-ebd.md) | PROPOSED sibling |
+| Distinct from | eBird Basic Dataset (EBD) — monthly research-grade dump; see sibling page [`ebird-ebd.md`](ebird-basic-dataset.md) | PROPOSED sibling |
 | Family | [`ebird`](./README.md) | PROPOSED — beyond `directory-rules.md` §7.3, see `OPEN-DSC-14` |
 | Producer / host | Cornell Lab of Ornithology, Cornell University | [EXTERNAL, ebird.org] |
 | Authentication | API key, registered at `ebird.org/api/keygen`; sent via `x-ebirdapitoken` header (or `key=` query parameter) | [EXTERNAL, eBird API 2.0 docs] |
@@ -558,7 +560,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 ## 16. Related docs
 
 - [`docs/sources/catalog/ebird/README.md`](./README.md) — family README
-- [`docs/sources/catalog/ebird/ebird-ebd.md`](./ebird-ebd.md) — sibling product page for the eBird Basic Dataset (PROPOSED)
+- [`docs/sources/catalog/ebird/ebird-ebd.md`](ebird-basic-dataset.md) — sibling product page for the eBird Basic Dataset (PROPOSED)
 - [`docs/sources/catalog/README.md`](../README.md) — catalog lane index
 - [`docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — per-product page template
 - [`docs/sources/catalog/PROFILES.md`](../PROFILES.md) — STAC / DCAT / PROV-O / domain-projection registry
@@ -621,7 +623,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 
 **Data quality framework** — eBird applies its own **data quality framework** (reviewer flags, hotspot vs. personal checklists, provisional vs. accepted records). KFM preserves this framework through the watcher so downstream consumers can filter appropriately (CONFIRMED — `KFM-P2-IDEA-0020`).
 
-**eBird Basic Dataset (EBD) is a distinct product** — Monthly research-grade dumps with richer fields, accessed via a separate Cornell data-request portal. KFM models EBD separately (`KFM-P24-PROG-0001`, `KFM-P24-PROG-0020`). See sibling page [`ebird-ebd.md`](./ebird-ebd.md).
+**eBird Basic Dataset (EBD) is a distinct product** — Monthly research-grade dumps with richer fields, accessed via a separate Cornell data-request portal. KFM models EBD separately (`KFM-P24-PROG-0001`, `KFM-P24-PROG-0020`). See sibling page [`ebird-ebd.md`](ebird-basic-dataset.md).
 
 **What the eBird API is not**
 

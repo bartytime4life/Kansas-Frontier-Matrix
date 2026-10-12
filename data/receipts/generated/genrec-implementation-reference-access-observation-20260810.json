@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-implementation-reference-access-observation-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/access-observation.yml",
+    "contracts/evidence/access_observation.md",
+    "docs/intake/exploratory/implementation-reference-access-observation-source-map.md",
+    "fixtures/contracts/v1/evidence/access_observation/cases.json",
+    "schemas/contracts/v1/evidence/access_observation.schema.json",
+    "tests/validators/evidence/test_validate_access_observation.py",
+    "tools/validators/evidence/validate_access_observation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/access-observation.yml": "sha256:d3bea773555f6a2fe84d2773d1aedede23e5c48d8a1417e1e9d62d013e96ad92",
+    "contracts/evidence/access_observation.md": "sha256:1c95ff3983882c9cd4e24a90a7f2cc1ac1415ed8221c71c21fa083c28378aba9",
+    "docs/intake/exploratory/implementation-reference-access-observation-source-map.md": "sha256:1356e9c87971b8865372d4b8ebd45d2e54de470d9bcc5657f9e20a30c6fc5e0e",
+    "fixtures/contracts/v1/evidence/access_observation/cases.json": "sha256:b64a0438fd7079f0b196c1dacf667e6db899d5521b6a882b6ed7065aaf89b0c8",
+    "schemas/contracts/v1/evidence/access_observation.schema.json": "sha256:42e8282f2fe55029aa8a32e629810359566defa0fe9e37f3c9a5b6ad034cda8d",
+    "tests/validators/evidence/test_validate_access_observation.py": "sha256:7b72421b7bd796b5ecc73d627120c4ce8760957ab785c76132679792b253cf59",
+    "tools/validators/evidence/validate_access_observation.py": "sha256:7c7dd68e1e4a92fb070e8555707c9ee14cbf825a0c921cde9d5dd4b660aed5ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:1c95ff3983882c9cd4e24a90a7f2cc1ac1415ed8221c71c21fa083c28378aba9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "Supplied Kansas Frontier Matrix Implementation Reference",
+      "Supplied Pass 20 Part 2 idea atlas",
+      "Connected Drive and supplied repository-architecture guidance"
+    ],
+    "evidence_refs": [
+      "private-corpus:implementation-reference#AccessObservation",
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/data/county_year_panel.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/domains/roads-rail-trade/access_restriction.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/access-observation.yml": "CONFIRMED",
+    "contracts/evidence/access_observation.md": "PROPOSED",
+    "docs/intake/exploratory/implementation-reference-access-observation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/access_observation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/access_observation.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_access_observation.py": "CONFIRMED",
+    "tools/validators/evidence/validate_access_observation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, pull-request, and branch probes found no checked-path AccessObservation implementation or same-purpose open work at authoring time."
+    },
+    {
+      "gate": "json-and-workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic tests and forty-four exact AccessObservation fixture cases passed in the connector workspace."
+    },
+    {
+      "gate": "no-network-no-routing-and-no-provider-payload-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "repository-hashing-and-adjacent-profile-suites",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector workspace is not a full repository checkout; local identity tests used a compatible SHA-256 canonical-JSON harness."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "implementation-reference-access-observation",
+      "validated": true,
+      "evidence_ref": "private-corpus:implementation-reference#AccessObservation"
+    },
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-county-year-panel-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/data/county_year_panel.md"
+    },
+    {
+      "id": "roads-domain-nonoverlap-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/domains/roads-rail-trade/access_restriction.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:18:17Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only AccessObservation packet derived from the supplied implementation reference and Pass 20 KFM-IDX-APP-008. It declares one aggregate county-year service-access measure, digest-bound geography, method and source lineage, explicit zero, suppression and missingness, service and method posture, correction lineage, interpretation limits, and deterministic identity while preserving evidence, geography, method execution, provider identity, routing, eligibility, emergency, policy, review, release, deployment, publication, and public-use boundaries."
+}

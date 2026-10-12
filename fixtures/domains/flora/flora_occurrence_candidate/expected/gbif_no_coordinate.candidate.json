@@ -1,0 +1,55 @@
+{
+  "object_type": "FloraOccurrenceCandidate",
+  "schema_version": "1.0.0",
+  "candidate_id": "flora-occurrence-candidate:f10a4b635ca880b4a422d1eef5ba2137",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:17a4097e50ea59e5a882303662bdd3e5d3a9792958e280b82bd29dbde3cebb9a",
+  "source_context": {
+    "source_id": "gbif",
+    "source_profile": "GBIF_DWC",
+    "source_record_id": "synthetic-gbif-no-coordinate-0001",
+    "institution_code": "SYNTH",
+    "collection_code": null,
+    "catalog_number": "SYNTH-0002",
+    "license": "CC-BY-4.0",
+    "rights_holder": null,
+    "source_role": "OBSERVATION_CANDIDATE"
+  },
+  "taxon": {
+    "scientific_name": "Schizachyrium scoparium",
+    "taxon_id": null,
+    "rank": null
+  },
+  "occurrence": {
+    "basis_of_record": "HUMAN_OBSERVATION",
+    "event_date": "2023",
+    "occurrence_status": "PRESENT"
+  },
+  "spatial": {
+    "geometry": null,
+    "crs": "EPSG:4326",
+    "uncertainty_meters": null,
+    "coordinate_exposure": "NO_COORDINATE"
+  },
+  "temporal": {
+    "event_date_precision": "YEAR"
+  },
+  "sensitivity_hints": [],
+  "provenance": {
+    "input_digest": "sha256:956c0499c8bd60ca31514f21f2628b567835cbd0c8b3064eacc7425bc2cd633c",
+    "normalizer_id": "flora-dwc-occurrence-normalizer",
+    "normalizer_version": "1.0.0"
+  },
+  "governance": {
+    "lifecycle_state": "WORK",
+    "source_admitted": false,
+    "evidence_bundle_resolved": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

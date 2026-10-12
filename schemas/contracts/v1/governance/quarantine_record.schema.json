@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/quarantine_record.schema.json",
+  "title": "quarantine_record",
+  "description": "A bounded control-plane record explaining why one candidate remains quarantined or held, or how that hold was resolved.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/governance/governed_run_chain.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/governed_run_chain/",
+    "validator": "tools/validators/governance/validate_governed_run_chain.py",
+    "policy": "policy/promotion/",
+    "status": "PROPOSED"
+  },
+  "required": [
+    "record_id",
+    "subject_ref",
+    "spec_hash",
+    "run_receipt_ref",
+    "policy_decision_ref",
+    "state",
+    "reason_codes",
+    "obligations",
+    "recorded_at"
+  ],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "run_receipt_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^\\S+$"
+    },
+    "policy_decision_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^\\S+$"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["QUARANTINED", "HELD", "RELEASED", "REJECTED"]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolution_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": ["RELEASED", "REJECTED"]
+          }
+        },
+        "required": ["state"]
+      },
+      "then": {
+        "required": ["resolution_ref", "resolved_at"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": ["QUARANTINED", "HELD"]
+          }
+        },
+        "required": ["state"]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {"required": ["resolution_ref"]},
+            {"required": ["resolved_at"]}
+          ]
+        }
+      }
+    }
+  ]
+}

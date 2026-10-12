@@ -1,0 +1,206 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T04:02:20.353354Z",
+  "owning_root": "data/",
+  "responsibility": "Append-only exact source comparison and bounded validation record; not review or release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 165,
+  "site_base_commit": "64ee0a61e577a0455fd1180fd18d346c017876bf",
+  "site_candidate_commit": "a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+  "github_base_commit": "283ed3d32ffb0ea46d55cd53a92ee5e63d778e0b",
+  "destination": "apps/site/source",
+  "application_method": "Seven modified source paths copied only after each destination matched its immutable v165 baseline; no additions or deletions under Site source.",
+  "deployment": {
+    "site_version": 166,
+    "source_commit": "a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+    "version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_7ec08a06667c8191b8d4690d809bbcce",
+    "deployment_id": "appgdep_6ac5c3a1fe588191bb49015d69172278",
+    "status": "succeeded",
+    "platform_normalized_archive_sha256": "cf47e46bf486bf139320b8aa5e728836fd806dd7b43a9df86d041b8532035f6b",
+    "evidence": "Parent native Sites deployment readback; platform-normalized archive digest is not asserted to equal the local source archive digest."
+  },
+  "counts": {
+    "changed_paths": 7,
+    "updated_paths": 7,
+    "new_paths": 0,
+    "deleted_paths": 0
+  },
+  "files": {
+    "app/globals.css": {
+      "github_base_sha256": "6f1c41b56fe75c3e0bb03195349d97bdb5ea380805cf7224c584c39094d90d52",
+      "github_result_sha256": "cdb3ce8a3314914d24d95eecbac141ba79289869da728fc6c5182b1440ca8f25",
+      "site_source_sha256": "cdb3ce8a3314914d24d95eecbac141ba79289869da728fc6c5182b1440ca8f25"
+    },
+    "app/page.tsx": {
+      "github_base_sha256": "bbd296d040956b4b68337cfba6600edbe70f14a3673a2fb50b5e348047d25203",
+      "github_result_sha256": "f0c51a9c6979763181fc2d2ac833e3fa09fc3200045e5c2aef2924532390723b",
+      "site_source_sha256": "f0c51a9c6979763181fc2d2ac833e3fa09fc3200045e5c2aef2924532390723b"
+    },
+    "docs/SITE_PRESERVATION.md": {
+      "github_base_sha256": "a4fde0b368346c38e211e35b02a6b4e683113023a837e6163e5cf112c2326a46",
+      "github_result_sha256": "6552d9f21e18d47dbb92bb17005636c3f5f46cb2c2391b128066f4fb7f4065b6",
+      "site_source_sha256": "6552d9f21e18d47dbb92bb17005636c3f5f46cb2c2391b128066f4fb7f4065b6"
+    },
+    "scripts/verify-explorer-geometry.mjs": {
+      "github_base_sha256": "fff41a2f76c413b65da77702862f1fa1abde2fdfbba5fc49b86cefc627641b5e",
+      "github_result_sha256": "2bb1ebb311c2db22d9df5999c28720e99306e503ec226a17ab539bc7e9bfc208",
+      "site_source_sha256": "2bb1ebb311c2db22d9df5999c28720e99306e503ec226a17ab539bc7e9bfc208"
+    },
+    "tests/mobile-compatibility.test.mjs": {
+      "github_base_sha256": "93a1743d0c91312d72dc1bdd2fccfbaae3063a8433846a87d4733d8bb0fddf54",
+      "github_result_sha256": "e4cfef4b1b8a2af0d69344d951527dd0d5b7fc31f522c50b74297081bb1ae2c7",
+      "site_source_sha256": "e4cfef4b1b8a2af0d69344d951527dd0d5b7fc31f522c50b74297081bb1ae2c7"
+    },
+    "tests/rendered-html.test.mjs": {
+      "github_base_sha256": "07b589a28a343858d1205401f07b7ebf09c14589808bd20ddbac96ecf1119f96",
+      "github_result_sha256": "15bcfd42305b0c444ae582b88b67a9140f51143598e9709379c5f7fef105f312",
+      "site_source_sha256": "15bcfd42305b0c444ae582b88b67a9140f51143598e9709379c5f7fef105f312"
+    },
+    "tests/runtime-resilience.test.mjs": {
+      "github_base_sha256": "501f83537dd1f584b8a48a553b86c955918eb9090eb1d8b08e5061d75ed67c13",
+      "github_result_sha256": "bc99f6dd78aae960e92e80d5be6b809d0fa75b616f754b3a0c552be25f7d1075",
+      "site_source_sha256": "bc99f6dd78aae960e92e80d5be6b809d0fa75b616f754b3a0c552be25f7d1075"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+    "source_dirty": false,
+    "mirrored_paths": 699,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "4807087e2f40e1b87cbfbe393fd90ebb28295f3e344ef0487cf42733c410adbb",
+    "inventory_encoding": "SHA-256 of UTF-8 compact JSON array sorted by path; each entry has path and lowercase sha256, object keys sorted."
+  },
+  "application_validation": {
+    "evidence": "Root task confirmed against final same-Site source; full 699-file source parity permits reuse without duplicate application runs in this mirror.",
+    "production_build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "passed": 552,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "errors": 0,
+      "inherited_warnings": 46
+    },
+    "browser_smoke": {
+      "root_capture_widths_px": [
+        1440,
+        375
+      ],
+      "toolbar_height_px": 54,
+      "map_top_px": 54,
+      "horizontal_document_overflow": false,
+      "search_and_2d_minimum_target_px": 44,
+      "map_more_compose_status_escape_focus": "PASS",
+      "hosted_capture_width_px": 1886,
+      "hosted_terrain_dem": "READY",
+      "evaluator_outcome": "PASS",
+      "evaluator_limit": "Evaluator reviewed fresh root captures; a separate evaluator browser capture was unavailable.",
+      "scope_limit": "Bounded observed layouts and interactions, not full accessibility, touch or WebGL acceptance."
+    }
+  },
+  "local_installation": {
+    "evidence": "Parent guarded installation and actual-store readback.",
+    "site_version": 166,
+    "source_commit": "a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+    "stable_alias_target": "KFM-Explorer-Site-v166",
+    "origin": "http://127.0.0.1:4173",
+    "physical_v109_state_retained": true,
+    "sqlite_checks_passed": 8,
+    "r2_blobs_verified": 15840,
+    "r2_blob_bytes_verified": 738852346,
+    "explorer_active": true,
+    "qwen_bridge": "READY",
+    "prism_pid_preserved": 11880,
+    "private_installation_receipt_sha256": "95794b7b06ae5ea903080f3f9e290f58a409cecbdd90a5fbef8137678915ec19",
+    "private_actual_readback_sha256": "09b5f84788f121d40ac4e499b0e0678bff52e634032bd3c8364a622010c0a46b"
+  },
+  "prior_record": {
+    "path": "data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json",
+    "sha256": "1d96d6e2c19c2aa736e836a4217fa0b3b15c82a0a22078ef52fddc0b93722bfa",
+    "unchanged": true,
+    "meaning": "Historical v153 reviewed receipt remains unchanged; later source parity does not grant reviewed mirror approval."
+  },
+  "limits": [
+    "No provider payload, dependency lock, persisted state, audience, source-admission, activation or data release changes in this repository diff.",
+    "Historical MIRROR_REVIEW_REQUIRED remains a separate inherited review hold.",
+    "Independent human review and exact-head hosted CI remain pending."
+  ],
+  "rollback": "Revert the seven-path toolbar change and this checkpoint to restore the prior repository layout. Retain historical receipts; local source rollback retains the physical data store and later writes. Hosted rollback independently selects saved v165.",
+  "repository_validation": {
+    "documentation_links": {
+      "outcome": "PASS",
+      "documents": 2,
+      "local_targets": 16,
+      "external_unverified": 4
+    },
+    "source_parity": "699 of 699 files match final immutable Site source.",
+    "whitespace": "PASS",
+    "repository_topology": {
+      "outcome": "FAIL",
+      "base_commit": "283ed3d32ffb0ea46d55cd53a92ee5e63d778e0b",
+      "base_and_candidate_failure_findings_identical": true,
+      "fail_new_drift": 6,
+      "fail_invariant": 0,
+      "inherited_warnings": 113,
+      "failures": [
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:94a86e4bf617c99cac21a7fa8c14f845d7b9c927cfd43402085a22bcc4bd2b4e",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/classify.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:5156d599303e36dab5765a45ea9d5f1a18f8822c8f8c7e52940a0d63d14822d6",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:632c54df048ade863f12295591137838b0d10c23abbcdf6dc07613a7f8248b15",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:8bd9c2d8c0255ba4fafe5c718cd0dfef47571cf1688d65dccefe7b2dbde9964d",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:f8b30c168598bf0cb465452699fcdf0a738458c2ce3558d975ce63def27c5a61",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/scan.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+          "fingerprint": "sha256:d1587085c4311eec6f802ff7dae2be85cbb997fe1197e4180f8f3c24a254eced",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/summary.json"
+        }
+      ],
+      "attribution": "Unchanged KFM-TOPO-017 findings introduced by the preceding DP-15 inventory merge; no toolbar file is implicated. No baseline, gate or imported file is changed."
+    },
+    "historical_mirror_check": {
+      "outcome": "FAIL",
+      "reason_code": "MIRROR_REVIEW_REQUIRED",
+      "review_hold_preserved": true
+    }
+  }
+}

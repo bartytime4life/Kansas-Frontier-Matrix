@@ -10,10 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/ahgp/README.md
-  - docs/sources/catalog/ahgp/IDENTITY.md
-  - docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ahgp/NAMING.md
-  - docs/sources/catalog/ahgp/OPEN-QUESTIONS.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/domains/people-dna-land/README.md
@@ -24,6 +20,9 @@ notes:
   - "Sibling-link presence verified in the Phase 0 Claude Code session that emitted the family README and stubs."
   - "AHGP source-role and rights claims grounded in the prior AHGP family catalog session (2026-05-13); KFM-internal implementation paths remain PROPOSED or NEEDS VERIFICATION until a mounted-repo run confirms them."
   - "Not an activation document. SourceActivationDecision for SRC-AHGP remains gated on the family-level prerequisites list."
+owning_root: docs/
+responsibility: "Documentation for AHGP Cemetery Transcriptions; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # AHGP Cemetery Transcriptions
@@ -62,7 +61,7 @@ INFERRED: Within the AHGP record-class taxonomy, cemetery transcriptions are the
 
 ## Source authority
 
-See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
+See `data/registry/sources/ahgp/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
 
 **Product-specific descriptor overlay (PROPOSED, anchored in prior AHGP family work):**
 
@@ -94,7 +93,7 @@ See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for
 
 ## Collection identity
 
-- PROPOSED Collection id: `kfm-ahgp-cemetery-transcriptions` (see [`IDENTITY.md`](./IDENTITY.md)).
+- PROPOSED Collection id: `kfm-ahgp-cemetery-transcriptions` (see `IDENTITY.md` (not present)).
 - PROPOSED namespace: `kfm:` *(see family-level OPEN-DSC-03)*.
 - PROPOSED asset roles (NEEDS VERIFICATION against `schemas/contracts/v1/source/`):
 
@@ -176,7 +175,7 @@ PROPOSED handling for this product:
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 **Product-specific posture (PROPOSED, summary only — canonical rules live in policy):**
 
@@ -279,7 +278,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## Open questions
 
-Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md). Cemetery-specific items below MUST NOT renumber family-level questions.
+Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in `OPEN-QUESTIONS.md` (not present). Cemetery-specific items below MUST NOT renumber family-level questions.
 
 <details>
 <summary><b>Cemetery-specific open questions (7)</b></summary>
@@ -303,10 +302,10 @@ Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [
 ## Related docs
 
 - [`docs/sources/catalog/ahgp/README.md`](./README.md) — AHGP family README (activation prerequisites live here).
-- [`docs/sources/catalog/ahgp/IDENTITY.md`](./IDENTITY.md) — Collection id patterns and namespace pins.
-- [`docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights/sensitivity map (canonical).
-- [`docs/sources/catalog/ahgp/NAMING.md`](./NAMING.md) — Naming conventions.
-- [`docs/sources/catalog/ahgp/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — Family-level open questions register.
+- `docs/sources/catalog/ahgp/IDENTITY.md` (not present) — Collection id patterns and namespace pins.
+- `docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights/sensitivity map (canonical).
+- `docs/sources/catalog/ahgp/NAMING.md` (not present) — Naming conventions.
+- `docs/sources/catalog/ahgp/OPEN-QUESTIONS.md` (not present) — Family-level open questions register.
 - [`docs/sources/catalog/README.md`](../README.md) — Source catalog landing.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement law.
 - [`docs/domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) — Domain README *(NEEDS VERIFICATION — exact folder name)*.

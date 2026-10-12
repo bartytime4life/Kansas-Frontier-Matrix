@@ -1,314 +1,248 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-atmosphere-readme
-title: contracts/atmosphere/ — Atmosphere / Air Semantic Contracts
-type: readme
-version: v0.1
-status: draft
-owners: OWNER_TBD — Atmosphere steward · Air steward · Contract steward · Schema steward · Policy steward · Data steward · Docs steward
+title: contracts/atmosphere/ — Atmosphere / Air Contract Compatibility Index
+type: readme; directory-readme; compatibility-index
+version: v0.3
+status: draft; repository-grounded; compatibility-index; mixed-content; non-canonical
+owners: OWNER_TBD — Atmosphere steward · Contract steward · Schema steward · Policy steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
-policy_label: public; contracts; atmosphere; air; semantic-contracts; compatibility-path; slug-conflict
+updated: 2026-09-07
+policy_label: public; contracts; atmosphere; air; compatibility; no-parallel-authority; cite-or-abstain
 related:
   - ../README.md
   - ../air/README.md
+  - ../domains/atmosphere/README.md
   - ../../docs/domains/atmosphere/README.md
-  - ../../docs/domains/atmosphere/API_CONTRACTS.md
-  - ../../docs/domains/atmosphere/MAP_UI_CONTRACTS.md
-  - ../../docs/domains/atmosphere/CANONICAL_PATHS.md
-  - ../../docs/architecture/smoke-atmosphere-hazards.md
   - ../../docs/doctrine/directory-rules.md
-  - ../../schemas/contracts/v1/air/
-  - ../../schemas/contracts/v1/atmosphere/
-  - ../../schemas/contracts/v1/domains/atmosphere/
-  - ../../policy/domains/atmosphere/
-  - ../../tests/domains/atmosphere/
-  - ../../fixtures/domains/atmosphere/
-  - ../../data/registry/sources/
-  - ../../data/proofs/
-  - ../../release/
-tags: [kfm, contracts, atmosphere, air, semantic-contracts, object-families, weather, air-quality, smoke-context, aod, climate, source-role, evidence, governance]
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../schemas/contracts/v1/domains/atmosphere/README.md
+  - ../../schemas/contracts/v1/atmosphere/README.md
+  - ../../schemas/contracts/v1/air/README.md
+  - ../../policy/domains/atmosphere/README.md
+  - ../../fixtures/domains/atmosphere/README.md
+  - ../../tests/domains/atmosphere/README.md
+tags: [kfm, contracts, atmosphere, air, compatibility, semantic-contracts, object-families, source-role, evidence, governance]
 notes:
-  - "Draft directory README for the current contracts/atmosphere compatibility folder."
-  - "Path posture is CONFLICTED / NEEDS VERIFICATION: Atmosphere domain docs explicitly identify schema/contract slug drift between air and atmosphere, and also discuss Directory Rules-style domains/atmosphere placement."
-  - "This README does not settle canonical contract placement; migration requires ADR or migration note."
-  - "Contracts define semantic meaning; machine-checkable shape belongs in schemas/contracts/v1/atmosphere/, schemas/contracts/v1/air/, or schemas/contracts/v1/domains/atmosphere/ only after canonical placement is settled."
-  - "Atmosphere/Air contracts are not emergency advisories, not life-safety direction, not model truth, and not public release authority."
+  - "This path is a compatibility and placement index, not a second semantic-contract authority."
+  - "The direct inventory is README.md plus air-observation.schema.json; the schema is an empty-property PROPOSED residue under a contracts root."
+  - "Current semantic meaning belongs under contracts/domains/atmosphere/; current machine shape belongs under schemas/contracts/v1/domains/atmosphere/."
+  - "No migration, source activation, release, publication, API/UI binding, or life-safety authority is implied."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Atmosphere / Air Semantic Contracts
+# Atmosphere / Air Contract Compatibility Index
 
-> Directory contract for Atmosphere / Air object-family Markdown semantics. This folder documents meaning, boundaries, and trust posture; it does not define JSON Schema, policy, source data, emergency guidance, release decisions, or public API/UI behavior.
+This README explains what the historical contracts/atmosphere path currently means, what it contains, and where maintained semantic and machine-shape material belongs. It is a repository-grounded compatibility index, not a second writable contract authority.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Root: contracts/atmosphere" src="https://img.shields.io/badge/root-contracts%2Fatmosphere-blue">
-  <img alt="Domain: atmosphere" src="https://img.shields.io/badge/domain-atmosphere-green">
-  <img alt="Path posture: conflicted" src="https://img.shields.io/badge/path-CONFLICTED%20%7C%20NEEDS%20VERIFICATION-orange">
-  <img alt="Authority: semantic contracts" src="https://img.shields.io/badge/authority-semantic__contracts-purple">
-</p>
+## Contents
 
-`contracts/atmosphere/`
-
-## Quick jumps
-
-[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current directory snapshot](#current-directory-snapshot) · [Contract inventory](#contract-inventory) · [Semantic contract rules](#semantic-contract-rules) · [Source-role and anti-collapse rules](#source-role-and-anti-collapse-rules) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
-
----
+- [Status](#status)
+- [Placement and related paths](#placement-and-related-paths)
+- [Direct inventory](#direct-inventory)
+- [Scope and non-goals](#scope-and-non-goals)
+- [Semantic inventory and boundaries](#semantic-inventory-and-boundaries)
+- [Migration and lifecycle](#migration-and-lifecycle)
+- [Validation and maintenance](#validation-and-maintenance)
+- [Evidence ledger](#evidence-ledger)
+- [Definition of done](#definition-of-done)
+- [Rollback and review note](#rollback-and-review-note)
 
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / directory README  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `contracts/atmosphere/`  
-> **Path posture:** `CONFLICTED` / `NEEDS VERIFICATION` against `contracts/air/` and `contracts/domains/atmosphere/` variants  
-> **Truth posture:** `CONFIRMED` current README path and file update; Atmosphere/Air domain meaning is supported by domain docs; full contract inventory, canonical path, schemas, validators, fixtures, policy bundles, and CI behavior remain `NEEDS VERIFICATION`.
+> **Status:** draft / compatibility index / mixed content  
+> **Path:** contracts/atmosphere/  
+> **Semantic home:** [contracts/domains/atmosphere/](../domains/atmosphere/README.md)  
+> **Machine-shape target:** [schemas/contracts/v1/domains/atmosphere/](../../schemas/contracts/v1/domains/atmosphere/README.md)  
+> **Current posture:** the requested path exists, but its schema residue is not canonical, complete, validated, releasable, or public.
 
----
+The direct folder inventory is confirmed on current main. The previous documentation correction was merged in [PR #4409](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4409); this follow-up is a new docs-only draft. No migration, deletion, rename, release, publication, source activation, API binding, UI binding, or public promotion is implied.
 
-## Scope
+## Placement and related paths
 
-`contracts/atmosphere/` is the current compatibility folder for Atmosphere / Air semantic contracts.
+Current implementation truth is the exact GitHub repository state. Accepted placement guidance is [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) together with the adopted [Directory Rules](../../docs/doctrine/directory-rules.md). The [contracts root guidance](../README.md) assigns semantic meaning to contracts and keeps schemas, policy, fixtures, tests, validators, registries, lifecycle data, receipts, proofs, release state, runtime behavior, and public behavior in their responsibility roots.
 
-Contracts in this folder should describe **semantic meaning** for air-quality, weather, smoke/aerosol, climate, and advisory-context object families: what an object means, which identity attributes are load-bearing, what source roles may apply, what sensitivity or public-safety posture constrains the object, what it must not be confused with, and what downstream validation must prove.
+| Surface | Current posture | Role of this README |
+| --- | --- | --- |
+| [contracts/domains/atmosphere/](../domains/atmosphere/README.md) | Current semantic-contract home | Point here; do not duplicate definitions |
+| [schemas/contracts/v1/domains/atmosphere/](../../schemas/contracts/v1/domains/atmosphere/README.md) | Current machine-shape target | Point here; do not treat a contract-root schema as canonical |
+| [contracts/air/](../air/README.md) | Merged sibling compatibility/index lane | Preserve the historical air slug without creating another authority |
+| [schemas/contracts/v1/atmosphere/](../../schemas/contracts/v1/atmosphere/README.md) | Atmosphere schema compatibility index | Retain as a pointer, not a second schema home |
+| [schemas/contracts/v1/air/](../../schemas/contracts/v1/air/README.md) | Air schema compatibility/legacy lane | Retain its bounded placeholder; add no parallel definitions |
+| contracts/atmosphere/ | This path | Record direct contents, drift, aliases, and migration conditions only |
+| [docs/domains/atmosphere/](../../docs/domains/atmosphere/README.md) | Explanatory domain documentation | Use for domain scope and boundaries, not implementation authority |
+| [policy/domains/atmosphere/](../../policy/domains/atmosphere/README.md) | Proposed/default-only policy lane | Use for policy posture; do not infer an accepted evaluator or bundle |
+| [fixtures/domains/atmosphere/](../../fixtures/domains/atmosphere/README.md) | Deterministic/offline fixture index | Use for bounded examples; fixtures are not evidence or release state |
+| [tests/domains/atmosphere/](../../tests/domains/atmosphere/README.md) | Bounded domain test lane | Use for test posture; tests do not become contract authority |
 
-This folder does **not** define JSON Schema, executable validators, policy bundles, raw source data, processed records, catalog/triplet records, proof closure, emergency advisories, life-safety direction, release decisions, public API DTOs, public UI behavior, or map display behavior.
+Do not create a parallel contracts/air/, contracts/atmosphere/, schemas/contracts/v1/air/, schemas/contracts/v1/atmosphere/, or other authority home merely to satisfy a historical path name.
 
----
+## Direct inventory
 
-## Path posture
+The direct contents observed on current main are:
 
-The requested path is:
-
-```text
+~~~text
 contracts/atmosphere/
-```
-
-Atmosphere domain docs explicitly identify slug drift between `air` and `atmosphere` contract/schema homes, and the repo now also contains a requested `contracts/air/README.md` compatibility file. Candidate homes include:
-
-```text
-contracts/air/
-contracts/atmosphere/
-contracts/domains/atmosphere/
-schemas/contracts/v1/air/
-schemas/contracts/v1/atmosphere/
-schemas/contracts/v1/domains/atmosphere/
-```
-
-This README keeps the requested path usable while surfacing the conflict. It does not move, delete, redirect, or canonicalize any file.
-
-| Path | Status | Meaning |
-|---|---|---|
-| `contracts/atmosphere/` | `CONFIRMED` current requested folder path | Compatibility folder currently being filled. |
-| `contracts/air/` | `CONFIRMED` compatibility sibling | Existing compatibility README records the `air` slug variant. |
-| `contracts/domains/atmosphere/` | `PROPOSED` in Atmosphere docs / Directory Rules style | Likely domain-contract home; requires ADR or migration note before becoming canonical. |
-| `schemas/contracts/v1/air/` | `PROPOSED`/legacy slug variant | Machine schema candidate; not verified as canonical here. |
-| `schemas/contracts/v1/atmosphere/` | `PROPOSED` plain atmosphere slug variant | Machine schema candidate; not verified as canonical here. |
-| `schemas/contracts/v1/domains/atmosphere/` | `PROPOSED` Directory Rules-style schema home | Machine schema candidate; not replaced by Markdown contracts. |
-
----
-
-## Repo fit
-
-```text
-contracts/
 ├── README.md
-├── air/
-│   └── README.md
-└── atmosphere/
-    └── README.md
-```
+└── air-observation.schema.json
+~~~
 
-Adjacent responsibility roots:
+The second file is a schema residue under a contracts root. Its current shape is:
 
-| Root | Relationship to this folder |
-|---|---|
-| `../README.md` | Root contracts guidance: contracts define meaning; schemas define shape. |
-| `../air/README.md` | Compatibility sibling for the `air` slug variant. |
-| `../../docs/domains/atmosphere/` | Domain doctrine, object families, scope boundaries, source roles, and verification backlog. |
-| `../../schemas/contracts/v1/air/` | Candidate machine schema home using `air` slug. |
-| `../../schemas/contracts/v1/atmosphere/` | Candidate machine schema home using plain `atmosphere` slug. |
-| `../../schemas/contracts/v1/domains/atmosphere/` | Candidate machine schema home using `domains/atmosphere` path. |
-| `../../policy/domains/atmosphere/` | Policy and sensitivity gates. |
-| `../../tests/domains/atmosphere/` | Expected validators/contract tests. |
-| `../../fixtures/domains/atmosphere/` | Expected examples and fixtures. |
-| `../../data/registry/sources/` | SourceDescriptor and source activation authority. |
-| `../../release/` | Release decisions and rollback state. |
+| Field | Observed value | Meaning |
+| --- | --- | --- |
+| title | Air Observation | Descriptive title only |
+| type | object | Broad JSON Schema type |
+| additionalProperties | true | Open scaffold, not a constrained contract |
+| properties | empty | No normative fields are defined |
+| x-kfm.status | PROPOSED | Proposed scaffold, not accepted shape |
+| x-kfm.path | contracts/atmosphere/air-observation.schema.json | Historical placement record |
+| x-kfm.source_docs | [FILE_SYSTEM_PLAN.md](../../docs/domains/atmosphere/FILE_SYSTEM_PLAN.md) | Lineage pointer only |
+| x-kfm.contract_doc | null | No linked contract document |
 
----
+Its identifier is kfm://contracts/atmosphere/air-observation.schema.json. That identifier must not be used as evidence that the file is canonical, complete, validated, releasable, or public.
 
-## Accepted inputs
+## Scope and non-goals
 
-| Belongs in this directory | Required posture |
-|---|---|
-| Markdown semantic contracts | Define meaning, identity, source-role boundaries, sensitivity posture, and validation expectations. |
-| Object-family contract READMEs | Must preserve KFM lifecycle, trust membrane, cite-or-abstain, source-role anti-collapse, and policy-aware release rules. |
-| Compatibility notes | Must clearly label `air` / `atmosphere` / `domains/atmosphere` path conflicts and migration requirements. |
-| Evidence ledgers | Must cite Atmosphere domain docs, source-family docs, root contract guidance, and current file evidence. |
-| Validation checklists | Must point to schemas/tests/policy roots without claiming they exist unless verified. |
-| Rollback notes | Must name prior content SHA or migration rollback target. |
+This README may:
 
----
+- identify the current path and direct contents;
+- link to the maintained semantic, schema, policy, fixture, test, and domain-documentation lanes;
+- record aliases, placement drift, migration preconditions, and rollback references;
+- summarize current repository evidence without promoting proposed scaffolds;
+- preserve the distinction between the historical air slug and the broader Atmosphere domain.
 
-## Exclusions
+This README does not:
 
-| Does not belong here | Correct home |
-|---|---|
-| JSON Schema or machine-checkable shape | `../../schemas/contracts/v1/air/`, `../../schemas/contracts/v1/atmosphere/`, `../../schemas/contracts/v1/domains/atmosphere/`, or accepted schema home. |
-| Policy bundles, sensitivity rules, emergency redirect logic | `../../policy/domains/atmosphere/` and Hazards policy surfaces. |
-| SourceDescriptor records | `../../data/registry/sources/`. |
-| Raw, work, quarantine, processed, catalog, triplet, or published data | `../../data/...` lifecycle roots. |
-| EvidenceBundle or proof closure | `../../data/proofs/` and proof workflows. |
-| Release decisions | `../../release/`. |
-| Emergency alerting or life-safety direction | Official issuing authorities and Hazards-lane redirect context. |
-| Public API DTOs and route behavior | Governed API/app roots after verification. |
-| Public UI/map behavior | Governed UI/app roots after release and policy gates. |
-| Canonical path migration | ADR or migration note, not this README alone. |
+- define new object semantics or normative fields;
+- add or bless schemas, policy, fixtures, validators, tests, registries, receipts, proofs, releases, or runtime behavior;
+- declare a source active, rights-cleared, public-safe, health-safe, or life-safety capable;
+- make a compatibility path canonical by assertion;
+- replace an accepted ADR, Directory Rules, contract file, schema registry, validator, or release record.
 
----
+## Semantic inventory and boundaries
 
-## Current directory snapshot
+The maintained semantic lane documents fifteen primary object families plus a support decision envelope:
 
-> [!NOTE]
-> This snapshot is based on current-session file inspection, not a complete repository inventory.
+1. AirStation
+2. AirObservation
+3. PM25Observation
+4. OzoneObservation
+5. SmokeContext
+6. AODRaster
+7. WeatherStation
+8. WeatherObservation
+9. WindField
+10. PrecipitationObservation
+11. TemperatureObservation
+12. ClimateNormal
+13. ClimateAnomaly
+14. ForecastContext
+15. AdvisoryContext
+16. AtmosphereAirDecisionEnvelope (support contract)
 
-| File | Status | What it proves | What it does not prove |
-|---|---|---|---|
-| `contracts/atmosphere/README.md` | `CONFIRMED` | This directory README exists and states compatibility-folder boundaries. | Does not settle canonical placement. |
-| `contracts/air/README.md` | `CONFIRMED` | A sibling compatibility README exists for the `air` slug variant. | Does not settle canonical placement. |
-| Other `contracts/atmosphere/*` files | `UNKNOWN` | Not verified by this README. | Requires separate inventory. |
+The domain directory also contains lowercase compatibility forms and supporting records for source role, validation, correction, sensor colocation, trigger candidates, prescribed burns, and layer descriptors. A Markdown file is not proof that its schema, policy, fixtures, tests, source rights, or release gates are complete.
 
----
+Preserve these non-collapse rules:
 
-## Contract inventory
+- AQI is not pollutant concentration.
+- AOD is not surface PM2.5.
+- Forecast, model, reanalysis, or fusion output is not an observation.
+- A low-cost sensor is not a regulatory monitor.
+- AirNow preliminary or operational context is not the AQS certified archive.
+- Smoke, plume, hotspot, or prescribed-burn context is not ground-level exposure, a health effect, an evacuation order, or emergency authority.
+- Climate normals and anomalies are not current weather observations.
+- Advisory context is not a KFM-issued alert or instruction.
+- A receipt is not proof; proof is not review; review is not promotion; promotion is not release, deployment, or publication.
+- A derived tile, raster, index, graph edge, dashboard, or AI answer is not sovereign evidence.
 
-| Object family | Current contract | Canonical-path posture | Schema posture |
-|---|---|---|---|
-| `AirStation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `AirObservation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `PM25Observation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `OzoneObservation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `SmokeContext` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `AODRaster` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `WeatherStation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `WeatherObservation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `WindField` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `PrecipitationObservation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `TemperatureObservation` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `ClimateNormal` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `ClimateAnomaly` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `ForecastContext` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
-| `AdvisoryContext` | `UNKNOWN` | `CONFLICTED` / `NEEDS VERIFICATION` | Candidate homes require ADR. |
+Cross-domain ownership remains separate. Hazards owns emergency and life-safety authority. Agriculture owns crop and field claims. Soil owns soil properties and soil-moisture truth. Hydrology owns gauge, watershed, flood, and hydrologic truth. Other domains retain their own ecological, infrastructure, and network claims. Atmosphere may provide governed context or forcing without borrowing another domain's authority.
 
----
+## Migration and lifecycle
 
-## Semantic contract rules
+Any migration of air-observation.schema.json must be explicit, dependency-closed, and reversible:
 
-Every Atmosphere / Air contract in this folder must state:
+1. Re-pin current main and inspect the target tree, semantic contracts, schema registry, policy, fixtures, tests, and open work.
+2. Name an owner and record the applicable ADR or migration decision.
+3. Choose one outcome: move the schema to the domain schema lane, retain a documented compatibility alias, or retire the empty scaffold.
+4. If retained, define machine identity, required fields, source role, units, evidence references, rights, sensitivity, and migration fixtures in the maintained schema lane.
+5. Pair a retained schema with the relevant contract, policy, fixture, validator, test, registry, receipt, and rollback evidence.
+6. Verify that no public API, UI, map, release, source activation, or runtime path reads this residue directly.
+7. Update this README only after the target path, alias behavior, and rollback are reviewable.
 
-- object meaning;
-- owning domain and cross-lane dependencies;
-- accepted inputs and exclusions;
-- identity-bearing fields;
-- source-role constraints;
-- temporal and measurement units that matter;
-- sensitivity, caveat, and public-safety posture;
-- EvidenceRef, EvidenceBundle, and SourceDescriptor expectations;
-- lifecycle boundaries;
-- validation requirements;
-- rollback path;
-- definition of done.
+Until then, the safe posture is HOLD: visible compatibility pointer plus visible residue, with no new definitions in this folder.
 
----
+## Validation and maintenance
 
-## Source-role and anti-collapse rules
+### Confirmed on current main
 
-Atmosphere / Air contracts must preserve the domain’s anti-collapse rules:
+- The target folder contains README.md and air-observation.schema.json.
+- The semantic README identifies contracts/domains/atmosphere/ as the current contract home.
+- The schema-domain README identifies schemas/contracts/v1/domains/atmosphere/ as the machine-shape target.
+- The sibling contracts/air/ compatibility README is present on main.
+- Policy, fixture, test, and documentation READMEs describe draft or bounded surfaces.
+- The residue schema has no properties and no linked contract document.
 
-- AQI is not concentration;
-- AOD is not PM2.5;
-- model fields are not observations;
-- low-cost sensor outputs require correction, caveats, confidence, and limitations before public release;
-- smoke and advisory context are not emergency/life-safety direction;
-- atmosphere evidence may support agriculture, hydrology, biodiversity, settlement, or hazard context without owning those domains’ canonical claims.
+### Still unproven
 
----
+- Complete contract-to-schema coverage for every object family.
+- Accepted schema registry ownership or a release-ready version.
+- Validator, policy evaluator, CI, or hosted-check binding for this exact residue path.
+- Scientific validity, source freshness, rights verification, sensitivity clearance, or public-release eligibility.
+- API, MapLibre, dashboard, catalog, graph, or AI-consumer safety.
+- Migration or rollback completion for air-observation.schema.json.
 
-## Lifecycle and trust boundary
+### Documentation update checklist
 
-```mermaid
-flowchart LR
-  CONTRACT[contracts/atmosphere/] --> AIR[contracts/air compatibility]
-  CONTRACT --> CANON[contracts/domains/atmosphere proposed]
-  CONTRACT --> SCHEMA[schemas/contracts/v1/air OR v1/atmosphere OR v1/domains/atmosphere]
-  CONTRACT --> POLICY[policy/domains/atmosphere]
-  CONTRACT --> TESTS[tests/domains/atmosphere]
-  SOURCE[data/registry/sources + EvidenceRef] --> RAW[data/raw]
-  RAW --> WORK[data/work or data/quarantine]
-  WORK --> PROC[data/processed]
-  PROC --> CAT[data/catalog + data/triplets]
-  CAT --> REL[release]
-  REL --> PUB[data/published]
-```
+For future edits to this README:
 
-Contracts describe meaning. They do not move data, validate schemas, make policy decisions, close evidence, issue alerts, direct user action, or publish.
+- Re-pin current main before drafting.
+- Fetch every linked path whose status or role is being changed.
+- Review headings, anchors, tables, code fences, links, and direct inventory.
+- Keep proposed, unknown, and confirmed claims visibly distinct.
+- Re-fetch the branch blob and compare changed paths before opening or updating a draft PR.
+- Report repository tests, schema validation, Rego evaluation, hosted checks, browser/runtime checks, release checks, and live connectors as not run unless actually executed.
 
----
+## Evidence ledger
 
-## Validation
+| Evidence | Exact reference | Role |
+| --- | --- | --- |
+| Current main | [f73daca](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f73dacaee38d7be1722200fccd2fe73251afb7e3) | Base for this follow-up; includes the merged predecessor |
+| Previous documentation update | [PR #4409](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4409) | Merged README correction; not a current work branch |
+| Current target README | [db947e0](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f73dacaee38d7be1722200fccd2fe73251afb7e3/contracts/atmosphere/README.md) | Prior blob and rollback target |
+| Target schema residue | [c99cde1](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f73dacaee38d7be1722200fccd2fe73251afb7e3/contracts/atmosphere/air-observation.schema.json) | Current proposed empty-property scaffold |
+| Semantic contract README | [2626d011](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/contracts/domains/atmosphere/README.md) | Current semantic placement evidence |
+| Domain schema README | [cad321bf](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/schemas/contracts/v1/domains/atmosphere/README.md) | Current machine-shape evidence |
+| Air compatibility README | [6ee8922](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/contracts/air/README.md) | Merged sibling compatibility posture |
+| Contracts root README | [e0b7c126](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/contracts/README.md) | Responsibility-root boundary |
+| Directory Rules | [fd49a0b8](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md) | Adopted placement guidance |
+| ADR-0029 | [a4de0d7a](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement decision |
+| Policy README | [a300dfd5](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/policy/domains/atmosphere/README.md) | Proposed/default-only policy posture |
+| Fixture README | [121ec0e4](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/fixtures/domains/atmosphere/README.md) | Deterministic/offline fixture posture |
+| Test README | [29204b56](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/tests/domains/atmosphere/README.md) | Bounded no-network test posture |
+| Domain docs README | [7e7a96a3](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/domains/atmosphere/README.md) | Explanatory documentation boundary |
+| Notion builder page | [KFM Hourly Atmosphere Domain Builder](https://app.notion.com/p/3caa92021bf68112bb24dac33bca6357?pvs=204) | Coordination and historical handoff only |
+| Drive architecture report | [KFM Atmosphere / Air report](https://drive.google.com/file/d/1gHk6Jp3fGfrPTgvczwxyNXxvNopiKgRw/view) | Read-only lineage; its unmounted-repo result is historical |
 
-Before relying on this directory, verify:
-
-- canonical `air` vs `atmosphere` vs `domains/atmosphere` contract/schema home is resolved by Directory Rules, ADR, or migration note;
-- every Atmosphere object family has exactly one semantic contract home or a documented compatibility redirect;
-- matching JSON Schemas exist in the accepted schema home;
-- policy bundles exist for sensitivity, official-source redirection, caveats, release, and denial outcomes;
-- SourceDescriptor and EvidenceRef requirements are testable;
-- validators cover identity, source role, temporal logic, units, geometry/coverage, evidence closure, sensitivity, caveats, and release gates;
-- public API/UI surfaces do not read raw, work, quarantine, or unreleased contract-derived material directly;
-- release and rollback records exist for promoted public surfaces.
-
----
-
-## Evidence basis
-
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| `contracts/atmosphere/README.md` before this edit | `CONFIRMED` | Target file existed but was blank. | No contract-directory content before this edit. |
-| `contracts/air/README.md` | `CONFIRMED` | Sibling compatibility README for `air` slug variant and documented air/atmosphere drift. | Does not prove canonical placement. |
-| `contracts/README.md` | `CONFIRMED` | Contracts define semantic meaning and pair with schemas; executable validation, JSON Schema, policy code, and source data do not belong in contracts. | Root README is brief and does not settle air/atmosphere path conflict. |
-| `docs/domains/atmosphere/README.md` | `CONFIRMED` | Atmosphere/Air/Climate scope, canonical object-family list, non-emergency posture, source-role anti-collapse rules, and explicit `air` vs `atmosphere` slug conflict. | Does not prove schemas or validators exist. |
-
----
-
-## Rollback
-
-Rollback is required if this README is used to claim that `contracts/atmosphere/` is canonical despite unresolved `air` / `atmosphere` / `domains/atmosphere` slug drift, or if it is used to justify schema, policy, source data, alerting, emergency guidance, release, API, UI, or public-claim authority.
-
-Rollback target: initial blank file content SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
-
----
+Notion is a coordination projection. Google Drive is read-only lineage. Current GitHub state, accepted placement decisions, and exact-head checks control implementation claims.
 
 ## Definition of done
 
-- [ ] Canonical `air` vs `atmosphere` vs `domains/atmosphere` contract path conflict is resolved by ADR or migration note.
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] All Atmosphere object-family contract files are inventoried.
-- [ ] Every contract has a matching schema or documented `NEEDS VERIFICATION` gap.
-- [ ] Policy bundles are linked and verified.
-- [ ] Tests and fixtures are linked and verified.
-- [ ] SourceDescriptor and EvidenceRef requirements are testable.
-- [ ] Anti-collapse checks cover AQI/concentration, AOD/PM2.5, model/observation, advisory/emergency, and cross-domain claim boundaries.
-- [ ] Release and rollback requirements are linked to release records.
-- [ ] No schema, policy, source data, proof, release, API, UI, alerting, emergency guidance, or publication authority is asserted from this folder.
+- [ ] Current main and the target tree are re-pinned immediately before change.
+- [ ] An owner and applicable ADR or migration record are named.
+- [ ] The schema residue is classified as move, alias, or retire.
+- [ ] Semantic and machine-shape paths are unambiguous.
+- [ ] Contract, schema, policy, fixture, validator, test, registry, and rollback coverage is independently checked.
+- [ ] Source role, knowledge character, units, rights, sensitivity, freshness, and public boundary are explicit.
+- [ ] No public API, UI, map, release, source activation, or runtime path bypasses governed lanes.
+- [ ] Exact-head validation is recorded with PASS, FAIL, SKIPPED, NOT_RUN, or UNKNOWN labels.
+- [ ] The change remains reviewable, draft, reversible, and unmerged until independently approved.
 
----
+## Rollback and review note
 
-## Status summary
+The rollback target for this follow-up is the current main blob [db947e095](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f73dacaee38d7be1722200fccd2fe73251afb7e3/contracts/atmosphere/README.md). Do not delete air-observation.schema.json as part of a README-only update. Any schema move, rename, or retirement requires its own reviewed change, migration record, and rollback plan.
 
-`contracts/atmosphere/` is a compatibility folder for Atmosphere / Air semantic contracts. It is not yet confirmed as the canonical Atmosphere contract home. It is not a schema home, policy home, source registry, data lifecycle root, proof root, emergency alerting system, release authority, public API surface, public UI surface, or publication authority.
+Last reviewed: 2026-09-07 against main@f73dacaee38d7be1722200fccd2fe73251afb7e3. This follow-up is documentation-only and does not merge, mark ready, approve, release, deploy, publish, activate a source, change settings, or claim passing hosted checks.
 
 <p align="right"><a href="#top">Back to top</a></p>

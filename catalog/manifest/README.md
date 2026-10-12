@@ -1,396 +1,339 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-manifest-readme
-title: catalog/manifest/ — Catalog Manifest Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Catalog steward · Data steward · Manifest steward · Source steward · Evidence steward · Release steward · Schema steward · Policy steward · Docs steward
+title: catalog/manifest/ — Deprecated Manifest Compatibility Redirect
+type: readme; deprecated-boundary; compatibility-redirect
+version: v0.3.0
+status: draft; repository-grounded; deprecated; redirect-only; integration-hold
+owners: ["@bartytime4life"]
+owner_scope: repository review route only; specialist stewardship and independent approval remain NEEDS VERIFICATION
 created: 2026-06-16
-updated: 2026-07-09
-policy_label: public
+updated: 2026-09-04
+policy_label: public-doc; no-catalog-publication; fail-closed
+owning_root: catalog/
+root_class: deprecated
+readme_profile: BOUNDARY_COMPACT
+canonical_target: data/catalog/
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 832d15769f142f70b0065c9b8c45a7b3e4cd5c10
+  prior_readme_blob: 9fe630fe18decc275d26ad99c5c7e2ac215d18ca
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+truth_posture: CONFIRMED tracked inventory and adopted boundary; PROPOSED documentation correction; UNKNOWN external consumers and runtime state
 related:
   - ../README.md
-  - ../../data/README.md
   - ../../data/catalog/README.md
-  - ../../data/catalog/stac/README.md
-  - ../../data/catalog/dcat/README.md
-  - ../../data/catalog/prov/README.md
-  - ../../data/triplets/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../../data/published/README.md
-  - ../../data/registry/README.md
   - ../../release/README.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
   - ../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, manifest, compatibility-root, redirect, data-catalog, catalog-manifest, release-manifest-boundary, non-authoritative, drift-fence, no-trust-records, no-public-use]
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/repository_topology_correction_register.yaml
+  - ../../data/receipts/generated/README.md
 notes:
-  - "Refreshes the root-level catalog/manifest compatibility-redirect fence."
-  - "Root-level catalog/manifest/ is treated as compatibility and drift-control documentation only, not canonical catalog-manifest authority."
-  - "Canonical catalog manifest material belongs under the governed data catalog tree, currently data/catalog/; a dedicated data/catalog/manifest/ sublane was not found on main during this revision and remains NEEDS VERIFICATION until created or accepted."
-  - "ReleaseManifest and release-decision manifests are separate release-governance records and belong under release/, not catalog/manifest/."
-  - "Do not add catalog manifests, source manifests, inventory manifests, STAC/DCAT/PROV manifests, receipts, proofs, release records, policy rules, schemas, published artifacts, generated manifests, or producer outputs here without an ADR/migration note."
-  - "Actual current contents beyond this README, historical producers, workflow writes, migration status, canonical sublane acceptance, CI/review enforcement, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical data/catalog alignment, explicit data/catalog/manifest absence on main, release-manifest boundary, minimum safe redirect slice, anti-bypass matrix, no-producer/no-public-use/no-trust-record safeguards, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "Preserves the document ID, top anchor, and all numbered section headings."
+  - "No new manifest sublane, placeholder, migration note, payload, or authority is created here."
+  - "This proposed README correction does not authorize its own frozen-root integration."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Catalog Manifest Compatibility Redirect
 
-`catalog/manifest/`
+**Looking for catalog manifests? Start with [data/catalog/](../../data/catalog/README.md).
+Looking for release-governance manifests? Start with [release/](../../release/README.md).**
 
-**Root-level compatibility and drift-control fence for legacy or accidental catalog-manifest placement. Canonical KFM catalog manifests belong under the governed `data/catalog/` lifecycle tree, while release decision manifests belong under `release/`.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![canonical](https://img.shields.io/badge/canonical_home-data%2Fcatalog-blue)
-![release](https://img.shields.io/badge/ReleaseManifest-home%3A%20release%2F-blueviolet)
-![sublane](https://img.shields.io/badge/data%2Fcatalog%2Fmanifest-NEEDS__VERIFICATION-yellow)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical home](#2-canonical-home) · [Boundary](#3-authority-boundary) · [Allowed](#5-allowed-contents) · [Forbidden](#6-forbidden-contents) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+`catalog/manifest/` is retained navigation beneath the **deprecated, frozen**
+[`catalog/` root](../README.md), not a manifest store, catalog service, release
+registry, or public endpoint. The links on this page are documentation redirects;
+they do not implement an HTTP redirect, filesystem alias, or runtime resolver.
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/manifest/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical catalog-manifest home:** `data/catalog/` unless an accepted sublane such as `data/catalog/manifest/` is created and verified  
-> **Release decision manifest home:** `release/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Catalog manifests are lifecycle catalog records, so canonical catalog-manifest material belongs under the governed `data/catalog/` tree. ReleaseManifest and release decision manifests belong under `release/`. Root-level `catalog/manifest/` is a compatibility redirect only; it must not become a parallel catalog, schema, policy, proof, receipt, release, source-registry, published-artifact, pipeline, package, tool, manifest, search, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/README.md` exists and treats `catalog/` as compatibility redirect / CONFIRMED canonical `data/catalog/README.md` exists and treats catalog as CATALOG-stage data including release-linked catalog manifests / CONFIRMED `data/catalog/manifest/README.md` was not found on `main` during this revision / CONFIRMED `release/README.md` exists and treats `release/` as release-governance root with manifest lanes / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/manifest/` redirect contract / UNKNOWN actual files beyond README, historical producers, workflow writes, migration status, canonical sublane acceptance, CI/review guard, public-client/producer exclusion, and ADR disposition
+> A canonical logical home is not a public access path. Public clients consume
+> governed APIs and released, public-safe artifacts, never internal or unreleased
+> catalog stores. A manifest records or references state; it does not grant it.
 
-> [!CAUTION]
-> Do not make `catalog/manifest/` a parallel catalog-manifest or release-manifest authority. KFM catalog manifests, inventory manifests, source manifests, publication-state manifests, crosswalk manifests, generated manifest indexes, and public lookup products must live in governed lifecycle homes, especially `data/catalog/` and downstream `data/published/` after release. ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, signatures, and release decisions must live under `release/`. Receipts, proofs, schemas, contracts, and policy stay in their own owning roots.
-
----
+> [!WARNING]
+> **Draft correction; integration held.** Replacing this README changes a blob
+> covered by the frozen-root topology rule. No accepted exact transition for
+> this path is present in the inspected correction register. Keep the validator,
+> baseline, and register unchanged; see [validation expectations](#13-validation-expectations).
 
 ## Quick jump
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical home](#2-canonical-home)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Minimum safe redirect slice](#8-minimum-safe-redirect-slice)
-- [9. Diagram](#9-diagram)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Safe change pattern](#14-safe-change-pattern)
-- [15. Rollback and correction posture](#15-rollback-and-correction-posture)
-- [16. Safe language rules](#16-safe-language-rules)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-
----
+[Evidence](#0-evidence-basis-for-this-revision) ·
+[Routing](#2-canonical-home) · [Boundary](#3-authority-boundary) ·
+[Inventory](#7-directory-shape) · [Inspection](#12-inspection-path) ·
+[Validation](#13-validation-expectations) · [Open items](#18-open-verification-items)
 
 ## 0. Evidence basis for this revision
 
-This README is a documentation boundary, not migration proof and not catalog enforcement proof. The 2026-07-09 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/manifest/` with the canonical `data/catalog/` catalog-stage lane, the separate `release/` manifest authority, and Directory Rules placement posture.
+Reviewed on **2026-09-04** against
+[`main@832d15769f142f70b0065c9b8c45a7b3e4cd5c10`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/832d15769f142f70b0065c9b8c45a7b3e4cd5c10).
+These are pinned observations, not assertions about later repository state.
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/manifest/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, public-client exclusion, or ADR disposition. |
-| `catalog/README.md` exists and treats root-level `catalog/` as a compatibility redirect, not canonical catalog authority. | CONFIRMED document presence and redirect posture | `catalog/manifest/` should inherit root-level redirect/fence behavior. | It does not prove all root-level catalog drift has been removed. |
-| `data/catalog/README.md` exists and treats `data/catalog/` as CATALOG-stage data with RELEASED ONLY public exposure. It lists release-linked catalog manifests as accepted catalog contents. | CONFIRMED lifecycle posture | Canonical catalog manifest material belongs under the governed data catalog tree. | It does not prove concrete manifest inventory, validators, receipts, release manifests, or public route behavior. |
-| `data/catalog/manifest/README.md` was not found on `main` during this revision. | CONFIRMED fetch result from current session | A dedicated `data/catalog/manifest/` sublane must remain `NEEDS VERIFICATION` until created or accepted. | It does not prove a future sublane is invalid or that no manifest files exist elsewhere under `data/catalog/`. |
-| `release/README.md` exists and treats `release/` as release-governance root with manifest lanes. | CONFIRMED release-root posture | ReleaseManifest and release decision records belong under `release/`, not root-level `catalog/manifest/`. | It does not prove release manifest lane convention, singular/plural lane choice, or release workflow maturity is finalized. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/manifest/` must remain a compatibility fence; lifecycle catalog records belong under `data/catalog/`, while release governance records belong under `release/`. | It does not prove live repo drift has been fully audited. |
+| Evidence | Confirmed scope | Limit |
+|---|---|---|
+| Exact `catalog/manifest/` listing | Only `README.md` and an empty `.gitkeep`; no tracked payload or child directory | Does not inventory untracked, ignored, cached, or external bytes |
+| [Parent README](../README.md), blob `44378e14fe7470f19df20ebfc9914ad1e3d2a6a9` | Deprecated containment and no new placeholders | Its older inventory is not a current runtime audit |
+| [Root Registry](../../control_plane/root_registry.yaml), blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | `root.catalog`: deprecated, immutable, `frozen_no_writes`, `redirect_only`; target `data/catalog/` | The projection grants no write, migration, or release authority |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../docs/doctrine/directory-rules.md) | Accepted adoption of rules blob `fd49a0b83e55cef52c1124281f093e263526898d` | The retained draft label inside the adopted bytes does not undo adoption |
+| Exact `data/catalog/` listing and [README](../../data/catalog/README.md), blob `765dd1be99aa95d4377931344c05751b751243ec` | Canonical catalog-stage responsibility; no tracked `manifest/` child at this snapshot | Does not establish a dedicated manifest sublane or complete catalog implementation |
+| [Release README](../../release/README.md), blob `60b6a656f8f2b765616bba7223f51c25863c7172` | Release-governance records are distinct from catalog projections and published payloads | Does not establish an operational release or final manifest sublane convention |
+| [ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md), blob `79f37be0991b050d8bc9c00991d6db887d343cd7` | Stage 1 exact-transition mechanism accepted | The initial agricultural transition does not authorize this manifest edit |
+| [Correction register](../../control_plane/repository_topology_correction_register.yaml), blob `b48e8df74a2b9d8c2599ce256ef5156687b98dbf` | One proposed agriculture entry with null accepted-decision bindings | No accepted, bound transition for `catalog/manifest/README.md` |
 
-[Back to top](#top)
-
----
+Drive's *Directory Rules* and the Notion *KFM Repository Workbench* were consulted
+as lineage and coordination. Current repository decisions govern placement;
+older coordination snapshots do not establish current implementation or approval.
 
 ## 1. Purpose
 
-`catalog/manifest/` is a **root-level compatibility redirect** for catalog-manifest path drift.
-
-It exists only to prevent accidental, legacy, generated, copied, or externally imported catalog manifest material from becoming a parallel authority outside the KFM lifecycle data root or release-governance root.
-
-This folder should not be used for canonical:
-
-- catalog manifests or catalog inventory manifests;
-- generated catalog manifest indexes or lookup manifests;
-- source manifests, domain manifests, layer manifests, crosswalk manifests, or publication-state manifests;
-- STAC, DCAT, PROV, CatalogMatrix, domain-catalog, or release-catalog manifests;
-- ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, release signatures, or release decision records;
-- collection summaries or public discovery manifests;
-- receipts, proof records, schemas, policy rules, published artifacts, or producer outputs.
-
-This README does not prove that any catalog manifest material currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
+Preserve legacy navigation and prevent a second writable manifest authority.
+Inherit the parent root's containment contract rather than duplicate catalog,
+release, or manifest specifications in this leaf README.
 
 ## 2. Canonical home
 
-Canonical catalog manifest material belongs under the governed data catalog tree:
+Route by **object responsibility and lifecycle**, not by the word `manifest`.
 
-```text
-data/catalog/
-```
+| Artifact responsibility | Logical home or next step |
+|---|---|
+| Catalog inventory, lookup, collection, crosswalk, or release-linked discovery projection | `data/catalog/`, under its applicable accepted family/profile |
+| ReleaseManifest instance or release/promotion/correction/withdrawal/rollback decision | `release/`, under the governing release-family contract |
+| Source, dataset, layer, rights, or sensitivity registry instance | Its governed family under `data/registry/` |
+| Execution or catalog-build receipt | `data/receipts/` |
+| EvidenceBundle or proof-pack instance | `data/proofs/` |
+| Object meaning, machine shape, or normative admissibility rule | `contracts/`, `schemas/`, or `policy/`, respectively |
+| Released public-safe carrier | `data/published/`, only after the applicable release gates |
 
-A dedicated manifest sublane may be used only when accepted and verified:
+**`data/catalog/manifest/` is not tracked at the inspected base.** Do not create
+it, link to an imagined README, or call it canonical merely to match this legacy
+name. Any future sublane needs responsibility, accepted placement, contracts,
+validation, ownership, and migration evidence appropriate to its scope.
 
-```text
-data/catalog/manifest/   # NEEDS VERIFICATION — README not found on main during this revision
-```
-
-Release decision manifests are different objects and belong under:
-
-```text
-release/
-```
-
-The root-level `catalog/manifest/` directory is a redirect/fence only.
-
-```text
-catalog/manifest/       # compatibility redirect only; do not add catalog manifest records here
-data/catalog/           # canonical catalog-stage lifecycle lane
-release/                # release-governance records, including ReleaseManifest lanes
-```
-
-If a future ADR or migration creates `data/catalog/manifest/`, this README should be updated to cite the accepted target, producer-configuration evidence, and any migration or rollback records.
+A schema, semantic contract, synthetic fixture, source-native manifest, or released
+representation is not a misplaced ReleaseManifest decision solely because of its
+filename. Asset metadata also does not relocate the referenced asset bytes.
 
 ## 3. Authority boundary
 
-`catalog/manifest/` has **no canonical catalog-manifest authority** and **no release-manifest authority**. It may hold only redirect guidance, migration notes, drift logs, or temporary markers while misplaced material is reviewed and moved into its proper lifecycle or release home.
+| Concern | Local contract |
+|---|---|
+| Authority owner | `catalog/` owns deprecated containment only; `data/` and `release/` retain their distinct responsibilities |
+| Review route | `@bartytime4life` from the Root Registry; specialist stewardship and independent approval remain unverified |
+| Inputs / outputs | Verified path, identity, and migration facts in; navigation and boundary guidance out; no trust-object or dataset output |
+| Mutation | Frozen; retaining a README is not blanket authority to replace its bytes or add siblings |
+| Exposure | Public documentation is not permission to expose internal manifests, catalog records, or source material |
+| Retention | Migration-bound; retirement requires accepted decisions and verified writer/consumer closure |
 
-```text
-WRONG / LEGACY ROOT                    CANONICAL LIFECYCLE HOME              TRUST / RELEASE HOMES
-catalog/manifest/                 -->  data/catalog/                     -->  data/receipts/
-compatibility fence only               catalog manifests / inventories        data/proofs/
-not authoritative                      optional accepted manifest sublane      release/
-                                         release-linked catalog pointers        data/published/
-```
-
-A catalog manifest outside the governed `data/catalog/` tree should be treated as drift until reviewed and migrated. A ReleaseManifest outside `release/` should be treated as a release-governance drift candidate until reviewed and corrected.
+Directory Rules §§16–18 govern compact boundary documentation, direct-child maps,
+compatibility, migration, and rollback. ADR-0029 adopts those rules; ADR-0038
+constrains frozen-topology corrections. This README changes neither decision.
 
 ## 4. Default posture
 
-Anything found under root-level `catalog/manifest/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
-
-Do not expose, publish, index, cite, search, cache, export, tile, or depend on root-level catalog manifest files as canonical records. First confirm source, provenance, rights, sensitivity, schema validity, lifecycle state, receipts, proofs, release state, rollback path, correction path, and whether the object is actually a catalog manifest or a release-governance manifest.
+Unexpected material is **drift requiring review**, not admitted evidence or a
+release. Do not load, index, publish, export, or cite it as canonical. Preserve
+identity and provenance before remediation. Unclear rights, sovereignty,
+sensitivity, protected locations, living-person/DNA information, or private-land
+details require restricted handling, not copying into public PRs or receipts.
 
 ## 5. Allowed contents
 
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize manifest content |
+Retain the **existing** README and zero-byte `.gitkeep` while containment remains
+in force. Link to migration, drift, correction, and rollback records in their
+actual owning homes.
+
+Do **not** add `MIGRATION.md`, `DRIFT.md`, `OPEN-QUESTIONS.md`, additional
+placeholders, or a second writable manifest here. Earlier suggested files were
+proposals, not exceptions to the adopted freeze.
 
 ## 6. Forbidden contents
 
-| Forbidden here | Correct home |
-|---|---|
-| Catalog manifests, inventory manifests, lookup manifests, publication-state manifests | `data/catalog/` or an accepted sublane under it |
-| STAC, DCAT, PROV, CatalogMatrix, domain-catalog, or catalog-family manifests | `data/catalog/` under their proper family lanes |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, release signatures, release decisions | `release/` |
-| Catalog-derived public products | `data/published/` after governed release |
-| Source descriptors, source registry rows, rights rows, sensitivity rows | `data/registry/` or governed registry homes |
-| Receipts, validation reports, redaction receipts, catalog-build receipts | `data/receipts/` |
-| EvidenceBundles, proof packs, attestations | `data/proofs/` |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| Raw, work, quarantine, processed, catalog, triplet, or published lifecycle data | `data/` lifecycle subtrees |
+No catalog, registry, receipt, proof, release, policy, schema, semantic-contract,
+or lifecycle payload belongs in this deprecated directory. It also does not own
+producer code, validators, pipeline outputs, generated indexes, tiles, exports,
+AI responses, credentials, or sensitive source material.
+
+Use the responsibility routing in §2 and the governing root's README. A new
+filename, digest, signature, passing check, or generated manifest cannot grant
+source admission, policy clearance, evidence closure, review, or release state.
 
 ## 7. Directory shape
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+**CONFIRMED tracked inventory at the evidence snapshot:**
 
 ```text
 catalog/manifest/
-├── README.md                 # compatibility redirect / drift fence
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced catalog manifest material is found
+├── .gitkeep                  # existing zero-byte placeholder; not authority
+└── README.md                 # existing deprecated manifest navigation boundary
 ```
 
-> [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify actual contents before making inventory, producer, enforcement, or migration claims.
+The retained placeholder is blob
+`e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`; the pre-edit README is blob
+`9fe630fe18decc275d26ad99c5c7e2ac215d18ca`. There are no tracked manifest payloads
+in this subtree. This does not prove zero consumers or completed migration.
 
 ## 8. Minimum safe redirect slice
 
-A smallest safe `catalog/manifest/` state should prove only that the folder prevents drift; it should not contain trust-bearing material.
-
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `data/catalog/` for catalog manifests and `release/` for ReleaseManifest records | Prevents parallel authority |
-| No catalog manifest records | No durable inventory, lookup, source, domain, STAC/DCAT/PROV, CatalogMatrix, crosswalk, or publication-state manifest files | Keeps catalog records in lifecycle root |
-| No release-governance records | No ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, signatures, or release decisions | Preserves release root authority |
-| No trust support records | No receipts, proofs, releases, registry rows, policy rules, schemas, contracts, or published artifacts | Preserves responsibility roots |
-| Drift procedure | Explains how to inspect and migrate misplaced manifests | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable manifests here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, and indexes must not read from this path as canonical | Preserves governed access path |
-| Sublane guard | `data/catalog/manifest/` remains `NEEDS VERIFICATION` until accepted and present | Avoids inventing canonical structure |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
+Preserve the canonical pointers, stable anchors, no-payload boundary, frozen-root
+posture, and explicit unknowns. Keep any generated-work receipt under the existing
+[receipt lane](../../data/receipts/generated/README.md), not here. Neither the
+README nor its receipt is a policy decision, evidence proof, or release approval.
 
 ## 9. Diagram
 
-```mermaid
-flowchart TD
-    wrong["catalog/manifest/\nroot-level redirect"] --> review["review for catalog-manifest drift"]
-    review --> classify["classify: catalog manifest / release manifest / receipt / proof / source / schema / policy / published artifact / producer output"]
-    classify --> canonical["data/catalog/\ncanonical catalog-stage lane"]
-    canonical -. optional .-> sublane["data/catalog/manifest/\nNEEDS VERIFICATION"]
-    classify --> release["release/\nReleaseManifest / decisions / rollback / correction"]
-    classify --> receipts["data/receipts\nvalidation / transform / catalog-build receipts"]
-    classify --> proofs["data/proofs\nEvidenceBundles / proof packs"]
-    release --> published["data/published\npublic-safe released artifacts"]
-    canonical --> release
-    wrong -. "must not be public/canonical" .-> published
-    wrong -. "must not be producer target" .-> canonical
+```text
+Legacy navigation: catalog/manifest/README.md
+                   -> data/catalog/README.md  (catalog projections)
+                   -> release/README.md       (release-governance records)
+                   Documentation links only; no data transfer or publication.
+
+Governed lifecycle: RAW -> WORK / QUARANTINE -> PROCESSED
+                       -> CATALOG / TRIPLET -> PUBLISHED
 ```
+
+EvidenceRef -> EvidenceBundle resolution, rights/sensitivity checks, validation,
+provenance/integrity, receipts/proofs, policy, review, release, correction, and
+rollback remain separate requirements. Maps, tiles, graphs, indexes, scenes,
+summaries, and AI remain downstream carriers, not truth authorities.
 
 ## 10. Migration posture
 
-If catalog manifest files are found here:
+First inventory discovered paths, bytes, hashes, source roles, rights, sensitivity,
+writers, consumers, and existing references. Classify responsibility before
+selecting a destination. Obtain the applicable accepted decision and record the
+migration in its owning lane before moving or regenerating anything.
 
-1. Do not publish, cite, index, search, cache, export, tile, or depend on them.
-2. Identify whether they are catalog manifests, source manifests, inventory manifests, lookup manifests, STAC/DCAT/PROV manifests, CatalogMatrix records, crosswalks, publication-state manifests, ReleaseManifest records, receipts, proofs, release records, source registry rows, schemas, policy records, published-output material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move or regenerate durable catalog manifests into `data/catalog/` or an accepted, verified sublane under it.
-5. Move ReleaseManifest records, promotion decisions, rollback cards, correction notices, signatures, and release decisions into `release/`.
-6. Move receipts, proofs, published artifacts, schemas, contracts, policy, source descriptors, and producer code into their owning roots.
-7. Preserve provenance, source refs, digests, receipts, review notes, producer identity, and rollback path.
-8. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-9. Add or update validation checks so producers do not recreate root-level catalog-manifest drift.
-10. Leave `catalog/manifest/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
+A reviewed migration preserves or explicitly versions identity, retains source
+and transform lineage, cuts producers to the canonical writer, validates consumer
+parity, and supplies correction and rollback evidence. Destructive cleanup comes
+last. This README performs no migration, deletion, source admission, or retirement;
+a file move is not lifecycle promotion.
 
 ## 11. Runtime and producer anti-bypass matrix
 
-| Bypass risk | Required behavior | Review signal |
+| Risk | Required boundary | Evidence needed before claiming closure |
 |---|---|---|
-| Producer writes catalog manifests to `catalog/manifest/` | Fail review/CI; write to `data/catalog/` or accepted sublane instead | Generator config and output paths checked |
-| Producer writes ReleaseManifest records to `catalog/manifest/` | Fail review/CI; write to `release/` instead | Release manifest path check passes |
-| Public client reads root-level manifest | Deny; route through governed catalog/release path | Client/search/index config excludes this path |
-| Root-level manifest is treated as canonical | Mark as drift and migrate/regenerate | Migration note references canonical target |
-| `data/catalog/manifest/` is claimed canonical before it exists | Keep `NEEDS VERIFICATION` until path and README are accepted | Current fetch or PR evidence cited |
-| Receipts/proofs/release records stored here | Move to owning roots | Directory review blocks trust support records |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Published artifact stored here | Move to `data/published/` after release gate | Release/publication review passes |
-| Search/cache/export pipeline consumes this path | Deny as canonical; switch to governed catalog/release source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
+| Producer targets `catalog/manifest/` | Reject new durable output here | Producer configuration, negative test, and exact-run result |
+| Public API, map, search, export, or AI treats legacy content as authority | Deny or use the governed released path | Consumer trace and applicable evidence, policy, and release records |
+| Catalog inventory is mistaken for a release decision | Preserve catalog/release responsibility separation | Matching object contracts, identity, and actual decision records |
+| An imagined `data/catalog/manifest/` becomes a default writer | Do not create authority through naming | Accepted placement and current target/consumer evidence |
+| Earlier downstream use is discovered | Preserve correction and rollback lineage | Affected-consumer inventory and reviewed remediation |
+
+These are obligations, not claims that comprehensive runtime enforcement or a
+producer/consumer audit has passed.
 
 ## 12. Inspection path
 
-Actual root-level contents, producers, workflow writes, migration status, canonical sublane acceptance, CI/review enforcement, public-client/index exclusion, and current ADR disposition remain `NEEDS VERIFICATION`.
+Run these read-only commands from an actual checkout. They inspect tracked state,
+not live manifests or release readiness. Change `REF` only for a deliberate new
+snapshot review.
 
 ```bash
-find catalog/manifest -maxdepth 6 -type f | sort
-find data/catalog data/receipts data/proofs data/published data/registry release schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 6 -type f 2>/dev/null | grep -Ei 'catalog|manifest|ReleaseManifest|PromotionDecision|RollbackCard|CorrectionNotice|inventory|lookup|crosswalk|CatalogBuildReceipt|CatalogMatrix|EvidenceBundle|RunReceipt|SourceDescriptor|stac|dcat|prov|schema|policy|validator|publish|workflow|migration|drift' | sort
+REF=832d15769f142f70b0065c9b8c45a7b3e4cd5c10
+
+git rev-parse --verify "${REF}^{commit}"
+git ls-tree -r --long "$REF" -- catalog/manifest/
+git ls-tree "$REF:data/catalog"
+git show "${REF}:control_plane/repository_topology_correction_register.yaml"
+
+# Candidate references, not proof of producer or consumer behavior.
+git grep -n -F 'catalog/manifest' "$REF" -- .
 ```
+
+`git grep` normally exits `1` for no matches; a fatal Git error is not an empty
+inventory. These commands cannot inspect untracked files, external stores,
+runtime mounts, browser caches, or deployed configuration. Listing commands here
+does not claim they ran in a local checkout during this revision.
 
 ## 13. Validation expectations
 
-Useful validation for this folder should cover:
+**Review validation is not integration authorization.** Check exact base/head and
+diff scope, retained headings/anchors, relative links, balanced fences, UTF-8,
+final newline, sensitive-content absence, and the receipt's
+[current schema](../../schemas/contracts/v1/receipts/generated_receipt.schema.json)
+and final content hash. Record actual outcomes in the PR; this checklist is not
+a passing test report.
 
-- no catalog manifests, inventory manifests, lookup manifests, collection manifests, crosswalk manifests, or publication-state manifests are stored here;
-- no STAC, DCAT, PROV, CatalogMatrix, or domain catalog records are stored here;
-- no ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, release decisions, signatures, receipts, proofs, registry records, policy rules, schemas, source code, pipelines, tools, producer outputs, or published artifacts are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- producer tools, scripts, generated outputs, workflows, indexes, search services, public clients, exports, tile jobs, and map runtimes do not target `catalog/manifest/` as canonical;
-- links point users to `data/catalog/`, `release/`, and other owning roots;
-- CI or review checks flag root-level `catalog/manifest/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+For frozen-root integration, ADR-0038 explains that `KFM-TOPO-004` fingerprints
+`path@object_id`. **This README replacement introduces a new blob delta.** It must
+not be relabeled as wholly inherited drift or waived because it is documentation.
+The inspected correction register authorizes no transition for this path.
+
+Keep the topology validator, baseline, and correction register unchanged.
+Integration remains held pending separately accepted exact authority and the
+required trusted-base validation. A draft PR, generation receipt, mergeability
+signal, or green unrelated check does not satisfy that gate.
 
 ## 14. Safe change pattern
 
-For changes under `catalog/manifest/`:
-
-1. Confirm the change is redirect documentation, migration support, drift documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel catalog-manifest authority or release-manifest authority.
-3. Confirm durable catalog manifests are placed under `data/catalog/` or an accepted and verified sublane.
-4. Confirm ReleaseManifest and release-governance records remain under `release/`.
-5. Confirm receipts, proofs, release records, registry records, schemas, contracts, policy rules, published artifacts, and code are placed under their owning roots.
-6. Confirm no public client, search index, map runtime, export job, tile job, story/focus/evidence surface, catalog producer, release producer, or cache reads this path as canonical.
-7. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-8. Update docs and validation rules when behavior materially changes.
+Re-pin `main`, target bytes, applicable decisions, and overlapping work. Prepare
+only the bounded README correction and its generated-work receipt, preserving
+path, document ID, anchors, `.gitkeep`, and all unrelated content. Follow the
+[current contributor controls](../../CONTRIBUTING.md); branch authoring does not
+authorize ready-for-review, approval, merge, or public effects.
 
 ## 15. Rollback and correction posture
 
-If material was added here by mistake, rollback should be small and auditable:
+Before integration, retain the unmerged candidate or append a non-force revert
+on its task branch. The exact prior README blob is recorded in §7. Keep the
+receipt as historical process memory rather than rewriting its artifact hash to
+claim it describes different bytes.
 
-- remove or revert the misplaced file from `catalog/manifest/`;
-- regenerate or move durable catalog manifests into `data/catalog/` through a governed migration;
-- move release-governance manifests into `release/` through the appropriate release review path;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, generated downstream, search, export, cache, release, or catalog artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+After any authorized integration, reverting frozen content is itself a reviewed
+transition. Re-check current authority and bytes. Never erase correction history,
+restore known damage, or reopen parallel writers just to match an old fingerprint.
+No data, release, runtime, or deployment rollback is performed by this document.
 
 ## 16. Safe language rules
 
-Use these terms carefully:
-
-| Phrase | Allowed here? | Safer wording |
-|---|---:|---|
-| "canonical manifest in `catalog/manifest/`" | No | "misplaced or legacy catalog manifest requiring review" |
-| "ReleaseManifest in `catalog/manifest/`" | No | "release-governance manifest belongs under `release/`" |
-| "published from `catalog/manifest/`" | No | "published only after release via canonical lifecycle path" |
-| "CI blocks this" | Only with current evidence | "CI guard remains NEEDS VERIFICATION" |
-| "migration complete" | Only with migration evidence | "migration status remains NEEDS VERIFICATION" |
-| "safe to consume" | Only after release/access evidence | "do not consume as canonical from this path" |
-| "`data/catalog/manifest/` exists" | Only with path evidence | "dedicated manifest sublane remains NEEDS VERIFICATION" |
+| Avoid | Use instead |
+|---|---|
+| “The canonical manifest lives here” | “This is deprecated navigation to the owning catalog or release family” |
+| “No manifests exist” | “No tracked manifest payload exists in this pinned subtree” |
+| “The canonical path is public” | “Public access still requires governed release and access checks” |
+| “ADR-0038 allows this edit” | “Its accepted mechanism does not authorize this unregistered exact transition” |
+| “CI passed” without a matching result | Name the executed check, exact scope, result, and limitations |
 
 ## 17. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/manifest/` contents are verified.
-- [ ] Any misplaced catalog manifest material is migrated, removed, regenerated under `data/catalog/`, or documented as drift.
-- [ ] Any misplaced release-governance manifest is migrated, removed, regenerated under `release/`, or documented as drift.
-- [ ] Canonical catalog manifest placement under `data/catalog/` or an accepted sublane is documented with evidence.
-- [ ] `data/catalog/manifest/` existence/absence is verified before being referenced as canonical.
-- [ ] No trust-bearing records live here.
-- [ ] No catalog manifests, STAC/DCAT/PROV/CatalogMatrix records, ReleaseManifest records, registry records, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, source code, producer outputs, or lifecycle data live here.
-- [ ] No public client, search index, map runtime, export job, tile job, catalog producer, release producer, story/focus/evidence surface, or cache uses this path as canonical.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
+For the **README draft**: accurate responsibility routing, confirmed bounded
+inventory, preserved identity and anchors, inherited freeze semantics, documented
+validation, a hash-matching receipt, and explicit integration blockers.
+
+For **integration or retirement**: additionally require the applicable accepted
+exact transition, trusted-base checks, human review, and writer/consumer,
+migration, correction, and rollback closure where relevant. Draft completion is
+not integration, retirement, runtime readiness, or publication.
 
 ## 18. Open verification items
 
-| Item | Why it matters |
+| Item | Status and first affected transition |
 |---|---|
-| Confirm actual files under root-level `catalog/manifest/` | Prevents overclaiming or missing drift |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm accepted canonical catalog-manifest placement | Required before final migration claims |
-| Confirm whether `data/catalog/manifest/` should exist | Required before sublane creation or references harden |
-| Confirm migration status to `data/catalog/` | Required before canonical-home claims beyond doctrine |
-| Confirm ReleaseManifest lane convention under `release/` | Required before release-manifest placement hardens |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm public clients/search/export/tile jobs do not consume this path | Required before safety claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/manifest/` | Required before long-term retention claims |
+| Accepted, bound exact transition for this replacement | **NEEDS VERIFICATION / HOLD integration**; absent from the inspected register |
+| Exact-head hosted checks and independent human review | **NEEDS VERIFICATION** before readiness or integration claims |
+| External bytes, active writers/consumers, and operational enforcement | **UNKNOWN**; blocks migration/retirement and exposure claims |
+| Dedicated catalog-manifest sublane and final release-family convention | **NEEDS VERIFICATION** before creating paths or asserting final conventions |
+| Specialist stewardship, retention, correction propagation, and rollback drills | **NEEDS VERIFICATION**; repository routing is not independent approval |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README already contained a bounded catalog-manifest redirect and anti-parallel-authority contract. This revision preserves that contract, refreshes metadata, adds a current evidence-basis section, adds Directory Rules placement posture, records that `data/catalog/manifest/README.md` was not found on `main`, strengthens canonical `data/catalog/` alignment, clarifies that ReleaseManifest records belong under `release/`, strengthens minimum safe redirect slice, producer/public-use anti-bypass safeguards, no-trust-record safeguards, migration/rollback guidance, safe language rules, and validation expectations, and keeps implementation/migration/enforcement claims bounded. It does not claim catalog manifest files, migration work, CI enforcement, producer workflow behavior, public-client exclusion, canonical sublane acceptance, release-manifest convention finality, or ADR disposition are implemented.
+Version v0.3.0 preserves the catalog/release distinction, trust-family separation,
+public-boundary rules, lifecycle law, migration and rollback requirements,
+document ID, top anchor, and numbered section headings. It replaces stale
+inventory uncertainty with the verified two-file tree, removes obsolete proposals
+to add files beneath the deprecated root, and identifies the exact-transition
+integration hold. Historical v0.2 bytes remain available at the pinned prior blob.
+No manifest specification, authority decision, or runtime capability is added.
 
 </details>
 
 ## Status summary
 
-`catalog/manifest/` is a root-level compatibility redirect and catalog-manifest drift fence. It is not the canonical catalog-manifest home and not the release-manifest home.
+**Deprecated navigation, not a manifest store.** Catalog projections and release
+records remain in their separate governed homes. This proposed documentation
+correction does not authorize its own integration or any data publication.
 
-Catalog manifest authority belongs under the governed `data/catalog/` tree; a dedicated `data/catalog/manifest/` sublane remains `NEEDS VERIFICATION` until accepted and present. ReleaseManifest and release-governance records belong under `release/`. Trust-bearing support belongs under `data/receipts/`, `data/proofs/`, and `release/`; released public-safe products belong under `data/published/`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)

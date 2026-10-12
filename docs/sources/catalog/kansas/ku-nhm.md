@@ -18,7 +18,6 @@ related:
   - docs/sources/catalog/kansas/khri.md
   - docs/sources/catalog/kansas/kansas-state-archives.md
   - docs/sources/catalog/kansas/kansas-memory.md
-  - docs/sources/catalog/kansas/ksu-special-collections.md
   - docs/sources/catalog/kansas/ksu-research-extension.md
   - docs/sources/catalog/kansas/kansas-mesonet.md
   - docs/sources/catalog/kansas/ksgs.md
@@ -41,9 +40,8 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/ku-nhm/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -98,6 +96,9 @@ notes:
   - >-
     `connectors/kansas/` lane is CONFIRMED (at commit
     `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
+owning_root: docs/
+responsibility: "Documentation for KU Biodiversity Institute & Natural History Museum (KU NHM) — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # KU Biodiversity Institute & Natural History Museum (KU NHM) — Source Catalog Entry
@@ -694,7 +695,7 @@ For traceability into the KFM Idea Index spine, this brief draws on the followin
 - [`./kdwp.md`](./kdwp.md) — sibling Kansas-first authority per `C7-10` (regulatory contrast)
 - [`./khri.md`](./khri.md) — sibling Kansas-first authority per `C7-10`
 - [`./kansas-state-archives.md`](./kansas-state-archives.md) — sibling Kansas-first umbrella (KSHS)
-- [`./ksu-special-collections.md`](./ksu-special-collections.md) — sibling K-State institution (archives stack `C10-07`)
+- `./ksu-special-collections.md` (not present) — sibling K-State institution (archives stack `C10-07`)
 - [`./ksu-research-extension.md`](./ksu-research-extension.md) — sibling K-State umbrella
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§6.1, §7.3, §7.4)
 - [`../../../domains/fauna/README.md`](../../../domains/fauna/README.md) — primary receiving domain

@@ -2,570 +2,1156 @@
 doc_id: kfm://doc/runbook-archaeology-source-refresh
 title: Archaeology Source Refresh Runbook
 type: standard
-version: v0.1
-status: draft
-owners: Docs steward + Archaeology domain steward + Source connector owner
+subtype: operational-runbook
+version: v1.0.0
+prior_version: v0.1
+status: draft; repository-grounded; documentation-only; live-source-execution-hold
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable archaeology, source, connector, rights, sensitivity, cultural-review, evidence, release, and correction stewards"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: restricted-by-default; public-safe sections only
+updated: 2026-08-24
+policy_label: repository-facing; restricted-by-default; public-safe-procedure-only
+current_path: docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: "Describe the governed operator procedure for refreshing an already-admitted archaeology source without granting source authority, activating a connector, exposing sensitive material, promoting a release, or publishing data."
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS_VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational procedure
+authority_rank: subordinate to accepted doctrine and ADRs, source authority, contracts, schemas, policy, evidence, review, lifecycle, release, correction, and rollback records
+canonical_relationship: same-path update; no sibling authority created
+path_posture: PLACE
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 6b0f0f5353754553e0ff3800206f5479b069921a
+  target_prior_blob: c50bcf2f484d670f2c91745550304445852f0ffa
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  archaeology_source_registry_readme_blob: 40f859e7b61cec8fb6e27268f2f5b38bcd57bb4f
+  archaeology_connector_readme_blob: eb4b0064ba27c208473cd1fa550ab6de187ec4d9
+  ingest_spec_blob: 4e41ac4f913d01ee38a18a1cf192c6be463388c4
+  exact_location_policy_blob: 37e9d0a624be86ba22a9f1dfa94d99df77b953a8
+  exact_location_test_blob: 302014e8f1042412a21326bfc17c413d9306a981
+  archaeological_site_schema_blob: 5a1371a2fb4dc6d1a5c7b13f7c5198823ae89b40
+  release_candidate_readme_blob: bc5edc7a44ea77a6b8ed25b95569646d8df72754
+  promotion_runbook_blob: 6c746a4fc2977f0081025c55f6ddc08feba820f7
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/archaeology/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/runbooks/ui_VALIDATION.md
-  - docs/runbooks/ui_ROLLBACK.md
-  - docs/adr/ADR-0001-schema-home.md
-tags: [kfm, runbook, archaeology, source-refresh, lifecycle, sensitivity]
+  - ../README.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../domains/archaeology/README.md
+  - ../../domains/archaeology/DATA_LIFECYCLE.md
+  - ../../domains/archaeology/CULTURAL_REVIEW.md
+  - ../../sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/archaeology/README.md
+  - ../../../connectors/archaeology/README.md
+  - ../../../pipeline_specs/archaeology/README.md
+  - ../../../policy/domains/archaeology/README.md
+  - ../../../tests/domains/archaeology/README.md
+  - ../../../release/candidates/archaeology/README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+tags:
+  - kfm
+  - runbook
+  - archaeology
+  - cultural-heritage
+  - source-refresh
+  - source-admission
+  - lifecycle
+  - rights
+  - sensitivity
+  - exact-location-denial
+  - cultural-review
+  - evidence
+  - quarantine
+  - rollback
 notes:
-  - Domain owns the most sensitive lane in KFM; fail-closed defaults dominate.
-  - All path-bearing instructions are PROPOSED until verified against the mounted repo.
+  - "This revision replaces no-repository assumptions with current, commit-pinned repository evidence."
+  - "Tracked archaeology source YAML files are proposal placeholders, not admitted SourceDescriptor records."
+  - "The source authority register is an empty projection with implementation_status ABSENT at the pinned snapshot."
+  - "No executable archaeology connector, non-vacuous source-admission fixture, or live refresh entry point was verified."
+  - "This runbook therefore defaults live source execution to HOLD."
+  - "A source refresh may prepare a promotion candidate; only the promotion runbook and owning release authorities govern release state."
+non_effects:
+  - does_not_activate_sources
+  - does_not_admit_source_descriptors
+  - does_not_fetch_live_data
+  - does_not_authorize_sensitive_access
+  - does_not_approve_rights_or_cultural_use
+  - does_not_create_evidence_or_proof
+  - does_not_promote_release
+  - does_not_deploy
+  - does_not_publish
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Archaeology Source Refresh Runbook
 
-> Operator procedure for refreshing Archaeology and Cultural Heritage sources through the governed `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` lifecycle, with sensitivity, rights, and steward review enforced at every gate.
-
-![status: draft](https://img.shields.io/badge/status-draft-lightgrey)
-![lifecycle: governed](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)
-![sensitivity: restricted-by-default](https://img.shields.io/badge/sensitivity-restricted--by--default-critical)
-![cite or abstain](https://img.shields.io/badge/posture-cite--or--abstain-informational)
-![rollback: required](https://img.shields.io/badge/rollback-required--before--release-orange)
-<!-- TODO: replace placeholder badges with verified Shields.io endpoints (CI build, last-updated, license, ADR-0001 status) once repo evidence is mounted. -->
-
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | Docs steward · Archaeology domain steward · Source connector owner |
-| **Last updated** | 2026-05-13 |
-| **Authority of these procedures** | CONFIRMED doctrine · PROPOSED implementation |
-| **Authority of any specific path quoted here** | PROPOSED until verified against mounted-repo evidence |
+> **Purpose.** Provide a fail-closed, evidence-bearing procedure for refreshing an **already-admitted** Archaeology and Cultural Heritage source through KFM's governed lifecycle, while keeping source admission, connector execution, evidence closure, human review, promotion, release, deployment, and publication separate.
 
 > [!CAUTION]
-> **Archaeology is a fail-closed domain.** Exact site locations, burials, human remains, sacred sites, unresolved cultural sensitivity, collection security, private landowner details, and looting-risk exposure are denied by default. Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **blocks public promotion**. When in doubt, **quarantine, redact, generalize, delay, or deny** — record the transform and the reason.
+> **Live archaeology source refresh is `HOLD` at the pinned repository snapshot.** The source-authority register has no entries, the tracked archaeology source YAML files are proposal placeholders, the connector lane has no executable connector module, the pipeline specifications are placeholders, and representative archaeology tests are non-executable docstring scaffolds. This document does not convert any of those surfaces into authority or readiness.
 
----
-
-## Contents
-
-- [1. Scope](#1-scope)
-- [2. Repo fit](#2-repo-fit)
-- [3. Accepted inputs](#3-accepted-inputs)
-- [4. Exclusions](#4-exclusions)
-- [5. Operator roles & separation of duties](#5-operator-roles--separation-of-duties)
-- [6. Preconditions](#6-preconditions)
-- [7. Source families & sensitivity posture](#7-source-families--sensitivity-posture)
-- [8. Lifecycle diagram](#8-lifecycle-diagram)
-- [9. Refresh procedure](#9-refresh-procedure)
-- [10. Required artifacts per gate](#10-required-artifacts-per-gate)
-- [11. Validators & negative fixtures](#11-validators--negative-fixtures)
-- [12. Sensitivity transforms & redaction posture](#12-sensitivity-transforms--redaction-posture)
-- [13. Rollback path](#13-rollback-path)
-- [14. Correction path](#14-correction-path)
-- [15. Failure modes & quarantine reasons](#15-failure-modes--quarantine-reasons)
-- [16. Verification backlog](#16-verification-backlog)
-- [17. Related docs](#17-related-docs)
-- [Appendix A — Worked refresh skeleton (illustrative)](#appendix-a--worked-refresh-skeleton-illustrative)
-- [Appendix B — Operator pre-flight checklist](#appendix-b--operator-pre-flight-checklist)
-
----
-
-## 1. Scope
-
-This runbook governs **how an operator refreshes Archaeology and Cultural Heritage source material** in the Kansas Frontier Matrix (KFM) — from the moment a new payload (or a new vintage of an existing payload) is admitted to RAW, to the moment a public-safe derivative is published, corrected, or rolled back.
-
-It is **operational governance**: it does not redefine the lifecycle, the truth posture, the trust membrane, or the per-source rights. It binds the operator to those rules and provides the gate-by-gate procedure for executing a refresh inside them.
-
-**CONFIRMED doctrine** for this runbook:
-
-- Archaeology follows the universal lifecycle `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`, with **promotion as a governed state transition, not a file move**.
-- AI is interpretive and never the root truth source. `EvidenceBundle` outranks generated language.
-- Public clients consume governed APIs and released artifacts only; they MUST NOT read `RAW`, `WORK`, `QUARANTINE`, candidate stores, or model runtimes directly.
-- Exact archaeological geometry, burials, human remains, sacred sites, and looting-risk exposure fail closed.
-
-**PROPOSED** for this runbook: every path, command, tool name, route, and CI job named below. None has been verified against a mounted repository in this session.
-
----
-
-## 2. Repo fit
-
-| Aspect | Value |
+| Field | Current value |
 |---|---|
-| **Responsibility root** | `docs/` (human-facing control plane) |
-| **Sub-area** | `docs/runbooks/` (ops procedures, rollback drills, validation runs) |
-| **Domain segment** | `archaeology/` (domain as a segment inside a responsibility root — Directory Rules §12) |
-| **Authority order** | Directory Rules §2.1: doctrine → ADRs → Directory Rules → per-root README → dossiers → repo convention |
-| **Schema home referenced** | `schemas/contracts/v1/<…>` per **ADR-0001 (schema home)** — PROPOSED until verified |
-| **Upstream doctrine** | `docs/doctrine/directory-rules.md`, `docs/doctrine/lifecycle-law.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/trust-membrane.md` |
-| **Downstream consumers** | Source connector operators · Archaeology domain stewards · Release manager · Review queue · CI gate authors |
+| Document state | `draft` · repository-grounded · documentation-only |
+| Repository evidence | `main@6b0f0f5353754553e0ff3800206f5479b069921a` |
+| Path decision | `PLACE` — same-path modernization under the accepted `docs/runbooks/<domain>/` pattern |
+| Default operational result | `HOLD` until source admission, rights, sensitivity, review routing, connector, fixtures, and rollback prerequisites are proved |
+| Safe autonomous work | No-network inspection, proposal review, fixture work, validator work, and candidate packet preparation on a feature branch |
+| Terminal boundary | This runbook may produce a refresh record and a promotion candidate; it does not release, deploy, promote, or publish |
 
-> [!NOTE]
-> The path `docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md` is **PROPOSED**. Two layouts are admissible under Directory Rules §6.1 and §12: a domain-segmented folder (`archaeology/SOURCE_REFRESH_RUNBOOK.md`, used here) or a flat subsystem-prefixed file (`archaeology_SOURCE_REFRESH.md`, matching prior `ui_*` and `governed_ai_*` naming). The segmented form scales when Archaeology accumulates multiple runbooks (refresh, rollback, sensitivity drill). Confirm the local convention against the mounted `docs/runbooks/` tree and any existing ADR before adopting either form as canon.
+**Quick navigation:** [Authority](#1-authority-scope-and-boundary) · [Current state](#2-current-repository-state) · [Outcomes](#3-outcomes-and-truth-vocabulary) · [Roles](#4-roles-and-separation-of-duties) · [Inputs](#5-inputs-and-exclusions) · [Preflight](#6-authority-freeze-and-preflight) · [Sources](#7-current-source-family-inventory) · [Lifecycle](#8-lifecycle-and-trust-boundary) · [Procedure](#9-refresh-procedure) · [Artifacts](#10-required-artifacts-and-gates) · [Validation](#11-validation-and-proof) · [Sensitivity](#12-rights-sensitivity-cultural-authority-and-log-hygiene) · [Operations](#13-no-change-retry-rate-limit-and-error-handling) · [Correction](#14-correction-withdrawal-and-rollback) · [Reasons](#15-reason-codes) · [Packet](#16-operator-record-template) · [Checklist](#17-review-and-handoff-checklist) · [Backlog](#18-verification-backlog) · [Related](#19-related-documents)
 
 ---
 
-## 3. Accepted inputs
+## 1. Authority, scope, and boundary
 
-This runbook applies when **any** of the following arrives at the connector boundary:
+### 1.1 What this runbook governs
 
-- A new vintage of an existing Archaeology source (e.g., a fresh export from a state historic preservation inventory, an updated NRHP-like listing, a refreshed field-survey batch).
-- A previously admitted source whose **rights, terms, sensitivity class, cadence, or steward** have materially changed.
-- A new candidate source family (e.g., a partner LiDAR run, a remote-sensing anomaly batch, a museum/collection accession refresh) that has cleared minimum admission criteria.
-- A correction-driven re-pull triggered by `CorrectionNotice` against a previously published Archaeology artifact.
+This runbook governs the recurring operational sequence for one source family and one refresh attempt:
 
-Every accepted input MUST arrive with — or be wrapped into — a `SourceDescriptor` carrying **role, authority, rights, sensitivity, citation, time fields, and a payload hash**. Inputs missing any of these go to QUARANTINE on admission, not to RAW.
+```text
+authority freeze
+  -> source-admission resolution
+  -> no-network proof
+  -> conditional retrieval or controlled import
+  -> immutable RAW capture or QUARANTINE
+  -> normalization in WORK
+  -> validation and policy evaluation
+  -> PROCESSED candidate
+  -> catalog/evidence closure candidate
+  -> promotion handoff
+```
+
+It applies to source material such as inventory exports, survey records, collection records, laboratory reports, historic maps, oral-history or community-governed knowledge, remote-sensing candidates, and 3D documentation **only after** a valid source-admission decision exists.
+
+### 1.2 What this runbook does not govern
+
+This document does not:
+
+- decide that a source should be admitted;
+- create or amend a `SourceDescriptor`;
+- populate the source-authority register;
+- activate a live connector or watcher;
+- grant access to exact archaeological geometry or culturally restricted knowledge;
+- decide cultural authority, affiliation, ownership, significance, or consent;
+- substitute a model, anomaly, map, OCR result, or generated summary for evidence;
+- approve a `ReviewRecord`, `PromotionDecision`, `ReleaseManifest`, correction, or rollback;
+- write directly to `data/published/`;
+- authorize release, deployment, promotion, publication, or an administrative bypass.
+
+Use [the promotion runbook](./PROMOTION_RUNBOOK.md) to evaluate bounded promotion readiness and [the rollback runbook](./ROLLBACK_RUNBOOK.md) to prepare or execute only an authorized reversal. Owning release authorities remain separate. This source-refresh runbook ends at a reviewable candidate or a recorded fail-closed outcome.
+
+### 1.3 Directory Rules basis
+
+The target is an existing tracked file under `docs/runbooks/archaeology/`. Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the Directory Rules responsibility-root model: `docs/` owns human-facing documentation, `docs/runbooks/` owns operational procedures, and `archaeology/` is a domain segment rather than a new authority root.
+
+**Decision:** update this file in place. Do not create a flat sibling, move the runbook, or create a parallel source, schema, policy, proof, or release home.
+
+[Back to top](#top)
 
 ---
 
-## 4. Exclusions
+## 2. Current repository state
 
-This runbook does **not** cover:
+The table below distinguishes tracked structure from operational proof.
 
-| Excluded topic | Belongs under |
-|---|---|
-| Defining or revising the Archaeology object families (`ArchaeologicalSite`, `Survey`, `Feature`, `Context`, `ExcavationUnit`, `RemoteSensingAnomaly`, `LiDARCandidate`, `ProvenienceContext`, `StratigraphicUnit`, `CollectionAccession`, `ChronologyAssertion`, `CulturalReview`, `StewardReview`, `SensitivityTransform`, `CandidateFeature`, `PublicationTransformReceipt`) | `contracts/domains/archaeology/` and `schemas/contracts/v1/domains/archaeology/` |
-| Policy bundle authoring (allow / deny / restrict / abstain rules for sensitive geometry, sacred sites, living-person joins) | `policy/domains/archaeology/` |
-| Source identity, rights register, sensitivity classification | `data/registry/sources/archaeology/` and `policy/sensitivity/` |
-| UI rendering of public-safe Archaeology layers and Evidence Drawer payload | `docs/architecture/ui/` and `docs/runbooks/ui_VALIDATION.md` |
-| Governed AI behavior for Archaeology answers (ABSTAIN/DENY rules, exact-location denial) | `docs/architecture/governed-ai/` and `docs/runbooks/governed_ai_VALIDATION.md` |
-| Rollback drill for the publication surface | `docs/runbooks/ui_ROLLBACK.md` plus this runbook §13 |
-| 3D site documentation admission and access control | A separate Archaeology 3D runbook (PROPOSED; not present in this session) |
-
-If a request crosses the line into any of the above, **stop, hand off, and link the appropriate doc**. Do not extend this runbook past its responsibility.
-
----
-
-## 5. Operator roles & separation of duties
+| Surface | Current evidence at the pinned commit | Bounded conclusion |
+|---|---|---|
+| This runbook | Existing tracked blob `c50bcf2f484d670f2c91745550304445852f0ffa` | Same-path modernization is supported. |
+| Source-authority register | `control_plane/source_authority_register.yaml` declares `implementation_status: ABSENT`, `completeness: empty`, and `entries: []` | No archaeology source admission is proved by the register. |
+| Archaeology source registry | Ten `*.source.yaml` files plus a README are tracked under `data/registry/sources/archaeology/` | The lane exists, but the YAML files are proposal placeholders, not complete admitted descriptors. |
+| Representative descriptor | `nrhp_listings.source.yaml` contains only `status: PROPOSED`, a source-document pointer, its path, and a placeholder note | File presence does not establish source identity, rights, sensitivity, cadence, steward, activation, or admissibility. |
+| Connector lane | `connectors/archaeology/` contains `.gitkeep` and `README.md` | The boundary is documented; no executable archaeology connector was verified. |
+| Pipeline specifications | `ingest`, `normalize`, `validate`, `catalog`, and `publish` spec files are tracked | Representative `ingest.spec.yaml` is a proposal placeholder; executable orchestration is not proved. |
+| Policy lane | Named archaeology Rego files are tracked | Representative `exact_location_deny.rego` is explicitly a `PROPOSED scaffold`; default-deny text does not prove complete policy wiring or enforcement. |
+| Tests | Named archaeology test modules are tracked | Representative `test_exact_sensitive_geometry_denial.py` contains only a proposal docstring; the named test is not non-vacuous proof. |
+| Source-admission fixtures | `tests/domains/archaeology/fixtures/source_admission/` contains a README and `.gitkeep` | No executable source-admission fixture was verified in that lane. |
+| Schema lane | Archaeology schemas are tracked under `schemas/contracts/v1/domains/archaeology/` | Maturity is mixed; representative `archaeological_site.schema.json` is a permissive proposal scaffold with no defined properties. |
+| Release-candidate lane | `release/candidates/archaeology/` contains only a README | No archaeology release candidate, release decision, or rollback target was verified there. |
+| Hosted CI | Repository workflows will evaluate a pull-request head | A future green check would validate only its defined checks; it would not admit a source or authorize a refresh. |
 
 > [!IMPORTANT]
-> **Release authority MUST be distinct from the original author when materiality applies.** A connector operator who admitted the payload is not the same person who promotes it to PUBLISHED.
+> **Operational determination:** repository structure is materially deeper than the prior version of this runbook claimed, but source-refresh closure is not proved. The correct current action for a live source is `HOLD`, not optimistic execution.
 
-| Role | What they may do | What they MUST NOT do |
+### 2.1 Confirmed retained doctrine
+
+The current evidence does not weaken these governing rules:
+
+- `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`;
+- promotion is a governed state transition, not a file move;
+- `EvidenceRef` must resolve to `EvidenceBundle` before a consequential claim is treated as supported;
+- public clients use governed interfaces and released public-safe carriers, never RAW, WORK, QUARANTINE, or direct connector output;
+- candidate and modeled results remain candidate or modeled until separately reviewed and promoted;
+- unknown rights, sensitivity, cultural authority, review state, or location risk fail closed;
+- watchers and connectors may detect, retrieve, package, and propose; they do not publish;
+- receipts record execution; they do not alone prove evidence closure, review, release, or publication.
+
+[Back to top](#top)
+
+---
+
+## 3. Outcomes and truth vocabulary
+
+### 3.1 Truth labels
+
+| Label | Meaning in this runbook |
+|---|---|
+| `CONFIRMED` | Verified from the pinned repository bytes or an accepted governing decision |
+| `PROPOSED` | A design, future state, or requested procedure not proved as current behavior |
+| `UNKNOWN` | Available evidence cannot support a stronger statement |
+| `NEEDS VERIFICATION` | A concrete check is known but not closed |
+| `CONFLICTED` | Two relevant surfaces disagree or imply incompatible authority |
+| `HOLD` | A governed work-state block; no transition may continue |
+
+### 3.2 Source-refresh outcomes
+
+A connector or operator record should use a finite outcome. Do not infer success from process completion.
+
+| Outcome | Meaning | Allowed next action |
 |---|---|---|
-| **Source connector operator** | Fetch source under approved descriptor; emit `RawCaptureReceipt` and `RunReceipt`; quarantine on failure | Fetch unknown-rights data to a public path; bypass rights or sensitivity checks; self-promote |
-| **Archaeology domain steward** | Annotate uncertainty; approve redaction; classify sensitivity; sign `ReviewRecord`; resolve source conflicts; initiate rollback drill | Publish without release manager or recorded review; weaken sensitivity defaults without ADR |
-| **Cultural / tribal reviewer** *(where applicable)* | Review oral history and culturally sensitive material; approve, restrict, or deny release | Be substituted by a generic reviewer; have their decision overwritten by AI output |
-| **Policy admin** | Manage policy gates and role classes; review deny reasons | Bypass audit; grant unlimited access |
-| **Release manager** | Assemble `ReleaseManifest`; promote; rollback; withdrawal | Release without proof, review state, or rollback target |
-| **Developer / pipeline owner** | Implement schemas, APIs, validators, tests, no-network fixtures | Claim production behavior without tests or logs |
-| **AI assistant** | Summarize **released** Archaeology `EvidenceBundle`s; compare evidence; draft steward-review notes | Produce uncited claims; receive direct browser calls; override policy; disclose exact sensitive locations |
+| `ADMIT` | All source-admission and retrieval prerequisites passed for RAW capture | Write only to the approved RAW target and emit receipts |
+| `QUARANTINE` | Material was preserved but one or more gates are unresolved or failed | Route to the approved quarantine target with reason codes |
+| `DENY` | Policy, rights, sensitivity, cultural authority, or access rules forbid the action | Stop; emit a bounded denial record without sensitive detail |
+| `NO_CHANGE` | Conditional retrieval or digest comparison proves no material source change | Emit a heartbeat/no-change receipt; do not create a new catalog or release object |
+| `SKIP` | The source was intentionally not processed under a recorded rule | Record the rule and next eligible evaluation point |
+| `RATE_LIMITED` | Upstream terms or response require delay | Record safe retry metadata; do not bypass controls |
+| `ERROR` | The attempt could not complete reliably | Stop; preserve safe diagnostics and retry only under policy |
+| `HOLD` | Required authority, ownership, evidence, review, rollback, or implementation proof is absent | Open or update a bounded follow-up; do not fetch or promote |
+
+`ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are downstream governed-response outcomes. They are not substitutes for the source-refresh outcomes above. A successful fetch does not imply an `ANSWER`; unresolved evidence still requires `ABSTAIN`.
+
+[Back to top](#top)
 
 ---
 
-## 6. Preconditions
+## 4. Roles and separation of duties
 
-Before starting a refresh, confirm **all** of the following. Any miss returns the source to a candidate state under steward.
+Only the GitHub review route is verified in this document. Accountable role assignments remain `NEEDS VERIFICATION`; do not replace them with invented names.
 
-- [ ] A current `SourceDescriptor` exists with verified `role`, `authority`, `rights`, `sensitivity`, `citation`, `time`, and `payload hash`. **NEEDS VERIFICATION** for every Archaeology source until the rights register is mounted.
-- [ ] The source's `rights` and `terms` are currently valid (license window, attribution, use class). Re-verify on every refresh; rights drift is treated as a refresh-blocking event.
-- [ ] The source's `cadence` is recorded; the refresh interval does not violate the upstream's terms (rate limits, snapshot-only restrictions).
-- [ ] A steward is named for this source family. For oral history, cultural knowledge, sacred sites, burials, and human remains, a **cultural / tribal reviewer is named and reachable**.
-- [ ] The Archaeology policy bundle (`policy/domains/archaeology/`) is at a known version and its negative fixtures pass in CI.
-- [ ] The kill switch and rollback target for the **currently published** Archaeology release are known.
-- [ ] No active `CorrectionNotice` against this source is unresolved — or, if one exists, this refresh is the correction action.
+| Role | Permitted responsibilities | Prohibited responsibilities |
+|---|---|---|
+| Source steward | Confirm source identity, source role, cadence, authority, and supersession posture | Self-authorize missing rights or sensitivity decisions |
+| Connector operator | Execute an approved retrieval/import, preserve source-native context, emit receipts, route to RAW or QUARANTINE | Activate an unadmitted source, approve release, or expose restricted content |
+| Archaeology domain steward | Review domain meaning, candidate-versus-site classification, temporal and spatial interpretation | Treat contextual or modeled material as confirmed evidence without support |
+| Rights steward | Resolve license, access, redistribution, attribution, embargo, and terms drift | Infer permission from public availability |
+| Sensitivity steward | Classify precision and exploitation risk; require redaction, generalization, restriction, delay, or denial | Approve public exposure through styling alone |
+| Authorized cultural, community, or Tribal reviewer | Apply source-specific consent, sovereignty, representation, and access obligations where required | Be substituted by a generic reviewer or an AI system |
+| Evidence/proof steward | Verify reference resolution, digest closure, limitations, and proof-family separation | Treat a receipt, map, summary, or model output as root evidence |
+| Release authority | Decide promotion using the promotion runbook and owning release controls | Be the sole author, connector operator, policy author, and approver for a material release |
+| Correction reviewer | Classify defects, supersession, withdrawal, derivative invalidation, and rollback need | Silently mutate a released object |
+| AI assistant | Summarize released public-safe evidence and draft review notes | Decide truth, rights, sensitivity, cultural authority, review, release, or exact-location disclosure |
+
+### 4.1 Minimum separation before promotion handoff
+
+For a material archaeology refresh:
+
+1. the retrieval/import actor must be identifiable;
+2. source, rights, sensitivity, and cultural-review responsibilities must be resolved;
+3. the promotion decision must not be an automatic consequence of connector success;
+4. release authority must be separate from the original source-refresh author where the owning governance requires independent review;
+5. human review, CI, merge, release, deployment, promotion, and publication must remain separately recorded states.
+
+[Back to top](#top)
 
 ---
 
-## 7. Source families & sensitivity posture
+## 5. Inputs and exclusions
 
-The following source families are governed by this runbook. **Source role**, **rights/sensitivity**, and **freshness** must be verified per family on every refresh — these are not static attributes.
+### 5.1 Required inputs
 
-| Source family | Typical role | Rights / sensitivity | Freshness | Status |
-|---|---|---|---|---|
-| State site inventory / SHPO or equivalent | authority / observation | rights and current terms **NEEDS VERIFICATION**; sensitive joins fail closed | source-vintage or cadence specific | PROPOSED |
-| Public NRHP-like listings | authority / observation / context | rights **NEEDS VERIFICATION**; public listings still need rights review | source-vintage specific | PROPOSED |
-| Field survey forms | observation / context | restricted; rights and consent **NEEDS VERIFICATION** | per-project cadence | PROPOSED |
-| Excavation records & provenience packets | observation / context | restricted; sensitive joins fail closed | project-cycle specific | PROPOSED |
-| Artifact / collection / repository records | authority / observation | rights and donor terms **NEEDS VERIFICATION** | accession-cadence specific | PROPOSED |
-| Lab reports (radiometric, geophysics, etc.) | observation / model | rights and embargo terms **NEEDS VERIFICATION** | report-cycle specific | PROPOSED |
-| Historic maps / plats / land records / newspapers | context | rights and attribution **NEEDS VERIFICATION** | source-vintage specific | PROPOSED |
-| Oral history & cultural knowledge | authority *(community)* / context | restricted; **cultural/tribal review required**; consent and steward protocol **NEEDS VERIFICATION** | per-protocol | PROPOSED |
-| Remote sensing / LiDAR / aerial / geophysics anomalies | observation / model | **candidates, not sites**; exact geometry restricted by default | per-survey cadence | PROPOSED |
-| 3D site documentation | observation | access controls and transform receipts required | per-project | PROPOSED |
+A refresh attempt requires all applicable items below:
+
+- an admitted, immutable `SourceDescriptor` reference;
+- a source-authority or equivalent admission decision that resolves the descriptor;
+- source-native identity and a stable source-family identifier;
+- source role and authority class;
+- current rights and terms review;
+- sensitivity class and precision limits;
+- cultural/community/Tribal review routing where source terms or subject matter require it;
+- expected cadence, staleness threshold, and retry/rate-limit posture;
+- approved retrieval or import method;
+- previous source version, ETag, Last-Modified value, manifest digest, or content digest where available;
+- an approved RAW or QUARANTINE target;
+- an executable connector/importer version or an explicitly reviewed manual-import procedure;
+- no-network fixtures and non-vacuous validation for the source boundary;
+- a named operator and run identity;
+- a correction path;
+- the last known safe public release and rollback target when a downstream released surface may be affected.
+
+Missing a required item yields `HOLD`, `QUARANTINE`, or `DENY` according to the owning policy. It never yields implicit permission.
+
+### 5.2 Excluded material and actions
+
+Do not place any of the following in this runbook, a public PR, logs, screenshots, branch names, commit messages, fixtures, or public artifacts:
+
+- real exact archaeological coordinates, site perimeters, reversible location clues, or protected identifiers;
+- burial, cemetery, human-remains, funerary, sacred, ceremonial, traditional-use, or culturally restricted location detail;
+- confidential consultation records or restricted community knowledge;
+- private-land access instructions, owner details, parcel joins, or unpublished survey locations;
+- collection-security or artifact-storage detail;
+- credentials, tokens, signed URLs, private endpoints, or secret-bearing headers;
+- raw source payloads or restricted samples;
+- a fabricated command, route, validator, schema, or receipt presented as executable fact;
+- a direct connector-to-CATALOG, connector-to-PUBLISHED, or watcher-to-public path;
+- an anomaly, model, OCR extraction, geocode, or AI summary relabeled as a confirmed archaeological site.
+
+[Back to top](#top)
+
+---
+
+## 6. Authority freeze and preflight
+
+Perform the authority freeze before any network access or source import. Record each result in the operator packet in [Section 16](#16-operator-record-template).
+
+### 6.1 Repository and concurrency freeze
+
+- [ ] Record the exact `main` commit and target runbook blob.
+- [ ] Confirm the task branch starts from that exact commit or document a later rebase.
+- [ ] Search open pull requests and active branches for overlapping changes to this runbook, source descriptors, connector code, policy, tests, pipeline specifications, or release candidates.
+- [ ] Read path-scoped instructions and the current [runbook index](../README.md).
+- [ ] Confirm the same-path `PLACE` decision remains valid under accepted Directory Rules.
+- [ ] Identify changed-area workflows and required checks.
+- [ ] Stop on overlapping ownership or migration unless the work is deliberately reconciled.
+
+### 6.2 Source-admission freeze
+
+- [ ] Resolve the proposed `SourceDescriptor` to a complete machine-readable record.
+- [ ] Resolve the descriptor through the source-authority register or other accepted admission authority.
+- [ ] Confirm `source_role`; do not infer it from file name or source reputation.
+- [ ] Confirm rights, terms, redistribution, attribution, access, and embargo posture.
+- [ ] Confirm sensitivity, precision, exploitation risk, and public-safe transform obligations.
+- [ ] Confirm cultural/community/Tribal authority and reviewer routing where applicable.
+- [ ] Confirm cadence, staleness threshold, upstream rate limits, and permitted retrieval method.
+- [ ] Confirm correction, supersession, and withdrawal routes.
+- [ ] Confirm the source is not currently suspended, denied, or under unresolved correction.
+
+### 6.3 Implementation freeze
+
+- [ ] Identify the exact connector or controlled import entry point and its immutable version.
+- [ ] Confirm the connector can emit finite outcomes and route only to RAW, QUARANTINE, and receipt homes.
+- [ ] Confirm no-network fixtures are populated and exercise success plus negative outcomes.
+- [ ] Confirm policy and schema checks are non-vacuous and tied to the candidate source shape.
+- [ ] Confirm receipt, digest, and diagnostic handling cannot leak restricted values.
+- [ ] Confirm all output paths are responsibility-correct and non-public.
+- [ ] Confirm a safe rollback target exists for any released derivative that may later be superseded.
+
+### 6.4 Current snapshot result
+
+At the pinned snapshot, these preflight items are not closed:
+
+- source-authority entry;
+- complete admitted descriptor;
+- executable archaeology connector;
+- non-placeholder pipeline specification;
+- non-vacuous source-admission fixture;
+- non-vacuous representative archaeology policy test;
+- verified accountable stewards;
+- concrete release candidate and rollback target.
+
+**Result: `HOLD`.**
+
+[Back to top](#top)
+
+---
+
+## 7. Current source-family inventory
+
+The tracked source registry contains ten proposal placeholders. Their presence supports routing and planning only.
+
+| Tracked placeholder | Intended source family | Current disposition |
+|---|---|---|
+| `artifact_collection_repository.source.yaml` | Artifact, accession, museum, repository, or collection records | `PROPOSED` · not admitted |
+| `excavation_records.source.yaml` | Excavation, provenience, context, and stratigraphic records | `PROPOSED` · not admitted |
+| `field_survey_forms.source.yaml` | Field survey forms and project observations | `PROPOSED` · not admitted |
+| `historic_maps_plats.source.yaml` | Historic maps, plats, land records, and contextual cartography | `PROPOSED` · not admitted |
+| `lab_reports.source.yaml` | Laboratory, dating, geophysics, or analytical reports | `PROPOSED` · not admitted |
+| `lidar_remote_sensing.source.yaml` | LiDAR, aerial, satellite, geophysics, and anomaly candidates | `PROPOSED` · not admitted |
+| `nrhp_listings.source.yaml` | Public historic-resource or listing context | `PROPOSED` · not admitted |
+| `oral_history_cultural_knowledge.source.yaml` | Oral history and community-governed cultural knowledge | `PROPOSED` · not admitted |
+| `state_site_inventory.source.yaml` | State inventory or historic-preservation source family | `PROPOSED` · not admitted |
+| `three_d_documentation.source.yaml` | 3D documentation, photogrammetry, scan, or model source family | `PROPOSED` · not admitted |
 
 > [!WARNING]
-> A LiDAR, aerial, satellite, geophysical, model, or 3D anomaly is a **candidate**, not a confirmed site, until source evidence and review support promotion. This runbook MUST NOT collapse candidate detection into confirmed-site publication. The `CandidateFeature` / `ArchaeologicalSite` distinction is enforced at validation and again at catalog closure.
+> **Candidate is not site.** LiDAR, remote sensing, geophysics, predictive surfaces, OCR extractions, geocodes, and 3D interpretations remain `candidate`, `modeled`, `synthetic`, or `context` according to their admitted source role. A refresh must not promote them to `ArchaeologicalSite` by renaming a type or writing a catalog record.
+
+### 7.1 Source-role preservation
+
+Use the accepted source-role vocabulary from the actual admitted descriptor. The following examples describe boundaries, not a new canonical enum:
+
+| Role concept | Archaeology example | Anti-collapse rule |
+|---|---|---|
+| Observation | Field-recorded finding within a bounded survey method | Does not imply unrestricted precision or public release |
+| Regulatory/administrative | Eligibility, inventory, compliance, accession, or repository status | Does not prove field condition, significance, affiliation, or release permission |
+| Modeled/candidate | LiDAR anomaly, geophysics interpretation, predictive surface | Requires method, inputs, uncertainty, model/run references, and review |
+| Aggregate | County, region, survey-area, or generalized public-safe summary | Must resist re-identification and reverse engineering |
+| Context | Historic map, local history, route, land-use, or interpretive background | Cannot confirm a site alone |
+| Synthetic | Demonstration, test, reconstruction, or generated representation | Requires a reality-boundary note and must never mix with evidence claims |
+| Restricted | Exact site, sacred, burial, human-remains, landowner, or collection-security material | Defaults to quarantine, restriction, delay, generalization, or denial |
+
+[Back to top](#top)
 
 ---
 
-## 8. Lifecycle diagram
+## 8. Lifecycle and trust boundary
 
 ```mermaid
 flowchart LR
-    A[Upstream source] -->|fetch under SourceDescriptor| ADM{{Admission gate}}
-    ADM -->|admit| RAW[(RAW)]
-    ADM -->|missing rights / sensitivity / hash| Q1[(QUARANTINE — admission)]
-    RAW -->|normalize schema, geometry, time, identity| NORM{{Normalization gate}}
-    NORM -->|fail policy or schema| Q2[(QUARANTINE — normalization)]
-    NORM -->|pass| WORK[(WORK)]
-    WORK -->|validators + receipts| VAL{{Validation gate}}
-    VAL -->|fail| WORK
-    VAL -->|pass| PROC[(PROCESSED)]
-    PROC -->|EvidenceRef resolves, digests close| CAT{{Catalog-closure gate}}
-    CAT -->|hold — no public edge| PROC
-    CAT -->|pass| CATR[(CATALOG / TRIPLET)]
-    CATR -->|ReviewRecord + release authority distinct from author| REL{{Release gate}}
-    REL -->|hold| CATR
-    REL -->|pass| PUB[(PUBLISHED — public-safe only)]
-    PUB -->|defect detected| CORR{{Correction}}
-    CORR --> PUB2[(PUBLISHED')]
-    PUB -.->|emergency| RBK{{Rollback}}
-    RBK -.-> PUBprev[(Prior PUBLISHED restored)]
+    S[Candidate source] --> A{Admission authority resolves?}
+    A -- no --> H[HOLD or DENY]
+    A -- yes --> N{No-network proof passes?}
+    N -- no --> H
+    N -- yes --> C[Approved connector or controlled import]
+    C --> D{Retrieval outcome}
+    D -- no change --> NC[NO_CHANGE receipt]
+    D -- denied or error --> Q[QUARANTINE or DENY]
+    D -- new immutable bytes --> R[RAW + capture receipt]
+    R --> W[WORK normalization]
+    W --> V{Schema, rights, sensitivity, role, evidence, and integrity checks}
+    V -- fail or unresolved --> Q
+    V -- pass --> P[PROCESSED candidate]
+    P --> E{Evidence and catalog closure}
+    E -- unresolved --> H2[HOLD at PROCESSED]
+    E -- closed --> G[CATALOG or TRIPLET candidate]
+    G --> PH[Promotion handoff]
+    PH --> PR[Promotion runbook and human review]
+    PR -->|separate governed decision| PUB[PUBLISHED public-safe carrier]
 
-    classDef quarantine fill:#fde2e2,stroke:#b00020,color:#5a0010;
-    classDef public fill:#e6f4ea,stroke:#1e7a32,color:#0c3c1a;
-    classDef governed fill:#eef2ff,stroke:#3949ab,color:#1a237e;
-    class Q1,Q2 quarantine;
-    class PUB,PUB2,PUBprev public;
-    class ADM,NORM,VAL,CAT,REL,CORR,RBK governed;
+    C -. forbidden .-> PUB
+    R -. forbidden .-> PUB
+    W -. forbidden .-> PUB
+    Q -. forbidden .-> PUB
 ```
 
-*Diagram reflects the universal KFM lifecycle invariant applied to Archaeology. Gate names mirror the Master Pipeline Gate Reference; named artifacts are PROPOSED until verified against the mounted repo.*
+The dotted forbidden paths are non-negotiable. Neither the browser, map, AI surface, connector, watcher, nor refresh operator reads or writes around the trust membrane.
+
+### 8.1 Stage ownership
+
+| Stage | Owning responsibility | This runbook's role |
+|---|---|---|
+| Source admission | Source registry, rights, sensitivity, policy, and authorized review | Verify closure; never create authority |
+| Retrieval/import | `connectors/` or accepted controlled-import implementation | Describe operator sequence and required outputs |
+| RAW/WORK/QUARANTINE/PROCESSED | `data/` lifecycle roots plus pipelines and validators | Require correct handoffs and reasoned failures |
+| Catalog/evidence closure | Catalog, evidence, proof, and graph/triplet owners | Verify references and digest closure before handoff |
+| Promotion/release | `release/`, promotion policy, review records, and release authority | Hand off only |
+| Public UI/API/AI | Governed runtime and released public-safe artifacts | Post-handoff smoke only; no direct source access |
+
+[Back to top](#top)
 
 ---
 
 ## 9. Refresh procedure
 
-Each step ends in a **gate** with a binary outcome: pass and emit the named artifact(s), or hold and emit a structured failure with reason. **No silent promotion.** No step may write to a public surface.
+Each step ends with an explicit result and artifacts. A missing prerequisite stops the run.
 
-### Step 0 — Preflight
+### Step 0 — Freeze authority and record the attempt
 
-Run before any fetch.
+**Precondition:** none.
 
-1. Re-read this runbook's §6 preconditions. Any miss aborts the refresh.
-2. Read the current `SourceDescriptor` for the target source family. If `rights`, `sensitivity`, `cadence`, `steward`, or `cultural_reviewer` is `UNKNOWN` / `NEEDS VERIFICATION`, **do not fetch** — open a steward task and stop.
-3. Confirm the **prior published release**'s rollback target is known and reachable.
-4. Confirm CI is green on the Archaeology policy bundle's negative fixtures (sensitive-geometry deny, candidate-not-site, public no-leak, AI exact-location denial).
+**Actions:**
 
-### Step 1 — Admission (`— → RAW`)
+1. Complete [Section 6](#6-authority-freeze-and-preflight).
+2. Allocate a unique refresh-run identifier.
+3. Record repository commit, descriptor reference and digest, connector/importer version, policy version, schema version, operator, and intended source version.
+4. Record the previously known source version and any currently released derivative that may be affected.
+5. Stop if the descriptor or admission decision cannot be resolved.
 
-**Pre-condition:** source identity and rights minimally established; source-role intent set.
+**Output:** operator packet with `HOLD` or `READY_FOR_NO_NETWORK_PROOF`.
 
-**Operator actions:**
+### Step 1 — Prove the source boundary without network access
 
-- Fetch under the approved `SourceDescriptor`. Use conditional GETs / ETag / If-None-Match where the upstream supports them.
-- Persist the immutable payload (or reference) plus a payload hash.
-- Emit `RawCaptureReceipt` and `RunReceipt`.
+**Precondition:** a complete admitted descriptor and an identified connector or controlled importer.
 
-**Required artifacts:** `SourceDescriptor` (role, authority, rights, sensitivity, cadence) · payload-or-reference hash · `RawCaptureReceipt` · `RunReceipt`.
+**Actions:**
 
-**Failure-closed outcome:** source not admitted; logged as a candidate awaiting steward. Do **not** retry without steward input.
+1. Run the source-boundary fixture suite with network egress denied.
+2. Exercise at least:
+   - valid admission;
+   - unknown-rights hold;
+   - exact-location quarantine or denial;
+   - candidate-not-site rejection;
+   - digest mismatch;
+   - no-change;
+   - rate-limit or retry;
+   - safe error logging.
+3. Confirm fixtures are synthetic or rights-cleared and contain no real protected location or identity.
+4. Confirm each negative fixture fails for the expected reason, not any arbitrary process failure.
+5. Record commands, versions, fixture digests, and results.
 
-> [!TIP]
-> A no-change refresh (conditional GET returns 304, or `spec_hash` is unchanged) MUST still emit a heartbeat receipt and MUST NOT create new catalog entries. This preserves audit continuity without churning the publication surface.
-
-### Step 2 — Normalization (`RAW → WORK / QUARANTINE`)
-
-**Pre-condition:** schema, geometry, time, identity, evidence, rights, and policy rules are runnable for this source family.
-
-**Operator actions:**
-
-- Normalize schema, geometry (preserving CRS), time fields (source/observed/valid/retrieval — keep them distinct), identity (deterministic basis: source id + object role + temporal scope + normalized digest), evidence, rights, and policy.
-- Apply sensitivity classification. Sensitive joins (e.g., site coordinates × landowner records, or anomaly geometry × tribal review state) fail closed and route to QUARANTINE with a reason code.
-- Emit `TransformReceipt`, working-set `ValidationReport`, and `PolicyDecision`.
-
-**Required artifacts:** `TransformReceipt` · `ValidationReport` (working) · `PolicyDecision` · `QUARANTINE` record on failure.
-
-**Failure-closed outcome:** QUARANTINE with a structured reason — never silent promotion to WORK.
-
-### Step 3 — Validation (`WORK → PROCESSED`)
-
-**Pre-condition:** validators are deterministic and tied to fixtures; required receipts present.
-
-**Operator actions:**
-
-- Run all Archaeology validators (§11). All MUST pass; partial passes hold in WORK.
-- Apply `SensitivityTransform`s where required (generalization, suppression, redaction) and emit `RedactionReceipt`.
-- If aggregations are produced (e.g., survey-coverage summaries, candidate-anomaly surfaces), emit `AggregationReceipt`.
-
-**Required artifacts:** `ValidationReport` (pass) · `RedactionReceipt` (when sensitivity applies) · `AggregationReceipt` (when applies).
-
-**Failure-closed outcome:** stay in WORK; emit a structured `FAIL` outcome with the validator IDs that did not pass.
-
-### Step 4 — Catalog closure (`PROCESSED → CATALOG / TRIPLET`)
-
-**Pre-condition:** every `EvidenceRef` resolves; catalog matrix and digests close.
-
-**Operator actions:**
-
-- Verify every `EvidenceRef` resolves to an `EvidenceBundle`. Unresolved references hold the gate.
-- Emit `CatalogMatrix` entry, `EvidenceBundle`, and graph/triplet projections where applicable.
-- Confirm digests close (artifact digest ↔ run receipt ↔ catalog record).
-
-**Required artifacts:** `CatalogMatrix` entry · `EvidenceBundle` · graph / triplet projection (where applicable).
-
-**Failure-closed outcome:** HOLD at PROCESSED; structured `FAIL`; **no public edge** is offered.
-
-### Step 5 — Release (`CATALOG / TRIPLET → PUBLISHED`)
-
-**Pre-condition:** review state present where required; release authority distinct from the original author when materiality applies; the change is **public-safe**.
-
-> [!IMPORTANT]
-> For Archaeology, **`ReviewRecord` is required**. For oral history, cultural knowledge, sacred sites, burials, or human remains, a **cultural / tribal reviewer's `ReviewRecord` is required in addition to the domain steward's**. The release manager does not substitute for these reviewers.
-
-**Operator actions:**
-
-- Assemble `ReleaseManifest` with: artifact digests, source provenance, rights, sensitivity class, applied transforms, validator pass set, review records, **rollback target**, and **correction path**.
-- Confirm separation of duties: the release manager is not the connector operator who admitted the payload.
-- Promote through the governed release path (state transition; **not** a file move).
-- Surface trust badges and stale-state indicators in the public UI per the Cross-cutting viewing products doctrine.
-
-**Required artifacts:** `ReleaseManifest` · `rollback target` · `correction path` · `ReviewRecord` (one or more).
-
-**Failure-closed outcome:** HOLD at CATALOG; no public surface change.
-
-### Step 6 — Post-release smoke
-
-1. Verify the new Archaeology layer/Evidence Drawer surface resolves end-to-end through governed APIs only.
-2. Run no-public-`RAW` / no-public-`WORK` / no-public-`QUARANTINE` route checks.
-3. Confirm Focus Mode answers for this refresh's claims either **ANSWER with citations**, **ABSTAIN** when evidence is insufficient, or **DENY** where sensitivity/policy/release state forbids — exact-location denial fixtures pass.
-4. Confirm the rollback target restores the prior `ReleaseManifest` in a dry-run.
-5. Update the verification backlog (§16) for any remaining `NEEDS VERIFICATION` items.
-
----
-
-## 10. Required artifacts per gate
-
-| Gate | Required artifacts (PROPOSED minimum) | Failure-closed outcome |
-|---|---|---|
-| Admission (`— → RAW`) | `SourceDescriptor`; payload-or-reference hash; `RawCaptureReceipt`; `RunReceipt` | Source not admitted; candidate awaiting steward |
-| Normalization (`RAW → WORK / QUARANTINE`) | `TransformReceipt`; `ValidationReport` (working); `PolicyDecision`; QUARANTINE on failure | Quarantine with reason; never silent |
-| Validation (`WORK → PROCESSED`) | `ValidationReport` (pass); `RedactionReceipt` if sensitivity applies; `AggregationReceipt` if applies | Stay in WORK; structured `FAIL` |
-| Catalog closure (`PROCESSED → CATALOG / TRIPLET`) | `CatalogMatrix` entry; `EvidenceBundle`; graph / triplet projection if applicable | Hold at PROCESSED; no public edge |
-| Release (`CATALOG → PUBLISHED`) | `ReleaseManifest`; rollback target; correction path; `ReviewRecord` (steward + cultural where required) | Hold at CATALOG; no public surface change |
-| Correction (`PUBLISHED → PUBLISHED'`) | `CorrectionNotice`; updated `EvidenceBundle`; superseding `ReleaseManifest` | The old release is **superseded**, not silently mutated |
-
----
-
-## 11. Validators & negative fixtures
-
-The validators below are the **minimum** set the Archaeology lane is expected to enforce. All are PROPOSED in implementation; their existence in the mounted repo is **NEEDS VERIFICATION**.
-
-| Validator (PROPOSED) | What it proves | Negative fixture (must FAIL when policy is violated) |
-|---|---|---|
-| `EvidenceBundle-required` | No claim can publish without a resolved `EvidenceBundle` | Claim with missing or unresolved `EvidenceRef` |
-| `candidate-not-site` | LiDAR / RS / model anomalies are not promoted to confirmed sites without source evidence and review | Candidate object promoted to `ArchaeologicalSite` without review |
-| `public-no-leak` | RAW / WORK / QUARANTINE / candidate / unreleased data never appears on a public surface | Public route resolves to a non-PUBLISHED artifact |
-| `rights-and-cultural-review` | Sources with cultural / oral-history content carry a cultural reviewer's record | Release with missing cultural `ReviewRecord` |
-| `exact-sensitive-geometry-denial` | Exact archaeological geometry, burials, sacred sites, human remains are not exposed publicly | Public response returns exact geometry for a flagged feature |
-| `catalog-closure` | Every published artifact resolves to a closed catalog record with digest closure | Published artifact with unresolved `CatalogMatrix` entry |
-| `AI-exact-location-denial` | Governed AI denies exact-location queries for restricted sites; ABSTAIN or DENY only | AI returns exact coordinates for a restricted feature |
-| `stale-source` | Stale or late telemetry / vintage produces a visible stale state, not silent serve | Source past freshness window returns ANSWER without stale flag |
-| `no-change-no-churn` | A 304 / unchanged `spec_hash` refresh emits a heartbeat receipt and does not create new catalog entries | Unchanged source produces a new `ReleaseManifest` |
+**Output:** bounded no-network validation evidence or `HOLD`.
 
 > [!NOTE]
-> Negative fixtures are the load-bearing part of this list. A validator that has no failing case is doctrine, not enforcement.
+> The tracked source-admission fixture lane is not populated with executable fixtures at the pinned snapshot. A README and `.gitkeep` do not satisfy this step.
+
+### Step 2 — Resolve current rights, sensitivity, and source state
+
+**Precondition:** Step 1 passes.
+
+**Actions:**
+
+1. Recheck terms and rights at refresh time; do not rely only on the prior admission date.
+2. Recheck sensitivity and precision posture against the incoming version and intended use.
+3. Recheck cultural/community/Tribal authority, consent, embargo, confidentiality, and representation obligations where applicable.
+4. Check active correction, withdrawal, supersession, or source suspension.
+5. Confirm the retrieval interval and request method comply with upstream terms.
+
+**Output:** `READY_TO_FETCH`, `HOLD`, or `DENY`.
+
+### Step 3 — Retrieve or import conditionally
+
+**Precondition:** `READY_TO_FETCH`.
+
+**Actions:**
+
+1. Use the approved connector or controlled-import procedure.
+2. Prefer conditional retrieval using ETag, Last-Modified, source manifest, object version, or prior digest when supported.
+3. Apply bounded timeout, retry, rate-limit, redirect, size, content-type, and authentication controls defined by the owning implementation and source terms.
+4. Never place credentials, restricted locators, protected identifiers, or geometry in logs.
+5. Preserve source-native identifiers, timestamps, caveats, and headers required for provenance.
+6. Produce one finite outcome.
+
+**Outputs:**
+
+- `NO_CHANGE` — emit heartbeat/no-change receipt and stop;
+- `RATE_LIMITED`, `SKIP`, `DENY`, or `ERROR` — record safe diagnostics and stop;
+- `ADMIT` — continue to immutable capture;
+- `QUARANTINE` — preserve only in the approved quarantine path.
+
+### Step 4 — Capture immutable RAW or QUARANTINE material
+
+**Precondition:** new material was retrieved or imported.
+
+**Actions:**
+
+1. Compute the configured content digest over the preserved source bytes or immutable source reference.
+2. Record byte length, media type, source-native version, retrieval/import time, connector/importer version, and descriptor reference.
+3. Write only to the approved RAW or QUARANTINE target.
+4. Emit a capture/run receipt that distinguishes source bytes from metadata and derived transformations.
+5. Verify the write and digest before downstream processing.
+
+**Fail-closed triggers:** digest mismatch, unexpected type or size, unresolved rights, missing source identity, sensitive value in an unsafe channel, or unauthorized location.
+
+### Step 5 — Normalize in WORK
+
+**Precondition:** verified RAW capture.
+
+**Actions:**
+
+1. Preserve source, observation, valid, publication, retrieval, effective, correction, and transaction times as distinct fields where present.
+2. Preserve source role and authority; do not upgrade or rewrite role during normalization.
+3. Normalize identity deterministically where the owning contract allows.
+4. Preserve CRS, coordinate uncertainty, scale, georeferencing method, and source precision without exposing protected values.
+5. Normalize references, rights, sensitivity, and review-routing metadata.
+6. Route unresolved or invalid records to QUARANTINE with reason codes.
+7. Emit transform and working validation records under their owning object families.
+
+**Output:** WORK candidate, QUARANTINE record, or `ERROR`.
+
+### Step 6 — Validate and apply policy
+
+**Precondition:** normalized WORK candidate.
+
+**Actions:**
+
+1. Validate schema shape using the actual active schema, not a permissive scaffold.
+2. Validate source-role anti-collapse and candidate-versus-site boundaries.
+3. Validate geometry, time, identity, evidence references, rights, sensitivity, review routing, and integrity.
+4. Evaluate policy with the exact policy version and input digest recorded.
+5. Apply only authorized sensitivity transforms.
+6. Record transform parameters and reasons so the public-safe derivative is reproducible and auditable.
+7. Keep original restricted material in its authorized controlled lane; public-safe derivatives do not replace source truth.
+8. Require all negative checks to be non-vacuous.
+
+**Output:** `PROCESSED_CANDIDATE`, QUARANTINE, `DENY`, `HOLD`, or `ERROR`.
+
+### Step 7 — Close evidence and catalog candidate
+
+**Precondition:** validated PROCESSED candidate.
+
+**Actions:**
+
+1. Resolve every consequential `EvidenceRef` to an admissible `EvidenceBundle`.
+2. Confirm source, run, transform, validation, policy, and artifact digests close.
+3. Record limitations, uncertainty, spatial/temporal scope, source role, sensitivity transform, and stale-state behavior.
+4. Build catalog or triplet projections only from the validated candidate.
+5. Verify graph, index, tile, map, search, and summary derivatives remain downstream carriers.
+6. Hold at PROCESSED if any reference, digest, right, review obligation, or rollback prerequisite is unresolved.
+
+**Output:** `PROMOTION_CANDIDATE` or `HOLD_AT_PROCESSED`.
+
+### Step 8 — Hand off; do not self-promote
+
+**Precondition:** complete promotion candidate.
+
+**Actions:**
+
+1. Prepare the promotion packet required by [the promotion runbook](./PROMOTION_RUNBOOK.md).
+2. Identify the required domain, rights, sensitivity, cultural/community/Tribal, evidence, and release reviewers.
+3. Record the prior release and rollback target.
+4. Record correction, withdrawal, supersession, cache/index invalidation, and derivative recompile obligations.
+5. Stop. Do not write to PUBLISHED from this procedure.
+
+**Output:** reviewable promotion candidate. Human review, CI, merge, release, deployment, promotion, and publication remain pending unless separately recorded.
+
+### Step 9 — Post-run record
+
+For every terminal outcome:
+
+1. record start/end times and the finite outcome;
+2. record exact inputs, versions, digests, commands or entry points, and safe diagnostics;
+3. record objects created, changed, quarantined, or intentionally not created;
+4. record unresolved items and the next authorized actor;
+5. verify no restricted values entered logs, PR text, reports, or public artifacts;
+6. link any correction, follow-up, or rollback work;
+7. preserve the prior safe state.
+
+[Back to top](#top)
 
 ---
 
-## 12. Sensitivity transforms & redaction posture
+## 10. Required artifacts and gates
 
-Archaeology publishes **public-safe derivatives only**. Exact-geometry products live behind steward-only review surfaces; they are never the default public release.
+Names below are object-family concepts. The operator must use the actual accepted contract/schema names and paths resolved from the repository; this table does not create them.
 
-| Posture | When it applies | Required record |
-|---|---|---|
-| **Generalize** | Point geometry would expose looting-risk or sacred site | `SensitivityTransform` + `RedactionReceipt` documenting buffer / aggregation rule |
-| **Suppress** | Feature class is denied for public release entirely (burials, human remains, sacred sites) | `PolicyDecision` (DENY) + `SensitivityTransform` recording the suppression |
-| **Stage access** | Researcher-class access permitted under access policy | Access role decision + `PolicyDecision` (RESTRICT) + audit log |
-| **Delay** | Active investigation, looting risk window, embargo | `PolicyDecision` (DEFER) + release-after date + steward note |
-| **Deny** | Rights / sensitivity / review state unresolved | `PolicyDecision` (DENY) + reason code |
+| Gate | Minimum evidence | Pass result | Fail-closed result |
+|---|---|---|---|
+| Authority freeze | Commit, descriptor digest, admission decision, ownership, overlap check, implementation version | Proceed to no-network proof | `HOLD` |
+| Source admission | Complete descriptor, role, rights, sensitivity, cadence, access, review routing | `ADMITTED_SOURCE_RESOLVED` | `HOLD` or `DENY` |
+| No-network proof | Non-vacuous positive and negative fixtures, deterministic results, no egress | `SOURCE_BOUNDARY_PROVED` | `HOLD` |
+| Retrieval/import | Approved entry point, safe request/import metadata, finite outcome | `ADMIT` or `NO_CHANGE` | `QUARANTINE`, `DENY`, `RATE_LIMITED`, or `ERROR` |
+| RAW capture | Immutable bytes/reference, digest, source identity, capture/run receipt | `RAW_CAPTURED` | QUARANTINE |
+| Normalization | Transform record, working validation, preserved role/time/CRS/rights/sensitivity | `WORK_NORMALIZED` | QUARANTINE or `ERROR` |
+| Validation/policy | Schema, geometry, time, identity, role, evidence, rights, sensitivity, integrity, negative fixtures | `PROCESSED_CANDIDATE` | WORK/QUARANTINE, `DENY`, or `HOLD` |
+| Evidence/catalog closure | Resolved evidence, catalog record, digest closure, limitations, uncertainty | `PROMOTION_CANDIDATE` | `HOLD_AT_PROCESSED` |
+| Promotion handoff | Review packet, prior release, rollback and correction routes | Hand off to promotion authority | `HOLD_AT_CATALOG` |
+| Correction/rollback | Defect record, affected objects, prior safe state, invalidation scope | Superseding candidate or rollback request | Withdraw/restrict and escalate |
 
-> [!CAUTION]
-> The redaction posture is **deny-by-default**. A missing decision is not "allow." When `rights`, `sensitivity`, or `review` is `UNKNOWN`, the only admissible release decision is to **hold or deny** — never to ship.
+### 10.1 Object-family separation
+
+Keep these families distinct:
+
+- source descriptor and admission decision;
+- source bytes or immutable reference;
+- capture/run/transform/validation/redaction/aggregation receipts;
+- validation report;
+- policy decision;
+- evidence reference and evidence bundle;
+- catalog record and graph/triplet projection;
+- review record;
+- promotion decision;
+- release manifest;
+- correction or withdrawal notice;
+- rollback card;
+- published artifact.
+
+A receipt is not a proof. A proof is not a policy decision. A policy decision is not human review. Review is not release. A commit or passing check is not promotion or publication.
+
+[Back to top](#top)
 
 ---
 
-## 13. Rollback path
+## 11. Validation and proof
 
-A rollback is a **governed state transition**, not a file copy.
+### 11.1 Documentation-change validation
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Op as Operator (steward + release mgr)
-    participant Rel as Release surface
-    participant Cat as Catalog / TRIPLET
-    participant UI as Public UI
-    participant Audit as Audit log
+For changes to this runbook, use repository-native checks where available:
 
-    Op->>Rel: Identify affected ReleaseManifest
-    Op->>Cat: Locate prior safe artifact set + verify digests
-    Op->>Rel: Disable / withdraw affected public surfaces
-    Rel->>UI: Mark withdrawn / stale; remove from active layers
-    Op->>Rel: Restore prior ReleaseManifest via governed release path
-    Rel->>UI: Restore prior layers / Evidence Drawer payloads
-    Op->>Audit: Emit RollbackCard + receipts (no hidden copy)
+```bash
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md
+
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+
+make repository-topology
 ```
 
-**Required artifacts for rollback:** prior `ReleaseManifest`; artifact digests; cache invalidation record; `RollbackCard`; audit entries.
+The pull-request head is also subject to repository workflows such as `link-check` and `validator-suite`. Report exact-head results separately from review or merge state.
 
-**Anti-pattern:** "swap the file." Rollback that is not a governed transition with receipts is treated as a hidden mutation — and a release that cannot be rolled back through the governed path is, by KFM doctrine, not safely publishable.
+A green documentation or topology check proves only the bounded check. It does not prove a source is admitted, a connector is operational, rights are clear, sensitive handling is safe, evidence is closed, or release is authorized.
 
----
+### 11.2 Refresh-execution validation
 
-## 14. Correction path
+Before any live source refresh, the owning implementation must prove all applicable checks below with real executable fixtures:
 
-A correction does **not** silently mutate the prior release; it publishes a superseding release.
-
-1. Detect or receive the defect (evidence gap, source-role error, rights drift, sensitivity miss, geometry error, temporal error, policy miss, validation miss, rendering error, API error, AI-output error).
-2. Classify the defect class. Pair it with a correction posture (e.g., **evidence gap → ABSTAIN / withdraw**; **sensitivity miss → suppress / regeneralize**).
-3. Preserve the original `ReleaseManifest`.
-4. Emit `CorrectionNotice` with: defect class, affected artifact digests, affected `EvidenceBundle`(s), proposed superseding state.
-5. Update the `EvidenceBundle` and re-run §9 steps 3–5 for the corrected refresh.
-6. Publish the **superseding `ReleaseManifest`**. Mark the prior release `superseded`, not deleted.
-7. Where downstream derivatives (tiles, graph projections, AI receipts) reference the old release, mark them stale or invalidate them per their own correction path.
-
----
-
-## 15. Failure modes & quarantine reasons
-
-| Reason (PROPOSED reason codes) | Trigger | Disposition |
+| Required check | Positive proof | Negative proof |
 |---|---|---|
-| `rights_unknown` | Rights / terms not verified at refresh time | Hold; open steward task; do not fetch |
-| `rights_expired` | License window passed | Hold; do not publish derivatives until renewed |
-| `sensitivity_unresolved` | Cultural / tribal review missing for an oral history / sacred site / burial source | Hold for reviewer; deny public derivatives |
-| `hash_mismatch` | Payload digest does not match `RunReceipt` | Quarantine; treat as integrity event |
-| `schema_invalid` | Source payload fails normalization schema | Quarantine with validator IDs |
-| `geometry_invalid` | Geometry repair would change site identity | Hold for steward; record `GeometryRepairReport` |
-| `candidate_promoted_without_review` | Anomaly attempted promotion to confirmed site | Quarantine; route to review queue |
-| `evidence_unresolved` | One or more `EvidenceRef` does not resolve | Hold at PROCESSED |
-| `review_missing` | `ReviewRecord` missing where required | Hold at CATALOG |
-| `cultural_review_missing` | Cultural / tribal `ReviewRecord` missing where required | Hold at CATALOG; escalate |
-| `rollback_target_unknown` | Cannot identify a safe prior release | Hold at CATALOG; **never release** until resolved |
-| `stale_source` | Source past freshness window | Allow with stale state surfaced, or hold per policy |
-| `kill_switch_engaged` | Operational kill switch is active for Archaeology releases | Block all publication paths |
+| Descriptor resolution | Complete admitted descriptor resolves by immutable identity | Placeholder, missing, stale, or unregistered descriptor yields `HOLD` |
+| Rights and terms | Reviewed rights permit the intended operation | Unknown, expired, incompatible, or embargoed terms deny or hold |
+| Exact-location protection | Protected values remain in controlled storage and logs stay clean | Exact or reversible protected location in public output or logs fails |
+| Candidate-not-site | Candidate remains candidate until reviewed evidence supports a transition | Type rename or unreviewed candidate-to-site promotion fails |
+| Cultural authority | Required consent/reviewer/representation obligations resolve | Missing or conflicting authority holds or denies |
+| Digest integrity | Source bytes, receipts, transforms, and candidate artifacts close | Digest mismatch quarantines |
+| No-change | Unchanged source emits a no-change record only | Unchanged source creates new catalog/release churn and fails |
+| Public no-leak | Public clients can resolve only released public-safe carriers | RAW, WORK, QUARANTINE, candidate, or restricted store access fails |
+| Evidence closure | Every consequential claim resolves to an admissible evidence bundle | Unresolved reference produces `ABSTAIN` or `HOLD` |
+| Rollback/correction | Prior safe state and derivative invalidation can be demonstrated | Unknown rollback target blocks promotion handoff |
+| Log hygiene | Diagnostics retain reason and correlation without sensitive values | Sensitive identifiers, geometry, secrets, or access details in logs fail |
+| Network posture | No-network tests cannot reach DNS, HTTP, storage, or model endpoints | Any unexpected egress fails the test |
 
-> [!WARNING]
-> Quarantine is a **safe state**, not a failure to fix later. Material in QUARANTINE is preserved with its reason; it is not silently retried. Re-entry to WORK requires steward action.
+### 11.3 Current proof gaps
+
+At the pinned snapshot:
+
+- representative archaeology test modules are placeholders;
+- the source-admission fixture directory has no executable fixture payload;
+- representative policy and pipeline files are scaffolds;
+- source descriptors are placeholders;
+- no executable connector was verified.
+
+Therefore a file name, importable test module, parsable Rego file, or schema meta-validation must not be reported as source-refresh proof.
+
+[Back to top](#top)
 
 ---
 
-## 16. Verification backlog
+## 12. Rights, sensitivity, cultural authority, and log hygiene
 
-Carried forward from project doctrine; these items must be resolved against the mounted repo before the corresponding section of this runbook can be promoted from PROPOSED to CONFIRMED.
+### 12.1 Fail-closed posture
 
-| Item to verify | Evidence that would settle it | Status |
+| Risk | Required default |
+|---|---|
+| Unknown or changed rights/terms | `HOLD` or `DENY` |
+| Exact site or protected identifier | Restrict, quarantine, generalize only under approved transform, or deny |
+| Burial, human remains, funerary object, sacred or ceremonial place | Fail closed; require the owning cultural/community/Tribal and legal/governance process |
+| Looting, vandalism, trespass, theft, disturbance, or collection-security risk | Restrict and minimize; public release requires explicit review |
+| Private landowner or access detail | Fail closed unless purpose, rights, minimization, and release posture are recorded |
+| Oral history or community-governed knowledge | Preserve consent, authority, access, allowed use, and representation obligations |
+| Candidate anomaly or predictive surface | Keep candidate/modeled with method and uncertainty |
+| Historic/georeferenced map | Preserve source vintage and georeferencing uncertainty; proximity is not confirmation |
+| Cross-domain join | Review re-identification, harmful inference, and authority before release |
+| Unknown review or rollback state | `HOLD` |
+
+A missing decision is not `ALLOW`. Client-side hiding, style filters, obscured labels, and undocumented coordinate jitter are not sufficient controls.
+
+### 12.2 Transform records
+
+An authorized public-safe transform must record:
+
+- input object and version;
+- policy and reviewer references;
+- reason and risk class;
+- transform method and parameters;
+- spatial and temporal precision before and after;
+- information removed or generalized;
+- reproducibility limits;
+- output digest;
+- allowed audience and use;
+- correction and rollback references.
+
+The transformed derivative remains downstream of the controlled evidence. It does not replace or silently mutate the source record.
+
+### 12.3 Safe diagnostics
+
+Logs and reports may include:
+
+- run ID;
+- source-family ID;
+- descriptor reference or opaque identifier;
+- stage;
+- finite outcome;
+- non-sensitive reason code;
+- safe retry time;
+- tool version;
+- truncated digest prefix where policy permits;
+- correlation ID.
+
+They must not include:
+
+- protected coordinates or reversible geometry clues;
+- confidential source locators;
+- site, burial, sacred-place, collection-security, landowner, or private-person identifiers;
+- credentials, cookies, tokens, signed URLs, or authorization headers;
+- raw response bodies;
+- restricted filenames where the name itself discloses protected information.
+
+[Back to top](#top)
+
+---
+
+## 13. No-change, retry, rate-limit, and error handling
+
+### 13.1 No-change
+
+A conditional response, immutable version match, or digest match may yield `NO_CHANGE` only when the comparison basis is recorded.
+
+A `NO_CHANGE` outcome must:
+
+- emit a heartbeat/no-change record;
+- preserve the prior source and release state;
+- create no new catalog entry solely for identical bytes;
+- create no new release manifest solely for identical bytes;
+- update operational freshness only where the owning contract allows;
+- remain distinguishable from `SKIP`, `ERROR`, and `RATE_LIMITED`.
+
+### 13.2 Retry
+
+Retry only when:
+
+- source terms permit it;
+- the error class is retryable;
+- the retry limit and delay are bounded;
+- the same run or a linked retry identity is preserved;
+- idempotency is understood;
+- the retry cannot duplicate RAW or downstream objects silently.
+
+Do not retry rights, sensitivity, cultural-authority, descriptor, schema, evidence, review, or rollback failures without an authorized state change.
+
+### 13.3 Rate limits
+
+On `RATE_LIMITED`:
+
+1. record a safe retry time or backoff class;
+2. preserve upstream terms and response metadata without secrets;
+3. do not rotate identities, bypass controls, distribute requests to evade limits, or scrape around an approved interface;
+4. do not downgrade the result to `ERROR` or pretend freshness was achieved;
+5. surface staleness according to the owning policy.
+
+### 13.4 Errors
+
+An error record must distinguish:
+
+- request/import failure;
+- authentication/authorization failure;
+- integrity failure;
+- parser/format failure;
+- schema failure;
+- geometry/time/identity failure;
+- policy denial;
+- review hold;
+- evidence/catalog closure failure;
+- storage/write failure;
+- post-write verification failure.
+
+Unexpected errors stop the transition. “Fail closed” means the prior safe state remains; it does not mean every arbitrary crash is accepted as proof that the intended control worked.
+
+[Back to top](#top)
+
+---
+
+## 14. Correction, withdrawal, and rollback
+
+### 14.1 Before promotion
+
+For an unpromoted refresh candidate:
+
+1. stop downstream work;
+2. preserve the candidate and reason in WORK or QUARANTINE as policy permits;
+3. invalidate incomplete derived candidates;
+4. retain the prior catalog and published state unchanged;
+5. open or update the bounded correction task;
+6. rerun from the earliest affected gate after authority changes.
+
+### 14.2 After a released derivative is affected
+
+Do not silently overwrite the release.
+
+1. Identify the affected source version, evidence bundles, catalog records, public carriers, caches, indexes, graph projections, summaries, and AI receipts.
+2. Classify the defect: rights drift, sensitivity miss, cultural-authority conflict, evidence gap, source-role error, integrity mismatch, geometry/time error, transform defect, stale source, or runtime exposure.
+3. Apply the safest immediate posture: restrict, withdraw, mark stale, deny, or restore the prior safe release.
+4. Preserve the original release record.
+5. Emit the owning correction or withdrawal record.
+6. Prepare a superseding refresh candidate through this runbook.
+7. Use [the rollback runbook](./ROLLBACK_RUNBOOK.md) for the governed reversal and [the promotion runbook](./PROMOTION_RUNBOOK.md) for any superseding release.
+8. Record derivative invalidation and recompile obligations.
+
+### 14.3 Rollback boundary
+
+Rollback is a governed state transition, not “copy the old file back.” It requires:
+
+- an identified prior safe release;
+- verified artifact digests;
+- an authorized rollback decision;
+- public-surface disablement or state change;
+- cache/index/tile/graph/summary invalidation as applicable;
+- audit records;
+- a correction path;
+- post-rollback verification.
+
+If the prior safe state or rollback authority cannot be identified, the promotion handoff remains `HOLD`.
+
+[Back to top](#top)
+
+---
+
+## 15. Reason codes
+
+Use the owning canonical reason-code vocabulary when one exists. Until then, the codes below are **PROPOSED interoperability labels** for operator records; they do not amend policy.
+
+| Reason code | Trigger | Required disposition |
 |---|---|---|
-| Steward authority and confidentiality protocol for Archaeology | Repo files, schemas, registry entries, tests, review records, release manifests | NEEDS VERIFICATION |
-| Public geometry thresholds and transform profiles | Sensitivity policy bundle + generalization recipes + negative fixtures | NEEDS VERIFICATION |
-| Oral history / cultural knowledge protocol | Cultural reviewer registry + consent records + access policy | NEEDS VERIFICATION |
-| Emergency public-layer disablement and rollback drill | Rollback runbook + drill record + `RollbackCard` fixtures | NEEDS VERIFICATION |
-| Source-rights register entries for every accepted Archaeology source family | `data/registry/sources/archaeology/` populated | NEEDS VERIFICATION |
-| Policy tooling actually wired (OPA / Conftest / cosign / DSSE) | CI workflow + signed manifest example | NEEDS VERIFICATION |
-| `schemas/contracts/v1/domains/archaeology/` schema home | ADR-0001 acceptance + mounted directory | NEEDS VERIFICATION |
-| Public no-leak route guard for `RAW` / `WORK` / `QUARANTINE` / candidate stores | Negative integration test in CI | NEEDS VERIFICATION |
-| AI exact-location denial covered by Focus Mode tests | Adapter fixtures + citation validation + DENY outcome | NEEDS VERIFICATION |
+| `source_not_admitted` | No accepted admission decision resolves | `HOLD`; do not fetch |
+| `descriptor_placeholder` | Tracked file is proposal metadata rather than a complete descriptor | `HOLD` |
+| `descriptor_unresolved` | Descriptor identity or version cannot be resolved | `HOLD` |
+| `owner_unresolved` | Accountable steward/reviewer route is absent | `HOLD` |
+| `rights_unknown` | Rights or intended use not verified | `HOLD` or `DENY` |
+| `rights_expired_or_changed` | Terms changed or validity window ended | Stop; reassess admission and derivatives |
+| `cultural_authority_unresolved` | Required consent, authority, or reviewer is missing/conflicted | `HOLD` or `DENY` |
+| `sensitivity_unresolved` | Precision, exploitation risk, or transform obligation unresolved | QUARANTINE or `DENY` |
+| `connector_absent` | No approved executable connector/import path | `HOLD` |
+| `fixture_absent_or_vacuous` | Required no-network proof is missing or non-executable | `HOLD` |
+| `policy_scaffold_only` | Policy file presence does not prove enforcement | `HOLD` |
+| `schema_scaffold_only` | Candidate depends on permissive/undefined schema shape | `HOLD` |
+| `rate_limited` | Upstream requests delay | `RATE_LIMITED` |
+| `no_change` | Conditional/version/digest comparison is unchanged | `NO_CHANGE`; no churn |
+| `hash_mismatch` | Bytes and declared digest disagree | QUARANTINE; integrity event |
+| `unexpected_content` | Type, size, encoding, or package differs from admission | QUARANTINE |
+| `schema_invalid` | Candidate fails active schema | WORK or QUARANTINE |
+| `geometry_invalid` | Geometry invalid or repair would change identity/meaning | `HOLD` for steward review |
+| `candidate_promoted_without_review` | Candidate/model is relabeled as site | QUARANTINE or `DENY` |
+| `evidence_unresolved` | Evidence reference cannot resolve | `HOLD_AT_PROCESSED`; downstream `ABSTAIN` |
+| `review_missing` | Required human review absent | `HOLD_AT_CATALOG` |
+| `rollback_target_unknown` | No prior safe state or reversal path | `HOLD_AT_CATALOG` |
+| `sensitive_log_leak` | Restricted values enter logs or public review surfaces | Stop, contain, rotate secrets if applicable, and open incident/correction work |
+| `public_boundary_violation` | RAW/WORK/QUARANTINE/restricted data reaches public path | Disable exposure, initiate correction/rollback, investigate |
+| `kill_switch_engaged` | Owning operational control blocks the lane | Stop all affected transitions |
 
-[Back to top ↑](#archaeology-source-refresh-runbook)
-
----
-
-## 17. Related docs
-
-- `docs/doctrine/directory-rules.md` — placement law and authority order
-- `docs/doctrine/lifecycle-law.md` — universal `RAW → PUBLISHED` invariant
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default
-- `docs/doctrine/trust-membrane.md` — public clients use governed APIs only
-- `docs/domains/archaeology/README.md` — domain identity, scope, ubiquitous language *(PROPOSED)*
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — standard `SourceDescriptor` fields *(PROPOSED)*
-- `docs/runbooks/ui_VALIDATION.md` — UI validation, contract, e2e smoke *(PROPOSED)*
-- `docs/runbooks/ui_ROLLBACK.md` — rollback and feature-flag steps *(PROPOSED)*
-- `docs/runbooks/governed_ai_VALIDATION.md` — Focus Mode evidence/citation/policy validation *(PROPOSED)*
-- `docs/adr/ADR-0001-schema-home.md` — schema home decision *(PROPOSED)*
-- `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide verification register *(PROPOSED)*
-- `docs/registers/DRIFT_REGISTER.md` — placement and convention drift *(PROPOSED)*
-
-<!-- TODO: replace each PROPOSED link with a verified path once the mounted repo is inspected. Stable anchors here intentionally match the runbook section IDs (`#1-scope`, `#9-refresh-procedure`, etc.) so cross-doc references survive minor edits. -->
+[Back to top](#top)
 
 ---
 
-## Appendix A — Worked refresh skeleton (illustrative)
+## 16. Operator record template
 
-> [!NOTE]
-> The block below is **illustrative**. Commands, file paths, and tool names are PROPOSED. Replace with verified pipelines and CI jobs from the mounted repo before treating any of this as executable.
+This YAML is a **documentation template**, not a canonical schema and not an executable configuration. Store the completed record only in the accepted owning artifact family.
 
-<details>
-<summary><b>Click to expand: illustrative refresh skeleton for a State Site Inventory vintage</b></summary>
-
-```text
-# Step 0 — Preflight (illustrative)
-kfm preflight \
-    --domain archaeology \
-    --source state-site-inventory \
-    --check rights,sensitivity,steward,cultural_reviewer,rollback_target
-
-# Step 1 — Admission (illustrative)
-kfm source fetch \
-    --descriptor data/registry/sources/archaeology/state-site-inventory.descriptor.yaml \
-    --conditional-get \
-    --emit-receipts raw_capture,run
-
-# Step 2 — Normalization (illustrative)
-kfm pipeline run \
-    --spec pipeline_specs/archaeology/state-site-inventory.normalize.yaml \
-    --quarantine-on policy_fail,schema_fail,geometry_invalid
-
-# Step 3 — Validation (illustrative)
-kfm validate \
-    --validators evidence_bundle_required,candidate_not_site,public_no_leak,\
-                 rights_and_cultural_review,exact_sensitive_geometry_denial,\
-                 stale_source,no_change_no_churn \
-    --negative-fixtures fixtures/domains/archaeology/
-
-# Step 4 — Catalog closure (illustrative)
-kfm catalog close \
-    --domain archaeology \
-    --require evidence_bundle,catalog_matrix,digest_closure
-
-# Step 5 — Release (illustrative — requires distinct release authority)
-kfm release promote \
-    --domain archaeology \
-    --review-records steward,cultural \
-    --rollback-target release/last_safe/archaeology \
-    --correction-path docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md#14-correction-path
-
-# Step 6 — Post-release smoke (illustrative)
-kfm smoke \
-    --no-public-raw \
-    --focus-mode exact-location-denial \
-    --rollback-dry-run
+```yaml
+source_refresh_run:
+  run_id: "<stable-run-id>"
+  domain: archaeology
+  repository:
+    base_commit: "<40-character-commit-sha>"
+    branch_or_work_ref: "<ref>"
+  source:
+    family_id: "<non-sensitive-family-id>"
+    descriptor_ref: "<immutable-descriptor-ref>"
+    descriptor_digest: "sha256:<digest>"
+    admission_decision_ref: "<accepted-authority-ref>"
+    admitted: false
+    source_role: "<resolved-role>"
+    prior_version_ref: "<prior-version-or-null>"
+    expected_version_ref: "<expected-version-or-null>"
+  authority:
+    source_steward_ref: "<role-or-review-ref>"
+    rights_review_ref: "<review-ref>"
+    sensitivity_review_ref: "<review-ref>"
+    cultural_review_ref: "<review-ref-or-not-applicable-with-reason>"
+    connector_or_importer_ref: "<immutable-version-ref>"
+    policy_ref: "<immutable-policy-ref>"
+    schema_ref: "<immutable-schema-ref>"
+  preflight:
+    overlap_check: "<pass|hold>"
+    no_network_proof_ref: "<proof-ref>"
+    rollback_target_ref: "<prior-safe-release-or-not-applicable>"
+    correction_path_ref: "<ref>"
+  retrieval:
+    method: "<conditional-http|package-import|other-approved-method>"
+    started_at: "<RFC3339>"
+    completed_at: "<RFC3339>"
+    prior_etag_or_digest: "<safe-value-or-null>"
+    outcome: "<ADMIT|QUARANTINE|DENY|NO_CHANGE|SKIP|RATE_LIMITED|ERROR|HOLD>"
+    reason_codes: []
+  outputs:
+    raw_capture_ref: "<ref-or-null>"
+    quarantine_ref: "<ref-or-null>"
+    run_receipt_ref: "<ref-or-null>"
+    transform_receipt_refs: []
+    validation_report_refs: []
+    policy_decision_refs: []
+    evidence_bundle_refs: []
+    catalog_candidate_refs: []
+    promotion_candidate_ref: "<ref-or-null>"
+  safety:
+    sensitive_values_logged: false
+    network_scope_as_approved: false
+    public_surface_changed: false
+  follow_up:
+    next_actor_role: "<role>"
+    open_items: []
+    release_state: "unchanged"
+    deployment_state: "unchanged"
+    publication_state: "unchanged"
 ```
 
-This skeleton is **PROPOSED**. The KFM CLI name, subcommands, and flags shown here have not been verified against any mounted repository in this session. They exist to illustrate the gate sequence, not to prescribe an interface.
+The `admitted`, `network_scope_as_approved`, and output fields must reflect evidence, not desired state. At the pinned repository snapshot, a truthful initial packet would set `admitted: false`, `outcome: HOLD`, and `public_surface_changed: false`.
 
-</details>
-
----
-
-## Appendix B — Operator pre-flight checklist
-
-<details>
-<summary><b>Click to expand: copy-into-PR pre-flight checklist</b></summary>
-
-```text
-[ ] SourceDescriptor read; role, authority, rights, sensitivity, cadence, steward verified
-[ ] Cultural / tribal reviewer named and reachable (where applicable)
-[ ] Rights window currently valid
-[ ] Prior PUBLISHED rollback target known and reachable
-[ ] Archaeology policy bundle version recorded; negative fixtures green in CI
-[ ] Kill switch state checked
-[ ] No unresolved CorrectionNotice against this source (or this refresh is the correction)
-[ ] Refresh interval respects upstream terms (rate, snapshot-only, etc.)
-[ ] Separation of duties confirmed: release manager != connector operator
-[ ] Verification backlog re-read; any item that would block this refresh raised before fetch
-```
-
-</details>
-
-[Back to top ↑](#archaeology-source-refresh-runbook)
+[Back to top](#top)
 
 ---
 
-### Footer
+## 17. Review and handoff checklist
 
-- **Related docs:** see [§17](#17-related-docs)
-- **Last updated:** 2026-05-13
-- **Status:** `draft` — PROPOSED implementation; CONFIRMED doctrine for lifecycle, sensitivity posture, and trust membrane.
-- [Back to top ↑](#archaeology-source-refresh-runbook)
+### 17.1 Before retrieval
+
+- [ ] Exact repository commit and target bytes recorded.
+- [ ] No overlapping PR or active migration owns the same surface.
+- [ ] Complete admitted descriptor resolved.
+- [ ] Source-authority entry or accepted equivalent resolved.
+- [ ] Source role and authority class fixed.
+- [ ] Rights, terms, access, attribution, redistribution, and embargo current.
+- [ ] Sensitivity and precision posture current.
+- [ ] Cultural/community/Tribal authority and review routing resolved where applicable.
+- [ ] Approved connector/importer version identified.
+- [ ] No-network positive and negative fixtures pass non-vacuously.
+- [ ] Approved RAW/QUARANTINE targets identified.
+- [ ] Correction and rollback routes recorded.
+- [ ] Logs and diagnostics reviewed for sensitive-data minimization.
+
+### 17.2 Before catalog/promotion handoff
+
+- [ ] Capture and transform lineage closes.
+- [ ] Source role remains unchanged.
+- [ ] Candidate-versus-site rule passes.
+- [ ] Active schema and policy versions recorded.
+- [ ] Geometry, time, identity, rights, sensitivity, and integrity checks pass.
+- [ ] Every consequential evidence reference resolves.
+- [ ] Limitations and uncertainty are visible.
+- [ ] Public-safe transform is documented and reproducible where used.
+- [ ] No RAW, WORK, QUARANTINE, restricted, or candidate path is public.
+- [ ] Prior safe release and rollback target resolve.
+- [ ] Required reviewers are identified and independent where required.
+- [ ] Promotion packet is complete.
+- [ ] Source refresh stops before release-state mutation.
+
+### 17.3 PR handoff
+
+- [ ] Changed files match the stated scope.
+- [ ] Exact-head validation is reported separately from human review.
+- [ ] Introduced failures are distinguished from inherited baseline failures.
+- [ ] No claim of source activation, release, deployment, promotion, or publication is made.
+- [ ] Rollback is “close/revert the focused PR or commit,” not an undocumented file swap.
+- [ ] Remaining `UNKNOWN`, `NEEDS VERIFICATION`, and `HOLD` items are visible.
+
+[Back to top](#top)
+
+---
+
+## 18. Verification backlog
+
+| ID | Verification item | Evidence required to close | Current state |
+|---|---|---|---|
+| `ARCH-SR-001` | Populate and govern source-authority entries | Accepted register entries with owner, rights, sensitivity, role, and non-effects | `HOLD` |
+| `ARCH-SR-002` | Replace proposal YAMLs with complete descriptors | Schema-valid descriptor records plus review and admission decisions | `HOLD` |
+| `ARCH-SR-003` | Identify accountable stewards and reviewers | CODEOWNERS or accepted governance records plus current role assignments | `NEEDS VERIFICATION` |
+| `ARCH-SR-004` | Implement or identify one controlled source connector/importer | Executable code, pinned dependencies, source terms, tests, safe finite outcomes | `HOLD` |
+| `ARCH-SR-005` | Replace placeholder pipeline specs | Executable specs tied to implementation, schemas, policy, outputs, and tests | `HOLD` |
+| `ARCH-SR-006` | Prove policy enforcement | Non-vacuous policy tests and exact-head CI evidence for expected deny/hold reasons | `HOLD` |
+| `ARCH-SR-007` | Prove active schema fitness | Non-permissive schema, semantic contract, valid/invalid fixtures, consumer evidence | `HOLD` |
+| `ARCH-SR-008` | Populate source-admission fixtures | Synthetic public-safe positive and negative fixture payloads | `HOLD` |
+| `ARCH-SR-009` | Prove no-public-leak boundary | Integration tests showing public clients cannot resolve internal lifecycle stores | `NEEDS VERIFICATION` |
+| `ARCH-SR-010` | Prove cultural-authority routing | Accepted reviewer/consent/access protocol and synthetic denial/hold tests | `NEEDS VERIFICATION` |
+| `ARCH-SR-011` | Define public-safe geometry profiles | Accepted sensitivity policy, transform recipes, receipts, and re-identification tests | `NEEDS VERIFICATION` |
+| `ARCH-SR-012` | Establish one promotion candidate and rollback target | Complete candidate packet, prior safe state, correction and rollback drill evidence | `HOLD` |
+| `ARCH-SR-013` | Verify source-refresh observability | Safe structured outcomes, metrics, logs, redaction, retention, and incident routing | `NEEDS VERIFICATION` |
+| `ARCH-SR-014` | Reconcile stale sibling runbooks and empty lane README | Same-path repository-grounded updates without authority collision | `PROPOSED follow-up` |
+| `ARCH-SR-015` | Confirm required hosted checks and ruleset coupling | Exact-head workflow results and current ruleset evidence | `NEEDS VERIFICATION` |
+
+The backlog is not permission to execute around missing controls. Each `HOLD` remains blocking for the affected transition.
+
+[Back to top](#top)
+
+---
+
+## 19. Related documents
+
+### Governing placement and architecture
+
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [ADR-0029 — adopted Directory Rules v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [ADR-0001 — schema-home decision package](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — still proposed as a dedicated ADR; the Directory Rules placement default is separately adopted
+- [Runbook index](../README.md)
+
+### Archaeology domain and source boundaries
+
+- [Archaeology domain README](../../domains/archaeology/README.md)
+- [Archaeology data lifecycle](../../domains/archaeology/DATA_LIFECYCLE.md)
+- [Archaeology cultural review](../../domains/archaeology/CULTURAL_REVIEW.md)
+- [Source Descriptor Standard](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
+- [Source-authority register](../../../control_plane/source_authority_register.yaml)
+- [Archaeology source registry](../../../data/registry/sources/archaeology/README.md)
+- [Archaeology connector boundary](../../../connectors/archaeology/README.md)
+- [Archaeology pipeline-spec lane](../../../pipeline_specs/archaeology/README.md)
+- [Archaeology policy lane](../../../policy/domains/archaeology/README.md)
+- [Archaeology test lane](../../../tests/domains/archaeology/README.md)
+- [Archaeology release-candidate lane](../../../release/candidates/archaeology/README.md)
+
+### Sibling procedures
+
+- [No-network test runbook](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Promotion runbook](./PROMOTION_RUNBOOK.md)
+- [Rollback runbook](./ROLLBACK_RUNBOOK.md)
+
+[Back to top](#top)
+
+---
+
+## Appendix A — Current execution-readiness worksheet
+
+| Readiness question | Pinned-snapshot answer | Operator action |
+|---|---|---|
+| Is the target path valid? | `CONFIRMED` | Update in place |
+| Is an archaeology source admitted in the authority register? | No entry is present | `HOLD` |
+| Are the tracked source YAMLs complete descriptors? | No; they are proposal placeholders | `HOLD` |
+| Is an executable archaeology connector present? | Not verified; lane contains README and `.gitkeep` | `HOLD` |
+| Are the pipeline specs executable? | Representative file is a proposal placeholder | `HOLD` |
+| Are source-admission fixtures populated? | No executable payload verified | `HOLD` |
+| Are representative archaeology tests non-vacuous? | Representative named test is only a proposal docstring | `HOLD` |
+| Is exact-location policy fully wired and proved? | Rego scaffold exists; enforcement not proved | `HOLD` |
+| Is schema fitness proved? | Mixed maturity; representative core schema is permissive scaffold | `HOLD` |
+| Is a release candidate and rollback target present? | Only release-candidate README verified | `HOLD` |
+| Can documentation modernization proceed? | Yes, on a feature branch with changed-area validation | Proceed to draft PR |
+| Can live source refresh proceed? | No | Remain `HOLD` |
+
+---
+
+## Appendix B — Material preserved and corrected from v0.1
+
+### Preserved
+
+- archaeology's restricted-by-default posture;
+- exact-location, burial, human-remains, sacred-site, collection-security, private-land, and looting-risk controls;
+- candidate-versus-confirmed distinction;
+- source-family inventory;
+- role separation and cultural-review requirement where applicable;
+- lifecycle gates;
+- no-change heartbeat behavior;
+- EvidenceRef-to-EvidenceBundle closure;
+- distinct receipts, proofs, reviews, release, correction, and rollback objects;
+- sensitivity transforms;
+- correction and rollback procedures;
+- structured failure reasons;
+- operator preflight checklist.
+
+### Corrected
+
+- replaced the “no mounted repository” premise with commit-pinned current evidence;
+- changed the target path from `PROPOSED` to `CONFIRMED PLACE`;
+- corrected the ADR-0001 filename and separated its proposed lifecycle state from the adopted Directory Rules schema-route default;
+- distinguished tracked scaffolds from executable implementation;
+- recorded the empty source-authority register;
+- recorded placeholder descriptors, connector absence, placeholder pipeline specs, vacuous tests, and absent release candidate;
+- removed the fabricated `kfm ...` command skeleton;
+- narrowed this runbook to source refresh and promotion handoff instead of duplicating release authority;
+- made `HOLD` the truthful default for live refresh;
+- separated exact-head CI, human review, merge, release, deployment, promotion, and publication.
+
+---
+
+### Document status
+
+- **Path:** `docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md`
+- **Version:** `v1.0.0`
+- **Evidence snapshot:** `main@6b0f0f5353754553e0ff3800206f5479b069921a`
+- **Operational state:** documentation modernized; live-source execution remains `HOLD`
+- **Release, deployment, promotion, publication:** unchanged
+
+[Back to top](#top)

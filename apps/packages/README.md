@@ -180,7 +180,6 @@ The canonical `apps/` map contains:
 apps/governed-api/
 apps/explorer-web/
 apps/review-console/
-apps/cli/
 apps/workers/
 apps/admin/
 ```

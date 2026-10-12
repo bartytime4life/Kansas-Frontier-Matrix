@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/nws-api.md
   - docs/sources/catalog/noaa/station-climate-products.md
   - docs/sources/catalog/noaa/noaa-uscrn.md
@@ -23,7 +21,7 @@ related:
   - docs/domains/atmosphere/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, ncei, storm-events, hazards, severe-weather, historical, event-catalog, tornado, hail, flash-flood, multi-modal]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -33,6 +31,9 @@ notes:
   - "Dominant anti-collapse: Storm Events record ≠ observed flood inundation (CONFIRMED from NOAA family entry §5.2). Plus: damage report ≠ wind/hail measurement; historical record ≠ current event; reporting bias means absence ≠ no hazard."
   - "Anchored in KFM-P19-FEAT-0006 (CONFIRMED): tornado path overlays with event IDs, episode IDs, checksums, source-file evidence refs."
   - "Event ID and episode ID are part of Item identity — re-issuance or correction produces new Items per the version-in-identity pattern."
+owning_root: docs/
+responsibility: "Documentation for NOAA Storm Events; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA Storm Events
@@ -229,8 +230,8 @@ Where `finalized_state ∈ { preliminary, finalized, corrected_v<n> }` — `prel
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling — operational counterpart** | [`nws-api.md`](./nws-api.md) | NWS API issues **operational** warnings (`regulatory-context`); Storm Events is the **historical record** of events after the warning lifecycle. Both feed Hazards but at different lifecycle stages. |
 | **Sibling — adjacent observation** | [`station-climate-products.md`](./station-climate-products.md) | Both NCEI-distributed; Storm Events is event-keyed while station-climate is station-keyed. Cross-product comparison products possible (e.g., severe-weather events overlaid on station climate context). |
 | **Sibling — reference observation** | [`noaa-uscrn.md`](./noaa-uscrn.md) | Continuous station obs vs discrete event records — fundamentally different record structure. |
@@ -241,7 +242,7 @@ Where `finalized_state ∈ { preliminary, finalized, corrected_v<n> }` — `prel
 | **Cross-root (domain, primary)** | [`docs/domains/hazards/`](../../../domains/hazards/) | Owns `HazardEvent`, `HazardObservation`, `HazardTimeline`, `ImpactArea`. |
 | **Cross-root (domain, adjacency)** | [`docs/domains/atmosphere/`](../../../domains/atmosphere/) | Climate-of-severe-weather analyses. |
 | **Cross-root (domain, adjacency)** | [`docs/domains/agriculture/`](../../../domains/agriculture/) | Crop-damage records for ag-impact context. |
-| **Cross-root (domain, adjacency)** | [`docs/domains/settlements/`](../../../domains/settlements/) | Property-damage records in the built environment. |
+| **Cross-root (domain, adjacency)** | `docs/domains/settlements/` (not present) | Property-damage records in the built environment. |
 | **Doctrine** | [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) | Placement authority. |
 
 ```mermaid
@@ -302,7 +303,7 @@ PROPOSED — the descriptor should at minimum carry:
 - `source_role` — `observation` by default for finalized records; `candidate` for preliminary records.
 - `role_authority` — NOAA NCEI (the operational catalog steward); NWS forecasters as the validating reviewers.
 - `rights` — license, redistribution terms, attribution. Storm Events is generally a U.S. government work in the public domain; per-product terms and any narrative-text redistribution caveats NEEDS VERIFICATION.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md); narrative-text and casualty fields warrant attention.
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present); narrative-text and casualty fields warrant attention.
 - `cadence` — NCEI typically updates Storm Events on a multi-month cycle as forecasters finalize records; NEEDS VERIFICATION against current NCEI documentation.
 - `event_id_basis` — NCEI-issued event identifier scheme (per KFM-P19-FEAT-0006).
 - `episode_id_basis` — NCEI-issued episode identifier scheme.
@@ -535,7 +536,7 @@ PROPOSED — Storm Events records carry quality and uncertainty information that
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -780,22 +781,22 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./nws-api.md`](./nws-api.md) — Operational counterpart (`regulatory-context` warnings to Storm Events' historical observation).
 - [`./station-climate-products.md`](./station-climate-products.md) — Adjacent NCEI-distributed product (station obs and climate aggregates).
 - [`./noaa-uscrn.md`](./noaa-uscrn.md) — Reference-grade station obs (different record structure entirely).
 - [`./hrrr-smoke.md`](./hrrr-smoke.md) — Forecast counterpart (predicts; Storm Events documents what occurred).
 - [`./hms-fire-smoke.md`](./hms-fire-smoke.md), [`./goes-abi-aod.md`](./goes-abi-aod.md) — Other NOAA-family slices.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Primary domain (HazardEvent, HazardObservation, HazardTimeline, ImpactArea).
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Adjacency (climate-of-severe-weather).
 - [`../../../domains/agriculture/README.md`](../../../domains/agriculture/README.md) — Adjacency (crop damage).
-- [`../../../domains/settlements/README.md`](../../../domains/settlements/README.md) — Adjacency (property damage in built environment).
+- `../../../domains/settlements/README.md` (not present) — Adjacency (property damage in built environment).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile.
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/ncei-storm-events` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `HazardEvent` / `HazardObservation` / `HazardTimeline` / `ImpactArea` schemas once authored.

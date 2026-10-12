@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-pass18-hyperparameter-tuning-receipt-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hyperparameter-tuning-receipt.yml",
+    "contracts/evidence/hyperparameter_tuning_receipt.md",
+    "docs/intake/exploratory/pass-18-hyperparameter-tuning-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/hyperparameter_tuning_receipt/cases.json",
+    "schemas/contracts/v1/evidence/hyperparameter_tuning_receipt.schema.json",
+    "tests/validators/evidence/test_validate_hyperparameter_tuning_receipt.py",
+    "tools/validators/evidence/validate_hyperparameter_tuning_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hyperparameter-tuning-receipt.yml": "sha256:15f49601f153e77099e09e9d8c0b34fdc06128041bef406d35e5c61c3666ef80",
+    "contracts/evidence/hyperparameter_tuning_receipt.md": "sha256:78a8222958fceaaedc70c52ba92dd03746b57134c72af66455d0031fa7dd5f56",
+    "docs/intake/exploratory/pass-18-hyperparameter-tuning-receipt-source-map.md": "sha256:ae8c7ab397be6613b8cda80416fe8dfdcdd9b5b11f83a719d82f23de6edf86d3",
+    "fixtures/contracts/v1/evidence/hyperparameter_tuning_receipt/cases.json": "sha256:a003a01ab9db55c566133096e44c97a9a6c15af7adc5da3ee9309fb9551837b8",
+    "schemas/contracts/v1/evidence/hyperparameter_tuning_receipt.schema.json": "sha256:b77a1b1d163eceb5dcef5227cbe6573985e05e91ba4ba1bc1254c6475b74e38b",
+    "tests/validators/evidence/test_validate_hyperparameter_tuning_receipt.py": "sha256:b4290b554f07b55ab8f817229d5b4c613649e9ad37aa4fa6c86bd85eef914e48",
+    "tools/validators/evidence/validate_hyperparameter_tuning_receipt.py": "sha256:ae5ba4e57566a7f9e8814cb660c7f40e166aeea1e336e2eeff0a49290f55d39d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:78a8222958fceaaedc70c52ba92dd03746b57134c72af66455d0031fa7dd5f56",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:4f548f4dc326242aa8e88750a85eb273e70fa579b559dcaf4cc1db3cc32440fa",
+      "sha256:769e69cb891bb8a9d3649600ef08e67e08ef378c81e17ce6fcbed7647e76eca2",
+      "sha256:cb6275b4bf2c44e5fc56b166b1161ceb859a1de0562462814ad5b8ad6fd111b6",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "Supplied AI Concepts Using Python reference; private discovery identifier withheld",
+      "Supplied Pass 18 atlas; private discovery identifier withheld"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-160",
+      "attachment://AI_Concepts_Using_Python.pdf#section=4.1.3.5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/model_evaluation_split_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/predictive_layer_generalization_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/governance/model_card_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hyperparameter-tuning-receipt.yml": "CONFIRMED",
+    "contracts/evidence/hyperparameter_tuning_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-hyperparameter-tuning-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/hyperparameter_tuning_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/hyperparameter_tuning_receipt.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_hyperparameter_tuning_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_hyperparameter_tuning_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic hyperparameter-tuning receipt tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "full-evidence-validator-lane",
+      "outcome": "PASS",
+      "reason": "All 285 evidence-validator tests passed."
+    },
+    {
+      "gate": "adjacent-model-card-regression",
+      "outcome": "PASS",
+      "reason": "All ten ModelCardEnvelope tests passed."
+    },
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-hyperparameter-tuning-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-160"
+    },
+    {
+      "id": "ai-concepts-hyperparameter-corroboration",
+      "validated": true,
+      "evidence_ref": "attachment://AI_Concepts_Using_Python.pdf#section=4.1.3.5"
+    },
+    {
+      "id": "model-evaluation-split-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/model_evaluation_split_receipt.md"
+    },
+    {
+      "id": "predictive-generalization-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/predictive_layer_generalization_assessment.md"
+    },
+    {
+      "id": "model-card-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/governance/model_card_envelope.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:37:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only hyperparameter-tuning receipt. It records method, search-space binding, seed, trial accounting, selected declared-public-safe scalars, objective, reproducibility posture, and disclosure without accessing data, executing training or evaluation, recomputing metrics, resolving evidence, or creating policy, review, release, deployment, publication, or public-use authority."
+}

@@ -8,7 +8,7 @@
         "contract_doc": "contracts/source/source_descriptor.md",
         "canonical_schema_path": "schemas/contracts/v1/sources/source_descriptor.schema.json",
         "legacy_schema_path": "schemas/contracts/v1/source/source_descriptor.schema.json",
-        "fixtures_root": "tests/fixtures/sources/source_descriptor/",
+        "fixtures_root": "fixtures/contracts/v1/source/source_descriptor/",
         "validator": "tools/validators/sources/validate_source_descriptor.py",
         "policy": "policy/source/",
         "registry_home": "data/registry/sources/",

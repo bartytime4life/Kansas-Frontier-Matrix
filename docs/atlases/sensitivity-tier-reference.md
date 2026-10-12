@@ -1,30 +1,27 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
+doc_id: kfm://doc/docs-atlases-sensitivity-tier-reference
 title: Sensitivity / Rights Tier Reference (Atlas v1.1 §24.5 register extract)
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: OWNER_TBD (sensitivity reviewer; release authority; sovereignty reviewer; docs steward)
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: "Provide a human navigational extract of Atlas v1.1 sensitivity and rights tiers without becoming policy, permission, source, evidence, release, or publication authority."
+truth_posture: "CONFIRMED source extraction and current same-path repository identity / PROPOSED tier scheme and implementation surfaces / NEEDS VERIFICATION adoption, ownership, implementation depth, review, release, and publication"
 related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/atlases/source-role-anti-collapse.md
   - docs/atlases/stale-state-reference.md
-  - docs/atlases/decision-outcome-envelope.md
-  - docs/atlases/master-api-surface.md
-  - docs/adr/ADR-S-05-sensitivity-tier-scheme.md
+  - docs/atlas/master-api-surface.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/REDACTION_DETERMINISM.md
   - docs/registers/DRIFT_REGISTER.md
-  - contracts/correction/redaction_receipt.md
   - contracts/correction/correction_notice.md
-  - contracts/correction/representation_receipt.md
-  - contracts/data/aggregation_receipt.md
-  - contracts/governance/review_record.md
-  - contracts/governance/policy_decision.md
+  - contracts/governance/ReviewRecord.md
   - contracts/release/release_manifest.md
   - contracts/release/rollback_card.md
   - schemas/contracts/v1/
@@ -39,7 +36,7 @@ notes:
   - "EvidenceBundle, source dossiers, and schemas under schemas/contracts/v1/... remain the canonical sources for any specific claim (Atlas v1.1 Ch. 24 preamble)."
   - "Tier scheme T0-T4 is PROPOSED per §24.5.1; ADR-S-05 governs canonical adoption."
   - "Corpus-internal divergence: Pass 10 C6-01 uses a 0-5 rubric (6 levels); Atlas v1.1 §24.5 uses T0-T4 (5 tiers). Reconciliation is ADR-S-05 territory. See §12.1."
-  - "Implementation depth (redaction profile libraries, validators, policy packages, schema headers) is PROPOSED throughout and requires mounted-repo verification."
+  - "Implementation depth (redaction profile libraries, validators, policy packages, schema headers) remains PROPOSED; the 2026-08-28 same-path identity repair verifies only this document's repository placement, metadata, and topology relationship."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -60,10 +57,10 @@ notes:
 > **Status:** `draft`.
 > **Authority:** Navigational extract. `CONFIRMED` doctrine for the §24.5 register body (extracted faithfully). The tier scheme itself is explicitly labeled `PROPOSED` in §24.5.1 of the source; ADR-S-05 governs canonical adoption.
 > **Truth posture:** `CONFIRMED` doctrine framing (safest-representation principle, five tier classes, governed transitions) / `PROPOSED` tier names, transform vocabulary, per-domain defaults, schema paths, policy packages / `NEEDS VERIFICATION` mounted-repo presence of every contract, schema, policy, validator, receipt family / `UNKNOWN` repo implementation depth.
-> **Open ADR:** [`ADR-S-05`](../adr/ADR-S-05-sensitivity-tier-scheme.md) — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise (reconcile with Pass 10 C6-01 0–5 rubric).
+> **Open ADR:** `ADR-S-05` (not present) — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise (reconcile with Pass 10 C6-01 0–5 rubric).
 > **Owner:** `OWNER_TBD`.
 
-**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Tier scheme](#2-tier-scheme-§2451) · [Allowed transforms](#3-allowed-transforms-vocabulary) · [Per-domain tier matrix](#4-per-domain-tier-matrix-§2452) · [Tier transitions](#5-tier-transitions-§2453) · [Deny-by-Default Register cross-reference](#6-deny-by-default-register-cross-reference-§205) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
+**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Tier scheme](#2-tier-scheme-2451) · [Allowed transforms](#3-allowed-transforms-vocabulary) · [Per-domain tier matrix](#4-per-domain-tier-matrix-2452) · [Tier transitions](#5-tier-transitions-2453) · [Deny-by-Default Register cross-reference](#6-deny-by-default-register-cross-reference-205) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
 
 ---
 
@@ -426,8 +423,8 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 |---|---|
 | [`docs/atlases/source-role-anti-collapse.md`](./source-role-anti-collapse.md) *(extract of §24.1)* | Source role and sensitivity tier are sibling fields on `SourceDescriptor`, both fixed at admission. Synthetic content (collapse pattern 6) and sensitive-domain interlock (§7 row 7 of source-role register) interact directly with §4 row 13 of this register. |
 | [`docs/atlases/stale-state-reference.md`](./stale-state-reference.md) *(extract of §24.8)* | Stale-state marker 7 (Rights status changed) interacts directly with §5 tier-transitions: a rights change can demote a published tier. §5.2 derivative-invalidation rule cross-references the §6 correction-vs-stale decision rule in stale-state. |
-| [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | §7 enforcement surfaces use the envelope vocabulary `DENY` / `ABSTAIN` / `HOLD` / `ERROR` for sensitivity outcomes. |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
+| `docs/atlases/decision-outcome-envelope.md` (not present) *(extract of §24.3)* | §7 enforcement surfaces use the envelope vocabulary `DENY` / `ABSTAIN` / `HOLD` / `ERROR` for sensitivity outcomes. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
 
 ### 10.2 Other Atlas v1.1 Chapter 24 registers
 
@@ -558,7 +555,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | `directory-rules.md` v1.2 §6.6 fixture substructure + §7.4 + ADR-0001 | `CONFIRMED doctrine` | Grounds §9.2 schema paths and §9.6 fixture layout. | Doctrine, not implementation. |
 | `docs/atlas/README.md` and `docs/atlas/source-role-anti-collapse.md` (prior turns, this session) | `CONFIRMED pointer-page status` | Establishes the deprecated-lane pattern; this canonical-lane register supersedes the prior pointers in scope. | Pointer; not authority. |
 
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected. Every implementation claim is `PROPOSED` and bounded to doctrine.
+**Current repository evidence boundary.** The 2026-08-28 same-path identity repair inspected this file, its parent lane, accepted Directory Rules, and the repository topology and documentation validators at `main@2a205c8df31ff95a61f72a52489336b924a791ac`. That confirms only this document's repository identity and human-reference responsibility. Every policy, contract, schema, validator, runtime, review, release, and publication claim remains `PROPOSED` or `NEEDS VERIFICATION` as labeled.
 
 </details>
 

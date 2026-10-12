@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-pipeline-ci-finalization-20260918",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
+    ".github/workflows/local-data-store.yml",
+    ".github/workflows/native-explorer-check.yml",
+    ".github/workflows/offline-pipeline-check.yml",
+    ".github/workflows/pipeline-spec-declarations.yml",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml",
+    ".github/workflows/soil-mesonet-station-health.yml",
+    "Makefile",
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json",
+    "pnpm-lock.yaml",
+    "tests/ci/test_install_python_ci.py",
+    "tools/ci/README.md",
+    "tools/ci/install_python_ci.py",
+    "tools/ci/python-geo.lock"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "sha256:73d1e6e6e71b3b0e876267b4b91968fb0d97b1652006e5d2e238da5abba57a41",
+    ".github/workflows/local-data-store.yml": "sha256:eca3de66ba316fb7dcfffe4dc36ceb4c63ded265cffa57901a7122590001c69b",
+    ".github/workflows/native-explorer-check.yml": "sha256:8b80c946ec8f14f9a7a337b57922b18cc20351d6779f240cf9e77725b46a32ca",
+    ".github/workflows/offline-pipeline-check.yml": "sha256:17dbd30fd2d0167ac8c3c470a1327b41a170c1667ff82dd0574cfad86a6a00fa",
+    ".github/workflows/pipeline-spec-declarations.yml": "sha256:b6cb4dda982a0a596a24c64f9327e455a59e2c2b28f62763ee8b8713c8501d42",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "sha256:ac017abb619c9305ec2cbc1a2a625f7759ba41507e0df2d937d45c2b9a15a4fb",
+    ".github/workflows/soil-mesonet-station-health.yml": "sha256:a565187ef73b354b10c7429762742ed437249b3215c6dbb7e88e65fe72baa63b",
+    "Makefile": "sha256:2619b812b00a6e86ed3e0f91fd02255b7dd07b206507c3033cd2986d8d72a28f",
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:4752a9fd578b70ae7ea01e84cdb655f1398ba8f9f72658d7545abbf9a4c66d88",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "sha256:b5f5ef457ec2272b84d99a9c2c7e749474336bdd6a9b94a3befb4ebdc41fb534",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:b50caded9182b2c1a9244c97cae607340af61fa8faa1479e736fc3064a7970ff",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:1bbde1da728374401040124c64c2d5ab4faaff0e3e54f6ff7dc838baebb3b5cd",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "sha256:5bc35ef58bf6930edb07d4a1ab0bbc07328bf834436c8166eaa2a7727622e0b6",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh": "sha256:c3da398460fff8e2af8ec4153732a3efaad5c02668afbfe401f2b176ce580008",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json": "sha256:fd4bf44c012def3774a20a41b7e74faf9ca4861f8accb78970bc71c9656851a3",
+    "pnpm-lock.yaml": "sha256:d617b3dcd8958a35d2730f662eb6f961f532d31e2ece83850ba2131ce6f0fa19",
+    "tests/ci/test_install_python_ci.py": "sha256:a816bb28244250b78942b9a86291f99ec4f29d76ce9137e80dc6e671ff7b52bf",
+    "tools/ci/README.md": "sha256:c1e77e8c6707b19962822644a359908c191ad255064eebab8dd0323874ae021b",
+    "tools/ci/install_python_ci.py": "sha256:e02a94f14d9a9e44390cd9392184939ac7fb447bd060cb6cc9c7ac2c5b50089c",
+    "tools/ci/python-geo.lock": "sha256:d55c5a7245fbfeaad089422b0381b53d345b5ee7069e060a15331e3c1b5701d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:8144a7783f36a3225630199480cc1a199040c0259ee35501d505d90f2b119874",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub",
+      "Sites readback",
+      "Google Drive",
+      "Notion",
+      "local validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "83f6f59c5a896b727ee28a80a86d83175607f2b8",
+      "main@eaff4f86e1f6b4398bbfc95c06df66e4a2f7364a",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5717323582",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "CONFIRMED",
+    ".github/workflows/local-data-store.yml": "CONFIRMED",
+    ".github/workflows/native-explorer-check.yml": "CONFIRMED",
+    ".github/workflows/offline-pipeline-check.yml": "CONFIRMED",
+    ".github/workflows/pipeline-spec-declarations.yml": "CONFIRMED",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "CONFIRMED",
+    ".github/workflows/soil-mesonet-station-health.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/README.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json": "CONFIRMED",
+    "pnpm-lock.yaml": "CONFIRMED",
+    "tests/ci/test_install_python_ci.py": "CONFIRMED",
+    "tools/ci/README.md": "CONFIRMED",
+    "tools/ci/install_python_ci.py": "CONFIRMED",
+    "tools/ci/python-geo.lock": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "frozen dependency inputs",
+      "outcome": "PASS",
+      "reason": "Node 22.22.0/corepack pnpm 11.17.0 frozen workspace install succeeds; app npm ci --dry-run --ignore-scripts --workspaces=false succeeds. Current-main dependency declarations and allowBuilds policy unchanged. Both main lockfiles contained tool truncation markers; regenerated using intact prior locks and current manifests. Initial pre-runtime-setup invocation used host Node 24 and failed on the corrupted lockfile; final checks use Node 22."
+    },
+    {
+      "gate": "native Explorer typecheck build and tests",
+      "outcome": "PASS",
+      "reason": "make native-explorer-check now invokes strict TypeScript no-emit before Vite. 152 app tests and 5 lint compatibility tests pass; 2 legacy opt-in probes skipped. Restored truncated page with the two intended Vite anchor replacements and executable bits on build/install helpers. Removed orphan D1 route whose imports and dependency were deleted by main. Initial eight TypeScript diagnostics resolved with Vite/Node types, allowImportingTsExtensions under noEmit, and orphan removal. Initial formatting-sensitive test failed after JSON formatting, resolved by retaining original tsconfig formatting; tests unchanged."
+    },
+    {
+      "gate": "offline synthetic pipelines",
+      "outcome": "PASS",
+      "reason": "make offline-pipeline-check: 170 passed on Python 3.12.14 with Python egress guard and PROJ_NETWORK=OFF. Python pipeline inputs remain identical to reviewed 83f6f59."
+    },
+    {
+      "gate": "local-data regression",
+      "outcome": "PASS",
+      "reason": "make local-data-check: 91 tests and 16 subtests pass with the Python egress guard."
+    },
+    {
+      "gate": "prior receipt integrity",
+      "outcome": "PASS",
+      "reason": "Original genrec-pipeline-ci-completion-20260917 receipt remains unchanged and validates all 12 artifact bindings in the combined tree."
+    },
+    {
+      "gate": "hosted validation and current review",
+      "outcome": "SKIPPED",
+      "reason": "Original head hosted runs 35229482539 (both Python versions) and 35229481878 (native app) were reread successful. New combined-head hosted result and fresh human review are pending at authoring; original acceptance does not approve added repairs."
+    },
+    {
+      "gate": "remaining acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Topology conformance, authenticated browser/WebGL, live Sites equivalence and rollback, and #4024 containment remain separately held. No waiver, PR, merge-to-main, settings, source activation or deployment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a9fe94fe98ffde1ea7671e0875c55856e95d923b"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-18T01:35:33.969049+00:00",
+  "emitter": "Codex KFM pipeline finalization",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward-only combination preserves original reviewed 83f6f59 and current main eaff4f86 as parents. New corrections repair existing main truncation in page.tsx and both locks, restore two executable file modes (100755), complete Vite TypeScript configuration, and make typechecking part of the build. Deleted only apps/kansas-frontier-matrix-explorer/examples/d1/app/api/notes/route.ts, an orphan importing removed database modules. README reflects current Vite and authentication/error-boundary limitations. Existing generated receipts remain historical, unchanged. Historical hosting-provider-removal receipt describes prior bytes; this successor binds repaired bytes. No model-facing tool-output fragments are used as source content. Paths follow ADR-0029. Rollback: abandon branch, or after separately authorized integration revert the bounded change while retaining receipts. This receipt excludes itself; human review is pending for the added corrections."
+}

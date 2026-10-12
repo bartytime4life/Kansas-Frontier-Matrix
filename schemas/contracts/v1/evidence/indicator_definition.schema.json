@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/indicator_definition.schema.json",
+  "title": "IndicatorDefinition",
+  "description": "Fixture-only declaration of one derived indicator's components, method, support, disclosure, and non-authority posture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "definition_id",
+    "indicator",
+    "components",
+    "method",
+    "support",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "IndicatorDefinition" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.indicator-definition.fixture.v1" },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^kfm:indicator-definition:[a-f0-9]{24}$"
+    },
+    "indicator": { "$ref": "#/$defs/indicator" },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/component" }
+    },
+    "method": { "$ref": "#/$defs/method" },
+    "support": { "$ref": "#/$defs/support" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}$"
+    },
+    "nullable_ref": {
+      "oneOf": [{ "$ref": "#/$defs/ref" }, { "type": "null" }]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "indicator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicator_key", "label", "description", "value_kind", "unit", "direction", "source_role"],
+      "properties": {
+        "indicator_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "label": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "value_kind": { "enum": ["COUNT", "RATE", "RATIO", "PERCENT", "INDEX", "CATEGORY"] },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "direction": { "enum": ["HIGHER_IS_MORE", "LOWER_IS_MORE", "NEUTRAL"] },
+        "source_role": { "const": "DERIVED" }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component_ref", "role", "allowed_source_roles", "required", "unit", "evidence_required"],
+      "properties": {
+        "component_ref": { "$ref": "#/$defs/ref" },
+        "role": { "enum": ["NUMERATOR", "DENOMINATOR", "INPUT", "WEIGHT", "BASELINE"] },
+        "allowed_source_roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ADMINISTRATIVE",
+              "AGGREGATE",
+              "DERIVED",
+              "INTERPRETIVE",
+              "MODELED",
+              "OBSERVED",
+              "REGULATORY",
+              "SYNTHETIC"
+            ]
+          }
+        },
+        "required": { "type": "boolean" },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "evidence_required": { "const": true }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_ref",
+        "formula_ref",
+        "aggregation",
+        "denominator_policy",
+        "missing_data_policy",
+        "normalization",
+        "percentile_method",
+        "threshold_policy_ref"
+      ],
+      "properties": {
+        "method_ref": { "$ref": "#/$defs/ref" },
+        "formula_ref": { "$ref": "#/$defs/ref" },
+        "aggregation": { "enum": ["COUNT", "RATE", "RATIO", "PERCENT", "INDEX", "CATEGORY"] },
+        "denominator_policy": { "enum": ["REQUIRED", "NOT_APPLICABLE"] },
+        "missing_data_policy": { "enum": ["ABSTAIN", "EXCLUDE_WITH_DISCLOSURE", "ZERO_ONLY_WITH_EVIDENCE"] },
+        "normalization": { "enum": ["NONE", "MIN_MAX", "Z_SCORE", "BASELINE_RATIO", "PERCENTILE_RANK", "DOMAIN_SPECIFIC"] },
+        "percentile_method": {
+          "oneOf": [
+            { "enum": ["HAZEN", "LINEAR", "NEAREST_RANK"] },
+            { "type": "null" }
+          ]
+        },
+        "threshold_policy_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spatial_scope_ref",
+        "temporal_scope_ref",
+        "temporal_support_kind",
+        "window_duration",
+        "geography_version_required",
+        "valid_time_required"
+      ],
+      "properties": {
+        "spatial_scope_ref": { "$ref": "#/$defs/ref" },
+        "temporal_scope_ref": { "$ref": "#/$defs/ref" },
+        "temporal_support_kind": { "enum": ["INSTANT", "INTERVAL", "REFERENCE_PERIOD", "ROLLING_WINDOW"] },
+        "window_duration": {
+          "oneOf": [
+            { "type": "string", "pattern": "^P(?!$).{1,31}$" },
+            { "type": "null" }
+          ]
+        },
+        "geography_version_required": { "type": "boolean" },
+        "valid_time_required": { "const": true }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uncertainty_required",
+        "component_disclosure_required",
+        "missing_count_disclosure_required",
+        "interpretation_limits"
+      ],
+      "properties": {
+        "uncertainty_required": { "const": true },
+        "component_disclosure_required": { "const": true },
+        "missing_count_disclosure_required": { "const": true },
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "NO_CAUSAL_CLAIM",
+              "NO_PUBLICATION_AUTHORITY",
+              "NOT_OBSERVATION",
+              "NOT_ROOT_TRUTH",
+              "SCOPE_BOUND"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "formula_executed",
+        "indicator_computed",
+        "evidence_resolved",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "formula_executed": { "const": false },
+        "indicator_computed": { "const": false },
+        "evidence_resolved": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}

@@ -2,21 +2,513 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://schemas/contracts/v1/evidence/citation_validation_report.schema.json",
   "title": "Citation Validation Report",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "description": "PROPOSED fixture-first report for preserving citation readiness, evidence handoff, and fail-closed public-surface states without resolving evidence or granting policy, review, release, or publication authority.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "report_id",
+    "checked_at",
+    "validator_profile_ref",
+    "subject",
+    "citations",
+    "summary",
+    "permissions",
+    "limitations",
+    "spec_hash"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "1.0.0-proposed"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^kfm:citation-validation-report:[0-9a-f]{24}$"
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validator_profile_ref": {
+      "type": "string",
+      "pattern": "^kfm:profile:citation-validation:[a-z0-9._-]+@sha256:[0-9a-f]{64}$"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/citation"
+      }
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "creates_evidence_closure",
+        "makes_policy_decision",
+        "approves_review",
+        "authorizes_release",
+        "authorizes_publication",
+        "authorizes_public_answer"
+      ],
+      "properties": {
+        "creates_evidence_closure": {
+          "const": false
+        },
+        "makes_policy_decision": {
+          "const": false
+        },
+        "approves_review": {
+          "const": false
+        },
+        "authorizes_release": {
+          "const": false
+        },
+        "authorizes_publication": {
+          "const": false
+        },
+        "authorizes_public_answer": {
+          "const": false
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "declared_states_not_authenticated",
+        "no_evidence_resolution",
+        "no_policy_evaluation",
+        "no_review_authentication",
+        "no_release_verification",
+        "no_publication_authority"
+      ]
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 192,
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"
+    },
+    "nullable_kfm_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "ABSTAIN",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "source_role": {
+      "enum": [
+        "ADMINISTRATIVE",
+        "AGGREGATE",
+        "CANDIDATE",
+        "CONTEXTUAL",
+        "MODELED",
+        "OBSERVED",
+        "REGULATORY",
+        "SYNTHETIC"
+      ]
+    },
+    "reason_code": {
+      "enum": [
+        "CITATION_BUNDLE_DENIED",
+        "CITATION_BUNDLE_ERROR",
+        "CITATION_BUNDLE_INCOMPLETE",
+        "CITATION_EVIDENCE_REF_DENIED",
+        "CITATION_EVIDENCE_REF_ERROR",
+        "CITATION_EVIDENCE_REF_UNRESOLVED",
+        "CITATION_LOCATOR_MISSING",
+        "CITATION_MALFORMED",
+        "CITATION_MISSING",
+        "CITATION_OUT_OF_SCOPE",
+        "CITATION_POLICY_DENIED",
+        "CITATION_POLICY_ERROR",
+        "CITATION_POLICY_NOT_READY",
+        "CITATION_READY_FOR_DECLARED_SCOPE",
+        "CITATION_RELEASE_NOT_READY",
+        "CITATION_RELEASE_WITHDRAWN",
+        "CITATION_REVIEW_NOT_READY",
+        "CITATION_RIGHTS_BLOCKED",
+        "CITATION_RIGHTS_DENIED",
+        "CITATION_RIGHTS_UNKNOWN",
+        "CITATION_SENSITIVITY_BLOCKED",
+        "CITATION_SENSITIVITY_DENIED",
+        "CITATION_SENSITIVITY_RESTRICTED_PUBLIC",
+        "CITATION_SENSITIVITY_UNKNOWN",
+        "CITATION_SOURCE_ROLE_NOT_ALLOWED",
+        "CITATION_STALE",
+        "CITATION_STATE_ERROR",
+        "CITATION_TIME_UNKNOWN"
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_ref",
+        "subject_type",
+        "claim_scope_ref",
+        "surface",
+        "allowed_source_roles",
+        "requires_current_support"
+      ],
+      "properties": {
+        "subject_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "subject_type": {
+          "enum": [
+            "AI_ANSWER_CANDIDATE",
+            "API_ANSWER_CANDIDATE",
+            "CLAIM_CANDIDATE",
+            "EVIDENCE_BUNDLE_CANDIDATE",
+            "EVIDENCE_DRAWER_CANDIDATE",
+            "EXPORT_CANDIDATE",
+            "MAP_LAYER_CANDIDATE",
+            "RELEASE_CANDIDATE"
+          ]
+        },
+        "claim_scope_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "surface": {
+          "enum": [
+            "AI_ANSWER_CANDIDATE",
+            "EXPORT_CANDIDATE",
+            "FOCUS_CANDIDATE",
+            "GOVERNED_API_CANDIDATE",
+            "INTERNAL_REVIEW",
+            "MAP_CANDIDATE"
+          ]
+        },
+        "allowed_source_roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/source_role"
+          }
+        },
+        "requires_current_support": {
+          "type": "boolean"
+        }
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "ANCHOR",
+            "FEATURE",
+            "NONE",
+            "PAGE",
+            "RECORD",
+            "SECTION",
+            "TIME_WINDOW"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "NONE"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/kfm_ref"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evidence_ref_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "state"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        },
+        "state": {
+          "enum": [
+            "DENIED",
+            "ERROR",
+            "NOT_APPLICABLE",
+            "RESOLVED",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "bundle_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "state"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        },
+        "state": {
+          "enum": [
+            "CLOSED",
+            "DENIED",
+            "ERROR",
+            "INCOMPLETE",
+            "NOT_APPLICABLE"
+          ]
+        }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "citation_id",
+        "target_ref",
+        "source_record_ref",
+        "source_role",
+        "locator",
+        "citation_state",
+        "freshness_state",
+        "evidence_ref",
+        "evidence_bundle",
+        "rights_state",
+        "sensitivity_state",
+        "policy_state",
+        "review_state",
+        "release_state",
+        "declared_outcome",
+        "reason_codes",
+        "remediation_ref"
+      ],
+      "properties": {
+        "citation_id": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "target_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "source_record_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "source_role": {
+          "$ref": "#/$defs/source_role"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "citation_state": {
+          "enum": [
+            "ERROR",
+            "MALFORMED",
+            "MISSING",
+            "OUT_OF_SCOPE",
+            "RIGHTS_BLOCKED",
+            "SENSITIVITY_BLOCKED",
+            "USABLE"
+          ]
+        },
+        "freshness_state": {
+          "enum": [
+            "CURRENT",
+            "NOT_APPLICABLE",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/evidence_ref_state"
+        },
+        "evidence_bundle": {
+          "$ref": "#/$defs/bundle_state"
+        },
+        "rights_state": {
+          "enum": [
+            "CLEAR",
+            "DENIED",
+            "UNKNOWN"
+          ]
+        },
+        "sensitivity_state": {
+          "enum": [
+            "DENIED",
+            "PUBLIC_SAFE",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "policy_state": {
+          "enum": [
+            "ALLOW",
+            "DENY",
+            "ERROR",
+            "NOT_APPLICABLE",
+            "NOT_EVALUATED",
+            "RESTRICT"
+          ]
+        },
+        "review_state": {
+          "enum": [
+            "APPROVED",
+            "CHANGES_REQUESTED",
+            "NOT_APPLICABLE",
+            "PENDING"
+          ]
+        },
+        "release_state": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "RELEASED",
+            "UNKNOWN",
+            "UNRELEASED",
+            "WITHDRAWN"
+          ]
+        },
+        "declared_outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 28,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reason_code"
+          }
+        },
+        "remediation_ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "blocking",
+        "citation_count",
+        "pass_count",
+        "abstain_count",
+        "deny_count",
+        "error_count",
+        "reason_codes",
+        "remediation_refs"
+      ],
+      "properties": {
+        "outcome": {
+          "$ref": "#/$defs/outcome"
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "citation_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "pass_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "abstain_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "deny_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 28,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reason_code"
+          }
+        },
+        "remediation_refs": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/kfm_ref"
+          }
+        }
+      }
+    }
+  },
   "x-kfm": {
-    "status": "PROPOSED",
+    "status": "PROPOSED_FIXTURE_FIRST",
     "path": "schemas/contracts/v1/evidence/citation_validation_report.schema.json",
-    "source_docs": [
-      "docs/domains/archaeology/API_CONTRACTS.md",
-      "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
-      "docs/domains/fauna/API_CONTRACTS.md",
-      "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md",
-      "docs/domains/roads-rail-trade/API_CONTRACTS.md",
-      "docs/domains/settlements-infrastructure/MAP_UI_CONTRACTS.md"
-    ],
-    "contract_doc": null
+    "contract_doc": "contracts/evidence/citation_validation_report.md",
+    "validator": "tools/validators/citation/validate_citation_validation_report.py",
+    "authority": "shape-only; no evidence, policy, review, release, publication, or public-answer authority"
   }
 }

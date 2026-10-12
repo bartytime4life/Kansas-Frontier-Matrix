@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-noaa-src-noaa-readme
 title: connectors/noaa/src/noaa/ — NOAA Connector Python Package Boundary
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Hazards steward · Atmosphere steward · Climate steward · Soil steward · Data steward · Validation steward · Security steward · Docs steward
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-10-07
 policy_label: "public-doctrine; implementation-boundary; source-admission; multi-role; not-life-safety; import-safe; no-network-by-default; raw-quarantine-only; descriptor-gated; rights-aware; sensitivity-aware; finite-outcomes; replayable; rollback-aware; no-secrets"
 current_path: connectors/noaa/src/noaa/README.md
 truth_posture: CONFIRMED target path and prior empty blob, empty package __init__.py, parent NOAA connector README, NOAA source-root README, NOAA test-root README, connector-root contract, NOAA source-family catalog, proposed source-admission ADR, package project name and 0.0.0 version, and absence of client.py at the proposed path / PROPOSED package responsibility contract, import surface, configuration, transport, product adapters, parser interfaces, admission-candidate model, finite outcomes, error taxonomy, provenance capture, and test plan / UNKNOWN complete directory inventory, package installability, dependencies, import consumers, source descriptor IDs, active NOAA products, live endpoints, parsers, fixtures, runtime orchestration, emitted receipts, CI, schedules, deployment, and health / NEEDS VERIFICATION owners, package namespace, parent README drift, source-schema path drift, activation states, rights and sensitivity bindings, admission contract, validators, tests, CI, correction, and rollback automation
@@ -62,9 +62,38 @@ notes:
 
 # NOAA Connector Python Package Boundary
 
+`nwm.py` adds fixed NOAA NOMADS and reference-flowline capture primitives with
+complete-cycle selection and strict object/byte bounds. Model guidance remains
+separate from observations; the [NWM operator runbook](../../../../docs/runbooks/noaa-nwm-local-capture.md)
+records the private capture and review boundaries.
+
+`nexrad_level3.py` decodes the small NEXRAD Level III storm-tracking and
+mesocyclone products from the NOAA Open Data copy referenced by NCEI's NEXRAD
+page. It uses fixed bucket keys and size limits and does not admit data. See
+the [NEXRAD runbook](../../../../docs/runbooks/noaa-nexrad-local-capture.md).
+
+`ghcnd.py` adds a bounded Kansas station-history fetch and format-inspection
+adapter. It uses fixed NOAA HTTPS metadata/station paths, retains original
+quality/source flags, and does not admit data. The
+[local operator runbook](../../../../docs/runbooks/noaa-ghcnd-local-capture.md)
+documents storage limits, source receipts, retry and review boundaries.
+
 `connectors/noaa/src/noaa/`
 
 > Import-package boundary for NOAA source fetch, parse, provenance, and admission helpers. This package may prepare product-specific NOAA material for governed **RAW** or **QUARANTINE** handoff; it does not establish NOAA truth, issue alerts, approve publication, or bypass KFM governance.
+
+> [!NOTE]
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; lane placement is still open).**
+> - **`fetch.retrieve_storm_events(url)`:** accepts only the exact URL `storm_events.details_url(year, created)` emits for the vintage it names; `application/gzip` or `application/x-gzip`.
+> - **`fetch.retrieve_uscrn_hourly(url)`:** accepts only the exact URL `uscrn_hourly.hourly_url(year, station)` emits; `text/plain`.
+> - **`fetch.retrieve_nws_alerts(url)`:** accepts only the exact URL `nws_alerts.alerts_url(area, active=...)` emits; `application/geo+json` or `application/json`. No identifying `User-Agent` is invented; a real client must supply one.
+> - All three run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`noaa.storm-events`, `noaa.uscrn-hourly02`, `noaa.nws-alerts`) and profiles.
+> - **`admit.admit()`:** selects the parser from the episode's own source identity and re-applies fetch's URL rule. Unknown or mismatched sources are refused. It routes as follows:
+>   - a parsed file or collection becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES`, `MISSING_HOURS_PRESENT` (USCRN gaps), or the NWS collection's own reasons when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. NWS freshness is as of the retrieval instant only; KFM relays no alert. The NWS parser receives the `ETag` and `Last-Modified` the episode records; `Cache-Control`, `Date` and `Expires` are not episode-contract fields and are not carried.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/noaa/tests/test_fetch_admit.py`, run by `.github/workflows/noaa-connector-offline.yml`.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![version](https://img.shields.io/badge/version-v0.1-informational)

@@ -6,22 +6,28 @@
 doc_id: kfm://doc/archaeology-object-families
 title: Archaeology — Object Families
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: TODO — archaeology domain steward; docs steward
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Governance register of Archaeology and Cultural Heritage object families, identity, time handling, and sensitivity posture; not evidence, policy, release, or publication authority.
+truth_posture: cite-or-abstain; doctrine CONFIRMED where cited; repository paths PROPOSED or NEEDS VERIFICATION
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md  # PROPOSED
-  - docs/domains/archaeology/SENSITIVITY.md  # PROPOSED
-  - schemas/contracts/v1/archaeology/  # PROPOSED — Atlas v1.1 §2.1
-  - contracts/archaeology/             # PROPOSED — Atlas v1.1 §2.1
-  - policy/sensitivity/archaeology/    # PROPOSED — Atlas v1.1 §2.1
+  - data/registry/sources/archaeology/
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/SENSITIVITY.md
+  - schemas/contracts/v1/archaeology/
+  - contracts/archaeology/
+  - policy/sensitivity/archaeology/
 tags: [kfm, domain, archaeology, object-family, sensitivity, doctrine]
 notes:
+  - "2026-10-11: added required owning_root, responsibility, and truth_posture fields and dropped inline status comments from related entries so each resolves as a path."
+  - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY)
   - All repo-state and path claims are PROPOSED until repo is mounted
@@ -33,9 +39,9 @@ notes:
 ![default tier: T4](https://img.shields.io/badge/default__tier-T4_DENY-b30000)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-555)
 ![review: required](https://img.shields.io/badge/review-steward%20%2B%20cultural-blueviolet)
-![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey)
+![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology domain steward; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-05-28
+**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology domain steward; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** (per `docs/doctrine/ai-build-operating-contract.md` §pin requirement).
 
 > [!CAUTION]
@@ -77,7 +83,7 @@ This file does **not** define:
 - Field-level **shape** — that lives under `schemas/contracts/v1/archaeology/` (PROPOSED).
 - Object **semantics** in human prose at the contract level — that lives under `contracts/archaeology/` (PROPOSED).
 - Allow / deny / restrict / abstain rules — those live under `policy/sensitivity/archaeology/` and `policy/release/archaeology/` (PROPOSED).
-- Source identity, rights, sensitivity-at-admission — those live under `data/registry/archaeology/` (PROPOSED) and the cross-cutting `SourceDescriptor` contract.
+- Source identity, rights, sensitivity-at-admission — those live under the canonical SourceDescriptor lane `data/registry/sources/archaeology/` (`DIR-SOURCE-003`) and the cross-cutting `SourceDescriptor` contract; `data/registry/archaeology/sources/` is a read-only compatibility view (`DIR-SOURCE-004`).
 
 > [!IMPORTANT]
 > This is a **navigational governance register**, not a canonical machine artifact. Where this document and a schema, contract, policy, or ADR disagree, the schema / contract / policy / ADR governs, and the conflict is filed against `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
@@ -327,7 +333,8 @@ policy/release/archaeology/                  # PROPOSED — staged release rules
 
 tests/domains/archaeology/                   # PROPOSED
 fixtures/domains/archaeology/                # PROPOSED — no-network fixtures
-data/registry/archaeology/                   # PROPOSED — source ledger
+data/registry/sources/archaeology/           # canonical source ledger (DIR-SOURCE-003)
+data/registry/archaeology/                   # domain-first compatibility parent; no independent source writes (DIR-SOURCE-004)
 data/published/layers/archaeology/           # PROPOSED — generalized surfaces only
 release/candidates/archaeology/              # PROPOSED — promotion candidates
 ```
@@ -462,6 +469,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | New file at `docs/domains/archaeology/OBJECT_FAMILIES.md`. | new | Domain-level register did not previously exist; consolidates Atlas v1.1 §15.C / §15.E / §15.F / §15.I / §15.K / §15.L / §15.M and §24.x cross-cutting registers into a per-domain navigational view. |
 | Adopted `domains/<domain>/` segmentation pattern in proposed placements. | clarification | Aligns with Directory Rules §4 Step 3 path examples; flagged as drift against Atlas v1.1 §2.1 row 15 in OQ-ARCH-OF-01. |
 | Folded Atlas §15.B scope-only families (`RemoteSensingAnomaly`, `LiDARCandidate`, `GeophysicsObservation`, `ThreeDDocumentation`, `CulturalReview`, `StewardReview`, `ChronologyAssertion`, `SensitivityTransform`) into the register. | gap closure | Atlas §15.E rows + §15.C language alone undercount the lane. |
+| **v1.0.1 (2026-10-11):** §2 out-of-scope list and §10 path tree now name `data/registry/sources/archaeology/` as the canonical source ledger and label `data/registry/archaeology/` a compatibility parent. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
 
 > **Backward compatibility.** This is a new file; no anchors are at risk. Future edits SHOULD preserve the anchors under §1–§13 to keep cross-links stable.
 
@@ -493,6 +501,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-_Last updated: 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`_
+_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"`_
 
 [Back to top ↑](#archaeology--object-families)

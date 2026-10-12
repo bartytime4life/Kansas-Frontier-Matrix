@@ -12,7 +12,7 @@ related:
   - ai-build-operating-contract.md                            # canonical operating contract, CONTRACT_VERSION = "3.0.0"
   - docs/domains/settlements-infrastructure/README.md          # NEEDS VERIFICATION
   - docs/domains/settlements-infrastructure/SENSITIVITY.md     # NEEDS VERIFICATION
-  - docs/architecture/governed-api.md                          # NEEDS VERIFICATION
+  - docs/architecture/governed-api/README.md                          # NEEDS VERIFICATION
   - docs/standards/PROV.md                                     # CONFIRMED authored (prior session)
   - kfm://atlas/domains-v1.1#ch14                              # CONFIRMED doctrine (Settlements/Infrastructure)
   - kfm://atlas/domains-v1.1#ch24.3                            # CONFIRMED doctrine (Master Decision Outcome Envelope)
@@ -511,7 +511,7 @@ Linked documents below are a mix of `CONFIRMED authored` (prior session), `PROPO
 - `docs/domains/settlements-infrastructure/sublanes/infrastructure.md` — *PROPOSED* infrastructure sublane dossier (asset/network half).
 - `docs/domains/settlements-infrastructure/SENSITIVITY.md` — *TODO* per-domain sensitivity rules.
 - `docs/domains/settlements-infrastructure/VERIFICATION_BACKLOG.md` — *TODO* tracked open items.
-- `docs/architecture/governed-api.md` — *TODO* trust-membrane architecture.
+- `docs/architecture/governed-api/README.md` — *TODO* trust-membrane architecture.
 - `docs/architecture/contract-schema-policy-split.md` — *TODO* contracts ↔ schemas ↔ policy split.
 - `docs/standards/PROV.md` — *CONFIRMED authored* (prior session); provenance crosswalk.
 - `docs/standards/SENSITIVITY_RUBRIC.md` — *PROPOSED in corpus* (Pass-10 C6-01); not yet authored.

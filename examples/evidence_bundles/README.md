@@ -121,7 +121,7 @@ CODEOWNERS routing is not stewardship, approval evidence, policy permission, or 
 - [Proof root](../../data/proofs/README.md)
 - [EvidenceBundle proof lane](../../data/proofs/evidence_bundle/README.md)
 - [Citation validation](../../data/proofs/citation_validation/README.md)
-- [Governed API doctrine](../../docs/architecture/governed-api.md)
+- [Governed API doctrine](../../docs/architecture/governed-api/README.md)
 
 ## ADRs
 

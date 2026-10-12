@@ -18,7 +18,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, sources, source-family, epa, atmosphere-air, hazards]
@@ -27,6 +27,9 @@ notes:
   - "Path docs/sources/catalog/ is PROPOSED grouping of per-agency source briefs under docs/sources/."
   - "All schema, policy, and registry paths are PROPOSED until mounted-repo evidence verifies them."
   - "'Catalog' in this path means a documentation catalog of source briefs; it is NOT the data/catalog/ lifecycle phase."
+owning_root: docs/
+responsibility: "Documentation for EPA — Source Family Brief; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # EPA — Source Family Brief
@@ -66,9 +69,9 @@ notes:
 - [11. Validators and tests (proposed)](#11-validators-and-tests-proposed)
 - [12. Open verification items](#12-open-verification-items)
 - [13. Related docs](#13-related-docs)
-- [Appendix A — Field-level descriptor surface (illustrative)](#appendix-a--field-level-descriptor-surface-illustrative)
-- [Appendix B — EvidenceBundle alignment (illustrative)](#appendix-b--evidencebundle-alignment-illustrative)
-- [Appendix C — Glossary](#appendix-c--glossary)
+- Appendix A — Field-level descriptor surface (illustrative)
+- Appendix B — EvidenceBundle alignment (illustrative)
+- Appendix C — Glossary
 
 ---
 

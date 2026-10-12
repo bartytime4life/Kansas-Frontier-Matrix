@@ -1,598 +1,744 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook-roads-rail-trade-promotion
-title: Roads / Rail / Trade Routes — Promotion Runbook
+title: Roads, Rail, and Trade Promotion Preflight Runbook
 type: standard
-version: v1
-status: draft
-owners: <docs-steward>, <roads-rail-trade-domain-steward>
+version: v2.0
+prior_state: proposal-heavy May 2026 promotion procedure with unverified paths, commands, gates, receipts, roles, and release execution
+status: draft; repository-grounded; PROMOTION_EXECUTION_HELD; BOUNDED_NO_NETWORK_VALIDATION; NON_RELEASE; NON_DEPLOYMENT; NON_PUBLICATION
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Roads/Rail/Trade, transport, evidence, rights, sensitivity, policy, safety, and release assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infrastructure-sensitive; historic and cultural corridor precision-sensitive; fail-closed
+current_path: docs/runbooks/roads-rail-trade/PROMOTION_RUNBOOK.md
+owning_root: docs/
+responsibility: human promotion preflight and accountable-review handoff for the Roads/Rail/Trade lane
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, source records, policy, evidence, lifecycle, review, release, correction, rollback, and official authorities
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 3009a477071271c9a1d2ac0a1fcac98d26e40976
+  target_before_update_blob: 315eb67a2c6cadac812f66e4e81f0a42f7f0c40d
+  local_runbook_boundary_blob: 5de90772b7ae420f42ed2794e7f545e55035aaa9
+  domain_workflow_blob: 391fead3fdd0d7ecead6464be7946cbaf68247e0
+  corridor_route_contract_blob: 2bef2e964b8afa855ca7e72c86ca72dad2b63f52
+  corridor_route_schema_blob: 663afd8aa09c52a2626d84cfbc6c76965df79942
+  corridor_route_validator_blob: 9b75fd5d15d348ec788057fa1e1371f82e685415
+  corridor_route_tests_blob: 4df9495c441810e5ad196d88ad67f64e00426136
+  candidate_lane_readme_blob: c989bf2bed10472bc46a168231b2269f17bbda48
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  candidate_records_observed: 0
+  bounded_executable_profiles: 1
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/domains/roads-rail-trade/README.md
-  - docs/architecture/promotion-gates.md
-  - policy/domains/roads-rail-trade/
-  - schemas/contracts/v1/receipts/promotion_receipt.schema.json
-  - release/candidates/roads-rail-trade/
-tags: [kfm, runbook, promotion, roads-rail-trade, governance]
+  - ./README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../../domains/roads-rail-trade/README.md
+  - ../../domains/roads-rail-trade/DATA_LIFECYCLE.md
+  - ../../domains/roads-rail-trade/SENSITIVITY.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/lifecycle-law.md
+  - ../../doctrine/trust-membrane.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/workflows/domain-roads-rail-trade.yml
+  - ../../../contracts/domains/roads-rail-trade/corridor_route.md
+  - ../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json
+  - ../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py
+  - ../../../tests/schemas/test_corridor_route_contract.py
+  - ../../../fixtures/domains/roads-rail-trade/corridor_route/
+  - ../../../data/registry/sources/roads-rail-trade/README.md
+  - ../../../data/proofs/roads-rail-trade/README.md
+  - ../../../policy/domains/roads-rail-trade/README.md
+  - ../../../release/candidates/roads-rail-trade/README.md
 notes:
-  - Runbook is doctrine-grounded; specific paths PROPOSED until mounted-repo verification.
-  - Path placement follows Directory Rules §12; runbook lives under a domain segment.
+  - "v2.0 replaces proposal-era promotion execution with a current-repository preflight and accountable-review handoff."
+  - "The only executable domain profile verified for this update is synthetic, no-network CorridorRoute validation."
+  - "The domain workflow deliberately holds proof production and release dry-run; no candidate packet or promotion executor was established."
+  - "This documentation change does not admit a source, create a candidate, issue a policy decision, approve review, release, deploy, promote, or publish."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Roads / Rail / Trade Routes — Promotion Runbook
-
-> Operator-facing procedure for promoting roads, rail, historic routes, trade corridors, facilities, and graph projections across `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` under KFM's seven-gate matrix.
-
-<p align="center">
-  <img alt="Lifecycle" src="https://img.shields.io/badge/lifecycle-governed-blue">
-  <img alt="Domain" src="https://img.shields.io/badge/domain-roads--rail--trade-2c7">
-  <img alt="Gates" src="https://img.shields.io/badge/gates-A%E2%80%93G-orange">
-  <img alt="Policy" src="https://img.shields.io/badge/policy-fail--closed-red">
-  <img alt="AI" src="https://img.shields.io/badge/AI-advisory--only-lightgrey">
-  <img alt="Status" src="https://img.shields.io/badge/status-draft-lightgrey">
-</p>
-
-| Status | Owner(s) | Authority | Last reviewed |
-|---|---|---|---|
-| `draft` | `<docs-steward>` · `<roads-rail-trade-domain-steward>` | CONFIRMED doctrine · **PROPOSED** implementation | 2026-05-12 |
-
-> [!IMPORTANT]
-> **Promotion is a governed state transition, not a file move.** No artifact reaches `PUBLISHED` without (1) resolved `EvidenceRef → EvidenceBundle`, (2) policy decision, (3) all seven gates A–G passing, (4) a signed `PromotionReceipt`, (5) a `ReleaseManifest` with rollback and correction targets. Missing any one element → fail-closed → `DENY` / `QUARANTINE`.
-
----
-
-## Quick links
-
-- [Purpose](#purpose)
-- [Scope and repo fit](#scope-and-repo-fit)
-- [What this runbook governs](#what-this-runbook-governs)
-- [Lifecycle map for Roads / Rail / Trade Routes](#lifecycle-map-for-roads--rail--trade-routes)
-- [Domain snapshot](#domain-snapshot)
-- [Promotion Gates A–G applied to Roads / Rail / Trade Routes](#promotion-gates-ag-applied-to-roads--rail--trade-routes)
-- [Operator procedure](#operator-procedure)
-- [Sensitivity, generalization, and fail-closed defaults](#sensitivity-generalization-and-fail-closed-defaults)
-- [Failure modes and quarantine handling](#failure-modes-and-quarantine-handling)
-- [Negative-path fixtures](#negative-path-fixtures)
-- [Receipts and artifacts emitted](#receipts-and-artifacts-emitted)
-- [Rollback and correction](#rollback-and-correction)
-- [Governed AI posture for this domain](#governed-ai-posture-for-this-domain)
-- [Verification backlog and open questions](#verification-backlog-and-open-questions)
-- [Related docs](#related-docs)
-- [Appendix — receipt sketches](#appendix--receipt-sketches)
-
----
-
-## Purpose
-
-This runbook tells a domain steward, release officer, and pipeline operator **how to move a Roads / Rail / Trade Routes artifact through KFM's governed lifecycle** without bypassing the trust membrane. It binds three things together for this domain:
-
-1. The **canonical KFM lifecycle** — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` (CONFIRMED doctrine).
-2. The **seven-gate promotion matrix** (Gates **A** Structure and Metadata, **B** Schemas and Contracts, **C** Policy Parity, **D** Security and Sensitivity, **E** Data Quality, **F** Provenance and Lineage, **G** Reviewability with two-key approval) — CONFIRMED gate names and meaning; per-domain wiring PROPOSED until mounted-repo verification.
-3. The **Roads / Rail / Trade Routes domain doctrine** — modern roads, rail corridors, historic routes (wagon, military, emigrant, stage, cattle, trade), depots, sidings, yards, crossings, bridges, ferries, river crossings, freight corridors, network graph projections, and the explicit sensitivity rules that gate Indigenous corridors, culturally sensitive routes, and critical transport facilities.
-
-It does **not** decide truth, replace `EvidenceBundle` resolution, or substitute for steward review. AI summarization is advisory only.
-
-[Back to top](#top)
-
----
-
-## Scope and repo fit
-
-> [!NOTE]
-> All paths in this section are PROPOSED until verified against mounted-repo evidence. Placement follows Directory Rules §3 (responsibility roots), §4 (placement protocol), and §12 (Domain Placement Law). A domain MUST appear as a *segment* inside a responsibility root, never as a root itself.
-
-This runbook lives under `docs/` because its primary responsibility is **explaining a governed procedure to humans**. It lives under the `roads-rail-trade` domain segment because every step here applies specifically to that domain's objects, sources, and sensitivity posture.
-
-```text
-docs/
-└── runbooks/
-    └── roads-rail-trade/
-        └── PROMOTION_RUNBOOK.md    ← this file
-```
-
-**Upstream of this runbook** (inputs it depends on):
-
-| Upstream artifact | PROPOSED home | Why this runbook needs it |
-|---|---|---|
-| Roads / Rail / Trade Routes domain README | `docs/domains/roads-rail-trade/README.md` | Scope, ubiquitous language, object families. |
-| Lifecycle law | `docs/doctrine/lifecycle-law.md` | `RAW → PUBLISHED` invariants. |
-| Directory Rules | `docs/doctrine/directory-rules.md` | Where every artifact emitted by promotion belongs. |
-| Authority ladder | `docs/doctrine/authority-ladder.md` | Conflict resolution between sources, ADRs, and convention. |
-| Promotion-gate spec (A–G) | `docs/architecture/promotion-gates.md` | Canonical gate definitions; this runbook applies them to one domain. |
-| `SourceDescriptor` standard | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | Intake field requirements. |
-| Domain object map | `contracts/domains/roads-rail-trade/OBJECT_MAP.md` | Object meaning. |
-| Domain schemas | `schemas/contracts/v1/domains/roads-rail-trade/*.schema.json` | Object shape. |
-| Domain policy | `policy/domains/roads-rail-trade/*.rego` | Allow / deny / restrict / abstain. |
-
-**Downstream of this runbook** (artifacts produced by following it):
-
-| Downstream artifact | PROPOSED home |
-|---|---|
-| `RunReceipt` for each pipeline run | `data/receipts/roads-rail-trade/` |
-| `PromotionReceipt` covering Gates A–G | `data/receipts/roads-rail-trade/promotion/` |
-| `EvidenceBundle` for released claims | `data/catalog/domain/roads-rail-trade/` |
-| `ReleaseManifest` for a release set | `release/candidates/roads-rail-trade/` then `release/published/roads-rail-trade/` |
-| `RollbackCard` paired with every release | `release/rollback/roads-rail-trade/` |
-| `CorrectionNotice` for any superseded release | `release/corrections/roads-rail-trade/` |
-| `GeneralizationReceipt` / `RedactionReceipt` | `data/receipts/roads-rail-trade/transforms/` |
-
-[Back to top](#top)
-
----
-
-## What this runbook governs
-
-| In scope | Out of scope (and where to look instead) |
-|---|---|
-| Roads, rail, historic route, depot, siding, yard, crossing, bridge, ferry, river-crossing, freight-corridor, route-event, operator-status, access-restriction, network-edge, movement-story-node promotion. | Settlement / infrastructure canonical claims → **Settlements / Infrastructure** runbook. |
-| Generalization, suppression, and uncertainty handling for Indigenous corridors, culturally sensitive routes, uncertain historic alignments, and critical transport facilities. | Hydrologic evidence for fords, gauges, channels → **Hydrology** runbook. |
-| Cross-lane consumption of crossings, river fords, facility identity, hazard closures, and historic-corridor context. | Hazard event / advisory / warning publication → **Hazards** runbook. |
-| Graph / triplet projection of the transport network and rollback of derived graphs. | Archaeological site coordinates → **Archaeology** runbook (denied / generalized by default). |
-| `RunReceipt`, `PromotionReceipt`, `ReleaseManifest`, `RollbackCard`, and `CorrectionNotice` for this domain. | Generic governed-API runtime semantics → `docs/architecture/governed-ai/` and governed-API runbooks. |
-
-[Back to top](#top)
-
----
-
-## Lifecycle map for Roads / Rail / Trade Routes
-
-The lifecycle below is CONFIRMED KFM doctrine; the per-domain handler labels are PROPOSED — exact validator, policy, and pipeline names will be set when the responsibility-root files are landed.
-
-```mermaid
-flowchart LR
-  RAW["RAW
-  immutable source intake
-  (KDOT / FHWA / WZDx / TIGER / GNIS / OSM / archival)"]
-  WORK["WORK
-  normalize schema · geometry · time · identity
-  derive route membership · uncertainty profile"]
-  Q["QUARANTINE
-  unclear rights · unresolved source role
-  cultural-corridor flag · over-precise historic geom
-  legal-status from OSM/GNIS · failed validator"]
-  PROC["PROCESSED
-  EvidenceRef · ValidationReport
-  GeneralizationReceipt · digest closure"]
-  CAT["CATALOG / TRIPLET
-  EvidenceBundle · graph projection
-  release candidate"]
-  PUB["PUBLISHED
-  ReleaseManifest · RollbackCard
-  governed API only"]
-
-  RAW --> WORK
-  WORK --> PROC
-  WORK -- "fail-closed" --> Q
-  Q -. "steward decision" .-> WORK
-  Q -. "no resolution" .-> RAW
-  PROC --> CAT
-  CAT -- "Gates A–G PASS" --> PUB
-  CAT -- "any gate FAIL" --> Q
-  PUB -- "correction / rollback" --> CAT
-```
-
-> [!NOTE]
-> The "fail-closed" arrows are non-decorative: **unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state MUST block public promotion** (CONFIRMED doctrine). Resolution is a steward action, not an operator override.
-
-[Back to top](#top)
-
----
-
-## Domain snapshot
-
-CONFIRMED domain scope; PROPOSED field-level realization until schemas land.
-
-### Object families this runbook moves
-
-| Object family | Identity rule (PROPOSED) | Temporal handling (CONFIRMED) |
-|---|---|---|
-| `RoadSegment` | `source_id + object_role + temporal_scope + normalized_digest` | `source / observed / valid / retrieval / release / correction` times distinct where material. |
-| `RailSegment` | same shape as RoadSegment | same |
-| `HistoricRouteClaim` | same shape; uncertainty class required | same; alignment versions explicit |
-| `TradeRouteCorridor` | same shape; corridor envelope, not surveyed alignment | same |
-| `CorridorRoute` · `RouteMembership` | same | same |
-| `Crossing` · `Bridge` · `Ferry` · `RiverCrossing` | point identity + temporal scope | same |
-| `Depot` · `Siding` · `Yard` · `TransportFacility` | facility identity is **Settlements/Infrastructure-owned**; this runbook carries the *transport* relation. | same |
-| `RouteEvent` · `OperatorStatus` · `AccessRestriction` · `RestrictionEvent` | event identity + temporal scope | same |
-| `NetworkNode` · `NetworkEdge` | derived graph identity; rollback-distinct from canonical | derived; never replaces canonical |
-| `MovementStoryNode` | narrative identity bound to released evidence | linked to source/observed times |
-| `GeneralizationReceipt` | transform identity + input/output digests | always paired with public-safe geometry |
-
-### Key source families (CONFIRMED)
-
-| Source family | Role | Rights / sensitivity | Freshness |
-|---|---|---|---|
-| Census TIGER/Line roads | authority / observation / context / model | terms NEEDS VERIFICATION; sensitive joins fail-closed | source-vintage |
-| FHWA HPMS | authority / observation | terms NEEDS VERIFICATION | cadence-specific |
-| FHWA National Highway Freight Network | authority / context | terms NEEDS VERIFICATION | cadence-specific |
-| WZDx feeds | observation | terms NEEDS VERIFICATION | near-real-time; treat as observation, not authority |
-| KDOT / KanPlan / KanDrive / Kansas GIS | authority / observation | terms NEEDS VERIFICATION | cadence-specific |
-| County / state bridge and restriction data | authority / observation | terms NEEDS VERIFICATION | cadence-specific |
-| GNIS names | authority / context | terms NEEDS VERIFICATION | versioned |
-| OpenStreetMap | context / observation | **MUST NOT** be used as legal-status authority | crowd-cadence |
-| Historic maps · county atlases · military/emigrant trail sources | context | sensitive cultural-corridor flag possible | source-vintage |
-| Steward sources for sensitive cultural corridors | authority (restricted) | steward-only; **never** public-default | as steward defines |
-
-### Cross-lane relations (CONFIRMED doctrine)
-
-| This domain → related lane | Relation type | Constraint |
-|---|---|---|
-| Roads/Rail → Settlements / Infrastructure | depots · crossings · facilities · dependencies | preserve facility ownership; settlement-owned identity. |
-| Roads/Rail → Hydrology | bridge · ferry · ford · river-crossing | preserve hydrologic evidence ownership. |
-| Roads/Rail → Hazards | closure · detour · flood / fire / smoke exposure | KFM is **never** an alert authority. |
-| Roads/Rail → Archaeology / Cultural Heritage | historic routes · Indigenous corridors · forts · missions | exact archaeological coordinates **denied**; corridor reconstructions cited as context only. |
-
-[Back to top](#top)
-
----
-
-## Promotion Gates A–G applied to Roads / Rail / Trade Routes
-
-The seven gates are CONFIRMED canonical (KFM Promotion Gate Matrix A–G). The mapping below shows what each gate checks **for this domain**. Per-gate validator names, Rego packages, and CI job names remain PROPOSED until mounted-repo verification.
-
-| Gate | Canonical intent (CONFIRMED) | Roads / Rail / Trade Routes specifics (PROPOSED) | Pass evidence | Default on failure |
-|---|---|---|---|---|
-| **A · Structure and Metadata** | MetaBlock present; zone correctness; placement matches Directory Rules. | KFM Meta Block present on doc artifacts; emitted records placed under `data/<phase>/roads-rail-trade/` and `release/candidates/roads-rail-trade/`; no path drift into a root domain folder. | `check_structure` PASS; placement audit clean. | `ERROR` → quarantine. |
-| **B · Schemas and Contracts** | Schema and OpenAPI validation against canonical homes. | `RoadSegment`, `RailSegment`, `HistoricRouteClaim`, `TradeRouteCorridor`, `Crossing`, `Bridge`, `Ferry`, `RouteEvent`, `OperatorStatus`, `AccessRestriction`, `NetworkEdge`, `GeneralizationReceipt` validate against `schemas/contracts/v1/domains/roads-rail-trade/*.schema.json`; layer manifests validate against the canonical `LayerManifest` schema. | Validator PASS with version pinned; spec_hash recorded. | `ERROR` → quarantine. |
-| **C · Policy Parity** | Same Rego bundle in CI (Conftest) and runtime. | `policy/domains/roads-rail-trade/*.rego` runs identically in CI and PDP; pinned by digest. | Conftest PASS; PDP digest matches CI digest. | `DENY` → fail-closed. |
-| **D · Security and Sensitivity** | Sensitivity, rights, license scans; living-person and culturally sensitive content checks. | **Indigenous trade / mobility corridors, oral history, treaty, cultural, and interpretive evidence default to steward review and generalized public geometry**; critical transport facilities require review; OSM / GNIS **may not** publish a legal-status determination; over-precise historic alignments without uncertainty profile are denied. | `RedactionReceipt` / `GeneralizationReceipt` present where required; license SPDX in allowlist; steward sensitivity review recorded. | `DENY` → quarantine; steward review required. |
-| **E · Data Quality** | DQ profilers / assertions with thresholds. | Route membership and designation are separable (no conflation); operator / status timelines temporally coherent; uncertainty class set for every `HistoricRouteClaim`; crossing / bridge / ferry references resolve to facility identity in Settlements / Infrastructure. | DQ assertions PASS at threshold; failed assertions emit a structured report. | `ERROR` → quarantine; remediation required. |
-| **F · Provenance and Lineage** | Receipt and lineage validation; PROV-O round-trip. | Every claim resolves `EvidenceRef → EvidenceBundle`; `RunReceipt` present for the producing pipeline; PROV-O / STAC / DCAT fragments emitted; graph / triplet projection labeled as **derived**, not canonical. | `EvidenceBundle` content-addressed; `RunReceipt` cosign-verified; lineage walk returns no orphans. | `ABSTAIN` (missing evidence) or `ERROR` (missing receipt). |
-| **G · Reviewability** | CODEOWNERS-enforced human approval plus policy approval (two-key). | Domain steward **and** release officer both approve; sensitivity steward additionally approves any cultural-corridor or critical-facility release; `PromotionReceipt` records both approval identities and timestamps. | `PromotionReceipt` carries two distinct, valid approval signatures bound to CODEOWNERS roles. | `DENY` until both approvals present and policy-significant duties separated. |
-
-> [!IMPORTANT]
-> **Auto-merge / auto-publish fires only when all seven gates pass.** Any gate failure blocks the transition. The matrix is the *complete* set; partial passage is not a partial release.
-
-[Back to top](#top)
-
----
-
-## Operator procedure
-
-The procedure is grouped by lifecycle phase. Each step lists the **action**, the **evidence emitted**, and the **failure rule**. Commands shown are illustrative; exact tool names and flags are PROPOSED until repo verification.
-
-### Phase 0 — Pre-flight checks
-
-- [ ] You hold the domain-steward or release-officer role for `roads-rail-trade` (CODEOWNERS check).
-- [ ] The release officer is **a different person** than the producing operator when the release is policy-significant (cultural corridor, critical facility, schema-versioned change). Separation of duties is required at Gate G.
-- [ ] `SourceDescriptor` exists for every source you intend to admit; `source_role`, `rights`, `sensitivity`, `cadence`, and citation are present.
-- [ ] You have read the active sensitivity callouts in `docs/domains/roads-rail-trade/README.md` for cultural corridors and critical facilities.
-- [ ] No active `CorrectionNotice` or open rollback drill blocks the affected layer.
-
-### Phase 1 — RAW intake (admission, not promotion)
-
-> [!NOTE]
-> `RAW` is **not** a public surface. Admission to `RAW` does not imply promotion. Connectors emit to `data/raw/roads-rail-trade/` and quarantine — never to `data/processed/` or `data/published/`.
-
-1. Run the source connector or watcher. The connector emits a `RunReceipt` covering fetch metadata (ETag, Last-Modified, content length, source URL, fetch timestamp).
-2. Persist the immutable source payload (or governed reference) plus the `SourceDescriptor`.
-3. If `source_role`, `rights`, `sensitivity`, citation, or hash are missing → **route to `QUARANTINE`** with a structured reason. Do not proceed.
-4. Watchers MUST open a PR or candidate record — **never publish directly** (watcher-as-non-publisher invariant).
-
-**Emitted:** `RunReceipt` · `SourceDescriptor` (or update).
-
-### Phase 2 — WORK / QUARANTINE normalization
-
-1. Normalize schema, geometry, time, identity, evidence references, rights, and policy posture.
-2. For `HistoricRouteClaim` and `TradeRouteCorridor`, attach an uncertainty profile and explicit alignment-version. Over-precise historic geometry without uncertainty profile → quarantine (per the Roads/Rail validator set).
-3. For cross-lane references (crossings → settlements, bridges/fords → hydrology, closures → hazards, historic corridors → archaeology), resolve to the **owning lane's** canonical identity; do not invent identity here.
-4. For OSM / GNIS-derived legal-status claims → strip the claim; persist the geometry / name evidence but **do not** carry an OSM legal-status determination into `PROCESSED`.
-5. Failures hold in `QUARANTINE`; a quarantine reason record is required. Quarantine is not "later"; it is a governed holding state with its own review queue.
-
-**Emitted:** `RunReceipt` for the normalization run · quarantine reason record where applicable.
-
-### Phase 3 — PROCESSED (validated, but not yet public)
-
-1. Resolve `EvidenceRef → EvidenceBundle` for every claim. Unresolved evidence → `ABSTAIN` (Gate F).
-2. Emit `ValidationReport` covering shape (Gate B), meaning (contract conformance), and domain-specific assertions (Gate E).
-3. Apply public-safe transforms where sensitivity policy requires generalization (cultural corridors, critical facilities, precise historic alignments). Each transform emits a `GeneralizationReceipt` or `RedactionReceipt` with input / output geometry digests and reasoning.
-4. Compute a canonical `spec_hash` from the JCS-canonicalized record. Same evidence → same hash, deterministically.
-
-**Emitted:** `ValidationReport` · `EvidenceRef` chain · `GeneralizationReceipt` / `RedactionReceipt` as needed · `RunReceipt`.
-
-### Phase 4 — CATALOG / TRIPLET (release candidate)
-
-1. Emit the `EvidenceBundle` (JSON-LD, content-addressed by `spec_hash`).
-2. Emit catalog records and the graph / triplet projection, **labeled derived**. The graph never replaces canonical records.
-3. Emit a release candidate under `release/candidates/roads-rail-trade/<release-id>/`.
-4. Run the **full** Gate A–G evaluation against the candidate. Joined decision records carry a shared `decision_id`.
-
-**Emitted:** `EvidenceBundle` · catalog records · graph projection (derived) · candidate `ReleaseManifest` · gate decision records.
-
-### Phase 5 — PUBLISHED (governed release)
-
-1. If all seven gates PASS → produce the signed `PromotionReceipt` enumerating Gates A–G.
-2. Bind the release to a `ReleaseManifest` that records: artifact digests, policy posture, review state, correction path, and rollback target.
-3. Sign with DSSE; record cosign verification; (optionally) anchor via Rekor.
-4. Promote to `release/published/roads-rail-trade/<release-id>/`. The governed API is the **only** route public clients use; no direct reads of canonical stores.
-5. Open the paired `RollbackCard` in `release/rollback/roads-rail-trade/<release-id>/`. Every release MUST have a rollback target, even if the rollback is "forward fix only" with stated reason.
-
-**Emitted:** `PromotionReceipt` (Gates A–G) · `ReleaseManifest` · DSSE signature · `RollbackCard`.
-
-> [!TIP]
-> If a partial set of gates passes and one fails, the right action is **always** quarantine plus a structured reason — never "publish the safe parts now and fix the rest later." Lifecycle skip is an anti-pattern (Directory Rules §13.5).
-
-[Back to top](#top)
-
----
-
-## Sensitivity, generalization, and fail-closed defaults
-
-This domain has explicit, CONFIRMED sensitivity posture. The defaults below apply unless a steward decision documented in the `PromotionReceipt` overrides them with stated reason.
-
-| Class | Default posture | Required transform | Required reviewer |
-|---|---|---|---|
-| Indigenous trade and mobility corridors | **Steward review** required; geometry **generalized** for public release. | Corridor envelope, not surveyed alignment; precision generalization to reviewer-stated tolerance. | Cultural / sensitivity steward + domain steward. |
-| Oral history, treaty, or interpretive route evidence | Steward review; public release **default-off**. | `RedactionReceipt`; cited as context, not as authoritative alignment. | Cultural / sensitivity steward. |
-| Uncertain historic alignments (wagon, military, emigrant, stage, cattle) | Uncertainty profile **required**; over-precise geometry denied. | `GeneralizationReceipt` with stated tolerance and uncertainty class. | Domain steward. |
-| Critical transport facilities (bridges, ferries, designated freight nodes flagged as critical) | Review required before public detail. | Sensitivity-aware projection; precision suppression where harmful. | Sensitivity steward + domain steward. |
-| OSM- or GNIS-derived legal status | **Never** published as legal authority. | Strip status; retain geometry / name only. | Validator; no steward override at Gate C. |
-| Cross-domain join with archaeology (historic corridor near a site) | Exact archaeological coordinates **denied** by default. | Archaeology lane controls site geometry; this lane carries only the corridor. | Archaeology steward. |
+# Roads, Rail, and Trade Promotion Preflight Runbook
+
+> Prepare, validate, and hand off one Roads/Rail/Trade candidate for accountable
+> review without creating route truth, operational authority, release authority,
+> promotion authority, deployment authority, or publication state.
 
 > [!WARNING]
-> Unclear rights, unresolved source role, missing evidence, unresolved sensitivity, or absent release state **MUST** block public promotion (CONFIRMED doctrine, Directory Rules §3, Lifecycle Law). The default is `DENY`, not "publish and revisit."
+> KFM is not a navigation, dispatch, traffic-control, railroad-operating,
+> bridge-safety, emergency-routing, legal-access, right-of-way, regulatory, or
+> current-closure authority. Stop if the requested work could be mistaken for
+> current safe-passage, legal-access, infrastructure-condition, or emergency
+> guidance.
 
-[Back to top](#top)
+> [!IMPORTANT]
+> **Current result: `HOLD`.** The repository contains one bounded, synthetic,
+> no-network `CorridorRoute` validation profile. The Roads/Rail/Trade candidate
+> lane contains no candidate record, the proof job reports no accepted proof
+> producer, and the release-dry-run job reports no accepted domain command or
+> candidate-manifest contract. This runbook stops at preflight and handoff.
 
----
+## Quick navigation
 
-## Failure modes and quarantine handling
+- [1. Goal and scope](#1-goal-and-scope)
+- [2. Authority and terminal boundary](#2-authority-and-terminal-boundary)
+- [3. Current repository disposition](#3-current-repository-disposition)
+- [4. State and outcome vocabulary](#4-state-and-outcome-vocabulary)
+- [5. Preconditions](#5-preconditions)
+- [6. Preflight check matrix](#6-preflight-check-matrix)
+- [7. Roles and separation of duties](#7-roles-and-separation-of-duties)
+- [8. Procedure](#8-procedure)
+- [9. Repository-native validation](#9-repository-native-validation)
+- [10. Mandatory stop conditions](#10-mandatory-stop-conditions)
+- [11. Candidate handoff packet](#11-candidate-handoff-packet)
+- [12. Release handoff](#12-release-handoff)
+- [13. Correction and rollback](#13-correction-and-rollback)
+- [14. Acceptance and negative cases](#14-acceptance-and-negative-cases)
+- [15. Related repository surfaces](#15-related-repository-surfaces)
+- [16. Open verification backlog](#16-open-verification-backlog)
+- [17. Runbook maintenance and documentation rollback](#17-runbook-maintenance-and-documentation-rollback)
 
-| Failure | Detected at | Outcome | Remediation |
-|---|---|---|---|
-| Missing `SourceDescriptor` field (role / rights / sensitivity / citation / hash). | Phase 1 RAW intake. | `QUARANTINE`. | Source steward populates descriptor; re-admit. |
-| Geometry / time / identity normalization fails. | Phase 2. | `QUARANTINE`. | Pipeline operator + domain steward repair; re-run. |
-| OSM / GNIS attempts to set legal status. | Phase 2 / Gate C. | `DENY`. | Strip claim; retain underlying observation only. |
-| Over-precise historic alignment, no uncertainty profile. | Phase 2 / Gate E. | `QUARANTINE`. | Attach uncertainty profile; apply `GeneralizationReceipt`. |
-| `EvidenceRef` does not resolve to `EvidenceBundle`. | Phase 3 / Gate F. | `ABSTAIN`. | Re-resolve; if unresolvable, drop the claim. |
-| Cultural corridor flagged but no sensitivity review recorded. | Gate D. | `DENY`. | Sensitivity steward review; record decision in `PromotionReceipt`. |
-| Single-approver attempt on policy-significant release. | Gate G. | `DENY`. | Second approver required; release officer ≠ producer. |
-| Spec hash mismatch (recomputation differs from recorded). | Gate B / Gate F. | `ERROR` → quarantine. | Re-canonicalize; investigate non-determinism. |
-| Cosign signature invalid or absent. | Phase 5. | `DENY`. | Re-sign; verify key chain; abort release if unresolved. |
-| Rollback target missing or stale. | Phase 5 / Gate G. | `DENY`. | Pair release with `RollbackCard` covering the prior root hash / manifest reference. |
+## 1. Goal and scope
 
-[Back to top](#top)
+This runbook governs the **preflight and review handoff** for a proposed
+Roads/Rail/Trade transition from `CATALOG` or `TRIPLETS` toward `PUBLISHED`.
+It helps an operator determine whether an immutable candidate is supported
+well enough for accountable review.
 
----
+### In scope
 
-## Negative-path fixtures
+- freezing one candidate identity, exact repository ref, artifact inventory,
+  and digest set;
+- verifying source role, rights, sensitivity, time, geometry, uncertainty,
+  evidence, validation, policy, review, correction, and rollback references;
+- running the repository's bounded synthetic `CorridorRoute` checks at the
+  exact reviewed ref;
+- recording `PASS`, `ABSTAIN`, `DENY`, `ERROR`, and workflow `HOLD` results
+  without collapsing them into release state;
+- producing a public-safe, reference-only candidate dossier; and
+- handing a complete packet to separately authenticated accountable reviewers.
 
-Negative-path coverage is mandatory; fail-closed gates are only meaningful when proven by failing inputs. The fixture list below is PROPOSED in shape and home; exact filenames are NEEDS VERIFICATION until landed.
+### Out of scope
+
+- source discovery, live retrieval, source admission, or connector operation;
+- creating or mutating route, segment, membership, crossing, facility,
+  operator, restriction, legal-access, safe-passage, or current-status truth;
+- moving payloads between lifecycle lanes;
+- issuing an operational policy decision or authenticating a reviewer;
+- assembling a real release manifest, proof pack, signature, or published
+  carrier;
+- changing a public API, map, graph, tile, export, Focus Mode, deployment, or
+  runtime surface; and
+- approving, releasing, deploying, promoting, publishing, or activating data.
+
+## 2. Authority and terminal boundary
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../doctrine/directory-rules.md). Those rules
+place human operational procedures under `docs/runbooks/`, candidate dossiers
+under `release/candidates/`, release decisions under the appropriate
+`release/<object-family>/` lane, and release-approved public-safe carriers under
+`data/published/`.
+
+This file therefore explains a procedure. It is not a source descriptor,
+contract, schema, policy rule, EvidenceBundle, proof, review record, promotion
+decision, release manifest, rollback card, receipt, signature, published
+carrier, or operational instruction.
+
+Directory placement does not grant truth, rights clearance, review, release,
+or publication status. Promotion emits a new governed state or version; it is
+never inferred from a copy, move, filename, workflow completion, green check,
+or mutable alias.
+
+The highest result this runbook may produce is:
 
 ```text
-tests/domains/roads-rail-trade/negative/
-fixtures/domains/roads-rail-trade/invalid/
+READY_FOR_ACCOUNTABLE_RELEASE_REVIEW
 ```
 
-| Fixture | Asserted outcome | Gate exercised |
+That result means the dossier is coherent enough for the responsible humans to
+review. It does **not** mean `APPROVED`, `RELEASED`, `DEPLOYED`, `PROMOTED`, or
+`PUBLISHED`.
+
+## 3. Current repository disposition
+
+The evidence below is bound to the commit and blobs in the metadata block. A
+later change must be re-inspected before relying on this table.
+
+| Surface | Current evidence | Bounded conclusion |
 |---|---|---|
-| `missing_source_role.json` | `DENY` | Gate D · source-role check |
-| `osm_legal_status_claim.json` | `DENY` (claim stripped) | Gate C · policy parity |
-| `historic_route_no_uncertainty.json` | `QUARANTINE` | Gate E · data quality |
-| `cultural_corridor_no_review.json` | `DENY` | Gate D · sensitivity review |
-| `evidence_ref_unresolvable.json` | `ABSTAIN` | Gate F · provenance |
-| `spec_hash_mismatch.json` | `ERROR` | Gate B · schemas / Gate F · receipts |
-| `single_approver_policy_significant.json` | `DENY` | Gate G · two-key approval |
-| `release_manifest_no_rollback.json` | `DENY` | Gate G · review / rollback target |
-| `graph_projection_published_as_canonical.json` | `DENY` | Gate F · derived-vs-canonical labeling |
+| Runbook path | This file already exists below `docs/runbooks/roads-rail-trade/` | **CONFIRMED.** Same-path replacement is valid; no new home is required. |
+| Local procedure boundary | `docs/runbooks/roads-rail-trade/README.md` classifies the prior promotion runbook as proposal-heavy | **CONFIRMED stale procedure.** Replace its unverified execution claims with this preflight boundary. |
+| Candidate lane | `release/candidates/roads-rail-trade/` contains `README.md` only | **CONFIRMED / ABSENT candidate.** No real candidate can advance. |
+| Executable domain profile | Contract, schema, validator, synthetic fixtures, and focused tests exist for `CorridorRoute` | **CONFIRMED / BOUNDED.** The profile can return `PASS`, `ABSTAIN`, `DENY`, or `ERROR`; it is not route evidence or release closure. |
+| Domain workflow | `.github/workflows/domain-roads-rail-trade.yml` runs the focused tests and fixture validator with `KFM_NO_NETWORK=1` | **CONFIRMED / BOUNDED.** It proves only the named checks at the tested SHA. |
+| Broader domain validation | The workflow records broader Roads/Rail/Trade semantic validation as not established | **CONFIRMED / HOLD.** Do not generalize from `CorridorRoute` to the whole lane. |
+| Proof production | The workflow reports no accepted Roads/Rail/Trade proof producer or deterministic proof command | **CONFIRMED / HOLD.** A green held job is not an EvidenceBundle or proof. |
+| Release dry-run | The workflow reports no accepted Roads/Rail/Trade release-dry-run command or candidate-manifest contract | **CONFIRMED / HOLD.** The job performs no release, promotion, or public write. |
+| Policy | Domain policy files and a proposal-oriented policy README exist; the workflow guards the scaffold posture | **CONFIRMED presence / PARTIAL.** File presence does not establish accepted runtime evaluation or a candidate-bound decision. |
+| Review routing | `CODEOWNERS` routes repository review to `@bartytime4life` | **CONFIRMED route / INSUFFICIENT authority.** Routing is not domain, rights-holder, sensitivity, release, or independent approval. |
+| Operational promotion | No candidate, accepted proof producer, domain release-dry-run command, authenticated authority, or execution path was established | **UNKNOWN / HOLD.** Do not execute a lifecycle transition. |
 
-[Back to top](#top)
+### Current finite result
 
----
+```yaml
+work_state: HOLD
+reason_codes:
+  - RRT_CANDIDATE_ABSENT
+  - RRT_PROOF_PRODUCER_UNESTABLISHED
+  - RRT_RELEASE_DRY_RUN_UNESTABLISHED
+  - RRT_POLICY_RUNTIME_UNVERIFIED
+  - RRT_ACCOUNTABLE_REVIEW_AUTHORITY_UNVERIFIED
+terminal_boundary: ACCOUNTABLE_REVIEW_HANDOFF_ONLY
+promotion_execution: HELD
+release: NOT_PERFORMED
+deployment: NOT_PERFORMED
+publication: NOT_PERFORMED
+```
 
-## Receipts and artifacts emitted
+## 4. State and outcome vocabulary
 
-CONFIRMED doctrine: receipts are not optional when an operation is consequential. If no receipt exists, the operation did not happen in the governed sense.
+Keep validator result, workflow/work state, review state, promotion decision,
+release state, deployment state, and publication state separate.
 
-| Artifact | Emitted at | PROPOSED schema home | Lifetime |
-|---|---|---|---|
-| `SourceDescriptor` | RAW intake | `schemas/contracts/v1/sources/source_descriptor.schema.json` | Immutable; supersession via new descriptor + lineage. |
-| `RunReceipt` | Every pipeline run | `schemas/contracts/v1/receipts/run_receipt.schema.json` | Permanent; signed. |
-| `GeneralizationReceipt` / `RedactionReceipt` | Public-safe transform | `schemas/contracts/v1/receipts/transform_receipt.schema.json` | Permanent; bound to release. |
-| `ValidationReport` | Phase 3 | `schemas/contracts/v1/validation/validation_report.schema.json` | Permanent. |
-| `EvidenceBundle` | Phase 4 | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | Content-addressed; immutable. |
-| `PromotionReceipt` (Gates A–G) | Phase 5 | `schemas/contracts/v1/receipts/promotion_receipt.schema.json` | Permanent; signed. |
-| `ReleaseManifest` | Phase 5 | `schemas/contracts/v1/release/release_manifest.schema.json` | Permanent. |
-| `RollbackCard` | Phase 5 | `schemas/contracts/v1/release/rollback_card.schema.json` | Paired with release; survives release retirement. |
-| `CorrectionNotice` | On correction | `schemas/contracts/v1/release/correction_notice.schema.json` | Permanent; carries supersession link. |
-| `ReviewRecord` | At Gate G | `schemas/contracts/v1/review/review_record.schema.json` | Permanent; carries reviewer identities. |
-| `DecisionEnvelope` (per gate) | Each gate | `schemas/contracts/v1/decisions/decision_envelope.schema.json` | Permanent; joined by `decision_id`. |
-
-[Back to top](#top)
-
----
-
-## Rollback and correction
-
-Rollback is a **governance event**, not an emergency hack.
-
-### Rollback procedure (PROPOSED operational shape)
-
-1. Identify the affected release via `release/published/roads-rail-trade/<release-id>/`.
-2. Locate the paired `RollbackCard` in `release/rollback/roads-rail-trade/<release-id>/`. It names the prior root hash, manifest reference, and tile / artifact checksum set.
-3. Two-key approval: domain steward + release officer (Gate G mirror).
-4. Promote the prior `ReleaseManifest` back to active via the same governed transition — **never** a manual file move.
-5. Emit a fresh `PromotionReceipt` for the rollback transition. Gates A–G evaluate over the rollback, not the original release.
-6. Open a `CorrectionNotice` linked to the superseded release. Citations to the prior release MUST be updated through the governed API.
-
-### Correction procedure
-
-1. File a `CorrectionNotice` referencing the affected `EvidenceBundle` `spec_hash` and the specific claim.
-2. Re-run the lifecycle from the lowest phase the correction touches (usually Phase 2 or Phase 3).
-3. The new release supersedes — never silently overwrites — the prior release. Both remain inspectable.
-
-> [!CAUTION]
-> A rollback that has no paired `RollbackCard`, or a correction that does not preserve the superseded artifact for audit, is an invariant violation. Halt and escalate to the docs steward.
-
-[Back to top](#top)
-
----
-
-## Governed AI posture for this domain
-
-AI may **summarize** released Roads / Rail / Trade Routes `EvidenceBundle`s, **compare** evidence across sources, **explain** uncertainty, and **draft** steward-review notes. AI must `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request. AI must `ERROR` cleanly on internal failure.
-
-| AI may | AI must not |
-|---|---|
-| Summarize a released route's evidence and limitations. | Establish truth about a route, alignment, or restriction. |
-| Compare two source claims for the same corridor. | Bypass steward review on cultural corridors or critical facilities. |
-| Draft a steward-review note explaining a sensitivity concern. | Publish an unsigned claim or substitute generated language for an `EvidenceBundle`. |
-| Surface a `RunReceipt` for inspection. | Override a `DENY` policy decision under any framing. |
-| Project a public-safe popup or Evidence Drawer payload. | Read `RAW`, `WORK`, `QUARANTINE`, or unpublished candidates directly from a public client. |
-
-[Back to top](#top)
-
----
-
-## Verification backlog and open questions
-
-NEEDS VERIFICATION until a mounted repo or accepted ADR settles each.
-
-| Item | Evidence that would settle it | Status |
+| Term | Meaning here | Authority effect |
 |---|---|---|
-| Live KDOT / FHWA / FRA / WZDx source terms and rights. | `data/registry/sources/roads-rail-trade/` entries + license SPDX in allowlist. | NEEDS VERIFICATION |
-| Indigenous / cultural corridor policy text and reviewer assignments. | `policy/domains/roads-rail-trade/sensitivity_cultural_corridor.rego` + steward CODEOWNERS. | NEEDS VERIFICATION |
-| `RouteUncertaintyProfile` shape and validator. | Schema landed under `schemas/contracts/v1/domains/roads-rail-trade/`. | NEEDS VERIFICATION |
-| Transport graph projection and MapLibre integration boundary. | ADR (renderer-as-non-truth) + accompanying tests. | NEEDS VERIFICATION |
-| Two-key approval enforcement (Gate G) on policy-significant releases. | CODEOWNERS + branch protection + Conftest rule. | NEEDS VERIFICATION |
-| Path convention for domain runbooks: `docs/runbooks/<domain>/` vs `docs/runbooks/<domain>_PROMOTION.md`. | An accepted ADR or per-root README directive in `docs/runbooks/`. | NEEDS VERIFICATION |
-| Existence of canonical `docs/architecture/promotion-gates.md` (gate definitions referenced by this runbook). | File presence + cross-linking. | NEEDS VERIFICATION |
-| CI workflow name(s) that implement Gates A–G for this domain. | `.github/workflows/*` and required-checks branch protection. | NEEDS VERIFICATION |
+| `PASS` | The invoked bounded validator found no violation in its declared profile | No lifecycle or release change |
+| `ABSTAIN` | Required support is unresolved and the validator refuses a stronger result | Candidate does not advance |
+| `DENY` | A prohibited, unsafe, contradictory, or released-without-closure state was detected | Candidate does not advance |
+| `ERROR` | Valid evaluation could not complete | Result is unusable until repaired and rerun |
+| `HOLD` | Ownership, authority, rights, sensitivity, overlap, candidate, proof, policy, review, correction, rollback, or operational closure is unresolved | Work remains in its prior state |
+| `READY_FOR_ACCOUNTABLE_RELEASE_REVIEW` | Every applicable preflight item is supported and the dossier is reviewable | Still not approval or release |
+| `APPROVED` | An authenticated accountable authority approved the exact candidate under an accepted decision contract | Not emitted by this runbook |
+| `PUBLISHED` | A separately authorized release decision activated an immutable public-safe carrier | Not emitted by this runbook |
 
-[Back to top](#top)
+The `CorridorRoute` validator's finite result is evidence for one bounded
+profile. Do not translate its `PASS` into a review, promotion, release,
+deployment, or publication result.
 
----
+## 5. Preconditions
 
-## Related docs
+A candidate is eligible for this preflight only when every applicable item is
+bound to an immutable or versioned object. Missing support produces `HOLD`,
+`ABSTAIN`, `DENY`, or `ERROR`; it never produces partial promotion.
 
-PROPOSED links; targets exist as doctrine references and may not all be landed.
+| # | Required support | Minimum evidence | Default if unresolved |
+|---:|---|---|---|
+| 1 | Exact candidate identity | Candidate ID, domain, object family, exact repository/build ref, version, artifact inventory, and deterministic digests | `HOLD` or `DENY` |
+| 2 | Lifecycle boundary | Prior state and proposed transition are explicit; no skipped state or file-move inference | `DENY` |
+| 3 | Canonical source descriptors | Stable source IDs, roles, rights, access, sensitivity, citation, cadence, version, and retrieval identity | `ABSTAIN`, `HOLD`, or `DENY` |
+| 4 | Source-role separation | Observed, regulatory, modeled, aggregate, administrative, candidate, context, and synthetic roles remain distinct where applicable | `DENY` |
+| 5 | Object and membership identity | Route, segment, membership, crossing, facility, operator, restriction, and graph identities are not collapsed | `DENY` |
+| 6 | Time and freshness | Source, observed, valid, retrieval, build, release, expiry, correction, and withdrawal times are distinguished where material | `ABSTAIN`, `HOLD`, or `DENY` |
+| 7 | Geometry and uncertainty | CRS, topology, precision, lineage, reconstruction status, uncertainty, and public transform are supported | `ABSTAIN`, `HOLD`, or `DENY` |
+| 8 | Rights and sensitivity | Redistribution basis and cultural, sovereignty, infrastructure, access, precision, private-property, and combination-risk obligations are resolved | `HOLD` or `DENY` |
+| 9 | Evidence closure | Every consequential `EvidenceRef` resolves to an admissible candidate-scoped `EvidenceBundle` | `ABSTAIN` or `DENY` |
+| 10 | Catalog/projection closure | Catalog and optional triplet/graph projections are reproducible and remain derived | `HOLD` or `DENY` |
+| 11 | Policy result | Accepted evaluator identity, policy bundle/version, candidate binding, finite outcome, reasons, and obligations | `HOLD`, `DENY`, or `ERROR` |
+| 12 | Validation closure | Applicable schemas, validators, negative fixtures, tests, and exact-ref results are complete | `HOLD`, `DENY`, or `ERROR` |
+| 13 | Accountable review | Authenticated roles, current assignments, scope binding, conflicts, independence, time, and required rights-holder review | `HOLD` or `ABSTAIN` |
+| 14 | Correction and rollback | Correction path, invalidation scope, prior target, recovery procedure, and rollback evidence are candidate-bound | `HOLD` or `DENY` |
+| 15 | Public boundary | Public consumers use governed interfaces or released carriers; no internal, restricted, candidate, or mutable store is exposed | `DENY` |
+| 16 | Overlap and ownership | No active branch, pull request, migration, or steward work owns the same candidate or authority surface | `HOLD` |
 
-- `docs/doctrine/directory-rules.md` — placement authority for every artifact this runbook emits.
-- `docs/doctrine/lifecycle-law.md` — `RAW → PUBLISHED` invariant.
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default.
-- `docs/doctrine/trust-membrane.md` — public clients consume governed APIs only.
-- `docs/architecture/promotion-gates.md` — canonical Gate A–G specification.
-- `docs/domains/roads-rail-trade/README.md` — domain scope, ubiquitous language, object families.
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — `SourceDescriptor` intake standard.
-- `docs/adr/ADR-0001-schema-home.md` — schemas live under `schemas/contracts/v1/`.
-- `policy/domains/roads-rail-trade/` — gate logic and sensitivity policy.
-- `release/candidates/roads-rail-trade/` and `release/published/roads-rail-trade/` — release homes.
-- TODO: cross-link the Settlements / Infrastructure, Hydrology, Hazards, and Archaeology promotion runbooks once they exist.
+## 6. Preflight check matrix
 
-[Back to top](#top)
+The prior runbook described a seven-gate implementation as though
+Roads/Rail/Trade wiring and release execution were established. Current
+repository evidence supports only the bounded `CorridorRoute` profile. Use the
+matrix below as a human preflight checklist; it is **not** an accepted machine
+enum and must not be reported as an executed release gate.
 
----
+| Check family | Required closure | Current lane disposition |
+|---|---|---|
+| Placement and identity | Candidate dossier is in the candidate lane; payloads remain in their owning lifecycle roots; identities and digests are immutable | `HOLD` — no candidate record |
+| Artifact integrity | Candidate inventory, manifest references, receipts, proofs, and digests agree over the exact artifact set | `HOLD` — no candidate/proof packet |
+| Source and evidence | Source roles, rights, retrieval identity, citations, EvidenceRefs, and EvidenceBundles close without upcasting | `HOLD` — real candidate support absent |
+| Time, geometry, and uncertainty | Temporal roles, freshness, CRS, precision, reconstruction, membership, and transform lineage are coherent | `NEEDS VERIFICATION` for any real candidate |
+| Rights, sensitivity, and cross-domain authority | Cultural/sovereignty, infrastructure, legal-access, private-property, exact-location, and combination risks are resolved by the correct owners | `HOLD` — accountable roles unverified |
+| Policy and validation | Accepted candidate-bound policy result plus applicable schema, validator, negative-fixture, and test evidence | `HOLD` — bounded schema profile only; runtime policy unverified |
+| Review, correction, and rollback | Authenticated independent review where required, explicit obligations, correction lineage, rollback target, and recovery evidence | `HOLD` — authority and operational closure unverified |
 
-## Appendix — receipt sketches
+## 7. Roles and separation of duties
 
-The shapes below are PROPOSED illustrative skeletons. They show the joins this runbook depends on (`decision_id`, `spec_hash`, gate identifiers). Authoritative shape lives in `schemas/contracts/v1/`.
+Do not infer an actor's authority from a filename, commit author, requested
+review, CODEOWNERS route, workflow identity, or repository permission.
 
-<details>
-<summary><b>Illustrative <code>RunReceipt</code> (PROPOSED shape)</b></summary>
+| Role | Required responsibility | Current status |
+|---|---|---|
+| Candidate author | Assemble immutable references and disclose all known gaps; never self-create approval | `UNKNOWN` until a candidate exists |
+| Domain steward | Confirm Roads/Rail/Trade semantics, identity, membership, time, and cross-domain boundaries | `NEEDS VERIFICATION` |
+| Source and rights reviewer | Confirm source identity, authority role, rights, access, attribution, cadence, and redistribution | `NEEDS VERIFICATION` |
+| Cultural/sovereignty reviewer | Review Indigenous, Tribal, treaty, oral-history, cultural-corridor, and steward-controlled knowledge where applicable | `NEEDS VERIFICATION` |
+| Infrastructure/security reviewer | Review critical facilities, harmful precision, private access, and combination risks where applicable | `NEEDS VERIFICATION` |
+| Evidence/policy reviewer | Confirm evidence closure and accepted candidate-bound policy evaluation | `NEEDS VERIFICATION` |
+| Correction/rollback reviewer | Confirm correction, invalidation, rollback target, recovery procedure, and evidence | `NEEDS VERIFICATION` |
+| Release authority | Decide the exact release under an accepted contract after all required reviews | `NEEDS VERIFICATION`; outside this runbook |
 
-```json
-{
-  "object_type": "RunReceipt",
-  "schema_version": "v1",
-  "decision_id": "<uuid>",
-  "domain": "roads-rail-trade",
-  "phase": "PROCESSED",
-  "pipeline": "roads-rail-trade/normalize",
-  "spec_hash": "sha256:<jcs-canonicalized-hash>",
-  "inputs": [
-    { "source_descriptor_ref": "kfm://source/<id>", "fetch_etag": "<etag>" }
-  ],
-  "outputs": [
-    { "object_type": "RoadSegment", "digest": "sha256:<...>" }
-  ],
-  "tool_versions": { "normalizer": "<pin>", "validator": "<pin>" },
-  "policy_decision_ref": "kfm://decision/<decision_id>",
-  "evidence_refs": [ "kfm://evidence/<bundle-id>" ],
-  "actor": "<runner-identity>",
-  "timestamp": "2026-05-12T00:00:00Z"
-}
+For policy-significant, rights-sensitive, precision-sensitive,
+infrastructure-sensitive, first-source, or first-public-surface work, the
+candidate author must not self-approve. If the required independent authority
+cannot be authenticated, return `HOLD`.
+
+## 8. Procedure
+
+### Step 0 — Stop at the operational-safety boundary
+
+Confirm that the request is not asking KFM to determine or change current
+safe-passage, traffic control, rail operation, bridge condition, closure,
+detour, legal access, emergency response, or regulatory status. If it is, stop,
+preserve repository and candidate state, and refer the question to the official
+authority.
+
+Record either `RRT_NON_OPERATIONAL_BOUNDARY_CONFIRMED` or the reason for
+`DENY` or `ESCALATE`.
+
+### Step 1 — Freeze the candidate and authority baseline
+
+Record:
+
+- exact candidate ID and declared lifecycle transition;
+- exact repository commit and build/run reference;
+- candidate artifact inventory and deterministic digests;
+- contract, schema, validator, fixture, test, policy, and release-profile
+  versions;
+- source, evidence, receipt, proof, catalog, review, correction, withdrawal,
+  and rollback references;
+- active branches, pull requests, migrations, and ownership overlaps; and
+- failures or holds that predate this candidate.
+
+Do not continue when the candidate is mutable, incompletely inventoried,
+semantically owned by overlapping work, or based on floating aliases.
+
+### Step 2 — Verify source role, rights, sensitivity, and evidence
+
+For every contributing source:
+
+1. resolve the canonical source identity and immutable retrieval/version
+   reference;
+2. preserve the admitted source role without upcasting;
+3. verify rights, license, access, attribution, retention, and redistribution;
+4. identify cultural, sovereignty, infrastructure, privacy, precision,
+   private-property, and combination-risk obligations;
+5. resolve every consequential `EvidenceRef` to an admissible
+   `EvidenceBundle`; and
+6. record all unresolved support explicitly.
+
+Never use a map edit, observation, candidate, crowd source, generated summary,
+or graph projection as legal, regulatory, current-operational, or safe-passage
+authority.
+
+### Step 3 — Verify route, membership, time, and geometry semantics
+
+Confirm that:
+
+- a route is not collapsed into a segment, route-membership assertion,
+  crossing, facility, operator event, restriction, or graph edge;
+- modern, historic, reconstructed, modeled, narrative, candidate, synthetic,
+  and generated representations remain distinguishable;
+- source, observed, valid, retrieval, build, release, expiry, correction, and
+  withdrawal times remain distinct where material;
+- geometry has explicit CRS, provenance, precision, uncertainty, and
+  reconstruction status;
+- public generalization or redaction is separately reviewed and receipted;
+- Hydrology, Settlements/Infrastructure, Hazards, Archaeology, People/Land,
+  legal, safety, and official-authority claims remain owned by their proper
+  lanes; and
+- graph/triplet projections remain rebuildable derivatives, never canonical
+  truth.
+
+### Step 4 — Run bounded repository validation
+
+Run the commands in [Section 9](#9-repository-native-validation) from the
+repository root at the exact candidate ref. Record exact commands, environment,
+inputs, outputs, result status, and limitations.
+
+The commands evaluate only synthetic `CorridorRoute` fixtures. They do not
+evaluate a real candidate, active policy, proof packet, manifest, public
+surface, release, or publication state.
+
+A failure may be classified as inherited only when exact base/head evidence
+supports that classification. Do not weaken a schema, validator, negative
+fixture, no-network boundary, policy hold, workflow sentinel, or topology
+ratchet to obtain a passing result.
+
+### Step 5 — Require a candidate-bound policy result
+
+An eligible candidate needs an accepted evaluator result bound to:
+
+- the exact candidate and digest set;
+- the policy bundle identity and version;
+- evaluation time and evaluator identity;
+- finite outcome, reason codes, labels, and obligations; and
+- rights, sensitivity, precision, source role, evidence, and public exposure.
+
+Policy file presence, syntax, README prose, a proposed Rego package, or a green
+static workflow is not an operational decision. At the pinned snapshot, the
+Roads/Rail/Trade policy runtime remains unverified; keep promotion on `HOLD`.
+
+### Step 6 — Complete accountable review
+
+Verify each required review record against:
+
+- reviewer identity, role, current assignment, and authority interval;
+- independence and conflict constraints;
+- candidate ID, exact ref, scope, artifact set, and digest binding;
+- source-rights, cultural/sovereignty, infrastructure/security, evidence,
+  policy, domain, correction, rollback, and public-surface responsibilities;
+- review time and review outcome; and
+- unresolved obligations or dissent.
+
+Requested review, comments, automated review, workflow success, non-draft PR
+state, merge history, and CODEOWNERS routing are not accountable approval.
+
+### Step 7 — Close correction and rollback before release review
+
+Require candidate-bound references for:
+
+- correction intake, decision, supersession, and user-visible correction path;
+- affected artifact, catalog, graph, cache, API, map, export, and derived-view
+  invalidation;
+- prior release target and forward-fix boundary;
+- recovery procedure, stop conditions, and accountable roles; and
+- rehearsal or other evidence appropriate to the candidate's risk.
+
+A generic rollback document or synthetic test does not prove that a real
+candidate can be recovered.
+
+### Step 8 — Audit the public boundary
+
+When the candidate would affect a public surface, verify that:
+
+- ordinary clients use governed APIs or immutable release-approved carriers;
+- no RAW, WORK, QUARANTINE, restricted, internal, or unreleased candidate store
+  is exposed;
+- evidence, source role, time, policy, review, release, correction, and
+  withdrawal state remain inspectable;
+- denied, withheld, stale, corrected, unavailable, and error states fail safely;
+- sensitive precision cannot leak through URLs, logs, tiles, popups, exports,
+  screenshots, caches, search, AI context, or deep links; and
+- KFM is not presented as current legal, operational, navigation, emergency, or
+  safe-passage authority.
+
+If no public implementation and evidence can be inspected, record `UNKNOWN`
+and keep the candidate on `HOLD`.
+
+### Step 9 — Reconcile the final preflight result
+
+Apply this precedence:
+
+```text
+ERROR > DENY > ABSTAIN > HOLD > READY_FOR_ACCOUNTABLE_RELEASE_REVIEW
 ```
 
-</details>
+`HOLD` is a work-state result. It remains mandatory when ownership, authority,
+candidate, proof, rights, sensitivity, overlap, review, correction, rollback,
+or operational closure is unresolved even if a bounded validator returns
+`PASS`.
 
-<details>
-<summary><b>Illustrative <code>PromotionReceipt</code> with Gates A–G (PROPOSED shape)</b></summary>
+### Step 10 — Hand off; do not promote
 
-```json
-{
-  "object_type": "PromotionReceipt",
-  "schema_version": "v1",
-  "decision_id": "<uuid>",
-  "domain": "roads-rail-trade",
-  "release_id": "<release-id>",
-  "release_manifest_ref": "kfm://release/roads-rail-trade/<release-id>",
-  "spec_hash": "sha256:<...>",
-  "gates": {
-    "A_structure_metadata": { "outcome": "ANSWER", "evidence_refs": ["..."] },
-    "B_schemas_contracts": { "outcome": "ANSWER", "evidence_refs": ["..."] },
-    "C_policy_parity":     { "outcome": "ANSWER", "evidence_refs": ["..."] },
-    "D_security_sensitivity": {
-      "outcome": "ANSWER",
-      "evidence_refs": ["..."],
-      "review_record_ref": "kfm://review/<id>"
-    },
-    "E_data_quality":      { "outcome": "ANSWER", "evidence_refs": ["..."] },
-    "F_provenance_lineage": {
-      "outcome": "ANSWER",
-      "evidence_bundle_ref": "kfm://evidence/<bundle-id>"
-    },
-    "G_reviewability": {
-      "outcome": "ANSWER",
-      "approvals": [
-        { "role": "domain-steward", "actor": "<id>", "timestamp": "..." },
-        { "role": "release-officer", "actor": "<id>", "timestamp": "..." }
-      ]
-    }
-  },
-  "outcome": "ANSWER",
-  "rollback_card_ref": "kfm://rollback/<release-id>",
-  "signature": { "type": "DSSE", "key_id": "<cosign-key>", "rekor_ref": "<optional>" },
-  "timestamp": "2026-05-12T00:00:00Z"
-}
+When every applicable precondition is supported, assemble the packet in
+[Section 11](#11-candidate-handoff-packet) and hand it to the accountable
+release authority. This runbook ends there.
+
+Do not mutate lifecycle stores, manifests, aliases, registries, public carriers,
+deployments, caches, or public interfaces from this procedure.
+
+## 9. Repository-native validation
+
+Run from the repository root at the exact candidate ref.
+
+### 9.1 Focused `CorridorRoute` contract and validator tests
+
+```bash
+python -m pytest -q tests/schemas/test_corridor_route_contract.py
 ```
 
-</details>
+The focused module verifies contract/schema pairing, required fields,
+route/segment/membership anti-collapse rules, forbidden authority fields,
+deterministic hashing, released-posture closure, source-role constraints,
+public-sensitive-geometry denial, synthetic/no-network fixture metadata, and
+the validator CLI fixture runner.
 
-<details>
-<summary><b>Illustrative <code>RollbackCard</code> (PROPOSED shape)</b></summary>
+### 9.2 Deterministic fixture suite
 
-```json
-{
-  "object_type": "RollbackCard",
-  "schema_version": "v1",
-  "domain": "roads-rail-trade",
-  "release_id": "<release-id>",
-  "prior_release_manifest_ref": "kfm://release/roads-rail-trade/<prior-id>",
-  "prior_root_hash": "<hash>",
-  "rollback_target_state": "release/published/roads-rail-trade/<prior-id>/",
-  "rehearsal_status": "REHEARSED | NEEDS_REHEARSAL | FORWARD_FIX_ONLY",
-  "forward_fix_reason": "<required iff rehearsal_status = FORWARD_FIX_ONLY>",
-  "approvers": [
-    { "role": "domain-steward", "actor": "<id>" },
-    { "role": "release-officer", "actor": "<id>" }
-  ],
-  "timestamp": "2026-05-12T00:00:00Z"
-}
+```bash
+python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
 ```
 
-</details>
+The fixture suite expects one `PASS`, one `ABSTAIN`, and eight `DENY` outcomes.
+It succeeds only when each tracked fixture returns its declared expected
+result. This is bounded synthetic proof, not a real-candidate evaluation.
+
+### 9.3 Hosted domain workflow
+
+The [domain workflow](../../../.github/workflows/domain-roads-rail-trade.yml)
+runs both commands with `KFM_NO_NETWORK=1`. It also:
+
+- verifies required repository boundaries and parses domain schemas/fixtures;
+- detects implementation appearing in currently documented validator
+  scaffolds so it can be wired deliberately;
+- preserves the proposal-oriented domain policy sentinel;
+- records broader semantic validation as held;
+- records proof production as explicitly skipped and held; and
+- records release dry-run as explicitly skipped and held.
+
+A green workflow means those checks and hold sentinels behaved as written at
+one SHA. It does not establish route truth, source admission, policy approval,
+EvidenceBundle closure, proof, accountable review, release, deployment,
+promotion, or publication.
+
+### 9.4 Validation result record
+
+Record at least:
+
+```yaml
+repository_ref: <exact-commit-sha>
+candidate_id: <stable-id-or-NOT_AVAILABLE>
+command: <exact-command>
+environment: <runner-and-relevant-pins>
+inputs: [<schema-contract-fixture-or-candidate-refs>]
+result: PASS | ABSTAIN | DENY | ERROR | NOT_RUN
+introduced_failures: [<ids>]
+inherited_failures: [<ids-with-base-and-head-evidence>]
+limitations: [<what-the-check-does-not-prove>]
+```
+
+## 10. Mandatory stop conditions
+
+### Return `HOLD` when
+
+- no immutable candidate dossier exists;
+- the candidate lane, proof producer, release dry-run, policy runtime, or
+  accountable authority is not established;
+- source rights, sensitivity, sovereignty, access, precision, currentness, or
+  evidence needs review;
+- required ownership, reviewer role, separation, or overlap remains unresolved;
+- correction, invalidation, recovery, or rollback support is incomplete; or
+- a public implementation cannot be inspected.
+
+### Return `ABSTAIN` when
+
+- a consequential EvidenceRef, source role, time, geometry, identity, rights,
+  or authority claim cannot be supported strongly enough for a decision; or
+- repository evidence is insufficient to distinguish a safe candidate from an
+  unsupported claim.
+
+### Return `DENY` when
+
+- the candidate presents observation, candidate, context, graph, generated, or
+  crowd material as legal, regulatory, current-operational, or safe-passage
+  authority;
+- rights, policy, sensitivity, cultural/sovereignty, infrastructure, or public
+  exposure forbids the candidate;
+- historic or culturally sensitive geometry is more precise than supported;
+- route, segment, membership, facility, operator, restriction, cross-domain,
+  or lifecycle authority is collapsed;
+- the candidate would expose internal, restricted, quarantined, or unreleased
+  material; or
+- a lifecycle state would be skipped or inferred from placement.
+
+### Return `ERROR` when
+
+- input cannot be parsed or validated;
+- schema, contract, hash, artifact inventory, manifest, receipt, proof, review,
+  correction, or rollback declarations contradict each other;
+- the accepted evaluator or validator cannot run reproducibly; or
+- environment or tooling failure prevents a trustworthy result.
+
+### Return `ESCALATE` when
+
+- the request could affect current transportation operation, emergency
+  response, legal access, right-of-way, infrastructure security, protected
+  cultural knowledge, or another external authority; or
+- unsafe details cannot be reviewed in a public pull request.
+
+## 11. Candidate handoff packet
+
+Store only a public-safe, reference-only dossier under
+`release/candidates/roads-rail-trade/`. Keep payloads, source instances,
+evidence, proofs, policy, review records, receipts, manifests, correction
+notices, rollback cards, and published carriers in their owning roots.
+
+The packet must contain or reference:
+
+1. candidate ID, domain, object family, lifecycle transition, exact ref, run,
+   build, version, and artifact inventory;
+2. deterministic artifact and specification digests;
+3. source descriptors, roles, versions, retrieval identity, rights, access,
+   sensitivity, and citations;
+4. route/segment/membership/crossing/facility/operator/restriction identity and
+   cross-domain ownership notes;
+5. temporal, CRS, geometry, topology, precision, reconstruction, uncertainty,
+   and public-transform records;
+6. EvidenceRefs, EvidenceBundle digests, catalog references, and derived graph
+   or triplet references;
+7. schema, contract, validator, negative-fixture, test, workflow, and exact-ref
+   result records;
+8. accepted policy evaluator and bundle identity, result, reasons, and
+   obligations;
+9. authenticated reviewer roles, assignments, conflicts, independence, and
+   candidate-bound review records;
+10. correction, invalidation, withdrawal, supersession, recovery, and rollback
+    references;
+11. public-boundary and non-operational-authority assessment;
+12. introduced and inherited failures with exact base/head evidence; and
+13. every remaining `UNKNOWN`, `NEEDS VERIFICATION`, `CONFLICTED`, `HOLD`,
+    `ABSTAIN`, `DENY`, or `ERROR` finding.
+
+If a value is sensitive, place only a safe opaque identifier and an
+access-controlled reference in the dossier. Never copy credentials, temporary
+URLs, restricted payloads, exact sensitive coordinates, private facility
+detail, rights-holder notes, or vulnerability information into a filename,
+commit, pull request, log, or public candidate packet.
+
+## 12. Release handoff
+
+### Valid handoff result
+
+```text
+READY_FOR_ACCOUNTABLE_RELEASE_REVIEW
+```
+
+Use it only when every applicable preflight item is supported and no stronger
+finite result applies. Record the exact candidate, commit, artifact set,
+digests, validation evidence, limitations, required reviewers, and remaining
+obligations.
+
+### Current repository limitation
+
+At the pinned snapshot, the correct result is `HOLD`: no candidate record,
+accepted proof producer, accepted domain release-dry-run command,
+candidate-manifest contract, verified policy runtime, or authenticated release
+authority was established.
+
+The release authority must use a separately accepted release process. This
+runbook does not define, simulate, or invoke that process.
+
+## 13. Correction and rollback
+
+### Before release
+
+If preflight fails, keep the candidate in its current lifecycle state. Record
+the finding, correction owner, affected references, and rerun boundary. Do not
+create a rollback record for a release that never occurred.
+
+### After a separately authorized release
+
+Use the owning correction and rollback procedures. Preserve immutable prior
+versions, supersession lineage, affected EvidenceRefs, public invalidation,
+recovery targets, accountable decisions, and user-visible correction state.
+
+The existing Roads/Rail/Trade rollback runbook remains classified by the local
+procedure boundary as proposal-heavy. Until its complete command, inputs,
+outputs, authority, and recovery evidence are reconciled, it is not operational
+rollback proof.
+
+## 14. Acceptance and negative cases
+
+### Documentation acceptance criteria
+
+- [ ] The runbook states `PROMOTION_EXECUTION_HELD`, `NON_RELEASE`,
+      `NON_DEPLOYMENT`, and `NON_PUBLICATION` plainly.
+- [ ] The candidate lane is not described as containing a real candidate.
+- [ ] The bounded `CorridorRoute` profile is the only claimed executable domain
+      validation slice.
+- [ ] Proof and release-dry-run workflow holds remain visible.
+- [ ] `PASS`, `ABSTAIN`, `DENY`, `ERROR`, `HOLD`, review, release, deployment,
+      promotion, and publication remain separate.
+- [ ] Route, segment, membership, time, geometry, rights, sensitivity,
+      cross-domain, correction, and rollback boundaries remain explicit.
+- [ ] Commands and links resolve to current repository surfaces.
+- [ ] No source, candidate, policy decision, review, release, promotion,
+      deployment, or publication is implied by the documentation change.
+
+### Required negative cases for future promotion implementation
+
+Any future real-candidate preflight must fail closed for at least:
+
+- missing or mutable candidate identity;
+- artifact or specification digest mismatch;
+- unresolved source identity, role, rights, version, or retrieval context;
+- observation/candidate/context upcast to legal or regulatory authority;
+- route, segment, membership, facility, restriction, or graph-role collapse;
+- invalid temporal ordering or stale current-status claim;
+- unsupported CRS, precision, historic reconstruction, or geometry lineage;
+- missing EvidenceBundle support;
+- culturally sensitive or infrastructure-sensitive detail without accountable
+  review and public-safe transform;
+- graph projection presented as canonical truth;
+- missing accepted policy result or policy obligations;
+- missing independent review where required;
+- missing correction, invalidation, withdrawal, or rollback target;
+- public access to internal or unreleased material; and
+- any attempted lifecycle skip or public write during preflight.
+
+## 15. Related repository surfaces
+
+- [Local Roads/Rail/Trade procedure boundary](./README.md)
+- [Bounded no-network procedure](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Roads/Rail/Trade rollback runbook](./ROLLBACK_RUNBOOK.md)
+- [Domain boundary](../../domains/roads-rail-trade/README.md)
+- [Domain lifecycle](../../domains/roads-rail-trade/DATA_LIFECYCLE.md)
+- [Domain sensitivity guidance](../../domains/roads-rail-trade/SENSITIVITY.md)
+- [Directory Rules](../../doctrine/directory-rules.md)
+- [Lifecycle Law](../../doctrine/lifecycle-law.md)
+- [Trust Membrane](../../doctrine/trust-membrane.md)
+- [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [`CorridorRoute` contract](../../../contracts/domains/roads-rail-trade/corridor_route.md)
+- [`CorridorRoute` schema](../../../schemas/contracts/v1/domains/roads-rail-trade/corridor_route.schema.json)
+- [CorridorRoute validator](../../../tools/validators/domains/roads-rail-trade/validate_corridor_route.py)
+- [Focused CorridorRoute tests](../../../tests/schemas/test_corridor_route_contract.py)
+- [Synthetic CorridorRoute fixtures](../../../fixtures/domains/roads-rail-trade/corridor_route/)
+- [Domain workflow](../../../.github/workflows/domain-roads-rail-trade.yml)
+- [Source-registry boundary](../../../data/registry/sources/roads-rail-trade/README.md)
+- [Proof boundary](../../../data/proofs/roads-rail-trade/README.md)
+- [Domain policy boundary](../../../policy/domains/roads-rail-trade/README.md)
+- [Release-candidate boundary](../../../release/candidates/roads-rail-trade/README.md)
+
+## 16. Open verification backlog
+
+| Item | Evidence required to close it | Current state |
+|---|---|---|
+| Real candidate contract | Accepted candidate/manifest contracts plus one immutable dossier and artifact inventory | `HOLD` |
+| Proof producer | Accepted producer, schemas, source-role controls, fixtures, validators, receipts, access controls, and deterministic tests | `HOLD` |
+| Domain release dry-run | Accepted command, candidate-manifest contract, fail-closed fixtures, no-public-write proof, and rollback boundary | `HOLD` |
+| Policy runtime | Accepted evaluator path, bundle/version identity, parity proof, candidate binding, finite result, reasons, and obligations | `NEEDS VERIFICATION` |
+| Accountable roles | Current domain, source, rights, cultural/sovereignty, infrastructure/security, evidence/policy, rollback, and release assignments | `NEEDS VERIFICATION` |
+| Full semantic validation | Executable crossing, bridge/river-crossing, facility, source-role, catalog, graph, evidence, public-safety, and release profiles | `HOLD` |
+| Public boundary | Governed API or immutable released-carrier implementation, access control, redaction/generalization, correction, and degraded-state evidence | `UNKNOWN` |
+| Operational recovery | Candidate-bound correction, invalidation, rollback, recovery, and rehearsal evidence | `HOLD` |
+| `roads-rail-trade` / `transport` convergence | Accepted ADR and migration plan resolving the documented naming/authority split | `CONFLICTED / HOLD` |
+
+## 17. Runbook maintenance and documentation rollback
+
+Re-review this runbook when a candidate appears, the domain workflow changes,
+a proof producer or release-dry-run command is accepted, policy runtime becomes
+executable, accountable roles change, a release contract is adopted, a public
+surface is added, or correction/rollback evidence changes.
+
+For a future edit:
+
+1. freeze the exact default-branch commit and relevant blobs;
+2. inspect the local procedure boundary, candidate lane, workflow, validator,
+   tests, policy, proof, review, correction, rollback, and public surfaces;
+3. update only claims supported at that exact snapshot;
+4. check headings, anchors, code fences, tables, and relative links;
+5. review the complete diff for unrelated churn; and
+6. preserve the terminal authority boundary unless a separately accepted
+   decision and implementation prove a later state.
+
+Before merge, close the draft pull request and delete only its feature branch.
+After merge, revert the documentation commit or submit a reviewed forward
+correction. Either action changes documentation only; it does not undo source
+admission, evidence, policy, lifecycle, release, deployment, promotion, or
+publication state.
 
 [Back to top](#top)
-
----
-
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Lifecycle Law](../../doctrine/lifecycle-law.md) · [Promotion Gates A–G](../../architecture/promotion-gates.md) · [Roads / Rail / Trade Routes domain README](../../domains/roads-rail-trade/README.md)
-
-**Last updated:** 2026-05-12 · **Status:** `draft` · **[Back to top](#top)**

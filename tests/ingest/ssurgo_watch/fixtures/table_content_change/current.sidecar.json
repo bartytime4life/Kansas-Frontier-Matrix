@@ -1,0 +1,79 @@
+{
+  "analysis_area_m2": 1000000,
+  "analysis_geometry_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "attribute_schema": {
+    "component": [
+      {
+        "name": "cokey",
+        "nullable": false,
+        "primary_key": true,
+        "references": null,
+        "type": "text"
+      },
+      {
+        "name": "comppct_r",
+        "nullable": false,
+        "primary_key": false,
+        "references": null,
+        "type": "integer"
+      },
+      {
+        "name": "mukey",
+        "nullable": false,
+        "primary_key": false,
+        "references": "mapunit.mukey",
+        "type": "text"
+      }
+    ],
+    "mapunit": [
+      {
+        "name": "mukey",
+        "nullable": false,
+        "primary_key": true,
+        "references": null,
+        "type": "text"
+      },
+      {
+        "name": "muname",
+        "nullable": true,
+        "primary_key": false,
+        "references": null,
+        "type": "text"
+      },
+      {
+        "name": "musym",
+        "nullable": false,
+        "primary_key": false,
+        "references": null,
+        "type": "text"
+      }
+    ]
+  },
+  "content_hash": "sha256:3c5138be4425397d1f639b1b6e129965a8ccdd1c314e75b50d0a85678a094618",
+  "extraction_profile_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "fixture_only": true,
+  "geometry_profile_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "mapunit_areas_m2": {
+    "MU-FIX-A": 600000,
+    "MU-FIX-B": 400000
+  },
+  "mapunit_geometry_hashes": {
+    "MU-FIX-A": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "MU-FIX-B": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+  },
+  "materiality_profile": {
+    "mapunit_area_change_ppm": 5000
+  },
+  "observed_at": "2026-05-16T00:00:00Z",
+  "package_identifier": "SSURGO_FIXTURE_2026_B",
+  "package_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "profile_id": "kfm.ssurgo-watch.synthetic.v1",
+  "publication_date": "2026-05-15",
+  "source_descriptor_ref": "fixture://source/nrcs-ssurgo",
+  "spec_hash": "sha256:fbc78bf99dc4bbdfd130599933f689d83b9eb00c5191efba3793eb10ed8989ca",
+  "survey_area_symbol": "ZZ999",
+  "table_content_hashes": {
+    "component": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "mapunit": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  }
+}

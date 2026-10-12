@@ -1,0 +1,31 @@
+{
+  "assessment_id": "material-change:habitat-land-cover:example-county:20260804",
+  "subject_ref": "kfm://habitat/land-cover/example-county",
+  "baseline_ref": "kfm://dataset-version/habitat-land-cover/example-county/2025",
+  "candidate_ref": "kfm://dataset-version/habitat-land-cover/example-county/2026",
+  "baseline_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "candidate_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "semantic_changed": true,
+  "analysis_unit_kind": "county",
+  "analysis_unit_area_ha": 100000.0,
+  "metrics": {
+    "reclassification_fraction": 0.01,
+    "max_net_class_delta_ha": 100.0
+  },
+  "evidence": {
+    "diff_report_ref": "kfm://diff/habitat-land-cover/example-county/2026",
+    "validation_report_refs": [],
+    "source_refs": [
+      "kfm://source/z",
+      "kfm://source/a"
+    ],
+    "criterion_evidence_refs": [
+      "kfm://validation/habitat-land-cover/example-county"
+    ]
+  },
+  "timing": {
+    "assessed_at": "2026-08-04T12:00:00Z",
+    "baseline_as_of": "2025-01-01T00:00:00Z",
+    "candidate_as_of": "2026-01-01T00:00:00Z"
+  }
+}

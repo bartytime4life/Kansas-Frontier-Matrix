@@ -12,10 +12,6 @@ related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-labels.md
-  - docs/doctrine/source-roles.md
-  - docs/doctrine/evidence-model.md
-  - docs/doctrine/ai-boundary.md
 tags: [kfm, doctrine, governance, evidence]
 notes:
   - Codifies the Primary / Secondary / Tertiary hierarchy used to govern documentation, decisions, and claims.
@@ -23,6 +19,9 @@ notes:
   - Pinned to ai-build-operating-contract.md CONTRACT_VERSION = "3.0.0".
   - Owner team, doc_id UUID, and sibling doc paths require verification against the repository.
   - v1.1 reconciles the §6 truth-label table with operating contract §8; surfaces a STALE vs. SOURCE_STALE terminology question (OQ-AL-01); adds anti-injection containment to §8; pins CONTRACT_VERSION.
+owning_root: docs/
+responsibility: "Documentation for Authority Ladder; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Authority Ladder
@@ -73,7 +72,7 @@ notes:
 
 ## 1. Why an authority ladder
 
-KFM is an evidence-first system. Every public statement, schema, route, policy decision, release manifest, and AI summary either traces to a source whose authority is known, or it abstains. The lifecycle invariant — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` — depends on it; the trust posture (see [§6](#6-relationship-to-truth-labels)) depends on it; the [AI boundary plan](./ai-boundary.md) <sub>PROPOSED path</sub> depends on it. Without a fixed hierarchy of sources, "we have evidence" devolves into "someone wrote it down somewhere," and the distinction between **what the project commits to** and **what an individual contributor or external article asserts** collapses.
+KFM is an evidence-first system. Every public statement, schema, route, policy decision, release manifest, and AI summary either traces to a source whose authority is known, or it abstains. The lifecycle invariant — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` — depends on it; the trust posture (see [§6](#6-relationship-to-truth-labels)) depends on it; the AI boundary plan (PROPOSED; not present) <sub>PROPOSED path</sub> depends on it. Without a fixed hierarchy of sources, "we have evidence" devolves into "someone wrote it down somewhere," and the distinction between **what the project commits to** and **what an individual contributor or external article asserts** collapses.
 
 The authority ladder answers a single question: **when two sources of information disagree, which one wins, and what label does the loser carry?** It applies to:
 
@@ -264,7 +263,7 @@ The authority ladder governs **documentation, decisions, and claims about the pr
 > [!IMPORTANT]
 > **Do not collapse them.** A common drift is to call a piece of documentation "authoritative" because it describes an `authority`-class data source. The authority *of the document* is set by the ladder (is it a doctrine doc? an ADR? a code comment?). The `authority` *role on a data source* is set by domain doctrine (e.g., USGS WBD for HUC boundaries). These two senses of "authority" are not interchangeable.
 
-For full source-role doctrine, see the [Source Roles doctrine doc](./source-roles.md) <sub>PROPOSED path</sub>.
+For full source-role doctrine, see the Source Roles doctrine doc (PROPOSED; not present) <sub>PROPOSED path</sub>.
 
 [Back to top](#authority-ladder)
 
@@ -599,11 +598,11 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/ai-build-operating-contract.md`](./ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`); §1 Operating Law is the spine this doc subordinates to.
 - [`docs/doctrine/directory-rules.md`](./directory-rules.md) — Placement law; the responsibility-root system used by Tier 1.
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — The `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` invariant and the publication-as-state-transition rule.
-- [`docs/doctrine/truth-labels.md`](./truth-labels.md) <sub>PROPOSED</sub> — Full definitions of `CONFIRMED`, `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`, `DENY`, `ABSTAIN`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`.
-- [`docs/doctrine/source-roles.md`](./source-roles.md) <sub>PROPOSED</sub> — The data source-role taxonomy (`authority`, `observation`, `context`, `model`, `aggregate`, `admin`, `candidate`) and why it is distinct from this ladder.
-- [`docs/doctrine/evidence-model.md`](./evidence-model.md) <sub>PROPOSED</sub> — `EvidenceRef`, `EvidenceBundle`, and the citation closure rule.
-- [`docs/doctrine/ai-boundary.md`](./ai-boundary.md) <sub>PROPOSED</sub> — Where AI assists, where AI abstains, and how this ladder constrains AI-authored content.
-- [`docs/prompts/ai-builder-markdown-authoring.md`](../prompts/ai-builder-markdown-authoring.md) <sub>PROPOSED</sub> — The Markdown Authoring Agent operating prompt that references this ladder.
+- `docs/doctrine/truth-labels.md` (PROPOSED; not present) <sub>PROPOSED</sub> — Full definitions of `CONFIRMED`, `PROPOSED`, `INFERRED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`, `DENY`, `ABSTAIN`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`.
+- `docs/doctrine/source-roles.md` (PROPOSED; not present) <sub>PROPOSED</sub> — The data source-role taxonomy (`authority`, `observation`, `context`, `model`, `aggregate`, `admin`, `candidate`) and why it is distinct from this ladder.
+- `docs/doctrine/evidence-model.md` (PROPOSED; not present) <sub>PROPOSED</sub> — `EvidenceRef`, `EvidenceBundle`, and the citation closure rule.
+- `docs/doctrine/ai-boundary.md` (PROPOSED; not present) <sub>PROPOSED</sub> — Where AI assists, where AI abstains, and how this ladder constrains AI-authored content.
+- `docs/prompts/ai-builder-markdown-authoring.md` (PROPOSED; not present) <sub>PROPOSED</sub> — The Markdown Authoring Agent operating prompt that references this ladder.
 - [`docs/adr/`](../adr/) — Architecture Decision Records, the canonical place where Tier 2 findings escalate into Tier 1 changes.
 - [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml) <sub>PROPOSED</sub> — Machine-readable index of doctrine docs and their authority status.
 

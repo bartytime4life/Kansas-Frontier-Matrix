@@ -12,20 +12,18 @@ updated: 2026-05-25
 policy_label: public
 proposed_home: docs/doctrine/encyclopedia.md
 related:
-  - docs/doctrine/directory-rules.md                                  # v1.4 presentation refresh of v1.3 (renderer-decision refresh)
+  - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
-  - docs/architecture/maplibre-3d.md                                  # v1.3 sole-renderer doctrine (renderer-decision ADR PROPOSED)
-  - docs/encyclopedia/                                                # PROPOSED — planning-artifact encyclopedia (manuscript + index); NOT this file
+  - docs/encyclopedia/
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md         # PROPOSED — number pending; directory-rules.md §18.e OPEN-DR-10
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - control_plane/document_registry.yaml
 truth_labels: [CONFIRMED, PROPOSED, INFERRED, NEEDS VERIFICATION, UNKNOWN, EXTERNAL]
 authority_class: governance doctrine
@@ -42,6 +40,9 @@ notes:
   - "No mounted repo was inspected in this session. Implementation maturity is bounded per the AI Build Operating Contract current-session evidence limit."
   - "Placement of this file at docs/doctrine/encyclopedia.md is the requested path. The relationship to docs/encyclopedia/ (planning manuscript) is recorded in §1.2 and flagged as a NEEDS VERIFICATION / ADR-class question."
   - "v0.1 is the initial edition: it consolidates doctrine vocabulary already established in directory-rules.md (v1.4), kfm_unified_doctrine_synthesis.md, ai-build-operating-contract.md, and the Domains v1.1 + Pass 23/32 Consolidated Atlas. No new doctrine is introduced — every term and rule traces to a prior source."
+owning_root: docs/
+responsibility: "Documentation for KFM Doctrine Encyclopedia; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -68,7 +69,7 @@ notes:
 
 | Foundation | Invariants | Vocabulary | Patterns | Reference |
 |---|---|---|---|---|
-| [§0 Status & Authority](#0-status--authority) · [§1 Purpose & scope](#1-purpose-and-scope) · [§2 How to use this file](#2-how-to-use-this-encyclopedia) | [§3 Five core invariants](#3-the-five-core-invariants) · [§4 Truth labels](#4-truth-labels) · [§5 Lifecycle invariant](#5-the-lifecycle-invariant) · [§6 Trust membrane](#6-the-trust-membrane) · [§7 Authority ladder](#7-the-authority-ladder) · [§8 Cite-or-abstain](#8-cite-or-abstain-posture) | [§9 Finite-outcome envelope](#9-finite-outcome-decision-envelope) · [§10 Object families](#10-object-families) · [§11 Receipt taxonomy](#11-receipt-taxonomy) · [§12 Identity, hashing, replay](#12-identity-hashing-and-replay-verification) | [§13 Renderer doctrine](#13-renderer-doctrine-maplibre-as-sole-renderer-v13) · [§14 Focus Mode pattern](#14-focus-mode-pattern-v12) · [§15 Domain Placement Law](#15-domain-placement-law-cross-reference) · [§16 Compatibility taxonomy](#16-compatibility-class-taxonomy) | [§17 External standards](#17-external-standards-kfm-conforms-to) · [§18 ADR-class question types](#18-adr-class-question-types) · [§19 Anti-pattern taxonomy](#19-anti-pattern-taxonomy) · [§20 Glossary (A–Z)](#20-glossary-az) · [§21 Cross-reference index](#21-cross-reference-index) · [§22 Open questions](#22-open-questions-and-needs-verification) · [§23 Changelog](#23-changelog) |
+| [§0 Status & Authority](#0-status--authority) · [§1 Purpose & scope](#1-purpose-and-scope) · [§2 How to use this file](#2-how-to-use-this-encyclopedia) | [§3 Five core invariants](#3-the-five-core-invariants) · [§4 Truth labels](#4-truth-labels) · [§5 Lifecycle invariant](#5-the-lifecycle-invariant) · [§6 Trust membrane](#6-the-trust-membrane) · [§7 Authority ladder](#7-the-authority-ladder) · [§8 Cite-or-abstain](#8-cite-or-abstain-posture) | [§9 Finite-outcome envelope](#9-finite-outcome-decision-envelope) · [§10 Object families](#10-object-families) · [§11 Receipt taxonomy](#11-receipt-taxonomy) · [§12 Identity, hashing, replay](#12-identity-hashing-and-replay-verification) | [§13 Renderer doctrine](#13-renderer-doctrine--maplibre-as-sole-renderer-v13) · [§14 Focus Mode pattern](#14-focus-mode-pattern-v12) · [§15 Domain Placement Law](#15-domain-placement-law-cross-reference) · [§16 Compatibility taxonomy](#16-compatibility-class-taxonomy) | [§17 External standards](#17-external-standards-kfm-conforms-to) · [§18 ADR-class question types](#18-adr-class-question-types) · [§19 Anti-pattern taxonomy](#19-anti-pattern-taxonomy) · [§20 Glossary (A–Z)](#20-glossary-az) · [§21 Cross-reference index](#21-cross-reference-index) · [§22 Open questions](#22-open-questions-and-needs-verification) · [§23 Changelog](#23-changelog) |
 
 ## Doctrine map
 
@@ -206,7 +207,7 @@ These five rules are the load-bearing invariants of KFM. Every other rule in thi
 | # | Invariant | One-line statement | Canonical source |
 |---|---|---|---|
 | **I-1** | **Lifecycle** | Source material becomes public knowledge only by passing **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, and each transition is a **governed state transition, not a file move**. | `docs/doctrine/lifecycle-law.md`; `directory-rules.md` §9.1 |
-| **I-2** | **Trust membrane** | Public clients read **only** through `apps/governed-api/`. Raw, work, quarantine, canonical, model-generated, and internal state MUST NOT be a public path. | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md`; `directory-rules.md` §7.1 |
+| **I-2** | **Trust membrane** | Public clients read **only** through `apps/governed-api/`. Raw, work, quarantine, canonical, model-generated, and internal state MUST NOT be a public path. | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md`; `directory-rules.md` §7.1 |
 | **I-3** | **Cite-or-abstain** | No public claim is asserted without a resolvable `EvidenceRef` → `EvidenceBundle`. When evidence is missing, sensitive, denied, or stale, the system **abstains**; it does not fall through to fluent text. | `docs/doctrine/truth-posture.md`; `kfm_unified_doctrine_synthesis.md` §2 |
 | **I-4** | **Watcher-as-non-publisher** | Connectors, watchers, workers, and AI runtimes emit **receipts and candidates**. They **never** publish, mutate canonical records, or bypass `PromotionDecision` review. | `directory-rules.md` §7.1 (`apps/workers/` role); §13.5 (anti-pattern *Watcher publishes*); `kfm_unified_doctrine_synthesis.md` §4 |
 | **I-5** | **Deterministic identity** | Every governed object carries a content-addressable identity (`spec_hash` via canonical JCS+SHA-256, content hash for binary artifacts, or equivalent) so that replay verification, supersession lineage, and rollback targets resolve unambiguously. | `kfm_unified_doctrine_synthesis.md` §13; `directory-rules.md` §6.2 (`control_plane/document_registry.yaml`) |
@@ -291,7 +292,7 @@ The **trust membrane** is the boundary that prevents raw, unreviewed, restricted
 
 A public route MUST go through `apps/governed-api/`. Direct reads from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or `data/catalog/` by `apps/explorer-web/` or any feature code are trust-membrane violations (see §19 anti-pattern *Public route reads canonical store*).
 
-**Canonical source:** `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md`; `directory-rules.md` §7.1, §7.1.a, §13.5 (anti-pattern table).
+**Canonical source:** `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md`; `directory-rules.md` §7.1, §7.1.a, §13.5 (anti-pattern table).
 
 ---
 
@@ -726,7 +727,7 @@ Concept → owning canonical doctrine document. Use this index to find the **aut
 |---|---|
 | Placement (where files live) | `docs/doctrine/directory-rules.md` (v1.4) |
 | Lifecycle phases and promotion | `docs/doctrine/lifecycle-law.md`; `directory-rules.md` §9 |
-| Trust membrane and governed-API boundary | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md` |
+| Trust membrane and governed-API boundary | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md` |
 | Authority order for resolving conflicts | `docs/doctrine/authority-ladder.md`; this file §7 |
 | Truth labels and cite-or-abstain | `docs/doctrine/truth-posture.md`; this file §4, §8 |
 | Schema home (`schemas/contracts/v1/`) | `docs/adr/ADR-0001-schema-home.md`; `directory-rules.md` §7.4 |
@@ -854,16 +855,16 @@ Concept → owning canonical doctrine document. Use this index to find the **aut
 - [`docs/doctrine/trust-membrane.md`](./trust-membrane.md) — `apps/governed-api/` boundary
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — RAW → … → PUBLISHED invariant
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — `contracts/` vs `schemas/` vs `policy/`
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — trust membrane in executable form
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — trust membrane in executable form
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — map-first shell architecture
-- [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — sole-renderer doctrine + 3D feature surface (v1.3)
+- `docs/architecture/maplibre-3d.md` (PROPOSED; not present) — sole-renderer doctrine + 3D feature surface (v1.3)
 - [`docs/encyclopedia/README.md`](../encyclopedia/README.md) — planning-artifact encyclopedia master index *(distinct from this file; see §1.2)*
-- [`docs/encyclopedia/kfm_encyclopedia.pdf`](../encyclopedia/kfm_encyclopedia.pdf) — planning manuscript
+- `docs/encyclopedia/kfm_encyclopedia.pdf` (PROPOSED; not present) — planning manuscript
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — consolidated atlas
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — operational drift tracking
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — NEEDS VERIFICATION items
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home convention
-- [`docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md`](../adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md) — *PROPOSED*; renderer-decision ADR (`directory-rules.md` §18.e OPEN-DR-10)
+- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
+- `docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md` (PROPOSED; not present) — *PROPOSED*; renderer-decision ADR (`directory-rules.md` §18.e OPEN-DR-10)
 
 > _Last updated: **2026-05-25** · Edition: **v0.1** (initial) · Doctrine rank: peer to `directory-rules.md`, `authority-ladder.md`, `truth-posture.md`, `trust-membrane.md`, `lifecycle-law.md`._
 

@@ -1,0 +1,184 @@
+{
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:589fa7731853aabe77a1168fc2abc93270ba7ada97857b84e14b8f80f9ab9bc5",
+    "apps/site/evidence/v232-20261011/explorer-published-phone-v232.png": "sha256:0208354d7ee91858676b5f0777526c3953a88801e8137469058f139d93d207dc",
+    "apps/site/evidence/v232-20261011/underground-reconciled-pending.png": "sha256:4700c35ecfc85451a9c06624cb603ff3577c4d3b6ab3db1f4b9486639806802c",
+    "apps/site/source/app/governed-water.ts": "sha256:37d0254350aeddf26a09e2e0194719dfb611b481fb04716bf53168f6d26ad41e",
+    "apps/site/source/app/historical-topo-control.tsx": "sha256:e18fcb99d1c073f2f17a0e76c8e00cf72f862cc1cfe2d5f4502bca3e1a01c228",
+    "apps/site/source/app/page.tsx": "sha256:5f37f2c1f9d42cca7d191514214902c60526d86c1714f49d8cb29479347eb568",
+    "apps/site/source/app/scene-effects-controls.tsx": "sha256:8749c0249275612711cfcec7a43cdaf78d3c01c6290e3eb92f94e93101d5205c",
+    "apps/site/source/app/scene-effects.css": "sha256:a93e11dce684d91e2b6d612763b79fcfb5a0740348a4b5bc03f22e385c439ff2",
+    "apps/site/source/app/water-flow-layer.ts": "sha256:dd8211ad00c1b57b742bcc8fd14f359750932b1e27a06c452740bcdd78803662",
+    "apps/site/source/app/water-flow-motion.ts": "sha256:e438555db4e3224eb5e0c83d27331e2cca2a68efafbae5697592bf366db86ef0",
+    "apps/site/source/app/water-flow-sync.ts": "sha256:3182fea88f5542437eac4709f24d1b82cdbe7f83476122acf099479b293b3ce1",
+    "apps/site/source/docs/explorer-scene-verification-20261011.md": "sha256:71bdbb58d33e4120557616e28da1cf4a2c9ae620fdf71c758233aa6863aece37",
+    "apps/site/source/tests/custom-report-privacy.test.mjs": "sha256:a20588950b03bc3f3e9a318b4a97d10f8782a64d2de47e2c72d3214cfb7e630b",
+    "apps/site/source/tests/fixtures/governed-water-integrity/python-numbers.json": "sha256:425b1807000bc9fb60e9757a3f60021ad7a1b03ce02c60d81302144ed03dd5e4",
+    "apps/site/source/tests/governed-water-admin.test.mjs": "sha256:ee737f90343f88dcb833c997cee917285f6633323e33d97eaea243dfd34fe4fb",
+    "apps/site/source/tests/governed-water-integrity.test.mjs": "sha256:f436837ad5cc3fc61debc0d5728f274a90edb2f5ede24e05d08897babd893fd5",
+    "apps/site/source/tests/historical-topo-privacy.test.mjs": "sha256:a0b8132cb925dd47b89d9b54a820e62b67f70ee567187e44a7652ab363b25a00",
+    "apps/site/source/tests/scene-studio.test.mjs": "sha256:889a9ae339b5277d8ce68cdf1049c9a64d5ae6121e513f0c417392280d646965",
+    "apps/site/source/tests/water-flow-motion.test.mjs": "sha256:08980fb261f1b26cb8c60a98ad04eb4d215cb7c667d302c895f622fe10415ddd",
+    "apps/site/source/tests/water-flow-sync.test.mjs": "sha256:62c36895a448ee298bb23f1fbebd6190f8ca2bd3d4cbb56c368f226a4324bb49",
+    "apps/site/verification-v232-20261011.md": "sha256:d1e923018c552e71ac4120a8abac1078e17fc0953c65e94ca874711b920f9933",
+    "data/receipts/generated/site-v232-privacy-scene-overlay-20261011.json": "sha256:b6fd7fa673e4fc7564c9717afa0ca5a4c7a492370206052b8907620a8526b66d",
+    "tools/qa/site_mirror.py": "sha256:39a6216d35410b7a06bfab3898e21e718427ffce68ec699e898c116565e2d7ec"
+  },
+  "artifact_paths": [
+    "apps/site/README.md",
+    "apps/site/evidence/v232-20261011/explorer-published-phone-v232.png",
+    "apps/site/evidence/v232-20261011/underground-reconciled-pending.png",
+    "apps/site/source/app/governed-water.ts",
+    "apps/site/source/app/historical-topo-control.tsx",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/scene-effects-controls.tsx",
+    "apps/site/source/app/scene-effects.css",
+    "apps/site/source/app/water-flow-layer.ts",
+    "apps/site/source/app/water-flow-motion.ts",
+    "apps/site/source/app/water-flow-sync.ts",
+    "apps/site/source/docs/explorer-scene-verification-20261011.md",
+    "apps/site/source/tests/custom-report-privacy.test.mjs",
+    "apps/site/source/tests/fixtures/governed-water-integrity/python-numbers.json",
+    "apps/site/source/tests/governed-water-admin.test.mjs",
+    "apps/site/source/tests/governed-water-integrity.test.mjs",
+    "apps/site/source/tests/historical-topo-privacy.test.mjs",
+    "apps/site/source/tests/scene-studio.test.mjs",
+    "apps/site/source/tests/water-flow-motion.test.mjs",
+    "apps/site/source/tests/water-flow-sync.test.mjs",
+    "apps/site/verification-v232-20261011.md",
+    "data/receipts/generated/site-v232-privacy-scene-overlay-20261011.json",
+    "tools/qa/site_mirror.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "2e35af50b61655cf2775f8db33b13b8055cc5779",
+      "id": "v232-source",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/docs/explorer-scene-verification-20261011.md",
+      "id": "source-browser-evidence",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/verification-v232-20261011.md",
+      "id": "mirror-verification",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-11T20:59:26.693945Z",
+  "emitter": "Codex source-mirror integration",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "attached_docs": [
+      "apps/site/source/AGENTS.md",
+      "apps/site/source/docs/SITE_PRESERVATION.md",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ],
+    "evidence_refs": [
+      "site:appgprj_6aa0b1c41bc08191bfd86003920f1631:v232",
+      "source:2e35af50b61655cf2775f8db33b13b8055cc5779",
+      "repository-base:8e2afd9d13512f7634dc3e9bf2ed1edd37705d29",
+      "data/receipts/generated/site-v229-weather-layer-overlay-20261011.json"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6",
+    "provider": "OpenAI",
+    "version": "Exact serving version not exposed"
+  },
+  "notes": "Source import and bounded overlay reconciliation, not policy approval, release or hosted equivalence. Preserves predecessor receipts, repository weather overlay, user checkouts, local services and persisted data. Final artifact hashes cover all authored/imported paths except this self-referential provenance record.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "git",
+      "gh",
+      "Sites readback",
+      "local build and test tools"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:cecc88b55f54705d802551d81341f1b98cb571f3bb550b983f46fd64fd91bb2d",
+  "receipt_id": "genrec:site-v232-source-mirror:20261011",
+  "truth_labels": {
+    "apps/site/README.md": "PROPOSED",
+    "apps/site/evidence/v232-20261011/explorer-published-phone-v232.png": "PROPOSED",
+    "apps/site/evidence/v232-20261011/underground-reconciled-pending.png": "PROPOSED",
+    "apps/site/source/app/governed-water.ts": "PROPOSED",
+    "apps/site/source/app/historical-topo-control.tsx": "PROPOSED",
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects-controls.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects.css": "PROPOSED",
+    "apps/site/source/app/water-flow-layer.ts": "PROPOSED",
+    "apps/site/source/app/water-flow-motion.ts": "PROPOSED",
+    "apps/site/source/app/water-flow-sync.ts": "PROPOSED",
+    "apps/site/source/docs/explorer-scene-verification-20261011.md": "PROPOSED",
+    "apps/site/source/tests/custom-report-privacy.test.mjs": "PROPOSED",
+    "apps/site/source/tests/fixtures/governed-water-integrity/python-numbers.json": "PROPOSED",
+    "apps/site/source/tests/governed-water-admin.test.mjs": "PROPOSED",
+    "apps/site/source/tests/governed-water-integrity.test.mjs": "PROPOSED",
+    "apps/site/source/tests/historical-topo-privacy.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-studio.test.mjs": "PROPOSED",
+    "apps/site/source/tests/water-flow-motion.test.mjs": "PROPOSED",
+    "apps/site/source/tests/water-flow-sync.test.mjs": "PROPOSED",
+    "apps/site/verification-v232-20261011.md": "PROPOSED",
+    "data/receipts/generated/site-v232-privacy-scene-overlay-20261011.json": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "production-build",
+      "outcome": "PASS",
+      "reason": "Bounded verified build"
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS",
+      "reason": "No errors"
+    },
+    {
+      "gate": "lint",
+      "outcome": "PASS",
+      "reason": "0 errors; 64 warnings"
+    },
+    {
+      "gate": "application-tests",
+      "outcome": "PASS",
+      "reason": "1069 passed, 0 failed or skipped"
+    },
+    {
+      "gate": "water-release-api-mirror-startup-tests",
+      "outcome": "PASS",
+      "reason": "317 passed"
+    },
+    {
+      "gate": "local-backend-smoke",
+      "outcome": "PASS",
+      "reason": "76 checks across 59 routes, isolated empty state"
+    },
+    {
+      "gate": "recorded-mirror-content",
+      "outcome": "PASS",
+      "reason": "954 file hashes match; no review acceptance"
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "0 new drift or invariant failures; 113 baselined warnings"
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending independent review; no approval or override claimed"
+    },
+    {
+      "gate": "mirror-hosted-equivalence",
+      "outcome": "SKIPPED",
+      "reason": "No mirror deployment; prior Site browser evidence is separate"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-noaa-storm-discovery-verification-20261009",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/storm-events-queue.tsx",
+    "apps/site/source/tests/public-map-browser.test.mjs",
+    "apps/site/source/tests/storm-events-queue.test.mjs",
+    "tests/local_data/test_public_map_catalog.py",
+    "tools/local_data/public_map_catalog.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/storm-events-queue.tsx": "sha256:648cda88f0ae4b190e76fa26ca5c0cd19cccbd7bb572a52f4f07676ac83a1bd1",
+    "apps/site/source/tests/public-map-browser.test.mjs": "sha256:990fb8bd3d373a6ff28422402cf2ab87283311e0f7b9897ea00311a2102d815a",
+    "apps/site/source/tests/storm-events-queue.test.mjs": "sha256:ff205302146a432a32f631ede7af20f658b0a06f1cc7ab756d3f264d88b0718c",
+    "tests/local_data/test_public_map_catalog.py": "sha256:ad52ba5e628d1a44d798adaf880fe78bcd732f7131df8035b2c63bfb5364d08e",
+    "tools/local_data/public_map_catalog.py": "sha256:830dd3ce3966d12d0077486681789ae429969bd82a80f32628b6bade14e6fe49"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session model version not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@f42505f9a03f2de88ca8e247b9d46db788b984c4",
+      "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "Sites v199 source d40828815b8af85e60a798b3af83083b9dd5b5ed"
+    ],
+    "evidence_hashes": [
+      "sha256:cf7cd06e8aaef8c9b830d705e6ecffe9f0265d4e2b5d567ea1dbb058473612f1",
+      "sha256:ba3aaaad1c793284bf5c80320361a76722d960258c1960dc62fbfcda97db1032"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/storm-events-queue.tsx": "CONFIRMED",
+    "apps/site/source/tests/public-map-browser.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/storm-events-queue.test.mjs": "CONFIRMED",
+    "tests/local_data/test_public_map_catalog.py": "CONFIRMED",
+    "tools/local_data/public_map_catalog.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "public-map catalog and download Python tests",
+      "outcome": "PASS",
+      "reason": "69 passed and 80 subtests passed."
+    },
+    {
+      "gate": "local_data suite",
+      "outcome": "PASS",
+      "reason": "286 passed, 3 skipped, 153 subtests passed after installing declared rfc3339-validator dependency; skips remain separate."
+    },
+    {
+      "gate": "focused Site component/catalog tests",
+      "outcome": "PASS",
+      "reason": "27 passed, zero failures/skips; TypeScript 5.9.3 transpilation harness."
+    },
+    {
+      "gate": "live listing parser verification",
+      "outcome": "PASS",
+      "reason": "53138 bytes; 77 years, 231 archives; exact filenames and per-kind reissue dates matched independent HTMLParser; one Storm Events metadata request."
+    },
+    {
+      "gate": "metadata boundaries and deterministic failures",
+      "outcome": "PASS",
+      "reason": "Empty/invalid UTF-8/nonbytes/mixed invalid dates/page/total/request caps fail; failed refresh retains 77 records with partial coverage."
+    },
+    {
+      "gate": "hosted initial server-rendered presentation",
+      "outcome": "PASS",
+      "reason": "v199 /downloads HTTP 200; new collection and disabled Connect to list Storm Events files control; initial coverage unknown."
+    },
+    {
+      "gate": "production fetch in this execution environment",
+      "outcome": "FAIL",
+      "reason": "URLError: temporary failure in name resolution with existing no-proxy production transport. Bounded TLS-verified curl retrieval succeeded; no transport bypass added to application."
+    },
+    {
+      "gate": "interactive hosted discovery through owner-local operator",
+      "outcome": "SKIPPED",
+      "reason": "Browser requires ChatGPT sign-in; owner-local companion is unavailable from this environment."
+    },
+    {
+      "gate": "provider archive transfer and checksum verification",
+      "outcome": "SKIPPED",
+      "reason": "No NOAA archive was requested or downloaded; owner-local bounded acceptance remains."
+    },
+    {
+      "gate": "full Site build, TypeScript project check, hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Localized copy changes covered by focused transpiling component tests; repository PR checks remain independently observable."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "NOAA-STORM-LISTING",
+      "validated": true,
+      "evidence_ref": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+    },
+    {
+      "id": "KFM-4970",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4970"
+    },
+    {
+      "id": "KFM-4973",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4973"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-09T19:44:56.894266+00:00",
+  "emitter": "Codex/GPT-6",
+  "notes": "Process evidence only. Corrects false claims that NOAA omits exact sizes; expectedBytes stays null because this catalog does not capture listed sizes. The new table fixture is synthetic, not acquisition evidence. No provider archive download, upstream checksum validation, source admission, layer activation, hosted deployment change, or publication. MIRROR_REVIEW_REQUIRED and broader hosted/native acceptance remain separate."
+}

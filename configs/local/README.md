@@ -2,22 +2,31 @@
 doc_id: kfm://doc/configs-local-readme
 title: configs/local/ — Local-Only Configuration Override Boundary
 type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Config steward · Security steward · Developer-experience steward · Ops steward · Consumer owner(s) · Validation steward · Docs steward
+version: v0.3
+prior_version: v0.2
+status: repository-grounded; draft; readme-only; non-authoritative
+owners: "@bartytime4life — CONFIRMED CODEOWNERS review route; accepted config, security, developer-experience, operations, consumer, validation, and docs stewardship remain NEEDS VERIFICATION"
 created: 2026-06-16
-updated: 2026-07-13
+updated: 2026-09-04
 policy_label: public; config-sublane; local-overrides; ignored-by-default; non-authoritative; no-secret-store; no-runtime-authority; no-deployment-authority; no-release-authority
 current_path: configs/local/README.md
-truth_posture: CONFIRMED target README, parent configs contract, .gitignore local-lane rules, root .env.example guidance, tracked sibling configuration boundaries, secrets and incident-response doctrine, and v0.1 introduction lineage / PROPOSED local-override contract, consumer metadata, naming posture, validation matrix, migration rules, and minimum safe local slice / UNKNOWN ignored workstation files, exhaustive local inventories, consumers, loaders, merge precedence, schema bindings, secret-store integration, validators, CI enforcement, deployment integration, owner assignments, and runtime behavior
+truth_posture: CONFIRMED current target README, current main branch/tree pin, exact README-only tracked lane, canonical configs root, current .gitignore local-lane rules, root .env.example guidance, tracked sibling configuration boundaries, /configs/ CODEOWNERS review route, secrets and incident-response doctrine, and v0.1 introduction lineage / PROPOSED local-override contract, consumer metadata, naming posture, validation matrix, migration rules, and minimum safe local slice / UNKNOWN ignored workstation files, exhaustive local inventories, consumers, loaders, merge precedence, schema bindings, secret-store integration, validators, CI enforcement, deployment integration, owner assignments, and runtime behavior
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-  prior_blob: be6dce4a40e95f94eccb397dd351a4f912f64ba1
+  base_commit: 7cbb5e771834c07465c0270efcb32d9dd4329cc2
+  prior_blob: 16f0c64baa482db3b146aa2a8d62a9b7baf3fede
   introduction_commit: 5b458ab970cbda8966dc5c799d560a64ed086804
+  main_tree: ddb95ff89266d4b1745e8405952459a6600a5314
+  local_tree: d0a45feb8e70675b3e2061aab22f3967405ac8d2
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  ignore_blob: 50e0e0e2485e6dbd6b7e1c2767350b459335b22b
+  env_example_blob: 5af73215557f4af432157409ff89ab17088d0953
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  secrets_blob: 562b654e101ca3c52e32b85f7acdaea9f589ab5c
+  incident_response_blob: da6eb82dc6608e0cdfbbe9f1823ebd1e13289ec4
 related:
   - ../README.md
   - ../dev/README.md
@@ -45,9 +54,10 @@ tags: [kfm, configs, local, overrides, ignored, workstation, development, placeh
 notes:
   - "The repository .gitignore ignores configs/local/* and explicitly re-includes configs/local/README.md. The tracked lane is therefore the README; workstation-local override files are intentionally untracked."
   - "The root .env.example also states that configs/local/ is ignored and forbids committing real secrets."
-  - "A path-scoped repository search returned this README but no additional tracked configs/local files. Ignored workstation files are not observable through GitHub and remain UNKNOWN by design."
+  - "A recursive Git tree inspection at main@7cbb5e771834c07465c0270efcb32d9dd4329cc2 (tree ddb95ff89266d4b1745e8405952459a6600a5314) shows only configs/local/README.md under this lane. GitHub does not observe ignored workstation files, which remain UNKNOWN by design."
   - "v0.1 called the lane commit-safe local templates. v0.2 corrects that boundary: commit-safe examples and reusable templates belong in configs/examples/, configs/templates/, configs/dev/, or another reviewed tracked lane; configs/local/ is for uncommitted local overrides."
-  - "docs/security/INCIDENT_RESPONSE.md is confirmed at the pinned base. The separately referenced docs/runbooks/SECRET_LEAK_RUNBOOK.md path was not found and remains NEEDS VERIFICATION; this README does not publish a broken link to it."
+  - "docs/security/INCIDENT_RESPONSE.md is confirmed at the current main snapshot. The separately referenced docs/runbooks/SECRET_LEAK_RUNBOOK.md path was not found at current main and remains NEEDS VERIFICATION; this README does not publish a broken link to it."
+  - "The current .github/CODEOWNERS file routes /configs/ to @bartytime4life. That is review routing only, not proof of accepted stewardship, required review, approval, or separation of duties."
   - "Only this Markdown file changes. No local override, example, template, .gitignore rule, .env file, consumer, loader, schema, policy, secret, test, workflow, runtime behavior, deployment binding, release record, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -66,7 +76,7 @@ notes:
 </p>
 
 > [!IMPORTANT]
-> **Document lifecycle:** `draft v0.2`  
+> **Document lifecycle:** `draft v0.3`  
 > **Tracked lane maturity:** README-only at the inspected repository search; `.gitignore` excludes all other `configs/local/*` paths  
 > **Owning responsibility root:** `configs/` — safe configuration defaults, templates, and configuration-facing documentation  
 > **Local lane responsibility:** uncommitted, machine-local overrides for explicitly verified consumers  
@@ -129,7 +139,7 @@ A local override can influence a verified local consumer. It cannot establish pr
 
 ### Bounded repository snapshot
 
-At base commit `b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8`, the tracked lane is:
+At authoring snapshot `main@7cbb5e771834c07465c0270efcb32d9dd4329cc2` (tree `ddb95ff89266d4b1745e8405952459a6600a5314`), the tracked lane is:
 
 ```text
 configs/local/
@@ -143,7 +153,7 @@ configs/local/*
 !configs/local/README.md
 ```
 
-A path-scoped repository search returned this README and no additional tracked file under `configs/local/`. This is the expected visible state. Ignored files on contributor workstations, in untracked local checkouts, or on other branches remain `UNKNOWN` and must not be inferred.
+The recursive Git tree at `main@7cbb5e771834c07465c0270efcb32d9dd4329cc2` contains only `configs/local/README.md` under this lane. This is the expected visible state. Ignored files on contributor workstations, in untracked local checkouts, or on other branches remain `UNKNOWN` and must not be inferred.
 
 ### Material correction from v0.1
 
@@ -169,7 +179,7 @@ This correction preserves the original goal—keeping personal overrides out of 
 | Secret integration | **NEEDS VERIFICATION** | Doctrine exists; concrete store, injection, and redaction behavior require implementation evidence. |
 | Test/CI enforcement | **LIMITED BY DESIGN** | CI cannot validate ignored workstation files; it can validate tracked examples, loader behavior, and boundary tests. |
 | Deployment integration | **DENY BY DEFAULT** | Nothing here establishes staging or production binding. |
-| Ownership | **OWNER_TBD** | Accepted owners have not been confirmed in the file metadata. |
+| Ownership | **REVIEW ROUTE CONFIRMED; STEWARDSHIP NEEDS VERIFICATION** | `.github/CODEOWNERS` routes `/configs/` to `@bartytime4life`; accepted config, security, developer-experience, operations, consumer, validation, and docs stewardship are not established here. |
 
 [Back to top](#top)
 
@@ -521,7 +531,10 @@ Rollback is required if this README is used to justify any of the following with
 Rollback target:
 
 ```text
-Restore configs/local/README.md v0.1
+Restore configs/local/README.md v0.2 from the authoring base
+blob SHA: 16f0c64baa482db3b146aa2a8d62a9b7baf3fede
+
+The v0.1 introduction remains preserved as historical lineage:
 blob SHA: be6dce4a40e95f94eccb397dd351a4f912f64ba1
 ```
 
@@ -535,6 +548,9 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 
 | Source | Status | Supports | Limits |
 |---|---:|---|---|
+| Current GitHub `main` branch and recursive tree | **CONFIRMED authoring snapshot** | `main@7cbb5e771834c07465c0270efcb32d9dd4329cc2` (tree `ddb95ff89266d4b1745e8405952459a6600a5314`) contains only `configs/local/README.md` under this lane. | A later `main` commit and ignored workstation files are outside this snapshot. |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | **CONFIRMED review route** | `/configs/` routes review requests to `@bartytime4life`. | Routing is not proof of accepted stewardship, required code-owner enforcement, approval, or independent review. |
+| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | **CONFIRMED placement source** | The current document assigns non-secret configuration responsibility to `configs/`, supporting this path's placement. | Its own adoption/version posture and any future root change remain separately governed. |
 | [`../README.md`](../README.md) | **CONFIRMED** | `configs/` is the canonical root for safe non-secret defaults and templates and cannot replace schema, policy, infra, runtime, data, or release authority. | Does not prove this lane's consumers or local files. |
 | [`.gitignore`](../../.gitignore) | **CONFIRMED** | `configs/local/*` is ignored and `configs/local/README.md` is explicitly tracked. | Cannot inventory ignored workstation files. |
 | [`.env.example`](../../.env.example) | **CONFIRMED** | Local config is ignored; real secrets must not be committed; example variables use safe local values. | Does not prove a specific consumer or precedence chain. |
@@ -543,9 +559,9 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 | [`../dev/README.md`](../dev/README.md) | **CONFIRMED** | Shared development defaults and templates are a tracked configuration sublane with no secret or deployment authority. | Does not prove this local lane's loaders. |
 | [`../test/README.md`](../test/README.md) | **CONFIRMED** | Test configuration has a separate tracked lane and remains subordinate to `tests/` and `fixtures/`. | Does not prove local consumer behavior. |
 | [`../../docs/security/SECRETS.md`](../../docs/security/SECRETS.md) | **CONFIRMED doctrine** | Repository is not a secret store; references-by-name and secret injection are preferred; real secrets in local or test material must not be committed. | Concrete secret store, rotation, and enforcement remain implementation-specific. |
-| [`../../docs/security/INCIDENT_RESPONSE.md`](../../docs/security/INCIDENT_RESPONSE.md) | **CONFIRMED draft** | A tracked security incident-response surface exists. | Detailed secret-leak runbook path remains `NEEDS VERIFICATION`. |
-| `docs/runbooks/SECRET_LEAK_RUNBOOK.md` | **NOT FOUND at pinned base** | The path is referenced by secrets doctrine as proposed procedural detail. | Do not publish it as a working link until created or relocated. |
-| Repository search for `configs/local/` | **BOUNDED RESULT** | Returned this README and no additional tracked local file. | Search is not a recursive workstation inventory; ignored files remain invisible. |
+| [`../../docs/security/INCIDENT_RESPONSE.md`](../../docs/security/INCIDENT_RESPONSE.md) | **CONFIRMED at current snapshot** | A tracked security incident-response surface exists. | Detailed secret-leak runbook path remains `NEEDS VERIFICATION`. |
+| `docs/runbooks/SECRET_LEAK_RUNBOOK.md` | **NOT FOUND at current main snapshot** | The path is referenced by secrets doctrine as proposed procedural detail. | Do not publish it as a working link until created or relocated. |
+| Recursive Git tree at `main@7cbb5e771834c07465c0270efcb32d9dd4329cc2` | **BOUNDED RESULT** | Contains this README and no additional tracked local file. | It is not a workstation inventory; ignored files remain invisible. |
 | v0.1 introduction commit `5b458ab970cbda8966dc5c799d560a64ed086804` | **CONFIRMED lineage** | Preserves the original intent to keep personal and machine-specific overrides outside repository authority. | Its commit-safe-template wording conflicted with current ignore evidence and is corrected here. |
 | Actual local overrides, consumers, loaders, precedence, validators, CI, deployments, and runtime behavior | **UNKNOWN / NEEDS VERIFICATION** | Required before implementation claims. | This README is not executable proof. |
 
@@ -557,7 +573,7 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 
 | Item | Status | Evidence needed |
 |---|---:|---|
-| Confirm accountable owners. | **NEEDS VERIFICATION** | CODEOWNERS, maintainer decision, or accepted ownership record. |
+| Confirm accountable owners beyond the CODEOWNERS review route. | **NEEDS VERIFICATION** | Accepted ownership record, required-review evidence, or maintainer decision. |
 | Inventory consumers that support local override files. | **NEEDS VERIFICATION** | Code search, consumer docs, config loaders, and tests. |
 | Confirm supported local filenames and formats. | **NEEDS VERIFICATION** | Loader implementations and parser contracts. |
 | Confirm merge and precedence rules. | **NEEDS VERIFICATION** | Consumer code and deterministic tests. |
@@ -613,6 +629,6 @@ This is a documentation-only change. Rollback does not alter `.gitignore`, `.env
 
 ## Status summary
 
-`configs/local/` is the intentionally ignored workstation-override lane under `configs/`. The README is tracked; local payload files are not. Local overrides may support a verified local consumer, but they are non-authoritative, non-reproducible unless paired with tracked examples and tests, and unable to define schemas, policy, deployment, runtime truth, lifecycle state, evidence, release, or publication.
+At authoring snapshot `main@7cbb5e771834c07465c0270efcb32d9dd4329cc2` (tree `ddb95ff89266d4b1745e8405952459a6600a5314`), `configs/local/` remains the intentionally ignored workstation-override lane under `configs/`. The README is tracked; local payload files are not. Local overrides may support a verified local consumer, but they are non-authoritative, non-reproducible unless paired with tracked examples and tests, and unable to define schemas, policy, deployment, runtime truth, lifecycle state, evidence, release, or publication. This snapshot does not inventory workstation-local files or establish a consumer, loader, precedence rule, or runtime binding.
 
 <p align="right"><a href="#top">Back to top</a></p>

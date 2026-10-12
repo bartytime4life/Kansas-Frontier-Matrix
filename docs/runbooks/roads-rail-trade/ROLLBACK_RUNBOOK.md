@@ -1,530 +1,470 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/roads-rail-trade/rollback
-title: Roads / Rail / Trade Routes — Rollback Runbook
-type: standard
-version: v1
-status: draft
-owners: [Docs steward, Roads/Rail/Trade lane owner, Release authority]
+title: Roads, Rail, and Trade Routes — Rollback Readiness Runbook
+type: runbook
+version: v2.0
+prior_state: proposal-heavy May 2026 procedure with unverified release records, commands, roles, public surfaces, and live rollback capability
+status: draft; repository-grounded; BOUNDED_ROLLBACK_CANDIDATE_VALIDATION; SYNTHETIC_REHEARSAL_ONLY; PRODUCTION_ROLLBACK_EXECUTION_HELD; NON_RELEASE; NON_DEPLOYMENT; NON_PUBLICATION
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Roads/Rail/Trade, evidence, rights, sensitivity, policy, release, rollback, infrastructure, and cultural-corridor assignments"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-29
+policy_label: repository-facing; infrastructure-sensitive; historic and cultural corridor precision-sensitive; fail-closed
+current_path: docs/runbooks/roads-rail-trade/ROLLBACK_RUNBOOK.md
+owning_root: docs/
+responsibility: human incident classification, rollback-readiness validation, and accountable-review handoff for the Roads/Rail/Trade lane
+truth_posture: cite-or-abstain
+authority_class: explanatory operational documentation
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, source records, evidence, policy, review, release records, correction and withdrawal records, signatures, receipts, proofs, and official authorities
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 702d61158d601ab12ef3c7b4d5e83fd0636ae9d5
+  target_before_update_blob: a097a2aa95bda465227a4103aa5da7416a72622d
+  local_runbook_boundary_blob: 964d3f7ec2409d01b1cd40fd84403a69f5950b56
+  domain_workflow_blob: 391fead3fdd0d7ecead6464be7946cbaf68247e0
+  rollback_card_workflow_blob: 1980b6e914532c1478d6f14310b916b69a0fb1c4
+  rollback_drill_workflow_blob: 2d0c39fc6ff8e44bd9cf753ce546475079e8ffd5
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  rollback_card_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  rollback_card_validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  rollback_card_tests_blob: c8aeac6348127fb768981e2b5b5588c6a7bdeb78
+  synthetic_rehearsal_helper_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
+  lane_rollback_cards_readme_blob: 1ddc6fb9da9bf415984f2a3de3c1bf839e38334f
+  lane_manifests_readme_blob: aaa85fb6f24e32d5526c6b1c901b0b7b8c22f430
+  lane_candidate_readme_blob: c989bf2bed10472bc46a168231b2269f17bbda48
+  lane_proof_readme_blob: 91c109d463c45c925f1d104d4cd8aaf742cd28af
+  lane_policy_readme_blob: 577fde2174817459b87039922e3264e6e1073831
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  lane_candidate_records_observed: 0
+  lane_release_manifest_records_observed: 0
+  lane_rollback_card_records_observed: 0
+  lane_proof_artifacts_observed: 0
+  lane_published_payloads_observed: 0
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/correction-and-rollback.md
-  - docs/domains/roads-rail-trade/README.md
-  - docs/runbooks/governed_ai_ROLLBACK.md
-  - docs/adr/ADR-0001-schema-home.md
-  - release/candidates/roads-rail-trade/
-  - data/receipts/README.md
-  - data/proofs/README.md
-  - schemas/contracts/v1/domains/roads-rail-trade/
-tags: [kfm, runbook, rollback, roads-rail-trade, governance, release]
+  - ./README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ../../domains/roads-rail-trade/README.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/lifecycle-law.md
+  - ../../doctrine/trust-membrane.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../.github/workflows/domain-roads-rail-trade.yml
+  - ../../../.github/workflows/rollback-card.yml
+  - ../../../.github/workflows/rollback-drill.yml
+  - ../../../contracts/release/rollback_card.md
+  - ../../../schemas/contracts/v1/release/rollback_card.schema.json
+  - ../../../tools/validators/release/validate_rollback_card.py
+  - ../../../tests/validators/test_validate_rollback_card.py
+  - ../../../tools/release/rollback_apply.py
+  - ../../../release/candidates/roads-rail-trade/README.md
+  - ../../../release/manifests/roads-rail-trade/README.md
+  - ../../../release/rollback_cards/roads-rail-trade/README.md
+  - ../../../data/proofs/roads-rail-trade/README.md
+  - ../../../data/rollback/roads-rail-trade/README.md
+  - ../../../data/published/roads-rail-trade/README.md
 notes:
-  - Doctrine is CONFIRMED from attached KFM corpus.
-  - All path-shaped claims about *this repo* are PROPOSED until verified against mounted-repo evidence.
-  - Placement follows Directory Rules §12 (Domain Placement Law) and the existing docs/runbooks/* convention.
+  - "v2.0 replaces proposed live rollback steps with a current-repository readiness procedure and accountable-review handoff."
+  - "The generic RollbackCard profile is closed, fixture-validated, and explicitly non-executing; its schema status remains PROPOSED."
+  - "The rollback drill is a read-only readiness workflow. The only apply helper is marker-protected, synthetic-only, and incapable of creating production authority."
+  - "The Roads/Rail/Trade candidate, manifest, rollback-card, proof, and published lanes contain guidance only; no lane instance record or public payload was observed."
+  - "Production target selection, signature and review verification, policy evaluation, receipt flow, external invalidation, alias mutation, release transition, deployment, and publication remain held."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Roads / Rail / Trade Routes — Rollback Runbook
+# Roads, Rail, and Trade Routes — Rollback Readiness Runbook
 
-> **Reversible withdrawal and restoration of public-safe Roads, Rail, and Trade-Routes releases through the governed release path — pointer-shift, not file delete; audit-preserving, not memory-holing.**
-
-![Status: draft](https://img.shields.io/badge/status-draft-yellow)
-![Type: runbook](https://img.shields.io/badge/type-runbook-blue)
-![Domain: roads--rail--trade](https://img.shields.io/badge/domain-roads--rail--trade-1f6feb)
-![Lifecycle: PUBLISHED → rollback target](https://img.shields.io/badge/lifecycle-PUBLISHED%20%E2%86%92%20rollback%20target-7e57c2)
-![Policy: public](https://img.shields.io/badge/policy-public-green)
-<!-- TODO badges to verify: CI workflow badge for release/rollback drill; coverage of rollback fixtures. -->
-
-| Field | Value |
-|---|---|
-| **Status** | draft |
-| **Owners** | Docs steward · Roads/Rail/Trade lane owner · Release authority |
-| **Reviewers required** | Release authority + lane owner; additional steward sign-off for Indigenous / cultural corridors |
-| **Last updated** | 2026-05-12 |
-| **Doctrine basis** | CONFIRMED — KFM domain atlas, encyclopedia, unified build manual, MapLibre master, Directory Rules |
-| **Implementation basis** | PROPOSED — exact route names, schema homes, CI wiring, and deployed behavior remain `NEEDS VERIFICATION` |
-
----
-
-## Table of contents
-
-1. [Scope and non-scope](#1-scope-and-non-scope)
-2. [Doctrine basis and truth labels](#2-doctrine-basis-and-truth-labels)
-3. [When to run this runbook](#3-when-to-run-this-runbook)
-4. [Preconditions](#4-preconditions)
-5. [Roles and separation of duties](#5-roles-and-separation-of-duties)
-6. [Rollback flow at a glance](#6-rollback-flow-at-a-glance)
-7. [Procedure](#7-procedure)
-8. [Roads / Rail / Trade-specific concerns](#8-roads--rail--trade-specific-concerns)
-9. [Verification checklist](#9-verification-checklist)
-10. [Failure modes and anti-patterns](#10-failure-modes-and-anti-patterns)
-11. [Artifacts touched](#11-artifacts-touched)
-12. [Appendix — receipt and manifest sketches](#12-appendix--receipt-and-manifest-sketches)
-13. [Verification backlog](#13-verification-backlog)
-14. [Related docs](#14-related-docs)
-
----
-
-## 1. Scope and non-scope
-
-This runbook governs **rollback of a published Roads / Rail / Trade-Routes release** — i.e., reversing a release that already cleared the publication gate and is now in `PUBLISHED` state.
-
-**In scope.** Released road segments, rail segments, historic routes, trade-route corridors, depots, sidings, yards, crossings, bridges, ferries, river crossings, freight corridors, route events, operator-status records, access restrictions, network-edge / graph projections, `MovementStoryNode` exposures, and any released `LayerManifest`, `TileArtifactManifest`, `StyleManifest`, or `EvidenceDrawerPayload` whose source-of-truth lives in the Roads / Rail / Trade lane.
-
-**Out of scope.**
-
-- **Pre-publication retraction.** A defect found before `PUBLISHED` is a promotion gate failure handled by validation and review, not by this runbook. Send it back to `WORK / QUARANTINE`.
-- **Settlements / Infrastructure canonical claims.** Settlement, depot identity, and infrastructure-ownership records are owned by Settlements/Infrastructure; rolling those back follows that lane's runbook.
-- **Hydrology, Archaeology/Cultural Heritage, Hazards.** Crossings of river or sensitive cultural geometry that originate in those lanes follow their lane runbooks; this runbook only rolls back the *transport-side* derivative.
-- **Emergency alerting.** KFM is never an alert authority. WZDx or live restriction feeds are governed evidence, not life-safety guidance. Redirect users to the official source.
-- **Governed AI answers and Focus Mode.** `AIReceipt`-level retraction is handled by `docs/runbooks/governed_ai_ROLLBACK.md`. This runbook only rolls back the underlying domain release that an AI answer may have cited.
-
-> [!NOTE]
-> A rollback is a **governed state transition**, not a file move and not a delete. The rollback target is a *pointer to a prior `ReleaseManifest`, `root_hash`, and tile-checksum set*; the prior artifacts and the retracted artifacts both remain inspectable.
-
----
-
-## 2. Doctrine basis and truth labels
-
-| Claim | Label | Source |
-|---|---|---|
-| Lifecycle invariant `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` with promotion as a governed state transition | CONFIRMED | Directory Rules §0; Unified Build Manual §7; Encyclopedia |
-| Released claims, layers, catalog records, artifacts, and AI answers MUST carry a visible correction path **and** rollback target before they are safely publishable | CONFIRMED | Unified Build Manual — Correction and rollback model |
-| Rollback flow: identify affected release → locate prior safe artifact set → verify digests/manifests → disable or withdraw affected public surfaces → preserve audit receipts → mark stale or withdrawn UI state → restore or republish via the same governed release path | CONFIRMED doctrine | Unified Build Manual — Correction and rollback model |
-| `ReleaseManifest` rollback target is **pointer-based** — tile variants are kept and lineage/catalog references shift back to a prior `tile_id` / `root_hash` set | CONFIRMED doctrine | Master MapLibre — ML-057-047, ML-058-031, ML-058-043, ML-058-044, ML-058-045 |
-| Revocation is **not** deletion — a signed tombstone receipt is appended to the audit ledger; UI/API hide tombstoned items while lineage remains explorable | CONFIRMED doctrine | KFM Components — C5-09, C1-06, C6-08 |
-| Roads / Rail / Trade rollback gate includes route-membership/designation separation, operator-status temporality, OSM/GNIS legal-status denial, historic-overprecision denial, public-generalization receipt, and transport-graph projection rollback | CONFIRMED doctrine | Domain Atlas — Roads, Rail, and Trade Routes §K |
-| Indigenous trade and mobility corridors, oral history, treaty, cultural, and interpretive evidence default to steward review and generalized public geometry; critical transport facilities require review | CONFIRMED doctrine | Domain Atlas §I; Encyclopedia §7.11 |
-| Cache invalidation (CDN/client) must accompany rollback or stale tiles can leak retracted content | CONFIRMED doctrine | Master MapLibre — Cache invalidation record; KFM Components C6-08 |
-| Exact route names, schema homes, CI workflow names, governed API routes, and deployed behavior for this lane | UNKNOWN / NEEDS VERIFICATION | Domain Atlas §J, §N; Unified Build Manual §6.8 |
-
-Memory is not evidence. Every implementation specific in this runbook (path, schema name, command, owner identity) is **PROPOSED** until verified against mounted-repo evidence.
-
----
-
-## 3. When to run this runbook
-
-A rollback is the correct response to a **defect class** discovered after publication. Other responses (forward-fix correction, supersession by next release, ABSTAIN) may apply in parallel; rollback is the path when **continued public exposure is the worse outcome**.
-
-| Defect class | Rollback posture | Forward correction available? | Notes |
-|---|---|---|---|
-| **Evidence gap** — released claim no longer supported by an `EvidenceBundle` (source retracted, evidence invalidated, citation broken) | Restore prior evidence-supported release | Yes, if superseding evidence is admissible | `EvidenceBundle` outranks generated language; do not patch by paraphrase |
-| **Source-role error** — OSM / GNIS / WZDx / KDOT row promoted to `authority` when it was `observation` or `context`; cattle-trail narrative promoted to surveyed alignment | Restore prior release; reclassify source-role at admission, not at promotion | No — role is fixed at admission | See Domain Atlas §K *route membership and designation separation* |
-| **Rights / license defect** — feed license unknown, attribution missing, terms changed, ETag / `Last-Modified` provenance broken | Restore prior release; quarantine the offending source pending re-admission | Only after rights re-verified | WZDx and other transport feeds explicitly require license-from-feed proof |
-| **Sensitivity / sovereignty defect** — Indigenous trade or mobility corridor exposed at precision, treaty / oral-history corridor exposed without steward review, sensitive cultural-route geometry leaked | **Roll back immediately**; notify cultural steward; generalize or suppress before any re-release | Only after steward review records `ALLOW` or `RESTRICT` with conditions | Default is **steward review + generalized public geometry** |
-| **Geometry / precision defect** — historic alignment published at modern-survey precision; route narrative collapsed onto surveyed centerline; uncertainty class lost | Restore prior release with `GeneralizationReceipt`; fix uncertainty labeling | Yes, when uncertainty class can be re-stated | Historic overprecision is a named denial gate |
-| **Temporal defect** — operator-status or route-event published with wrong valid-time / observed-time / retrieval-time; restriction-event valid window incorrect | Restore prior release; recompute temporal scope | Yes, if `valid_time` is the only field affected | Keep source / observed / valid / retrieval / release / correction times **distinct** |
-| **Policy defect** — `policy_label = unknown`, `rights_status = unknown`, `sensitivity ≠ public`, missing `evidence_refs`, missing artifacts, or `rollback_supported = false` slipped through | Restore prior release; treat the missed gate as an incident | Forward-fix only after policy fixtures pass | Public runtime rule for `ReleaseManifest` is fail-closed |
-| **Validation defect** — `ValidationReport` claimed pass under stale inputs; schema validation drifted; spec_hash mismatch | Restore prior release; re-run validators on deterministic inputs | Yes, if validators newly pass | Spec_hash and digest closure must hold |
-| **Rendering defect** — tile root hash mismatch, `VerifyReceipt` failed digest / bounds / schema, `RuntimeProbeResult` exceeded budget after release | Shift tile lineage pointer to prior root_hash; invalidate caches | Yes, after rebuild | Tile variants are kept; pointers move |
-| **API defect** — `RoadsRailDecisionEnvelope` returns wrong outcome class (e.g., `ANSWER` where doctrine requires `ABSTAIN`); layer manifest resolver returns non-public artifact | Withdraw the affected route surface; restore prior contract | Yes, after contract test passes | Finite outcomes must remain finite |
-| **AI-output defect** — Focus Mode answer cites retracted Roads/Rail/Trade evidence | Roll back the **domain release first**; then follow `governed_ai_ROLLBACK.md` to retract the `AIReceipt` | Both | AI never root truth |
-
-> [!IMPORTANT]
-> If a defect involves **rights, sovereignty, cultural sensitivity, living-person data, archaeology, infrastructure precision, or rare / sensitive location exposure** — prefer **quarantine, redaction, generalization, staged access, delayed publication, or denial** over forward-fix. Roll back first; debate scope after the public surface is safe.
-
----
-
-## 4. Preconditions
-
-A rollback MUST NOT begin until each of the following is true. Use this as a checklist in the incident channel before the first state-changing command.
-
-- [ ] **Affected release is identified.** A specific `release_id` (or set of `release_id`s) is named, with its `ReleaseManifest` digest and its `rollback_target`.
-- [ ] **Rollback target exists and is valid.** The prior `ReleaseManifest` is fetchable, its artifact digests verify, its policy posture is `release_state = PUBLISHED`, `policy_label != unknown`, `rights_status != unknown`, `sensitivity == public`, and its `evidence_refs` and artifact hashes are present.
-- [ ] **Defect class is named.** One or more rows from the table in §3 is selected; defect is recorded in the incident ledger.
-- [ ] **Receipts are loadable.** `RunReceipt`, `ValidationReport`, `PolicyDecision`, `VerifyReceipt`, and the relevant `EvidenceBundle`s for both the affected release and the rollback target are accessible.
-- [ ] **Audit ledger is writable.** A new tombstone / rollback record can be appended; the ledger is append-only and not in degraded mode.
-- [ ] **Cache invalidation surfaces are reachable.** The CDN / tile-server / client cache invalidation hooks bound to the affected `LayerManifest` are responsive.
-- [ ] **Separation of duties is satisfied.** The author of the affected release is **not** the sole approver of the rollback. Sensitive lanes require a cultural / rights steward in addition to the release authority.
-- [ ] **Communication plan is staged.** Steward, downstream consumer, and public-surface notice messages are drafted (not yet sent).
+Use this runbook to classify a suspected post-release defect, assemble a
+rollback or withdrawal candidate, run the repository's bounded no-network
+checks, and hand the result to accountable reviewers. It does not execute a
+production rollback.
 
 > [!WARNING]
-> If any precondition is missing — especially a valid rollback target — **do not roll back blind.** Withdraw the affected public surface with `ABSTAIN` / withdrawn-state UI markers, open a `CorrectionNotice` candidate, and escalate to release authority for a *new* governed release rather than a rollback.
-
----
-
-## 5. Roles and separation of duties
-
-Rollback is a release-class action. The roles below MUST be distinct people (or at minimum, distinct approval seats); a single actor MUST NOT both author and approve a rollback on a sensitive lane.
-
-| Role | Responsibility |
-|---|---|
-| **Incident initiator** | Files the defect, names the defect class, opens the incident ticket. May be anyone with read access to the lane. |
-| **Lane owner (Roads / Rail / Trade)** | Confirms defect class fits the lane, identifies the affected release, names the rollback target candidate. |
-| **Release authority** | Approves the rollback, signs the new `ReleaseManifest` (rollback target re-asserted), authorizes cache invalidation. MUST be distinct from the release's original author for sensitive lanes. |
-| **Cultural / rights steward** | Required when the defect touches Indigenous trade / mobility corridors, treaty corridors, oral-history geometry, archaeology adjacency, or living-person data. Approves or denies the rollback's exposure posture. |
-| **Validator / proof reviewer** | Re-runs `ValidationReport`, `VerifyReceipt`, and the rollback drill fixture against the rollback target; signs the drill receipt. |
-| **Communications steward** | Drafts and dispatches steward, downstream-consumer, and public-surface notices; records the notice references in the incident ledger. |
-| **Auditor (post-hoc)** | Reviews the closed incident, the appended tombstone, the rollback receipt chain, and the post-mortem. |
-
-> [!TIP]
-> The watcher-as-non-publisher invariant still applies in rollback: a worker / watcher can **propose** a rollback candidate and emit receipts, but it MUST NOT execute the release-authority step. Automated rollback shortcuts that bypass this rule become the normal public path and harden into bypass authority.
-
----
-
-## 6. Rollback flow at a glance
-
-```mermaid
-flowchart TD
-  A[Defect observed in PUBLISHED release] --> B{Defect class<br/>identifiable?}
-  B -- No --> Z1[Open CorrectionNotice candidate;<br/>quarantine surface; do not roll back blind]
-  B -- Yes --> C[Lane owner names release_id<br/>+ rollback_target candidate]
-  C --> D{Rollback target valid?<br/>policy = PUBLISHED,<br/>rights known, sensitivity = public,<br/>evidence_refs + artifact hashes present,<br/>rollback_supported = true}
-  D -- No --> Z1
-  D -- Yes --> E[Release authority approves;<br/>steward approval if sensitive lane]
-  E --> F[Withdraw / mark stale<br/>affected public surfaces]
-  F --> G[Shift LayerManifest / TileArtifactManifest /<br/>StyleManifest pointers to rollback target]
-  G --> H[Invalidate CDN + client caches;<br/>emit invalidation receipt]
-  H --> I[Append tombstone receipt to audit ledger<br/>pointing at retracted release_id]
-  I --> J[Verify: digests match,<br/>VerifyReceipt passes,<br/>RuntimeProbeResult within budget,<br/>policy gate fixtures green]
-  J --> K[Publish superseding ReleaseManifest;<br/>previous rollback chain preserved]
-  K --> L[Notify stewards, downstream consumers,<br/>public surface; close incident]
-  L --> M[Post-mortem;<br/>add fixture if new failure mode;<br/>update VERIFICATION_BACKLOG]
-
-  classDef danger fill:#fde2e2,stroke:#c33,color:#600
-  classDef safe fill:#e3f5e3,stroke:#2a8,color:#063
-  class Z1 danger
-  class K,L,M safe
-```
-
-> [!NOTE]
-> The diagram is a **doctrinal flow**. Concrete tool names, CLI commands, dashboard URLs, and CI job identifiers are `UNKNOWN` until verified against mounted-repo evidence.
-
----
-
-## 7. Procedure
-
-Each step lists: *who*, *what*, *evidence required*, and *exit condition*. Do not skip ahead. Stop at any step whose exit condition is not met and escalate.
-
-### 7.1 Step 1 — Triage and classify
-
-- **Who.** Incident initiator + lane owner.
-- **What.** Confirm the surface is in `PUBLISHED` state. Name the affected `release_id`(s). Map the defect to one or more rows in §3.
-- **Evidence required.** Current `ReleaseManifest`; the surface, drawer, or AI response that exposed the defect; any user / steward report.
-- **Exit condition.** Defect class is named in the incident ticket; severity is set; sensitive-lane flag is set if applicable.
-
-### 7.2 Step 2 — Identify and validate the rollback target
-
-- **Who.** Lane owner + validator.
-- **What.** Fetch the previous `ReleaseManifest` (or earlier, if the previous one is also affected). Re-verify against the public runtime rule:
-
-  > A public client may consume a `ReleaseManifest` only when `release_state == PUBLISHED`, `policy_label != unknown`, `rights_status != unknown`, `sensitivity == public`, `evidence_refs` are present, artifact hashes are present, `rollback_supported == true`, and policy `allow == true`.
-
-  Re-verify `EvidenceBundle` digests, `RunReceipt` lineage, and (for tile artifacts) `root_hash` / tile-checksum sets.
-- **Evidence required.** Prior `ReleaseManifest`, its `RunReceipt`, its `ValidationReport`, its `EvidenceBundle` digests, its `VerifyReceipt`.
-- **Exit condition.** A specific rollback target is named and passes the public-runtime rule. If no valid target exists, **escalate to a new governed release** rather than rolling back to an unverified manifest.
-
-### 7.3 Step 3 — Approvals
-
-- **Who.** Release authority; cultural / rights steward when sensitive-lane flag is set.
-- **What.** Record approvals as `ReviewRecord` entries (`reviewer`, `role`, `decision = ALLOW`, `evidence_refs`, `policy_ref`, `time`).
-- **Exit condition.** All required approvals are recorded and digitally identifiable. Author of the original release MUST NOT be the sole approver for sensitive lanes.
-
-### 7.4 Step 4 — Withdraw or mark-stale the affected public surfaces
-
-- **Who.** Release authority (or designated operator).
-- **What.** Mark the affected `LayerManifest`, `TileArtifactManifest`, `StyleManifest`, Evidence Drawer payloads, Focus Mode answers, and any derived `MovementStoryNode` exposures as **stale / withdrawn** in the UI state. Public clients SHOULD see a stale-state badge before any pointer-shift completes.
-- **Evidence required.** `AutomationBadgePayload` projection for trust-visible state; UI feature-flag or stale-state toggle.
-- **Exit condition.** No public surface continues to advertise the retracted artifacts as authoritative.
-
-### 7.5 Step 5 — Shift pointers to the rollback target
-
-- **Who.** Release authority + tile / artifact maintainer.
-- **What.** Shift the `LayerManifest`, `TileArtifactManifest`, and `StyleManifest` references back to the rollback target's `root_hash`, tile-checksum set, and `spec_hash`. **Do not delete tile variants.** Pointer-based rollback preserves both variants and keeps the audit trail explorable.
-- **Evidence required.** Rollback target's tile digest set; spec_hash; signed manifest.
-- **Exit condition.** Pointers resolve cleanly; no dangling references; the old set remains in the artifact store with a `superseded` marker, not a delete.
-
-### 7.6 Step 6 — Invalidate caches
-
-- **Who.** Release authority + ops.
-- **What.** Trigger CDN purge / cache invalidation for the affected tile URLs and version-specific routes. Emit a **cache invalidation receipt**.
-- **Evidence required.** Cache-key list from the affected `ReleaseManifest`; invalidation receipt schema.
-- **Exit condition.** No stale tile may be reissued from cache; the invalidation receipt is appended to the audit ledger.
+> Current repository evidence does not establish a Roads/Rail/Trade release to
+> roll back. The lane-specific candidate, manifest, rollback-card, proof, and
+> published directories contain only their README files and `.gitkeep` markers.
+> Stop at `HOLD` unless an exact affected release and all required governed
+> support records are independently identified and verified.
 
 > [!CAUTION]
-> Skipping cache invalidation makes the rollback partial. Stale PMTiles / vector-tile fragments can survive in CDN and client caches, leaking retracted content. The C6-08 doctrine is explicit: **revocation that does not invalidate caches is incomplete.**
+> KFM is not a navigation, dispatch, traffic-control, railroad-operating,
+> bridge-safety, emergency-routing, legal-access, right-of-way, regulatory, or
+> current-closure authority. A rollback check cannot establish that a road,
+> rail line, bridge, crossing, ferry, facility, route, or corridor is open,
+> lawful, current, complete, or safe.
 
-### 7.7 Step 7 — Tombstone the retracted release
+**Quick navigation:** [Current capability](#current-capability) ·
+[When to use this runbook](#when-to-use-this-runbook) ·
+[Inputs and stop conditions](#inputs-and-stop-conditions) ·
+[Procedure](#procedure) · [Validation commands](#validation-commands) ·
+[Handoff packet](#handoff-packet) · [Rollback of this document](#rollback-of-this-document)
 
-- **Who.** Release authority.
-- **What.** Append a signed tombstone receipt to the audit ledger. The tombstone points at the retracted `release_id`, records the defect class and reason, names the supersession reference (rollback target or future superseding release), and is signed by the release authority. UI and API filters thereafter hide the tombstoned items from public views; lineage and audit views remain explorable.
-- **Evidence required.** Tombstone schema; ledger append succeeds; signature verifies.
-- **Exit condition.** A `run_receipt.tombstone.json` (or equivalent named tombstone artifact) is appended and discoverable through the audit surface.
+## Purpose and authority boundary
 
-### 7.8 Step 8 — Verify
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the [Directory Rules](../../doctrine/directory-rules.md), which place
+human operational procedures below `docs/runbooks/`. This same-path update
+therefore remains under the `docs/` responsibility root. It does not create a
+new release, policy, proof, data, or execution authority.
 
-- **Who.** Validator / proof reviewer.
-- **What.** Run the rollback drill fixture:
+The controlling separation is:
 
-  1. Verify the previous `ReleaseManifest` resolves and its digests match.
-  2. Verify the tile digest set matches the rollback target's manifest.
-  3. Run `VerifyReceipt` (digest_verified, bounds_verified, schema_verified) on at least one representative tile of each affected layer.
-  4. Run `RuntimeProbeResult` against the renderer / tile budget for the rollback target's tileset.
-  5. Run the OPA / Rego release-manifest policy fixture against the new superseding `ReleaseManifest`.
-  6. Run Roads / Rail / Trade lane-specific fixtures: route-membership/designation separation, OSM/GNIS legal-status denial, historic-overprecision denial, public-generalization receipt presence, transport-graph projection rollback.
-
-- **Evidence required.** Green test results; signed `VerifyReceipt`; signed `ValidationReport`; signed `PolicyDecision = allow`.
-- **Exit condition.** All fixtures pass deterministically. Any failure here aborts the rollback and either escalates to a different rollback target or to a new governed release.
-
-### 7.9 Step 9 — Publish the superseding ReleaseManifest
-
-- **Who.** Release authority.
-- **What.** Publish a new `ReleaseManifest` that records the rollback chain: it identifies the retracted release, the rollback target, the defect class, and re-asserts a valid `rollback_target` for the new release itself.
-- **Evidence required.** New `ReleaseManifest` passes the public runtime rule; `evidence_refs` resolve; artifact hashes verify; `rollback_supported = true`.
-- **Exit condition.** Public surfaces and governed API begin resolving to the superseding manifest; finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) remain coherent.
-
-### 7.10 Step 10 — Communicate
-
-- **Who.** Communications steward.
-- **What.** Send notices in this order: cultural / rights stewards (if sensitive-lane), internal downstream consumers, public surface (release notes, stale-state banner, correction page). Record each notice's reference in the incident ledger.
-- **Evidence required.** Notice templates; recipient list; transmission timestamps.
-- **Exit condition.** All notices sent and acknowledged where acknowledgment is required.
-
-### 7.11 Step 11 — Post-mortem and backlog
-
-- **Who.** Auditor + lane owner.
-- **What.** Within one working week: write a post-mortem (Friday check-in pattern), add or strengthen a fixture for the failure mode, record any new verification items in `docs/registers/VERIFICATION_BACKLOG.md`, and update `docs/registers/DRIFT_REGISTER.md` if the defect revealed structural drift.
-- **Evidence required.** Post-mortem document; new fixture PR(s); register entries.
-- **Exit condition.** Incident closed; lineage preserved; next-time path narrower than this-time path.
-
----
-
-## 8. Roads / Rail / Trade-specific concerns
-
-These are doctrinal carve-outs the lane MUST respect during rollback. Each is **CONFIRMED doctrine / PROPOSED implementation** unless otherwise noted.
-
-### 8.1 Indigenous trade and mobility corridors
-
-Indigenous trade and mobility corridors, oral-history corridors, treaty corridors, and culturally interpretive evidence default to **steward review + generalized public geometry**. A rollback that involves any of these MUST include a cultural / rights steward in the approval chain (§5) and MUST NOT republish at finer precision than the steward authorizes — even when the rollback target's original release used finer precision. If the rollback target itself violates this rule, escalate to a **forward-fix governed release** instead.
-
-### 8.2 Historic route claims vs. surveyed alignment
-
-Historic routes (wagon, military, mail, emigrant, stage, cattle, trade) are **claims with uncertainty**, not surveyed alignments. A rollback that restores a release where claim and surveyed centerline were collapsed is itself defective; the rollback target must carry a `GeneralizationReceipt` and explicit uncertainty class. Historic overprecision is a named denial gate — restoring overprecision is not a valid rollback.
-
-### 8.3 OSM / GNIS legal-status denial
-
-OSM and GNIS rows are typically `observation` or `context` for the lane's purposes, not `authority`. A rollback that re-asserts OSM- or GNIS-derived rows as `authority` for legal road / rail designations re-triggers the source-role denial gate. Source role is **fixed at admission** and MUST NOT be promoted by rollback.
-
-### 8.4 WZDx and live transport feeds
-
-Work-zone (WZDx) and other live transport feeds carry license terms, ETag / `Last-Modified` provenance, and Indigenous-sovereignty checks at admission. A rollback that restores a release built on a feed snapshot whose license, attribution, or provenance is now broken MUST quarantine the feed at admission before re-publication, even if the prior `ReleaseManifest` passed at its time.
-
-### 8.5 Critical transport facilities
-
-Bridges, ferries, river crossings, depots, sidings, yards, and other facilities classified as **critical infrastructure** require review before public exposure of precise geometry, condition, or inspection detail. A rollback that re-exposes precise critical-facility geometry without current review records MUST instead republish at generalized geometry with a `GeneralizationReceipt`.
-
-### 8.6 Network-edge / graph projections
-
-Routing graphs, traversal graphs, and network-edge projections are **derived artifacts**, not canonical records. A rollback restores graph projections only through the rollback target's manifest; it MUST NOT promote a graph projection back to canonical-record status, and MUST NOT let a routing graph become the public surface in place of the evidence-bearing layer.
-
-### 8.7 Operator-status and route-event temporality
-
-`OperatorStatus` and `RouteEvent` are temporal. A rollback MUST preserve the distinct time fields — source, observed, valid, retrieval, release, correction — and MUST NOT collapse `valid_time` with `observed_time` to make a rollback look cleaner.
-
-### 8.8 Consent-bound and PII-adjacent overlays
-
-Where a transport surface intersects a consent-bound overlay (e.g., a historical-mobility narrative tied to identifiable individuals), the consent metadata pointer-only pattern applies: no raw PII in tiles or artifacts, render-time consent verification, fail-closed on revoked / expired / missing proof. A rollback that re-exposes a previously consent-blocked surface is a defect, not a recovery.
-
----
-
-## 9. Verification checklist
-
-Run through this list before declaring the rollback complete. Every line must be checkable from a receipt or fixture; "looks fine" is not a check.
-
-- [ ] Defect class is named and recorded in the incident ledger.
-- [ ] Affected `release_id` is named; current `ReleaseManifest` and its digests are captured.
-- [ ] Rollback target is named; its `ReleaseManifest` passes the public runtime rule.
-- [ ] Approvals recorded as `ReviewRecord`s with distinct author and approver where the lane is sensitive.
-- [ ] Affected public surfaces show stale / withdrawn state **before** pointer shift.
-- [ ] `LayerManifest`, `TileArtifactManifest`, and `StyleManifest` pointers shifted to rollback target.
-- [ ] Tile variants preserved in artifact store (pointer rollback, not delete).
-- [ ] CDN and client cache invalidations issued; invalidation receipt appended.
-- [ ] Tombstone receipt appended to audit ledger; signed and discoverable.
-- [ ] `VerifyReceipt` passes (digest_verified, bounds_verified, schema_verified).
-- [ ] `RuntimeProbeResult` within budget.
-- [ ] OPA / Rego release-manifest policy fixture passes against superseding manifest.
-- [ ] Roads / Rail / Trade fixtures pass: route-membership/designation, operator-status temporality, OSM/GNIS legal-status denial, historic-overprecision denial, generalization receipt, transport-graph rollback.
-- [ ] If sensitive-lane: steward approval recorded; generalization posture intact.
-- [ ] Superseding `ReleaseManifest` published; `rollback_target` re-asserted; finite outcomes coherent.
-- [ ] Notices sent (steward, downstream, public) and recorded.
-- [ ] Post-mortem scheduled; fixture / backlog updates filed.
-
----
-
-## 10. Failure modes and anti-patterns
-
-> [!WARNING]
-> Each row below is a way a Roads / Rail / Trade rollback can quietly fail. Every one is recoverable, but only if it's named. If the runbook starts feeling clean and the ledger is silent, suspect one of these.
-
-| Failure mode | What goes wrong | Counter-rule |
+| Concern | Owning surface | This runbook's limit |
 |---|---|---|
-| **Delete-as-rollback** | Tile artifacts and receipts removed instead of pointers shifted; lineage is destroyed. | Pointer-shift only. Old variants remain in the artifact store with a superseded marker. |
-| **Cache-stale leak** | Pointers shifted, but CDN / client caches keep serving retracted PMTiles. | Issue invalidation receipt; verify cache-purge before declaring complete. |
-| **Hidden author-approver collapse** | The author of the affected release is also the rollback approver. | Separation of duties (§5); sensitive lanes require a steward in addition. |
-| **Rollback to an unsafe target** | Target's `policy_label`, `rights_status`, or `sensitivity` is unknown or non-public. | Verify the public runtime rule against the target before approval. |
-| **Tombstone-as-delete** | Tombstone written but item is also hard-deleted; explainability lost. | Tombstone preserves the retracted run_id; hard delete violates audit. |
-| **Forward-fix masquerading as rollback** | New release pushed without an explicit rollback chain; treated as "a new version". | Rollback chain must be recorded in the superseding `ReleaseManifest`. |
-| **Indigenous corridor re-exposure** | Rollback target predates current steward review; restoring it re-exposes generalized-only geometry at precision. | Steward approval is mandatory for sensitive lanes; honor the **current** generalization posture, not the original. |
-| **OSM/GNIS role promotion at rollback** | Rollback restores a release where OSM / GNIS rows were `authority`. | Source role is fixed at admission; rollback cannot upgrade it. |
-| **Historic overprecision restoration** | Rollback target collapses claim onto surveyed centerline. | Historic overprecision denial gate applies to rollback targets too. |
-| **Watcher self-rollback** | A worker / watcher rolls back without release-authority sign-off. | Watcher-as-non-publisher; workers emit candidates and receipts only. |
-| **Graph-projection promotion** | Routing graph becomes the public surface during rollback. | Graph projections remain derived; canonical records carry truth. |
-| **Cache-only rollback** | Tile pointer shifted but graph-projection / Evidence Drawer caches not invalidated. | Invalidate every cache layer tied to the affected `LayerManifest`. |
-| **AI receipt drift** | Domain rolled back, but Focus Mode `AIReceipt`s still cite retracted evidence. | Trigger `governed_ai_ROLLBACK.md` after the domain rollback completes. |
-| **Silent admin-shortcut rollback** | An admin / infra path performs the rollback outside the governed release path. | Admin shortcuts MUST stay off the normal public path; rollback runs through the governed release path. |
+| Incident procedure and handoff | `docs/runbooks/roads-rail-trade/` | Explains and records bounded human steps |
+| Rollback candidate meaning and shape | `contracts/release/rollback_card.md` and `schemas/contracts/v1/release/rollback_card.schema.json` | Cites the proposed profile; cannot activate it |
+| Release-plane records | `release/manifests/`, `release/rollback_cards/`, `release/correction_notices/`, `release/withdrawal_notices/` | Requires immutable pointers; cannot manufacture a decision |
+| Data-plane rollback support | `data/rollback/roads-rail-trade/` | May hold governed support records; cannot authorize rollback |
+| Evidence and proof | `data/proofs/` and accepted evidence contracts | Evidence outranks prose, maps, tests, and generated language |
+| Policy and sensitivity | `policy/` plus accountable review | Missing or inactive evaluation fails closed |
+| Public state | Governed release resolvers and public-safe artifacts | No direct write or read path from this runbook |
 
----
+Rollback is a governed state transition. It is not deletion, erasure, a file
+move, a branch merge, or an undocumented pointer edit. Prior manifests,
+artifacts, evidence, receipts, decisions, and correction lineage remain
+inspectable unless a separate authorized retention or erasure process applies.
 
-## 11. Artifacts touched
+## Current capability
 
-The artifacts below are the doctrinal touch-points of a Roads / Rail / Trade rollback. Concrete paths are **PROPOSED** until verified against mounted-repo evidence; the responsibility roots follow Directory Rules.
-
-| Artifact | Responsibility root (PROPOSED) | Role in rollback |
+| Surface | Confirmed repository state | Safe conclusion |
 |---|---|---|
-| `ReleaseManifest` (retracted + rollback target + superseding) | `release/candidates/roads-rail-trade/` → `release/published/...` | Binds tiles, evidence, policy, sensitivity, receipts, rollback, correction lineage, spec_hash, attestations. |
-| `RunReceipt` | `data/receipts/roads-rail-trade/` | Build / run provenance; inputs, config / spec hash, artifact digests, source_head, attestations. |
-| `ValidationReport` | `data/receipts/roads-rail-trade/` or `data/proofs/roads-rail-trade/` | Validator outcome under deterministic inputs. |
-| `PolicyDecision` | `data/proofs/roads-rail-trade/` | Rego / OPA decision on the superseding manifest. |
-| `VerifyReceipt` | `data/proofs/roads-rail-trade/` | Runtime verification of tile activation: digest / bounds / schema. |
-| `RuntimeProbeResult` | `data/proofs/roads-rail-trade/` | Renderer / tile budget pass-fail. |
-| `EvidenceBundle` | `data/catalog/roads-rail-trade/` | Admissible evidence object resolved from `EvidenceRef`; outranks maps and tiles. |
-| `EvidenceDrawerPayload` | `data/published/layers/roads-rail-trade/` (governed projection) | Governed UI projection; must reflect stale / withdrawn state during rollback. |
-| `LayerManifest`, `TileArtifactManifest`, `StyleManifest` | `data/published/layers/roads-rail-trade/` (governed projection) | Pointer-shift target; tile variants kept. |
-| `CorrectionNotice` | `release/corrections/roads-rail-trade/` | Records the defect and the invalidated derivatives. |
-| `RollbackCard` / tombstone receipt | `data/receipts/roads-rail-trade/` or audit ledger | Signed retraction marker pointing at retracted `release_id`. |
-| `ReviewRecord` | `data/receipts/roads-rail-trade/` | Approvals (lane owner, release authority, steward, validator). |
-| Schema home | `schemas/contracts/v1/domains/roads-rail-trade/` per ADR-0001 | Shape for envelopes, manifests, receipts. PROPOSED; verify with Directory Rules and ADR. |
-| Policy home | `policy/domains/roads-rail-trade/` | Release / sensitivity / source-role denial rules. |
-| Fixtures | `fixtures/domains/roads-rail-trade/` and `tests/domains/roads-rail-trade/` | Rollback drill, generalization receipt, historic-overprecision denial, OSM/GNIS legal-status denial, transport-graph rollback. |
-| Audit ledger | `data/AUDIT/receipts/YYYY/MM/...` or OCI evidence registry (per C1-06; backend ADR pending) | Append-only; tombstones live here. |
+| Roads/Rail/Trade release inventory | Candidate, manifest, rollback-card, proof, and published subtrees contain no instance records or payloads | No in-repository lane release is available for a real rollback |
+| `CorridorRoute` profile | Fourteen focused tests plus a no-network fixture validator are wired in the domain workflow | Synthetic contract validation is available; route truth, policy, proof, release, and rollback are not established |
+| Generic `RollbackCard` profile | Closed proposed schema, semantic validator, positive and negative fixtures, focused tests, and read-only workflow | Candidate shape and local consistency can be checked; validation does not authorize mutation |
+| Signed rollback token | `PROPOSED_INACTIVE` schema, fixtures, validator, tests, and read-only workflow | Fixture readiness only; no cryptography, signature authority, receipt write, alias mutation, or rollback execution |
+| Rollback drill | Read-only workflow inspects holds and runs twelve generic/Hazards synthetic rehearsal tests | Non-vacuous readiness evidence only; no production target or public state is selected or mutated |
+| Apply helper | `tools/release/rollback_apply.py` accepts only a marker-protected synthetic workspace and `synthetic: true` scenario | Safe for isolated rehearsal tests; deny all production use |
+| Production rollback pipeline | `pipelines/rollback/main.py` remains a greenfield placeholder | Production execution is held |
+| Roads/Rail/Trade domain rollback tests | `test_release_manifest_present.py` and `test_transport_graph_rollback.py` contain docstrings only | No lane-specific executable release or graph rollback proof exists |
+| Roads/Rail/Trade policy | Repository-grounded scaffold; evaluator and governed consumers are unbound | No active policy decision or obligation enforcement is established |
 
----
+A green workflow proves only the exact bounded checks it runs at the tested
+revision. It is not a `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`,
+`RollbackCard` approval, proof, signature, release transition, deployment, or
+publication event.
 
-## 12. Appendix — receipt and manifest sketches
+## When to use this runbook
 
-> [!NOTE]
-> The shapes below are **illustrative sketches** drawn from doctrinal language. Exact field names, types, and the canonical schema home for Roads / Rail / Trade are **PROPOSED** and depend on `schemas/contracts/v1/domains/roads-rail-trade/` content, which is `NEEDS VERIFICATION`.
+Use it after a suspected defect is reported against material believed to be
+released through the Roads/Rail/Trade lane. First determine whether the report
+actually names a governed release record. If it names only a map view, branch,
+pull request, template, candidate, generated answer, cache entry, screenshot,
+or internal data file, do not assume publication.
 
-<details>
-<summary><strong>A. Tombstone receipt — illustrative shape</strong></summary>
+Classify the earliest supported response:
 
-```json
-{
-  "object_type": "RollbackTombstone",
-  "version": "v1-PROPOSED",
-  "retracted_release_id": "rrt-release-2026-04-22-xyz",
-  "rollback_target_release_id": "rrt-release-2026-04-15-abc",
-  "defect_class": "sensitivity-corridor-exposure",
-  "defect_summary": "Historic mobility corridor exposed at precision finer than steward authorization.",
-  "supersession_ref": "rrt-release-2026-05-12-def",
-  "approvals": [
-    { "reviewer": "release-authority/<id>", "role": "release_authority", "decision": "ALLOW", "time": "2026-05-12T12:34:00Z" },
-    { "reviewer": "cultural-steward/<id>",  "role": "rights_steward",    "decision": "ALLOW", "time": "2026-05-12T12:30:00Z" }
-  ],
-  "signature": { "alg": "cosign-keyless", "keyid": "cosign://fulcio/<issuer>", "sig": "<base64>" },
-  "time": "2026-05-12T12:35:00Z"
-}
+| Disposition | Use only when | Required posture |
+|---|---|---|
+| `ROLLBACK_CANDIDATE` | The affected release is exact and a different prior safe release is exact, digest-verified, policy-eligible, reviewed, and complete | Prepare a candidate; do not mutate public state |
+| `WITHDRAWAL_CANDIDATE` | Continued exposure is unsafe and no verified safe target is available | Fail closed and prepare withdrawal review |
+| `HOLD` | Release identity, target, evidence, rights, sensitivity, policy, review, signature, invalidation, or correction support is unresolved | Preserve the uncertainty and escalate |
+| `ERROR` | Inputs are malformed, conflicting, unreadable, or cannot be deterministically evaluated | Repair the evidence or tooling before relying on a result |
+
+Defects that can justify immediate fail-closed escalation include unsupported
+evidence, incorrect source role, unknown rights, harmful precision, cultural or
+sovereignty exposure, stale or incorrect valid time, route/segment/membership
+collapse, digest mismatch, invalid public-safe transform, unreviewed policy
+change, or a governed client resolving an unreleased artifact.
+
+## Inputs and stop conditions
+
+### Required incident inputs
+
+- [ ] Exact repository revision and incident identifier.
+- [ ] Exact affected `ReleaseManifest` reference and immutable digest.
+- [ ] Evidence that the affected release is the public release currently
+      resolved by the governed surface; do not infer this from a filename named
+      `latest` or `current`.
+- [ ] Exact defect class, affected object families, geography, time interval,
+      carriers, and public surfaces.
+- [ ] Resolvable EvidenceBundle, source-role, rights, sensitivity, policy,
+      validation, proof, and review references appropriate to the defect.
+- [ ] Correction or withdrawal record reference with a named reason and time.
+- [ ] Complete invalidation inventory covering every affected carrier and
+      downstream derivative.
+- [ ] Accountable release and domain reviewers; cultural, rights, security, or
+      infrastructure review when the scope requires it.
+
+### Additional inputs for a rollback candidate
+
+- [ ] Exact target `ReleaseManifest` reference that differs from the affected
+      release.
+- [ ] Target artifact inventory and digest closure.
+- [ ] Proof that the target's evidence, rights, sensitivity, policy, review,
+      correction, and public-safe posture remain valid now.
+- [ ] Preserved lineage from the target through the affected release and the
+      proposed correction.
+- [ ] Restoration and post-change verification plan.
+
+### Mandatory stop conditions
+
+Return `HOLD`, `WITHDRAWAL_CANDIDATE`, or `ERROR` as supported when any of the
+following is unresolved:
+
+- no exact released state or current governed resolver can be verified;
+- the rollback target is absent, equal to the affected release, mutable, stale,
+  digest-invalid, unreviewed, or no longer policy-eligible;
+- source role, rights, sensitivity, sovereignty, consent, harmful precision,
+  currentness, or valid time is unclear;
+- evidence, proof, policy, review, signature, correction, withdrawal, receipt,
+  or invalidation closure is incomplete;
+- a cross-domain dependency would absorb Hydrology, Hazards, Archaeology,
+  Settlements/Infrastructure, People/Land, or another lane's authority;
+- a proposed action would expose restricted geometry or operational detail;
+- the action depends on the synthetic helper, placeholder production pipeline,
+  docstring-only domain tests, or proposal-only policy as live authority; or
+- an actor would both author and solely approve a policy- or release-significant
+  transition without an accepted exception.
+
+## Procedure
+
+### 1. Pin the evidence boundary
+
+Record the exact Git commit, incident ID, affected repository paths, observed
+public surface, reporter evidence, and time of observation. Preserve raw reports
+outside public logs when they contain restricted geometry or sensitive
+infrastructure detail.
+
+Inventory the lane before making a release claim:
+
+```bash
+find release/candidates/roads-rail-trade -mindepth 1 -type f \
+  ! -name README.md ! -name .gitkeep -print
+find release/manifests/roads-rail-trade -mindepth 1 -type f \
+  ! -name README.md ! -name .gitkeep -print
+find release/rollback_cards/roads-rail-trade -mindepth 1 -type f \
+  ! -name README.md ! -name .gitkeep -print
+find data/proofs/roads-rail-trade data/published/roads-rail-trade \
+  -mindepth 1 -type f ! -name README.md ! -name .gitkeep -print
 ```
 
-</details>
+Empty output is not proof that no external release exists, but it blocks an
+in-repository rollback claim until the external release identity and governed
+records are reconciled.
 
-<details>
-<summary><strong>B. Public runtime rule for ReleaseManifest — doctrinal restatement</strong></summary>
+### 2. Classify the defect and affected carriers
 
-A public client may consume a `ReleaseManifest` only when **all** of the following hold:
+Keep the following identities separate:
 
-- `release_state == PUBLISHED`
-- `policy_label != "unknown"`
-- `rights_status != "unknown"`
-- `sensitivity == "public"`
-- `evidence_refs` are present and resolve
-- artifact hashes are present and verify
-- `rollback.rollback_supported == true`
-- policy `allow == true`
+- route or corridor identity;
+- road or rail segments;
+- sourced, time-bounded segment membership;
+- legal designation, operator, access, restriction, or status claims;
+- historic or interpretive alignment and its uncertainty;
+- generalized public geometry versus restricted canonical geometry; and
+- graph, tile, search, report, export, Evidence Drawer, and AI derivatives.
 
-This rule applies to **both** the original release and the superseding rollback release. If the rollback target itself does not satisfy this rule, the rollback is unsafe and must be replaced by a forward-fix governed release.
+List each affected carrier explicitly. The synthetic rehearsal contract names
+`API_CACHE`, `CDN`, `TILES`, `CATALOG`, `TRIPLETS`, `SEARCH_INDEX`,
+`VECTOR_INDEX`, `AI_CACHE`, and `DOWNSTREAM_DERIVATIVES`; a production plan must
+also include any lane-specific carriers confirmed by current deployment
+evidence. Do not assume the synthetic list is a complete production inventory.
 
-</details>
+### 3. Select rollback, withdrawal, or hold
 
-<details>
-<summary><strong>C. Roads / Rail / Trade rollback drill — fixture checklist</strong></summary>
+Choose `ROLLBACK_CANDIDATE` only after both manifests and all referenced
+artifacts verify. When there is no safe prior target, choose
+`WITHDRAWAL_CANDIDATE` or `HOLD` instead of restoring an unverified release.
 
-The rollback drill fixture validates:
+For rights, cultural, sovereignty, private-access, sensitive-infrastructure, or
+harmful-precision defects, prefer immediate governed withdrawal, redaction,
+generalization, or denial while review proceeds. Do not publish a more precise
+explanation of the defect than the affected public is authorized to see.
 
-1. Previous `ReleaseManifest` resolves; digests match.
-2. Tile digest set matches rollback target's manifest.
-3. `VerifyReceipt` digest_verified / bounds_verified / schema_verified all pass for a representative tile per affected layer.
-4. `RuntimeProbeResult` decode, hash, heap, and token-latency budgets pass on the device-profile under test.
-5. OPA / Rego `release_manifest.rego` denies an unknown policy_label, unknown rights_status, non-public sensitivity, missing evidence_refs, missing artifacts, and unsupported rollback — i.e., fail-closed under each negative case.
-6. Roads / Rail / Trade lane fixtures:
-   - Route-membership and designation separation.
-   - Operator-status / route-event temporal separation.
-   - OSM / GNIS legal-status denial.
-   - Historic overprecision denial.
-   - Public generalization receipt presence.
-   - Transport-graph projection rollback.
+### 4. Assemble a non-executing RollbackCard candidate
 
-PROPOSED locations: `tests/domains/roads-rail-trade/rollback/` and `fixtures/domains/roads-rail-trade/rollback/`. NEEDS VERIFICATION against mounted-repo evidence.
+Use the current generic contract and schema as a proposed candidate profile.
+Populate all required groups, including:
 
-</details>
+- stable identity, version, deterministic `spec_hash`, and finite disposition;
+- trigger and affected release reference;
+- target mode: `PRIOR_RELEASE`, `WITHDRAWAL`, or `HOLD`;
+- EvidenceBundle, policy-decision, review-record, and correction-notice
+  references;
+- invalidations and restoration verification;
+- decision and execution timing;
+- supersession lineage; and
+- governance non-effects.
 
-<details>
-<summary><strong>D. Defect-class → posture quick-card</strong></summary>
+The profile's `x-kfm` metadata says its authority is
+`candidate_shape_and_local_consistency_only`. Schema validity must not be
+reported as approval or executable rollback authority.
 
-| Defect | First action | Rollback? | Forward-fix? |
-|---|---|---|---|
-| Evidence gap | Withdraw surface; open `CorrectionNotice` | Yes | If new evidence admissible |
-| Source-role error | Reclassify at admission | Yes | No — role is fixed at admission |
-| Rights / license | Quarantine source | Yes | After rights re-verified |
-| Sensitivity / sovereignty | Steward; generalize | **Yes — immediately** | After steward `ALLOW` |
-| Geometry overprecision | Add `GeneralizationReceipt` | Yes | Yes |
-| Temporal error | Recompute scope | Yes | Yes |
-| Policy gate slip | Treat as incident | Yes | After fixtures pass |
-| Validation drift | Re-run validators | Yes | Yes |
-| Rendering / tile drift | Shift root_hash pointer | Yes | Yes |
-| API contract drift | Withdraw route | Yes | After contract test |
-| AI cite-of-retracted | Domain rollback first; then AI rollback | Yes | After domain rollback |
+### 5. Run bounded validation
 
-</details>
+Run the exact current commands in [Validation commands](#validation-commands).
+Record the revision, command, exit code, and complete finite outcome. Do not
+rewrite `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` as success.
 
----
+### 6. Prepare the accountable handoff
 
-## 13. Verification backlog
+Attach the handoff packet below to a review request. CODEOWNERS routes repository
+review to `@bartytime4life`; that is not proof of independent domain, rights,
+sensitivity, policy, release, or rollback approval.
 
-The items below are `NEEDS VERIFICATION` until mounted-repo evidence is inspected. Each is parked here rather than asserted in the body of the runbook.
+Stop here. No command in this runbook authorizes production target selection,
+signature creation, policy activation, external cache invalidation, alias
+mutation, release transition, deployment, publication, or source activation.
 
-| Item | Evidence that would settle it | Status |
+## Validation commands
+
+Run from the repository root at the exact revision under review.
+
+### Roads/Rail/Trade bounded profile
+
+```bash
+python -m pytest -q tests/schemas/test_corridor_route_contract.py
+python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
+```
+
+The current workflow expects fourteen focused tests and the fixture-declared
+`PASS`, `ABSTAIN`, `DENY`, and `ERROR` polarity. These commands do not validate
+a release or rollback.
+
+### Generic RollbackCard candidate profile
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+python tools/validators/release/validate_rollback_card.py --fixtures
+```
+
+To check a proposed card without mutating state:
+
+```bash
+python tools/validators/release/validate_rollback_card.py \
+  <path-to-proposed-rollback-card.json>
+```
+
+### Fixture-only signed-token readiness
+
+```bash
+python -m py_compile \
+  tools/validators/release/validate_signed_rollback_token.py \
+  tests/validators/test_validate_signed_rollback_token.py
+python -m unittest tests.validators.test_validate_signed_rollback_token -v
+python tools/validators/release/validate_signed_rollback_token.py --fixtures
+```
+
+These checks execute no cryptography, alias mutation, rollback, receipt write,
+deployment, or publication.
+
+### Synthetic rehearsal regression profile
+
+```bash
+python -m unittest -q \
+  tests.release.test_synthetic_rollback_rehearsal \
+  tests.domains.hazards.test_synthetic_rollback_rehearsal
+```
+
+The current rollback-drill workflow expects twelve non-vacuous tests. The
+rehearsal helper is deliberately limited to isolated roots containing the exact
+`.kfm-synthetic-rollback-rehearsal` marker and scenarios with `synthetic: true`.
+Do not point it at repository, staging, production, published, or externally
+mounted state, and do not treat its `--apply` option as a production command.
+
+## Result interpretation
+
+| Observation | Meaning | Required response |
 |---|---|---|
-| Exact governed-API route for Roads / Rail / Trade resolvers (e.g., feature/detail, layer manifest, Evidence Drawer payload, Focus Mode) | `apps/governed-api/` route table; OpenAPI / contract tests | NEEDS VERIFICATION |
-| Schema home for `RoadsRailDecisionEnvelope`, `LayerManifest`, `TileArtifactManifest`, `StyleManifest`, `ReleaseManifest`, receipts | `schemas/contracts/v1/domains/roads-rail-trade/` directory contents; ADR-0001 alignment | NEEDS VERIFICATION |
-| CI workflow that enforces the rollback drill on every release PR | `.github/workflows/*` | NEEDS VERIFICATION |
-| Audit ledger backend choice (filesystem vs OCI vs both) | Accepted ADR; tooling presence | UNKNOWN |
-| Cache invalidation surfaces (CDN, tile server, client) and their receipt schema | `infra/` config; invalidation receipt schema | NEEDS VERIFICATION |
-| Identity of release authority and lane owner for Roads / Rail / Trade | `CODEOWNERS`; lane README | NEEDS VERIFICATION |
-| Cultural / rights steward roster and contact path for sensitive-lane approvals | `docs/governance/stewards.md` (PROPOSED) | UNKNOWN |
-| Whether `docs/runbooks/<domain>/<NAME>_RUNBOOK.md` is the agreed runbook subdirectory pattern, or whether the flat `docs/runbooks/<domain>_<NAME>.md` form is preferred | `docs/runbooks/README.md` (PROPOSED) or an accepted ADR on runbook structure | NEEDS VERIFICATION |
-| Whether prior released artifacts must remain hot-fetchable or may move to cold-store while pointers shift | Operational ADR; infra retention policy | NEEDS VERIFICATION |
-| Drift register and verification backlog files exist and are linked | `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md` | NEEDS VERIFICATION |
+| RollbackCard `PASS` | Proposed card satisfied shape, hash, reference syntax, and local semantic checks | Continue accountable review; do not mutate state |
+| `ABSTAIN` | Required support is unresolved | Preserve uncertainty and stop advancement |
+| `DENY` | Candidate violates a fail-closed rule | Correct the candidate or select withdrawal/hold |
+| `ERROR` | Input or evaluation failed | Repair tooling or inputs before relying on the result |
+| Signed-token fixture `PASS` | Fixture-only readiness checks passed | Do not claim a signature or authorization exists |
+| Synthetic rehearsal `PASS` | Isolated marker-protected history and invalidation behavior passed | Do not generalize to production |
+| `rollback-drill` green | Current holds and synthetic checks matched workflow expectations | Production rollback remains held |
+| Domain workflow green | Bounded CorridorRoute and readiness checks passed | No route truth, proof, release, or rollback is established |
 
----
+## Handoff packet
 
-## 14. Related docs
+The review packet must contain:
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), responsibility roots, anti-patterns.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`; promotion as governed state transition.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public clients use governed APIs; never canonical / internal stores.
-- [`docs/architecture/correction-and-rollback.md`](../../architecture/correction-and-rollback.md) — corpus-level rollback and correction model. *(PROPOSED home; verify against repo.)*
-- [`docs/domains/roads-rail-trade/README.md`](../../domains/roads-rail-trade/README.md) — lane scope, ubiquitous language, object families, sensitivity posture. *(PROPOSED home.)*
-- [`docs/runbooks/governed_ai_ROLLBACK.md`](../governed_ai_ROLLBACK.md) — AI adapter rollback and kill switch; trigger after a domain rollback that retracted cited evidence.
-- [`docs/runbooks/ui_ROLLBACK.md`](../ui_ROLLBACK.md) — UI rollback, feature flag, and schema-deprecation steps for any shell-level changes that accompany a domain rollback.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — canonical schema home (`schemas/contracts/v1/...`). *(PROPOSED id; verify.)*
-- [`release/candidates/roads-rail-trade/`](../../../release/candidates/roads-rail-trade/) — release candidates and rollback targets for this lane.
-- [`data/receipts/README.md`](../../../data/receipts/README.md) and [`data/proofs/README.md`](../../../data/proofs/README.md) — proof and receipt homes.
+- [ ] incident ID, author, timestamp, and exact Git revision;
+- [ ] affected release reference, manifest digest, artifact inventory, and proof
+      that the governed public surface resolves it;
+- [ ] defect class, evidence, source-role, rights, sensitivity, policy,
+      validation, and review references;
+- [ ] exact target release and digest closure, or an explicit withdrawal/hold
+      reason;
+- [ ] proposed RollbackCard candidate plus validator output;
+- [ ] correction or withdrawal reference;
+- [ ] affected carrier and downstream-derivative inventory;
+- [ ] invalidation, stale-state, correction-display, and verification plan;
+- [ ] preservation proof for affected and target manifests and artifacts;
+- [ ] accountable reviewer identities and separation-of-duties record;
+- [ ] communication plan that does not expose restricted detail;
+- [ ] finite terminal state: `ROLLBACK_CANDIDATE`,
+      `WITHDRAWAL_CANDIDATE`, `HOLD`, or `ERROR`; and
+- [ ] explicit statement that no live action occurred during this procedure.
 
----
+## Definition of done
 
-<sub>**Last updated:** 2026-05-12 · **Doc id:** `kfm://doc/runbook/roads-rail-trade/rollback` · **Status:** draft · [Back to top ↑](#top)</sub>
+This readiness pass is complete when the exact evidence boundary is pinned, the
+defect and carriers are classified, the candidate passes or returns a truthful
+negative result, the handoff packet is complete, and no unauthorized mutation
+occurred.
+
+A production rollback is **not** complete merely because this runbook was
+followed. Production completion remains held until an accepted executor,
+authenticated target and signatures, active policy evaluation, accountable
+review, durable receipts, external invalidation, governed alias transition,
+post-change verification, correction visibility, and rollback-of-rollback path
+are independently implemented and proven.
+
+## Open verification register
+
+| ID | Question | Current status |
+|---|---|---|
+| RRT-RB-001 | Which exact release and public resolver would be affected? | No lane instance observed; `HOLD` |
+| RRT-RB-002 | Who holds accountable domain, release, rollback, rights, sensitivity, and independent-review roles? | `NEEDS VERIFICATION` |
+| RRT-RB-003 | Which policy bundle and governed consumer enforce rollback obligations? | Scaffold/evaluator unbound |
+| RRT-RB-004 | Which accepted signature and token mechanism authorizes a live transition? | Fixture-only token profile; inactive |
+| RRT-RB-005 | Which production engine selects targets, writes receipts, invalidates carriers, and changes the governed resolver? | Production pipeline placeholder |
+| RRT-RB-006 | What domain-specific fixtures prove manifest, graph, map, API, Evidence Drawer, export, search, and AI invalidation? | Domain test files are placeholders |
+| RRT-RB-007 | What accepted decision resolves the `roads-rail-trade` versus `transport` contract/schema topology? | `NEEDS VERIFICATION`; do not resolve here |
+| RRT-RB-008 | Which checks are required by repository rules for a rollback-significant change? | `NEEDS VERIFICATION` |
+
+## Documentation maintenance
+
+Re-review this runbook when a Roads/Rail/Trade candidate, manifest, rollback
+card, proof artifact, published payload, accepted policy bundle, governed
+consumer, signature mechanism, production executor, invalidation adapter, or
+domain rollback test appears. Update current-state claims from exact repository
+evidence; do not upgrade a template, README, fixture, workflow, or green check
+into release authority.
+
+## Rollback of this document
+
+Before merge, close the draft pull request and discard only its feature branch.
+After merge, revert the documentation commit or submit a reviewed forward
+correction. Either action changes documentation only; it does not select a
+release target, restore data, invalidate a cache, mutate an alias, execute a
+rollback, deploy, publish, or activate a source.
+
+## Related responsibility roots
+
+- [Local Roads/Rail/Trade runbook boundary](./README.md)
+- [Promotion preflight](./PROMOTION_RUNBOOK.md)
+- [Bounded no-network validation](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Roads/Rail/Trade domain boundary](../../domains/roads-rail-trade/README.md)
+- [Generic RollbackCard contract](../../../contracts/release/rollback_card.md)
+- [Generic RollbackCard schema](../../../schemas/contracts/v1/release/rollback_card.schema.json)
+- [Generic RollbackCard validator](../../../tools/validators/release/validate_rollback_card.py)
+- [Rollback-card workflow](../../../.github/workflows/rollback-card.yml)
+- [Rollback-drill readiness workflow](../../../.github/workflows/rollback-drill.yml)
+- [Lane candidate boundary](../../../release/candidates/roads-rail-trade/README.md)
+- [Lane manifest boundary](../../../release/manifests/roads-rail-trade/README.md)
+- [Lane rollback-card boundary](../../../release/rollback_cards/roads-rail-trade/README.md)
+- [Lane proof boundary](../../../data/proofs/roads-rail-trade/README.md)
+- [Lane data-plane rollback boundary](../../../data/rollback/roads-rail-trade/README.md)
+- [Lane published-data boundary](../../../data/published/roads-rail-trade/README.md)
+
+[Back to top](#top)

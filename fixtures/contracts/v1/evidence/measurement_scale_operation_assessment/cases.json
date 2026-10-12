@@ -1,0 +1,59 @@
+{
+  "object_type": "MeasurementScaleOperationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.measurement-scale-operation-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "MeasurementScaleOperationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.measurement-scale-operation-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-377",
+    "observed_at": "2026-08-10T19:00:00Z",
+    "attribute_ref": "kfm:attribute:synthetic-precipitation-total:001",
+    "attribute_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_use": "SCIENTIFIC_SUMMARY",
+    "measurement": {
+      "scale_class": "RATIO",
+      "unit_ref": "kfm:unit:millimetre",
+      "true_zero": "PRESENT",
+      "ordering_meaningful": true,
+      "equal_intervals": true,
+      "scale_definition": {"ref": "kfm:measurement-definition:synthetic-precipitation:001", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"}
+    },
+    "requested_operations": ["MEAN", "PROPORTIONAL_SYMBOL", "SUM"],
+    "assessment": {
+      "state": "COMPLETE",
+      "permitted_operations": ["MEAN", "PROPORTIONAL_SYMBOL", "SUM"],
+      "denied_operations": [],
+      "obligations": [],
+      "review_record_refs": ["kfm:review-record:synthetic-measurement-scale:001"]
+    },
+    "authority_claims": {
+      "measurement_authority": false,
+      "analytics_authority": false,
+      "legend_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_ratio_summary", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_nominal_categorical", "patch": {"measurement": {"scale_class": "NOMINAL", "unit_ref": null, "true_zero": "NOT_APPLICABLE", "ordering_meaningful": false, "equal_intervals": false}, "requested_operations": ["CATEGORICAL_LEGEND", "MODE"], "assessment": {"permitted_operations": ["CATEGORICAL_LEGEND", "MODE"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_ordinal_public_with_blocked_mean", "patch": {"intended_use": "PUBLIC_MAP", "measurement": {"scale_class": "ORDINAL", "unit_ref": null, "true_zero": "NOT_APPLICABLE", "ordering_meaningful": true, "equal_intervals": false}, "requested_operations": ["MEAN", "ORDERED_LEGEND", "RANK", "SEQUENTIAL_COLOR_RAMP"], "assessment": {"permitted_operations": ["ORDERED_LEGEND", "RANK", "SEQUENTIAL_COLOR_RAMP"], "denied_operations": ["MEAN"], "obligations": ["PUBLIC_EXPLANATION_REQUIRED", "UNSUPPORTED_OPERATION_BLOCKED"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_assessment", "patch": {"assessment": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_custom_scale", "patch": {"measurement": {"scale_class": "CUSTOM", "unit_ref": null, "true_zero": "UNKNOWN", "ordering_meaningful": true, "equal_intervals": false}, "assessment": {"state": "UNKNOWN", "permitted_operations": [], "denied_operations": [], "obligations": ["CUSTOM_SCALE_REVIEW_REQUIRED"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_UNKNOWN", "MIXED_OR_CUSTOM_REQUIRES_REVIEW"]}},
+    {"name": "abstain_unresolved_definition", "patch": {"measurement": {"scale_definition": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["SCALE_DEFINITION_UNRESOLVED"]}},
+    {"name": "deny_nominal_mean_permitted", "patch": {"measurement": {"scale_class": "NOMINAL", "unit_ref": null, "true_zero": "NOT_APPLICABLE", "ordering_meaningful": false, "equal_intervals": false}, "requested_operations": ["MEAN"], "assessment": {"permitted_operations": ["MEAN"], "obligations": ["UNSUPPORTED_OPERATION_BLOCKED"]}}, "expected": {"outcome": "DENY", "codes": ["OPERATION_PARTITION_MISMATCH"]}},
+    {"name": "deny_scale_metadata_mismatch", "patch": {"measurement": {"scale_class": "ORDINAL", "unit_ref": null, "true_zero": "NOT_APPLICABLE", "ordering_meaningful": false, "equal_intervals": true}, "assessment": {"obligations": ["UNSUPPORTED_OPERATION_BLOCKED"]}}, "expected": {"outcome": "DENY", "codes": ["MEASUREMENT_METADATA_INCOHERENT", "OPERATION_PARTITION_MISMATCH"]}},
+    {"name": "deny_ratio_true_zero_absent", "patch": {"measurement": {"true_zero": "ABSENT"}}, "expected": {"outcome": "DENY", "codes": ["MEASUREMENT_METADATA_INCOHERENT"]}},
+    {"name": "deny_numeric_unit_missing", "patch": {"measurement": {"unit_ref": null}}, "expected": {"outcome": "DENY", "codes": ["NUMERIC_UNIT_REQUIRED"]}},
+    {"name": "deny_public_review_missing", "patch": {"intended_use": "PUBLIC_MAP", "assessment": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"source_values": [12, 18]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

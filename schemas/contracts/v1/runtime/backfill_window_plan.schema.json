@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/backfill_window_plan.schema.json",
+  "title": "backfill_window_plan",
+  "description": "Deterministic planning result for one bounded backfill window. It carries no write or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "plan_id",
+    "planner_version",
+    "dataset_id",
+    "source_uri",
+    "window",
+    "spec_hash",
+    "dedupe_key",
+    "artifact_uri",
+    "current_published_spec_hash",
+    "decision",
+    "reason_codes",
+    "required_gates",
+    "write_authority"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "pattern": "^backfill:[a-z][a-z0-9._-]{0,127}:[0-9]{8}T[0-9]{6}Z_[0-9]{8}T[0-9]{6}Z:[a-f0-9]{16}$"
+    },
+    "planner_version": {"type": "string", "const": "v1"},
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,127}$"
+    },
+    "source_uri": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^(https://|kfm://)\\S+$"
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "semantics"],
+      "properties": {
+        "start": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "end": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "semantics": {"type": "string", "const": "half-open"}
+      }
+    },
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "dedupe_key": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "artifact_uri": {
+      "type": "string",
+      "pattern": "^data/processed/[a-z][a-z0-9._-]{0,127}/window=[0-9]{8}T[0-9]{6}Z_[0-9]{8}T[0-9]{6}Z/artifact-[a-f0-9]{64}\\.json$"
+    },
+    "current_published_spec_hash": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      ]
+    },
+    "decision": {"type": "string", "enum": ["NOOP", "REBUILD"]},
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["CURRENT_SPEC_MATCH", "CURRENT_SPEC_ABSENT", "CURRENT_SPEC_CHANGED"]
+      }
+    },
+    "required_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_check", "signature_verification", "promotion_review"],
+      "properties": {
+        "policy_check": {"const": true},
+        "signature_verification": {"const": true},
+        "promotion_review": {"const": true}
+      }
+    },
+    "write_authority": {"const": false}
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/backfill_window_plan.md",
+    "planner": "packages/pipelines-core/src/pipelines_core/backfill_window.py",
+    "cli": "scripts/plan_backfill_window.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/backfill_window_plan/",
+    "status": "PROPOSED"
+  }
+}

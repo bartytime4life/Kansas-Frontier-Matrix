@@ -1,0 +1,69 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789236417311,
+      "tag": "0000_tired_swordsman",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790797081526,
+      "tag": "0001_governed_water",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790797081527,
+      "tag": "0002_kansas_knowledge",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790797081528,
+      "tag": "0003_crop_casma",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1790797081529,
+      "tag": "0004_submission_list_order",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1791580000000,
+      "tag": "0005_daily_archive",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1791720000000,
+      "tag": "0006_governed_weather",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1791806400000,
+      "tag": "0007_governed_soil",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1791892800000,
+      "tag": "0008_governed_storm_events",
+      "breakpoints": true
+    }
+  ]
+}

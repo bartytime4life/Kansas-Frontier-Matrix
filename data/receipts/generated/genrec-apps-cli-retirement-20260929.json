@@ -1,0 +1,116 @@
+{
+  "receipt_id": "genrec-apps-cli-retirement-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/README.md",
+    "apps/packages/README.md",
+    "apps/workers/src/ingest_worker/README.md",
+    "apps/workers/src/validate_worker/README.md",
+    "control_plane/repository_governance_parity.yaml",
+    "docs/architecture/deployment-topology.md",
+    "docs/architecture/system-context.md",
+    "docs/runbooks/FIRST_INGEST.md",
+    "docs/runbooks/RELEASE_DRY_RUN.md",
+    "packages/kfm-cli/README.md",
+    "packages/kfm-cli/src/kfm_cli/cli.py",
+    "tests/packages/kfm_cli/test_diff.py",
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "apps/README.md": "sha256:8b41566c99fd02f9ca9d2cf62e7211fb836df9a330b2c962ae39b71af4779e8f",
+    "apps/packages/README.md": "sha256:3eae1262bb9bf73aa60004dcf12eba09415eb7a59aa299189691fc65f2ecd7c0",
+    "apps/workers/src/ingest_worker/README.md": "sha256:cb7fd68fe27098429ab530235161a6830ca46baf8b6fe8be73051697febae579",
+    "apps/workers/src/validate_worker/README.md": "sha256:9a6aa5dcc9b23db921074d1ed3d2f979ed8af4406a2ea72c7732d37465eaded9",
+    "control_plane/repository_governance_parity.yaml": "sha256:502436aaaf597d69ce04ac2ff774df0715277e5f18d55b9532cc9dfc93952f6c",
+    "docs/architecture/deployment-topology.md": "sha256:13479ea47ec8a7a51bae76f1dcee210b5494231cf7dc016ab27caff16eb3318d",
+    "docs/architecture/system-context.md": "sha256:bf85123cfd16bb646f906619647ebd85fb31dbdd226570fa5077e9fa2d04b26c",
+    "docs/runbooks/FIRST_INGEST.md": "sha256:50eb6e0e13d26c74ad3b4e171fb710afa7513f4d23f219f239bcfed4f80b0bef",
+    "docs/runbooks/RELEASE_DRY_RUN.md": "sha256:b21ee94e0cb409ee5015f1de295abd36f4656a977d4376fc304f428aaa577565",
+    "packages/kfm-cli/README.md": "sha256:146a6f0292e3c29e9b1eb291587834302b9084fb68afa037bd033addddbc17e2",
+    "packages/kfm-cli/src/kfm_cli/cli.py": "sha256:fef4d4ff2fbba0bafe92a7100afaa07329be6ceb506086b8f52c9a2eea0ab30b",
+    "tests/packages/kfm_cli/test_diff.py": "sha256:ccbe5342b8db4ba3674af28654080dc284e582d50c2adb6dcb1db07ae80251d1",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:2f0ba12358ea5dd38bf21dc6c8e8c63029ef4f7db554dd9f8156953da39fe97a",
+    "tools/qa/scaffold_baseline.json": "sha256:22eb48daef9ce307ee24e3d4ae94bc58352a7d0fc0a0b1620095b99a2ff3d763",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:b22425a8e4164a3ccdc6e84074cb3ddbf63c2236adcd22a5fc6ee177529ea87d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/06c46a55f2ef64989b117a55702806e18c01a728",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791"
+    ]
+  },
+  "truth_labels": {
+    "apps/README.md": "CONFIRMED",
+    "apps/packages/README.md": "CONFIRMED",
+    "apps/workers/src/ingest_worker/README.md": "CONFIRMED",
+    "apps/workers/src/validate_worker/README.md": "CONFIRMED",
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
+    "docs/architecture/deployment-topology.md": "CONFIRMED",
+    "docs/architecture/system-context.md": "CONFIRMED",
+    "docs/runbooks/FIRST_INGEST.md": "CONFIRMED",
+    "docs/runbooks/RELEASE_DRY_RUN.md": "CONFIRMED",
+    "packages/kfm-cli/README.md": "CONFIRMED",
+    "packages/kfm-cli/src/kfm_cli/cli.py": "CONFIRMED",
+    "tests/packages/kfm_cli/test_diff.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "CLI suites",
+      "outcome": "PASS",
+      "reason": "tests/packages/kfm_cli passes (14) with the hash-locked CLI profile, including the ported release-diff cases; tests/diff passes."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "repository-topology (validator also passes with --trusted-baseline-ref main), repository-governance-parity, workflow-security, root registry and scaffold_inventory --check pass; the scaffold baseline drops 17 apps/cli findings (1241 -> 1224)."
+    },
+    {
+      "gate": "Documentation checks",
+      "outcome": "PASS",
+      "reason": "check_links.py on every changed Markdown file, and document-graph and meta-block checks on the PR diff, exit 0."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. The governance-parity base_ref repin needs owner review."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/06c46a55f2ef64989b117a55702806e18c01a728"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T04:54:30Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4791,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Retires the apps/cli scaffold at the repository owner's direction (18 deleted files) after porting its one working route, the ReleaseManifest diff, to packages/kfm-cli as `kfm release-diff`. Deleting apps/cli/DIFF_COMMAND.md strictly shrank the path-grammar:uppercase topology waiver, one of the three #4782 recovery fingerprints; its entry is replaced by the strictly smaller one, the governance-parity base_ref moves from the pre-recovery fc7c558e to main 4324e239 so the shrink is evaluated under the ordinary rules, and the one-time recovery test now replays the baseline from the recovery commit."
+}

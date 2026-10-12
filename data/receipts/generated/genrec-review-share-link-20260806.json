@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-review-share-link-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/review-share-link.yml",
+    "contracts/review/review_share_link.md",
+    "fixtures/review/review_share_link/invalid/decision_mismatch.json",
+    "fixtures/review/review_share_link/valid/active.json",
+    "fixtures/review/review_share_link/valid/expired.json",
+    "fixtures/review/review_share_link/valid/revoked.json",
+    "fixtures/review/review_share_link/valid/unsafe_context_denied.json",
+    "schemas/contracts/v1/review/review_share_link.schema.json",
+    "tests/validators/review/review_share_link/test_validate_review_share_link.py",
+    "tools/validators/review/review_share_link/README.md",
+    "tools/validators/review/review_share_link/validate_review_share_link.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/review-share-link.yml": "sha256:1faea5a214a7d6be650a2f45bfecfaf0c860de8ee9d6fa8f5cb48e40fd2dc526",
+    "contracts/review/review_share_link.md": "sha256:17738a35fba7ff0a25cad4d4e050603b20d408d8f2490e9ead3d288596d8e99e",
+    "fixtures/review/review_share_link/invalid/decision_mismatch.json": "sha256:39352ccdb7e01ffd17721ee60ca333569713d226cd8c3899f6d2fea50287754b",
+    "fixtures/review/review_share_link/valid/active.json": "sha256:cc5713a453e3d3a0326d7b0d39c79ec620556bbccd84098f08592252b1c5b04e",
+    "fixtures/review/review_share_link/valid/expired.json": "sha256:d8f955a4b4140c7b98c87e25481d285200280927435d3e24cb618693bb29c0fa",
+    "fixtures/review/review_share_link/valid/revoked.json": "sha256:a06f7c5af686b752bdfe5f59cb55b4f0e753da2671a1d7ff96083e7e1fbfc051",
+    "fixtures/review/review_share_link/valid/unsafe_context_denied.json": "sha256:0f2adc92211f820ba1c9b1cb8d901182f4d2dc5de90e1486e41ff6c7ecd73b32",
+    "schemas/contracts/v1/review/review_share_link.schema.json": "sha256:cb3b73687a36435f1816f63134d9f501fdbbccbd380988279b7f26873340547b",
+    "tests/validators/review/review_share_link/test_validate_review_share_link.py": "sha256:e66340cb64146b6a55de65d97af5eaf973673b4840509b71b919a4d73434e361",
+    "tools/validators/review/review_share_link/README.md": "sha256:cbdb80c8e8712d28f91a56fe5a5df2e16633c1d258d98b10fb27e3489ea76730",
+    "tools/validators/review/review_share_link/validate_review_share_link.py": "sha256:fbe906de2065d45673d418e7861e32e66f98a4f41e39f2c1031ff0190105a8d2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:e270412d27ad6febcd73630852118ce918c4ba375c2b59ad05093714ca596d15",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-10-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-10-26.pdf#review-share-link",
+      "repo:schemas/contracts/v1/review/README.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/review-share-link.yml": "PROPOSED",
+    "contracts/review/review_share_link.md": "PROPOSED",
+    "fixtures/review/review_share_link/invalid/decision_mismatch.json": "PROPOSED",
+    "fixtures/review/review_share_link/valid/active.json": "PROPOSED",
+    "fixtures/review/review_share_link/valid/expired.json": "PROPOSED",
+    "fixtures/review/review_share_link/valid/revoked.json": "PROPOSED",
+    "fixtures/review/review_share_link/valid/unsafe_context_denied.json": "PROPOSED",
+    "schemas/contracts/v1/review/review_share_link.schema.json": "PROPOSED",
+    "tests/validators/review/review_share_link/test_validate_review_share_link.py": "PROPOSED",
+    "tools/validators/review/review_share_link/README.md": "PROPOSED",
+    "tools/validators/review/review_share_link/validate_review_share_link.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Ten deterministic ReviewShareLink tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "Active, expired, and revoked fixtures carry deterministic spec hashes and exact finite decisions."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:review-share-link",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-10-26.pdf#review-share-link"
+    },
+    {
+      "id": "repository:review-schema-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/review/README.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@506987cdb5752b8d651d4ff6f9cbddcb9c89b3ba"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T21:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only ReviewShareLink contract, machine schema, deterministic validator, valid/invalid fixtures, tests, and read-only CI. It hashes bearer tokens and does not create an access grant or live server."
+}

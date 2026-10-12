@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-mock-adapter-ai-receipt-projection-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/envelopes/src/envelopes/mock_adapter_receipt.py",
+    "tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py"
+  ],
+  "artifact_hashes": {
+    "packages/envelopes/src/envelopes/mock_adapter_receipt.py": "sha256:4bc0074c1cf3f3f9aaa3f260d0e81629b226534a19b2c720ef1f0754bf86f6cd",
+    "tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py": "sha256:36d915fcd04d5ab3682e8fc909b20987965422a1017fbbbd5f20e62c223a3631"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "sha256:8cb69b5946ce9025a848a395eac39d8af0638aa1bc94c89c8ff1ddf50a106483",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "attached-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#21",
+      "attachment:KFM_Full_Atlas_seed_cards.md#Evidence-Subordinate-AI-Implementation-Surface",
+      "repo:main@70f023e2a6cd83d0d236337a72da91a8787758d3",
+      "repo:runtime/model_adapters/MockAdapter.py@70f023e2a6cd83d0d236337a72da91a8787758d3",
+      "repo:packages/envelopes/src/envelopes/ai_receipt.py@70f023e2a6cd83d0d236337a72da91a8787758d3",
+      "repo:contracts/runtime/ai_receipt.md@70f023e2a6cd83d0d236337a72da91a8787758d3",
+      "repo:docs/doctrine/directory-rules.md@70f023e2a6cd83d0d236337a72da91a8787758d3"
+    ]
+  },
+  "truth_labels": {
+    "packages/envelopes/src/envelopes/mock_adapter_receipt.py": "PROPOSED",
+    "tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-baseline",
+      "outcome": "PASS",
+      "reason": "Pinned main to 70f023e2a6cd83d0d236337a72da91a8787758d3 and classified three existing failed workflows before branch creation: schema-validation, validator-suite, and release-manifest."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request or issue owned the MockAdapter-to-AIReceipt candidate projection at selection time; current MockAdapter, AIReceipt contract/schema/builder/tests, proposed ADR-0019, and Focus mock workflow were inspected."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "A deterministic isolated reproduction using the current MockAdapter and AIReceipt builder behavior ran five focused unittest cases successfully with no network access."
+    },
+    {
+      "gate": "compile-and-syntax",
+      "outcome": "PASS",
+      "reason": "The proposed helper and focused test compiled in the isolated validation environment."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds the final proposed helper and focused test bytes with SHA-256."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head CI starts after the draft pull request opens; branch failures will be compared with the pinned inherited baseline."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@70f023e2a6cd83d0d236337a72da91a8787758d3"
+    },
+    {
+      "id": "mock-adapter-current-boundary",
+      "validated": true,
+      "evidence_ref": "repo:runtime/model_adapters/MockAdapter.py@70f023e2a6cd83d0d236337a72da91a8787758d3"
+    },
+    {
+      "id": "ai-receipt-current-builder",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/ai_receipt.py@70f023e2a6cd83d0d236337a72da91a8787758d3"
+    },
+    {
+      "id": "ai-receipt-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/ai_receipt.md@70f023e2a6cd83d0d236337a72da91a8787758d3"
+    },
+    {
+      "id": "governed-ai-source",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#21"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T00:09:25Z",
+  "emitter": "OpenAI ChatGPT via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "The helper projects only the already-selected finite outcome from a caller-supplied, prevalidated MockAdapter response into the existing AIReceipt candidate builder. It fixes synthetic adapter/model identity to mock/fixture-only. It does not invoke MockAdapter, call a model, validate RuntimeResponseEnvelope semantics, compute or authenticate digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen access. Canonicalization of input/output digests remains unresolved in the current AIReceipt contract and is intentionally upstream."
+}

@@ -1,0 +1,12 @@
+{
+  "fixture_id": "infra-gen-invalid-001-input",
+  "fixture_posture": "synthetic; public-safe; invalid; no-leak-request",
+  "request_type": "InfrastructureDetailRequest",
+  "asset_id": "kfm://fixture/synthetic/settlements-infrastructure/asset-001",
+  "requested_tier": "T0",
+  "requested_fields": [
+    "exact_geometry",
+    "condition_observation",
+    "dependency_edges"
+  ]
+}

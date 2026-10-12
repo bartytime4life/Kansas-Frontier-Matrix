@@ -47,7 +47,7 @@ Source namespace for Habitat implementation helpers that transform governed inpu
 - [Development notes](#development-notes)
 - [Definition of done](#definition-of-done)
 - [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Rollback
 
 ---
 

@@ -2,15 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/evidence/readme
 title: Evidence Contract Fixtures README
 type: fixture-readme
-version: v0.1.0
+version: v0.2.0
 status: draft
 owners: TODO(owner): schema steward; TODO(owner): evidence contracts steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-06-30 expansion
-updated: 2026-07-19
+updated: 2026-08-02
 policy_label: public-review
-related: [evidence_bundle/README.md, evidence_ref/README.md, ../../../../schemas/contracts/v1/evidence/README.md, ../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json, ../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json, ../../../../contracts/evidence/evidence_bundle.md, ../../../../contracts/evidence/evidence_ref.md, ../../../../tests/schemas/test_common_contracts.py, ../../../../docs/doctrine/directory-rules.md]
-tags: [kfm, fixtures, contracts, v1, evidence, evidence-bundle, evidence-ref, json-schema, valid-fixtures, invalid-fixtures, schema-tests, non-authoritative]
-notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/README.md`.", "This directory groups evidence-family contract fixtures under the discovery shape used by `tests/schemas/test_common_contracts.py`.", "Fixture content is schema-test input only; contract meaning, schema shape, validator code, policy rules, release decisions, and operational proof support stay in their owning roots.", "Verified child fixture families in this pass are `evidence_bundle/` and `evidence_ref/`; broader evidence-family coverage remains PARTIAL.", "Both schema-declared validator wrappers now exist and delegate to the shared JSON Schema runner; the EvidenceRef wrapper is aggregate-wired and has focused CLI polarity tests."]
+related: [evidence_bundle/README.md, evidence_ref/README.md, verification_state_history/README.md, ../../../../schemas/contracts/v1/evidence/README.md, ../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json, ../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json, ../../../../schemas/contracts/v1/evidence/verification_state_history.schema.json, ../../../../contracts/evidence/evidence_bundle.md, ../../../../contracts/evidence/evidence_ref.md, ../../../../contracts/evidence/verification_state_history.md, ../../../../tests/schemas/test_common_contracts.py, ../../../../tests/schemas/test_verification_state_history.py, ../../../../docs/doctrine/directory-rules.md]
+tags: [kfm, fixtures, contracts, v1, evidence, evidence-bundle, evidence-ref, verification-state-history, bitemporal, json-schema, valid-fixtures, invalid-fixtures, semantic-negative-fixtures, schema-tests, non-authoritative]
+notes: ["This README replaces a blank file at `fixtures/contracts/v1/evidence/README.md`.", "This directory groups evidence-family contract fixtures under the discovery shape used by `tests/schemas/test_common_contracts.py`.", "Fixture content is schema-test input only; contract meaning, schema shape, validator code, policy rules, release decisions, and operational proof support stay in their owning roots.", "Verified child fixture families in this pass are `evidence_bundle/`, `evidence_ref/`, and `verification_state_history/`; broader evidence-family coverage remains PARTIAL.", "The VerificationStateHistory family separates schema-negative `invalid_*` fixtures from schema-valid `semantic_*` negatives exercised by its specialized validator."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -67,6 +67,7 @@ This inventory is **PARTIAL / CONFIRMED WHERE FETCHED**. It is not a complete re
 |---|---|---|---|---|
 | [`evidence_bundle/`](evidence_bundle/README.md) | `valid/valid_1.json` includes `bundle_id` and required top-level fields. | `invalid/invalid_1.json` omits required `bundle_id`; expected error matcher is `required`. | `tools/validators/validate_evidence_bundle.py` exists and is aggregate-wired. | CONFIRMED fixture family / schema status `PROPOSED` |
 | [`evidence_ref/`](evidence_ref/README.md) | Two valid fixtures cover a minimal measurement ref and a dataset ref with `bundle_ref`. | Three invalid fixtures cover missing `ref`, an extra property, and an unsupported `kind`. | `tools/validators/validate_evidence_ref.py` exists, is aggregate-wired, and remains shape-only. | CONFIRMED validator slice / schema status `PROPOSED` |
+| [`verification_state_history/`](verification_state_history/README.md) | Two valid fixtures cover late correction, re-verification, supersession, revocation, and replay. | One schema-negative and six semantic-negative fixtures cover conditional shape, chain, effective/recorded order, invalid time, hash, append order, and transition failures. | `tools/validators/validate_verification_state_history.py` plus focused schema/replay tests; collected by `make test`, not the curated aggregate. | CONFIRMED bounded executable / contract and schema status `PROPOSED` |
 
 ---
 
@@ -76,6 +77,7 @@ This inventory is **PARTIAL / CONFIRMED WHERE FETCHED**. It is not a complete re
 |---|---|---|---|
 | `evidence_bundle` | [`../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | [`../../../../contracts/evidence/evidence_bundle.md`](../../../../contracts/evidence/evidence_bundle.md) | `fixtures/contracts/v1/evidence/evidence_bundle/` |
 | `evidence_ref` | [`../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_ref.schema.json) | [`../../../../contracts/evidence/evidence_ref.md`](../../../../contracts/evidence/evidence_ref.md) | `fixtures/contracts/v1/evidence/evidence_ref/` |
+| `verification_state_history` | [`../../../../schemas/contracts/v1/evidence/verification_state_history.schema.json`](../../../../schemas/contracts/v1/evidence/verification_state_history.schema.json) | [`../../../../contracts/evidence/verification_state_history.md`](../../../../contracts/evidence/verification_state_history.md) | `fixtures/contracts/v1/evidence/verification_state_history/` |
 
 The schema parent README at `schemas/contracts/v1/evidence/README.md` identifies this as the evidence schema family. Directory Rules identifies `fixtures/` as a canonical root for valid/invalid test inputs paired with `tests/`.
 
@@ -97,6 +99,8 @@ Observed harness expectations:
 | `invalid/invalid_*.json` | at least one JSON Schema error |
 | `invalid/invalid_*.expected_error.txt` | expected text appears in combined error messages |
 
+The VerificationStateHistory family also uses `invalid/semantic_*.json` for instances that intentionally pass JSON Schema and fail its specialized bitemporal validator. The generic schema harness ignores that prefix; the focused test requires exact semantic finding-code polarity.
+
 This README documents expected fixture behavior and confirmed validator wiring. Remote CI status and resolver behavior remain separately verified.
 
 ---
@@ -111,6 +115,7 @@ This README documents expected fixture behavior and confirmed validator wiring. 
 | `<schema_name>/invalid/README.md` | Negative-fixture lane notes. |
 | `<schema_name>/invalid/invalid_*.json` | JSON instances expected to fail the matching evidence schema. |
 | `<schema_name>/invalid/invalid_*.expected_error.txt` | Optional expected error fragment for the matching invalid fixture. |
+| `<schema_name>/invalid/semantic_*.json` | Optional schema-valid negative used only by a named specialized validator and focused test. |
 
 ---
 
@@ -136,7 +141,7 @@ Before adding or changing evidence fixtures here:
 | Target README | CONFIRMED | `fixtures/contracts/v1/evidence/README.md` existed as a blank file before this update. |
 | Immediate version parent | CONFIRMED BLANK | `fixtures/contracts/v1/README.md` exists but is blank. |
 | Evidence schema parent | CONFIRMED README | `schemas/contracts/v1/evidence/README.md` exists and identifies evidence schemas. |
-| Verified child families | CONFIRMED PARTIAL | `evidence_bundle/` and `evidence_ref/` are documented. No full recursive inventory was performed. |
+| Verified child families | CONFIRMED PARTIAL | `evidence_bundle/`, `evidence_ref/`, and `verification_state_history/` are documented. No full recursive inventory was performed. |
 | Directory Rules fixture root | CONFIRMED doctrine | `fixtures/` is a canonical root for valid/invalid test inputs. |
 | Schema harness | CONFIRMED / TEST-COVERED | `tests/schemas/test_common_contracts.py` includes `evidence` and discovers this fixture shape. |
 | `evidence_bundle` validator wrapper | CONFIRMED / AGGREGATE-WIRED | Wrapper exists and targets the bundle schema and fixture root. |

@@ -1,0 +1,140 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Repository-Map.md": "sha256:d940dda6e8b98de307021c7c121c5121aaa374e0b657fa16fea5978cb6fcdd51"
+  },
+  "artifact_paths": [
+    "docs/wiki/Repository-Map.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/Repository-Map.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "id": "repository-map-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "id": "wiki-source-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "id": "directory-rules",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:control_plane/root_registry.yaml@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "id": "root-registry",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo-tree:2d7f3014d52cc51556f1ecb1660f8998e8654035:d2ca3c5c24cea63f1b30f92cb69019c736d39275",
+      "id": "exact-root-tree",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T18:06:04Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/Repository-Map.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "repo:docs/wiki/README.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "repo:docs/doctrine/directory-rules.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "repo:control_plane/root_registry.yaml@2d7f3014d52cc51556f1ecb1660f8998e8654035",
+      "repo-tree:2d7f3014d52cc51556f1ecb1660f8998e8654035:d2ca3c5c24cea63f1b30f92cb69019c736d39275",
+      "user-request:sha256:2894cff65584d641f82c1b4675e692c34933ac2b25ab932e49997ec55831a3dd"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-15"
+  },
+  "notes": "Same-path modernization of docs/wiki/Repository-Map.md from main@2d7f3014d52cc51556f1ecb1660f8998e8654035. Adds the pinned root tree, responsibility atlas, authority split, lifecycle lanes, scope and placement rules, examples, migration controls, anti-patterns, and contributor checks. No native-wiki synchronization, authority change, release, deployment, publication, or repository-setting change. Receipt excludes itself from hashes.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:2894cff65584d641f82c1b4675e692c34933ac2b25ab932e49997ec55831a3dd",
+  "receipt_id": "genrec-wiki-repository-map-d940dda6e8b9",
+  "truth_labels": {
+    "docs/wiki/Repository-Map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "preflight",
+      "outcome": "PASS",
+      "reason": "Target, history, overlap, wiki contract, authority sources, and exact root tree inspected."
+    },
+    {
+      "gate": "page-identity",
+      "outcome": "PASS",
+      "reason": "Same path and page ID; no sibling authority, root, mirror, or allowlist change."
+    },
+    {
+      "gate": "root-parity",
+      "outcome": "PASS",
+      "reason": "Twenty-five roots and the adopted 22-plus-3 class split match the pinned evidence."
+    },
+    {
+      "gate": "markdown",
+      "outcome": "PASS",
+      "reason": "One H1, valid heading order, balanced fences and HTML, clean whitespace, final newline, parser success."
+    },
+    {
+      "gate": "links",
+      "outcome": "PASS",
+      "reason": "Relative wiki targets and local anchors resolve."
+    },
+    {
+      "gate": "claim-and-safety-boundary",
+      "outcome": "PASS",
+      "reason": "Claims are snapshot-bounded; path authority is separated from truth, rights, release, and publication; no sensitive content."
+    },
+    {
+      "gate": "receipt-local",
+      "outcome": "PASS",
+      "reason": "Required fields, enums, JSON shape, path/hash parity, and artifact SHA-256 checked."
+    },
+    {
+      "gate": "repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "Runs after branch commit."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Runs after draft PR."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki sync is a separate reviewed action."
+    }
+  ]
+}

@@ -1,6 +1,111 @@
-status: PROPOSED
-path: "data/registry/sources/soil/noaa-uscrn.yaml"
-source_docs:
-  - "docs/domains/soil/CANONICAL_PATHS.md"
-notes:
-  - "Placeholder created from the current docs/domains markdown inventory."
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/noaa-uscrn",
+  "descriptor_version": "1.0.0",
+  "title": "NOAA USCRN daily01: Kansas reference-station soil pilot",
+  "description": "Admitted scope: daily volumetric soil moisture and soil temperature at 5, 10, 20, 50 and 100 cm for the two U.S. Climate Reference Network stations in Kansas (WBAN 53974 Manhattan 6 SSW, WBAN 03067 Oakley 19 SSW), read from the NCEI daily01 (CRND0103) station-year files by connectors/noaa/src/noaa/uscrn_daily_capture.py. Pipeline records carry the short source_id noaa-uscrn. Admitted by the repository owner on 2026-10-11. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": [
+    "soil"
+  ],
+  "source_type": "official_government_dataset",
+  "source_role": "observation",
+  "authority_rank": "primary_authority",
+  "authority_notes": "NOAA NCEI operates the U.S. Climate Reference Network. Daily values are NOAA's own daily01 products computed over the station's local-standard-time day from redundant co-located sensors; KFM does not aggregate or interpolate them. Only USCRN (not USRCRN) stations carry soil sensors.",
+  "publisher": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncei.noaa.gov/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncei.noaa.gov/access/crn/"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); USCRN data subject to revision",
+    "attribution_required": true,
+    "attribution_text": "NOAA National Centers for Environmental Information, U.S. Climate Reference Network (USCRN) daily01 product. Values may be revised.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-10-11T22:50:00Z",
+    "verified_by": "@bartytime4life"
+  },
+  "sensitivity_default": "public",
+  "sensitivity_notes": "Two public federal reference stations at published locations. No living-person, cultural or restricted-infrastructure content in the proposed scope.",
+  "cadence": {
+    "update_cadence": "daily",
+    "freshness_expectation": "NCEI appends daily01 rows each day. The pilot treats a station as stale three days after its latest reported soil moisture value.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "USCRN daily01 station-year files",
+        "uri": "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/",
+        "purpose": "download"
+      },
+      {
+        "label": "USCRN daily01 field headers",
+        "uri": "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/headers.txt",
+        "purpose": "metadata"
+      },
+      {
+        "label": "USCRN daily01 readme",
+        "uri": "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/readme.txt",
+        "purpose": "documentation"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "Diamond, H.J., et al. (2013): U.S. Climate Reference Network after one decade of operations, Bull. Amer. Meteor. Soc. 94, 485-498; USCRN daily01, station {station_id}, {variable} at {depth_cm} cm, NOAA National Centers for Environmental Information, accessed {accessed_at}.",
+    "citation_guidance": "Cite the station, variable, depth and retrieval time, and state that values may be revised."
+  },
+  "source_head": {
+    "observed_at": "2026-10-11T22:30:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "uscrn daily01 CRND0103",
+      "source_head_uri": "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/headers.txt"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "observation",
+      "map_display",
+      "citation_support"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety"
+    ],
+    "limitations": "Admission covers only daily soil moisture (m3/m3) and soil temperature (degC) at the five standard depths at the two listed stations. Values describe a single station point and local-standard-time day, not an area, field or county. A missing value stays missing and never counts as zero; a physically impossible value is withheld. Not an agronomic, drought-declaration or regulatory product.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Each package needs a kfm.soil-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0046: public sensitivity and this admitted license.",
+      "Every release keeps the NCEI citation and the revision notice."
+    ]
+  },
+  "review_state": "approved",
+  "release_state": "candidate",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2026-10-11T22:30:00Z",
+    "updated_at": "2026-10-11T22:50:00Z"
+  }
+}

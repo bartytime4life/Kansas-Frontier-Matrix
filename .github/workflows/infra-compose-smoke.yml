@@ -34,23 +34,24 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Check out tested revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
 
-      - name: Run static Compose boundary tests
+      - name: Run static Docker and Compose boundary tests
         env:
+          KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONHASHSEED: "0"
         run: |
           python -m unittest discover \
             --start-directory tests/infra \
-            --pattern 'test_compose_static.py' \
+            --pattern 'test_*.py' \
             --verbose
 
   render-and-build-compose:
@@ -59,7 +60,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out tested revision without persisted credentials
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 

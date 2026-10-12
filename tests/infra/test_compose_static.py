@@ -19,10 +19,10 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
     def test_build_context_and_dockerfiles_resolve(self):
         contexts = re.findall(r"^\s+context:\s*(\S+)\s*$", self.text, re.MULTILINE)
         dockerfiles = re.findall(r"^\s+dockerfile:\s*(\S+)\s*$", self.text, re.MULTILINE)
-        self.assertEqual(contexts, ["..", ".."])
+        self.assertEqual(contexts, ["../docker"])
         self.assertEqual(
             dockerfiles,
-            ["docker/Dockerfile.governed-api", "docker/Dockerfile.explorer-web"],
+            ["Dockerfile.governed-api"],
         )
         for context, dockerfile in zip(contexts, dockerfiles, strict=True):
             context_path = (self.compose_dir / context).resolve()
@@ -33,9 +33,18 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
             self.assertRegex(dockerfile_text, r"(?m)^FROM\s+\S+")
             self.assertRegex(dockerfile_text, r"(?m)^WORKDIR\s+\S+")
 
+            users = re.findall(r"(?m)^USER\s+(\S+)\s*$", dockerfile_text)
+            self.assertTrue(users, f"{dockerfile_path}: missing final USER")
+            runtime_user = users[-1].split(":", maxsplit=1)[0]
+            self.assertNotIn(
+                runtime_user.lower(),
+                {"0", "root"},
+                f"{dockerfile_path}: final USER must be non-root",
+            )
+
     def test_published_ports_are_loopback_only(self):
         port_specs = re.findall(r'ports:\s*\["([^"]+)"\]', self.text)
-        self.assertEqual(len(port_specs), 2)
+        self.assertEqual(len(port_specs), 1)
         for port_spec in port_specs:
             self.assertTrue(port_spec.startswith("127.0.0.1:"), port_spec)
 

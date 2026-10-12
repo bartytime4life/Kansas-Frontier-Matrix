@@ -1,0 +1,482 @@
+{
+  "object_type": "FieldCaptureEvidenceHandoffFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "ready": {
+      "object_type": "FieldCaptureEvidenceHandoffAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.field-capture-evidence-handoff.fixture.v1",
+      "assessment_id": "kfm:field-capture-handoff:000000000000000000000000",
+      "assessed_at": "2026-08-10T15:10:00Z",
+      "capture": {
+        "capture_ref": "kfm://capture/fixture/gnss-point-001",
+        "capture_status": "CANDIDATE",
+        "capture_kind": "GNSS_POINT",
+        "acquisition_method": "GNSS_RECEIVER",
+        "acquired_at": "2026-08-10T15:00:00Z",
+        "source_descriptor_ref": "kfm://source/fixture/field-team",
+        "analyst_record_ref": "kfm://analyst-record/fixture/field-team",
+        "revision_ref": "kfm://revision/fixture/gnss-point-001-v1",
+        "geometry_posture": "EXACT_RESTRICTED",
+        "geometry_ref": "kfm://geometry/fixture/restricted-gnss-point-001",
+        "crs_ref": "kfm://crs/epsg/4326",
+        "accuracy_class": "FIELD_GRADE",
+        "rights_status": "VERIFIED",
+        "sensitivity": "SENSITIVE",
+        "capture_authorization_ref": null
+      },
+      "processing": {
+        "processing_receipt_ref": "kfm://receipt/fixture/gnss-normalization-001",
+        "georeference_validation_ref": "kfm://validation/fixture/gnss-point-001",
+        "public_transform_receipt_ref": null
+      },
+      "evidence": {
+        "evidence_bundle_ref": "kfm://evidence/fixture/gnss-point-001",
+        "review_state": "APPROVED",
+        "handoff_state": "READY"
+      },
+      "decision": {
+        "outcome": "PASS",
+        "reason_codes": ["READY_FOR_EVIDENCE_HANDOFF"]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_accessed": false,
+        "reference_resolution_performed": false,
+        "evidence_created": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "lifecycle_transitioned": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "authority": "NONE"
+      },
+      "limitations": [
+        "CAPTURE_REMAINS_CANDIDATE",
+        "FIXTURE_ONLY",
+        "NO_EVIDENCE_CREATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RAW_COORDINATES",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "held": {
+      "object_type": "FieldCaptureEvidenceHandoffAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.field-capture-evidence-handoff.fixture.v1",
+      "assessment_id": "kfm:field-capture-handoff:000000000000000000000000",
+      "assessed_at": "2026-08-10T16:05:00Z",
+      "capture": {
+        "capture_ref": "kfm://capture/fixture/field-note-001",
+        "capture_status": "CANDIDATE",
+        "capture_kind": "FIELD_OBSERVATION",
+        "acquisition_method": "HUMAN_RECORDED",
+        "acquired_at": "2026-08-10T16:00:00Z",
+        "source_descriptor_ref": "kfm://source/fixture/field-team",
+        "analyst_record_ref": "kfm://analyst-record/fixture/field-team",
+        "revision_ref": "kfm://revision/fixture/field-note-001-v1",
+        "geometry_posture": "WITHHELD",
+        "geometry_ref": null,
+        "crs_ref": null,
+        "accuracy_class": "UNKNOWN",
+        "rights_status": "UNRESOLVED",
+        "sensitivity": "UNKNOWN",
+        "capture_authorization_ref": null
+      },
+      "processing": {
+        "processing_receipt_ref": "kfm://receipt/fixture/field-note-001",
+        "georeference_validation_ref": null,
+        "public_transform_receipt_ref": null
+      },
+      "evidence": {
+        "evidence_bundle_ref": null,
+        "review_state": "PENDING",
+        "handoff_state": "HELD"
+      },
+      "decision": {
+        "outcome": "ABSTAIN",
+        "reason_codes": ["HANDOFF_HELD"]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_accessed": false,
+        "reference_resolution_performed": false,
+        "evidence_created": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "lifecycle_transitioned": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "authority": "NONE"
+      },
+      "limitations": [
+        "CAPTURE_REMAINS_CANDIDATE",
+        "FIXTURE_ONLY",
+        "NO_EVIDENCE_CREATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RAW_COORDINATES",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "denied": {
+      "object_type": "FieldCaptureEvidenceHandoffAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.field-capture-evidence-handoff.fixture.v1",
+      "assessment_id": "kfm:field-capture-handoff:000000000000000000000000",
+      "assessed_at": "2026-08-10T17:30:00Z",
+      "capture": {
+        "capture_ref": "kfm://capture/fixture/drone-flight-001",
+        "capture_status": "CANDIDATE",
+        "capture_kind": "DRONE_CAPTURE",
+        "acquisition_method": "UAS_SENSOR",
+        "acquired_at": "2026-08-10T17:00:00Z",
+        "source_descriptor_ref": "kfm://source/fixture/field-team",
+        "analyst_record_ref": "kfm://analyst-record/fixture/field-team",
+        "revision_ref": "kfm://revision/fixture/drone-flight-001-v1",
+        "geometry_posture": "GENERALIZED_PUBLIC",
+        "geometry_ref": "kfm://geometry/fixture/generalized-drone-footprint-001",
+        "crs_ref": "kfm://crs/epsg/4326",
+        "accuracy_class": "FIELD_GRADE",
+        "rights_status": "DENIED",
+        "sensitivity": "PUBLIC_SAFE",
+        "capture_authorization_ref": "kfm://authorization/fixture/drone-flight-001"
+      },
+      "processing": {
+        "processing_receipt_ref": "kfm://receipt/fixture/drone-processing-001",
+        "georeference_validation_ref": "kfm://validation/fixture/drone-flight-001",
+        "public_transform_receipt_ref": "kfm://receipt/fixture/drone-generalization-001"
+      },
+      "evidence": {
+        "evidence_bundle_ref": null,
+        "review_state": "PENDING",
+        "handoff_state": "DENIED"
+      },
+      "decision": {
+        "outcome": "DENY",
+        "reason_codes": ["HANDOFF_DENIED"]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_accessed": false,
+        "reference_resolution_performed": false,
+        "evidence_created": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "lifecycle_transitioned": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "authority": "NONE"
+      },
+      "limitations": [
+        "CAPTURE_REMAINS_CANDIDATE",
+        "FIXTURE_ONLY",
+        "NO_EVIDENCE_CREATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RAW_COORDINATES",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ready-pass",
+      "base": "ready",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "manual-point-ready-pass",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/capture_kind", "value": "MANUAL_POINT" },
+        { "path": "/capture/acquisition_method", "value": "MANUAL_MAP_PLACEMENT" },
+        { "path": "/capture/capture_ref", "value": "kfm://capture/fixture/manual-point-001" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "unresolved-held-abstain",
+      "base": "held",
+      "mutations": [],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "rights-denied",
+      "base": "denied",
+      "mutations": [],
+      "expected_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "evidence-pending-abstain",
+      "base": "ready",
+      "mutations": [
+        { "path": "/evidence/evidence_bundle_ref", "value": null },
+        { "path": "/evidence/review_state", "value": "PENDING" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "acquisition-method-mismatch",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/acquisition_method", "value": "MANUAL_MAP_PLACEMENT" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_ACQUISITION_METHOD_MISMATCH", "path": "/capture/acquisition_method" }
+      ]
+    },
+    {
+      "case_id": "time-order-invalid",
+      "base": "ready",
+      "mutations": [
+        { "path": "/assessed_at", "value": "2026-08-10T14:59:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_TIME_ORDER_INVALID", "path": "/assessed_at" }
+      ]
+    },
+    {
+      "case_id": "drone-authorization-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/capture_kind", "value": "DRONE_CAPTURE" },
+        { "path": "/capture/acquisition_method", "value": "UAS_SENSOR" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_AUTHORIZATION_REF_REQUIRED", "path": "/capture/capture_authorization_ref" }
+      ]
+    },
+    {
+      "case_id": "non-drone-authorization-unexpected",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/capture_authorization_ref", "value": "kfm://authorization/fixture/unexpected" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_AUTHORIZATION_REF_UNEXPECTED", "path": "/capture/capture_authorization_ref" }
+      ]
+    },
+    {
+      "case_id": "withheld-geometry-ref-forbidden",
+      "base": "held",
+      "mutations": [
+        { "path": "/capture/geometry_ref", "value": "kfm://geometry/fixture/should-not-leak" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_WITHHELD_GEOMETRY_REF_FORBIDDEN", "path": "/capture/geometry_ref" }
+      ]
+    },
+    {
+      "case_id": "withheld-transform-ref-forbidden",
+      "base": "held",
+      "mutations": [
+        { "path": "/processing/public_transform_receipt_ref", "value": "kfm://receipt/fixture/unexpected-transform" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_WITHHELD_TRANSFORM_REF_FORBIDDEN", "path": "/processing/public_transform_receipt_ref" }
+      ]
+    },
+    {
+      "case_id": "geometry-ref-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/geometry_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_GEOMETRY_REF_REQUIRED", "path": "/capture/geometry_ref" }
+      ]
+    },
+    {
+      "case_id": "crs-ref-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/crs_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_CRS_REF_REQUIRED", "path": "/capture/crs_ref" }
+      ]
+    },
+    {
+      "case_id": "accuracy-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/accuracy_class", "value": "UNKNOWN" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_ACCURACY_REQUIRED", "path": "/capture/accuracy_class" }
+      ]
+    },
+    {
+      "case_id": "georeference-validation-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/processing/georeference_validation_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_GEOREFERENCE_VALIDATION_REQUIRED", "path": "/processing/georeference_validation_ref" }
+      ]
+    },
+    {
+      "case_id": "exact-geometry-must-be-sensitive",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/sensitivity", "value": "PUBLIC_SAFE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_EXACT_GEOMETRY_MUST_BE_SENSITIVE", "path": "/capture/sensitivity" }
+      ]
+    },
+    {
+      "case_id": "exact-public-transform-forbidden",
+      "base": "ready",
+      "mutations": [
+        { "path": "/processing/public_transform_receipt_ref", "value": "kfm://receipt/fixture/unexpected-public-transform" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_EXACT_PUBLIC_TRANSFORM_FORBIDDEN", "path": "/processing/public_transform_receipt_ref" }
+      ]
+    },
+    {
+      "case_id": "generalized-public-must-be-safe",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/geometry_posture", "value": "GENERALIZED_PUBLIC" },
+        { "path": "/processing/public_transform_receipt_ref", "value": "kfm://receipt/fixture/generalization" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_GENERALIZED_PUBLIC_MUST_BE_SAFE", "path": "/capture/sensitivity" }
+      ]
+    },
+    {
+      "case_id": "generalized-public-transform-required",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/geometry_posture", "value": "GENERALIZED_PUBLIC" },
+        { "path": "/capture/sensitivity", "value": "PUBLIC_SAFE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_PUBLIC_TRANSFORM_REQUIRED", "path": "/processing/public_transform_receipt_ref" }
+      ]
+    },
+    {
+      "case_id": "handoff-state-mismatch",
+      "base": "ready",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/evidence/handoff_state", "value": "HELD" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id" },
+        { "code": "FIELD_CAPTURE_HANDOFF_STATE_MISMATCH", "path": "/evidence/handoff_state" },
+        { "code": "FIELD_CAPTURE_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "decision-mismatch",
+      "base": "ready",
+      "mutations": [],
+      "assertion_mutations": [
+        {
+          "path": "/decision",
+          "value": { "outcome": "ABSTAIN", "reason_codes": ["HANDOFF_HELD"] }
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id" },
+        { "code": "FIELD_CAPTURE_DECISION_MISMATCH", "path": "/decision" },
+        { "code": "FIELD_CAPTURE_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "ready",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/spec_hash", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "base": "ready",
+      "mutations": [],
+      "assertion_mutations": [
+        { "path": "/assessment_id", "value": "kfm:field-capture-handoff:ffffffffffffffffffffffff" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id" }
+      ]
+    },
+    {
+      "case_id": "raw-coordinate-field-denied",
+      "base": "ready",
+      "mutations": [
+        { "path": "/capture/latitude", "value": 38.5 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_SCHEMA_INVALID", "path": "/capture" }
+      ]
+    },
+    {
+      "case_id": "publication-authority-denied",
+      "base": "ready",
+      "mutations": [
+        { "path": "/governance/publication_authorized", "value": true }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_SCHEMA_INVALID", "path": "/governance/publication_authorized" }
+      ]
+    },
+    {
+      "case_id": "limitations-order-mismatch",
+      "base": "ready",
+      "mutations": [
+        {
+          "path": "/limitations",
+          "value": [
+            "FIXTURE_ONLY",
+            "CAPTURE_REMAINS_CANDIDATE",
+            "NO_EVIDENCE_CREATION",
+            "NO_POLICY_OR_REVIEW_AUTHORITY",
+            "NO_RAW_COORDINATES",
+            "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "FIELD_CAPTURE_LIMITATIONS_MISMATCH", "path": "/limitations" }
+      ]
+    }
+  ]
+}

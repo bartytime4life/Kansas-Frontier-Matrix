@@ -27,7 +27,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json
   - connectors/kansas/
   - data/registry/sources/
   - policy/sensitivity/
@@ -63,6 +62,9 @@ notes:
     rankings, parallel with NatureServe and KDWP SINC); **KANU specimen
     records** are `observed` (specimen-backed observation). The two roles MUST
     be preserved separately in the descriptor.
+owning_root: docs/
+responsibility: "Documentation for Kansas Biological Survey (KBS) — incl. KU McGregor Herbarium (KANU); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Biological Survey (KBS) — incl. KU McGregor Herbarium (KANU)
@@ -414,7 +416,7 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 ## 14. Related connectors and pipelines
 
 - [`connectors/kansas/`](../../../../connectors/kansas/) — **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** family lane per Directory Rules v1.2 §7.3.
-- [`connectors/kansas/kbs/`](../../../../connectors/kansas/kbs/) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kbs/`; see §12). Adapter may further sub-organize per surface (`connectors/kansas/kbs/nhi/`, `connectors/kansas/kbs/kanu-mcgregor/`) — NEEDS VERIFICATION.
+- `connectors/kansas/kbs/` (not present) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kbs/`; see §12). Adapter may further sub-organize per surface (`connectors/kansas/kbs/nhi/`, `connectors/kansas/kbs/kanu-mcgregor/`) — NEEDS VERIFICATION.
 - Pipelines: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
 - Pipeline specs: [`pipeline_specs/fauna/`](../../../../pipeline_specs/fauna/), [`pipeline_specs/flora/`](../../../../pipeline_specs/flora/), [`pipeline_specs/habitat/`](../../../../pipeline_specs/habitat/) (PROPOSED — confirm per surface).
 - Related blueprint: **`kansas_flora_watch`** per `KFM-P2-PROG-0002` (PROPOSED watcher pulling DwC-A archives from the KU R.L. McGregor Herbarium (KANU) IPT and the Kansas State University Herbarium (KSC) IPT, with GBIF/iDigBio as coverage and USDA PLANTS as taxonomy/state-presence baseline).
@@ -455,7 +457,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## 17. Verification backlog
 
-Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-open-questions) applies. Product-specific items below.
+Inheritance: every family-level OPEN item from [`./README.md`](./README.md) applies. Product-specific items below.
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|

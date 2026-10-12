@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-digest-mismatch",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_DIGEST_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_digest_mismatch"
+}

@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-governed-api-envelopes-8ace89bffa5d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/ENVELOPES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/ENVELOPES.md": "sha256:8ace89bffa5d9853007b1b25ca368c4512dae864d6b9f825be7df33989abe9aa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/architecture/governed-api/README.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/architecture/governed-api/ERROR_CODES.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/architecture/governed-api/LIFECYCLE_GATES.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:docs/doctrine/directory-rules.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:.github/CODEOWNERS@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:contracts/runtime/runtime_response_envelope.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:contracts/runtime/decision_envelope.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:schemas/contracts/v1/evidence/evidence_ref.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:contracts/runtime/runtime_response_http_binding_v1.md@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:schemas/contracts/v1/focus/runtime_response_envelope.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:packages/envelopes/src/envelopes/runtime_response.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:tests/packages/envelopes/test_runtime_response_candidate.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:tools/validators/validate_runtime_response_envelope.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:tools/validators/validate_decision_envelope.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:apps/governed-api/src/governed_api/main.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:apps/governed-api/src/governed_api/stub.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/ENVELOPES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned authoring main at d2214bd46e78d3758b2a084a62b60eacaa98e170, verified prior target blob 0e518123aab1298a5430b8458808bc9c00072df5, and found no open pull request claiming the exact target path."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 confirm the existing docs/architecture/governed-api/ placement while contracts, schemas, policy, runtime, implementation, tests, receipts, review, release, and publication remain in their owning roots."
+    },
+    {
+      "gate": "envelope-contract-schema-reconciliation",
+      "outcome": "PASS",
+      "reason": "Compared the full prior architecture page with current RuntimeResponseEnvelope and DecisionEnvelope contracts and closed schemas. The revision records exact current members and removes unsupported nested payload, policy decision, release, citation, reason-object, trace, and lowercase decision claims."
+    },
+    {
+      "gate": "bounded-executable-envelope-evidence",
+      "outcome": "PASS",
+      "reason": "Inspected the deterministic RuntimeResponseEnvelope candidate builder, focused package tests, dedicated validators, current Governed API WSGI scaffold, route registry, stub builders, and app-local tests; bounded executable behavior is distinguished from evidence, policy, review, release, deployment, and public authority."
+    },
+    {
+      "gate": "reason-and-http-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the permissive RuntimeResponseEnvelope reason_code, upper-snake executable literals, DecisionEnvelope semantic-validator grammar, slash-namespaced ERROR_CODES proposal, inactive HTTP binding, and current 200/404/405 scaffold behavior without declaring an unsupported canonical mapping."
+    },
+    {
+      "gate": "domain-feature-envelope-search",
+      "outcome": "PASS",
+      "reason": "A bounded repository search found DomainFeatureEnvelope only in proposal/atlas lineage and the prior target; no paired contract, schema, validator, fixture family, serializer, package implementation, or accepted ADR was established."
+    },
+    {
+      "gate": "markdown-structure-anchor-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified one H1, YAML-readable meta block, 16 unique explicit anchors including legacy numbered section anchors, 34 resolved local fragment references, 16 balanced fence markers, 20 stable tables, no tabs or trailing whitespace, final newline, and 30 unique repository-relative targets against the inspected tree."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 4c80f1d1808d5bed8f56bc2fd1fb73222d65ee42 matches the locally computed Git blob; final document SHA-256 is 8ace89bffa5d9853007b1b25ca368c4512dae864d6b9f825be7df33989abe9aa."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the feature branch without force to main@091c128261d0bec26de36d9df7a549c4f3402777. Intervening changes affected only docs/architecture/governed-api/archaeology.md and its generated receipt; the exact target and envelope evidence surfaces did not overlap."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked for required fields, finite enums, hash patterns, artifact path/hash closure, pending human review, and no additional top-level properties."
+    },
+    {
+      "gate": "repository-native-documentation-and-envelope-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available. Deterministic local source checks and remote blob verification were completed; repository-native commands and hosted exact-head checks remain separate execution evidence."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no contract, schema, policy, route, answer, access, review, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "reconciled-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "runtime-response-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/runtime_response_envelope.md@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "runtime-response-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "decision-envelope-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/decision_envelope.md@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "decision-envelope-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "bounded-runtime-builder",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/runtime_response.py@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "current-api-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@d2214bd46e78d3758b2a084a62b60eacaa98e170"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T23:28:46Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It preserves stable identity and sections 1–12, grounds RuntimeResponseEnvelope and DecisionEnvelope in their current closed profiles, records bounded executable builder/validator/scaffold evidence, removes unsupported three-envelope nesting, marks DomainFeatureEnvelope as proposal-only, exposes reason-code and HTTP-binding conflicts, defines HOLDs and a no-network graduation slice, and changes no contract, schema, policy, fixture, validator, test, workflow, package, app, route, runtime, release, deployment, or publication state."
+}

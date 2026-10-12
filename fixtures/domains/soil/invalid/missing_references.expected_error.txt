@@ -1,0 +1,2 @@
+EVIDENCE_REF_MISSING	$.evidence_refs
+SOURCE_DESCRIPTOR_REF_MISSING	$.source_descriptor_ref

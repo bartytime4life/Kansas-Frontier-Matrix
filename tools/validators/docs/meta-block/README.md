@@ -1,250 +1,198 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-validators-docs-meta-block-readme
-title: tools/validators/docs/meta-block README
+title: Documentation Metadata-Block Validator
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded-executable; local-only; no-network; non-authoritative
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-07
-policy_label: repository-facing; docs-validator; meta-block; markdown-qa; non-authoritative
+updated: 2026-08-06
+policy_label: repository-facing; docs-validator; meta-block; registry-delta; non-authoritative
 owning_root: tools/
-responsibility: proposed documentation metadata-block validator lane for KFM_META_BLOCK_V2 presence, parseability, required fields, path/doc_id consistency, truth-posture labels, owner/status posture, related-link hygiene, and docs-QA reports without deciding doctrine, evidence sufficiency, source admissibility, or release approval
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: deterministic KFM_META_BLOCK_V2 structural validation and review-only machine document-registry delta generation without deciding doctrine, evidence sufficiency, source admissibility, policy, review, release, publication, or Directory Rules exceptions
+truth_posture: CONFIRMED bounded executable and synthetic tests / PROPOSED metadata profile pending steward adoption / NEEDS VERIFICATION hosted exact-head results and whole-repository historical classification
 related:
-  - ../../README.md
-  - ../../_common/README.md
-  - ../../../docs/README.md
-  - ../../../../docs/README.md
+  - ../README.md
+  - ../link-check/README.md
+  - ../document-graph/README.md
   - ../../../../docs/registers/DOCUMENT_REGISTRY.md
-  - ../../../../docs/adr/
-  - ../../../../docs/architecture/trust-membrane.md
-  - ../../../../data/receipts/validation/
-  - ../../../../artifacts/qa/
-  - ../../../../tests/
+  - ../../../../control_plane/document_registry.yaml
+  - ../../../../docs/doctrine/directory-rules.md
+  - ../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../../tests/validators/docs/meta-block/README.md
 notes:
-  - "This README documents a proposed docs meta-block validator lane. It does not confirm executable files."
-  - "A meta-block checker can report missing, malformed, inconsistent, or stale metadata. It cannot decide that a claim is true, a source is admissible, a policy exception is valid, or a release is approved."
-  - "KFM_META_BLOCK_V2 is widely used in repository Markdown, but this README does not assert that every file is compliant or that a validator already exists."
+  - "The validator checks a bounded top-level metadata subset and does not claim general YAML conformance."
+  - "The registry delta is a deterministic review candidate only; the executable never writes or authorizes the machine register."
+  - "Exact local target, fragment, case, and path validation remains delegated to link-check."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# tools/validators/docs/meta-block
+# `tools/validators/docs/meta-block/` — Documentation Metadata QA
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-docs--meta--block-informational)
-![authority](https://img.shields.io/badge/authority-QA--only-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
+> **Purpose.** Validate the structural integrity of `KFM_META_BLOCK_V2`
+> envelopes in explicitly scoped Markdown and optionally compare valid document
+> identities with `control_plane/document_registry.yaml` without mutating either
+> surface.
 
-> **One-line purpose.** `tools/validators/docs/meta-block/` is the proposed documentation metadata-block validator lane for Markdown files: `KFM_META_BLOCK_V2` presence, delimiters, parseability, required keys, path consistency, `doc_id` posture, owner/status fields, policy labels, related-link hygiene, truth-posture labels, and docs-QA reports.
+## Status and authority boundary
 
----
-
-## Purpose
-
-`tools/validators/docs/meta-block/` exists for metadata-block validation of repository documentation and README-style Markdown.
-
-The durable KFM question for this lane is:
-
-> Does a document carry a parseable, bounded, internally consistent KFM metadata block without implying that metadata presence proves truth, policy approval, evidence closure, implementation maturity, or release state?
-
-The answer should be a deterministic validation result and, where configured, a docs QA report. It should not edit doctrine, approve ADRs, validate evidence sufficiency, decide source admissibility, promote releases, or publish documents.
-
-[Back to top](#top)
-
----
-
-## Status
-
-| Surface | Status | Notes |
+| Surface | State | Limit |
 |---|---|---|
-| `tools/validators/docs/meta-block/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Meta-block validator executables | **PROPOSED / NEEDS VERIFICATION** | No script name is claimed here. |
-| `KFM_META_BLOCK_V2` usage | **CONFIRMED in repo evidence / broad pattern** | Search results show many repository Markdown files use this marker. Completeness and compliance remain unverified. |
-| Parent docs-tooling boundary | **CONFIRMED in repo evidence / draft** | `tools/docs/README.md` says metadata checks are docs tooling and cannot decide truth, admissibility, or release approval. |
-| `tools/validators/docs/README.md` | **NOT FOUND in related task evidence** | A parent validator README may be useful later, but this file does not create that parent authority. |
-| CI wiring | **PROPOSED / NEEDS VERIFICATION** | This README does not prove CI, pre-commit, scheduled checks, or artifact uploads are wired. |
+| `check_meta_blocks.py` | **CONFIRMED bounded executable** | Standard-library only; explicit Markdown scope; no network. |
+| Synthetic tests | **CONFIRMED** | Positive, negative, replay, ratchet, CLI, and no-mutation coverage. |
+| Pull-request workflow | **CONFIRMED definition / NEEDS VERIFICATION execution** | Read-only changed-file ratchet; hosted result remains separate evidence. |
+| Metadata field profile | **PROPOSED executable profile** | It is structural QA, not adopted metadata doctrine. |
+| Registry delta | **Review-only QA projection** | It cannot create, update, authorize, or approve a register entry. |
+| Whole-repository health | **NEEDS VERIFICATION** | Existing historical findings require classification before stricter enforcement. |
 
-[Back to top](#top)
+Accepted ADR-0029 makes Directory Rules v2 the placement authority. Reusable
+repository validation belongs under `tools/`; executable evidence belongs under
+`tests/`; orchestration belongs under `.github/`; generated authoring
+accountability belongs under `data/receipts/generated/`. This lane does not
+create a parallel documentation, schema, policy, registry, receipt, proof,
+release, or publication authority.
 
----
+## What the validator reads
 
-## Authority boundary
+- explicitly supplied UTF-8 `.md` and `.markdown` files or directories;
+- one bounded top-level `KFM_META_BLOCK_V2` envelope per document;
+- optional changed-file scope from `<base-sha>...HEAD`; and
+- optional `doc_id` and `path` entries from the existing machine document
+  registry.
 
-| Responsibility | Home |
-|---|---|
-| Docs meta-block validator entrypoints | `tools/validators/docs/meta-block/` |
-| Shared validator plumbing | `tools/validators/_common/` |
-| General docs tooling | `tools/docs/` |
-| Documentation content | `docs/` and each owning responsibility root |
-| Documentation registry | `docs/registers/` or accepted docs registry home |
-| Doctrine, ADRs, runbooks, standards | owning docs lanes under `docs/` |
-| Policy rules | `policy/` |
-| Contracts and schemas | `contracts/`, `schemas/` |
-| Receipts from validation runs | `data/receipts/validation/` or accepted receipt home |
-| QA artifacts and summaries | `artifacts/qa/` when non-authoritative and non-trust-bearing |
-| Tests and fixtures | `tests/` and accepted fixture conventions |
+The parser intentionally supports only top-level scalar fields and simple
+sequences. Nested mappings are reported as outside the bounded profile. No
+metadata value is executed.
 
-Safe interpretation:
+## Profiles
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** meta-block validator code may live here when it checks metadata-block syntax, parseability, and consistency.
-- **NEEDS VERIFICATION:** exact executable names, required-field contract, fixture paths, report destinations, ignore rules, and CI wiring.
-- **DENY:** using this folder as docs content authority, doctrine authority, ADR authority, source-admissibility authority, policy authority, evidence validator, release validator, receipt store, generated-docs store, or public documentation surface.
+| Profile | Missing block | Existing block |
+|---|---|---|
+| `present` | Counted but not failed | Validated fully when present. This is the initial repository ratchet. |
+| `required` | `META_BLOCK_MISSING` failure | Validated fully. Intended for bounded lanes after steward adoption. |
 
-[Back to top](#top)
+The first workflow uses `present` so the new validator does not convert
+historical metadata coverage debt into an unreviewed repository-wide gate.
 
----
+## Structural checks
 
-## What belongs here
+The first executable profile validates:
 
-Good fits for `tools/validators/docs/meta-block/` include checks that:
+- complete, non-duplicated metadata delimiters;
+- unique top-level field names;
+- required fields: `doc_id`, `title`, `type`, `version`, `status`, `created`,
+  `updated`, `policy_label`, `owning_root`, `responsibility`, and
+  `truth_posture`;
+- exactly one of `owner` or `owners`, with at least one non-empty owner value;
+- bounded `kfm://` identity syntax;
+- ISO calendar dates and non-reversing `created`/`updated` order;
+- top-level responsibility-root agreement between `owning_root` and path;
+- bounded type and field lengths;
+- recognized evidence-posture markers;
+- basic `related` entry hygiene and path-escape denial;
+- duplicate `doc_id` values across the scan scope; and
+- optional registry identity/path parity.
 
-- detect missing `KFM_META_BLOCK_V2` blocks where the configured profile requires one;
-- detect malformed opening and closing delimiters;
-- parse metadata blocks safely without executing content;
-- validate required keys such as `doc_id`, `title`, `type`, `version`, `status`, `owner` or `owners`, `updated`, `policy_label`, `owning_root`, `responsibility`, and `truth_posture` when required by profile;
-- check whether `doc_id`, title, owning root, and file path are internally consistent;
-- check that `status` and truth-posture labels do not overclaim implementation maturity;
-- check `related` entries for basic path hygiene, optionally delegating link resolution to `tools/validators/docs/link-check/`;
-- detect duplicate `doc_id` values where a registry or scan is available;
-- emit deterministic docs QA summaries and validation receipts where configured;
-- support explicit ignore rules with owner, reason, scope, and review posture.
+It deliberately does **not** decide whether a document's status is justified by
+evidence. Evidence-based overclaim analysis remains a separate future profile.
 
-[Back to top](#top)
+## Review-only document-registry delta
 
----
+When `--registry` is supplied, valid metadata identities are compared with the
+machine register:
 
-## What does not belong here
+| Result | Delta action | Effect |
+|---|---|---|
+| Exact `doc_id` and path match | none | Registry state is reported as `registered`. |
+| Valid document absent from registry | `ADD_REVIEW` | Emits proposed `kind`, `status`, and `policy_label`; leaves `authority` unresolved. |
+| Same `doc_id`, different path | `HOLD_CONFLICT` | Fails current changes; requires migration or correction authority. |
+| Same path, different `doc_id` | `HOLD_CONFLICT` | Fails current changes; requires identity correction authority. |
 
-| Do not put in `tools/validators/docs/meta-block/` | Correct home |
-|---|---|
-| Documentation content | `docs/` or the owning root |
-| Doctrine decisions | accepted doctrine / ADR lanes under `docs/` |
-| Metadata policy as doctrine | accepted docs standard or ADR, not tool-only convention |
-| Policy rules | `policy/` |
-| Contracts or schemas | `contracts/`, `schemas/` |
-| EvidenceBundle validation | evidence/proof validator lanes |
-| Receipts | `data/receipts/` |
-| Proofs | `data/proofs/` |
-| Release decisions or release manifests | `release/` |
-| Published docs or public site output | accepted public/docs publishing root |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
+The delta includes `review_only: true` and `mutates_registry: false`. It is never
+applied automatically.
 
-[Back to top](#top)
+## Changed-file ratchet
 
----
+`--git-diff <base-sha>...HEAD` keeps current changes strict without silently
+ratifying inherited debt:
 
-## Meta-block validation posture
+- findings touching a changed document retain their configured severity;
+- unchanged failures become historical warnings;
+- unchanged warnings and informational findings are omitted from the PR gate;
+- registry additions are emitted only for the current review scope; and
+- `--warnings-as-errors` promotes only current warnings.
 
-Meta-block checking is documentation QA, not governance approval.
+Historical downgrade is visibility, not acceptance. A separately reviewed
+baseline is still required before whole-repository enforcement.
 
-A passing meta-block check means only that the configured validator could parse and check the metadata fields it was asked to inspect. It does not mean:
+## Finite outcomes
 
-- the document is authoritative;
-- the claims in the document are true;
-- the source is admissible;
-- the policy posture is correct;
-- the implementation maturity is proven;
-- the release state is approved;
-- the document is safe for public publication.
+| Outcome | Exit | Meaning |
+|---|---:|---|
+| `DOC_META_BLOCK_PASS` | `0` | No configured finding was emitted. |
+| `DOC_META_BLOCK_WARN` | `0` | Reviewable current or historical findings exist. |
+| `DOC_META_BLOCK_FAIL` | `1` | A current fail-closed metadata or registry finding exists. |
+| `ERROR` | `2` | The bounded operation could not complete safely. |
 
-A failing meta-block check should route to one of these actions:
+Stable finding families include `META_BLOCK_MISSING`,
+`META_BLOCK_MALFORMED`, `META_BLOCK_DUPLICATE`,
+`META_BLOCK_DUPLICATE_KEY`, `REQUIRED_FIELD_MISSING`, `DOC_ID_INVALID`,
+`OWNING_ROOT_PATH_MISMATCH`, `DATE_INVALID`, `DATE_ORDER_INVALID`,
+`RELATED_PATH_ESCAPE`, `DUPLICATE_DOC_ID`, `REGISTRY_ENTRY_MISSING`,
+`REGISTRY_DOC_ID_PATH_CONFLICT`, and `REGISTRY_PATH_DOC_ID_CONFLICT`.
 
-- add or repair the metadata block;
-- correct stale or overconfident status fields;
-- fix path, `doc_id`, title, owner, policy label, or related-link drift;
-- add a documented ignore rule with owner and review posture;
-- open a docs verification backlog item where the correct authority or status is unclear.
+## Run
 
-[Back to top](#top)
-
----
-
-## Standard outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `DOC_META_BLOCK_PASS` | Configured metadata-block checks passed. |
-| `DOC_META_BLOCK_FAIL` | One or more configured metadata-block checks failed. |
-| `META_BLOCK_MISSING` | Required metadata block is absent. |
-| `META_BLOCK_MALFORMED` | Metadata block delimiters or parse structure are invalid. |
-| `REQUIRED_FIELD_MISSING` | Required metadata key is absent. |
-| `FIELD_VALUE_INVALID` | Metadata key is present but outside the accepted profile. |
-| `DOC_ID_PATH_MISMATCH` | `doc_id`, title, or owning root does not align with the file path/profile. |
-| `DUPLICATE_DOC_ID` | A duplicate `doc_id` was detected in the configured scan scope. |
-| `STATUS_OVERCLAIM` | Status/truth posture appears stronger than current evidence supports. |
-| `RELATED_ENTRY_INVALID` | A `related` entry is malformed or outside expected path posture. |
-| `IGNORED_WITH_REASON` | Failure was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
-
-[Back to top](#top)
-
----
-
-## Validation
-
-Suggested future test surface:
-
-```text
-tests/validators/docs/meta-block/
-├── README.md
-├── test_docs_meta_block.py
-└── fixtures/
-    ├── valid_meta_block_v2/
-    ├── missing_meta_block/
-    ├── malformed_delimiters/
-    ├── missing_required_field/
-    ├── doc_id_path_mismatch/
-    ├── duplicate_doc_id/
-    ├── status_overclaim/
-    ├── related_entry_invalid/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+Fixture profile:
 
 ```bash
-pytest -q tests/validators/docs/meta-block
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root tests/validators/docs/meta-block/fixtures/valid_repo \
+  --registry control_plane/document_registry.yaml \
+  --format markdown \
+  README.md docs
 ```
+
+Repository changed-file profile:
 
 ```bash
-python tools/validators/docs/meta-block/check_meta_blocks.py --repo-root . --format json
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --registry control_plane/document_registry.yaml \
+  --git-diff <BASE_SHA>...HEAD \
+  --format markdown \
+  --output /tmp/docs-meta-block.md \
+  --registry-delta-output /tmp/document-registry-delta.json \
+  README.md docs tools/validators/docs
 ```
 
-> [!NOTE]
-> This is a proposed interface, not proof that `check_meta_blocks.py` or the test path exists.
+Tests:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/meta-block \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
+## Explicit limits
+
+- Structural conformance does not establish truth, authority, rights,
+  sensitivity, source admissibility, policy, review, release, or publication.
+- The parser is not a general YAML implementation.
+- Exact local link/anchor/case resolution remains owned by link-check.
+- The document graph remains the connectivity, backlink, and reachability
+  projection.
+- The machine registry remains separately governed; this tool cannot update it.
+- The tool never edits Markdown or repository control surfaces.
+
+## Rollback
+
+Before merge, close the draft pull request and remove its feature branch. After
+an authorized merge, revert the implementation commit. No source, lifecycle
+data, release, deployment, cache, or public artifact requires migration or
+withdrawal.
 
 [Back to top](#top)
-
----
-
-## Review checklist
-
-- [ ] Validator checks metadata blocks deterministically without executing content.
-- [ ] Required-field profile is documented outside the validator implementation or clearly marked proposed.
-- [ ] Validator detects status/truth-posture overclaims without deciding truth itself.
-- [ ] Link resolution is delegated to link-check tooling where appropriate.
-- [ ] Ignore rules include reason, owner, scope, and review posture.
-- [ ] Reports and receipts are written only to accepted non-authority roots.
-- [ ] Validator does not edit docs without a separate explicit change process.
-- [ ] Tests use synthetic fixtures and do not require network access by default.
-- [ ] Executable claims are backed by current repo evidence.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for empty file. |
-| Next smallest safe change | Verify actual meta-block scripts, required-field profile, ignore files, fixtures, report destinations, receipts, and CI wiring before promoting this lane beyond draft. |

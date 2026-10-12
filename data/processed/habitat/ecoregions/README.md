@@ -223,7 +223,7 @@ Changes require review proportional to consequence:
 | Ecoregion sublane doctrine | [`../../../../docs/domains/habitat/sublanes/ecoregions.md`](../../../../docs/domains/habitat/sublanes/ecoregions.md) | Framework, hierarchy, regionalization, map, and join semantics. |
 | Ecoregion schema index | [`../../../../schemas/contracts/v1/domains/habitat/ecoregions/README.md`](../../../../schemas/contracts/v1/domains/habitat/ecoregions/README.md) | Machine-shape placement and verification backlog. |
 | Habitat policy | [`../../../../policy/domains/habitat/README.md`](../../../../policy/domains/habitat/README.md) | Domain admissibility. |
-| Habitat sensitivity policy | [`../../../../policy/sensitivity/habitat/README.md`](../../../../policy/sensitivity/habitat/README.md) | Sensitive joins and public-safe transforms. |
+| Habitat sensitivity policy | `../../../../policy/sensitivity/habitat/README.md` (not present) | Sensitive joins and public-safe transforms. |
 | Source registry | [`../../../registry/sources/habitat/README.md`](../../../registry/sources/habitat/README.md) | SourceDescriptor authority. |
 | Habitat catalog | [`../../../catalog/domain/habitat/README.md`](../../../catalog/domain/habitat/README.md) | Downstream discoverability and evidence linkage. |
 | Published ecoregion layers | [`../../../published/layers/habitat/ecoregions/README.md`](../../../published/layers/habitat/ecoregions/README.md) | Released carrier lane, not processed truth. |

@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-configs-dev-readme-currentness-20260904",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/dev/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/dev/README.md": "sha256:83019902ce6ca8f7ad25f321b74c27fb1b815aa43f827cbb9255a1816acc8281"
+  },
+  "model_identity": "Codex GPT-5",
+  "prompt_or_contract": "Update configs/dev/README.md using a reviewable PR; preserve repository governance, evidence boundaries, and no-merge incident-response limits.",
+  "parameters": {
+    "repository_full_name": "bartytime4life/Kansas-Frontier-Matrix",
+    "base_ref": "main",
+    "base_commit": "80cccb313e460cc8c408fc7acd19be60c1984c11",
+    "target_blob_before": "e05de7866a7f2423f462002a687f79c967973ac1",
+    "target_version_before": "v0.3",
+    "target_version_after": "v0.4",
+    "scope": "README currentness refresh plus generated receipt",
+    "current_tree_sha": "11dd4b90bfa78c2781caddfc6e420033bffe3b37",
+    "configs_dev_tree_sha": "c4d413a4e4b0ee7e2729d5e015df8b3033296312",
+    "tree_response_truncated": false,
+    "open_prs_before_branch": 0,
+    "checked_open_pr_changed_paths": []
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@80cccb313e460cc8c408fc7acd19be60c1984c11",
+      "github:bartytime4life/Kansas-Frontier-Matrix:configs/dev/README.md@e05de7866a7f2423f462002a687f79c967973ac1",
+      "github:bartytime4life/Kansas-Frontier-Matrix:configs/README.md@a800983eac7582a84e9dd82bc7d4baf04f552ad8",
+      "github:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:bartytime4life/Kansas-Frontier-Matrix:docs/security/SECRETS.md@562b654e101ca3c52e32b85f7acdaea9f589ab5c",
+      "github:bartytime4life/Kansas-Frontier-Matrix:docs/security/INCIDENT_RESPONSE.md@da6eb82dc6608e0cdfbbe9f1823ebd1e13289ec4",
+      "github:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "github:bartytime4life/Kansas-Frontier-Matrix:.github/PULL_REQUEST_TEMPLATE.md@f4efe2cade80942d8d87315a68d18757655ba05c",
+      "github:ruleset/15484585@read-only",
+      "github:issue/4024@open",
+      "google-drive:Directory Rules@read-only",
+      "google-drive:KFM Contributor Reliability System@read-only",
+      "google-drive:KFM Hourly Dependency-Closed Repository Builder v1.0@read-only",
+      "notion:KFM Repository Workbench@coordination-only",
+      "notion:KFM Knowledge Workspace@coordination-only"
+    ],
+    "open_prs_checked": [
+      4264,
+      4263,
+      4261,
+      4260,
+      4259,
+      4258
+    ]
+  },
+  "truth_labels": {
+    "target_lane": "CONFIRMED",
+    "current_tracked_inventory": "CONFIRMED",
+    "named_absence_probes": "CONFIRMED",
+    "payloads": "NOT_ESTABLISHED",
+    "consumers_and_loader": "NEEDS_VERIFICATION",
+    "ownership": "NEEDS_VERIFICATION",
+    "runtime_and_deployment": "UNKNOWN",
+    "generated_artifact": "PROPOSED"
+  },
+  "validation_gates": {
+    "current_main_repin": "PASS — exact main commit 80cccb313e460cc8c408fc7acd19be60c1984c11, target blob, root tree, configs/dev subtree, and non-truncated recursive tree were read in the branch-creation transaction",
+    "recursive_tree_inventory": "PASS — configs/dev subtree contains only README.md in the current tracked tree",
+    "currentness_reconciliation": "PASS — v0.3 metadata and bounded-search wording are refreshed to v0.4 exact-tree wording",
+    "authority_and_overlap": "PASS — 0 current open draft PRs were checked by exact changed paths; none touches configs/dev/README.md or the receipt path",
+    "directory_and_secret_boundary": "PASS — accepted ADR-0029 doctrine, configs root, secrets standard, incident-response distinction, and CODEOWNERS route are reflected",
+    "markdown_structure_and_content_review": "PASS — final branch README readback matches the corrected prepared content; duplicate stale metadata line removed; final newline, balanced fences, one H1 outside fences, no accidental trailing whitespace or NULs; five existing Markdown hard-break lines are preserved",
+    "receipt_schema_shape": "PASS — final branch receipt artifact hash matches the corrected final branch README SHA-256, current-main citation, and required fields are present",
+    "local_precommit_and_repository_tests": "NOT RUN — no mounted checkout was available through the selected connector surface",
+    "hosted_workflow_behavior": "NOT CLAIMED — no workflow or settings change is included",
+    "human_review": "PENDING — draft PR requires independent review"
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "label": "current-main",
+      "ref": "github:bartytime4life/Kansas-Frontier-Matrix@b5a91a33b6c900033364fe924a74a907745a6d2d"
+    },
+    {
+      "label": "configs-dev-tree",
+      "ref": "github:bartytime4life/Kansas-Frontier-Matrix:configs/dev@c4d413a4e4b0ee7e2729d5e015df8b3033296312"
+    },
+    {
+      "label": "directory-governance",
+      "ref": "github:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "label": "secrets-and-incident-paths",
+      "ref": "github:bartytime4life/Kansas-Frontier-Matrix:docs/security/SECRETS.md@562b654e101ca3c52e32b85f7acdaea9f589ab5c;github:bartytime4life/Kansas-Frontier-Matrix:docs/security/INCIDENT_RESPONSE.md@da6eb82dc6608e0cdfbbe9f1823ebd1e13289ec4"
+    },
+    {
+      "label": "review-routing",
+      "ref": "github:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    },
+    {
+      "label": "delivery-boundary",
+      "ref": "github:issue/4024@open"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "emitter": "codex-github-connector",
+  "created_at": "2026-09-04T18:55:00Z",
+  "notes": [
+    "Generated from the exact current GitHub main target content before branch creation.",
+    "The receipt itself is a companion generated-work record and is not included in artifact_hashes.",
+    "The draft PR is the highest intended delivery state; no ready, approval, merge, auto-merge, settings, release, deployment, publication, or source-admission action is authorized."
+  ]
+}

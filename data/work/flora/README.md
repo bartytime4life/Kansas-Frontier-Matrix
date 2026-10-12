@@ -334,7 +334,7 @@ is also forbidden for sensitive source artifacts, exact rare-plant geometry, rig
 - [`../../../docs/domains/flora/README.md`](../../../docs/domains/flora/README.md)
 - [`../../../docs/domains/flora/DATA_LIFECYCLE.md`](../../../docs/domains/flora/DATA_LIFECYCLE.md)
 - [`../../../docs/domains/flora/SENSITIVITY.md`](../../../docs/domains/flora/SENSITIVITY.md)
-- [`../../../docs/domains/flora/POLICY.md`](../../../docs/domains/flora/POLICY.md)
+- `../../../docs/domains/flora/POLICY.md` (not present)
 - [`../../../docs/domains/flora/EVIDENCE_DRAWER.md`](../../../docs/domains/flora/EVIDENCE_DRAWER.md)
 - [`../../../docs/domains/flora/PUBLICATION_AND_ROLLBACK.md`](../../../docs/domains/flora/PUBLICATION_AND_ROLLBACK.md)
 - [`../../../docs/runbooks/flora/PROMOTION_RUNBOOK.md`](../../../docs/runbooks/flora/PROMOTION_RUNBOOK.md)

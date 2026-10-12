@@ -1,0 +1,127 @@
+{
+  "fixture_only": true,
+  "governance": {
+    "evidence_resolution_performed": false,
+    "holds": [
+      "CURRENT_SOURCE_TERMS_UNVERIFIED",
+      "SENSITIVE_OCCURRENCE_REVIEW_PENDING"
+    ],
+    "public_use_allowed": false,
+    "release": "HOLD",
+    "rights": "NEEDS_VERIFICATION",
+    "sensitivity": "NEEDS_VERIFICATION",
+    "source_activation_allowed": false
+  },
+  "object_type": "OccurrenceRetrievalSnapshotCandidate",
+  "previous_snapshot_ref": "kfm://candidate/source/occurrence-retrieval/ebird/a471a48007e36abaf2c1256f2cc43e6a8432b49981f0a51dc58abbcfb74e351f/revision/1",
+  "query_snapshot": {
+    "country_code": "US",
+    "county_fips": [
+      "20041",
+      "20053"
+    ],
+    "credentials_embedded": false,
+    "date_range": {
+      "end": "2026-04-15",
+      "start": "2026-03-15"
+    },
+    "notification_addresses_embedded": false,
+    "predicates": [
+      {
+        "field": "all_species_reported",
+        "operator": "equals",
+        "value": true
+      },
+      {
+        "field": "distance_km",
+        "operator": "less_than_or_equal",
+        "value": 5
+      },
+      {
+        "field": "duration_minutes",
+        "operator": "greater_than_or_equal",
+        "value": 5
+      },
+      {
+        "field": "party_size",
+        "operator": "less_than_or_equal",
+        "value": 10
+      },
+      {
+        "field": "protocol_type",
+        "operator": "not_equals",
+        "value": "Incidental"
+      }
+    ],
+    "profile_version": "kfm.synthetic.occurrence-query.v1",
+    "query_hash": "sha256:a471a48007e36abaf2c1256f2cc43e6a8432b49981f0a51dc58abbcfb74e351f",
+    "source_native_query_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "state_code": "KS",
+    "taxon_keys": [
+      "ebird:species:amecro",
+      "ebird:species:wesmea"
+    ]
+  },
+  "result_semantics": {
+    "failed_or_missing_transfer": "STATUS_UNCONFIRMED_NOT_EMPTY_RESULT",
+    "non_detection_scope": "CHECKLIST_EVENT_ONLY",
+    "occurrence_role": "SOURCE_REPORTED_OCCURRENCE_NOT_CONFIRMED_PRESENCE",
+    "zero_record_result": "NO_CLAIM_NOT_ABSENCE"
+  },
+  "retrieval_id": "kfm://candidate/source/occurrence-retrieval/ebird/a471a48007e36abaf2c1256f2cc43e6a8432b49981f0a51dc58abbcfb74e351f",
+  "retrieval_intent": {
+    "absence_claim_requested": false,
+    "exact_coordinates_requested": false,
+    "public_output": "aggregate_only",
+    "purpose": "presence_absence_analysis",
+    "requested_claim_support": "checklist_non_detection"
+  },
+  "revision": 2,
+  "sampling_support": {
+    "absence_claim_supported": false,
+    "complete_checklists_only": true,
+    "ebd_sed_pair": {
+      "ebd_artifact_ref": "source-artifact:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "pairing_confirmed": true,
+      "release_date": "2026-04-15",
+      "sed_artifact_ref": "source-artifact:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "non_detection_supported": true,
+    "required_effort_fields": [
+      "distance_km",
+      "duration_minutes",
+      "party_size",
+      "protocol_type"
+    ],
+    "support_type": "COMPLETE_CHECKLIST_EBD_SED"
+  },
+  "schema_version": "kfm.source.occurrence-retrieval-snapshot.v1",
+  "snapshot_id": "kfm://candidate/source/occurrence-retrieval/ebird/a471a48007e36abaf2c1256f2cc43e6a8432b49981f0a51dc58abbcfb74e351f/revision/2",
+  "source_descriptor_ref": "kfm://source/fauna/ebird@synthetic-2026-04-15",
+  "source_family": "ebird",
+  "source_role": "citizen_science_observation",
+  "spec_hash": "sha256:ce4ef7e90012da700c923348a99a57664d6c037b8272f2b950edb602cd11c102",
+  "transfer": {
+    "citation_refs": [],
+    "current_state": "SUCCEEDED",
+    "failure_reason_code": null,
+    "mode": "bulk_file",
+    "native_job_key_digest": null,
+    "record_count": 42,
+    "result_artifact_refs": [
+      "source-artifact:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source-artifact:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    ],
+    "result_interpretation": "candidate_records_available",
+    "state_history": [
+      {
+        "occurred_at": "2026-04-15T12:00:00Z",
+        "state": "SUBMITTED"
+      },
+      {
+        "occurred_at": "2026-04-15T12:10:00Z",
+        "state": "SUCCEEDED"
+      }
+    ]
+  }
+}

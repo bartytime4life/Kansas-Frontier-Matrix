@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-dashboard-archaeology-dc2b3c1500b7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/archaeology.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/archaeology.md": "sha256:dc2b3c1500b7b7756cbf59a0ea1d115cc309196c8a4bb20108873d3640b48ed0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:605e2d8324021d5678d2273514e3265071b040999b59eb265e0f450a788e42cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "deterministic local source checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:605e2d8324021d5678d2273514e3265071b040999b59eb265e0f450a788e42cf"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit/51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:commit/60714d75d7f2b578131204768d1ca6c4bb04b730",
+      "repo:docs/dashboards/domain/archaeology.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=0c5727e7b812b34889962e8158d4c3c51ca971df",
+      "repo:docs/dashboards/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/domain/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@60714d75d7f2b578131204768d1ca6c4bb04b730",
+      "repo:docs/dashboards/INDICATOR_CATALOG.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/governance/SENSITIVITY_RIGHTS.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/adr/ADR-archaeology-exact-location-policy.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=9f7723dea1ddffa5b1e57140ab9e1af83d6e5203",
+      "repo:contracts/governance/sensitive_location_parity_assessment.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=0740f68300075fc707b221f6ff49a000f4f9a3e9",
+      "repo:schemas/contracts/v1/governance/sensitive_location_parity_assessment.schema.json@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=3c4beaba469ea39cf93895ec37a6244acc6b91a1",
+      "repo:tools/validators/validate_sensitive_location_parity_assessment.py@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:tests/validators/test_validate_sensitive_location_parity_assessment.py@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=22d091498ca03aeff97a9f051aef1e6d41f3b9fe",
+      "repo:.github/CODEOWNERS@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:docs/dashboards/domain/archaeology.md@5bb3ed3c625f809bbff2206e3348497f6458ab57#blob=9bcaac2445aac0f4da35ea2c559f90fc87db5b34",
+      "user-request:update-docs-dashboards-domain-archaeology-next#sha256=605e2d8324021d5678d2273514e3265071b040999b59eb265e0f450a788e42cf",
+      "repo:branch-merge/5574d2396b87f37d44e9c7b3c8e55b0890a9b888#parents=506816067598797c3886a83b2d094040ef9c2d5d,60714d75d7f2b578131204768d1ca6c4bb04b730"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/archaeology.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned the initial target, verified the prior blob, found no matching open pull request before branch creation or mutation, and reconciled current main through 60714d75d7f2b578131204768d1ca6c4bb04b730."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced twice during authoring: first through PR #3191, then through the Atmosphere metadata repair and Fauna/Agriculture dashboard work. Comparison showed no modification to docs/dashboards/domain/archaeology.md; both current-main states were merged into the feature branch without force."
+    },
+    {
+      "gate": "directory-rules-and-same-path-boundary",
+      "outcome": "PASS",
+      "reason": "The existing human specification remains under docs/; the dashboards direct-child placement hold is preserved and no structural or authority-root migration is attempted."
+    },
+    {
+      "gate": "repository-evidence-and-sensitive-domain-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision distinguishes current files and fixture-only validation from unknown runtime, policy, review, transform, release, and publication behavior; exact or reconstructive exposure remains denied."
+    },
+    {
+      "gate": "markdown-metadata-anchors-tables-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "One metadata block, one H1, unique anchors, balanced fences, consistent Markdown tables, UTF-8/LF bytes, no trailing whitespace or tabs, and no protected payload or protective transform parameter were found in deterministic source checks."
+    },
+    {
+      "gate": "repository-relative-link-target-inventory",
+      "outcome": "PASS",
+      "reason": "All 15 unique repository-relative targets referenced by the document were resolved from pinned repository evidence."
+    },
+    {
+      "gate": "artifact-hash-and-remote-byte-parity",
+      "outcome": "PASS",
+      "reason": "The final document SHA-256 is dc2b3c1500b7b7756cbf59a0ea1d115cc309196c8a4bb20108873d3640b48ed0 and its locally computed Git blob equals the remote blob 9bcaac2445aac0f4da35ea2c559f90fc87db5b34."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout or dependency environment was available in this connector-first authoring session; repository-native and hosted exact-head checks remain to be observed after draft pull request creation."
+    },
+    {
+      "gate": "generated-receipt-shape-and-binding",
+      "outcome": "PASS",
+      "reason": "The receipt satisfies the fetched Draft 2020-12 field profile, artifact-map parity, canonical local-path, supported SHA-256, citation-presence, no-self-reference, and pending-human-review requirements."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-dashboard-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "repo-archaeology-dashboard-prior",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/archaeology.md@60714d75d7f2b578131204768d1ca6c4bb04b730#blob=0c5727e7b812b34889962e8158d4c3c51ca971df"
+    },
+    {
+      "id": "repo-exact-location-decision-candidate",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-archaeology-exact-location-policy.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=9f7723dea1ddffa5b1e57140ab9e1af83d6e5203"
+    },
+    {
+      "id": "repo-sensitive-location-assessment-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/sensitive_location_parity_assessment.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=0740f68300075fc707b221f6ff49a000f4f9a3e9"
+    },
+    {
+      "id": "repo-sensitive-location-assessment-tests",
+      "validated": true,
+      "evidence_ref": "repo:tests/validators/test_validate_sensitive_location_parity_assessment.py@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=22d091498ca03aeff97a9f051aef1e6d41f3b9fe"
+    },
+    {
+      "id": "repo-codeowners-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    },
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "user-request:update-docs-dashboards-domain-archaeology-next#sha256=605e2d8324021d5678d2273514e3265071b040999b59eb265e0f450a788e42cf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T14:26:34Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-archaeology-exact-location-policy.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. This receipt is not archaeology evidence, cultural or sovereignty authority, policy approval, review approval, access permission, transform proof, release, deployment, publication, or merge authority."
+}

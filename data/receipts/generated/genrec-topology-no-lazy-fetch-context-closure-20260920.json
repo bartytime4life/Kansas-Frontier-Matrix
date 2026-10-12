@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-topology-no-lazy-fetch-context-closure-20260920",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:d625eaf9611aec2a0452d97baadeae9031b3d9177544a361026b0c769a022f88",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:d19d27d83219b9e089b1ea57ff1b4c7eff08aec679c474ae5b6f8daa1aedc687",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "sha256:ffdb188f3ef0b1484695fd40dda9471cbb3b4f07600635bb518a1f1b51a248d5",
+    "tools/validators/directory_governance/README.md": "sha256:27da5bcc874dfe3d220b4e174124de01b9cf4682a1e60ba8a72b497f7761b051",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:74990fa3edc4a27d9cd629ef3350bf00fcbbb866fc809e540f116635282ab62f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:302f74f872611f3d99bf6b366216e6ca70cf68adaf5cec8ccf30ec72613de2eb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d625eaf9611aec2a0452d97baadeae9031b3d9177544a361026b0c769a022f88",
+      "sha256:d19d27d83219b9e089b1ea57ff1b4c7eff08aec679c474ae5b6f8daa1aedc687",
+      "sha256:ffdb188f3ef0b1484695fd40dda9471cbb3b4f07600635bb518a1f1b51a248d5",
+      "sha256:27da5bcc874dfe3d220b4e174124de01b9cf4682a1e60ba8a72b497f7761b051",
+      "sha256:74990fa3edc4a27d9cd629ef3350bf00fcbbb866fc809e540f116635282ab62f"
+    ],
+    "evidence_refs": [
+      "git:c388e1063927abfb266eb1a8db518f5f277f6e78",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "CONFIRMED",
+    "tests/ci/test_directory_root_registry_workflow.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-receipt-replay",
+      "outcome": "PASS",
+      "reason": "The superseded five-artifact receipt validates at exact ancestor c388e1063927abfb266eb1a8db518f5f277f6e78."
+    },
+    {
+      "gate": "current-binding-and-focused-regressions",
+      "outcome": "SKIPPED",
+      "reason": "Candidate validation follows emission and must be reported from the exact resulting tree; this receipt does not predict it."
+    },
+    {
+      "gate": "topology-conformance-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "The catalog KFM-TOPO-004 transition and independent review remain separate held gates."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-authority",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "immutable-predecessor-binding",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json@c388e1063927abfb266eb1a8db518f5f277f6e78"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-20T06:59:31Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": 4640,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Current successor binding for the Git-compatible no-lazy-fetch context repair. The predecessor receipt remains byte-identical and replays only at its exact authored ancestor. This receipt binds implementation bytes; it does not accept topology drift, consume ADR-0040 Stage 1B, authorize repository transition, grant review, merge, release, deployment, promotion, or publication authority."
+}

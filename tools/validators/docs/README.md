@@ -2,20 +2,21 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.1
-status: draft
+version: v0.9
+status: draft; six-bounded-child-executables; terminology-parity-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-09-10
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
-responsibility: proposed parent/index lane for documentation validators that check Markdown metadata, links, anchors, freshness, terminology, truth-label posture, implementation-overclaim signals, and docs-QA reports without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, directory-rule exceptions, release approval, or publication
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, opt-in assessment-axis separation, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
+truth_posture: CONFIRMED bounded local-only link-check, critical-structure, document-graph, meta-block, stale-scan, and opt-in truth-label assessment-axis executables with synthetic tests / PROPOSED terminology-parity executable and broader assessment-document adoption / NEEDS VERIFICATION hosted exact-head results, historical baselines, steward acceptance, and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
-  - ../../docs/README.md
   - ./link-check/README.md
+  - ./critical-structure/README.md
+  - ./document-graph/README.md
   - ./meta-block/README.md
   - ./stale-scan/README.md
   - ./terminology-parity/README.md
@@ -23,250 +24,164 @@ related:
   - ../../../docs/README.md
   - ../../../docs/registers/DOCUMENT_REGISTRY.md
   - ../../../docs/registers/VERIFICATION_BACKLOG.md
-  - ../../../docs/adr/
-  - ../../../policy/
-  - ../../../contracts/
-  - ../../../schemas/
-  - ../../../data/receipts/validation/
-  - ../../../artifacts/qa/
-  - ../../../tests/
+  - ../../../control_plane/document_registry.yaml
+  - ../../../tests/validators/docs/
 notes:
-  - "This README documents a proposed parent lane for docs validators. It does not confirm executable files."
-  - "Documentation validators can report metadata, link, freshness, terminology, and truth-label QA issues. They cannot decide that a claim is true, a source is admissible, a policy exception is valid, a Directory Rules exception is valid, or a release is approved."
-  - "Child README lanes exist for link-check, meta-block, stale-scan, terminology-parity, and truth-label-lint; executable behavior remains NEEDS VERIFICATION unless verified separately."
+  - "This parent lane contains six bounded local-only executables: link-check, critical-structure, document-graph, meta-block, stale-scan, and the opt-in truth-label assessment-axis linter."
+  - "Documentation validators emit QA projections and cannot create truth, source admission, policy, review, release, or publication authority."
+  - "Assessment-axis linting verifies only that an opted-in document keeps authority or epistemic posture separate from capability maturity; it does not interpret either value."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# tools/validators/docs
+# `tools/validators/docs/`
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![root](https://img.shields.io/badge/root-tools%2F-blue)
-![scope](https://img.shields.io/badge/scope-docs--validators-informational)
-![authority](https://img.shields.io/badge/authority-QA--only-lightgrey)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
-
-> **One-line purpose.** `tools/validators/docs/` is the proposed parent/index lane for documentation validators: metadata blocks, links, anchors, freshness, terminology parity, truth-label linting, implementation-overclaim checks, and docs-QA reports.
-
----
-
-## Purpose
-
-`tools/validators/docs/` exists to group validator lanes that inspect documentation hygiene and evidence-posture signals across repository Markdown.
-
-The durable KFM question for this parent lane is:
-
-> Do repository documents carry enough metadata, link integrity, freshness posture, terminology consistency, and truth-label discipline for maintainers to review them without confusing QA signals for doctrine, evidence closure, policy approval, release approval, or publication?
-
-The answer should be deterministic validation results and, where configured, docs QA reports. This parent lane should not edit doctrine, decide whether a claim is true, validate evidence sufficiency, decide source admissibility, approve policy exceptions, override Directory Rules, promote releases, or publish documents.
-
-[Back to top](#top)
-
----
+> **Purpose.** Group deterministic documentation QA lanes while keeping each
+> validator's scope, outcome grammar, evidence boundary, and non-effects
+> explicit.
 
 ## Status
 
-| Surface | Status | Notes |
+| Surface | State | Notes |
 |---|---|---|
-| `tools/validators/docs/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Parent docs validator executables | **PROPOSED / NEEDS VERIFICATION** | No parent runner or script name is claimed here. |
-| Child README lanes | **CONFIRMED README siblings / executable proposed** | `link-check/`, `meta-block/`, `stale-scan/`, `terminology-parity/`, and `truth-label-lint/` README files exist. |
-| Parent docs tooling boundary | **CONFIRMED in repo evidence / draft** | `tools/docs/README.md` says docs tooling may check metadata, links, warnings, drift, overclaims, and house style, but cannot decide truth, admissibility, release approval, or Directory Rules exceptions. |
-| Validator scope profile | **PROPOSED / NEEDS VERIFICATION** | Exact required fields, freshness thresholds, allowed truth labels, terminology profile, ignore rules, and report destinations must be accepted outside this README before CI enforcement. |
-| CI wiring | **PROPOSED / NEEDS VERIFICATION** | This README does not prove CI, pre-commit, scheduled checks, artifacts, or receipts are wired. |
+| Parent README | **CONFIRMED** | Navigation and authority boundary only; no parent executable is claimed. |
+| `link-check/` | **CONFIRMED bounded executable** | Local inline/reference links, files, directories, images, and fragments; external URLs remain unverified. |
+| `critical-structure/` | **CONFIRMED bounded executable** | Explicitly enrolled critical Markdown; the initial profile detects contributor-contract self-insertion and boundary corruption without interpreting claims. |
+| `document-graph/` | **CONFIRMED bounded executable** | Nodes, typed edges, backlinks, reachability, generated MOCs, and registry parity. |
+| `meta-block/` | **CONFIRMED bounded executable** | `KFM_META_BLOCK_V2` structure plus review-only registry-delta candidates. |
+| `stale-scan/` | **CONFIRMED bounded executable** | Explicit-as-of freshness, review-age, placeholder-owner, temporal-marker, and review-due signals. |
+| `terminology-parity/` | **README-only proposal** | Vocabulary, casing, and source-role consistency. |
+| `truth-label-lint/` | **CONFIRMED bounded executable** | Tracked standard-library implementation and synthetic tests structurally separate authority/epistemic posture from capability maturity; values remain uninterpreted. |
+| Workflow definition | **CONFIRMED tracked definition** | The focused read-only truth-label workflow is present; its presence is not a hosted-run result. |
+| Hosted enforcement | **NEEDS VERIFICATION** | Exact-head runs and required-check coupling remain separate evidence. |
 
-[Back to top](#top)
+## Responsibility split
 
----
+| Question | Owning child lane |
+|---|---|
+| Does a local Markdown target or fragment resolve? | `link-check/` |
+| Does an explicitly enrolled critical document retain its bounded structural invariants? | `critical-structure/` |
+| How are documents connected, and which are unreachable or identity-conflicted? | `document-graph/` |
+| Is the bounded metadata envelope structurally valid, and what registry review delta follows? | `meta-block/` |
+| Is review/freshness posture stale under an explicit as-of date and threshold? | `stale-scan/` |
+| Does terminology align with accepted KFM vocabulary? | `terminology-parity/` — proposed |
+| Does an explicitly opted-in assessment keep authority/epistemic posture separate from capability maturity? | `truth-label-lint/` — bounded structural executable |
 
-## Child lanes
+Child validators must delegate rather than silently reimplement another lane's
+authority. In particular:
 
-| Child lane | Validator question | Status |
-|---|---|---|
-| `link-check/` | Do documentation links, anchors, image refs, citation refs, and external-link postures resolve as configured? | README confirmed; executable proposed. |
-| `meta-block/` | Does a document carry a parseable, internally consistent `KFM_META_BLOCK_V2` or accepted metadata block profile? | README confirmed; executable proposed. |
-| `stale-scan/` | Does a document show stale metadata, overdue review posture, expired caveats, unresolved TODOs, or implementation-overclaim drift? | README confirmed; executable proposed. |
-| `terminology-parity/` | Does a document use KFM terminology, casing, source-role vocabulary, truth-label terms, and authority pointers consistently? | README confirmed; executable proposed. |
-| `truth-label-lint/` | Does a document use truth labels in a way that signals evidence posture and verification boundary without overclaiming? | README confirmed; executable proposed. |
-
-Future child lanes should be added only when they cover a distinct docs-QA invariant. Avoid creating a new child lane for every document type unless it has a separate validator contract, fixtures, and report semantics.
-
-[Back to top](#top)
-
----
+- metadata validation does not become a second link checker;
+- document graph construction does not become metadata doctrine;
+- stale scanning does not infer truth or current runtime behavior from a date;
+- freshness parsing delegates malformed metadata to `meta-block/`;
+- assessment-axis linting preserves values as written and does not create a hidden enum, maturity decision, or evidence decision; and
+- exact local target resolution remains with `link-check/`.
 
 ## Authority boundary
 
+Documentation validators are repository QA tools. They may inspect explicit
+Markdown, emit deterministic findings, produce non-authoritative summaries, and
+route gaps to review. They must not:
+
+- edit documentation or registries without a separate authorized change;
+- decide whether a claim is true or an EvidenceBundle is sufficient;
+- approve source admission, rights, sensitivity, or policy exceptions;
+- create review, release, promotion, publication, correction, or rollback state;
+- turn a passing workflow, badge, graph, metadata block, recent date, or assessment table into authority; or
+- write generated QA reports into canonical trust-object homes.
+
+Responsibility-root placement remains:
+
 | Responsibility | Home |
 |---|---|
-| Docs validator parent/index | `tools/validators/docs/` |
+| Validator implementation | `tools/validators/docs/<lane>/` |
 | Shared validator plumbing | `tools/validators/_common/` |
-| General docs tooling | `tools/docs/` |
+| Executable tests and synthetic fixtures | `tests/validators/docs/<lane>/` |
+| Read-only CI orchestration | `.github/workflows/` |
+| Generated validation receipts | `data/receipts/validation/` when separately emitted |
+| Non-authoritative QA reports | `artifacts/qa/` or ephemeral CI output |
 | Documentation content | `docs/` and each owning responsibility root |
-| Documentation registries and backlogs | `docs/registers/` or accepted docs registry homes |
-| Doctrine, ADRs, runbooks, standards | owning docs lanes under `docs/` |
-| Policy rules | `policy/` |
-| Contracts and schemas | `contracts/`, `schemas/` |
-| Evidence and proof support | `data/proofs/` and accepted evidence/proof roots |
-| Receipts from validation runs | `data/receipts/validation/` or accepted receipt home |
-| QA artifacts and summaries | `artifacts/qa/` when non-authoritative and non-trust-bearing |
-| Tests and fixtures | `tests/` and accepted fixture conventions |
-| Release records | `release/` |
-| Published public-safe docs/artifacts | accepted publication roots, not validator lanes |
+| Machine document register | `control_plane/document_registry.yaml` |
 
-Safe interpretation:
+## Child outcomes
 
-- **CONFIRMED:** this README exists.
-- **PROPOSED:** parent docs-validator runner code may live here only when it orchestrates child docs validators and preserves their boundaries.
-- **NEEDS VERIFICATION:** exact executable names, accepted profiles, child runner behavior, fixture paths, report destinations, ignore rules, receipts, and CI wiring.
-- **DENY:** using this folder as docs content authority, doctrine authority, ADR authority, source-admissibility authority, policy authority, evidence validator, release validator, receipt store, generated-docs store, or public documentation surface.
+| Lane | Pass | Warn / not applicable | Fail | Operational error |
+|---|---|---|---|---|
+| Link check | `DOC_LINK_CHECK_PASS` | informational external/unverified state | target/anchor/path failures | `ERROR` |
+| Critical structure | `DOC_CRITICAL_STRUCTURE_PASS` | none | bounded heading, duplicate-section, boundary, or final-newline failures | `ERROR` |
+| Document graph | `DOC_GRAPH_PASS` | `DOC_GRAPH_WARN` | `DOC_GRAPH_FAIL` | `ERROR` |
+| Metadata block | `DOC_META_BLOCK_PASS` | `DOC_META_BLOCK_WARN` | `DOC_META_BLOCK_FAIL` | `ERROR` |
+| Freshness scan | `DOC_STALE_SCAN_PASS` | `DOC_STALE_SCAN_WARN` | `DOC_STALE_SCAN_FAIL` | `ERROR` |
+| Truth-label assessment axes | `DOC_TRUTH_LABEL_LINT_PASS` | `DOC_TRUTH_LABEL_LINT_NOT_APPLICABLE` | `DOC_TRUTH_LABEL_LINT_FAIL` | `ERROR` |
 
-[Back to top](#top)
-
----
-
-## What belongs here
-
-Good fits for `tools/validators/docs/` include:
-
-- parent README and navigation for docs validator lanes;
-- optional orchestration wrappers that invoke child validators without redefining their logic;
-- shared docs-validator configuration only when it is not better placed in `_common/` or an accepted config root;
-- profile declarations that are explicitly accepted by docs stewards or marked **PROPOSED**;
-- synthetic fixture references and test-surface guidance;
-- docs-QA summary conventions that route reports to accepted non-authority roots;
-- handoff guidance for steward review, verification backlog entries, ADR proposals, and correction follow-up.
-
-[Back to top](#top)
-
----
-
-## What does not belong here
-
-| Do not put in `tools/validators/docs/` | Correct home |
-|---|---|
-| Documentation content | `docs/` or the owning root |
-| Doctrine decisions | accepted doctrine / ADR lanes under `docs/` |
-| Directory Rules exceptions | accepted ADR or governance lane |
-| Policy rules | `policy/` |
-| Contracts or schemas | `contracts/`, `schemas/` |
-| EvidenceBundle validation | evidence/proof validator lanes and proof roots |
-| Source-admissibility decisions | source registry, policy, review, and governance lanes |
-| Receipts | `data/receipts/` |
-| Proofs | `data/proofs/` |
-| Release decisions or release manifests | `release/` |
-| Published docs or public site output | accepted public/docs publishing root |
-| Generated QA reports that are not source code | `artifacts/qa/` or accepted report lane |
-| Tests and fixtures | `tests/` and fixture conventions |
-
-[Back to top](#top)
-
----
-
-## Docs validator posture
-
-Docs validators are QA aids, not governance approval.
-
-A passing docs-validator run means only that the configured checks did not detect configured documentation hygiene issues at scan time. It does not mean:
-
-- the document is authoritative;
-- the claims in the document are true;
-- the evidence chain actually resolves;
-- the source is admissible;
-- the policy posture is correct;
-- the implementation maturity is proven;
-- the release state is approved;
-- the document is safe for public publication;
-- the path satisfies Directory Rules without further review.
-
-A failing docs-validator run should route to one of these actions:
-
-- fix metadata, links, anchors, terminology, or truth-label posture;
-- weaken overconfident implementation or release claims;
-- add a verification-backlog item;
-- open a steward review task;
-- propose an ADR for unresolved terminology, directory, policy, or authority conflict;
-- add a documented ignore rule with owner, reason, scope, and review posture.
-
-[Back to top](#top)
-
----
-
-## Standard parent outcomes
-
-| Outcome | Meaning |
-|---|---|
-| `DOCS_VALIDATION_PASS` | Configured docs validator checks passed. |
-| `DOCS_VALIDATION_FAIL` | One or more configured docs validator checks failed. |
-| `CHILD_VALIDATOR_MISSING` | Expected child validator lane or runner is absent. |
-| `CHILD_VALIDATOR_FAILED` | Child validator reported one or more findings. |
-| `DOCS_PROFILE_MISSING` | Required docs validation profile is absent. |
-| `DOCS_PROFILE_CONFLICT` | Profiles disagree about metadata, terminology, truth labels, freshness, or report handling. |
-| `REPORT_DESTINATION_INVALID` | QA report or receipt destination is outside an accepted root. |
-| `AUTHORITY_CONFUSION` | Docs text or validator output implies authority the artifact does not hold. |
-| `IGNORED_WITH_REASON` | Finding was ignored under an explicit, reviewable rule. |
-| `IGNORE_RULE_EXPIRED` | Ignore rule is stale and must be reviewed. |
-| `ABSTAIN` | Validator cannot decide safely with available context. |
-| `ERROR` | Validator could not safely complete. |
-
-[Back to top](#top)
-
----
+A parent outcome grammar remains **PROPOSED** until precedence, waiver rules,
+report destinations, and composition semantics are reviewed. No parent runner is
+claimed by this README.
 
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/validators/docs/
-├── README.md
-├── test_docs_validator_parent.py
-└── fixtures/
-    ├── valid_docs_validator_bundle/
-    ├── missing_child_validator/
-    ├── conflicting_profiles/
-    ├── invalid_report_destination/
-    ├── authority_confusing_output/
-    └── ignored_with_reason/
-```
-
-Suggested future command pattern:
+Run the bounded child suites independently:
 
 ```bash
-pytest -q tests/validators/docs
+python -m unittest discover \
+  --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
 ```
 
 ```bash
-python tools/validators/docs/run_docs_validators.py --repo-root . --format json
+python -m unittest discover \
+  --start-directory tests/validators/docs/critical-structure \
+  --pattern 'test_*.py' \
+  --verbose
 ```
 
-> [!NOTE]
-> This is a proposed interface, not proof that `run_docs_validators.py` or the test path exists.
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/document-graph \
+  --pattern 'test_*.py' \
+  --verbose
+```
 
-[Back to top](#top)
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/meta-block \
+  --pattern 'test_*.py' \
+  --verbose
+```
 
----
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/stale-scan \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/truth-label-lint \
+  --pattern 'test_*.py' \
+  --verbose
+```
 
 ## Review checklist
 
-- [ ] Parent runner delegates to child validators instead of redefining their rules.
-- [ ] Parent lane uses accepted profiles rather than hidden tool-only doctrine.
-- [ ] Reports and receipts are written only to accepted non-authority roots.
-- [ ] Docs validators do not edit docs without a separate explicit change process.
-- [ ] QA findings are routed to steward review, verification backlog, or ADR when needed.
-- [ ] Ignore rules include reason, owner, scope, and review posture.
-- [ ] Passing checks are not described as truth, policy, release, publication, or Directory Rules approval.
-- [ ] Tests use synthetic fixtures and do not require network access by default.
-- [ ] Executable claims are backed by current repo evidence.
+- [ ] The child validator has one distinct QA responsibility.
+- [ ] The implementation uses explicit bounded inputs and no network by default.
+- [ ] Time-dependent scans record an explicit as-of date and thresholds.
+- [ ] Current regressions fail closed while inherited debt is classified honestly.
+- [ ] Generated outputs remain non-authoritative and review-only.
+- [ ] Documentation and registry mutation require a separate authorized action.
+- [ ] Passing checks are not described as truth, policy, review, release, or publication approval.
+- [ ] Synthetic fixtures cover positive, negative, replay, and failure behavior.
+- [ ] Rollback is ordinary Git reversion with no external-state claim.
+
+## Next smallest safe change
+
+After the opt-in assessment-axis profile receives human review, adopt it in one
+bounded dated assessment or reconciliation document and compare its findings
+with manual review. Keep repository-wide enforcement and any value vocabulary
+on hold until an accepted owner, baseline, and semantics exist. The independent
+terminology-parity validator remains a separate candidate.
 
 [Back to top](#top)
-
----
-
-## Last reviewed
-
-| Field | Value |
-|---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for empty file and parent index for docs validator child lanes. |
-| Next smallest safe change | Verify actual parent runner, child validator scripts, accepted docs-validation profiles, ignore rules, fixtures, report destinations, receipts, and CI wiring before promoting this lane beyond draft. |

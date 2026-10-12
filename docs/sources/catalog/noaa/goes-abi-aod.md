@@ -10,21 +10,22 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/newspapers/ocr-full-text.md
   - docs/domains/atmosphere/README.md
   - docs/domains/hazards/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, goes, abi, aod, atmosphere-air, modeled, satellite-retrieval]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
   - "PROPOSED path under docs/sources/catalog/noaa/ — parallel to newspapers/<product>.md convention; resolves NOAA family entry OPEN-NOAA-08 in favor of per-family-folder layout."
   - "Default source_role is modeled (with mandatory ModelRunReceipt). GOES ABI AOD is a satellite retrieval, not a direct measurement."
   - "Dominant anti-collapse: AOD is not PM2.5 (CONFIRMED DOM-AIR doctrine; §I)."
+owning_root: docs/
+responsibility: "Documentation for GOES ABI Aerosol Optical Depth; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # GOES ABI Aerosol Optical Depth
@@ -146,8 +147,8 @@ This page is a **product-page**: it describes the slice's *catalog identity*, *p
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation; this product is one slice. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Cross-family sibling** | [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) | Structural parallel — also a `modeled`-flavored product with mandatory `ModelRunReceipt`. |
 | **Upstream (root)** | [`../README.md`](../README.md) | Catalog landing page. |
 | **Cross-root (data)** | [`data/registry/sources/`](../../../../data/registry/sources/) | Authoritative `SourceDescriptor` home; not duplicated here. |
@@ -206,7 +207,7 @@ PROPOSED — the descriptor for this slice should at minimum carry:
 - `role_model_run_ref` — `EvidenceRef → ModelRunReceipt` (**MUST**, per Atlas Ch. 24.1.3 when `source_role = modeled`)
 - `role_authority` — the retrieval algorithm authority (NOAA NESDIS / STAR), distinct from the satellite platform owner
 - `rights` — license, redistribution terms, attribution (GOES products are generally U.S. government works; per-product rights **NEEDS VERIFICATION**)
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md)
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present)
 - `cadence` — sub-hourly nominal cadence for full-disk and CONUS modes (per-mode **NEEDS VERIFICATION**)
 - `ingest_hash` — content-addressable digest of the admitted product
 
@@ -236,7 +237,7 @@ PROPOSED — AOD items map across the standard KFM-STAC / DCAT / PROV-O profile 
 
 ## Collection identity
 
-- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-noaa-goes-abi-aod`. See sibling [`IDENTITY.md`](./IDENTITY.md) for the family-level rule.
+- **PROPOSED Collection ID pattern.** `kfm-<org>-<product>` — e.g., `kfm-noaa-goes-abi-aod`. See sibling `IDENTITY.md` (not present) for the family-level rule.
 - **PROPOSED namespace.** `kfm:` — pending resolution of *OPEN-DSC-03* (namespace canonicalization). NEEDS VERIFICATION.
 - **PROPOSED Item ID rule.** Deterministic basis: `platform + instrument + retrieval_algorithm + algorithm_version + scan_mode + scan_time + tile_locator + normalized_digest`. The **retrieval algorithm and its version are part of identity** (parallel to the OCR-engine-version-in-identity rule for `ocr-full-text.md`) — re-retrieval with a new algorithm or version produces a **new Item**, not an update.
 - **Asset roles.** NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/`. Candidate roles: `data` (the AOD raster itself, e.g., COG), `quality` (DQF / per-pixel quality flags), `uncertainty` (retrieval uncertainty surface, if separate), `metadata` (algorithm parameters, geometry), `thumbnail`.
@@ -349,7 +350,7 @@ NEEDS VERIFICATION — confirm against `data/catalog/` artifacts and any GOES-pr
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -562,16 +563,16 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) — Structural parallel (also `modeled`-flavored with mandatory `ModelRunReceipt`).
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Domain owner of `AODRaster` and DOM-AIR anti-collapse doctrine.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Smoke / fire adjacency consumer.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `ModelRunReceipt` schema README once authored.

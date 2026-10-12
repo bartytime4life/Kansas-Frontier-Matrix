@@ -19,7 +19,7 @@ related:
   - ../proof_pack/README.md
   - ../../tests/
 notes:
-  - "This README documents the QA tooling lane. It does not confirm executable files."
+  - "This README documents the QA tooling lane. scaffold_inventory.py, deny_test_runner.py, and gap_scan.py are the confirmed executables; reports remain review aids."
   - "QA reports support review and do not replace validators, tests, source records, proof records, or release review."
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,7 +51,11 @@ A QA report is a review aid. It is not final acceptance by itself.
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/qa/README.md` | **CONFIRMED** | This README replaces the previous stub. |
-| QA executables | **PROPOSED / NEEDS VERIFICATION** | No script is claimed here. |
+| `scaffold_inventory.py` + `scaffold_baseline.json` | **CONFIRMED** | Inventories placeholder, stub, blank, vacuous-test, TODO-echo, and TBD-descriptor files across scripting, automation, data-processing, and contract surfaces; `--check` (`make scaffold-inventory`, `.github/workflows/scaffold-ratchet.yml`) fails on new scaffolding and on resolved entries left in the baseline, so the count only goes down. |
+| `deny_test_runner.py` | **CONFIRMED** | Runs a closed registry of deny suites (`make deny-suites`, `deny-test.yml` job `aggregate-deny-suites`); a failing, missing, timed-out, or empty suite fails the run. |
+| `gap_scan.py` + `gap_scan_baseline.json` | **CONFIRMED** | Census of gaps the scaffold ratchet does not cover: structured-data parse errors outside negative fixtures and `tests/` packages that shadow an imported root (both must stay at zero), plus broken local Markdown links, non-Markdown placeholders outside scaffold surfaces, and Markdown files whose header declares a placeholder (counts may only fall). `make gap-scan`, `.github/workflows/gap-scan.yml`; procedures in [`docs/registers/repository-gap-fill-goal-2026-10-02.md`](../../docs/registers/repository-gap-fill-goal-2026-10-02.md). |
+| `dp15_inventory_scan.py` + `dp15_inventory_classify.py` | **CONFIRMED** | Read-only reproduction scripts for the commit-pinned DP-15 inventory in [`artifacts/qa/reports/dp-15-inventory-20261007/`](../../artifacts/qa/reports/dp-15-inventory-20261007/README.md), moved here from that report because `artifacts/` admits only provenance-bearing JSON payloads. Review aid only; not a DP validator or enforcement rule. |
+| Other QA executables | **PROPOSED / NEEDS VERIFICATION** | No other script is claimed here. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | Parent README names `tools/qa/` as QA tooling. |
 
 ---
@@ -80,6 +84,10 @@ A QA report is a review aid. It is not final acceptance by itself.
 - Last-reviewed scans.
 - CI reviewer-summary renderers.
 - QA report formatters.
+- Read-only Site mirror drift diagnostics and recorded-content parity checks.
+  `site_mirror.py --check` reports receipt review declarations independently;
+  review acceptance remains with the source owner and is not evaluated by the
+  parity check. `--check --format markdown` renders the same result for CI.
 
 ---
 

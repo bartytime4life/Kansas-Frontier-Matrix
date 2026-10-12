@@ -1,0 +1,193 @@
+{
+  "profile": "kfm.evidence.observation-fitness.fixture.v1",
+  "base": {
+    "object_type": "ObservationFitnessAssessment",
+    "schema_version": "0.1.0",
+    "profile": "kfm.evidence.observation-fitness.fixture.v1",
+    "assessment_id": "AUTO",
+    "observation": {
+      "observation_ref": "kfm:fixture:observation:alpha",
+      "source_role": "SYNTHETIC",
+      "observed_at": "2026-07-15T16:00:00Z",
+      "method_profile_id": "SYNTHETIC_VEGETATION_CHANGE",
+      "method_profile_version": "1.0.0",
+      "quality_state": "PASS",
+      "quality_mask_refs": ["kfm:fixture:mask:qa-alpha-v1"],
+      "quality_evidence_refs": ["kfm:fixture:evidence:quality-alpha"],
+      "evidence_bundle_refs": ["kfm:fixture:evidence:observation-alpha"]
+    },
+    "declared_use": {
+      "use_case_id": "SYNTHETIC_CHANGE_SCREENING",
+      "analysis_profile_id": "FIXTURE_OBSERVATION_FITNESS",
+      "analysis_profile_version": "1.0.0",
+      "spatial_support_ref": "kfm:fixture:spatial-support:generalized-alpha",
+      "interval_start": "2026-07-01T00:00:00Z",
+      "interval_end": "2026-07-31T23:59:59Z"
+    },
+    "context_snapshot": {
+      "snapshot_ref": "kfm:fixture:context-snapshot:alpha-v1",
+      "captured_at": "2026-07-16T12:00:00Z",
+      "confounders": [
+        {
+          "code": "CLOUD",
+          "state": "ABSENT",
+          "mask_ref": "kfm:fixture:mask:cloud-alpha-v1",
+          "evidence_refs": ["kfm:fixture:evidence:cloud-alpha"]
+        },
+        {
+          "code": "SMOKE",
+          "state": "ABSENT",
+          "mask_ref": "kfm:fixture:mask:smoke-alpha-v1",
+          "evidence_refs": ["kfm:fixture:evidence:smoke-alpha"]
+        }
+      ],
+      "persistence_support": {
+        "state": "SUPPORTED",
+        "observation_count": 3,
+        "evidence_refs": ["kfm:fixture:evidence:persistence-alpha"]
+      }
+    },
+    "decision": {
+      "state": "FIT",
+      "handling": "INCLUDE",
+      "reason_codes": ["OBSERVATION_FIT_FOR_DECLARED_USE"],
+      "obligations": ["DISPLAY_DECLARED_USE", "PRESERVE_CONTEXT_SNAPSHOT"],
+      "retained_evidence_refs": []
+    },
+    "correction_lineage": {
+      "state": "ORIGINAL",
+      "supersedes_assessment_ref": null,
+      "corrected_mask_refs": [],
+      "reinterpretation_required": false
+    },
+    "evaluated_at": "2026-07-16T13:00:00Z",
+    "governance": {
+      "fixture_only": true,
+      "no_network": true,
+      "lifecycle_write": false,
+      "evidence_deletion_authority": false,
+      "truth_authority": false,
+      "analysis_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "spec_hash": "AUTO"
+  },
+  "cases": [
+    {
+      "name": "current_clear_observation_is_fit",
+      "mutations": [],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "cloud_present_retains_and_excludes",
+      "mutations": [{"path": "/context_snapshot/confounders/0/state", "value": "PRESENT"}],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "smoke_present_retains_and_excludes",
+      "mutations": [{"path": "/context_snapshot/confounders/1/state", "value": "PRESENT"}],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "stale_quality_mask_excludes",
+      "mutations": [{"path": "/observation/quality_state", "value": "STALE"}],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "missing_qa_abstains",
+      "mutations": [
+        {"path": "/observation/quality_state", "value": "UNKNOWN"},
+        {"path": "/observation/quality_mask_refs", "value": []}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "single_observation_is_conditionally_fit",
+      "mutations": [
+        {"path": "/context_snapshot/persistence_support/state", "value": "UNSUPPORTED"},
+        {"path": "/context_snapshot/persistence_support/observation_count", "value": 1}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "corrected_mask_creates_new_fit_assessment",
+      "mutations": [
+        {"path": "/correction_lineage/state", "value": "CORRECTED"},
+        {"path": "/correction_lineage/supersedes_assessment_ref", "value": "kfm:observation-fitness:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"path": "/correction_lineage/corrected_mask_refs", "value": ["kfm:fixture:mask:qa-alpha-v2"]},
+        {"path": "/correction_lineage/reinterpretation_required", "value": true},
+        {"path": "/observation/quality_mask_refs", "value": ["kfm:fixture:mask:qa-alpha-v2"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "contradictory_duplicate_confounder_is_denied",
+      "mutations": [
+        {"path": "/context_snapshot/confounders/1/code", "value": "CLOUD"},
+        {"path": "/context_snapshot/confounders/1/state", "value": "PRESENT"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CONFOUNDER_CONTEXT_CONTRADICTORY"]
+    },
+    {
+      "name": "present_confounder_requires_mask",
+      "mutations": [
+        {"path": "/context_snapshot/confounders/0/state", "value": "PRESENT"},
+        {"path": "/context_snapshot/confounders/0/mask_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PRESENT_CONFOUNDER_MASK_REQUIRED"]
+    },
+    {
+      "name": "decision_self_promotion_is_denied",
+      "mutations": [
+        {"path": "/context_snapshot/confounders/0/state", "value": "PRESENT"},
+        {"path": "/decision/state", "value": "FIT"}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["FITNESS_DECISION_MISMATCH"]
+    },
+    {
+      "name": "retained_evidence_cannot_be_dropped",
+      "mutations": [{"path": "/decision/retained_evidence_refs", "value": ["kfm:fixture:evidence:observation-alpha"]}],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["FITNESS_DECISION_MISMATCH"]
+    },
+    {
+      "name": "correction_requires_predecessor",
+      "mutations": [
+        {"path": "/correction_lineage/state", "value": "CORRECTED"},
+        {"path": "/correction_lineage/corrected_mask_refs", "value": ["kfm:fixture:mask:qa-alpha-v2"]},
+        {"path": "/correction_lineage/reinterpretation_required", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CORRECTION_PREDECESSOR_REQUIRED"]
+    },
+    {
+      "name": "evidence_deletion_authority_is_rejected",
+      "mutations": [{"path": "/governance/evidence_deletion_authority", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [{"path": "/evaluated_at", "value": "2026-07-16T14:00:00Z"}],
+      "rederive": false,
+      "reseal": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH", "ASSESSMENT_ID_MISMATCH"]
+    }
+  ]
+}

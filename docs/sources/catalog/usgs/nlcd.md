@@ -11,12 +11,10 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
-  - docs/sources/catalog/usgs/usgs-gnis-names.md
-  - docs/sources/catalog/usgs/usgs-nhdplus-hr.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -25,14 +23,9 @@ related:
   - docs/standards/STAC.md
   - docs/standards/PMTILES.md
   - docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usgs/
-  - data/registry/sources/mrlc/
-  - policy/sources/usgs/
   - policy/sensitivity/agriculture/
   - policy/sensitivity/habitat/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/raster/
-  - schemas/contracts/v1/landcover/
   - connectors/nlcd/
   - connectors/usgs/
 adr_refs:
@@ -53,6 +46,9 @@ notes:
   - "Class-map versioning is the unique discipline for this product — the classification taxonomy itself evolves across NLCD releases (2001, 2006, 2011, 2016, 2019, 2021, …). Cross-release comparison requires class-map reconciliation, not pixel-equality. Analogous to but distinct from earthquake event versioning and NHDPlus HR release-vintage immutability."
   - "Per KFM-P2-IDEA-0028: land-cover authorities (NLCD + USDA CDL + LANDFIRE + GAP) are ingested per-source primary with native classification preserved; crosswalks are advisory, not authoritative."
   - "Engineering-claim disclaimer applies — NLCD wetlands ≠ USACE/EPA regulatory wetlands; NLCD agriculture ≠ USDA NASS CDL crop-specific classifications."
+owning_root: docs/
+responsibility: "Documentation for USGS NLCD National Land Cover Database; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -79,10 +75,10 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) *(placement OPEN — see [§2](#2-product-identity-within-the-family))* &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) *(or `data/registry/sources/mrlc/` pending the family-folder ADR — see §2)*. Rights, sensitivity, and engineering-disclaimer policy live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/), [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/), and [`policy/sensitivity/habitat/`](../../../../policy/sensitivity/habitat/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present) *(or `data/registry/sources/mrlc/` pending the family-folder ADR — see §2)*. Rights, sensitivity, and engineering-disclaimer policy live in `policy/sources/usgs/` (not present), [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/), and [`policy/sensitivity/habitat/`](../../../../policy/sensitivity/habitat/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
-> **Every NLCD pixel is a classifier assignment, not a measurement.** Unlike the heterogeneous sibling products in this family (3DEP: observed LAZ + modeled DEMs; NHDPlus HR: observed geometry + modeled VAAs; Earthquakes: observed events + modeled derivatives), NLCD is **uniformly modeled** at every pixel and every sub-product. Per Atlas §24.1.2 *"Modeled product labeled or queried as observed"* DENY condition: a KFM derivative that cites an NLCD class as if it were a measurement of land cover at the pixel violates the source-role anti-collapse rule. See [§2.1](#21-sub-product-source-role-decomposition) and [§6](#6-source-role-posture-anti-collapse).
+> **Every NLCD pixel is a classifier assignment, not a measurement.** Unlike the heterogeneous sibling products in this family (3DEP: observed LAZ + modeled DEMs; NHDPlus HR: observed geometry + modeled VAAs; Earthquakes: observed events + modeled derivatives), NLCD is **uniformly modeled** at every pixel and every sub-product. Per Atlas §24.1.2 *"Modeled product labeled or queried as observed"* DENY condition: a KFM derivative that cites an NLCD class as if it were a measurement of land cover at the pixel violates the source-role anti-collapse rule. See [§2.1](#21-sub-product-source-role-decomposition) and §6.
 
 > [!CAUTION]
 > **NLCD class enum evolves across releases.** The class taxonomy in NLCD 2001 is not pixel-equivalent to the taxonomy in NLCD 2019 or 2021 — classes have been added, refined, split, or merged. Cross-release comparison (the change-product use case) requires **class-map reconciliation**, not pixel equality. KFM preserves the source class-map version on every NLCD record; KFM derivatives that compare NLCD epochs must consume the class-map reconciliation, not raw class codes. See [§7.2](#72-class-map-versioning-and-cross-release-reconciliation) and Q-5.
@@ -209,7 +205,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **fifth** product authored under what is provisionally the `usgs` source family — sibling to the heterogeneous-role [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md), [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md), [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md), and the administrative [`usgs-gnis-names.md`](./usgs-gnis-names.md). NLCD's structural posture differs from all four: **pure modeled, every pixel, every sub-product**.
+> This page is the **fifth** product authored under what is provisionally the `usgs` source family — sibling to the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md), [`usgs-earthquake-catalog.md`](earthquake-catalog.md), [`usgs-nhdplus-hr.md`](nhdplus-hr.md), and the administrative [`usgs-gnis-names.md`](gnis-names.md). NLCD's structural posture differs from all four: **pure modeled, every pixel, every sub-product**.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -258,7 +254,7 @@ The v0.1 scaffold's `connectors/nlcd/` directory is more consistent with Option 
 | **Biodiversity habitat** classes | `<PROPOSED> docs/sources/catalog/gap/gap.md` (USGS GAP — ecological systems) | — |
 | **Regulatory wetlands determinations** | USACE / EPA Section 404 sources — **not** NLCD | NLCD wetlands classes are NOT regulatory wetlands. |
 | **Hi-res building / parcel footprints** | `<PROPOSED> docs/sources/catalog/census/tiger.md` + state parcel sources | NLCD developed-classes are 30m raster, not vector footprints. |
-| **Terrain context** for a land-cover analysis | [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md) | — |
+| **Terrain context** for a land-cover analysis | [`usgs-3dep-elevation.md`](3dep-elevation.md) | — |
 | **EPA ecoregion baselines** alongside NLCD | `<PROPOSED> docs/sources/catalog/epa/ecoregions.md` (per `ML-K-008`) | — |
 | **NLCD ↔ CDL ↔ LANDFIRE ↔ GAP** crosswalk artifact | `<PROPOSED> docs/sources/catalog/_crosswalks/landcover-crosswalk.md` (or wherever ADR-S-?? lands the crosswalk catalog) | NLCD's native classification is preserved per `KFM-P2-IDEA-0028`; crosswalk lives separately and is **advisory**. |
 | **Aerial imagery** (Landsat reflectance the classifier ingests) | A separate Landsat / NAIP product page | NLCD is the *classifier output*, not the imagery. |
@@ -275,7 +271,7 @@ The v0.1 scaffold's `connectors/nlcd/` directory is more consistent with Option 
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) *(or `data/registry/sources/mrlc/` per the family-folder ADR — see [§2 attribution box](#2-product-identity-within-the-family))* for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) *(or `data/registry/sources/mrlc/` per the family-folder ADR — see [§2 attribution box](#2-product-identity-within-the-family))* for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 Doctrinal anchors for this product:
 
@@ -471,7 +467,7 @@ NLCD class codes are integers; the **class-map version** binds code to label. Co
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/), [`policy/sensitivity/habitat/`](../../../../policy/sensitivity/habitat/), and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/), [`policy/sensitivity/habitat/`](../../../../policy/sensitivity/habitat/), and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with engineering disclaimer
 
@@ -570,14 +566,14 @@ NLCD class codes are integers; the **class-map version** binds code to label. Co
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `LandCoverRasterTile` contract | [`contracts/data/landcover/`](../../../../contracts/data/landcover/) | **PROPOSED** — new object class. |
-| `LandCoverRasterTile` schema | [`schemas/contracts/v1/landcover/`](../../../../schemas/contracts/v1/landcover/) | **PROPOSED**. |
-| `ClassMap` schema (per-epoch class taxonomy) | [`schemas/contracts/v1/landcover/`](../../../../schemas/contracts/v1/landcover/) | **PROPOSED**. |
-| `ChangeProductDerivation` schema (epoch-pair derivation + reconciled class-map) | [`schemas/contracts/v1/landcover/`](../../../../schemas/contracts/v1/landcover/) | **PROPOSED**. |
+| `LandCoverRasterTile` contract | `contracts/data/landcover/` (not present) | **PROPOSED** — new object class. |
+| `LandCoverRasterTile` schema | `schemas/contracts/v1/landcover/` (not present) | **PROPOSED**. |
+| `ClassMap` schema (per-epoch class taxonomy) | `schemas/contracts/v1/landcover/` (not present) | **PROPOSED**. |
+| `ChangeProductDerivation` schema (epoch-pair derivation + reconciled class-map) | `schemas/contracts/v1/landcover/` (not present) | **PROPOSED**. |
 | `ClassifierRunRef` schema (MRLC classifier model + version + parameters) | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
-| `LandCoverCrosswalk` schema (NLCD ↔ CDL ↔ LANDFIRE ↔ GAP advisory crosswalk) | [`schemas/contracts/v1/landcover/`](../../../../schemas/contracts/v1/landcover/) | **PROPOSED** per `KFM-P2-IDEA-0028`. |
-| `RasterAssetManifest` (general raster contract from Section K of `Master MapLibre Components v2.1`) | [`schemas/contracts/v1/raster/`](../../../../schemas/contracts/v1/raster/) | **PROPOSED** per `ML-K-008` / Section K. |
-| `COGArtifactManifest` | [`schemas/contracts/v1/raster/`](../../../../schemas/contracts/v1/raster/) | **PROPOSED**. |
+| `LandCoverCrosswalk` schema (NLCD ↔ CDL ↔ LANDFIRE ↔ GAP advisory crosswalk) | `schemas/contracts/v1/landcover/` (not present) | **PROPOSED** per `KFM-P2-IDEA-0028`. |
+| `RasterAssetManifest` (general raster contract from Section K of `Master MapLibre Components v2.1`) | `schemas/contracts/v1/raster/` (not present) | **PROPOSED** per `ML-K-008` / Section K. |
+| `COGArtifactManifest` | `schemas/contracts/v1/raster/` (not present) | **PROPOSED**. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 | `CorrectionNotice` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
@@ -609,7 +605,7 @@ NLCD class codes are integers; the **class-map version** binds code to label. Co
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); an NLCD-specific example sketch belongs at `_examples/stac-nlcd-landcover-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); an NLCD-specific example sketch belongs at `_examples/stac-nlcd-landcover-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal STAC Item sketch for a KFM-derived NLCD Land Cover tile (illustrative)</b></summary>

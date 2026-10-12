@@ -142,8 +142,20 @@ def active_state(
     return state
 
 
-def non_active_state(context: dict, claim_state: str = "HELD") -> dict:
+def confirmed_tracked_state() -> dict:
+    """Return the tracked projection re-pinned as a current CONFIRMED snapshot.
+
+    The tracked file is intentionally SUPERSEDED; claim-semantics tests pin a
+    CONFIRMED copy so they exercise HELD behavior rather than currentness.
+    """
     state = load(STATE_PATH)
+    state["projection_status"] = "CONFIRMED"
+    state["state_digest"] = compute_state_digest(state)
+    return state
+
+
+def non_active_state(context: dict, claim_state: str = "HELD") -> dict:
+    state = confirmed_tracked_state()
     state["base"].update(
         current_main_sha=context["base_sha"],
         observed_at=context["now"],
@@ -188,8 +200,17 @@ def test_digest_mutation_fails_closed() -> None:
     ]
 
 
-def test_held_projection_is_expected_readiness_hold() -> None:
+def test_superseded_tracked_projection_cannot_authorize_work() -> None:
     result = evaluate(load(STATE_PATH), synthetic_context())
+    assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
+        "EXPECTED_READINESS_HOLD",
+        "STATE_PROJECTION_SUPERSEDED",
+        True,
+    )
+
+
+def test_held_projection_is_expected_readiness_hold() -> None:
+    result = evaluate(confirmed_tracked_state(), synthetic_context())
     assert (result.outcome_class, result.reason_code, result.blocks_merge) == (
         "EXPECTED_READINESS_HOLD",
         "CLAIM_HELD",
@@ -198,7 +219,7 @@ def test_held_projection_is_expected_readiness_hold() -> None:
 
 
 def test_non_active_observed_snapshot_does_not_self_stale_after_head_moves() -> None:
-    state = load(STATE_PATH)
+    state = confirmed_tracked_state()
     context = synthetic_context()
     context["base_sha"] = "f" * 40
 

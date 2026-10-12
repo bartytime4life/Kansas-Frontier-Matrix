@@ -1,0 +1,612 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/temporal_view_state.schema.json",
+  "title": "TemporalViewState",
+  "description": "Closed renderer-independent temporal exploration state; no authority is created.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "state_id",
+    "spatial_scope",
+    "active_layer_ids",
+    "query",
+    "selection",
+    "display",
+    "presentation",
+    "as_of",
+    "pins",
+    "comparison",
+    "representation"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.temporal.view-state.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "state_id": {
+      "type": "string",
+      "pattern": "^kfm:temporal-view-state:sha256:[a-f0-9]{64}$"
+    },
+    "spatial_scope": {
+      "$ref": "#/$defs/spatial_scope"
+    },
+    "active_layer_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "query": {
+      "$ref": "#/$defs/query"
+    },
+    "selection": {
+      "$ref": "#/$defs/selection"
+    },
+    "display": {
+      "$ref": "#/$defs/display"
+    },
+    "presentation": {
+      "$ref": "#/$defs/presentation"
+    },
+    "as_of": {
+      "$ref": "#/$defs/as_of"
+    },
+    "pins": {
+      "$ref": "#/$defs/pins"
+    },
+    "comparison": {
+      "$ref": "#/$defs/comparison"
+    },
+    "representation": {
+      "$ref": "#/$defs/representation"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$"
+    },
+    "nullable_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{0,159}$"
+    },
+    "temporal_string": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "zoned_instant": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "spatial_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_type",
+        "aoi_ref",
+        "geometry_ref",
+        "public_safe"
+      ],
+      "properties": {
+        "scope_type": {
+          "enum": [
+            "AOI",
+            "GLOBAL",
+            "LAYER_NATIVE"
+          ]
+        },
+        "aoi_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "geometry_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "public_safe": {
+          "const": true
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disclosure_profile",
+        "query_class",
+        "time_basis",
+        "interval_semantics",
+        "point_event_semantics",
+        "master_time",
+        "controlling_layer_id"
+      ],
+      "properties": {
+        "disclosure_profile": {
+          "const": "kfm.governance.temporal-query-disclosure.v1"
+        },
+        "query_class": {
+          "enum": [
+            "CURRENT_STATE",
+            "PRIOR_STATE",
+            "SEQUENCED",
+            "NONSEQUENCED",
+            "TRACKING_LOG"
+          ]
+        },
+        "time_basis": {
+          "enum": [
+            "VALID_TIME",
+            "TRANSACTION_TIME",
+            "BITEMPORAL",
+            "RELEASE_TIME"
+          ]
+        },
+        "interval_semantics": {
+          "enum": [
+            "CLOSED",
+            "HALF_OPEN",
+            "OPEN"
+          ]
+        },
+        "point_event_semantics": {
+          "enum": [
+            "AT_INSTANT",
+            "CONTAINS_INSTANT",
+            "UNKNOWN"
+          ]
+        },
+        "master_time": {
+          "enum": [
+            "DECLARED_MASTER",
+            "INDEPENDENT_TRACKS"
+          ]
+        },
+        "controlling_layer_id": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "provenance_ref"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NONE",
+            "OFFSET_TO_UTC",
+            "CALENDAR_PRESERVED",
+            "UNSUPPORTED"
+          ]
+        },
+        "provenance_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "lower_raw",
+        "upper_raw"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "APPROXIMATE",
+            "UNCERTAIN",
+            "RANGE"
+          ]
+        },
+        "lower_raw": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "upper_raw": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "raw",
+        "normalized",
+        "precision",
+        "source_timezone",
+        "calendar",
+        "bound_status",
+        "normalization",
+        "uncertainty"
+      ],
+      "properties": {
+        "profile": {
+          "enum": [
+            "instant",
+            "date_only",
+            "month",
+            "year",
+            "uncertain_range",
+            "geologic_age"
+          ]
+        },
+        "raw": {
+          "$ref": "#/$defs/temporal_string"
+        },
+        "normalized": {
+          "$ref": "#/$defs/zoned_instant"
+        },
+        "precision": {
+          "enum": [
+            "unknown",
+            "second",
+            "minute",
+            "hour",
+            "day",
+            "month",
+            "year",
+            "range",
+            "geologic"
+          ]
+        },
+        "source_timezone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        },
+        "calendar": {
+          "enum": [
+            "GREGORIAN",
+            "JULIAN",
+            "EDTF",
+            "UNKNOWN",
+            "OTHER"
+          ]
+        },
+        "bound_status": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "OPEN"
+          ]
+        },
+        "normalization": {
+          "$ref": "#/$defs/normalization"
+        },
+        "uncertainty": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection_mode",
+        "start",
+        "end",
+        "anchor",
+        "support_ref"
+      ],
+      "properties": {
+        "selection_mode": {
+          "enum": [
+            "INSTANT",
+            "WINDOW"
+          ]
+        },
+        "start": {
+          "$ref": "#/$defs/boundary"
+        },
+        "end": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/boundary"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "anchor": {
+          "enum": [
+            "START",
+            "END",
+            "CENTER"
+          ]
+        },
+        "support_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "display": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "step_rule",
+        "direction",
+        "controlling_layer_id",
+        "missing_data_policy",
+        "aggregate_semantics",
+        "window_duration"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "SNAPSHOT",
+            "MOVING_WINDOW",
+            "ACCUMULATION",
+            "EVENT_STEP",
+            "COMPARISON"
+          ]
+        },
+        "step_rule": {
+          "enum": [
+            "NONE",
+            "REGULAR",
+            "CALENDAR",
+            "AVAILABLE_EVENT"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "FORWARD",
+            "BACKWARD"
+          ]
+        },
+        "controlling_layer_id": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "missing_data_policy": {
+          "enum": [
+            "PAUSE",
+            "WITHHOLD_LAYER",
+            "PRESENTATION_SKIP"
+          ]
+        },
+        "aggregate_semantics": {
+          "enum": [
+            "NONE",
+            "EVENT_COUNT",
+            "UNIQUE_ENTITY_COUNT",
+            "INTEGRATED_QUANTITY",
+            "CURRENT_STATE"
+          ]
+        },
+        "window_duration": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "speed",
+        "frame_rate",
+        "duration_ms",
+        "loop",
+        "reduced_motion",
+        "camera_easing"
+      ],
+      "properties": {
+        "speed": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 16
+        },
+        "frame_rate": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "loop": {
+          "type": "boolean"
+        },
+        "reduced_motion": {
+          "type": "boolean"
+        },
+        "camera_easing": {
+          "enum": [
+            "NONE",
+            "LINEAR",
+            "DECORATIVE"
+          ]
+        }
+      }
+    },
+    "as_of": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "knowledge_cutoff",
+        "release_ref",
+        "correction_policy"
+      ],
+      "properties": {
+        "knowledge_cutoff": {
+          "$ref": "#/$defs/zoned_instant"
+        },
+        "release_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "correction_policy": {
+          "enum": [
+            "AS_OF_CUTOFF",
+            "CURRENT_POLICY"
+          ]
+        }
+      }
+    },
+    "pins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_version_refs",
+        "release_refs",
+        "pin_status"
+      ],
+      "properties": {
+        "dataset_version_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "uniqueItems": true
+        },
+        "release_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "uniqueItems": true
+        },
+        "pin_status": {
+          "enum": [
+            "PINNED",
+            "UNPINNED"
+          ]
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "left",
+        "right",
+        "camera_lock",
+        "compatibility"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "left": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/selection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "right": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/selection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_lock": {
+          "type": "boolean"
+        },
+        "compatibility": {
+          "enum": [
+            "UNASSESSED",
+            "COMPATIBLE",
+            "QUALIFIED",
+            "INCOMPATIBLE"
+          ]
+        }
+      }
+    },
+    "representation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "color_scale",
+        "units",
+        "geometry",
+        "accessible_alternative"
+      ],
+      "properties": {
+        "color_scale": {
+          "enum": [
+            "STABLE",
+            "PER_FRAME",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "units": {
+          "enum": [
+            "SOURCE_UNITS",
+            "CONVERTED_WITH_PROVENANCE",
+            "INCOMPATIBLE"
+          ]
+        },
+        "geometry": {
+          "enum": [
+            "NO_MORPHING",
+            "VERSIONED_CROSSWALK",
+            "STATIC_CONTEXT"
+          ]
+        },
+        "accessible_alternative": {
+          "enum": [
+            "TABLE",
+            "TEXT",
+            "NONE"
+          ]
+        }
+      }
+    }
+  }
+}

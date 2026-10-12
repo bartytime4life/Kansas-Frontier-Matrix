@@ -1,0 +1,76 @@
+{
+  "receipt_id": "genrec-automation-proposal-type-safety-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/test_validate_automation_pr_proposal.py",
+    "tools/validators/governance/validate_automation_pr_proposal.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/test_validate_automation_pr_proposal.py": "sha256:d577e75deec37ecb7f965bf6f7ad10477f7f92d0363614fad0aa2087471db30f",
+    "tools/validators/governance/validate_automation_pr_proposal.py": "sha256:2bb8ae49b226c561731961ca568b6c1e4ac304292188e82b39c2dd54fec37623"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/5bbfae05970acd4357a08135ff340284585039f4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/contracts/governance/automation_pr_proposal.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/.github/workflows/automation-pr-proposal-guard.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3663",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/test_validate_automation_pr_proposal.py": "PROPOSED",
+    "tools/validators/governance/validate_automation_pr_proposal.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "structural-and-live-binding-local",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14: 17 unittest tests and 26 subtests, zero failures/errors/skips. Malformed policy/path values return finite denial and stop before Git binding."
+    },
+    {
+      "gate": "existing-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "One PASS, one HOLD, two expected-negative ERROR fixtures retain exact polarity and exit codes. HOLD and expected denial are not accepted write operations."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-proposal-contract",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/contracts/governance/automation_pr_proposal.md"
+    },
+    {
+      "id": "existing-read-only-ci-consumer",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/.github/workflows/automation-pr-proposal-guard.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T15:36:34Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded malformed JSON type handling only. Existing valid profile, draft-only flags, closed key set, fixtures, workflow permissions, dispatch envelope and scheduler state are unchanged. Hosted validation, independent accountable review, full repository validation and live dispatch are NOT_RUN here. No policy acceptance, source admission, lifecycle, release, deployment, publication or settings action. This receipt is authorship provenance, not acceptance or containment evidence."
+}

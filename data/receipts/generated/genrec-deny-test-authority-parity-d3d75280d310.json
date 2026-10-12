@@ -1,0 +1,192 @@
+{
+  "receipt_id": "genrec-deny-test-authority-parity-d3d75280d310",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "docs/security/DENY_TESTS.md",
+    "tests/api/README.md",
+    "tests/api/deny/README.md",
+    "tests/api/deny/test_no_model_runtime_exposure.py",
+    "tests/api/deny/test_public_boundary.py",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md",
+    "tests/domains/fauna/focus/deny_sensitive/README.md",
+    "tests/invalid/README.md",
+    "tests/release/README.md"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:d3d75280d310c0301132320e7c1e90d5b95b8507f1c6da0ff87f38f114d79ca4",
+    "docs/security/DENY_TESTS.md": "sha256:a166cc48bf967f4f1e6ef77b06bd36a2a593fb9927c15562439f372d3bb1244a",
+    "tests/api/README.md": "sha256:327ac8fcda58979306cce883691f9a21ea11e871986a0269f68a539020922cfe",
+    "tests/api/deny/README.md": "sha256:af2aa438b6d649e4a10710835ae9382d8e187df622a386232d1e7c1ea2d4b0b9",
+    "tests/api/deny/test_no_model_runtime_exposure.py": "sha256:b8119045f05fde2ef5e896ddc8109b7466075f35d564c184281f6cdc20f069e6",
+    "tests/api/deny/test_public_boundary.py": "sha256:afc26725954e0020eb8871fde7266ce30be60cc8106b60b3e5b297f494b581e6",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "sha256:3f550854db53b7c2d6e68221911ef55ec0a4f5f2a30224213155207072e52deb",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "sha256:f327127738e0b383949cfac524fb2c961b5e55214533e34099230788a4ab1dc2",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "sha256:ded951da7a3ad90780d391b45584b3587d55be46fce373e40937b94c2d02355b",
+    "tests/domains/fauna/focus/deny_sensitive/README.md": "sha256:2ff13c0f7d1cd81a50c547486d99ca7ca8859866053a1b0b5d8a19276da88d25",
+    "tests/invalid/README.md": "sha256:4930af0e375bcd4be1617ba9775f3b0898848132a441518e1a9183c85b53a623",
+    "tests/release/README.md": "sha256:3e6b733a2dbb955961d5b57aed42e04ca939ee4570041f46e7a3cd95757316fa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:91f2eab36200c04beb3e64dc0e9e64d4708162389c516451a113c81babf64783",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "isolated uv environment",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:14541def4dd4db1bc8861b4533099036ccfb8579ba16ee617bd816eecf831d8b",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:6e50296fcc9cad42a49eb08e91f8dadb2d4cff4f4414307e2649ec387700b46f",
+      "sha256:805f9667fe5850759d09ce90bc10315994dc70a5f43c06802ecf453f6d59b2e0",
+      "sha256:91f2eab36200c04beb3e64dc0e9e64d4708162389c516451a113c81babf64783",
+      "sha256:afc26725954e0020eb8871fde7266ce30be60cc8106b60b3e5b297f494b581e6",
+      "sha256:b8119045f05fde2ef5e896ddc8109b7466075f35d564c184281f6cdc20f069e6"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "Makefile@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      ".github/workflows/deny-test.yml@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "apps/governed-api/tests/test_boundary_guards.py@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "docs/doctrine/directory-rules.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "CONFIRMED",
+    "docs/security/DENY_TESTS.md": "CONFIRMED",
+    "tests/api/README.md": "CONFIRMED",
+    "tests/api/deny/README.md": "CONFIRMED",
+    "tests/api/deny/test_no_model_runtime_exposure.py": "CONFIRMED",
+    "tests/api/deny/test_public_boundary.py": "CONFIRMED",
+    "tests/domains/atmosphere/policy-deny/aqi-vs-concentration/README.md": "CONFIRMED",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "CONFIRMED",
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "CONFIRMED",
+    "tests/domains/fauna/focus/deny_sensitive/README.md": "CONFIRMED",
+    "tests/invalid/README.md": "CONFIRMED",
+    "tests/release/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-open-work-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "vacuous-placeholder-removal-and-inbound-reference-scan",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "make-help-dry-run-and-deny-test-five-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-byte-preservation-and-five-test-selector-parity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "changed-document-link-check-nine-documents",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-structure-and-final-newline-check-nine-documents",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "boundary-guards-sixteen-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "aggregate-validator-and-schema-contract-suite-139-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "full-python-suite-453-tests-plus-74-subtests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "deterministic-no-network-posture",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this process-memory receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-cb8a46fff898",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "DENY-WORKFLOW-805f9667fe58",
+      "validated": true,
+      "evidence_ref": ".github/workflows/deny-test.yml@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "BOUNDARY-TESTS-6e50296fcc9c",
+      "validated": true,
+      "evidence_ref": "apps/governed-api/tests/test_boundary_guards.py@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@cb8a46fff89861b8f0ca57c1c29bacf1fec885a5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T06:49:45Z",
+  "emitter": "openai/codex-gpt-5-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One process-memory receipt for GAP-PUBLIC-DENY-TEST-PARITY-001. The two deleted-path hashes are SHA-256 digests of their pinned base preimages because those paths have no head bytes; every other artifact hash covers final branch-ready bytes. The change removes false-green assert-true collection, makes the local deny-test target execute the existing app-owned five-test module, preserves workflow bytes and check identities, and reconciles direct current-state documentation without claiming full policy, domain, release, deployment, publication, or production proof. Dependency installation occurred only in an isolated temporary uv environment and did not modify manifests or lockfiles. Rollback is to close the unmerged draft pull request or transparently revert the bounded commit through a reviewed branch; restoring tautological tests would not restore coverage."
+}

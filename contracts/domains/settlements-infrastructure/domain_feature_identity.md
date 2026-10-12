@@ -71,7 +71,7 @@ notes:
 > **Status:** `draft` / semantic contract  
 > **Contract path:** `contracts/domains/settlements-infrastructure/domain_feature_identity.md`  
 > **Schema path:** `schemas/contracts/v1/domains/settlements-infrastructure/domain_feature_identity.schema.json`  
-> **Truth posture:** target path, prior scaffold, paired schema metadata, current contract-lane README, and domain object-family doctrine are **CONFIRMED** from current repo evidence. Field-level schema enforcement, validator implementation, fixtures, policy behavior, source registry behavior, release workflow, public API behavior, graph behavior, map rendering, and runtime behavior remain **NEEDS VERIFICATION**.
+> **Truth posture:** target path, prior scaffold, paired schema metadata, current contract-lane README, domain object-family doctrine, and a bounded candidate validator with synthetic identity fixtures are **CONFIRMED** from current repo evidence. Field-level schema enforcement, broader validator coverage, policy behavior, source registry behavior, release workflow, public API behavior, graph behavior, map rendering, and runtime behavior remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
 > This contract defines identity meaning only. It does **not** authorize public release, prove a settlement or asset claim, expose sensitive infrastructure details, decide policy, validate JSON, replace object-family contracts, emit EvidenceBundles, or create a public map/API/AI surface.
@@ -296,7 +296,7 @@ Contracts describe meaning. They do not move data, enforce schema shape, execute
 Before this contract is treated as mature, maintainers should verify:
 
 - [ ] the schema becomes restrictive enough to enforce identity fields beyond `id`;
-- [ ] the validator at `tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py` exists and matches schema/contract intent;
+- [x] a bounded candidate validator at `tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py` rejects object-family collapse in the documented fixtures; complete schema/contract and policy alignment still needs review;
 - [ ] fixtures cover all sixteen domain object families;
 - [ ] fixtures cover legal/census/historic identity splits for settlement-side families;
 - [ ] fixtures cover infrastructure asset, network, facility, operator, condition, and dependency sensitivity splits;

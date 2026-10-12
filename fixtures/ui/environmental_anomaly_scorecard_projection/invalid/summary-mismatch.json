@@ -1,0 +1,73 @@
+{
+  "profile": "kfm.explorer.environmental-anomaly-scorecard.fixture.v1",
+  "scorecard_id": "kfm:environmental-anomaly-scorecard:synthetic:ellsworth-ks:summary-mismatch",
+  "outcome": "ANSWER",
+  "reason_code": "SCORECARD_AVAILABLE",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": {
+    "scope_ref": "kfm://scope/county/ks/053",
+    "state_code": "KS",
+    "geometry_ref": "kfm://geometry/county/ks/053/generalized"
+  },
+  "assessed_at": "2026-08-10T18:00:00Z",
+  "lanes": [
+    {
+      "lane": "AIR",
+      "freshness_state": "CURRENT",
+      "candidate_state": "NONE",
+      "reason_code": "NO_ANOMALY_CANDIDATE",
+      "source_health_assessment_ref": "kfm:source-health:air:synthetic:2026-08-10",
+      "evidence_ref": "kfm://evidence/ref/air/synthetic/current",
+      "candidate_ref": null
+    },
+    {
+      "lane": "BIODIVERSITY",
+      "freshness_state": "CURRENT",
+      "candidate_state": "NONE",
+      "reason_code": "NO_ANOMALY_CANDIDATE",
+      "source_health_assessment_ref": "kfm:source-health:biodiversity:synthetic:2026-08-10",
+      "evidence_ref": "kfm://evidence/ref/biodiversity/synthetic/current",
+      "candidate_ref": null
+    },
+    {
+      "lane": "HYDROLOGY",
+      "freshness_state": "CURRENT",
+      "candidate_state": "NONE",
+      "reason_code": "NO_ANOMALY_CANDIDATE",
+      "source_health_assessment_ref": "kfm:source-health:hydrology:synthetic:2026-08-10",
+      "evidence_ref": "kfm://evidence/ref/hydrology/synthetic/current",
+      "candidate_ref": null
+    },
+    {
+      "lane": "SOILS",
+      "freshness_state": "CURRENT",
+      "candidate_state": "NONE",
+      "reason_code": "NO_ANOMALY_CANDIDATE",
+      "source_health_assessment_ref": "kfm:source-health:soils:synthetic:2026-08-10",
+      "evidence_ref": "kfm://evidence/ref/soils/synthetic/current",
+      "candidate_ref": null
+    },
+    {
+      "lane": "VEGETATION",
+      "freshness_state": "CURRENT",
+      "candidate_state": "PROPOSED",
+      "reason_code": "ANOMALY_CANDIDATE_PROPOSED",
+      "source_health_assessment_ref": "kfm:source-health:vegetation:synthetic:2026-08-10",
+      "evidence_ref": "kfm://evidence/ref/vegetation/synthetic/current",
+      "candidate_ref": "kfm:anomaly-candidate:vegetation:synthetic:053:2026-08-10"
+    }
+  ],
+  "summary": {
+    "lane_count": 5,
+    "current_count": 5,
+    "candidate_count": 0,
+    "hold_count": 0,
+    "error_count": 0,
+    "overall_outcome": "COMPLETE",
+    "separate_interpretation_gate_required": true
+  },
+  "interpretation_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

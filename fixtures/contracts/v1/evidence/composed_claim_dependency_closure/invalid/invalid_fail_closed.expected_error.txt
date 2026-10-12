@@ -1,0 +1,1 @@
+{"contains": "True was expected", "field": "/governance/fail_closed", "keyword": "const", "kind": "schema"}

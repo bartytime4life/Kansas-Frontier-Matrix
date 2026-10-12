@@ -1,0 +1,12 @@
+case_id: failed_lane
+lane_states:
+  control-plane-registry-packet: FAIL
+  object-family-register: PASS
+  path-alias-register: PASS
+  public-boundary-guards: PASS
+  repository-topology: HOLD_INHERITED
+  root-registry: PASS
+coverage_complete: true
+baseline_growth: false
+introduced_topology_findings: 0
+topology_current_failures: 9

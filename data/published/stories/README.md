@@ -233,7 +233,7 @@ RAW / WORK / QUARANTINE / direct source record / direct model output / unrelease
 - [`../reports/README.md`](../reports/README.md)
 - [`../../README.md`](../../README.md)
 - [`../../../docs/architecture/story/README.md`](../../../docs/architecture/story/README.md)
-- [`../../../docs/architecture/maplibre-3d.md`](../../../docs/architecture/maplibre-3d.md)
+- `../../../docs/architecture/maplibre-3d.md` (not present)
 - [`../../../docs/architecture/ui/README.md`](../../../docs/architecture/ui/README.md)
 - [`../../../docs/architecture/governed-ai/README.md`](../../../docs/architecture/governed-ai/README.md)
 - [`../../../docs/doctrine/derived-stays-derived.md`](../../../docs/doctrine/derived-stays-derived.md)

@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-validator-suite-native-receipt-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-suite.yml",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-suite.yml": "sha256:9e957a82af19aaec63da994413b4d7f0c45ab49e0c5fa37d587e1af73d62fe3c",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:2d0c28c33a336226611f21347a1e6dcf618377861507f682ffc3e7979090a361"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:f01847dfc94126426b4849004762a12557de2332ae0ca1b4602210b341f0281b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@e161467e8d2ea2da7bcfa48db3dce96946f412ba",
+      "d2e1cfd782ec190ee7b125f531845655ec28c1d1: prior guardrail authoring and immutable receipt replay",
+      "tools/validators/validate_generated_receipt.py@52cbca1fe46c583894196855ba52ddc331f78e4f",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e161467e8d2ea2da7bcfa48db3dce96946f412ba",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34658171093",
+      "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-suite.yml": "CONFIRMED",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-input-identity",
+      "outcome": "PASS",
+      "reason": "Complete local workflow and test originals match retrieved Git blob SHAs a5c963314366f088159565d2c44c6ce88abf053f and bff81ac0dee9299dc6e5e4c26b0d49da0a30e5f6. Receipt schema matches fba21ed27ebccf1362fe397fe0c3ebd85e072685. This is a sparse file projection, not a full checkout."
+    },
+    {
+      "gate": "focused-workflow-tests",
+      "outcome": "PASS",
+      "reason": "Python 3.13.5 / PyYAML 6.0.3: all ten focused test methods passed, including the seven retained guardrail tests. Receipt dispatch tests use an explicit argv-recording python substitute, not the native validator."
+    },
+    {
+      "gate": "negative-controls",
+      "outcome": "PASS",
+      "reason": "Expanded tests detect the original missing-gate workflow (five failed assertions/subtests, no errors) and all fourteen weakened variants. Six receipt shell cases preserve exit 0, 1 and 2; twelve existing guardrail shell cases retain their make substitute."
+    },
+    {
+      "gate": "receipt-shape-hashes-and-hygiene",
+      "outcome": "PASS",
+      "reason": "Exact Draft 2020-12 schema with FormatChecker, artifact-map parity and complete SHA-256 digests pass. Python 3.11 grammar and Bash syntax pass; these do not prove native Python 3.11 execution."
+    },
+    {
+      "gate": "prior-head-hosted-observation",
+      "outcome": "PASS",
+      "reason": "Read decoded run 34658171093 at prior task head d2e1cfd, PR merge checkout 562e2a10051098d41084dd9ee29e3529e1cdf74e: seven guardrail tests passed under Python 3.11.16, downstream stages executed despite topology failure. Not validation of these newly changed bytes or this receipt."
+    },
+    {
+      "gate": "new-head-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "Pending at emission. Exact repair-branch push enrolls the existing read-only workflow without a PR lifecycle transition. Native historical replay and current receipt checks must be read back at the new head."
+    },
+    {
+      "gate": "full-repository-conformance-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Local Git transport failed DNS resolution. No full scan or independent review performed. Prior hosted topology tests failed; no baseline was changed, violation waived or all-green claim made."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-responsibilities",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e161467e8d2ea2da7bcfa48db3dce96946f412ba"
+    },
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@e161467e8d2ea2da7bcfa48db3dce96946f412ba"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T23:54:18Z",
+  "emitter": "openai/chatgpt-repository-authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "One bounded continuation on the preserved guardrail branch. Existing workflow and test roots remain .github/ and tests/; this successor receipt follows data/receipts/generated/. Original receipt stays byte-unchanged and is replayed at its exact ancestor; this receipt binds current candidate bytes without a historical override. Two receipt checks are independent cancellation-aware stages and expose their actual outcomes. Only the exact repair branch is added to push triggers; action pins, permissions, checkout credentials, job names, dependency versions, validators and topology baseline remain unchanged. Workflow comments/summary and test documentation cover behavior; no unrelated README is rewritten. Before integration retain the branch unmerged; after authorized integration use a reviewed paired workflow/test correction while preserving receipt history. No new PR, ready, review approval, merge, settings, source, release, deployment, publication or Site action is part of this writer continuation."
+}

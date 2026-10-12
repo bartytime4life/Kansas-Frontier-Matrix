@@ -1,32 +1,349 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/data/dataset_version.schema.json",
-  "title": "dataset_version",
+  "title": "DatasetVersion",
+  "description": "Fixture-first KFM descriptor for one governed dataset representation version. The object binds deterministic identity, source role, lifecycle, temporal context, integrity, rights/sensitivity posture, provenance references, and correction/release lineage without itself granting evidence, policy, release, publication, or public-use authority.",
   "type": "object",
-  "description": "KFM v1 contract schema stub for dataset_version. Greenfield placeholder; fields to be defined per the contract document and ADR.",
-  "x-kfm": {
-    "contract_doc": "contracts/data/dataset_version.md",
-    "fixtures_root": "fixtures/data/dataset_version/",
-    "validator": "tools/validators/data/validate_dataset_version.py",
-    "policy": "policy/data/",
-    "status": "PROPOSED"
-  },
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "id",
+    "identity_profile",
+    "dataset_id",
+    "version_label",
+    "representation_kind",
+    "source_ref",
+    "source_role_ref",
+    "content_digest",
+    "spec_hash",
+    "temporal",
+    "lifecycle_stage",
+    "rights",
+    "sensitivity",
+    "provenance",
+    "lineage",
+    "release_ref",
+    "governance"
+  ],
   "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
+    "object_type": {
+      "const": "DatasetVersion"
+    },
+    "schema_version": {
+      "const": "1.0.0"
     },
     "id": {
       "type": "string",
-      "description": "Canonical identifier."
+      "pattern": "^kfm:dataset-version:sha256:[a-f0-9]{64}$"
     },
-    "version": {
+    "identity_profile": {
+      "const": "kfm-dataset-version-id-v1"
+    },
+    "dataset_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "version_label": {
+      "$ref": "#/$defs/ref"
+    },
+    "representation_kind": {
       "type": "string",
-      "description": "Contract or object version."
+      "enum": [
+        "provider_release",
+        "retrieval_snapshot",
+        "processed_derivative",
+        "corrected_version",
+        "published_version"
+      ]
+    },
+    "source_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "source_role_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "content_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "temporal": {
+      "$ref": "#/$defs/temporal"
+    },
+    "lifecycle_stage": {
+      "type": "string",
+      "enum": [
+        "RAW",
+        "WORK",
+        "QUARANTINE",
+        "PROCESSED",
+        "CATALOG",
+        "TRIPLET",
+        "PUBLISHED"
+      ]
+    },
+    "rights": {
+      "$ref": "#/$defs/rights"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/sensitivity"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "release_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
     }
   },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "^\\S(?:.*\\S)?$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_window": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_published_at",
+        "retrieved_at",
+        "ingested_at",
+        "effective_window"
+      ],
+      "properties": {
+        "source_published_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "effective_window": {
+          "$ref": "#/$defs/nullable_window"
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "decision_ref",
+        "obligations"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "REVIEW_REQUIRED",
+            "ALLOWED",
+            "RESTRICTED",
+            "DENIED"
+          ]
+        },
+        "decision_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "obligations": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "decision_ref",
+        "transform_refs"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "REVIEW_REQUIRED",
+            "PUBLIC_SAFE",
+            "RESTRICTED",
+            "DENIED"
+          ]
+        },
+        "decision_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "transform_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_refs",
+        "validation_refs",
+        "run_receipt_refs",
+        "input_version_refs"
+      ],
+      "properties": {
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "validation_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "run_receipt_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "input_version_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_version_ref",
+        "supersedes",
+        "superseded_by",
+        "correction_refs",
+        "rollback_target"
+      ],
+      "properties": {
+        "previous_version_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "supersedes": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "rollback_target": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "evidence_closure_claimed",
+        "policy_decision_created",
+        "release_authority_created",
+        "publication_authority_created",
+        "public_use_authority_created"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "evidence_closure_claimed": {
+          "const": false
+        },
+        "policy_decision_created": {
+          "const": false
+        },
+        "release_authority_created": {
+          "const": false
+        },
+        "publication_authority_created": {
+          "const": false
+        },
+        "public_use_authority_created": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/data/dataset_version.md",
+    "fixtures_root": "fixtures/contracts/v1/data/dataset_version/",
+    "validator": "tools/validators/data/validate_dataset_version.py",
+    "tests": "tests/validators/data/test_validate_dataset_version.py",
+    "authority": "shape_identity_lifecycle_and_lineage_only",
+    "non_effects": [
+      "does_not_activate_or_fetch_sources",
+      "does_not_resolve_evidence_or_rights",
+      "does_not_create_policy_or_review_decisions",
+      "does_not_authorize_promotion_release_publication_or_public_use"
+    ]
+  }
 }

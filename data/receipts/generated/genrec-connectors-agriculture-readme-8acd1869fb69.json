@@ -1,0 +1,178 @@
+{
+  "receipt_id": "genrec-connectors-agriculture-readme-8acd1869fb692c0f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/agriculture/README.md": "sha256:8acd1869fb692c0ff53eb5cdf63994f46260412d63481f0cde237fc1e4ff155b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "unreported"
+  },
+  "prompt_or_contract": "sha256:08e5dc090dfc24d47a22172ef0aa4fb7bb100b1e0cfd7f2d67c0bdfb3781bfcc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/connectors/agriculture/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/connectors/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/domains/agriculture/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/sources/ADMISSION_PROCESS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/raw/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/registry/sources/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/trees/688b192bd39bfcf9c16c2d346c9258b5d2b71e1a?recursive=1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5549171639"
+    ],
+    "attached_docs": [
+      "Google Drive: KFM Agriculture Domain Implementation Dossier, Revised QA Scan Edition, 2026-04-21; document 1TkFtqaDDtR9CiiEDdqGsyLgc2dDLX4qr; read-only design lineage",
+      "Google Drive: Directory Rules, document 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs; read-only lineage, subordinate to accepted repository doctrine",
+      "Notion: KFM Hourly Agriculture Domain Builder v1.0, page 3caa9202-1bf6-814b-b884-ed13a2923c19; historical coordination, not current scheduler or implementation proof"
+    ]
+  },
+  "truth_labels": {
+    "connectors/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-copy-integrity",
+      "outcome": "PASS",
+      "reason": "Copied original README reproduces Git blob 098c86258bd316753b570d62638fc0e17ecbec45 and 23724 bytes. Copied schema reproduces fba21ed27ebccf1362fe397fe0c3ebd85e072685 and 7700 bytes."
+    },
+    {
+      "gate": "pinned-subtree-and-placement-review",
+      "outcome": "PASS",
+      "reason": "Complete non-truncated agriculture Git subtree contains only README.md. Accepted ADR-0029 and Directory Rules, RAW and source-registry parents were read at the exact base. Source-first identity and held physical placement are preserved; no migration is executed."
+    },
+    {
+      "gate": "session-only-markdown-qa",
+      "outcome": "PASS",
+      "reason": "Explicit overlay check: one H1; all 17 existing H2 headings retained; 22 unique anchors; 48 Markdown links; 8 rectangular tables; 5 fences. Relative Markdown file/root links resolve against pinned reads and tree metadata. Source-family directory references retained only in metadata were not all independently enumerated."
+    },
+    {
+      "gate": "session-only-negative-document-qa",
+      "outcome": "PASS",
+      "reason": "Whitespace, missing anchor, unverified relative link, duplicate metadata key, missing lifecycle, and unbounded inventory claim mutations were all rejected."
+    },
+    {
+      "gate": "generated-receipt-schema-and-binding",
+      "outcome": "PASS",
+      "reason": "Session-only Draft202012Validator with FormatChecker against exact copied source schema, plus artifact-map parity, full SHA-256 binding and pending-review/no-override checks; malformed hash, extra property, artifact drift and map mismatch negatives rejected. This is not repository-native validator execution or authenticated review."
+    },
+    {
+      "gate": "repository-native-and-runtime",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN: repository-native documentation, receipt, topology and aggregate validators; connector/domain tests; browser/runtime, endpoint, deployment and release tests. No full checkout: git ls-remote failed with GitHub DNS resolution error. Validation used an explicit source overlay, not a complete repository."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No hosted result was observed at authorship. No inherited failure is declared passing."
+    },
+    {
+      "gate": "draft-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Writer-only branch handoff under the current CONTRIBUTING/#4024 containment. An eligible independent one-shot creator/observer boundary was not proved; this receipt does not authorize creating or readying a PR."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/connectors/agriculture/README.md"
+    },
+    {
+      "id": "2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/connectors/README.md"
+    },
+    {
+      "id": "3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/domains/agriculture/README.md"
+    },
+    {
+      "id": "7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/docs/sources/ADMISSION_PROCESS.md"
+    },
+    {
+      "id": "8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/raw/README.md"
+    },
+    {
+      "id": "9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/registry/sources/README.md"
+    },
+    {
+      "id": "10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/CONTRIBUTING.md"
+    },
+    {
+      "id": "11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/data/receipts/generated/README.md"
+    },
+    {
+      "id": "13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1d4efc64fe23f47a15dcb18da945a553304bbf6/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T04:40:28Z",
+  "emitter": "kfm-agriculture-connector-readme-writer",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Authorship provenance only; not a connector-run receipt, EvidenceBundle, source admission, policy decision, proof, approval or release. Visible user request is hashed; no hidden instructions, reasoning, credentials or protected payloads are included. Same-path README plus this generated receipt only. Preserve doc_id/H1/anchors and original receipt history. Unknown source rights/activation, exact physical capture placement, source-family alias/writer choices, accountable stewardship and live enforcement remain separate gates. Drive and Notion were read-only. No direct-main write, force push, PR creation/ready/approval/merge, repository-settings change, source retrieval/activation, pipeline/publication change, release, deployment or promotion is performed by this writer. Final branch identity, overlap and external CI observations are recorded in the separate handoff, not retroactively claimed here."
+}

@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/data/baseline_cohort_assessment.schema.json",
+  "title": "BaselineCohortAssessment",
+  "description": "Fixture-first composite for a versioned baseline manifest, cohort eligibility, discontinuities, validation, and rebuild provenance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "subject_ref",
+    "baseline_manifest",
+    "cohort_eligibility_report",
+    "discontinuity_records",
+    "baseline_validation_report",
+    "baseline_rebuild_receipt",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "BaselineCohortAssessment"},
+    "schema_version": {"const": "0.1.0"},
+    "profile": {"const": "kfm.data.baseline-cohort.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:baseline-cohort:[a-f0-9]{64}$"},
+    "subject_ref": {"$ref": "#/$defs/ref"},
+    "baseline_manifest": {"$ref": "#/$defs/baseline_manifest"},
+    "cohort_eligibility_report": {"$ref": "#/$defs/cohort_eligibility_report"},
+    "discontinuity_records": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {"$ref": "#/$defs/discontinuity_record"}
+    },
+    "baseline_validation_report": {"$ref": "#/$defs/baseline_validation_report"},
+    "baseline_rebuild_receipt": {"$ref": "#/$defs/baseline_rebuild_receipt"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "baseline_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_ref",
+        "baseline_version",
+        "previous_baseline_ref",
+        "input_artifact_refs",
+        "input_digest",
+        "source_refs",
+        "source_role_profile_ref",
+        "lookback_started_at",
+        "lookback_ended_at",
+        "seasonal_window_ref",
+        "eligibility_profile_ref",
+        "parameter_profile_ref",
+        "uncertainty_profile_ref",
+        "recalculation_cadence",
+        "method_id",
+        "method_version",
+        "tool_versions"
+      ],
+      "properties": {
+        "baseline_ref": {"$ref": "#/$defs/ref"},
+        "baseline_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "previous_baseline_ref": {"$ref": "#/$defs/nullable_ref"},
+        "input_artifact_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "input_digest": {"$ref": "#/$defs/sha256"},
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "source_role_profile_ref": {"$ref": "#/$defs/ref"},
+        "lookback_started_at": {"type": "string", "format": "date-time"},
+        "lookback_ended_at": {"type": "string", "format": "date-time"},
+        "seasonal_window_ref": {"$ref": "#/$defs/ref"},
+        "eligibility_profile_ref": {"$ref": "#/$defs/ref"},
+        "parameter_profile_ref": {"$ref": "#/$defs/ref"},
+        "uncertainty_profile_ref": {"$ref": "#/$defs/ref"},
+        "recalculation_cadence": {"type": "string", "pattern": "^P[0-9]+[DWMY]$"},
+        "method_id": {"$ref": "#/$defs/code"},
+        "method_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "tool_versions": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 20,
+          "propertyNames": {"pattern": "^[a-z][a-z0-9_.-]{1,63}$"},
+          "additionalProperties": {"type": "string", "minLength": 1, "maxLength": 80}
+        }
+      }
+    },
+    "cohort_eligibility_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_count",
+        "eligible_count",
+        "excluded_count",
+        "missing_count",
+        "missingness_state",
+        "exclusion_reason_counts",
+        "known_blind_spots"
+      ],
+      "properties": {
+        "candidate_count": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "eligible_count": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "excluded_count": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "missing_count": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "missingness_state": {"enum": ["COMPLETE", "PARTIAL", "INSUFFICIENT"]},
+        "exclusion_reason_counts": {
+          "type": "object",
+          "maxProperties": 30,
+          "propertyNames": {"pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+          "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 1000000000}
+        },
+        "known_blind_spots": {
+          "type": "array",
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/code"}
+        }
+      }
+    },
+    "discontinuity_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discontinuity_ref",
+        "kind",
+        "effective_at",
+        "resolution",
+        "evidence_ref",
+        "predecessor_segment_ref",
+        "successor_segment_ref"
+      ],
+      "properties": {
+        "discontinuity_ref": {"$ref": "#/$defs/ref"},
+        "kind": {"enum": ["METHOD_CHANGE", "SENSOR_RELOCATION", "INSTRUMENT_CHANGE", "SOURCE_CHANGE"]},
+        "effective_at": {"type": "string", "format": "date-time"},
+        "resolution": {"enum": ["SEGMENT_BASELINE", "EXCLUDE_AFTER", "INCLUDE_WITH_QUALIFICATION", "UNRESOLVED"]},
+        "evidence_ref": {"$ref": "#/$defs/ref"},
+        "predecessor_segment_ref": {"$ref": "#/$defs/nullable_ref"},
+        "successor_segment_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "baseline_validation_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline_state", "decision", "reason_codes", "obligations", "evaluated_at"],
+      "properties": {
+        "baseline_state": {"enum": ["REPLAYABLE", "QUALIFIED", "INSUFFICIENT", "DISCONTINUITY_UNRESOLVED"]},
+        "decision": {"enum": ["REVIEW_CANDIDATE", "HOLD"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/code"}
+        },
+        "obligations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/code"}
+        },
+        "evaluated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "baseline_rebuild_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rebuild_ref",
+        "generated_at",
+        "output_digest",
+        "toolchain_digest",
+        "supersedes_baseline_ref",
+        "correction_ref"
+      ],
+      "properties": {
+        "rebuild_ref": {"$ref": "#/$defs/ref"},
+        "generated_at": {"type": "string", "format": "date-time"},
+        "output_digest": {"$ref": "#/$defs/sha256"},
+        "toolchain_digest": {"$ref": "#/$defs/sha256"},
+        "supersedes_baseline_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "no_network", "lifecycle_write", "truth_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "no_network": {"const": true},
+        "lifecycle_write": {"const": false},
+        "truth_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

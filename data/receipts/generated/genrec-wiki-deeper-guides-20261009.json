@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-wiki-deeper-guides-20261009",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "CONTRIBUTING.md",
+    "docs/installation.md",
+    "docs/wiki/Architecture.md",
+    "docs/wiki/Builder-Profile.md",
+    "docs/wiki/Contributing.md",
+    "docs/wiki/Data-Lifecycle.md",
+    "docs/wiki/Development-and-Validation.md",
+    "docs/wiki/Domains.md",
+    "docs/wiki/Engineering-Case-Studies.md",
+    "docs/wiki/Getting-Started.md",
+    "docs/wiki/Glossary.md",
+    "docs/wiki/Governance-and-Evidence.md",
+    "docs/wiki/Map-UI-and-AI.md",
+    "docs/wiki/Project-Status.md",
+    "docs/wiki/README.md",
+    "docs/wiki/Repository-Map.md",
+    "docs/wiki/Security-and-Sensitivity.md",
+    "docs/wiki/Wiki-Maintenance.md",
+    "docs/wiki/_Sidebar.md"
+  ],
+  "artifact_hashes": {
+    "CONTRIBUTING.md": "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+    "docs/installation.md": "sha256:173d7afa885ca0fddb865b4d983ccd218f564e7617ce05b4fda9bf3399b08429",
+    "docs/wiki/Architecture.md": "sha256:9f923bc2d5afeca6d5a354cd60df4a5a9e86fa92d821796b16d14e939c9f095f",
+    "docs/wiki/Builder-Profile.md": "sha256:bed2c9b8d9ae8689821b835ef2ed8b7beff92b63062ae7ff74cbe236beccbbf5",
+    "docs/wiki/Contributing.md": "sha256:31097939162f0b53c53f84fb5ea890e9a2a2bb8a2e001abd89561fe19500332e",
+    "docs/wiki/Data-Lifecycle.md": "sha256:608b95de85ce2bac78de567395b8a59d1bd209159c39f7423da5abf1be8a24e5",
+    "docs/wiki/Development-and-Validation.md": "sha256:efdfd9bda0c5984819596ceb21425420aa173193501e9672a599965fcc035391",
+    "docs/wiki/Domains.md": "sha256:ef57770a667e0021de07f093edb10a55baba73f9a52fbd6cfe34a528502b078c",
+    "docs/wiki/Engineering-Case-Studies.md": "sha256:36d0a5f6ef9d880cb83c71b07e1cd54ff25a07615bc05194b00a82722548b2f7",
+    "docs/wiki/Getting-Started.md": "sha256:5212bc5a41f3e265ffa3f72c63fec23b6cd94bc4bfdd394e8c22508ab4103973",
+    "docs/wiki/Glossary.md": "sha256:e2a98c1e934f88d00f691f2e9bbf3ba1443d2a20652997e2562d5949d9a97a21",
+    "docs/wiki/Governance-and-Evidence.md": "sha256:a50513e0779d4becf66cdb4229786f59b1735940a9e7c83649d525ab9a5f68ed",
+    "docs/wiki/Map-UI-and-AI.md": "sha256:8cf4cace0deb7eb59e9024d5cf6efdb1e18e65a37dd6630fd00cc07e1bd4ad2f",
+    "docs/wiki/Project-Status.md": "sha256:7b284f851e63626aec059ea8b90c3a724dffb8507afd7786a80330bb565ea8f8",
+    "docs/wiki/README.md": "sha256:4cede3ddda3fce74ab5f375ffd2fdb4cc83ecf50edeec97f6f8fff058234e3a9",
+    "docs/wiki/Repository-Map.md": "sha256:331da86d75f60c9b2172445753bb140b1faf25ab27e716dc1370250084f602a6",
+    "docs/wiki/Security-and-Sensitivity.md": "sha256:29f2e9e2debb038db64b88aa1e2b220f8a49f6a3cb22261a29922ca8c5240f07",
+    "docs/wiki/Wiki-Maintenance.md": "sha256:f5504b2bc2d77765021310628ab3ed7212a0d873bea7e9481ddf77a56e79222a",
+    "docs/wiki/_Sidebar.md": "sha256:7d283d0107088a4f73803fb1c11812c6ffefb12b7ad8815dd7c44c752f3a1e44"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session-reported; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:074c0d4f692d22f91ba23a730c48e94346d3994e28a57ea812845ae62fb49fc4",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:9666e026682c514c0086155a8754cbe58abed0eb",
+      "guide-source:f06e477a30ee307d3f440d1f5141db47388ae7f1",
+      "wiki:45b03bb48f4c15b2aa4552532d1355cec89e5335",
+      "Sites metadata rechecked 2026-10-09: latest saved version 197, owner-only, zero external visitors",
+      "Notion Workbench and Drive Chronicle consulted as coordination context; private contents not copied"
+    ]
+  },
+  "truth_labels": {
+    "CONTRIBUTING.md": "PROPOSED",
+    "docs/installation.md": "PROPOSED",
+    "docs/wiki/Architecture.md": "PROPOSED",
+    "docs/wiki/Builder-Profile.md": "PROPOSED",
+    "docs/wiki/Contributing.md": "PROPOSED",
+    "docs/wiki/Data-Lifecycle.md": "PROPOSED",
+    "docs/wiki/Development-and-Validation.md": "PROPOSED",
+    "docs/wiki/Domains.md": "PROPOSED",
+    "docs/wiki/Engineering-Case-Studies.md": "PROPOSED",
+    "docs/wiki/Getting-Started.md": "PROPOSED",
+    "docs/wiki/Glossary.md": "PROPOSED",
+    "docs/wiki/Governance-and-Evidence.md": "PROPOSED",
+    "docs/wiki/Map-UI-and-AI.md": "PROPOSED",
+    "docs/wiki/Project-Status.md": "PROPOSED",
+    "docs/wiki/README.md": "PROPOSED",
+    "docs/wiki/Repository-Map.md": "PROPOSED",
+    "docs/wiki/Security-and-Sensitivity.md": "PROPOSED",
+    "docs/wiki/Wiki-Maintenance.md": "PROPOSED",
+    "docs/wiki/_Sidebar.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "wiki-sync-contract",
+      "outcome": "PASS",
+      "reason": "7 focused existing tests, including executable projection"
+    },
+    {
+      "gate": "local-links",
+      "outcome": "PASS",
+      "reason": "22 documents and 762 local targets"
+    },
+    {
+      "gate": "metadata",
+      "outcome": "PASS",
+      "reason": "22 documents, 0 failures; legacy wiki source markers retained"
+    },
+    {
+      "gate": "document-graph",
+      "outcome": "PASS",
+      "reason": "22 documents reachable, 0 warnings and 0 failures"
+    },
+    {
+      "gate": "source-and-structure",
+      "outcome": "PASS",
+      "reason": "52 pinned source/artwork targets and 2 fragments verified; H1, fences, details nesting and bounded private-identifier checks pass"
+    },
+    {
+      "gate": "public-documentation-review",
+      "outcome": "PASS",
+      "reason": "No new security certification claims, secrets or private system records; old details explicitly historical; operational source and storage remain distinct"
+    },
+    {
+      "gate": "native-rendering",
+      "outcome": "SKIPPED",
+      "reason": "Postpublication verification recorded in the source PR; not established by this authoring receipt"
+    },
+    {
+      "gate": "application-and-security-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no application code, package, Site configuration, data, model or service changes"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "git:9666e026682c514c0086155a8754cbe58abed0eb:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "wiki-source",
+      "validated": true,
+      "evidence_ref": "git:9666e026682c514c0086155a8754cbe58abed0eb:docs/wiki/README.md"
+    },
+    {
+      "id": "security-reporting",
+      "validated": true,
+      "evidence_ref": "git:9666e026682c514c0086155a8754cbe58abed0eb:SECURITY.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-09T17:47:51.212502+00:00",
+  "emitter": "Codex",
+  "notes": "Second owner-requested wiki renovation. Thirteen technical pages receive current introductions and preserve older detail in labeled expandable historical sections. Two repository guides receive evaluation walkthroughs; capability navigation connects them. Source PR remains review-pending; authorized native wiki documentation publication is separate from source merge. No application deployment, data admission, security clearance, service or audience change. Roll back using separate forward reverts of source and wiki commits. All 19 changed Markdown files are bound; private Notion/Drive records are context only."
+}

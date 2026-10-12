@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-pass32-denial-reason-explorer-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/DenialReasonProjection.ts",
+    "apps/explorer-web/src/features/denial_reason_explorer/README.md",
+    "apps/explorer-web/src/features/denial_reason_explorer/index.ts",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.fixture.ts",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.html",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.spec.ts",
+    "apps/explorer-web/tests/denial-reason-explorer.test.ts",
+    "docs/intake/exploratory/pass-32-denial-reason-explorer-source-map.md",
+    "fixtures/ui/denial_reason_projection/README.md",
+    "fixtures/ui/denial_reason_projection/invalid/extra-field.json",
+    "fixtures/ui/denial_reason_projection/invalid/unknown-reason.json",
+    "fixtures/ui/denial_reason_projection/valid/all-source-codes.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/DenialReasonProjection.ts": "sha256:afe843c88ecf9febab1be9c3d4977423eb67b7083a21354be955778b61dd7ad7",
+    "apps/explorer-web/src/features/denial_reason_explorer/README.md": "sha256:5cb2dd6843dafc86686bfbc2b7997cce326667debc7ecec10f59dfcff71f7784",
+    "apps/explorer-web/src/features/denial_reason_explorer/index.ts": "sha256:672178f7cf231ffdad2a70cdab7e275f06ad5f16007ce1530b1786c315abe2f6",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.fixture.ts": "sha256:c77ce851ba3ab46960cdb5bebd78225f305b6ee36efa53a121bcaee0521c9f7c",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.html": "sha256:8ca0aecbdb7dbff8b0f91879b266a3b64ef6e5c5ed87f6fad30bae2dd8c8a286",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.spec.ts": "sha256:ababf5b3d9ee6e890304b8860124122899b550a98e3d28c1d11b7f2b47780abe",
+    "apps/explorer-web/tests/denial-reason-explorer.test.ts": "sha256:2177e0f1e406681a16b150ce358c90eff1d3f5e6c86b0ded1edca8fcd9c9e785",
+    "docs/intake/exploratory/pass-32-denial-reason-explorer-source-map.md": "sha256:5d1f3431a99efe7fb2528b738ff0ce4836b4408c0b9c45275e3820d45361819d",
+    "fixtures/ui/denial_reason_projection/README.md": "sha256:068ce59face1442b8c41b4c3470457dd7b7ebc8318d6644f2531e8e4f08ea586",
+    "fixtures/ui/denial_reason_projection/invalid/extra-field.json": "sha256:bb68ae0bd061a8685e33c0ca458b92f559f2b1f445eb56a90fdef931cd5f64e1",
+    "fixtures/ui/denial_reason_projection/invalid/unknown-reason.json": "sha256:511d94d8a084837bfca2def6c0d5e515bc526e1fd8c77a1623541bd10df8c8e5",
+    "fixtures/ui/denial_reason_projection/valid/all-source-codes.json": "sha256:bceec2001a1bf667cacab604884e5a2ab45176de595cd84bfb27873fe0fede37"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas 5-17-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0017",
+      "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:contracts/policy/policy_decision.md",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/DenialReasonProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/denial_reason_explorer/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/denial_reason_explorer/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/denial-reason-explorer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/denial-reason-explorer.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-denial-reason-explorer-source-map.md": "PROPOSED",
+    "fixtures/ui/denial_reason_projection/README.md": "PROPOSED",
+    "fixtures/ui/denial_reason_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/denial_reason_projection/invalid/unknown-reason.json": "PROPOSED",
+    "fixtures/ui/denial_reason_projection/valid/all-source-codes.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the selected card ID and feature terms; no implementation overlap was found."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 110 Explorer unit tests passed, including the six denial-reason-explorer tests."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The denial-reason browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-denial-reason-explorer",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0017"
+    },
+    {
+      "id": "gdrive:new-ideas-5-17-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:policy-decision-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/policy/policy_decision.md"
+    },
+    {
+      "id": "repository:existing-explorer-no-leak-pattern",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:10:49Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0017. It accepts only four fixed public-safe reason codes and exposes no override seam. It grants no policy, receipt, attestation, review, release, deployment, publication, or public-use authority."
+}

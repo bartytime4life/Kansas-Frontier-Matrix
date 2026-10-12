@@ -1,0 +1,382 @@
+{
+  "schema_version": "kfm.claim-field-binding-fixtures.v1",
+  "profile": "kfm.evidence.claim-field-binding.v1",
+  "description": "One reusable field-binding base with exact, transformed, contextual, conflicted, and fail-closed mutations.",
+  "bases": {
+    "current": {
+      "profile": "kfm.evidence.claim-field-binding.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "object_ref": "kfm://object/synthetic-condition-record/alpha",
+      "field_pointer": "/properties/value",
+      "source_artifact_ref": "kfm://source-artifact/synthetic-condition-record/alpha",
+      "source_snapshot_ref": "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111",
+      "native_locator": {
+        "kind": "JSON_POINTER",
+        "value": "/record/value"
+      },
+      "native_statement_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "native_value_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "normalized_value_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "transform": {
+        "kind": "NONE",
+        "transform_ref": null,
+        "transform_receipt_ref": null,
+        "deterministic": true
+      },
+      "evidence_ref": "kfm://evidence-ref/synthetic-condition-record/alpha/value",
+      "support_scope": "EXACT_FIELD",
+      "quality": {
+        "state": "ACCEPTED",
+        "confidence": "HIGH",
+        "reason_codes": [
+          "SOURCE_FIELD_EXACT"
+        ]
+      },
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "limitations": [
+        "Fixture-only field binding.",
+        "Referenced evidence is not resolved by this profile."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_exact_current",
+      "base": "current",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_normalized_unit",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/field_pointer",
+          "value": "/properties/value_celsius"
+        },
+        {
+          "path": "/normalized_value_digest",
+          "value": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        {
+          "path": "/transform/kind",
+          "value": "NORMALIZE_UNIT"
+        },
+        {
+          "path": "/transform/transform_ref",
+          "value": "kfm://transform/unit/fahrenheit-to-celsius/v1"
+        },
+        {
+          "path": "/transform/transform_receipt_ref",
+          "value": "kfm://transform-receipt/synthetic/alpha/value"
+        },
+        {
+          "path": "/support_scope",
+          "value": "DERIVED_FIELD"
+        },
+        {
+          "path": "/quality/state",
+          "value": "QUALIFIED"
+        },
+        {
+          "path": "/quality/confidence",
+          "value": "MEDIUM"
+        },
+        {
+          "path": "/quality/reason_codes",
+          "value": [
+            "DETERMINISTIC_TRANSFORM",
+            "SOURCE_FIELD_EXACT"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Fixture-only field binding.",
+            "Normalized value depends on a deterministic unit transform.",
+            "Referenced evidence is not resolved by this profile."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_context_only",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/field_pointer",
+          "value": "/properties/context_label"
+        },
+        {
+          "path": "/normalized_value_digest",
+          "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "path": "/support_scope",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/quality/state",
+          "value": "QUALIFIED"
+        },
+        {
+          "path": "/quality/confidence",
+          "value": "LOW"
+        },
+        {
+          "path": "/quality/reason_codes",
+          "value": [
+            "CONTEXT_ONLY"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Context-only support cannot establish the field as authoritative.",
+            "Fixture-only field binding.",
+            "Referenced evidence is not resolved by this profile."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_conflicted",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/field_pointer",
+          "value": "/properties/status"
+        },
+        {
+          "path": "/normalized_value_digest",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        },
+        {
+          "path": "/quality/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/quality/confidence",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/quality/reason_codes",
+          "value": [
+            "SOURCE_VALUES_CONFLICT"
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/lineage/conflict_refs",
+          "value": [
+            "kfm://conflict/synthetic/alpha/status/source-a",
+            "kfm://conflict/synthetic/alpha/status/source-b"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Conflicting source values remain unresolved.",
+            "Fixture-only field binding.",
+            "Referenced evidence is not resolved by this profile."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "invalid_field_pointer",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/field_pointer",
+          "value": "properties/value"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "empty_evidence_ref",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/evidence_ref",
+          "value": ""
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "transform_receipt_missing",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/transform/kind",
+          "value": "NORMALIZE_UNIT"
+        },
+        {
+          "path": "/transform/transform_ref",
+          "value": "kfm://transform/unit/fahrenheit-to-celsius/v1"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "TRANSFORM_RECEIPT_REQUIRED"
+      ]
+    },
+    {
+      "name": "nondeterministic_transform",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/transform/kind",
+          "value": "SUMMARIZE"
+        },
+        {
+          "path": "/transform/transform_ref",
+          "value": "kfm://transform/summarize/v1"
+        },
+        {
+          "path": "/transform/transform_receipt_ref",
+          "value": "kfm://transform-receipt/synthetic/summary"
+        },
+        {
+          "path": "/transform/deterministic",
+          "value": false
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "NONDETERMINISTIC_TRANSFORM_DENIED"
+      ]
+    },
+    {
+      "name": "context_confidence_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/support_scope",
+          "value": "CONTEXT_ONLY"
+        },
+        {
+          "path": "/quality/confidence",
+          "value": "CONFIRMED"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CONTEXT_CONFIDENCE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "conflict_without_closure",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/lineage/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/quality/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/quality/confidence",
+          "value": "UNRESOLVED"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "CONFLICT_BINDING_INCOMPLETE"
+      ]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "path": "/release_ref",
+          "value": "kfm://release/synthetic/claim-field-binding"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RELEASE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_USE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/effects/evidence_resolved",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "EFFECT_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "current",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    }
+  ]
+}

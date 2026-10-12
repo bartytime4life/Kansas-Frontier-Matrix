@@ -11,15 +11,13 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
-  - docs/sources/catalog/usgs/usgs-gnis-names.md
-  - docs/sources/catalog/usgs/usgs-nhdplus-hr.md
-  - docs/sources/catalog/usgs/usgs-nlcd.md
-  - docs/sources/catalog/usgs/usgs-nwis-water.md
-  - docs/sources/catalog/usgs/usgs-the-national-map.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
+  - docs/sources/catalog/usgs/nlcd.md
+  - docs/sources/catalog/usgs/nwis-water.md
+  - docs/sources/catalog/usgs/the-national-map.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -29,10 +27,6 @@ related:
   - docs/standards/PROV.md
   - docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
   - docs/domains/geology/README.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
-  - policy/sensitivity/geology/
-  - policy/sensitivity/cultural/
   - policy/sensitivity/hazards/
   - schemas/contracts/v1/source/
   - schemas/contracts/v1/geology/
@@ -57,6 +51,9 @@ notes:
   - "USGS MRDS maintenance disposition is itself an open concern — MRDS as a system is historically valuable but has been in stewardship transition; current update cadence and authoritative status NEEDS VERIFICATION (Q-3)."
   - "Per Atlas Geology §B explicit non-ownership: KFM does NOT own ownership/lease/permit/title claims or active mining operations. MRDS in KFM is about deposits/occurrences as Geology-domain evidence, NEVER about who currently mines or has rights to mine them. Cross-lane to People/Land is explicitly constrained: 'lease, parcel, operator relation cannot prove deposits.'"
   - "Three-axis anti-collapse: occurrence (a mineral is present) ≠ deposit (concentrated enough to be a deposit) ≠ economic resource (currently economically extractable). These three evidentiary claims live in three different communities of practice; MRDS records one or more; KFM never silently promotes the weaker claim into the stronger."
+owning_root: docs/
+responsibility: "Documentation for USGS Mineral Resources Data System; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -83,7 +80,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Rights, sensitivity, hazards-disclaimer, CARE applicability, and critical-minerals posture all live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/), [`policy/sensitivity/geology/`](../../../../policy/sensitivity/geology/), [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/), and [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Rights, sensitivity, hazards-disclaimer, CARE applicability, and critical-minerals posture all live in `policy/sources/usgs/` (not present), `policy/sensitivity/geology/` (not present), `policy/sensitivity/cultural/` (not present), and [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Three-axis anti-collapse is the defining discipline for this product.** An MRDS record may attest to:
@@ -236,7 +233,7 @@ flowchart TB
 | KFM source-role | **Heterogeneous** — see [§2.1](#21-sub-product-source-role-decomposition) | **CONFIRMED enum** per Atlas §24.1.1; primarily `administrative` with `observed` (first-party USGS field surveys) and `candidate` (unverified historical occurrences) sub-roles. |
 | Atlas Geology object classes carried | **Mineral Occurrence** (primary) · **ResourceEstimate** (limited — see §2.1) · **Extraction Site** | **CONFIRMED** per Atlas Geology §B + §C ubiquitous-language table. |
 | Domain served | **Geology and Natural Resources** (primary) with cross-lane relations to Soil (parent material), Hydrology (hydrostratigraphy), Hazards (fault/subsidence context — *without owning risk*), People/Land (*lease, parcel, operator relation cannot prove deposits*) per Atlas Geology §F | **CONFIRMED**. |
-| Primary upstream surface | USGS Mineral Resources Program distribution (historically `mrdata.usgs.gov`-class endpoints); may be reachable via TNM for some assets ([`usgs-the-national-map.md`](./usgs-the-national-map.md)) | **EXTERNAL — NEEDS VERIFICATION** of current endpoint and active-maintenance status. |
+| Primary upstream surface | USGS Mineral Resources Program distribution (historically `mrdata.usgs.gov`-class endpoints); may be reachable via TNM for some assets ([`usgs-the-national-map.md`](the-national-map.md)) | **EXTERNAL — NEEDS VERIFICATION** of current endpoint and active-maintenance status. |
 | Cardinal evidence objects | **`MineralOccurrenceRecord`** (PROPOSED) keyed by MRDS dep_id; **`ResourceEstimateRecord`** (PROPOSED — see §2.1 sensitivity); **`ExtractionSiteRecord`** (PROPOSED) keyed by stable MRDS site identifier with history chain | **PROPOSED** — three new object classes mapping to Atlas Geology §B. |
 | Geometry | **Point** per occurrence/site (with significant location-uncertainty — see [§8.2](#82-location-uncertainty-as-dominant-axis)) | **CONFIRMED-point with uncertainty**. |
 | Cadence | **Historical compilation** with episodic updates; active-maintenance status itself **NEEDS VERIFICATION** (Q-3) | **CONFIRMED-historical**. |
@@ -280,7 +277,7 @@ Per Atlas §24.1.1 enum + Atlas Geology §B/§C/§D ubiquitous-language for Geol
 | **Critical-minerals supply-chain context** | USGS National Minerals Information Center + USGS Critical Minerals List — distinct product surfaces | MRDS provides occurrence/deposit-type context but is not the supply-chain authority. |
 | **Abandoned-mine hazards records** (open shafts, contamination) | State abandoned-mine-land program + USFS/BLM for federal lands — **distinct** from MRDS extraction-site records | MRDS carries some historical-mine information but does not own hazard claims per Atlas Geology cross-lane. |
 | **Industrial archaeology** of historical mining sites | `<PROPOSED> docs/sources/catalog/_archaeology/` family — cross-reference via GNIS-named historical mining communities | MRDS is geology, archaeology is a sibling domain. |
-| **Mining-community place names** | [`usgs-gnis-names.md`](./usgs-gnis-names.md) cross-joined via co-located point | — |
+| **Mining-community place names** | [`usgs-gnis-names.md`](gnis-names.md) cross-joined via co-located point | — |
 
 > [!CAUTION]
 > **MRDS is not a regulatory or compliance carrier.** Mining-rights compliance, environmental compliance (e.g., CWA, SMCRA, NEPA for federal-lands projects), and modern resource-estimate reporting all live with their controlling authorities — never with MRDS. KFM's engineering-disclaimer cascade (3DEP §9.3 → NHDPlus HR §9.1 → NLCD §9.1 → Water Data §9.1) extends to this page with the most explicit *"not for regulatory or compliance use"* posture in the family.
@@ -291,7 +288,7 @@ Per Atlas §24.1.1 enum + Atlas Geology §B/§C/§D ubiquitous-language for Geol
 
 ## 3. Source authority and family-catalog addition
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 ### 3.1 Doctrinal anchors
 
@@ -335,7 +332,7 @@ See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for
 | **PROV-O / PAV** lineage (**critical for source-attribution chain**) | `data/catalog/prov/` | **PROPOSED — Yes (critical)** | `C8-03`. PROV chain MUST capture the **multi-source attribution chain**: which originating compiler (USGS field, USBM, state survey, industry publication, academic paper) contributed which detail. Without source-attribution provenance, an MRDS record loses its evidentiary lineage. |
 | **Domain projection — Geology and Natural Resources** | `data/catalog/domain/geology/` | **PROPOSED — Yes (primary domain)** | Atlas Geology §D source-family. |
 | **Cross-lane domain projection — Hazards** | `data/catalog/domain/hazards/` | **PROPOSED — Yes (limited; context-only)** | Atlas Geology §F: *"fault/landslide/subsidence risk context without owning risk."* Same constraint applies to abandoned-mine extraction sites — context not authority. |
-| **Cross-lane domain projection — Cultural/Tribal** | `data/catalog/domain/cultural/` | **PROPOSED — Yes (where applicable)** | Tribal-lands mineral occurrences route through CARE-applicability per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals). |
+| **Cross-lane domain projection — Cultural/Tribal** | `data/catalog/domain/cultural/` | **PROPOSED — Yes (where applicable)** | Tribal-lands mineral occurrences route through CARE-applicability per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals). |
 | **STAC × Darwin Core hybrid** (`C4-03`) | — | **CONFIRMED No** | Not biological occurrence. |
 
 > [!TIP]
@@ -405,12 +402,12 @@ See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for
 | `historical_estimate_vintage` | ISO date — when the estimate was made | **CONFIRMED-required** when an estimate is present. |
 | `not_current_resource_estimate_banner` | Boolean — **MUST be `true`** for any historical_grade/tonnage_estimate | **CONFIRMED-required**. The banner is non-optional. |
 | **Cross-domain fields** | | |
-| `gnis_id_co_located` | Optional GNIS feature ID where the occurrence is GNIS-named-correlated (mining community, named claim) | **PROPOSED**; cross-reference to [`usgs-gnis-names.md`](./usgs-gnis-names.md). |
+| `gnis_id_co_located` | Optional GNIS feature ID where the occurrence is GNIS-named-correlated (mining community, named claim) | **PROPOSED**; cross-reference to [`usgs-gnis-names.md`](gnis-names.md). |
 | `successor_compilation_refs` | Array of cross-refs to USMIN / ARDF / state-DB equivalents | **PROPOSED**. |
-| `tribal_lands_overlap` | Boolean + Tribal-authority context (where the occurrence is on Tribal lands) | **PROPOSED-required when applicable** per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals). |
+| `tribal_lands_overlap` | Boolean + Tribal-authority context (where the occurrence is on Tribal lands) | **PROPOSED-required when applicable** per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals). |
 | `critical_mineral_flag` | Boolean (whether commodity is on USGS Critical Minerals List) — for sensitivity-tier consideration per Q-9 | **PROPOSED**. |
 | `kfm:provenance.reality_boundary_ref` | `kfm://realityboundary/...` | Per [§10](#10-reality-boundary). |
-| `kfm:provenance.engineering_disclaimer_ref` | `kfm://disclaimer/mrds-not-regulatory-not-compliance` | Per [§9.1](#91-t0-default-with-engineering-disclaimer). |
+| `kfm:provenance.engineering_disclaimer_ref` | `kfm://disclaimer/mrds-not-regulatory-not-compliance` | Per §9.1. |
 | `kfm:provenance.hazards_disclaimer_ref` | `kfm://disclaimer/mrds-extraction-site-hazards-not-owned` | Per [§9.4](#94-abandoned-mine-hazards-cross-lane-context-not-authority). |
 
 Per-asset integrity: **`file:checksum`** (SHA-256) on every published distribution (per `C3-02`).
@@ -539,7 +536,7 @@ graph LR
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/geology/`](../../../../policy/sensitivity/geology/), [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See `policy/sensitivity/geology/` (not present), `policy/sensitivity/cultural/` (not present), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with three-disclaimer cascade
 
@@ -636,8 +633,8 @@ graph LR
 - **Engineering / compliance disclaimer banner required** (gate-blocking) — `usgs_mrds_engineering_disclaimer_banner_required` per [§9.1](#91-t0-default-with-three-disclaimer-cascade).
 - **Hazards disclaimer banner required for extraction sites** (gate-blocking) — `usgs_mrds_hazards_disclaimer_banner_required` per [§9.4](#94-abandoned-mine-hazards-cross-lane-context-not-authority).
 - **People/Land non-ownership boundary enforced** (gate-blocking) — `usgs_mrds_people_land_non_ownership_enforced`: MRDS records do not carry operator/lease/permit/title fields; cross-lane joins to People/Land require ADR-S-14 review per [§9.2](#92-atlas-geology-b-explicit-non-ownership-of-land-rights).
-- **Tribal-lands review required where applicable** (gate-blocking) — `usgs_mrds_tribal_lands_review_required` per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals).
-- **Critical-minerals flag preserved** — `usgs_mrds_critical_mineral_flag_preserved` per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals) (default disposition per Q-9).
+- **Tribal-lands review required where applicable** (gate-blocking) — `usgs_mrds_tribal_lands_review_required` per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals).
+- **Critical-minerals flag preserved** — `usgs_mrds_critical_mineral_flag_preserved` per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals) (default disposition per Q-9).
 - **Cross-lane to Hazards: context-only enforcement** — `usgs_mrds_hazards_context_only_enforced`: any extraction-site → hazards cross-reference carries the context-not-authority flag.
 - **STAC Projection lint** for point items (`KFM-P27-FEAT-0003`).
 - **DCAT mirror closure** (`KFM-P14-IDEA-0002`, `KFM-P26-PROG-0025`).
@@ -658,7 +655,7 @@ graph LR
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `MineralOccurrenceRecord` contract | [`contracts/data/geology/`](../../../../contracts/data/geology/) | **PROPOSED** — maps to Atlas Geology §B `Mineral Occurrence` object class. |
+| `MineralOccurrenceRecord` contract | `contracts/data/geology/` (not present) | **PROPOSED** — maps to Atlas Geology §B `Mineral Occurrence` object class. |
 | `MineralOccurrenceRecord` schema | [`schemas/contracts/v1/geology/`](../../../../schemas/contracts/v1/geology/) | **PROPOSED**. |
 | `ResourceEstimateRecord` schema (with `historical_` prefix discipline) | [`schemas/contracts/v1/geology/`](../../../../schemas/contracts/v1/geology/) | **PROPOSED** — maps to Atlas Geology §B `ResourceEstimate`. |
 | `ExtractionSiteRecord` schema | [`schemas/contracts/v1/geology/`](../../../../schemas/contracts/v1/geology/) | **PROPOSED** — maps to Atlas Geology §B `Extraction Site`. |
@@ -696,7 +693,7 @@ graph LR
 | Normalize pipeline | [`pipelines/normalize/`](../../../../pipelines/normalize/) | Per-record JSON-LD canonical shape; CRS canonicalization to `EPSG:4326`; commodity/deposit-type/mine-status enum normalization; **source-attribution-chain extraction and PROV-O graph synthesis**; location-uncertainty class assignment; first-observation-vintage extraction where knowable. |
 | Source-attribution chain pipeline | [`pipelines/normalize/source_attribution_chain/`](../../../../pipelines/normalize/) | **PROPOSED** — extracts and canonicalizes the multi-source attribution chain (USGS field / USBM / state survey / industry / academic) for each record. The load-bearing pipeline for this product. |
 | Critical-minerals tagging pipeline | [`pipelines/normalize/critical_minerals_tagging/`](../../../../pipelines/normalize/) | **PROPOSED** — applies the USGS Critical Minerals List to each record; sets `critical_mineral_flag` where commodity matches. |
-| Tribal-lands overlap classifier | [`pipelines/normalize/tribal_lands_overlap/`](../../../../pipelines/normalize/) | **PROPOSED** — spatial join against Tribal-lands boundaries; sets `tribal_lands_overlap` flag and routes through sovereignty-review queue per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals). |
+| Tribal-lands overlap classifier | [`pipelines/normalize/tribal_lands_overlap/`](../../../../pipelines/normalize/) | **PROPOSED** — spatial join against Tribal-lands boundaries; sets `tribal_lands_overlap` flag and routes through sovereignty-review queue per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals). |
 | Successor-compilation cross-reference pipeline | [`pipelines/normalize/mrds_successor_xref/`](../../../../pipelines/normalize/) | **PROPOSED** — adds cross-references to USMIN, ARDF, state-DB equivalents where matching identifiers can be resolved. |
 | Validate pipeline | [`pipelines/validate/`](../../../../pipelines/validate/) | All validators in [§11](#11-validation-and-catalog-closure). |
 | Catalog pipeline | [`pipelines/catalog/`](../../../../pipelines/catalog/) | DCAT-primary + STAC-secondary catalog closure; rich PROV-O for source-attribution chains. |
@@ -712,7 +709,7 @@ graph LR
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); MRDS-specific example sketches belong at `_examples/mineral-occurrence-record-example.json` and `_examples/source-attribution-chain-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); MRDS-specific example sketches belong at `_examples/mineral-occurrence-record-example.json` and `_examples/source-attribution-chain-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal MineralOccurrenceRecord sketch (illustrative, JSON-LD)</b></summary>
@@ -872,9 +869,9 @@ graph LR
 | Q-6 | **Should `ResourceEstimateRecord` be its own product page** rather than a sub-collection of this page? | **PROPOSED** | Default = **stay nested here** because MRDS is the only carrier of historical resource estimates in this family; if KFM later admits modern resource-estimate sources (JORC/NI 43-101 filings), those go elsewhere. |
 | Q-7 | **Three-axis anti-collapse formalization.** The occurrence/deposit/economic-resource three-axis discipline is doctrinally clear here but not formally codified in the Atlas §24.1.2 anti-collapse register. Where does it formalize? | **OPEN — gating cross-page** | ADR-S-?? (occurrence-vs-deposit-vs-economic-resource anti-collapse). Default = **formalize in `policy/sources/_three_axis_anti_collapse.md`** with this page as the canonical example; ADR adds a validator family. |
 | Q-8 | **Historical resource estimate display policy.** Some commodities' historical estimates are dangerous to publish (gold rushes spawned by historical reports; modern speculative investment scams). UI display strategy? | **OPEN — gating policy** | Default = **hidden by default in public UI; surfaced only in Focus Mode with explicit historical-context and not-current banners; never in default search results or summary tiles**. |
-| Q-9 | **Critical-minerals sensitivity disposition.** Does USGS Critical Minerals List commodity status affect MRDS record tier? | **OPEN — gating policy** | ADR-S-?? (critical-minerals sensitivity disposition). Default per [§9.3](#93-care-applicability-tribal-lands-and-critical-minerals) = **`critical_mineral_flag` preserved; tier-escalation reserved for critical-mineral commodity + Tribal lands + active critical-minerals national-strategy context compound case**. |
+| Q-9 | **Critical-minerals sensitivity disposition.** Does USGS Critical Minerals List commodity status affect MRDS record tier? | **OPEN — gating policy** | ADR-S-?? (critical-minerals sensitivity disposition). Default per [§9.3](#93-care-applicability--tribal-lands-and-critical-minerals) = **`critical_mineral_flag` preserved; tier-escalation reserved for critical-mineral commodity + Tribal lands + active critical-minerals national-strategy context compound case**. |
 | Q-10 | **Active mine status verification.** How does KFM detect when an MRDS "producer" record may no longer be producing? Cross-reference USGS Mineral Commodity Summaries? | **PROPOSED** | Default = **out of scope for MRDS-as-page**; if KFM admits the USGS Mineral Commodity Summaries product separately, cross-referencing comes there. |
-| Q-11 | **State-survey precedence.** When MRDS conflicts with a state geological survey on a specific occurrence's details, which is canonical? | **PROPOSED** | Default = **preserve both with explicit authority labels** (analog of the GNIS Tribal-authority reconciliation pattern in [`usgs-gnis-names.md`](./usgs-gnis-names.md) §9.2); KFM does not unilaterally pick. |
+| Q-11 | **State-survey precedence.** When MRDS conflicts with a state geological survey on a specific occurrence's details, which is canonical? | **PROPOSED** | Default = **preserve both with explicit authority labels** (analog of the GNIS Tribal-authority reconciliation pattern in [`usgs-gnis-names.md`](gnis-names.md) §9.2); KFM does not unilaterally pick. |
 | Q-12 | **STAC namespace pin** (`kfm:` vs `ks-kfm:`). | **OPEN** | Pin at family / catalog level. |
 | Q-13 | **AOI scope.** Kansas extent + buffer + adjacent-state occurrences material to Kansas geology? | **PROPOSED** | Default = **Kansas + buffer + occurrences in adjacent-state Major-Mineral-Districts that are relevant to Kansas geologic context** (e.g., Tri-State lead-zinc district straddling KS/MO/OK). |
 | Q-14 | **Engineering / compliance disclaimer UX.** Persistent banner on every UI surface using MRDS? | **PROPOSED** | Default = **persistent banner on every MRDS surface; explicit interstitial on resource-estimate and economic-extraction queries**. Same disclaimer cascade as siblings, extended for the three-axis discipline. |

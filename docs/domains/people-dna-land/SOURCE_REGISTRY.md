@@ -2,12 +2,17 @@
 doc_id: kfm://doc/docs/domains/people-dna-land/SOURCE_REGISTRY
 title: People / DNA / Land Domain — Source Registry
 type: standard
-version: v1
+version: v1.1.3
+prior_version: v1.1.2
+prior_state: repository-grounded registry boundary that resolved the placement warning while citing a nonexistent Directory Rules subsection
 status: draft
 owners: TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority
 created: 2026-05-19
-updated: 2026-06-07
+updated: 2026-08-28
 policy_label: restricted
+owning_root: docs/
+responsibility: Explain the current People/DNA/Land source-family and admission-control documentation boundary without activating a source, connector, refresh cadence, consent decision, release, or publication.
+truth_posture: CONFIRMED current repository paths and source-refresh HOLD / PROPOSED source-family and admission design lineage / NEEDS VERIFICATION accountable ownership, admitted descriptors, connector implementation, policy runtime, receipts, custody, evidence, and review
 related:
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/SOURCE_LEDGER.md
@@ -15,21 +20,20 @@ related:
   - docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
   - docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - schemas/contracts/v1/source/source-descriptor.json
-  - schemas/contracts/v1/consent/consent_sidecar.schema.json
   - data/registry/sources/people-dna-land/
   - policy/domains/people-dna-land/
   - policy/consent/people/
-  - policy/sensitivity/people/
 tags: [kfm, people, dna, land, genealogy, source-registry, governance, admission, sensitivity, consent]
 notes:
   - CONTRACT_VERSION = "3.0.0".
   - Human-facing control surface, not the machine-readable registry; not a bibliography; not a publication authority; not a substitute for consent.
   - This domain carries the highest publication-sensitivity posture in KFM. T4 (Denied) is the default for living-person fields, raw DNA segments, and private person-parcel joins.
   - CONFLICTED — folder slug people-dna-land vs Atlas name "People / Genealogy / DNA / Land"; canonical lane name is unsettled (deep-research slug-drift register; Atlas §24.13). Slug is PROPOSED, not CONFIRMED. Resolve by ADR. See OQ-PDL-REG-01.
-  - CONFLICTED — SOURCE_REFRESH_RUNBOOK belongs under docs/runbooks/ per Directory Rules §6.1.b, not docs/domains/. See OQ-PDL-REG-02.
+  - RESOLVED — SOURCE_REFRESH_RUNBOOK is homed at docs/runbooks/people-dna-land/ under Directory Rules §9.1; the canonical file is a repository-grounded HOLD boundary.
   - Consent does NOT publish data — a ConsentSidecar constrains a render gate; publication still requires ReleaseManifest + Promotion Gate G.
+  - Live People/DNA/Land source refresh is not currently implemented or admitted; the canonical runbook is a repository-grounded HOLD boundary.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,9 +50,9 @@ notes:
 ![consent: required](https://img.shields.io/badge/consent-required-c2185b)
 ![contract: v3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-blue)
 ![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026--06--07](https://img.shields.io/badge/last%20updated-2026--06--07-informational)
+![last updated: 2026--08--28](https://img.shields.io/badge/last%20updated-2026--08--28-informational)
 
-**Status:** draft &middot; **Owners:** TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority &middot; **Updated:** 2026-06-07
+**Status:** draft &middot; **Owners:** TODO — people-dna-land domain steward; source-registry steward; rights-holder representative; sensitivity reviewer; release authority &middot; **Updated:** 2026-08-28
 **Pinned:** `CONTRACT_VERSION = "3.0.0"`
 
 > [!CAUTION]
@@ -100,19 +104,19 @@ It is paired with — and **does not replace** — the machine-readable registry
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/people-dna-land/SOURCE_REGISTRY.md` | PROPOSED — Directory Rules §6 / §12 domain-lane pattern |
+| Current path | `docs/domains/people-dna-land/SOURCE_REGISTRY.md` | CONFIRMED — current repository path under the adopted `docs/` domain responsibility boundary |
 | Owning root | `docs/` (human-facing control plane) | CONFIRMED rule |
-| Domain segment | `people-dna-land/` inside `docs/domains/` | PROPOSED — slug unsettled (see callout) |
+| Domain segment | `people-dna-land/` inside `docs/domains/` | CONFIRMED repository segment; externally presented canonical lane name remains unsettled (see callout) |
 | Doc class | Standard (KFM Meta Block v2 applies) | CONFIRMED |
 | Upstream doctrine | `[DOM-PEOPLE]`, `[ENCY]`, `[DIRRULES]`, `[GAI]` | CONFIRMED |
 | Downstream artifacts | `data/registry/sources/people-dna-land/` · `policy/domains/people-dna-land/` · `policy/consent/people/` · per-source descriptors · `SourceActivationDecision` records | PROPOSED |
-| Pair documents | `README.md` · `SOURCE_LEDGER.md` · `SOURCE_FAMILIES.md` · `SENSITIVITY_PROFILE.md` · `SOURCE_REFRESH_RUNBOOK.md` | PROPOSED — NEEDS VERIFICATION |
+| Pair documents | `README.md` · `SOURCE_LEDGER.md` · `SOURCE_FAMILIES.md` · `SENSITIVITY_PROFILE.md` · `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` | CONFIRMED current repository paths; maturity remains file-specific |
 
 > [!WARNING]
 > **Slug is PROPOSED, not CONFIRMED (CONFLICTED → ADR).** A prior draft asserted the `people-dna-land` slug was "CONFIRMED by Directory Rules §6.1" with a "canonical illustration." Project evidence does not support that: Directory Rules illustrates domain lanes with `hydrology/ soil/ fauna/`, and the corpus slug-drift register records the People lane's canonical externally-presented name as **unsettled** — Atlas §16 names it "People / Genealogy / DNA / Land," schema/policy paths use `people/`, and `people-dna-land` appears only as a docs-slug variant. Treat the slug as PROPOSED until an ADR settles it; until then all cross-references resolve to this slug provisionally. Tracked as `OQ-PDL-REG-01`. [DIRRULES §6, §12; ATLAS §24.13; deep-research slug-drift register]
 
-> [!WARNING]
-> **Runbook placement conflict (CONFLICTED → ADR).** The related `SOURCE_REFRESH_RUNBOOK` is listed under `docs/domains/people-dna-land/` in earlier drafts, but Directory Rules §6.1.b makes `docs/runbooks/` the canonical home for operational procedures (source refresh explicitly named), with Pattern A (`docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md`) matching the existing fauna runbook. This registry now points at the `docs/runbooks/` location. Tracked as `OQ-PDL-REG-02`. [DIRRULES §6.1.b, §18 OPEN-DR-02]
+> [!NOTE]
+> **Runbook placement is resolved.** The canonical source-refresh boundary is `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` under Directory Rules §9.1. Earlier domain-path placement remains proposal lineage in Git history only; it does not create a second procedure home or reopen the retired `OQ-PDL-REG-02`.
 
 [↑ back to top](#top)
 
@@ -362,15 +366,15 @@ For each render, `policy.consent.render` consumes the sidecar plus a request con
 
 ## 10. Admission flow
 
-PROPOSED source-activation flow, drawn from CONFIRMED doctrine. The watcher MUST NOT publish or rewrite catalog; it emits a `SourceIntakeRecord` / `RunReceipt`, after which admission decisions follow. [IMPL-PIPE §13; DIRRULES §13 watcher-as-non-publisher]
+PROPOSED source-activation design lineage, drawn from CONFIRMED doctrine. Current repository evidence does not establish a live People/DNA/Land watcher, admitted descriptor instance, activation decision, receipt producer, or cadence-refresh profile. The canonical [source-refresh boundary](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) therefore remains `HOLD`; the sequence below cannot be executed as current procedure. [IMPL-PIPE §13; DIRRULES §13 watcher-as-non-publisher]
 
 1. **Propose** a new or updated `SourceDescriptor` (this registry receives a new row in §5).
 2. **Review** source role, rights, sensitivity, cadence, access, and consent requirements.
 3. **Resolve** rights and sensitivity; for DNA-adjacent sources, resolve consent posture and vendor TOS.
 4. **Issue** a `SourceActivationDecision`: one of `allowed`, `restricted`, `denied`, `needs-review`.
 5. **Stand up** fixtures, validators, and policy gates **before** any connector or watcher becomes active.
-6. **Activate** the connector / watcher only after fixtures, validators, and policy gates exist and pass.
-7. **Refresh** on cadence per the [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md); emit `SourceIntakeRecord` and `ValidationReport` every tick.
+6. **Keep activation at `HOLD`** unless the owning source, connector, policy, evidence, custody, and review surfaces establish the implementation and authority independently of this document.
+7. **Do not run cadence refresh or emit per-tick records.** The [`SOURCE_REFRESH_RUNBOOK`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) permits repository-only metadata review and a minimized handoff; live retrieval, admission, receipt production, and lifecycle mutation remain unavailable.
 8. **Re-evaluate** annually, or earlier on rights change, vendor TOS change, vendor distress, consent change, or doctrinal change.
 
 ### Activation decision matrix
@@ -489,7 +493,6 @@ CONFIRMED carry-forward from `[DOM-PEOPLE §N]` plus this revision's surfaced co
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
 | OQ-PDL-REG-01 | Is the canonical lane slug `people-dna-land`, or the Atlas name "People / Genealogy / DNA / Land" (schema/policy use `people/`)? | Docs steward + domain steward | ADR + Directory Rules / Atlas §24.13 |
-| OQ-PDL-REG-02 | Does `SOURCE_REFRESH_RUNBOOK` live at `docs/runbooks/people-dna-land/` (Directory Rules §6.1.b) or beside the dossier? | Architecture steward + docs steward | ADR + §6.1.b / §18 OPEN-DR-02 |
 | OQ-PDL-REG-15 | Tombstone-vs-erasure boundary for revoked DNA/personal records | Rights & Sovereignty reviewer | ADR + `docs/runbooks/revocation.md` |
 | OQ-PDL-REG-16 | Multi-party consent shape (family claim where several living relatives have stake) | Consent / PDP owner | ConsentSidecar schema extension |
 
@@ -502,18 +505,18 @@ CONFIRMED carry-forward from `[DOM-PEOPLE §N]` plus this revision's surfaced co
 
 ## 15. Related docs
 
-PROPOSED targets. `NEEDS VERIFICATION` until each target exists in the mounted repo.
+Current repository paths and proposal-lineage targets are listed together below; each annotation states its current posture.
 
 - [`docs/domains/people-dna-land/README.md`](./README.md) — domain landing (PROPOSED)
 - [`docs/domains/people-dna-land/SOURCE_LEDGER.md`](./SOURCE_LEDGER.md) — instance-level "what each source cannot prove" (PROPOSED)
 - [`docs/domains/people-dna-land/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — family→role taxonomy (PROPOSED)
 - [`docs/domains/people-dna-land/SENSITIVITY_PROFILE.md`](./SENSITIVITY_PROFILE.md) — tier disposition + revocation path (PROPOSED)
-- `docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md` — operations (PROPOSED; relocated per §6.1.b — OQ-PDL-REG-02)
+- [`docs/runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/people-dna-land/SOURCE_REFRESH_RUNBOOK.md) — canonical repository-grounded source-refresh `HOLD` boundary; no live retrieval, admission, cadence refresh, or receipt production
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — cross-cutting descriptor doctrine (PROPOSED)
 - `docs/domains/archaeology/SOURCE_REGISTRY.md` · `docs/domains/habitat/SOURCE_REGISTRY.md` · `docs/domains/hazards/SOURCE_REGISTRY.md` — neighboring sensitive-lane precedent (authored prior session; presence NEEDS VERIFICATION)
 - `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` — operational template (authored prior session; presence NEEDS VERIFICATION)
 - `docs/standards/PROV.md` — provenance crosswalk (authored prior session; naming-variance pending ADR per Directory Rules §18 OPEN-DR-01)
-- `directory-rules.md` — placement and lifecycle authority (CONFIRMED)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement and lifecycle authority (CONFIRMED)
 - `schemas/contracts/v1/source/source-descriptor.json` — canonical schema home (PROPOSED per ADR-0001; NEEDS VERIFICATION)
 - `schemas/contracts/v1/consent/consent_sidecar.schema.json` — consent sidecar schema (PROPOSED)
 - `policy/domains/people-dna-land/` · `policy/consent/people/` · `policy/sensitivity/people/` — policy homes (PROPOSED)
@@ -602,7 +605,7 @@ PROPOSED targets. `NEEDS VERIFICATION` until each target exists in the mounted r
 > If something in this registry feels approximate, that is a feature: every PROPOSED row is a verification candidate. File evidence into `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED) and replace the label, do not erase it.
 
 **Related docs:** [§15](#15-related-docs)
-**Last updated:** 2026-06-07
-**Version:** v1 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28
+**Version:** v1.1.3 (draft) · **Pinned** `CONTRACT_VERSION = "3.0.0"`
 
 [↑ back to top](#top)

@@ -2,57 +2,66 @@
 doc_id: kfm://doc/infra-readme
 title: infra/ — Deployment, Host, Network, and Exposure Posture Root
 type: README; directory-readme; canonical-infrastructure-root; deployment-boundary-index
-version: v1.1.2
-status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; placeholder-docker-compose-payloads-confirmed; locked-pnpm-audit-proposed; deployability-unestablished; infra-validation-unestablished; deny-by-default; non-release; non-publication
-owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accepted infrastructure, security, and operations stewardship, required-review enforcement, and independent approval controls were not established
+version: v1.3.0
+status: draft; repository-grounded; canonical-root; documentation-heavy; hardening-checklist-confirmed; docker-review-image-inputs-confirmed; bounded-docker-static-build-scan-validation-confirmed; compose-placeholder-confirmed; bounded-compose-static-render-build-validation-confirmed; infra-wide-validation-unestablished; deployability-unestablished; deny-by-default; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; accountable infrastructure, security, and operations stewardship, required-review enforcement, and independent approval controls remain unverified
 created: 2026-07-03
-updated: 2026-07-29
-supersedes: v1.1 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
-prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
+updated: 2026-08-29
+supersedes: v1.2.0 documentation at the same path; no deployment, host, network, exposure, application, runtime, policy, lifecycle, release, or publication behavior is superseded
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: repository-facing; infra; deployment; host; network; exposure; deny-by-default; least-privilege; no-public-raw-path; no-public-model-path; auditability; rollback-aware
 current_path: infra/README.md
 owning_root: infra/
 responsibility: own deployment mechanics, host and network posture, service exposure, private-access boundaries, infrastructure-as-code, and operational hardening without becoming policy, evidence, lifecycle, runtime, release, or publication authority
 truth_posture: >
-  CONFIRMED same-path target; Directory Rules designation of infra/ as the canonical deployment, host, network,
-  and exposure root; nine repository-present standard infrastructure lane READMEs; infra/flora/README.md; the hardening
-  review checklist; CODEOWNERS routing; current Makefile targets; implemented app/static boundary tests; and
-  the current policy-boundary workflow definition / PROPOSED infrastructure maturity model, deployment-change
-  packet, lane-specific executable checks, topology convergence, and future infra validation orchestration /
-  CONFLICTED infra/flora/ as a domain-named direct child not established as canonical by accepted Directory Rules or
-  domain-lane examples / UNKNOWN live environments, hosts, routes, ports, operational or external infrastructure,
-  service identities, secret stores, data mounts, non-placeholder deployment payloads, actual orchestration, and operational
-  rollback / NEEDS VERIFICATION accountable stewards, branch/ruleset enforcement, active secret-scanning
-  coverage, public route inventory, deployment topology, and release-integrated infrastructure evidence
+  CONFIRMED same-path target; accepted Directory Rules v2 through ADR-0029; infra/ as the canonical
+  deployment, host, network, and exposure responsibility root; nine standard infrastructure child-lane
+  READMEs; infra/flora/README.md; the hardening checklist; CODEOWNERS routing; current Makefile state;
+  the two payload-free Docker review images and their dependency-integrity inputs; bounded no-network
+  Docker and Compose static tests; the security and infra-compose-smoke workflows; successful exact-main
+  image build/scan and Compose render/build evidence without starting services / PROPOSED the infrastructure maturity
+  vocabulary, aggregate infra validation entrypoint, lane-specific executable checks, topology convergence,
+  and future release-integrated validation / CONFLICTED infra/flora/ as a domain-named direct child not
+  established as a canonical pattern by accepted Directory Rules / UNKNOWN live environments, hosts,
+  routes, ports, external infrastructure, service identities, secret stores, data mounts, non-placeholder
+  deployment payloads, actual orchestration, applied state, and operational rollback / NEEDS VERIFICATION
+  accountable stewards, ruleset enforcement, active secret-scanning coverage, public route inventory,
+  deployment topology, and release-integrated infrastructure evidence
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3c410ca496f56a892b131af62465560fa298b1d2
-  target_prior_blob: c791f22f4163603bab2aa2579bff8786e1d21c37
+  base_commit: 4e714b639861e340b0c35a5360f9ffaecdf1f53c
+  target_prior_blob: 618f2578c4a0e00caefee7371bf83d2ee0102161
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md; accepted
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  makefile_blob: 304145dd0f674dda759f9097a747c4c7f0b9269d
   hardening_checklist_blob: e1dffb88106ca22f82aff6fe8c67df0e34d2709f
-  boundary_workflow_blob: 6d442a6cdd0b146cd4003cbf1d7c619a455a16ae
-  deployment_topology_blob: 73ece039f0da4acf68843cb2dd6d20c6152df9e5
-  exposure_plan_blob: 0ade933f4b4f1a03641f70ca3b2ef792340a8101
-  compose_prior_blob: f8c19a11a91746398f0e6ae27f5f70093407df70
-  governed_api_dockerfile_blob: ea10e9a12737e4e9369b80b6ea3e9b84f2241abb
-  explorer_web_dockerfile_blob: 77e7a862d1cb01c8c818188e8b3101610fdcf415
-  inspection_method: full tracked README and repository-reference inventory plus exact infra file reads and static Compose path checks; no deployed environment, branch ruleset, secret store, host, container, cluster, network, image build, or runtime was inspected
-dependency_scan_change_evidence:
-  base_commit: b5f156c32efa149846ad1022b9661b766f464485
-  target_prior_blob: 954c6a4541724c72a2fe64114ce4ee73648dbd1b
-  workflow: ../.github/workflows/dependency-scan.yml
-  scope: repository dependency advisory signal only; no infrastructure payload or environment validation
+  compose_blob: 8a45891700a501f6e18a921ce8d260956441e4b3
+  compose_readme_blob: 20e3993016bf7f99bdf45c4fc37508005637b91a
+  docker_readme_blob: 7bf079f404b8c7c99119fc566befacef28667d03
+  governed_api_dockerfile_blob: 1c6db4cbff750c660f9b0989d8018e3d373fd083
+  explorer_web_dockerfile_blob: b1d471c1ee55fed5e3e8ffc7bc42e8f66ef69874
+  explorer_web_manifest_blob: 702202d3bc21891ebdcf0e941b81c58e8031f9a5
+  explorer_web_lock_blob: 19c84d76d4f7a2987328ab962adea906da0605e7
+  governed_api_requirements_blob: 26928a7b48576a69d02fa1d6fc2e5b4d588b9444
+  compose_static_test_blob: 7627d55ec83ec15e848f637522b907c0f55f5e9d
+  docker_static_test_blob: e1349b3d2f246aa9d80e947e05f7bb934830eb7e
+  infra_test_readme_blob: 7ecd30dacc2c8191897950dc3946916a50b28e3c
+  compose_workflow_blob: a9b51526bbcf9bf80295cc8fd3a9188bcca97da2
+  security_workflow_blob: 295d546085c6ac725efe59960a043f79a843ece5
+  confirmed_compose_run: 33277502881; exact main; conclusion success
+  confirmed_security_run: 33277502890; exact main; repository scan, both container scans, scorecard, and aggregate result succeeded; dependency review skipped on push
+  inspection_method: current target and direct-child inventory; exact Compose, Dockerfile, dependency-integrity, test, workflow, Makefile, CODEOWNERS, Directory Rules, and ADR reads; exact-main hosted workflow/job inspection; no deployed environment, secret store, host, container startup, cluster, network, Terraform state, or runtime inspected
 related:
   - ../docs/doctrine/directory-rules.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../docs/security/README.md
   - ../docs/security/EXPOSURE_PLAN.md
   - ../docs/security/INCIDENT_RESPONSE.md
   - ../docs/security/KEY_ROTATION.md
   - ../docs/architecture/deployment-topology.md
-  - ../docs/architecture/governed-api.md
+  - ../docs/architecture/governed-api/README.md
   - ../docs/runbooks/
   - ../apps/governed-api/
   - ../apps/explorer-web/
@@ -74,16 +83,18 @@ related:
   - ./hardening/README.md
   - ./hardening/CHECKLIST.md
   - ./flora/README.md
+  - ../tests/infra/README.md
+  - ../tests/infra/test_compose_static.py
   - ../.github/CODEOWNERS
+  - ../.github/workflows/infra-compose-smoke.yml
   - ../.github/workflows/policy-boundary-guards.yml
   - ../.github/workflows/dependency-scan.yml
   - ../.github/workflows/codeql.yml
   - ../Makefile
 notes:
-  - "v1.1.2 reconciles the adjacent dependency-scan description with the proposed locked pnpm audit; this does not establish infrastructure or deployment validation."
-  - "v1.1.1 corrects the tracked payload inventory and repairs two Dockerfile references within the existing infra-bounded Compose contexts without establishing deployability."
-  - "The accepted Directory Rules v2 ROOT_FULL field set is addressed without claiming a fixed heading order."
-  - "The repository has substantial infrastructure guidance, but no live deployment or complete infra-specific executable validation surface was established in the bounded inspection."
+  - "v1.3.0 reconciles the root Docker status with the payload-free review-image inputs, static tests, security workflow, and exact-main image build/scan evidence."
+  - "The Compose and security workflows do not start services; their successful runs are bounded repository, render, build, and scan evidence only."
+  - "Infra-wide executable validation, environment verification, release integration, deployment, and publication remain unestablished."
   - "Static badges summarize inspected repository state only; they are not deployment, review, security, release, or publication proof."
 [/KFM_META_BLOCK_V2] -->
 
@@ -96,19 +107,19 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Authority: deployment boundary](https://img.shields.io/badge/authority-deployment%20boundary-1f6feb?style=flat-square)](#authority-level)
 [![Posture: deny by default](https://img.shields.io/badge/posture-deny%20by%20default-b42318?style=flat-square)](#trust-membrane-and-exposure-model)
-[![Hardening checklist: confirmed](https://img.shields.io/badge/hardening%20checklist-confirmed-2da44e?style=flat-square)](./hardening/CHECKLIST.md)
-[![Infrastructure validation: not established](https://img.shields.io/badge/infra%20validation-not%20established-b42318?style=flat-square)](#validation)
-[![Placeholder payloads: confirmed](https://img.shields.io/badge/placeholder%20payloads-confirmed-d4a72c?style=flat-square)](#status)
+[![Docker build/scan: confirmed](https://img.shields.io/badge/docker%20build%2Fscan-confirmed-2da44e?style=flat-square)](#validation)
+[![Compose smoke: confirmed](https://img.shields.io/badge/compose%20smoke-confirmed-2da44e?style=flat-square)](#validation)
+[![Infra-wide validation: not established](https://img.shields.io/badge/infra--wide%20validation-not%20established-b42318?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `infra/` is the confirmed deployment/exposure responsibility root. Repository evidence confirms nine standard child-lane READMEs, two placeholder Dockerfiles, a placeholder Compose file, a one-line Caddy placeholder, a documentation-only firewall posture file, and a detailed hardening review checklist. Current evidence does **not** establish a running environment, selected production topology, non-placeholder or deployable Docker/Compose/proxy/firewall/VPN/systemd/Kubernetes/Terraform payload set, infra-specific CI gate, or public exposure approval.
+> **Safe current conclusion:** `infra/` is the confirmed deployment and exposure responsibility root. Repository evidence confirms two bounded validation slices: Docker review-image static checks plus exact-main builds/scans, and Compose static checks plus exact-main rendering/builds. Neither workflow starts services. The evidence does **not** establish application startup, health, governed API behavior, browser behavior, a running environment, a selected production topology, an infra-wide validation gate, public exposure approval, release, deployment, or publication.
 
 > [!CAUTION]
-> Infrastructure prose and checklists express required posture; they are not firewall rules, proxy configuration, service units, cluster policy, Terraform plans, secret scans, route-denial tests, release records, or observed runtime behavior. A deployment claim requires the relevant payload plus validation and environment evidence.
+> Infrastructure prose, templates, tests, workflows, and checklists have bounded meanings. A passing render/build smoke test is not a firewall rule, proxy route denial, service unit, cluster policy, Terraform apply, secret scan, runtime observation, release record, deployment approval, or publication decision.
 
 > [!WARNING]
-> Accepted Directory Rules assign deployment and exposure configuration to `infra/` but do not enumerate its child topology or establish domain-named infrastructure lanes. [`infra/flora/`](./flora/) is a confirmed domain-named direct child, so treat its placement as **CONFLICTED / NEEDS VERIFICATION**, not as precedent, until review, a migration note, or an ADR resolves it.
+> Accepted Directory Rules assign deployment and exposure configuration to `infra/` but do not establish domain-named infrastructure lanes as a general pattern. [`infra/flora/`](./flora/) remains a confirmed domain-named direct child with **CONFLICTED / NEEDS VERIFICATION** placement. Do not use it as precedent or expand it until a reviewed placement decision, migration note, or ADR resolves the boundary.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Topology](#current-bounded-topology) · [Trust membrane](#trust-membrane-and-exposure-model) · [Lanes](#lane-contract-index) · [Maturity](#infrastructure-maturity-model) · [Change packet](#infrastructure-change-packet) · [Correction](#correction-and-rollback) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
 
@@ -155,28 +166,29 @@ A normal public path must not terminate at RAW, WORK, QUARANTINE, unpublished ca
 
 **Canonical responsibility root for deployment mechanics and exposure posture; non-policy, non-evidence, non-lifecycle, non-runtime, non-release, and non-publication authority.**
 
-Directory Rules assign deployment, host, network, and exposure posture to `infra/`. This README refines that placement rule for the current repository, but it does not override accepted ADRs, policy, security doctrine, application contracts, or release decisions.
+Accepted Directory Rules v2, adopted through [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), place deployment, host, network, and exposure configuration under `infra/`. This README refines that root contract for current repository evidence. It does not override accepted ADRs, policy, security doctrine, application contracts, source/evidence authority, or release decisions.
 
 | Concern | Owning authority | `infra/` role |
 |---|---|---|
-| Deployment packaging and orchestration | `infra/` | Owns reviewed templates and deployment mechanics. |
-| Host and network posture | `infra/` | Owns service binding, firewall, proxy, VPN, ingress, and hardening mechanics. |
-| Non-secret deployment defaults | [`configs/`](../configs/) | `infra/` may consume them; it must not turn `configs/` into a secret store. |
-| Application behavior | [`apps/`](../apps/) | Hosts and routes applications; does not redefine their behavior. |
-| Runtime adapters and model clients | [`runtime/`](../runtime/) | Keeps them private and behind governed interfaces; does not own runtime code. |
-| Semantic meaning | [`contracts/`](../contracts/) | May reference contracts; does not define object meaning. |
-| Machine shape | [`schemas/`](../schemas/) | May validate manifests against schemas; does not own schema authority. |
-| Admissibility, rights, sensitivity, access obligations | [`policy/`](../policy/) | Enforces deployment consequences of reviewed policy; does not author policy here. |
-| Lifecycle material | [`data/`](../data/) | Mounts or serves only the phases and artifacts a reviewed service requires. |
-| Release, correction, withdrawal, rollback decisions | [`release/`](../release/) | Applies or hosts reviewed decisions; cannot create release authority. |
-| Human-facing security doctrine | [`docs/security/`](../docs/security/) | Implements deployment constraints consistent with the doctrine. |
-| Public trust membrane | [`apps/governed-api/`](../apps/governed-api/) | Routes public trust-bearing requests to it; does not bypass it. |
+| Deployment packaging and orchestration | `infra/` | Own reviewed templates and deployment mechanics. |
+| Host and network posture | `infra/` | Own service binding, firewall, proxy, VPN, ingress, and hardening mechanics. |
+| Non-secret deployment defaults | [`configs/`](../configs/) | Consume reviewed defaults; never turn `configs/` into a secret store. |
+| Application behavior | [`apps/`](../apps/) | Host and route applications; do not redefine their behavior. |
+| Runtime adapters and model clients | [`runtime/`](../runtime/) | Keep private and behind governed interfaces; do not own runtime code here. |
+| Semantic meaning | [`contracts/`](../contracts/) | Reference contracts; do not define object meaning in `infra/`. |
+| Machine shape | [`schemas/`](../schemas/) | Validate manifests when applicable; do not create schema authority here. |
+| Rights, sensitivity, access, admissibility | [`policy/`](../policy/) | Enforce deployment consequences of reviewed policy; do not author policy here. |
+| Lifecycle material | [`data/`](../data/) | Mount or serve only reviewed phases and released artifacts. |
+| Release, correction, withdrawal, rollback decisions | [`release/`](../release/) | Apply or host reviewed decisions; never create release authority. |
+| Human-facing security doctrine | [`docs/security/`](../docs/security/) | Implement deployment constraints consistent with the doctrine. |
+| Public trust membrane | [`apps/governed-api/`](../apps/governed-api/) | Route public trust-bearing requests to it; never bypass it. |
 
 ### Anti-collapse rules
 
 `infra/` must never collapse:
 
 - a reachable port into authorization;
+- a successful build into a working service;
 - a successful deployment into release approval;
 - a proxy route into policy permission;
 - a firewall allow rule into evidence closure;
@@ -186,7 +198,8 @@ Directory Rules assign deployment, host, network, and exposure posture to `infra
 - a Terraform plan into applied state;
 - an example secret reference into a real credential;
 - a checklist into observed validation;
-- a GitHub merge into a production deployment.
+- a passing workflow into environment verification;
+- a GitHub merge into production deployment or KFM publication.
 
 [Back to top](#top)
 
@@ -196,32 +209,34 @@ Directory Rules assign deployment, host, network, and exposure posture to `infra
 
 ### Repository-grounded status matrix
 
-| Surface | Current evidence at `main@3c410ca496f5…` | Safe conclusion |
-|---|---:|---|
-| `infra/README.md` | **CONFIRMED v1.1 prior state**, blob `c791f22…` | Same-path v1.1.1 inventory correction. |
-| Directory Rules | **CONFIRMED** `infra/` responsibility; no `infra/` child topology is enumerated | Root placement and responsibility are established; child-lane adoption remains repository evidence, not doctrine. |
-| Standard child lanes | **CONFIRMED repository evidence** for READMEs under `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; lane payload maturity and adoption remain separate. |
-| Hardening checklist | **CONFIRMED** [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | Repeatable review questions exist; the checklist is not an executable validator or completed review record. |
-| Docker lane | **CONFIRMED** two tracked three-line greenfield Dockerfile placeholders; no `infra/.dockerignore` or root `.dockerignore` verified | File presence only; `TEMPLATE_PRESENT`, image build, scan, runtime, and deployment readiness are **NOT ESTABLISHED**. |
-| Compose lane | **CONFIRMED** tracked greenfield `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | File presence only; `TEMPLATE_PRESENT`, Compose rendering, image build, runtime, and deployment readiness are **NOT ESTABLISHED**. |
-| Firewall lane | **CONFIRMED** README plus documentation-only `deny_by_default.md` | No executable firewall-rule payload or enforcement is established. |
-| Reverse-proxy lane | **CONFIRMED** README plus one-line greenfield `caddy.example.caddyfile` | Placeholder presence only; product adoption, parse/reload, route denials, and runtime are **NOT ESTABLISHED**. |
-| VPN, systemd, Kubernetes, Terraform | Their READMEs describe proposed structures and future verification triggers | Selected products, implementation-bearing payloads, and deployed behavior remain **NEEDS VERIFICATION**. |
-| `infra/flora/` | **CONFIRMED** README path | Placement is **CONFLICTED / NEEDS VERIFICATION**; do not treat as canonical precedent. |
-| `Makefile` | **CONFIRMED** no infrastructure validation target | There is no repository-native `make infra-*` validation entrypoint. |
-| `policy-boundary-guards` | **CONFIRMED** 15 structural/static/API tests; workflow paths omit `infra/**` | Useful adjacent trust-boundary evidence, not infrastructure configuration or environment validation. |
-| CodeQL | **CONFIRMED** Python and JavaScript/TypeScript analysis workflow | Source analysis exists; it does not inspect firewall, proxy, VPN, systemd, Kubernetes, Terraform, hosts, or running routes. |
-| Dependency scan | **CONFIRMED** Python audit plus **PROPOSED** locked high-threshold pnpm audit | Dependency findings are point-in-time and not infrastructure validation or deployment approval. |
-| Active secret-scanning workflow | Expected current workflow path was not found in bounded inspection | Current active secret-scan coverage is **NOT ESTABLISHED** here. |
-| Deployment and exposure docs | **CONFIRMED** draft `deployment-topology.md` and `EXPOSURE_PLAN.md` | Doctrine is available; actual environments and routes remain unverified. |
-| Running environments | No host, cluster, proxy, firewall, VPN, Terraform backend, route inventory, logs, or runtime was inspected | Operational deployment state is **UNKNOWN**. |
+| Surface | Current evidence at `main@4e714b639861…` | Safe conclusion |
+|---|---|---|
+| `infra/README.md` | **CONFIRMED v1.2.0**, blob `618f257…` | Same-path v1.3.0 evidence refresh; no runtime or authority expansion. |
+| Directory Rules | **CONFIRMED accepted** through ADR-0029; canonical source blob `fd49a0b…` | `infra/` root responsibility is established; child-lane maturity remains separate. |
+| Standard child lanes | **CONFIRMED** READMEs under `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; implementation and environment adoption vary by lane. |
+| Hardening checklist | **CONFIRMED** [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | Repeatable review questions exist; no completed review or executable aggregate validator is implied. |
+| Docker lane | **CONFIRMED** two payload-free review Dockerfiles plus npm and Python dependency-integrity inputs | Static assertions include an allowlisted `.dockerignore` and six OS package floors. Historical exact-main image scans apply only to their prior bytes; a fresh candidate build/scan is pending. No application payload, command, entrypoint, exposed port, health check, runtime behavior, registry custody, release, or deployment is established. |
+| Compose lane | **CONFIRMED** placeholder `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | Static constraints, Compose rendering, and review-image builds are confirmed; service startup and runtime behavior are not. |
+| Compose static tests | **CONFIRMED** [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | Deterministically checks context/Dockerfile resolution, loopback ports, and selected forbidden mounts/escape settings. |
+| Compose hosted workflow | **CONFIRMED** [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml), read-only, no service start | Exact-main run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) succeeded; scope remains bounded to the checked-in Compose placeholder and review-image builds. |
+| Security workflow | **CONFIRMED** [`.github/workflows/security.yml`](../.github/workflows/security.yml) with pinned actions and Trivy `0.73.0` | Exact-main run [`33277502890`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502890) passed the repository scan, both review-image build/scan jobs, Scorecard, and aggregate result; dependency review correctly skipped on a push. |
+| Firewall lane | **CONFIRMED** README plus documentation-only `deny_by_default.md` | No executable firewall-rule payload or applied enforcement is established. |
+| Reverse-proxy lane | **CONFIRMED** README plus one-line greenfield Caddy placeholder | Product adoption, config validation, route-denial proof, reload, and runtime remain unestablished. |
+| VPN, systemd, Kubernetes, Terraform | READMEs document responsibilities, exclusions, and future checks | Selected products, implementation-bearing payloads, applied state, and deployed behavior remain **NEEDS VERIFICATION**. |
+| `infra/flora/` | **CONFIRMED** README path | Placement remains **CONFLICTED / NEEDS VERIFICATION**; do not treat it as canonical precedent. |
+| `Makefile` | **CONFIRMED** no `infra-*` validation target | A bounded hosted Compose workflow exists, but no aggregate repository-native local infra entrypoint exists. |
+| Adjacent boundary tests | **CONFIRMED** app/control-plane static suites and policy-boundary workflow | Useful adjacent evidence; not firewall, proxy, cluster, state, or environment validation. |
+| CodeQL, dependency, and security scanning | **CONFIRMED repository workflows** | Source, dependency, repository, and review-image findings have bounded scopes and are not infrastructure or deployment approval. |
+| Secret scanning | **CONFIRMED** Trivy repository and review-image secret scanning in `security.yml`; repository scan excludes `.git`, `data/raw`, `data/work`, and `data/quarantine` | Workflow coverage is bounded to configured tracked paths and built images. GitHub platform secret-scanning enablement, ignored/generated/external material, and environment coverage remain **NEEDS VERIFICATION**. |
+| Deployment and exposure docs | **CONFIRMED** draft topology and exposure guidance | Doctrine/design inputs exist; actual environments and routes remain unverified. |
+| Running environments | No host, cluster, proxy, firewall, VPN, Terraform backend, route inventory, logs, or runtime inspected | Operational deployment state is **UNKNOWN**. |
 | CODEOWNERS | **CONFIRMED** `/infra/ @bartytime4life` | Review routing exists; stewardship, required approval, and separation of duties remain **NEEDS VERIFICATION**. |
 
 ### Truth labels used here
 
 | Label | Meaning |
 |---|---|
-| `CONFIRMED` | Verified from pinned repository files, workflow definitions, or exact-path reads in this update. |
+| `CONFIRMED` | Verified from pinned repository bytes, workflows, tests, hosted checks, or exact-path reads in this update. |
 | `PROPOSED` | Recommended future design or check not established as current implementation. |
 | `UNKNOWN` | Evidence is insufficient to support a stronger conclusion. |
 | `NEEDS VERIFICATION` | A concrete check exists but was not closed strongly enough to act as fact. |
@@ -233,7 +248,7 @@ Directory Rules assign deployment, host, network, and exposure posture to `infra
 
 ## What belongs here
 
-Use `infra/` for material whose **primary responsibility** is deployment, host, network, exposure, private access, infrastructure-as-code, or operational hardening.
+Use `infra/` when the artifact's **primary responsibility** is deployment, host, network, exposure, private access, infrastructure-as-code, or operational hardening.
 
 Accepted content includes:
 
@@ -247,7 +262,7 @@ Accepted content includes:
 - Terraform modules, environment stacks, backend/provider templates, plan-review notes, and state-safety guidance;
 - cross-infrastructure hardening baselines and review checklists;
 - sanitized route inventories, service-boundary diagrams, validation summaries, and rollback notes;
-- `.env.example`, `.tfvars.example`, `.tfbackend.example`, `.service.example`, `.timer.example`, and equivalent placeholder-only templates;
+- placeholder-only `.env.example`, `.tfvars.example`, `.tfbackend.example`, `.service.example`, `.timer.example`, and equivalent templates;
 - non-secret references to environment-specific secret stores;
 - operational evidence that proves denied paths without disclosing private topology or restricted data.
 
@@ -256,11 +271,12 @@ Accepted content includes:
 Before adding a file under `infra/`, verify:
 
 1. Is deployment, host, network, exposure, private access, IaC, or hardening its primary responsibility?
-2. Does the chosen child lane already own that responsibility?
+2. Does one existing child lane uniquely own that responsibility?
 3. Does the file contain only sanitized, non-secret, reviewable material?
 4. Does it preserve public access through governed interfaces and released artifacts?
 5. Does it name validation and rollback expectations?
-6. Does it avoid creating a parallel policy, schema, contract, data, proof, receipt, or release home?
+6. Does it avoid creating a parallel policy, schema, contract, data, proof, receipt, registry, or release home?
+7. Does the change preserve least privilege and prove the required negative exposure states?
 
 [Back to top](#top)
 
@@ -287,12 +303,13 @@ Do not place the following in `infra/`:
 
 If secret, credential, state, or sensitive operational material is committed here:
 
-1. treat the event as a security incident;
+1. contain the exposure and stop further use;
 2. revoke or rotate affected access;
 3. audit repository and downstream exposure;
-4. remove or redact the material through a reviewed correction;
+4. remove or redact through a reviewed correction;
 5. record the response through the appropriate security/runbook path;
-6. preserve enough non-sensitive evidence for review and rollback without retaining the exposed secret.
+6. preserve non-sensitive evidence for review and rollback;
+7. add a prevention check when feasible.
 
 [Back to top](#top)
 
@@ -307,15 +324,15 @@ If secret, credential, state, or sensitive operational material is committed her
 | Source | Input | Boundary |
 |---|---|---|
 | [`docs/doctrine/`](../docs/doctrine/) | Lifecycle, trust-membrane, truth-posture, and placement invariants | Doctrine guides deployment; it is not an environment fact. |
-| [`docs/security/`](../docs/security/) | Threat model, exposure posture, incident response, key rotation | Security docs explain; concrete controls still require infra payloads and tests. |
+| [`docs/security/`](../docs/security/) | Threat model, exposure posture, incident response, key rotation | Concrete controls still require payloads and tests. |
 | [`docs/architecture/deployment-topology.md`](../docs/architecture/deployment-topology.md) | Proposed planes, service relationships, environment questions | Topology remains draft until environment evidence closes it. |
 | [`apps/`](../apps/) | Service entrypoints, public/private classification, health and route contracts | Infrastructure hosts apps; it does not invent routes. |
-| [`runtime/`](../runtime/) | Adapter isolation and private model-runtime requirements | Runtime must remain behind governed interfaces. |
+| [`runtime/`](../runtime/) | Adapter isolation and private model-runtime requirements | Runtime stays behind governed interfaces. |
 | [`configs/`](../configs/) | Non-secret defaults and templates | Real secret values are prohibited. |
 | [`policy/`](../policy/) | Reviewed access, rights, sensitivity, and release obligations | Policy authority remains outside `infra/`. |
-| [`release/`](../release/) and [`data/published/`](../data/published/) | Release state, rollback target, and public artifacts eligible for hosting | Infrastructure must not infer release from file presence. |
-| [`tests/`](../tests/) and [`tools/validators/`](../tools/validators/) | Reusable validation behavior and negative-state tests | Validation logic should not be hidden in deployment prose. |
-| CODEOWNERS and repository rules | Review routing and branch controls | Routing does not prove review or approval. |
+| [`release/`](../release/) and [`data/published/`](../data/published/) | Release state, rollback target, public artifacts eligible for hosting | Infrastructure must not infer release from file presence. |
+| [`tests/`](../tests/) and [`tools/validators/`](../tools/validators/) | Reusable validation behavior and negative-state tests | Validation logic must not be hidden in deployment prose. |
+| CODEOWNERS and repository controls | Review routing and branch controls | Routing does not prove review or approval. |
 
 [Back to top](#top)
 
@@ -357,35 +374,59 @@ If secret, credential, state, or sensitive operational material is committed her
 | Surface | Current state | What it proves—and does not prove |
 |---|---|---|
 | [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | **CONFIRMED** review checklist | Provides review questions; does not execute checks or show a completed review. |
-| `make boundary-guards-ci` | **CONFIRMED** command-bearing suite | Exercises 15 control-plane/app/connector/pipeline structural tests; does not target `infra/**`. |
-| `apps/governed-api/tests/test_boundary_guards.py` | **CONFIRMED** static/API boundary tests | Proves selected route/import/path-literal boundaries for the tested revision; not network or host enforcement. |
-| `tests/policy/test_explorer_web_adapter_boundary.py` | **CONFIRMED** client static boundary tests | Proves selected adapter and internal-store literal constraints; not browser network behavior. |
-| `.github/workflows/codeql.yml` | **CONFIRMED** source analysis | Does not validate deployment payloads, secret stores, network paths, or applied state. |
-| `.github/workflows/dependency-scan.yml` | **CONFIRMED** Python audit; **PROPOSED** locked pnpm audit with fail-closed result classification | Does not validate images, clusters, Terraform state, firewall rules, running services, or deployment readiness. |
-| Infra-specific Make target | **NOT ESTABLISHED** | No unified repository-native infrastructure validation command was found. |
-| Infra-specific workflow | **NOT ESTABLISHED** | No workflow was verified that parses and tests all applicable infra lanes. |
-| Active secret scanning | **NOT ESTABLISHED in bounded inspection** | A historical workflow existed, but the expected current workflow path was absent. |
-| Environment smoke / negative route tests | **UNKNOWN** | No host, cluster, proxy, firewall, VPN, or applied environment was inspected. |
+| `tests/infra/test_docker_security_overrides.py` (not present) | **CONFIRMED** deterministic no-network test | Checks exact Explorer overlay versions and integrity metadata, the checksum-bound npm archive, replacement targets, dependency versions, and extraction API assertion. It does not build or run an image. |
+| [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | **CONFIRMED** deterministic no-network test | Verifies the two relative contexts and Dockerfiles resolve, ports are loopback-bound, and selected sensitive mounts/privileged escapes are absent. It is not runtime or environment proof. |
+| [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml) | **CONFIRMED** read-only workflow with immutable action pins | Runs static tests, `docker compose ... config --quiet`, and `docker compose ... build`; never starts services. |
+| Exact-main Compose run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) | **CONFIRMED success** at `4e714b6…` | Static and render/build jobs passed. The result is point-in-time evidence for those bytes, not service-start or continuous environment proof. |
+| [`.github/workflows/security.yml`](../.github/workflows/security.yml) | **CONFIRMED** pinned security workflow | Builds both review images and scans OS/library vulnerabilities and secrets with Trivy `0.73.0`; separately scans the repository for vulnerabilities, misconfiguration, and secrets. It does not start containers or establish runtime controls. |
+| Exact-main security run [`33277502890`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502890) | **CONFIRMED success** at `4e714b6…` | Repository scan, both container build/scan jobs, Scorecard, and aggregate result succeeded; dependency review skipped as designed on a push. The result is bounded to configured inputs, scanner database, thresholds, and ignore policy. |
+| `make boundary-guards-ci` | **CONFIRMED** command-bearing adjacent suite | Exercises selected control-plane/app/connector/pipeline boundaries; does not target infrastructure payloads or hosts. |
+| App/browser boundary tests | **CONFIRMED** source/static constraints | Prove tested source/import/path-literal boundaries only; not browser network or host enforcement. |
+| CodeQL and dependency scanning | **CONFIRMED** companion repository workflows | Do not validate clusters, Terraform state, firewall rules, running services, or deployment readiness. |
+| Infra-specific Make target | **NOT ESTABLISHED** | No aggregate local `make infra-*` entrypoint was found. |
+| Infra-wide workflow | **NOT ESTABLISHED** | Compose has bounded coverage; proxy, firewall, VPN, systemd, Kubernetes, Terraform, and applied environments do not share one verified gate. |
+| GitHub platform secret scanning and environment coverage | **NOT ESTABLISHED in bounded inspection** | The Trivy workflow has confirmed bounded secret checks; platform feature enablement, ignored/generated/external material, and deployed environments remain open. |
+| Environment smoke and negative route tests | **UNKNOWN** | No host, cluster, proxy, firewall, VPN, applied environment, or live route was inspected. |
 
 > [!IMPORTANT]
-> A green general-purpose check must be interpreted according to its real scope. CodeQL, dependency scanning, app-boundary tests, documentation checks, or a completed Markdown review cannot substitute for parsing the changed infrastructure payload and proving the relevant negative exposure states.
+> A green general-purpose check must be interpreted according to its declared scope. The Compose smoke proves that the checked-in placeholder renders and its two review images build on the runner. The security workflow adds configured repository and review-image scan evidence. Neither proves application code, commands, health checks, governed API behavior, Explorer behavior, service startup, runtime controls, host controls, release, deployment, or publication.
+
+### Current bounded Compose commands
+
+Static no-network tests:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_compose_static.py' \
+  --verbose
+```
+
+Supported hosted Docker/Compose checks:
+
+```bash
+docker compose -f infra/compose/docker-compose.yml config --quiet
+docker compose -f infra/compose/docker-compose.yml build
+```
+
+Do **not** add `up`, service startup, live probes, secret injection, production mounts, or external side effects to this bounded smoke without a separately reviewed change.
 
 ### Applicability-aware checks
 
-Use the checks that match the changed lane. These commands are **PROPOSED examples** until the repository establishes supported versions and an accepted orchestration entrypoint.
+Use checks that match the changed lane. The commands below are requirements or **PROPOSED examples** until the repository pins supported products and a common orchestration entrypoint.
 
 | Lane | Minimum useful checks | Required negative evidence |
 |---|---|---|
-| Docker | Dockerfile parse/build in a safe context; image user, ports, mounts, and content review; SBOM/scan when adopted | No embedded secrets, RAW/WORK/QUARANTINE, proof/receipt/release data, or direct public model path |
-| Compose | `docker compose config`; service, port, network, volume, profile, and secret-reference review | No broad host mounts or direct public internal/model/data services |
-| Reverse proxy | Engine config validation; positive route inventory; header/CORS/TLS-reference review | RAW/WORK/QUARANTINE, candidates, model, admin, debug, internal, `.env`, and secret paths denied |
+| Docker | Parse/build in a safe context; image user, ports, mounts, contents, SBOM/scan when adopted | No embedded secrets, non-public lifecycle data, proof/receipt/release data, or direct public model path |
+| Compose | Static boundary test; `docker compose config`; bounded build; service/network/volume/profile review | No broad host mounts, privileged escape, or direct public internal/model/data services |
+| Reverse proxy | Engine config validation; route inventory; header/CORS/TLS-reference review | RAW/WORK/QUARANTINE, candidates, model, admin, debug, internal, `.env`, and secret paths denied |
 | Firewall | Syntax/plan review; explicit port/service inventory; ingress and egress review | Default deny; no public database, object store, model runtime, raw store, admin, or debug listener |
-| VPN/private access | Access owner/purpose/expiry/revocation review; sanitized route-intent validation | Public users denied; private access does not grant publication or unrestricted raw/internal access |
+| VPN/private access | Access owner/purpose/expiry/revocation review; sanitized route-intent validation | Public users denied; private access does not grant publication or unrestricted internal access |
 | systemd | `systemd-analyze verify` or equivalent; user/group, filesystem, binding, restart, and journal review | Public units cannot read non-public lifecycle stores or expose direct model/admin services |
-| Kubernetes | YAML/render/dry-run; NetworkPolicy, RBAC, ingress, volume, secret-reference, and probe review | Public ingress cannot reach model, raw/internal stores, admin, or unpublished artifacts |
+| Kubernetes | Render/dry-run; NetworkPolicy, RBAC, ingress, volume, secret-reference, and probe review | Public ingress cannot reach model, raw/internal stores, admin, or unpublished artifacts |
 | Terraform | `fmt`, safe `init`, `validate`, redacted plan, IAM/network/storage/state review | No committed state/secrets; no public denied surfaces or broad wildcard permissions |
 | Hardening | Completed checklist with links to lane-specific evidence | All applicable deny states explicitly demonstrated |
-| Documentation-only | UTF-8/GFM source checks, links/anchors, evidence labels, no-secret scan | No new operational claim without implementation evidence |
+| Documentation-only | UTF-8/GFM source checks, links/anchors, evidence labels, no-secret scan | No operational claim without implementation evidence |
 
 ### Validation record requirements
 
@@ -409,7 +450,7 @@ For an exposure-significant change, record:
 
 ### Verified review routing
 
-[`/.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/infra/` to `@bartytime4life`. The CODEOWNERS file explicitly states that this route is not a stewardship assignment, review record, policy decision, release approval, or proof of independent review.
+[`/.github/CODEOWNERS`](../.github/CODEOWNERS) routes `/infra/` to `@bartytime4life`. The file explicitly states that routing is not a stewardship assignment, review record, policy decision, release approval, publication authority, or proof that review occurred.
 
 ### Recommended role review
 
@@ -417,22 +458,22 @@ The following burden is **PROPOSED governance guidance** until approved stewards
 
 | Change type | Review needed |
 |---|---|
-| README-only wording with no posture or path change | Infra or docs maintainer |
-| Docker/Compose packaging with no exposure change | Infra maintainer plus affected application/runtime owner |
+| README-only wording with no posture or path change | Infrastructure or documentation maintainer |
+| Docker/Compose packaging with no exposure change | Infrastructure maintainer plus affected application/runtime owner |
 | Public route, firewall, ingress, DNS, TLS, headers, or CORS | Infrastructure + security + governed API/web owner |
 | VPN, admin, review-console, or emergency access | Infrastructure + security + operations owner |
-| systemd, Kubernetes, or Terraform affecting public exposure or identity | Infrastructure + security; affected app/runtime/data owner |
+| systemd, Kubernetes, or Terraform affecting exposure or identity | Infrastructure + security + affected app/runtime/data owner |
 | Model-runtime service, route, mount, or network path | Runtime + security owner |
 | RAW/WORK/QUARANTINE/internal-store access | Data + security owner |
 | Public artifact hosting or export serving | Release + infrastructure + security owner |
 | Secret-reference, credential, state, or key-rotation handling | Security + infrastructure owner |
 | Production deployment or rollback posture | Infrastructure + security + release owner |
 | Exception to deny-by-default or least privilege | Accepted ADR or documented, time-bounded risk acceptance with rollback |
-| `infra/flora/` placement resolution | Docs/architecture + infrastructure + Flora/domain owner; migration or ADR as required |
+| `infra/flora/` placement resolution | Documentation/architecture + infrastructure + Flora/domain owner; migration or ADR as required |
 
 ### Separation-of-duties boundary
 
-For policy-significant or production exposure changes, the author should not be treated as the sole independent approver. Whether GitHub rulesets enforce this remains **NEEDS VERIFICATION**.
+For policy-significant or production-exposure changes, the author should not be treated as the sole independent approver. Whether rulesets enforce this remains **NEEDS VERIFICATION**.
 
 [Back to top](#top)
 
@@ -442,19 +483,20 @@ For policy-significant or production exposure changes, the author should not be 
 
 | Folder | Relationship |
 |---|---|
-| [`docs/doctrine/`](../docs/doctrine/) | Core invariants and Directory Rules. |
+| [`docs/doctrine/`](../docs/doctrine/) | Core invariants and accepted Directory Rules source. |
+| [`docs/adr/`](../docs/adr/) | Accepted and proposed decision records, including ADR-0029. |
 | [`docs/security/`](../docs/security/) | Human-facing threat, exposure, incident, and key-rotation doctrine. |
 | [`docs/runbooks/`](../docs/runbooks/) | Operational procedures, recovery, drills, and incident response. |
 | [`docs/architecture/`](../docs/architecture/) | Deployment topology and governed API design. |
 | [`apps/governed-api/`](../apps/governed-api/) | Executable public trust membrane. |
-| [`apps/explorer-web/`](../apps/explorer-web/) | Public map shell, downstream of governed API and released artifacts. |
+| `apps/explorer-web/` (retired) | Public map shell downstream of governed APIs and released artifacts. |
 | [`apps/review-console/`](../apps/review-console/) | Restricted reviewer surface; not the normal public path. |
-| [`runtime/`](../runtime/) | Private adapters and model runtime implementation. |
+| [`runtime/`](../runtime/) | Private adapters and model-runtime implementation. |
 | [`configs/`](../configs/) | Non-secret configuration defaults and templates. |
 | [`policy/`](../policy/) | Admissibility, rights, sensitivity, access, and release rules. |
 | [`data/`](../data/) | Lifecycle material and public/non-public phase boundaries. |
 | [`release/`](../release/) | Release decisions, correction, withdrawal, and rollback authority. |
-| [`tests/`](../tests/) | Executable enforceability proof. |
+| [`tests/infra/`](../tests/infra/) | Bounded infrastructure static test lane. |
 | [`tools/validators/`](../tools/validators/) | Reusable validation implementation. |
 | [`.github/workflows/`](../.github/workflows/) | CI definitions; each workflow has bounded authority. |
 | [`artifacts/`](../artifacts/) | Non-authoritative build/docs/QA/temporary outputs only. |
@@ -465,11 +507,11 @@ For policy-significant or production exposure changes, the author should not be 
 
 ## ADRs
 
-No accepted infrastructure-topology ADR was established in the bounded inspection. The draft deployment and exposure documents are evidence inputs, not accepted decision records.
+[`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is the accepted placement authority that adopts the exact Directory Rules v2 bytes. No accepted production infrastructure-topology decision was established in this bounded review.
 
 An ADR or equivalent adopted architecture decision is required or strongly indicated before:
 
-- adding, removing, or renaming a canonical root or recognized infrastructure lane;
+- adding, removing, renaming, or changing the authority of a root or recognized infrastructure lane;
 - creating a parallel infrastructure authority;
 - selecting a production orchestration standard when the choice changes shared contracts or migration burden;
 - selecting or replacing the public edge/reverse-proxy architecture;
@@ -478,7 +520,7 @@ An ADR or equivalent adopted architecture decision is required or strongly indic
 - turning a domain-named infrastructure folder such as `infra/flora/` into an accepted general placement pattern;
 - making an irreversible or high-risk production exposure decision.
 
-Routine, reversible templates inside an accepted lane may use normal review when they do not alter these decisions.
+Routine, reversible templates inside an accepted lane may use normal review when they do not alter those decisions.
 
 [Back to top](#top)
 
@@ -488,11 +530,11 @@ Routine, reversible templates inside an accepted lane may use normal review when
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-29 |
-| Review type | Same-path repository-grounded inventory correction and Compose build-path repair |
-| Repository snapshot | `main@3c410ca496f56a892b131af62465560fa298b1d2` |
-| Current maturity | Documentation-heavy; hardening checklist and placeholder Docker/Compose payloads confirmed; deployability and infra-specific tool validation not established |
-| Next review trigger | First non-placeholder deployment payload, infra validation workflow, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
+| Last reviewed | 2026-08-29 |
+| Review type | Same-path repository-grounded Docker evidence reconciliation after focused static checks and exact-main review-image build/scan validation |
+| Repository snapshot | `main@4e714b639861e340b0c35a5360f9ffaecdf1f53c` |
+| Current maturity | Documentation-heavy; hardening checklist, Docker review-image inputs, and Compose placeholder confirmed; bounded Docker static/build/scan and Compose static/render/build validation confirmed; service startup, infra-wide validation, deployability, and environment state unestablished |
+| Next review trigger | Application payload, Docker context allowlist, command/entrypoint/health check, service-start smoke, aggregate infra validator, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
 
 [Back to top](#top)
 
@@ -502,7 +544,7 @@ Routine, reversible templates inside an accepted lane may use normal review when
 
 ## Current bounded topology
 
-The complete tracked recursive inventory at the reviewed base contained 18 files across ten direct child directories. Per `DIR-README-003`, this tree maps direct children only; each child README owns deeper detail.
+The direct tracked topology remains ten child directories: nine standard infrastructure lanes plus the unresolved domain-named `flora/` lane. This review rechecked direct children and the Compose/Docker/test/workflow closure; it did not claim a fresh exhaustive inventory of ignored, generated, externally managed, or deployed infrastructure.
 
 ```text
 infra/
@@ -523,29 +565,29 @@ infra/
 
 | Lane | Intended responsibility | Evidence-bounded maturity |
 |---|---|---|
-| [`docker/`](./docker/) | Image construction and container boundary | README plus two greenfield Dockerfile placeholders confirmed; `TEMPLATE_PRESENT` and build/runtime readiness not established |
-| [`compose/`](./compose/) | Local/small-host orchestration | README plus greenfield Compose placeholder confirmed; `TEMPLATE_PRESENT` and render/runtime readiness not established |
-| [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README plus one-line greenfield Caddy placeholder confirmed; adoption, parse/reload, and runtime not established |
+| [`docker/`](./docker/) | Image construction and container boundary | README, two payload-free review Dockerfiles, dependency-integrity inputs, and a constrained `.dockerignore`; bounded static checks pass, while a fresh image build/scan for the changed candidate remains pending; application payloads, commands, health, runtime, registry, release, and deployment remain unestablished |
+| [`compose/`](./compose/) | Local/small-host orchestration | README plus placeholder Compose file; static boundary, render, and build checks pass; service start and runtime remain unestablished |
+| [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README plus one-line greenfield Caddy placeholder; adoption, parse/reload, denials, and runtime unestablished |
 | [`vpn/`](./vpn/) | Private-access governance | README confirmed; live config intentionally excluded; implementation unestablished |
-| [`firewall/`](./firewall/) | Host/network allow and deny posture | README plus documentation-only deny-by-default posture file confirmed; executable rule payload not established |
+| [`firewall/`](./firewall/) | Host/network allow and deny posture | README plus documentation-only deny-by-default file; executable rule payload unestablished |
 | [`systemd/`](./systemd/) | Host service units, timers, sockets, hardening | README confirmed; service set and units unestablished |
 | [`kubernetes/`](./kubernetes/) | Cluster manifests, NetworkPolicy, RBAC, ingress | README confirmed; convention and manifests unestablished |
-| [`terraform/`](./terraform/) | IaC, providers, state/backend safety, provisioning | README confirmed; adoption, providers, and modules unestablished |
-| [`hardening/`](./hardening/) | Cross-infra hardening baseline and review discipline | README and checklist confirmed; executable validation unestablished |
-| [`flora/`](./flora/) | Flora-specific deployment/exposure guidance | README and `.gitkeep` confirmed; placement conflicted; implementation-bearing payload not established |
+| [`terraform/`](./terraform/) | IaC, providers, state/backend safety, provisioning | README confirmed; adoption, providers, modules, and state unestablished |
+| [`hardening/`](./hardening/) | Cross-infra hardening baseline and review discipline | README and checklist confirmed; aggregate executable validation unestablished |
+| [`flora/`](./flora/) | Flora-specific deployment/exposure guidance | README confirmed; placement conflicted; implementation-bearing payload unestablished |
 
 ### `infra/flora/` conflict
 
-Accepted Directory Rules assign deployment and exposure configuration to `infra/` but do not enumerate its child topology. Their domain examples use domain-aware responsibility roots such as `docs/domains/`, `contracts/domains/`, `schemas/.../domains/`, `policy/domains/`, `pipelines/domains/`, and lifecycle/release lanes; they do not establish `infra/<domain>/` as a canonical pattern. `infra/flora/` may reflect an earlier interpretation that domains can segment every root, but its current placement remains unresolved.
+Accepted Directory Rules place scope inside the owning responsibility root only after the root is fixed, but current evidence does not establish `infra/<domain>/` as a reusable child-lane pattern. `infra/flora/` may represent earlier design lineage; it is not authority for creating siblings.
 
 Until resolved:
 
 - do not add another `infra/<domain>/` lane by analogy;
 - do not call `infra/flora/` canonical;
-- keep any existing file visibly documentation-only;
-- inspect whether its content belongs in a standard infra lane plus Flora docs/runbooks;
+- keep existing content visibly documentation-only;
+- inspect whether its material belongs in a standard infra lane plus Flora docs/runbooks;
 - use a reviewed migration note or ADR before moving or legitimizing the path;
-- preserve rollback and inbound links if the path changes.
+- preserve history, rollback, and inbound links if the path changes.
 
 [Back to top](#top)
 
@@ -607,7 +649,7 @@ An exposure-significant deployment is incomplete until evidence shows:
 ### Public route classes
 
 | Route class | Default |
-|---|---:|
+|---|---|
 | Public web shell | `ALLOW` only when reviewed and downstream of governed APIs |
 | Governed API | `ALLOW` only with application policy/evidence/release controls |
 | Released static artifacts | `ALLOW` only with release identity and rollback target |
@@ -619,7 +661,7 @@ An exposure-significant deployment is incomplete until evidence shows:
 | Source credentials and secret stores | `DENY` |
 | Debug or temporary routes | `DENY public` unless time-bounded, reviewed, and reversible |
 
-These route labels describe the desired exposure posture. They are not proof that any route currently exists or is enforced.
+These route labels express required posture. They do not prove any route currently exists or is enforced.
 
 [Back to top](#top)
 
@@ -629,20 +671,20 @@ These route labels describe the desired exposure posture. They are not proof tha
 
 ## Lane contract index
 
-Each standard lane inherits the root rules and adds its own payload and validation contract.
+Each standard lane inherits the root rules and adds a payload and validation contract.
 
 | Lane | Must preserve | Must prove before operational reliance |
 |---|---|---|
 | `docker/` | No secret/data bake-in; non-root and minimal image posture where practical | Build/scan result, image contents, user, ports, health, provenance |
-| `compose/` | Private/local defaults; explicit ports, networks, volumes, profiles | Rendered config and route/mount denial checks |
+| `compose/` | Private/local defaults; explicit ports, networks, volumes, profiles | Rendered config, bounded build, service start when admitted, and route/mount denials |
 | `reverse_proxy/` | Explicit public routes; TLS/header/CORS posture; no wildcard bypass | Config parse/reload, route inventory, positive and negative requests |
 | `vpn/` | Steward-only access with owner, purpose, expiry, revocation, audit | Access lifecycle and public-denial evidence |
 | `firewall/` | Default deny; explicit ingress/egress; narrow service exposure | Rule parse/plan, port inventory, denied surfaces |
-| `systemd/` | Least privilege, private model binding, narrow filesystem access, safe timers | Unit verify, user/group/mount/binding/log review |
+| `systemd/` | Least privilege, private model binding, narrow filesystem access, safe timers | Unit verification, identity, mount, binding, and log review |
 | `kubernetes/` | Namespace/service-account isolation, NetworkPolicy, RBAC, explicit ingress | Render/dry-run, policy/RBAC/volume/route evidence |
 | `terraform/` | Protected state, no secrets, plan review, explicit public/private resources | Format/init/validate/plan and IAM/network/storage review |
 | `hardening/` | Cross-lane checklist and fail-closed negative states | Completed evidence-backed checklist |
-| `flora/` | Documentation-only while conflicted; no sensitive Flora exposure | Placement decision plus any applicable standard-lane checks |
+| `flora/` | Documentation-only while conflicted; no sensitive Flora exposure | Placement decision plus applicable standard-lane checks |
 
 [Back to top](#top)
 
@@ -650,24 +692,25 @@ Each standard lane inherits the root rules and adds its own payload and validati
 
 ## Infrastructure maturity model
 
-The following model is **PROPOSED** for consistent status reporting. It is not a current repository enum or release state.
+The following labels are **PROPOSED** for consistent status reporting. They are not release states and do not override lane-specific evidence.
 
 | Level | Meaning | Minimum evidence |
 |---|---|---|
 | `DOCUMENTED` | README or architecture guidance exists | Current, linked, evidence-labeled documentation |
 | `TEMPLATE_PRESENT` | A concrete non-secret payload exists | File inventory, owner, intended environment |
-| `PARSES` | Tool-specific syntax/render/plan checks succeed | Supported tool version and observed command result |
-| `BOUNDARY_TESTED` | Positive service behavior and required denials are tested | Deterministic or environment-scoped negative evidence |
+| `PARSES_OR_BUILDS` | Tool-specific syntax/render/build checks succeed | Supported tool version and observed command result |
+| `BOUNDARY_TESTED` | Positive behavior and required denials are tested | Deterministic or environment-scoped negative evidence |
 | `ENVIRONMENT_VERIFIED` | Applied environment matches reviewed design | Host/cluster/edge evidence tied to a known revision |
-| `RELEASE_INTEGRATED` | Public hosting and deployment changes are tied to release, correction, and rollback | Release identity, review record, rollback drill |
+| `RELEASE_INTEGRATED` | Hosting/deployment changes bind to release, correction, and rollback | Release identity, review record, rollback drill |
 | `RETIRED` | Path or environment is no longer active | Deprecation/migration record and removal verification |
 
 Current safe classification:
 
 - standard lane READMEs: `DOCUMENTED`;
 - `hardening/CHECKLIST.md`: review aid under `DOCUMENTED`, not `BOUNDARY_TESTED`;
-- Docker/Compose placeholder files: **CONFIRMED**; `TEMPLATE_PRESENT` remains **NEEDS VERIFICATION** because ownership and intended-environment requirements are incomplete;
-- applied environments and release integration: **UNKNOWN**;
+- Docker review images: `PARSES_OR_BUILDS` for the exact checked-in inputs, with focused static checks and configured exact-main scans; not runnable-service, runtime, release, or deployment evidence;
+- Compose placeholder: `PARSES_OR_BUILDS` for the exact checked-in placeholder plus selected static boundary assertions; not service-start or full network `BOUNDARY_TESTED`;
+- applied environments and release integration: `UNKNOWN`;
 - `infra/flora/`: `DOCUMENTED` plus `CONFLICTED`.
 
 [Back to top](#top)
@@ -683,7 +726,7 @@ A material infrastructure PR should make the deployment effect inspectable witho
 | Scope | Exact files, lane, environment class, and intended consumer |
 | Authority | Directory Rules basis and any governing ADR/architecture decision |
 | Current state | What is verified before the change |
-| Desired state | What will change and what will remain denied |
+| Desired state | What changes and what remains denied |
 | Exposure delta | Routes, ports, listeners, origins, DNS, ingress, egress, or static-hosting changes |
 | Identity delta | Service accounts, roles, users, groups, permissions, and least-privilege rationale |
 | Data/mount delta | Read/write paths and lifecycle phase; public-service denials |
@@ -694,7 +737,7 @@ A material infrastructure PR should make the deployment effect inspectable witho
 | Residual risk | `UNKNOWN` and `NEEDS VERIFICATION` items left open |
 | Review | Required maintainers/stewards and decision record |
 
-A packet may be carried in the PR body, a reviewed runbook, or a dedicated lane document. It must not be hidden in commit messages alone.
+The packet may live in the PR body, a reviewed runbook, or a dedicated lane document. It must not be hidden in commit messages alone.
 
 [Back to top](#top)
 
@@ -704,7 +747,7 @@ A packet may be carried in the PR body, a reviewed runbook, or a dedicated lane 
 
 ### Documentation rollback
 
-Before merge, close the review branch or PR. After merge, revert the scoped correction commit without rewriting shared history. Restore the prior v1.1 blob `c791f22f4163603bab2aa2579bff8786e1d21c37` only when byte-level recovery of this README is required.
+Before merge, close or abandon the review branch/PR. After merge, revert the scoped documentation commit without rewriting shared history. For byte-level recovery of the pre-v1.3 README, restore blob `618f2578c4a0e00caefee7371bf83d2ee0102161`.
 
 ### Operational correction
 
@@ -712,13 +755,13 @@ If infrastructure exposes a denied surface or secret:
 
 1. **contain** — disable the route, listener, credential, identity, or environment;
 2. **preserve safe evidence** — retain sanitized logs and revision identity;
-3. **rotate/revoke** — replace exposed credentials or access;
+3. **rotate or revoke** — replace exposed credentials or access;
 4. **assess scope** — identify data, users, services, and releases affected;
 5. **correct** — land the smallest reviewed configuration fix;
-6. **invalidate/repoint** — update routes, caches, aliases, or release references;
+6. **invalidate or repoint** — update routes, caches, aliases, or release references;
 7. **document** — create the appropriate incident, correction, rollback, or risk record;
 8. **verify** — rerun positive and negative checks;
-9. **review recurrence controls** — add tests, validators, or rules so the failure cannot silently return.
+9. **prevent recurrence** — add a test, validator, policy, or rule where feasible.
 
 Infrastructure rollback must not erase audit history or silently restore an unsafe prior configuration.
 
@@ -730,13 +773,14 @@ Infrastructure rollback must not erase audit history or silently restore an unsa
 
 ### For this root README
 
-- [x] Same path and `doc_id` preserved.
-- [x] Accepted Directory Rules v2 placement and ROOT_FULL field set addressed.
-- [x] Current child READMEs and hardening checklist grounded in pinned repository evidence.
-- [x] Current CODEOWNERS, Makefile, boundary tests, and workflow scopes reconciled.
-- [x] Doctrine, configuration, validation, environment, release, and publication states kept separate.
-- [x] `infra/flora/` conflict surfaced without unilateral move or deletion.
-- [x] Trust membrane, lane contracts, maturity, validation gaps, review burden, and rollback made explicit.
+- [x] Same path, H1, `doc_id`, and creation date preserved.
+- [x] Accepted Directory Rules v2 and ADR-0029 adoption state reconciled.
+- [x] Current child-lane and `infra/flora/` placement posture retained.
+- [x] Current Docker review-image inputs, static tests, security workflow, and exact-main build/scan evidence reconciled without claiming runnable services.
+- [x] Bounded Compose static tests, workflow, immutable pins, and successful hosted run incorporated.
+- [x] Compose evidence kept separate from service startup, environment, deployment, release, and publication proof.
+- [x] No local aggregate infra target or infra-wide gate invented.
+- [x] Trust membrane, lane contracts, maturity, validation gaps, review burden, and rollback remain explicit.
 - [ ] Human review and GitHub host-render inspection.
 - [ ] Any separately required generated provenance or review record.
 
@@ -744,10 +788,10 @@ Infrastructure rollback must not erase audit history or silently restore an unsa
 
 A lane is not operationally complete until:
 
-- a concrete payload and owner exist;
+- a concrete payload and accountable owner exist;
 - secrets and state are outside Git;
 - supported tool versions are pinned or documented;
-- syntax/render/plan checks pass;
+- syntax/render/plan/build checks pass;
 - positive behavior and required deny states are tested;
 - service identities, data mounts, and public/private routes are reviewed;
 - logging is useful and redacted;
@@ -765,8 +809,8 @@ A lane is not operationally complete until:
 
 | ID | Verification question | Status |
 |---|---|---|
-| INF-OV-001 | Is operational, generated, ignored, or externally managed infrastructure omitted from the 18-file tracked inventory at the reviewed revision? | Tracked inventory **CONFIRMED**; external/operational state **UNKNOWN** |
-| INF-OV-002 | Which tracked placeholders are adopted, owned, and implementation-bearing rather than documentation or greenfield scaffolding? | Placeholder/document-only files **CONFIRMED**; adoption and operational maturity **NEEDS VERIFICATION** |
+| INF-OV-001 | Is operational, generated, ignored, or externally managed infrastructure omitted from the tracked repository inventory? | Tracked direct topology **CONFIRMED**; external/operational state **UNKNOWN** |
+| INF-OV-002 | Which placeholders are adopted, owned, and implementation-bearing rather than documentation or greenfield scaffolding? | Docker review-image inputs plus bounded static/build/scan and Compose static/render/build evidence **CONFIRMED**; application payloads, consumers, ownership, and operational maturity **NEEDS VERIFICATION** |
 | INF-OV-003 | What deployment classes exist: local-only, homelab, VPN-only, staging, public, production, or mixed? | **UNKNOWN** |
 | INF-OV-004 | Which orchestration paths are adopted: direct host, systemd, Compose, Kubernetes, Terraform, or another platform? | **NEEDS VERIFICATION** |
 | INF-OV-005 | What public edge/reverse-proxy stack and route inventory are active? | **UNKNOWN** |
@@ -775,14 +819,15 @@ A lane is not operationally complete until:
 | INF-OV-008 | Which service users, accounts, roles, mounts, and writable paths exist? | **UNKNOWN** |
 | INF-OV-009 | How is direct model-runtime access prevented in each environment? | **UNKNOWN** |
 | INF-OV-010 | How are RAW, WORK, QUARANTINE, candidates, internal stores, and source credentials denied to public services? | **UNKNOWN** |
-| INF-OV-011 | Which public artifact hosts serve released PMTiles, COGs, styles, exports, or reports, and how are release/rollback identities enforced? | **UNKNOWN** |
-| INF-OV-012 | What infrastructure-native validation command and CI workflow should be adopted? | **PROPOSED / NEEDS VERIFICATION** |
-| INF-OV-013 | Do branch rules require CODEOWNER review and independent approval for exposure-significant changes? | **NEEDS VERIFICATION** |
+| INF-OV-011 | Which hosts serve released PMTiles, COGs, styles, exports, or reports, and how are release/rollback identities enforced? | **UNKNOWN** |
+| INF-OV-012 | What lane validators and aggregate local/CI entrypoint should complement the confirmed bounded Compose smoke? | **PROPOSED / NEEDS VERIFICATION** |
+| INF-OV-013 | Do rulesets require CODEOWNER review and independent approval for exposure-significant changes? | **NEEDS VERIFICATION** |
 | INF-OV-014 | What log retention, redaction, audit access, backup, and restore requirements apply? | **UNKNOWN** |
 | INF-OV-015 | What rollback drill proves a bad route, identity, mount, manifest, or Terraform change can be contained safely? | **UNKNOWN** |
 | INF-OV-016 | Should `infra/flora/` be retained, moved into standard infra lanes plus Flora docs, or governed by an ADR? | **CONFLICTED / NEEDS VERIFICATION** |
-| INF-OV-017 | Are other domain-named or historical infra lanes present outside the bounded direct reads? | **UNKNOWN** |
+| INF-OV-017 | Are other domain-named or historical infra lanes present outside the direct topology? | **UNKNOWN** |
 | INF-OV-018 | Who holds accountable infrastructure, security, operations, and production release stewardship? | **NEEDS VERIFICATION** |
+| INF-OV-019 | What service-start and health-check fixture can be added without introducing secrets, external network, or false deployment claims? | **PROPOSED / NEEDS VERIFICATION** |
 
 [Back to top](#top)
 
@@ -791,28 +836,29 @@ A lane is not operationally complete until:
 <details>
 <summary><strong>No-loss and evidence ledger</strong></summary>
 
-| Baseline v1 element | Disposition in v1.1 |
+| Baseline v1.2.0 element | Disposition in v1.3.0 |
 |---|---|
 | Same path, `doc_id`, title, creation date | **KEEP** |
-| Deny-by-default, least privilege, auditability, rollback | **KEEP / ENRICH** |
-| No direct public RAW/WORK/QUARANTINE/internal/model path | **KEEP / ENRICH** with evidence boundaries and required negative states |
-| Governed API and released artifact public path | **KEEP / ENRICH** |
-| No secrets in Git and incident response on exposure | **KEEP / ENRICH** |
-| Nine-lane Directory map | **KEEP / VERIFY** against nine directly inspected READMEs |
-| Lane summaries and lane contracts | **KEEP / ENRICH** with maturity and validation burden |
-| Mermaid trust-membrane diagram | **KEEP / REPAIR** for explicit public, private, runtime, worker, and non-public paths |
-| Inputs and outputs | **KEEP / SPLIT** into Directory Rules sections |
-| Validation matrix | **KEEP / REPAIR** by separating confirmed checks from proposed infra checks |
-| Review matrix | **KEEP / REPAIR** with verified CODEOWNERS route and unverified stewardship |
-| Open verification list | **KEEP / ENRICH** as stable IDs |
-| Last-reviewed block | **KEEP / UPDATE** |
-| Directory Rules §15 missing headings | **ADD** Authority level, Status, Related folders, ADRs in required order |
-| Repository-grounded status | **ADD** pinned evidence snapshot and current maturity matrix |
-| `infra/flora/` path | **ADD / SURFACE CONFLICT**; no move or deletion |
-| Changelog and byte-level rollback | **ADD** |
-| Claim that guidance equals enforcement | **DENY** |
+| Deny-by-default, least privilege, auditability, rollback | **KEEP / CLARIFY** |
+| No direct public RAW/WORK/QUARANTINE/internal/model path | **KEEP / CLARIFY** |
+| Governed API and released-artifact public path | **KEEP** |
+| No secrets in Git and incident response on exposure | **KEEP / CLARIFY** |
+| Nine standard lane summaries | **KEEP** |
+| `infra/flora/` placement conflict | **KEEP / SURFACE CONFLICT** |
+| Mermaid trust-membrane diagram | **KEEP / CLARIFY** |
+| Inputs and outputs | **KEEP** |
+| Validation matrix | **REPAIR** with current Docker static tests, security workflow, exact-main build/scan run, and refreshed Compose run |
+| Review matrix | **KEEP / CLARIFY** with verified CODEOWNERS route and unverified stewardship |
+| Open verification register | **KEEP / UPDATE** with aggregate-validation and service-start residue |
+| Last-reviewed block | **UPDATE** |
+| Maturity vocabulary | **KEEP / REPAIR** so bounded Compose parsing/build evidence is visible |
+| Infrastructure change packet | **KEEP** |
+| Correction and rollback | **KEEP / UPDATE** with the v1.2.0 prior blob |
+| Claim that bounded Compose CI equals deployment proof | **DENY** |
+| Accepted Directory Rules adoption state | **REPAIR** through ADR-0029 evidence |
+| Docker “tiny greenfield placeholder” status | **REPAIR** to payload-free review images with dependency-integrity and bounded scan evidence |
 
-**Evidence used:** target blob `7464b14…`; Directory Rules `2affb08…`; CODEOWNERS `dd2a84a…`; Makefile `51537af…`; hardening checklist `e1dffb8…`; boundary workflow `6d442a6…`; deployment topology `73ece03…`; exposure plan `0ade933…`; and directly inspected child READMEs.
+**Current evidence used:** main `4e714b6…`; target blob `618f257…`; Directory Rules blob `fd49a0b…`; accepted ADR-0029; CODEOWNERS `dd2a84a…`; Makefile `304145d…`; Compose `8a45891…`; Compose README `20e3993…`; Docker README `7bf079f…`; Dockerfiles `1c6db4c…` and `b1d471c…`; npm manifest `702202d…` and lock `19c84d7…`; Python requirements lock `26928a7…`; Compose static test `7627d55…`; Docker static test `e1349b3…`; test README `7ecd30d…`; Compose workflow `a9b5152…`; security workflow `295d546…`; exact-main Compose run `33277502881`; exact-main security run `33277502890`.
 
 </details>
 
@@ -820,15 +866,18 @@ A lane is not operationally complete until:
 
 | Version | Date | Change | Rollback |
 |---|---|---|---|
-| v1 | 2026-07-03 | Expanded the infrastructure root posture, nine standard lanes, trust membrane, validation, review, and open questions. | Restore blob `7464b149f74f26c87cdd5574ab23a9628de25ed0`. |
-| v1.1 | 2026-07-23 | Same-path repository-grounded modernization: Directory Rules order, evidence snapshot, bounded topology, `infra/flora/` conflict, validation reality, ownership, maturity model, change packet, correction, rollback, and no-loss ledger. | Before merge, close the draft PR; after merge, revert the documentation commit. |
-| v1.1.1 | 2026-07-29 | Corrected the complete tracked payload inventory, bounded Compose builds to `infra/`, repaired Dockerfile references, and reconciled current v2 Directory Rules claims; no deployment or publication state changed. | Before merge, close the draft PR; after merge, revert the scoped infrastructure correction commit. |
+| v1 | 2026-07-03 | Expanded the infrastructure root posture, standard lanes, trust membrane, validation, review, and open questions. | Restore the corresponding Git-history version. |
+| v1.1 | 2026-07-23 | Same-path repository-grounded modernization: evidence snapshot, bounded topology, `infra/flora/` conflict, validation reality, ownership, maturity, change packet, correction, rollback, and no-loss ledger. | Revert the scoped documentation commit. |
+| v1.1.1 | 2026-07-29 | Corrected the tracked payload inventory, bounded Compose builds to `infra/`, and repaired Dockerfile references without establishing deployability. | Restore prior blob `c791f22f4163603bab2aa2579bff8786e1d21c37`. |
+| v1.1.2 | 2026-07-29 | Reconciled the dependency-scan description while preserving its non-infrastructure-validation boundary. | Restore the prior same-path blob recorded in Git history. |
+| v1.2.0 | 2026-08-08 | Refreshed against current main; recorded accepted Directory Rules through ADR-0029; added bounded Compose static/render/build workflow evidence; preserved infra-wide, runtime, deployment, release, and publication holds. | Before merge, close the draft PR; after merge, revert the scoped commit or restore blob `b8189deda0de476a967fc9ff832ae97011a3252d`. |
+| v1.3.0 | 2026-08-29 | Reconciled the root Docker status with payload-free review-image inputs, focused static tests, the pinned security workflow, and exact-main image build/scan evidence; refreshed the bounded Compose run while preserving runtime, release, deployment, and publication holds. | Before merge, close the draft PR; after merge, revert the scoped commit or restore blob `618f2578c4a0e00caefee7371bf83d2ee0102161`. |
 
 ## Status summary
 
-`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its current repository surface is documentation-heavy: the standard lane READMEs, hardening checklist, two placeholder Dockerfiles, and one placeholder Compose file are confirmed, while non-placeholder deployment payloads, environment behavior, infra-specific CI, route denials, active secret-scanning coverage, and release-integrated rollback remain unestablished or unknown.
+`infra/` is KFM's canonical deployment, host, network, and exposure responsibility root. Its repository surface remains documentation-heavy, with bounded executable evidence across two related review lanes: deterministic Docker and Compose static checks, exact-main review-image builds/scans, and exact-main Compose render/build validation, all without service startup.
 
-Until those gaps close, the safe posture is:
+The evidence does not establish application/runtime behavior, public routes, host or cluster controls, secret-store integration, applied state, deployment, release integration, or publication. The safe posture is:
 
 ```text
 repository-grounded
@@ -837,9 +886,13 @@ documentation-heavy
 deny-by-default
 least-privilege
 hardening checklist confirmed
-placeholder Docker/Compose payloads confirmed
+payload-free Docker review-image inputs confirmed
+Compose placeholder confirmed
+bounded Docker static/build/scan validation confirmed
+bounded Compose static/render/build validation confirmed
+service startup not established
+infra-wide validation not established
 deployability not established
-infra-specific validation not established
 non-release
 non-publication
 ```

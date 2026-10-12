@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-pass30-lidar-lineage-receipt-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/lidar-derived-product-lineage-receipt.yml",
+    "contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md",
+    "docs/intake/exploratory/pass-30-lidar-derived-product-lineage-source-map.md",
+    "fixtures/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt/cases.json",
+    "schemas/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json",
+    "tests/validators/test_validate_lidar_derived_product_lineage_receipt.py",
+    "tools/validators/validate_lidar_derived_product_lineage_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/lidar-derived-product-lineage-receipt.yml": "sha256:c481a7b9e2234e9fb89ca0b7dc65d067c9f087ab3c86bf90f6e6094c94c62da5",
+    "contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md": "sha256:aa1c6910ccf5bcad958be8d74540f5e021bdbdf1f2552770705b50714cc45f2e",
+    "docs/intake/exploratory/pass-30-lidar-derived-product-lineage-source-map.md": "sha256:d205bb527a8bc891a4420baf582b192f345663e4c2ae3c742edd1f9f01cf973e",
+    "fixtures/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt/cases.json": "sha256:44100e0f855747f3779acabc6112930b2846f9ac7e66aaae4990b17020a8545b",
+    "schemas/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json": "sha256:8f783fb8188a77c4b925b352b0c93e5d63af1bd1f12ff1e18652cdd75a563896",
+    "tests/validators/test_validate_lidar_derived_product_lineage_receipt.py": "sha256:723d08a84ea429aea65647fe060438ae35fb14469b16b5812bf1541e4db0d31b",
+    "tools/validators/validate_lidar_derived_product_lineage_receipt.py": "sha256:eafc9752b3d0dbe7627236a99fb0b8490465c68074222520bc916993f11a6d97"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:6440bf4dc36d7e95e53c2e1b85e2ad42a92ce1d87317db71a770f749feedc741",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local PDF inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P30-PROG-0028",
+      "repo:docs/sources/catalog/usgs/3dep-elevation.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "repo:contracts/spatial-foundation/README.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/lidar-derived-product-lineage-receipt.yml": "PROPOSED",
+    "contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-lidar-derived-product-lineage-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt/cases.json": "PROPOSED",
+    "schemas/contracts/v1/spatial-foundation/lidar_derived_product_lineage_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_lidar_derived_product_lineage_receipt.py": "PROPOSED",
+    "tools/validators/validate_lidar_derived_product_lineage_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Two valid LAZ-to-carrier-to-model chains and ten fail-closed role, topology, ancestry, transform, spatial, authority, and identity cases passed exact deterministic polarity checks."
+    },
+    {
+      "gate": "focused-validator-tests",
+      "outcome": "PASS",
+      "reason": "Eleven focused tests passed locally, including both carrier variants, role anti-collapse, lineage closure, reference preservation, identity, symlink, determinism, diagnostics, and no-network/write checks."
+    },
+    {
+      "gate": "adjacent-spatial-and-receipt-tests",
+      "outcome": "PASS",
+      "reason": "Thirty-eight LiDAR lineage, spatial transform receipt, and GENERATED_RECEIPT tests passed locally."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator bound the listed SHA-256 values to final local artifact bytes."
+    },
+    {
+      "gate": "repository-wide-pytest",
+      "outcome": "SKIPPED",
+      "reason": "Collection is blocked by inherited default-import name collisions, missing test-support import paths, and a syntax-corrupted unmodified replay-safe-effect-ledger semantics module on the selected main revision."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, spatial, and source-role review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass30-lidar-lineage-card",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P30-PROG-0028"
+    },
+    {
+      "id": "repository:usgs-3dep-source-guidance",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/usgs/3dep-elevation.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    },
+    {
+      "id": "repository:spatial-foundation-owner",
+      "validated": true,
+      "evidence_ref": "repo:contracts/spatial-foundation/README.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T20:30:28Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only LidarDerivedProductLineageReceipt candidate adapted from KFM-P30-PROG-0028 and current 3DEP repository guidance. It binds opaque LAZ, COPC/EPT, DEM, and terrain identities while granting no external-byte verification, source admission, lifecycle/catalog mutation, engineering, legal, policy, release, deployment, publication, or public-use authority."
+}

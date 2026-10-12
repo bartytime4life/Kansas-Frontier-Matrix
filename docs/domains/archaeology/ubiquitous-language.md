@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PLACEHOLDER-uuid
+doc_id: kfm://doc/docs-domains-archaeology-ubiquitous-language
 title: Archaeology — Ubiquitous Language
 type: standard
-version: v1
+version: v1.0.1
+owning_root: docs/
+responsibility: "Define bounded Archaeology terms and preserve evidence, candidate-status, temporal, sensitivity, and release distinctions for human readers."
+truth_posture: "Mixed: confirmed doctrine and repository placement with proposed field realization, identity rules, and accepted bindings still needing verification."
 status: draft
 owners: <archaeology-domain-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-08-28
 policy_label: public
-related: [docs/domains/archaeology/README.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, ai-build-operating-contract.md, DomainDriven_Design_Reference.pdf]
+related: [docs/domains/archaeology/README.md, docs/domains/archaeology/source-families.md, docs/domains/archaeology/sensitivity-and-publication-posture.md, docs/domains/archaeology/cross-lane-relations.md, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, archaeology, ubiquitous-language, glossary, DDD, sensitive-domain]
-notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine, field realization PROPOSED, repo not mounted this session]
+notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine; repository placement CONFIRMED; field realization and accepted binding remain NEEDS VERIFICATION]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,10 +29,10 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine, field reali
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![repo--state](https://img.shields.io/badge/field_realization-PROPOSED-lightgrey)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` (PLACEHOLDER) · **Updated:** 2026-08-28
 
 > [!CAUTION]
-> **Sensitive domain.** Several terms below name objects whose exact geometry fails closed (sites, provenience, excavation units). Using a term correctly is part of the trust posture: a `CandidateFeature` is **not** an `Archaeological Site`. Disposition is governed by `ai-build-operating-contract.md` §23.2.
+> **Sensitive domain.** Several terms below name objects whose exact geometry fails closed (sites, provenience, excavation units). Using a term correctly is part of the trust posture: a `CandidateFeature` is **not** an `Archaeological Site`. Disposition is governed by `docs/doctrine/ai-build-operating-contract.md` §23.2.
 
 ---
 
@@ -56,7 +59,7 @@ notes: [CONTRACT_VERSION = "3.0.0" pinned; terms CONFIRMED doctrine, field reali
 This document is the **ubiquitous language** for the Archaeology / Cultural Heritage domain: the defined terms, what the domain owns, what it explicitly does not own, and the single constraint that governs every term's meaning.
 
 > [!NOTE]
-> **Truth labels in this doc.** The term set and the scope/ownership statement are `CONFIRMED` doctrine (Atlas §15.B–§15.C). Each term is a `CONFIRMED` term with a `PROPOSED` field realization — the *name* is doctrine; the concrete schema fields are unverified. Identity rules are `PROPOSED`; temporal-separation rules are `CONFIRMED`. All repo paths are `PROPOSED` (no repository mounted).
+> **Truth labels in this doc.** The term set and the scope/ownership statement are `CONFIRMED` doctrine (Atlas §15.B–§15.C). Each term is a `CONFIRMED` term with a `PROPOSED` field realization — the *name* is doctrine; the concrete schema fields are unverified. Identity rules are `PROPOSED`; temporal-separation rules are `CONFIRMED`. Repository placement at `docs/domains/archaeology/ubiquitous-language.md` is `CONFIRMED`; concrete schema fields and accepted contract bindings remain `PROPOSED / NEEDS VERIFICATION`.
 
 The domain's one-line purpose (`CONFIRMED` doctrine / `PROPOSED` implementation): *govern archaeological sites, surveys, artifacts, contexts, excavation units, remote-sensing and LiDAR candidates, geophysics, 3D documentation, cultural/steward review, chronology, sensitivity transforms, and public-safe summaries.*
 
@@ -68,12 +71,12 @@ The domain's one-line purpose (`CONFIRMED` doctrine / `PROPOSED` implementation)
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/ubiquitous-language.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/ubiquitous-language.md` | `CONFIRMED` |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Domain segment | `archaeology` as a lane inside `docs/`, never a root | `CONFIRMED` rule |
 | Contract counterpart (meaning) | `contracts/domains/archaeology/` | `PROPOSED` |
 | Schema counterpart (shape) | `schemas/contracts/v1/domains/archaeology/` | `PROPOSED` |
-| Upstream | `ai-build-operating-contract.md`; `[DDD]` bounded-context doctrine; `[ENCY]` | `CONFIRMED` rule / `PROPOSED` presence |
+| Upstream | `docs/doctrine/ai-build-operating-contract.md`; `[DDD]` bounded-context doctrine; `[ENCY]` | `CONFIRMED` rule / `PROPOSED` presence |
 
 **Directory Rules basis.** A doc that *explains to humans* lives under `docs/`. The **meaning** of each term is formalized in `contracts/`; the **machine shape** in `schemas/`. This glossary is navigational; the contracts and schemas govern actual field realization.
 
@@ -225,6 +228,8 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Initial draft of Archaeology ubiquitous language | new | Synthesizes Atlas §15.B–§15.C + §15.E identity/temporal rules |
 | Surfaced §15.B ↔ §15.C term mapping as CONFLICTED | reconciliation | Colloquial vs. formalized names differ; flagged for ADR |
 | Pinned `CONTRACT_VERSION = "3.0.0"` | clarification | Doctrine-adjacent doc requirement |
+| Assigned a unique repository document identity and reconciled placement status | compatibility correction | Remove the duplicate placeholder identifier without implying schema, contract, evaluator, review, release, or publication authority |
+| Bumped version v1 → v1.0.1 | housekeeping | Patch correction with stable content and section anchors |
 
 > **Backward compatibility.** New document; no prior anchors to preserve. Section anchors are stable for future revisions.
 
@@ -244,13 +249,13 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- `docs/domains/archaeology/README.md` — archaeology lane landing page (`PROPOSED`)
-- `docs/domains/archaeology/source-families.md` — sibling source doc (`PROPOSED`)
-- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`PROPOSED`)
-- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`PROPOSED`)
-- `ai-build-operating-contract.md` — source-role anti-collapse, §23.2 matrix (canonical)
+- `docs/domains/archaeology/README.md` — archaeology lane landing page (`CONFIRMED` path; its authority and maturity remain separate)
+- `docs/domains/archaeology/source-families.md` — sibling source doc (`CONFIRMED` path; content remains draft)
+- `docs/domains/archaeology/sensitivity-and-publication-posture.md` — sibling sensitivity doc (`CONFIRMED` path; content remains draft)
+- `docs/domains/archaeology/cross-lane-relations.md` — sibling cross-lane doc (`CONFIRMED` path; content remains draft)
+- `docs/doctrine/ai-build-operating-contract.md` — source-role anti-collapse, §23.2 matrix (canonical)
 - `contracts/domains/archaeology/` — term meaning home (`PROPOSED`)
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)

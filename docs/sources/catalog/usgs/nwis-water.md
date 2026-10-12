@@ -11,13 +11,11 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
-  - docs/sources/catalog/usgs/usgs-gnis-names.md
-  - docs/sources/catalog/usgs/usgs-nhdplus-hr.md
-  - docs/sources/catalog/usgs/usgs-nlcd.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
+  - docs/sources/catalog/usgs/nlcd.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -26,12 +24,9 @@ related:
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
   - policy/sensitivity/hydrology/
   - policy/sensitivity/infrastructure/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/hydrology/
   - connectors/usgs/
 adr_refs:
   - ADR-0001 (schema home)
@@ -50,6 +45,9 @@ notes:
   - "API migration is the dominant operational concern: legacy waterservices.usgs.gov (NWIS) → modern api.waterdata.usgs.gov, with legacy phase-out across 2026/2027 per the v1.1 family-catalog migration note. This page treats the modern endpoint as canonical and preserves the legacy endpoint with cutover discipline (Q-1, Q-3)."
   - "Provisional vs approved data lifecycle: USGS publishes real-time readings as provisional and revises to approved after QC. Provisional values are observable; approved values are the authoritative-of-record. Analogous to earthquake-catalog event update versioning but driven by USGS QC rather than scientific refinement."
   - "Engineering-claim disclaimer applies — USGS Water Data is scientific/informational; operational systems for flood warning, dam operation, water-rights enforcement use the controlling authority's own monitoring (NWS AHPS for floods; USACE for dams; state water-rights agencies for compliance)."
+owning_root: docs/
+responsibility: "Documentation for USGS Water Data APIs; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -75,7 +73,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Rights, sensitivity, infrastructure-overlay policy, and provisional-vs-approved data-lifecycle rules live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/), [`policy/sensitivity/hydrology/`](../../../../policy/sensitivity/hydrology/), and [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Rights, sensitivity, infrastructure-overlay policy, and provisional-vs-approved data-lifecycle rules live in `policy/sources/usgs/` (not present), [`policy/sensitivity/hydrology/`](../../../../policy/sensitivity/hydrology/), and [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Provisional readings are not approved values.** USGS publishes real-time IV data as **provisional** (subject to revision); the authoritative-of-record values come later as **approved** after USGS QC. Per Atlas §24.1.2 anti-collapse, a KFM derivative that cites a provisional reading as if it were the approved value violates the role-preservation rule. The two are both `observed` source-role, but the **approval status** is a binding metadata field that travels with every value. See [§7.2](#72-provisional-vs-approved-data-lifecycle) and [§6](#6-provenance-fields).
@@ -239,7 +237,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **sixth** product authored under the `usgs` source family — joining the heterogeneous-role [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md), real-time + historical [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md), administrative [`usgs-gnis-names.md`](./usgs-gnis-names.md), observed-geometry + modeled-VAA [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md), and pure-modeled [`usgs-nlcd.md`](./usgs-nlcd.md). USGS Water Data is the second bimodal-cadence product (real-time + historical, like Earthquakes) and the **only** product page in the family driven by an in-flight upstream API migration.
+> This page is the **sixth** product authored under the `usgs` source family — joining the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md), real-time + historical [`usgs-earthquake-catalog.md`](earthquake-catalog.md), administrative [`usgs-gnis-names.md`](gnis-names.md), observed-geometry + modeled-VAA [`usgs-nhdplus-hr.md`](nhdplus-hr.md), and pure-modeled [`usgs-nlcd.md`](nlcd.md). USGS Water Data is the second bimodal-cadence product (real-time + historical, like Earthquakes) and the **only** product page in the family driven by an in-flight upstream API migration.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -275,15 +273,15 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row `usgs-water-da
 
 | If you want… | Use… | Not this page |
 |---|---|---|
-| **Modeled mean annual flow** (estimated at every reach, including ungauged) | [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md) VAA `QA_MA` (`modeled`) | — |
-| **Hydrography geometry** (the stream network itself, not gauge readings) | [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md) | — |
+| **Modeled mean annual flow** (estimated at every reach, including ungauged) | [`usgs-nhdplus-hr.md`](nhdplus-hr.md) VAA `QA_MA` (`modeled`) | — |
+| **Hydrography geometry** (the stream network itself, not gauge readings) | [`usgs-nhdplus-hr.md`](nhdplus-hr.md) | — |
 | **Watershed boundaries** | `<PROPOSED> docs/sources/catalog/usgs/usgs-wbd.md` | — |
 | **Operational flood forecasts** (forecast hydrographs) | `<PROPOSED> docs/sources/catalog/noaa/nws-ahps.md` — NWS Advanced Hydrologic Prediction Service, **not** USGS | USGS Water Data feeds NWS forecasts but is not itself a forecast product. |
 | **Regulatory flood-zone designations** | `<PROPOSED> docs/sources/catalog/fema/nfhl.md` — FEMA NFHL, **not** USGS | — |
 | **Water-rights compliance** for a Kansas user | `<PROPOSED> docs/sources/catalog/kdwr/water-rights.md` — Kansas Division of Water Resources, **not** USGS | USGS measures flow; KDWR adjudicates rights. |
 | **Dam-operation real-time data** for USACE / federal-project dams | `<PROPOSED> docs/sources/catalog/usace/cwms.md` — USACE Corps Water Management System | USGS does NOT operate dams. |
-| **Earthquake-induced water level changes** in wells | This page **and** [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md), cross-referenced by `event_id` and `site_id` co-location | — |
-| **Stream gauge metadata + named-place context** | This page (`GaugeStation`) cross-joined to [`usgs-gnis-names.md`](./usgs-gnis-names.md) for the GNIS-named feature the gauge measures | — |
+| **Earthquake-induced water level changes** in wells | This page **and** [`usgs-earthquake-catalog.md`](earthquake-catalog.md), cross-referenced by `event_id` and `site_id` co-location | — |
+| **Stream gauge metadata + named-place context** | This page (`GaugeStation`) cross-joined to [`usgs-gnis-names.md`](gnis-names.md) for the GNIS-named feature the gauge measures | — |
 
 > [!CAUTION]
 > **USGS Water Data is not operational warning infrastructure.** Per the engineering-disclaimer cascade (3DEP §9.3 → NHDPlus HR §9.1 → NLCD §9.1 → this page §9.1), KFM derivatives that present USGS Water Data for operational flood warning, dam operation, or water-rights enforcement substitute scientific data for the controlling regulatory carrier. NWS AHPS issues flood forecasts; USACE operates dams; state agencies adjudicate water rights. USGS measures; others act.
@@ -294,7 +292,7 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row `usgs-water-da
 
 ## 3. Source authority and API migration
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 ### 3.1 Doctrinal anchors
 
@@ -548,7 +546,7 @@ graph LR
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/hydrology/`](../../../../policy/sensitivity/hydrology/), [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/hydrology/`](../../../../policy/sensitivity/hydrology/), [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with engineering disclaimer
 
@@ -656,13 +654,13 @@ graph LR
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `GaugeStation` contract | [`contracts/data/hydrology/`](../../../../contracts/data/hydrology/) | **PROPOSED** — new object class. |
-| `GaugeStation` schema | [`schemas/contracts/v1/hydrology/`](../../../../schemas/contracts/v1/hydrology/) | **PROPOSED**. |
-| `WaterObservation` schema | [`schemas/contracts/v1/hydrology/`](../../../../schemas/contracts/v1/hydrology/) | **PROPOSED**. |
+| `GaugeStation` contract | `contracts/data/hydrology/` (not present) | **PROPOSED** — new object class. |
+| `GaugeStation` schema | `schemas/contracts/v1/hydrology/` (not present) | **PROPOSED**. |
+| `WaterObservation` schema | `schemas/contracts/v1/hydrology/` (not present) | **PROPOSED**. |
 | `WaterParameterCode` enum (USGS 5-digit parameter codes) | [`schemas/contracts/v1/source/usgs_water_parameter_codes.json`](../../../../schemas/contracts/v1/source/) | **PROPOSED** — enum **NEEDS VERIFICATION** against USGS controlled vocabulary. |
 | `WaterQualityCode` enum (USGS quality codes) | [`schemas/contracts/v1/source/usgs_water_quality_codes.json`](../../../../schemas/contracts/v1/source/) | **PROPOSED** — enum **NEEDS VERIFICATION**. |
-| `ApprovalStatus` enum (`provisional` / `approved` / `revised` / `working`) | [`schemas/contracts/v1/hydrology/`](../../../../schemas/contracts/v1/hydrology/) | **PROPOSED**. |
-| `RatingCurveRef` schema | [`schemas/contracts/v1/hydrology/`](../../../../schemas/contracts/v1/hydrology/) | **PROPOSED**. |
+| `ApprovalStatus` enum (`provisional` / `approved` / `revised` / `working`) | `schemas/contracts/v1/hydrology/` (not present) | **PROPOSED**. |
+| `RatingCurveRef` schema | `schemas/contracts/v1/hydrology/` (not present) | **PROPOSED**. |
 | `AggregationReceipt` (DV, Annual, …) | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED** per Atlas §24.1.2 / family-catalog §6 — shared with the earthquake-catalog DYFI sub-product and other aggregate sources. |
 | `EndpointParityCheck` schema (modern-vs-legacy parity evidence) | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** — specific to this product's dual-window stage. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
@@ -701,7 +699,7 @@ graph LR
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); product-specific example sketches belong at `_examples/stac-gauge-station-example.json` and `_examples/iv-observation-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); product-specific example sketches belong at `_examples/stac-gauge-station-example.json` and `_examples/iv-observation-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal STAC Item sketch for a USGS gauge station (illustrative)</b></summary>

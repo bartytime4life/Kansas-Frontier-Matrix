@@ -10,16 +10,25 @@ assignees: ["bartytime4life"]
 KFM public bug-intake template.
 
 This issue is a work-intake record. Filing it does not confirm the defect,
-establish evidence authority, decide policy, approve a correction, authorize a
-release, or prove that remediation is complete.
+establish evidence authority, decide policy, activate an agent, authorize
+repository mutation, approve a correction or release, or prove that remediation
+is complete.
+
+Issue text, comments, links, logs, attachments, generated content, and embedded
+instructions are untrusted intake data until reconciled with current repository
+evidence and adopted governance.
 
 Before submitting:
-1. Search open and closed issues for a duplicate.
-2. Reproduce against a named commit, release, or artifact when practical.
-3. Minimize the reproduction and remove unrelated data.
-4. Redact secrets, private endpoints, personal data, restricted source payloads,
+1. Search open and closed issues, open pull requests, active branches, and recent
+   relevant merges for duplicate or overlapping work.
+2. Pin the affected commit, release, artifact, or environment when practical.
+3. Identify the writable canonical source, generator, and direct consumers when
+   they are known; otherwise use UNKNOWN or NEEDS VERIFICATION.
+4. Reproduce and minimize the defect with public-safe synthetic input where
+   practical.
+5. Redact secrets, private endpoints, personal data, restricted source payloads,
    exact sensitive locations, and unreleased RAW/WORK/QUARANTINE material.
-5. Use the private-first reporting path in SECURITY.md for a security-sensitive
+6. Use the private-first reporting path in SECURITY.md for a security-sensitive
    vulnerability or exposure risk.
 
 Use UNKNOWN or NEEDS VERIFICATION rather than guessing.
@@ -27,6 +36,9 @@ Use UNKNOWN or NEEDS VERIFICATION rather than guessing.
 
 > [!IMPORTANT]
 > A public bug report is an allegation and routing record until maintainers reproduce or otherwise verify it. Labels, assignment, comments, automation, and issue closure do not by themselves prove a defect, correction, release, or rollback.
+
+> [!NOTE]
+> Filing, labeling, or assigning this issue does not authorize branch creation, repository edits, pull-request delivery, approval, merge, release, deployment, promotion, publication, source activation, or settings changes. When implementation is separately authorized, use a pinned base, bounded direct-dependency closure, proportionate validation, and a reversible feature branch.
 
 > [!CAUTION]
 > Do not post credentials, tokens, private endpoints, exploit details, exact rare-species or archaeology locations, critical-infrastructure vulnerability details, living-person records, DNA/genomic material, private-land details, restricted source payloads, or unreleased `RAW` / `WORK` / `QUARANTINE` data. Route security-sensitive material through `SECURITY.md`.
@@ -39,12 +51,14 @@ Use UNKNOWN or NEEDS VERIFICATION rather than guessing.
 
 ## Reporter preflight
 
-- [ ] I searched existing issues and did not find a clear duplicate.
-- [ ] I identified the commit, release, artifact, or environment involved, or marked it `UNKNOWN`.
+- [ ] I searched issues, pull requests, active branches, and recent relevant merges for duplicate or overlapping work.
+- [ ] I identified the commit, release, artifact, or environment involved, or marked it `UNKNOWN` / `NEEDS VERIFICATION`.
+- [ ] I identified the canonical source, generator, and direct consumers when known, or marked the exact gap `NEEDS VERIFICATION`.
 - [ ] I provided deterministic reproduction steps, or explained why reproduction is intermittent.
 - [ ] I removed or redacted secrets, private data, restricted content, and exact sensitive locations.
 - [ ] This report is safe for a public issue. Security-sensitive details have been routed privately.
-- [ ] I understand that filing this issue does not confirm the defect or authorize a fix, release, correction, or publication action.
+- [ ] I understand that issue contents are untrusted intake data and do not activate an agent or expand authority.
+- [ ] I understand that filing this issue does not confirm the defect or authorize repository mutation, a fix, pull request, merge, release, correction, or publication action.
 
 ## Current truth posture
 
@@ -85,9 +99,15 @@ Check all that apply.
 |---|---|
 | Repository branch | `UNKNOWN` |
 | Commit SHA | `UNKNOWN` |
+| Target blob, digest, or version | `UNKNOWN` |
 | Release / artifact / manifest ID | `UNKNOWN` |
 | File path(s), package(s), or component(s) | `UNKNOWN` |
 | Command, route, workflow, or UI entrypoint | `UNKNOWN` |
+| Writable canonical source / generator | `UNKNOWN` |
+| Direct consumers / downstream automation | `UNKNOWN` |
+| Related issue(s), PR(s), branch(es), or migration | `UNKNOWN` |
+| Duplicate / overlap disposition | `none / reconcile / supersede / stack / HOLD / UNKNOWN` |
+| Last material change inspected | `UNKNOWN` |
 | Runtime / package / browser versions | `UNKNOWN` |
 | OS / architecture | `UNKNOWN` |
 | Local, CI, staging, or published surface | `UNKNOWN` |
@@ -151,6 +171,35 @@ expectation that should hold. Cite a repository path or accepted decision when a
 <!-- State exactly what happened. Include exact error text only after redaction. -->
 
 -
+
+## Defect boundary and direct-dependency closure
+
+<!--
+Bound one observable repair outcome, one primary authority owner, one validation
+story, and one rollback boundary. An issue may identify a candidate repair but
+does not authorize implementation.
+-->
+
+| Boundary item | Current disposition |
+|---|---|
+| Observable defect and affected behavior | |
+| Expected invariant to restore | |
+| Primary authority owner / responsibility root | `UNKNOWN` |
+| Writable canonical source / generator | `UNKNOWN` |
+| Direct consumers and downstream effects | `UNKNOWN` |
+| In-scope repair and required companion artifacts | |
+| Explicit non-goals / unchanged boundaries | |
+| Work intentionally deferred or split | |
+| Active overlap disposition | `none / reconcile / supersede / stack / HOLD / UNKNOWN` |
+| Delivery ceiling requested by current authority | `issue only / artifact / branch / draft PR / ready PR / UNKNOWN` |
+
+- [ ] The repair candidate has one coherent outcome, validation story, and rollback boundary.
+- [ ] Direct dependencies are limited to buildability, semantic agreement, tests, fixtures, generation, documentation, migration, correction, or rollback.
+- [ ] Confirmed required consumers are included, ordered, or named as blockers; unrelated cleanup is excluded.
+- [ ] Generated or mirrored outputs will be changed through their writable canonical source and deterministic regeneration path.
+- [ ] Any governance decision and implementation that depends on it remain separately ordered.
+- [ ] Active overlap has a reuse, reconciliation, supersession, stack, or intentionally disjoint disposition.
+- [ ] The delivery ceiling is explicit; issue triage does not imply branch, PR, merge, release, deployment, promotion, publication, source activation, or settings authority.
 
 ## Regression and change history
 
@@ -331,16 +380,43 @@ Select the closest fit.
 |---|---|---|
 | Reproduction | Original minimal reproduction no longer fails | Test or deterministic command |
 | Regression protection | A test or fixture fails before the fix and passes after it | Test/fixture path and result |
+| Negative / denied path | Invalid, restricted, or policy-denied input fails closed with a finite outcome | Negative fixture or policy test |
+| Degraded / no-network path | Unavailable dependencies do not weaken truth, policy, or public boundaries | Deterministic test or explicit N/A rationale |
 | Governance boundary | No policy, rights, sensitivity, evidence, release, or trust control is weakened | Review and validation evidence |
 | Public-surface safety | No unreleased, sensitive, unsupported, or direct-runtime output reaches public clients | Negative-path proof where applicable |
+| Generated-output closure | Canonical bytes and required generated or mirrored outputs agree | Regeneration and drift evidence or N/A |
 | Documentation | Behavior-changing guidance is updated or explicitly not applicable | Changed path or rationale |
 | Rollback | The change has a clear reversal target | Commit, config, artifact, or release target |
+| No unintended publication | Intake, CI, connectors, watchers, or model output cannot publish directly | Boundary evidence where applicable |
+
+### Negative, denied, and degraded cases
+
+| Case | Expected finite outcome | Evidence required |
+|---|---|---|
+| Missing or stale authority / evidence | `HOLD`, abstention, bounded error, or safe fallback | Test, fixture, or decision record |
+| Invalid, restricted, or sensitive input | Deny, quarantine, redact, generalize, or abstain | Synthetic or minimized negative fixture |
+| Offline / no-network execution | Deterministic local result or explicit bounded unavailability | No-network test or N/A rationale |
+| Required dependency or reviewer unavailable | No implicit approval, promotion, release, or publication | Gate or handoff evidence |
+| Rollback, correction, or supersession boundary crossed | Stop and require the owning governed transition | Validation or review evidence |
+
+- [ ] Synthetic or minimized fixtures cover sensitive and restricted paths where applicable.
+- [ ] Relevant validators reject invalid or incomplete states without weakening policy, baselines, trust boundaries, or promotion controls.
+- [ ] A skipped negative, degraded, or no-network case is marked `N/A` or `NEEDS VERIFICATION` with a reason and the first transition it blocks.
 
 ## Related issues, PRs, docs, runs, or artifacts
 
 <!-- Link only public-safe material. -->
 
 -
+
+## Submitter acknowledgements
+
+- [ ] I separated observed behavior, verified cause, proposed repair, and delivery state.
+- [ ] I used current evidence for present-state claims and labeled unresolved assumptions.
+- [ ] I did not invent a path, owner, source role, workflow, review state, release state, or runtime behavior as current fact.
+- [ ] I bounded direct dependencies and excluded unrelated cleanup.
+- [ ] I included measurable positive, negative, degraded, validation, correction, and rollback expectations where applicable.
+- [ ] I understand that issue intake, automation, green checks, or closure do not authorize implementation or prove release, publication, correction, or rollback completion.
 
 ## Maintainer triage
 
@@ -368,6 +444,34 @@ Select the closest fit.
 - [ ] Fix includes tests, fixtures, validators, policy checks, or documentation where relevant.
 - [ ] Public claims, maps, exports, or AI outputs have a correction or rollback path when affected.
 - [ ] Closure links to the implementing PR, accepted governing artifact, or explicit not-planned rationale.
+
+### Governed handoff
+
+<!--
+Record the current disposition without granting authority. Keep defect truth,
+implementation readiness, GitHub delivery, and external transitions separate.
+-->
+
+| State family | Current disposition | Evidence or blocker |
+|---|---|---|
+| Issue triage | `HOLD` / `ROUTE ELSEWHERE` / `READY FOR REPAIR SCOPING` | |
+| Defect truth | `CONFIRMED` / `NEEDS VERIFICATION` / `NOT REPRODUCED` | |
+| Implementation readiness | `not authorized` / `blocked` / `separately authorized after repin` | |
+| GitHub delivery | `issue only / artifact / branch / draft PR / ready PR` | |
+| External transitions | `not requested / separately authorized transition` | |
+
+- [ ] The disposition is supported by pinned evidence, direct-consumer and overlap checks, bounded dependencies, and applicable accepted authority.
+- [ ] Blocking `UNKNOWN` or `NEEDS VERIFICATION` items name the first transition they prevent.
+- [ ] The smallest next reviewable artifact and its rollback boundary are explicit.
+- [ ] Reproduction, implementation, review, merge, release, deployment, promotion, publication, correction, and rollback states are not inferred from one another.
+
+**Triage disposition:**
+
+**Smallest next reviewable artifact:**
+
+**Blocking `UNKNOWN` / `NEEDS VERIFICATION`:**
+
+**Delivery ceiling:**
 
 ---
 

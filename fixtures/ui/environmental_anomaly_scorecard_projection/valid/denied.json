@@ -1,0 +1,15 @@
+{
+  "profile": "kfm.explorer.environmental-anomaly-scorecard.fixture.v1",
+  "scorecard_id": "kfm:environmental-anomaly-scorecard:synthetic:denied",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": null,
+  "assessed_at": null,
+  "lanes": [],
+  "summary": null,
+  "interpretation_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

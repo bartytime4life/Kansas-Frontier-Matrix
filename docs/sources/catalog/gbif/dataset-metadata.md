@@ -10,9 +10,6 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
-  - docs/sources/catalog/gbif/IDENTITY.md
-  - docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/gbif/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
@@ -20,6 +17,9 @@ tags: [kfm, docs, sources, catalog, gbif, fauna, biodiversity]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in prior Claude Code session, NEEDS VERIFICATION against mounted repo."
   - "v0.2: applied KFM presentation standard; added corpus-CONFIRMED Backbone DOI, license map, and STAC × DwC hybrid references."
+owning_root: docs/
+responsibility: "Documentation for GBIF Dataset Metadata; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌍 GBIF Dataset Metadata
@@ -103,7 +103,7 @@ notes:
 
 ## 4. Collection identity
 
-- **PROPOSED Collection id pattern:** `kfm-<org>-<product>` — corpus expansion direction for C4-02. Concrete example shape: `kfm-gbif-occurrences-kansas` (illustrative, **not** authoritative until the [`IDENTITY.md`](./IDENTITY.md) sibling pins it).
+- **PROPOSED Collection id pattern:** `kfm-<org>-<product>` — corpus expansion direction for C4-02. Concrete example shape: `kfm-gbif-occurrences-kansas` (illustrative, **not** authoritative until the `IDENTITY.md` (not present) sibling pins it).
 - **PROPOSED KFM namespace:** `kfm:` (short, KFM-global) — **OPEN-DSC-03 (PROPOSED tracking id; NEEDS VERIFICATION against the docs/sources/catalog open-questions register)**. The corpus records this as an unresolved choice between `kfm:` and `ks-kfm:` (Kansas-scoped) at C4-01.
 - **CONFIRMED (C7-08):** The GBIF Backbone DOI version used at admission **must be pinned in the RunReceipt and EvidenceBundle** so downstream queries can replay against the same backbone. Backbone version bumps are a **separately governed event**, not a silent upgrade.
 - **Asset roles:** **NEEDS VERIFICATION** — confirm against `schemas/contracts/v1/source/` and any STAC asset-role conventions adopted by the catalog lane README.
@@ -159,7 +159,7 @@ notes:
 | `file:checksum` | STAC `file` extension, per-asset bytes | CONFIRMED (STAC extension) |
 
 > [!WARNING]
-> The KFM namespace token (`kfm:` vs `ks-kfm:`) is **unsettled** at C4-01. Until OPEN-DSC-03 is closed, do **not** mint Collections under both prefixes; pick one in [`IDENTITY.md`](./IDENTITY.md) and treat the other as a redirect candidate.
+> The KFM namespace token (`kfm:` vs `ks-kfm:`) is **unsettled** at C4-01. Until OPEN-DSC-03 is closed, do **not** mint Collections under both prefixes; pick one in `IDENTITY.md` (not present) and treat the other as a redirect candidate.
 
 [Back to top](#-gbif-dataset-metadata)
 
@@ -214,7 +214,7 @@ notes:
 - The corpus convention is to anchor every occurrence to ITIS TSN, falling back to GBIF Backbone where ITIS is silent. The Backbone DOI version is **pinned per run** so a downstream sensitivity recomputation is replayable.
 - **NEEDS VERIFICATION:** specific sensitive-taxa registry path, geoprivacy-transform parameters, and AI no-leak audit results for the mounted repo.
 
-See [`policy/sensitivity/`](../../../../policy/sensitivity/) and the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+See [`policy/sensitivity/`](../../../../policy/sensitivity/) and the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 [Back to top](#-gbif-dataset-metadata)
 
@@ -388,8 +388,8 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 ## 15. Related docs
 
 - [`docs/sources/catalog/gbif/README.md`](./README.md) — family landing page *(PROPOSED sibling; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/gbif/IDENTITY.md`](./IDENTITY.md) — Collection id + namespace pin *(PROPOSED sibling; NEEDS VERIFICATION)*
-- [`docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — per-license / per-taxon sensitivity map *(PROPOSED sibling; NEEDS VERIFICATION)*
+- `docs/sources/catalog/gbif/IDENTITY.md` (not present) — Collection id + namespace pin *(PROPOSED sibling; NEEDS VERIFICATION)*
+- `docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — per-license / per-taxon sensitivity map *(PROPOSED sibling; NEEDS VERIFICATION)*
 - [`docs/sources/catalog/README.md`](../README.md) — catalog source-pages index *(PROPOSED sibling; NEEDS VERIFICATION)*
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement, lifecycle, and naming authority
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O profile (note: filename `PROV.md` vs corpus reference `PROVENANCE.md` is **OPEN-DR-01** in `directory-rules.md §18`)

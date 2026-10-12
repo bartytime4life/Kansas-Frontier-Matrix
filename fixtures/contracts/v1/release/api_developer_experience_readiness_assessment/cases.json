@@ -1,0 +1,212 @@
+{
+  "object_type": "ApiDeveloperExperienceReadinessAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "public": {
+      "object_type": "ApiDeveloperExperienceReadinessAssessmentCandidate",
+      "schema_version": "1.0.0",
+      "profile": "kfm.release.api-developer-experience-readiness.fixture.v1",
+      "source_card": "KFM-P18-INV-412",
+      "observed_at": "2026-08-11T19:00:00Z",
+      "api_subject": {
+        "capability_ref": "fixture:api-capability:public-evidence-read",
+        "api_contract_ref": "fixture:api-contract:public-evidence-v1",
+        "audience_class": "PUBLIC_CLIENT",
+        "exposure_posture": "PUBLIC_CANDIDATE"
+      },
+      "onboarding": {
+        "state": "COMPLETE",
+        "getting_started_ref": "fixture:api-doc:getting-started-v1",
+        "access_guidance_ref": "fixture:api-doc:access-guidance-v1",
+        "resource_ontology_ref": "fixture:api-doc:resource-ontology-v1",
+        "versioning_guidance_ref": "fixture:api-doc:versioning-v1",
+        "support_path_ref": "fixture:api-doc:support-v1"
+      },
+      "documentation": {
+        "state": "COMPLETE",
+        "contract_documentation_ref": "fixture:api-doc:contract-v1",
+        "terminology_review_ref": "fixture:review:published-language-v1",
+        "finite_outcome_examples": [
+          {
+            "outcome": "ABSTAIN",
+            "example_ref": "fixture:api-example:abstain-v1",
+            "response_schema_ref": "fixture:schema:runtime-response-v1",
+            "citation_duties_disclosed": true,
+            "policy_semantics_disclosed": true,
+            "synthetic_data_only": true
+          },
+          {
+            "outcome": "ANSWER",
+            "example_ref": "fixture:api-example:answer-v1",
+            "response_schema_ref": "fixture:schema:runtime-response-v1",
+            "citation_duties_disclosed": true,
+            "policy_semantics_disclosed": true,
+            "synthetic_data_only": true
+          },
+          {
+            "outcome": "DENY",
+            "example_ref": "fixture:api-example:deny-v1",
+            "response_schema_ref": "fixture:schema:runtime-response-v1",
+            "citation_duties_disclosed": true,
+            "policy_semantics_disclosed": true,
+            "synthetic_data_only": true
+          },
+          {
+            "outcome": "ERROR",
+            "example_ref": "fixture:api-example:error-v1",
+            "response_schema_ref": "fixture:schema:runtime-response-v1",
+            "citation_duties_disclosed": true,
+            "policy_semantics_disclosed": true,
+            "synthetic_data_only": true
+          }
+        ],
+        "documented_failure_modes": [
+          "CITATION_UNRESOLVED",
+          "EVIDENCE_STALE",
+          "POLICY_DENIED",
+          "REFERENCE_UNAVAILABLE",
+          "SCHEMA_INVALID"
+        ]
+      },
+      "prototype_validation": {
+        "state": "COMPLETE",
+        "prototype_fixture_refs": [
+          "fixture:api-prototype:negative-outcomes-v1",
+          "fixture:api-prototype:public-read-v1"
+        ],
+        "consumer_validation_ref": "fixture:consumer-validation:public-read-v1",
+        "prototype_receipt_ref": "fixture:receipt:api-prototype-v1",
+        "runtime_behavior_claimed": false
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "security_review_ref": "fixture:review:api-security-v1",
+        "policy_review_ref": "fixture:review:api-policy-v1",
+        "review_record_refs": [
+          "fixture:review:api-contract-v1",
+          "fixture:review:developer-experience-v1"
+        ],
+        "release_readiness_ref": "fixture:release-readiness:api-v1",
+        "correction_ref": "fixture:correction:api-doc-v1",
+        "rollback_ref": "fixture:rollback:api-doc-v1"
+      },
+      "limitations": [
+        "DECLARATION_ONLY",
+        "NO_API_OR_ROUTE_DISCOVERY",
+        "NO_API_OR_DOCUMENTATION_MUTATION",
+        "NO_CONSUMER_OR_REFERENCE_AUTHENTICATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ],
+      "authority_claims": {
+        "api_mutation_authority": false,
+        "documentation_authority": false,
+        "consumer_validation_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "release_authority": false,
+        "deployment_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "internal": {
+      "extends": "public",
+      "api_subject": {
+        "capability_ref": "fixture:api-capability:internal-evidence-read",
+        "api_contract_ref": "fixture:api-contract:internal-evidence-v1",
+        "audience_class": "INTERNAL_DEVELOPER",
+        "exposure_posture": "INTERNAL_ONLY"
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "security_review_ref": "fixture:review:api-security-v1",
+        "policy_review_ref": "fixture:review:api-policy-v1",
+        "review_record_refs": [
+          "fixture:review:api-contract-v1",
+          "fixture:review:developer-experience-v1"
+        ],
+        "release_readiness_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    },
+    "incomplete": {
+      "extends": "public",
+      "api_subject": {
+        "capability_ref": "fixture:api-capability:unresolved",
+        "api_contract_ref": "fixture:api-contract:unresolved",
+        "audience_class": "UNKNOWN",
+        "exposure_posture": "UNRESOLVED"
+      },
+      "onboarding": {
+        "state": "INCOMPLETE",
+        "getting_started_ref": null,
+        "access_guidance_ref": null,
+        "resource_ontology_ref": null,
+        "versioning_guidance_ref": null,
+        "support_path_ref": null
+      },
+      "documentation": {
+        "state": "INCOMPLETE",
+        "contract_documentation_ref": null,
+        "terminology_review_ref": null,
+        "finite_outcome_examples": [],
+        "documented_failure_modes": []
+      },
+      "prototype_validation": {
+        "state": "INCOMPLETE",
+        "prototype_fixture_refs": [],
+        "consumer_validation_ref": null,
+        "prototype_receipt_ref": null,
+        "runtime_behavior_claimed": null
+      },
+      "governance": {
+        "state": "INCOMPLETE",
+        "security_review_ref": null,
+        "policy_review_ref": null,
+        "review_record_refs": [],
+        "release_readiness_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    },
+    "error": {
+      "extends": "incomplete",
+      "onboarding": {"state": "ERROR"},
+      "documentation": {"state": "ERROR"},
+      "prototype_validation": {"state": "ERROR"},
+      "governance": {"state": "ERROR"}
+    }
+  },
+  "cases": [
+    {"name": "pass_public_candidate", "base": "public", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "pass_internal_candidate", "base": "internal", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "abstain_incomplete_readiness", "base": "incomplete", "expected_outcome": "ABSTAIN", "expected_findings": ["DOCUMENTATION_INCOMPLETE", "GOVERNANCE_INCOMPLETE", "ONBOARDING_INCOMPLETE", "PROTOTYPE_VALIDATION_INCOMPLETE", "SUBJECT_UNRESOLVED"]},
+    {"name": "error_declared", "base": "error", "expected_outcome": "ERROR", "expected_findings": ["READINESS_ASSESSMENT_ERROR"]},
+    {"name": "deny_getting_started_missing", "base": "public", "mutations": [{"path": "/onboarding/getting_started_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["ONBOARDING_REFERENCE_REQUIRED"]},
+    {"name": "deny_resource_ontology_missing", "base": "public", "mutations": [{"path": "/onboarding/resource_ontology_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["ONBOARDING_REFERENCE_REQUIRED"]},
+    {"name": "deny_contract_documentation_missing", "base": "public", "mutations": [{"path": "/documentation/contract_documentation_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["DOCUMENTATION_REFERENCE_REQUIRED"]},
+    {"name": "deny_terminology_review_missing", "base": "public", "mutations": [{"path": "/documentation/terminology_review_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["DOCUMENTATION_REFERENCE_REQUIRED"]},
+    {"name": "deny_outcome_example_missing", "base": "public", "mutations": [{"path": "/documentation/finite_outcome_examples", "value": [{"outcome": "ABSTAIN", "example_ref": "fixture:api-example:abstain-v1", "response_schema_ref": "fixture:schema:runtime-response-v1", "citation_duties_disclosed": true, "policy_semantics_disclosed": true, "synthetic_data_only": true}]}], "expected_outcome": "DENY", "expected_findings": ["FINITE_OUTCOME_EXAMPLE_COVERAGE_REQUIRED"]},
+    {"name": "deny_real_data_example", "base": "public", "mutations": [{"path": "/documentation/finite_outcome_examples/1/synthetic_data_only", "value": false}], "expected_outcome": "DENY", "expected_findings": ["SYNTHETIC_EXAMPLE_REQUIRED"]},
+    {"name": "deny_citation_duty_undisclosed", "base": "public", "mutations": [{"path": "/documentation/finite_outcome_examples/1/citation_duties_disclosed", "value": false}], "expected_outcome": "DENY", "expected_findings": ["CITATION_DUTY_DISCLOSURE_REQUIRED"]},
+    {"name": "deny_policy_semantics_undisclosed", "base": "public", "mutations": [{"path": "/documentation/finite_outcome_examples/2/policy_semantics_disclosed", "value": false}], "expected_outcome": "DENY", "expected_findings": ["POLICY_SEMANTICS_DISCLOSURE_REQUIRED"]},
+    {"name": "deny_failure_mode_missing", "base": "public", "mutations": [{"path": "/documentation/documented_failure_modes", "value": ["CITATION_UNRESOLVED", "POLICY_DENIED", "REFERENCE_UNAVAILABLE", "SCHEMA_INVALID"]}], "expected_outcome": "DENY", "expected_findings": ["FAILURE_MODE_COVERAGE_REQUIRED"]},
+    {"name": "deny_prototype_fixture_missing", "base": "public", "mutations": [{"path": "/prototype_validation/prototype_fixture_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": ["PROTOTYPE_FIXTURE_REQUIRED"]},
+    {"name": "deny_consumer_validation_missing", "base": "public", "mutations": [{"path": "/prototype_validation/consumer_validation_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PROTOTYPE_EVIDENCE_REQUIRED"]},
+    {"name": "deny_prototype_receipt_missing", "base": "public", "mutations": [{"path": "/prototype_validation/prototype_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PROTOTYPE_EVIDENCE_REQUIRED"]},
+    {"name": "deny_runtime_behavior_claim", "base": "public", "mutations": [{"path": "/prototype_validation/runtime_behavior_claimed", "value": true}], "expected_outcome": "DENY", "expected_findings": ["PROTOTYPE_RUNTIME_OVERCLAIM"]},
+    {"name": "deny_security_review_missing", "base": "public", "mutations": [{"path": "/governance/security_review_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["GOVERNANCE_REVIEW_REQUIRED"]},
+    {"name": "deny_review_record_missing", "base": "public", "mutations": [{"path": "/governance/review_record_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": ["GOVERNANCE_REVIEW_REQUIRED"]},
+    {"name": "deny_public_release_readiness_missing", "base": "public", "mutations": [{"path": "/governance/release_readiness_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_CLOSURE_REQUIRED"]},
+    {"name": "deny_public_correction_missing", "base": "public", "mutations": [{"path": "/governance/correction_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_CLOSURE_REQUIRED"]},
+    {"name": "deny_public_rollback_missing", "base": "public", "mutations": [{"path": "/governance/rollback_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_CLOSURE_REQUIRED"]},
+    {"name": "deny_audience_exposure_mismatch", "base": "public", "mutations": [{"path": "/api_subject/audience_class", "value": "INTERNAL_DEVELOPER"}], "expected_outcome": "DENY", "expected_findings": ["AUDIENCE_EXPOSURE_MISMATCH"]},
+    {"name": "deny_internal_release_reference", "base": "internal", "mutations": [{"path": "/governance/release_readiness_ref", "value": "fixture:release-readiness:unexpected"}], "expected_outcome": "DENY", "expected_findings": ["INTERNAL_RELEASE_REFERENCE_FORBIDDEN"]},
+    {"name": "deny_noncanonical_prototype_refs", "base": "public", "mutations": [{"path": "/prototype_validation/prototype_fixture_refs", "value": ["fixture:prototype:z", "fixture:prototype:a"]}], "expected_outcome": "DENY", "expected_findings": ["REFERENCE_ARRAY_NOT_CANONICAL"]},
+    {"name": "deny_profile_hash_mismatch", "base": "public", "profile_spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": ["PROFILE_SPEC_HASH_MISMATCH"]},
+    {"name": "deny_non_utc_timestamp", "base": "public", "mutations": [{"path": "/observed_at", "value": "2026-08-11T14:00:00-05:00"}], "expected_outcome": "DENY", "expected_findings": ["UTC_TIMESTAMP_REQUIRED"]},
+    {"name": "deny_authority_overreach", "base": "public", "mutations": [{"path": "/authority_claims/release_authority", "value": true}], "expected_outcome": "DENY", "expected_findings": ["SCHEMA_INVALID"]}
+  ]
+}

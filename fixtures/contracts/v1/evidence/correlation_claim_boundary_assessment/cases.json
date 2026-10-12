@@ -1,0 +1,107 @@
+{
+  "object_type": "CorrelationClaimBoundaryAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.correlation-claim-boundary-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "CorrelationClaimBoundaryAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.correlation-claim-boundary-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-158",
+    "observed_at": "2026-08-11T16:00:00Z",
+    "statistic": {
+      "output_ref": "kfm:analytic-output:synthetic-correlation:001",
+      "output_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "statistic_role": "RELATIONSHIP_EVIDENCE",
+      "analytic_output_disclosure": {
+        "ref": "kfm:analytic-output-disclosure:synthetic-correlation:001",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "resolution": "RESOLVED"
+      },
+      "condition_relation": {
+        "ref": "kfm:condition-relation:synthetic-correlation:001",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED"
+      },
+      "method": {
+        "kind": "PEARSON_R",
+        "registry_ref": "kfm:analytical-method:synthetic-pearson:001",
+        "registry_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "resolution": "RESOLVED"
+      },
+      "uncertainty": {
+        "ref": "kfm:uncertainty:synthetic-correlation:001",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "resolution": "RESOLVED"
+      }
+    },
+    "claim": {
+      "claim_ref": "kfm:claim:synthetic-association:001",
+      "claim_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "requested_role": "ASSOCIATION",
+      "wording_class": "ASSOCIATIONAL",
+      "intended_use": "INTERNAL_QA",
+      "causal_design": {
+        "ref": null,
+        "digest": null,
+        "resolution": "NOT_PROVIDED",
+        "design_class": "NOT_PROVIDED"
+      }
+    },
+    "disclosure": {
+      "state": "COMPLETE",
+      "permitted_role": "ASSOCIATION_ONLY",
+      "caveat_codes": ["CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"],
+      "explanation": "The synthetic coefficient supports a bounded association statement and does not establish cause.",
+      "evidence_refs": [
+        "kfm:evidence-bundle:synthetic-correlation:001",
+        "kfm:evidence-bundle:synthetic-correlation:002"
+      ],
+      "review_record_refs": []
+    },
+    "authority_claims": {
+      "relationship_evidence_authority": false,
+      "causal_inference_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_association_pearson", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_association_spearman", "patch": {"statistic": {"method": {"kind": "SPEARMAN_RHO"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_association_kendall", "patch": {"statistic": {"method": {"kind": "KENDALL_TAU"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_association_other_registered", "patch": {"statistic": {"method": {"kind": "OTHER_REGISTERED"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_public_association_reviewed", "patch": {"claim": {"intended_use": "PUBLIC_EXPLANATION"}, "disclosure": {"caveat_codes": ["CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "PUBLIC_EXPLANATION_REQUIRED", "SCOPE_BOUND"], "review_record_refs": ["kfm:review-record:synthetic-correlation:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_release_review_association", "patch": {"claim": {"intended_use": "RELEASE_REVIEW"}, "disclosure": {"review_record_refs": ["kfm:review-record:synthetic-correlation:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_analytic_disclosure_unresolved", "patch": {"statistic": {"analytic_output_disclosure": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["ANALYTIC_DISCLOSURE_UNRESOLVED"]}},
+    {"name": "abstain_condition_relation_unresolved", "patch": {"statistic": {"condition_relation": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["CONDITION_RELATION_UNRESOLVED"]}},
+    {"name": "abstain_method_registry_unresolved", "patch": {"statistic": {"method": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["METHOD_REGISTRY_UNRESOLVED"]}},
+    {"name": "abstain_uncertainty_unresolved", "patch": {"statistic": {"uncertainty": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["UNCERTAINTY_UNRESOLVED"]}},
+    {"name": "abstain_disclosure_incomplete", "patch": {"disclosure": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_INCOMPLETE"]}},
+    {"name": "abstain_disclosure_unknown", "patch": {"disclosure": {"state": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_UNKNOWN"]}},
+    {"name": "abstain_wording_ambiguous", "patch": {"claim": {"wording_class": "AMBIGUOUS"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CLAIM_WORDING_AMBIGUOUS"]}},
+    {"name": "abstain_contribution_without_design", "patch": {"claim": {"requested_role": "CONTRIBUTION", "wording_class": "CONTRIBUTION_OR_EXPOSURE"}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["STRONGER_CLAIM_SUPPORT_NOT_PROVIDED"]}},
+    {"name": "abstain_exposure_design_unresolved", "patch": {"claim": {"requested_role": "EXPOSURE", "wording_class": "CONTRIBUTION_OR_EXPOSURE", "causal_design": {"ref": "kfm:causal-design:synthetic-exposure:001", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "UNRESOLVED", "design_class": "UNKNOWN"}}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["CAUSAL_DESIGN_UNRESOLVED"]}},
+    {"name": "abstain_contribution_design_review", "patch": {"claim": {"requested_role": "CONTRIBUTION", "wording_class": "CONTRIBUTION_OR_EXPOSURE", "causal_design": {"ref": "kfm:causal-design:synthetic-contribution:001", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED", "design_class": "OBSERVATIONAL"}}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["STRONGER_CLAIM_REVIEW_REQUIRED"]}},
+    {"name": "abstain_cause_stronger_design_review", "patch": {"claim": {"requested_role": "CAUSE", "wording_class": "CAUSAL", "causal_design": {"ref": "kfm:causal-design:synthetic-randomized:001", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED", "design_class": "RANDOMIZED_EXPERIMENT"}}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED"]}},
+    {"name": "abstain_cause_design_unresolved", "patch": {"claim": {"requested_role": "CAUSE", "wording_class": "CAUSAL", "causal_design": {"ref": "kfm:causal-design:synthetic-cause:001", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "UNRESOLVED", "design_class": "UNKNOWN"}}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["CAUSAL_DESIGN_UNRESOLVED"]}},
+    {"name": "deny_cause_without_design", "patch": {"claim": {"requested_role": "CAUSE", "wording_class": "CAUSAL"}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "DENY", "codes": ["CAUSAL_WORDING_UNSUPPORTED"]}},
+    {"name": "deny_cause_observational_design", "patch": {"claim": {"requested_role": "CAUSE", "wording_class": "CAUSAL", "causal_design": {"ref": "kfm:causal-design:synthetic-observational:001", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED", "design_class": "OBSERVATIONAL"}}, "disclosure": {"permitted_role": "CAUSAL_REVIEW_REQUIRED", "caveat_codes": ["CAUSAL_DESIGN_REVIEW_REQUIRED", "CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "DENY", "codes": ["CAUSAL_WORDING_UNSUPPORTED"]}},
+    {"name": "deny_association_with_causal_wording", "patch": {"claim": {"wording_class": "CAUSAL"}}, "expected": {"outcome": "DENY", "codes": ["CAUSAL_WORDING_UNSUPPORTED"]}},
+    {"name": "deny_permitted_role_mismatch", "patch": {"disclosure": {"permitted_role": "NO_CLAIM"}}, "expected": {"outcome": "DENY", "codes": ["PERMITTED_ROLE_MISMATCH"]}},
+    {"name": "deny_required_caveat_missing", "patch": {"disclosure": {"caveat_codes": ["CORRELATION_NOT_CAUSATION", "SCOPE_BOUND"]}}, "expected": {"outcome": "DENY", "codes": ["REQUIRED_CAVEAT_MISSING"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"disclosure": {"evidence_refs": ["kfm:evidence-bundle:synthetic-correlation:002", "kfm:evidence-bundle:synthetic-correlation:001"]}}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_public_review_record_missing", "patch": {"claim": {"intended_use": "PUBLIC_EXPLANATION"}, "disclosure": {"caveat_codes": ["CONFOUNDING_NOT_EXCLUDED", "CORRELATION_NOT_CAUSATION", "PUBLIC_EXPLANATION_REQUIRED", "SCOPE_BOUND"]}}, "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}},
+    {"name": "deny_release_review_record_missing", "patch": {"claim": {"intended_use": "RELEASE_REVIEW"}}, "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}},
+    {"name": "deny_public_caveat_missing", "patch": {"claim": {"intended_use": "PUBLIC_EXPLANATION"}, "disclosure": {"review_record_refs": ["kfm:review-record:synthetic-correlation:001"]}}, "expected": {"outcome": "DENY", "codes": ["REQUIRED_CAVEAT_MISSING"]}},
+    {"name": "deny_causal_design_declaration_mismatch", "patch": {"claim": {"causal_design": {"ref": "kfm:causal-design:synthetic-mismatch:001"}}}, "expected": {"outcome": "DENY", "codes": ["CAUSAL_DESIGN_DECLARATION_MISMATCH"]}},
+    {"name": "deny_non_utc_observed_at", "patch": {"observed_at": "2026-08-11T16:00:00+00:00"}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"raw_observations": [1, 2, 3]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

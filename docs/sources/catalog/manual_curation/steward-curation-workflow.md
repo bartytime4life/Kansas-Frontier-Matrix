@@ -14,17 +14,20 @@ related:
   - docs/sources/catalog/README.md
   - docs/sources/catalog/local_upload.md
   - docs/sources/catalog/local_upload/user-file-upload.md
-  - docs/sources/catalog/loc/iiif-presentations.md
+  - docs/sources/catalog/loc/loc-iiif-presentations.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/governance/separation-of-duties.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, docs, sources, catalog, manual_curation, workflow, stewardship, governance]
 notes:
   - "PROPOSED product-page scaffold operationalizing the parent methodology doc at ../manual_curation.md."
   - "STRUCTURAL TENSION (OPEN-MCW-01): manual_curation is a methodology, not a source family — modeling it as a sibling of local_upload/ and loc/ inside docs/sources/catalog/ NEEDS RECONCILIATION against Directory Rules and the parent standard doc. Surfaced, not smoothed over."
   - "v0.2: tailored template to workflow (not source-product) reality — most source-product fields are N/A and the page now says so; cross-links to parent methodology and sibling pages added; structural-tension flag surfaced."
+owning_root: docs/
+responsibility: "Documentation for Manual Curation Workflow; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Manual Curation Workflow
@@ -174,7 +177,7 @@ sequenceDiagram
 This workflow does **not** own a `SourceDescriptor`. It produces and consumes descriptors *for the source being curated*. Every curation pass writes (or reads) a descriptor at [`data/registry/sources/`](../../../../data/registry/sources/), schema-shaped by `schemas/contracts/v1/source/` per Directory Rules §7.4 and ADR-0001.
 
 > [!WARNING]
-> **Do not duplicate descriptor fields on this page.** The descriptor for any given curation pass belongs to the source being curated — see e.g. [`../local_upload.md`](../local_upload.md) §5 for the `local_upload` family defaults or [`../loc/iiif-presentations.md`](../loc/iiif-presentations.md) for the LOC IIIF Presentations product defaults.
+> **Do not duplicate descriptor fields on this page.** The descriptor for any given curation pass belongs to the source being curated — see e.g. [`../local_upload.md`](../local_upload.md) §5 for the `local_upload` family defaults or [`../loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) for the LOC IIIF Presentations product defaults.
 
 | Surface this workflow touches | PROPOSED home | Read or write? |
 |---|---|---|
@@ -350,8 +353,8 @@ The workflow **invokes** the following surfaces (each PROPOSED beyond the doctri
 > [!NOTE]
 > The two worked walk-throughs for this workflow live in the parent methodology doc, not here. Use them as the operational reference for what a curation pass actually looks like.
 
-- **Hydrology dataset (versioned publisher) walk-through** — [`../manual_curation.md` §13](../manual_curation.md#13-worked-example) — admission of a county-level streamflow dataset with `source_role = observation`, `rights = public`, sensitivity = `public`. Nine ordered steps from admission to review.
-- **User-uploaded file (`local_upload`) contrast walk-through** — [`../manual_curation.md` §13](../manual_curation.md#13-worked-example) — same gates, different defaults (`source_role = candidate`, `rights = unknown`, sensitivity = `restricted`).
+- **Hydrology dataset (versioned publisher) walk-through** — [`../manual_curation.md` §13](../manual_curation.md) — admission of a county-level streamflow dataset with `source_role = observation`, `rights = public`, sensitivity = `public`. Nine ordered steps from admission to review.
+- **User-uploaded file (`local_upload`) contrast walk-through** — [`../manual_curation.md` §13](../manual_curation.md) — same gates, different defaults (`source_role = candidate`, `rights = unknown`, sensitivity = `restricted`).
 
 If a minimal STAC Item example with the `kfm:provenance` block is needed, see the family-level example referenced at [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json) *(NEEDS VERIFICATION — path PROPOSED)*.
 
@@ -387,11 +390,11 @@ PROPOSED — Each item below blocks promotion of this page to `status: review`.
 - [`../README.md`](../README.md) — catalog lane orientation.
 - [`../local_upload.md`](../local_upload.md) — `local_upload` family governance doc — sibling family example.
 - [`../local_upload/user-file-upload.md`](../local_upload/user-file-upload.md) — `local_upload` product page — sibling product example (candidate-role default).
-- [`../loc/iiif-presentations.md`](../loc/iiif-presentations.md) — LOC IIIF Presentations product page — sibling product example (versioned publisher).
+- [`../loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) — LOC IIIF Presentations product page — sibling product example (versioned publisher).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §6.5 (singular `policy/`), §7.3 (`connectors/`), §7.4 (schema home), §9 (`data/` and `release/`).
 - [`../../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary.
 - [`../../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *PROPOSED* — RAW → PUBLISHED governance.
-- [`../../../governance/separation-of-duties.md`](../../../governance/separation-of-duties.md) — *PROPOSED* — full separation-of-duties matrix.
+- [`../../../governance/separation-of-duties.md`](../../../governance/SEPARATION_OF_DUTIES.md) — *PROPOSED* — full separation-of-duties matrix.
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — *PROPOSED* — where **OPEN-MCW-01** and **OPEN-MCW-02** should be logged.
 
 ---

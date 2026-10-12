@@ -1,292 +1,270 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-cross-domain-readme
-title: contracts/cross_domain/ — Cross-Domain Semantic Contracts
-type: readme
-version: v0.1
-status: draft
-owners: OWNER_TBD — Contract steward · Architecture steward · Domain stewards · Schema steward · Policy steward · Validation steward · Docs steward
+title: contracts/cross_domain/ — Cross-Domain Semantic Contract Boundary
+type: readme; directory-readme; cross-domain-contract-index; semantic-boundary
+version: v0.2.0
+status: draft; repository-grounded; existing-cross-domain-namespace; mixed-maturity; non-authoritative; non-publisher
+owner: NEEDS VERIFICATION — CODEOWNERS routes /contracts/ to @bartytime4life; accountable cross-domain, contract, domain, policy, sensitivity, validation, and release stewards are not established here
 created: 2026-06-20
-updated: 2026-06-20
-policy_label: public; contracts; cross-domain; semantic-contracts; placement; shared-topic; non-domain-root
-tags: [kfm, contracts, cross-domain, semantic-contracts, domain-placement-law, lowest-common-responsibility-root, anti-parallel-authority, shared-topic, governance]
+updated: 2026-09-08
+current_path: contracts/cross_domain/README.md
+owning_root: contracts/
+responsibility: index and bound semantic meaning that genuinely spans independently governed domains without absorbing endpoint authority or becoming schema, policy, evidence, lifecycle, release, or publication authority
+truth_posture: cite-or-abstain; repository presence, fixture validation, a passing check, merge, or an ALLOW candidate never establishes relationship truth, public-use permission, release, or publication
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@5c563bd07e12689eece7b5cf105b1e2f0545f03a
+prior_blob: 58c2f1bfaa4f9b49676c339b2977a1c46ffcf88a
+directory_governance: ADR-0029 accepted Directory Rules v2; same-path documentation update only
 related:
   - ../README.md
-  - ../../docs/architecture/cross-domain/multi-domain-placement.md
-  - ../../docs/architecture/domain-placement-law.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/architecture/ecology-cross-domain.md
-  - ../../schemas/contracts/v1/
-  - ../../policy/
-  - ../../fixtures/
-  - ../../tests/
-  - ../../tools/validators/
-  - ../../data/proofs/
-  - ../../release/
+  - ./knowledge_character.md
+  - ./fauna_habitat/public_safe_assignment_profile.md
+  - ./soil_agriculture/public_safe_context_profile.md
+  - ./soil_hydrology/public_safe_context_profile.md
+  - ../joins/cross_lane_join_assessment.md
+  - ../../control_plane/cross_domain_seam_register.yaml
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/architecture/cross-domain/README.md
+  - ../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json
+  - ../../fixtures/contracts/v1/joins/
+  - ../../tools/validators/cross_domain/
+  - ../../tests/cross_domain/README.md
 notes:
-  - "Initial README for the current contracts/cross_domain directory."
-  - "Path posture is NEEDS VERIFICATION: cross-domain placement doctrine uses contracts/<topic>/... for cross-domain semantic contracts, but topic naming conventions and underscore vs hyphen form require review."
-  - "This folder may coordinate cross-domain semantic contracts, but it must not become a new domain root or duplicate domain-owned contract authority."
-  - "No paired schemas/contracts/v1/cross_domain schema home or validator was verified in this task."
+  - "v0.2.0 replaces the stale README-only inventory with the verified direct-child tree and four current semantic artifacts."
+  - "The three pair profiles are proposed, fixture-first, no-network candidate profiles backed by existing validators, fixtures, and tests; none authorizes a public join."
+  - "The proposed seam register is partial and navigational only. All five projected seams are HOLD_UNRESOLVED, public_join_allowed is false, and seam_contract_path is null."
+  - "Current underscore child names are existing repository identities, not accepted canonical seam IDs; no rename or compatibility migration occurs here."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Cross-Domain Semantic Contracts
+# `contracts/cross_domain/` — Cross-Domain Semantic Contract Boundary
 
-> Directory contract for semantic contracts whose responsibility legitimately spans two or more KFM domains. This folder coordinates cross-domain meaning; it does not absorb domain ownership, create a new domain, or override domain-owned contracts.
+This directory owns human-readable semantic meaning for relationships or
+cross-cutting concepts that genuinely span independently governed KFM domains.
+It preserves the authority of every participating domain; it is not a domain,
+Shared Kernel, schema home, policy engine, evidence store, release lane, or
+publication surface.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Root: contracts/cross_domain" src="https://img.shields.io/badge/root-contracts%2Fcross__domain-blue">
-  <img alt="Posture: cross-domain" src="https://img.shields.io/badge/posture-cross--domain-purple">
-  <img alt="Authority: semantic" src="https://img.shields.io/badge/authority-semantic__contracts-green">
-  <img alt="Parallel authority: denied" src="https://img.shields.io/badge/parallel__authority-denied-red">
-</p>
+The safe interpretation is:
 
-`contracts/cross_domain/`
+```text
+DOCUMENTED != IMPLEMENTED
+ALLOW != ANSWER
+SCHEMA_VALID != AUTHORIZED
+MERGED != RELEASED
+```
 
-## Quick jumps
+## Status and evidence boundary
 
-[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current directory snapshot](#current-directory-snapshot) · [Contract inventory](#contract-inventory) · [Cross-domain placement rules](#cross-domain-placement-rules) · [Semantic contract rules](#semantic-contract-rules) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+| Surface | Verified state at the evidence snapshot | Safe interpretation |
+|---|---|---|
+| Directory contents | This README, `knowledge_character.md`, and three pair-profile directories | The prior README-only inventory is superseded. |
+| Placement authority | [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts [Directory Rules v2](../../docs/doctrine/directory-rules.md) | Same-path `PLACE`; no new root, move, rename, or authority change. |
+| Pair profiles | Fauna–Habitat, Soil–Agriculture, and Soil–Hydrology have proposed fixture-first semantic profiles plus validators, fixtures, and tests | Bounded candidate conformance exists; public relationship authority does not. |
+| Cross-cutting contract | `knowledge_character.md` is a draft semantic anti-collapse pattern | No accepted global enum, paired cross-domain schema, or cross-domain validator is established by this file. |
+| Seam projection | `cross_domain_seam_register.yaml` is `PROPOSED`, partial, and navigation/review only | Every projected seam remains held; registration is not activation. |
+| Review route | CODEOWNERS routes `/contracts/` to `@bartytime4life` | Routing is not accountable multi-steward approval or release authority. |
 
----
+Repository bytes and exact-head evidence control implementation claims. Google
+Drive research and Notion coordination may inform review, but neither can place
+repository files, accept a seam, activate a source, approve policy, or publish a
+relationship.
 
-## Status
+## Purpose and scope
 
-> [!IMPORTANT]
-> **Status:** `draft` / directory README  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `contracts/cross_domain/`  
-> **Path posture:** `CONFIRMED` current requested path; canonical naming and topic segmentation `NEEDS VERIFICATION`  
-> **Truth posture:** `CONFIRMED` current file update and cross-domain placement doctrine. Paired schemas, validators, fixtures, policies, contract inventory, CI behavior, and downstream usage remain `NEEDS VERIFICATION`.
+Use this lane when the semantic responsibility itself spans two or more bounded
+contexts and choosing one arbitrary lead domain would misstate ownership.
 
----
+A contract belongs here only when it:
 
-## Scope
+- names every participating domain and preserves the owner of each atomic fact;
+- defines the meaning, invariants, exclusions, and finite outcomes of the
+  cross-domain concept or relation;
+- retains source role, EvidenceRef, temporal basis, geography or precision,
+  sensitivity, rights, and limitations needed by later gates;
+- fails closed when identity, evidence, compatibility, sensitivity, policy, or
+  review is unresolved;
+- creates no lifecycle, review, release, promotion, publication, or public-use
+  effect merely by existing or validating.
 
-`contracts/cross_domain/` is a semantic-contract coordination folder for cross-domain KFM concepts.
+A file does not belong here merely because multiple domains consume it. A
+single-owner artifact remains with that owner and references its dependencies.
 
-A cross-domain contract belongs here only when:
+## Placement and authority
 
-- it is truly a **contract**;
-- it spans two or more KFM domains;
-- no single domain is the correct owner;
-- placing it under one domain would create a parallel authority or forced crosswalk;
-- the contract preserves ownership of atomic facts in their bounded contexts.
+Accepted Directory Rules keep responsibility roots distinct:
 
-This folder does **not** define schema shape, policy rules, executable validators, fixtures, data, release state, proof closure, public API behavior, public UI behavior, or domain ownership.
+| Responsibility | Owning surface |
+|---|---|
+| Human-readable semantic meaning | `contracts/` |
+| Machine-checkable shape | `schemas/` |
+| Allowed, denied, held, restricted, or abstained conditions | `policy/` |
+| Reusable synthetic inputs | `fixtures/` |
+| Executable conformance | `tests/` |
+| Shared repository validation | `tools/validators/` |
+| Machine navigation and review projections | `control_plane/` |
+| Lifecycle, evidence, receipt, proof, and released carriers | Applicable `data/` and `release/` families |
 
----
+Directory Rules section 12.5 illustrates a cross-domain semantic contract at
+`contracts/cross_domain/<seam_id>/`, with corresponding tests and validators in
+their own responsibility roots. Never select an arbitrary lead domain merely to
+obtain a path.
 
-## Path posture
+The current child names use established underscore identities. The proposed
+seam register uses different registered-style IDs and does not map any entry to
+a contract path. Do not silently rename, alias, or duplicate a child. Any
+identity change requires accepted authority, a consumer map, compatibility and
+migration analysis, negative checks, and rollback.
 
-The requested path is:
+## Current direct-child map
+
+Verified at `main@5c563bd07e12689eece7b5cf105b1e2f0545f03a`:
 
 ```text
 contracts/cross_domain/
+├── README.md               # boundary and inventory — this file
+├── fauna_habitat/          # proposed assignment-candidate semantics
+├── knowledge_character.md  # draft cross-domain anti-collapse semantics
+├── soil_agriculture/       # proposed context-candidate semantics
+└── soil_hydrology/         # proposed context-candidate semantics
 ```
 
-Cross-domain placement doctrine says cross-domain semantic contracts use the `contracts/<topic>/...` responsibility root pattern. That means `contracts/cross_domain/` can be treated as a cross-domain topic segment, but its final naming convention needs review because the cross-domain placement doc emphasizes stable `<topic>` names and examples usually use descriptive topic names.
+This is a current direct-child map, not an illustrative future tree. Child
+artifacts retain their own version, status, evidence limits, and rollback.
 
-| Path | Status | Meaning |
-|---|---|---|
-| `contracts/cross_domain/` | `CONFIRMED` current requested folder path | Current cross-domain contract coordination folder. |
-| `contracts/<topic>/...` | `CONFIRMED doctrine pattern` / per-topic names `NEEDS VERIFICATION` | Preferred pattern for cross-domain semantic contracts. |
-| `contracts/domains/<picked-one>/...` | `DENIED` for true cross-domain contracts | Would create domain-as-owner drift. |
-| `schemas/contracts/v1/<topic>/...` | `PROPOSED` / `NEEDS VERIFICATION` | Machine-shape home for cross-domain schemas, if present. |
-| `policy/<topic>/...` | `PROPOSED` / `NEEDS VERIFICATION` | Policy home for cross-domain rules, if present. |
+## Current semantic inventory
 
----
-
-## Repo fit
-
-```text
-contracts/
-├── README.md
-└── cross_domain/
-    └── README.md
-```
-
-Adjacent responsibility roots:
-
-| Root | Relationship to this folder |
-|---|---|
-| `../README.md` | Root contract guidance: contracts define meaning; schemas define shape. |
-| `../../docs/architecture/cross-domain/multi-domain-placement.md` | Cross-domain placement standard for contracts, schemas, policy, validators, fixtures, and tests. |
-| `../../docs/architecture/domain-placement-law.md` | Domain Placement Law: domains are lanes inside responsibility roots; cross-domain files use lowest common responsibility root. |
-| `../../docs/architecture/contract-schema-policy-split.md` | Meaning/shape/admissibility/enforceability split. |
-| `../../schemas/contracts/v1/` | Machine schema root; cross-domain schemas should use topic segment after accepted placement. |
-| `../../policy/` | Cross-domain admissibility rules after accepted placement. |
-| `../../tools/validators/` | Cross-domain validators after accepted placement. |
-| `../../fixtures/`, `../../tests/` | Fixtures and enforceability. |
-| `../../data/proofs/` | EvidenceBundle and proof support for cross-domain claims. |
-| `../../release/` | Release state for any public cross-domain product. |
-
----
-
-## Accepted inputs
-
-| Belongs in this directory | Required posture |
-|---|---|
-| Cross-domain semantic contract README files | Must define composite meaning without absorbing owning-domain facts. |
-| Cross-domain relation contracts | Must state every participating domain and the owner of each atomic fact. |
-| Cross-domain derived product contracts | Must identify source domains, EvidenceBundle dependencies, policy gates, and release posture. |
-| Compatibility notes | Must document placement conflicts and ADR triggers. |
-| Evidence ledgers | Must cite placement doctrine, owning-domain docs, and current file evidence. |
-| Validation checklists | Must point to schema/test/policy roots without claiming they exist unless verified. |
-| Rollback notes | Must name prior content SHA or migration rollback target. |
-
----
-
-## Exclusions
-
-| Does not belong here | Correct home |
-|---|---|
-| Single-domain contract | `contracts/domains/<domain>/...` or accepted domain contract home. |
-| JSON Schema | `schemas/contracts/v1/<topic>/...` or accepted schema home. |
-| Policy rules | `policy/<topic>/...` or accepted policy home. |
-| Validator code | `tools/validators/<topic>/...` or accepted validator package. |
-| Fixtures and tests | `fixtures/<topic>/...`, `tests/<topic>/...`, or accepted test roots. |
-| Source data, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED records | `data/...` lifecycle roots. |
-| EvidenceBundle/proof content | `data/proofs/` or accepted proof root. |
-| Release manifests and current aliases | `release/`. |
-| Public API or UI behavior | Governed app/UI roots after validation and release. |
-| New repo root such as `cross_domain/` at root | Denied by responsibility-root discipline. |
-| Duplicate domain doctrine | Domain docs should link to the cross-domain contract, not copy it. |
-
----
-
-## Current directory snapshot
-
-> [!NOTE]
-> This snapshot is based on current-session file inspection, not a complete repository inventory.
-
-| File | Status | What it proves | What it does not prove |
+| Semantic artifact | Current posture | Verified backing | Authority limit |
 |---|---|---|---|
-| `contracts/cross_domain/README.md` | `CONFIRMED` | This directory README exists and states cross-domain contract boundaries. | Does not prove cross-domain contract inventory, schemas, validators, policy, or CI behavior. |
-| Other `contracts/cross_domain/*` files | `UNKNOWN` | Not verified by this README. | Requires separate inventory. |
+| [`knowledge_character.md`](./knowledge_character.md) | Draft cross-domain anti-collapse pattern; exact version and evidence limits belong to the child contract | Atmosphere-specific contract, schema, registry, and tests are adjacent evidence | Does not establish an accepted global vocabulary, paired cross-domain schema, cross-domain validator, or domain-independent authority. |
+| [Fauna–Habitat assignment profile](./fauna_habitat/public_safe_assignment_profile.md) | `v0.2.0`; proposed; repository-grounded; fixture-first; no-network; non-authoritative | [Pair validator](../../tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py), [fixtures](../../fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json), [tests](../../tests/cross_domain/fauna_habitat/test_public_safe_assignment.py), and shared join schema | `ALLOW` is a non-publishing candidate report, not an accepted fauna occurrence, habitat assignment, or public claim. |
+| [Soil–Agriculture context profile](./soil_agriculture/public_safe_context_profile.md) | `v0.2.0`; proposed; fixture-first; no-network; non-authoritative | [Pair validator](../../tools/validators/cross_domain/soil_agriculture/validate_public_safe_context.py), [fixtures](../../fixtures/contracts/v1/joins/soil_agriculture_public_safe_context/cases.json), [tests](../../tests/cross_domain/soil_agriculture/test_public_safe_context.py), and shared join schema | Does not establish crop suitability, yield causation, farm or operator identity, public-join permission, or a canonical seam. |
+| [Soil–Hydrology context profile](./soil_hydrology/public_safe_context_profile.md) | `v0.2.0`; proposed; fixture-first; no-network; non-authoritative | [Pair validator](../../tools/validators/cross_domain/soil_hydrology/validate_public_safe_context.py), [fixtures](../../fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/cases.json), [tests](../../tests/cross_domain/soil_hydrology/test_public_safe_context.py), and shared join schema | Does not establish hydrologic causation, operational advice, public-join permission, or a canonical seam. |
 
----
+The three pair profiles reuse the generic
+[`CrossLaneJoinAssessment`](../joins/cross_lane_join_assessment.md) and its
+[closed schema](../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json).
+They do not create three replacement schemas or a second join authority.
 
-## Contract inventory
+## Seam-register reconciliation
 
-No concrete cross-domain contract files beyond this README were verified in this task.
+The current [seam register](../../control_plane/cross_domain_seam_register.yaml)
+is a proposed, partial navigation and review projection. Its five entries are:
 
-| Contract family | Current evidence | Status | Notes |
-|---|---|---|---|
-| Cross-domain relation contract | `UNKNOWN` | `NEEDS VERIFICATION` | Must name relation topic and participating domains. |
-| Cross-domain derived product contract | `UNKNOWN` | `NEEDS VERIFICATION` | Must identify source domains, evidence, policy, and release gates. |
-| Cross-domain sensitivity inheritance contract | `UNKNOWN` | `NEEDS VERIFICATION` | Must preserve most restrictive policy posture. |
-| Cross-domain join/projection contract | `UNKNOWN` | `NEEDS VERIFICATION` | Must not create derived truth without source/evidence support. |
-| Cross-domain public-safe summary contract | `UNKNOWN` | `NEEDS VERIFICATION` | Must include redaction/generalization/aggregation and release posture. |
+| Projected seam ID | Status | Public join | Contract path |
+|---|---|---:|---|
+| `agriculture--soil--suitability-context` | `HOLD_UNRESOLVED` | `false` | `null` |
+| `archaeology--roads-rail-trade--historic-corridor-context` | `HOLD_UNRESOLVED` | `false` | `null` |
+| `atmosphere--hazards--condition-advisory-context` | `HOLD_UNRESOLVED` | `false` | `null` |
+| `fauna--hydrology--aquatic-occurrence-context` | `HOLD_UNRESOLVED` | `false` | `null` |
+| `hazards--settlements-infrastructure--exposure-context` | `HOLD_UNRESOLVED` | `false` | `null` |
 
----
+The Soil–Agriculture profile is related to, but does not resolve or adopt, the
+first projected seam. Fauna–Habitat and Soil–Hydrology are not represented by
+the five current entries. `knowledge_character` is a cross-cutting semantic
+pattern rather than a registered seam entry. These mismatches remain visible
+holds; this README does not repair them by assertion.
 
-## Cross-domain placement rules
+## Inputs, outputs, and consumers
 
-Cross-domain contracts must preserve the Domain Placement Law:
+| Direction | Permitted boundary |
+|---|---|
+| Inputs | Versioned domain-owned contracts, stable object references, source-role and sensitivity declarations, EvidenceRefs, accepted doctrine and ADRs, and repository-grounded implementation evidence. |
+| Outputs | Versioned semantic definitions, finite candidate meanings, explicit exclusions, compatibility notes, and links to separately owned enforcement. |
+| Writers | Repository contributors through review; CODEOWNERS provides routing only. Authority-changing decisions require the accountable owners and accepted decision path. |
+| Machine consumers | Schemas, policy, validators, tests, pipelines, and governed services may implement or check these semantics without moving their authority here. |
+| Public consumers | Ordinary clients must use governed interfaces and released carriers. Raw contracts, fixtures, validator output, PRs, and merges are not public evidence or release records. |
 
-- choose the lowest responsibility root by file responsibility;
-- for semantic contracts, use `contracts/<topic>/...` rather than `contracts/domains/<picked-one>/...`;
-- do not make a domain the owner of a multi-domain file merely because it is convenient;
-- do not create new root folders;
-- use stable topic segments;
-- cross-link from each affected domain dossier rather than duplicating content;
-- treat topic renames as ADR-class when links or public meaning would break.
+No contract in this directory may activate or retrieve a source, ingest or emit
+geometry or data, resolve EvidenceRefs, create an EvidenceBundle, write lifecycle
+state, decide policy, assign review, create a release, or publish a result.
 
----
+## Exposure, sensitivity, mutation, and retention
 
-## Semantic contract rules
+- This is public repository documentation; precise sensitive, private,
+  controlled, licensed, or living-person payloads are prohibited here.
+- A derived or generalized relation inherits the most restrictive applicable
+  source, sensitivity, rights, and release posture until an owning policy and
+  accountable review establish otherwise.
+- Files are durable, versioned source artifacts changed through reviewed commits.
+  They are not generated runtime state and have no direct production writer.
+- A semantic edit must identify affected schemas, policy, fixtures, validators,
+  tests, consumers, compatibility, correction, and rollback. Documentation-only
+  edits must not claim those dependent artifacts changed.
 
-Each cross-domain semantic contract must state:
+## Validation and negative checks
 
-- the cross-domain topic name;
-- participating domains;
-- owning domain for each atomic fact;
-- why no single domain owns the contract;
-- accepted inputs and exclusions;
-- source-role boundaries;
-- identity and temporal semantics;
-- sensitivity inheritance and most-restrictive policy posture;
-- EvidenceRef/EvidenceBundle requirements;
-- policy gates and review posture;
-- release and rollback expectations;
-- downstream API/UI/AI boundaries;
-- migration and rollback path if ownership later changes.
+For this directory README, review must verify:
 
----
+1. one H1, unique headings, closed fences, normalized whitespace, and a final
+   newline;
+2. every relative link and every direct-child inventory entry at the pinned
+   commit;
+3. consistency with accepted Directory Rules, ADR-0029, the current seam
+   register, the generic join contract and schema, and each child contract;
+4. that no prose promotes a proposed seam, fixture result, schema-valid object,
+   PR, merge, or passing check into truth, authorization, release, or
+   publication;
+5. exact-head diff, hosted checks, review state, and open-PR overlap before
+   relying on the update.
 
-## Lifecycle and trust boundary
+For a semantic or executable change, also run the affected pair validator,
+fixture matrix, focused tests, generic join regressions, and applicable hosted
+workflow. A skipped, uncollected, stale-head, or unrelated check is not passing
+evidence. The [cross-domain test index](../../tests/cross_domain/README.md)
+records current test coverage and its limits.
 
-```mermaid
-flowchart LR
-  CONTRACT[contracts/cross_domain topic] --> OWNERS[domain-owned contracts]
-  CONTRACT --> SCHEMA[schemas/contracts/v1/topic]
-  CONTRACT --> POLICY[policy/topic]
-  CONTRACT --> TESTS[tests + fixtures]
-  OWNERS --> DATA[data lifecycle roots]
-  DATA --> PROOFS[data/proofs]
-  PROOFS --> RELEASE[release]
-  RELEASE --> PUBLIC[governed API/UI/AI surfaces]
-```
+Required negative checks include arbitrary-lead-domain placement, endpoint
+ownership collapse, source-role coercion, sensitivity downgrade, missing
+evidence, unsafe precision, living-person or private-entity exposure, implied
+causation, non-false publication effects, unregistered identity, and absent
+dependency behavior.
 
-Contracts describe meaning. They do not validate schemas, decide policy, create evidence, move lifecycle data, release artifacts, expose sensitive data, or serve public clients.
+## Review, escalation, and open holds
 
----
+Escalate when a change alters a domain owner, seam identity, canonical path,
+Shared Kernel relationship, machine vocabulary, public exposure, lifecycle or
+release responsibility, or compatibility promise. A README cannot accept those
+decisions.
 
-## Validation
+Open holds include:
 
-Before relying on this directory, verify:
+- accountable contract, domain, policy, sensitivity, validation, and release
+  stewardship;
+- accepted seam-registration and activation authority, coverage, and mapping to
+  current underscore paths;
+- accepted source-role crosswalks and global `knowledge_character` vocabulary;
+- per-seam policy, evidence closure, rights, authenticated review, release,
+  correction, withdrawal, and rollback;
+- verified public-client consumer closure through governed interfaces only;
+- a governed end-to-end cross-domain `ANSWER` with no trust-membrane bypass.
 
-- naming convention for `cross_domain` versus a more specific `<topic>` segment;
-- inventory of all files under `contracts/cross_domain/`;
-- every cross-domain contract lists participating domains and owning domains for atomic facts;
-- no contract duplicates domain-owned semantics;
-- matching schemas exist in accepted cross-domain schema homes or gaps are marked `NEEDS VERIFICATION`;
-- policy roots exist for cross-domain allow/deny/restrict/abstain behavior where needed;
-- validators, fixtures, and tests enforce cross-domain joins, source-role boundaries, evidence references, and sensitivity inheritance;
-- release and rollback records exist for public cross-domain products;
-- public API/UI/AI surfaces use governed, released, policy-safe outputs and do not read RAW/WORK/QUARANTINE or internal stores directly.
+Until those are closed, every proposed public join remains held.
 
----
+## Related references
 
-## Evidence basis
+- [Parent contract root](../README.md)
+- [Cross-domain architecture index](../../docs/architecture/cross-domain/README.md)
+- [Cross-domain seam register](../../control_plane/cross_domain_seam_register.yaml)
+- [Generic join contract](../joins/cross_lane_join_assessment.md)
+- [Generic join schema](../../schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json)
+- [Cross-domain validators](../../tools/validators/cross_domain/)
+- [Join fixtures](../../fixtures/contracts/v1/joins/)
+- [Cross-domain test index](../../tests/cross_domain/README.md)
+- [Directory Rules](../../docs/doctrine/directory-rules.md)
+- [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| `contracts/cross_domain/README.md` before this edit | `CONFIRMED` | Target file existed but was blank. | No directory contract content before this edit. |
-| `contracts/README.md` | `CONFIRMED` | Contracts define semantic meaning; schemas define shape; executable validation, JSON Schema, policy code, and source data do not belong in contracts. | Root README does not inventory cross-domain contracts. |
-| `docs/architecture/cross-domain/multi-domain-placement.md` | `CONFIRMED doctrine / PROPOSED paths` | Cross-domain semantic contracts belong under `contracts/<topic>/...`, not under one picked domain; responsibility roots remain canonical. | Some path naming issues and OPEN-DR items remain unresolved. |
-| `docs/architecture/domain-placement-law.md` | `CONFIRMED derived doctrine` | Domain is a lane inside responsibility roots, not a root folder; cross-domain joins remain possible through shaped lanes and lowest common roots. | Concrete paths in that doc are often marked PROPOSED until repo verification. |
-| `docs/architecture/ecology-cross-domain.md` | `CONFIRMED example doctrine` | Cross-domain ecology/biodiversity composition preserves atomic ownership in fauna, flora, habitat, etc. | Ecology is one example, not the full cross-domain inventory. |
+## Rollback and review trigger
 
----
+Rollback is a focused revert of this README to prior blob
+`58c2f1bfaa4f9b49676c339b2977a1c46ffcf88a`. It changes no child contract,
+schema, policy, fixture, validator, test, pipeline, lifecycle object, evidence,
+release record, or public surface.
 
-## Rollback
+Re-review this index when a direct child changes, a seam is registered or
+activated, an ADR changes placement or authority, an enforcement or consumer
+binding changes, a public exposure path is proposed, or correction, withdrawal,
+rollback, or material drift is observed.
 
-Rollback is required if this README is used to claim that `cross_domain` is a domain, to create a new repo root, to duplicate domain-owned authority, to claim schemas/policy/validators exist without verification, or to bypass source/evidence/policy/release gates.
-
-Rollback target: prior blank file content SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
-
----
-
-## Definition of done
-
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Naming convention for `cross_domain` is resolved or renamed by ADR/migration note.
-- [ ] Full `contracts/cross_domain/` inventory is generated.
-- [ ] Each contract identifies participating domains and owning domains for atomic facts.
-- [ ] Matching schemas, policy bundles, validators, fixtures, and tests are linked or gaps are marked.
-- [ ] Sensitivity inheritance and most-restrictive policy behavior are testable.
-- [ ] Release and rollback posture is defined for every public cross-domain product.
-- [ ] Affected domain docs cross-link here without duplicating doctrine.
-- [ ] No schema, policy, data, proof, release, API, UI, AI, or publication authority is asserted from this folder.
-
----
-
-## Status summary
-
-`contracts/cross_domain/` is a semantic contract coordination folder for true cross-domain topics. It is not a domain, not a schema home, not a policy home, not a validator package, not a fixture store, not a data lifecycle root, not a proof root, not a release authority, not a public API/UI surface, and not a way to bypass domain ownership.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)

@@ -1,0 +1,442 @@
+{
+  "$defs": {
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_activated",
+        "raw_admission_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "nullableRef": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        "output_type": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+          "type": "string"
+        },
+        "schema_ref": {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        "target_zone": {
+          "enum": [
+            "WORK",
+            "QUARANTINE"
+          ]
+        }
+      },
+      "required": [
+        "output_type",
+        "contract_ref",
+        "schema_ref",
+        "target_zone"
+      ],
+      "type": "object"
+    },
+    "repoPath": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "watcher": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "PLACEHOLDER"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_ref": {
+                "type": "null"
+              },
+              "capabilities": {
+                "maxItems": 0
+              },
+              "endpoint_ref": {
+                "type": "null"
+              },
+              "governance": {
+                "properties": {
+                  "source_activated": {
+                    "const": false
+                  }
+                }
+              },
+              "outputs": {
+                "maxItems": 0
+              },
+              "policy_ref": {
+                "type": "null"
+              },
+              "poll": {
+                "properties": {
+                  "cadence": {
+                    "type": "null"
+                  },
+                  "max_attempts": {
+                    "const": 0
+                  },
+                  "mode": {
+                    "const": "MANUAL_ONLY"
+                  },
+                  "timeout_seconds": {
+                    "type": "null"
+                  }
+                }
+              },
+              "schema_url": {
+                "type": "null"
+              },
+              "signature_ref": {
+                "type": "null"
+              },
+              "source_descriptor_ref": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "ACTIVE"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "activation_ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "endpoint_ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "governance": {
+                "properties": {
+                  "source_activated": {
+                    "const": true
+                  }
+                }
+              },
+              "outputs": {
+                "minItems": 1
+              },
+              "policy_ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "schema_url": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "signature_ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "source_descriptor_ref": {
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "activation_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "canonical_id": {
+          "pattern": "^kfm://watcher/[a-z0-9][a-z0-9/_-]{2,126}$",
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "enum": [
+              "CONDITIONAL_REQUEST",
+              "CONTENT_DIGEST",
+              "MATERIALITY_CLASSIFICATION",
+              "METADATA_HEAD",
+              "SCHEMA_AWARE_DIFF"
+            ]
+          },
+          "maxItems": 5,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "endpoint_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "governance": {
+          "$ref": "#/$defs/governance"
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/output"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "policy_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "poll": {
+          "additionalProperties": false,
+          "properties": {
+            "cadence": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "pattern": "^P[A-Z0-9.]+$",
+                  "type": "string"
+                }
+              ]
+            },
+            "max_attempts": {
+              "maximum": 10,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "mode": {
+              "enum": [
+                "MANUAL_ONLY",
+                "SCHEDULED",
+                "EVENT_DRIVEN"
+              ]
+            },
+            "timeout_seconds": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "maximum": 3600,
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "mode",
+            "cadence",
+            "timeout_seconds",
+            "max_attempts"
+          ],
+          "type": "object"
+        },
+        "reason_codes": {
+          "items": {
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "schema_url": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "signature_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/nullableRef"
+        },
+        "spec_path": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "spec_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "state": {
+          "enum": [
+            "PLACEHOLDER",
+            "INACTIVE",
+            "ACTIVE",
+            "SUSPENDED",
+            "RETIRED"
+          ]
+        },
+        "version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[a-z0-9.-]+)?$",
+          "type": "string"
+        },
+        "watcher_id": {
+          "pattern": "^kfm\\.watcher\\.[a-z0-9][a-z0-9_.-]{2,126}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "watcher_id",
+        "canonical_id",
+        "version",
+        "state",
+        "spec_path",
+        "spec_sha256",
+        "source_descriptor_ref",
+        "activation_ref",
+        "endpoint_ref",
+        "poll",
+        "policy_ref",
+        "outputs",
+        "schema_url",
+        "signature_ref",
+        "capabilities",
+        "reason_codes",
+        "governance"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/source/watcher_registry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activation_authorized": {
+          "const": false
+        },
+        "source_authority_created": {
+          "const": false
+        }
+      },
+      "required": [
+        "source_authority_created",
+        "source_activation_authorized",
+        "execution_authorized",
+        "raw_admission_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "object_type": {
+      "const": "WatcherRegistry"
+    },
+    "registry_id": {
+      "const": "kfm://control-plane/watcher-registry/v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "watchers": {
+      "items": {
+        "$ref": "#/$defs/watcher"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "registry_id",
+    "status",
+    "canonicalization_profile",
+    "spec_hash",
+    "watchers",
+    "governance"
+  ],
+  "title": "WatcherRegistry",
+  "type": "object",
+  "x-kfm": {
+    "authority": "control_plane_index_only",
+    "contract_doc": "contracts/source/watcher_registry.md",
+    "instance": "control_plane/watcher_registry.json",
+    "non_effects": [
+      "does_not_activate_source",
+      "does_not_execute_watcher",
+      "does_not_admit_raw",
+      "does_not_authorize_promotion",
+      "does_not_release_or_publish"
+    ],
+    "validator": "tools/validators/validate_watcher_registry.py"
+  }
+}

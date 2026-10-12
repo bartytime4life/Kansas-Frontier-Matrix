@@ -1,0 +1,34 @@
+{
+  "record_id": "fixture:atmosphere:invalid",
+  "object_family": "ForecastContext",
+  "knowledge_character": "MODEL_FIELD",
+  "source_descriptor_ref": "",
+  "evidence_refs": [],
+  "spatial_support": {
+    "kind": "exact_station",
+    "county_fips": "20-53",
+    "latitude": "synthetic-forbidden-location"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-08-02T12:00:00",
+    "retrieved_at": "2026-08-02T11:00:00Z"
+  },
+  "measurement": {
+    "parameter": "forecast_precipitation",
+    "value": -1,
+    "unit": "in",
+    "accumulation_minutes": 0,
+    "method": "model"
+  },
+  "governance": {
+    "rights_state": "unknown",
+    "sensitivity_state": "unknown",
+    "review_state": "approved",
+    "release_state": "released",
+    "promotion_eligible": true,
+    "rollback_state": "missing"
+  },
+  "limitations": [
+    "safe_for_alerts"
+  ]
+}

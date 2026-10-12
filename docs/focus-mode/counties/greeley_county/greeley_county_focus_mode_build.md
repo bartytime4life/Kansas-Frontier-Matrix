@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/greeley-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Greeley County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Greeley County Focus Mode Build Plan
 type: county-focus-mode-build-plan
 version: v0.1-proposed
@@ -9,23 +14,23 @@ county_name: Greeley County
 county_slug: greeley
 lane_slug: greeley-county
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-10-12
 owners:
-  focus_mode_owner: NEEDS_VERIFICATION
-  evidence_steward: NEEDS_VERIFICATION
-  local_governance_reviewer: NEEDS_VERIFICATION
-  census_privacy_reviewer: NEEDS_VERIFICATION
-  agriculture_disclosure_reviewer: NEEDS_VERIFICATION
-  groundwater_water_rights_reviewer: NEEDS_VERIFICATION
-  transportation_time_zone_reviewer: NEEDS_VERIFICATION
-  municipal_public_services_reviewer: NEEDS_VERIFICATION
-  emergency_weather_reviewer: NEEDS_VERIFICATION
-  property_living_person_reviewer: NEEDS_VERIFICATION
-  infrastructure_security_reviewer: NEEDS_VERIFICATION
-  rights_reviewer: NEEDS_VERIFICATION
-  correction_steward: NEEDS_VERIFICATION
-  rollback_owner: NEEDS_VERIFICATION
-  release_approver: NEEDS_VERIFICATION
+  - focus_mode_owner: NEEDS_VERIFICATION
+  - evidence_steward: NEEDS_VERIFICATION
+  - local_governance_reviewer: NEEDS_VERIFICATION
+  - census_privacy_reviewer: NEEDS_VERIFICATION
+  - agriculture_disclosure_reviewer: NEEDS_VERIFICATION
+  - groundwater_water_rights_reviewer: NEEDS_VERIFICATION
+  - transportation_time_zone_reviewer: NEEDS_VERIFICATION
+  - municipal_public_services_reviewer: NEEDS_VERIFICATION
+  - emergency_weather_reviewer: NEEDS_VERIFICATION
+  - property_living_person_reviewer: NEEDS_VERIFICATION
+  - infrastructure_security_reviewer: NEEDS_VERIFICATION
+  - rights_reviewer: NEEDS_VERIFICATION
+  - correction_steward: NEEDS_VERIFICATION
+  - rollback_owner: NEEDS_VERIFICATION
+  - release_approver: NEEDS_VERIFICATION
 unverified_homes:
   canonical_human_plan_path: PROPOSED / NEEDS_VERIFICATION
   contract_home: PROPOSED / NEEDS_VERIFICATION

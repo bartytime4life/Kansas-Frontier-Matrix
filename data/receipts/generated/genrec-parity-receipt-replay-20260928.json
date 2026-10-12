@@ -1,0 +1,66 @@
+{
+  "receipt_id": "genrec-parity-receipt-replay-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:bcc0182675bca98f95ad2c7bb903adfa05517487ab9d17923104a173c6b28ad4",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "sha256:5c3b190ffbba99308d447a58266daf9cae9c4774431abba8b151d791b07b82b6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@e32729b1e74590a7b89661598e1beb680582b6f0",
+      "data/receipts/generated/genrec-topology-baseline-recovery-20260928.json",
+      "data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json"
+    ]
+  },
+  "citations": [
+    {
+      "id": "Topology baseline recovery merge",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4782",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    "Makefile": "CONFIRMED",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository governance parity target",
+      "outcome": "PASS",
+      "reason": "make repository-governance-parity exits 0: 12 unit tests OK, fixtures OK, profile PASS / HOLD_INHERITED with no findings, receipt replay from e32729b1 VALID."
+    },
+    {
+      "gate": "previous receipt replay",
+      "outcome": "FAIL",
+      "reason": "The replaced step replayed genrec-repository-governance-parity-mrts-04-20260822 from f7c6ba4c, which is not an ancestor of main (ARTIFACT_GIT_REF_UNRESOLVED)."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T14:55:30Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Replaces the repository-governance-parity target's unresolvable receipt replay with the topology recovery receipt replayed from its merge commit on main. The historical MRTS-04 receipt is kept."
+}

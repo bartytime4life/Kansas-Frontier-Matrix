@@ -19,7 +19,6 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json
   - connectors/inaturalist/README.md
   - policy/sensitivity/
   - policy/rights/
@@ -38,6 +37,9 @@ notes:
     Operational facts (per-record license, current API endpoint, auth, rate limits)
     remain NEEDS VERIFICATION; source-steward review must close these before connector
     activation.
+owning_root: docs/
+responsibility: "Documentation for iNaturalist — Source Catalog Profile; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # iNaturalist — Source Catalog Profile
@@ -556,14 +558,14 @@ For traceability into the KFM Idea Index spine, this profile is the documentatio
 ## 16. Related docs
 
 - [`docs/sources/README.md`](../README.md) — source catalog index *(TODO link target — PROPOSED)*
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — descriptor standard *(PROPOSED home)*
-- [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) — Fauna domain dossier *(PROPOSED home per Directory Rules §6.1)*
-- [`docs/domains/flora/README.md`](../../domains/flora/README.md) — Flora domain dossier *(PROPOSED home per Directory Rules §6.1)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority (v1.2)
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](../../standards/SENSITIVITY_RUBRIC.md) — C6-01 0–5 rubric *(PROPOSED in corpus; not yet authored)*
-- [`docs/standards/REDACTION_DETERMINISM.md`](../../standards/REDACTION_DETERMINISM.md) — C6-03 seeded-jitter rule *(PROPOSED in corpus; not yet authored)*
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — placement and convention drift entries
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — KFM-wide verification queue
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — descriptor standard *(PROPOSED home)*
+- [`docs/domains/fauna/README.md`](../../../domains/fauna/README.md) — Fauna domain dossier *(PROPOSED home per Directory Rules §6.1)*
+- [`docs/domains/flora/README.md`](../../../domains/flora/README.md) — Flora domain dossier *(PROPOSED home per Directory Rules §6.1)*
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority (v1.2)
+- [`docs/standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — C6-01 0–5 rubric *(PROPOSED in corpus; not yet authored)*
+- [`docs/standards/REDACTION_DETERMINISM.md`](../../../standards/REDACTION_DETERMINISM.md) — C6-03 seeded-jitter rule *(PROPOSED in corpus; not yet authored)*
+- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — placement and convention drift entries
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../../../registers/VERIFICATION_BACKLOG.md) — KFM-wide verification queue
 - `connectors/inaturalist/README.md` — connector reference *(CONFIRMED lane per Directory Rules §7.3 at commit `b6a2791`; README content PROPOSED)*
 - `schemas/contracts/v1/source/source_descriptor.schema.json` — descriptor schema *(default home per ADR-0001)*
 - `schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json` — occurrence schema *(PROPOSED consolidation home; current PROPOSED home `schemas/occurrence_evidence/`)*
@@ -703,6 +705,6 @@ All bindings ship with: profile method doc, Rego fixture stating which sensitivi
 
 ### Footer
 
-> **Related:** [Directory Rules](../../doctrine/directory-rules.md) · [Fauna dossier](../../domains/fauna/README.md) · [Flora dossier](../../domains/flora/README.md) · [`SourceDescriptor` schema](../../../schemas/contracts/v1/source/source_descriptor.schema.json) · [`OccurrenceEvidenceObject` schema](../../../schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json)
+> **Related:** [Directory Rules](../../../doctrine/directory-rules.md) · [Fauna dossier](../../../domains/fauna/README.md) · [Flora dossier](../../../domains/flora/README.md) · [`SourceDescriptor` schema](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) · `OccurrenceEvidenceObject` schema (not present)
 > **Last updated:** 2026-05-21 · **Status:** draft (v2) · **Authority of this doc:** explanatory; does **not** decide admission, activation, or release.
 > [⬆ Back to top](#inaturalist--source-catalog-profile)

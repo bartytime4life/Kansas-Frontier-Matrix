@@ -118,7 +118,7 @@ This README documents organization and known limits only. It does not claim that
 | Semantic contract meaning | `contracts/` | Referenced, not replaced. |
 | Executable policy and admissibility rules | `policy/` | Out of scope. |
 | Source registry records | `data/registry/` | Out of scope. |
-| Lifecycle source/material data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope. |
+| Lifecycle source/material data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope. |
 | Runtime/API behavior | `runtime/`, `apps/`, `packages/`, and governed API surfaces | Out of scope. |
 | Release decisions and manifests | `release/` | Out of scope. |
 | Enforceability proof | `tests/` and validator tooling | Referenced, not claimed as run. |

@@ -2,12 +2,15 @@
 doc_id: kfm://doc/docs-domains-archaeology-changelog
 title: Archaeology and Cultural Heritage — Changelog
 type: standard
-version: v1
+version: v1.0.4
 status: draft
 owners: <archaeology-domain-steward> + <docs-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: "Record the versioned history and repository-evidence posture of human-facing Archaeology lane documentation without granting policy, runtime, release, or publication authority."
+truth_posture: "Current path, tracked document presence, and listed metadata versions are confirmed at the observed main revision; document content remains draft and independently governed."
 related:
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/ubiquitous-language.md
@@ -17,12 +20,14 @@ related:
   - docs/domains/archaeology/cross-lane-relations.md
   - docs/domains/archaeology/governed-ai-behavior.md
   - docs/domains/archaeology/verification-backlog.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, domains, archaeology, changelog, versioning, lineage]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; versioning follows operating contract §37 (MAJOR/MINOR/PATCH).
-  - Entries record draft authoring in this session; "merged" status is PROPOSED until verified against a mounted repo.
+  - Repository history and current document metadata were inspected on 2026-08-28; tracked presence and listed versions are confirmed at the observed main revision.
+  - Tracked presence is not review, acceptance, policy activation, release, promotion, or publication evidence.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 across thirteen lane docs; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -35,9 +40,9 @@ notes:
 ![policy](https://img.shields.io/badge/policy-public_doc-blue)
 ![versioning](https://img.shields.io/badge/versioning-§37_MAJOR%2FMINOR%2FPATCH-blue)
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![repo--state](https://img.shields.io/badge/merge_status-PROPOSED-lightgrey)
+![repo--state](https://img.shields.io/badge/repository_evidence-CONFIRMED-green)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<docs-steward>` (PLACEHOLDER) · **Updated:** 2026-05-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<docs-steward>` (PLACEHOLDER) · **Updated:** 2026-10-11
 
 > [!NOTE]
 > This changelog tracks the **Archaeology lane documentation** under `docs/domains/archaeology/`. It does not track the canonical operating contract (see `ai-build-operating-contract.md` §52) or repo-wide doctrine. Each entry records a documentation change classified by the contract's §37 MAJOR / MINOR / PATCH model.
@@ -67,7 +72,7 @@ This document is the **changelog** for the Archaeology / Cultural Heritage docum
 > **No silent edits.** Per the corrections-are-first-class posture, a material change to any lane doc is recorded here (or in the doc's own changelog section) and, where it diverges from repo convention, in `docs/registers/DRIFT_REGISTER.md`. A changelog entry is not a substitute for the doc's own version bump or for a `GENERATED_RECEIPT.json` when the change is merged.
 
 > [!NOTE]
-> **Truth labels in this doc.** The §37 versioning model is `CONFIRMED` doctrine. The "merged" status of each entry below is `PROPOSED` — these documents were authored as drafts in-session; whether they are committed to a mounted repository is `NEEDS VERIFICATION`. All repo paths are `PROPOSED`.
+> **Truth labels in this doc.** The §37 versioning model is `CONFIRMED` doctrine. Current repository inspection confirms this path, the tracked lane-document paths in §4, and their listed metadata versions. Their content remains `draft`; repository presence does not establish review, acceptance, semantic correctness, policy activation, release, promotion, or publication.
 
 [↑ Back to top](#top)
 
@@ -77,11 +82,11 @@ This document is the **changelog** for the Archaeology / Cultural Heritage docum
 
 | Aspect | Value | Status |
 |---|---|---|
-| Proposed path | `docs/domains/archaeology/CHANGELOG.md` | `PROPOSED` |
+| Current path | `docs/domains/archaeology/CHANGELOG.md` | `CONFIRMED` at observed main |
 | Owning responsibility root | `docs/` (explains something to humans) | `CONFIRMED` rule |
 | Scope | Archaeology lane docs only | `CONFIRMED` |
-| Versioning authority | `ai-build-operating-contract.md` §37 | `CONFIRMED` rule / `PROPOSED` presence |
-| Drift counterpart | `docs/registers/DRIFT_REGISTER.md` | `PROPOSED` |
+| Versioning authority | `docs/doctrine/ai-build-operating-contract.md` §37 | `CONFIRMED` rule and path |
+| Drift counterpart | `docs/registers/DRIFT_REGISTER.md` | `CONFIRMED` path; entry relevance remains case-specific |
 
 **Directory Rules basis.** A doc that *explains to humans* lives under `docs/`; a changelog is human-facing history of the lane it sits in. Per-document version bumps live in each doc's own KFM Meta Block and changelog section; this file aggregates the lane view.
 
@@ -111,19 +116,19 @@ This document is the **changelog** for the Archaeology / Cultural Heritage docum
 
 ## 4. Lane document inventory
 
-The documents this changelog tracks, with their current version. All `merged` states are `PROPOSED` (no mounted repo).
+The documents this changelog tracks, with versions read from their current metadata blocks. `Tracked on main` proves repository presence only; every document remains `draft` until its own governed transition.
 
-| Document | Current version | Status |
+| Document | Current version | Repository state |
 |---|---|---|
-| `README.md` | v2 | `draft` · merge `PROPOSED` |
-| `ubiquitous-language.md` | v1 | `draft` · merge `PROPOSED` |
-| `source-families.md` | v1 | `draft` · merge `PROPOSED` |
-| `sensitivity-and-publication-posture.md` | v1 | `draft` · merge `PROPOSED` |
-| `pipeline-shape.md` | v1 | `draft` · merge `PROPOSED` |
-| `cross-lane-relations.md` | v1 | `draft` · merge `PROPOSED` |
-| `governed-ai-behavior.md` | v1 | `draft` · merge `PROPOSED` |
-| `verification-backlog.md` | v2 | `draft` · merge `PROPOSED` |
-| `CHANGELOG.md` (this file) | v1 | `draft` · merge `PROPOSED` |
+| `README.md` | v2.2.4 | `CONFIRMED` tracked · content `draft` |
+| `ubiquitous-language.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
+| `source-families.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
+| `sensitivity-and-publication-posture.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
+| `pipeline-shape.md` | v1 | `CONFIRMED` tracked · content `draft` |
+| `cross-lane-relations.md` | v1 | `CONFIRMED` tracked · content `draft` |
+| `governed-ai-behavior.md` | v1 | `CONFIRMED` tracked · content `draft` |
+| `verification-backlog.md` | v2.1.1 | `CONFIRMED` tracked · content `draft` |
+| `CHANGELOG.md` (this file) | v1.0.4 | `PROPOSED` in this change · content `draft` |
 
 [↑ Back to top](#top)
 
@@ -132,6 +137,67 @@ The documents this changelog tracks, with their current version. All `merged` st
 ## 5. Changelog entries
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
+
+### 2026-10-11 — Compatibility-view descriptor migration — PATCH
+
+On owner direction, the three `PROPOSED` greenfield descriptor templates in `data/registry/archaeology/sources/` moved to the canonical lane as `data/registry/sources/archaeology/{ahgp,khri_archaeology,tribal_consultation_register}.source.yaml` (`git mv`; field values unchanged and still `TBD`; nothing admitted). The crosswalk and rollback are in `data/registry/archaeology/sources/README.md` (Migration record). `SOURCES.md` verification item 1 and `SOURCE_REGISTRY.md` `OQ-ARCH-SR-08` now say the migration is done. AHGP keeps its archaeology assignment, flagged for source-admission review because it is a genealogy transcription source.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `SOURCE_REGISTRY.md` | v0.2.2 → v0.2.4 | PATCH | v0.2.4 also sets the registry-home badge and §3 tree label to `CONFIRMED`. `OQ-ARCH-SR-08` notes the migration; the §6 placement warning separates the CONFIRMED canonical registry home from the still-PROPOSED implementation paths. |
+| `SOURCES.md` | v1.0.2 (unchanged) | PATCH (wording) | Verification item 1 says the three descriptors were migrated. |
+| `CHANGELOG.md` (this file) | v1.0.2 → v1.0.4 | PATCH | This entry and the 2026-10-11 source-registry entry below, which was added without a self-version bump; v1.0.4 records the `SOURCE_REGISTRY.md` v0.2.4 badge correction. |
+
+### 2026-10-11 — Source-registry path reconciliation — PATCH
+
+Aligned source-registry paths to accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029): `data/registry/sources/archaeology/` is the canonical `SourceDescriptor` writer, and `data/registry/archaeology/sources/` is a read-only compatibility view that must never become an independent writer. Three unmigrated descriptors remain in the compatibility view (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`); this entry records them and moves no registry record.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `PIPELINE.md` | v1.0.1 → v1.0.2 | PATCH | Scope list, §6 and §17 path trees, verification item, and `related` name the canonical lane; the domain-first parent is labelled compatibility-only. |
+| `OBJECT_FAMILIES.md` | v1 → v1.0.1 | PATCH | Out-of-scope list and path tree name the canonical lane; visible dates synced. |
+| `SOURCES.md` | v1.0.1 → v1.0.2 | PATCH | Doctrine-surface callout, §11 tree, KHRI open question, verification item, review trigger, and `related` name the canonical lane; the v1 changelog row that adopted the domain-first path is superseded. |
+| `SOURCE_REGISTRY.md` | v0.2.1 → v0.2.2 | PATCH | `OQ-ARCH-SR-08` resolved by `DIR-SOURCE-003`/`004`. |
+| `RELEASE_INDEX.md` | v2.0.1 → v2.0.2 | PATCH | `SourceDescriptor` supersession row points at the canonical lane. |
+| `PUBLICATION_AND_POLICY.md` | v1 → v1.0.1 | PATCH | Same supersession-row fix; visible dates synced. |
+
+### 2026-10-11 — Header sync and ledger evidence correction — PATCH
+
+Follow-up to the RAW placement reconciliation below, from review of that change.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `MISSING_OR_PLANNED_FILES.md` | v1.2.1 → v1.2.3 | PATCH | The `data/raw/archaeology/README.md` row moves to `❓ UNKNOWN` / `❓` / `NEEDS VERIFICATION` (tracked on `main` since #5040; v1.2.2 briefly used `🟡 PLANNED`, which wrongly implied it was unimplemented), because this ledger's evidence rules forbid `🟢 PRESENT` without a mounted-repo verification pass. The version badge now matches the metadata. |
+| `API_CONTRACTS.md`, `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `SOURCE_REGISTRY.md`, `README.md` | none (same edition) | PATCH | Visible badges, status rows, and "Last updated" fields now match the metadata-block version and `updated` date from the reconciliation. |
+
+### 2026-10-11 — RAW placement reconciliation (lane-wide) — PATCH / MINOR
+
+Aligned RAW placement wording to accepted Directory Rules `DIR-SOURCE-001`–`004` (`docs/doctrine/directory-rules.md` §12.3): RAW capture identity is source-first under a `source_id` registered once in `data/registry/sources/`; one capture may support several domains without duplicated RAW bytes. Physical source-first RAW placement is **HOLD** (no accepted placement decision), and `data/raw/archaeology/` is a compatibility/reference lane (`data/raw/archaeology/README.md` v0.2.0) that receives no payloads. Connector rules now read "emit only to the accepted source-first RAW home or QUARANTINE; never to processed, catalog, or published." Every deny-by-default, exact-location, sovereignty, cultural-review, and consent rule is preserved unchanged. Documentation only; no payload, path, writer, policy, or release state changed.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `CANONICAL_PATHS.md` | v1.1 → v1.2 | MINOR | Normative §3 placement table: `data/raw/` row now CONFIRMED rule / HOLD path; connector row and anti-pattern A7 retargeted; tree, diagram, and no-public-surface WARNING generalized. |
+| `API_CONTRACTS.md` | v0.3.1 → v0.3.2 | PATCH | Trust-membrane check covers RAW as source-first capture or the legacy lane. |
+| `ARCHITECTURE.md` | v1.2 → v1.2.1 | PATCH | Lane map, path list, and watcher-as-non-publisher callout. |
+| `CONTINUITY_INVENTORY.md` | v1.1 → v1.1.2 | PATCH | Watcher row, lifecycle-skip rule, backlog item 14; required metadata added. |
+| `DATA_LIFECYCLE.md` | v2.1 → v2.1.1 | PATCH | §2 `Data — raw` row set to HOLD. |
+| `EXPANSION_PLAN.md` | v0.3 → v0.3.1 | PATCH | Scaffolding tree and diagram. |
+| `FILE_SYSTEM_PLAN.md` | v1.2 → v1.2.1 | PATCH | Lane-map rows 11 and 19, diagram and NOTE, §5.3/§5.4, Appendix A; required metadata added. |
+| `MISSING_OR_PLANNED_FILES.md` | v1.2 → v1.2.1 | PATCH | `data/raw/archaeology/README.md` now PRESENT; per-run payload-tree row HOLD (retained); `⏸ HOLD` legend added. |
+| `PIPELINE.md` | v1 → v1.0.1 | PATCH | §6 RAW placement uses a HOLD placeholder; §5 anti-pattern generalized; §17 tree; required metadata added. |
+| `README.md` | v2.2.3 → v2.2.4 | PATCH | Repo-fit tree and source-first RAW note. |
+| `RELEASE_INDEX.md` | v2 → v2.0.1 | PATCH | Diagram node; index-consistency rule 8 generalized. |
+| `SOURCES.md` | v1 → v1.0.1 | PATCH | Admission diagram RAW node. |
+| `SOURCE_REGISTRY.md` | v0.2 → v0.2.1 | PATCH | Admission-flow connector node. |
+| `CHANGELOG.md` (this file) | v1.0.1 → v1.0.2 | PATCH | This entry; inventory version refresh. |
+
+### `CHANGELOG.md` v1 → v1.0.1 — PATCH
+
+| Change | §37 type | Reason |
+|---|---|---|
+| Replaced the stale repository-unavailable posture with an exact current-main inventory. | status-table refresh (PATCH) | Current Git history and metadata prove the tracked paths and listed versions. |
+| Added responsibility metadata and corrected the operating-contract path. | metadata/link repair (PATCH) | Align with current documentation validation without changing authority. |
+| Kept every tracked document `draft` and separated presence from review, acceptance, release, and publication. | truth-posture clarification (PATCH) | Prevent repository evidence from being misread as governance approval. |
 
 ### `verification-backlog.md` v1 → v2 — MINOR
 
@@ -172,7 +238,7 @@ Entries are newest-first. Each names the document, version delta, §37 type, and
 | `CHANGELOG.md` (this file) | new (MINOR) | Establishes the lane changelog. |
 
 > [!NOTE]
-> All v0 → v1 entries are **`PROPOSED` as merged**. They record documents authored in-session against the KFM corpus. Whether each is committed to a mounted repository is `NEEDS VERIFICATION`.
+> Current Git history confirms that all v0 → v1 documents listed above are tracked. This resolves repository-presence uncertainty only; their authored claims and `draft` status remain governed independently.
 
 [↑ Back to top](#top)
 
@@ -218,7 +284,7 @@ Changes anticipated but not yet authored, gated on verification or ADR resolutio
 |---|---|---|---|
 | OQ-ARCH-CL-01 | Is there a repo-wide changelog convention (e.g., "Keep a Changelog" format) this lane file must conform to? | docs steward | repo inspection / ADR |
 | OQ-ARCH-CL-02 | Should per-document changelog sections be the source of truth, with this file an aggregate view, or vice versa? | docs steward | ADR |
-| OQ-ARCH-CL-03 | At what point do the v0 → v1 "PROPOSED as merged" entries become CONFIRMED (i.e., what commit evidence settles them)? | docs steward | repo inspection |
+| OQ-ARCH-CL-03 | `RESOLVED 2026-08-28`: current Git history settles tracked presence; content acceptance remains outside this changelog. | docs steward | current repository history + per-document metadata |
 | OQ-ARCH-CL-04 | Does a merged doc change require a `GENERATED_RECEIPT.json` entry linked from this changelog? | docs steward + governed-ai steward | ADR / contract §34 |
 
 ## Definition of done
@@ -229,7 +295,7 @@ This changelog is done enough to enter the repository when:
 - a docs steward and the archaeology domain steward review it;
 - it is linked from the lane `README.md` and `docs/domains/README.md`;
 - the changelog convention (OQ-ARCH-CL-01) is confirmed or logged in `docs/registers/DRIFT_REGISTER.md`;
-- the v0 → v1 "PROPOSED as merged" entries are reconciled against actual commit history once the repo is mounted;
+- the v0 → v1 entries remain reconciled against current Git history without treating presence as acceptance;
 - the `GENERATED_RECEIPT.json` planned in Section 2 (Notes) is wired into CI;
 - future changes follow the operating contract's §37 lifecycle.
 
@@ -240,9 +306,9 @@ This changelog is done enough to enter the repository when:
 - [`docs/domains/archaeology/README.md`](./README.md) — lane landing page
 - [`docs/domains/archaeology/verification-backlog.md`](./verification-backlog.md) — open verification items
 - [`docs/domains/archaeology/sensitivity-and-publication-posture.md`](./sensitivity-and-publication-posture.md) — tiers + CARE
-- `ai-build-operating-contract.md` — §37 versioning, §52 contract changelog (canonical)
+- `docs/doctrine/ai-build-operating-contract.md` — §37 versioning, §52 contract changelog (canonical)
 - `docs/registers/DRIFT_REGISTER.md` — divergence log (`PROPOSED`)
 
-**Last updated:** 2026-05-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-10-11 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)

@@ -1,0 +1,100 @@
+{
+  "object_type": "HlsNdviZonalMaterialityAssessment",
+  "schema_version": "1.0.0",
+  "assessed_at": "2026-08-06T20:35:00Z",
+  "support": {
+    "kind": "county",
+    "id": "20091"
+  },
+  "product": {
+    "collection": "HLS",
+    "ndvi_source": "VI_ASSET",
+    "mask_profile": "clear_acceptable_aerosol_no_adjacent_cloud",
+    "statistic_method": "area_weighted_clear_pixels"
+  },
+  "grid": {
+    "crs": "EPSG:5070",
+    "resolution_m": 30,
+    "alignment_hash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "thresholds": {
+    "min_valid_fraction": 0.6,
+    "min_absolute_change": 0.05,
+    "min_relative_change": 0.1
+  },
+  "governance": {
+    "fixture_only": true,
+    "promotion_allowed": false,
+    "release_state": "not_released",
+    "public_use_allowed": false
+  },
+  "assessment_id": "hls-ndvi-low-valid-hold-20091-20260806",
+  "prior": {
+    "stac_item_id": "HLS.FIXTURE.prior.a",
+    "collection_version": "2.0",
+    "stac_updated": "2026-06-30T23:59:59Z",
+    "window_start": "2026-06-01T00:00:00Z",
+    "window_end": "2026-06-30T23:59:59Z",
+    "asset_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "evidence_ref": "fixture://hls/prior/a",
+    "pixel_counts": {
+      "total": 1000,
+      "valid": 720,
+      "cloud": 93,
+      "shadow": 46,
+      "adjacent_cloud": 46,
+      "high_aerosol": 46,
+      "snow": 23,
+      "water": 23,
+      "other_invalid": 3
+    },
+    "statistics": {
+      "mean_ndvi": 0.3,
+      "median_ndvi": 0.31,
+      "p95_ndvi": 0.55
+    },
+    "valid_mask_footprint_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "current": {
+    "stac_item_id": "HLS.FIXTURE.current.b",
+    "collection_version": "2.1",
+    "stac_updated": "2026-07-31T23:59:59Z",
+    "window_start": "2026-07-01T00:00:00Z",
+    "window_end": "2026-07-31T23:59:59Z",
+    "asset_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "source_spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "evidence_ref": "fixture://hls/current/b",
+    "pixel_counts": {
+      "total": 1000,
+      "valid": 550,
+      "cloud": 150,
+      "shadow": 75,
+      "adjacent_cloud": 75,
+      "high_aerosol": 75,
+      "snow": 37,
+      "water": 37,
+      "other_invalid": 1
+    },
+    "statistics": {
+      "mean_ndvi": 0.39,
+      "median_ndvi": 0.4,
+      "p95_ndvi": 0.65
+    },
+    "valid_mask_footprint_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "computed": {
+    "source_changed": true,
+    "absolute_change": 0.09,
+    "relative_change": 0.3,
+    "signal_changed": true,
+    "current_valid_fraction": 0.55
+  },
+  "decision": {
+    "outcome": "HOLD",
+    "reasons": [
+      "VALID_FRACTION_BELOW_MINIMUM"
+    ]
+  },
+  "spec_hash": "sha256:d97135548d786111dc460c9356686084c316af839b7cfaac32bdaa763b0dba35"
+}

@@ -8,15 +8,18 @@ owners: <Docs steward + Settlements/Infrastructure lane steward — TODO confirm
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable Settlements/Infrastructure placement guidance; not executable path creation, policy, schema, contract, release, or publication authority.
+truth_posture: cite-or-abstain; responsibility-root doctrine is confirmed only where accepted repository evidence supports it, while unverified path presence remains proposed or needs verification.
 related:
-  - ai-build-operating-contract.md            # canonical operating contract, CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/settlements-infrastructure/README.md
   - docs/domains/settlements-infrastructure/ARCHITECTURE.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, doctrine, directory-rules, domains, settlements-infrastructure, canonical-paths]
 notes:
   - "CONTRACT_VERSION = \"3.0.0\" — doctrine-adjacent doc; operating-contract pin carried."
@@ -56,11 +59,11 @@ notes:
 - [1. Scope and role of this document](#1-scope-and-role-of-this-document)
 - [2. Doctrinal basis](#2-doctrinal-basis)
 - [3. Domain slug — why `settlements-infrastructure`](#3-domain-slug--why-settlements-infrastructure)
-- [4. Canonical-path map](#4-canonicalpath-map)
-- [5. Lane-by-lane canonical paths](#5-lanebylane-canonical-paths)
-- [6. Sensitivity-aware policy lanes](#6-sensitivityaware-policy-lanes)
-- [7. Cross-domain placement](#7-crossdomain-placement)
-- [8. Compatibility roots and anti-patterns](#8-compatibility-roots-and-antipatterns)
+- [4. Canonical-path map](#4-canonical-path-map)
+- [5. Lane-by-lane canonical paths](#5-lane-by-lane-canonical-paths)
+- [6. Sensitivity-aware policy lanes](#6-sensitivity-aware-policy-lanes)
+- [7. Cross-domain placement](#7-cross-domain-placement)
+- [8. Compatibility roots and anti-patterns](#8-compatibility-roots-and-anti-patterns)
 - [9. Reviewer placement checklist](#9-reviewer-placement-checklist)
 - [10. Open questions register](#10-open-questions-register)
 - [11. Related docs](#11-related-docs)
@@ -391,7 +394,7 @@ settlements-infrastructure/
 └── docs/
 ```
 
-This pattern competes with responsibility roots, fragments the lifecycle, and creates parallel authority homes. The fix is to migrate every file into the lane pattern shown in [§5](#5-lanebylane-canonical-paths).
+This pattern competes with responsibility roots, fragments the lifecycle, and creates parallel authority homes. The fix is to migrate every file into the lane pattern shown in [§5](#5-lane-by-lane-canonical-paths).
 
 ### 8.2 Other anti-patterns specifically risky for this domain
 
@@ -413,7 +416,7 @@ This pattern competes with responsibility roots, fragments the lifecycle, and cr
 When reviewing a PR that adds, moves, or renames a Settlements/Infrastructure-related path, work through this list (extends Directory Rules §16):
 
 - [ ] **Responsibility identified.** Maps to exactly one of Directory Rules §4 Step 1 categories.
-- [ ] **Right root.** Chosen root matches that responsibility (use [§5](#5-lanebylane-canonical-paths) as the lookup).
+- [ ] **Right root.** Chosen root matches that responsibility (use [§5](#5-lane-by-lane-canonical-paths) as the lookup).
 - [ ] **Domain segment correct.** Slug is `settlements-infrastructure` (not `settlement`, `settlements`, `infrastructure`, or `settlement-and-infrastructure`) unless OPEN-CP-01 has been resolved otherwise by ADR.
 - [ ] **`domains/` segment present where §4 Step 3 requires it.** Specifically under `docs/`, `contracts/`, `schemas/contracts/v1/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`.
 - [ ] **`domains/` segment absent where §4 Step 3 forbids it.** Specifically under `pipeline_specs/`, `data/<phase>/`, `release/candidates/`, `connectors/`, `tools/`, `runtime/`, `apps/`, `infra/`, `configs/`, `migrations/`.
@@ -449,7 +452,7 @@ These items are tracked here for triage; resolutions migrate to `docs/registers/
 ### Repo-evidence
 
 - **OPEN-CP-04 — Mounted-repo verification of every path above.** `NEEDS VERIFICATION`.
-  Every PROPOSED path in [§5](#5-lanebylane-canonical-paths) NEEDS VERIFICATION against a mounted repo. The doctrine is CONFIRMED; presence is not.
+  Every PROPOSED path in [§5](#5-lane-by-lane-canonical-paths) NEEDS VERIFICATION against a mounted repo. The doctrine is CONFIRMED; presence is not.
 - **OPEN-CP-05 — Per-domain `examples/` convention.** `PROPOSED`.
   Whether `examples/settlements-infrastructure/` is the convention, or examples live under `examples/<topic>/` without a domain segment. Directory Rules §4 Step 3 does not list `examples/` in the lane-pattern enumeration; §12 is silent. **Resolution via routine PR + Docs steward decision.**
 

@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-m17-review-image-hardening-20260913",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/infra-compose-smoke.yml",
+    "infra/README.md",
+    "infra/docker/.dockerignore",
+    "infra/docker/Dockerfile.explorer-web",
+    "infra/docker/Dockerfile.governed-api",
+    "infra/docker/README.md",
+    "tests/infra/test_docker_security_overrides.py",
+    "tests/infra/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/infra-compose-smoke.yml": "sha256:a0cfd6c11ac4332da94ccde0a7ff0cdce71e1882863c0aa2d14cf60ec391510b",
+    "infra/README.md": "sha256:ea16b69030bbc5aec5c12dd367cc0cc4fe7d71b2e9042c663ff7b15d8b62e66e",
+    "infra/docker/.dockerignore": "sha256:3dee51fb69d1ff1e5c40d5c13547d37a306677e7e6b80871bfeea20cc03c6690",
+    "infra/docker/Dockerfile.explorer-web": "sha256:aca91ff32d3148da4af886d2b69fd8076328d3794f1817ee29e8ac88e344a831",
+    "infra/docker/Dockerfile.governed-api": "sha256:5ece2729a2e8dc4827b93d1694e156127eb237e3fb8962359378eec0e0f4f313",
+    "infra/docker/README.md": "sha256:209d872cdec70cd4ba863fa8ccdb82de8c14b5e3149eaa9dfc005318c59c7dca",
+    "tests/infra/test_docker_security_overrides.py": "sha256:29054a225c180f551a165cb208dea9e54db3613a5e1d3a5757275deeb92ed789",
+    "tests/infra/README.md": "sha256:63ea6549cb44d21a3d1f2069652935e87002155a2e7cc0e6057c965d68bb67d1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:432857864596f7136760c56f05a593479eb57a854ec6d5b7845f9199c0775895",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7e96acd2d21bfd9aee25891b098580125fdea98b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issue/3382",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issue/3366",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7e96acd2d21bfd9aee25891b098580125fdea98b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/infra-compose-smoke.yml": "PROPOSED",
+    "infra/README.md": "PROPOSED",
+    "infra/docker/.dockerignore": "PROPOSED",
+    "infra/docker/Dockerfile.explorer-web": "PROPOSED",
+    "infra/docker/Dockerfile.governed-api": "PROPOSED",
+    "infra/docker/README.md": "PROPOSED",
+    "tests/infra/test_docker_security_overrides.py": "PROPOSED",
+    "tests/infra/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main and overlap preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main@7e96acd2d21bfd9aee25891b098580125fdea98b before editing; the selected paths form one bounded review-image and static-CI slice."
+    },
+    {
+      "gate": "no-network static infra suite",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 python -m unittest discover --start-directory tests/infra --pattern test_*.py --verbose completed 9 tests with 0 failures."
+    },
+    {
+      "gate": "python syntax and diff hygiene",
+      "outcome": "PASS",
+      "reason": "python -m py_compile passed for both static-test modules and git diff --check reported no whitespace errors."
+    },
+    {
+      "gate": "workflow dependency-lock migration ledger",
+      "outcome": "FAIL",
+      "reason": "Inherited main@7e96acd2d21bfd9aee25891b098580125fdea98b mismatch: verify-workflows reports 22 pre-existing workflow hash mismatches; infra-compose-smoke.yml is not among them and this candidate does not alter the migration ledger."
+    },
+    {
+      "gate": "artifact hash binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were computed over the final eight non-self artifact byte streams before committing."
+    },
+    {
+      "gate": "local image build and scan",
+      "outcome": "SKIPPED",
+      "reason": "Neither Docker nor Podman is installed in this workspace."
+    },
+    {
+      "gate": "hosted exact-head image build and scan",
+      "outcome": "SKIPPED",
+      "reason": "Pending a separately reviewed draft pull request; this receipt does not represent hosted validation."
+    },
+    {
+      "gate": "independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Review remains pending; this receipt does not authorize readiness, merge, release, deployment, promotion, or publication."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/7e96acd2d21bfd9aee25891b098580125fdea98b"
+    },
+    {
+      "id": "m17-supply-chain-slice",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issue/3382"
+    },
+    {
+      "id": "m06-static-ci-slice",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issue/3366"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7e96acd2d21bfd9aee25891b098580125fdea98b/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-13T01:30:23Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded candidate for #3382 and #3366. It preserves the digest-pinned bases, existing dependency overlays, non-root final users, scanner threshold, and fail-closed posture; it adds only Debian package floors, a Docker build-context allowlist, static assertions, and no-network static-CI execution. It does not suppress a finding, add runtime payloads, admit a source, change policy, or grant merge, release, deployment, promotion, or publication authority. Rollback is a revert of the candidate commit."
+}

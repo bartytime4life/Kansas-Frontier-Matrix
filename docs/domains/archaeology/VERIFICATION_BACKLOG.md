@@ -14,7 +14,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
-  - docs/domains/archaeology/README.md                  # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
@@ -24,21 +24,16 @@ related:
   - docs/domains/archaeology/SOURCES.md
   - docs/domains/archaeology/SOURCE_REGISTRY.md
   - docs/domains/archaeology/VALIDATORS.md
-  - docs/domains/archaeology/CULTURAL_REVIEW.md         # PROPOSED — link target
-  - docs/registers/VERIFICATION_BACKLOG.md              # PROPOSED — repo-wide register
-  - docs/registers/DRIFT_REGISTER.md                    # PROPOSED — drift between docs / repo
-  - docs/registers/OVERRIDE_REGISTER.md                 # PROPOSED — KFM-P3-IDEA-0003
+  - docs/domains/archaeology/CULTURAL_REVIEW.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
   - docs/adr/INDEX.md
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/adr/ADR-archaeology-source-roles.md            # PROPOSED — pairs with ADR-S-04
-  - docs/adr/ADR-archaeology-exact-location-policy.md   # PROPOSED — pairs with BL-ARCH-02
-  - docs/adr/ADR-archaeology-domain-segmentation.md     # PROPOSED — pairs with BL-ARCH-05
-  - docs/runbooks/archaeology/sovereignty_review.md     # PROPOSED — pairs with BL-ARCH-03
-  - docs/runbooks/archaeology/rollback_drill.md         # PROPOSED — pairs with BL-ARCH-04
-  - docs/runbooks/archaeology/parity_test.md            # PROPOSED — pairs with BL-ARCH-08
-  - docs/standards/SENSITIVITY_RUBRIC.md                # PROPOSED — Pass 10 §C6-01 home
-  - docs/standards/SMART_SYNC.md                        # PROPOSED — Pass 10 §C3 home
-  - docs/standards/REDACTION_DETERMINISM.md             # PROPOSED — Pass 10 §C6-03 home
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-archaeology-source-roles.md
+  - docs/adr/ADR-archaeology-exact-location-policy.md
+  - docs/standards/SENSITIVITY_RUBRIC.md
+  - docs/standards/SMART_SYNC.md
+  - docs/standards/REDACTION_DETERMINISM.md
 tags: [kfm, archaeology, cultural-heritage, verification, governance, register]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0".
@@ -46,6 +41,9 @@ notes:
   - Backlog items mirror KFM_Domains_Culmination_Atlas_v1_1.pdf §15.N and consolidate the cross-doc OQ-ARCH-* register across eight sibling docs.
   - Path placement follows Directory Rules §12 (Domain Placement Law).
   - v2 expands the four original Atlas §15.N items with five new items (BL-ARCH-05..09) distilled from the cross-doc register, adds an "Appendix C — Cross-doc OQ register navigator", refreshes the validator/test coverage map against the seven canonical archaeology validators (V1–V7) from VALIDATORS.md, and pins CONTRACT_VERSION = "3.0.0".
+owning_root: docs/
+responsibility: "Documentation for Archaeology and Cultural Heritage — Verification Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology and Cultural Heritage — Verification Backlog
@@ -605,7 +603,7 @@ An item is **DONE** only when **all** of the following hold:
 
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — *(PROPOSED)* repo-wide register.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED)* for conflicts between this register and mounted-repo state.
-- [`docs/registers/OVERRIDE_REGISTER.md`](../../registers/OVERRIDE_REGISTER.md) — *(PROPOSED)* override register (KFM-P3-IDEA-0003).
+- `docs/registers/OVERRIDE_REGISTER.md` (not present) — *(PROPOSED)* override register (KFM-P3-IDEA-0003).
 
 **Doctrine**
 
@@ -624,18 +622,18 @@ An item is **DONE** only when **all** of the following hold:
 
 **Runbooks (PROPOSED)**
 
-- [`docs/runbooks/archaeology/sovereignty_review.md`](../../runbooks/archaeology/sovereignty_review.md) — *(PROPOSED)* sovereignty review workflow (BL-ARCH-03).
-- [`docs/runbooks/archaeology/rollback_drill.md`](../../runbooks/archaeology/rollback_drill.md) — *(PROPOSED)* rollback drill (BL-ARCH-04).
-- [`docs/runbooks/archaeology/parity_test.md`](../../runbooks/archaeology/parity_test.md) — *(PROPOSED)* CI / runtime parity test (BL-ARCH-08).
-- [`docs/runbooks/archaeology/source_refresh.md`](../../runbooks/archaeology/source_refresh.md) — *(PROPOSED)* per-family source refresh.
+- `docs/runbooks/archaeology/sovereignty_review.md` (not present) — *(PROPOSED)* sovereignty review workflow (BL-ARCH-03).
+- `docs/runbooks/archaeology/rollback_drill.md` (not present) — *(PROPOSED)* rollback drill (BL-ARCH-04).
+- `docs/runbooks/archaeology/parity_test.md` (not present) — *(PROPOSED)* CI / runtime parity test (BL-ARCH-08).
+- `docs/runbooks/archaeology/source_refresh.md` (not present) — *(PROPOSED)* per-family source refresh.
 
 **ADRs**
 
 - `docs/adr/INDEX.md` — *(TODO: link once ADR home is verified)* — accepted and pending ADRs that gate items here.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home convention.
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention.
 - [`docs/adr/ADR-archaeology-source-roles.md`](../../adr/ADR-archaeology-source-roles.md) — *(PROPOSED)* pairs with BL-ARCH-06; Atlas v1.1 §24.12 ADR-S-04.
 - [`docs/adr/ADR-archaeology-exact-location-policy.md`](../../adr/ADR-archaeology-exact-location-policy.md) — *(PROPOSED)* pairs with BL-ARCH-02 / BL-ARCH-07.
-- [`docs/adr/ADR-archaeology-domain-segmentation.md`](../../adr/ADR-archaeology-domain-segmentation.md) — *(PROPOSED)* pairs with BL-ARCH-05.
+- `docs/adr/ADR-archaeology-domain-segmentation.md` (not present) — *(PROPOSED)* pairs with BL-ARCH-05.
 
 ---
 

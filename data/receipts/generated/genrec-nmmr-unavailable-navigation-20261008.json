@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-nmmr-unavailable-navigation-20261008",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/public-map-browser.module.css",
+    "apps/site/source/app/public-map-browser.tsx",
+    "apps/site/source/app/public-map-catalog.ts",
+    "apps/site/source/docs/public-map-library.md",
+    "apps/site/source/tests/public-map-browser.test.mjs",
+    "apps/site/source/tests/public-map-catalog.test.mjs",
+    "tests/local_data/test_public_map_catalog.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/public-map-browser.module.css": "sha256:087f6df209ebd8733039785278b269650f7f612bc08f4b041c486fb57b606df3",
+    "apps/site/source/app/public-map-browser.tsx": "sha256:efdcf6c077dad9acffc133263e8c2ab0f28c172487e5fb0c7bf17d93efa3566a",
+    "apps/site/source/app/public-map-catalog.ts": "sha256:ecd0f890461e6a896285975d2be061829cb575932f2d3682ea583a30ffbf460d",
+    "apps/site/source/docs/public-map-library.md": "sha256:1b693f660a648354e31d5bd3771eb08903e9e9d12d35722d6f5668b1dd3fe748",
+    "apps/site/source/tests/public-map-browser.test.mjs": "sha256:b7978bfd0cab3700af28b14da71d177b6b3a93425357281e058c772c5254526b",
+    "apps/site/source/tests/public-map-catalog.test.mjs": "sha256:bd26a594d63427ffa0de8cb14066f05a771379310f7b42fce84a60d3c19dad33",
+    "tests/local_data/test_public_map_catalog.py": "sha256:bfeae4e6024bcfed6b3dd7fa3bd926b9cbe28d2f07f426ab1a906024549dae8e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact build version not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "github",
+      "web_search"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:60326c64ea2a089e5fd8b71dec120a30eabf67ab8ca19f741ea80983129f3538",
+      "sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "docs/doctrine/directory-rules.md@sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "apps/site/source/app/public-map-catalog.json@sha256:60326c64ea2a089e5fd8b71dec120a30eabf67ab8ca19f741ea80983129f3538",
+      "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2"
+    ],
+    "evidence_refs": [
+      "git-commit:eca1bb23cf6131b7ca297500064a485b80f580d8",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4944",
+      "https://mmr.osmre.gov/",
+      "https://mmr.osmre.gov/Help",
+      "https://mmr.osmre.gov/Request"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/public-map-browser.module.css": "PROPOSED",
+    "apps/site/source/app/public-map-browser.tsx": "PROPOSED",
+    "apps/site/source/app/public-map-catalog.ts": "PROPOSED",
+    "apps/site/source/docs/public-map-library.md": "PROPOSED",
+    "apps/site/source/tests/public-map-browser.test.mjs": "PROPOSED",
+    "apps/site/source/tests/public-map-catalog.test.mjs": "PROPOSED",
+    "tests/local_data/test_public_map_catalog.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-site-model-and-browser-tests",
+      "outcome": "PASS",
+      "reason": "20 Node tests pass. Recovery regression failed before the bounded retry fix and passes afterward. Hook harness verifies native anchors, unavailable/zero distinction, pinned-link replacement resistance and validated refresh recovery; it does not claim rendered browser QA."
+    },
+    {
+      "gate": "full-site-suite",
+      "outcome": "PASS",
+      "reason": "715 tests: 713 passed, 2 existing installer tests skipped because the installer refuses root execution."
+    },
+    {
+      "gate": "site-typescript-and-production-build",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit and npm run build both exited 0."
+    },
+    {
+      "gate": "focused-python-discovery-and-download-tests",
+      "outcome": "PASS",
+      "reason": "44 tests and 80 subtests pass, including default verifying TLS, no insecure retry, fixed endpoint denial, TLS failure followed by checked zero or index-point recovery."
+    },
+    {
+      "gate": "repository-baseline",
+      "outcome": "PASS",
+      "reason": "make validate exited 0: nine configured schema validators; 502 schema/contract tests and 53 subtests passed."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "14383 tracked paths; zero invariants, zero new drift, 113 baselined warnings, zero stale baseline entries before staging the generated receipt."
+    },
+    {
+      "gate": "diff-and-markdown-checks",
+      "outcome": "PASS",
+      "reason": "git diff --check and focused Markdown structure/final-newline checks passed; added links correspond to retrieved official NMMR pages."
+    },
+    {
+      "gate": "live-tls-certificate-diagnosis",
+      "outcome": "SKIPPED",
+      "reason": "The pinned fixed-endpoint count probe and strict openssl verification probe failed DNS before TLS. Retained receipt records unable to get local issuer certificate; provider-chain versus original-host trust-store cause remains unknown."
+    },
+    {
+      "gate": "rendered-browser-accessibility-and-mobile-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No supported managed preview/browser QA path available for this repository task. Native anchor and focus-style implementation inspected; no exhaustive browser acceptance claimed."
+    },
+    {
+      "gate": "human-review-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Human review and exact-head hosted CI remain pending at emission. No publication, source admission, rights disposition, deployment, map download or merge performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-reference-catalog",
+      "validated": true,
+      "evidence_ref": "apps/site/source/app/public-map-catalog.json@sha256:60326c64ea2a089e5fd8b71dec120a30eabf67ab8ca19f741ea80983129f3538"
+    },
+    {
+      "id": "historical-nmmr-tls-failure",
+      "validated": true,
+      "evidence_ref": "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:193d00a8cbcfc83054f08d96d3d599fc7a053ff76d360186b3514f481040cde2"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-08T23:52:35.013458+00:00",
+  "emitter": "codex/generated-work-receipt",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded navigation and catalog-read recovery correction. All seven authored artifacts remain proposed pending human review. Source seed, discovery snapshot, provider endpoints and download permissions are unchanged. Receipt is provenance, not source rights, data admission, acceptance, approval or publication. No prompts, hidden reasoning, credentials or archival payloads are included."
+}

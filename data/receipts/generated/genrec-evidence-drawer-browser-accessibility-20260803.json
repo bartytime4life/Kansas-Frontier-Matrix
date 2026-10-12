@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-evidence-drawer-browser-accessibility-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/package.json",
+    "apps/explorer-web/playwright.config.ts",
+    "apps/explorer-web/src/features/evidence_drawer/README.md",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/src/main.ts",
+    "apps/explorer-web/tests/browser/evidence-drawer.html",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts",
+    "pnpm-lock.yaml"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/README.md": "sha256:e853142f715fe41ad772fe6399cbaed97fad375d1190850a9a73279019291367",
+    "apps/explorer-web/package.json": "sha256:90bec19dc56d5d57e3cee69839645d8b8236ca60b686feafaf17a9969648c13c",
+    "apps/explorer-web/playwright.config.ts": "sha256:c66c0e66627a1953097d3f702e2530347fa6be34ef70ce8f3eebe4e95d153565",
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "sha256:5e0fcef0f94f883ce9fbbabf908319b5a9f47945193e7a970606d6e45dff8dde",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:ee773aef52780158c1d18a6a4e4764a68bca9e7214b88cc399a3be03baee2063",
+    "apps/explorer-web/src/main.ts": "sha256:7b5184ef32bd964d3c459b5b19d5cd7ec7b61e3482a3f5c18d2491fb9fd90b23",
+    "apps/explorer-web/tests/browser/evidence-drawer.html": "sha256:3812acd22ead3982ff188dda9d25a1fe0a83c2da30ea446e1c599b33fea815dc",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts": "sha256:8e8ab9778c52f1594b44c7ef1d39adff45b451427c91acc674f3cbcd1b97d3fa",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts": "sha256:a5f05b2e96e8ab9b4fb097c888b31dd0e2da0609fac757c4bd094fd68940c69c",
+    "pnpm-lock.yaml": "sha256:716db2517cf5d58f3842976af2559ccf22eb4cbfc51c3732d5885fd7f8cb328a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:54fdd5bd2b85aec13bde3cc489240b07e0ed2be055f78467f4b402a72160c4ff",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "pnpm, TypeScript, Vite, and Vitest",
+      "Playwright with local Chromium",
+      "deterministic no-network boundary validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:54fdd5bd2b85aec13bde3cc489240b07e0ed2be055f78467f4b402a72160c4ff"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5229dd8f35a9487be60a7cba7abbc0b6fa938815",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1920",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/apps/explorer-web/src/adapters/GovernedClient.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/.github/workflows/ui-build.yml"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/README.md": "PROPOSED",
+    "apps/explorer-web/package.json": "CONFIRMED",
+    "apps/explorer-web/playwright.config.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "CONFIRMED",
+    "apps/explorer-web/src/main.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/evidence-drawer.html": "CONFIRMED",
+    "apps/explorer-web/tests/browser/evidence-drawer.fixture.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/evidence-drawer.spec.ts": "CONFIRMED",
+    "pnpm-lock.yaml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Merged PR #1920, current main 5229dd8f35a9487be60a7cba7abbc0b6fa938815, the adapter, resolver, shell, fixtures, tests, package lock, and ui-build workflow were inspected before authoring."
+    },
+    {
+      "gate": "dependency-closed-browser-accessibility-slice",
+      "outcome": "PASS",
+      "reason": "The app-local resolver now feeds one native DOM controller with keyboard open/Escape close, focus entry/return, and labeled complementary-landmark behavior. No schema, policy, transport, source, lifecycle, release, publication, or settings authority was added."
+    },
+    {
+      "gate": "explorer-web-unit-browser-and-build",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test passed 11 Vitest cases and four Playwright cases in Chromium; pnpm --filter explorer-web build passed TypeScript and Vite. The browser cases cover keyboard operation, focus restoration, labeled landmarks, deterministic ANSWER rendering, and DENY/ERROR DOM no-leak behavior."
+    },
+    {
+      "gate": "frozen-workspace-lock",
+      "outcome": "PASS",
+      "reason": "pnpm 11.17.0 install --frozen-lockfile accepted the exact workspace importer and existing Playwright 1.62.0 resolution. Local Node 24 emitted the declared >=22.13 <23 warning; hosted ui-build pins Node 22."
+    },
+    {
+      "gate": "explorer-browser-boundary-policy",
+      "outcome": "PASS",
+      "reason": "Both functions from the repository-owned Explorer adapter boundary policy test passed directly, and the existing unit source guard continued to reject fetch, lifecycle-store, and model-runtime references."
+    },
+    {
+      "gate": "documentation-and-integrity",
+      "outcome": "PASS",
+      "reason": "Direct app and feature documentation was updated without adding links; final artifact paths and SHA-256 hashes are bound here, excluding this receipt from its own artifact map."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted checks are unavailable until draft pull-request delivery and are not inferred from local validation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-evidence-drawer-view-state-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1920"
+    },
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/5229dd8f35a9487be60a7cba7abbc0b6fa938815"
+    },
+    {
+      "id": "current-ui-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/.github/workflows/ui-build.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T05:41:30Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "This batch adds a bounded browser-accessibility controller and fixture-driven browser proof to the existing app-local Evidence Drawer projection. ANSWER, ABSTAIN, DENY, and ERROR resolution semantics are unchanged. Denied and error payload text remains filtered before DOM rendering. No live transport, canonical schema or policy authority, source access, lifecycle mutation, release, deployment, publication, promotion, or repository-setting change is introduced. Rollback is a clean revert of the branch commits; no migration or external state exists."
+}

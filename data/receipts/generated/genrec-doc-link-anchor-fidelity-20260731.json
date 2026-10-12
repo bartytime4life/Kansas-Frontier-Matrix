@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-doc-link-anchor-fidelity-20260731",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/docs/link-check/README.md",
+    "tests/validators/docs/link-check/test_docs_link_check.py",
+    "tools/validators/docs/link-check/README.md",
+    "tools/validators/docs/link-check/check_links.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/docs/link-check/README.md": "sha256:c68d35402384e74fb6094d6bd63cfbeed49b53da53bdbccbaf0ff5b2880d36c1",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "sha256:3f21b61ef088bd52ca1d46c16c68dc4b54803beb56885a93d2413d27ee317017",
+    "tools/validators/docs/link-check/README.md": "sha256:f7d7988197de4304d5bcfccdc5bc8ec3f63d85486e89a2c5c79070790e671973",
+    "tools/validators/docs/link-check/check_links.py": "sha256:39f2152a37478d4c025f7a0ba4299e3e1eb7bd4bf28c3e2132545428560fccea"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "official GitHub documentation discovery",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:1ef88f7ff0461392c7231e7a1369535bcaf1b6f239d48e368ece5a0fa99c578a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5143195769",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/.github/workflows/link-check.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/docs/link-check/README.md": "PROPOSED",
+    "tests/validators/docs/link-check/test_docs_link_check.py": "CONFIRMED",
+    "tools/validators/docs/link-check/README.md": "PROPOSED",
+    "tools/validators/docs/link-check/check_links.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The repository, main@c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d, issue #1675 owner resolution, issue #1820 cursor v32, accepted ADR-0029, adopted Directory Rules, contribution/security guidance, workflow, validator lane, test lane, generated-receipt schema, open pull requests, and overlapping branches were inspected before mutation. Issue #1675 comment 5143810920 permits bounded branches, non-force pushes, and draft pull requests while preserving the merge and release holds."
+    },
+    {
+      "gate": "directory-placement-and-authority",
+      "outcome": "PASS",
+      "reason": "Reusable validation remains under tools/, executable conformance proof under tests/, and one changeset receipt under data/receipts/generated/. No new root or parallel contract, schema, policy, evidence, proof, release, rollback, or publication authority was created."
+    },
+    {
+      "gate": "focused-standard-library-link-check-tests",
+      "outcome": "PASS",
+      "reason": "Thirteen deterministic tests passed, including inline-code content and angle-bracket placeholders, em dash, slash, arrow, ampersand, image-alt and link-label content, adjacent spaces, normalized duplicates, inert code-span anchors, local failures, path escape, exact case, external abstention, strict diff selection, and CLI polarity."
+    },
+    {
+      "gate": "historical-v32-anchor-reconciliation",
+      "outcome": "PASS",
+      "reason": "Against issue #1820's exact main@9f42d4c3a35f5df4dbf027cbec3922cc03e22b7e corpus, 7,376 of the prior 7,636 ANCHOR_MISSING occurrences cease. Of the prior occurrences, 260 remain; 74 newly surfaced anchor failures reflect one-space-per-hyphen semantics that the old collapsing algorithm had accepted. LOCAL_TARGET_MISSING (2,214), PATH_ESCAPE (52), and EXTERNAL_TARGET_UNVERIFIED (12,836) multisets are unchanged."
+    },
+    {
+      "gate": "current-main-historical-diagnostic",
+      "outcome": "PASS",
+      "reason": "The bounded no-network checker ran across 3,814 current-main Markdown documents and 105,143 local targets. It deterministically returned DOC_LINK_CHECK_FAIL with 399 ANCHOR_MISSING, 2,199 LOCAL_TARGET_MISSING, and 52 PATH_ESCAPE findings while classifying 12,838 external occurrences as unverified. These are diagnostic candidates, not an asserted defect backlog."
+    },
+    {
+      "gate": "python-compile-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile with the available standard-library Python; changed-document link validation and git diff --check pass for the bounded artifact set."
+    },
+    {
+      "gate": "generated-receipt-json-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON, artifact_paths exactly match artifact_hashes and truth_labels, and all four SHA-256 hashes were recomputed against the final artifacts. The receipt is excluded from its own artifact map to avoid a recursive self-hash."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The local environment has neither Python jsonschema nor a cached compatible validator, and the run prohibits dependency downloads. Repository-hosted schema validation remains pending."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "The repository aggregate requires unavailable pytest and jsonschema dependencies. They were not downloaded because implementation and tests are no-network; the focused standard-library suite is the runnable native validation for this slice."
+    },
+    {
+      "gate": "hosted-workflow-and-ruleset-coupling",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks and required-check coupling remain unobserved until draft delivery. No workflow or repository setting is changed by this slice."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "bounded-anchor-fidelity-cursor-v32",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1820#issuecomment-5143195769"
+    },
+    {
+      "id": "repository-authoring-hold-lift",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8eb4e6bfe2e926d6ef1bdc2f75c3eef54992e6d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "github-basic-section-link-rules",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-31T15:28:33Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1820"
+  },
+  "notes": "Closes only GAP-DOC-LINK-ANCHOR-FIDELITY-001 within the bounded validator/test/docs/receipt slice. The checker now separates link and anchor visibility, retains supported markup contents for headings, preserves code placeholders, replaces each literal space independently, and retains duplicate suffix behavior. Historical link repair, reference-style and inline-HTML links, external availability, document truth, source admission, evidence closure, policy, proof, release, deployment, publication, and repository settings remain outside scope. The full historical diagnostics deliberately remain failing and are not treated as defect counts; human review remains pending."
+}

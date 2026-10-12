@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/planning_scenario_manifest.schema.json",
+  "title": "water_planning_planning_scenario_manifest",
+  "description": "Synthetic, generalized water-planning scenario carrier. Shape validity does not establish prediction, evidence closure, policy approval, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "manifest_id",
+    "version",
+    "status",
+    "synthetic",
+    "scenario_type",
+    "title",
+    "purpose",
+    "geography",
+    "time_horizon",
+    "input_variables",
+    "data_vintages",
+    "assumptions",
+    "equity_dimensions",
+    "participation_refs",
+    "evidence_refs",
+    "model_refs",
+    "policy_decision_refs",
+    "review_refs",
+    "public_summary",
+    "drawer_payload",
+    "correction_path_ref",
+    "rollback_ref",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "kind": {"const": "planning_scenario_manifest"},
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm:planning-scenario:water-planning:[a-z0-9][a-z0-9-]{2,80}:v[0-9]+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "status": {"enum": ["DRAFT", "READY_FOR_REVIEW", "HELD", "SUPERSEDED"]},
+    "synthetic": {"const": true},
+    "scenario_type": {"enum": ["EXPLORATORY", "COMPARATIVE"]},
+    "title": {"type": "string", "minLength": 1, "maxLength": 160},
+    "purpose": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "geography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_type", "scope_ref", "location_precision", "exact_geometry"],
+      "properties": {
+        "scope_type": {"enum": ["STATEWIDE_GENERALIZED", "PLANNING_REGION_GENERALIZED"]},
+        "scope_ref": {"$ref": "#/$defs/reference"},
+        "location_precision": {"const": "GENERALIZED"},
+        "exact_geometry": {"const": false}
+      }
+    },
+    "time_horizon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline_as_of", "horizon_start", "horizon_end"],
+      "properties": {
+        "baseline_as_of": {"type": "string", "format": "date"},
+        "horizon_start": {"type": "string", "format": "date"},
+        "horizon_end": {"type": "string", "format": "date"}
+      }
+    },
+    "input_variables": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["variable_id", "label", "source_ref", "uncertainty"],
+        "properties": {
+          "variable_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+          "label": {"type": "string", "minLength": 1, "maxLength": 160},
+          "source_ref": {"$ref": "#/$defs/reference"},
+          "uncertainty": {"$ref": "#/$defs/uncertainty"}
+        }
+      }
+    },
+    "data_vintages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dataset_ref", "evidence_ref", "observed_through", "limitations"],
+        "properties": {
+          "dataset_ref": {"$ref": "#/$defs/reference"},
+          "evidence_ref": {"$ref": "#/$defs/reference"},
+          "observed_through": {"type": "string", "format": "date"},
+          "limitations": {"$ref": "#/$defs/text_list"}
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assumption_id", "statement", "evidence_refs", "uncertainty"],
+        "properties": {
+          "assumption_id": {"type": "string", "pattern": "^assumption-[a-z0-9][a-z0-9-]{1,62}$"},
+          "statement": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "evidence_refs": {"$ref": "#/$defs/nonempty_references"},
+          "uncertainty": {"$ref": "#/$defs/uncertainty"}
+        }
+      }
+    },
+    "equity_dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension_id", "description", "evidence_refs", "limitation"],
+        "properties": {
+          "dimension_id": {"type": "string", "pattern": "^equity-[a-z0-9][a-z0-9-]{1,62}$"},
+          "description": {"type": "string", "minLength": 1, "maxLength": 800},
+          "evidence_refs": {"$ref": "#/$defs/nonempty_references"},
+          "limitation": {"type": "string", "minLength": 1, "maxLength": 800}
+        }
+      }
+    },
+    "participation_refs": {"$ref": "#/$defs/nonempty_references"},
+    "evidence_refs": {"$ref": "#/$defs/nonempty_references"},
+    "model_refs": {"$ref": "#/$defs/references"},
+    "policy_decision_refs": {"$ref": "#/$defs/references"},
+    "review_refs": {"$ref": "#/$defs/references"},
+    "public_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome", "heading", "text", "data_vintage_label", "assumptions_label",
+        "limitations", "evidence_refs", "non_authority_labels"
+      ],
+      "properties": {
+        "outcome": {"$ref": "#/$defs/surface_outcome"},
+        "heading": {"type": "string", "minLength": 1, "maxLength": 160},
+        "text": {"type": "string", "minLength": 1, "maxLength": 1200},
+        "data_vintage_label": {"type": "string", "minLength": 1, "maxLength": 320},
+        "assumptions_label": {"type": "string", "minLength": 1, "maxLength": 320},
+        "limitations": {"$ref": "#/$defs/text_list"},
+        "evidence_refs": {"$ref": "#/$defs/nonempty_references"},
+        "non_authority_labels": {
+          "const": [
+            "NOT_A_PREDICTION",
+            "NOT_EMERGENCY_ALERTING",
+            "NOT_REGULATORY_DETERMINATION"
+          ]
+        }
+      }
+    },
+    "drawer_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome", "title", "scope_text", "horizon_text", "assumption_refs",
+        "equity_dimension_refs", "participation_refs", "evidence_refs", "limitations"
+      ],
+      "properties": {
+        "outcome": {"$ref": "#/$defs/surface_outcome"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 160},
+        "scope_text": {"type": "string", "minLength": 1, "maxLength": 800},
+        "horizon_text": {"type": "string", "minLength": 1, "maxLength": 500},
+        "assumption_refs": {"$ref": "#/$defs/nonempty_ids"},
+        "equity_dimension_refs": {"$ref": "#/$defs/nonempty_ids"},
+        "participation_refs": {"$ref": "#/$defs/nonempty_references"},
+        "evidence_refs": {"$ref": "#/$defs/nonempty_references"},
+        "limitations": {"$ref": "#/$defs/text_list"}
+      }
+    },
+    "correction_path_ref": {"$ref": "#/$defs/reference"},
+    "rollback_ref": {"$ref": "#/$defs/reference"},
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only", "evidence_resolved", "policy_approved", "review_approved",
+        "release_authorized", "publication_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "evidence_resolved": {"type": "boolean"},
+        "policy_approved": {"type": "boolean"},
+        "review_approved": {"type": "boolean"},
+        "release_authorized": {"type": "boolean"},
+        "publication_authorized": {"type": "boolean"}
+      }
+    },
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "reference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._~:/#?=&%+@-]{0,319}$"
+    },
+    "references": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "nonempty_references": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "nonempty_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,80}$"}
+    },
+    "text_list": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 800}
+    },
+    "uncertainty": {"enum": ["LOW", "MEDIUM", "HIGH", "UNRESOLVED"]},
+    "surface_outcome": {"enum": ["ABSTAIN", "DENY", "NARROWED"]}
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/domains/water_planning/planning_scenario_manifest.md",
+    "fixtures_root": "fixtures/domains/water_planning/planning_scenario_manifest/",
+    "validator": "tools/validators/domains/water_planning/validate_planning_scenario_manifest.py",
+    "status": "PROPOSED",
+    "authority_boundary": "synthetic-validation-only"
+  }
+}

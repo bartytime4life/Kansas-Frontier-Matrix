@@ -10,7 +10,7 @@ updated: 2026-05-14
 policy_label: public
 related:
   - docs/standards/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
@@ -440,7 +440,7 @@ Items below are explicitly **not resolved** by this document and SHOULD be track
 - `docs/doctrine/lifecycle-law.md` — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLETS → PUBLISHED, with receipts riding alongside.
 - `docs/doctrine/truth-posture.md` — cite-or-abstain; why telemetry is carrier and not truth.
 - `docs/doctrine/trust-membrane.md` — public path through governed APIs; never raw stores.
-- `docs/architecture/governed-api.md` — where public-facing services live.
+- `docs/architecture/governed-api/README.md` — where public-facing services live.
 - `docs/architecture/map-shell.md` — map-runtime class context; runtime probes.
 - `docs/standards/README.md` — sibling external-standards docs (STAC, DCAT, PROV) — _PLACEHOLDER, presence NEEDS VERIFICATION._
 - `docs/adr/ADR-0001-schema-home.md` — referenced for schema-home conventions when receipts are versioned.

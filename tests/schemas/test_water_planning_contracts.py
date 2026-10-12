@@ -164,6 +164,46 @@ def test_planning_region_rac_number_bounded_to_14() -> None:
     assert errors, "rac_number 15 must be rejected by the schema"
 
 
+@pytest.mark.parametrize("bad_id", ["kwo-rac-00", "kwo-rac-15", "kwo-rac-99"])
+def test_planning_region_id_uses_exact_rac_range(bad_id: str) -> None:
+    """Only the exact kwo-rac-01 through kwo-rac-14 ID shape is admitted."""
+    validator = load_validator(_schema("planning_region"))
+    document = json.loads(_valid_fixture("planning_region").read_text())
+    document["region_id"] = bad_id
+    assert list(validator.iter_errors(document)), f"{bad_id} must be rejected"
+
+
+def test_planning_region_reference_states_are_coherent() -> None:
+    """Resolved geometry/crosswalk states require non-null references."""
+    validator = load_validator(_schema("planning_region"))
+
+    document = json.loads(_valid_fixture("planning_region").read_text())
+    document["geometry_confidence"] = "confirmed"
+    assert list(validator.iter_errors(document))
+
+    document = json.loads(_valid_fixture("planning_region").read_text())
+    document["county_crosswalk_resolution_status"] = "resolved"
+    assert list(validator.iter_errors(document))
+
+
+def test_project_region_and_geometry_reference_states_are_coherent() -> None:
+    """Project region membership and location geometry fail closed independently."""
+    validator = load_validator(_schema("project"))
+
+    document = json.loads(_valid_fixture("project").read_text())
+    document["planning_region_resolution_status"] = "resolved"
+    assert list(validator.iter_errors(document))
+
+    document = json.loads(_valid_fixture("project").read_text())
+    document["geometry_confidence"] = "approximate"
+    assert list(validator.iter_errors(document))
+
+    document = json.loads(_valid_fixture("project").read_text())
+    document["planning_region_resolution_status"] = "resolved"
+    document["planning_region_ref"] = "kwo-gmd-01"
+    assert list(validator.iter_errors(document))
+
+
 def test_geometry_confidence_rejects_guessed() -> None:
     """geometry_confidence must reject 'guessed' — missing geometry must be stored as unresolved."""
     schema_path = _schema("project")

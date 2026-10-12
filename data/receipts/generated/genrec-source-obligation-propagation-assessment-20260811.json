@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-source-obligation-propagation-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-obligation-propagation-assessment.yml",
+    "contracts/source/source_obligation_propagation_assessment.md",
+    "docs/intake/exploratory/source-obligation-propagation-assessment-source-map.md",
+    "fixtures/contracts/v1/source/source_obligation_propagation_assessment/cases.json",
+    "schemas/contracts/v1/source/source_obligation_propagation_assessment.schema.json",
+    "tests/validators/test_validate_source_obligation_propagation_assessment.py",
+    "tools/validators/source/validate_source_obligation_propagation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-obligation-propagation-assessment.yml": "sha256:af6798da191caebf5ae637bf1fa116ea398a940f36a58ae480fd2c6894c0f685",
+    "contracts/source/source_obligation_propagation_assessment.md": "sha256:0cc51173794dca6d2cf6fe7a49995e4a46aaeac727daaccda9249ce8b3556ee3",
+    "docs/intake/exploratory/source-obligation-propagation-assessment-source-map.md": "sha256:ccbcaf24c30f3e45cad96a71262fdb338352682573792df79baf435ebc134654",
+    "fixtures/contracts/v1/source/source_obligation_propagation_assessment/cases.json": "sha256:caf89c977a4abe3a1c255738aac97b01305f0dd055cc536d12dadc5234fe33ee",
+    "schemas/contracts/v1/source/source_obligation_propagation_assessment.schema.json": "sha256:8f5a85d22178c86edc5fd849148e9ee267b0f8eceabd2a971482e50832e32be5",
+    "tests/validators/test_validate_source_obligation_propagation_assessment.py": "sha256:2ffee02759f4245cada1bc652fe4af65473a2397d8d60b728c88eaf3f95f3229",
+    "tools/validators/source/validate_source_obligation_propagation_assessment.py": "sha256:12c8c7540359a6c847ca2bdbcceea678f1986d07f8d89cf8f2873cfaa805f883"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:0cc51173794dca6d2cf6fe7a49995e4a46aaeac727daaccda9249ce8b3556ee3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector source discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Report.docx",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Comprehensive_Research_and_Verification_Report.docx#W05-rights-attribution-and-derived-artifacts",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#evidence-policy-review-release-separation",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/source/source_rights_currentness_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-obligation-propagation-assessment.yml": "CONFIRMED",
+    "contracts/source/source_obligation_propagation_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/source-obligation-propagation-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_obligation_propagation_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_obligation_propagation_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_obligation_propagation_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_source_obligation_propagation_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "obligation-propagation-negative-cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "research-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Comprehensive_Research_and_Verification_Report.docx#W05-rights-attribution-and-derived-artifacts"
+    },
+    {
+      "id": "briefing-source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#evidence-policy-review-release-separation"
+    },
+    {
+      "id": "existing-rights-currentness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/source/source_rights_currentness_assessment.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:10:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SourceObligationPropagationAssessment candidate. It verifies declared attribution, terms, notices, redistribution, derivative-use, transform-receipt, and carrier-stage continuity without creating rights, policy, evidence, export, release, publication, or public-use authority."
+}

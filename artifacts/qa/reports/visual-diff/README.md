@@ -74,6 +74,17 @@ notes:
 
 # `artifacts/qa/reports/visual-diff/` — Visual-Difference QA Report, Baseline, and Non-Authority Boundary
 
+> [!IMPORTANT]
+> **2026-09-29 removal update.** The legacy standalone MapLibre performance
+> harness (`scripts/maplibre-smoke-perf.mjs`), its render-diff, attestation,
+> release-manifest, proof-pack, correction/rollback, and failure-bundle builders,
+> the root `maplibre:*` npm scripts, the `make maplibre-*` targets, their seven
+> placeholder schemas under `schemas/maplibre/`, and their placeholder verifiers
+> under `tools/validators/maplibre/` were removed. References to them below are
+> historical. The closed performance envelope
+> (`configs/maplibre/perf-envelope.v1.json`, `schemas/maplibre/perf-envelope.schema.json`,
+> `tools/validators/maplibre/validate_perf_envelope.py`) remains.
+
 > **Purpose.** Define the staging boundary for generated visual-comparison reports without allowing a baseline, screenshot, heatmap, changed-pixel count, similarity score, green workflow, accepted threshold, or human “looks good” judgment to become source truth, semantic correctness, accessibility conformance, evidence closure, policy permission, release approval, publication, or production truth.
 
 <p>

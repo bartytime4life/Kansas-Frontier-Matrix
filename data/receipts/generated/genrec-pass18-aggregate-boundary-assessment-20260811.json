@@ -1,0 +1,178 @@
+{
+  "receipt_id": "genrec-pass18-aggregate-boundary-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/aggregate-boundary-assessment.yml",
+    "contracts/governance/aggregate_boundary_assessment.md",
+    "docs/intake/exploratory/pass-18-aggregate-boundary-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/aggregate_boundary_assessment/cases.json",
+    "schemas/contracts/v1/governance/aggregate_boundary_assessment.schema.json",
+    "tests/validators/governance/test_validate_aggregate_boundary_assessment.py",
+    "tools/validators/governance/validate_aggregate_boundary_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/aggregate-boundary-assessment.yml": "sha256:41bbc6a3de7fb6fb1a385e988ebab2a3f0ad5af7db6ba2306d07c22884b0bc8e",
+    "contracts/governance/aggregate_boundary_assessment.md": "sha256:f4782e6246c2b5fb36f0d8d32b06b26926c4ca871a669fb329b7a7a26b1c1152",
+    "docs/intake/exploratory/pass-18-aggregate-boundary-assessment-source-map.md": "sha256:74bb9209bab01bc413fe6d6c15df8587d7df96aa2ae365c1dc09aef2d0a14cc0",
+    "fixtures/contracts/v1/governance/aggregate_boundary_assessment/cases.json": "sha256:f0e93d70dce8bda7958d2de9b2258294f25b95f4e028efe95393c930090d237d",
+    "schemas/contracts/v1/governance/aggregate_boundary_assessment.schema.json": "sha256:e4fc1141628d2adb6f8e1a4c6e0f3acfd2d0d42413913574d9d156a75b9d7251",
+    "tests/validators/governance/test_validate_aggregate_boundary_assessment.py": "sha256:2d3f4c791c11bc29f06fd967db05a160ddfcf52d380557f86b64b1fa84cdfc4e",
+    "tools/validators/governance/validate_aggregate_boundary_assessment.py": "sha256:4487054972506b01688896a01669f230f4add6e336e800b32e4d4fc71e891d59"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f4782e6246c2b5fb36f0d8d32b06b26926c4ca871a669fb329b7a7a26b1c1152",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:80611ec20ac8f01df6316664e90b331055b59ee3c6c4496a61aa04f1565f36ca",
+      "sha256:3674fe9deaabda673cf3b3f066cc663494b38e02df830f6729ccf7fcc1889df7",
+      "sha256:dd474c338d3f6597e2c5e8960d3071828f857cb822c09b030c10055cf7459f36"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; card KFM-P18-INV-465 was text-located and its two pages were visually verified",
+      "Supplied Domain-Driven Design Reference.pdf; aggregate, repository, and factory pages were text-located and visually verified",
+      "Connected Drive KFM_Full_Atlas_seed_cards; private corpus used only as thematic corroboration"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-465",
+      "attachment://Domain-Driven-Design-Reference.pdf#physical-pages=23-25",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/governance/object_identity_kind_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/governance/object_family_domain_reference_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/aggregate-boundary-assessment.yml": "CONFIRMED",
+    "contracts/governance/aggregate_boundary_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-aggregate-boundary-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/aggregate_boundary_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/aggregate_boundary_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_aggregate_boundary_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_aggregate_boundary_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical pages 287-288 and DDD reference physical pages 23-25 were rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic aggregate-boundary assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirty-six exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-object-family-and-identity-regression",
+      "outcome": "PASS",
+      "reason": "Thirty-three combined governance tests and fifteen subtests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred thirty-nine tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Forty-two CI-readiness tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata tests and both new metadata blocks passed; only expected review-only registry warnings were emitted."
+    },
+    {
+      "gate": "documentation-link-and-graph-profile",
+      "outcome": "PASS",
+      "reason": "Eighteen link tests, twenty-seven graph tests, explicit local-link validation, and the bounded two-document graph check passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-aggregate-boundary-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-465"
+    },
+    {
+      "id": "ddd-aggregate-repository-factory-reference",
+      "validated": true,
+      "evidence_ref": "attachment://Domain-Driven-Design-Reference.pdf#physical-pages=23-25"
+    },
+    {
+      "id": "drive-seed-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "adjacent-object-identity-kind-assessment",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/governance/object_identity_kind_assessment.md"
+    },
+    {
+      "id": "partial-object-family-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/control_plane/object_family_register.yaml"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T20:36:13Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only declaration for one aggregate boundary. It composes existing object-family and identity-kind responsibilities by opaque reference, creates or mutates no object, executes no persistence or transaction, resolves no reference or EvidenceBundle, changes no schema, register, policy, review, release, or public state, and grants no promotion, release, deployment, publication, or public-use authority."
+}

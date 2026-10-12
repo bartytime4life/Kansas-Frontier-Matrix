@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tests-api-deny-readme
 title: tests/api/deny/ — Governed API Deny, Abstain, Error, and Leakage Test Lane
 type: readme; directory-readme; negative-api-test-index; trust-membrane-proof-guardrail
-version: v0.2
-status: draft; canonical-test-sublane; readme-only; workflow-placeholder; executable-proof-absent; NEEDS VERIFICATION
+version: v0.3
+status: draft; canonical-test-sublane; contract-and-routing-only; app-owned-five-test-companion; executable-workflow-confirmed; broader-proof-NEEDS-VERIFICATION
 policy_label: public
 owners: OWNER_TBD — QA steward · Governed API steward · Policy steward · Runtime steward · Evidence steward · Security steward · Release steward · Docs steward
-updated: 2026-07-16
+updated: 2026-08-01
 current_path: tests/api/deny/README.md
-truth_posture: CONFIRMED target README and prior blob, tests/api parent boundary, deny-test doctrine, TODO-only deny workflow, finite runtime outcomes, trust-membrane rule, and bounded absence of direct test modules at the pinned snapshot / UNKNOWN governed route inventory, accepted denial response profile, active fixtures, validator wiring, production behavior, and current pass state / NEEDS VERIFICATION implementation, negative fixtures, executable CI, leakage assertions, route coverage, ownership, correction coverage, and rollback proof
-base_commit: 7855938a308f967a51b7dce0d023db39ca20eca0
-prior_blob: d7b5a7a9ec1044f137aceb426086636b3707f604
+truth_posture: CONFIRMED target README and prior blob, tests/api parent boundary, deletion of two vacuous assert-true modules, five app-owned route/method/manifest/internal-store-literal/forbidden-import checks, executable local target, three-job workflow definition, finite runtime doctrine, and trust-membrane rule / UNKNOWN required-check status, complete governed route inventory, accepted denial response profile, active fixtures, production behavior, deployment state, and current hosted pass state / NEEDS VERIFICATION broader auth, policy, rights, sensitivity, evidence, runtime-payload, network, correction, rollback, and leakage coverage
+base_commit: cb8a46fff89861b8f0ca57c1c29bacf1fec885a5
+prior_blob: 57aab223677099be2b4178223fb08be04c8f2741
 related:
   - ../README.md
   - ../../README.md
@@ -23,13 +23,15 @@ related:
   - ../../../runtime/envelopes/README.md
   - ../../../contracts/runtime/policy_decision.md
   - ../../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../../apps/governed-api/tests/test_boundary_guards.py
   - ../../../.github/workflows/deny-test.yml
+  - ../../../Makefile
 tags: [kfm, tests, api, deny, abstain, error, fail-closed, leakage, trust-membrane, governed-api, finite-outcomes, negative-tests]
 notes:
-  - "v0.2 replaces a generic deny-test placeholder index with an evidence-bounded executable-proof contract."
-  - "The lane is canonical for negative governed API surface tests but currently contains no confirmed test module beyond this README."
-  - "The deny-test workflow is TODO-only and must not be cited as executable deny coverage."
-  - "This revision changes documentation only."
+  - "v0.3 removes two vacuous assert-true modules rather than preserving false-green evidence."
+  - "The lane remains the negative governed API contract and routing boundary; the five current executable assertions have one owner in apps/governed-api/tests/test_boundary_guards.py."
+  - "make deny-test and the read-only three-job workflow execute the same five-test set, with different local-versus-hosted process topology."
+  - "The five structural checks are bounded evidence, not complete denial, policy, leakage, release, or production proof."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -40,14 +42,13 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![lane](https://img.shields.io/badge/lane-negative__API__tests-blue)
-![implementation](https://img.shields.io/badge/tests-README__only-orange)
-![workflow](https://img.shields.io/badge/workflow-TODO__only-critical)
+![implementation](https://img.shields.io/badge/lane-contract__only-orange)
+![workflow](https://img.shields.io/badge/workflow-5__bounded__guards-blue)
 
 > [!IMPORTANT]
 > `tests/api/deny/` is a **test authority lane**, not policy authority, API implementation, contract or schema authority, fixture authority, evidence authority, receipt storage, or release authority.
 
-> [!WARNING]
-> `.github/workflows/deny-test.yml` currently runs only `echo TODO ...` jobs. A green workflow result therefore proves workflow execution only; it does **not** prove public-boundary denial, RAW-leak prevention, model-runtime isolation, route coverage, response-envelope conformance, or absence of sensitive leakage.
+The current executable companion checks unknown-route `404`, unsupported-method `405`, the exact three-route scaffold manifest, forbidden internal-store **literals**, and selected MapLibre/Cesium/Ollama import prefixes. A green run does **not** prove authentication, authorization, finite `DENY` envelopes, runtime payload safety, network isolation, complete route or leakage coverage, policy/rights/sensitivity enforcement, release, deployment, or publication.
 
 ## Quick navigation
 
@@ -57,13 +58,15 @@ notes:
 
 ## Status and evidence boundary
 
-| Surface | Status at the pinned snapshot | Safe conclusion |
+| Surface | Status at this revision | Safe conclusion |
 |---|---|---|
 | `tests/api/deny/README.md` | **CONFIRMED** | Target exists; prior blob is pinned in metadata. |
-| Direct executable files below `tests/api/deny/` | **NOT SURFACED in bounded search** | Treat the lane as README-only until recursive inventory proves otherwise. |
+| Direct executable files below `tests/api/deny/` | **NONE at this revision** | Two vacuous `assert True` modules were deleted; zero collection must not be reported as passing coverage. |
 | `tests/api/README.md` | **CONFIRMED** | Defines the governed API test parent lane and identifies `deny/` as its negative child. |
 | `docs/security/DENY_TESTS.md` | **CONFIRMED draft doctrine/catalog** | Defines fail-closed obligations and gate families, but several implementation paths remain proposed or stale. |
-| `.github/workflows/deny-test.yml` | **CONFIRMED TODO-only scaffold** | Three jobs echo TODO text; green status is not executable proof. |
+| `apps/governed-api/tests/test_boundary_guards.py` | **CONFIRMED executable companion** | Owns five bounded structural/scaffold assertions; it is not complete deny-envelope or policy coverage. |
+| `make deny-test` | **CONFIRMED executable local target** | Runs the five app-owned assertions in one pytest process and propagates failure. |
+| `.github/workflows/deny-test.yml` | **CONFIRMED executable definition** | Three read-only jobs split the same five-test set; required-check and exact-head run state require hosted verification. |
 | Governed API route inventory | **UNKNOWN** | No complete, accepted route-to-deny-test matrix is established here. |
 | Canonical denial response profile | **NEEDS VERIFICATION** | Runtime, policy, and API envelope documents contain related but not automatically interchangeable vocabularies. |
 | Test fixtures and snapshots | **UNKNOWN** | No accepted fixture or snapshot family is confirmed under this lane. |
@@ -372,27 +375,32 @@ Integration tests requiring controlled services must be separately marked and mu
 
 ## Current proof and CI boundary
 
-The present workflow is:
+The current local and hosted selectors are:
 
 ```yaml
-public-boundary-deny:
-  run: echo TODO public-boundary-deny
+make deny-test:
+  source: apps/governed-api/tests/test_boundary_guards.py
+  tests: all 5
 
-raw-leak-deny:
-  run: echo TODO raw-leak-deny
+workflow:
+  public-boundary-deny:
+    tests: [unknown-route-404, non-GET-405, exact-route-manifest]
 
-model-runtime-deny:
-  run: echo TODO model-runtime-deny
+  raw-leak-deny:
+    tests: [forbidden-internal-store-literal-scan]
+
+  model-runtime-deny:
+    tests: [forbidden-renderer-and-model-import-prefix-scan]
 ```
 
 Therefore:
 
-- workflow existence is **CONFIRMED**;
-- executable deny coverage is **NOT CONFIRMED**;
-- route coverage is **UNKNOWN**;
-- fail-closed behavior is **UNKNOWN**;
-- leakage coverage is **UNKNOWN**;
-- CI should not be described as enforcing deny tests until real commands run and fail on violations.
+- executable five-test coverage and local/workflow test-set parity are **CONFIRMED in source**;
+- local execution results must be reported for the exact revision;
+- hosted run state and required-check configuration remain separate hosted facts;
+- the route checks cover only scaffold routing and methods;
+- the literal/import scans are bounded source checks, not runtime information-flow, payload, network, or side-channel proof;
+- broader deny behavior remains **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION** as cataloged below.
 
 ### Required CI characteristics
 
@@ -478,8 +486,9 @@ Recommended bounded checks:
 
 ```bash
 find tests/api/deny -maxdepth 5 -type f | sort
-python -m pytest -q tests/api/deny
-python -m pytest -q tests/api
+make deny-test
+PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers \
+  apps/governed-api/tests/test_boundary_guards.py
 ```
 
 Workflow inspection:
@@ -495,7 +504,7 @@ git grep -nE 'data/(raw|work|quarantine)|ollama|Traceback' -- \
   apps tests/api runtime
 ```
 
-Do not append `|| true` to promotion-significant test commands. When no executable tests exist, record `NO TESTS COLLECTED` or fail according to the accepted bootstrap policy; do not report coverage as green.
+Do not run `pytest tests/api/deny` and report its zero-collection exit as coverage. Do not append `|| true` to promotion-significant test commands.
 
 ---
 
@@ -512,8 +521,8 @@ This lane is operationally complete only when:
 - [ ] response-body, header, cache, and side-channel leakage checks exist;
 - [ ] rights, consent, sensitivity, evidence, lifecycle, release, correction, and rollback cases are covered where applicable;
 - [ ] public clients cannot reach RAW, WORK, QUARANTINE, canonical stores, or model providers directly;
-- [ ] the workflow executes real tests and fails closed;
-- [ ] no echo-only job is represented as proof;
+- [x] the current workflow executes five bounded tests and propagates assertion or collection failure;
+- [x] no echo-only job is represented as proof;
 - [ ] test reports are inspectable and public-safe;
 - [ ] owners and reviewers are assigned;
 - [ ] correction and rollback behavior are tested;
@@ -550,24 +559,26 @@ Do not delete a failing deny test merely to recover green CI. Either:
 - hold the affected release;
 - document a temporary, reviewed exception with expiry and rollback.
 
+The two deleted modules were tautological `assert True` placeholders with no inbound references; they were not failing tests or proof. Restoring them would restore false-green collection, not coverage.
+
 ---
 
 ## Open verification backlog
 
-- [ ] Recursively inventory `tests/api/deny/`.
+- [x] Inventory `tests/api/deny/` at this revision; only this README remains.
 - [ ] Inventory actual governed API routes and handlers.
 - [ ] Identify accepted public and semi-public response profiles.
 - [ ] Resolve RuntimeResponseEnvelope, DecisionEnvelope, PolicyDecision, and HTTP mapping boundaries.
 - [ ] Identify canonical fixtures and snapshot home.
 - [ ] Add route-level public-boundary tests.
 - [ ] Add RAW, WORK, and QUARANTINE leakage tests.
-- [ ] Add direct model-runtime denial tests.
+- [ ] Add behavior-level direct model-endpoint denial tests; the current import-prefix scan is structural only.
 - [ ] Add exact sensitive geometry denial/generalization tests.
 - [ ] Add rights, consent, and sensitivity cases.
 - [ ] Add evidence-resolution and citation abstention cases.
 - [ ] Add release, withdrawal, correction, supersession, and rollback cases.
 - [ ] Add header, cache, search-index, tile, and generated-summary leakage checks.
-- [ ] Replace echo-only workflow jobs with real fail-closed commands.
+- [x] Replace echo-only workflow jobs with real fail-closed commands.
 - [ ] Verify workflow path filters and required-check status.
 - [ ] Assign owners and CODEOWNERS.
 - [ ] Record test-report and artifact retention policy.
@@ -581,11 +592,13 @@ Do not delete a failing deny test merely to recover green CI. Either:
 | Evidence | Status | Supports | Limit |
 |---|---|---|---|
 | Prior `tests/api/deny/README.md` | **CONFIRMED** | Existing lane intent and prior blob | Previously overstated proof purpose relative to implementation |
-| `tests/api/README.md` | **CONFIRMED** | Parent API test boundary and child-lane placement | Also reports no direct API test modules confirmed |
-| `docs/security/DENY_TESTS.md` | **CONFIRMED draft** | Fail-closed doctrine, gate families, and negative-test taxonomy | Contains proposed/stale implementation path claims |
-| `.github/workflows/deny-test.yml` | **CONFIRMED** | Workflow name and three job families | Jobs are echo-only |
+| `tests/api/README.md` | **CONFIRMED** | Parent API test boundary and child-lane placement | Direct lane remains contract/routing-only. |
+| `docs/security/DENY_TESTS.md` | **CONFIRMED draft** | Fail-closed doctrine, gate families, and negative-test taxonomy | Most catalog families remain proposed. |
+| `apps/governed-api/tests/test_boundary_guards.py` | **CONFIRMED executable** | Five route/method/manifest/literal/import assertions | No complete policy, response-envelope, payload, network, release, or production proof. |
+| `Makefile` | **CONFIRMED executable definition** | Local five-test aggregate with strict pytest flags | Not hosted job isolation or required-check evidence. |
+| `.github/workflows/deny-test.yml` | **CONFIRMED executable definition** | Workflow name, three jobs, and five-test selector union | Hosted exact-head result and required-check status require separate verification. |
 | Runtime and policy schema/contract surfaces | **CONFIRMED related evidence** | Finite-outcome and policy decision concepts | Exact API response profile remains unresolved |
-| Bounded repository search | **CONFIRMED bounded result** | No direct executable file surfaced under the lane | Not a substitute for recursive tree inventory |
-| Repository test execution | **NOT RUN** | — | Markdown-only API update |
+| Direct lane inventory | **CONFIRMED at base** | Two tautological modules had no inbound references and were deleted | Future branches may add distinct substantive cases. |
+| Repository test execution | **NEEDS EXACT-HEAD RESULT** | Local and hosted outcomes are reported separately | A pass proves only the selected five checks. |
 
 [Back to top](#top)

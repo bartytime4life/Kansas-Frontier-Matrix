@@ -1,0 +1,523 @@
+{
+  "base": {
+    "profile_version": "kfm.cover-class-crosswalk-candidate.v1",
+    "candidate_id": "kfm:cover-class-crosswalk:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_scheme": {
+      "scheme_id": "kfm:class-scheme:synthetic:source-cover",
+      "scheme_version": "2021.0.0",
+      "ontology_ref": "urn:kfm:synthetic:ontology:source-cover@2021.0.0",
+      "source_role": "AUTHORITATIVE_OBSERVATION",
+      "class_codes": [
+        "11",
+        "41",
+        "90",
+        "95"
+      ]
+    },
+    "target_scheme": {
+      "scheme_id": "kfm:class-scheme:synthetic:target-habitat",
+      "scheme_version": "1.0.0",
+      "ontology_ref": "urn:kfm:synthetic:ontology:target-habitat@1.0.0",
+      "source_role": "CANDIDATE",
+      "class_codes": [
+        "forest",
+        "open-water",
+        "wetland"
+      ]
+    },
+    "crosswalk": {
+      "crosswalk_version": "0.1.0",
+      "directionality": "FORWARD_ONLY",
+      "review_state": "CANDIDATE",
+      "mapping_basis": "SYNTHETIC_FIXTURE",
+      "source_role_effect": "PRESERVE_DISTINCT",
+      "allowed_uses": [
+        "FIXTURE_VALIDATION"
+      ],
+      "denied_uses": [
+        "AUTOMATED_REVERSE_MAPPING",
+        "OBSERVATION_TRUTH",
+        "PUBLIC_RELEASE",
+        "RENDERER_TRANSFORM"
+      ],
+      "evidence_refs": [
+        "urn:kfm:synthetic:evidence:source-legend-review",
+        "urn:kfm:synthetic:evidence:target-legend-review"
+      ],
+      "review_ref": "urn:kfm:synthetic:review-request:cover-crosswalk",
+      "correction_path_ref": "urn:kfm:synthetic:correction-path:cover-crosswalk",
+      "rollback_ref": "urn:kfm:synthetic:rollback:cover-crosswalk"
+    },
+    "mappings": [
+      {
+        "row_id": "row-001",
+        "source_codes": [
+          "11"
+        ],
+        "target_codes": [
+          "open-water"
+        ],
+        "mapping_state": "EXACT",
+        "lossy": false,
+        "caveat_required": false,
+        "evidence_refs": [
+          "urn:kfm:synthetic:evidence:row-open-water"
+        ]
+      },
+      {
+        "row_id": "row-002",
+        "source_codes": [
+          "41"
+        ],
+        "target_codes": [
+          "forest"
+        ],
+        "mapping_state": "EXACT",
+        "lossy": false,
+        "caveat_required": false,
+        "evidence_refs": [
+          "urn:kfm:synthetic:evidence:row-forest"
+        ]
+      },
+      {
+        "row_id": "row-003",
+        "source_codes": [
+          "90",
+          "95"
+        ],
+        "target_codes": [
+          "wetland"
+        ],
+        "mapping_state": "AGGREGATED",
+        "lossy": true,
+        "caveat_required": true,
+        "evidence_refs": [
+          "urn:kfm:synthetic:evidence:row-wetland-aggregation"
+        ]
+      }
+    ],
+    "summary": {
+      "ontology_versions_bound": true,
+      "source_class_count": 4,
+      "accounted_source_class_count": 4,
+      "unmapped_source_class_count": 0,
+      "mapping_row_count": 3,
+      "lossy_row_count": 1,
+      "caveat_row_count": 1,
+      "profile_state": "REVIEW_REQUIRED",
+      "silent_recode_authorized": false,
+      "reverse_use_authorized": false,
+      "production_use_authorized": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "network_access": false,
+      "recodes_source_data": false,
+      "source_activation_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "renderer_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "version_bound_explicit_crosswalk",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_profile_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "source_ontology_version_drift",
+      "mutations": [
+        {
+          "path": "/source_scheme/scheme_version",
+          "value": "2022.0.0"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_ONTOLOGY_VERSION_MISMATCH",
+          "path": "/source_scheme/ontology_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "target_ontology_version_drift",
+      "mutations": [
+        {
+          "path": "/target_scheme/scheme_version",
+          "value": "2.0.0"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_ONTOLOGY_VERSION_MISMATCH",
+          "path": "/target_scheme/ontology_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "source_class_unaccounted",
+      "mutations": [
+        {
+          "path": "/source_scheme/class_codes",
+          "value": [
+            "11",
+            "41",
+            "90",
+            "95",
+            "99"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SOURCE_CLASS_UNACCOUNTED",
+          "path": "/mappings"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown_source_code",
+      "mutations": [
+        {
+          "path": "/mappings/0/source_codes",
+          "value": [
+            "11",
+            "12"
+          ]
+        },
+        {
+          "path": "/mappings/0/mapping_state",
+          "value": "AGGREGATED"
+        },
+        {
+          "path": "/mappings/0/lossy",
+          "value": true
+        },
+        {
+          "path": "/mappings/0/caveat_required",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SOURCE_CODE_UNKNOWN",
+          "path": "/mappings/0/source_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown_target_code",
+      "mutations": [
+        {
+          "path": "/mappings/0/target_codes",
+          "value": [
+            "other-water"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_TARGET_CODE_UNKNOWN",
+          "path": "/mappings/0/target_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "duplicate_source_code_across_rows",
+      "mutations": [
+        {
+          "path": "/mappings/1/source_codes",
+          "value": [
+            "11",
+            "41"
+          ]
+        },
+        {
+          "path": "/mappings/1/mapping_state",
+          "value": "AGGREGATED"
+        },
+        {
+          "path": "/mappings/1/lossy",
+          "value": true
+        },
+        {
+          "path": "/mappings/1/caveat_required",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SOURCE_CODE_DUPLICATE",
+          "path": "/mappings"
+        }
+      ]
+    },
+    {
+      "case_id": "mapping_rows_out_of_order",
+      "mutations": [
+        {
+          "path": "/mappings/0/row_id",
+          "value": "row-999"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_ROW_ORDER_INVALID",
+          "path": "/mappings"
+        }
+      ]
+    },
+    {
+      "case_id": "many_to_one_marked_lossless",
+      "mutations": [
+        {
+          "path": "/mappings/2/lossy",
+          "value": false
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_AGGREGATION_NOT_LOSSY",
+          "path": "/mappings/2/lossy"
+        }
+      ]
+    },
+    {
+      "case_id": "many_to_one_caveat_missing",
+      "mutations": [
+        {
+          "path": "/mappings/2/caveat_required",
+          "value": false
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_AGGREGATION_CAVEAT_REQUIRED",
+          "path": "/mappings/2/caveat_required"
+        }
+      ]
+    },
+    {
+      "case_id": "exact_mapping_shape_invalid",
+      "mutations": [
+        {
+          "path": "/mappings/0/target_codes",
+          "value": [
+            "forest",
+            "open-water"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_EXACT_SHAPE_INVALID",
+          "path": "/mappings/0"
+        }
+      ]
+    },
+    {
+      "case_id": "unmapped_classes_denied_until_resolved",
+      "mutations": [
+        {
+          "path": "/mappings/2/target_codes",
+          "value": []
+        },
+        {
+          "path": "/mappings/2/mapping_state",
+          "value": "UNMAPPED"
+        },
+        {
+          "path": "/mappings/2/lossy",
+          "value": false
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_UNMAPPED_CLASS_DENIED",
+          "path": "/mappings/2"
+        }
+      ]
+    },
+    {
+      "case_id": "reverse_use_without_review",
+      "mutations": [
+        {
+          "path": "/crosswalk/directionality",
+          "value": "BIDIRECTIONAL_REVIEW_REQUESTED"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_REVERSE_USE_REVIEW_REQUIRED",
+          "path": "/crosswalk/directionality"
+        }
+      ]
+    },
+    {
+      "case_id": "source_and_target_scheme_collision",
+      "mutations": [
+        {
+          "path": "/target_scheme/scheme_id",
+          "value": "kfm:class-scheme:synthetic:source-cover"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SCHEME_ID_COLLISION",
+          "path": "/target_scheme/scheme_id"
+        }
+      ]
+    },
+    {
+      "case_id": "source_class_order_invalid",
+      "mutations": [
+        {
+          "path": "/source_scheme/class_codes",
+          "value": [
+            "95",
+            "90",
+            "41",
+            "11"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_CLASS_CODE_ORDER_INVALID",
+          "path": "/source_scheme/class_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "summary_tampered",
+      "mutations": [
+        {
+          "path": "/summary/source_class_count",
+          "value": 99
+        }
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ]
+    },
+    {
+      "case_id": "spec_hash_tampered",
+      "mutations": [],
+      "spec_hash_override": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "candidate_id_tampered",
+      "mutations": [],
+      "candidate_id_override": "kfm:cover-class-crosswalk:000000000000000000000000",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_ID_MISMATCH",
+          "path": "/candidate_id"
+        }
+      ]
+    },
+    {
+      "case_id": "source_role_collapse_denied",
+      "mutations": [
+        {
+          "path": "/crosswalk/source_role_effect",
+          "value": "UPGRADE_TO_OBSERVATION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SCHEMA_INVALID",
+          "path": "/crosswalk/source_role_effect"
+        }
+      ]
+    },
+    {
+      "case_id": "recode_authority_denied",
+      "mutations": [
+        {
+          "path": "/governance/recodes_source_data",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SCHEMA_INVALID",
+          "path": "/governance/recodes_source_data"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown_field_denied",
+      "mutations": [
+        {
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CROSSWALK_SCHEMA_INVALID",
+          "path": "/"
+        }
+      ]
+    }
+  ]
+}

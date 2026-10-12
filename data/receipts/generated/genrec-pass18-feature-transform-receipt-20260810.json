@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-pass18-feature-transform-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/feature-transform-receipt.yml",
+    "contracts/evidence/feature_transform_receipt.md",
+    "docs/intake/exploratory/pass-18-feature-transform-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/feature_transform_receipt/cases.json",
+    "schemas/contracts/v1/evidence/feature_transform_receipt.schema.json",
+    "tests/validators/evidence/test_validate_feature_transform_receipt.py",
+    "tools/validators/evidence/validate_feature_transform_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/feature-transform-receipt.yml": "sha256:2d98477f0a100259015af97e9d14b07293b1f11ea73f79b79da7ab8b396c2a31",
+    "contracts/evidence/feature_transform_receipt.md": "sha256:8d95049402daf5ab788f214ab0dc1f82ed3583694d53b9e4428141652af6e0e0",
+    "docs/intake/exploratory/pass-18-feature-transform-receipt-source-map.md": "sha256:aae3b7910be8a5ee4505e84cb773e905622ef411fe3871e98a85ff70d4124037",
+    "fixtures/contracts/v1/evidence/feature_transform_receipt/cases.json": "sha256:ac7b578788519a19b1061f707130ccb08edbf7962a76cbada0f9e0014574fd53",
+    "schemas/contracts/v1/evidence/feature_transform_receipt.schema.json": "sha256:8d9eef87f6a3556967d52220547da6d49e322f0740fa2165b38d1bdeea899ef5",
+    "tests/validators/evidence/test_validate_feature_transform_receipt.py": "sha256:76cdc5c04b8d73d9e36b95d9878b8a28640f953fc02817261aeb69ce0daa1c9e",
+    "tools/validators/evidence/validate_feature_transform_receipt.py": "sha256:f0278caa3956273189874316c923829edcf7279c79c1becf71ca4858041de6d2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:8d95049402daf5ab788f214ab0dc1f82ed3583694d53b9e4428141652af6e0e0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local deterministic PDF, JSON, YAML, Python, schema, fixture, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Google Drive KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-408",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#card=KFM-P18-INV-408",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/evidence/feature_set_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/governance/model_card_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/evidence/predictive_layer_generalization_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/feature-transform-receipt.yml": "CONFIRMED",
+    "contracts/evidence/feature_transform_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-feature-transform-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/feature_transform_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/feature_transform_receipt.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_feature_transform_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_feature_transform_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "source-card-pdf-visual-review", "outcome": "PASS", "reason": "Rendered physical pages 276-277 were inspected for card and continuation fidelity."},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic feature-transform receipt tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-kfm-p18-inv-408", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-408"},
+    {"id": "drive-pass18", "validated": true, "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#card=KFM-P18-INV-408"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T03:58:35Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only feature-transform receipt profile. It checks ordered feature-reference, transform-family, method/parameter, fit-scope, review-hold, and deterministic-identity declarations without carrying feature values, executing transforms or models, resolving evidence, deciding policy or review, releasing, or publishing."
+}

@@ -19,7 +19,7 @@ related:
   - docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - control_plane/verification_backlog.yaml
   - schemas/contracts/v1/domains/flora/
   - policy/sensitivity/flora/
@@ -29,6 +29,9 @@ notes:
   - Domain-scoped backlog; rolls up into docs/registers/VERIFICATION_BACKLOG.md.
   - All implementation-layer claims are PROPOSED or NEEDS VERIFICATION until repo is mounted.
   - v1.1 reconciles ADR references to the canonical ADR-S-* backlog (source-role vocabulary is ADR-S-04, sensitivity tiers ADR-S-05) instead of inventing parallel flora-specific ADRs, and wires in the session-authored flora source suite.
+owning_root: docs/
+responsibility: "Documentation for Flora — Verification Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Flora — Verification Backlog
@@ -407,7 +410,7 @@ sequenceDiagram
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain orientation (PROPOSED).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Global verification backlog (rolls up domain queues).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift entries for items past their review cadence.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Authority boundaries and the lifecycle law.
 - [`control_plane/verification_backlog.yaml`](../../../control_plane/verification_backlog.yaml) — Machine-readable backlog projection.
 - [`policy/sensitivity/flora/`](../../../policy/sensitivity/flora/) — Sensitivity policy home for the rare-plant lane.
@@ -523,7 +526,7 @@ items:
 
 This document is part of the KFM **human-facing control plane** (`docs/`). It does not, on its own, prove repository implementation: it is a queue of checks against doctrine, designed to be closed by mounted-repo evidence, schemas, tests, receipts, and ADRs.
 
-**Related docs:** [Flora README](./README.md) · [Source Registry](./SOURCE_REGISTRY.md) · [Thin Slice Plan](./THIN_SLICE_PLAN.md) · [Global Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Directory Rules](../../doctrine/directory-rules.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md)
+**Related docs:** [Flora README](./README.md) · [Source Registry](./SOURCE_REGISTRY.md) · [Thin Slice Plan](./THIN_SLICE_PLAN.md) · [Global Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Directory Rules](../../doctrine/directory-rules.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
 **Owners:** `<flora-domain-stewards@TODO>`, `<governance-stewards@TODO>`
 **Last updated:** 2026-06-03 · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 **Version:** v1.1 (draft)

@@ -1,0 +1,84 @@
+{
+  "fixture_id": "atmo-lcs-invalid-peer-consensus-reference",
+  "profile_id": "kfm-atmosphere-low-cost-sensor-calibration-fixture-v1",
+  "object_family": "PM25Observation",
+  "knowledge_character": "LOW_COST_SENSOR",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://source/atmosphere/low-cost-sensor",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/raw-observation",
+    "fixture://evidence/atmosphere/reference-collocation",
+    "fixture://evidence/atmosphere/held-out-evaluation",
+    "fixture://artifact/atmosphere/model/synthetic-meteorology-aware-reference-correction@fixture-v1",
+    "fixture://artifact/atmosphere/training/synthetic-midcontinent-context@fixture-v1",
+    "fixture://artifact/atmosphere/specification/low-cost-sensor-calibration@fixture-v1"
+  ],
+  "assessment": {
+    "caveat": "LOW_COST_SENSOR_NOT_REFERENCE_GRADE",
+    "confidence_state": "SYNTHETIC_VALIDATION_ONLY",
+    "reference_grade": false,
+    "regulatory_use": false,
+    "public_release_eligible": false
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "calibration": {
+    "status": "CORRECTED_WITH_LINEAGE",
+    "method_id": "synthetic-meteorology-aware-reference-correction",
+    "method_version": "fixture-v1",
+    "model_ref": "fixture://artifact/atmosphere/model/synthetic-meteorology-aware-reference-correction@fixture-v1",
+    "model_sha256": "sha256:f5e78e782db3fa29a0006d42c694cb0fd79fa3bd50a902d8ccac1a60ef496f28",
+    "training_data_ref": "fixture://artifact/atmosphere/training/synthetic-midcontinent-context@fixture-v1",
+    "training_data_sha256": "sha256:7712d6aa24c46df6936743d897229e12e946ac7a5d9f9579bad66280ae5cdfde",
+    "specification_ref": "fixture://artifact/atmosphere/specification/low-cost-sensor-calibration@fixture-v1",
+    "specification_sha256": "sha256:ec6349650559e7c05a645745953c0c66d82ae987a58747c86904d7b5b02a6878",
+    "raw_observation_ref": "fixture://observation/atmosphere/raw-corrected-pair",
+    "raw_evidence_ref": "fixture://evidence/atmosphere/raw-observation",
+    "corrected_observation_ref": "fixture://observation/atmosphere/corrected-pair",
+    "reference_collocation": {
+      "state": "SYNTHETIC_EVIDENCE_BOUND",
+      "source_descriptor_ref": "fixture://source/atmosphere/peer-consensus",
+      "evidence_ref": "fixture://evidence/atmosphere/reference-collocation",
+      "period_start": "2025-01-01T00:00:00Z",
+      "period_end": "2025-01-15T00:00:00Z"
+    },
+    "meteorology_inputs": [
+      "air_temperature",
+      "relative_humidity"
+    ],
+    "applicability": {
+      "hardware_family": "synthetic-low-cost-optical-sensor",
+      "sampling_cadence": "hourly",
+      "deployment_regime": "synthetic-midcontinent-context",
+      "transfer_state": "SYNTHETIC_BOUND_ONLY",
+      "drift_state": "SYNTHETIC_CHECKED"
+    },
+    "evaluation": {
+      "state": "SYNTHETIC_HELD_OUT",
+      "evidence_ref": "fixture://evidence/atmosphere/held-out-evaluation",
+      "metric_names": [
+        "bias",
+        "mae"
+      ],
+      "uncertainty_state": "SYNTHETIC_NOT_QUANTITATIVE",
+      "validity_bound": "DECLARED_DEPLOYMENT_REGIME_ONLY"
+    }
+  },
+  "limitations": [
+    "correction_not_scientifically_validated",
+    "not_life_safety_guidance",
+    "not_reference_grade",
+    "not_regulatory_use",
+    "synthetic_fixture_only"
+  ]
+}

@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · Census source steward · QA steward · Data steward · Docs steward
 created: 2026-07-10
-updated: 2026-07-10
+updated: 2026-09-26
 policy_label: public; tests; offline-first; source-admission-only
 related:
   - ../README.md
@@ -42,6 +42,19 @@ notes:
 
 `connectors/census/tests/`
 
+
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve_acs(url)`:** accepts only the exact URL `acs_api.acs_url` would emit (`key=` is refused).
+> - **`fetch.retrieve_tiger(file_name)`:** accepts only packages in the committed source-reference manifest. The URL must be `https://www2.census.gov/geo/tiger/TIGER<vintage>/<PRODUCT>/<file>`, the byte budget is the manifest length, and the manifest SHA-256 is the transport's expected digest, so a byte mismatch is an `INTEGRITY_MISMATCH` episode.
+> - Both run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`census.acs-api`, `census.tiger-line`) and profiles.
+> - **`admit.admit()`:** selects the product from the episode's own source identity. Unknown or mismatched sources are refused. It routes as follows:
+>   - an ACS table becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES` or with the table's own reasons when they apply;
+>   - a TIGER package keeps the route the inspector assigned;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/census/tests/test_fetch_admit.py`.
+
 ## Quick jumps
 
 [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted tests](#accepted-tests) · [Exclusions](#exclusions) · [Required test matrix](#required-test-matrix) · [Fixture posture](#fixture-posture) · [Live-service tests](#live-service-tests) · [Validation](#validation) · [Evidence limits](#evidence-limits) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
@@ -49,6 +62,14 @@ notes:
 ---
 
 ## Status
+
+> [!NOTE]
+> **Offline Census surfaces (2026-09-26).** Two standard-library modules now exist, neither of which fetches, activates, or admits anything:
+>
+> - `src/census/tiger_package.py` inspects one *supplied* TIGER/Line package against its entry in `../tiger-line-2025-kansas-core.source-reference.json` (byte length and SHA-256), then reads the zip in memory with member-path, duplicate-member, size, and compression-ratio bounds. It checks the `.shp`/`.shx` headers (shape type, bbox, feature count agreement), the `.prj` CRS (NAD83 geographic), and the `.dbf` attributes (identity uniqueness via `GEOID`/`GEOID20`/`LINEARID`/`HYDROID`, `STATEFP` and `COUNTYFP` scope against the file name). Geometry is never decoded. National packages are flagged as needing spatial or attribute selection. Candidates carry `source_role: REFERENCE_GEOMETRY_CANDIDATE` and are not legal-boundary, cadastral, or road authority.
+> - `src/census/acs_api.py` plans Kansas-scoped ACS data-API URLs (detailed, profile, and subject tables; estimates auto-paired with MOEs; API keys are never part of a provenance URL and are rejected if present) and parses supplied responses. Numbers become exact `Decimal`s; ACS annotation (jam) values such as `-666666666` become named annotations with no numeric value; nulls stay null; HTTP 204 is `EMPTY_RESULT_NOT_ABSENCE`. Nothing is converted to zero. Unrecognized negatives quarantine the row; header, width, geography-code, state-scope, or duplicate-GEOID problems reject the table.
+>
+> Synthetic tests: `tests/test_tiger_package.py`, `tests/test_acs_api.py`, run by `.github/workflows/census-offline.yml`. `fetch.py`, `admit.py`, and the `TBD` descriptor remain placeholders tracked by `tools/qa/scaffold_baseline.json`.
 
 > [!IMPORTANT]
 > **Status:** `draft` / `NEEDS VERIFICATION`  

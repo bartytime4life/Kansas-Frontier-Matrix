@@ -1,659 +1,847 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbook-habitat-source-refresh
-title: Habitat Source Refresh Runbook
-type: standard
-version: v0.1
-status: draft
-owners: Habitat lane steward + Docs steward (TBD — assign via per-root README)
+doc_id: kfm://doc/runbooks/habitat/source-refresh-runbook
+title: Habitat Source Refresh Inspection Runbook
+type: runbook
+subtype: domain-source-refresh-inspection
+version: v0.2
+status: draft; repository-grounded; documentation-only; inspection-and-handoff-only; source-inactive-by-default; fail-closed; non-authoritative; non-activation; non-review; non-promotion; non-release; non-deployment; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Habitat, source, connector, land-cover, wetlands, ecological-model, regulatory, rights, sensitivity/geoprivacy, evidence, policy, validation, review, release, correction, rollback, security, and operations stewards"
 created: 2026-05-12
-updated: 2026-05-12
-policy_label: public
+updated: 2026-08-25
+policy_label: public-review; habitat; source-refresh-inspection; operational-documentation; rights-aware; sensitive-location-aware; fail-closed; no-publication-authority
+current_path: docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md
+owning_root: docs/
+responsibility: >-
+  Explain how to inspect an already-authorized Habitat source-head signal, classify bounded
+  no-change or material-change evidence, and prepare a non-authoritative handoff without
+  admitting or activating a source, fetching live bytes, performing policy or review, crossing
+  a lifecycle boundary, promoting, releasing, deploying, or publishing.
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational documentation
+canonical_relationship: >-
+  Existing direct child of docs/runbooks/habitat/ and reconciled in place under the accepted
+  docs/ responsibility root. The lane README exists but is blank, and a duplicate proposal-era
+  runbook remains under docs/domains/habitat/; this update creates no alias, mirror, migration,
+  connector, watcher, or sibling authority and does not adjudicate those conflicts.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: b9eaecdda2ad72980e91e24bfc3b8ff073a6190e
+  target_prior_blob: 1fecc4e6337ba2c897f4c4b328a33ea3bdba97e8
+  lane_readme_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  source_descriptor_contract_blob: b57ae5ccc042c1423b75c168438800384c9b6713
+  source_descriptor_implementation_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  source_descriptor_plural_alias_blob: 42da54b28a527850cce88ad89f68921c101fc56b
+  source_authority_register_blob: 32729857bc8eb5001acb37b8ee8e60bcb6e0dc50
+  subtype_source_registry_readme_blob: 5d9c90f88ff7e2e2b0d4f2064bc835589196d8b8
+  domain_first_registry_readme_blob: 0dc7d3bb92cfb03d62cb35c9f375150f372c0952
+  connector_compatibility_index_blob: 62e0a0df3934eb2dc534960be8f49e5079351091
+  habitat_policy_readme_blob: cf6dd24db1a06cb857806c000500471bbe918ad7
+  domain_habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab
+  materiality_profile_contract_blob: c7ad48b435d8cc7fcdcf2910fb675e9c9778e7e7
+  materiality_workflow_blob: fd73a098c1dbf8fd07135ce3cdab04b280b30904
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/domains/habitat/README.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
-  - docs/standards/SMART_SYNC.md
-  - docs/standards/RUN_RECEIPT.md
-  - docs/runbooks/governed_ai_VALIDATION.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-tags: [kfm, runbook, habitat, sources, lifecycle, governance]
+  - ./README.md
+  - ./NO_NETWORK_TEST_RUNBOOK.md
+  - ./PROMOTION_RUNBOOK.md
+  - ./ROLLBACK_RUNBOOK.md
+  - ../../domains/habitat/README.md
+  - ../../domains/habitat/SOURCE_REFRESH_RUNBOOK.md
+  - ../../domains/habitat/SOURCE_REGISTRY.md
+  - ../../domains/habitat/SOURCE_FAMILIES.md
+  - ../../domains/habitat/MODEL_VS_OBSERVATION.md
+  - ../../domains/habitat/SENSITIVITY.md
+  - ../../domains/habitat/SENSITIVITY_AND_GEOPRIVACY.md
+  - ../../domains/habitat/REASON_CODES.md
+  - ../../../contracts/source/source_descriptor.md
+  - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../../schemas/contracts/v1/sources/source_descriptor.schema.json
+  - ../../../control_plane/source_authority_register.yaml
+  - ../../../data/registry/sources/habitat/README.md
+  - ../../../data/registry/habitat/README.md
+  - ../../../data/registry/sources/habitat/usfws-critical-habitat.source.yaml
+  - ../../../data/registry/sources/habitat/usfws_ecos.yaml
+  - ../../../connectors/habitat/README.md
+  - ../../../policy/domains/habitat/README.md
+  - ../../../contracts/domains/habitat/land_cover/materiality_profile.md
+  - ../../../tools/validators/domains/habitat/validate_land_cover_materiality.py
+  - ../../../tests/validators/domains/habitat/test_land_cover_materiality.py
+  - ../../../.github/workflows/habitat-land-cover-materiality.yml
+  - ../../../.github/workflows/domain-habitat.yml
+tags: [kfm, habitat, runbook, source-refresh, inspection, source-head, material-change, no-network, rights, sensitivity, geoprivacy, evidence, fail-closed]
 notes:
-  - PROPOSED placement; nested vs flat runbook layout is NEEDS VERIFICATION
-  - All source endpoints, cadences, and rights statuses are NEEDS VERIFICATION
-  - Implementation maturity (routes, schemas, watcher code) is PROPOSED
+  - "This revision removes illustrative live watcher, conditional-GET, fetch, lifecycle-write, release, and publication instructions that current repository evidence does not authorize."
+  - "The machine source-authority projection is PROPOSED, projection-only, implementation-absent, empty, and non-activating."
+  - "The inspected Habitat registry YAMLs are PROPOSED inventory placeholders rather than accepted SourceDescriptor instances."
+  - "Habitat source-registry topology remains conflicted between subtype-first and domain-first lanes; this runbook does not select or write either lane."
+  - "The standalone connectors/habitat/ path is a documentation-only compatibility index; source access remains source-first and product-specific, with several path conflicts still unresolved."
+  - "The Habitat policy boundary records proposed rule scaffolds without an accepted bundle, evaluator, or production consumer."
+  - "The only repository-grounded comparison path used here is the inactive, synthetic, no-network Habitat land-cover materiality profile; it does not fetch or admit a live source and does not generalize to every Habitat source family."
+  - "This document creates no source descriptor, activation, fetch, source-head observation, receipt, evidence, policy decision, review, candidate, lifecycle transition, promotion, release, deployment, or public state."
 [/KFM_META_BLOCK_V2] -->
 
-# Habitat Source Refresh Runbook
+<a id="top"></a>
 
-> **How the Habitat lane re-admits, re-validates, and re-promotes evidence from upstream ecological sources without bypassing the trust membrane.** Refresh is a *governed state transition*, not a file refresh. No bytes change public state until validators, policy gates, evidence-bundle closure, and release decisions all pass — every time.
+# Habitat Source Refresh Inspection Runbook
 
-<p align="left">
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-orange">
-  <img alt="Authority: PROPOSED" src="https://img.shields.io/badge/authority-PROPOSED-yellow">
-  <img alt="Domain: Habitat" src="https://img.shields.io/badge/domain-habitat-2e7d32">
-  <img alt="Lifecycle: RAW%20→%20PUBLISHED" src="https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue">
-  <img alt="Posture: fail-closed" src="https://img.shields.io/badge/posture-fail--closed-critical">
-  <img alt="License-or-policy: public-or-restricted" src="https://img.shields.io/badge/policy-mixed%20public%2Frestricted-lightgrey">
-  <!-- TODO: replace with real Shields.io endpoints once CI surface is wired -->
-</p>
+> **Use this runbook to inspect a source-head signal that an already-authorized source operation produced, classify the bounded evidence, and prepare a non-authoritative handoff.** This runbook is not a watcher, connector, scheduler, source-admission decision, fetch command, policy evaluator, reviewer, lifecycle writer, or publisher.
 
-| Field | Value |
-|---|---|
-| **Document type** | Runbook (operational procedure) |
-| **Status** | `draft` — PROPOSED placement and content |
-| **Lane** | Habitat — see `docs/domains/habitat/` (PROPOSED) |
-| **Owners** | Habitat lane steward + Docs steward (TBD; **placeholder** — confirm via per-root README) |
-| **Last reviewed** | `2026-05-12` (initial draft) |
-| **Authority for procedure** | KFM core invariants → Directory Rules → Habitat dossier → this runbook |
-| **Authority for *any specific path* quoted here** | **PROPOSED** until verified against the mounted repo |
-
----
-
-## Quick jump
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. Authority & invariants](#2-authority--invariants)
-- [3. Preconditions](#3-preconditions)
-- [4. Habitat source families](#4-habitat-source-families)
-- [5. End-to-end refresh flow](#5-end-to-end-refresh-flow)
-- [6. Conditional GET & smart sync](#6-conditional-get--smart-sync)
-- [7. Watcher-as-non-publisher](#7-watcher-as-non-publisher)
-- [8. Stale-state markers & supersession](#8-stale-state-markers--supersession)
-- [9. Sensitivity, rights & geoprivacy gates](#9-sensitivity-rights--geoprivacy-gates)
-- [10. Validation & policy gates](#10-validation--policy-gates)
-- [11. Promotion, correction & rollback](#11-promotion-correction--rollback)
-- [12. Operator checklist](#12-operator-checklist)
-- [13. Failure modes & responses](#13-failure-modes--responses)
-- [14. Verification backlog](#14-verification-backlog)
-- [15. Related docs](#15-related-docs)
-- [Appendix A — Example artifacts](#appendix-a--example-artifacts)
-
----
-
-## 1. Purpose & scope
-
-This runbook governs **how Habitat lane sources are refreshed** — re-checked for change, re-fetched when warranted, re-normalized, re-validated, re-bundled, and re-promoted — without bypassing any KFM gate.
-
-It applies whenever any of the following triggers a check against an upstream source for the Habitat lane:
-
-- Scheduled cadence on a registered `SourceDescriptor`.
-- Object-store event or push notification (where the upstream is event-capable).
-- Steward-initiated re-admission (e.g., after a rights or sensitivity change).
-- Schema, geography, model, or policy version drift detected against an already-published claim.
-
-**In scope.** Procedure, gates, receipts, sensitivity posture, stale handling, supersession, rollback, and the artifacts each step must produce.
-
-**Out of scope.**
-
-- Object-family meaning (lives in `contracts/`).
-- Field-level schema shape (lives in `schemas/contracts/v1/…`).
-- Admissibility logic itself (lives in `policy/`).
-- Source identity, rights, sensitivity at registration time (lives in `data/registry/` and the `SourceDescriptor` standard).
-- Habitat *modeling* — model-card, suitability, connectivity training/eval. This runbook only governs refresh of *inputs* to such models and supersession when an input changes.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-posture)
+[![Source authority: empty](https://img.shields.io/badge/source%20authority-empty-b42318?style=flat-square)](#current-repository-posture)
+[![Registry records: placeholders](https://img.shields.io/badge/registry-placeholders-d4a72c?style=flat-square)](#current-repository-posture)
+[![Policy: inactive scaffolds](https://img.shields.io/badge/policy-inactive%20scaffolds-d4a72c?style=flat-square)](#current-repository-posture)
+[![Materiality: synthetic no-network](https://img.shields.io/badge/materiality-synthetic%20no--network-0969da?style=flat-square)](#validation-and-command-boundary)
+[![Authority: inspection only](https://img.shields.io/badge/authority-inspection%20only-0969da?style=flat-square)](#authority-and-negative-authority)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-b42318?style=flat-square)](#authority-and-negative-authority)
 
 > [!IMPORTANT]
-> **Refresh is a governed state transition, not a file move.** A new fetch into `data/raw/habitat/...` does not, by itself, change any public state. Public state changes only when promotion, validation, and policy gates pass with the artifacts named in this runbook.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 2. Authority & invariants
-
-When this runbook conflicts with other sources, resolve in this order (mirrors Directory Rules §2.1):
-
-1. **KFM core invariants** — lifecycle law, cite-or-abstain, trust membrane, authority ladder, watcher-as-non-publisher.
-2. **Accepted ADRs** amending Directory Rules or Habitat schema/policy homes.
-3. **Directory Rules** (`docs/doctrine/directory-rules.md`).
-4. **Habitat dossier** (`docs/domains/habitat/`) and the Habitat+Fauna thin-slice plan.
-5. **This runbook.**
-6. **Per-root READMEs** in the affected lane.
-
-### Invariants this runbook preserves
-
-| Invariant | Operational form for Habitat refresh |
-|---|---|
-| **Lifecycle law** | `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` — no skipping, no silent promotion. |
-| **Watcher-as-non-publisher** | Watchers emit `RunReceipt` and candidate decisions only; they **never** write to `data/catalog/`, `data/published/`, or `release/`. |
-| **Cite-or-abstain** | A Habitat claim without a resolvable `EvidenceRef → EvidenceBundle` cannot be re-promoted. |
-| **Trust membrane** | Public clients consume only released layer manifests; refresh never bypasses `apps/governed-api/`. |
-| **Deny-by-default sensitivity** | Regulatory critical habitat, exact rare-species occurrence joins, and unresolved rights remain restricted until proven releasable. |
-| **Reversibility** | Every promotion in this flow has a named `RollbackCard` target before it is allowed. |
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 3. Preconditions
-
-Before any operator runs a Habitat refresh, **all** of the following must be true. If any is `false` or `unknown`, stop and route to the Habitat lane steward.
-
-- [ ] The source has a current `SourceDescriptor` in `data/registry/sources/habitat/` *(PROPOSED path; see Directory Rules §12)* with source_id, source_role, authority, rights, sensitivity, and cadence.
-- [ ] The `SourceDescriptor` rights status is one of `open | controlled | restricted` — **never** `unknown`. Unknown rights fail closed.
-- [ ] The watcher entry (e.g., `tools/ingest/watchers/<habitat>_*.yaml`) is **signed** and registered. *(PROPOSED location.)*
-- [ ] A `RollbackCard` template exists for the affected release, or one will be authored before promotion (see §11).
-- [ ] Operator has access to required artifact stores and to the policy bundle version pinned by the current release.
-- [ ] Adjacent doctrine documents (`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`, `docs/standards/SMART_SYNC.md`, `docs/standards/RUN_RECEIPT.md`) are read.
+> **Current safe determination at `main@b9eaecdda2ad…`: `HOLD — NO ACTIVE HABITAT SOURCE REFRESH PATH ESTABLISHED`.** The machine source-authority projection has no entries; the inspected Habitat registry YAMLs are proposal placeholders; the Habitat connector directory is documentation-only; source-specific connector paths remain conflicted; the Habitat policy bundle and evaluator are unaccepted; and the domain workflow explicitly holds proof and release while running only bounded synthetic no-network validation.
 
 > [!CAUTION]
-> If a `SourceDescriptor` is missing, this is **not** a "refresh" — it is an **admission**, which is a different governed transition (`— → RAW`) and requires the source-admission runbook *(PROPOSED, NEEDS VERIFICATION)*. Do not improvise.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 4. Habitat source families
-
-The Habitat lane consumes the following families. **All rights, cadence, and endpoint details are `NEEDS VERIFICATION`** against the current upstream terms-of-service and the live `SourceDescriptor`; treat the table as a checklist, not a contract.
-
-| Source family | Typical source role | Sensitivity posture | Cadence (placeholder — NEEDS VERIFICATION) |
-|---|---|---|---|
-| **USFWS ECOS / critical habitat services** | `authority` | Public, but joins to sensitive species fail closed | Source-vintage-driven |
-| **KDWP state review context** | `authority / observation` | State-controlled; some fields restricted | Steward-cadence |
-| **NLCD land cover** | `authority / observation` | Public raster; derivatives PROPOSED public | Periodic, multi-year |
-| **NWI wetlands** | `authority / observation` | Public, but joins to listed-species occurrence restricted | Vintage-driven |
-| **GAP / LANDFIRE** | `authority / context / model` | Public; model labels MUST stay visible | Periodic |
-| **NatureServe + controlled biodiversity** | `authority` (controlled) | Often controlled; rights MUST be honored | License-driven |
-| **GBIF / iNaturalist / iDigBio occurrence inputs** | `observation` (often as Habitat context only) | **Geoprivacy-sensitive**; exact location DENY by default | Continuous / API-driven |
-| **PAD-US stewardship context** | `authority / context` | Public; sensitivity flags travel through | Periodic |
-| **State ecological inventories / restoration projects** | `observation / context` | Mixed; per-source rights | Project-driven |
-| **Remote-sensing vegetation indices** | `observation / model as source` | Public products; model labels preserved | Sensor-cadence |
-| **Field surveys & steward-reviewed habitat models** | `observation / model as source` | Steward-controlled; review state required | Steward-cadence |
-
-<details>
-<summary><strong>Citation:</strong> sources for the table above</summary>
-
-Source basis enumerated in the Habitat dossier (`[DOM-HAB]`) and KFM Encyclopedia §7.4 / Appendix D ("Source families and source roles"). The Habitat lane scope is **CONFIRMED doctrine** — the *implementation*, including which source IDs are admitted in the current repo state, is **PROPOSED / NEEDS VERIFICATION** until the source ledger is inspected.
-
-</details>
-
-> [!NOTE]
-> The Habitat lane explicitly **does not own** species occurrence truth, plant taxonomy, or fauna taxonomy. It *joins* to Fauna and Flora through governed relationships. A Habitat refresh that pulls occurrence data is consuming it as *context*, never as authoritative occurrence evidence — those refreshes are governed by the **Fauna** and **Flora** source-refresh runbooks *(PROPOSED, NEEDS VERIFICATION — author parallel runbooks per lane)*.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 5. End-to-end refresh flow
-
-The diagram below shows the canonical refresh flow. Every transition between phases is a **gate**, not a copy; phases correspond to the lifecycle invariant. The diagram reflects **CONFIRMED doctrine**; specific gate implementations (`gate.A`–`gate.G`, validator scripts, policy bundle IDs) are **PROPOSED / NEEDS VERIFICATION** against the mounted repo.
-
-```mermaid
-flowchart TD
-    A[Refresh trigger<br/>schedule · event · steward · drift] --> B{Conditional<br/>GET<br/>or push}
-    B -- 304 / no-change --> Bn[Emit no-op<br/>RunReceipt<br/>heartbeat]
-    Bn --> Z[End: no public state change]
-
-    B -- 200 / changed --> C[Fetch into<br/>data/raw/habitat/&lt;source_id&gt;/&lt;run_id&gt;/]
-    C --> D[Normalize:<br/>schema · geometry · time<br/>identity · evidence · rights]
-    D -- pass --> E[data/work/habitat/&lt;run_id&gt;/]
-    D -- fail --> Q[data/quarantine/habitat/&lt;reason&gt;/&lt;run_id&gt;/<br/>reason recorded]
-    Q --> R[Steward review<br/>or supersede]
-
-    E --> F[Validate:<br/>ValidationReport · PolicyDecision<br/>RedactionReceipt if sensitive]
-    F -- pass --> G[data/processed/habitat/&lt;dataset_id&gt;/&lt;version&gt;/]
-    F -- fail --> Q
-
-    G --> H[Catalog closure:<br/>EvidenceBundle · CatalogMatrix<br/>graph/triplet projection]
-    H --> I{Sensitivity<br/>policy gate}
-    I -- DENY --> Q
-    I -- ABSTAIN --> R
-    I -- ALLOW --> J[ReleaseCandidate<br/>+ RollbackCard target]
-
-    J --> K[Release gate:<br/>ReleaseManifest · ReviewRecord<br/>signatures · correction path]
-    K -- pass --> P[PUBLISHED<br/>data/published/layers/habitat/<br/>via apps/governed-api/]
-    K -- hold --> R
-```
-
-**Read the diagram as:** the right-hand spine (`A → C → E → G → H → J → K → P`) is the only path to a public state change. The left-hand spine (`B → Bn → Z`) is the most common outcome — **most refreshes change nothing publicly** and that is correct. The `Q` lane (quarantine) is healthy operation, not failure: it is how unresolved evidence stays auditable instead of leaking.
-
-<details>
-<summary><strong>Gate-by-gate artifact requirements</strong> (consolidated from KFM Domains Atlas §24.6.1)</summary>
-
-| Gate (transition) | Pre-condition | Required artifacts | Fail-closed outcome |
-|---|---|---|---|
-| **Admission** (`— → RAW`) | `SourceDescriptor` exists; rights ≠ unknown | `SourceDescriptor`; payload hash or reference | Not admitted; logged as candidate awaiting steward |
-| **Normalization** (`RAW → WORK / QUARANTINE`) | Schema, geometry, time, identity, evidence, rights rules runnable | `TransformReceipt`; `ValidationReport` (working); `PolicyDecision`; `QUARANTINE` for failures | Quarantine with reason; never silently promotes |
-| **Validation** (`WORK → PROCESSED`) | Validators deterministic and tied to fixtures | `ValidationReport` pass; `RedactionReceipt` if sensitivity applies; `AggregationReceipt` if applies | Stay in WORK; structured FAIL outcome |
-| **Catalog closure** (`PROCESSED → CATALOG / TRIPLET`) | `EvidenceRef`s resolve; catalog matrix + digests close | `CatalogMatrix` entry; `EvidenceBundle`; graph/triplet projections | HOLD at PROCESSED; no public edge |
-| **Release** (`CATALOG / TRIPLET → PUBLISHED`) | Review state where required; release authority distinct from author when material | `ReleaseManifest`; rollback target; correction path; `ReviewRecord` (if required) | HOLD at CATALOG; no public surface change |
-| **Correction** (`PUBLISHED → PUBLISHED′`) | Detected error or new evidence | `CorrectionNotice` + new `ReleaseManifest` + supersession link | Old release retained for audit |
-
-</details>
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 6. Conditional GET & smart sync
-
-**Polling is conditional. Always.** The first network call on every refresh is a validator probe, not a download.
-
-### 6.1 Order of preference
-
-1. **Object-store event subscription** (preferred when available, e.g., partner-granted S3 / GCS notifications): handler receives the event, compares the recorded validator, performs an optional defensive `HEAD`, then fetches.
-2. **HTTP conditional GET with `If-None-Match`** (strong ETag preferred; weak ETag is advisory).
-3. **`If-Modified-Since`** fallback (Last-Modified-based).
-4. **Manifest SHA-256 verification** if the publisher exposes a checksum manifest.
-5. **Polite full GET** only when none of the above is available — and in that case the watcher MUST record `validators_absent: true` in the `RunReceipt` so downstream gates can downgrade evidence quality.
-
-### 6.2 What gets recorded on a 304 / no-change
-
-A no-change response is **not** a no-op. It is an audited event.
-
-```json
-{
-  "spec_hash": "jcs:sha256:<unchanged>",
-  "source_head": {
-    "etag": "\"<unchanged>\"",
-    "last_modified": "<ISO8601>",
-    "content_length": 0,
-    "source_commit": null
-  },
-  "source_url": "<provider URI>",
-  "decision_log": {
-    "decision_id": "<uuid>",
-    "policy_id": "gate.A.identity",
-    "decision": "no_change",
-    "obligations": []
-  },
-  "target_zone": "RAW",
-  "result": "heartbeat",
-  "kfm_spec_version": "vNext",
-  "timestamp": "<ISO8601 UTC>"
-}
-```
-
-> [!NOTE]
-> A 304 heartbeat **MUST NOT** trigger new STAC items, DCAT distributions, PROV entities, cache invalidation, or layer-manifest churn. The hydrology-domain precedent applies to Habitat: *"Confirmed no-change responses should not create new STAC/DCAT/PROV entities."* Treat any layer-manifest update on a no-change refresh as a regression.
-
-### 6.3 Debounce / coalesce for event-driven sources
-
-For event-driven Habitat inputs (e.g., a partner-granted bucket emitting many small object events), aggregate events into a **delta manifest** over a per-source debounce window. Materialization only happens when the `spec_hash` actually changes.
-
-| Source class (PROPOSED) | Debounce window |
-|---|---|
-| High-churn sensor (e.g., near-real-time vegetation index updates) | 5–30 s |
-| Moderate feed (e.g., partner habitat correction stream) | 30–120 s |
-| Heavy batch (NLCD vintage drop, LANDFIRE release) | 120–300 s |
-
-Window starting numbers are **PROPOSED**; calibrate per source and record per-source materialization rates over time.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 7. Watcher-as-non-publisher
-
-This is the most-violated invariant in source refresh systems and KFM treats it as a **MUST**:
-
-> **A watcher emits receipts and candidate decisions. A watcher does not publish, mutate canonical records, write to `data/catalog/`, write to `data/published/`, write to `release/`, or invalidate caches.**
-
-| Watcher MAY | Watcher MUST NOT |
-|---|---|
-| Fetch into `data/raw/habitat/<source_id>/<run_id>/` | Write to `data/processed/`, `data/catalog/`, `data/published/`, `release/` |
-| Emit `RunReceipt` (signed) | Emit a `ReleaseManifest` |
-| Emit a `RunReceipt` with `decision: quarantine` | Bypass the policy gate by setting `target_zone: PUBLISHED` |
-| Update its own `validators` checkpoint (ETag, Last-Modified, SHA-256) | Update a public-facing layer cache, CDN, or tile host |
-| Mark itself superseded; emit a final receipt | Activate or deactivate layers in the renderer |
-| Hand off to a downstream promotion job via a queue or candidate dossier | Sign anything other than its own `RunReceipt` envelope |
+> A source descriptor filename, endpoint URL, schedule proposal, workflow dispatch button, manual download, changed upstream page, HTTP status, `ETag`, timestamp, digest, material-change result, pull request, or green validation job is not source admission, activation, evidence closure, policy approval, review, promotion, release, deployment, or publication.
 
 > [!WARNING]
-> A watcher that writes to `data/catalog/`, `data/published/`, or `release/` is a trust-membrane breach. Treat it as a security incident: rotate credentials if the watcher had write paths it should not have had, audit the affected artifacts, and write a runbook entry in `docs/runbooks/` describing the breach and the remediation.
+> Never place credentials, private endpoints, exact or reverse-engineerable rare-species, rare-plant, nest, den, roost, hibernaculum, spawning, breeding, stewardship, cultural, archaeological, private-land, or infrastructure-adjacent coordinates; protected joins; redaction offsets; controlled taxon attributes; or source-native restricted payloads in an ordinary refresh packet, log, issue, pull request, screenshot, or generated summary.
 
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-and-negative-authority) · [State](#current-repository-posture) · [Outcomes](#finite-procedure-outcomes) · [Triggers](#recognized-inspection-triggers) · [Preconditions](#preconditions-and-stop-conditions) · [Packet](#required-inspection-packet) · [Procedure](#procedure) · [No change](#no-change-candidate-path) · [Material change](#material-change-candidate-path) · [Habitat controls](#habitat-specific-controls) · [Validation](#validation-and-command-boundary) · [Handoff](#handoff-boundary) · [Anti-patterns](#anti-patterns-to-refuse) · [Open work](#open-verification-register) · [Evidence](#evidence-basis) · [Rollback](#document-change-rollback) · [Non-effects](#non-effects)
 
 ---
 
-## 8. Stale-state markers & supersession
+<a id="purpose"></a>
 
-KFM distinguishes **stale** (evidence has aged past its declared tolerance) from **wrong** (substance is incorrect). Both have visible markers; both have traceable lifecycles. A source refresh is one of several events that can resolve stale state — or expose it.
+## Purpose
 
-| Marker | Trigger | UI signal | Required action |
+This runbook supports a narrow, evidence-preserving inspection:
+
+1. freeze the exact repository revision and the separately produced source-head signal;
+2. verify that source identity, source role, authority, rights, sensitivity, and connector path are already established by owning surfaces;
+3. compare immutable prior/current metadata without making a network request here;
+4. run only a separately accepted, deterministic, no-network comparison profile when one applies;
+5. classify a no-change candidate, material-change candidate, or fail-closed outcome;
+6. record non-sensitive findings and immutable pointers; and
+7. hand the result to the owning source, evidence, policy, review, lifecycle, correction, and release processes.
+
+It does not:
+
+- create, admit, activate, suspend, or withdraw a `SourceDescriptor`;
+- choose between competing source-registry, schema, or connector paths;
+- schedule a watcher, call an upstream API, issue a conditional request, or fetch bytes;
+- store, move, transform, overwrite, or delete RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED material;
+- manufacture a source-head observation, checksum, `RunReceipt`, `EvidenceBundle`, `PolicyDecision`, review record, promotion candidate, release manifest, correction notice, withdrawal notice, or rollback card;
+- perform geoprivacy, generalization, redaction, crosswalk, model execution, or ecological interpretation;
+- invalidate caches, rebuild tiles, change aliases, deploy, promote, release, or publish; or
+- certify source freshness, completeness, accuracy, ecological meaning, regulatory effect, rights, safety, or public usability.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-negative-authority"></a>
+
+## Authority and negative authority
+
+This file is explanatory operational documentation under `docs/runbooks/habitat/`. It describes safe inspection and handoff. It does not own a source, a source operation, a policy decision, or a lifecycle transition.
+
+| Concern | Owning surface | This runbook may do | This runbook must not do |
 |---|---|---|---|
-| **Source freshness expired** | Cadence in `SourceDescriptor` passed without re-admission | "Stale source" badge in Evidence Drawer | Re-admit via this runbook, or supersede; otherwise mark dependent claims stale |
-| **Schema version drift** | Object schema upgraded past the published claim's version | "Schema drift" badge; link to migration ADR | Migrate, re-validate, re-release; or mark stale |
-| **Geography version drift** | `GeographyVersion` replaced; claim still bound to prior | "Geography version" banner with prior-version citation | Rebind to current `GeographyVersion`; re-release; or mark stale |
-| **Time-scope outside support** | Claim's temporal scope falls outside current support window | "Time out of support" indicator | Mark stale; do not refresh silently |
-| **Model version superseded** | `ModelRunReceipt` references an older model than current | "Model version" badge with new model identity | Re-run; supersede; or mark stale |
-| **Review aged out** | `ReviewRecord` older than the review-cycle tolerance for the lane | "Review aged" badge | Trigger steward review; potentially downgrade tier |
-| **Rights status changed** | Rights change in `SourceDescriptor` | "Rights changed" badge | Re-evaluate tier; potentially downgrade; emit `CorrectionNotice` if necessary |
-| **Policy version changed** | Policy referenced by `PolicyDecision` superseded | "Policy version" badge | Re-run gate; potentially supersede release |
+| Source identity and admission | accepted source registry plus authority/activation records | Require exact resolvable state | Mint, admit, activate, suspend, or withdraw |
+| Source access | one accepted source-first connector or runtime | Inspect an already-produced bounded signal | Choose a connector path, fetch, authenticate, or schedule |
+| Source role and authority | `SourceDescriptor`, source doctrine, and owning domain contracts | Check preservation and surface conflicts | Upgrade a role or convert context/model/aggregate into observation or regulation |
+| Rights, terms, and citation | accepted rights policy and accountable review | Require finite state and obligations | Infer permission from public reachability or provider identity |
+| Sensitivity and geoprivacy | accepted sensitivity/geoprivacy policy and accountable review | Require finite state and public-safe obligations | Reveal protected detail or invent a transform |
+| Source payload lifecycle | governed `data/` lanes and authorized writers | Reference immutable identities | Write, move, transform, overwrite, or delete payloads |
+| Evidence and receipts | receipt/proof families and evidence resolver | Require support pointers | Manufacture evidence, receipts, proof, or closure |
+| Materiality | accepted contract/profile and accountable steward | Run a bounded existing fixture profile | Generalize one profile to every source family |
+| Habitat policy | accepted policy source, bundle, selector, evaluator, and reviewers | Prepare an input/handoff checklist | Treat current scaffolds as active policy |
+| Neighbor-domain truth | Fauna, Flora, Hydrology, Soil, Agriculture, Archaeology, People/Land, and other owning lanes | Preserve references and ownership | Absorb occurrence, taxon, wetland-law, water, soil, cultural, or ownership authority |
+| Promotion and release | `release/` and accountable release operations | Identify downstream prerequisites | Promote, release, deploy, or publish |
+| Correction and rollback | release-accountability objects and owning operations | Preserve lineage requirements | Execute correction, invalidation, withdrawal, or rollback |
 
-### Supersession behavior
+A README cannot turn a proposal placeholder into an admitted source, an endpoint into permission, a changed source head into ecological evidence, a materiality classification into review, or a candidate into release.
 
-When a Habitat refresh produces a *changed* normalized output, the prior published claim is **not** deleted — it is **superseded**:
-
-- The old `SourceDescriptor` is retained with `superseded_by: <new_source_descriptor_id>` and an entry in the source register.
-- The old `EvidenceBundle` is retained and linked to a `CorrectionNotice` if the change reflects an error rather than a vintage update.
-- The old `ReleaseManifest` becomes the rollback target for the new one.
-- `GeographyVersion` and `Schema` supersession both produce ADR entries and version-register crosswalks.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
+[Back to top](#top)
 
 ---
 
-## 9. Sensitivity, rights & geoprivacy gates
+<a id="current-repository-posture"></a>
 
-Habitat sits next to several sensitive registers. A refresh that flattens that sensitivity is a far worse outcome than a refresh that fails closed.
+## Current repository posture
 
-### 9.1 Deny-by-default register relevant to Habitat
+The observations below are pinned to `main@b9eaecdda2ad72980e91e24bfc3b8ff073a6190e`.
 
-| Class | Default | Required to release | Citation |
-|---|---|---|---|
-| **Rare-species occurrence** (joined to Habitat as context) | DENY exact location | Geoprivacy transform + `RedactionReceipt` + steward review | `[DOM-FAUNA]` / `[DOM-FLORA]` |
-| **Sacred / culturally sensitive places** intersecting Habitat polygons | DENY exact public output | Cultural / steward review + sensitivity transform | `[DOM-ARCH]` |
-| **Source-rights-limited records** (e.g., controlled NatureServe data) | DENY public release | Rights resolution; attribution; no public derivative if barred | `[ENCY]` |
-| **Exact sensitive locations** (rare patch, last-known-population polygon) | DENY by default | Redaction / generalization + audit | `[DOM-DIR]` |
-| **Living-person joins** (private landowner-sensitive context) | DENY exact / public if unclear | Aggregation; permissions; policy review | `[DOM-PEOPLE]` |
-
-### 9.2 Critical habitat vs modeled habitat
-
-The Habitat ubiquitous language is specific here and **must not be flattened**:
-
-- **Regulatory critical habitat** is a designated regulatory category sourced from authoritative agency services (e.g., USFWS ECOS). It carries legal meaning.
-- **Modeled habitat** is a KFM- or partner-produced suitability surface. It carries probabilistic meaning.
-
-A refresh **MUST NOT** allow modeled habitat to be presented as regulatory critical habitat at any surface — drawer, layer, focus, export, or downstream graph. The `modeled-as-critical denial` test is one of the lane's named negative fixtures.
-
-### 9.3 Style filters are not protection
-
-Hiding a sensitive layer in the MapLibre style is **not** a sensitivity protection — the bytes can still be inspected. Sensitive geometry MUST be transformed before publication, not styled away. Sensitivity transforms require receipts and `EvidenceBundle` linkage before publication.
-
-> [!CAUTION]
-> If a refresh produces output that *requires* a style filter to keep something hidden, it is in the wrong place. Roll it back to `WORK` or `QUARANTINE` and apply the geoprivacy transform there.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 10. Validation & policy gates
-
-Each gate produces a structured decision; each decision goes in the `RunReceipt` for that run. The shape below is **PROPOSED** until the mounted policy bundle and validator suite are inspected.
-
-| Gate | Family | Purpose | Pass criterion (PROPOSED) | Fail outcome |
-|---|---|---|---|---|
-| **A — Identity & integrity** | `gate.A.identity` | spec_hash via RFC 8785 JCS + SHA-256; `source_head` validators recorded | `spec_hash` recomputes; validators non-empty (or `validators_absent: true` recorded) | QUARANTINE |
-| **B — License & provenance** | `gate.B.license` | SPDX license recorded and on allowlist | `license.spdx_id` ∈ allowlist; provenance link resolves | QUARANTINE (UNKNOWN → fail) |
-| **C — Schema & geometry QA** | `gate.C.qa` | Schema validates; geometry repair report attached if repairs occurred | Schema valid; area drift within threshold; topology repaired | QUARANTINE |
-| **D — Policy evaluation** | `gate.D.policy` | Rights, sensitivity, source role, release state policy check | `decision == "allow"`; obligations resolvable | DENY / HOLD |
-| **E — Evidence closure** | `gate.E.evidence` | `EvidenceRef → EvidenceBundle` resolves | Bundle resolves; required fields present | ABSTAIN |
-| **F — Attestation** | `gate.F.attest` | DSSE envelope; cosign signature; optional Rekor index | Signature verifies; (if keyless) Rekor inclusion proof valid | DENY |
-| **G — Release** | `gate.G.release` | `ReleaseManifest` + rollback target + review state | All bound; release authority distinct from author when material | HOLD |
-
-### Fail-closed rules before promotion
-
-Any of the following force `target_zone = QUARANTINE` and block promotion:
-
-- Missing or unverifiable signature.
-- `spec_hash` mismatch on recompute.
-- License verdict `fail` or `UNKNOWN`.
-- OPA decision ≠ `allow`.
-- Missing required `evidence_refs`.
-- `confidence_score < 0.6` (where the source produces a confidence field).
-- Sensitivity transform required but receipt absent.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 11. Promotion, correction & rollback
-
-### 11.1 Promotion is a state transition
-
-Promotion to `PUBLISHED` is the act of binding a `ReleaseManifest`. It is **not** the act of copying bytes to `data/published/`. A pipeline that writes to `data/published/` without a bound `ReleaseManifest` has violated the lifecycle invariant.
-
-`ReleaseManifest` references that MUST be present for a Habitat refresh promotion:
-
-- `EvidenceBundle` reference(s)
-- `LayerManifest` reference(s) — public-safe only
-- `PolicyDecision` reference (current bundle version)
-- `ReviewRecord` reference (where required — e.g., for sensitive joins)
-- `RollbackCard` target — pointer to the prior release manifest, artifact digests, and cache-invalidation steps
-- Correction path — how a future `CorrectionNotice` would be issued
-- Signature artifacts (`release/signatures/…`)
-
-### 11.2 Correction lineage
-
-Corrections **never erase lineage**. The old release is retained; the new release supersedes it; a `CorrectionNotice` documents what changed and why. The published catalog continues to expose both the new release and the supersession link.
-
-### 11.3 Rollback drill
-
-Before a Habitat refresh that materially changes a published surface can promote, a rollback drill MUST be runnable against the candidate release:
-
-1. Identify the current `ReleaseManifest` for the affected layer(s).
-2. Author a `RollbackCard` naming: prior manifest digest, artifact digests to restore, cache/CDN invalidation steps, and replay steps.
-3. Dry-run the rollback in a non-public environment; produce a rollback receipt.
-4. Attach the rollback receipt to the release-candidate dossier.
-5. Promotion proceeds **only** after rollback is proven reversible.
-
-> [!IMPORTANT]
-> A release without a tested rollback target is not eligible for promotion. This is non-negotiable for Habitat surfaces because Habitat layers anchor downstream Fauna and Flora joins; a wrong publication propagates fast.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 12. Operator checklist
-
-For a single Habitat source refresh, work top-to-bottom. If any item fails, stop and either remediate or quarantine.
-
-### Pre-flight
-
-- [ ] Confirm `SourceDescriptor` present, current, and `rights ≠ unknown`.
-- [ ] Confirm watcher entry is registered and signed.
-- [ ] Confirm policy bundle version is current and pinned.
-- [ ] Confirm rollback target is identified (even if not yet authored).
-
-### Fetch
-
-- [ ] Conditional probe runs first (`HEAD` / `If-None-Match` / event subscription).
-- [ ] On 304 / no-change: emit heartbeat `RunReceipt`. **STOP.** No public state change.
-- [ ] On change: fetch into `data/raw/habitat/<source_id>/<run_id>/` with retrieval metadata and checksum.
-
-### Normalize & validate
-
-- [ ] Run schema, geometry, time, identity, evidence, and rights validators.
-- [ ] Pass → emit `TransformReceipt` and move to `data/work/habitat/<run_id>/`.
-- [ ] Fail → emit `QUARANTINE` receipt with reason; stop the run; route to steward.
-
-### Catalog closure
-
-- [ ] Resolve all `EvidenceRef`s to `EvidenceBundle`s.
-- [ ] Emit `CatalogMatrix` entry; emit graph/triplet projection.
-- [ ] Run sensitivity policy gate. Apply `RedactionReceipt` / `AggregationReceipt` if needed.
-
-### Promotion
-
-- [ ] Bind `ReleaseManifest` with rollback target.
-- [ ] Run release-gate; obtain signatures.
-- [ ] Activate via `apps/governed-api/` — never directly.
-
-### Post-flight
-
-- [ ] Verify drawer, layer, and focus surfaces reflect the new release (or that 304 heartbeat surfaces unchanged).
-- [ ] File a brief incident entry if any gate failed unexpectedly.
-- [ ] Update the Habitat verification backlog if a `NEEDS VERIFICATION` item was resolved.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 13. Failure modes & responses
-
-| Symptom | Probable cause | Response |
+| Surface | Confirmed repository evidence | Bounded conclusion |
 |---|---|---|
-| 304 response but a new layer manifest was generated anyway | Watcher emitted a manifest on a no-change tick (regression) | Treat as bug; do not promote; capture as negative fixture |
-| Publisher dropped ETag; full GET returned identical bytes | Validator stripping on republish | Compare SHA-256 against prior; emit `validators_absent: true`; downgrade evidence quality label |
-| Policy decision `unknown` | Missing license SPDX or unresolved rights | QUARANTINE; route to rights resolution; do **not** promote |
-| Modeled suitability surface inadvertently joined to "critical habitat" label | Source-role flattening | DENY; reject candidate; run `modeled-as-critical-denial` test; correct labeling pipeline |
-| Sensitive species occurrence reaches `PROCESSED` with exact coordinates | Geoprivacy transform skipped or misconfigured | Roll back to `WORK`; apply geoprivacy transform with receipt; re-run gates |
-| `GeographyVersion` changed mid-refresh | Concurrent geography supersession | Pause refresh; rebind to current `GeographyVersion`; restart from validation |
-| `ReleaseManifest` bound but rollback drill never ran | Out-of-order promotion | Treat as governance breach; immediately author and run a rollback drill; issue `CorrectionNotice` if a public state changed |
-| Watcher wrote to `data/catalog/` or `data/published/` | Trust-membrane breach | Rotate credentials; audit; runbook entry; revert affected artifacts; add static grep test to CI |
+| Requested runbook path | `docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md` exists as an operational-documentation path | Same-path reconciliation is `PLACE`; no new path is needed |
+| Habitat runbook lane README | `docs/runbooks/habitat/README.md` contains only a newline | Lane index, ownership, and direct-child boundary remain `NEEDS VERIFICATION` |
+| Duplicate domain runbook | `docs/domains/habitat/SOURCE_REFRESH_RUNBOOK.md` exists and itself says operational procedures belong under `docs/runbooks/` | Duplicate responsibility is `CONFLICTED`; this change neither edits nor deletes it |
+| SourceDescriptor contract | Rich v1 contract and validator references exist, but the paired schema remains `PROPOSED` and plural/singular schema paths are a compatibility relationship | Schema presence is not source admission or activation |
+| Machine source authority | `PROPOSED`, `projection_only`, implementation `ABSENT`, completeness `empty`, `entries: []` | No active source authority is established by the projection |
+| Habitat source registry | The subtype-first README is experimental; the domain-first parent is compatibility/routing; both warn against divergent records | Registry topology remains `CONFLICTED`; do not write either by convenience |
+| Inspected Habitat registry YAMLs | USFWS ECOS and critical-habitat records are seven-line `PROPOSED` placeholders generated from documentation inventory; the connector index reports the same pattern for several other Habitat records | No accepted, refreshable Habitat `SourceDescriptor` was established by bounded inspection |
+| Habitat connector directory | `connectors/habitat/` is a documentation-only compatibility index with no client, parser, package, activation record, fixture suite, or runtime beneath it | No domain-scoped Habitat connector/runtime path is established |
+| Source-specific connector topology | NLCD, USFWS ECOS, KDWP, LANDFIRE, and iNaturalist have mixed or duplicate path forms documented by the compatibility index | A refresh operator may not choose a source path by convenience |
+| Habitat policy | The policy boundary records proposed default-only scaffolds, mixed result relations, no accepted entrypoint, no native Rego test suite, no accepted bundle, and no verified evaluator/consumer | Current policy files cannot authorize a refresh or outward use |
+| Habitat land-cover materiality profile | Inactive, synthetic, no-network adapter emits `NON_EVENT`, `PROMOTION_CANDIDATE`, or `HOLD` process memory | Bounded comparison evidence only; no live source, admission, policy, review, or release |
+| Domain Habitat workflow | Runs the synthetic materiality suite and explicitly holds Habitat proof and release-dry-run producers | A green workflow is not evidence closure, promotion, release, or publication |
+| Drive Habitat blueprints | Planning reports explicitly lacked a mounted repository and labeled paths, routes, workflows, and live-source behavior as proposed | Useful lineage for risks and scope; not current implementation proof |
 
-<details>
-<summary><strong>Incident escalation path</strong> (PROPOSED — NEEDS VERIFICATION against current governance)</summary>
+### Current safe determination
 
-1. Operator records the failure in the run log with `run_id` and `spec_hash`.
-2. Habitat lane steward acknowledges; classifies as `stale`, `wrong`, `sensitive`, or `membrane breach`.
-3. If `wrong` or `sensitive` reached a public surface: issue `CorrectionNotice`, run rollback, notify Docs steward.
-4. If `membrane breach`: treat per security runbook (TBD — see Directory Rules §10 reference to `docs/runbooks/` for secrets/leak incidents).
-5. Drift entry recorded in `docs/registers/DRIFT_REGISTER.md` if the failure reveals a doctrine vs. implementation gap.
-
-</details>
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 14. Verification backlog
-
-These items are explicitly **not** resolved in this draft. They should be tracked in `docs/registers/VERIFICATION_BACKLOG.md` and addressed via ADR, per-root README, or a follow-up PR.
-
-- **NEEDS VERIFICATION:** Exact path placement of this runbook. The Whole-UI / Governed-AI expansion plan attests flat naming (e.g., `docs/runbooks/ui_LOCAL_DEV.md`). This file uses nested naming (`docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md`). Resolve via a short per-root README in `docs/runbooks/` or an ADR.
-- **NEEDS VERIFICATION:** Whether `data/registry/sources/habitat/` or `data/registry/habitat/` is the live registry home for Habitat `SourceDescriptor`s.
-- **NEEDS VERIFICATION:** Official `SourceDescriptor` records for USFWS critical habitat, KDWP, NLCD, NWI, GAP/LANDFIRE, NatureServe, and PAD-US — current rights, cadence, and endpoints.
-- **NEEDS VERIFICATION:** Habitat geoprivacy transform implementation and the `Geoprivacy transform` field shape on `SourceDescriptor`.
-- **NEEDS VERIFICATION:** Model-card requirements for suitability products under refresh-driven supersession.
-- **NEEDS VERIFICATION:** Habitat MapLibre overlay registry and Focus Mode behavior on stale-state badges.
-- **NEEDS VERIFICATION:** Watcher implementation paths (`tools/ingest/watchers/`) and signing convention.
-- **NEEDS VERIFICATION:** Policy bundle version and Conftest / OPA rule IDs (`gate.A` … `gate.G`).
-- **OPEN:** Should this runbook be paired with a `docs/runbooks/habitat/SOURCE_ADMISSION_RUNBOOK.md` (initial `— → RAW`) and `docs/runbooks/habitat/ROLLBACK_DRILL_RUNBOOK.md`? PROPOSED yes; defer to ADR.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## 15. Related docs
-
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement and lifecycle doctrine
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) *(PROPOSED)* — `RAW → PUBLISHED` invariants
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) *(PROPOSED)* — public-path discipline
-- [`docs/domains/habitat/README.md`](../../domains/habitat/README.md) *(PROPOSED)* — Habitat lane overview
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) *(PROPOSED)* — standard descriptor fields
-- [`docs/standards/SMART_SYNC.md`](../../standards/SMART_SYNC.md) *(PROPOSED)* — conditional-GET and event-driven ingest standard
-- [`docs/standards/RUN_RECEIPT.md`](../../standards/RUN_RECEIPT.md) *(PROPOSED)* — canonical `RunReceipt` schema
-- [`docs/runbooks/ui_VALIDATION.md`](../ui_VALIDATION.md) *(PROPOSED)* — UI-side validation that surfaces refresh outcomes
-- [`docs/runbooks/governed_ai_VALIDATION.md`](../governed_ai_VALIDATION.md) *(PROPOSED)* — Focus Mode evidence / citation gates
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) *(PROPOSED)* — verification items home
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) *(PROPOSED)* — drift entries
-
-> [!NOTE]
-> Linked paths follow the canonical responsibility-root layout in Directory Rules. They are **PROPOSED** until verified against the mounted repo; some may currently live in compatibility roots or not yet exist.
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
-
----
-
-## Appendix A — Example artifacts
-
-> [!NOTE]
-> The shapes below are **illustrative**. Field names follow the recurring conventions in the Habitat dossier, Encyclopedia, and `New Ideas` `run_receipt` skeleton. They are **PROPOSED** until pinned by a JSON Schema in `schemas/contracts/v1/receipts/` and ratified by ADR.
-
-<details>
-<summary><strong>A.1 — Illustrative <code>RunReceipt</code> for a 304 / no-change Habitat refresh</strong></summary>
-
-```json
-{
-  "spec_hash": "jcs:sha256:<unchanged>",
-  "source_head": {
-    "etag": "\"unchanged-etag\"",
-    "last_modified": "2026-04-01T00:00:00Z",
-    "content_length": 0,
-    "source_commit": null
-  },
-  "source_url": "https://example.gov/nlcd/<vintage>",
-  "decision_log": {
-    "decision_id": "<uuid>",
-    "policy_id": "gate.A.identity",
-    "decision": "no_change",
-    "obligations": []
-  },
-  "license": {
-    "spdx_id": "CC0-1.0",
-    "license_text_ref": "<provider terms URL>"
-  },
-  "evidence_refs": [],
-  "runner_id": "<CI run id>",
-  "timestamp": "2026-05-12T00:00:00Z",
-  "kfm_spec_version": "vNext",
-  "target_zone": "RAW",
-  "result": "heartbeat"
-}
+```text
+procedure_disposition: HOLD
+reason: NO_ACTIVE_HABITAT_SOURCE_REFRESH_PATH
+source_fetch_performed: false
+lifecycle_effect: none
+public_effect: none
 ```
 
-</details>
+This is a documentation conclusion for the pinned revision. It is not a source-state record, activation decision, policy outcome, receipt, review, or release decision.
 
-<details>
-<summary><strong>A.2 — Illustrative <code>RunReceipt</code> for a successful Habitat catalog candidate</strong></summary>
-
-```json
-{
-  "spec_hash": "jcs:sha256:<new-hash>",
-  "source_head": {
-    "etag": "\"new-etag\"",
-    "last_modified": "2026-05-10T00:00:00Z",
-    "content_length": 123456789,
-    "source_commit": "<provider build id>"
-  },
-  "source_url": "https://example.gov/nlcd/<vintage+1>",
-  "decision_log": {
-    "decision_id": "<uuid>",
-    "policy_id": "gate.D.policy",
-    "decision": "allow",
-    "obligations": []
-  },
-  "license": {
-    "spdx_id": "CC0-1.0",
-    "license_text_ref": "<provider terms URL>"
-  },
-  "evidence_refs": [
-    {"type": "evidenceBundle", "uri": "kfm://bundle/<habitat-patch-bundle>"}
-  ],
-  "runner_id": "<CI run id>",
-  "timestamp": "2026-05-12T00:00:00Z",
-  "kfm_spec_version": "vNext",
-  "target_zone": "CATALOG"
-}
-```
-
-</details>
-
-<details>
-<summary><strong>A.3 — Illustrative watcher config snippet for an NLCD-style source</strong></summary>
-
-```yaml
-# tools/ingest/watchers/habitat/nlcd_landcover.yaml   (PROPOSED path)
-id: habitat.nlcd.landcover.v1
-type: http
-source_id: src.habitat.nlcd
-source_role: authority/observation
-rights:
-  spdx_id: CC0-1.0
-  text_ref: <provider terms URL>      # NEEDS VERIFICATION
-cadence:
-  mode: periodic
-  hint: vintage-driven                # actual schedule NEEDS VERIFICATION
-validators:
-  prefer: ["etag", "last-modified"]
-  fallback: "manifest-sha256"
-fail_closed_on_missing:
-  - license_spdx
-  - source_head
-  - spec_hash
-emit:
-  raw_root: data/raw/habitat/${source_id}/${run_id}/
-  receipts_root: data/receipts/ingest/habitat/${run_id}/
-publish: false   # watcher-as-non-publisher: never true
-```
-
-</details>
-
-<sub><a href="#quick-jump">↑ Back to top</a></sub>
+[Back to top](#top)
 
 ---
 
-<sub>**Status:** draft · **Last reviewed:** 2026-05-12 · **Owners:** Habitat lane steward + Docs steward *(TBD)* · **Authority:** PROPOSED until verified against mounted repo</sub>
+<a id="finite-procedure-outcomes"></a>
 
-<sub><a href="#habitat-source-refresh-runbook">↑ Back to top</a></sub>
+## Finite procedure outcomes
+
+This runbook does not create a canonical repository-wide enum. Machine records must use the selected accepted contract and validator vocabulary. For human inspection, record one bounded disposition:
+
+| Disposition | Meaning | Permitted next step |
+|---|---|---|
+| `NO_CHANGE_CANDIDATE` | Authorized prior/current metadata appear unchanged under the named bounded profile | Hand off for owning audit/receipt handling; do not claim a receipt exists |
+| `MATERIAL_CHANGE_CANDIDATE` | A bounded comparison found declared dimensions requiring accountable inspection | Hand off; do not create review, promotion, or release state |
+| `HOLD` | Authority, identity, rights, sensitivity, baseline, connector, evidence, profile, or ownership is absent or conflicted | Preserve the prior safe state |
+| `ABSTAIN` | Available evidence cannot support a change/no-change conclusion | Obtain admissible evidence or narrow scope |
+| `RESTRICT` | Handling may continue only through approved restricted controls | Remove protected material from ordinary surfaces |
+| `DENY` | Requested access, comparison, storage, join, or exposure violates a governing rule | Stop and record only a non-sensitive reason |
+| `ERROR` | Inspection or validation could not produce a reliable result | Preserve inputs and diagnostics; make no materiality claim |
+
+The current inactive Habitat land-cover profile uses its own machine vocabulary:
+
+| Profile result | Human interpretation here | Non-effect |
+|---|---|---|
+| `NON_EVENT` | Potential `NO_CHANGE_CANDIDATE` after provenance and authority checks | Does not prove freshness or an authentic source-head observation |
+| `PROMOTION_CANDIDATE` | Potential `MATERIAL_CHANGE_CANDIDATE` | Is not promotion, review, release, or publication authority |
+| `HOLD` | `HOLD` | Preserves the prior safe state |
+| Invalid input / failed validation | `ERROR` | Emits no authoritative assessment |
+
+[Back to top](#top)
+
+---
+
+<a id="recognized-inspection-triggers"></a>
+
+## Recognized inspection triggers
+
+An inspection may begin only from one of these separately governed inputs:
+
+- an immutable source-head signal already emitted by an accepted source-first connector or authorized source operation;
+- an upstream version, edition, revision, or effective-date notice preserved by the owning source process;
+- a rights, terms, attribution, access, sensitivity, or citation change recorded by an accountable reviewer;
+- an accepted `SourceDescriptor` revision or supersession;
+- a correction, withdrawal, deprecation, or replacement notice tied to an existing source identity;
+- a replay request for an accepted deterministic comparison profile; or
+- an authorized investigation of a previously emitted validation finding.
+
+These are not sufficient triggers:
+
+- a changed web page viewed manually;
+- a timestamp generated during this runbook;
+- an HTTP `200`, `Last-Modified`, `ETag`, digest, file size, or download URL without authenticated provenance;
+- a proposed schedule, watcher YAML, connector README, or workflow button;
+- a Drive PDF, architecture plan, source-family list, or repository issue;
+- a branch, commit, pull request, merge, green check, badge, or release note by itself; or
+- an AI-generated claim that a source changed.
+
+When the trigger's producer, identity, authority, or immutability cannot be verified, use `HOLD`, `ABSTAIN`, or `ERROR`.
+
+[Back to top](#top)
+
+---
+
+<a id="preconditions-and-stop-conditions"></a>
+
+## Preconditions and stop conditions
+
+Before comparing anything, confirm all items below. A failed item is a stop condition, not permission to improvise.
+
+1. **Repository revision:** pin the exact commit and re-check the target file, applicable contracts, registries, policy boundaries, workflows, and open overlapping work.
+2. **Accepted source identity:** resolve one exact source ID to one accepted `SourceDescriptor`; proposal placeholders do not qualify.
+3. **Authority and activation:** resolve an accepted authority/activation record whose scope includes the intended access and comparison. An empty projection does not qualify.
+4. **Connector identity:** resolve one accepted source-first connector/runtime and the exact operation that produced the signal. `connectors/habitat/` does not qualify.
+5. **Source role:** preserve the descriptor's exact machine role and authority limits. Do not resolve current vocabulary conflicts inside this runbook.
+6. **Rights and citation:** require finite, current, review-backed terms, attribution, redistribution, and access posture.
+7. **Sensitivity and handling:** require a finite sensitivity class, join-induced sensitivity assessment, and approved handling obligations.
+8. **Immutable baseline:** identify the prior source-head observation, upstream version, observation time, producer, and immutable pointer.
+9. **Immutable candidate:** identify the current source-head observation using the same scope and comparison basis.
+10. **Product semantics:** record product family, native classification/version, spatial and temporal scope, scale or resolution, CRS/datum, regulatory/model/observation/aggregate character, and known uncertainty.
+11. **Comparison profile:** identify an accepted versioned profile, criteria, canonicalization method, and `spec_hash`; otherwise perform descriptive inspection only.
+12. **No protected payload:** keep source bytes, credentials, precise protected geometry, controlled fields, and redaction mechanics out of the ordinary packet.
+13. **No overlap:** confirm no open branch, pull request, migration, or steward operation owns the same source record or refresh surface.
+14. **Rollback-preserving posture:** confirm the prior released state remains untouched throughout inspection.
+
+### Current stop condition
+
+At the pinned revision, preconditions 2 through 7 are not established for a general Habitat live-source refresh. Therefore the default executable outcome is:
+
+```text
+HOLD: NO_ACTIVE_HABITAT_SOURCE_REFRESH_PATH
+```
+
+The synthetic land-cover materiality fixtures may be validated independently, but that activity is not a live-source refresh and does not cure missing source authority.
+
+[Back to top](#top)
+
+---
+
+<a id="required-inspection-packet"></a>
+
+## Required inspection packet
+
+The packet is pointer-based and contains no protected source payload.
+
+| Field | Requirement |
+|---|---|
+| `repository_commit` | Exact commit inspected |
+| `runbook_blob` | Exact runbook blob used |
+| `source_id` and `descriptor_version` | Resolvable accepted source identity |
+| `source_type`, `source_role`, and authority limits | Exact descriptor values, not human inference |
+| `source_family` and `product_id` | Product-specific identity such as land cover, wetland inventory, regulatory designation, stewardship, model, or occurrence context |
+| `authority_or_activation_ref` | Accepted record authorizing the bounded source operation |
+| `connector_ref` and operation identity | Accepted source-first connector/runtime, version, and producing operation |
+| `prior_source_head_ref` | Immutable prior observation pointer |
+| `current_source_head_ref` | Immutable candidate observation pointer |
+| `source_head_methods` | Declared methods such as upstream version, revision ID, checksum, `ETag`, last modified, or content length; methods are evidence dimensions, not authority |
+| `observed_at` and `producer` | Time and accountable producer of each observation |
+| `rights_review_ref` | Current rights, terms, attribution, redistribution, and access decision |
+| `sensitivity_review_ref` | Current sensitivity, geoprivacy, and join-obligation decision |
+| `native_classification` and `native_version` | Preserved source-native system and edition |
+| `spatial_scope` | Coverage, scale/resolution, CRS/datum, geometry type, and precision class |
+| `temporal_scope` | Valid, observed, publication, retrieval, effective, and correction times when applicable |
+| `knowledge_character` | Observed, regulatory, modeled, aggregate, administrative, candidate, synthetic, or the accepted machine equivalent |
+| `uncertainty_and_limitations` | Known model, inventory, sampling, completeness, temporal, or spatial limitations |
+| `comparison_profile` | Profile ID/version, canonicalization, criteria, and `spec_hash`, if used |
+| `comparison_outputs` | Immutable output pointers and validator result; no unsupported summary |
+| `neighbor_domain_refs` | Fauna, Flora, Hydrology, Soil, Agriculture, Archaeology, People/Land, or other authority dependencies |
+| `public_safe_obligations` | Generalization, redaction, aggregation, delayed release, staged access, or denial obligations |
+| `open_conflicts` | Path, identity, role, rights, sensitivity, baseline, profile, or ownership conflicts |
+| `requested_handoff` | Exact owning process requested to inspect the result |
+
+Use `UNKNOWN` or `NEEDS VERIFICATION`; do not substitute a plausible value.
+
+[Back to top](#top)
+
+---
+
+<a id="procedure"></a>
+
+## Procedure
+
+### 1. Freeze repository and authority inputs
+
+Record the exact `main` commit, target blob, accepted Directory Rules bytes, relevant ADRs, source contract/schema, registry records, connector boundary, policy boundary, validator/profile, and open overlapping work.
+
+Stop with `HOLD` if the branch moved materially, the target changed, or another change owns the same source/refresh surface.
+
+### 2. Resolve one source identity
+
+Resolve the source ID and descriptor version through the accepted source registry. Verify that the record satisfies the active schema and is not a documentation-generated placeholder, compatibility copy, deprecated alias, or unresolved duplicate.
+
+Stop with `HOLD` when:
+
+- no accepted descriptor exists;
+- two writable homes claim authority;
+- the descriptor relies only on deprecated minimal fields;
+- source role, rights, sensitivity, access, or lifecycle state is unknown; or
+- a domain-first and subtype-first record diverge.
+
+### 3. Resolve authority and connector provenance
+
+Verify the accepted activation/authority record and the one source-first connector/runtime that produced the signal. Confirm the operation did not use the Habitat compatibility index as a runtime path.
+
+Stop with `HOLD` when:
+
+- the source-authority projection is empty or non-operative;
+- connector path identity is conflicted;
+- activation is disabled, candidate-only, or absent;
+- producer identity cannot be authenticated; or
+- the signal came from a manual browser/download or generated prose.
+
+### 4. Re-check rights, citation, and access
+
+Use the accountable review record, not assumptions. Confirm terms apply to the specific product, version, endpoint, payload, fields, redistribution, derivative use, public display, and intended downstream operation.
+
+Use `RESTRICT`, `DENY`, or `HOLD` when obligations are unresolved or more restrictive than the requested handling.
+
+### 5. Re-check sensitivity and join-induced risk
+
+Evaluate the candidate's own sensitivity and the most restrictive plausible governed join. A public land-cover or wetland layer can become restricted when combined with exact occurrence, rare-species, rare-plant, nest, den, roost, spawning, stewardship, cultural, archaeological, private-land, or infrastructure context.
+
+Style filters, hidden layers, client-side suppression, and omitted popup fields are not geoprivacy controls.
+
+### 6. Preserve source role and native semantics
+
+Record the exact accepted source role and product character. Preserve native class systems, legends, versions, effective dates, model/run identities, scale, resolution, CRS/datum, uncertainty, and limitations.
+
+Do not:
+
+- call modeled suitability observed habitat;
+- call land cover a species occurrence;
+- call an inventory a legal determination;
+- call a regulatory designation a biological observation;
+- call stewardship status habitat condition; or
+- treat a crosswalk as replacement truth.
+
+### 7. Compare immutable source-head observations
+
+Compare only already-produced, immutable prior/current observations under the same scope. Do not issue a network request from this runbook.
+
+At minimum compare:
+
+- source and product identity;
+- upstream version, edition, revision, or effective date;
+- declared source-head methods;
+- publication/retrieval/observation times;
+- spatial and temporal coverage;
+- native classification or schema version;
+- scale/resolution and CRS/datum;
+- rights, access, citation, and sensitivity posture;
+- source role and authority limits;
+- model/run identity and uncertainty, if applicable; and
+- correction, withdrawal, or supersession state.
+
+A byte or metadata difference is not automatically material. An unchanged digest is not proof the source is current, complete, authorized, or safe.
+
+### 8. Run only an accepted bounded no-network profile
+
+When a separately accepted profile applies, run its exact repository-native validator over local fixtures or authorized immutable inputs. Record the profile ID, version, criteria, canonicalization method, `spec_hash`, command, result, and immutable output pointer.
+
+The current Habitat land-cover profile is `PROPOSED_INACTIVE` and synthetic. It is useful for validating the adapter and shared assessment contract, not for deciding live source state.
+
+### 9. Classify the bounded result
+
+Choose one disposition from [Finite procedure outcomes](#finite-procedure-outcomes). State what the evidence supports and what remains unresolved.
+
+Never translate:
+
+- `NON_EVENT` into “source current”;
+- `PROMOTION_CANDIDATE` into promotion;
+- a green job into approval;
+- a material difference into ecological significance; or
+- no detected difference into evidence closure.
+
+### 10. Record a minimal non-sensitive finding
+
+Record:
+
+- frozen identities and pointers;
+- selected profile and criteria;
+- observed comparison result;
+- finite disposition;
+- non-sensitive reason codes;
+- unresolved authority, rights, sensitivity, role, or topology issues; and
+- the exact owning handoff requested.
+
+Do not claim this document emitted a canonical receipt or decision object.
+
+### 11. Hand off without crossing a boundary
+
+Send the packet to the owning source, rights, sensitivity, evidence, policy, review, lifecycle, correction, and release processes as applicable. Each owner independently decides whether to act.
+
+Preserve the prior published state until all later governed transitions close.
+
+[Back to top](#top)
+
+---
+
+<a id="no-change-candidate-path"></a>
+
+## No-change candidate path
+
+A no-change candidate is appropriate only when:
+
+- source identity and scope match;
+- the comparison basis is accepted and version-pinned;
+- prior/current observations are authentic and immutable;
+- required source-head dimensions match;
+- no rights, sensitivity, citation, access, role, classification, model, scale, time, correction, or authority change is present; and
+- the selected validator returns its no-change-equivalent result.
+
+Record:
+
+```text
+disposition: NO_CHANGE_CANDIDATE
+profile: <accepted profile id and version>
+evidence_scope: <exact bounded dimensions>
+source_fetch_performed_by_this_runbook: false
+receipt_created_by_this_runbook: false
+lifecycle_effect: none
+public_effect: none
+```
+
+A no-change candidate does not prove:
+
+- that a watcher or live connector ran;
+- that the source is globally current or complete;
+- that omitted upstream dimensions are unchanged;
+- that rights or sensitivity remain safe outside the bounded review;
+- that a no-op receipt, EvidenceBundle, policy decision, or review exists; or
+- that any public artifact should be rebuilt, retained, or released.
+
+[Back to top](#top)
+
+---
+
+<a id="material-change-candidate-path"></a>
+
+## Material-change candidate path
+
+A material-change candidate may be appropriate when the accepted profile or accountable inspection finds one or more declared changes, including:
+
+- a new product vintage, edition, revision, effective date, or correction;
+- native class, legend, schema, field, or identifier changes;
+- spatial coverage, geometry, precision, scale, resolution, CRS, or datum changes;
+- temporal coverage, publication cadence, or validity-window changes;
+- source role, authority scope, rights, terms, attribution, redistribution, access, citation, or sensitivity changes;
+- regulatory designation boundaries or effective-date changes;
+- model algorithm, input set, run identity, calibration, uncertainty, or applicability changes;
+- a new exact-location or harmful-join exposure;
+- a withdrawal, supersession, deprecation, or source-head conflict; or
+- a change exceeding an accepted profile's explicit materiality criteria.
+
+Record:
+
+```text
+disposition: MATERIAL_CHANGE_CANDIDATE
+profile: <accepted profile id and version>
+changed_dimensions:
+  - <bounded, evidence-backed dimension>
+requested_handoff:
+  - source stewardship
+  - rights and sensitivity review
+  - evidence and validation
+  - downstream impact analysis
+source_fetch_performed_by_this_runbook: false
+promotion_effect: none
+release_effect: none
+public_effect: none
+```
+
+The candidate may justify further work. It does not itself:
+
+- admit or activate a source;
+- prove ecological, regulatory, legal, or management significance;
+- create a review request, policy decision, lifecycle transition, correction, or release;
+- authorize a new public-safe transform;
+- supersede prior evidence or published artifacts; or
+- permit a direct RAW-to-PUBLISHED path.
+
+[Back to top](#top)
+
+---
+
+<a id="habitat-specific-controls"></a>
+
+## Habitat-specific controls
+
+### Source and knowledge anti-collapse
+
+| Must remain distinct | Why |
+|---|---|
+| Land-cover observation or aggregate vs. habitat condition | Cover class is not a complete ecological assessment |
+| NWI wetland inventory vs. site-specific legal wetland determination | Inventory context does not replace jurisdictional or legal review |
+| Regulatory critical-habitat designation vs. modeled suitability | Issued legal/regulatory scope and modeled ecological inference have different authority |
+| GAP/LANDFIRE ecological or vegetation model vs. direct observation | Model inputs, run identity, uncertainty, and applicability must remain visible |
+| Habitat patch/context vs. species occurrence | Habitat does not own Fauna or Flora occurrence truth |
+| Specimen/observation aggregator vs. authoritative taxon or occurrence claim | Aggregation, source provenance, licenses, and geoprivacy survive the join |
+| PAD-US or stewardship boundary vs. habitat quality or conservation outcome | Administrative/stewardship status is not ecological condition |
+| Ecoregion, HUC, PLSS, county, or survey unit vs. habitat truth | Context fabric supports grouping and analysis; it does not prove habitat state |
+| Native source classification vs. KFM crosswalk | Crosswalks are derived, loss-bearing, versioned interpretations |
+| Public tile, map, summary, or AI answer vs. evidence | Rendered and generated carriers remain downstream of governed evidence |
+
+### Native classification, scale, and time
+
+For every comparison, preserve:
+
+- source-native class codes and labels;
+- legend/classification version and crosswalk version;
+- source vintage, effective date, observation window, publication date, retrieval date, and correction date;
+- nominal and effective spatial resolution;
+- map or survey scale and minimum mapping unit where applicable;
+- CRS, datum, vertical reference, and geometry precision;
+- aggregation unit and method;
+- model/run version and uncertainty; and
+- completeness, provisional status, and known limitations.
+
+A source refresh must not silently rewrite prior vintages into a timeless surface.
+
+### Sensitive joins and geoprivacy
+
+Apply the most restrictive governed posture across joined inputs. Exact or reverse-engineerable ecological locations must be transformed before public artifacts are created. Record transform identity and reason through the owning process; do not expose the transform mechanics in ordinary public documentation.
+
+When safety cannot be established, prefer:
+
+- quarantine;
+- restricted/steward-only handling;
+- generalization or aggregation;
+- delayed release;
+- redaction;
+- narrowed scope;
+- abstention; or
+- denial.
+
+### One capture, multiple governed consumers
+
+Habitat, Fauna, Flora, Hydrology, Soil, Agriculture, and other domains must not independently capture the same upstream source merely because they use it differently. Source acquisition belongs to one accepted source identity and source-first connector. Domains receive lineage-preserving candidates and apply their own contracts, policy, evidence, and release controls downstream.
+
+### Regulatory and management language
+
+This runbook does not:
+
+- designate critical habitat;
+- determine wetlands jurisdiction;
+- establish species presence or absence;
+- declare habitat suitability or restoration success;
+- provide legal, conservation, land-management, or permitting advice; or
+- upgrade a map or model to regulatory authority.
+
+[Back to top](#top)
+
+---
+
+<a id="validation-and-command-boundary"></a>
+
+## Validation and command boundary
+
+### Current repository-grounded commands
+
+The following commands are verified from the inactive synthetic Habitat land-cover materiality profile:
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/domains/habitat \
+  --pattern 'test_land_cover_materiality.py' \
+  --verbose
+
+python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+```
+
+The focused workflow installs declared project runtime dependencies and executes those commands against synthetic no-network fixtures. The aggregate Habitat workflow also invokes the same bounded suite and explicitly records the profile as `PROPOSED_INACTIVE`.
+
+A passing result proves only:
+
+- the selected synthetic fixture/profile shape can be evaluated;
+- the adapter's deterministic mapping can be exercised;
+- emitted assessment objects pass the shared validator; and
+- the tested revision satisfies the bounded workflow checks.
+
+It does not prove:
+
+- any live Habitat source was accessed, admitted, refreshed, or compared;
+- source identity, rights, sensitivity, authority, freshness, or completeness;
+- Habitat, species, wetlands, land-cover, or regulatory truth;
+- policy evaluation, evidence closure, steward review, public-safe geometry, proof construction, promotion, release, deployment, or publication; or
+- that the profile's thresholds are scientifically, legally, or operationally accepted.
+
+### Commands this runbook does not authorize
+
+Do not add or run live-source commands here, including `curl`, `wget`, browser automation, ArcGIS/REST queries, STAC searches, API clients, cloud downloads, object-store sync, credentialed requests, or connector dispatch.
+
+A live-source command requires a separately accepted source descriptor, authority/activation record, connector path, rights and sensitivity review, secret handling, no-network test coverage, bounded output contract, receipt path, correction path, and rollback plan.
+
+[Back to top](#top)
+
+---
+
+<a id="handoff-boundary"></a>
+
+## Handoff boundary
+
+A handoff is a request for accountable inspection, not a state transition.
+
+| Potential recipient | Minimum question |
+|---|---|
+| Source steward | Is the source identity, role, authority, version, and source-head evidence valid? |
+| Connector steward | Is the producing connector/runtime accepted, deterministic, secure, and operating within activation scope? |
+| Rights reviewer | Do current terms permit the intended acquisition, transformation, retention, citation, redistribution, and public use? |
+| Sensitivity/geoprivacy reviewer | Does the source or any plausible join require restricted handling, generalization, delay, redaction, or denial? |
+| Habitat steward | Are native semantics, ecological limits, scale, time, and model/observation/regulatory distinctions preserved? |
+| Neighbor-domain steward | Does the packet depend on Fauna, Flora, Hydrology, Soil, Agriculture, Archaeology, People/Land, or another authority? |
+| Evidence/validation steward | Does admissible evidence support the bounded change conclusion, and are outputs valid? |
+| Policy steward | Is there an accepted policy bundle, selector, evaluator, and normalized decision path for the requested operation? |
+| Review/release steward | Is a later candidate eligible for independent review, correction planning, rollback planning, and release consideration? |
+| Security/operations steward | Are credentials, access, logging, storage, monitoring, and failure handling safe and auditable? |
+
+The handoff packet must include:
+
+- the finite disposition;
+- exact immutable references;
+- bounded changed/unchanged dimensions;
+- source role and limitations;
+- rights and sensitivity state;
+- protected-data handling requirements;
+- comparison profile identity;
+- unresolved conflicts;
+- explicit non-effects; and
+- the requested decision owner.
+
+Do not include source-native restricted bytes or exact sensitive geometry.
+
+[Back to top](#top)
+
+---
+
+<a id="anti-patterns-to-refuse"></a>
+
+## Anti-patterns to refuse
+
+Refuse or fail closed on any request to:
+
+1. treat a seven-line `status: PROPOSED` registry placeholder as an admitted source;
+2. choose between subtype-first and domain-first registry records by convenience;
+3. implement runtime behavior under `connectors/habitat/` without an accepted placement decision;
+4. choose among duplicate source-specific connector paths without migration authority;
+5. fetch a live source because an endpoint is documented or publicly reachable;
+6. infer rights, source role, sensitivity, cadence, or authority from a provider name;
+7. treat `ETag`, timestamp, digest, file size, or HTTP status as source truth;
+8. treat `NON_EVENT` as proof that a source is current;
+9. treat `PROMOTION_CANDIDATE` as promotion, review, release, or publication;
+10. treat a green fixture workflow as proof, policy approval, or public safety;
+11. relabel modeled, aggregate, regulatory, administrative, candidate, or occurrence context as observed Habitat truth;
+12. overwrite a prior vintage instead of preserving identity and lineage;
+13. hide sensitive geometry only through client-side styling;
+14. place exact protected ecological or cross-domain join details in a PR or ordinary log;
+15. let Habitat absorb Fauna, Flora, wetland-law, cultural, land, or infrastructure authority;
+16. use a Drive blueprint or proposal-era runbook as current implementation evidence;
+17. manufacture receipts, EvidenceBundles, policy decisions, review records, or release objects from documentation prose; or
+18. collapse source refresh, evidence closure, review, promotion, release, deployment, and publication into one step.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification-register"></a>
+
+## Open verification register
+
+| ID | Status | Verification need | Safe posture |
+|---|---|---|---|
+| `HAB-SR-01` | `NEEDS VERIFICATION` | Populate and review the Habitat runbook lane README | Do not infer lane ownership or direct-child status beyond path presence |
+| `HAB-SR-02` | `CONFLICTED` | Reconcile the duplicate `docs/domains/habitat/SOURCE_REFRESH_RUNBOOK.md` | No delete, redirect, or supersession in this PR |
+| `HAB-SR-03` | `CONFLICTED` | Decide subtype-first vs. domain-first Habitat source registry topology | One authoritative record only; no parallel writes |
+| `HAB-SR-04` | `HOLD` | Replace proposal inventory YAMLs with schema-valid, reviewed descriptors or retire them through migration | Placeholders remain non-activating |
+| `HAB-SR-05` | `HOLD` | Populate an accepted source-authority/activation surface | Empty projection grants no authority |
+| `HAB-SR-06` | `CONFLICTED` | Reconcile NLCD, USFWS ECOS, KDWP, LANDFIRE, and iNaturalist connector path/identity collisions | Use no source path by convenience |
+| `HAB-SR-07` | `NEEDS VERIFICATION` | Resolve SourceDescriptor schema canonical/implementation alias posture and validator wiring | Validate only against the explicitly selected revision |
+| `HAB-SR-08` | `HOLD` | Accept one Habitat policy package, entrypoint, decision shape, bundle, selector, evaluator, tests, and consumer | Current scaffolds remain inactive |
+| `HAB-SR-09` | `HOLD` | Establish an accepted live-source signal producer with rights, sensitivity, secrets, receipts, correction, and rollback | No live fetch |
+| `HAB-SR-10` | `HOLD` | Establish Habitat proof and release-dry-run producers | Domain workflow holds both lanes |
+| `HAB-SR-11` | `NEEDS VERIFICATION` | Assign accountable Habitat, source, connector, rights, sensitivity, evidence, policy, review, release, and operations stewards | Use the verified repository-owner review route only |
+| `HAB-SR-12` | `NEEDS VERIFICATION` | Verify product-specific endpoints, fields, terms, attribution, cadence, source-head method, classifications, and sensitivity | Do not copy planning values into operational records |
+| `HAB-SR-13` | `NEEDS VERIFICATION` | Determine whether materiality thresholds/profile status are accepted for any live product | Keep the current profile synthetic and inactive |
+| `HAB-SR-14` | `NEEDS VERIFICATION` | Inventory downstream consumers and harmful joins before any source revision is admitted | Fail closed on unknown impact |
+| `HAB-SR-15` | `NEEDS VERIFICATION` | Verify hosted required-check significance and exact-head validation for future operational changes | Green checks remain bounded evidence |
+| `HAB-SR-16` | `NEEDS VERIFICATION` | Reconcile other proposal-era Habitat runbooks with current repository evidence | This one-file update does not upgrade sibling maturity |
+
+[Back to top](#top)
+
+---
+
+<a id="evidence-basis"></a>
+
+## Evidence basis
+
+### Current repository evidence
+
+| Evidence | What it supports | What it does not support |
+|---|---|---|
+| Accepted ADR-0029 and pinned Directory Rules | Existing `docs/` responsibility, same-path reconciliation, no parallel authority | Source admission, rights, sensitivity, or publication |
+| Prior target blob | Confirms proposal-era live-refresh instructions being replaced | Proof that any proposed watcher or gate exists |
+| Blank Habitat runbook README | Confirms lane README presence and missing content | Lane ownership or canonical child inventory |
+| Duplicate domain runbook | Confirms a responsibility/path conflict | Authority to delete or migrate it |
+| SourceDescriptor contract and schemas | Required source-governance concepts and proposed machine shape | An admitted Habitat source |
+| Source-authority register | Empty, projection-only, implementation-absent posture | Activation or permission |
+| Habitat registry READMEs and sampled YAMLs | Topology conflict and proposal-placeholder posture | Schema-valid accepted descriptors |
+| Habitat connector compatibility index | Source-first posture, path conflicts, and no runtime under `connectors/habitat/` | A selected live connector |
+| Habitat policy README | Proposed scaffold inventory and inactive evaluator/bundle posture | Active policy behavior |
+| Habitat materiality contract/workflow | Synthetic no-network comparison vocabulary and exact validation commands | Live-source change, ecological truth, or promotion |
+| Domain Habitat workflow | Bounded validation plus explicit proof/release holds | Evidence closure, release readiness, or publication |
+
+### Google Drive planning lineage
+
+The Drive Habitat architecture blueprint and Habitat + Fauna thin-slice blueprint are used only for planning lineage: source-family separation, model-versus-observation boundaries, native-classification preservation, geoprivacy, no-network fixtures, and the principle that Habitat assignments are derived rather than sovereign truth.
+
+Both documents explicitly reported that no KFM repository was mounted in their authoring session and labeled concrete paths, routes, connectors, workflows, and implementation maturity as proposed or unknown. Current repository evidence therefore controls this runbook's implementation claims.
+
+No external endpoint, current source release, license, cadence, or scientific threshold was verified in this documentation-only change.
+
+[Back to top](#top)
+
+---
+
+<a id="document-change-rollback"></a>
+
+## Document change rollback
+
+### Before merge
+
+- Keep the pull request draft.
+- Close it if the repository evidence, placement basis, or one-file boundary is rejected.
+- Delete or abandon only the feature branch after review policy permits.
+- Do not modify source, connector, registry, policy, lifecycle, proof, release, or published state as part of documentation rollback.
+
+### After merge
+
+Revert the documentation commit through normal review or restore prior blob:
+
+```text
+1fecc4e6337ba2c897f4c4b328a33ea3bdba97e8
+```
+
+Then re-run repository-native documentation, link, topology, and changed-area validation.
+
+Documentation rollback does not:
+
+- reactivate the proposal-era watcher instructions;
+- activate or deactivate a source;
+- fetch or delete source material;
+- change a registry, policy bundle, evidence object, lifecycle object, release object, deployment, or public artifact; or
+- resolve the duplicate domain runbook or registry/connector topology conflicts.
+
+[Back to top](#top)
+
+---
+
+<a id="non-effects"></a>
+
+## Non-effects
+
+This revision does not:
+
+- activate, admit, suspend, refresh, or withdraw any Habitat source;
+- call any external endpoint or connector;
+- create or edit a `SourceDescriptor`, source-head observation, authority record, activation record, receipt, evidence object, policy decision, review record, lifecycle object, candidate, proof, release manifest, correction notice, withdrawal notice, or rollback card;
+- select a registry, schema, connector, policy, evidence, or release authority;
+- move, rename, delete, redirect, or supersede the duplicate domain runbook;
+- populate the blank Habitat runbook lane README;
+- change materiality criteria, validator behavior, fixtures, tests, workflows, policy source, runtime behavior, or public surfaces;
+- cross RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED boundaries;
+- approve review, promotion, release, deployment, or publication; or
+- certify ecological, regulatory, legal, rights, sensitivity, freshness, completeness, or public-safety claims.
+
+---
+
+## Change history
+
+| Version | Date | Change |
+|---|---|---|
+| `v0.1` | 2026-05-12 | Proposal-era full refresh procedure with illustrative watchers, conditional requests, lifecycle writes, gates, and release steps |
+| `v0.2` | 2026-08-25 | Repository-grounded inspection-and-handoff runbook; live-source, activation, policy, lifecycle, promotion, release, deployment, and publication effects removed |
+
+[Back to top](#top)

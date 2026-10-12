@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-documentation-drift-8bb1b6bd40a0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/governance/DOCUMENTATION_DRIFT.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/governance/DOCUMENTATION_DRIFT.md": "sha256:8bb1b6bd40a0f990a6040f12e0cd4ba4bafb894659710c6bfda5fe49f974b365"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-22",
+    "parameter_hash": "sha256:65ef32024c1c9f705a9f811e7a972c99db47cae290746eb60cb7f2181ec0ba23"
+  },
+  "prompt_or_contract": "sha256:d2bbfd2f73bd513ddd17d27afc08d98bbff89c0cf73e8c67429e7d8f1246cd36",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector",
+      "local Python static validation",
+      "GitHub Actions read-only exact-byte digest probe"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@f86fcddb553217f7ffadafd80f20e95d635180b1",
+      "github:current-main@568a95f025654d1ceb551f4d014674b736b5dbad",
+      "github:docs/dashboards/governance/DOCUMENTATION_DRIFT.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:a4999c965d17040d5ee2e627e06f8abb9a25c941",
+      "github:docs/dashboards/governance/DOCUMENTATION_DRIFT.md@agent/docs-dashboard-documentation-drift-20260822#blob:3796787d810074c880f7d4199bf539a2024e4c60",
+      "github:docs/dashboards/README.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:02f891d4734b6d54ac36c4a9f7c4ba272585f167",
+      "github:docs/dashboards/DASHBOARD_CATALOG.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:82c7859b2782c13e97b1b3d3d55cdf35400fe675",
+      "github:docs/dashboards/INDICATOR_CATALOG.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:4fe3d6be5b0b6ba6359a301942c01d713c8e970f",
+      "github:docs/dashboards/governance/README.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:8f7dd5d42d4c1e2842e5d8f656b2f9c1fbe6cf73",
+      "github:docs/registers/DRIFT_REGISTER.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0",
+      "github:control_plane/root_registry.yaml@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "github:control_plane/document_registry.yaml@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:217a13a9f7d9eeb6ee6ea0bf6eaa90a707a32f1a",
+      "github:docs/adr/INDEX.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:8f90c75e662918f8062c4a9d139b19f268295c55",
+      "github:docs/doctrine/directory-rules.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f86fcddb553217f7ffadafd80f20e95d635180b1#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:workflow-run:32591478806#head:5d2e2445523c31427d8492f1d807e943af0ea860",
+      "github:pull-request:3404",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "task-contract:docs-dashboard-documentation-drift-20260822"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/governance/DOCUMENTATION_DRIFT.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned starting main@f86fcddb553217f7ffadafd80f20e95d635180b1, read the complete predecessor at blob a4999c965d17040d5ee2e627e06f8abb9a25c941, inspected direct authority and implementation dependencies, and found no open pull request or task branch targeting the exact path before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2. The tracked human dashboard specification remains under docs/ through same-path treatment; parent dashboard-lane placement remains HOLD, and no move, admission, rename, redirect, retirement, or deletion occurred."
+    },
+    {
+      "gate": "repository-evidence-and-no-overclaim-review",
+      "outcome": "PASS",
+      "reason": "The revision distinguishes current ADR, registry, validator, workflow, and register evidence from proposed metrics and unknown runtime behavior. Unstructured or incomplete inputs remain explicit finite states rather than green counts."
+    },
+    {
+      "gate": "markdown-structure-anchors-and-links",
+      "outcome": "PASS",
+      "reason": "Static validation of the authored bytes found one H1, balanced fences, valid heading order, unique explicit anchors, resolving internal fragments, no trailing whitespace, valid UTF-8, and a final newline. Nineteen repository-relative links were inspected against the pinned repository tree."
+    },
+    {
+      "gate": "security-rights-privacy-and-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credential, restricted payload, private-person data, protected precise location, vulnerability detail, raw prompt, hidden reasoning, or unsafe public drill-down was introduced. Future panels are explicitly read-only, role-gated, minimized, and fail-closed."
+    },
+    {
+      "gate": "artifact-sha256-integrity",
+      "outcome": "PASS",
+      "reason": "Read-only GitHub Actions run 32591478806, associated with pull request 3404 and head 5d2e2445523c31427d8492f1d807e943af0ea860, checked out the PR merge ref over base 568a95f025654d1ceb551f4d014674b736b5dbad and computed 56,730 bytes, 861 LF bytes, and SHA-256 8bb1b6bd40a0f990a6040f12e0cd4ba4bafb894659710c6bfda5fe49f974b365 for the target. The branch target remained blob 3796787d810074c880f7d4199bf539a2024e4c60."
+    },
+    {
+      "gate": "generated-receipt-json-and-schema",
+      "outcome": "PASS",
+      "reason": "The receipt was constructed as valid JSON against the inspected GENERATED_RECEIPT Draft 2020-12 field, type, enum, and additional-properties constraints; hosted repository validation remains separate exact-head evidence."
+    },
+    {
+      "gate": "repository-native-checkout-commands",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available for git diff --check, ADR-index, topology, document-graph, metadata, stale-scan, link, or generated-receipt commands. Static checks and hosted workflows are reported separately."
+    },
+    {
+      "gate": "hosted-final-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The final review head does not yet exist at receipt emission time. Hosted results for the final head are inspected after temporary-probe removal, receipt commit, and current-main reconciliation; pending is not pass."
+    },
+    {
+      "gate": "accountable-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt is authoring provenance, not approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:documentation-drift-predecessor",
+      "validated": true,
+      "evidence_ref": "blob:a4999c965d17040d5ee2e627e06f8abb9a25c941"
+    },
+    {
+      "id": "github:dashboard-lane-readme",
+      "validated": true,
+      "evidence_ref": "blob:02f891d4734b6d54ac36c4a9f7c4ba272585f167"
+    },
+    {
+      "id": "github:indicator-catalog",
+      "validated": true,
+      "evidence_ref": "blob:4fe3d6be5b0b6ba6359a301942c01d713c8e970f"
+    },
+    {
+      "id": "github:drift-register",
+      "validated": true,
+      "evidence_ref": "blob:5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0"
+    },
+    {
+      "id": "github:root-registry",
+      "validated": true,
+      "evidence_ref": "blob:024f668b5f0a9239bafa4f8b09e2afd86300ff8c"
+    },
+    {
+      "id": "github:document-registry",
+      "validated": true,
+      "evidence_ref": "blob:217a13a9f7d9eeb6ee6ea0bf6eaa90a707a32f1a"
+    },
+    {
+      "id": "github:adr-index",
+      "validated": true,
+      "evidence_ref": "blob:8f90c75e662918f8062c4a9d139b19f268295c55"
+    },
+    {
+      "id": "github:directory-rules",
+      "validated": true,
+      "evidence_ref": "blob:fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "github:adr-0029",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "github:exact-byte-digest-probe",
+      "validated": true,
+      "evidence_ref": "workflow-run:32591478806/job:97075899219"
+    },
+    {
+      "id": "attachment:kfm-repository-build-v6",
+      "validated": true,
+      "evidence_ref": "sha256:d2bbfd2f73bd513ddd17d27afc08d98bbff89c0cf73e8c67429e7d8f1246cd36"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T18:42:40Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 3404,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring provenance for the same-path Documentation Drift dashboard specification. The receipt binds the exact Markdown bytes verified by a temporary read-only GitHub Actions digest probe; that temporary workflow is removed before final review. It does not accept an ADR, mutate a drift or document registry, establish metric or dashboard runtime, authenticate stewardship or human review, change policy or repository settings, activate a source, authorize a lifecycle transition, release, deploy, publish, correct, withdraw, roll back KFM knowledge, or merge. The sanitized prompt hash covers the direct user request and named v6 implementation contract without storing prompt text, hidden reasoning, credentials, or restricted content."
+}

@@ -72,7 +72,7 @@ related:
   - ../../evidence/README.md
   - ../validate_evidence_before_model.py
   - ../../validate_runtime_response_envelope.py
-  - ../../../../docs/architecture/governed-ai.md
+  - ../../../../docs/architecture/governed-ai/README.md
   - ../../../../docs/architecture/governed-ai/FOCUS_FLOW.md
   - ../../../../docs/architecture/governed-ai/AI_RECEIPTS.md
   - ../../../../docs/architecture/governed-ai/ADAPTER_CONTRACT.md

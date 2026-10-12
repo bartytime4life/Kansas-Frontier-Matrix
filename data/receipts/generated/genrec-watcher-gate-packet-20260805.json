@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-watcher-gate-packet-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/watcher-gate-packet.yml",
+    "contracts/watchers/watcher_gate_packet.md",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py",
+    "tools/validators/watchers/validate_watcher_gate_packet.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/watcher-gate-packet.yml": "sha256:5b5b51246b429c0d528fd4a1db4fe2bcc3c97d0b77bf561dcd1f7bbd5308c372",
+    "contracts/watchers/watcher_gate_packet.md": "sha256:8bfc1241d912b117d88cd481971c6abf641154d9562fcf9dcdd1a7ba023cd307",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "sha256:ed01d07e92c0742c31318b6cb5c6a01a5a558738654dabff999a5349895d449e",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json": "sha256:553503463f2693a8ba92fcbf4311f56db5b135a80383fb187b84977b58dc2d11",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json": "sha256:bc3ae14944c9f6439b01033d6d13540acc85908c67c001c679c5cd62fdcedd2a",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json": "sha256:007f9af12a78d08d9df1cd893eb301122112b07da8ef4fc90e88b505a673d34c",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json": "sha256:9486fe2b5c1621ff4f33f8eb2b551a6e9c3c742eb3d12ed5793ef245a0084d58",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json": "sha256:9b033d55fca5ae9ee8fb1c279b2599e409fffded231c92100fb70115fd0c25aa",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json": "sha256:f80bb32f354881a560d47e5a41c04620b4f1e02c126b964c0296db7c4893d5af",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json": "sha256:738749452821afa3fac3ee75ab5bdc427f1f8795626dc1ad13d4bcff10cfc1e8",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json": "sha256:aaad11409759777b4e080c49e4370794129f3e56dd3d764722fd1355d26bab73",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json": "sha256:7eac000d40c1c765ba5f1b9abb10f8c3086a78b1436ed52afe05acc1971067a5",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json": "sha256:16d08046868036cfc843eff8c3a112b142d6714880cde8bd4798b5f0e3d52cc9",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json": "sha256:6bfe4c2d16a0ac88206505c3eefd4950e777786eff8e0dcf87651d2a60a4e4eb",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json": "sha256:8f64b2eb8741fc8783629014b9443a71f61c922788164e49056a168b7927969a",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json": "sha256:a357488ff3c6bc73042e47bd94127df9e3dd8333e6796f10e665a2dcf047d393",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py": "sha256:3561a008983958ec036a3bb2216c63ec77b0b8fba81d9d4cac98ce18567694cc",
+    "tools/validators/watchers/validate_watcher_gate_packet.py": "sha256:4ab2712e1d178d72cf994655d24cad0f0d73b1b4d9300734367fc374e5a8f009"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:49d5ded030b4455901d84cf3d8ac710b496858c05880b7b9700e0ca46ce58fe1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f9639c509ad340becc3154310d086ffcfa43fab00a5f19ab735854f9778f4016"
+    ],
+    "attached_docs": [
+      "New Ideas 5-19-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 5-19-26.pdf#pages-14-17-watcher-gate",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cc9342942afdcbdb917bd787b13aa088725a781",
+      "repo:tools/watchers/README.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/watcher-gate-packet.yml": "PROPOSED",
+    "contracts/watchers/watcher_gate_packet.md": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json": "PROPOSED",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json": "PROPOSED",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json": "PROPOSED",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json": "PROPOSED",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py": "PROPOSED",
+    "tools/validators/watchers/validate_watcher_gate_packet.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Focused no-network schema, semantic, boundary, parser, and CLI tests passed."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Three valid fixtures passed and five exact-negative fixtures failed with reviewed reason codes."
+    },
+    {
+      "gate": "profile-and-self-hash-integrity",
+      "outcome": "PASS",
+      "reason": "Canonical JSON SHA-256 bindings were recomputed for the inactive profile and every fixture packet."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-5-19-watcher-gate",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 5-19-26.pdf#pages-14-17-watcher-gate"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    },
+    {
+      "id": "repository:watcher-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/watchers/README.md@9cc9342942afdcbdb917bd787b13aa088725a781"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T22:03:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the source-derived watcher routing gap. This receipt grants no source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

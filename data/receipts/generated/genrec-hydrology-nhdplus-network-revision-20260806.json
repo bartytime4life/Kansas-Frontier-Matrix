@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-hydrology-nhdplus-network-revision-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-nhdplus-network-revision.yml",
+    "contracts/domains/hydrology/nhdplus_network_revision.md",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_added.json",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_geometry_shift.json",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_linear_reference_change.json",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_unchanged.json",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/prior.json",
+    "tests/ingest/hydrology_watch/test_nhdplus_network_revision.py",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision.py",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-nhdplus-network-revision.yml": "sha256:bbce831d9b180ef0fa24f340c417873732a5207307f09a3fe2545e7f124d8ae8",
+    "contracts/domains/hydrology/nhdplus_network_revision.md": "sha256:42a1c50c95dbc5ab6db1455bd72f24122256c76faf540260e278119917b4eb4e",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json": "sha256:5e21656cbad092559ba4af370fa3592d42db9ee4a2cad0ed408ffeb3a0cb0cf7",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_added.json": "sha256:ea72d5b2c09011deede992af75be6cfce36238cfca4d8bd63316ac37bc60b9c8",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_geometry_shift.json": "sha256:3781a138ce9cbc8a62e18cfb3d1b9415a285447588c279b9836943a76c8b4e3d",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_linear_reference_change.json": "sha256:3c72d60023bb88580e0099ce4f4b41e6037b0e6fb2361b04e5aacf2bd84acf48",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_unchanged.json": "sha256:0807b26b555a8c491be7dc1549d9cf649d7a62a711a07b08ae71e65bc19314f1",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/prior.json": "sha256:9f9294b4e9aa63c121262af96418dbde00304821252a0d698e39a6e9c55f06ca",
+    "tests/ingest/hydrology_watch/test_nhdplus_network_revision.py": "sha256:10dc4b43fb6a7bbafb3b9b828a5d1e3859675efe1379f16ed6c69ae0273bbac1",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision.py": "sha256:9ace939105118516697120ae979004b2ec65015c87d2e4a482271eea4915d521",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision/README.md": "sha256:32d5c608635ddd31af14714f2507b9d34c3c962ba1a4e8e5b04f7feeab9a4b89"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:c9add354d6caf79ac60339de2a3456585792404271b99ef700c544ecbaa7d43e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26.pdf#nhdplus-hr-network-revision-watcher",
+      "repo:tools/ingest/hydrology_watch/README.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-nhdplus-network-revision.yml": "PROPOSED",
+    "contracts/domains/hydrology/nhdplus_network_revision.md": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_network_revision_report.schema.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_added.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_geometry_shift.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_linear_reference_change.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/current_unchanged.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/fixtures/nhdplus_network_revision/prior.json": "PROPOSED",
+    "tests/ingest/hydrology_watch/test_nhdplus_network_revision.py": "PROPOSED",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision.py": "PROPOSED",
+    "tools/ingest/hydrology_watch/nhdplus_network_revision/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Eight deterministic NHDPlus network-revision tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The comparator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-no-change",
+      "outcome": "PASS",
+      "reason": "The CLI returns NO_MATERIAL_CHANGE and exit code 0 for retrieval-only fixture drift."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this receipt, which cannot self-bind."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-nhdplus-network-revision",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26.pdf#nhdplus-hr-network-revision-watcher"
+    },
+    {
+      "id": "repository:hydrology-watcher-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/hydrology_watch/README.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T19:45:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only NHDPlus HR network-revision comparator. It classifies COMID inventory, linear-reference, HUC12-assignment, and geometry changes without live source access, lifecycle writes, evidence resolution, policy approval, promotion, release, or publication."
+}

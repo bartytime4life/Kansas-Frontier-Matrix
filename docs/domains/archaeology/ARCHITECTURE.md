@@ -2,24 +2,25 @@
 doc_id: kfm://doc/domain-archaeology-architecture
 title: Archaeology Domain — Architecture
 type: standard
-version: v1.2
+version: v1.2.1
 status: draft
 owners: TODO — Archaeology domain steward · Sensitivity reviewer · Cultural/sovereignty review liaison · Docs steward · Release authority
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/domains/archaeology/README.md
-  - docs/domains/archaeology/CANONICAL_PATHS.md          # path-namespace authority for this lane
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md     # continuity register
-  - docs/domains/archaeology/CROSS_DOMAIN.md             # cross-lane boundary register
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
   - docs/runbooks/archaeology/PROMOTION_RUNBOOK.md
   - docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md
   - contracts/domains/archaeology/
@@ -31,6 +32,10 @@ notes:
   - "Doctrine is CONFIRMED from [ENCY] §7.13, Atlas v1.1 §24.13, [DOM-ARCH], [DIRRULES] §12, and the v3.0 §23.2 sensitive-domain matrix (matrix itself PROPOSED pending steward ratification). Implementation maturity is UNKNOWN until verified against mounted-repo evidence."
   - "v1.2 RECONCILES the path namespace: this file now uses the Directory Rules §12 form (contracts/domains/archaeology/, schemas/contracts/v1/domains/archaeology/), matching CANONICAL_PATHS.md, CONTINUITY_INVENTORY.md, and CROSS_DOMAIN.md. The Atlas v1.1 §24.13 / ENCY §7.13 shorthand (contracts/archaeology/) is recorded as LINEAGE. Resolution basis: §2.1 authority order — Directory Rules §12 (CONFIRMED rule) outranks the Atlas crosswalk (PROPOSED). Closes OQ-ARCH-01 in favor of the §12 form; a uniform ADR-domains-segment may still revisit it repo-wide."
   - "DOM-ARCH names two overlapping object lists — the §B/ENCY collapsed set and the §E decomposed spine. Both are preserved; the casing/decomposition conflict is tracked as OQ-ARCH-04 / OQ-CI-01."
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Architecture
@@ -47,18 +52,18 @@ Governed, evidence-first, sensitivity-bounded architecture for KFM's Archaeology
 ![lifecycle: RAW%E2%86%92PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
 ![paths: reconciled to DR §12](https://img.shields.io/badge/contracts%2Fschemas%20paths-reconciled%20to%20DR%20%C2%A712-2da44e)
 ![conformance: RFC 2119](https://img.shields.io/badge/conformance-RFC%202119-555)
-![last updated: 2026--05--29](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
+![last updated: 2026--10--11](https://img.shields.io/badge/last%20updated-2026--10--11-informational)
 
 | Field | Value |
 |---|---|
-| **Status** | Draft · doctrine CONFIRMED · implementation PROPOSED · path namespace RECONCILED to Directory Rules §12 (v1.2) |
+| **Status** | Draft · doctrine CONFIRMED · implementation PROPOSED · path namespace RECONCILED to Directory Rules §12 (in v1.2; current edition v1.2.1) |
 | **Pinned contract** | `CONTRACT_VERSION = "3.0.0"` (per `ai-build-operating-contract.md` §1.3 / §8, §37) |
 | **Owners** | TODO — Archaeology domain steward · Sensitivity reviewer · Cultural/sovereignty review liaison |
 | **Required additional reviewer (§23.2)** | Tribal/cultural reviewer · rights-holder representative |
 | **Authority basis** | `[CONTRACT v3.0]` §23.2 · `[ENCY]` §7.13 · Atlas v1.1 §24.13, §24.14 · `[DOM-ARCH]` · `[DIRRULES]` §12, §13 · `[GAI]` |
 | **Public posture** | `DENY` exact site coordinates by default · generalize to county/region · `RedactionReceipt` required before any release |
 | **Lifecycle** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Last updated** | 2026-05-29 |
+| **Last updated** | 2026-10-11 |
 
 > [!CAUTION]
 > This domain is on the **sensitive lane**. Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), the default disposition for archaeology site locations is **`DENY` exact coordinates** — generalize to county/region. The §23.2 matrix is **PROPOSED** as of v3.0 (steward ratification pending); until ratified, the **most restrictive applicable row applies**, which only strengthens the gate. Burial / human-remains records and sacred-place attributes are **`DENY` exact location** with cultural reviewer and rights-holder rep gates. **No section of this document authorizes a release**; releases are governed by `ReleaseManifest`, `MapReleaseManifest`, `EvidenceBundle`, `RedactionReceipt`, `PolicyDecision`, and an explicit cultural / steward `ReviewRecord`.
@@ -241,7 +246,7 @@ flowchart LR
   end
 
   subgraph LIFE["lifecycle data"]
-    R1["data/raw/archaeology/"]:::data
+    R1["RAW (source-first capture,<br/>placement HOLD)"]:::data
     W1["data/work/archaeology/<br/>data/quarantine/archaeology/"]:::data
     PR1["data/processed/archaeology/"]:::data
     CT1["data/catalog/domain/archaeology/<br/>data/triplets/...<br/>data/published/layers/archaeology/"]:::data
@@ -281,7 +286,7 @@ fixtures/domains/archaeology/
 packages/domains/archaeology/
 pipelines/domains/archaeology/
 pipeline_specs/archaeology/
-data/raw/archaeology/
+data/raw/archaeology/README.md                          # compatibility/reference lane; no payloads (source-first RAW placement HOLD, DIR-SOURCE-001)
 data/work/archaeology/
 data/quarantine/archaeology/
 data/processed/archaeology/
@@ -440,7 +445,7 @@ flowchart LR
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests | `ReleaseManifest` + `MapReleaseManifest` (if maps) + `RedactionReceipt` + correction path + rollback target + review / policy state exist | PROPOSED |
 
 > [!WARNING]
-> **Watcher-as-non-publisher.** Connectors and watchers emit to `data/raw/archaeology/` or `data/quarantine/archaeology/` only. They **MUST NOT** write to `data/processed/`, `data/catalog/`, `data/published/`, or `release/`. Promotion is a **governed state transition**, never a file move. (`[DIRRULES]` §13.5 watcher-publishes / connector-publishes anti-patterns; `[CONTRACT v3.0]` §10.2, §38.11)
+> **Watcher-as-non-publisher.** Connectors and watchers emit to the accepted source-first RAW home (exact path **HOLD** pending an accepted placement decision; one capture under a registered `source_id`, `DIR-SOURCE-001`) or `data/quarantine/archaeology/` only; `data/raw/archaeology/` is a compatibility/reference lane and receives no payloads. They **MUST NOT** write to `data/processed/`, `data/catalog/`, `data/published/`, or `release/`. Promotion is a **governed state transition**, never a file move. (`[DIRRULES]` §13.5 watcher-publishes / connector-publishes anti-patterns; `[CONTRACT v3.0]` §10.2, §38.11)
 
 [Back to top ↑](#archaeology-domain--architecture)
 
@@ -744,6 +749,13 @@ Every Archaeology publication **MUST** carry the following before crossing the t
 
 ## 16. Changelog
 
+### v1.2 → v1.2.1
+
+| Change | Type (per `[CONTRACT v3.0]` §37) | Reason |
+|---|---|---|
+| RAW placement wording aligned to accepted Directory Rules `DIR-SOURCE-001` (2026-10-11): the §4.2 lane map now shows RAW as source-first capture with placement **HOLD**; the §4.3 path list keeps `data/raw/archaeology/README.md` as a compatibility/reference lane with no payloads; the §7.2 watcher-as-non-publisher callout now names the accepted source-first RAW home (path HOLD) or QUARANTINE | reconciliation (PATCH) | Capture identity is source-first and one capture may support several domains without duplicated RAW bytes; no physical placement has been accepted. The MUST NOT on writes to `processed/`, `catalog/`, `published/`, and `release/` and every sensitivity, sovereignty, and cultural-review rule are unchanged. Documentation only. |
+| Added `data/raw/README.md` to meta `related` and §18 | refresh (PATCH) | Points readers at the source-first RAW contract. |
+
 ### v1.1 → v1.2
 
 | Change | Type (per `[CONTRACT v3.0]` §37) | Reason |
@@ -802,9 +814,12 @@ This document is done enough to enter the repository when:
   [`CANONICAL_PATHS.md`](CANONICAL_PATHS.md) — path-namespace authority for this lane ·
   [`CONTINUITY_INVENTORY.md`](CONTINUITY_INVENTORY.md) — continuity register ·
   [`CROSS_DOMAIN.md`](CROSS_DOMAIN.md) — cross-lane boundary register ·
-  [`SENSITIVITY.md`](SENSITIVITY.md) · [`PIPELINE.md`](PIPELINE.md) · [`VIEWING_PRODUCTS.md`](VIEWING_PRODUCTS.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
+  [`SENSITIVITY.md`](SENSITIVITY.md) · [`PIPELINE.md`](PIPELINE.md) · `VIEWING_PRODUCTS.md` (not present) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
+- **RAW lifecycle contract**:
+  [`../../../data/raw/README.md`](../../../data/raw/README.md) — source-first RAW (`DIR-SOURCE-001`; physical placement HOLD) ·
+  [`../../../data/raw/archaeology/README.md`](../../../data/raw/archaeology/README.md) — compatibility/reference lane; no payloads
 - **Architecture neighbors**:
-  [`../../architecture/governed-api.md`](../../architecture/governed-api.md) ·
+  [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) ·
   [`../../architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) ·
   [`../../architecture/map-shell.md`](../../architecture/map-shell.md)
 - **Runbooks** (PROPOSED, partly drafted):
@@ -817,7 +832,7 @@ This document is done enough to enter the repository when:
   [`../roads-rail-trade/ARCHITECTURE.md`](../roads-rail-trade/ARCHITECTURE.md) ·
   [`../hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md) ·
   [`../geology/ARCHITECTURE.md`](../geology/ARCHITECTURE.md) ·
-  [`../flora/architecture/README.md`](../flora/architecture/README.md) *(folder pattern — see `OQ-ARCH-03`)*
+  `../flora/architecture/README.md` (not present) *(folder pattern — see `OQ-ARCH-03`)*
 - **ADRs (proposed)**: [`../../adr/`](../../adr/) — see §15.2
 - **Registers**:
   [`../../registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) ·

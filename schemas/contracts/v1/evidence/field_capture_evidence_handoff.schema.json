@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/field_capture_evidence_handoff.schema.json",
+  "title": "FieldCaptureEvidenceHandoffAssessment",
+  "description": "Closed fixture-only assessment of field-capture metadata readiness for evidence handoff. It neither creates evidence nor authorizes public use.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessed_at",
+    "capture",
+    "processing",
+    "evidence",
+    "decision",
+    "governance",
+    "limitations",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "FieldCaptureEvidenceHandoffAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.field-capture-evidence-handoff.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:field-capture-handoff:[a-f0-9]{24}$"
+    },
+    "assessed_at": { "$ref": "#/$defs/aware_datetime" },
+    "capture": { "$ref": "#/$defs/capture" },
+    "processing": { "$ref": "#/$defs/processing" },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "CAPTURE_REMAINS_CANDIDATE",
+          "FIXTURE_ONLY",
+          "NO_EVIDENCE_CREATION",
+          "NO_POLICY_OR_REVIEW_AUTHORITY",
+          "NO_RAW_COORDINATES",
+          "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+        ]
+      }
+    },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 192,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/ref" },
+        { "type": "null" }
+      ]
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_ref",
+        "capture_status",
+        "capture_kind",
+        "acquisition_method",
+        "acquired_at",
+        "source_descriptor_ref",
+        "analyst_record_ref",
+        "revision_ref",
+        "geometry_posture",
+        "geometry_ref",
+        "crs_ref",
+        "accuracy_class",
+        "rights_status",
+        "sensitivity",
+        "capture_authorization_ref"
+      ],
+      "properties": {
+        "capture_ref": { "$ref": "#/$defs/ref" },
+        "capture_status": { "const": "CANDIDATE" },
+        "capture_kind": {
+          "enum": [
+            "DRONE_CAPTURE",
+            "FIELD_OBSERVATION",
+            "GNSS_POINT",
+            "LIDAR",
+            "MANUAL_POINT",
+            "PHOTOGRAMMETRY"
+          ]
+        },
+        "acquisition_method": {
+          "enum": [
+            "CAMERA_RIG",
+            "GNSS_RECEIVER",
+            "HUMAN_RECORDED",
+            "LIDAR_SENSOR",
+            "MANUAL_MAP_PLACEMENT",
+            "UAS_SENSOR"
+          ]
+        },
+        "acquired_at": { "$ref": "#/$defs/aware_datetime" },
+        "source_descriptor_ref": { "$ref": "#/$defs/ref" },
+        "analyst_record_ref": { "$ref": "#/$defs/ref" },
+        "revision_ref": { "$ref": "#/$defs/ref" },
+        "geometry_posture": {
+          "enum": ["EXACT_RESTRICTED", "GENERALIZED_PUBLIC", "WITHHELD"]
+        },
+        "geometry_ref": { "$ref": "#/$defs/nullable_ref" },
+        "crs_ref": { "$ref": "#/$defs/nullable_ref" },
+        "accuracy_class": {
+          "enum": ["ESTIMATED", "FIELD_GRADE", "SURVEY_GRADE", "UNKNOWN"]
+        },
+        "rights_status": { "enum": ["DENIED", "UNRESOLVED", "VERIFIED"] },
+        "sensitivity": { "enum": ["PUBLIC_SAFE", "SENSITIVE", "UNKNOWN"] },
+        "capture_authorization_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "processing_receipt_ref",
+        "georeference_validation_ref",
+        "public_transform_receipt_ref"
+      ],
+      "properties": {
+        "processing_receipt_ref": { "$ref": "#/$defs/ref" },
+        "georeference_validation_ref": { "$ref": "#/$defs/nullable_ref" },
+        "public_transform_receipt_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_bundle_ref", "review_state", "handoff_state"],
+      "properties": {
+        "evidence_bundle_ref": { "$ref": "#/$defs/nullable_ref" },
+        "review_state": { "enum": ["APPROVED", "DENIED", "PENDING"] },
+        "handoff_state": { "enum": ["DENIED", "HELD", "READY"] }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": { "enum": ["ABSTAIN", "DENY", "PASS"] },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["HANDOFF_DENIED", "HANDOFF_HELD", "READY_FOR_EVIDENCE_HANDOFF"]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_accessed",
+        "reference_resolution_performed",
+        "evidence_created",
+        "policy_evaluated",
+        "review_approved",
+        "lifecycle_transitioned",
+        "release_authorized",
+        "publication_authorized",
+        "authority"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_accessed": { "const": false },
+        "reference_resolution_performed": { "const": false },
+        "evidence_created": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "lifecycle_transitioned": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false },
+        "authority": { "const": "NONE" }
+      }
+    }
+  }
+}

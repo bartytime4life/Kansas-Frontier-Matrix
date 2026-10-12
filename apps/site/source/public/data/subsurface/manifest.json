@@ -1,0 +1,5071 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-06T02:23:24.686123+00:00",
+  "status": "EXTERNAL_CONTEXT_ONLY",
+  "sources": [
+    {
+      "id": "kgs-wwc5",
+      "title": "KGS WWC5 well records",
+      "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/wwc5_wells.zip",
+      "retrievedAt": "2026-10-06T02:23:24.686123+00:00",
+      "sourceTime": "2026-09-11",
+      "sha256": "f08e1b808691ec19cd08afd644a565e13e7279f062aac6ab27d47c1adf9ee23f",
+      "limitation": "Provider records may be inaccurate or incomplete; PLSS locations are approximate. Record date can mean construction, reconstruction or plugging. No water-quality data, current well status or surveyed trajectory is inferred."
+    },
+    {
+      "id": "kgs-wwc5-logs",
+      "title": "KGS original lithologic logs",
+      "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/wwc5_lith_log.zip",
+      "retrievedAt": "2026-10-06T02:23:17.961907+00:00",
+      "sourceTime": "2026-09-11",
+      "sha256": "58b122d0af710474e7263fc9e44013081e026ba1eab922ca9e6a9644eb36d317",
+      "limitation": "Original logged descriptions, with recorded gaps and overlaps. Not continuous geology between wells. Invalid depth ranges are counted and excluded."
+    },
+    {
+      "id": "kgs-wwc5-interpreted",
+      "title": "KGS standardized lithology codes",
+      "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/interpreted_logs.zip",
+      "retrievedAt": "2026-10-06T02:23:24.215681+00:00",
+      "sourceTime": "2025-03-27",
+      "sha256": "09172a57bac1937afe664332686469d3e05da8c97ef377fe079a8cb093d180df",
+      "limitation": "Older independent interpretation edition; only exact well/depth/normalized-description matches are attached. Codes are interpretations, not observations or measured hydraulic properties."
+    },
+    {
+      "id": "kgs-core",
+      "title": "KGS Core Library inventory",
+      "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/coreLib.zip",
+      "retrievedAt": "2026-10-06T02:23:15.997130+00:00",
+      "sourceTime": "2026-09-11",
+      "sha256": "f087d0bbd88597fb88189bdbb16f91b29471343db5fda42d0d8d1558ce6ea2b0",
+      "limitation": "Inventory start/end spans may contain recovery gaps. Original drilling reference and deviation are unknown; ranges cannot be treated as true vertical depths or placed beneath terrain. Photos are external links only."
+    }
+  ],
+  "tiles": [
+    {
+      "id": "tile-155-253",
+      "bounds": [
+        -102.5,
+        36.5,
+        -102.0,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-155-253.json.gz",
+      "count": 5,
+      "wellCount": 5,
+      "coreCount": 0,
+      "sha256": "d471d5d7b0a38ad710414f44a9984d46bacb3bfc63cf85ba55c019e6881f54df",
+      "bytes": 835,
+      "uncompressedBytes": 4414
+    },
+    {
+      "id": "tile-155-254",
+      "bounds": [
+        -102.5,
+        37.0,
+        -102.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-155-254.json.gz",
+      "count": 259,
+      "wellCount": 244,
+      "coreCount": 15,
+      "sha256": "5a196bb1c858ceff90799973828423eb0864edc51b1262df677d2808f4d84ed3",
+      "bytes": 17333,
+      "uncompressedBytes": 198920
+    },
+    {
+      "id": "tile-155-255",
+      "bounds": [
+        -102.5,
+        37.5,
+        -102.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-155-255.json.gz",
+      "count": 104,
+      "wellCount": 100,
+      "coreCount": 4,
+      "sha256": "9d6dddec88e83eedd808097173b6b07980d072c6332a3d671f27d1939d01c681",
+      "bytes": 13809,
+      "uncompressedBytes": 123830
+    },
+    {
+      "id": "tile-155-256",
+      "bounds": [
+        -102.5,
+        38.0,
+        -102.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-155-256.json.gz",
+      "count": 64,
+      "wellCount": 59,
+      "coreCount": 5,
+      "sha256": "0f821d1629c5e2c991cc167c032a438035fd1d1566d17b4fb59f3256b832408b",
+      "bytes": 3798,
+      "uncompressedBytes": 41218
+    },
+    {
+      "id": "tile-155-257",
+      "bounds": [
+        -102.5,
+        38.5,
+        -102.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-155-257.json.gz",
+      "count": 53,
+      "wellCount": 49,
+      "coreCount": 4,
+      "sha256": "1bee32a319c25f29c925c9f75cf51363a476ebc7442728cb36271acbf0855bb2",
+      "bytes": 6156,
+      "uncompressedBytes": 52363
+    },
+    {
+      "id": "tile-155-258",
+      "bounds": [
+        -102.5,
+        39.0,
+        -102.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-155-258.json.gz",
+      "count": 115,
+      "wellCount": 115,
+      "coreCount": 0,
+      "sha256": "14bf86e2ed81fb1983f53acd711993ed87d5bfa9e31c548c1673dd3613758636",
+      "bytes": 9218,
+      "uncompressedBytes": 93053
+    },
+    {
+      "id": "tile-155-259",
+      "bounds": [
+        -102.5,
+        39.5,
+        -102.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-155-259.json.gz",
+      "count": 64,
+      "wellCount": 60,
+      "coreCount": 4,
+      "sha256": "b3bbfcd7b23109b11c1ed6671e6e276a5051f2c5dd8622af88bd22c225eb6929",
+      "bytes": 6339,
+      "uncompressedBytes": 57701
+    },
+    {
+      "id": "tile-155-260",
+      "bounds": [
+        -102.5,
+        40.0,
+        -102.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-155-260.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "c40cece8d3c3f7097124590d54a0742718c3be965be52ddbbc073e3390f36d92",
+      "bytes": 408,
+      "uncompressedBytes": 665
+    },
+    {
+      "id": "tile-156-253",
+      "bounds": [
+        -102.0,
+        36.5,
+        -101.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-156-253.json.gz",
+      "count": 22,
+      "wellCount": 21,
+      "coreCount": 1,
+      "sha256": "00785dad49880a79ab13e228b625602952a82e046fd1d3b972dee92a2482474a",
+      "bytes": 3411,
+      "uncompressedBytes": 22349
+    },
+    {
+      "id": "tile-156-254",
+      "bounds": [
+        -102.0,
+        37.0,
+        -101.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-156-254.json.gz",
+      "count": 1489,
+      "wellCount": 1347,
+      "coreCount": 142,
+      "sha256": "845edc81426b5fc6407b7a9eb88b591a4b69e8196a5f51279d5417755b3db4a4",
+      "bytes": 155389,
+      "uncompressedBytes": 1654331
+    },
+    {
+      "id": "tile-156-255",
+      "bounds": [
+        -102.0,
+        37.5,
+        -101.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-156-255.json.gz",
+      "count": 1504,
+      "wellCount": 1463,
+      "coreCount": 41,
+      "sha256": "a0b46e9cbd80d29ad0572f26ccb0ba547d3ffcbec7a60557df8deade7c582291",
+      "bytes": 182218,
+      "uncompressedBytes": 1863534
+    },
+    {
+      "id": "tile-156-256",
+      "bounds": [
+        -102.0,
+        38.0,
+        -101.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-156-256.json.gz",
+      "count": 391,
+      "wellCount": 368,
+      "coreCount": 23,
+      "sha256": "b16ab20351df6bc8f9fdad96e5acefb7727afab313df323046c7a1198bc9e6bf",
+      "bytes": 34673,
+      "uncompressedBytes": 359467
+    },
+    {
+      "id": "tile-156-257",
+      "bounds": [
+        -102.0,
+        38.5,
+        -101.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-156-257.json.gz",
+      "count": 939,
+      "wellCount": 922,
+      "coreCount": 17,
+      "sha256": "c003847c7565955c06baee079beb9b06e1a62165102e4492f02a6e9e870c13af",
+      "bytes": 83319,
+      "uncompressedBytes": 894874
+    },
+    {
+      "id": "tile-156-258",
+      "bounds": [
+        -102.0,
+        39.0,
+        -101.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-156-258.json.gz",
+      "count": 1236,
+      "wellCount": 1223,
+      "coreCount": 13,
+      "sha256": "9ab2c1c43820a408a29dab8e316101f94b3feedbbeb0d3aaca66e868f1577762",
+      "bytes": 109667,
+      "uncompressedBytes": 1217406
+    },
+    {
+      "id": "tile-156-259",
+      "bounds": [
+        -102.0,
+        39.5,
+        -101.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-156-259.json.gz",
+      "count": 1081,
+      "wellCount": 1066,
+      "coreCount": 15,
+      "sha256": "b0a7845e4a74df0957d1a9eb5bf3c9b8c2aecb72474b46f7d0424d603f3744a4",
+      "bytes": 80182,
+      "uncompressedBytes": 912794
+    },
+    {
+      "id": "tile-157-253",
+      "bounds": [
+        -101.5,
+        36.5,
+        -101.0,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-157-253.json.gz",
+      "count": 14,
+      "wellCount": 14,
+      "coreCount": 0,
+      "sha256": "ddfbfda0a110a2ae676aead36a1434eb6ed48f66be5bf362e74c3de29975db76",
+      "bytes": 2345,
+      "uncompressedBytes": 17091
+    },
+    {
+      "id": "tile-157-2540",
+      "bounds": [
+        -101.5,
+        37.0,
+        -101.25,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-157-2540.json.gz",
+      "count": 1087,
+      "wellCount": 1070,
+      "coreCount": 17,
+      "sha256": "3b70b7841963dbefb4b057e63b96e10152486b3580c7a87516062a6f13b67bbe",
+      "bytes": 112370,
+      "uncompressedBytes": 1239853
+    },
+    {
+      "id": "tile-157-2542",
+      "bounds": [
+        -101.5,
+        37.25,
+        -101.25,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-157-2542.json.gz",
+      "count": 612,
+      "wellCount": 588,
+      "coreCount": 24,
+      "sha256": "ad959e5c7139accf2fc6a3ed6bd7bca18a30d24eb0ac9d744db952324e746279",
+      "bytes": 75528,
+      "uncompressedBytes": 732660
+    },
+    {
+      "id": "tile-157-2541",
+      "bounds": [
+        -101.25,
+        37.0,
+        -101.0,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-157-2541.json.gz",
+      "count": 929,
+      "wellCount": 886,
+      "coreCount": 43,
+      "sha256": "38c1f0f68897bf78f851fb0511549110af7f896bc2c68f527d8480d76676813c",
+      "bytes": 100328,
+      "uncompressedBytes": 1102939
+    },
+    {
+      "id": "tile-157-2543",
+      "bounds": [
+        -101.25,
+        37.25,
+        -101.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-157-2543.json.gz",
+      "count": 914,
+      "wellCount": 836,
+      "coreCount": 78,
+      "sha256": "97bad435945664b7baa685ed3fd1b3753996481882431c217928d07f6e62751b",
+      "bytes": 100509,
+      "uncompressedBytes": 1040351
+    },
+    {
+      "id": "tile-157-2550",
+      "bounds": [
+        -101.5,
+        37.5,
+        -101.25,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-157-2550.json.gz",
+      "count": 776,
+      "wellCount": 765,
+      "coreCount": 11,
+      "sha256": "58c75fda92e5e14897cea1b745597761dcfecb9c7baaa338e4a3dacda0f6f594",
+      "bytes": 92983,
+      "uncompressedBytes": 880440
+    },
+    {
+      "id": "tile-157-2552",
+      "bounds": [
+        -101.5,
+        37.75,
+        -101.25,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-157-2552.json.gz",
+      "count": 698,
+      "wellCount": 683,
+      "coreCount": 15,
+      "sha256": "8330cc2881115506108f702c271354c92e65bb3a9e3f5cb87ad7ae228a122ac3",
+      "bytes": 66919,
+      "uncompressedBytes": 713589
+    },
+    {
+      "id": "tile-157-2551",
+      "bounds": [
+        -101.25,
+        37.5,
+        -101.0,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-157-2551.json.gz",
+      "count": 747,
+      "wellCount": 702,
+      "coreCount": 45,
+      "sha256": "2f8a37869c763979fe84f6082eae82714641339bbf42bc03e1930be13833e7dd",
+      "bytes": 112022,
+      "uncompressedBytes": 1063893
+    },
+    {
+      "id": "tile-157-2553",
+      "bounds": [
+        -101.25,
+        37.75,
+        -101.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-157-2553.json.gz",
+      "count": 1503,
+      "wellCount": 1471,
+      "coreCount": 32,
+      "sha256": "821430bb5a7502b3a558fd1937af4a76ec2a15dc9c446febe70f721bd142916a",
+      "bytes": 209790,
+      "uncompressedBytes": 2292758
+    },
+    {
+      "id": "tile-157-256",
+      "bounds": [
+        -101.5,
+        38.0,
+        -101.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-157-256.json.gz",
+      "count": 1574,
+      "wellCount": 1522,
+      "coreCount": 52,
+      "sha256": "878733cc28371bb514ccef98a7508c15ecdba22e7d2c1a14a34bc8a9a707cd0d",
+      "bytes": 157821,
+      "uncompressedBytes": 1714449
+    },
+    {
+      "id": "tile-157-257",
+      "bounds": [
+        -101.5,
+        38.5,
+        -101.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-157-257.json.gz",
+      "count": 785,
+      "wellCount": 780,
+      "coreCount": 5,
+      "sha256": "b08c550a5829d16d33d7ec71426abde1bc38eb2aa98dbf66df6150cad022f778",
+      "bytes": 65723,
+      "uncompressedBytes": 727881
+    },
+    {
+      "id": "tile-157-258",
+      "bounds": [
+        -101.5,
+        39.0,
+        -101.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-157-258.json.gz",
+      "count": 1731,
+      "wellCount": 1724,
+      "coreCount": 7,
+      "sha256": "fcbe894d327f7071abe69223632fc8e46a5adf673e786deea908932bd83bc439",
+      "bytes": 159363,
+      "uncompressedBytes": 1873334
+    },
+    {
+      "id": "tile-157-259",
+      "bounds": [
+        -101.5,
+        39.5,
+        -101.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-157-259.json.gz",
+      "count": 1445,
+      "wellCount": 1423,
+      "coreCount": 22,
+      "sha256": "f6084cf3937faf39c73884f98551aef291620acbdf3bd716418d269b55b17532",
+      "bytes": 110679,
+      "uncompressedBytes": 1333358
+    },
+    {
+      "id": "tile-157-260",
+      "bounds": [
+        -101.5,
+        40.0,
+        -101.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-157-260.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "49dc96468ac063ddd2b291ca219527e6fc31bee7f99c6299b410f84a6543e091",
+      "bytes": 489,
+      "uncompressedBytes": 939
+    },
+    {
+      "id": "tile-158-253",
+      "bounds": [
+        -101.0,
+        36.5,
+        -100.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-158-253.json.gz",
+      "count": 8,
+      "wellCount": 8,
+      "coreCount": 0,
+      "sha256": "10a2dab6ff869b1aa1eef83b9689e5e3b396cada9aa04b49ae07a15d3a87ec2d",
+      "bytes": 1005,
+      "uncompressedBytes": 6357
+    },
+    {
+      "id": "tile-158-2540",
+      "bounds": [
+        -101.0,
+        37.0,
+        -100.75,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-158-2540.json.gz",
+      "count": 1802,
+      "wellCount": 1754,
+      "coreCount": 48,
+      "sha256": "1c71c8a109e470da8d059e6ec4e4a11ec9621d78268d8b05bddcc35478e298ac",
+      "bytes": 152249,
+      "uncompressedBytes": 1839882
+    },
+    {
+      "id": "tile-158-2542",
+      "bounds": [
+        -101.0,
+        37.25,
+        -100.75,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-158-2542.json.gz",
+      "count": 920,
+      "wellCount": 872,
+      "coreCount": 48,
+      "sha256": "53b4de9070bd8c78a21677aa35f916f9704021a8c202b7d05d3c641e306569cb",
+      "bytes": 115895,
+      "uncompressedBytes": 1197664
+    },
+    {
+      "id": "tile-158-2541",
+      "bounds": [
+        -100.75,
+        37.0,
+        -100.5,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-158-2541.json.gz",
+      "count": 679,
+      "wellCount": 574,
+      "coreCount": 105,
+      "sha256": "1cbd5f73b118b617b6298f87fe402ee12ab5ab501f88b10558a61296f2041b94",
+      "bytes": 71130,
+      "uncompressedBytes": 788733
+    },
+    {
+      "id": "tile-158-2543",
+      "bounds": [
+        -100.75,
+        37.25,
+        -100.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-158-2543.json.gz",
+      "count": 640,
+      "wellCount": 634,
+      "coreCount": 6,
+      "sha256": "1d3397c83d7a18859230d11ddb2b10907483619954d447f27bedf55aca435ce2",
+      "bytes": 102724,
+      "uncompressedBytes": 1011319
+    },
+    {
+      "id": "tile-158-2550",
+      "bounds": [
+        -101.0,
+        37.5,
+        -100.75,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-158-2550.json.gz",
+      "count": 837,
+      "wellCount": 820,
+      "coreCount": 17,
+      "sha256": "749cdeecc3628c8d92c4f3cb7f2184fd23a0a44416caf332a4b679fefffe2f38",
+      "bytes": 155780,
+      "uncompressedBytes": 1505010
+    },
+    {
+      "id": "tile-158-25520",
+      "bounds": [
+        -101.0,
+        37.75,
+        -100.875,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-158-25520.json.gz",
+      "count": 368,
+      "wellCount": 360,
+      "coreCount": 8,
+      "sha256": "b528882657cb24d5816669983f77da1613e4e802953f207692c4cbeb202db008",
+      "bytes": 61522,
+      "uncompressedBytes": 627421
+    },
+    {
+      "id": "tile-158-25522",
+      "bounds": [
+        -101.0,
+        37.875,
+        -100.875,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-158-25522.json.gz",
+      "count": 1138,
+      "wellCount": 1134,
+      "coreCount": 4,
+      "sha256": "fb7332d6c00eb516cc04441a40b20c1d668e730716976bddbc643677750e487e",
+      "bytes": 97547,
+      "uncompressedBytes": 1151525
+    },
+    {
+      "id": "tile-158-25521",
+      "bounds": [
+        -100.875,
+        37.75,
+        -100.75,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-158-25521.json.gz",
+      "count": 255,
+      "wellCount": 248,
+      "coreCount": 7,
+      "sha256": "a6e217878cb564c25d5dc26a66841e9d676d99b03707d0881410708bdd58ff35",
+      "bytes": 42826,
+      "uncompressedBytes": 432599
+    },
+    {
+      "id": "tile-158-25523",
+      "bounds": [
+        -100.875,
+        37.875,
+        -100.75,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-158-25523.json.gz",
+      "count": 1069,
+      "wellCount": 1069,
+      "coreCount": 0,
+      "sha256": "f124fafef54cba6fbcc042ca390b48b30cb125734daf94920383666f3fa8e77c",
+      "bytes": 92368,
+      "uncompressedBytes": 1107282
+    },
+    {
+      "id": "tile-158-2551",
+      "bounds": [
+        -100.75,
+        37.5,
+        -100.5,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-158-2551.json.gz",
+      "count": 1107,
+      "wellCount": 1105,
+      "coreCount": 2,
+      "sha256": "4ed8487f9eac940c2011fc081abf950236c1dbe103e311b8cf89024d1b41805e",
+      "bytes": 175734,
+      "uncompressedBytes": 1719645
+    },
+    {
+      "id": "tile-158-2553",
+      "bounds": [
+        -100.75,
+        37.75,
+        -100.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-158-2553.json.gz",
+      "count": 776,
+      "wellCount": 773,
+      "coreCount": 3,
+      "sha256": "dc1dc456613f2c5dffc1eabf80206a31a1bbd957cb825685aac3b543662e6e5f",
+      "bytes": 100824,
+      "uncompressedBytes": 1037179
+    },
+    {
+      "id": "tile-158-256",
+      "bounds": [
+        -101.0,
+        38.0,
+        -100.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-158-256.json.gz",
+      "count": 2159,
+      "wellCount": 2124,
+      "coreCount": 35,
+      "sha256": "d4a9897aa6bc291d0326c9b8454cb3b6579792d80d8d0207fe2d5ecc11889cce",
+      "bytes": 210103,
+      "uncompressedBytes": 2367149
+    },
+    {
+      "id": "tile-158-257",
+      "bounds": [
+        -101.0,
+        38.5,
+        -100.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-158-257.json.gz",
+      "count": 883,
+      "wellCount": 871,
+      "coreCount": 12,
+      "sha256": "644ffa5d80862e9f3ba4fc4b31fee9e40e228998ee264fce0d560104354520fa",
+      "bytes": 73004,
+      "uncompressedBytes": 811146
+    },
+    {
+      "id": "tile-158-258",
+      "bounds": [
+        -101.0,
+        39.0,
+        -100.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-158-258.json.gz",
+      "count": 2665,
+      "wellCount": 2656,
+      "coreCount": 9,
+      "sha256": "f72baafb1e03576d533e8150d1f78e34070e7653f1a3339500253f04e9f27b5b",
+      "bytes": 216621,
+      "uncompressedBytes": 2608127
+    },
+    {
+      "id": "tile-158-259",
+      "bounds": [
+        -101.0,
+        39.5,
+        -100.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-158-259.json.gz",
+      "count": 1653,
+      "wellCount": 1641,
+      "coreCount": 12,
+      "sha256": "f8b4bcfd542d98ff629ff712aec2e9d82d1fd18fe852d1aa10c952bb9ac327f1",
+      "bytes": 124444,
+      "uncompressedBytes": 1484295
+    },
+    {
+      "id": "tile-158-260",
+      "bounds": [
+        -101.0,
+        40.0,
+        -100.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-158-260.json.gz",
+      "count": 4,
+      "wellCount": 4,
+      "coreCount": 0,
+      "sha256": "833533f99777790240e00fc842c32bc709168e4ade5109708a40d846813f4eb9",
+      "bytes": 640,
+      "uncompressedBytes": 2559
+    },
+    {
+      "id": "tile-159-254",
+      "bounds": [
+        -100.5,
+        37.0,
+        -100.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-159-254.json.gz",
+      "count": 2127,
+      "wellCount": 2061,
+      "coreCount": 66,
+      "sha256": "999c0d689683f7bbf542dd9f843c2a130cf824f9626fd0e97833ec2fade8bf48",
+      "bytes": 184945,
+      "uncompressedBytes": 2057759
+    },
+    {
+      "id": "tile-159-2550",
+      "bounds": [
+        -100.5,
+        37.5,
+        -100.25,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-159-2550.json.gz",
+      "count": 700,
+      "wellCount": 693,
+      "coreCount": 7,
+      "sha256": "130621f1fb0427ac379dfd6e046253eda826300065f59f2297cb4a5882a2c503",
+      "bytes": 76642,
+      "uncompressedBytes": 776338
+    },
+    {
+      "id": "tile-159-2552",
+      "bounds": [
+        -100.5,
+        37.75,
+        -100.25,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-159-2552.json.gz",
+      "count": 1088,
+      "wellCount": 1088,
+      "coreCount": 0,
+      "sha256": "333d61f254cd71e416a715ee58b3eea8ab6cd8d073aaf4918123ef9bccfd22d8",
+      "bytes": 103847,
+      "uncompressedBytes": 1088382
+    },
+    {
+      "id": "tile-159-2551",
+      "bounds": [
+        -100.25,
+        37.5,
+        -100.0,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-159-2551.json.gz",
+      "count": 1065,
+      "wellCount": 1065,
+      "coreCount": 0,
+      "sha256": "47045a0faf7c688a63598ad81d23675a06f0f6910f5db6ddc8f965206dd375a8",
+      "bytes": 80795,
+      "uncompressedBytes": 983761
+    },
+    {
+      "id": "tile-159-2553",
+      "bounds": [
+        -100.25,
+        37.75,
+        -100.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-159-2553.json.gz",
+      "count": 1437,
+      "wellCount": 1437,
+      "coreCount": 0,
+      "sha256": "e513d7b3d742a306dcd516eff021c34b175120cb1a57cd982b383450f06008b1",
+      "bytes": 97017,
+      "uncompressedBytes": 1199736
+    },
+    {
+      "id": "tile-159-256",
+      "bounds": [
+        -100.5,
+        38.0,
+        -100.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-159-256.json.gz",
+      "count": 789,
+      "wellCount": 769,
+      "coreCount": 20,
+      "sha256": "aa2af1aced39009edd308223d428fd9190f32a77d9d492fb9559bb6475f3b489",
+      "bytes": 60918,
+      "uncompressedBytes": 656815
+    },
+    {
+      "id": "tile-159-257",
+      "bounds": [
+        -100.5,
+        38.5,
+        -100.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-159-257.json.gz",
+      "count": 726,
+      "wellCount": 694,
+      "coreCount": 32,
+      "sha256": "cc0bb0071249cf89b3adf2aa6981f6af250d5f7f1d18326f6c69cd59adcfe49e",
+      "bytes": 49090,
+      "uncompressedBytes": 558906
+    },
+    {
+      "id": "tile-159-258",
+      "bounds": [
+        -100.5,
+        39.0,
+        -100.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-159-258.json.gz",
+      "count": 1980,
+      "wellCount": 1967,
+      "coreCount": 13,
+      "sha256": "def2cbf652506d4ae4901ea13607526005b1e384de31ba57cb9555391523f800",
+      "bytes": 173787,
+      "uncompressedBytes": 2007761
+    },
+    {
+      "id": "tile-159-259",
+      "bounds": [
+        -100.5,
+        39.5,
+        -100.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-159-259.json.gz",
+      "count": 1302,
+      "wellCount": 1225,
+      "coreCount": 77,
+      "sha256": "71fce8b26f4e5706e8e5be7d1a60664dbc2abcfc952b30c5e8ab67f0c46dc4c4",
+      "bytes": 120220,
+      "uncompressedBytes": 1380705
+    },
+    {
+      "id": "tile-159-260",
+      "bounds": [
+        -100.5,
+        40.0,
+        -100.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-159-260.json.gz",
+      "count": 5,
+      "wellCount": 4,
+      "coreCount": 1,
+      "sha256": "de21065347e5ca8ef7b2ced90fa345fccb5d30726384c8f2054400bc93d8a448",
+      "bytes": 1233,
+      "uncompressedBytes": 5523
+    },
+    {
+      "id": "tile-160-254",
+      "bounds": [
+        -100.0,
+        37.0,
+        -99.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-160-254.json.gz",
+      "count": 1501,
+      "wellCount": 1451,
+      "coreCount": 50,
+      "sha256": "d1f9379c90ef13ef84697d8cf3eb51a139e47d5666fa39b29ea079c47926a9f4",
+      "bytes": 93495,
+      "uncompressedBytes": 1155860
+    },
+    {
+      "id": "tile-160-255",
+      "bounds": [
+        -100.0,
+        37.5,
+        -99.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-160-255.json.gz",
+      "count": 2897,
+      "wellCount": 2881,
+      "coreCount": 16,
+      "sha256": "b904d45aea38a8a4fa4a76ac42c5703ae2aa622cb63ae5e1b56d2d62ad7968f0",
+      "bytes": 226487,
+      "uncompressedBytes": 2593196
+    },
+    {
+      "id": "tile-160-256",
+      "bounds": [
+        -100.0,
+        38.0,
+        -99.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-160-256.json.gz",
+      "count": 2311,
+      "wellCount": 2229,
+      "coreCount": 82,
+      "sha256": "bd435efd76df03b143ac729ce8987f682336aae6f2fd1ed80fd5de649fa8940a",
+      "bytes": 162130,
+      "uncompressedBytes": 1928851
+    },
+    {
+      "id": "tile-160-257",
+      "bounds": [
+        -100.0,
+        38.5,
+        -99.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-160-257.json.gz",
+      "count": 1458,
+      "wellCount": 1411,
+      "coreCount": 47,
+      "sha256": "fe4ab2fd4ff708eebda4e1fd8c0a407c3d5d08c6d3fc7160c2d7a97e8c8947a8",
+      "bytes": 87390,
+      "uncompressedBytes": 1088721
+    },
+    {
+      "id": "tile-160-258",
+      "bounds": [
+        -100.0,
+        39.0,
+        -99.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-160-258.json.gz",
+      "count": 1461,
+      "wellCount": 1437,
+      "coreCount": 24,
+      "sha256": "092cd27c920dc503955ddd4277661e5077541025e9a46841ea69d5054718443c",
+      "bytes": 102570,
+      "uncompressedBytes": 1247574
+    },
+    {
+      "id": "tile-160-259",
+      "bounds": [
+        -100.0,
+        39.5,
+        -99.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-160-259.json.gz",
+      "count": 2057,
+      "wellCount": 1963,
+      "coreCount": 94,
+      "sha256": "58002db8db1b60800f07ae02309fd41273d9d5ce8dfb35c2af83d7258001cce0",
+      "bytes": 154707,
+      "uncompressedBytes": 1858828
+    },
+    {
+      "id": "tile-160-260",
+      "bounds": [
+        -100.0,
+        40.0,
+        -99.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-160-260.json.gz",
+      "count": 2,
+      "wellCount": 2,
+      "coreCount": 0,
+      "sha256": "48b5cb069e1fe7b37ac9715c24a1c84ab6243aace9eb3a554a956ab068d387d7",
+      "bytes": 596,
+      "uncompressedBytes": 1557
+    },
+    {
+      "id": "tile-161-254",
+      "bounds": [
+        -99.5,
+        37.0,
+        -99.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-161-254.json.gz",
+      "count": 1324,
+      "wellCount": 1282,
+      "coreCount": 42,
+      "sha256": "4469a350c6e2fa14f671c7316e7870f6606f9648385226f9b1e7d2309d3570c3",
+      "bytes": 84174,
+      "uncompressedBytes": 1022658
+    },
+    {
+      "id": "tile-161-2550",
+      "bounds": [
+        -99.5,
+        37.5,
+        -99.25,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-161-2550.json.gz",
+      "count": 1564,
+      "wellCount": 1544,
+      "coreCount": 20,
+      "sha256": "9a68054fd3cea5478a356a8cbfe437fd523216448cea787d87bedf51d6198595",
+      "bytes": 100773,
+      "uncompressedBytes": 1278703
+    },
+    {
+      "id": "tile-161-2552",
+      "bounds": [
+        -99.5,
+        37.75,
+        -99.25,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-161-2552.json.gz",
+      "count": 1474,
+      "wellCount": 1470,
+      "coreCount": 4,
+      "sha256": "c7ed3866e4208cb8fd4f79ea7cc3b35ceb406c6cc3e24b2304b8c63f3c8d3600",
+      "bytes": 85112,
+      "uncompressedBytes": 1131819
+    },
+    {
+      "id": "tile-161-2551",
+      "bounds": [
+        -99.25,
+        37.5,
+        -99.0,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-161-2551.json.gz",
+      "count": 978,
+      "wellCount": 968,
+      "coreCount": 10,
+      "sha256": "cd67100b550b4937e371e93c29080a99e0f1b8c770b1e1b234ec0ad2ee72b871",
+      "bytes": 58957,
+      "uncompressedBytes": 766979
+    },
+    {
+      "id": "tile-161-2553",
+      "bounds": [
+        -99.25,
+        37.75,
+        -99.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-161-2553.json.gz",
+      "count": 2097,
+      "wellCount": 2087,
+      "coreCount": 10,
+      "sha256": "00d7f5d1f681704ae952e3dad1fc4ef43fc5158199fdcd6ff779817a0c3bbf40",
+      "bytes": 117951,
+      "uncompressedBytes": 1624725
+    },
+    {
+      "id": "tile-161-2560",
+      "bounds": [
+        -99.5,
+        38.0,
+        -99.25,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-161-2560.json.gz",
+      "count": 696,
+      "wellCount": 690,
+      "coreCount": 6,
+      "sha256": "1182c27a9ff132bc77646f1371c3911321a5d5515ac86db196e23f289989aef9",
+      "bytes": 48949,
+      "uncompressedBytes": 577161
+    },
+    {
+      "id": "tile-161-2562",
+      "bounds": [
+        -99.5,
+        38.25,
+        -99.25,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-161-2562.json.gz",
+      "count": 655,
+      "wellCount": 645,
+      "coreCount": 10,
+      "sha256": "800e3c983c54d579131d799a2d8a34e8d6424d74de8befaf4402bf1a04262b16",
+      "bytes": 43149,
+      "uncompressedBytes": 532217
+    },
+    {
+      "id": "tile-161-2561",
+      "bounds": [
+        -99.25,
+        38.0,
+        -99.0,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-161-2561.json.gz",
+      "count": 1916,
+      "wellCount": 1903,
+      "coreCount": 13,
+      "sha256": "4d2d067486259da0f434903f98ea290506efa7c37ef79076a90f50ec1d833320",
+      "bytes": 104144,
+      "uncompressedBytes": 1390800
+    },
+    {
+      "id": "tile-161-2563",
+      "bounds": [
+        -99.25,
+        38.25,
+        -99.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-161-2563.json.gz",
+      "count": 739,
+      "wellCount": 701,
+      "coreCount": 38,
+      "sha256": "065a80e59eeecb7e1167bc1ef8ab664562ab59775674221bf5ce2d97439930e0",
+      "bytes": 48481,
+      "uncompressedBytes": 576568
+    },
+    {
+      "id": "tile-161-2570",
+      "bounds": [
+        -99.5,
+        38.5,
+        -99.25,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-161-2570.json.gz",
+      "count": 553,
+      "wellCount": 535,
+      "coreCount": 18,
+      "sha256": "f61f7e39c8572c98bdef2a5dfbacf36dd9d3115a2938acfe9a0d93f1bd31fed3",
+      "bytes": 34205,
+      "uncompressedBytes": 411417
+    },
+    {
+      "id": "tile-161-2572",
+      "bounds": [
+        -99.5,
+        38.75,
+        -99.25,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-161-2572.json.gz",
+      "count": 3964,
+      "wellCount": 3953,
+      "coreCount": 11,
+      "sha256": "72657e6a4920a999d1f364535a0ed2b3dceb9a4c0b31d4635baa92b4da7218a2",
+      "bytes": 208829,
+      "uncompressedBytes": 2943744
+    },
+    {
+      "id": "tile-161-2571",
+      "bounds": [
+        -99.25,
+        38.5,
+        -99.0,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-161-2571.json.gz",
+      "count": 387,
+      "wellCount": 355,
+      "coreCount": 32,
+      "sha256": "33b510435ae83894657f7110111dac735d41ed160bfeaafaeb10d913530a2f81",
+      "bytes": 26832,
+      "uncompressedBytes": 315670
+    },
+    {
+      "id": "tile-161-2573",
+      "bounds": [
+        -99.25,
+        38.75,
+        -99.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-161-2573.json.gz",
+      "count": 643,
+      "wellCount": 632,
+      "coreCount": 11,
+      "sha256": "6a64da279329a3e048003bfe69384eed0f32df94e1c1c12b5c1e04982812c22b",
+      "bytes": 33761,
+      "uncompressedBytes": 448846
+    },
+    {
+      "id": "tile-161-258",
+      "bounds": [
+        -99.5,
+        39.0,
+        -99.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-161-258.json.gz",
+      "count": 1689,
+      "wellCount": 1639,
+      "coreCount": 50,
+      "sha256": "6aac0af951004a3abccbd966999239b8a409d954a8de31239a8a5e445d212ca1",
+      "bytes": 89105,
+      "uncompressedBytes": 1180375
+    },
+    {
+      "id": "tile-161-259",
+      "bounds": [
+        -99.5,
+        39.5,
+        -99.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-161-259.json.gz",
+      "count": 1644,
+      "wellCount": 1623,
+      "coreCount": 21,
+      "sha256": "f0dcbf4f29a42e84a28d7365fcd217dd244d7c4531f16318644386c75d6e3263",
+      "bytes": 100645,
+      "uncompressedBytes": 1270367
+    },
+    {
+      "id": "tile-161-260",
+      "bounds": [
+        -99.5,
+        40.0,
+        -99.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-161-260.json.gz",
+      "count": 9,
+      "wellCount": 9,
+      "coreCount": 0,
+      "sha256": "a92386e6b615e0a366ea23d118e7d6628b51197cbe58bbc1bd5ef02cc578344b",
+      "bytes": 1081,
+      "uncompressedBytes": 6327
+    },
+    {
+      "id": "tile-162-253",
+      "bounds": [
+        -99.0,
+        36.5,
+        -98.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-162-253.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "10554c4edcd8fad3efcdb515064607c5bce7a3a2c276f1dd96c55075a0d384e5",
+      "bytes": 410,
+      "uncompressedBytes": 752
+    },
+    {
+      "id": "tile-162-254",
+      "bounds": [
+        -99.0,
+        37.0,
+        -98.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-162-254.json.gz",
+      "count": 1701,
+      "wellCount": 1630,
+      "coreCount": 71,
+      "sha256": "da873b317adfcd4e6ffe671cac02cedd003903f090049f987fd85bca08efac79",
+      "bytes": 101872,
+      "uncompressedBytes": 1301983
+    },
+    {
+      "id": "tile-162-2550",
+      "bounds": [
+        -99.0,
+        37.5,
+        -98.75,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-162-2550.json.gz",
+      "count": 1112,
+      "wellCount": 1111,
+      "coreCount": 1,
+      "sha256": "b96296ec98ce212e0876344a18c68c823a8fa656becb7d850ca16edbf4dc0011",
+      "bytes": 77726,
+      "uncompressedBytes": 969243
+    },
+    {
+      "id": "tile-162-2552",
+      "bounds": [
+        -99.0,
+        37.75,
+        -98.75,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-162-2552.json.gz",
+      "count": 1802,
+      "wellCount": 1789,
+      "coreCount": 13,
+      "sha256": "465232a6513f1710972addbf1012950dcb7b2df7a1c263f51287d536a9a2cbc1",
+      "bytes": 103429,
+      "uncompressedBytes": 1361605
+    },
+    {
+      "id": "tile-162-2551",
+      "bounds": [
+        -98.75,
+        37.5,
+        -98.5,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-162-2551.json.gz",
+      "count": 2388,
+      "wellCount": 2360,
+      "coreCount": 28,
+      "sha256": "eaaf06fc240ebc98c6d56106c5012952dd9815f3ae4820a484ea86ed6745028e",
+      "bytes": 145441,
+      "uncompressedBytes": 1919285
+    },
+    {
+      "id": "tile-162-2553",
+      "bounds": [
+        -98.75,
+        37.75,
+        -98.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-162-2553.json.gz",
+      "count": 1664,
+      "wellCount": 1634,
+      "coreCount": 30,
+      "sha256": "c9820572f2126af0df9afd853b17c8cd254ddbc531491af6a1bf1171a8d135b5",
+      "bytes": 101158,
+      "uncompressedBytes": 1295472
+    },
+    {
+      "id": "tile-162-2560",
+      "bounds": [
+        -99.0,
+        38.0,
+        -98.75,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-162-2560.json.gz",
+      "count": 2273,
+      "wellCount": 2266,
+      "coreCount": 7,
+      "sha256": "4f5c37990906878b458d41790f9e5f2547a2804259ffb2e00b302f6084aad565",
+      "bytes": 126187,
+      "uncompressedBytes": 1689771
+    },
+    {
+      "id": "tile-162-25620",
+      "bounds": [
+        -99.0,
+        38.25,
+        -98.875,
+        38.375
+      ],
+      "url": "/data/subsurface/tile-162-25620.json.gz",
+      "count": 422,
+      "wellCount": 420,
+      "coreCount": 2,
+      "sha256": "2afd153da137975c679f906f5d0107ce737e43a796a56f5706b520bf57cc59de",
+      "bytes": 25013,
+      "uncompressedBytes": 311549
+    },
+    {
+      "id": "tile-162-25622",
+      "bounds": [
+        -99.0,
+        38.375,
+        -98.875,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-162-25622.json.gz",
+      "count": 261,
+      "wellCount": 260,
+      "coreCount": 1,
+      "sha256": "914a46b2dca165c4b85d9e9457c0c473873e9fef9c315866591ac95651b43194",
+      "bytes": 16574,
+      "uncompressedBytes": 191452
+    },
+    {
+      "id": "tile-162-25621",
+      "bounds": [
+        -98.875,
+        38.25,
+        -98.75,
+        38.375
+      ],
+      "url": "/data/subsurface/tile-162-25621.json.gz",
+      "count": 2974,
+      "wellCount": 2970,
+      "coreCount": 4,
+      "sha256": "a7e1373f16c9c418ee208d9cb9f9644d14d730893c008e3724e05b1157a9c9c3",
+      "bytes": 129129,
+      "uncompressedBytes": 1970621
+    },
+    {
+      "id": "tile-162-25623",
+      "bounds": [
+        -98.875,
+        38.375,
+        -98.75,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-162-25623.json.gz",
+      "count": 837,
+      "wellCount": 831,
+      "coreCount": 6,
+      "sha256": "1b69f949ef533ba8c646eb5d9359e0b2a4c4585a03f851dcfcbdb76e685f9fd9",
+      "bytes": 46473,
+      "uncompressedBytes": 608359
+    },
+    {
+      "id": "tile-162-2561",
+      "bounds": [
+        -98.75,
+        38.0,
+        -98.5,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-162-2561.json.gz",
+      "count": 1958,
+      "wellCount": 1938,
+      "coreCount": 20,
+      "sha256": "e387061bffa435d36f0f76f5289fe2a5c98effb3f96f97fe1cdbfbeb4268c208",
+      "bytes": 104171,
+      "uncompressedBytes": 1420883
+    },
+    {
+      "id": "tile-162-2563",
+      "bounds": [
+        -98.75,
+        38.25,
+        -98.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-162-2563.json.gz",
+      "count": 2467,
+      "wellCount": 2453,
+      "coreCount": 14,
+      "sha256": "e157d87846c10d66f18c90fe57c1ce5d581a7c2cd8c187b7b0c8156c13224dc1",
+      "bytes": 119279,
+      "uncompressedBytes": 1678781
+    },
+    {
+      "id": "tile-162-257",
+      "bounds": [
+        -99.0,
+        38.5,
+        -98.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-162-257.json.gz",
+      "count": 2673,
+      "wellCount": 2443,
+      "coreCount": 230,
+      "sha256": "2188f26f8ad1a10ed966ea7bed46b877ed1d30e21c8b12b60cb0eac51e7b7e1d",
+      "bytes": 142778,
+      "uncompressedBytes": 1893362
+    },
+    {
+      "id": "tile-162-258",
+      "bounds": [
+        -99.0,
+        39.0,
+        -98.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-162-258.json.gz",
+      "count": 921,
+      "wellCount": 910,
+      "coreCount": 11,
+      "sha256": "220a3d844f331556cc0c4938747ed6e5147645a6a9835068c0ebda3b183ba330",
+      "bytes": 52737,
+      "uncompressedBytes": 669361
+    },
+    {
+      "id": "tile-162-259",
+      "bounds": [
+        -99.0,
+        39.5,
+        -98.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-162-259.json.gz",
+      "count": 1076,
+      "wellCount": 1070,
+      "coreCount": 6,
+      "sha256": "4da64e8fb859c11d4ca48d34cdd9f61e3adb23e0d89c78995ad26b82b6dd2050",
+      "bytes": 60421,
+      "uncompressedBytes": 762697
+    },
+    {
+      "id": "tile-162-260",
+      "bounds": [
+        -99.0,
+        40.0,
+        -98.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-162-260.json.gz",
+      "count": 2,
+      "wellCount": 2,
+      "coreCount": 0,
+      "sha256": "8788dcff05b4580676baf0e59519a134f0c79860e7d9f93ca5e7ad002bab075b",
+      "bytes": 539,
+      "uncompressedBytes": 1404
+    },
+    {
+      "id": "tile-163-253",
+      "bounds": [
+        -98.5,
+        36.5,
+        -98.0,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-163-253.json.gz",
+      "count": 3,
+      "wellCount": 3,
+      "coreCount": 0,
+      "sha256": "1e2dc927914b84afdbb45b0536aca684f8590fd700a8670d28687634a9451c46",
+      "bytes": 627,
+      "uncompressedBytes": 2169
+    },
+    {
+      "id": "tile-163-254",
+      "bounds": [
+        -98.5,
+        37.0,
+        -98.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-163-254.json.gz",
+      "count": 2277,
+      "wellCount": 2230,
+      "coreCount": 47,
+      "sha256": "e89e1b62c520211f39bf1f4392eb1e93e3c23fdc3e010e111aa2c470a3d936c8",
+      "bytes": 128678,
+      "uncompressedBytes": 1715459
+    },
+    {
+      "id": "tile-163-2550",
+      "bounds": [
+        -98.5,
+        37.5,
+        -98.25,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-163-2550.json.gz",
+      "count": 1060,
+      "wellCount": 1054,
+      "coreCount": 6,
+      "sha256": "51ef2031be6c69f6687ba73f9479319c506022cb3182a4d31b6aefd463d6ae93",
+      "bytes": 72797,
+      "uncompressedBytes": 914261
+    },
+    {
+      "id": "tile-163-2552",
+      "bounds": [
+        -98.5,
+        37.75,
+        -98.25,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-163-2552.json.gz",
+      "count": 1558,
+      "wellCount": 1532,
+      "coreCount": 26,
+      "sha256": "0c2b303dcc7ba93ffd1596b3dde5406c72922a8726310c5a79874b915051f74e",
+      "bytes": 87343,
+      "uncompressedBytes": 1162252
+    },
+    {
+      "id": "tile-163-2551",
+      "bounds": [
+        -98.25,
+        37.5,
+        -98.0,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-163-2551.json.gz",
+      "count": 1274,
+      "wellCount": 1269,
+      "coreCount": 5,
+      "sha256": "0a8aae7a98ab396b7afe943bf39e902ae589a01a4be11df69d68da2578e27122",
+      "bytes": 76588,
+      "uncompressedBytes": 981107
+    },
+    {
+      "id": "tile-163-2553",
+      "bounds": [
+        -98.25,
+        37.75,
+        -98.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-163-2553.json.gz",
+      "count": 1651,
+      "wellCount": 1644,
+      "coreCount": 7,
+      "sha256": "17ded7e5c676b3483f2ef6fb65f01d3db50acb0ce2012d55379310aae29f8bc3",
+      "bytes": 88700,
+      "uncompressedBytes": 1180461
+    },
+    {
+      "id": "tile-163-2560",
+      "bounds": [
+        -98.5,
+        38.0,
+        -98.25,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-163-2560.json.gz",
+      "count": 1289,
+      "wellCount": 1267,
+      "coreCount": 22,
+      "sha256": "a8c8ac534a26591cf0822200c018ec28aa8ba1d6f94497df9f449896bf2d29ea",
+      "bytes": 66854,
+      "uncompressedBytes": 911877
+    },
+    {
+      "id": "tile-163-2562",
+      "bounds": [
+        -98.5,
+        38.25,
+        -98.25,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-163-2562.json.gz",
+      "count": 1399,
+      "wellCount": 1346,
+      "coreCount": 53,
+      "sha256": "ae74f3e7d30571af3c3b941e660dce48e749b4e5445a2ac7affd7975e7fe5f96",
+      "bytes": 68771,
+      "uncompressedBytes": 946384
+    },
+    {
+      "id": "tile-163-2561",
+      "bounds": [
+        -98.25,
+        38.0,
+        -98.0,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-163-2561.json.gz",
+      "count": 2025,
+      "wellCount": 2010,
+      "coreCount": 15,
+      "sha256": "8235adb3d62152a85b55e2c4b4cd3ad3c7358ccb1f67ad23aa9c9802544650b1",
+      "bytes": 98785,
+      "uncompressedBytes": 1384929
+    },
+    {
+      "id": "tile-163-2563",
+      "bounds": [
+        -98.25,
+        38.25,
+        -98.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-163-2563.json.gz",
+      "count": 1341,
+      "wellCount": 1258,
+      "coreCount": 83,
+      "sha256": "15df24a69dbfa80da8bc6676e03ae08d112dc25aefcace9ec10f6683c446c519",
+      "bytes": 83508,
+      "uncompressedBytes": 1025789
+    },
+    {
+      "id": "tile-163-257",
+      "bounds": [
+        -98.5,
+        38.5,
+        -98.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-163-257.json.gz",
+      "count": 2521,
+      "wellCount": 2447,
+      "coreCount": 74,
+      "sha256": "6dd0279fb8edf7f45b6142c6b0477a5cc9b4ccb6fdf52c8fc65479b78c5d98df",
+      "bytes": 142355,
+      "uncompressedBytes": 1836535
+    },
+    {
+      "id": "tile-163-258",
+      "bounds": [
+        -98.5,
+        39.0,
+        -98.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-163-258.json.gz",
+      "count": 1057,
+      "wellCount": 1043,
+      "coreCount": 14,
+      "sha256": "7c92244821e70bb166b322760f0ac22d37ec8a179cfc8e6bfc6fd0fe0f376f51",
+      "bytes": 64034,
+      "uncompressedBytes": 774737
+    },
+    {
+      "id": "tile-163-259",
+      "bounds": [
+        -98.5,
+        39.5,
+        -98.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-163-259.json.gz",
+      "count": 488,
+      "wellCount": 487,
+      "coreCount": 1,
+      "sha256": "a219fa5e27b865e05e540e0856ed07c0c024badf006db4905b949e345840ec93",
+      "bytes": 28618,
+      "uncompressedBytes": 336904
+    },
+    {
+      "id": "tile-163-260",
+      "bounds": [
+        -98.5,
+        40.0,
+        -98.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-163-260.json.gz",
+      "count": 17,
+      "wellCount": 17,
+      "coreCount": 0,
+      "sha256": "687d54c84e420538153aa15a78290cf65a5131886f8e5c579bd4f0bd63756b19",
+      "bytes": 1229,
+      "uncompressedBytes": 10202
+    },
+    {
+      "id": "tile-164-253",
+      "bounds": [
+        -98.0,
+        36.5,
+        -97.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-164-253.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "b1798808910103e7e6b7c9d860af4fd467b52e443a0ebd3a7f5999c16e85f1e5",
+      "bytes": 416,
+      "uncompressedBytes": 732
+    },
+    {
+      "id": "tile-164-254",
+      "bounds": [
+        -98.0,
+        37.0,
+        -97.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-164-254.json.gz",
+      "count": 2261,
+      "wellCount": 2216,
+      "coreCount": 45,
+      "sha256": "d7b457fc1342feadd38a8b1e9308584b67f8d6f242edff7a98a6b9e2e4ad266f",
+      "bytes": 113083,
+      "uncompressedBytes": 1566086
+    },
+    {
+      "id": "tile-164-2550",
+      "bounds": [
+        -98.0,
+        37.5,
+        -97.75,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-164-2550.json.gz",
+      "count": 1669,
+      "wellCount": 1661,
+      "coreCount": 8,
+      "sha256": "14f2f5a8b63f4304e4c634fc63d40da5a613c7389c1f59da94423c267736cc21",
+      "bytes": 80772,
+      "uncompressedBytes": 1170186
+    },
+    {
+      "id": "tile-164-2552",
+      "bounds": [
+        -98.0,
+        37.75,
+        -97.75,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-164-2552.json.gz",
+      "count": 2043,
+      "wellCount": 2023,
+      "coreCount": 20,
+      "sha256": "c40415c9c0336273cb6dd7f7e41269243acf2460c8ac6c7bb2b743109c065456",
+      "bytes": 106594,
+      "uncompressedBytes": 1421439
+    },
+    {
+      "id": "tile-164-25510",
+      "bounds": [
+        -97.75,
+        37.5,
+        -97.625,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-164-25510.json.gz",
+      "count": 353,
+      "wellCount": 351,
+      "coreCount": 2,
+      "sha256": "86e629d41e4a526ff2d995f6ef60caf963637220bb96bd7c92358d695e7a4910",
+      "bytes": 17805,
+      "uncompressedBytes": 247559
+    },
+    {
+      "id": "tile-164-25512",
+      "bounds": [
+        -97.75,
+        37.625,
+        -97.625,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-164-25512.json.gz",
+      "count": 814,
+      "wellCount": 812,
+      "coreCount": 2,
+      "sha256": "4b5761c1b3091814124ac8d9fd2a5c581b717308ddba50c622041f7ce282a9e1",
+      "bytes": 38760,
+      "uncompressedBytes": 577717
+    },
+    {
+      "id": "tile-164-25511",
+      "bounds": [
+        -97.625,
+        37.5,
+        -97.5,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-164-25511.json.gz",
+      "count": 1052,
+      "wellCount": 1047,
+      "coreCount": 5,
+      "sha256": "9439c6b7634ed1a3f60e4f1e005b10e08e8c60fdd6624cfd5c004ff0b9066aa4",
+      "bytes": 48198,
+      "uncompressedBytes": 736499
+    },
+    {
+      "id": "tile-164-255130",
+      "bounds": [
+        -97.625,
+        37.625,
+        -97.5625,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-164-255130.json.gz",
+      "count": 585,
+      "wellCount": 585,
+      "coreCount": 0,
+      "sha256": "757c6477bda7c36e9e639f715f7772aae78d962056c3b11ca6d6e4177e5786f1",
+      "bytes": 28281,
+      "uncompressedBytes": 439470
+    },
+    {
+      "id": "tile-164-255132",
+      "bounds": [
+        -97.625,
+        37.6875,
+        -97.5625,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-164-255132.json.gz",
+      "count": 273,
+      "wellCount": 273,
+      "coreCount": 0,
+      "sha256": "8aaffd93f6c9f847eb058bd3a23ff52724216eded14b4618e5c68b9b4ab79597",
+      "bytes": 14177,
+      "uncompressedBytes": 198593
+    },
+    {
+      "id": "tile-164-255131",
+      "bounds": [
+        -97.5625,
+        37.625,
+        -97.5,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-164-255131.json.gz",
+      "count": 1947,
+      "wellCount": 1947,
+      "coreCount": 0,
+      "sha256": "64ffd94d3dc6be0d72fb5632925f5d96d03156d73557645253338d6c2250ecc7",
+      "bytes": 85500,
+      "uncompressedBytes": 1482151
+    },
+    {
+      "id": "tile-164-255133",
+      "bounds": [
+        -97.5625,
+        37.6875,
+        -97.5,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-164-255133.json.gz",
+      "count": 1228,
+      "wellCount": 1228,
+      "coreCount": 0,
+      "sha256": "8a8e3c5061f9a7f0441c7a5b5745034b325b55dd872e666b3cf69850dc49e0fe",
+      "bytes": 52009,
+      "uncompressedBytes": 911892
+    },
+    {
+      "id": "tile-164-2553",
+      "bounds": [
+        -97.75,
+        37.75,
+        -97.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-164-2553.json.gz",
+      "count": 3551,
+      "wellCount": 3550,
+      "coreCount": 1,
+      "sha256": "88f4459bb37316086b62372f5933ec1b7835cfaf7540a2ac0deb4d090711b895",
+      "bytes": 197305,
+      "uncompressedBytes": 2784263
+    },
+    {
+      "id": "tile-164-256000",
+      "bounds": [
+        -98.0,
+        38.0,
+        -97.9375,
+        38.0625
+      ],
+      "url": "/data/subsurface/tile-164-256000.json.gz",
+      "count": 1375,
+      "wellCount": 1372,
+      "coreCount": 3,
+      "sha256": "489f5fd32afed6a2007a1fe49cfe4279fb491cffe4b4fc815facfac611227377",
+      "bytes": 62758,
+      "uncompressedBytes": 889703
+    },
+    {
+      "id": "tile-164-256002",
+      "bounds": [
+        -98.0,
+        38.0625,
+        -97.9375,
+        38.125
+      ],
+      "url": "/data/subsurface/tile-164-256002.json.gz",
+      "count": 1260,
+      "wellCount": 1257,
+      "coreCount": 3,
+      "sha256": "fc933bd4fa64369ae62aae675f847d5ef24590c6bd9bb40e22ebc42926729f16",
+      "bytes": 46281,
+      "uncompressedBytes": 787337
+    },
+    {
+      "id": "tile-164-256001",
+      "bounds": [
+        -97.9375,
+        38.0,
+        -97.875,
+        38.0625
+      ],
+      "url": "/data/subsurface/tile-164-256001.json.gz",
+      "count": 1747,
+      "wellCount": 1747,
+      "coreCount": 0,
+      "sha256": "72dcd7c853e848ebefe3ed420a36d09afe097c1db339d64bab09aac4bc0f1ce3",
+      "bytes": 63365,
+      "uncompressedBytes": 1030742
+    },
+    {
+      "id": "tile-164-256003",
+      "bounds": [
+        -97.9375,
+        38.0625,
+        -97.875,
+        38.125
+      ],
+      "url": "/data/subsurface/tile-164-256003.json.gz",
+      "count": 2821,
+      "wellCount": 2821,
+      "coreCount": 0,
+      "sha256": "fa7768e3b3bbfdcefa8b43e536e5559a0cba97481955ace06795e1cefaf78ef2",
+      "bytes": 116790,
+      "uncompressedBytes": 1883641
+    },
+    {
+      "id": "tile-164-25602",
+      "bounds": [
+        -98.0,
+        38.125,
+        -97.875,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-164-25602.json.gz",
+      "count": 1192,
+      "wellCount": 1192,
+      "coreCount": 0,
+      "sha256": "a912f119fd51b75599843ed2bb312dd7ec3e72f184faebb7913c6e9c1c6eace9",
+      "bytes": 70256,
+      "uncompressedBytes": 947231
+    },
+    {
+      "id": "tile-164-25601",
+      "bounds": [
+        -97.875,
+        38.0,
+        -97.75,
+        38.125
+      ],
+      "url": "/data/subsurface/tile-164-25601.json.gz",
+      "count": 2154,
+      "wellCount": 2153,
+      "coreCount": 1,
+      "sha256": "f959b69aa15caa242bdd0d2ba46a03367c0371bb956c6e48df9776427adeab7f",
+      "bytes": 115522,
+      "uncompressedBytes": 1648352
+    },
+    {
+      "id": "tile-164-25603",
+      "bounds": [
+        -97.875,
+        38.125,
+        -97.75,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-164-25603.json.gz",
+      "count": 809,
+      "wellCount": 809,
+      "coreCount": 0,
+      "sha256": "33750b971ab6e6f3f38ae9c27f49e4bce1f4f3d78ece1dbc3b7869cc8cd6c096",
+      "bytes": 43890,
+      "uncompressedBytes": 583380
+    },
+    {
+      "id": "tile-164-2562",
+      "bounds": [
+        -98.0,
+        38.25,
+        -97.75,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-164-2562.json.gz",
+      "count": 1120,
+      "wellCount": 1109,
+      "coreCount": 11,
+      "sha256": "d80e51b20d8a3522f8dd652172cf74450b506480a6e12ab77d5c7bc24e9ac7e7",
+      "bytes": 67036,
+      "uncompressedBytes": 837883
+    },
+    {
+      "id": "tile-164-2561",
+      "bounds": [
+        -97.75,
+        38.0,
+        -97.5,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-164-2561.json.gz",
+      "count": 2759,
+      "wellCount": 2725,
+      "coreCount": 34,
+      "sha256": "87cd9783397ea5382d1a93df037a68363e2db7276188a408db5133ba1fabd2ec",
+      "bytes": 206061,
+      "uncompressedBytes": 2559688
+    },
+    {
+      "id": "tile-164-2563",
+      "bounds": [
+        -97.75,
+        38.25,
+        -97.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-164-2563.json.gz",
+      "count": 2760,
+      "wellCount": 2745,
+      "coreCount": 15,
+      "sha256": "1f52362f7e22776da634a5a90b3a66abf6f6ed91d3555978cdfe57f4b4bc45fa",
+      "bytes": 183756,
+      "uncompressedBytes": 2267216
+    },
+    {
+      "id": "tile-164-2570",
+      "bounds": [
+        -98.0,
+        38.5,
+        -97.75,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-164-2570.json.gz",
+      "count": 504,
+      "wellCount": 504,
+      "coreCount": 0,
+      "sha256": "6eb1a1a179abc4f9fdf9fd338d035e6ef4b9cdc9ca6d0590b92be38041dc9552",
+      "bytes": 26208,
+      "uncompressedBytes": 340491
+    },
+    {
+      "id": "tile-164-2572",
+      "bounds": [
+        -98.0,
+        38.75,
+        -97.75,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-164-2572.json.gz",
+      "count": 472,
+      "wellCount": 471,
+      "coreCount": 1,
+      "sha256": "0b4319f38116623d2c3c6f00005b644fd2625073ee12ff09efdcb8461de13516",
+      "bytes": 30147,
+      "uncompressedBytes": 346479
+    },
+    {
+      "id": "tile-164-2571",
+      "bounds": [
+        -97.75,
+        38.5,
+        -97.5,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-164-2571.json.gz",
+      "count": 1251,
+      "wellCount": 1248,
+      "coreCount": 3,
+      "sha256": "8bdefd4779e943ade51e4b3d3cac7848eb8367a73415ef72d9d692a6015014a6",
+      "bytes": 73559,
+      "uncompressedBytes": 957136
+    },
+    {
+      "id": "tile-164-25730",
+      "bounds": [
+        -97.75,
+        38.75,
+        -97.625,
+        38.875
+      ],
+      "url": "/data/subsurface/tile-164-25730.json.gz",
+      "count": 1020,
+      "wellCount": 1019,
+      "coreCount": 1,
+      "sha256": "65d49e3c327600166a0e80c585b1155ec0eb94e6e15384c7ceba68a68daca1cc",
+      "bytes": 55085,
+      "uncompressedBytes": 709593
+    },
+    {
+      "id": "tile-164-25732",
+      "bounds": [
+        -97.75,
+        38.875,
+        -97.625,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-164-25732.json.gz",
+      "count": 203,
+      "wellCount": 203,
+      "coreCount": 0,
+      "sha256": "0fe80f1a67c8fdb3b06016b3a9b98288098a2c01003e3aadeff41bd9c63eeed6",
+      "bytes": 15057,
+      "uncompressedBytes": 167659
+    },
+    {
+      "id": "tile-164-257310",
+      "bounds": [
+        -97.625,
+        38.75,
+        -97.5625,
+        38.8125
+      ],
+      "url": "/data/subsurface/tile-164-257310.json.gz",
+      "count": 1980,
+      "wellCount": 1980,
+      "coreCount": 0,
+      "sha256": "d34833669c8b64d429529fad5366cae395d1ddc35ba94137ede0b066cb132ebc",
+      "bytes": 89880,
+      "uncompressedBytes": 1415430
+    },
+    {
+      "id": "tile-164-257312",
+      "bounds": [
+        -97.625,
+        38.8125,
+        -97.5625,
+        38.875
+      ],
+      "url": "/data/subsurface/tile-164-257312.json.gz",
+      "count": 2189,
+      "wellCount": 2188,
+      "coreCount": 1,
+      "sha256": "247d066a75eec972a87bce20f024d5e2f17d55a22521048f7e30484c7f86baac",
+      "bytes": 105683,
+      "uncompressedBytes": 1529254
+    },
+    {
+      "id": "tile-164-257311",
+      "bounds": [
+        -97.5625,
+        38.75,
+        -97.5,
+        38.8125
+      ],
+      "url": "/data/subsurface/tile-164-257311.json.gz",
+      "count": 85,
+      "wellCount": 85,
+      "coreCount": 0,
+      "sha256": "1d120cea755356d06bc6995d78a4fea7aff9f177847bce2715eb98f32c8d18e8",
+      "bytes": 5681,
+      "uncompressedBytes": 60440
+    },
+    {
+      "id": "tile-164-257313",
+      "bounds": [
+        -97.5625,
+        38.8125,
+        -97.5,
+        38.875
+      ],
+      "url": "/data/subsurface/tile-164-257313.json.gz",
+      "count": 347,
+      "wellCount": 346,
+      "coreCount": 1,
+      "sha256": "468990b1a7d462d6b8da9abc6b8ad7a52a665393f9abed594fba942959a6f9c6",
+      "bytes": 19741,
+      "uncompressedBytes": 249937
+    },
+    {
+      "id": "tile-164-25733",
+      "bounds": [
+        -97.625,
+        38.875,
+        -97.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-164-25733.json.gz",
+      "count": 434,
+      "wellCount": 430,
+      "coreCount": 4,
+      "sha256": "f84e59401154b861a540fe7d97d01b73407a6b2dc056a0d3d8e161e0da41562d",
+      "bytes": 27305,
+      "uncompressedBytes": 322539
+    },
+    {
+      "id": "tile-164-258",
+      "bounds": [
+        -98.0,
+        39.0,
+        -97.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-164-258.json.gz",
+      "count": 1821,
+      "wellCount": 1813,
+      "coreCount": 8,
+      "sha256": "aa51ef1fefa2de3b361c4ac852536393f33a4123d90e78676db436d76542053f",
+      "bytes": 127575,
+      "uncompressedBytes": 1507486
+    },
+    {
+      "id": "tile-164-259",
+      "bounds": [
+        -98.0,
+        39.5,
+        -97.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-164-259.json.gz",
+      "count": 1779,
+      "wellCount": 1773,
+      "coreCount": 6,
+      "sha256": "13c7774a32eb48ce0432e0d25f75ec6960b927814ec84eea476a14edd23aa139",
+      "bytes": 108054,
+      "uncompressedBytes": 1347119
+    },
+    {
+      "id": "tile-164-260",
+      "bounds": [
+        -98.0,
+        40.0,
+        -97.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-164-260.json.gz",
+      "count": 22,
+      "wellCount": 22,
+      "coreCount": 0,
+      "sha256": "51bd03eef48a18f5d939acc85dea98956e085f0894d98c8c95bcb195116d376b",
+      "bytes": 1545,
+      "uncompressedBytes": 14039
+    },
+    {
+      "id": "tile-165-253",
+      "bounds": [
+        -97.5,
+        36.5,
+        -97.0,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-165-253.json.gz",
+      "count": 7,
+      "wellCount": 7,
+      "coreCount": 0,
+      "sha256": "92af94b9d1e93f9efacd6a5e5462882e40b3dfce8e228c3965ec9ed2c48052bf",
+      "bytes": 663,
+      "uncompressedBytes": 3801
+    },
+    {
+      "id": "tile-165-2540",
+      "bounds": [
+        -97.5,
+        37.0,
+        -97.25,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-165-2540.json.gz",
+      "count": 145,
+      "wellCount": 137,
+      "coreCount": 8,
+      "sha256": "382aa132163f74c1f6841651aaf72febf90aaf05837f6d1f449ab28b5b2b00c0",
+      "bytes": 8923,
+      "uncompressedBytes": 101041
+    },
+    {
+      "id": "tile-165-2542",
+      "bounds": [
+        -97.5,
+        37.25,
+        -97.25,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-165-2542.json.gz",
+      "count": 2156,
+      "wellCount": 2129,
+      "coreCount": 27,
+      "sha256": "2d2d3db14f40350e9d677b54c2b3d2599eae46a6264f6dcec64a47e95163b344",
+      "bytes": 98205,
+      "uncompressedBytes": 1468336
+    },
+    {
+      "id": "tile-165-2541",
+      "bounds": [
+        -97.25,
+        37.0,
+        -97.0,
+        37.25
+      ],
+      "url": "/data/subsurface/tile-165-2541.json.gz",
+      "count": 1309,
+      "wellCount": 1267,
+      "coreCount": 42,
+      "sha256": "d89ea255e392195d70e4ddf14c5d383510f013bf4d062491256e5bfae456bb7e",
+      "bytes": 67801,
+      "uncompressedBytes": 908961
+    },
+    {
+      "id": "tile-165-2543",
+      "bounds": [
+        -97.25,
+        37.25,
+        -97.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-165-2543.json.gz",
+      "count": 1701,
+      "wellCount": 1666,
+      "coreCount": 35,
+      "sha256": "90537647d260e59e465439abccc5ce9f6819f18470d5c8ce107f41f8783aa6d2",
+      "bytes": 85373,
+      "uncompressedBytes": 1229766
+    },
+    {
+      "id": "tile-165-25500",
+      "bounds": [
+        -97.5,
+        37.5,
+        -97.375,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-165-25500.json.gz",
+      "count": 2112,
+      "wellCount": 2109,
+      "coreCount": 3,
+      "sha256": "f44f5a032cc1860a9e4d6eb6bc0b70708c6e3fdf6ef1ff2c98d617111598771c",
+      "bytes": 105004,
+      "uncompressedBytes": 1594564
+    },
+    {
+      "id": "tile-165-2550200",
+      "bounds": [
+        -97.5,
+        37.625,
+        -97.46875,
+        37.65625
+      ],
+      "url": "/data/subsurface/tile-165-2550200.json.gz",
+      "count": 640,
+      "wellCount": 640,
+      "coreCount": 0,
+      "sha256": "d55bb16290625d2ffa831cf583612b530131017e308fb499f6f7165ae27b9c6e",
+      "bytes": 32294,
+      "uncompressedBytes": 507375
+    },
+    {
+      "id": "tile-165-2550202",
+      "bounds": [
+        -97.5,
+        37.65625,
+        -97.46875,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-2550202.json.gz",
+      "count": 1333,
+      "wellCount": 1333,
+      "coreCount": 0,
+      "sha256": "a804023e5b962226279b84cb4382377aa70f1de09f00d02247f7c3ae0a365dba",
+      "bytes": 58656,
+      "uncompressedBytes": 1018964
+    },
+    {
+      "id": "tile-165-2550201",
+      "bounds": [
+        -97.46875,
+        37.625,
+        -97.4375,
+        37.65625
+      ],
+      "url": "/data/subsurface/tile-165-2550201.json.gz",
+      "count": 560,
+      "wellCount": 560,
+      "coreCount": 0,
+      "sha256": "3ed913a43d40f7bbfa6e89c6e9a6187c641526555e48973467d270b9d8518f0f",
+      "bytes": 28961,
+      "uncompressedBytes": 444444
+    },
+    {
+      "id": "tile-165-2550203",
+      "bounds": [
+        -97.46875,
+        37.65625,
+        -97.4375,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-2550203.json.gz",
+      "count": 1453,
+      "wellCount": 1453,
+      "coreCount": 0,
+      "sha256": "17a6cfddce473c2303ffb853ead02fac1d95cd66c191c88ea06c7645c273dad4",
+      "bytes": 62434,
+      "uncompressedBytes": 1039607
+    },
+    {
+      "id": "tile-165-2550220",
+      "bounds": [
+        -97.5,
+        37.6875,
+        -97.46875,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550220.json.gz",
+      "count": 1579,
+      "wellCount": 1579,
+      "coreCount": 0,
+      "sha256": "8d160c89efdd5d2cc8f518f90867a8775d34bd9ecd4428beaff8329d488bbd84",
+      "bytes": 66126,
+      "uncompressedBytes": 1194173
+    },
+    {
+      "id": "tile-165-2550222",
+      "bounds": [
+        -97.5,
+        37.71875,
+        -97.46875,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550222.json.gz",
+      "count": 1287,
+      "wellCount": 1287,
+      "coreCount": 0,
+      "sha256": "34265e7a3cd05bf0a99623f18e3140b3d2216430e4a69696aef354e0ab6db4a9",
+      "bytes": 48959,
+      "uncompressedBytes": 942756
+    },
+    {
+      "id": "tile-165-2550221",
+      "bounds": [
+        -97.46875,
+        37.6875,
+        -97.4375,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550221.json.gz",
+      "count": 1537,
+      "wellCount": 1537,
+      "coreCount": 0,
+      "sha256": "3808290394f0cf0fe18cc3c5772c910994099362d656e432f8e81d40aa6df0a7",
+      "bytes": 62562,
+      "uncompressedBytes": 1051086
+    },
+    {
+      "id": "tile-165-2550223",
+      "bounds": [
+        -97.46875,
+        37.71875,
+        -97.4375,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550223.json.gz",
+      "count": 2034,
+      "wellCount": 2034,
+      "coreCount": 0,
+      "sha256": "613ff9ada66157308fcebe26f2ea3de11c77e0a32b4082c340b48b783beea551",
+      "bytes": 75500,
+      "uncompressedBytes": 1505915
+    },
+    {
+      "id": "tile-165-255021",
+      "bounds": [
+        -97.4375,
+        37.625,
+        -97.375,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-255021.json.gz",
+      "count": 2856,
+      "wellCount": 2855,
+      "coreCount": 1,
+      "sha256": "0dadfd3a2b1c465d8f0262f29ec44f8bf4b08b74b66d1d416dba50e410be781c",
+      "bytes": 111040,
+      "uncompressedBytes": 1805153
+    },
+    {
+      "id": "tile-165-2550230",
+      "bounds": [
+        -97.4375,
+        37.6875,
+        -97.40625,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550230.json.gz",
+      "count": 1074,
+      "wellCount": 1074,
+      "coreCount": 0,
+      "sha256": "e56d24b9aa41612c427ec7e25c85154152fc7b202d3bc88875c942bdebbada95",
+      "bytes": 44109,
+      "uncompressedBytes": 703489
+    },
+    {
+      "id": "tile-165-2550232",
+      "bounds": [
+        -97.4375,
+        37.71875,
+        -97.40625,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550232.json.gz",
+      "count": 2992,
+      "wellCount": 2992,
+      "coreCount": 0,
+      "sha256": "9f57edadfbd80930e06f1595639a68c20f975dd8dfafca66c75cd95d56b35299",
+      "bytes": 86957,
+      "uncompressedBytes": 1956214
+    },
+    {
+      "id": "tile-165-2550231",
+      "bounds": [
+        -97.40625,
+        37.6875,
+        -97.375,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550231.json.gz",
+      "count": 1134,
+      "wellCount": 1134,
+      "coreCount": 0,
+      "sha256": "cf69695b0fbed10decd5c91e4258b763791aa3d98d139c59e0184f678f7e930f",
+      "bytes": 37978,
+      "uncompressedBytes": 645492
+    },
+    {
+      "id": "tile-165-2550233",
+      "bounds": [
+        -97.40625,
+        37.71875,
+        -97.375,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550233.json.gz",
+      "count": 795,
+      "wellCount": 795,
+      "coreCount": 0,
+      "sha256": "ff75d829d6e2af5e9b4b45e94a762cc9f57e104b5e9c196e55a7b2bd35b0a6ce",
+      "bytes": 30026,
+      "uncompressedBytes": 498207
+    },
+    {
+      "id": "tile-165-255010",
+      "bounds": [
+        -97.375,
+        37.5,
+        -97.3125,
+        37.5625
+      ],
+      "url": "/data/subsurface/tile-165-255010.json.gz",
+      "count": 1555,
+      "wellCount": 1555,
+      "coreCount": 0,
+      "sha256": "dbe879765a61d4bceb6eb577e4c459a2a9858147a4c74b8b43c26ce140da932a",
+      "bytes": 58944,
+      "uncompressedBytes": 1029019
+    },
+    {
+      "id": "tile-165-255012",
+      "bounds": [
+        -97.375,
+        37.5625,
+        -97.3125,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-165-255012.json.gz",
+      "count": 2776,
+      "wellCount": 2773,
+      "coreCount": 3,
+      "sha256": "fcfa7337294fcdb5a35767901cebf659217721b5daa8dbe6d6b09bdebc789361",
+      "bytes": 98540,
+      "uncompressedBytes": 1679007
+    },
+    {
+      "id": "tile-165-255011",
+      "bounds": [
+        -97.3125,
+        37.5,
+        -97.25,
+        37.5625
+      ],
+      "url": "/data/subsurface/tile-165-255011.json.gz",
+      "count": 1195,
+      "wellCount": 1195,
+      "coreCount": 0,
+      "sha256": "10cab9923246af0727a359a7823c8f725309c6fe36b82c221887fdace92ddb62",
+      "bytes": 55523,
+      "uncompressedBytes": 842180
+    },
+    {
+      "id": "tile-165-255013",
+      "bounds": [
+        -97.3125,
+        37.5625,
+        -97.25,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-165-255013.json.gz",
+      "count": 2177,
+      "wellCount": 2177,
+      "coreCount": 0,
+      "sha256": "c5435faf5740e8a209b9e59d25e2810b5d9d5de33e63593742ac144c29c848f3",
+      "bytes": 108129,
+      "uncompressedBytes": 1541850
+    },
+    {
+      "id": "tile-165-255030",
+      "bounds": [
+        -97.375,
+        37.625,
+        -97.3125,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-255030.json.gz",
+      "count": 4467,
+      "wellCount": 4467,
+      "coreCount": 0,
+      "sha256": "6a36ab14ace6078bbdfccfe4ab07ad6fe1ee1722e181104dfdb296517c02cb98",
+      "bytes": 165333,
+      "uncompressedBytes": 2618050
+    },
+    {
+      "id": "tile-165-2550320",
+      "bounds": [
+        -97.375,
+        37.6875,
+        -97.34375,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550320.json.gz",
+      "count": 1177,
+      "wellCount": 1177,
+      "coreCount": 0,
+      "sha256": "299140b6455349140e6ca4654b243fafe80a241c2df6c4553ddfd89723bad57d",
+      "bytes": 40946,
+      "uncompressedBytes": 653641
+    },
+    {
+      "id": "tile-165-2550322",
+      "bounds": [
+        -97.375,
+        37.71875,
+        -97.34375,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550322.json.gz",
+      "count": 922,
+      "wellCount": 922,
+      "coreCount": 0,
+      "sha256": "2a96632003f1d121199ac7cdbc147c667c98eee745a7e07babf4e6592e544589",
+      "bytes": 35826,
+      "uncompressedBytes": 536251
+    },
+    {
+      "id": "tile-165-2550321",
+      "bounds": [
+        -97.34375,
+        37.6875,
+        -97.3125,
+        37.71875
+      ],
+      "url": "/data/subsurface/tile-165-2550321.json.gz",
+      "count": 1555,
+      "wellCount": 1555,
+      "coreCount": 0,
+      "sha256": "107610ac62e256cbfb7a246a944dc3c20e27cb07da148a8d3651520bda467d48",
+      "bytes": 58862,
+      "uncompressedBytes": 939392
+    },
+    {
+      "id": "tile-165-2550323",
+      "bounds": [
+        -97.34375,
+        37.71875,
+        -97.3125,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-2550323.json.gz",
+      "count": 1755,
+      "wellCount": 1752,
+      "coreCount": 3,
+      "sha256": "1789d9ae1a6b8d5c6862e1c785a3a3ef43c7bf158b0e79f1588fb04beb815430",
+      "bytes": 64365,
+      "uncompressedBytes": 1047509
+    },
+    {
+      "id": "tile-165-255031",
+      "bounds": [
+        -97.3125,
+        37.625,
+        -97.25,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-255031.json.gz",
+      "count": 2595,
+      "wellCount": 2595,
+      "coreCount": 0,
+      "sha256": "c799f76c7edae5a0421796bf49d9e96ade7909049197c0ff93b5eef246f31f86",
+      "bytes": 110620,
+      "uncompressedBytes": 1563180
+    },
+    {
+      "id": "tile-165-255033",
+      "bounds": [
+        -97.3125,
+        37.6875,
+        -97.25,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-255033.json.gz",
+      "count": 938,
+      "wellCount": 937,
+      "coreCount": 1,
+      "sha256": "2e93b7ce5e388c7ce9f7a2cabfd7ec5652d1234053ae7fc2ed087b9673b6639c",
+      "bytes": 42928,
+      "uncompressedBytes": 587419
+    },
+    {
+      "id": "tile-165-255200",
+      "bounds": [
+        -97.5,
+        37.75,
+        -97.4375,
+        37.8125
+      ],
+      "url": "/data/subsurface/tile-165-255200.json.gz",
+      "count": 2619,
+      "wellCount": 2619,
+      "coreCount": 0,
+      "sha256": "61f5fae542ff92a49afaaa9e3058607c945ea853e2b76f47ff19f320b67bceae",
+      "bytes": 99877,
+      "uncompressedBytes": 1823959
+    },
+    {
+      "id": "tile-165-255202",
+      "bounds": [
+        -97.5,
+        37.8125,
+        -97.4375,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-165-255202.json.gz",
+      "count": 303,
+      "wellCount": 303,
+      "coreCount": 0,
+      "sha256": "3e8718397b481dfa55695efb41dd2aef6b4010cc2b9ec9867017b822ce09631d",
+      "bytes": 14244,
+      "uncompressedBytes": 214533
+    },
+    {
+      "id": "tile-165-255201",
+      "bounds": [
+        -97.4375,
+        37.75,
+        -97.375,
+        37.8125
+      ],
+      "url": "/data/subsurface/tile-165-255201.json.gz",
+      "count": 2396,
+      "wellCount": 2394,
+      "coreCount": 2,
+      "sha256": "c081d7fcd40e874a96c8238e4daad8f98313eeba9b705ed3da6d299610209d06",
+      "bytes": 87629,
+      "uncompressedBytes": 1611524
+    },
+    {
+      "id": "tile-165-255203",
+      "bounds": [
+        -97.4375,
+        37.8125,
+        -97.375,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-165-255203.json.gz",
+      "count": 958,
+      "wellCount": 957,
+      "coreCount": 1,
+      "sha256": "2f71d81b8d462e37ed5b7a45cbcafb73a0e7f84b850818f4f875137167cfd537",
+      "bytes": 38010,
+      "uncompressedBytes": 655300
+    },
+    {
+      "id": "tile-165-25522",
+      "bounds": [
+        -97.5,
+        37.875,
+        -97.375,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-165-25522.json.gz",
+      "count": 809,
+      "wellCount": 806,
+      "coreCount": 3,
+      "sha256": "b4d1251f226016e4fcb7454a309f3b39df4b4a74f97752438ddf86be8ffb9a19",
+      "bytes": 46615,
+      "uncompressedBytes": 632019
+    },
+    {
+      "id": "tile-165-255210",
+      "bounds": [
+        -97.375,
+        37.75,
+        -97.3125,
+        37.8125
+      ],
+      "url": "/data/subsurface/tile-165-255210.json.gz",
+      "count": 3821,
+      "wellCount": 3817,
+      "coreCount": 4,
+      "sha256": "07113e5b8ac868297a7227caa384f1838589a0771128cfdf3f851855ead1c04b",
+      "bytes": 139791,
+      "uncompressedBytes": 2410306
+    },
+    {
+      "id": "tile-165-255212",
+      "bounds": [
+        -97.375,
+        37.8125,
+        -97.3125,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-165-255212.json.gz",
+      "count": 1172,
+      "wellCount": 1171,
+      "coreCount": 1,
+      "sha256": "6f61f6b7e56ae7d5963a37153c46fa6948f44b3a7778e33544a0d159d3826f22",
+      "bytes": 47999,
+      "uncompressedBytes": 775910
+    },
+    {
+      "id": "tile-165-255211",
+      "bounds": [
+        -97.3125,
+        37.75,
+        -97.25,
+        37.8125
+      ],
+      "url": "/data/subsurface/tile-165-255211.json.gz",
+      "count": 600,
+      "wellCount": 600,
+      "coreCount": 0,
+      "sha256": "565bfd403fe23f86a84a634f83df9b5a4c1dab866f3abeed17431af5ca268cad",
+      "bytes": 25280,
+      "uncompressedBytes": 366762
+    },
+    {
+      "id": "tile-165-255213",
+      "bounds": [
+        -97.3125,
+        37.8125,
+        -97.25,
+        37.875
+      ],
+      "url": "/data/subsurface/tile-165-255213.json.gz",
+      "count": 215,
+      "wellCount": 215,
+      "coreCount": 0,
+      "sha256": "c95b3ab44eacdae94ec6cd20ea843bfaad4515a15ecb6d3e172be24af5df3184",
+      "bytes": 10378,
+      "uncompressedBytes": 144550
+    },
+    {
+      "id": "tile-165-25523",
+      "bounds": [
+        -97.375,
+        37.875,
+        -97.25,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-165-25523.json.gz",
+      "count": 472,
+      "wellCount": 470,
+      "coreCount": 2,
+      "sha256": "92f0784df53b5f7268ce86e0a94f13df6a5e3571f834086991240699ba3b6b78",
+      "bytes": 25001,
+      "uncompressedBytes": 344153
+    },
+    {
+      "id": "tile-165-25510",
+      "bounds": [
+        -97.25,
+        37.5,
+        -97.125,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-165-25510.json.gz",
+      "count": 2213,
+      "wellCount": 2212,
+      "coreCount": 1,
+      "sha256": "450d56a41804213900d3fd849de1dd14959f2fdb7d09d08b2a217aa5a1d9ac06",
+      "bytes": 101689,
+      "uncompressedBytes": 1593447
+    },
+    {
+      "id": "tile-165-255120",
+      "bounds": [
+        -97.25,
+        37.625,
+        -97.1875,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-255120.json.gz",
+      "count": 1685,
+      "wellCount": 1685,
+      "coreCount": 0,
+      "sha256": "3971463c50bb6e6f66c522fd3cad63dd24de55254baa7403254adb5650bed39e",
+      "bytes": 72609,
+      "uncompressedBytes": 1124829
+    },
+    {
+      "id": "tile-165-255122",
+      "bounds": [
+        -97.25,
+        37.6875,
+        -97.1875,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-255122.json.gz",
+      "count": 1673,
+      "wellCount": 1671,
+      "coreCount": 2,
+      "sha256": "77805c108c6fcce498301ff5e90c805a1e882494187752eaf0fc63c220b26963",
+      "bytes": 76078,
+      "uncompressedBytes": 1163956
+    },
+    {
+      "id": "tile-165-255121",
+      "bounds": [
+        -97.1875,
+        37.625,
+        -97.125,
+        37.6875
+      ],
+      "url": "/data/subsurface/tile-165-255121.json.gz",
+      "count": 2387,
+      "wellCount": 2387,
+      "coreCount": 0,
+      "sha256": "c1902e551e373ba17b5df171e968a7cec96fc5523fc8fb56a95a4153ca4ef18a",
+      "bytes": 95057,
+      "uncompressedBytes": 1654653
+    },
+    {
+      "id": "tile-165-255123",
+      "bounds": [
+        -97.1875,
+        37.6875,
+        -97.125,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-255123.json.gz",
+      "count": 3175,
+      "wellCount": 3174,
+      "coreCount": 1,
+      "sha256": "f705729d22e48f0fdd041be5d2ed68072bc4963f9ce9672fd4ec418db8f660bf",
+      "bytes": 120615,
+      "uncompressedBytes": 2219133
+    },
+    {
+      "id": "tile-165-25511",
+      "bounds": [
+        -97.125,
+        37.5,
+        -97.0,
+        37.625
+      ],
+      "url": "/data/subsurface/tile-165-25511.json.gz",
+      "count": 565,
+      "wellCount": 556,
+      "coreCount": 9,
+      "sha256": "cd90e659a41e24d3947a9aafc64592e2e39f6a567cb1b53d39280c98e9bf4d0e",
+      "bytes": 33398,
+      "uncompressedBytes": 448295
+    },
+    {
+      "id": "tile-165-25513",
+      "bounds": [
+        -97.125,
+        37.625,
+        -97.0,
+        37.75
+      ],
+      "url": "/data/subsurface/tile-165-25513.json.gz",
+      "count": 917,
+      "wellCount": 916,
+      "coreCount": 1,
+      "sha256": "3b095644842a63224d519a77c77c0076b48fc6d686dd0860b5f4f1acbec6254f",
+      "bytes": 46364,
+      "uncompressedBytes": 689919
+    },
+    {
+      "id": "tile-165-2553",
+      "bounds": [
+        -97.25,
+        37.75,
+        -97.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-165-2553.json.gz",
+      "count": 1696,
+      "wellCount": 1688,
+      "coreCount": 8,
+      "sha256": "84d2ce978b9770d196a50b571e59fb5088328ba045ec0fd24658fe5a30b05b51",
+      "bytes": 83579,
+      "uncompressedBytes": 1146409
+    },
+    {
+      "id": "tile-165-2560",
+      "bounds": [
+        -97.5,
+        38.0,
+        -97.25,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-165-2560.json.gz",
+      "count": 3606,
+      "wellCount": 3592,
+      "coreCount": 14,
+      "sha256": "5ab5fdb7fdf1963846003aca8c99e1af7dc55226d9db4fb47fcd6763c6377ab5",
+      "bytes": 204356,
+      "uncompressedBytes": 2732024
+    },
+    {
+      "id": "tile-165-2562",
+      "bounds": [
+        -97.5,
+        38.25,
+        -97.25,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-165-2562.json.gz",
+      "count": 697,
+      "wellCount": 691,
+      "coreCount": 6,
+      "sha256": "e2327a5aed2b438aa7ee84eca68c9bfcdc72dbdcc38c96464f7d2c098db364d1",
+      "bytes": 46091,
+      "uncompressedBytes": 557334
+    },
+    {
+      "id": "tile-165-2561",
+      "bounds": [
+        -97.25,
+        38.0,
+        -97.0,
+        38.25
+      ],
+      "url": "/data/subsurface/tile-165-2561.json.gz",
+      "count": 622,
+      "wellCount": 618,
+      "coreCount": 4,
+      "sha256": "90d5a8ec06eeba4e07ef0a32bb363a3f2911644a8056bbf578ba28d98da3c781",
+      "bytes": 39110,
+      "uncompressedBytes": 478262
+    },
+    {
+      "id": "tile-165-2563",
+      "bounds": [
+        -97.25,
+        38.25,
+        -97.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-165-2563.json.gz",
+      "count": 909,
+      "wellCount": 904,
+      "coreCount": 5,
+      "sha256": "f3eb2d793505e3f3602b8647c2f42646787387e34a06336810b4c05f9f868a0b",
+      "bytes": 51486,
+      "uncompressedBytes": 683262
+    },
+    {
+      "id": "tile-165-2570",
+      "bounds": [
+        -97.5,
+        38.5,
+        -97.25,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-165-2570.json.gz",
+      "count": 274,
+      "wellCount": 270,
+      "coreCount": 4,
+      "sha256": "e8a31c65995e8b3d850341e486c535a586c7dfef8327eaf08cbe7a6402cd9193",
+      "bytes": 18492,
+      "uncompressedBytes": 229647
+    },
+    {
+      "id": "tile-165-2572",
+      "bounds": [
+        -97.5,
+        38.75,
+        -97.25,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-165-2572.json.gz",
+      "count": 922,
+      "wellCount": 921,
+      "coreCount": 1,
+      "sha256": "a28a362ce015a4d9b4d25599303c310f20d8684cfadd5029b9a833ec432e33d0",
+      "bytes": 59795,
+      "uncompressedBytes": 727508
+    },
+    {
+      "id": "tile-165-2571",
+      "bounds": [
+        -97.25,
+        38.5,
+        -97.0,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-165-2571.json.gz",
+      "count": 526,
+      "wellCount": 520,
+      "coreCount": 6,
+      "sha256": "0d64fcd49b342ad25770871e99f302243a1e28f3b40775d3c4543ef16c719d7e",
+      "bytes": 34143,
+      "uncompressedBytes": 417391
+    },
+    {
+      "id": "tile-165-2573",
+      "bounds": [
+        -97.25,
+        38.75,
+        -97.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-165-2573.json.gz",
+      "count": 1818,
+      "wellCount": 1816,
+      "coreCount": 2,
+      "sha256": "57d388ab3ec62b3854b612f059ac3f8497dcc3792d5031dd6acc1a61057a2094",
+      "bytes": 130724,
+      "uncompressedBytes": 1643948
+    },
+    {
+      "id": "tile-165-258",
+      "bounds": [
+        -97.5,
+        39.0,
+        -97.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-165-258.json.gz",
+      "count": 1981,
+      "wellCount": 1967,
+      "coreCount": 14,
+      "sha256": "a5b4f53b5efe70545c2187cbcb68252769f022a057a48b7f752e6035a7b7a801",
+      "bytes": 141538,
+      "uncompressedBytes": 1738537
+    },
+    {
+      "id": "tile-165-259",
+      "bounds": [
+        -97.5,
+        39.5,
+        -97.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-165-259.json.gz",
+      "count": 1693,
+      "wellCount": 1682,
+      "coreCount": 11,
+      "sha256": "2fe50a5485b00a88e3af3c733797c7ecf26510d80ad20e2e884b736f0e00f589",
+      "bytes": 118783,
+      "uncompressedBytes": 1426972
+    },
+    {
+      "id": "tile-165-260",
+      "bounds": [
+        -97.5,
+        40.0,
+        -97.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-165-260.json.gz",
+      "count": 4,
+      "wellCount": 4,
+      "coreCount": 0,
+      "sha256": "c26b4c6a77b268253a6db2f454285da6e336a2856817efbf8c3f98477e639c40",
+      "bytes": 1202,
+      "uncompressedBytes": 6189
+    },
+    {
+      "id": "tile-166-253",
+      "bounds": [
+        -97.0,
+        36.5,
+        -96.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-166-253.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "98ce5508500b65dc7102a7ae61550cd8a5574903e0cd8fb383f3c9aa89f0a89b",
+      "bytes": 508,
+      "uncompressedBytes": 1109
+    },
+    {
+      "id": "tile-166-254",
+      "bounds": [
+        -97.0,
+        37.0,
+        -96.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-166-254.json.gz",
+      "count": 894,
+      "wellCount": 721,
+      "coreCount": 173,
+      "sha256": "26dee752bd637da37c34def76bdfda579bc55d6ab07a9c376fd181423195c90c",
+      "bytes": 47230,
+      "uncompressedBytes": 626277
+    },
+    {
+      "id": "tile-166-255",
+      "bounds": [
+        -97.0,
+        37.5,
+        -96.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-166-255.json.gz",
+      "count": 3519,
+      "wellCount": 3034,
+      "coreCount": 485,
+      "sha256": "1fc774d688db08ab0f336576b453b9e2407b188d8f349dc79149308125a7d874",
+      "bytes": 151703,
+      "uncompressedBytes": 2280873
+    },
+    {
+      "id": "tile-166-256",
+      "bounds": [
+        -97.0,
+        38.0,
+        -96.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-166-256.json.gz",
+      "count": 1264,
+      "wellCount": 1219,
+      "coreCount": 45,
+      "sha256": "e2d78871a083dda6f8c2def6b7c89317921d22de172c63dc92106784d8f8251a",
+      "bytes": 89887,
+      "uncompressedBytes": 1082803
+    },
+    {
+      "id": "tile-166-257",
+      "bounds": [
+        -97.0,
+        38.5,
+        -96.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-166-257.json.gz",
+      "count": 2349,
+      "wellCount": 2311,
+      "coreCount": 38,
+      "sha256": "9033cc8cc4e5b3cff0dfb0d64a55f1af8332d970e79697c565e35da26b09d5dd",
+      "bytes": 176068,
+      "uncompressedBytes": 2222286
+    },
+    {
+      "id": "tile-166-2580",
+      "bounds": [
+        -97.0,
+        39.0,
+        -96.75,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-166-2580.json.gz",
+      "count": 1407,
+      "wellCount": 1388,
+      "coreCount": 19,
+      "sha256": "79c2d89a0904af13bae814dab77caadd1dd770d0ebf40871c1b0ab4c49fe57c3",
+      "bytes": 94136,
+      "uncompressedBytes": 1207479
+    },
+    {
+      "id": "tile-166-2582",
+      "bounds": [
+        -97.0,
+        39.25,
+        -96.75,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-166-2582.json.gz",
+      "count": 684,
+      "wellCount": 673,
+      "coreCount": 11,
+      "sha256": "337bcc39367b3cee0592dcfca3f05119359f8938ccba881faf7bc43e678a14bb",
+      "bytes": 50878,
+      "uncompressedBytes": 650557
+    },
+    {
+      "id": "tile-166-2581",
+      "bounds": [
+        -96.75,
+        39.0,
+        -96.5,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-166-2581.json.gz",
+      "count": 2833,
+      "wellCount": 2811,
+      "coreCount": 22,
+      "sha256": "694645460c71a088d1d96b37af7e5f2812c05bdc4d363523f9f25a405c117746",
+      "bytes": 159379,
+      "uncompressedBytes": 2195462
+    },
+    {
+      "id": "tile-166-2583",
+      "bounds": [
+        -96.75,
+        39.25,
+        -96.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-166-2583.json.gz",
+      "count": 514,
+      "wellCount": 509,
+      "coreCount": 5,
+      "sha256": "c2ea108f7f45199f2fc3a00d6edd55c60de7e8068c5d90812fb4fb464248f377",
+      "bytes": 51261,
+      "uncompressedBytes": 623415
+    },
+    {
+      "id": "tile-166-259",
+      "bounds": [
+        -97.0,
+        39.5,
+        -96.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-166-259.json.gz",
+      "count": 1584,
+      "wellCount": 1560,
+      "coreCount": 24,
+      "sha256": "f7acba597b403f774379cd756c16efad90d2feccfaf526efc46729582a0402fc",
+      "bytes": 100907,
+      "uncompressedBytes": 1276068
+    },
+    {
+      "id": "tile-166-260",
+      "bounds": [
+        -97.0,
+        40.0,
+        -96.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-166-260.json.gz",
+      "count": 6,
+      "wellCount": 6,
+      "coreCount": 0,
+      "sha256": "cbbd550060c31a678fe479184d54136ad3bc5272bad753a0149379946779d9c3",
+      "bytes": 924,
+      "uncompressedBytes": 4697
+    },
+    {
+      "id": "tile-167-254",
+      "bounds": [
+        -96.5,
+        37.0,
+        -96.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-167-254.json.gz",
+      "count": 351,
+      "wellCount": 306,
+      "coreCount": 45,
+      "sha256": "98a19bb70c57ba306329830e6e0812d93251d89df7b3d682a99242c70e669bc5",
+      "bytes": 22035,
+      "uncompressedBytes": 267369
+    },
+    {
+      "id": "tile-167-255",
+      "bounds": [
+        -96.5,
+        37.5,
+        -96.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-167-255.json.gz",
+      "count": 457,
+      "wellCount": 341,
+      "coreCount": 116,
+      "sha256": "58045d793e9d226eea61677acc6b5783c171e17487dc3cbaf591ade173cc56b5",
+      "bytes": 22835,
+      "uncompressedBytes": 305438
+    },
+    {
+      "id": "tile-167-256",
+      "bounds": [
+        -96.5,
+        38.0,
+        -96.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-167-256.json.gz",
+      "count": 1366,
+      "wellCount": 1218,
+      "coreCount": 148,
+      "sha256": "4b5d25127a07f70c327f317f1e322222ee1bba2eabf4898ca0b5d01a4c2a947e",
+      "bytes": 68196,
+      "uncompressedBytes": 905938
+    },
+    {
+      "id": "tile-167-257",
+      "bounds": [
+        -96.5,
+        38.5,
+        -96.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-167-257.json.gz",
+      "count": 1111,
+      "wellCount": 1081,
+      "coreCount": 30,
+      "sha256": "887d8aa9e97c80a4d3e0913b377a45684d1eaaca9b2de0dc0e9aec19e2c7f6bb",
+      "bytes": 78375,
+      "uncompressedBytes": 1006021
+    },
+    {
+      "id": "tile-167-258",
+      "bounds": [
+        -96.5,
+        39.0,
+        -96.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-167-258.json.gz",
+      "count": 3049,
+      "wellCount": 3004,
+      "coreCount": 45,
+      "sha256": "cad57de7db0217867702b9729eeec3a4ed9beeb1b49a270b301238a98d0f818f",
+      "bytes": 204650,
+      "uncompressedBytes": 2594206
+    },
+    {
+      "id": "tile-167-259",
+      "bounds": [
+        -96.5,
+        39.5,
+        -96.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-167-259.json.gz",
+      "count": 810,
+      "wellCount": 778,
+      "coreCount": 32,
+      "sha256": "5158a1d3d43cb1b39c3089ae1505a97ee31d7c01a1d0ccffb085c64399d0050f",
+      "bytes": 54342,
+      "uncompressedBytes": 620721
+    },
+    {
+      "id": "tile-167-260",
+      "bounds": [
+        -96.5,
+        40.0,
+        -96.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-167-260.json.gz",
+      "count": 3,
+      "wellCount": 3,
+      "coreCount": 0,
+      "sha256": "579ab658dac0d44a0f58e1cf922e86cb108332db371337ed4d5712c889cd5dae",
+      "bytes": 843,
+      "uncompressedBytes": 3664
+    },
+    {
+      "id": "tile-168-254",
+      "bounds": [
+        -96.0,
+        37.0,
+        -95.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-168-254.json.gz",
+      "count": 2918,
+      "wellCount": 2722,
+      "coreCount": 196,
+      "sha256": "4e2a6454bc49318a951e40c351b3abdca7ac626c0593cdf1c25b278c3b1164b4",
+      "bytes": 132855,
+      "uncompressedBytes": 1931183
+    },
+    {
+      "id": "tile-168-255",
+      "bounds": [
+        -96.0,
+        37.5,
+        -95.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-168-255.json.gz",
+      "count": 815,
+      "wellCount": 480,
+      "coreCount": 335,
+      "sha256": "120dbce9aac7c7915d7fd087c2d8537d9c4b50bb5f4e42ea31df9c65cdf09b25",
+      "bytes": 35254,
+      "uncompressedBytes": 536909
+    },
+    {
+      "id": "tile-168-256",
+      "bounds": [
+        -96.0,
+        38.0,
+        -95.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-168-256.json.gz",
+      "count": 1219,
+      "wellCount": 837,
+      "coreCount": 382,
+      "sha256": "8226c33955a15e561bfa68ed0a37cadea2dc37dea282f156179a3e64207362ca",
+      "bytes": 60062,
+      "uncompressedBytes": 873890
+    },
+    {
+      "id": "tile-168-257",
+      "bounds": [
+        -96.0,
+        38.5,
+        -95.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-168-257.json.gz",
+      "count": 1285,
+      "wellCount": 1264,
+      "coreCount": 21,
+      "sha256": "1fc07d9e852c0489ed1c195d333eaf3915f36f66f2399e97c3631a91e62fb1d5",
+      "bytes": 79092,
+      "uncompressedBytes": 986177
+    },
+    {
+      "id": "tile-168-2580",
+      "bounds": [
+        -96.0,
+        39.0,
+        -95.75,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-168-2580.json.gz",
+      "count": 1126,
+      "wellCount": 1110,
+      "coreCount": 16,
+      "sha256": "94025dbf21eb478cd164caadaa8e515f2e5f1a4d9e23533cde8d2e8cdf3e48b9",
+      "bytes": 78085,
+      "uncompressedBytes": 968830
+    },
+    {
+      "id": "tile-168-2582",
+      "bounds": [
+        -96.0,
+        39.25,
+        -95.75,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-168-2582.json.gz",
+      "count": 262,
+      "wellCount": 258,
+      "coreCount": 4,
+      "sha256": "3bb526cafc4984af96915e4dc6288335ac0429932b5fa05a2b9d8c225c0dbe6d",
+      "bytes": 23003,
+      "uncompressedBytes": 269874
+    },
+    {
+      "id": "tile-168-2581",
+      "bounds": [
+        -95.75,
+        39.0,
+        -95.5,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-168-2581.json.gz",
+      "count": 3267,
+      "wellCount": 3241,
+      "coreCount": 26,
+      "sha256": "a6ec660e3575299250c55d9648b78cbbe7bbf676b664def4ff1d7a1a49f80ebf",
+      "bytes": 180688,
+      "uncompressedBytes": 2334417
+    },
+    {
+      "id": "tile-168-2583",
+      "bounds": [
+        -95.75,
+        39.25,
+        -95.5,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-168-2583.json.gz",
+      "count": 543,
+      "wellCount": 542,
+      "coreCount": 1,
+      "sha256": "7ce7407f61928d3dcf6a3d3b68b827b73a897ca0833fa40dab75c97191bcb6f4",
+      "bytes": 34294,
+      "uncompressedBytes": 433932
+    },
+    {
+      "id": "tile-168-259",
+      "bounds": [
+        -96.0,
+        39.5,
+        -95.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-168-259.json.gz",
+      "count": 1846,
+      "wellCount": 1808,
+      "coreCount": 38,
+      "sha256": "eb5dc81ccdccefe7fe0931a59204ca9fa7ad61abb520e066b5d5540264b948e9",
+      "bytes": 150712,
+      "uncompressedBytes": 1680192
+    },
+    {
+      "id": "tile-168-260",
+      "bounds": [
+        -96.0,
+        40.0,
+        -95.5,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-168-260.json.gz",
+      "count": 2,
+      "wellCount": 2,
+      "coreCount": 0,
+      "sha256": "6cb7d85c095f6a9dee2dcde08e00fe538fd1ba0164411c9ea004dd4750c87244",
+      "bytes": 669,
+      "uncompressedBytes": 2510
+    },
+    {
+      "id": "tile-169-254",
+      "bounds": [
+        -95.5,
+        37.0,
+        -95.0,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-169-254.json.gz",
+      "count": 1148,
+      "wellCount": 988,
+      "coreCount": 160,
+      "sha256": "19182f9f255c91370e37ac470e452cf597360b3a1bd693175c4c3bf285671c16",
+      "bytes": 48979,
+      "uncompressedBytes": 716160
+    },
+    {
+      "id": "tile-169-255",
+      "bounds": [
+        -95.5,
+        37.5,
+        -95.0,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-169-255.json.gz",
+      "count": 1909,
+      "wellCount": 1570,
+      "coreCount": 339,
+      "sha256": "71c2d152ec32ebbcb5a5e69bb827fb7539927e8d066b4835ce334948b0dc18a7",
+      "bytes": 75787,
+      "uncompressedBytes": 1152164
+    },
+    {
+      "id": "tile-169-256",
+      "bounds": [
+        -95.5,
+        38.0,
+        -95.0,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-169-256.json.gz",
+      "count": 531,
+      "wellCount": 380,
+      "coreCount": 151,
+      "sha256": "c1a5f0ee180b3a65c6744e0c57549411dc940c66eac703645058116cad8cc61b",
+      "bytes": 27717,
+      "uncompressedBytes": 363787
+    },
+    {
+      "id": "tile-169-2570",
+      "bounds": [
+        -95.5,
+        38.5,
+        -95.25,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-169-2570.json.gz",
+      "count": 1237,
+      "wellCount": 1216,
+      "coreCount": 21,
+      "sha256": "98b7dcaa78ba89b160c2b66f369df73acf13b088b6fafc99c8477be9b39a7a5a",
+      "bytes": 86468,
+      "uncompressedBytes": 1014315
+    },
+    {
+      "id": "tile-169-2572",
+      "bounds": [
+        -95.5,
+        38.75,
+        -95.25,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-169-2572.json.gz",
+      "count": 935,
+      "wellCount": 900,
+      "coreCount": 35,
+      "sha256": "61c4166238a619e89900d4bc5c0f5181e5a1ce293e3d14345394cc6502e7548b",
+      "bytes": 63773,
+      "uncompressedBytes": 755247
+    },
+    {
+      "id": "tile-169-2571",
+      "bounds": [
+        -95.25,
+        38.5,
+        -95.0,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-169-2571.json.gz",
+      "count": 402,
+      "wellCount": 352,
+      "coreCount": 50,
+      "sha256": "8ea15b31d1b3d585263d5203bbfe082a8b623ae8f83c2656ca0a0af237c984d2",
+      "bytes": 26200,
+      "uncompressedBytes": 299906
+    },
+    {
+      "id": "tile-169-2573",
+      "bounds": [
+        -95.25,
+        38.75,
+        -95.0,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-169-2573.json.gz",
+      "count": 2909,
+      "wellCount": 2828,
+      "coreCount": 81,
+      "sha256": "f9c0361332790cf744995f979e3a093cb2fe94d78b7a8ba07c0b001ee709bf18",
+      "bytes": 172504,
+      "uncompressedBytes": 2190175
+    },
+    {
+      "id": "tile-169-258",
+      "bounds": [
+        -95.5,
+        39.0,
+        -95.0,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-169-258.json.gz",
+      "count": 2262,
+      "wellCount": 2216,
+      "coreCount": 46,
+      "sha256": "8ab5125e79d291df812375a2f15e8d633d36663234057d70433c620173b0f88d",
+      "bytes": 160673,
+      "uncompressedBytes": 1982687
+    },
+    {
+      "id": "tile-169-259",
+      "bounds": [
+        -95.5,
+        39.5,
+        -95.0,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-169-259.json.gz",
+      "count": 1473,
+      "wellCount": 1446,
+      "coreCount": 27,
+      "sha256": "4722be3435cd989a10c5ca7a4ec32d6b184aff6162963869f4c96211b2c9ceb6",
+      "bytes": 95607,
+      "uncompressedBytes": 1093336
+    },
+    {
+      "id": "tile-169-260",
+      "bounds": [
+        -95.5,
+        40.0,
+        -95.0,
+        40.5
+      ],
+      "url": "/data/subsurface/tile-169-260.json.gz",
+      "count": 1,
+      "wellCount": 1,
+      "coreCount": 0,
+      "sha256": "e0622d0c4fe1f9082a080f2108084a99fa6d3159fca45dd99ccd5e130a662ed7",
+      "bytes": 418,
+      "uncompressedBytes": 826
+    },
+    {
+      "id": "tile-170-253",
+      "bounds": [
+        -95.0,
+        36.5,
+        -94.5,
+        37.0
+      ],
+      "url": "/data/subsurface/tile-170-253.json.gz",
+      "count": 4,
+      "wellCount": 4,
+      "coreCount": 0,
+      "sha256": "e91c4727316029b31d65b78a5caf1b9676825d7e4141e55fff82f9f64a55bf03",
+      "bytes": 549,
+      "uncompressedBytes": 2318
+    },
+    {
+      "id": "tile-170-254",
+      "bounds": [
+        -95.0,
+        37.0,
+        -94.5,
+        37.5
+      ],
+      "url": "/data/subsurface/tile-170-254.json.gz",
+      "count": 1095,
+      "wellCount": 1052,
+      "coreCount": 43,
+      "sha256": "199381f5e7fd0e74faeaa578617d10f428d93dd9b474e77b87c1369158446427",
+      "bytes": 60218,
+      "uncompressedBytes": 755230
+    },
+    {
+      "id": "tile-170-255",
+      "bounds": [
+        -95.0,
+        37.5,
+        -94.5,
+        38.0
+      ],
+      "url": "/data/subsurface/tile-170-255.json.gz",
+      "count": 548,
+      "wellCount": 490,
+      "coreCount": 58,
+      "sha256": "a1774c5654a68848e82a87f17e7dd2df7f39db79b0aff6c68327fcb91d1719e6",
+      "bytes": 31809,
+      "uncompressedBytes": 388261
+    },
+    {
+      "id": "tile-170-256",
+      "bounds": [
+        -95.0,
+        38.0,
+        -94.5,
+        38.5
+      ],
+      "url": "/data/subsurface/tile-170-256.json.gz",
+      "count": 732,
+      "wellCount": 654,
+      "coreCount": 78,
+      "sha256": "daf88611d9793fbf0367dc3970786904f91d3152c20ca6549284c9310dd24619",
+      "bytes": 37614,
+      "uncompressedBytes": 498914
+    },
+    {
+      "id": "tile-170-2570",
+      "bounds": [
+        -95.0,
+        38.5,
+        -94.75,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-170-2570.json.gz",
+      "count": 439,
+      "wellCount": 406,
+      "coreCount": 33,
+      "sha256": "4545d5bc20d5bb2e5a4bd949f18d626b4b9bcda908c628c46a06c894b3289ae1",
+      "bytes": 30315,
+      "uncompressedBytes": 372888
+    },
+    {
+      "id": "tile-170-2572",
+      "bounds": [
+        -95.0,
+        38.75,
+        -94.75,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-170-2572.json.gz",
+      "count": 2047,
+      "wellCount": 1936,
+      "coreCount": 111,
+      "sha256": "d22a4f3613d2dc946ed198fc1bcba12c386bcb4e45278482577cbff296f31371",
+      "bytes": 108976,
+      "uncompressedBytes": 1426215
+    },
+    {
+      "id": "tile-170-2571",
+      "bounds": [
+        -94.75,
+        38.5,
+        -94.5,
+        38.75
+      ],
+      "url": "/data/subsurface/tile-170-2571.json.gz",
+      "count": 177,
+      "wellCount": 166,
+      "coreCount": 11,
+      "sha256": "cb4fea0aa6a33814b9f6acab6e8cf33643101db40e3c51de70e29894bc64f7fe",
+      "bytes": 16423,
+      "uncompressedBytes": 196579
+    },
+    {
+      "id": "tile-170-2573",
+      "bounds": [
+        -94.75,
+        38.75,
+        -94.5,
+        39.0
+      ],
+      "url": "/data/subsurface/tile-170-2573.json.gz",
+      "count": 1818,
+      "wellCount": 1750,
+      "coreCount": 68,
+      "sha256": "576199e9aa5fe4ed0ec96035ca861c03c3a9d515147bc89e0d9fcb23edb2a6f9",
+      "bytes": 96950,
+      "uncompressedBytes": 1306401
+    },
+    {
+      "id": "tile-170-2580",
+      "bounds": [
+        -95.0,
+        39.0,
+        -94.75,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-170-2580.json.gz",
+      "count": 2051,
+      "wellCount": 2028,
+      "coreCount": 23,
+      "sha256": "ceb82216e00a47a6e7154cf2f707fb42b4eb35d2e16cd8ef0e9b83e478d03d6a",
+      "bytes": 146306,
+      "uncompressedBytes": 1746728
+    },
+    {
+      "id": "tile-170-2582",
+      "bounds": [
+        -95.0,
+        39.25,
+        -94.75,
+        39.5
+      ],
+      "url": "/data/subsurface/tile-170-2582.json.gz",
+      "count": 919,
+      "wellCount": 916,
+      "coreCount": 3,
+      "sha256": "8e449233e302126e0c85d26359375822795529d15de8ef166bb2971ead3e1125",
+      "bytes": 46918,
+      "uncompressedBytes": 608866
+    },
+    {
+      "id": "tile-170-25810",
+      "bounds": [
+        -94.75,
+        39.0,
+        -94.625,
+        39.125
+      ],
+      "url": "/data/subsurface/tile-170-25810.json.gz",
+      "count": 2815,
+      "wellCount": 2795,
+      "coreCount": 20,
+      "sha256": "1ba2b5ef60ff56607785b1e154acf914544aa730069b7e78939e66e1a3cd7568",
+      "bytes": 131949,
+      "uncompressedBytes": 1814814
+    },
+    {
+      "id": "tile-170-25812",
+      "bounds": [
+        -94.75,
+        39.125,
+        -94.625,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-170-25812.json.gz",
+      "count": 584,
+      "wellCount": 580,
+      "coreCount": 4,
+      "sha256": "4da39aa06915871b3d848d91363a61eb29b9962a461a2f1c200fd4127e09e108",
+      "bytes": 24621,
+      "uncompressedBytes": 350001
+    },
+    {
+      "id": "tile-170-25811",
+      "bounds": [
+        -94.625,
+        39.0,
+        -94.5,
+        39.125
+      ],
+      "url": "/data/subsurface/tile-170-25811.json.gz",
+      "count": 935,
+      "wellCount": 929,
+      "coreCount": 6,
+      "sha256": "72ba9e46ba39972eb685002865faa15686977deb33706e1d0198c5f627d756b0",
+      "bytes": 45213,
+      "uncompressedBytes": 599710
+    },
+    {
+      "id": "tile-170-25813",
+      "bounds": [
+        -94.625,
+        39.125,
+        -94.5,
+        39.25
+      ],
+      "url": "/data/subsurface/tile-170-25813.json.gz",
+      "count": 1600,
+      "wellCount": 1600,
+      "coreCount": 0,
+      "sha256": "b6617ce4b38155d2d190127cebedb579ac1a1e55cf5d3e8a784f204881197243",
+      "bytes": 58990,
+      "uncompressedBytes": 951287
+    },
+    {
+      "id": "tile-170-259",
+      "bounds": [
+        -95.0,
+        39.5,
+        -94.5,
+        40.0
+      ],
+      "url": "/data/subsurface/tile-170-259.json.gz",
+      "count": 125,
+      "wellCount": 125,
+      "coreCount": 0,
+      "sha256": "6f96d5a9df37caed7798d68b5342d615a1a7ab280c612319c3b7296aade64748",
+      "bytes": 7565,
+      "uncompressedBytes": 88052
+    }
+  ],
+  "totals": {
+    "coreCount": 6598,
+    "coreLibMalformedRows": 2,
+    "coreLibRows": 7394,
+    "coreRangeCount": 5372,
+    "coresOutsideKansas": 412,
+    "coresUnlocatedOrOutsideBounds": 382,
+    "coresWithPhotoLinks": 406,
+    "duplicateLoggedIntervals": 16,
+    "interpreted_logsRows": 964516,
+    "invalidCoreRanges": 1226,
+    "invalidInterpretedIntervals": 6950,
+    "invalidLoggedIntervals": 15739,
+    "loggedIntervalCount": 1599345,
+    "loggedIntervalsWithoutMappedWell": 823,
+    "matchedInterpretedIntervals": 953599,
+    "wellCount": 314844,
+    "wellsUnlocatedOrOutsideBounds": 410,
+    "wellsWithIntervals": 245750,
+    "wwc5_lith_logRows": 1615923,
+    "wwc5_wellsRows": 315254
+  },
+  "locator": {
+    "url": "/data/subsurface/locator.json.gz",
+    "count": 321442,
+    "columns": [
+      "id",
+      "county",
+      "coordinates",
+      "tileId"
+    ],
+    "sha256": "6fe9cfac8a836ee46d0214b40518f8442a21d6df063293dba4c0a23d5770e4e5",
+    "bytes": 3550680,
+    "uncompressedBytes": 20774037
+  },
+  "counties": [
+    {
+      "name": "Allen",
+      "coordinates": [
+        -95.352349,
+        37.901236
+      ],
+      "count": 514
+    },
+    {
+      "name": "Anderson",
+      "coordinates": [
+        -95.287571,
+        38.253329
+      ],
+      "count": 239
+    },
+    {
+      "name": "Atchison",
+      "coordinates": [
+        -95.245585,
+        39.550958
+      ],
+      "count": 839
+    },
+    {
+      "name": "Barber",
+      "coordinates": [
+        -98.614529,
+        37.26319
+      ],
+      "count": 1832
+    },
+    {
+      "name": "Barton",
+      "coordinates": [
+        -98.738868,
+        38.386297
+      ],
+      "count": 8270
+    },
+    {
+      "name": "Bourbon",
+      "coordinates": [
+        -94.734992,
+        37.826933
+      ],
+      "count": 261
+    },
+    {
+      "name": "Brown",
+      "coordinates": [
+        -95.562456,
+        39.829043
+      ],
+      "count": 1159
+    },
+    {
+      "name": "Butler",
+      "coordinates": [
+        -97.022329,
+        37.727797
+      ],
+      "count": 8201
+    },
+    {
+      "name": "Chase",
+      "coordinates": [
+        -96.588155,
+        38.328015
+      ],
+      "count": 648
+    },
+    {
+      "name": "Chautauqua",
+      "coordinates": [
+        -96.177638,
+        37.113892
+      ],
+      "count": 239
+    },
+    {
+      "name": "Cherokee",
+      "coordinates": [
+        -94.785631,
+        37.12535
+      ],
+      "count": 717
+    },
+    {
+      "name": "Cheyenne",
+      "coordinates": [
+        -101.734924,
+        39.761484
+      ],
+      "count": 1137
+    },
+    {
+      "name": "Clark",
+      "coordinates": [
+        -99.815409,
+        37.236521
+      ],
+      "count": 1445
+    },
+    {
+      "name": "Clay",
+      "coordinates": [
+        -97.147812,
+        39.351584
+      ],
+      "count": 1625
+    },
+    {
+      "name": "Cloud",
+      "coordinates": [
+        -97.612252,
+        39.513137
+      ],
+      "count": 1750
+    },
+    {
+      "name": "Coffey",
+      "coordinates": [
+        -95.727735,
+        38.259838
+      ],
+      "count": 703
+    },
+    {
+      "name": "Comanche",
+      "coordinates": [
+        -99.342257,
+        37.235784
+      ],
+      "count": 1135
+    },
+    {
+      "name": "Cowley",
+      "coordinates": [
+        -97.014846,
+        37.186199
+      ],
+      "count": 2224
+    },
+    {
+      "name": "Crawford",
+      "coordinates": [
+        -94.736988,
+        37.473119
+      ],
+      "count": 645
+    },
+    {
+      "name": "Decatur",
+      "coordinates": [
+        -100.482627,
+        39.771666
+      ],
+      "count": 1349
+    },
+    {
+      "name": "Dickinson",
+      "coordinates": [
+        -97.147792,
+        38.887488
+      ],
+      "count": 3666
+    },
+    {
+      "name": "Doniphan",
+      "coordinates": [
+        -95.144133,
+        39.794725
+      ],
+      "count": 600
+    },
+    {
+      "name": "Douglas",
+      "coordinates": [
+        -95.229183,
+        38.909712
+      ],
+      "count": 3294
+    },
+    {
+      "name": "Edwards",
+      "coordinates": [
+        -99.250094,
+        37.877429
+      ],
+      "count": 3879
+    },
+    {
+      "name": "Elk",
+      "coordinates": [
+        -96.225936,
+        37.439207
+      ],
+      "count": 142
+    },
+    {
+      "name": "Ellis",
+      "coordinates": [
+        -99.338774,
+        38.887415
+      ],
+      "count": 5548
+    },
+    {
+      "name": "Ellsworth",
+      "coordinates": [
+        -98.252219,
+        38.679361
+      ],
+      "count": 2033
+    },
+    {
+      "name": "Finney",
+      "coordinates": [
+        -100.881836,
+        37.967343
+      ],
+      "count": 5480
+    },
+    {
+      "name": "Ford",
+      "coordinates": [
+        -99.937991,
+        37.709978
+      ],
+      "count": 4947
+    },
+    {
+      "name": "Franklin",
+      "coordinates": [
+        -95.337339,
+        38.612295
+      ],
+      "count": 1560
+    },
+    {
+      "name": "Geary",
+      "coordinates": [
+        -96.815196,
+        39.031238
+      ],
+      "count": 1648
+    },
+    {
+      "name": "Gove",
+      "coordinates": [
+        -100.450203,
+        39.014061
+      ],
+      "count": 1196
+    },
+    {
+      "name": "Graham",
+      "coordinates": [
+        -99.894112,
+        39.381675
+      ],
+      "count": 1486
+    },
+    {
+      "name": "Grant",
+      "coordinates": [
+        -101.310305,
+        37.565129
+      ],
+      "count": 1573
+    },
+    {
+      "name": "Gray",
+      "coordinates": [
+        -100.446661,
+        37.735215
+      ],
+      "count": 3079
+    },
+    {
+      "name": "Greeley",
+      "coordinates": [
+        -101.754045,
+        38.553383
+      ],
+      "count": 455
+    },
+    {
+      "name": "Greenwood",
+      "coordinates": [
+        -96.19247,
+        37.872841
+      ],
+      "count": 392
+    },
+    {
+      "name": "Hamilton",
+      "coordinates": [
+        -101.819239,
+        37.939606
+      ],
+      "count": 854
+    },
+    {
+      "name": "Harper",
+      "coordinates": [
+        -98.07904,
+        37.262086
+      ],
+      "count": 1552
+    },
+    {
+      "name": "Harvey",
+      "coordinates": [
+        -97.458896,
+        38.038026
+      ],
+      "count": 7109
+    },
+    {
+      "name": "Haskell",
+      "coordinates": [
+        -100.863322,
+        37.571186
+      ],
+      "count": 2296
+    },
+    {
+      "name": "Hodgeman",
+      "coordinates": [
+        -99.815085,
+        38.103862
+      ],
+      "count": 1418
+    },
+    {
+      "name": "Jackson",
+      "coordinates": [
+        -95.774089,
+        39.439576
+      ],
+      "count": 1115
+    },
+    {
+      "name": "Jefferson",
+      "coordinates": [
+        -95.395067,
+        39.180091
+      ],
+      "count": 1189
+    },
+    {
+      "name": "Jewell",
+      "coordinates": [
+        -98.176004,
+        39.861157
+      ],
+      "count": 542
+    },
+    {
+      "name": "Johnson",
+      "coordinates": [
+        -94.784212,
+        38.931068
+      ],
+      "count": 5599
+    },
+    {
+      "name": "Kearny",
+      "coordinates": [
+        -101.233001,
+        37.92831
+      ],
+      "count": 2144
+    },
+    {
+      "name": "Kingman",
+      "coordinates": [
+        -98.121915,
+        37.582409
+      ],
+      "count": 3780
+    },
+    {
+      "name": "Kiowa",
+      "coordinates": [
+        -99.283314,
+        37.610905
+      ],
+      "count": 2667
+    },
+    {
+      "name": "Labette",
+      "coordinates": [
+        -95.221686,
+        37.268245
+      ],
+      "count": 876
+    },
+    {
+      "name": "Lane",
+      "coordinates": [
+        -100.482151,
+        38.521652
+      ],
+      "count": 958
+    },
+    {
+      "name": "Leavenworth",
+      "coordinates": [
+        -94.997165,
+        39.172067
+      ],
+      "count": 2841
+    },
+    {
+      "name": "Lincoln",
+      "coordinates": [
+        -98.17441,
+        39.020856
+      ],
+      "count": 1071
+    },
+    {
+      "name": "Linn",
+      "coordinates": [
+        -94.754016,
+        38.256794
+      ],
+      "count": 535
+    },
+    {
+      "name": "Logan",
+      "coordinates": [
+        -100.964594,
+        39.044029
+      ],
+      "count": 885
+    },
+    {
+      "name": "Lyon",
+      "coordinates": [
+        -96.191886,
+        38.439928
+      ],
+      "count": 1410
+    },
+    {
+      "name": "Marion",
+      "coordinates": [
+        -97.096432,
+        38.351532
+      ],
+      "count": 2514
+    },
+    {
+      "name": "Marshall",
+      "coordinates": [
+        -96.582207,
+        39.779156
+      ],
+      "count": 1061
+    },
+    {
+      "name": "McPherson",
+      "coordinates": [
+        -97.664972,
+        38.371131
+      ],
+      "count": 6196
+    },
+    {
+      "name": "Meade",
+      "coordinates": [
+        -100.386759,
+        37.264417
+      ],
+      "count": 2321
+    },
+    {
+      "name": "Miami",
+      "coordinates": [
+        -94.856996,
+        38.590983
+      ],
+      "count": 698
+    },
+    {
+      "name": "Mitchell",
+      "coordinates": [
+        -98.18858,
+        39.427026
+      ],
+      "count": 579
+    },
+    {
+      "name": "Montgomery",
+      "coordinates": [
+        -95.677011,
+        37.125093
+      ],
+      "count": 2282
+    },
+    {
+      "name": "Morris",
+      "coordinates": [
+        -96.674984,
+        38.687784
+      ],
+      "count": 1672
+    },
+    {
+      "name": "Morton",
+      "coordinates": [
+        -101.815079,
+        37.139549
+      ],
+      "count": 1199
+    },
+    {
+      "name": "Nemaha",
+      "coordinates": [
+        -95.965942,
+        39.800507
+      ],
+      "count": 1019
+    },
+    {
+      "name": "Neosho",
+      "coordinates": [
+        -95.417528,
+        37.647979
+      ],
+      "count": 1143
+    },
+    {
+      "name": "Ness",
+      "coordinates": [
+        -99.887373,
+        38.476562
+      ],
+      "count": 1337
+    },
+    {
+      "name": "Norton",
+      "coordinates": [
+        -99.889537,
+        39.801095
+      ],
+      "count": 1772
+    },
+    {
+      "name": "Osage",
+      "coordinates": [
+        -95.690277,
+        38.673769
+      ],
+      "count": 549
+    },
+    {
+      "name": "Osborne",
+      "coordinates": [
+        -98.775914,
+        39.390213
+      ],
+      "count": 1047
+    },
+    {
+      "name": "Ottawa",
+      "coordinates": [
+        -97.677133,
+        39.100009
+      ],
+      "count": 1593
+    },
+    {
+      "name": "Pawnee",
+      "coordinates": [
+        -99.160295,
+        38.151188
+      ],
+      "count": 3569
+    },
+    {
+      "name": "Phillips",
+      "coordinates": [
+        -99.345507,
+        39.783312
+      ],
+      "count": 1776
+    },
+    {
+      "name": "Pottawatomie",
+      "coordinates": [
+        -96.338,
+        39.265811
+      ],
+      "count": 2951
+    },
+    {
+      "name": "Pratt",
+      "coordinates": [
+        -98.727154,
+        37.660815
+      ],
+      "count": 5107
+    },
+    {
+      "name": "Rawlins",
+      "coordinates": [
+        -101.053065,
+        39.783905
+      ],
+      "count": 1648
+    },
+    {
+      "name": "Reno",
+      "coordinates": [
+        -97.974356,
+        38.024589
+      ],
+      "count": 18606
+    },
+    {
+      "name": "Republic",
+      "coordinates": [
+        -97.690118,
+        39.820602
+      ],
+      "count": 943
+    },
+    {
+      "name": "Rice",
+      "coordinates": [
+        -98.24097,
+        38.308787
+      ],
+      "count": 4166
+    },
+    {
+      "name": "Riley",
+      "coordinates": [
+        -96.661995,
+        39.229203
+      ],
+      "count": 3528
+    },
+    {
+      "name": "Rooks",
+      "coordinates": [
+        -99.315231,
+        39.320003
+      ],
+      "count": 1422
+    },
+    {
+      "name": "Rush",
+      "coordinates": [
+        -99.291061,
+        38.490665
+      ],
+      "count": 1926
+    },
+    {
+      "name": "Russell",
+      "coordinates": [
+        -98.794374,
+        38.899327
+      ],
+      "count": 1759
+    },
+    {
+      "name": "Saline",
+      "coordinates": [
+        -97.612104,
+        38.811916
+      ],
+      "count": 7617
+    },
+    {
+      "name": "Scott",
+      "coordinates": [
+        -100.92131,
+        38.476326
+      ],
+      "count": 1577
+    },
+    {
+      "name": "Sedgwick",
+      "coordinates": [
+        -97.383401,
+        37.689791
+      ],
+      "count": 74801
+    },
+    {
+      "name": "Seward",
+      "coordinates": [
+        -100.882109,
+        37.143411
+      ],
+      "count": 2997
+    },
+    {
+      "name": "Shawnee",
+      "coordinates": [
+        -95.72181,
+        39.0532
+      ],
+      "count": 4747
+    },
+    {
+      "name": "Sheridan",
+      "coordinates": [
+        -100.459484,
+        39.359681
+      ],
+      "count": 2086
+    },
+    {
+      "name": "Sherman",
+      "coordinates": [
+        -101.735053,
+        39.346712
+      ],
+      "count": 1536
+    },
+    {
+      "name": "Smith",
+      "coordinates": [
+        -98.805493,
+        39.777809
+      ],
+      "count": 1007
+    },
+    {
+      "name": "Stafford",
+      "coordinates": [
+        -98.73243,
+        38.053463
+      ],
+      "count": 6539
+    },
+    {
+      "name": "Stanton",
+      "coordinates": [
+        -101.740204,
+        37.563893
+      ],
+      "count": 1060
+    },
+    {
+      "name": "Stevens",
+      "coordinates": [
+        -101.298855,
+        37.187716
+      ],
+      "count": 2592
+    },
+    {
+      "name": "Sumner",
+      "coordinates": [
+        -97.432505,
+        37.335837
+      ],
+      "count": 3913
+    },
+    {
+      "name": "Thomas",
+      "coordinates": [
+        -101.006151,
+        39.346559
+      ],
+      "count": 2828
+    },
+    {
+      "name": "Trego",
+      "coordinates": [
+        -99.858367,
+        38.960427
+      ],
+      "count": 980
+    },
+    {
+      "name": "Wabaunsee",
+      "coordinates": [
+        -96.21537,
+        39.002305
+      ],
+      "count": 1064
+    },
+    {
+      "name": "Wallace",
+      "coordinates": [
+        -101.77825,
+        38.871541
+      ],
+      "count": 697
+    },
+    {
+      "name": "Washington",
+      "coordinates": [
+        -97.076328,
+        39.777552
+      ],
+      "count": 1807
+    },
+    {
+      "name": "Wichita",
+      "coordinates": [
+        -101.348891,
+        38.525357
+      ],
+      "count": 1039
+    },
+    {
+      "name": "Wilson",
+      "coordinates": [
+        -95.722844,
+        37.467965
+      ],
+      "count": 609
+    },
+    {
+      "name": "Woodson",
+      "coordinates": [
+        -95.765734,
+        37.872406
+      ],
+      "count": 241
+    },
+    {
+      "name": "Wyandotte",
+      "coordinates": [
+        -94.672512,
+        39.112076
+      ],
+      "count": 5973
+    }
+  ],
+  "horizontalTransform": {
+    "from": [
+      "EPSG:4269",
+      "EPSG:4267"
+    ],
+    "to": "EPSG:4326",
+    "nad83Operation": "EPSG:1188, NAD83 to WGS84 (1), 4 m stated operation accuracy; not source-location accuracy",
+    "nad27GridUrl": "https://cdn.proj.org/us_noaa_conus.tif",
+    "nad27GridSha256": "44611d823c48e5347500ee6afe40ff33d2b88cf817bf59f705ed4a4c3bd687d7",
+    "software": "pyproj 3.7.1 / PROJ 9.5.1",
+    "coordinateDecimals": 6
+  },
+  "coverageLimits": [
+    "Kansas records with valid provider coordinates inside the Kansas regional bounding box; not an exact state-boundary clip.",
+    "County navigation points are arithmetic means of included WWC5 locations, not county boundaries or official county centroids.",
+    "No DEM registration, ground-elevation datum, deviation trajectory, published 3D framework or geophysical raw data is supplied by these archives.",
+    "Public-source coordinate precision does not establish accuracy; do not use for excavation, engineering, water quality, property boundaries or resource estimates."
+  ],
+  "privacy": {
+    "excludedFields": [
+      "OWNER",
+      "DIRECTIONS",
+      "DWR_NUMBER",
+      "DRILLER",
+      "OTHER_ID",
+      "OPERATOR_NAME",
+      "CURRENT_OPERATOR_NAME",
+      "LEASE_NAME",
+      "API",
+      "WELL_USE",
+      "ELEV",
+      "STATIC_DEPTH",
+      "EST_YIELD"
+    ],
+    "labels": "Generic provider record identities only. No owner/operator labels or directions are projected."
+  },
+  "useConstraints": "Official KGS public-download factual records. KGS/KDHE accuracy and completeness disclaimers apply; no Creative Commons license or independent evidence admission is asserted."
+}

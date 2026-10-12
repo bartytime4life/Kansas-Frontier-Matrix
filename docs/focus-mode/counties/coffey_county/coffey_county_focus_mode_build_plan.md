@@ -1,11 +1,12 @@
 <!--
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/coffey-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 id_scheme: kfm://doc/NEEDS_VERIFICATION
 schema: KFM Meta Block V2-style
 version: v0.1
 status: draft
 created: 2026-05-21
-updated: 2026-05-21
+updated: 2026-10-12
 owners:
   - NEEDS_VERIFICATION: county-focus-mode steward
   - NEEDS_VERIFICATION: hydrology steward

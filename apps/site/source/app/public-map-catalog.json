@@ -1,0 +1,2851 @@
+{
+  "schema": "kfm-public-map-catalog/v1",
+  "generatedAt": "2026-10-09T14:30:00Z",
+  "sourceUrls": [
+    "https://mmr.osmre.gov/",
+    "https://experience.arcgis.com/experience/d84e5b88af674f588645f153e2127910#widget_2702=active_datasource_id:dataSource_4,center:-10971121.85551685%2C4674675.97959652%2C102100,scale:1469721.0749880797,level:8.728154117370744,rotation:0,viewpoint:%7B%22rotation%22%3A0%2C%22scale%22%3A1469721.0749880797%2C%22targetGeometry%22%3A%7B%22spatialReference%22%3A%7B%22latestWkid%22%3A3857%2C%22wkid%22%3A102100%7D%2C%22x%22%3A-10971121.85551685%2C%22y%22%3A4674675.97959652%7D%7D",
+    "https://ngmdb.usgs.gov/ngm-bin/ngm_search_dbi.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=",
+    "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+    "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/",
+    "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+    "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/",
+    "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+  ],
+  "coverage": [
+    {
+      "sourceId": "osmre-nmmr",
+      "title": "OSMRE National Mine Map Repository",
+      "state": "seed",
+      "recordCount": 1,
+      "expectedCount": null,
+      "reason": "Researched seed references only; statewide catalog discovery has not completed.",
+      "checkedAt": null
+    },
+    {
+      "sourceId": "ngmdb-usgs",
+      "title": "NGMDB Kansas \u2014 USGS",
+      "state": "seed",
+      "recordCount": 9,
+      "expectedCount": null,
+      "reason": "Researched seed references only; statewide catalog discovery has not completed.",
+      "checkedAt": null
+    },
+    {
+      "sourceId": "ngmdb-kgs",
+      "title": "NGMDB Kansas \u2014 Kansas Geological Survey",
+      "state": "seed",
+      "recordCount": 2,
+      "expectedCount": null,
+      "reason": "Researched seed references only; statewide catalog discovery has not completed.",
+      "checkedAt": null
+    },
+    {
+      "sourceId": "publisher-cdl",
+      "title": "USDA NASS \u00b7 public files including Kansas",
+      "state": "seed",
+      "recordCount": 20,
+      "expectedCount": null,
+      "reason": "Curated public publisher files; anonymous range reads verified file signatures and byte sizes on 2026-10-09. This is not a complete publisher catalog or verified Kansas pixel coverage. National/global originals need clipping before Kansas-only use.",
+      "checkedAt": "2026-10-09",
+      "discoveredCount": 0,
+      "seedReferenceCount": 20
+    },
+    {
+      "sourceId": "publisher-chirps",
+      "title": "UCSB Climate Hazards Center \u00b7 public files including Kansas",
+      "state": "seed",
+      "recordCount": 44,
+      "expectedCount": null,
+      "reason": "Curated public publisher files; anonymous range reads verified file signatures and byte sizes on 2026-10-09. This is not a complete publisher catalog or verified Kansas pixel coverage. National/global originals need clipping before Kansas-only use.",
+      "checkedAt": "2026-10-09",
+      "discoveredCount": 0,
+      "seedReferenceCount": 44
+    },
+    {
+      "sourceId": "publisher-noaa-storm-events",
+      "title": "NOAA NCEI Storm Events \u00b7 national CSV files including Kansas",
+      "state": "unavailable",
+      "recordCount": 0,
+      "expectedCount": null,
+      "reason": "File names change when NCEI reissues a year, so they are read from the NCEI Storm Events CSV directory when the catalog is refreshed on this computer. No files are listed until then.",
+      "checkedAt": null,
+      "discoveredCount": 0,
+      "seedReferenceCount": 0
+    },
+    {
+      "sourceId": "history-originals",
+      "title": "Selected Kansas history books",
+      "state": "seed",
+      "recordCount": 2,
+      "discoveredCount": 0,
+      "seedReferenceCount": 2,
+      "expectedCount": null,
+      "reason": "Two selected direct PDF originals. Collection holdings are not enumerated; metadata and rights are item-specific.",
+      "checkedAt": "2026-10-09"
+    }
+  ],
+  "records": [
+    {
+      "id": "osmre-nmmr-index",
+      "sourceId": "osmre-nmmr",
+      "publisher": "OSMRE",
+      "title": "National Mine Map Repository \u2014 Kansas discovery",
+      "counties": [],
+      "mapYear": null,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://www.arcgis.com/sharing/rest/content/items/52423d89e1dd465fa482b4ff36e72b8e?f=pjson",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://www.arcgis.com/sharing/rest/content/items/52423d89e1dd465fa482b4ff36e72b8e?f=pjson"
+      },
+      "description": "A geographic finding aid for historical mine maps, not mine boundaries. Point confidence, archive status and source uncertainty must remain visible. Current Kansas inventory is unverified; TLS-valid discovery is required.",
+      "geometryRole": "index-point",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "osmre-nmmr-service",
+          "title": "Mine map finding points",
+          "format": "ArcGIS REST",
+          "url": "https://geodata.osmre.gov/arcgis/rest/services/NMMR/MineMap_Points/MapServer/0",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "unverified",
+          "checkedAt": null
+        },
+        {
+          "id": "osmre-nmmr-request",
+          "title": "Request original archival TIFF scans",
+          "format": "TIFF",
+          "url": "https://mmr.osmre.gov/Request",
+          "expectedBytes": null,
+          "kind": "request",
+          "availability": "request-only",
+          "checkedAt": null
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "kgs-m118-2008",
+      "sourceId": "ngmdb-kgs",
+      "publisher": "KGS",
+      "title": "Surficial Geology of Kansas \u2014 KGS M-118",
+      "counties": [],
+      "mapYear": 2008,
+      "digitalYear": null,
+      "scale": "1:500,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://www.kgs.ku.edu/General/Geology/state23.html",
+      "rights": {
+        "status": "held",
+        "text": "Existing KGS rights review remains held; this catalog does not authorize redistribution or admission.",
+        "url": "https://www.kgs.ku.edu/General/Geology/state23.html"
+      },
+      "description": "Statewide interpreted surficial geology. Download sizes were checked by HTTP headers on 2026-10-08; georeferencing and local availability are not asserted.",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "kgs-m118-pdf",
+          "title": "Published map, 300 DPI",
+          "format": "PDF",
+          "url": "https://www.kgs.ku.edu/General/Geology/gifs/M118_StatewideGeology_2008_300dpi.pdf",
+          "expectedBytes": 37386469,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null
+        },
+        {
+          "id": "kgs-m118-jpeg",
+          "title": "Published map, 72 DPI",
+          "format": "JPEG",
+          "url": "https://www.kgs.ku.edu/General/Geology/gifs/M118_StatewideGeology_2008_72dpi.jpg",
+          "expectedBytes": 5348461,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null
+        },
+        {
+          "id": "kgs-m118-gems",
+          "title": "GeMS map unit polygons",
+          "format": "ArcGIS REST",
+          "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/State_Geology_GeMS/FeatureServer/14",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "unverified",
+          "checkedAt": null
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "kgs-m97-bourbon-2020",
+      "sourceId": "ngmdb-kgs",
+      "publisher": "KGS",
+      "title": "Surficial Geology of Bourbon County \u2014 KGS M-97 revised",
+      "counties": [
+        "Bourbon"
+      ],
+      "mapYear": 2020,
+      "digitalYear": null,
+      "scale": "1:50,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://www.kgs.ku.edu/General/Geology/County/abc/bourbon.html",
+      "rights": {
+        "status": "held",
+        "text": "Existing KGS rights review remains held; this catalog does not authorize redistribution or admission.",
+        "url": "https://www.kgs.ku.edu/General/Geology/County/abc/bourbon.html"
+      },
+      "description": "West and Sawin [2002] 2020 revised map; the original publication and revision are distinct from digital access dates.",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "kgs-m97-pdf",
+          "title": "Published map, revised 2020",
+          "format": "PDF",
+          "url": "https://www.kgs.ku.edu/General/Geology/County/abc/M97_BourbonGeology_2020_rev_150dpi.pdf",
+          "expectedBytes": 34770839,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null
+        },
+        {
+          "id": "kgs-m97-jpeg",
+          "title": "Published map, 300 DPI",
+          "format": "JPEG",
+          "url": "https://www.kgs.ku.edu/General/Geology/County/abc/M97_BourbonGeology_2020_rev_300dpi.jpg",
+          "expectedBytes": 66506223,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null
+        },
+        {
+          "id": "kgs-m97-gems",
+          "title": "GeMS distribution link",
+          "format": "GeMS",
+          "url": "https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=3200&pid=110305",
+          "expectedBytes": null,
+          "kind": "download",
+          "availability": "unverified",
+          "checkedAt": null
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-limon-p9djg0o3",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Limon quadrangle geologic map data",
+      "counties": [],
+      "mapYear": 1980,
+      "digitalYear": 2022,
+      "scale": "1:250,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P9DJG0O3",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://doi.org/10.5066/P9DJG0O3"
+      },
+      "description": "Digital reproduction released in 2022 of the 1980 Limon quadrangle map, covering eastern Colorado and western Kansas. Includes geologic polygons, fossil points, faunal-zone lines and Dakota Sandstone structure contours. Source map date is separate from digitization. ScienceBase metadata and exact ZIP response sizes were checked using TLS on 2026-10-08; ZIP contents and georeferencing have not been inspected locally.",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-limon-shapefiles-zip",
+          "title": "Limon shapefiles \u2014 original ZIP",
+          "format": "ZIP",
+          "url": "https://www.sciencebase.gov/catalog/file/get/62ebd4dfd34eacf539724c47?f=__disk__13%2F9d%2F2b%2F139d2b1b15e331816a9cd156f2375e95ddf79579",
+          "expectedBytes": 34235085,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "ef9a75a565139a8ffe1c6a5d79a13510"
+          }
+        },
+        {
+          "id": "usgs-limon-geodatabase-zip",
+          "title": "Limon geodatabase \u2014 original ZIP",
+          "format": "ZIP",
+          "url": "https://www.sciencebase.gov/catalog/file/get/62ebd4dfd34eacf539724c47?f=__disk__9f%2F3f%2F82%2F9f3f8235d9df8d744c0cbcc87856d52199f812ef",
+          "expectedBytes": 2650659,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "873a4a6acc2f3e0cd5ee96456c1b79a4"
+          }
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-lamar-p9mnqfy6",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Lamar quadrangle geologic map data",
+      "counties": [],
+      "mapYear": 1976,
+      "digitalYear": 2022,
+      "scale": "1:250,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P9MNQFY6",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://doi.org/10.5066/P9MNQFY6"
+      },
+      "description": "Digital geologic data released in 2022 from the 1976 Lamar quadrangle map, covering eastern Colorado and western Kansas. Includes mapped geologic units, contacts, faults, ammonite fossils and source-description tables. ScienceBase metadata and exact ZIP response sizes were checked using TLS on 2026-10-08; archive contents have not been inspected locally and are not an installed map layer.",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-lamar-geodatabase-zip",
+          "title": "Lamar GeMS geodatabase \u2014 original ZIP",
+          "format": "ZIP",
+          "url": "https://www.sciencebase.gov/catalog/file/get/62ebe7ccd34eacf539724cca?f=__disk__98%2F90%2Fed%2F9890ed9fb556b9ab8f4a2e98ed75dc948f553d4c",
+          "expectedBytes": 12697837,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "f699d2f9bcd5dd92fdee7c94fb6c759f"
+          }
+        },
+        {
+          "id": "usgs-lamar-open-zip",
+          "title": "Lamar open shapefiles and CSV tables \u2014 original ZIP",
+          "format": "ZIP",
+          "url": "https://www.sciencebase.gov/catalog/file/get/62ebe7ccd34eacf539724cca?f=__disk__40%2F82%2F21%2F4082216b5addc27545bb8eabe98ab0ab19734295",
+          "expectedBytes": 2224028,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "c3746bb8995b5093fed63774126d9400"
+          }
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-cngm-earth-p146vgvm",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Cooperative National Geologic Map \u2014 Earth surface",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": 2026,
+      "scale": "1:500,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P146VGVM",
+      "rights": {
+        "status": "source-terms",
+        "text": "The official version 2 ArcGIS item states public domain and requests source citation. Retain MapSourceID/DataSources provenance; private capture does not establish source admission, review, display readiness or release.",
+        "url": "https://doi.org/10.5066/P146VGVM"
+      },
+      "description": "Interpreted earth surface product in the Cooperative National Geologic Map. Initial publication 2025; version 2 released September 3, 2026. The offered GeMS ZIP is a full national archive, not a Kansas-only subset. The exact download returned verified-TLS HTTP 200 and Content-Length on October 8, 2026; only response headers were read. HEAD attempts timed out and archive contents are uninspected. The separate map-unit service supports bounded source previews. These thematic interpretations are not a continuous three-dimensional geology model; retain MapSourceID and linked DataSources citations and source-specific mapping limitations.",
+      "geometryRole": "interpreted-geology",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-cngm-earth-gems-zip",
+          "title": "Earth surface interpreted geology \u2014 national GeMS ZIP",
+          "format": "ZIP",
+          "url": "https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=4894&pid=118545",
+          "expectedBytes": 3492433165,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "GET-response-headers"
+        },
+        {
+          "id": "usgs-cngm-earth-map-units",
+          "title": "Earth surface interpreted map units \u2014 source service",
+          "format": "ArcGIS REST",
+          "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/National_Earth_Surface_v2/FeatureServer/6",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "ArcGIS-service-metadata"
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-cngm-quaternary-p16sjac6",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Cooperative National Geologic Map \u2014 Quaternary",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": 2026,
+      "scale": "1:500,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P16SJAC6",
+      "rights": {
+        "status": "source-terms",
+        "text": "The official version 2 ArcGIS item states public domain and requests source citation. Retain MapSourceID/DataSources provenance; private capture does not establish source admission, review, display readiness or release.",
+        "url": "https://doi.org/10.5066/P16SJAC6"
+      },
+      "description": "Interpreted quaternary product in the Cooperative National Geologic Map. Initial publication 2025; version 2 released September 3, 2026. The offered GeMS ZIP is a full national archive, not a Kansas-only subset. The exact download returned verified-TLS HTTP 200 and Content-Length on October 8, 2026; only response headers were read. HEAD attempts timed out and archive contents are uninspected. The separate map-unit service supports bounded source previews. These thematic interpretations are not a continuous three-dimensional geology model; retain MapSourceID and linked DataSources citations and source-specific mapping limitations.",
+      "geometryRole": "interpreted-geology",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-cngm-quaternary-gems-zip",
+          "title": "Quaternary interpreted geology \u2014 national GeMS ZIP",
+          "format": "ZIP",
+          "url": "https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=4893&pid=118545",
+          "expectedBytes": 2971732596,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "GET-response-headers"
+        },
+        {
+          "id": "usgs-cngm-quaternary-map-units",
+          "title": "Quaternary interpreted map units \u2014 source service",
+          "format": "ArcGIS REST",
+          "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/National_Quaternary_v2/FeatureServer/5",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "ArcGIS-service-metadata"
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-cngm-prequaternary-p147sgss",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Cooperative National Geologic Map \u2014 Pre-Quaternary",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": 2026,
+      "scale": "1:500,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P147SGSS",
+      "rights": {
+        "status": "source-terms",
+        "text": "The official version 2 ArcGIS item states public domain and requests source citation. Retain MapSourceID/DataSources provenance; private capture does not establish source admission, review, display readiness or release.",
+        "url": "https://doi.org/10.5066/P147SGSS"
+      },
+      "description": "Interpreted pre-quaternary product in the Cooperative National Geologic Map. Initial publication 2025; version 2 released September 3, 2026. The offered GeMS ZIP is a full national archive, not a Kansas-only subset. The exact download returned verified-TLS HTTP 200 and Content-Length on October 8, 2026; only response headers were read. HEAD attempts timed out and archive contents are uninspected. The separate map-unit service supports bounded source previews. These thematic interpretations are not a continuous three-dimensional geology model; retain MapSourceID and linked DataSources citations and source-specific mapping limitations.",
+      "geometryRole": "interpreted-geology",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-cngm-prequaternary-gems-zip",
+          "title": "Pre-Quaternary interpreted geology \u2014 national GeMS ZIP",
+          "format": "ZIP",
+          "url": "https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=4892&pid=118545",
+          "expectedBytes": 3067729423,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "GET-response-headers"
+        },
+        {
+          "id": "usgs-cngm-prequaternary-map-units",
+          "title": "Pre-Quaternary interpreted map units \u2014 source service",
+          "format": "ArcGIS REST",
+          "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/National_PreQuaternary_v2/FeatureServer/6",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "ArcGIS-service-metadata"
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-cngm-precambrian-p13tsv2j",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Cooperative National Geologic Map \u2014 Precambrian",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": 2026,
+      "scale": "1:500,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://doi.org/10.5066/P13TSV2J",
+      "rights": {
+        "status": "source-terms",
+        "text": "The official version 2 ArcGIS item states public domain and requests source citation. Retain MapSourceID/DataSources provenance; private capture does not establish source admission, review, display readiness or release.",
+        "url": "https://doi.org/10.5066/P13TSV2J"
+      },
+      "description": "Interpreted precambrian product in the Cooperative National Geologic Map. Initial publication 2025; version 2 released September 3, 2026. The offered GeMS ZIP is a full national archive, not a Kansas-only subset. The exact download returned verified-TLS HTTP 200 and Content-Length on October 8, 2026; only response headers were read. HEAD attempts timed out and archive contents are uninspected. The separate map-unit service supports bounded source previews. These thematic interpretations are not a continuous three-dimensional geology model; retain MapSourceID and linked DataSources citations and source-specific mapping limitations.",
+      "geometryRole": "interpreted-geology",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-cngm-precambrian-gems-zip",
+          "title": "Precambrian interpreted geology \u2014 national GeMS ZIP",
+          "format": "ZIP",
+          "url": "https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=4891&pid=118545",
+          "expectedBytes": 2211252348,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-08T18:04:03.440574+00:00",
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "GET-response-headers"
+        },
+        {
+          "id": "usgs-cngm-precambrian-map-units",
+          "title": "Precambrian interpreted map units \u2014 source service",
+          "format": "ArcGIS REST",
+          "url": "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/National_Precambrian_v2/FeatureServer/5",
+          "expectedBytes": null,
+          "kind": "service",
+          "availability": "verified",
+          "checkedAt": null,
+          "verifiedDate": "2026-10-08",
+          "verificationMethod": "ArcGIS-service-metadata"
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "ngmdb-959",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Geology of the Fredonia quadrangle, Kansas",
+      "counties": [],
+      "mapYear": 1954,
+      "digitalYear": null,
+      "scale": "1:62,500",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://ngmdb.usgs.gov/Prodesc/proddesc_959.htm",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://ngmdb.usgs.gov/Prodesc/proddesc_959.htm"
+      },
+      "description": "Wagner, H.C., 1954, Geology of the Fredonia quadrangle, Kansas, U.S. Geological Survey, Geologic Quadrangle Map GQ-49, 1:62,500",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [],
+      "rawMetadata": {
+        "scale_bin": 3,
+        "formats": "",
+        "series": "Geologic Quadrangle Map GQ-49",
+        "online": "True",
+        "order": "360",
+        "published_by": "U.S. Geological Survey",
+        "title": "Geology of the Fredonia quadrangle, Kansas",
+        "authors": "Wagner, H.C.",
+        "year": 1954,
+        "id": 959,
+        "parent": null,
+        "img": "True",
+        "scale": "1:62,500",
+        "gis": null
+      },
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "ngmdb-10231",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Geologic map of the Garnett East quadrangle and parts of the Garnett SE, Garnett NW, and Lane quadrangles, Anderson County, Kansas",
+      "counties": [
+        "Anderson"
+      ],
+      "mapYear": 1992,
+      "digitalYear": null,
+      "scale": "1:24,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://ngmdb.usgs.gov/Prodesc/proddesc_10231.htm",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://ngmdb.usgs.gov/Prodesc/proddesc_10231.htm"
+      },
+      "description": "Johnson, W.D., 1992, Geologic map of the Garnett East quadrangle and parts of the Garnett SE, Garnett NW, and Lane quadrangles, Anderson County, Kansas, U.S. Geological Survey, Miscellaneous Investigations Series Map I-2303, 1:24,000",
+      "geometryRole": "map-extent",
+      "bbox": null,
+      "point": null,
+      "assets": [],
+      "rawMetadata": {
+        "online": "True",
+        "parent": null,
+        "published_by": "U.S. Geological Survey",
+        "title": "Geologic map of the Garnett East quadrangle and parts of the Garnett SE, Garnett NW, and Lane quadrangles, Anderson County, Kansas",
+        "scale": "1:24,000",
+        "series": "Miscellaneous Investigations Series Map I-2303",
+        "id": 10231,
+        "gis": null,
+        "formats": "",
+        "scale_bin": 2,
+        "authors": "Johnson, W.D.",
+        "img": "True",
+        "year": 1992,
+        "order": "84"
+      },
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "usgs-coal-fields-2013",
+      "sourceId": "ngmdb-usgs",
+      "publisher": "USGS",
+      "title": "Coal Fields of the Conterminous United States \u2014 OFR 2012-1205",
+      "counties": [],
+      "mapYear": 2013,
+      "digitalYear": null,
+      "scale": "1:5,000,000",
+      "scaleUnit": "denominator",
+      "metadataUrl": "https://pubs.usgs.gov/of/2012/1205/",
+      "rights": {
+        "status": "source-terms",
+        "text": "Retain source attribution and source-specific terms; discovery does not grant redistribution rights or data admission.",
+        "url": "https://pubs.usgs.gov/of/2012/1205/"
+      },
+      "description": "Regional coal-field context only, not mine footprints. The hosted derivative returned 17 records intersecting a Kansas bounding rectangle, not an exact-state count. Original archive byte size is unverified.",
+      "geometryRole": "interpreted-geology",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "usgs-coal-fields-gis",
+          "title": "Source GIS archive",
+          "format": "ZIP",
+          "url": "https://pubs.usgs.gov/of/2012/1205/Downloads/GIS.zip",
+          "expectedBytes": null,
+          "kind": "download",
+          "availability": "unverified",
+          "checkedAt": null
+        }
+      ],
+      "crs": null,
+      "spatialAccuracy": null
+    },
+    {
+      "id": "publisher-cdl-2025-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2025 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2025-30m-file",
+          "title": "2025_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2025_30m_cdls.zip",
+          "expectedBytes": 1887184211,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2025-10m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2025 \u00b7 10 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2025,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2025-10m-file",
+          "title": "2025_10m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2025_10m_cdls.zip",
+          "expectedBytes": 10104684890,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2024-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2024 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2024,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2024-30m-file",
+          "title": "2024_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2024_30m_cdls.zip",
+          "expectedBytes": 1656243429,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2024-10m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2024 \u00b7 10 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2024,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2024-10m-file",
+          "title": "2024_10m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2024_10m_cdls.zip",
+          "expectedBytes": 8987241784,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2023-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2023 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2023,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2023-30m-file",
+          "title": "2023_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2023_30m_cdls.zip",
+          "expectedBytes": 2059094665,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2022-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2022 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2022,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2022-30m-file",
+          "title": "2022_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2022_30m_cdls.zip",
+          "expectedBytes": 2070138298,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2021-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2021 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2021,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2021-30m-file",
+          "title": "2021_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2021_30m_cdls.zip",
+          "expectedBytes": 2021909155,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2020-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2020 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2020,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2020-30m-file",
+          "title": "2020_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2020_30m_cdls.zip",
+          "expectedBytes": 2007640337,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2019-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2019 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2019,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2019-30m-file",
+          "title": "2019_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2019_30m_cdls.zip",
+          "expectedBytes": 1964882898,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2018-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2018 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2018,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2018-30m-file",
+          "title": "2018_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2018_30m_cdls.zip",
+          "expectedBytes": 1873535968,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2017-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2017 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2017,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2017-30m-file",
+          "title": "2017_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2017_30m_cdls.zip",
+          "expectedBytes": 1790196900,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2016-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2016 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2016,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2016-30m-file",
+          "title": "2016_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2016_30m_cdls.zip",
+          "expectedBytes": 1804126975,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2015-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2015 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2015,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2015-30m-file",
+          "title": "2015_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2015_30m_cdls.zip",
+          "expectedBytes": 1807983697,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2014-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2014 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2014,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2014-30m-file",
+          "title": "2014_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2014_30m_cdls.zip",
+          "expectedBytes": 1854193491,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2013-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2013 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2013,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2013-30m-file",
+          "title": "2013_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2013_30m_cdls.zip",
+          "expectedBytes": 1806704775,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2012-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2012 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2012,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2012-30m-file",
+          "title": "2012_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2012_30m_cdls.zip",
+          "expectedBytes": 1819245510,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2011-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2011 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2011,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2011-30m-file",
+          "title": "2011_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2011_30m_cdls.zip",
+          "expectedBytes": 1849298633,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2010-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2010 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2010,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2010-30m-file",
+          "title": "2010_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2010_30m_cdls.zip",
+          "expectedBytes": 1866483557,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2009-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2009 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2009,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2009-30m-file",
+          "title": "2009_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2009_30m_cdls.zip",
+          "expectedBytes": 1839306721,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-cdl-2008-30m",
+      "sourceId": "publisher-cdl",
+      "publisher": "USDA NASS",
+      "title": "Cropland Data Layer 2008 \u00b7 30 m \u00b7 national file including Kansas",
+      "counties": [],
+      "mapYear": 2008,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; credit USDA NASS and the product year. Classification is not a field survey or yield estimate.",
+        "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/"
+      },
+      "description": "USDA publisher original national cropland classification archive. Kansas is included; the archive is not clipped to Kansas. The 2024 and 2025 30 m products are resampled from 10 m. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "National original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-cdl-2008-30m-file",
+          "title": "2008_30m_cdls.zip",
+          "format": "ZIP",
+          "url": "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2008_30m_cdls.zip",
+          "expectedBytes": 1813824795,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2024",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2024 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2024,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2024-file",
+          "title": "chirps-v2.0.2024.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2024.tif",
+          "expectedBytes": 57612546,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2023",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2023 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2023,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2023-file",
+          "title": "chirps-v2.0.2023.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2023.tif",
+          "expectedBytes": 57612546,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2022",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2022 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2022,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2022-file",
+          "title": "chirps-v2.0.2022.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2022.tif",
+          "expectedBytes": 57616544,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2021",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2021 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2021,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2021-file",
+          "title": "chirps-v2.0.2021.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2021.tif",
+          "expectedBytes": 57616544,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2020",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2020 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2020,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2020-file",
+          "title": "chirps-v2.0.2020.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2020.tif",
+          "expectedBytes": 57616544,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2019",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2019 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2019,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2019-file",
+          "title": "chirps-v2.0.2019.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2019.tif",
+          "expectedBytes": 57616588,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2018",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2018 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2018,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2018-file",
+          "title": "chirps-v2.0.2018.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2018.tif",
+          "expectedBytes": 57616544,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2017",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2017 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2017,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2017-file",
+          "title": "chirps-v2.0.2017.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2017.tif",
+          "expectedBytes": 57616588,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2016",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2016 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2016,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2016-file",
+          "title": "chirps-v2.0.2016.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2016.tif",
+          "expectedBytes": 57616586,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2015",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2015 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2015,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2015-file",
+          "title": "chirps-v2.0.2015.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2015.tif",
+          "expectedBytes": 57616586,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2014",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2014 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2014,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2014-file",
+          "title": "chirps-v2.0.2014.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2014.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2013",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2013 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2013,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2013-file",
+          "title": "chirps-v2.0.2013.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2013.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2012",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2012 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2012,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2012-file",
+          "title": "chirps-v2.0.2012.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2012.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2011",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2011 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2011,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2011-file",
+          "title": "chirps-v2.0.2011.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2011.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2010",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2010 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2010,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2010-file",
+          "title": "chirps-v2.0.2010.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2010.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2009",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2009 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2009,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2009-file",
+          "title": "chirps-v2.0.2009.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2009.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2008",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2008 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2008,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2008-file",
+          "title": "chirps-v2.0.2008.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2008.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2007",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2007 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2007,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2007-file",
+          "title": "chirps-v2.0.2007.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2007.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2006",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2006 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2006,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2006-file",
+          "title": "chirps-v2.0.2006.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2006.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2005",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2005 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2005,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2005-file",
+          "title": "chirps-v2.0.2005.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2005.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2004",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2004 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2004,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2004-file",
+          "title": "chirps-v2.0.2004.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2004.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2003",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2003 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2003,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2003-file",
+          "title": "chirps-v2.0.2003.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2003.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2002",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2002 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2002,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2002-file",
+          "title": "chirps-v2.0.2002.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2002.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2001",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2001 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2001,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2001-file",
+          "title": "chirps-v2.0.2001.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2001.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-2000",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 2000 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 2000,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-2000-file",
+          "title": "chirps-v2.0.2000.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.2000.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1999",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1999 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1999,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1999-file",
+          "title": "chirps-v2.0.1999.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1999.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1998",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1998 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1998,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1998-file",
+          "title": "chirps-v2.0.1998.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1998.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1997",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1997 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1997,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1997-file",
+          "title": "chirps-v2.0.1997.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1997.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1996",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1996 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1996,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1996-file",
+          "title": "chirps-v2.0.1996.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1996.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1995",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1995 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1995,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1995-file",
+          "title": "chirps-v2.0.1995.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1995.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1994",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1994 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1994,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1994-file",
+          "title": "chirps-v2.0.1994.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1994.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1993",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1993 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1993,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1993-file",
+          "title": "chirps-v2.0.1993.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1993.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1992",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1992 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1992,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1992-file",
+          "title": "chirps-v2.0.1992.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1992.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1991",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1991 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1991,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1991-file",
+          "title": "chirps-v2.0.1991.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1991.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1990",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1990 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1990,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1990-file",
+          "title": "chirps-v2.0.1990.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1990.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1989",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1989 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1989,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1989-file",
+          "title": "chirps-v2.0.1989.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1989.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1988",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1988 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1988,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1988-file",
+          "title": "chirps-v2.0.1988.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1988.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1987",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1987 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1987,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1987-file",
+          "title": "chirps-v2.0.1987.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1987.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1986",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1986 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1986,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1986-file",
+          "title": "chirps-v2.0.1986.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1986.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1985",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1985 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1985,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1985-file",
+          "title": "chirps-v2.0.1985.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1985.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1984",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1984 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1984,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1984-file",
+          "title": "chirps-v2.0.1984.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1984.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1983",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1983 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1983,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1983-file",
+          "title": "chirps-v2.0.1983.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1983.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1982",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1982 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1982,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1982-file",
+          "title": "chirps-v2.0.1982.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1982.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "publisher-chirps-1981",
+      "sourceId": "publisher-chirps",
+      "publisher": "UCSB Climate Hazards Center",
+      "title": "CHIRPS rainfall 1981 \u00b7 global annual file including Kansas",
+      "counties": [],
+      "mapYear": 1981,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "metadataUrl": "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+      "rights": {
+        "status": "public-domain",
+        "text": "Public domain; cite CHIRPS and Funk et al. (2015). Gridded estimates are not local gauge measurements or a warning service.",
+        "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+      },
+      "description": "CHIRPS v2 publisher annual precipitation GeoTIFF. Kansas lies within its global 50S\u201350N domain; this is not clipped to Kansas. This annual publisher product differs from the daily collection listed in Earth Engine. Identified through the official Earth Engine catalog: https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY. No Google account, purchase, or data request is needed for this file.",
+      "geometryRole": "Global original including Kansas; not a Kansas clip",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "publisher-chirps-1981-file",
+          "title": "chirps-v2.0.1981.tif",
+          "format": "TIFF",
+          "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1981.tif",
+          "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "history-prentis-1909",
+      "sourceId": "history-originals",
+      "publisher": "Library of Congress / Internet Archive",
+      "title": "Noble L. Prentis: A history of Kansas (1909)",
+      "counties": [],
+      "mapYear": null,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "crs": null,
+      "spatialAccuracy": null,
+      "metadataUrl": "https://archive.org/details/historyofkansas00pren_0",
+      "rights": {
+        "status": "no-known-restrictions",
+        "text": "1909 book. Internet Archive records the Library of Congress as unaware of copyright restrictions. Historical perspective and OCR errors require source interpretation.",
+        "url": "https://archive.org/details/historyofkansas00pren_0"
+      },
+      "description": "1909 book. Internet Archive records the Library of Congress as unaware of copyright restrictions. Historical perspective and OCR errors require source interpretation.",
+      "geometryRole": "Historical reference book; no geographic geometry or map alignment.",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "history-prentis-1909-pdf",
+          "title": "Noble L. Prentis: A history of Kansas (1909)",
+          "format": "PDF",
+          "url": "https://dn721107.ca.archive.org/0/items/historyofkansas00pren_0/historyofkansas00pren_0.pdf",
+          "expectedBytes": 26261072,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09",
+          "providerChecksum": {
+            "algorithm": "SHA1",
+            "value": "e216f4d62bde70ac3da18fca90383affb6ac13c2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "history-arnold-history",
+      "sourceId": "history-originals",
+      "publisher": "Latin American Studies (scan host)",
+      "title": "Anna Estelle Arnold: A History of Kansas",
+      "counties": [],
+      "mapYear": null,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "crs": null,
+      "spatialAccuracy": null,
+      "metadataUrl": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf",
+      "rights": {
+        "status": "held",
+        "text": "The file identifies Anna Estelle Arnold; this scan edition and redistribution terms are not verified. Private reference capture only; do not infer rights from other editions.",
+        "url": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf"
+      },
+      "description": "The file identifies Anna Estelle Arnold; this scan edition and redistribution terms are not verified. Private reference capture only; do not infer rights from other editions.",
+      "geometryRole": "Historical reference book; no geographic geometry or map alignment.",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "history-arnold-history-pdf",
+          "title": "Anna Estelle Arnold: A History of Kansas",
+          "format": "PDF",
+          "url": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf",
+          "expectedBytes": 24602998,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    }
+  ]
+}

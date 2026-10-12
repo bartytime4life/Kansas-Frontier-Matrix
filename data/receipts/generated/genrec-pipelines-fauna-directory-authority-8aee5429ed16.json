@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-pipelines-fauna-directory-authority-8aee5429ed16",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/normalize/fauna/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/normalize/fauna/README.md": "sha256:8aee5429ed16b83bd929c419cdfc2ee50708c86e4f11a00307b8e1d144adfcaf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5.6 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:00869a9607007b8896b061b033c24d045756fe469209fd4cd731a8a7b48fbbac",
+      "sha256:2cb2ea826d2940f1af2a0c0a807aa98b6d10697755555ef531b85dedca078d22",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:a89f0527052062ce0ae659a3e9b5f863b050bc6731a7a569c4c4403d3ff2f46c",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d",
+      "sha256:c8a83662a70f94f871ec9ae7ec55107b64b6a325efd8c19364d77d048b257fb6",
+      "sha256:d9675d1fc33a1dd81bdcd05ae1e098478dc673fa374aff7dcf07373a109b3f2c"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1480",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "docs/doctrine/directory-rules.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "docs/architecture/directory-rules.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "CONTRIBUTING.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "pipelines/README.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "pipelines/normalize/README.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "pipelines/normalize/fauna/README.md@b0822dc76dabb0f41b7a4952bc876ba718d12697",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@b0822dc76dabb0f41b7a4952bc876ba718d12697"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/normalize/fauna/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "target-document-local-link-and-fragment-check-1-doc-65-targets",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "pipelines-lane-local-link-and-fragment-check-88-docs-3300-targets",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "link-checker-unit-tests-13",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "target-markdown-structure-and-final-newline",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-json-contract-shape-and-artifact-hash",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "sensitive-pattern-scan",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-draft-2020-12-jsonschema",
+      "outcome": "SKIPPED",
+      "reason": "The jsonschema Python package is unavailable and the no-network validation posture prohibits dependency installation; deterministic standard-library contract-shape and hash checks are used locally, with hosted schema validation to be observed after draft PR creation."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "FAIL",
+      "reason": "The command exits 2 before validation because the pre-existing jsonschema Python dependency is unavailable; targeted standard-library checks run without downloading dependencies."
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this process-memory receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-b0822dc76dab",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b0822dc76dabb0f41b7a4952bc876ba718d12697"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "PR-1480-FAUNA-README-BASELINE",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1480"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b0822dc76dabb0f41b7a4952bc876ba718d12697"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@b0822dc76dabb0f41b7a4952bc876ba718d12697"
+    },
+    {
+      "id": "CONTRIBUTING-bb4963d94b98",
+      "validated": true,
+      "evidence_ref": "CONTRIBUTING.md@b0822dc76dabb0f41b7a4952bc876ba718d12697"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T03:50:20Z",
+  "emitter": "openai/codex-gpt-5.6-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One canonical process-memory receipt for a bounded correction to the Fauna normalize README's Directory Rules authority posture and broken case-variant link. Accepted ADR-0029 resolves the controlling human-readable Directory Rules edition but does not settle the Fauna shared-versus-domain sublane, activate a source or specification, approve policy or geoprivacy, construct evidence or proof, promote data, release, deploy, publish, or establish repository completeness. Rollback is to close the unmerged draft pull request or transparently revert the bounded commit and its paired receipt through a reviewed branch."
+}

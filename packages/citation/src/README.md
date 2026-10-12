@@ -20,7 +20,7 @@ related:
   - packages/citation/README.md
   - packages/citation/src/citation/README.md
   - packages/api/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - data/proofs/evidence_bundle/
   - data/receipts/pipeline/
   - data/catalog/

@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec-policy-promotion-readme-b8556d55",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/promotion/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/promotion/README.md": "sha256:b8556d55cc1e68eae0246334440af4de3e38ada98a6f86c82cafcf6c36784dfd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a27402f97a0209ad6afd785f02b72d246afa8a8103b9f26f3352ec109db1d4fb",
+      "sha256:bf662aa49522c8cf74dda5a8e84bab1677f95bd91e02a396aa04aea79b96567f",
+      "sha256:1cc4e6f53074f1511cab844c6121678d5690f30d923bff839d52911e23f23b1d",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:policy/promotion/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:policy/promotion/promotion_prerequisites.rego@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:policy/promotion/rollback_card_required.rego@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:policy/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:policy/release/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:contracts/release/promotion_decision.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:contracts/release/promotion_receipt.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:contracts/release/promotion_verification_execution.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:contracts/release/rollback_card.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:schemas/contracts/v1/release/promotion_decision.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:schemas/contracts/v1/release/promotion_receipt.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:schemas/contracts/v1/release/rollback_card.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:schemas/contracts/v1/policy/promotion_decision.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:fixtures/release/promotion_gate/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:fixtures/release/promotion_decision/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:fixtures/release/promotion_receipt/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/promotion_gate/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/promotion_gate/validate_promotion_gate.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/release/validate_promotion_decision.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/release/validate_promotion_receipt.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/release/validate_rollback_card.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tests/release/test_promotion_gate.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tests/release/test_review_record.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tests/release/test_promotion_decision_schema.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tests/release/test_promotion_receipt.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tests/release/test_promotion_verification_execution.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:docs/adr/ADR-0018-promotion-gate-sequence.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:docs/runbooks/PROMOTION_RUNBOOK.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:docs/architecture/publication/promotion-gates.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:docs/doctrine/directory-rules.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:control_plane/root_registry.yaml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:control_plane/policy_gate_register.yaml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:release/promotion_decisions/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:release/rollback_cards/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:.github/CODEOWNERS@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:.github/workflows/promotion-gate.yml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:.github/workflows/promotion-receipt.yml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:.github/workflows/promotion-verification-execution.yml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:.github/workflows/rollback-card.yml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e",
+      "repo:tools/validators/validate_generated_receipt.py@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    ]
+  },
+  "truth_labels": {
+    "policy/promotion/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete direct-child tree, exact-target open-pull-request overlap, planned branch name, accepted Directory Rules and ADR-0029, parent policy authority, machine root projection, empty proposed policy-gate register, and directly related promotion, release, rollback, validator, test, workflow, decision, and receipt evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, balanced language-tagged fences, no diff whitespace errors, UTF-8-compatible text, a final newline, and a KFM_META_BLOCK_V2 envelope that passes the bounded repository validator."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 63 local README targets and fragments; no external URL was added or checked."
+    },
+    {
+      "gate": "promotion-readiness-related-evidence",
+      "outcome": "PASS",
+      "reason": "The bounded review-record fixture matrix, promotion-gate fixture matrix, eleven ReviewRecord tests, and nineteen promotion-gate tests passed under the repository no-network profile; the README preserves their declared-context-only and non-authoritative boundary."
+    },
+    {
+      "gate": "promotion-decision-related-evidence",
+      "outcome": "PASS",
+      "reason": "The proposed PromotionDecision positive and negative schema fixtures and focused schema test passed; the README preserves the distinction between structural validity, authenticated decision authority, and transition application."
+    },
+    {
+      "gate": "promotion-receipt-related-evidence",
+      "outcome": "PASS",
+      "reason": "Four valid and five invalid PromotionReceipt fixtures plus six focused tests passed; the README preserves the receipt's synthetic, declared-consistency, no-network, and non-publisher boundary."
+    },
+    {
+      "gate": "promotion-verification-and-rollback-related-evidence",
+      "outcome": "PASS",
+      "reason": "Five fixture-first promotion-verification execution tests, three valid and six invalid RollbackCard fixture cases, and eight RollbackCard tests passed; the README preserves their fake-tool, candidate-shape, no-execution, and no-authority limits."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 bounded local-link validator tests and all 24 metadata-block validator tests passed with no network access."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private review notes, personal data, protected records, exact sensitive locations, restricted payloads, production endpoints, hidden reasoning, or actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego rule, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consumer, decision, transition, release, deployment, rollback execution, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, independent approval, lifecycle mutation, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "promotion-policy-lane-inventory-and-stub-posture",
+      "validated": true,
+      "evidence_ref": "repo:policy/promotion/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "promotion-prerequisites-no-op-posture",
+      "validated": true,
+      "evidence_ref": "repo:policy/promotion/promotion_prerequisites.rego@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "rollback-card-required-no-op-posture",
+      "validated": true,
+      "evidence_ref": "repo:policy/promotion/rollback_card_required.rego@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "bounded-readiness-validator-non-authority",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/promotion_gate/README.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "proposed-gate-sequence-and-revise-checkpoint",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0018-promotion-gate-sequence.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "empty-proposed-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "directory-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@87ef04d532df34bee8dc62ef8b28dfac69f35a0e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T14:02:37Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the placeholder policy/promotion boundary. The update records the exact no-op Rego posture, separates policy source from readiness validation, decisions, receipts, review, release, rollback, transition application, and publication, and documents the unresolved A-G sequence mapping plus contributor, validation, correction, and rollback boundaries. It changes no Rego rule, policy behavior, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consumer, decision, lifecycle state, release, deployment, rollback execution, publication, or public behavior. This receipt is provenance and process memory rather than approval, proof, policy acceptance, independent review, lifecycle authority, release authority, or publication authority; authorized human review remains pending."
+}

@@ -10,22 +10,19 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/loc/README.md
-  - docs/sources/catalog/loc/IDENTITY.md
-  - docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/loc/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/PROV.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/loc/chronicling-america/
   - schemas/contracts/v1/source/source-descriptor.schema.json
-  - connectors/loc/chronicling-america/
-  - pipeline_specs/people-dna-land/loc-chronicling-america/
 tags: [kfm, docs, sources, catalog, loc, newspapers, ocr, iiif, ner, event-extraction]
 notes:
   - "PROPOSED product-page scaffold; the docs/sources/catalog/loc/ tree itself is PROPOSED until repo verification."
   - "All paths are PROPOSED per Directory Rules §0; no repository is mounted in this session."
   - "Owners, badge targets, and example links are explicit placeholders — not fabricated."
+owning_root: docs/
+responsibility: "Documentation for Chronicling America Historic Newspapers; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Chronicling America — Historic Newspapers
@@ -144,7 +141,7 @@ CONFIRMED (Pass 10 C4 category): Every promoted KFM dataset gets a **STAC** reco
 
 ## 5. Collection identity
 
-PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to [`IDENTITY.md`](./IDENTITY.md). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
+PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to `IDENTITY.md` (not present). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
 
 PROPOSED (Pass 10 C4-01 open question, also tracked as **OPEN-DSC-03**): The vendor namespace for KFM STAC extension fields is **unresolved between `kfm:` (KFM-global) and `ks-kfm:` (Kansas-scoped)**. This product page **MUST NOT** pin the choice; it follows whatever [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) declares once the ADR lands.
 
@@ -209,7 +206,7 @@ PROPOSED — newspaper pages themselves are non-spatial; geometry attaches to **
 
 - **CRS for provenance:** keep at the source authority's CRS (typically `EPSG:4326` for derived geocodes). NEEDS VERIFICATION against the geocoder used.
 - **Reprojection for tiling:** `EPSG:3857` only at tile time per the broader KFM rule that source CRS is preserved for provenance and reprojected only for tiling.
-- **Generalization rules:** any extracted location with **person-level identifiability**, **archaeological precision**, or **sensitive-species precision** MUST be generalized or denied per [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) and [`policy/sensitivity/`](../../../../policy/sensitivity/). NEEDS VERIFICATION per extracted record.
+- **Generalization rules:** any extracted location with **person-level identifiability**, **archaeological precision**, or **sensitive-species precision** MUST be generalized or denied per `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) and [`policy/sensitivity/`](../../../../policy/sensitivity/). NEEDS VERIFICATION per extracted record.
 
 > [!CAUTION]
 > A geocode derived from an OCR'd 1880s newspaper sentence is an **inference**, not an observation. It should carry an `EvidenceRef` to the OCR span and a generalization receipt if it touches a sensitive lane.
@@ -220,7 +217,7 @@ PROPOSED — newspaper pages themselves are non-spatial; geometry attaches to **
 
 ## 9. Rights, sensitivity, and publication posture
 
-NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 CONFIRMED (`Master MapLibre`, ML-Q section; CDB §16 sensitivity matrix; `KFM-P10-PROG-0014` SPDX guard):
 
@@ -293,9 +290,9 @@ NEEDS VERIFICATION (Directory Rules §13.5 anti-pattern *Source alias drift risk
 ## 13. Examples (illustrative only)
 
 > [!NOTE]
-> Examples below are **illustrative**, not authoritative. Authoritative samples live under [`_examples/`](./_examples/) and the fixture lanes (`fixtures/` and `tests/fixtures/`) — do not treat any block on this page as a contract.
+> Examples below are **illustrative**, not authoritative. Authoritative samples live under `_examples/` (not present) and the fixture lanes (`fixtures/` and `tests/fixtures/`) — do not treat any block on this page as a contract.
 
-See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the minimal STAC + `kfm:provenance` shape.
+See `_examples/stac-item-example.json` (not present) for the minimal STAC + `kfm:provenance` shape.
 
 <details>
 <summary><strong>Illustrative STAC Item sketch (DO NOT COPY VERBATIM)</strong></summary>
@@ -384,14 +381,14 @@ See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) for
 ## 15. Related docs
 
 - [`./README.md`](./README.md) — `loc` source family overview
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern, namespace decisions for the `loc` family
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — rights and sensitivity disposition for `loc` products
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — minimal STAC + `kfm:provenance` shape
+- `./IDENTITY.md` (not present) — collection-id pattern, namespace decisions for the `loc` family
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — rights and sensitivity disposition for `loc` products
+- `./_examples/stac-item-example.json` (not present) — minimal STAC + `kfm:provenance` shape
 - [`../README.md`](../README.md) — `docs/sources/catalog/` overview
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC profile (namespace, extensions, attestation hook)
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV provenance profile *(filename pending ADR-S-06)*
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule *(path PROPOSED)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule *(path PROPOSED)*
 
 [↑ Back to top](#chronicling-america--historic-newspapers)
 
@@ -439,7 +436,7 @@ See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) for
 
 ---
 
-**Related docs:** [loc family README](./README.md) · [IDENTITY](./IDENTITY.md) · [RIGHTS-AND-SENSITIVITY-MAP](./RIGHTS-AND-SENSITIVITY-MAP.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
 

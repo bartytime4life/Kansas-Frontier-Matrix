@@ -1,14 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/intake/idea-intake
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Index exploratory idea packets entering docs intake without promoting them to doctrine, ADR, or implementation status.
+truth_posture: PROPOSED index; repository implementation depth UNKNOWN; related paths NEEDS VERIFICATION
 title: New Ideas Index
 type: standard
 version: v1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-10-12
 policy_label: NEEDS VERIFICATION: public-facing documentation label not confirmed in mounted repo
-related: [docs/intake/IDEA_INTAKE.md (NEEDS VERIFICATION), docs/registers/AUTHORITY_LADDER.md (NEEDS VERIFICATION), docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md (NEEDS VERIFICATION), docs/registers/VERIFICATION_BACKLOG.md (NEEDS VERIFICATION)]
+related:
+  - docs/registers/AUTHORITY_LADDER.md
+  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
+  - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, docs, intake, new-ideas, governance]
 notes: [Repo implementation depth UNKNOWN in this drafting session; this index inventories exploratory packets without promoting them.]
 [/KFM_META_BLOCK_V2] -->

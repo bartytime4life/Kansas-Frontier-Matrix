@@ -1,14 +1,324 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/flora/specimen_record.schema.json",
-  "title": "Specimen Record",
+  "title": "Flora Specimen Record Candidate",
+  "description": "Closed, fixture-only candidate for specimen-backed historical evidence. Conformance does not establish current occurrence, activate a source, resolve evidence, approve policy, authorize release, or permit publication.",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/flora/specimen_record.schema.json. Fields are to be defined by the owning domain steward.",
-  "x-kfm": {
-    "status": "PROPOSED",
-    "source_doc": "docs/domains/flora/CANONICAL_PATHS.md",
-    "contract_doc": "contracts/domains/flora/specimen_record.md"
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "fixture_only",
+    "record_id",
+    "domain",
+    "record_class",
+    "source_role",
+    "source",
+    "collection_event",
+    "determination",
+    "evidence_refs",
+    "rights",
+    "sensitivity",
+    "public_projection",
+    "governance",
+    "correction",
+    "spec_hash"
+  ],
+  "$defs": {
+    "digest_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/@-]*@sha256:[0-9a-f]{64}$"
+    },
+    "nullable_digest_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/digest_ref" },
+        { "type": "null" }
+      ]
+    },
+    "date_or_null": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        { "type": "null" }
+      ]
+    }
   },
-  "properties": {},
-  "additionalProperties": true
+  "properties": {
+    "schema_version": {
+      "const": "kfm.flora.specimen-record.v1"
+    },
+    "object_type": {
+      "const": "SpecimenRecordCandidate"
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^kfm://candidate/flora/specimen/sha256:[0-9a-f]{64}$"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "record_class": {
+      "enum": [
+        "voucher_specimen",
+        "herbarium_sheet",
+        "catalog_record",
+        "image_record",
+        "duplicate_specimen",
+        "fragment",
+        "type_specimen",
+        "sensitive_specimen",
+        "candidate_record",
+        "synthetic"
+      ]
+    },
+    "source_role": {
+      "enum": [
+        "observed",
+        "regulatory",
+        "modeled",
+        "aggregate",
+        "administrative",
+        "candidate",
+        "synthetic"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor_ref",
+        "source_record_ref",
+        "source_version",
+        "institution_code",
+        "collection_code",
+        "catalog_number",
+        "terms_ref",
+        "retrieval_receipt_ref"
+      ],
+      "properties": {
+        "descriptor_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_record_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "source_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "institution_code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9._-]{0,31}$"
+        },
+        "collection_code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9._-]{0,31}$"
+        },
+        "catalog_number": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "terms_ref": { "$ref": "#/$defs/digest_ref" },
+        "retrieval_receipt_ref": { "$ref": "#/$defs/digest_ref" }
+      }
+    },
+    "collection_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_date",
+        "time_precision",
+        "historical_evidence_only",
+        "current_occurrence_claimed",
+        "locality_precision",
+        "coordinate_uncertainty_meters",
+        "restricted_geometry_ref"
+      ],
+      "properties": {
+        "event_date": { "$ref": "#/$defs/date_or_null" },
+        "time_precision": {
+          "enum": ["day", "month", "year", "range", "label_derived", "unknown"]
+        },
+        "historical_evidence_only": {
+          "type": "boolean"
+        },
+        "current_occurrence_claimed": {
+          "type": "boolean"
+        },
+        "locality_precision": {
+          "enum": [
+            "exact",
+            "high_precision",
+            "county",
+            "generalized",
+            "obscured",
+            "withheld",
+            "unknown"
+          ]
+        },
+        "coordinate_uncertainty_meters": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            { "type": "null" }
+          ]
+        },
+        "restricted_geometry_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "determination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_taxon_name",
+        "taxon_ref",
+        "crosswalk_ref",
+        "status",
+        "determination_date",
+        "label_text_accepted_as_taxonomy"
+      ],
+      "properties": {
+        "source_taxon_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "taxon_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "crosswalk_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "status": {
+          "enum": [
+            "current",
+            "prior",
+            "tentative",
+            "disputed",
+            "unresolved",
+            "superseded",
+            "rejected",
+            "unknown"
+          ]
+        },
+        "determination_date": { "$ref": "#/$defs/date_or_null" },
+        "label_text_accepted_as_taxonomy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/digest_ref" }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "license_ref",
+        "public_metadata_allowed",
+        "image_reuse_allowed"
+      ],
+      "properties": {
+        "state": {
+          "enum": ["open", "conditional", "restricted", "unknown"]
+        },
+        "license_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "public_metadata_allowed": { "type": "boolean" },
+        "image_reuse_allowed": { "type": "boolean" }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "rare_taxon",
+        "exact_locality_public",
+        "review_ref",
+        "redaction_receipt_ref"
+      ],
+      "properties": {
+        "state": {
+          "enum": ["public_safe", "restricted", "unknown"]
+        },
+        "rare_taxon": { "type": "boolean" },
+        "exact_locality_public": { "type": "boolean" },
+        "review_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "redaction_receipt_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "public_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate",
+        "claim_posture",
+        "geometry_ref",
+        "image_refs",
+        "release_ref"
+      ],
+      "properties": {
+        "candidate": { "type": "boolean" },
+        "claim_posture": {
+          "enum": ["historical_support", "no_current_occurrence_claim"]
+        },
+        "geometry_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "image_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "release_ref": { "type": "null" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_approved",
+        "review_approved",
+        "release_authorized",
+        "published"
+      ],
+      "properties": {
+        "source_activated": { "const": false },
+        "evidence_resolved": { "const": false },
+        "policy_approved": { "const": false },
+        "review_approved": { "const": false },
+        "release_authorized": { "const": false },
+        "published": { "const": false }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supersedes_record_ref", "correction_refs"],
+      "properties": {
+        "supersedes_record_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "correction_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
 }

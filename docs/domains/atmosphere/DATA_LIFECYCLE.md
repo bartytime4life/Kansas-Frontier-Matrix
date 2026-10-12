@@ -9,14 +9,13 @@ created: 2026-05-15
 updated: 2026-05-28
 policy_label: public
 related:
-  - ai-build-operating-contract.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/domains/atmosphere/README.md
   - docs/domains/atmosphere/CROSS_LANE_RELATIONS.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, domain, atmosphere, air, lifecycle, governance, publication]
@@ -24,6 +23,9 @@ notes:
   - CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
   - All repo-shaped paths are PROPOSED until verified against the mounted repository.
   - Atmosphere/Air does not replace official advisories or emergency alerting.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air — Data Lifecycle
@@ -604,14 +606,14 @@ This document is done enough to enter the repository when:
 
 > Paths below are **PROPOSED** until verified.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (canonical). *(Verify relative path.)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract v3.0 (canonical). *(Verify relative path.)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — CONFIRMED canonical statement of the lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and per-root authority.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public surfaces consume governed APIs only.
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain default.
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere/Air domain landing page. *(TODO if absent.)*
 - [`docs/domains/atmosphere/CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) — cross-lane relation detail. *(PROPOSED neighbor.)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — The only legitimate public path.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — The only legitimate public path.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance crosswalk used by atmosphere PROV activities.
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — Geographic metadata crosswalk.
 - *TODO:* link to atmosphere SourceDescriptor README once published.

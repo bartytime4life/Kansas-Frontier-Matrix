@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/proof_session_handoff.schema.json",
+  "title": "ProofSessionHandoffCandidate",
+  "description": "Fixture-only bounded experiment handoff without evidence, policy, review, proof, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "session_id",
+    "source_basis",
+    "session",
+    "scope",
+    "support",
+    "work_products",
+    "results",
+    "handoff",
+    "session_claims",
+    "assessment_state",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "ProofSessionHandoffCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.governance.proof-session-handoff.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^kfm:proof-session:[a-f0-9]{24}$"
+    },
+    "source_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_map_ref",
+        "adaptation",
+        "authority_state"
+      ],
+      "properties": {
+        "source_map_ref": {
+          "const": "docs/intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md"
+        },
+        "adaptation": {
+          "const": "OPTIONAL_BOUNDED_WORKSHEET"
+        },
+        "authority_state": {
+          "const": "PROPOSAL_ONLY"
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "started_at",
+        "completed_at",
+        "timebox_minutes",
+        "facilitator_role"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "SYNTHETIC_NO_NETWORK",
+            "REPOSITORY_BOUNDED"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timebox_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 480
+        },
+        "facilitator_role": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 96,
+          "pattern": "^[a-z][a-z0-9_]{2,95}$"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_or_question",
+        "intended_user_value",
+        "place_scope",
+        "time_scope"
+      ],
+      "properties": {
+        "claim_or_question": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 1024,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "intended_user_value": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 1024,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "place_scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "ref"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "SYNTHETIC",
+                "KANSAS_STATE",
+                "COUNTY",
+                "HUC12",
+                "OTHER"
+              ]
+            },
+            "ref": {
+              "$ref": "#/$defs/ref"
+            }
+          }
+        },
+        "time_scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "start",
+            "end"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "FIXTURE_ONLY",
+                "VALID_INTERVAL",
+                "OBSERVATION_TIME",
+                "OTHER"
+              ]
+            },
+            "start": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "end": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "support_posture",
+        "source_descriptor_refs",
+        "evidence_refs",
+        "evidence_bundle_refs",
+        "policy_question_refs"
+      ],
+      "properties": {
+        "support_posture": {
+          "enum": [
+            "SYNTHETIC_ONLY",
+            "REPOSITORY_EVIDENCE",
+            "MIXED",
+            "UNRESOLVED"
+          ]
+        },
+        "source_descriptor_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "evidence_bundle_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "policy_question_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "work_products": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_refs",
+        "schema_refs",
+        "fixture_refs",
+        "validator_refs",
+        "test_refs"
+      ],
+      "properties": {
+        "contract_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "schema_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "fixture_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "validator_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "test_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validation_outcome",
+        "validation_report_refs",
+        "demonstrated_surfaces",
+        "unresolved_items",
+        "proof_boundary_summary"
+      ],
+      "properties": {
+        "validation_outcome": {
+          "enum": [
+            "PASS",
+            "ABSTAIN",
+            "DENY",
+            "ERROR",
+            "NOT_RUN"
+          ]
+        },
+        "validation_report_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "demonstrated_surfaces": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "API",
+              "EVIDENCE_DRAWER",
+              "EXPORT",
+              "FOCUS_MODE",
+              "MAP",
+              "REVIEW",
+              "NONE"
+            ]
+          }
+        },
+        "unresolved_items": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+          }
+        },
+        "proof_boundary_summary": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 2048,
+          "pattern": "^[^\\r\\n]+$"
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "next_action",
+        "rollback_plan",
+        "rollback_target_ref",
+        "correction_path_ref",
+        "review_required"
+      ],
+      "properties": {
+        "disposition": {
+          "enum": [
+            "CONTINUE_REVIEW",
+            "HOLD",
+            "SPLIT",
+            "STOP"
+          ]
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 1024,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "rollback_plan": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 1024,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "rollback_target_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correction_path_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_required": {
+          "const": true
+        }
+      }
+    },
+    "session_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proof_established",
+        "release_ready",
+        "public_use_ready"
+      ],
+      "properties": {
+        "proof_established": {
+          "type": "boolean"
+        },
+        "release_ready": {
+          "type": "boolean"
+        },
+        "public_use_ready": {
+          "type": "boolean"
+        }
+      }
+    },
+    "assessment_state": {
+      "const": "REVIEW_REQUIRED"
+    },
+    "limitations": {
+      "const": [
+        "OPTIONAL_WORKSHEET_ONLY",
+        "TIMEBOX_DOES_NOT_ESTABLISH_PROOF",
+        "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_PROOF_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+        "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "proof_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority",
+        "lifecycle_write_authority"
+      ],
+      "properties": {
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "proof_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "public_use_authority": {
+          "const": false
+        },
+        "lifecycle_write_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

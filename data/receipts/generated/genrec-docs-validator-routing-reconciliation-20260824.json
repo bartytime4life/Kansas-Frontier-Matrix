@@ -1,0 +1,140 @@
+{
+  "artifact_hashes": {
+    "tools/docs/README.md": "sha256:6e988f0838e7b36dfc706d0de33358b31e2c0852db0600e668287ccbb22ad46e",
+    "tools/validators/docs/README.md": "sha256:f4cee71d440bcb5ca09c62992d9715c6aebbd701f62050ff68f00f79a4da5e90",
+    "tools/validators/docs/truth-label-lint/README.md": "sha256:182d867f42a41f38d57bf46bad672505d87883e1b9246723fdc91be3819ba684"
+  },
+  "artifact_paths": [
+    "tools/docs/README.md",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/truth-label-lint/README.md"
+  ],
+  "citations": [
+    {
+      "id": "drive:distinctive-delta-two-axis",
+      "validated": true,
+      "evidence_ref": "gdrive:KFM Circled Sources — Distinctive Delta Synthesis#3.1-two-axis-assessment-authority-is-not-maturity"
+    },
+    {
+      "id": "repository:distinctive-delta-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34#3.1"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    },
+    {
+      "id": "repository:directory-rule-validator-routing",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34#dir-exec-006"
+    },
+    {
+      "id": "repository:truth-label-implementation",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/docs/truth-label-lint/lint_truth_labels.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    },
+    {
+      "id": "repository:truth-label-workflow-definition",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/truth-label-assessment-axes.yml@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-24T21:28:58Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Circled Sources — Distinctive Delta Synthesis"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "repo:tools/docs/README.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:tools/validators/docs/README.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:tools/validators/docs/truth-label-lint/README.md@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:tools/validators/docs/truth-label-lint/lint_truth_labels.py@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34",
+      "repo:.github/workflows/truth-label-assessment-axes.yml@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-24"
+  },
+  "notes": "KFM-VIC-001 corrects documentation-routing and implementation-status drift without changing executable, workflow, schema, policy, registry, lifecycle, release, or publication behavior. The repository already contains the bounded truth-label validator, synthetic tests, and a read-only workflow definition; adoption of the opt-in document contract, hosted exact-head results, steward acceptance, and required-check coupling remain separate and unverified. No real data, Drive content, source payload, restricted material, or public source was activated or published.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft-PR delivery",
+      "Google Drive read-only source inspection",
+      "local deterministic hashing and repository validation"
+    ]
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:c996475d7a6f289557623d82ffe4967536165233edc1cebda908c0a4862f88a1",
+  "receipt_id": "genrec-docs-validator-routing-reconciliation-20260824",
+  "truth_labels": {
+    "tools/docs/README.md": "PROPOSED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/truth-label-lint/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "canonical-validator-routing",
+      "outcome": "PASS",
+      "reason": "The docs tooling README routes documentation validator implementation to tools/validators/docs and removes proposed duplicate metadata, link, and truth-label executable paths."
+    },
+    {
+      "gate": "implementation-and-authority-axis-separation",
+      "outcome": "PASS",
+      "reason": "Tracked executable and workflow-definition presence are stated separately from proposed opt-in adoption, unverified hosted results, steward acceptance, and required-check coupling."
+    },
+    {
+      "gate": "local-markdown-links",
+      "outcome": "PASS",
+      "reason": "The local-only link checker passed all three modified READMEs; five external badge targets remained explicitly unrequested and unverified."
+    },
+    {
+      "gate": "metadata-required-fields",
+      "outcome": "PASS",
+      "reason": "The metadata-block validator passed all three modified READMEs with zero failures, warnings, invalid blocks, or missing blocks."
+    },
+    {
+      "gate": "truth-label-focused-tests",
+      "outcome": "PASS",
+      "reason": "Eight standard-library truth-label-lint tests passed on the branch working tree before receipt emission."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 values bind the final bytes of all three authored documentation artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins only after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

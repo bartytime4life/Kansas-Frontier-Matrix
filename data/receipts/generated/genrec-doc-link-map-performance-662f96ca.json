@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-doc-link-map-performance-662f96ca",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md": "sha256:662f96cabb591ac3e82bdcba26e33b4e82eec0a52a25dded18168ac096af70a8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:54b7d4ec287a54b4194fd91fc22f4878e5640e98a555c0fd4ecf4cae62132c2a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic standard-library Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:54b7d4ec287a54b4194fd91fc22f4878e5640e98a555c0fd4ecf4cae62132c2a",
+      "sha256:df5acb9166594693aa4ba969856d1398fb8738070b311a3288ab5227f71e3286",
+      "sha256:55a96cb9d3bd725bde8af222a5841978878b937378b68a61c269c168cdd913db",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/294e1348ca83c60df8a22e1593d5f78c7c5aeff7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1905",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/architecture/map-master/PERFORMANCE_BUDGETS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/tools/validators/docs/link-check/check_links.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/map-master/PERFORMANCE_BUDGETS.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "post-pr-1905-base-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The clean starting tree was current main@294e1348ca83c60df8a22e1593d5f78c7c5aeff7, the merge commit for PR #1905. No open pull request or remote documentation-link branch overlapped the selected document."
+    },
+    {
+      "gate": "historical-finding-classification-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The current-tree diagnostic classified 394 ANCHOR_MISSING, 2,194 LOCAL_TARGET_MISSING, and 52 PATH_ESCAPE findings. All six newly covered reference-style uses passed. Archive, generated, template, lifecycle, proof, release, source-identity, sensitive, conflicted, and multi-authority candidates were excluded. The selected two findings are unique intra-document heading targets in one ordinary architecture document."
+    },
+    {
+      "gate": "exact-changed-document-link-check",
+      "outcome": "PASS",
+      "reason": "The repository-owned no-network checker passed docs/architecture/map-master/PERFORMANCE_BUDGETS.md with one checked document, 30 local targets, and four external badge occurrences classified as unverified and never requested."
+    },
+    {
+      "gate": "focused-link-check-regression-suite",
+      "outcome": "PASS",
+      "reason": "All 18 deterministic standard-library link-check unit tests passed, including local-target, anchor, path-escape, no-network external abstention, and defined reference-style cases."
+    },
+    {
+      "gate": "post-change-whole-repository-diagnostic",
+      "outcome": "PASS",
+      "reason": "The checker completed across 3,814 Markdown documents and 105,228 local targets. ANCHOR_MISSING decreased exactly from 394 to 392; LOCAL_TARGET_MISSING remained 2,194; PATH_ESCAPE remained 52; 12,832 external occurrences remained unverified; and no finding was added. The historical overall result remains DOC_LINK_CHECK_FAIL and is not represented as clean."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check passed. The authored Markdown diff changes only the two table-of-contents fragments selected by the diagnostic."
+    },
+    {
+      "gate": "generated-receipt-json-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON; artifact_paths, artifact_hashes, and truth_labels have identical keys; the final Markdown SHA-256 was recomputed; and the receipt is excluded from its own artifact map to avoid recursive self-hashing."
+    },
+    {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The available repository and primary runtimes do not provide the declared jsonschema dependency. No network dependency was installed for this no-network documentation slice; hosted schema validation remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head workflow results do not exist until the review branch and draft pull request are created. No workflow identity, outcome, or repository setting is changed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "post-pr-1905-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/294e1348ca83c60df8a22e1593d5f78c7c5aeff7"
+    },
+    {
+      "id": "selected-document-and-existing-heading-targets",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/architecture/map-master/PERFORMANCE_BUDGETS.md"
+    },
+    {
+      "id": "repository-owned-link-checker",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/tools/validators/docs/link-check/check_links.py"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ai-generated-receipt-requirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/294e1348ca83c60df8a22e1593d5f78c7c5aeff7/docs/doctrine/ai-build-operating-contract.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T23:40:45Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Repairs only two stale same-document table-of-contents fragments in the Map Master performance-budget document. The change does not revise its draft status, ownership, budget values, doctrine claims, related-document references, checker behavior, schema, policy, lifecycle, proof, release, deployment, publication, or repository settings. The required generated receipt is non-authoritative process memory; human review remains pending."
+}

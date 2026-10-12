@@ -1,5 +1,6 @@
-# local_upload source descriptor — greenfield placeholder
+# Historical non-authoritative connector placeholder; not a registered source.
+# Local quarantine capture does not consume this file or admit a source.
 name: local_upload
 role: TBD
 rights: TBD
-sensitivity_floor: public
+sensitivity_floor: unknown

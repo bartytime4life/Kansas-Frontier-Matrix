@@ -1,16 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/00000000-0000-0000-0000-000000000000
+doc_id: kfm://doc/docs-domains-agriculture-pipeline
 title: Agriculture — Pipeline
 type: standard
 version: v1
 status: draft
 owners: agriculture-stewards (TODO confirm CODEOWNERS)
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-28
 policy_label: public
+owning_root: docs/
+responsibility: Document the Agriculture lane's proposed lifecycle and promotion-gate shape without implementing or activating a pipeline.
+truth_posture: CONFIRMED tracked draft document and responsibility-root placement / PROPOSED pipeline semantics and paths unless current repository evidence is cited / NEEDS VERIFICATION implementation, validation, review, activation, release, and publication
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/DOMAIN.md
   - docs/domains/agriculture/OBJECTS.md

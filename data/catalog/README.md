@@ -2,32 +2,32 @@
 doc_id: kfm://doc/data-catalog-readme
 title: data/catalog/ — Governed Catalog Projections
 type: README; data-parent-contract; canonical-lane; authority-boundary
-version: v0.2.0
+version: v0.2.1
 status: repository-grounded draft; payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — data, catalog, evidence, and release stewards
-updated: 2026-07-24
+updated: 2026-08-31
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
 current_path: data/catalog/README.md
 review_packet_id: kfm-data-parent-wave-20260724
 truth_posture: >
-  CONFIRMED exact path, prior blob, Directory Rules v1.4, parent data-root contract,
-  and prior substantive boundary material / PROPOSED normalized folder contract /
+  CONFIRMED exact path, accepted ADR-0029 placement authority, parent data-root contract,
+  exact direct-child inventory at main@6a7ba4ee0d931dd53c69349beaeec81cf5fb0c8e,
+  and compatibility roles documented by the plural domains and top-level
+  settlements-infrastructure child READMEs / PROPOSED normalized folder contract /
   UNKNOWN recursive payloads, active writers/consumers, runtime, release, hosting,
-  and public effects / NEEDS VERIFICATION owners, accepted ADRs, enforcement,
-  retention, correction propagation, cache invalidation, and rollback drills
+  and public effects / NEEDS VERIFICATION owners, enforcement, retention,
+  correction propagation, cache invalidation, and rollback drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
-  review_branch: agent/modernize-data-readme-20260724-v3
-  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
-  prior_blob: 9cf67c4ce5308b9088466b023a244107e3863a48
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
+  base_commit: 6a7ba4ee0d931dd53c69349beaeec81cf5fb0c8e
+  prior_blob: b878b6156fdeea4f02143b39e6cb617a2b69ebc6
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  method: exact parent README read plus exact direct-child tree and compatibility-alias README inspection; no recursive payload or runtime inspection
 notes:
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
-  - "Markdown-only parent-lane convergence; no payload or operational state changed."
+  - "Discovery-index reconciliation only; no payload, lifecycle, release, runtime, alias promotion, or operational state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,9 +65,10 @@ This path does not own object meaning, machine shape, policy, release decisions,
 | Field | Bounded result |
 |---|---|
 | Path | `data/catalog/` |
-| Version | `v0.2.0` |
-| Prior blob | `9cf67c4ce5308b9088466b023a244107e3863a48` |
-| Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
+| Version | `v0.2.1` |
+| Prior blob | `b878b6156fdeea4f02143b39e6cb617a2b69ebc6` |
+| Evidence base | `main@6a7ba4ee0d931dd53c69349beaeec81cf5fb0c8e` |
+| Direct child-lane inventory | `CONFIRMED` — six direct child lanes at the evidence base |
 | Recursive payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
@@ -123,13 +124,14 @@ Accountable ownership remains **NEEDS VERIFICATION**. Changes should include dat
 
 ## ADRs
 
-Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
+Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/proof/manifest/catalog separation), ADR-0012 (connector output boundary), ADR-0015 (published aliases and rollback split), and ADR-0025 (public clients do not read internal stores). This README accepts none. Accepted ADR-0029 supplies the repository placement authority used for this same-path discovery-index reconciliation. An accepted ADR plus migration and rollback plan is required before changing a canonical lifecycle family, promoting compatibility, or creating parallel authority.
 
 ## Last reviewed
 
-- **Date:** 2026-07-24
-- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
-- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
+- **Date:** 2026-08-31
+- **Evidence boundary:** `main@6a7ba4ee0d931dd53c69349beaeec81cf5fb0c8e`
+- **Review type:** exact parent README, direct-child Git tree, compatibility-alias child READMEs, and accepted ADR-0029 placement authority
+- **Direct child-lane inventory:** confirmed; six direct child lanes
 - **Recursive payload/runtime inspection:** not performed
 - **Owners, independent review, retention, and operational rollback:** needs verification
 
@@ -141,18 +143,22 @@ Catalog closure should verify identifier agreement, source/evidence lineage, spa
 
 ## Current bounded child-lane index
 
+The exact direct-child tree at `main@6a7ba4ee0d931dd53c69349beaeec81cf5fb0c8e` contains the following six lanes. Presence is a discovery fact, not evidence of payload completeness, enforcement, release, or publication.
+
 | Child lane | Bounded posture |
 |---|---|
-| `stac/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `dcat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `prov/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `domain/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| `stac/` | Governed STAC projection lane; payloads and enforcement remain bounded by its own README and validators. |
+| `dcat/` | Governed DCAT projection lane; payloads and enforcement remain bounded by its own README and validators. |
+| `prov/` | Governed PROV projection lane; payloads and enforcement remain bounded by its own README and validators. |
+| `domain/` | Governing domain-scoped catalog index. |
+| `domains/` | `PROPOSED / COMPATIBILITY-ALIAS` to `domain/`; must not become parallel catalog authority. |
+| `settlements-infrastructure/` | `PROPOSED / COMPATIBILITY-ALIAS` to `domain/settlements-infrastructure/`; must not become parallel catalog authority. |
 
 ## Open verification register
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned recursive tree, payload families, LFS/external stores, rights/sensitivity, owners |
 | Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
 | Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
 | Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
@@ -166,13 +172,20 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 |---|---|
 | Stable path/document identity | Preserved |
 | Core lifecycle or compatibility role | Preserved and clarified |
-| Child-lane index | Preserved where present; omission is not retirement |
+| Child-lane index | Reconciled to the exact direct-child tree; compatibility aliases remain explicitly non-authoritative |
 | Trust membrane and anti-collapse rules | Preserved and strengthened |
 | Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
 | Prior blob and rollback target | Recorded |
-| Payload, move, deletion, redirect, migration, or public-state change | None |
+| Payload, move, deletion, redirect, migration, alias promotion, or public-state change | None |
 
 ### Change history
+
+#### v0.2.1 — 2026-08-31
+
+- reconciled the canonical parent discovery index to the exact six direct child lanes on current main;
+- classified `domains/` and top-level `settlements-infrastructure/` as compatibility aliases without creating parallel authority;
+- refreshed the evidence boundary and preserved recursive payload, runtime, release, and public-state uncertainty;
+- changed Markdown discovery metadata only.
 
 #### v0.2.0 — 2026-07-24
 

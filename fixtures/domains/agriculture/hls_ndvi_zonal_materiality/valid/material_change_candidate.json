@@ -1,0 +1,98 @@
+{
+  "object_type": "HlsNdviZonalMaterialityAssessment",
+  "schema_version": "1.0.0",
+  "assessed_at": "2026-08-06T20:35:00Z",
+  "support": {
+    "kind": "county",
+    "id": "20091"
+  },
+  "product": {
+    "collection": "HLS",
+    "ndvi_source": "VI_ASSET",
+    "mask_profile": "clear_acceptable_aerosol_no_adjacent_cloud",
+    "statistic_method": "area_weighted_clear_pixels"
+  },
+  "grid": {
+    "crs": "EPSG:5070",
+    "resolution_m": 30,
+    "alignment_hash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "thresholds": {
+    "min_valid_fraction": 0.6,
+    "min_absolute_change": 0.05,
+    "min_relative_change": 0.1
+  },
+  "governance": {
+    "fixture_only": true,
+    "promotion_allowed": false,
+    "release_state": "not_released",
+    "public_use_allowed": false
+  },
+  "assessment_id": "hls-ndvi-material-candidate-20091-20260806",
+  "prior": {
+    "stac_item_id": "HLS.FIXTURE.prior.a",
+    "collection_version": "2.0",
+    "stac_updated": "2026-06-30T23:59:59Z",
+    "window_start": "2026-06-01T00:00:00Z",
+    "window_end": "2026-06-30T23:59:59Z",
+    "asset_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "evidence_ref": "fixture://hls/prior/a",
+    "pixel_counts": {
+      "total": 1000,
+      "valid": 720,
+      "cloud": 93,
+      "shadow": 46,
+      "adjacent_cloud": 46,
+      "high_aerosol": 46,
+      "snow": 23,
+      "water": 23,
+      "other_invalid": 3
+    },
+    "statistics": {
+      "mean_ndvi": 0.3,
+      "median_ndvi": 0.31,
+      "p95_ndvi": 0.55
+    },
+    "valid_mask_footprint_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "current": {
+    "stac_item_id": "HLS.FIXTURE.current.b",
+    "collection_version": "2.1",
+    "stac_updated": "2026-07-31T23:59:59Z",
+    "window_start": "2026-07-01T00:00:00Z",
+    "window_end": "2026-07-31T23:59:59Z",
+    "asset_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "source_spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "evidence_ref": "fixture://hls/current/b",
+    "pixel_counts": {
+      "total": 1000,
+      "valid": 700,
+      "cloud": 100,
+      "shadow": 50,
+      "adjacent_cloud": 50,
+      "high_aerosol": 50,
+      "snow": 25,
+      "water": 25,
+      "other_invalid": 0
+    },
+    "statistics": {
+      "mean_ndvi": 0.37,
+      "median_ndvi": 0.38,
+      "p95_ndvi": 0.62
+    },
+    "valid_mask_footprint_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "computed": {
+    "source_changed": true,
+    "absolute_change": 0.07,
+    "relative_change": 0.23333333333333334,
+    "signal_changed": true,
+    "current_valid_fraction": 0.7
+  },
+  "decision": {
+    "outcome": "MATERIAL_CHANGE_CANDIDATE",
+    "reasons": []
+  },
+  "spec_hash": "sha256:c4ca5c87af88a69c79412737df233be1d5ab8773b69062bb8cd4bc8f862bcaf1"
+}

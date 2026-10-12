@@ -1,495 +1,938 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/map-runtime-boundary
 title: Map Runtime Boundary
-type: standard
-version: v0.1
-status: draft
-owners: <ui-subsystem-owner> + <docs-steward>
+type: architecture-reference
+version: v2.2.0-draft
+status: draft; repository-grounded; mixed-maturity; package-adapter-bounded; production-runtime-hold; non-publication
+owners:
+  - "@bartytime4life — current CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent UI, map-runtime, accessibility, security, policy, evidence, release, correction, and rollback stewardship"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-27
+policy_label: public; architecture; ui; map-runtime; trust-membrane; fail-closed; non-publication
+owning_root: docs/
+current_path: docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+responsibility: >-
+  Explain the current renderer-neutral map-interaction boundary, distinguish
+  the implemented port, null runtime, and package-owned concrete adapter from
+  held Explorer production activation, and state the gates that must close
+  before a browser renderer may enter the governed public path.
+truth_posture: >-
+  CONFIRMED current tracked path, accepted Directory Rules placement, accepted ADR-0006 package-owned seam and ADR-0007 renderer family,
+  renderer-neutral MapRuntimePort, deterministic NullMapRuntime, finite trust states, Explorer consumers, renderer-neutral feature-selection bridge,
+  fixture-only LayerManifest admission and PMTiles cache decisions, governed API abstain scaffolds, exact package-owned maplibre-gl 6.6.0 dependency and lock closure,
+  bounded package-owned MapLibreAdapter and Vite worker seam, and focused unit and browser tests / PARTIAL package adapter and browser-fixture proof /
+  HOLD Explorer production activation, transport, temporal contract, live layer loading, broader CSP, accessibility, performance, and long-session proof /
+  UNKNOWN deployed renderer and public layer serving, production policy and evidence resolution, operational cache invalidation,
+  correction propagation, rollback execution, and public parity / NEEDS VERIFICATION independent review and hosted exact-head validation.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 7da7e26240859ba0d3c7bd9f992a4590e8146cf2
+  target_prior_blob: d03d612f573928a64d590b5532ae840a4c87b327
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_0006_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
+  adr_0007_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
+  map_master_renderer_boundary_blob: 628872aa58f9f86e31337924025a8590405385b5
+  map_selection_bridge_blob: 18d61ea0ef2fbe2fc2f3cc9d42291c101003037f
+  click_bridge_readme_blob: de7219fcb58d257d81a6e50c3d060c932c9c35f2
+  map_selection_test_blob: 953bf536f1d3062c194a09855ed3dde4bc9fa311
+  layer_manifest_admission_blob: 895100728c9eb676b9e2aef84680073142694b27
+  layer_manifest_admission_test_blob: 915bf6e6a8c69fcca91e3203aeb49d446f3ce384
+  pmtiles_cache_blob: 9e52c7c186ce72d56e2728c8c1a35737fe5f1540
+  pmtiles_cache_test_blob: 8fc54a7244e112aa352864888e283457afb5d4a6
+  explorer_manifest_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  explorer_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
+  maplibre_package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
+  maplibre_package_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
+  governed_api_registry_blob: b0802568879e262a2cd411d8fe3bc4861de15505
+  governed_api_bootstrap_blob: 5d42426846069162eb3e68b93687d0bd587d87d0
+  governed_api_layers_blob: eaddcc9bfe066aea29178f3973275bd7e0932284
+  governed_api_evidence_blob: 866322965d5e6f3d123a3d06cc9ea0e8e82262e7
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+inspection_boundary: >-
+  Current-session repository and GitHub reads covered the complete prior target,
+  accepted Directory Rules adoption, CODEOWNERS, accepted ADR-0006 and ADR-0007, the
+  current map-master renderer boundary, Explorer package metadata, the
+  renderer-neutral click bridge and unit test, fixture-only layer admission and
+  PMTiles cache decisions and tests, the package-owned MapLibre dependency,
+  MapRuntimePort, NullMapRuntime, concrete adapter, Vite worker seam, focused
+  package and browser fixtures, Explorer consumers, the legacy comment-only
+  app adapter, and governed API stubs. No deployed runtime, live source,
+  release application, correction propagation, or production rollback was
+  exercised.
 related:
   - docs/architecture/ui/README.md
   - docs/architecture/ui/BOUNDARIES.md
-  - docs/architecture/ui/STATE_OWNERSHIP.md
   - docs/architecture/ui/LAYERING.md
-  - docs/architecture/ui/ROUTE_MAP.md
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
+  - docs/architecture/ui/ACCESSIBILITY.md
+  - docs/architecture/ui/GOVERNED_SHELL.md
   - docs/architecture/ui/CONTINUITY_NOTES.md
-  - docs/architecture/governed-ai/BOUNDARIES.md
-  - docs/adr/ADR-maplibre-adapter-boundary.md
-  - directory-rules.md
-tags: [kfm, ui, maplibre, adapter, trust-membrane, boundary]
+  - docs/architecture/map-master/RENDERER_BOUNDARY.md
+  - docs/architecture/map-master/LAYER_LIFECYCLE.md
+  - docs/architecture/map-master/TILE_ARTIFACTS.md
+  - docs/architecture/map-master/VIEWER_VERIFICATION.md
+  - docs/architecture/map-shell.md
+  - docs/architecture/maplibre-master.md
+  - docs/architecture/governed-api/README.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - packages/maplibre/package.json
+  - packages/maplibre/src/index.ts
+tags: [kfm, architecture, ui, map-runtime, maplibre, renderer-neutral, adapter, evidence-drawer, finite-outcomes, trust-membrane, renderer-hold, rollback]
 notes:
-  - Path PROPOSED until verified against mounted-repo state per Directory Rules §0.
-  - Focused split of the broader BOUNDARIES.md surface; see Section 2 of the source PR.
+  - "v2.2-draft reconciles accepted ADR-0006/0007 with the merged exact dependency, package-owned adapters, Vite worker seam, and focused browser proof."
+  - "The concrete adapter is implemented only inside the accepted package seam; Explorer production composition remains on NullMapRuntime."
+  - "A merged dependency and passing browser fixture do not prove broader runtime readiness or authorize release or publication."
+  - "The existing target receives PLACE as a same-path architecture update under accepted ADR-0029 and Directory Rules v2."
+  - "This document changes no application code, package, dependency, contract, schema, policy, registry, lifecycle state, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="map-runtime-boundary"></a>
 
 # Map Runtime Boundary
 
-> The map renderer is **downstream of trust, never upstream of it.** This file defines the contract that holds that line.
+> **Operating rule.** The browser renderer is downstream of evidence, policy, review, release, correction, and rollback. A map interaction may scope a governed request; it does not create a claim, resolve evidence, authorize exposure, or publish an artifact.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-architecture--doctrine-9cf)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20PROPOSED%20implementation-orange)
-![lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED--only%20to%20renderer-success)
-![adr](https://img.shields.io/badge/ADR-maplibre--adapter--boundary-lightgrey)
-![last_reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--14-informational)
-
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | UI subsystem owner · Docs steward *(placeholder — confirm in CODEOWNERS)* |
-| **Authority of this doctrine** | **CONFIRMED** from `UIAI-MAP`, `UIAI-WHOLE §18`, `UIAI-MASTER`, and the Unified Implementation Architecture Build Manual §3.9 |
-| **Authority of any specific path quoted here** | **PROPOSED** until verified against mounted-repo evidence (Directory Rules §0) |
-| **Governing ADR** | `docs/adr/ADR-maplibre-adapter-boundary.md` *(PROPOSED — not yet accepted in this session)* |
-| **Last reviewed** | `2026-05-14` |
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. The one-sentence rule](#2-the-one-sentence-rule)
-- [3. Scope & non-scope](#3-scope--non-scope)
-- [4. The boundary, at a glance](#4-the-boundary-at-a-glance)
-- [5. `MapRuntimePort` — the contract the rest of the UI may import](#5-mapruntimeport--the-contract-the-rest-of-the-ui-may-import)
-- [6. `MapLibreAdapter` — the only module that may import MapLibre](#6-maplibreadapter--the-only-module-that-may-import-maplibre)
-- [7. Feature click → claim resolution](#7-feature-click--claim-resolution)
-- [8. `LayerDescriptor` requirements](#8-layerdescriptor-requirements)
-- [9. Camera & time synchronization](#9-camera--time-synchronization)
-- [10. Forbidden browser operations](#10-forbidden-browser-operations)
-- [11. Negative states (first-class)](#11-negative-states-first-class)
-- [12. Validation & tests](#12-validation--tests)
-- [13. Rollback path](#13-rollback-path)
-- [14. Related docs](#14-related-docs)
-- [15. Open questions & verification backlog](#15-open-questions--verification-backlog)
-- [Appendix A — Method-signature sketch (illustrative)](#appendix-a--method-signature-sketch-illustrative)
-- [Appendix B — Anti-patterns this boundary forbids](#appendix-b--anti-patterns-this-boundary-forbids)
-
----
-
-## 1. Purpose
-
-**CONFIRMED doctrine.** This document defines the trust boundary between the disciplined 2D map renderer (MapLibre) and the rest of the governed UI shell. It exists to keep the renderer subordinate to evidence, policy, review state, release state, and the governed API — and to make that subordination *enforceable in code*, not only described in prose.
-
-It is the canonical home for two named seams:
-
-1. **`MapRuntimePort`** — the abstract port the rest of the UI imports.
-2. **`MapLibreAdapter`** — the only module permitted to import MapLibre runtime APIs.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d4a72c?style=flat-square)](#status-and-authority)
+[![Current bridge: renderer neutral](https://img.shields.io/badge/current%20bridge-renderer%20neutral-0969da?style=flat-square)](#current-repository-evidence)
+[![Concrete MapLibre: bounded](https://img.shields.io/badge/concrete%20MapLibre-bounded-0969da?style=flat-square)](#proposed-maplibre-adapter)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#rollback-and-non-effects)
 
 > [!IMPORTANT]
-> If this boundary is breached, every other UI trust property — citation, abstain, deny, freshness, rights, sensitivity, correction lineage, rollback — becomes negotiable. **The boundary is load-bearing.**
+> **Repository-grounded does not mean renderer-ready.** Current code proves a renderer-neutral `MapRuntimePort`, deterministic `NullMapRuntime`, an exact package-owned MapLibre dependency, bounded concrete adapters, a Vite worker seam, focused browser construction and fail-closed cases, request scoping, Evidence Drawer projection, fixture-only layer admission, and fixture-only cache decisions. It does not prove Explorer production activation, a live click-resolution route, released-layer rendering, broader runtime readiness, deployment, or public operation.
 
-[↑ Back to top](#map-runtime-boundary)
+> [!WARNING]
+> **Rendering is not publication.** A visible feature, hit-test result, screenshot, browser test, or performance probe is downstream technical evidence only. It does not establish claim truth, rights clearance, sensitivity approval, review approval, release, or publication safety.
 
----
+> [!CAUTION]
+> **Implemented package seam is not production admission.** ADR-0006 and ADR-0007 are `accepted`, and the exact dependency plus bounded package adapters are implemented. Explorer production activation, broader browser evidence, release, deployment, and publication remain on HOLD or unestablished.
 
-## 2. The one-sentence rule
-
-> **CONFIRMED.** *MapLibre is the disciplined 2D renderer and interaction runtime inside the governed KFM shell; it is not the canonical truth store, source registry, policy engine, citation authority, review authority, publication authority, or AI authority. The renderer is downstream of trust, never upstream of it.*
-> — Unified Implementation Architecture Build Manual §3.9 (UIAI-MAP §§1, 4–5)
-
-Everything below is the operational reading of that sentence.
+**Quick navigation:** [Status](#status-and-authority) · [Evidence](#current-repository-evidence) · [Purpose](#purpose-and-placement) · [Rule and scope](#core-rule-and-scope) · [Flow](#current-and-future-flow) · [Click bridge](#renderer-neutral-click-bridge) · [Admission and cache](#current-admission-and-cache-models) · [Port](#proposed-mapruntimeport) · [Adapter](#proposed-maplibre-adapter) · [Inputs](#renderer-input-contract) · [Camera and time](#camera-time-and-state) · [Forbidden operations](#forbidden-browser-operations) · [Finite states](#finite-and-negative-states) · [Validation](#validation-and-admission-evidence) · [Rollback](#rollback-and-non-effects) · [Related](#related-docs) · [Open work](#open-verification-and-adr-triggers)
 
 ---
 
-## 3. Scope & non-scope
+<a id="status-and-authority"></a>
 
-### 3.1 In scope
+## Status and authority
 
-- The contract between the governed UI shell and the MapLibre runtime.
-- The adapter that owns all MapLibre imports and lifecycle.
-- How the adapter accepts `LayerDescriptor` and `TimeState` and surfaces feature-click candidates.
-- The conversion of a click into a **governed claim-resolution request**.
-- Forbidden browser operations enumerated against this seam.
-- Negative states the adapter must surface as first-class.
-
-### 3.2 Out of scope
-
-| Topic | Lives in |
+| Field | Current bounded result |
 |---|---|
-| Drawer payload shape | `docs/architecture/ui/STATE_OWNERSHIP.md` and `EvidenceDrawerPayload` schema **(PROPOSED)** |
-| Layer catalog / legend behavior | `docs/architecture/ui/LAYERING.md` **(PROPOSED)** |
-| Focus Mode flow & model adapter boundary | `docs/architecture/governed-ai/BOUNDARIES.md` **(PROPOSED)** |
-| Story node conditional 3D handoff | `docs/architecture/story/README.md` **(PROPOSED)** |
-| Browser allowed/forbidden operations *broadly* | `docs/architecture/ui/BOUNDARIES.md` **(PROPOSED — this file is the map-runtime slice of that doc)** |
-| Object semantic meaning | `contracts/` |
-| Object machine shape | `schemas/contracts/v1/...` (per ADR-0001) |
-| Admissibility / deny / abstain | `policy/` |
+| **Tracked path** | `docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md` |
+| **Document identity** | `kfm://doc/architecture/ui/map-runtime-boundary` |
+| **Owning root** | `docs/` — human-readable architecture and boundary explanation |
+| **Placement** | **CONFIRMED / PLACE** under accepted ADR-0029 and Directory Rules v2 |
+| **Evidence snapshot** | `main@7da7e26240859ba0d3c7bd9f992a4590e8146cf2` |
+| **Prior target blob** | `d03d612f573928a64d590b5532ae840a4c87b327` |
+| **Review route** | `@bartytime4life` through current CODEOWNERS |
+| **Independent specialist review** | **NEEDS VERIFICATION** |
+| **Current click bridge** | **CONFIRMED / renderer-neutral / fixture transport injected** |
+| **Current layer admission** | **CONFIRMED / pure fixture evaluator / no registration or source creation** |
+| **Current PMTiles cache logic** | **CONFIRMED / pure fixture decision / no fetch or cache mutation** |
+| **`MapRuntimePort` / `NullMapRuntime`** | **CONFIRMED / IMPLEMENTED / dependency-free and renderer-neutral** |
+| **Concrete `MapLibreAdapter`** | **IMPLEMENTED / bounded package lifecycle, camera, teardown, finite-error, and Vite worker slices** |
+| **MapLibre dependency** | **CONFIRMED / exact `maplibre-gl@6.6.0` only in `@kfm/maplibre`, with pnpm lock closure** |
+| **ADR-0006 / ADR-0007** | **ACCEPTED architecture / package seam implemented; production runtime remains held** |
+| **Live governed click transport** | **UNKNOWN / not established; current routes abstain** |
+| **Deployed public behavior** | **UNKNOWN / not established here** |
+| **Release, deployment, or publication effect** | None |
 
-[↑ Back to top](#map-runtime-boundary)
+This file is explanatory architecture. Semantic meaning belongs to contracts; machine shape to schemas; admissibility to policy and accountable review; release decisions to `release/`; process memory to receipts; evidence and proof to their own families; public-safe carriers to governed publication lanes; and executable behavior to apps, packages, validators, tests, workflows, and runtime evidence.
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Verified in this revision from current repository bytes, accepted decisions, tests, or generated artifacts |
+| **PROPOSED** | A future seam, decision, field family, or implementation not accepted and verified as current behavior |
+| **UNKNOWN** | Available repository or operational evidence does not establish the claim |
+| **NEEDS VERIFICATION** | A concrete review, run, artifact, or platform check remains before relying on the claim |
+
+`PASS`, `HOLD`, `DENY`, `ABSTAIN`, `ERROR`, `READY`, and `PUBLISHED` are bounded workflow or system states. They do not replace the four evidence labels.
+
+[Back to top](#top)
 
 ---
 
-## 4. The boundary, at a glance
+<a id="current-repository-evidence"></a>
+
+## 0. Current repository evidence
+
+| Surface | Verified repository evidence | Bounded conclusion |
+|---|---|---|
+| `apps/explorer-web/src/features/map_runtime/index.tsx` (retired) | Strict `kfm.explorer.map-feature-selection.v1` parser, exact fields, bounded identifiers, at most 16 unique EvidenceRefs, injected resolver, evidence-subset check, fixed local failures, accessible fixture controls | A rendered-feature selection can scope a governed request without becoming evidence |
+| `apps/explorer-web/tests/map-evidence-drawer.test.ts` (retired) | Covers supported, invalid, missing-evidence, denied, out-of-scope, resolver-error, no-network, no-renderer-import, no-lifecycle-path, and no-model-runtime behavior | The bounded bridge has deterministic unit evidence; this is not live renderer or API proof |
+| `CLICK_EVIDENCE_BRIDGE.md` (retired) | Explicit renderer-neutral, fixture-first, no-network boundary and rollback statement | Real MapLibre and transport wiring remain future work |
+| `layer_manifest_admission.ts` (retired) | Exact fixture profile; finite `PASS`, `HOLD`, `DENY`, `ERROR`; checks public release, binding, evidence, policy, review, promotion, artifact, signature, rollback, source class, and authority overclaim | `PASS` means registration eligibility only; no registry is mutated and no MapLibre source is created |
+| `layer-manifest-admission.test.ts` (retired) | Positive and exact-negative synthetic coverage for the fixture evaluator | Test evidence is bounded to decision behavior |
+| `pmtiles_release_cache.ts` (retired) | Release-, artifact-, and policy-scoped key; finite cache outcomes; explicit `cacheMutated: false` and `networkRequested: false` | A future cache action can be planned without fetching, writing, or authorizing public use |
+| `pmtiles-release-cache.test.ts` (retired) | Positive and exact-negative synthetic coverage for cache hit, miss, mismatch, incomplete, withdrawal, authority, and invalid-input cases | No operational CacheStorage or Service Worker behavior is proved |
+| `apps/explorer-web/package.json` (retired) | Build, unit-test, and browser-test scripts; consumes the package seam without declaring raw `maplibre-gl` | Explorer does not create a parallel renderer dependency home |
+| [`packages/maplibre/package.json`](../../../packages/maplibre/package.json) | Private package `@kfm/maplibre`, version `0.0.0`, exact `maplibre-gl@6.6.0`, focused scripts, and explicit exports | The accepted package seam owns the renderer dependency; distribution remains unauthorized |
+| [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Exports the renderer-neutral port and deterministic null runtime | Normal consumers remain renderer-neutral |
+| [`maplibre-adapter.ts`](../../../packages/maplibre/src/maplibre-adapter.ts) | Package-owned raw renderer import; bounded construction, lifecycle, camera, finite errors, and teardown | Concrete adapter behavior exists without owning sources, evidence, policy, release, or publication |
+| [`maplibre-vite-adapter.ts`](../../../packages/maplibre/src/maplibre-vite-adapter.ts) and `vite.config.ts` (retired) | Package-owned Vite worker URL/configuration and Explorer CSS/build integration | The same-origin worker build seam exists; production activation and broad CSP proof do not |
+| [`map-runtime-port.ts`](../../../packages/maplibre/src/map-runtime-port.ts) | KFM-owned serializable camera, selection, snapshot, finite-state, validation, listener, error, and disposal contract | The port consumes bounded state; it owns no evidence, policy, review, release, lifecycle, or publication decision |
+| [`null-map-runtime.ts`](../../../packages/maplibre/src/null-map-runtime.ts) | Deterministic no-network implementation used for consumer migration and tests | It is not a renderer and does not satisfy browser readiness |
+| Package and Explorer focused tests | Mocked package tests cover bounded adapter success/failure; the Vite browser fixture covers real construction, CSS/local-request behavior, disposal, and WebGL2 denial | This is exact fixture evidence, not production activation, accessibility closure, performance proof, release, or publication |
+| `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) | Legacy comment-only placeholder | It is not the importer seam; the functioning implementation is package-owned |
+| Governed API route scaffolds | `/bootstrap`, `/layers`, and `/evidence` call the shared abstain stub with `outcome: ABSTAIN` and `reason_code: NOT_IMPLEMENTED` | No current click-specific claim-resolution transport may be inferred |
+| [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) and [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Both are `accepted` | Package ownership, the adapter seam, and renderer-family selection are binding architecture; dependency and runtime admission remain separate |
+| [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) | Reconciles the seven negative authorities with current executable evidence and keeps concrete MapLibre on HOLD | This UI page should remain consistent with that broader boundary |
+
+### Maturity matrix
+
+| Capability | Status | What exists | What remains |
+|---|---|---|---|
+| Map-feature selection profile | **CONFIRMED / bounded** | Strict renderer-neutral parser and immutable selection | Real renderer event translation |
+| Selection-to-Evidence-Drawer bridge | **CONFIRMED / bounded** | Injected resolver, evidence-subset guard, finite outcomes | Live governed transport and deployed behavior |
+| LayerManifest admission | **CONFIRMED / fixture-only** | Pure eligibility evaluator and tests | Registry lookup, authenticated validation, source creation, operational revocation |
+| PMTiles cache posture | **CONFIRMED / fixture-only** | Pure release-scoped decision and tests | Service Worker, CacheStorage, fetch, invalidation receipts, correction propagation |
+| `MapRuntimePort` / `NullMapRuntime` | **IMPLEMENTED / bounded** | Exported KFM-owned contract, deterministic null runtime, Explorer consumers, and focused tests | Layer loading, temporal methods, production renderer activation |
+| Concrete MapLibre adapter | **IMPLEMENTED / bounded** | Exact package dependency, package-owned adapters, Vite worker seam, mocked unit tests, and focused real-browser fixture | Explorer production composition, live sources/layers, broader CSP/accessibility/performance/long-session proof |
+| Governed click-resolution API | **UNKNOWN / not established** | Generic abstain route scaffolds | Accepted route/envelope and evidence-bound implementation |
+| Public map runtime | **UNKNOWN** | No current evidence in this revision | Deployment, release coupling, monitoring, correction, rollback, public review |
+
+[Back to top](#top)
+
+---
+
+<a id="purpose-and-placement"></a>
+
+## 1. Purpose and placement
+
+This document defines the trust boundary between the governed Explorer Web shell and any present or future browser map renderer. It answers four questions:
+
+1. What map-interaction behavior is implemented today?
+2. Which renderer-neutral port behavior exists, and which concrete adapter work remains held?
+3. Which evidence, policy, release, dependency, accessibility, and runtime gates must close before real rendering?
+4. Which responsibilities may never move into the browser renderer?
+
+### Directory Rules basis
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). The target already exists under `docs/architecture/ui/` and explains a human-readable UI authority boundary. This same-path modernization therefore receives **PLACE**.
+
+The change creates no new root, child lane, contract, schema, policy, source registry, proof, release record, runtime package, or published artifact. Its generated authoring receipt is process memory only; it creates no map-runtime, policy, release, or publication authority.
+
+### Responsibility split
+
+| Responsibility | Owning surface | Role of this page |
+|---|---|---|
+| UI architecture explanation | `docs/architecture/ui/` | Explain and reconcile current evidence |
+| Renderer-wide negative authorities | `docs/architecture/map-master/RENDERER_BOUNDARY.md` | Link and stay consistent |
+| Renderer-family or importer decision | Accepted ADR | Record current status; never accept implicitly |
+| Reusable renderer implementation | `packages/` after reviewed placement and admission | Report maturity and boundaries |
+| Explorer composition | `apps/explorer-web/` | Report verified browser behavior |
+| Governed transport | `apps/governed-api/` | Report only verified routes and finite envelopes |
+| Object meaning | `contracts/` | Consume accepted semantics |
+| Machine shape | `schemas/` | Link validated profiles |
+| Admissibility and restriction | `policy/` plus accountable decisions | State obligations, not decide |
+| Release, correction, withdrawal, rollback | `release/` and governed operators | Explain effects, not apply them |
+| Process receipts | `data/receipts/` | Reference process memory when required |
+| Evidence and proof | Evidence/proof families | Require resolution without fabricating support |
+
+[Back to top](#top)
+
+---
+
+<a id="core-rule-and-scope"></a>
+
+## 2. Core rule and scope
+
+> **MapLibre, if admitted, is a disciplined 2D renderer and interaction runtime inside the governed KFM shell. It is not the canonical truth store, source registry, policy engine, citation authority, review authority, publication authority, correction authority, rollback authority, or AI authority.**
+
+That rule is stable even while the concrete renderer remains on HOLD.
+
+### In scope
+
+- the boundary between Explorer Web and a browser map runtime;
+- the current renderer-neutral feature-selection bridge;
+- the current fixture-only layer-admission and PMTiles-cache decisions;
+- the implemented `MapRuntimePort` and deterministic `NullMapRuntime` used by non-renderer UI components;
+- the accepted but unimplemented single concrete `MapLibreAdapter` seam;
+- camera, time, layer, click-candidate, lifecycle, and teardown obligations;
+- finite negative states, accessibility, telemetry, validation, and rollback expectations;
+- the gates required before a concrete renderer enters the normal public path.
+
+### Out of scope
+
+| Topic | Owning surface |
+|---|---|
+| Evidence Drawer projection and user-facing evidence state | [EVIDENCE_DRAWER.md](./EVIDENCE_DRAWER.md) and app implementation |
+| Layer meaning, legend, release, and display posture | [LAYERING.md](./LAYERING.md) and map-master layer docs |
+| Broad browser allow/deny boundary | [BOUNDARIES.md](./BOUNDARIES.md) |
+| Shell composition and navigation | [GOVERNED_SHELL.md](./GOVERNED_SHELL.md) |
+| Accessibility requirements | [ACCESSIBILITY.md](./ACCESSIBILITY.md) |
+| Governed API architecture and envelopes | [governed API README](../governed-api/README.md) |
+| Renderer-wide truth and authority boundary | [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) |
+| Semantic contracts | `contracts/` |
+| Machine-readable schemas | `schemas/` |
+| Policy evaluation | `policy/` |
+| Release, correction, withdrawal, rollback decisions | `release/` |
+| Canonical evidence or source acquisition | Their governed evidence/source lanes |
+
+[Back to top](#top)
+
+---
+
+<a id="current-and-future-flow"></a>
+
+## 3. Current and future flow
 
 ```mermaid
 flowchart LR
-    subgraph Browser["Browser (public surface)"]
-        direction TB
-        Shell["GovernedShell<br/>(routes, panels, time banner)"]
-        Catalog["LayerCatalogPanel"]
-        Drawer["EvidenceDrawer"]
-        Focus["FocusPanel"]
-        Port{{"MapRuntimePort<br/><i>abstract contract</i>"}}
-        Adapter["MapLibreAdapter<br/><b>only module that imports MapLibre</b>"]
-        MapLibre["MapLibre GL JS"]
+    subgraph Current["CONFIRMED bounded slices"]
+        Shell["Explorer shell consumer"]
+        Port["MapRuntimePort"]
+        Null["NullMapRuntime"]
+        Selection["Renderer-neutral selection fixture"]
+        Parser["Strict selection parser"]
+        Resolver["Injected governed resolver"]
+        Drawer["Evidence Drawer projection"]
+        Admission["LayerManifest admission fixture"]
+        Cache["PMTiles cache decision fixture"]
+
+        Shell --> Port
+        Port --> Null
+        Null --> Selection
+        Selection --> Parser
+        Parser --> Resolver
+        Resolver --> Drawer
+        Admission -->|"PASS / HOLD / DENY / ERROR"| AdmissionResult["Eligibility result only"]
+        Cache -->|"PASS / HOLD / DENY / ERROR"| CacheResult["Decision only"]
     end
 
-    subgraph Governed["Governed API (apps/governed-api)"]
-        direction TB
-        ClaimResolve["POST /claims/resolve"]
-        EvidenceR["GET /evidence/:ref"]
-        Bootstrap["GET /bootstrap"]
+    subgraph Future["PROPOSED / HOLD"]
+        Adapter["One concrete MapLibreAdapter"]
+        Renderer["MapLibre GL JS"]
+        LiveAPI["Governed click-resolution transport"]
     end
 
-    subgraph Internal["Internal stores — NOT reachable from browser"]
-        direction TB
-        Raw[("RAW / WORK / QUARANTINE")]
-        Canon[("Canonical stores")]
-        Graph[("Graph & vector indexes")]
-        Models[("Model runtimes")]
-    end
+    Internal["RAW / WORK / QUARANTINE / canonical stores / models"]
 
-    Shell -- "validated LayerDescriptor, TimeState" --> Port
-    Catalog -- "loadValidatedLayer / setLayerVisibility" --> Port
-    Port --> Adapter
-    Adapter -- "addSource / addLayer<br/>after validation only" --> MapLibre
-    MapLibre -- "click candidate (feature_id, geom, layer_id)" --> Adapter
-    Adapter -- "claim-resolution request<br/>(NEVER feature props as claim)" --> ClaimResolve
-    ClaimResolve -- "DecisionEnvelope + EvidenceDrawerPayload<br/>or ABSTAIN / DENY / ERROR" --> Drawer
-    Drawer -- "EvidenceRef" --> EvidenceR
+    Port -. "accepted adapter seam" .-> Adapter
+    Adapter -. "renderer API" .-> Renderer
+    Renderer -. "bounded candidate" .-> Parser
+    Resolver -. "future transport" .-> LiveAPI
 
-    Browser -. "FORBIDDEN" .-x Internal
-
-    classDef forbidden fill:#fdd,stroke:#c00,stroke-width:2px,color:#900
-    class Internal,Raw,Canon,Graph,Models forbidden
-    classDef port fill:#eef,stroke:#33a,stroke-width:2px
-    class Port port
-    classDef adapter fill:#efe,stroke:#393,stroke-width:2px
-    class Adapter adapter
+    Renderer -. "FORBIDDEN" .-x Internal
+    Shell -. "FORBIDDEN normal path" .-x Internal
 ```
 
-> [!NOTE]
-> **Diagram status: PROPOSED.** The flow is faithful to UIAI-WHOLE §18 and UIAI-MAP doctrine. Concrete route names (`/claims/resolve`, `/evidence/:ref`, `/bootstrap`) are **NEEDS VERIFICATION** until the governed-API repo is inspected; treat them as placeholders for the routes the adapter calls.
+Solid arrows describe current bounded behavior. Dashed arrows describe concrete renderer and transport integration that remains **PROPOSED** or on **HOLD**.
 
-[↑ Back to top](#map-runtime-boundary)
+### Interpretation
+
+- A renderer event may become a **candidate selection**.
+- A candidate selection may scope an injected governed resolution request.
+- A returned Evidence Drawer projection must remain within the selection's allowed EvidenceRefs.
+- A fixture `PASS` does not register a source, fetch an artifact, mutate a cache, authorize public use, or publish a layer.
+- No current repository evidence inspected here establishes that MapLibre boots in Explorer Web.
+
+[Back to top](#top)
 
 ---
 
-## 5. `MapRuntimePort` — the contract the rest of the UI may import
+<a id="renderer-neutral-click-bridge"></a>
 
-**PROPOSED contract.** `MapRuntimePort` is the abstract seam. Every component outside the adapter — `GovernedShell`, `LayerCatalogPanel`, `EvidenceDrawer`, `FocusPanel`, `StoryNodePlayer`, compare/export controls — imports `MapRuntimePort`, never MapLibre directly.
+## 4. Current renderer-neutral click bridge
 
-| Method | Inputs | Outputs / events | Doctrine basis |
+### 4.1 Selection profile
+
+The current bridge accepts the exact profile `kfm.explorer.map-feature-selection.v1` with these fields:
+
+| External field | Purpose | Boundary |
+|---|---|---|
+| `profile` | Exact profile discriminator | Unknown profiles fail closed |
+| `selection_id` | Bounded request identity | Not evidence or release identity |
+| `layer_id` | Layer context | Does not prove layer admission |
+| `feature_id` | Feature context | Does not turn properties into a claim |
+| `evidence_refs` | Zero to 16 unique governed EvidenceRefs | Scopes, but does not resolve, evidence |
+
+The parser rejects unknown fields, duplicate EvidenceRefs, unsafe identifiers, arrays beyond the bound, and malformed objects. It returns an immutable internal representation.
+
+### 4.2 Resolution invariants
+
+The bridge:
+
+- performs no network access;
+- injects transport through a resolver supplied by its caller;
+- performs no policy, release, source, evidence-store, graph, vector, object-store, or model-runtime access;
+- never treats rendered properties, pixels, geometry, or renderer state as evidence;
+- abstains without calling the resolver when the selection contains no EvidenceRef;
+- accepts returned EvidenceRefs only when they are a subset of the clicked selection's allowed refs;
+- replaces resolver diagnostics with fixed public-safe error copy;
+- renders the result through the existing Evidence Drawer finite-state projection.
+
+### 4.3 Current finite outcomes
+
+| Condition | Bridge code | Drawer outcome | Effect |
 |---|---|---|---|
-| `setCamera` | bounds, center, zoom, pitch, bearing | next camera state | UIAI-WHOLE §18 |
-| `setTimeContext` | `TimeState` (`valid_time`, `observed_time`, `freshness`, viewport time) | applies time-aware filters; emits `time_applied` | UIAI-WHOLE §18, MapLibre Master P-085…P-090 |
-| `loadValidatedLayer` | validated `LayerDescriptor` (release_state = PUBLISHED) | source+layer added; `layer_loaded` event | UIAI-WHOLE §18, UIAI-MAP §10 |
-| `removeLayer` | `layer_id` | source+layer removed | UIAI-WHOLE §18 |
-| `setLayerVisibility` | `layer_id`, visible boolean | visibility applied | UIAI-WHOLE §18 |
-| `queryRenderedFeatureAtPoint` | screen point | **candidate** event with `feature_id`, `layer_id`, geometry — **never a claim** | UIAI-WHOLE §18, UIAI-MASTER |
-| `destroy` | — | tear down map, listeners, sources | UIAI-WHOLE §18 |
+| Valid selection and supported governed projection | `SUPPORTED` | `ANSWER` | Show only supported projection and allowed EvidenceRefs |
+| Valid selection with no EvidenceRef | `MISSING_EVIDENCE` | `ABSTAIN` | Do not call resolver; do not synthesize |
+| Governed policy denial | Governed reason code | `DENY` | Preserve fixed no-leak denial |
+| Resolver failure | `GOVERNED_RESOLVER_ERROR` | `ERROR` | Hide private diagnostics |
+| Returned evidence outside selection scope | `DRAWER_EVIDENCE_OUTSIDE_SELECTION` | `ERROR` | Reject expanded evidence scope |
+| Malformed selection | `SELECTION_INVALID` | `ERROR` | Fail closed |
 
-> [!TIP]
-> The method list is **PROPOSED** as the minimum surface. Adding a method to `MapRuntimePort` is an architectural change that **MUST** be justified in `ADR-maplibre-adapter-boundary` and **MUST NOT** widen the seam to leak unvalidated state, raw features as claims, or direct store access.
+### 4.4 Transport status
 
-See [Appendix A](#appendix-a--method-signature-sketch-illustrative) for an illustrative TypeScript-shaped signature sketch (clearly labeled illustrative, not normative).
+The current governed API exposes `/bootstrap`, `/layers`, and `/evidence` scaffolds. Each returns an `ABSTAIN` envelope with `reason_code: NOT_IMPLEMENTED`. No click-specific claim-resolution route or production transport is established by current evidence.
 
-[↑ Back to top](#map-runtime-boundary)
+The injected resolver is therefore a testable seam, not proof of a live governed path.
+
+### 4.5 Accessibility status
+
+The fixture uses ordinary buttons, a live status region, finite outcome text, and Evidence Drawer focus behavior. Those affordances provide bounded accessibility evidence for the fixture. They do not prove keyboard map navigation, non-map feature lists, screen-reader geography, reduced-motion renderer behavior, or production accessibility.
+
+[Back to top](#top)
 
 ---
 
-## 6. `MapLibreAdapter` — the only module that may import MapLibre
+<a id="current-admission-and-cache-models"></a>
 
-**PROPOSED implementation rule.** Exactly one module in the repo is permitted to import from the MapLibre runtime package (e.g., `maplibre-gl`). That module is `MapLibreAdapter`.
+## 5. Current admission and cache models
 
-### 6.1 Responsibilities (what the adapter DOES)
+### 5.1 LayerManifest admission fixture
 
-- Implement `MapRuntimePort` in full.
-- Translate `LayerDescriptor` → MapLibre `source` + `layer` **only after** the descriptor's `release_state`, `policy_label`, and integrity refs have been validated upstream.
-- Synchronize camera and time state with the shell's state owners.
-- Convert raw MapLibre click events into **candidate** events carrying `feature_id`, `layer_id`, and geometry — and hand those to the governed client for claim resolution.
-- Surface negative states (`stale`, `denied`, `error`, `evidence_missing`) at the boundary, not silently.
-- Tear down cleanly on `destroy`.
+`evaluateLayerManifestAdmission` is a pure, fixture-only eligibility evaluator using profile `kfm.layer-manifest-admission-fixture.v1`.
 
-### 6.2 Non-responsibilities (what the adapter MUST NOT do)
+It fails closed unless the synthetic input establishes all material conditions, including:
 
-| The adapter MUST NOT… | Because… | Source |
+- exact profile and field shape;
+- an active profile in `RELEASED_RUNTIME` execution mode;
+- `PUBLISHED` lifecycle and release state;
+- matching manifest, spec-hash, release, and requested layer bindings;
+- `GOVERNED_API` source URL classification;
+- resolved evidence;
+- allowed policy;
+- approved review and promotion;
+- verified artifact and signature;
+- rollback readiness;
+- a requested runtime action;
+- no claimed registry, release, publication, or public-use authority.
+
+| Outcome | Representative meaning | Non-effect |
 |---|---|---|
-| Read RAW / WORK / QUARANTINE / canonical stores | Public clients use governed APIs only | UIAI-WHOLE §25 |
-| Resolve `EvidenceBundle` from `EvidenceRef` | Resolution is a governed-API responsibility | UIAI-WHOLE §18 |
-| Call a model runtime (Ollama, OpenAI, vector DB, graph store) | Browser never holds the model seam | UIAI-WHOLE §18, §25 |
-| Filter unpublished or candidate layers into view | Only `PUBLISHED` artifacts reach the renderer | UIAI-MAP §10, Directory Rules lifecycle invariant |
-| Treat MapLibre `popup` content as a claim | Popups launch the Evidence Drawer; they are not evidence | UIAI-MASTER ML-064-080 |
-| Hide sensitive geometry by style alone | Style-only hiding is a known anti-pattern; sensitive geometry must be denied or generalized **before** reaching the adapter | UIAI-MASTER ML-064-075, ML-064-078 |
-| Synthesize feature attributes not present in the validated layer | Attribute whitelist enforced upstream; no inference at the renderer | UIAI-MASTER (style expressions) |
+| `PASS` | Synthetic projection is registration-eligible | No registration, source creation, release, or publication |
+| `HOLD` | Legacy/inactive/unpublished/stale/superseded/unresolved/incomplete | No bypass or optimistic rendering |
+| `DENY` | Withdrawn, policy-denied, binding mismatch, internal source class, or authority overclaim | No source creation or disclosure |
+| `ERROR` | Input shape is invalid | No partial fallback |
 
-> [!WARNING]
-> **Style-only hiding is not access control.** A MapLibre style filter that omits sensitive features still ships the underlying tile bytes. Sensitivity is enforced by the **policy gate and the artifact**, not by the style. See `policy/sensitivity/` (PROPOSED) and `KFMGeoManifest` validation.
+Every result records `authority: NONE`, `registryMutated: false`, and `maplibreSourceCreated: false`.
 
-[↑ Back to top](#map-runtime-boundary)
+### 5.2 PMTiles cache decision fixture
+
+`evaluatePmtilesCache` is a pure, fixture-only decision model using profile `kfm.pmtiles-release-cache-fixture.v1`. The release-scoped key binds:
+
+- `release_id`;
+- `artifact_digest`;
+- `policy_digest`.
+
+It distinguishes verified cache hits, online fetch requirements, offline misses, partial entries, release mismatch, policy mismatch, artifact mismatch, missing glyph/PMTiles/sprite assets, withdrawn releases, denied source class, authority overclaim, key mismatch, and invalid input.
+
+Every result records `authority: NONE`, `cacheMutated: false`, and `networkRequested: false`. A `PASS` may indicate that a complete, matching entry could render or that a future online fetch is required; it does not perform either action.
+
+### 5.3 What these models do not prove
+
+The fixture evaluators do not establish:
+
+- a connected release registry;
+- authenticated manifest retrieval;
+- a MapLibre source, style, layer, or protocol registration;
+- a Service Worker or CacheStorage implementation;
+- operational invalidation after correction, withdrawal, or rollback;
+- public layer serving;
+- production policy or evidence resolution;
+- release, deployment, or publication.
+
+[Back to top](#top)
 
 ---
 
-## 7. Feature click → claim resolution
+<a id="proposed-mapruntimeport"></a>
 
-**CONFIRMED doctrine** (UIAI-WHOLE §18, kfm_encyclopedia §8.B): a click is a **request to resolve**, not a fact.
+## 6. `MapRuntimePort` — implemented bounded UI contract
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant U as User
-    participant ML as MapLibre
-    participant A as MapLibreAdapter
-    participant GC as governedClient
-    participant API as Governed API
-    participant D as EvidenceDrawer
+**Status: CONFIRMED / IMPLEMENTED / dependency-free.**
 
-    U->>ML: click(x, y)
-    ML->>A: rendered feature candidate<br/>(feature_id, layer_id, geom)
-    A->>GC: resolveClaim({feature_id, layer_id, time_context})
-    GC->>API: POST /claims/resolve  (route name PROPOSED)
-    API-->>GC: DecisionEnvelope<br/>+ EvidenceDrawerPayload<br/>or ABSTAIN / DENY / ERROR
-    GC-->>A: validated envelope
-    A-->>D: open(payload)  (negative states first-class)
-    Note over ML,A: Feature properties are NEVER<br/>shipped to the Drawer as a claim.
-```
+Explorer consumers can depend on a KFM-owned renderer-neutral port rather than on MapLibre types. The port is a stability and trust seam, not a second authority layer.
 
-### Outcome envelope at the drawer
+### 6.1 Current method family
 
-| Outcome | What the drawer shows | Public-surface behavior |
+| Method | Current input | Current effect | Must not do |
+|---|---|---|---|
+| `initialize` | optional bounded camera | Enter `INITIALIZING`, then `READY` | Fetch, render, admit, release, or publish data |
+| `getSnapshot` | none | Return a frozen runtime snapshot | Expose renderer-native or canonical state |
+| `setCamera` | bounded center, zoom, pitch, bearing | Update shell-owned presentation state | Persist canonical state or fetch data |
+| `subscribeSnapshot` | snapshot listener | Observe finite runtime state | Grant lifecycle or policy authority |
+| `subscribeSelection` | selection listener | Observe bounded feature candidates | Return a claim or EvidenceBundle |
+| `dispose` | none | Remove listeners and enter `DISPOSED` | Mutate release or evidence state |
+
+`NullMapRuntime` supplies deterministic `emitSelection` and `emitTrustState` control hooks for migration and tests. They are not methods on the public port and confer no renderer, policy, evidence, or publication authority.
+
+### 6.2 Port invariants
+
+The current port must continue to:
+
+- expose KFM-owned types only;
+- return bounded events, never renderer-native objects;
+- keep feature candidates distinct from claims;
+- remain free of layer loading until an accepted, governed input contract is admitted;
+- preserve finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` paths;
+- support deterministic teardown and a fake/null implementation;
+- avoid network, policy, evidence resolution, release, and lifecycle authority;
+- remain usable if the concrete renderer implementation is rolled back.
+
+Adding a method is an architectural change when it widens authority, data exposure, transport, lifecycle, or compatibility. Such changes require the owning decision, direct tests, and migration review.
+
+[Back to top](#top)
+
+---
+
+<a id="proposed-maplibre-adapter"></a>
+
+## 7. `MapLibreAdapter` — bounded package-owned importer
+
+**Status: IMPLEMENTED / BOUNDED; PRODUCTION ACTIVATION HOLD.** The accepted
+`packages/maplibre/` seam owns exact `maplibre-gl@6.6.0`, the raw renderer
+import, bounded lifecycle/camera behavior, finite errors, teardown, and the Vite
+worker configuration. Focused mocked tests and a real-browser fixture cover
+construction and fail-closed WebGL2 denial. This does not establish Explorer
+production activation, source/layer admission, broader CSP or accessibility
+closure, performance, release, deployment, or publication.
+
+Exactly one package-owned seam may import the MapLibre runtime and implement the
+KFM-owned port. The legacy comment-only Explorer file is not that implementation
+and must not become an accidental second importer.
+
+### 7.1 Implemented and proposed responsibilities
+
+The current bounded adapters implement construction, lifecycle, camera state,
+finite errors, teardown, and Vite worker setup. Future reviewed increments may:
+
+- own MapLibre construction, lifecycle, event registration, and teardown;
+- translate accepted KFM layer inputs into renderer sources, styles, and layers;
+- apply shell-owned camera and time state;
+- translate renderer hit-test output into the strict renderer-neutral selection profile;
+- surface bounded loading, stale, denied, degraded, asset, and renderer errors;
+- register only reviewed protocols and plugins;
+- expose no MapLibre-native object outside the adapter seam.
+
+### 7.2 Non-responsibilities
+
+The adapter must not:
+
+| Forbidden responsibility | Why |
+|---|---|
+| Read RAW, WORK, QUARANTINE, canonical, graph, vector, object, or model stores | Public clients use governed interfaces, not internal authority stores |
+| Resolve EvidenceRef to EvidenceBundle | Resolution belongs behind the governed trust membrane |
+| Evaluate rights, sensitivity, policy, review, or release | The renderer reflects finite decisions; it does not make them |
+| Register an unpublished, withdrawn, denied, stale-held, or mismatched layer | Eligibility and release binding precede renderer creation |
+| Treat `feature.properties` or popup HTML as an answer | A hit-test is request context, not evidence |
+| Hide sensitive geometry by style alone | Style filters do not prevent restricted bytes from reaching the client |
+| Call model runtimes or AI endpoints | AI remains subordinate to governed evidence and policy |
+| Authorize release, publication, correction, withdrawal, or rollback | Rendering has no lifecycle authority |
+| Write registry or cache state without a governed operational design | Fixture eligibility is not mutation authority |
+
+### 7.3 Gates before production composition may be called current
+
+1. The implementation remains within accepted ADR-0006 and ADR-0007, or an accepted replacement explicitly changes the boundary.
+2. The exact package and importer modules remain fixed without creating a parallel runtime authority.
+3. The renderer dependency remains pinned and lockfile-synchronized; any protocol/plugin dependency requires separate admission.
+4. Any `MapRuntimePort` widening preserves compatibility, ownership, finite-state, and direct-test requirements.
+5. Repository-wide import enforcement proves that no other normal-path module imports renderer APIs.
+6. Layer admission is bound to governed release identity, artifact integrity, policy, evidence, review, correction, withdrawal, and rollback state.
+7. A real click event is translated into the existing strict selection profile without leaking raw feature data.
+8. Governed transport and finite response envelopes are implemented and fail closed.
+9. Browser tests cover keyboard and non-map alternatives, focus, reduced motion, negative states, asset failure, teardown, and no-leak behavior.
+10. Authenticated runtime, performance, accessibility, correction, invalidation, and rollback evidence is captured for the exact dependency and build.
+11. Release, deployment, and publication remain separate governed transitions.
+
+[Back to top](#top)
+
+---
+
+<a id="renderer-input-contract"></a>
+
+## 8. Renderer input contract
+
+### 8.1 Current verified minimum
+
+The current fixture evaluator establishes a useful lower bound for any future runtime input. A layer is not renderer-eligible unless the upstream projection is exact, public-path classified, release-bound, evidence-resolved, policy-allowed, reviewed, promoted, artifact-verified, signature-verified, rollback-ready, and free of claimed publication authority.
+
+That is current executable fixture behavior. It is not yet a canonical `LayerDescriptor` contract.
+
+### 8.2 Proposed future descriptor families
+
+A production renderer input will likely need these information families:
+
+| Family | Examples | Authority |
 |---|---|---|
-| **ANSWER** | claim, resolved `EvidenceBundle` ref, source roles, valid/observed/release time, freshness, rights, sensitivity, review, correction lineage | Substantive answer with citations |
-| **ABSTAIN** | reason code (`evidence_missing`, `stale`, `unresolved_ref`) | Non-substantive note; never invents |
-| **DENY** | policy reason code (rights, sensitivity, sovereignty) | Denial reason; offers non-restricted alternative if any |
-| **ERROR** | finite, actionable diagnostic | No claim leakage; no silent fallthrough |
+| Identity | stable layer id, manifest id, version, spec hash | Accepted contract/schema |
+| Release | release id/state, release-manifest ref, rollback target | Governed release authority |
+| Integrity | artifact digest, style digest, signature state, protocol/plugin identity | Release and artifact verification |
+| Source role | steward, observer, derived, model output, context | Accepted source semantics |
+| Time | source, valid, observed, retrieval, release, correction times; freshness window | Accepted temporal contract and upstream evaluation |
+| Rights | license, rights statement, obligations, attribution | Rights policy and review |
+| Sensitivity | public/generalized/restricted posture and applied transform | Policy and accountable review |
+| Evidence | resolvable EvidenceRefs and support state | Governed evidence resolution |
+| Review | review state and required independent approvals | Review authority |
+| Correction | correction, supersession, withdrawal, rollback state | Governed lifecycle |
+| Assets | public-safe tile/style/glyph/sprite/protocol references | Governed artifact serving |
 
-**Source:** kfm_encyclopedia §8.C; KFM_Domains_Culmination_Atlas §24.3.
+Exact field names, requiredness, enums, and compatibility do not become normative through this table. They belong in accepted contracts and schemas with validators, fixtures, migration guidance, and consumer tests.
 
-[↑ Back to top](#map-runtime-boundary)
+### 8.3 Style-only hiding is not access control
 
----
+A style filter can hide a feature from normal drawing while the underlying bytes remain available to the browser. Restricted precision must be denied, generalized, redacted, aggregated, delayed, or otherwise transformed before the renderer receives the artifact.
 
-## 8. `LayerDescriptor` requirements
-
-**PROPOSED.** Every descriptor accepted by `loadValidatedLayer` must already carry the fields needed for *interpretation at point of use*. The adapter does not enrich descriptors; it refuses descriptors that lack the required fields.
-
-| Field group | Required content | Source of truth |
-|---|---|---|
-| Identity | `layer_id`, `version`, `spec_hash` | `LayerManifest` schema (PROPOSED) |
-| Release state | `release_state` = `PUBLISHED`; `release_manifest_ref` | `ReleaseManifest`; UIAI-WHOLE §25 |
-| Integrity | artifact digest, signature ref (where applicable) | `KFMGeoManifest`; UIAI-MASTER §§2, 9–14 |
-| Source roles | `source_role` per layer (steward, observer, derived, model-output, etc.) | `SourceDescriptor` |
-| Time | `valid_time`, `observed_time`, `source_time`, `retrieval_time`, `release_time`, freshness window | UIAI-MASTER P. (time-aware); ML-061-091, ML-061-092 |
-| Rights | `rights_statement`, `license_spdx`, `obligations` | UIAI-MASTER ML-064-107 |
-| Sensitivity | `policy_label` (public / generalized / restricted), CARE flags | UIAI-MASTER ML-064-019, ML-064-075 |
-| Review | review state ref (where required) | `ReviewRecord` |
-| Correction lineage | latest `CorrectionNotice` ref, if any | `CorrectionNotice` |
-| Trust badges | enough metadata to render badges *without* re-deriving from raw data | UIAI-WHOLE §18 |
-
-> [!NOTE]
-> Field names are **PROPOSED** and align with `schemas/contracts/v1/layers/layer_descriptor.schema.json` (PROPOSED home per UIAI-WHOLE §16). The authoritative names land in that schema; this table follows it, not the other way around.
-
-[↑ Back to top](#map-runtime-boundary)
+[Back to top](#top)
 
 ---
 
-## 9. Camera & time synchronization
+<a id="camera-time-and-state"></a>
 
-**PROPOSED.** The adapter participates in two state flows it does **not own**:
+## 9. Camera, time, and state
 
-- **Camera state** is owned by the shell's map-view state owner; the adapter applies it through `setCamera` and emits camera-changed events back to the shell.
-- **Time state** (`TimeState`: viewport time, `valid_time`, `observed_time`, freshness, time filters) is owned by the shell's time state owner; the adapter applies it through `setTimeContext` and **must distinguish source time, valid time, observed time, retrieval time, and release time** (UIAI-MASTER ML-061-091, ML-061-092). Collapsing those is a known anti-pattern.
+**Current status: PARTIAL.** The dependency-free port and null runtime implement bounded camera state. No temporal port, concrete renderer translation, or browser proof was verified.
 
-> [!CAUTION]
-> The adapter **MUST NOT** decide that a layer is stale on its own. Staleness is computed upstream from the layer's freshness window and surfaced via the descriptor and the drawer payload. The adapter only *reflects* stale state in the UI (e.g., trust badge state) — it does not *declare* it.
+### 9.1 State ownership
 
-[↑ Back to top](#map-runtime-boundary)
+The future renderer should apply state owned by the governed shell and emit bounded changes back through the port. It should not become the canonical owner of:
+
+- route state;
+- selected layer identity;
+- evidence or drawer state;
+- policy or release state;
+- story or focus state;
+- correction or rollback state.
+
+### 9.2 Time discipline
+
+Where material, the system must distinguish:
+
+- source time;
+- valid time;
+- observed time;
+- retrieval time;
+- release time;
+- correction time.
+
+The adapter must not collapse those into one ambiguous timestamp. It must not decide freshness independently. Upstream governed logic determines stale, current, withdrawn, superseded, or corrected posture; the renderer reflects that finite state.
+
+### 9.3 2D/3D and cache scope
+
+A future 2D/3D handoff must preserve identity, EvidenceRefs, time context, release state, and policy-visible limitations. See [2D/3D parity](../map-master/2D_3D_PARITY.md).
+
+The current PMTiles fixture binds release, artifact, and policy digests. It does not bind camera or transient viewport state, and it does not establish an operational cache.
+
+[Back to top](#top)
 
 ---
+
+<a id="forbidden-browser-operations"></a>
 
 ## 10. Forbidden browser operations
 
-**CONFIRMED doctrine** (UIAI-WHOLE §25; kfm_encyclopedia §8.A; UIAI-MAP):
+The browser shell, port, adapter, renderer, worker, and plugin path must not:
 
-The browser, including the `MapLibreAdapter`, **MUST NOT**:
+- read RAW, WORK, QUARANTINE, canonical, internal graph/vector, object-store, or model-runtime paths;
+- access unpublished candidates, credentials, signed internal URLs, private service handles, or administrator shortcuts;
+- call Ollama, OpenAI, another model runtime, or an AI orchestration path directly;
+- resolve EvidenceRefs from canonical stores;
+- evaluate or override rights, sensitivity, sovereignty, review, release, correction, or rollback decisions;
+- treat pixels, tiles, PMTiles, COGs, style JSON, feature properties, screenshots, scenes, catalog records, graph projections, or generated language as sovereign truth;
+- load an artifact whose release binding, integrity, source class, policy, evidence, review, or rollback state is unresolved;
+- use style-only hiding as sensitive-data access control;
+- emit raw evidence, restricted geometry, full EvidenceBundles, prompts, credentials, private diagnostics, or internal paths through telemetry;
+- register unreviewed renderer plugins or protocols;
+- create a second direct renderer importer for convenience;
+- silently turn a fixture `PASS` into registry mutation, source creation, cache write, release, or publication;
+- degrade `ABSTAIN`, `DENY`, or `ERROR` into an unsupported answer.
 
-- Read RAW, WORK, QUARANTINE, canonical stores, graph stores, object stores, or vector indexes.
-- Call model runtimes (Ollama, OpenAI, local models) directly.
-- Access unpublished candidates, internal service handles, or credentials.
-- Load tile URLs that lack `LayerManifest` / `ReleaseManifest` / `TileArtifactManifest` approval.
-- Treat tiles, PMTiles, COGs, style JSON, screenshots, Story Nodes, 3D scenes, graph projections, catalog records, or AI answers as sovereign truth — **they are downstream carriers** (UIAI-MASTER §§2, 9–14).
-- Ship raw prompt text, raw evidence, restricted geometry, or full `EvidenceBundle` copies via telemetry (UIAI-WHOLE §25).
+The normal public path uses governed interfaces and public-safe released artifacts. Any administrative or diagnostic exception requires explicit authority, least privilege, auditability, clear separation from the public path, and its own review.
 
-The single allowed browser network path for trust payloads is the **typed governed API client**. All other network paths are tile/style/asset fetches against artifacts explicitly approved by the active `ReleaseManifest`.
-
-[↑ Back to top](#map-runtime-boundary)
-
----
-
-## 11. Negative states (first-class)
-
-**PROPOSED.** Negative states are not error cases bolted onto an otherwise happy path — they are the shape of the surface. The adapter must surface all of them through `MapRuntimePort` events and the drawer payload, not hide them.
-
-| State | When | Adapter behavior |
-|---|---|---|
-| `evidence_missing` | No `EvidenceBundle` resolves for a candidate | Open drawer in ABSTAIN; do not synthesize |
-| `restricted` | Policy denies based on rights / sensitivity / sovereignty | Open drawer in DENY with reason; never style-only hide after the fact |
-| `stale` | Layer freshness window has lapsed | Show stale badge; defer to upstream abstain rules |
-| `conflict` | Multiple released sources disagree on the candidate | Open drawer surfacing both EvidenceRefs; do not pick |
-| `invalid_payload` | Drawer payload fails runtime schema validation | ERROR outcome; no claim emitted |
-| `policy_denied` | Postcheck rejects an otherwise-resolved answer | DENY outcome; reason surfaced |
-
-**Source:** UIAI-WHOLE §19.1 (Evidence Drawer negative states); KFM_Domains_Culmination_Atlas §24.3.
-
-[↑ Back to top](#map-runtime-boundary)
+[Back to top](#top)
 
 ---
 
-## 12. Validation & tests
+<a id="finite-and-negative-states"></a>
 
-**PROPOSED** test families that prove this boundary is enforceable, not only described:
+## 11. Finite and negative states
 
-- **`MapRuntimePort` contract tests** — every method's input/output validates against the relevant schema; no extra side effects.
-- **Adapter isolation test** — a repo-wide import scan asserts that only `MapLibreAdapter` imports `maplibre-gl` (or equivalent). PROPOSED home: `tools/validators/ui/`.
-- **No-unreleased-tile test** — adapter refuses any descriptor whose `release_state ≠ PUBLISHED` or whose manifest digest fails verification.
-- **Click-to-drawer test** — a click never produces a drawer payload that bypassed `/claims/resolve` (route name PROPOSED).
-- **Negative-state fixtures** — `evidence_missing`, `restricted`, `stale`, `conflict`, `invalid_payload`, `policy_denied` each have a fixture and assertions (UIAI-WHOLE PR1 step 5).
-- **Sensitive-geometry deny fixture** — confirms style-only hiding is rejected; only generalized or denied outputs reach the adapter (UIAI-MASTER ML-064-075, ML-064-078).
-- **Visual regression** — style/expression-driven layers render deterministically against the published artifact set (Master MapLibre §12, EXPANDED).
-- **Accessibility smoke** — keyboard, focus, contrast, reduced motion, and map-control alternative-list checks (UIAI-WHOLE §27).
-- **Tile-load budget** — bounded, observable, and surfaced via shell diagnostics rather than swallowed.
+Negative states are first-class user-visible outcomes, not incidental errors hidden behind a happy path.
 
-> [!NOTE]
-> Concrete test file paths, runners, and CI workflow names are **NEEDS VERIFICATION** until the repo is mounted. The test *families* above are doctrinally required; the *names and homes* are not yet repo facts.
+### 11.1 Current confirmed states
 
-[↑ Back to top](#map-runtime-boundary)
+The renderer-neutral bridge currently proves:
+
+- supported answer;
+- missing-evidence abstention;
+- governed denial;
+- invalid selection;
+- resolver error;
+- evidence-scope violation.
+
+The layer-admission and cache fixtures prove bounded `PASS`, `HOLD`, `DENY`, and `ERROR` classifications without performing the proposed action.
+
+### 11.2 Current port states and held renderer states
+
+The current port exports `IDLE`, `INITIALIZING`, `READY`, `STALE`, `ABSTAINED`, `DENIED`, `CONFLICT`, `DEGRADED`, `WITHDRAWN`, `ROLLED_BACK`, `ERROR`, and `DISPOSED`. Focused tests exercise lifecycle, trust-state transitions, selection, evidence binding, validation, and teardown. These states describe a renderer-neutral snapshot; they do not prove a concrete renderer or public UX.
+
+A real renderer will still need explicit public behavior for:
+
+| State | Required public behavior |
+|---|---|
+| Loading | Announce progress without presenting a claim |
+| Ready | Show only admitted public-safe content |
+| Stale | Display stale posture and follow upstream abstain/deny rules |
+| Withdrawn | Remove or deny the affected representation and surface correction context |
+| Superseded | Prefer the governed successor; preserve lineage |
+| Policy denied | Show fixed public-safe reason; do not leak restricted detail |
+| Evidence unresolved | Abstain; do not render an authoritative claim |
+| Asset incomplete | Hold or degrade explicitly; do not present partial content as complete |
+| Offline miss | Show finite hold/offline state |
+| Renderer error | Show safe error and preserve non-map access where possible |
+| Destroyed | Remove listeners, workers, protocols, and renderer resources deterministically |
+
+The browser rendering, asset, offline, accessibility, and public-behavior mappings in this table remain **PROPOSED** until concrete implementation and tests exist.
+
+[Back to top](#top)
 
 ---
 
-## 13. Rollback path
+<a id="validation-and-admission-evidence"></a>
 
-**PROPOSED** (UIAI-WHOLE §26):
+## 12. Validation and admission evidence
 
-1. Retain `MapRuntimePort` as the stable seam.
-2. Swap `MapLibreAdapter` to a **no-op / static mock** implementation if runtime integration fails.
-3. Keep `LayerDescriptor` and drawer payload contracts intact so the shell, catalog, and drawer keep working with mock data.
-4. Disable map-dependent routes behind a feature flag; preserve the Evidence Drawer and layer browsing where they do not require live rendering.
-5. Record the rollback decision and prior `ReleaseManifest` digest via the standard `RollbackCard` flow under `release/rollback_cards/`.
+### 12.1 Repository-native commands
 
-The point of routing the rollback through the **port**, not the **adapter**, is that the seam itself never moves; only the implementation behind it does.
+Explorer Web declares these commands:
 
-[↑ Back to top](#map-runtime-boundary)
+```bash
+cd apps/explorer-web
+pnpm run build
+pnpm run test:unit
+pnpm run test:browser
+```
+
+The current focused unit files include:
+
+- `tests/map-runtime-port.test.ts`;
+- `tests/map-runtime-evidence-binding.test.ts`;
+- `tests/map-runtime-trust-status.test.ts`;
+- `tests/map-evidence-drawer.test.ts`;
+- `tests/layer-manifest-admission.test.ts`;
+- `tests/pmtiles-release-cache.test.ts`.
+
+The click-bridge documentation also identifies browser coverage for the Evidence Drawer fixture.
+
+### 12.2 Current and future evidence matrix
+
+| Check | Current status | What passing proves | What it does not prove |
+|---|---|---|---|
+| Port lifecycle, validation, trust-state, selection, and disposal tests | **CONFIRMED source/test presence** | Renderer-neutral contract and null-runtime behavior | Production renderer activation or publication |
+| Evidence-binding consumer tests | **CONFIRMED source/test presence** | Bounded consumer projection from runtime selection | Live evidence resolution or evidence truth |
+| Strict selection parser tests | **CONFIRMED source/test presence** | Closed request shape and immutable parse behavior | Real renderer event integrity |
+| Evidence-subset and no-leak tests | **CONFIRMED source/test presence** | Bounded projection behavior | Evidence truth or production policy |
+| No-network/no-renderer-import unit guard | **CONFIRMED source/test presence** | The current bridge stays renderer-neutral | Correct adapter behavior or production activation |
+| Layer admission fixture tests | **CONFIRMED source/test presence** | Finite synthetic eligibility decisions | Registry, source creation, release, or public serving |
+| PMTiles cache fixture tests | **CONFIRMED source/test presence** | Finite synthetic cache decisions | Service Worker, CacheStorage, fetch, or invalidation |
+| Explorer build | **CONFIRMED command and merged exact-head evidence; current-main run not established** | Type/build compatibility for the inspected package/app seam | Deployed runtime or publication |
+| Package adapter unit tests | **CONFIRMED source and merged exact-head evidence** | Bounded construction, lifecycle, camera, errors, teardown, and Vite worker configuration | Production composition or broader browser readiness |
+| Real MapLibre browser fixture | **CONFIRMED source and merged exact-head evidence** | Exact package construction, local CSS/request behavior, disposal, and fail-closed WebGL2 denial | Full keyboard/accessibility, CSP enforcement, live sources, performance, or long-session parity |
+| Repository-wide acquisition inventory | **CONFIRMED executable check** | Raw acquisition is inventoried and parallel package homes fail closed | Correct runtime behavior or dependency approval |
+| Dependency and lockfile verification | **CONFIRMED exact package and lock closure** | Exact renderer supply-chain identity in the accepted seam | Public safety, license disposition, or policy approval |
+| Broader authenticated renderer probe packet | **PROPOSED / required before production activation** | Exact build boots and exercises the remaining governed probe matrix | Release or publication |
+| Performance and resource budgets | **PROPOSED / required before production activation** | Bounded runtime envelope | Evidence truth |
+| Correction, withdrawal, cache invalidation, rollback exercise | **PROPOSED / required before production activation** | Operational reversibility | Independent release approval |
+
+### 12.3 What tests never confer
+
+A passing build, unit test, browser test, import scan, or runtime probe does not by itself:
+
+- accept an ADR;
+- admit a dependency;
+- resolve evidence;
+- approve rights or sensitivity;
+- approve review, promotion, release, deployment, or publication;
+- prove a public endpoint is current;
+- prove correction or rollback was exercised in production.
+
+[Back to top](#top)
 
 ---
+
+<a id="rollback-and-non-effects"></a>
+
+## 13. Rollback and non-effects
+
+### 13.1 This documentation change
+
+Before merge, rollback is to close or abandon the draft pull request and leave its branch unmerged. After an authorized merge, revert the documentation commit and rerun the repository's documentation validation.
+
+### 13.2 Future runtime rollback pattern
+
+A concrete renderer slice should preserve a renderer-neutral fake/null port so the governed shell, Evidence Drawer, layer catalog, and non-map access can remain reviewable when the renderer is disabled.
+
+A credible runtime rollback must include:
+
+1. disable or remove the concrete adapter without changing the KFM-owned port;
+2. remove or revert the renderer dependency and synchronized lockfile state;
+3. stop renderer workers, listeners, protocols, and cache writes;
+4. invalidate affected release-scoped caches through governed operations;
+5. preserve the last safe released public representation or explicit unavailable state;
+6. record correction, withdrawal, supersession, and rollback lineage where public reliance occurred;
+7. rerun build, unit, browser, import-boundary, accessibility, and rollback checks.
+
+### 13.3 Non-effects of this page
+
+This update does not:
+
+- modify application or package code;
+- create or accept a contract, schema, policy, ADR, source, registry, proof, or release record; its generated authoring receipt remains process memory only;
+- admit `maplibre-gl` or any plugin/protocol dependency;
+- create a MapLibre source, style, layer, worker, or cache entry;
+- alter governed API routes;
+- resolve evidence or authorize public use;
+- release, deploy, promote, publish, withdraw, correct, or roll back an artifact.
+
+[Back to top](#top)
+
+---
+
+<a id="related-docs"></a>
 
 ## 14. Related docs
 
-- `docs/architecture/ui/README.md` — UI subsystem overview *(PROPOSED)*
-- `docs/architecture/ui/BOUNDARIES.md` — broader browser allowed/forbidden surface; this file is its map-runtime slice *(PROPOSED)*
-- `docs/architecture/ui/STATE_OWNERSHIP.md` — map, time, layer, drawer, focus state ownership *(PROPOSED)*
-- `docs/architecture/ui/LAYERING.md` — layer descriptor & manifest detail *(PROPOSED)*
-- `docs/architecture/ui/ROUTE_MAP.md` — route families and shell continuity *(PROPOSED)*
-- `docs/architecture/ui/CONTINUITY_NOTES.md` — UI doctrine continuity / PDF lineage *(PROPOSED)*
-- `docs/architecture/governed-ai/BOUNDARIES.md` — model adapter and Focus seam *(PROPOSED)*
-- `docs/adr/ADR-maplibre-adapter-boundary.md` — governing ADR *(PROPOSED, not yet accepted)*
-- `directory-rules.md` — placement doctrine; **§0**, **§3**, **§15**, **§16** apply
+### UI architecture
 
-[↑ Back to top](#map-runtime-boundary)
+- [UI architecture README](./README.md)
+- [UI boundaries](./BOUNDARIES.md)
+- [Layering](./LAYERING.md)
+- [Evidence Drawer](./EVIDENCE_DRAWER.md)
+- [Accessibility](./ACCESSIBILITY.md)
+- [Governed shell](./GOVERNED_SHELL.md)
+- [Continuity notes](./CONTINUITY_NOTES.md)
+
+### Map and API architecture
+
+- [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md)
+- [Map Master layer lifecycle](../map-master/LAYER_LIFECYCLE.md)
+- [Map Master tile artifacts](../map-master/TILE_ARTIFACTS.md)
+- [Map Master viewer verification](../map-master/VIEWER_VERIFICATION.md)
+- [Map Master 2D/3D parity](../map-master/2D_3D_PARITY.md)
+- [Map shell](../map-shell.md)
+- [MapLibre architecture](../maplibre-master.md)
+- [Governed API architecture](../governed-api/README.md)
+
+### Decisions and doctrine
+
+- [ADR-0006 — MapLibre boundary](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
+- [ADR-0007 — MapLibre GL JS as sole browser renderer](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>)
+- [ADR-0029 — Directory governance adoption](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+
+### Current executable surfaces
+
+- Renderer-neutral click bridge (retired)
+- Click bridge notes (retired)
+- LayerManifest admission fixture (retired)
+- PMTiles cache fixture (retired)
+- Legacy Explorer adapter placeholder (retired)
+- [`@kfm/maplibre` package manifest](../../../packages/maplibre/package.json)
+- [`@kfm/maplibre` port and null-runtime entry](../../../packages/maplibre/src/index.ts)
+- [Package-owned concrete adapter](../../../packages/maplibre/src/maplibre-adapter.ts)
+- [Package-owned Vite worker adapter](../../../packages/maplibre/src/maplibre-vite-adapter.ts)
+- Explorer real-MapLibre browser fixture (retired)
+
+[Back to top](#top)
 
 ---
 
-## 15. Open questions & verification backlog
+<a id="open-verification-and-adr-triggers"></a>
 
-Mirror these into `docs/registers/VERIFICATION_BACKLOG.md` until resolved.
+## 15. Open verification and ADR triggers
 
-- **NEEDS VERIFICATION:** Frontend framework and app path (`apps/explorer-web/` is PROPOSED; the actual app path drives every concrete file location). *(UIAI-WHOLE §27)*
-- **NEEDS VERIFICATION:** MapLibre package version, plugin status, MLT readiness, PMTiles tooling versions. *(Master MapLibre v1.7 §8; UIAI-WHOLE §27)*
-- **NEEDS VERIFICATION:** Governed-API route names (`/claims/resolve`, `/evidence/:ref`, `/bootstrap`); names in this doc are placeholders.
-- **NEEDS VERIFICATION:** Existing `EvidenceDrawer` / `MapLibreAdapter` / `MapRuntimePort` code or precursor under `ui/`, `web/`, or `apps/explorer-web/`. Could turn this into a *refactor* doc rather than a *create* doc.
-- **OPEN:** Whether `BOUNDARIES.md` and `MAP_RUNTIME_BOUNDARY.md` co-exist (broad + focused) or this file folds into `BOUNDARIES.md` once written. The proposed tree in UIAI-WHOLE §29 lists only `BOUNDARIES.md`; this split is a placement proposal to surface in the PR.
-- **OPEN:** Whether MapLibre Native parity and offline behavior are in scope for this seam or for a sibling `MOBILE_RUNTIME_BOUNDARY.md`. *(Master MapLibre — RETAINED / NEEDS VERIFICATION)*
-- **OPEN:** Whether MapLibre RS gets a deferred adapter slot or is excluded by ADR. *(Master MapLibre — RETAINED)*
+| Item | Status | Closure evidence |
+|---|---|---|
+| Preserve or explicitly replace ADR-0006 | **ACCEPTED / ongoing** | Import enforcement, ownership, compatibility, and rollback for any concrete adapter |
+| Preserve or explicitly replace ADR-0007 | **ACCEPTED / ongoing** | Renderer-family compliance and governed exception handling |
+| Fix the exact package and concrete adapter module | **IMPLEMENTED / bounded** | `packages/maplibre/` owns the dependency, importer modules, focused tests, and rollback path |
+| Complete renderer-dependency governance | **PARTIAL / HOLD** | Exact version and lock closure exist; license, vulnerability, provenance, and accountable review remain open |
+| Activate the concrete adapter in Explorer production composition | **HOLD** | Accepted composition change, broader runtime probe matrix, compatibility, accessibility, security, correction, and rollback evidence |
+| Widen `MapRuntimePort` beyond current bounded methods | **HOLD** | Accepted need, compatibility analysis, source, validators where needed, migration, and tests |
+| Implement live governed click transport | **UNKNOWN / not established** | Accepted route and envelope, fail-closed resolver, integration tests, operational evidence |
+| Bind real layer loading to release and correction state | **PROPOSED** | Governed registry lookup, artifact verification, denial/withdrawal/correction tests |
+| Implement operational PMTiles caching | **PROPOSED** | Service Worker design, CacheStorage implementation, release-scoped invalidation, offline tests, receipts |
+| Prove public accessibility | **NEEDS VERIFICATION** | Keyboard map controls, non-map alternatives, screen-reader testing, reduced motion, human review |
+| Prove performance and resource limits | **NEEDS VERIFICATION** | Exact-head browser probes and accepted budgets |
+| Prove correction and rollback | **NEEDS VERIFICATION** | Withdraw/supersede/invalidate/rollback exercise with audit evidence |
+| Decide mobile/native parity | **OPEN** | Accepted scope and separate boundary or explicit exclusion |
+| Obtain independent specialist review | **NEEDS VERIFICATION** | Review records covering UI, map runtime, security, policy, evidence, accessibility, release, correction, and rollback |
 
-[↑ Back to top](#map-runtime-boundary)
+A proposal that introduces a peer renderer, a second direct importer, a new writable runtime package, renderer-owned policy/evidence resolution, direct internal-store access, or normal-path administrative bypass requires an accepted ADR or successor decision before dependent implementation.
+
+[Back to top](#top)
 
 ---
 
-## Appendix A — Method-signature sketch (illustrative)
+<a id="appendix-a"></a>
+
+## Appendix A — current TypeScript shape
 
 > [!NOTE]
-> **Illustrative only.** Field names, return types, and event payloads land in `schemas/contracts/v1/...` and the `MapRuntimePort` source file. This sketch is for shape, not for cut-and-paste.
-
-<details>
-<summary>Show illustrative TypeScript-shaped sketch</summary>
+> This excerpt mirrors the exported interface at the evidence snapshot. The repository source remains executable authority.
 
 ```ts
-// ILLUSTRATIVE — names and types PROPOSED.
-// Authoritative shape lives in:
-//   schemas/contracts/v1/layers/layer_descriptor.schema.json
-//   schemas/contracts/v1/runtime/decision_envelope.schema.json
-//   schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-
 export interface MapRuntimePort {
-  setCamera(camera: CameraState): void;
-  setTimeContext(time: TimeState): void;
-  loadValidatedLayer(descriptor: LayerDescriptor): Promise<void>; // throws if release_state !== "PUBLISHED"
-  removeLayer(layerId: string): void;
-  setLayerVisibility(layerId: string, visible: boolean): void;
-  queryRenderedFeatureAtPoint(point: ScreenPoint): FeatureCandidate | null;
-  destroy(): void;
-
-  on(event: "camera_changed", cb: (c: CameraState) => void): Unsubscribe;
-  on(event: "time_applied", cb: (t: TimeState) => void): Unsubscribe;
-  on(event: "layer_loaded", cb: (id: string) => void): Unsubscribe;
-  on(event: "feature_candidate", cb: (cand: FeatureCandidate) => void): Unsubscribe;
-  on(event: "boundary_violation", cb: (v: BoundaryViolation) => void): Unsubscribe;
-}
-
-// FeatureCandidate is NEVER a claim. It is an input to a governed
-// claim-resolution request that returns DecisionEnvelope.
-export interface FeatureCandidate {
-  feature_id: string;
-  layer_id: string;
-  geometry: GeoJSONGeometry;        // already public-safe per layer release
-  source_role: SourceRole;          // copied from validated descriptor
-  time_context: TimeState;
+  readonly profile: typeof MAP_RUNTIME_PORT_PROFILE;
+  initialize(initialCamera?: MapRuntimeCamera): Promise<MapRuntimeSnapshot>;
+  getSnapshot(): MapRuntimeSnapshot;
+  setCamera(camera: MapRuntimeCamera): MapRuntimeSnapshot;
+  subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void;
+  subscribeSelection(listener: MapRuntimeSelectionListener): () => void;
+  dispose(): void;
 }
 ```
 
-</details>
+Future layer, time, query, and renderer-specific expansion is outside this interface and requires accepted ownership, compatibility treatment, and implementation evidence.
 
-[↑ Back to top](#map-runtime-boundary)
+[Back to top](#top)
 
 ---
 
-## Appendix B — Anti-patterns this boundary forbids
+<a id="appendix-b"></a>
 
-<details>
-<summary>Show the anti-pattern list</summary>
+## Appendix B — anti-patterns
 
-| Anti-pattern | Why it's forbidden | Replacement |
+| Anti-pattern | Why it is forbidden | Replacement |
 |---|---|---|
-| A second module imports `maplibre-gl` for "convenience" | Splits the seam; the next breach is invisible | Add the method to `MapRuntimePort`; let `MapLibreAdapter` implement it |
-| Popup HTML built from `feature.properties` shown as the answer | Treats raw feature props as a claim | Popup becomes a launch point to `EvidenceDrawer` (ML-064-080) |
-| Style filter used to hide sensitive features | Bytes still ship; not access control | Deny or generalize **before** the descriptor reaches the adapter |
-| Adapter calls a model endpoint to "enrich" a click | Browser does not hold the model seam | Route through governed API + Focus boundary |
-| Adapter applies its own stale logic | Splits truth about freshness | Read `freshness` from the descriptor; reflect, don't decide |
-| Time slider collapses source/valid/observed/retrieval/release into one axis | Loses provenance discipline | Honor all five time fields (ML-061-091, ML-061-092) |
-| Tile URLs loaded without `TileArtifactManifest` verification | Bypasses release | Refuse the descriptor |
-| A "debug" panel exposes raw tiles or raw features | Becomes the normal public path by accident | Gate behind explicit admin path with audit, never default visible |
+| A second module imports `maplibre-gl` for convenience | Splits the seam and defeats enforceable ownership | Add a bounded KFM-owned port capability and keep one accepted importer |
+| Popup HTML from `feature.properties` is shown as the answer | Treats renderer data as a claim | Open the Evidence Drawer through governed resolution |
+| Style filters hide sensitive features after bytes reach the browser | Presentation is not access control | Deny or generalize before artifact delivery |
+| Adapter calls a model endpoint to enrich a click | Browser does not own the AI seam | Route through governed evidence and policy |
+| Adapter decides freshness | Splits temporal authority | Reflect upstream finite freshness state |
+| One time slider collapses source, valid, observed, retrieval, release, and correction time | Destroys provenance meaning | Preserve distinct temporal fields where material |
+| Fixture `PASS` triggers source registration or cache mutation | Eligibility is not mutation authority | Add an independently governed operational transition |
+| Tile or style URLs load without release and integrity binding | Bypasses publication controls | Require admitted public-safe artifacts |
+| Renderer-native objects escape into the rest of the UI | Couples consumers to an ungoverned vendor API | Expose KFM-owned immutable types |
+| Debug UI exposes raw features, internal paths, or private diagnostics | Becomes an accidental normal public path | Use constrained, audited administrative tooling outside the public path |
+| Test success is presented as release or publication | Confuses technical evidence with lifecycle authority | Preserve explicit promotion, release, and publication gates |
 
-</details>
-
-[↑ Back to top](#map-runtime-boundary)
+[Back to top](#top)
 
 ---
 
----
+**Related:** [UI README](./README.md) · [UI boundaries](./BOUNDARIES.md) · [Layering](./LAYERING.md) · [Evidence Drawer](./EVIDENCE_DRAWER.md) · [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
-**Related:** [UI README](./README.md) · [BOUNDARIES](./BOUNDARIES.md) · [STATE_OWNERSHIP](./STATE_OWNERSHIP.md) · [LAYERING](./LAYERING.md) · [ADR-maplibre-adapter-boundary](../../adr/ADR-maplibre-adapter-boundary.md) · [Directory Rules](../../../directory-rules.md)
+**Last updated:** `2026-08-27` · **Version:** `v2.1.1-draft` · **Status:** `repository-grounded draft / bounded port implemented / concrete renderer HOLD / non-publication`
 
-**Last updated:** `2026-05-14` · **Version:** `v0.1` · **Status:** `draft`
-
-[↑ Back to top](#map-runtime-boundary)
+[Back to top](#top)

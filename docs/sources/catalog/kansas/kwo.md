@@ -3,12 +3,12 @@ doc_id: kfm://doc/docs-sources-catalog-kansas-kwo
 title: KWO — Kansas Water Office (Source Catalog Entry)
 type: standard
 subtype: source-catalog-entry
-version: v0.1
-status: draft; documentation-only; no source activation; PROPOSED; NEEDS VERIFICATION before promotion
+version: v0.3
+status: source-grounded geometry/crosswalk candidate; internal; not released; NEEDS VERIFICATION before promotion
 owners: NEEDS VERIFICATION — Source steward + Hydrology domain steward + Water Planning domain steward
 created: 2026-07-28
-updated: 2026-07-28
-policy_label: public-review; source-documentation-only; cite-or-abstain; fail-closed
+updated: 2026-07-30
+policy_label: public-review; bounded-source-admission; internal-registry; not-released; cite-or-abstain; fail-closed
 related:
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/README.md
@@ -23,34 +23,42 @@ related:
   - schemas/contracts/v1/domains/water_planning/
   - contracts/domains/water_planning/
   - fixtures/domains/water_planning/
+  - fixtures/domains/water_planning/geometry_authority/
+  - tools/validators/domains/water_planning/validate_geometry_authority.py
+  - tools/validators/domains/water_planning/validate_rac_registry.py
+  - tests/domains/water_planning/test_geometry_authority.py
+  - tests/domains/water_planning/test_rac_registry.py
   - tests/schemas/test_water_planning_contracts.py
-  - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, source-catalog, kansas, kansas-first, kwo, water-planning, water-infrastructure, grant, rac, regional-advisory-committee, water-authority, water-plan, hydrology, governance, deferred-epic]
 notes:
-  - "Documentation-only. No source admission, connector activation, fetching, scheduling, normalization, release, or publication authorized by this file."
-  - "DEFERRED and BLOCKED — implementation is blocked by bartytime4life/Kansas-Frontier-Matrix#1675 until platform controls are verified."
+  - "The exact public KWO RAC Feature Service and Census 2025 county layer are admitted only for the bounded internal geometry/crosswalk candidate recorded in issue #1675."
+  - "No recurring connector, scheduling, release, deployment, or publication is authorized."
   - "Slice 1 of the water-planning modeling epic (issue #1647): official public-source and document inventory."
   - "FY2027 SWIGP application deadline: 2026-09-15T23:59:00-05:00 (America/Chicago / CDT)."
   - "HB 2462 (2026) changed eligibility criteria, scoring categories, and administration — must be modeled as a new ProgramVersion."
   - "Kansas has exactly 14 Regional Advisory Committee planning areas."
+  - "Slice 4 now pins one 14-feature KWO geometry payload and a 209-row positive-area county intersection crosswalk."
+owning_root: docs/
+responsibility: "Documentation for KWO — Kansas Water Office (Source Catalog Entry); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # KWO — Kansas Water Office
 
-> **Source family catalog entry.** The Kansas Water Office (KWO) is the state agency responsible for water resource policy, planning, and administration in Kansas. KWO administers the State Water Infrastructure Grant Program (SWIGP), coordinates the 14 Regional Advisory Committees (RACs), convenes the Kansas Water Authority (KWA), and maintains the Kansas Water Plan. This documentation-only entry supports the water-planning modeling epic (issue #1647, Slice 1). No source admission, connector, or publication is authorized by this file.
+> **Source family catalog entry.** The Kansas Water Office (KWO) is the state agency responsible for water resource policy, planning, and administration in Kansas. KWO administers the State Water Infrastructure Grant Program (SWIGP), coordinates the 14 Regional Advisory Committees (RACs), convenes the Kansas Water Authority (KWA), and maintains the Kansas Water Plan. This entry now records the exact public KWO RAC Feature Service used by the bounded internal geometry/crosswalk candidate. It does not authorize a recurring connector, release, or publication.
 
 [![Status: draft](https://img.shields.io/badge/status-draft-yellow)](#status)
-[![doc-version](https://img.shields.io/badge/doc--version-v0.1-blue)](#status)
+[![doc-version](https://img.shields.io/badge/doc--version-v0.3-blue)](#status)
 [![family](https://img.shields.io/badge/family-kansas%20%C2%A77.3%20canonical-success)](#)
 [![Doc type](https://img.shields.io/badge/type-source%20catalog-blue)](#)
 [![Domain](https://img.shields.io/badge/domain-hydrology%20%C2%B7%20water%20planning%20%C2%B7%20governance-2ea44f)](#)
-[![Deferred](https://img.shields.io/badge/implementation-DEFERRED%20blocked%20by%20%231675-red)](#governance-status)
-[![Source activation: none](https://img.shields.io/badge/source%20activation-none-b42318)](#authority-level)
-[![Last updated](https://img.shields.io/badge/last%20updated-2026--07--28-informational)](#)
+[![Implementation](https://img.shields.io/badge/implementation-bounded%20candidate-f59e0b)](#governance-status)
+[![Release](https://img.shields.io/badge/release-not--released-b42318)](#authority-level)
+[![Last updated](https://img.shields.io/badge/last%20updated-2026--07--30-informational)](#)
 
-**Status:** `draft` (v0.1) &nbsp;·&nbsp; **Owners:** `<TODO — source steward + Hydrology domain steward>` &nbsp;·&nbsp; **Updated:** `2026-07-28`
+**Status:** `source-grounded candidate` (v0.3) &nbsp;·&nbsp; **Owners:** `<TODO — source steward + Hydrology domain steward>` &nbsp;·&nbsp; **Updated:** `2026-07-30`
 
 ---
 
@@ -87,9 +95,9 @@ All four URLs are official public-facing KWO pages. This document records them f
 | Document lifecycle | `draft` |
 | Source family | `kansas` (§7.3 canonical) |
 | Connector lane | `connectors/kansas/` — **NEEDS VERIFICATION** that KWO sub-path exists; no connector activation authorized |
-| Source admission | None — admission requires a governed SourceDescriptor, rights review, and activation process |
-| Live network access | None authorized by this file |
-| Rights and sensitivity | `NEEDS VERIFICATION` — public web content presumed open; grant-portal authenticated content is explicitly excluded |
+| Source admission | Bounded to KWO ArcGIS item `cd87ef7a0bb34cc4a7f57e662d73ec0f`, layer `0`, and Census TIGERweb Counties 2025 for the internal RAC geometry/crosswalk candidate |
+| Live network access | One observed retrieval recorded in the registry; no recurring connector or schedule |
+| Rights and sensitivity | KWO item states no special restrictions; independent rights review remains pending; public administrative boundaries only |
 | Release or publication effect | None |
 | Human review | Pending |
 
@@ -109,9 +117,13 @@ All four URLs are official public-facing KWO pages. This document records them f
 ### 3.2 Regional Advisory Committees (RAC)
 
 - **URL:** https://www.kwo.ks.gov/about-us/regional-advisory-committees
+- **Geometry item:** https://www.arcgis.com/home/item.html?id=cd87ef7a0bb34cc4a7f57e662d73ec0f
+- **Geometry layer:** https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/Regional_Planning_Area/FeatureServer/0
 - **Authority:** Kansas Water Office
 - **Structure:** Kansas has **14 Regional Advisory Committee planning areas** that provide regional input into state water planning.
-- **Identity requirement:** All 14 RAC regions must resolve to one governed region identity source. Each is assigned a stable `region_id` in the form `kwo-rac-01` through `kwo-rac-14`. RAC numbers are bounded to 1–14; values outside this range are invalid.
+- **Identity requirement:** All 14 RAC regions resolve through one versioned, digest-pinned identity-authority candidate. The public page supplies the names; KFM assigns `kwo-rac-01` through `kwo-rac-14` by the frozen lexicographic official-name order. The numeric suffix is not claimed to be a KWO-native identifier.
+- **Observed geometry version:** Source item modified `2026-06-24T15:17:37Z`; the registry pins the exact response digest observed on `2026-07-30`.
+- **County derivation source:** U.S. Census Bureau TIGERweb Counties layer, January 1, 2025 vintage. County rows are computed spatial overlaps, not KWO membership claims.
 
 ### 3.3 Kansas Water Authority (KWA)
 
@@ -130,13 +142,16 @@ All four URLs are official public-facing KWO pages. This document records them f
 ## 4. Governance status
 
 > [!IMPORTANT]
-> **DEFERRED AND BLOCKED.** Full implementation of the water-planning modeling epic is blocked by bartytime4life/Kansas-Frontier-Matrix#1675 until repository-control readiness is restored and an explicit bounded recovery authorization is recorded.
+> **BOUNDED EXCEPTION RECORDED.** Issue #1675 records the exact source-research
+> and candidate-authoring authority for this RAC geometry/crosswalk slice.
+> Broader connector, grant-record, proof, release, deployment, publication,
+> ready, and merge operations remain held.
 >
-> This file represents **Slice 1 — official public-source and document inventory** only. It does not authorize connector activation, authenticated portal access, proof construction, release, deployment, or publication.
+> This file originated as **Slice 1 — official public-source and document inventory**. Slice 4 adds only a bounded, reference-only RAC identity and geometry-authority candidate. Neither slice authorizes connector activation, authenticated portal access, real geometry construction, proof construction, release, deployment, or publication.
 
 | Dependency | Status |
 |---|---|
-| Platform controls (issue #1675) | **BLOCKED** — must be resolved before connector, release, or publication work |
+| Platform controls (issue #1675) | Bounded RAC candidate exception only; connector, release, and publication remain blocked |
 | Prior dependency (issue #1531) | Archived — no longer the operative dependency |
 | First admissible slice | Documentation/source inventory (this file) |
 | Schema scaffolds (Slice 2) | `schemas/contracts/v1/domains/water_planning/` — PROPOSED, no data produced |
@@ -249,19 +264,46 @@ A scoring matrix change driven by HB 2462 must also be represented as a new `Sco
 
 ## 9. RAC planning regions
 
-Kansas has exactly **14 Regional Advisory Committee planning areas**. Each is assigned a stable governed identity in the form `kwo-rac-01` through `kwo-rac-14`. RAC numbers outside 1–14 are schema-rejected.
+The Kansas Water Office page identifies exactly **14 Regional Advisory Committee planning areas**. Slice 4 freezes the source-grounded names below and assigns stable KFM identities in lexicographic name order. The ordinal is a KFM convention, not a source-native KWO number.
 
-| Requirement | Implementation |
+| KFM ID | KFM ordinal | Source-grounded name |
+|---|---:|---|
+| `kwo-rac-01` | 1 | Cimarron |
+| `kwo-rac-02` | 2 | Equus-Walnut |
+| `kwo-rac-03` | 3 | Great Bend Prairie |
+| `kwo-rac-04` | 4 | Kansas |
+| `kwo-rac-05` | 5 | Marais des Cygnes |
+| `kwo-rac-06` | 6 | Missouri |
+| `kwo-rac-07` | 7 | Neosho |
+| `kwo-rac-08` | 8 | Red Hills |
+| `kwo-rac-09` | 9 | Smoky Hill-Saline |
+| `kwo-rac-10` | 10 | Solomon-Republican |
+| `kwo-rac-11` | 11 | Upper Arkansas |
+| `kwo-rac-12` | 12 | Upper Republican |
+| `kwo-rac-13` | 13 | Upper Smoky Hill |
+| `kwo-rac-14` | 14 | Verdigris |
+
+| Authority field | Slice 4 posture |
 |---|---|
-| 14 governed region identities | `planning_region.schema.json` — `rac_number` bounded to 1–14 |
-| Stable region identity format | `region_id` pattern: `^kwo-rac-[0-9]{2}$` |
-| Geometry resolution | `geometry_confidence` enum: `unresolved \| approximate \| confirmed` |
-| Unresolved geometry | Must be stored as `geometry_confidence: unresolved`, never guessed |
-| Region-to-meeting linkage | `advisory_committee_meeting.planning_region_ref` → `kwo-rac-01` … `kwo-rac-14` |
-| Region-to-project linkage | `project.planning_region_ref` (optional) |
-| County crosswalk | `county_crosswalk_ref` (optional, reserved for future authority crosswalk) |
+| Source locator | KWO Regional Advisory Committees page |
+| Geometry source | KWO ArcGIS item `cd87ef7a0bb34cc4a7f57e662d73ec0f`, layer `0`, modified `2026-06-24T15:17:37Z` |
+| County source | Census TIGERweb Counties layer, January 1, 2025 vintage, Kansas FIPS `20` |
+| Source observation | Exact source-response digests and `2026-07-30` observation time are pinned in the registry records |
+| Identity version | `kfm-rac-identity-v1` |
+| Digest scope | Normalized authority metadata plus ordered ID/ordinal/name tuples; not a claimed digest of remote page bytes |
+| Numeric-ID posture | `source_native_numeric_ids: false` |
+| Correction posture | Explicit current/corrected/superseded state plus lineage |
+| Region geometry | 14-feature source-grounded GeoJSON in `data/processed/water_planning/rac_regions/`, digest-pinned by the dataset registry |
+| County crosswalk | 209 positive-area intersections across all 105 Kansas counties; 50 dominant, 122 material-partial, 37 boundary-sliver |
+| Project region | Nullable state; a non-null value must resolve to the exact RAC inventory |
+| Project geometry | Separate nullable reference; never inferred from region, address, recipient, venue, county, or prose |
 
-The RAC region names and county crosswalks require a separate governed authority check (Slice 4 of the decomposition). This entry documents the inventory requirement only.
+The identity schema continues to enforce null/reference coherence for individual
+entities. The concrete registry validator additionally locks payload bytes,
+the exact 14-feature inventory, all 105 Kansas county GEOIDs, the ordered
+mapping digest, overlap-class thresholds, source versions, and the
+`not-released` posture. County intersections are geometry relationships, not
+county governance membership. Synthetic authority fixtures remain test-only.
 
 ---
 
@@ -274,9 +316,20 @@ The RAC region names and county crosswalks require a separate governed authority
 | Water-planning schemas (PROPOSED) | `schemas/contracts/v1/domains/water_planning/` |
 | Water-planning contracts (PROPOSED) | `contracts/domains/water_planning/` |
 | Water-planning fixtures (synthetic) | `fixtures/domains/water_planning/` |
-| Water-planning tests | `tests/schemas/test_water_planning_contracts.py` |
+| Water-planning schema tests | `tests/schemas/test_water_planning_contracts.py` |
+| Slice 4 authority validator | `tools/validators/domains/water_planning/validate_geometry_authority.py` |
+| Slice 4 synthetic fixtures | `fixtures/domains/water_planning/geometry_authority/` |
+| Slice 4 no-network tests | `tests/domains/water_planning/test_geometry_authority.py` |
+| RAC geometry dataset registry | `data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json` |
+| RAC/county crosswalk registry | `data/registry/crosswalks/water_planning/kwo_rac_counties_2026-06-24__tiger2025.json` |
+| RAC geometry payload | `data/processed/water_planning/rac_regions/kwo_rac_regions_2026-06-24.geojson` |
+| KWO source descriptor | `data/registry/sources/water_planning/kwo_rac_feature_service.source.json` — proposed, needs review, connector disabled |
+| Census source descriptor | `data/registry/sources/water_planning/census_tigerweb_counties_2025.source.json` — proposed, needs review, connector disabled |
+| Concrete registry contract | `contracts/domains/water_planning/rac_geometry_registry.md` |
+| Concrete registry validator | `tools/validators/domains/water_planning/validate_rac_registry.py` |
+| Concrete registry tests | `tests/domains/water_planning/test_rac_registry.py` |
 | Kansas connector lane | `connectors/kansas/` — KWO sub-path **NEEDS VERIFICATION** |
-| Source registry | `data/registry/sources/` — KWO entry not yet created |
+| Source registry | `data/registry/sources/water_planning/` — two bounded SourceDescriptor candidates; no recurring connector |
 | Policy | `policy/domains/water_planning/` — not yet created |
 
 ---
@@ -306,7 +359,10 @@ This catalog entry explicitly excludes:
 | KWA meeting records | Public meeting records; rights NEEDS VERIFICATION |
 | Kansas Water Plan documents | Public documents; rights NEEDS VERIFICATION for specific versions |
 
-Rights and sensitivity verification is required before any KWO source is activated, connected, normalized, or released.
+The observed KWO item states that there are no special restrictions on the
+content. Independent rights review remains required before release. The
+bounded internal geometry/crosswalk candidate does not authorize an ongoing
+connector or any public carrier.
 
 ---
 
@@ -315,7 +371,7 @@ Rights and sensitivity verification is required before any KWO source is activat
 | ID | Item | Priority |
 |---|---|---|
 | OQ-KWO-01 | Verify exact URL structure and machine-accessible endpoints for SWIGP recipient data | High |
-| OQ-KWO-02 | Verify all 14 RAC region names and their county crosswalk authority | High |
+| OQ-KWO-02 | Obtain domain/rights review for the new canonical RAC geometry and county-crosswalk records; source and derivation are now concrete, but release remains held | High |
 | OQ-KWO-03 | Verify terms of use for KWO public web content | High |
 | OQ-KWO-04 | Confirm FY2027 deadline is not changed by a subsequent KWO notice | High |
 | OQ-KWO-05 | Verify HB 2462 effective date and scope of changes | Medium |
@@ -329,13 +385,19 @@ Rights and sensitivity verification is required before any KWO source is activat
 
 - [`docs/sources/catalog/kansas/README.md`](./README.md) — Kansas source family index
 - [`docs/sources/catalog/README.md`](../README.md) — Source catalog parent
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement and authority rules
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain
-- [`schemas/contracts/v1/domains/water_planning/`](../../../schemas/contracts/v1/domains/water_planning/) — Entity schemas (PROPOSED)
-- [`contracts/domains/water_planning/`](../../../contracts/domains/water_planning/) — Contract documents (PROPOSED)
-- [`fixtures/domains/water_planning/`](../../../fixtures/domains/water_planning/) — Synthetic fixtures
-- [`tests/schemas/test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) — Schema tests
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home convention
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement and authority rules
+- `docs/doctrine/lifecycle-law.md` (not present) — RAW → PUBLISHED governance
+- `docs/doctrine/truth-posture.md` (not present) — Cite-or-abstain
+- `schemas/contracts/v1/domains/water_planning/` (not present) — Entity schemas (PROPOSED)
+- `contracts/domains/water_planning/` (not present) — Contract documents (PROPOSED)
+- `fixtures/domains/water_planning/` (not present) — Synthetic fixtures
+- `tests/schemas/test_water_planning_contracts.py` (not present) — Schema tests
+- `fixtures/domains/water_planning/geometry_authority/` (not present) — Slice 4 synthetic authority fixtures
+- `tools/validators/domains/water_planning/validate_geometry_authority.py` (not present) — Slice 4 deterministic checker
+- `tests/domains/water_planning/test_geometry_authority.py` (not present) — Slice 4 no-network tests
+- `contracts/domains/water_planning/rac_geometry_registry.md` (not present) — Concrete source and derivation contract
+- `tools/validators/domains/water_planning/validate_rac_registry.py` (not present) — Concrete registry validator
+- `tests/domains/water_planning/test_rac_registry.py` (not present) — Concrete registry regression tests
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home convention
 
 [Back to top](#top)

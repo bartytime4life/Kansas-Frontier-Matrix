@@ -1,4 +1,12 @@
-# packages/policy-runtime pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-policy-runtime"
 version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = ["kfm-connectors-core"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/policy_runtime"]

@@ -1,0 +1,349 @@
+{
+  "$defs": {
+    "aware_datetime": {
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$",
+      "type": "string"
+    },
+    "digest_pair": {
+      "additionalProperties": false,
+      "properties": {
+        "current": {
+          "$ref": "#/$defs/nullable_sha256"
+        },
+        "prior": {
+          "$ref": "#/$defs/nullable_sha256"
+        }
+      },
+      "required": [
+        "prior",
+        "current"
+      ],
+      "type": "object"
+    },
+    "entry": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "enum": [
+            "HEALTHY",
+            "DEGRADED",
+            "STALE",
+            "UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        },
+        "candidate_work_ref": {
+          "$ref": "#/$defs/nullable_candidate_ref"
+        },
+        "change_class": {
+          "enum": [
+            "UNCHANGED",
+            "BYTE_ONLY",
+            "SEMANTIC_NON_MATERIAL",
+            "MATERIAL",
+            "UNDETERMINED",
+            "ERROR"
+          ]
+        },
+        "checked_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "content_digests": {
+          "$ref": "#/$defs/digest_pair"
+        },
+        "material_change_assessment_ref": {
+          "pattern": "^material-change:[a-z0-9][a-z0-9_:.-]{7,240}$",
+          "type": "string"
+        },
+        "material_change_kind": {
+          "enum": [
+            "NONE",
+            "SCHEMA",
+            "CONTENT",
+            "BOTH",
+            "UNDETERMINED",
+            "ERROR"
+          ]
+        },
+        "material_change_outcome": {
+          "enum": [
+            "NON_EVENT",
+            "PROMOTION_CANDIDATE",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "items": {
+            "enum": [
+              "ASSESSMENT_ERROR",
+              "BYTE_ONLY_CHANGE",
+              "CANDIDATE_REVIEW_REQUIRED",
+              "MATERIAL_CONTENT_CHANGE",
+              "MATERIAL_SCHEMA_AND_CONTENT_CHANGE",
+              "MATERIAL_SCHEMA_CHANGE",
+              "MATERIALITY_UNDETERMINED",
+              "NO_MATERIAL_CHANGE",
+              "SEMANTIC_NON_MATERIAL_CHANGE",
+              "SOURCE_DEGRADED",
+              "SOURCE_HEALTHY",
+              "SOURCE_STALE",
+              "SOURCE_UNAVAILABLE",
+              "SOURCE_UNKNOWN"
+            ]
+          },
+          "maxItems": 4,
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "review_required": {
+          "type": "boolean"
+        },
+        "routing": {
+          "enum": [
+            "NO_ACTION",
+            "REVIEW_CANDIDATE",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "schema_digests": {
+          "$ref": "#/$defs/digest_pair"
+        },
+        "source_descriptor_ref": {
+          "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        },
+        "source_health_assessment_ref": {
+          "pattern": "^kfm:source-health:[a-z0-9][a-z0-9._:-]{2,240}$",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "source_descriptor_ref",
+        "source_health_assessment_ref",
+        "material_change_assessment_ref",
+        "checked_at",
+        "availability",
+        "change_class",
+        "material_change_kind",
+        "material_change_outcome",
+        "routing",
+        "review_required",
+        "candidate_work_ref",
+        "schema_digests",
+        "content_digests",
+        "reason_codes"
+      ],
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "candidate_execution_allowed": {
+          "const": false
+        },
+        "candidate_work_created": {
+          "const": false
+        },
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "network_attempted": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_write_allowed": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activation_allowed": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activation_allowed",
+        "raw_write_allowed",
+        "candidate_work_created",
+        "candidate_execution_allowed",
+        "policy_evaluated",
+        "authority_created",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "type": "object"
+    },
+    "nullable_candidate_ref": {
+      "oneOf": [
+        {
+          "pattern": "^kfm:proposed-work:[a-z0-9][a-z0-9._:-]{7,240}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_sha256": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "entry_count": {
+          "maximum": 256,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "error_count": {
+          "maximum": 256,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hold_count": {
+          "maximum": 256,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "overall_outcome": {
+          "enum": [
+            "STABLE",
+            "REVIEW_REQUIRED",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "review_candidate_count": {
+          "maximum": 256,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "stable_count": {
+          "maximum": 256,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "entry_count",
+        "stable_count",
+        "review_candidate_count",
+        "hold_count",
+        "error_count",
+        "overall_outcome"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_availability_watchlist.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Fixture-only aggregate projection that binds existing SourceHealthAssessment and MaterialChangeAssessment references into stable, review-candidate, hold, or error lanes. It creates no source, lifecycle, policy, review, promotion, release, publication, or public-use authority.",
+  "properties": {
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/entry"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "object_type": {
+      "const": "SourceAvailabilityWatchlist"
+    },
+    "observed_at": {
+      "$ref": "#/$defs/aware_datetime"
+    },
+    "profile": {
+      "const": "kfm.source-availability-watchlist.fixture.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "watchlist_id": {
+      "pattern": "^kfm:source-availability-watchlist:[a-f0-9]{24}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "watchlist_id",
+    "observed_at",
+    "entries",
+    "summary",
+    "governance",
+    "spec_hash"
+  ],
+  "title": "SourceAvailabilityWatchlist",
+  "type": "object",
+  "x-kfm": {
+    "authority": "aggregate_projection_shape_and_local_consistency_only",
+    "contract_doc": "contracts/source/source_availability_watchlist.md",
+    "dependencies": [
+      "contracts/source/source_health_assessment.md",
+      "contracts/data/material_change_assessment.md",
+      "packages/hashing"
+    ],
+    "fixtures_root": "fixtures/contracts/v1/source/source_availability_watchlist/",
+    "non_effects": [
+      "does_not_probe_network",
+      "does_not_activate_sources",
+      "does_not_create_candidate_work",
+      "does_not_write_raw_or_lifecycle_state",
+      "does_not_evaluate_policy",
+      "does_not_authorize_promotion_release_or_publication"
+    ],
+    "status": "PROPOSED",
+    "tests": "tests/validators/test_validate_source_availability_watchlist.py",
+    "validator": "tools/validators/source/validate_source_availability_watchlist.py"
+  }
+}

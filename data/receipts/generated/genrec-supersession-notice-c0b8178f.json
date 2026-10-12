@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-supersession-notice-c0b8178f83f79683",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/correction/supersession_notice.md"
+  ],
+  "artifact_hashes": {
+    "contracts/correction/supersession_notice.md": "sha256:c0b8178f83f79683016373442e0d54939098c55b5cc399d4b285bc22d672d9d5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:1ab5f21c8e4abb342255d7c8a595f5ac5626a3b1c68d0245d5f980a1c4d6c15f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/supersession_notice.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/correction/supersession_notice.schema.json@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/corrections-first-class.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/publication/CORRECTION.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_impact_assessment.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_propagation_plan.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    ],
+    "attached_docs": [
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204"
+    ]
+  },
+  "truth_labels": {
+    "contracts/correction/supersession_notice.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "bounded_markdown_structure_and_links",
+      "outcome": "PASS",
+      "reason": "Local MarkdownIt/PyYAML check: one H1, 18 retained legacy heading anchors plus top, 17 fragment links, 10 distinct relative targets matched to connector-verified pinned paths, 10 tables, 3 balanced fences, metadata, final newline and no trailing whitespace."
+    },
+    {
+      "gate": "placeholder_schema_characterization",
+      "outcome": "PASS",
+      "reason": "Exact schema blob 5ea3ef0895ff8527a3c2a466c654bf53b1431632; Draft202012 schema check, 8 expected acceptance/rejection cases, and authored Python example executed. This demonstrates permissiveness, not semantic enforcement."
+    },
+    {
+      "gate": "authored_line_git_whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check -- /dev/null <authored-file> emitted no whitespace diagnostics. This is not a full-checkout base-to-head validation."
+    },
+    {
+      "gate": "receipt_schema_and_artifact_binding",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker using exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/path/truth-label parity and full SHA-256 recomputed."
+    },
+    {
+      "gate": "native_repository_and_receipt_cli",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full checkout; container GitHub DNS access failed. make validate, make schemas, native receipt CLI, topology and changed-area repository suites were not run."
+    },
+    {
+      "gate": "supersession_runtime_and_semantic_conformance",
+      "outcome": "SKIPPED",
+      "reason": "Only documentation changed; the declared supersession validator and fixture directory are absent at the pinned base. Proposed acceptance cases were not implemented or run."
+    },
+    {
+      "gate": "hosted_exact_head_and_github_visual_rendering",
+      "outcome": "SKIPPED",
+      "reason": "Not established by local authoring checks. No hosted CI success or GitHub visual-rendering result is claimed."
+    },
+    {
+      "gate": "independent_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no reviewer, approved-review claim, or override was fabricated."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/supersession_notice.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/correction/supersession_notice.schema.json@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-7",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/corrections-first-class.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-8",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/publication/CORRECTION.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-9",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_impact_assessment.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-10",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/correction/correction_propagation_plan.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-11",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    },
+    {
+      "id": "source-12",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-07T17:48:00Z",
+  "emitter": "chatgpt-kfm-supersession-document-author",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation plus this generated authoring receipt only. Exact parent/base ec203a9ba11fb83b52245f9523ce36cc1ec6ac66; prior document blob 22f1fdb4a82063b7e66d0478fcc83cb03a89d68b. Same-path contracts/ placement; receipt in existing data/receipts/generated/. No schemas, validators, policies, workflows, aliases, caches, releases, deployment, settings, or publication changed. Safe branch-only delivery under open incident #4024; no PR creation or lifecycle mutation. Model runtime revision and sampling parameters are unavailable. Sources were resolved through connectors; citation validated means source retrieval, not runtime or approval verification. Local environment: Python 3.13.5, jsonschema 4.26.0, markdown-it-py 4.2.0, PyYAML 6.0.3. Two initial local harness assumptions failed: the top anchor is parsed as inline HTML, and Git no-index returns 1 for differences without whitespace diagnostics. The harness was corrected; final checks passed without changing document bytes. Review, native checks, and hosted checks remain open. The receipt records authored document bytes, not itself, avoiding recursive self-hashing. Rollback uses a reviewed forward correction/revert and preserves provenance history."
+}

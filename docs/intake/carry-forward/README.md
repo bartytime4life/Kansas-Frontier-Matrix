@@ -1,12 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/intake/carry-forward/readme
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Hold carry-forward intake material awaiting review without granting it doctrine or canonical status.
+truth_posture: PROPOSED lane; path, owners, neighboring links, and policy label NEEDS VERIFICATION
 title: Carry-Forward Intake
 type: standard
 version: v1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-16
-updated: 2026-05-16
+updated: 2026-10-12
 policy_label: public
 related: [../README.md, ../new-ideas-register.md, ../canonicalization-policy.md, ../../archive/README.md, ../../doctrine/directory-rules.md]
 tags: [kfm, docs, intake, carry-forward, documentation-control]

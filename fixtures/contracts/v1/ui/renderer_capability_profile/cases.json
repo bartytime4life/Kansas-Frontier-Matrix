@@ -1,0 +1,411 @@
+{
+  "base": {
+    "profile_version": "kfm.renderer-capability-candidate.v1",
+    "candidate_id": "kfm:renderer-capability:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "renderer": {
+      "renderer_id": "synthetic-maplibre-gl-js",
+      "renderer_kind": "MAPLIBRE_GL_JS",
+      "runtime_surface": "BROWSER",
+      "implementation_ref": "urn:kfm:synthetic:renderer:maplibre-gl-js",
+      "abstract_interface_version": "kfm.renderer.abstract.v1",
+      "declaration_basis": "SYNTHETIC_FIXTURE"
+    },
+    "contract_refs": [
+      "contracts/release/tile_artifact_manifest.md",
+      "contracts/ui/evidence_drawer_payload.md",
+      "contracts/ui/view_registry_profile.md"
+    ],
+    "required_capabilities": [
+      "CAMERA_STATE",
+      "PICK_EVENTS",
+      "SCREENSHOT",
+      "VECTOR_TILES"
+    ],
+    "declared_capabilities": [
+      "CAMERA_STATE",
+      "PICK_EVENTS",
+      "RASTER",
+      "SCREENSHOT",
+      "VECTOR_TILES"
+    ],
+    "compatibility": {
+      "missing_capabilities": [],
+      "state": "FULL",
+      "disposition": "SUBSTITUTE_CANDIDATE",
+      "review_required": true,
+      "production_selection_authorized": false
+    },
+    "boundary": {
+      "consumes_governed_contracts_only": true,
+      "direct_store_access": false,
+      "embedded_query": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "network_probe_performed": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "browser_renderer_rule": "MAPLIBRE_GL_JS_ONLY",
+      "adapter_seam_required": true,
+      "registry_write_authorized": false,
+      "release_authorized": false,
+      "deployment_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "complete_browser_declaration",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_profile_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "partial_declaration_abstains",
+      "mutations": [
+        {
+          "path": "/declared_capabilities",
+          "value": [
+            "CAMERA_STATE",
+            "PICK_EVENTS",
+            "VECTOR_TILES"
+          ]
+        }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_profile_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "empty_declaration_denied",
+      "mutations": [
+        {
+          "path": "/declared_capabilities",
+          "value": []
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_CAPABILITY_SET_INCOMPATIBLE",
+          "path": "/declared_capabilities"
+        }
+      ]
+    },
+    {
+      "case_id": "native_renderer_in_browser_denied",
+      "mutations": [
+        {
+          "path": "/renderer/renderer_kind",
+          "value": "MAPLIBRE_NATIVE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_BROWSER_RULE_VIOLATION",
+          "path": "/renderer/renderer_kind"
+        }
+      ]
+    },
+    {
+      "case_id": "experimental_renderer_wrong_surface",
+      "mutations": [
+        {
+          "path": "/renderer/renderer_kind",
+          "value": "MAPLIBRE_RS"
+        },
+        {
+          "path": "/renderer/runtime_surface",
+          "value": "NATIVE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_RUNTIME_SURFACE_INVALID",
+          "path": "/renderer/runtime_surface"
+        }
+      ]
+    },
+    {
+      "case_id": "contract_references_unsorted",
+      "mutations": [
+        {
+          "path": "/contract_refs",
+          "value": [
+            "contracts/ui/view_registry_profile.md",
+            "contracts/ui/evidence_drawer_payload.md",
+            "contracts/release/tile_artifact_manifest.md"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_CONTRACT_REFERENCE_ORDER_INVALID",
+          "path": "/contract_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "contract_reference_missing",
+      "mutations": [
+        {
+          "path": "/contract_refs/2",
+          "value": "contracts/ui/zz_renderer_missing.md"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_CONTRACT_REFERENCE_MISSING",
+          "path": "/contract_refs/2"
+        }
+      ]
+    },
+    {
+      "case_id": "implementation_direct_store_denied",
+      "mutations": [
+        {
+          "path": "/renderer/implementation_ref",
+          "value": "urn:kfm:synthetic:renderer:postgres-adapter"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_IMPLEMENTATION_REFERENCE_DENIED",
+          "path": "/renderer/implementation_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "required_capabilities_unsorted",
+      "mutations": [
+        {
+          "path": "/required_capabilities",
+          "value": [
+            "VECTOR_TILES",
+            "SCREENSHOT",
+            "PICK_EVENTS",
+            "CAMERA_STATE"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_REQUIRED_CAPABILITY_ORDER_INVALID",
+          "path": "/required_capabilities"
+        }
+      ]
+    },
+    {
+      "case_id": "declared_capabilities_unsorted",
+      "mutations": [
+        {
+          "path": "/declared_capabilities",
+          "value": [
+            "VECTOR_TILES",
+            "SCREENSHOT",
+            "RASTER",
+            "PICK_EVENTS",
+            "CAMERA_STATE"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_DECLARED_CAPABILITY_ORDER_INVALID",
+          "path": "/declared_capabilities"
+        }
+      ]
+    },
+    {
+      "case_id": "duplicate_declared_capability",
+      "mutations": [
+        {
+          "path": "/declared_capabilities",
+          "value": [
+            "CAMERA_STATE",
+            "CAMERA_STATE"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/declared_capabilities"
+        }
+      ]
+    },
+    {
+      "case_id": "stale_compatibility_denied",
+      "mutations": [
+        {
+          "path": "/declared_capabilities",
+          "value": [
+            "CAMERA_STATE",
+            "PICK_EVENTS",
+            "VECTOR_TILES"
+          ]
+        }
+      ],
+      "preserve_compatibility": true,
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_COMPATIBILITY_MISMATCH",
+          "path": "/compatibility"
+        }
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "mutations": [],
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "candidate_id_mismatch",
+      "mutations": [],
+      "candidate_id_override": "kfm:renderer-capability:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_ID_MISMATCH",
+          "path": "/candidate_id"
+        }
+      ]
+    },
+    {
+      "case_id": "direct_store_access_overreach",
+      "mutations": [
+        {
+          "path": "/boundary/direct_store_access",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/boundary/direct_store_access"
+        }
+      ]
+    },
+    {
+      "case_id": "evidence_authority_overreach",
+      "mutations": [
+        {
+          "path": "/boundary/evidence_authority",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/boundary/evidence_authority"
+        }
+      ]
+    },
+    {
+      "case_id": "release_authority_overreach",
+      "mutations": [
+        {
+          "path": "/governance/release_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/governance/release_authorized"
+        }
+      ]
+    },
+    {
+      "case_id": "adapter_seam_bypass_denied",
+      "mutations": [
+        {
+          "path": "/governance/adapter_seam_required",
+          "value": false
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/governance/adapter_seam_required"
+        }
+      ]
+    },
+    {
+      "case_id": "production_selection_overreach",
+      "mutations": [
+        {
+          "path": "/compatibility/production_selection_authorized",
+          "value": true
+        }
+      ],
+      "preserve_compatibility": true,
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/compatibility/production_selection_authorized"
+        }
+      ]
+    },
+    {
+      "case_id": "public_use_overreach",
+      "mutations": [
+        {
+          "path": "/governance/public_use_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "RENDERER_SCHEMA_INVALID",
+          "path": "/governance/public_use_authorized"
+        }
+      ]
+    }
+  ]
+}

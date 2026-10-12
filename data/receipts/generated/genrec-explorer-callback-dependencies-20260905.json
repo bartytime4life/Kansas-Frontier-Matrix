@@ -1,0 +1,34 @@
+{
+  "receipt_id": "genrec-explorer-callback-dependencies-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": ["apps/kansas-frontier-matrix-explorer/app/page.tsx", "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs"],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "sha256:77246111b182f6dae6323906f89b53b47b1d9f9bae2c728fc31e5d8271ceb3fa",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs": "sha256:54e2eb3a325c2ff52c363d0406fe547853325d7edec9b319b50aa476d2a028da"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "exact runtime build identifier not exposed"},
+  "prompt_or_contract": "sha256:1e0a879f0fe0d4bc4b5c5545879a6edc0a8a13cc274f7309358c67464a7e3ab5",
+  "parameters": {"seed": null, "temperature": null, "top_p": null, "max_tokens": null, "tools_enabled": ["GitHub", "Notion", "Google Drive", "container", "web"]},
+  "inputs": {
+    "evidence_hashes": ["sha256:6f107c9dd0071043c4dd6e8807fce2730ca7886e052c4be028dce6480c427702", "sha256:e39f31f0d4b9c4c75142755a2d18aa853b707fa3f008f44df8a3a32b3fc2ddb3"],
+    "evidence_refs": ["repo:b434a8ea606d44d3903da79cab08c5e08e824165", "repo:a9a53470e385350b795f6d978ad3e7a5811961c5", "github-actions:34002567180", "github-actions:34003022122", "receipt:genrec-explorer-owner-review-bf1335ad", "https://react.dev/reference/react/useCallback"]
+  },
+  "truth_labels": {"apps/kansas-frontier-matrix-explorer/app/page.tsx": "PROPOSED", "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs": "PROPOSED"},
+  "validation_gates": [
+    {"gate": "preceding-combined-execution", "outcome": "PASS", "reason": "Run 34002567180 at b434a8ea passes both app builds, 116 root app Node tests, actual npm test including its 26-test posttest, full app typecheck, 26 lint regressions, 14 actual-app browser scenarios, 460 Explorer Web unit tests and 128 Web browser tests. Six native receipt replays pass, including the scoped owner review claim. These are predecessor results, not execution of these new bytes."},
+    {"gate": "preceding-lint-warning-inventory", "outcome": "PASS", "reason": "The unchanged lint command exits zero but reports five warnings: four callback dependency arrays omit the stable requested-layer owner or its visibility method, and the browser test's outer catch variable is unused. This correction adds the required dependencies and omits only that unused catch binding. No rule, severity, ignore, runtime contract or assertion is removed."},
+    {"gate": "exact-warning-fix-materialization", "outcome": "PASS", "reason": "Run 34003022122 checks the two exact b434a8ea preimage hashes, requires exactly one match per edit, and confirms intended postimage hashes and Git blob identities. It creates only two unreferenced blobs, not refs, commits, PRs or deployments."},
+    {"gate": "new-head-native-validation", "outcome": "SKIPPED", "reason": "The two-file source and this receipt are committed atomically. Full exact-head application, strict zero-warning lint, browser and native provenance replay follow emission and must not be preclaimed."},
+    {"gate": "topology", "outcome": "FAIL", "reason": "Preceding matched run preserves raw topology failure on candidate and main. No topology baseline, correction register, Directory Rules or validator changes; #4228 remains separate."},
+    {"gate": "new-correction-human-review", "outcome": "SKIPPED", "reason": "User review of the presented handoff is already recorded and validated separately. Subsequently authored integration fixes are not represented as pre-reviewed or independently approved."},
+    {"gate": "pr-lifecycle-deployment-publication", "outcome": "SKIPPED", "reason": "No main write, PR lifecycle action, settings mutation, deployment, release, publication, source admission or renderer activation is performed or authorized by this receipt."}
+  ],
+  "policy_decisions": [],
+  "citations": [{"id": "matched-predecessor-run", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34002567180"}, {"id": "callback-dependency-reference", "validated": true, "evidence_ref": "https://react.dev/reference/react/useCallback"}],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-09-06T01:07:00Z",
+  "emitter": "ChatGPT GPT-6 Pro; append-only exact-source integration correction",
+  "links": {"pr_number": null, "adr_link": null, "drift_register_entry": null},
+  "notes": "This two-artifact receipt overlays the current combined-integration and compiler-entrypoint correction bindings without rewriting either historical receipt. It is committed with its two bound files and can be validated against that exact commit or unchanged current worktree. The ordered union still covers all 29 current non-receipt integration files. Preserve the owner-review receipt, original reviewed branches, main's temporal repair/build guard, and all failed diagnostic history. Final execution and coordination readback supplement this authoring-time receipt rather than retroactively changing it."
+}

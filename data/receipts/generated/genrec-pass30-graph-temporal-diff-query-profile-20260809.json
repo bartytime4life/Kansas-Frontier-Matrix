@@ -1,0 +1,72 @@
+{
+  "receipt_id": "genrec-pass30-graph-temporal-diff-query-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/graph-temporal-diff-query-profile.yml",
+    "contracts/governance/graph_temporal_diff_query_profile.md",
+    "docs/intake/exploratory/pass-30-graph-temporal-diff-query-profile-source-map.md",
+    "fixtures/contracts/v1/governance/graph_temporal_diff_query_profile/cases.json",
+    "schemas/contracts/v1/governance/graph_temporal_diff_query_profile.schema.json",
+    "tests/validators/governance/test_graph_temporal_diff_query_profile.py",
+    "tools/validators/governance/validate_graph_temporal_diff_query_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/graph-temporal-diff-query-profile.yml": "sha256:cf2ce8b57957706d7785d9c1f2cab89343456992d6c644146dc4e5ae5d892c4f",
+    "contracts/governance/graph_temporal_diff_query_profile.md": "sha256:3cf4701a24a05a66db05f6f4dd033698b6a2ddb1cd0e0450d78cbcc9b8ad2e62",
+    "docs/intake/exploratory/pass-30-graph-temporal-diff-query-profile-source-map.md": "sha256:51e75d26ad915c47b30203acc48cfbf19a1fdaace9094bce0f01ffff1cb77288",
+    "fixtures/contracts/v1/governance/graph_temporal_diff_query_profile/cases.json": "sha256:5c352cdd10bb2f7aab4d7913ffeeb11b67b9a09f3ae28dff081fd6f28e930a68",
+    "schemas/contracts/v1/governance/graph_temporal_diff_query_profile.schema.json": "sha256:1a4d72940fded6031e5247a330fd84f8255f2d67e316b81555c066e8b7156a4f",
+    "tests/validators/governance/test_graph_temporal_diff_query_profile.py": "sha256:b441874f1bdbe4b1d1196d108330622d2259c2e431444e8eed373bc51e1e1deb",
+    "tools/validators/governance/validate_graph_temporal_diff_query_profile.py": "sha256:40b8d1f01da9bbf3dc24a91b38a8d185d0b0e1ddf645b1bbe9d9370ec5a9634b"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:b40876ab01dbd8f6262288674846060542ee79a7e75d0ac202cd04febb64f5ba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0010",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:contracts/governance/graph_migration_declaration.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:migrations/graph/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/graph-temporal-diff-query-profile.yml": "PROPOSED",
+    "contracts/governance/graph_temporal_diff_query_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-graph-temporal-diff-query-profile-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/graph_temporal_diff_query_profile/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/graph_temporal_diff_query_profile.schema.json": "PROPOSED",
+    "tests/validators/governance/test_graph_temporal_diff_query_profile.py": "PROPOSED",
+    "tools/validators/governance/validate_graph_temporal_diff_query_profile.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Card KFM-P30-PROG-0010 was resolved in the consolidated atlas and remained active and unchanged through Pass 32."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card ID, title, branch, pull-request, and proposed contract/schema paths were absent at the recorded base."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Proposed query-declaration meaning is separated from migrations/graph mechanics and from schema, fixture, validator, test, workflow, intake, and receipt responsibilities."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Eight unit tests and fourteen positive/negative fixture cases passed without network or graph access."},
+    {"gate": "adjacent-local-tests", "outcome": "PASS", "reason": "Fourteen existing graph-migration and graph-invariant tests passed unchanged."},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P30-PROG-0010", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0010-PASS32-UNCHANGED", "validated": true, "evidence_ref": "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T02:38:23Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed profile. It performs no graph access, query, migration, policy evaluation, approval, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}

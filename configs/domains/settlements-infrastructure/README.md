@@ -1,443 +1,186 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/configs-domains-settlements-infrastructure-readme
-title: configs/domains/settlements-infrastructure/ — Settlements, Communities, and Infrastructure Configuration Boundary
+title: configs/domains/settlements-infrastructure/ — Governed Settlements and Infrastructure Configuration Boundary
 type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Config steward · Settlements/Infrastructure steward · Settlements/place-identity steward · Infrastructure/security steward · Cultural/sovereignty reviewer · Source steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
+version: v0.3
+status: draft; repository-grounded; README-only configuration lane; non-authoritative
+owners:
+  - "@bartytime4life — verified /configs/ CODEOWNERS review route only"
+  - "NEEDS VERIFICATION — accountable configuration, domain, place-identity, legal-status, infrastructure-sensitivity, source/rights, cultural/sovereignty, consumer, validation, policy, and release stewardship"
 created: 2026-07-13
-updated: 2026-07-14
+updated: 2026-09-04
 policy_label: "public; config-sublane; settlements-infrastructure; place-identity-aware; legal-status-aware; critical-asset-aware; cultural-context-aware; source-role-aware; time-aware; non-secret; non-authoritative; no-live-binding; no-service-guarantee; not-emergency-operations; no-release-authority"
 current_path: configs/domains/settlements-infrastructure/README.md
-truth_posture: CONFIRMED canonical settlements-infrastructure config lane, parent configuration contract, repository-present domain doctrine and implementation-shaped surfaces, README-only bounded config inventory, placeholder/scaffold status of inspected package metadata, pipeline code, pipeline specs, policy, schema, validators, workflow, and tests, unresolved settlements-infrastructure versus settlement and infrastructure policy path variance, unresolved registry topology, and prior README lineage / PROPOSED future consumer-bound templates and accepted profile references / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, and publication use / NEEDS VERIFICATION accepted owners, canonical authority paths, source-role vocabulary, source rights, legal-status authority, place-identity rules, facility exposure rules, service-area and dependency semantics, freshness budgets, cultural review requirements, executable validation, scanners, CI enforcement, correction propagation, and rollback integration
+owning_root: configs/
+readme_profile: BOUNDARY_COMPACT
+responsibility: "Document safe, non-secret Settlements/Infrastructure configuration authoring and future explicit consumer binding without acquiring place, municipal, infrastructure, source, evidence, policy, emergency, or release authority."
+truth_posture: "CONFIRMED pinned tracked configuration path, parent configuration contract, accepted Directory Rules adoption, current Settlements/Infrastructure workflow source, current test-index posture, and review routing; PROPOSED future inactive configuration classes and consumer-bound profiles; UNKNOWN runtime consumption, loader precedence, live source integration, and public use; NEEDS VERIFICATION accountable stewardship, exact-head validation, rights, legal-status authority, sensitivity enforcement, and release integration."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
-  visibility: public
   base_ref: main
-  base_commit: 53dbff3ddbdcd05ea7a7c112d9db288b325d0cb5
-  prior_blob: 47a1b267ff4309e0c3a68b6d1a3a3883b468dd2f
-  bounded_path_search: configs/domains/settlements-infrastructure/README.md only
+  base_commit: 9e152476cda7bd9b80a2afac8031619a1898eceb
+  prior_blob: 55104307922fca18285b2db2e546739332a3e207
+  parent_readme_blob: c497e41466f3aaf934aeca4b9976a2fa8516ff21
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  domain_workflow_blob: a47d89c40efd58ac31bc44dbc56bdfb1ccc3a325
+  domain_test_readme_blob: 08cd09f1700ca02fae7a35c55a1c22684c996448
 related:
   - ../README.md
   - ../../README.md
+  - ../../../CONTRIBUTING.md
+  - ../../../.github/CODEOWNERS
+  - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../docs/domains/settlements-infrastructure/README.md
   - ../../../docs/domains/settlements-infrastructure/CANONICAL_PATHS.md
-  - ../../../docs/domains/settlements-infrastructure/ARCHITECTURE.md
-  - ../../../docs/domains/settlements-infrastructure/VERIFICATION_BACKLOG.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
-  - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/settlements-infrastructure/
-  - ../../../schemas/contracts/v1/domains/settlements-infrastructure/
-  - ../../../policy/domains/settlements-infrastructure/
-  - ../../../policy/release/settlements-infrastructure/
-  - ../../../data/registry/settlements-infrastructure/
-  - ../../../data/registry/sources/settlements-infrastructure/
-  - ../../../packages/domains/settlements-infrastructure/
-  - ../../../pipelines/domains/settlements-infrastructure/
-  - ../../../pipeline_specs/settlements-infrastructure/
-  - ../../../tools/validators/domains/settlements-infrastructure/
-  - ../../../tests/domains/settlements-infrastructure/
-  - ../../../fixtures/domains/settlements-infrastructure/
-  - ../../../apps/explorer-web/src/features/domains/settlements_infrastructure/
-  - ../../../data/raw/settlements-infrastructure/
-  - ../../../data/work/settlements-infrastructure/
-  - ../../../data/quarantine/settlements-infrastructure/
-  - ../../../data/processed/settlements-infrastructure/
-  - ../../../data/catalog/domain/settlements-infrastructure/
-  - ../../../data/triplets/settlements-infrastructure/
-  - ../../../data/published/layers/settlements-infrastructure/
-  - ../../../data/receipts/settlements-infrastructure/
-  - ../../../data/proofs/settlements-infrastructure/
-  - ../../../release/candidates/settlements-infrastructure/
-  - ../../../release/manifests/settlements-infrastructure/
-  - ../../../docs/runbooks/settlements-infrastructure/PROMOTION_RUNBOOK.md
-  - ../../../docs/runbooks/settlements-infrastructure/ROLLBACK_RUNBOOK.md
+  - ../../../docs/domains/settlements-infrastructure/IDENTITY_MODEL.md
+  - ../../../docs/domains/settlements-infrastructure/SENSITIVITY.md
+  - ../../../contracts/domains/settlements-infrastructure/README.md
+  - ../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md
+  - ../../../policy/domains/settlements-infrastructure/README.md
+  - ../../../fixtures/domains/settlements-infrastructure/README.md
+  - ../../../tests/domains/settlements-infrastructure/README.md
+  - ../../../tools/validators/domains/settlements-infrastructure/README.md
+  - ../../../data/registry/sources/settlements-infrastructure/README.md
+  - ../../../data/proofs/settlements-infrastructure/README.md
+  - ../../../release/candidates/settlements-infrastructure/README.md
   - ../../../.github/workflows/domain-settlements-infrastructure.yml
-tags: [kfm, configs, settlements, municipalities, census-places, historic-townsites, infrastructure, facilities, service-areas, dependencies, critical-assets, place-identity, legal-status, source-role, time, sensitivity, no-secrets, no-live-binding, governance]
+tags: [kfm, configs, settlements, infrastructure, municipalities, places, facilities, service-areas, dependencies, critical-assets, source-role, time, sensitivity, no-secrets, no-live-binding, governance]
 notes:
-  - "The bounded repository search for configs/domains/settlements-infrastructure returned this README only. No executable config payload or indexed direct consumer was found."
-  - "The surrounding domain has many documentation and implementation-shaped surfaces, but inspected package metadata, pipeline files, pipeline specs, policy modules, schemas, validators, workflow jobs, and test lanes are draft scaffolds, placeholders, empty stage lists, permissive schemas, NotImplemented entrypoints, TODO-only jobs, or otherwise not proof of production behavior."
-  - "Repository evidence contains settlements-infrastructure versus settlement path variance, infrastructure sensitivity-policy projections, and domain-first versus subtype-first source-registry paths. This lane does not resolve, alias, or duplicate those conflicts."
-  - "Configuration may reference an accepted place-identity, source, legal-status, temporal, sensitivity, public-safe geometry, service-area, dependency, review, or release profile. It cannot create municipal authority, place truth, service availability, operational status, critical-asset clearance, policy, evidence, release, or publication state."
-  - "Only this Markdown file changes."
+  - "v0.3 supersedes v0.2 documentation at this same path; no executable configuration payload, consumer, schema, contract, policy, source record, workflow, runtime, release object, or public artifact is changed."
+  - "README-only describes this tracked configuration lane, not the whole Settlements/Infrastructure domain. Current workflow source performs bounded static/readiness checks and explicit proof/release holds; it does not establish semantic validation, source admission, or publication readiness."
+  - "The earlier July blanket scaffold inventory is revision history, not current implementation proof. This revision narrows claims to current repository evidence inspected for this update."
+  - "Configuration may reference an accepted place-identity, source, temporal, sensitivity, public-safe geometry, service-area, dependency, review, or release profile; it cannot create or weaken those authorities."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Settlements, Communities, and Infrastructure Domain Configuration
+# Governed Settlements and Infrastructure Domain Configuration
 
-`configs/domains/settlements-infrastructure/`
+`configs/domains/settlements-infrastructure/` is the safe configuration boundary for settlement, community, municipal, facility, network, service-area, and infrastructure presentation or processing **only after a named consumer and governing profiles are explicit**.
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for settlements, municipalities, census places, historic townsites, communities, infrastructure assets, facilities, networks, service areas, operators, condition observations, dependencies, and public-safe derivatives. This lane is not municipal legal authority, utility or service-availability authority, emergency operations, infrastructure security clearance, land-title proof, source authority, or release authority.
+**Status:** draft v0.3 · **Tracked configuration payload:** README only · **Owning root:** `configs/` · **Consumer binding:** UNKNOWN
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![critical-assets](https://img.shields.io/badge/critical__assets-fail__closed-red)
-![secrets](https://img.shields.io/badge/secrets-forbidden-red)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Identity](#place-identity-legal-status-and-object-boundaries) · [Roles](#source-role-and-knowledge-character) · [Time](#time-freshness-and-stale-state) · [Critical assets](#critical-infrastructure-facilities-and-dependencies) · [Geometry](#geometry-service-areas-access-and-public-safe-representation) · [Cultural context](#historic-cultural-community-and-sovereignty-context) · [Logging](#logging-telemetry-and-observability) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-and-deactivation) · [Done](#definition-of-done-for-the-first-payload)
-
-> [!IMPORTANT]
-> **Document lifecycle:** draft `v0.2`  
-> **Observed lane maturity:** README-only in the bounded path search; no executable configuration payload or direct consumer binding is established  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for place identity, legal status, infrastructure status, access, services, policy, evidence, or release  
-> **Runtime posture:** no loader, precedence rule, source activation, network fetch, place merge, facility exposure, service calculation, dependency graph, public layer, release, or publication is established by this README
+[Purpose](#purpose) · [Authority](#authority-level) · [Evidence](#status-and-evidence) · [Placement](#repository-fit-and-directory-rules-basis) · [Configuration contract](#minimum-configuration-contract) · [Identity](#place-identity-legal-status-and-object-boundaries) · [Infrastructure safety](#critical-infrastructure-facilities-services-and-dependencies) · [Time](#time-freshness-and-stale-state) · [Validation](#validation-and-test-matrix) · [Rollback](#rollback-correction-supersession-and-invalidation)
 
 > [!CAUTION]
-> KFM settlement and infrastructure context is evidence and governed publication material—not proof that a municipality is legally current, a facility is operational, a service is available, a dependency is complete, a site is safe to approach, a boundary is legally controlling, or critical-asset detail is suitable for public exposure. Missing evidence, unclear rights, stale status, unresolved cultural authority, or uncertain sensitivity fails closed.
-
----
+> Configuration is not municipal or legal authority, title proof, source authority, infrastructure-status authority, service-availability authority, emergency guidance, security clearance, evidence closure, policy approval, or release authority. Missing evidence, unclear rights, stale status, uncertain legal meaning, unresolved cultural authority, or sensitive infrastructure detail must fail closed at the applicable governed boundary.
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `settlements-infrastructure` domain segment under `configs/domains/`.
+This page inherits the [domain configuration contract](../README.md) and the [configuration root contract](../../README.md). It records only the Settlements/Infrastructure-specific constraints a maintainer needs before drafting or binding a configuration file.
 
-It may eventually hold small defaults, templates, examples, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, select, compare, generalize, aggregate, render, or package already-governed material, but they cannot decide:
+A future configuration may help a verified consumer select labels, display modes, aggregation, public-safe geometry, freshness presentation, source-role badges, relation rendering, or review routing for already-governed material. It cannot decide whether a settlement exists, whether a municipality has a particular legal status, whether a census geography is a jurisdiction, whether a facility is operating, whether a service is available, whether a dependency is complete, whether a place is safe to approach, or whether a public release is permitted.
 
-- whether a settlement, municipality, census place, townsite, ghost town, fort, mission, reservation community, neighborhood, or unincorporated place exists;
-- whether a place name, legal status, incorporation status, jurisdiction, boundary, annexation, dissolution, or historical interpretation is current or authoritative;
-- whether an infrastructure asset, network, facility, service area, operator, condition observation, or dependency is complete, current, safe, available, public, or legally accessible;
-- whether census geography is municipal or jurisdictional truth;
-- whether map geometry proves ownership, title, access, service entitlement, legal boundary, or facility status;
-- whether an administrative roster is an observed condition;
-- whether a modeled, inferred, candidate, synthetic, or graph-projected relationship is source truth;
-- whether exact critical-asset geometry, operator-sensitive details, condition, dependency, vulnerability, access, or private-property context may be exposed;
-- whether a historic or culturally sensitive place may be represented precisely or publicly;
-- whether evidence supports a claim;
-- whether a source is admitted, active, licensed, current, or redistributable;
-- whether an artifact may be promoted, released, or published.
-
-This README is intended for configuration maintainers, domain stewards, security and sensitivity reviewers, source and evidence stewards, consumer owners, validation owners, policy and release reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+The audience is configuration maintainers, consumer owners, Settlements/Infrastructure reviewers, place-identity and legal-status reviewers, infrastructure-security reviewers, cultural/sovereignty reviewers, and source, rights, validation, policy, and release stewards.
 
 ## Authority level
 
-**Configuration-supporting and non-authoritative.**
+**Implementation-supporting and non-authoritative.** A configuration value may point to authority; it cannot become authority by repetition or successful parsing.
 
-| Concern | Authority in this lane |
-|---|---|
-| Domain scope and meaning | **None.** Human doctrine remains under `docs/domains/settlements-infrastructure/`; semantic contracts remain in their accepted contract home. |
-| Settlement or community identity | **None.** Config cannot merge places, select a canonical name by convenience, infer continuity, or equate historic and present places. |
-| Municipality or jurisdiction status | **None.** Config cannot create, infer, renew, supersede, or prove legal status, incorporation, jurisdiction, annexation, dissolution, or authority. |
-| Census geography | **None.** Config cannot relabel a census place as a municipality or legal jurisdiction. |
-| Infrastructure identity or status | **None.** Config cannot prove asset existence, ownership, operation, condition, service availability, dependency, access, safety, or criticality. |
-| Source identity, role, rights, cadence, freshness, and activation | **None.** These require source registry, rights, policy, review, and current source evidence. |
-| Schema or contract shape | **None.** Config may reference accepted schemas/contracts but cannot duplicate or redefine them. |
-| Sensitivity, redaction, aggregation, clustering, or public-safe geometry | **None.** Config may select an accepted profile; it cannot create, weaken, or approve a rule. |
-| Evidence or claim truth | **None.** Config cannot create an `EvidenceBundle`, close evidence, validate a consequential claim, or make generated interpretation sovereign truth. |
-| Release or publication | **None.** Config cannot authorize promotion, release, public display, service promises, emergency guidance, or KFM publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and documented precedence. |
+| Concern | Owning authority or evidence | Configuration limit |
+|---|---|---|
+| Domain meaning and object semantics | [Domain doctrine](../../../docs/domains/settlements-infrastructure/README.md) and accepted semantic contracts | No merging or redefining settlement, municipality, census place, townsite, facility, operator, service area, or dependency semantics. |
+| Machine shape | [Schema lane](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) | Reference an accepted shape; do not create a second schema home. |
+| Place identity and legal status | Accepted identity/legal sources, contracts, evidence, and review | No canonical-name selection, incorporation inference, annexation/dissolution inference, or census-place-to-municipality conversion. |
+| Sources, rights, freshness | Source registry and applicable governance | No source admission, role upgrade, rights clearance, freshness extension, or network activation. |
+| Sensitivity and public-safe representation | Applicable policy, review, and transform evidence | No weakening of critical-infrastructure, cultural, sovereignty, private-land, archaeology, or living-person protections. |
+| Evidence and review | Resolvable EvidenceRef -> EvidenceBundle and review records | No invented evidence closure or approval. |
+| Release and correction | Governed release/correction records | A config, successful check, map display, or file move is not release. |
+| Consumer operation | Exact loader/binding/validation/runtime evidence | No implicit discovery, precedence, remote include, deployment, or public use. |
 
-A configuration value may point to an authority surface. It does not become authority through repetition, successful parsing, operational convenience, use in a map, graph, search index, dashboard, Evidence Drawer, Focus Mode, export, or AI surface.
+Preserve `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`. Configuration cannot skip or authorize a lifecycle transition.
 
-[Back to top](#top)
+## Status and evidence
 
----
+This revision was prepared from current GitHub evidence at `main@9e152476cda7bd9b80a2afac8031619a1898eceb`.
 
-## Status
+### Current bounded findings
 
-### Evidence snapshot
+| Surface | Confirmed at the snapshot | What remains unproved |
+|---|---|---|
+| This configuration lane | The target README exists under the canonical `configs/domains/settlements-infrastructure/` path. | Any executable config payload, loader, ignored/untracked files, or runtime consumption. |
+| Parent domain configuration contract | `configs/domains/README.md` is v0.6 and explicitly keeps child lanes non-secret, non-authoritative, and inactive unless consumer binding is verified. | Generic discovery, merge order, precedence, runtime behavior, and publication behavior. |
+| Directory governance | ADR-0029 is accepted and points to the exact current Directory Rules v2 bytes under `docs/doctrine/`. | No new path, alias, root, or authority change is introduced here. |
+| Domain workflow | `.github/workflows/domain-settlements-infrastructure.yml` performs bounded readiness checks, parses current schemas/fixtures structurally, and records explicit semantic-validation, proof, and release holds. | Accepted semantic validation, proof production, release dry run, source admission, or publication readiness. |
+| Domain tests | `tests/domains/settlements-infrastructure/README.md` is a domain-test parent index and explicitly keeps executable coverage/pass rates as NEEDS VERIFICATION. | Exact executable test inventory, exact-head pass results, policy runtime, release integration, and public-surface invalidation. |
+| Review routing | `/configs/` has a CODEOWNERS review route to `@bartytime4life`. | Accountable specialist ownership, independent review, required-review enforcement, and approval. |
+| Runtime/release/publication | Not established by this README. | Live source use, production binding, deployment, release, publication, or emergency operation. |
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `53dbff3ddbdcd05ea7a7c112d9db288b325d0cb5` |
-| Prior README blob | `47a1b267ff4309e0c3a68b6d1a3a3883b468dd2f` |
-| Bounded config-path result | `configs/domains/settlements-infrastructure/README.md` only |
-
-### Maturity matrix
-
-| Item | State | Safe conclusion |
-|---|---:|---|
-| Canonical config lane | **CONFIRMED** | The requested README exists under the parent domain-config boundary. |
-| Parent config contract | **CONFIRMED** | `configs/domains/README.md` v0.4 defines documentation-only, non-secret, non-authoritative child lanes. |
-| Domain doctrine | **CONFIRMED repository-present** | Scope, object families, source families, sensitivity, lifecycle, validation, and cross-lane boundaries are documented. |
-| Current config contents | **README ONLY IN BOUNDED SEARCH** | No indexed payload or direct consumer was found. Exhaustive inventory remains `NEEDS VERIFICATION`. |
-| Direct config consumer | **NOT FOUND IN BOUNDED SEARCH** | Differently named or unindexed consumers remain `UNKNOWN`. |
-| Package metadata | **GREENFIELD PLACEHOLDER** | `pyproject.toml` declares version `0.0.0`; it does not prove implemented helpers. |
-| Pipeline implementation | **PLACEHOLDER** | Inspected `ingest.py`, `normalize.py`, `validate.py`, `publish.py`, and `rollback.py` contain only greenfield placeholder comments. |
-| Pipeline specs | **EMPTY STAGE LISTS** | Inspected ingest, validate, and publish specs declare `stages: []`. |
-| Domain policy | **PROPOSED / INCOMPLETE** | Inspected rules are default-only scaffolds or greenfield stubs, not complete enforceable policy. |
-| Domain schemas | **PROPOSED STUBS** | Schema index is a greenfield scaffold; inspected schema permits additional properties and carries placeholder fields. |
-| Domain validators | **NOT IMPLEMENTED IN INSPECTED FILES** | Inspected validators raise `NotImplementedError`. |
-| Domain workflow | **TODO-ONLY SCAFFOLD** | Validation, proof, and publish-dry-run jobs echo TODO commands. |
-| Domain tests | **README/INDEX MATURITY** | Test README confirms intended guardrails and one identity child README; executable coverage and pass rates remain unverified. |
-| Explorer Web feature | **README BOUNDARY CONFIRMED** | Feature contract exists; route wiring, modules, adapters, receipts, release state, and runtime behavior remain unverified. |
-| Registry topology | **CONFLICTED / NEEDS VERIFICATION** | Domain-first and subtype-first source-registry patterns both exist; duplication is forbidden pending resolution. |
-| Path/slug posture | **CONFLICTED** | Working `settlements-infrastructure` segment coexists with `settlement` and `infrastructure` projections in older/crosswalk paths. |
-| Source-role vocabulary | **CONFLICTED / NEEDS VERIFICATION** | Older authority/observation/context/model wording and newer role sets require governance; config must not create aliases. |
-| Runtime, release, publication | **NOT ESTABLISHED** | Nothing in this lane authorizes operational use or public exposure. |
-
-Directory presence must not trigger config discovery, source activation, network access, place canonicalization, municipal-status inference, facility aggregation, dependency graphing, map-layer creation, emergency guidance, lifecycle promotion, release, or publication.
-
-[Back to top](#top)
-
----
+The July v0.2 maturity table described many package, pipeline, schema, policy, validator, and workflow surfaces as broad placeholders. That statement is retained only as historical lineage. This v0.3 page narrows its currentness claims to the surfaces actually re-inspected for this revision and does not imply a whole-domain audit.
 
 ## What belongs here
 
-Only configuration-supporting material that is safe to commit and explicitly bound to a verified consumer belongs here.
+Safe, non-secret configuration documentation and, when separately scoped, small **inactive** templates or synthetic examples for a named or conspicuously proposed consumer.
 
-| Accepted material | Required posture |
+Suitable future classes include:
+
+| Proposed class | Bounded purpose |
 |---|---|
-| This README | Current, evidence-bounded, and aligned with the parent contract. |
-| `*.template.yaml` / `*.example.yaml` / `*.example.json` / `*.example.toml` | Parseable, non-secret, synthetic, explicit consumer, explicit class/version, no automatic activation. |
-| Place-identity profile references | Reference accepted identity/normalization profiles; never define legal or canonical identity here. |
-| Legal-status evidence profile references | Select accepted municipal/legal-status validation profiles; never infer legal status from labels, census geography, or geometry. |
-| Source-role and source-family selector references | Preserve accepted source roles and rights; never activate a source or upgrade its role. |
-| Time/freshness/stale-state profile references | Select accepted temporal handling; never erase vintage, valid time, retrieval time, or stale state. |
-| Public-safe geometry, clustering, aggregation, and redaction profile references | Select accepted reviewed profiles; never encode exact restricted facilities or approve publication. |
-| Infrastructure exposure-class references | Reference accepted security/sensitivity classifications; never classify a real asset here without governing evidence and review. |
-| Review-routing defaults | Conservative HOLD/ABSTAIN/review-required defaults; never waive mandatory review. |
-| Compatibility notes | Time-bounded migration guidance with owner, sunset, test, and rollback. |
-| Tiny synthetic fixtures for configuration parsing | Clearly fake; no real facility, operator, dependency, private parcel, living person, or culturally sensitive location. |
+| `place_presentation` | Labels, place-type display, source-role badges, uncertainty, historical/current distinction. |
+| `temporal_profile_ref` | Reference accepted rules for source, observed, valid, retrieval, release, and correction time. |
+| `public_safe_geometry_ref` | Reference policy-owned aggregation, generalization, redaction, suppression, or delay. |
+| `facility_context` | Presentation-only settings for already-cleared facility or infrastructure context. |
+| `service_area_presentation` | Render already-governed service-area evidence without implying entitlement or current availability. |
+| `dependency_presentation` | Render already-governed dependencies without inferring completeness, criticality, vulnerability, or operational status. |
+| `review_routing` | Select a governance review path; never approve or release. |
+| `synthetic_test_profile` | Deterministic, fictional, no-network authoring input. |
+| `migration_compatibility` | Explicit, time-bounded consumer migration with rollback and no parallel authority. |
 
-[Back to top](#top)
+These are authoring categories, not an adopted schema or implemented enumeration.
 
----
+## What does not belong here
 
-## What does NOT belong here
+Do not place the following in this directory:
 
-| Prohibited material | Correct handling |
-|---|---|
-| Credentials, tokens, keys, certificates, cookies, signed URLs, private endpoints | External secret/config system or ignored local override; treat exposure as an incident. |
-| Live source endpoints or production connection strings | Deployment controls; do not commit private operational topology. |
-| Actual source payloads, facility inventories, condition feeds, service telemetry, dependency graphs | Governed lifecycle lanes under `data/`, not config. |
-| Exact critical-infrastructure or restricted facility geometry | Restricted lifecycle/policy/review lanes; public-safe derivative only after governed transform and release. |
-| Vulnerability, access-control, emergency-response, security-system, dependency, or operator-sensitive detail | Restricted operational/security systems; not public config. |
-| Private-property, living-person, title, ownership, or parcel joins | People/DNA/Land and policy-governed evidence paths; never config authority. |
-| Cultural, sacred, reservation-community, mission, fort, archaeology, burial, or stewardship-sensitive exact detail | Rights-holder, cultural, sovereignty, archaeology, and sensitivity governance; fail closed. |
-| Municipality, incorporation, jurisdiction, annexation, dissolution, legal boundary, or legal-status decisions | Legal-source evidence, contracts, policy, review, and current authority records. |
-| Service availability, utility status, facility operation, safety, access, or emergency guidance | Official operational authority; KFM may provide cited context only. |
-| Schema, contract, policy, registry, receipt, proof, catalog, graph, release, correction, or rollback objects | Their owning responsibility roots. |
-| Package, pipeline, validator, app, or runtime implementation | `packages/`, `pipelines/`, `tools/`, `apps/`, or `runtime/`. |
-| Generated reports, caches, screenshots, tiles, exports, or build outputs | `artifacts/`, released data homes, or ignored workspace as appropriate. |
-| Settings that collapse Settlement, Municipality, CensusPlace, Townsite, GhostTown, Facility, ServiceArea, Operator, ConditionObservation, or Dependency | Reject; object family and role remain explicit. |
-| Settings that turn map geometry into legal status, ownership, access, service entitlement, or operational truth | Reject; geometry is evidence/representation, not proof. |
-| Automatic recursive discovery or filename-based activation | Reject until a governed discovery contract, allowlist, validator, and tests are accepted. |
+- credentials, tokens, cookies, private endpoints, workstation bindings, or signed URLs;
+- real source records, evidence objects, proofs, receipts, policy decisions, review records, release decisions, or lifecycle data;
+- municipal legal determinations, incorporation/annexation/dissolution decisions, title or ownership assertions;
+- exact or reconstructable critical-infrastructure details, vulnerability data, restricted access routes, private facility internals, or sensitive dependency topology;
+- cultural or sovereignty-sensitive precision without accepted review and public-safe treatment;
+- schemas, semantic contracts, validators, executable tests, runtime code, pipelines, caches, or published artifacts;
+- live alerting, emergency, dispatch, incident-command, or service-guarantee settings;
+- files whose only purpose is to bypass an unresolved canonical-home or alias decision.
 
-[Back to top](#top)
+## Repository fit and Directory Rules basis
 
----
+The owning responsibility root remains `configs/`. This document describes safe configuration authoring; it does not own domain doctrine, machine shape, policy, evidence, lifecycle state, or release state.
 
-## Inputs
+[ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepted the exact [Directory Rules v2](../../../docs/doctrine/directory-rules.md) bytes as the placement authority. Under those rules, domain scope refines an existing responsibility root rather than creating a root-level domain home. The `BOUNDARY_COMPACT` README posture is appropriate here because the parent contracts carry shared configuration rules.
 
-A future config payload may be authored only from bounded, reviewable inputs:
+Meaning stays in `contracts/`; shape in `schemas/`; admissibility in `policy/`; source descriptors and lifecycle records in governed `data/` homes; enforceability in tests/tooling; and release/correction decisions in `release/`. This update creates no new root, alias, schema home, policy home, source registry, proof home, or release home.
 
-- a named consumer requirement with owner and version;
-- an accepted schema and semantic contract reference;
-- accepted source, identity, legal-status, time, sensitivity, public-safe geometry, aggregation, or release profile identifiers;
-- synthetic examples created solely to explain configuration shape;
-- verified migration requirements for an existing key, consumer, or path;
-- current rights, security, cultural, and source-role review as applicable.
+## Minimum configuration contract
 
-Minimum authoring context:
+A future executable binding should not be accepted until it identifies, at minimum:
 
-1. `domain_slug: settlements-infrastructure`;
-2. configuration class and environment scope;
-3. exact intended consumer path and version;
-4. explicit loader/binding mechanism;
-5. parser and schema reference;
-6. contract and policy references;
-7. source-profile and rights references;
-8. time/freshness/stale behavior;
-9. sensitivity/exposure profile;
-10. network and side-effect statement;
-11. logging/redaction statement;
-12. owner, review date, deprecation, and rollback.
+- `config_id` and immutable `config_version`;
+- exact `consumer_id` and owner;
+- explicit configuration class and bounded purpose;
+- accepted contract/schema/profile references;
+- exact parser and supported version;
+- required/optional-file behavior;
+- unknown-key, duplicate-key, malformed-input, and unsupported-version behavior;
+- remote-include and environment-substitution policy;
+- source/network activation boundary;
+- rights, sensitivity, cultural/sovereignty, and public-safe profile references where applicable;
+- material time/freshness behavior;
+- validation command and negative fixtures;
+- rollback/deactivation target;
+- migration/supersession relationship.
 
-Reject or quarantine inputs containing secrets, real operational values, exact restricted assets, private access data, living-person joins, unresolved rights, ambiguous legal status, stale status presented as current, or instructions to bypass evidence, policy, review, release, correction, or rollback.
+These are design requirements, not proof that such fields or a loader currently exist.
 
-[Back to top](#top)
+### Consumer binding and precedence
 
----
+No loader is established by this README. A future consumer must select a file intentionally, validate its exact supported profile, apply configuration atomically, and fail closed on malformed or ambiguous inputs. Directory scanning must not become feature activation, network activation, source admission, or release authority.
 
-## Outputs
+Local, test, deployment, or runtime overrides must never override source role, rights, evidence, legal status, sensitivity, review, release state, or official validity. Public callers must not be able to choose arbitrary filesystem paths or policy profiles.
 
-This lane currently emits **documentation only**.
+## Place identity, legal status, and object boundaries
 
-A future validated file may support a named consumer by providing:
-
-- safe defaults;
-- explicit profile references;
-- parseable templates and examples;
-- conservative review routing;
-- compatibility/migration metadata;
-- validation expectations.
-
-It must not emit or authorize:
-
-- municipal or jurisdiction truth;
-- source admission or activation;
-- place or facility canonicalization;
-- infrastructure exposure classification;
-- legal status, service availability, operational status, safety, access, or emergency guidance;
-- lifecycle transitions;
-- EvidenceBundles, proofs, receipts, catalogs, graph/triplet truth, or release objects;
-- deployment credentials or live bindings;
-- public layers, API answers, map truth, exports, or AI claims.
-
-A consumer must explicitly opt in through reviewed implementation. Merely adding a file to this folder must have no runtime effect.
-
-[Back to top](#top)
-
----
-
-## Validation
-
-No executable validator for this configuration lane is established by the inspected repository evidence. The following matrix is a **required target**, not a claim of current enforcement.
-
-| Check | Required outcome | Current state |
-|---|---|---:|
-| Syntax and parser version | File parses under declared format/version. | `PROPOSED` |
-| Accepted schema | Non-empty accepted schema validates known keys/types. | `NEEDS VERIFICATION`; inspected schemas are stubs. |
-| Unknown keys | Fail or produce an explicit finite error; never silently broaden behavior. | `UNKNOWN` |
-| Consumer compatibility | Named consumer loads exact path/version without hidden fallback. | `UNKNOWN` |
-| Explicit binding | No recursive scan, filename activation, or ambient global state. | Required |
-| Determinism | Same file/parser/profile versions normalize identically. | `PROPOSED` |
-| Secret/private endpoint scan | No credentials, signed URLs, private hosts, or personal paths. | Required; automation unverified. |
-| Critical-asset/sensitive-value scan | No exact restricted geometry, access, condition, dependency, vulnerability, or operator-sensitive value. | Required; automation unverified. |
-| Cultural/living-person/private-property scan | No protected cultural, sovereignty, archaeology, living-person, parcel, title, or private-access detail. | Required; automation unverified. |
-| Object-family separation | Settlement, Municipality, CensusPlace, Townsite, GhostTown, Facility, ServiceArea, Operator, ConditionObservation, Dependency remain distinct. | Required |
-| Legal-status anti-inference | Census, label, geometry, or model context cannot create municipal/legal status. | Required |
-| Source-role preservation | Config cannot upcast administrative/model/candidate/context material into observed/regulatory truth. | Required |
-| Temporal integrity | Source, observed, valid/effective, retrieval, release, correction, supersession, and stale state remain visible where material. | Required |
-| Public-safe transform | Accepted profile and transform/aggregation/redaction receipt are required; config alone cannot approve exposure. | Required |
-| No-network parse | Parsing/basic validation is local and deterministic where practical. | `PROPOSED` |
-| No side effect | Validation cannot fetch, write lifecycle state, publish, deploy, notify, or alter operations. | Required |
-| Logging safety | Logs contain IDs/reason codes/digests, not sensitive payload values. | Required |
-| Lifecycle isolation | No registry, receipt, proof, catalog, graph, release, or published object stored here. | Required |
-| Documentation links | Relative links and anchors resolve. | Manual/local validation for this revision. |
-| Staleness review | Owner, consumer, profile versions, review date, and sunset remain current. | Review on change or within six months. |
-
-### Finite configuration-review outcomes
-
-These outcomes apply only to config readiness; they are not policy or release decisions.
-
-| Outcome | Meaning |
-|---|---|
-| `PASS` | Config support checks pass; use is still bounded by consumer, evidence, policy, and release state. |
-| `HOLD` | Checkable uncertainty remains; file must remain inactive. |
-| `DENY` | Secret, protected detail, unsafe exposure, authority bypass, permissive fallback, or operational side effect is present. |
-| `ERROR` | Parser, validator, or review process failed unexpectedly; failure is not permission. |
-
-### Workflow preflight
-
-The inspected domain workflow triggers on pull requests and pushes to `main`, uses GitHub-hosted runners, and currently runs TODO echo commands for domain validation, proof building, and publish dry-run. It does not prove substantive validation, proof closure, release safety, or branch protection.
-
-[Back to top](#top)
-
----
-
-## Review burden
-
-| Change class | Minimum review posture |
-|---|---|
-| README clarification | Config/docs reviewer plus Settlements/Infrastructure steward. |
-| New config payload | Config steward + exact consumer owner + domain steward + validation steward. |
-| Municipality/legal-status or boundary-related key | Add source/legal-status and policy reviewers. |
-| Infrastructure asset, facility, service-area, operator, condition, dependency, or public-safe geometry key | Add infrastructure security/sensitivity reviewer and release reviewer. |
-| Historic townsite, ghost town, fort, mission, reservation community, cultural/community key | Add cultural/sovereignty/rights-holder and archaeology reviewers as applicable. |
-| Source selection, rights, cadence, or freshness key | Add source and rights reviewers. |
-| Cross-lane join with roads/rail, hazards, hydrology, people/land, archaeology, or agriculture | Add affected domain steward. |
-| Discovery, precedence, loader, schema-home, policy-home, registry topology, or slug change | ADR/path-governance review; not a config-only decision. |
-
-`OWNER_TBD` is not accepted ownership. Automatic reviewer enforcement and branch protection remain `NEEDS VERIFICATION`.
-
-Prefer one bounded concern per PR. Do not bundle config documentation with schema, policy, registry, data, release, or runtime rewrites.
-
-[Back to top](#top)
-
----
-
-## Related folders
-
-| Responsibility | Repository surface | Relationship |
-|---|---|---|
-| Parent config contract | [`../README.md`](../README.md) | Defines all domain config lanes as non-secret, non-authoritative support. |
-| Root config contract | [`../../README.md`](../../README.md) | Repo-wide configuration boundary. |
-| Domain doctrine | [`../../../docs/domains/settlements-infrastructure/README.md`](../../../docs/domains/settlements-infrastructure/README.md) | Scope, object families, source families, sensitivity, lifecycle, and cross-lane ownership. |
-| Path conflict register | [`../../../docs/domains/settlements-infrastructure/CANONICAL_PATHS.md`](../../../docs/domains/settlements-infrastructure/CANONICAL_PATHS.md) | Tracks `settlements-infrastructure`, `settlement`, and `infrastructure` path variance. |
-| Semantic contracts | `../../../contracts/domains/settlements-infrastructure/` and conflicted variants | Meaning authority; config references only. |
-| Machine schemas | `../../../schemas/contracts/v1/domains/settlements-infrastructure/` and conflicted variants | Shape authority when accepted; inspected files remain draft/stub. |
-| Domain policy | `../../../policy/domains/settlements-infrastructure/` | Admissibility inputs; inspected rules are scaffolds/stubs. |
-| Release sensitivity policy | `../../../policy/release/settlements-infrastructure/` and unresolved infrastructure sensitivity paths | Public-safe clustering/generalization inputs; placement and implementation need verification. |
-| Domain registry | `../../../data/registry/settlements-infrastructure/` | Existing domain-first routing/compatibility parent. |
-| Source registry | `../../../data/registry/sources/settlements-infrastructure/` | Competing subtype-first pattern; topology unresolved. |
-| Shared package | `../../../packages/domains/settlements-infrastructure/` | Package contract and placeholder metadata; not proof of implementation. |
-| Pipelines | `../../../pipelines/domains/settlements-infrastructure/` | README plus inspected placeholder code. |
-| Pipeline specs | `../../../pipeline_specs/settlements-infrastructure/` | Inspected specs have empty stage lists. |
-| Validators | `../../../tools/validators/domains/settlements-infrastructure/` | Inspected validators raise `NotImplementedError`. |
-| Tests/fixtures | `../../../tests/domains/settlements-infrastructure/`, `../../../fixtures/domains/settlements-infrastructure/` | Intended enforceability; executable coverage unverified. |
-| Explorer feature | `../../../apps/explorer-web/src/features/domains/settlements_infrastructure/` | README boundary; implementation and routes unverified. |
-| Lifecycle | `../../../data/{raw,work,quarantine,processed}/settlements-infrastructure/` | Evidence-bearing state; never config storage. |
-| Catalog/graph/published | `../../../data/catalog/domain/settlements-infrastructure/`, `../../../data/triplets/settlements-infrastructure/`, `../../../data/published/layers/settlements-infrastructure/` | Derived/released carriers after gates close. |
-| Release/correction/rollback | `../../../release/`, promotion and rollback runbooks | Decisions and reversible state transitions. |
-
-[Back to top](#top)
-
----
-
-## ADRs and drift triggers
-
-No ADR is enacted by this README.
-
-The following remain ADR/governance surfaces:
-
-| Decision | Current posture |
-|---|---:|
-| `settlements-infrastructure` versus `settlement` contract/schema/pipeline variants | `CONFLICTED` |
-| `policy/domains/settlements-infrastructure` versus `policy/sensitivity/infrastructure` and other sensitivity projections | `CONFLICTED / NEEDS VERIFICATION` |
-| Domain-first versus subtype-first source-registry topology | `CONFLICTED / NEEDS VERIFICATION` |
-| Accepted source-role vocabulary and compatibility mapping | `NEEDS VERIFICATION` |
-| Universal config envelope | `OPEN / PROPOSED` |
-| Auto-discovery, precedence, and missing-file fallback | `NO ACCEPTED DECISION VERIFIED` |
-| Critical-asset exposure classes and public-safe clustering/generalization profiles | `NEEDS VERIFICATION` |
-| Legal-status and municipality-evidence profiles | `NEEDS VERIFICATION` |
-| Cultural/community/sovereignty review profiles | `NEEDS VERIFICATION` |
-
-Do not resolve these by adding aliases, duplicate payloads, permissive defaults, or parallel authority inside `configs/`.
-
-[Back to top](#top)
-
----
-
-## Last reviewed
-
-**2026-07-14**, against `main@53dbff3ddbdcd05ea7a7c112d9db288b325d0cb5`.
-
-Review again before:
-
-- the first non-README config payload;
-- the first consumer binding;
-- any loader/discovery/precedence decision;
-- any municipality/legal-status profile;
-- any critical-asset, service-area, condition, operator, dependency, public-safe geometry, clustering, or aggregation setting;
-- any historic/cultural/community exposure setting;
-- any resolution of the path, policy, registry, or source-role conflicts;
-- six months pass.
-
-[Back to top](#top)
-
----
-
-## Scope and bounded context
-
-Configuration in this lane may eventually support these object families without owning their truth:
-
-### Place and community families
+Keep these families distinct unless an accepted contract explicitly relates them:
 
 - `Settlement`
 - `Municipality`
@@ -447,10 +190,6 @@ Configuration in this lane may eventually support these object families without 
 - `Fort`
 - `Mission`
 - `ReservationCommunity`
-- neighborhood or unincorporated-place profiles when accepted
-
-### Infrastructure families
-
 - `InfrastructureAsset`
 - `NetworkNode`
 - `NetworkSegment`
@@ -460,520 +199,146 @@ Configuration in this lane may eventually support these object families without 
 - `ConditionObservation`
 - `Dependency`
 
-### Cross-lane context
+Configuration must not collapse display-name equality, coordinate proximity, geometry overlap, historic continuity, census geography, administrative rosters, or generated summaries into identity or legal status.
 
-- roads/rail owns transport-route truth;
-- hydrology owns water, wastewater, drainage, and flood evidence;
-- hazards owns events, warnings, declarations, and life-safety authority;
-- people/land owns living-person, ownership, parcel, title, residence, and private-land truth;
-- archaeology/cultural authorities own sensitive site identity and access decisions;
-- agriculture and spatial foundation lanes own their respective source truth.
-
-A config may reference released or governed cross-lane profiles. It cannot mirror-author or override another lane's truth.
-
----
-
-## Configuration class taxonomy
-
-| Class | Purpose | Activation posture |
-|---|---|---|
-| `template` | Demonstrate supported fields and placeholders. | Never active by presence. |
-| `example` | Explain realistic synthetic values. | Never active by presence. |
-| `dev-default` | Conservative local-development defaults for a verified consumer. | Explicit opt-in only. |
-| `test-default` | Deterministic no-network test settings. | Test harness only. |
-| `review-default` | Hold, abstain, review, and caveat routing. | Cannot waive policy/release review. |
-| `public-safe-template` | Select accepted generalization, clustering, aggregation, or redaction profiles. | Policy, receipt, review, and release still required. |
-| `compatibility` | Temporary key/path mapping. | Time-bounded with sunset and rollback. |
-| `production-binding` | Real endpoints, credentials, facility IDs, operator values, or operational state. | **Forbidden here.** |
-
----
-
-## Minimum configuration contract
-
-A non-trivial future payload must expose or document:
-
-| Field | Requirement |
-|---|---|
-| `domain_slug` | `settlements-infrastructure`; no local aliasing. |
-| `config_class` | One class from the taxonomy above. |
-| `intended_consumer` | Exact repository path and component name. |
-| `consumer_version` | Version/range or `NEEDS VERIFICATION`. |
-| `format` / `parser_version` | Explicit and testable. |
-| `schema_ref` | Accepted, non-empty schema reference. |
-| `contract_refs` | Object meaning references; no duplication. |
-| `policy_refs` | Rights, legal status, sensitivity, cultural review, release, and stale-state policy references. |
-| `source_profile_refs` | Source IDs/roles/rights/cadence profiles; no activation. |
-| `time_profile_ref` | Time-kind, freshness, stale, supersession, correction handling. |
-| `exposure_profile_ref` | Critical-asset/public-safe geometry/clustering/aggregation/redaction profile. |
-| `network_behavior` | `none` by default; any consumer network behavior documented separately. |
-| `side_effects` | `none` for parse/validation. |
-| `secret_posture` | External references only; no values. |
-| `sensitivity_posture` | No restricted values or reconstructable clues. |
-| `logging_posture` | IDs, reason codes, digests only; no protected payloads. |
-| `override_mechanism` | Approved external/ignored local mechanism. |
-| `owner` / `reviewed_at` | Named owner or `OWNER_TBD`; ISO review date. |
-| `deprecation` / `rollback` | Replacement, sunset, deactivation, correction, and restore path. |
-
-A machine-checkable universal envelope is **PROPOSED** and is not created by this README.
-
----
-
-## Consumer binding, precedence, and discovery
-
-### Explicit binding
-
-A consumer must name the exact file it reads. Folder presence, globbing, recursive scanning, and “first matching filename” must not activate behavior.
-
-### Precedence is undefined
-
-This README does not establish an order among:
-
-```text
-base → domain → dev/test → local → environment → deployment
-```
-
-That sequence is illustrative only. A verified consumer must document and test:
-
-- files considered;
-- merge order;
-- replace-versus-deep-merge behavior;
-- environment substitution;
-- unknown-key handling;
-- missing-file behavior;
-- type coercion;
-- profile resolution;
-- stale/deprecated key behavior;
-- logging/redaction;
-- fallback and error outcomes.
-
-### Fail safe
-
-Missing or invalid config must not silently:
-
-- infer legal status or place identity;
-- broaden facility exposure;
-- expose exact geometry;
-- treat stale condition as current;
-- create service guarantees;
-- disable review or policy;
-- publish or deploy;
-- fall back to an unrestricted environment.
-
-Use explicit inactive, HOLD, DENY, ABSTAIN, or ERROR behavior.
-
----
-
-## Place identity, legal status, and object boundaries
-
-Configuration must preserve these distinctions:
-
-| Object | Must remain distinct from |
-|---|---|
-| `Settlement` | legal municipality, census place, infrastructure asset, map label |
-| `Municipality` | census place, named settlement, postal place, inferred jurisdiction |
-| `CensusPlace` | incorporation/legal authority, municipality, service area |
-| `Townsite` | current municipality, parcel, settlement continuity |
-| `GhostTown` | abandoned property, folklore, current jurisdiction |
-| `Fort` | archaeology site, active military facility, tourist site, settlement |
-| `Mission` | current institution, archaeology site, culturally cleared public location |
-| `ReservationCommunity` | tribal authority, reservation boundary, census geography, public-access permission |
-| `Facility` | settlement, legal jurisdiction, service guarantee |
-| `ServiceArea` | ownership, legal jurisdiction, access, guaranteed service |
-| `Operator` | owner, regulator, current service provider, legal authority |
-| `ConditionObservation` | enduring asset status, official alert, service availability |
-| `Dependency` | proven causal/operational dependency or public-safe relationship |
-
-Rules:
-
-- names are labels/assertions, not identity by themselves;
-- geometry is not identity or legal boundary;
-- census geography is not municipal status;
-- legal status needs source-specific authority, event/time scope, evidence, and review;
-- historic and present place identities must not be collapsed by name similarity;
-- a config may reference an accepted identity profile but cannot define the winning record.
-
----
+Historic and current places can share names while representing different objects, extents, jurisdictions, time scopes, or evidence states. Preserve source identity, object role, temporal scope, and correction lineage where material.
 
 ## Source role and knowledge character
 
-Source role is fixed at admission and must remain visible through config selection and downstream transformation.
+A source may support observation, official/administrative status, contextual history, model output, classification, aggregate statistics, or another accepted role. Configuration may select a display treatment for an already-resolved role; it cannot upgrade one role into another.
 
-At minimum, config must not collapse:
+Do not treat:
 
-- observed or first-hand records;
-- regulatory/legal determinations;
-- administrative compilations;
-- modeled or inferred outputs;
-- aggregates/statistical geographies;
-- candidates awaiting review;
-- synthetic/reconstructed interpretations;
-- context-only or restricted material where accepted vocabulary uses those terms.
-
-High-risk failures:
-
-| Failure | Required response |
-|---|---|
-| Census geography treated as municipal/legal status | `DENY` / validation failure |
-| Facility roster treated as observed condition | `DENY` / validation failure |
-| Operator directory treated as current service guarantee | `DENY` / `ABSTAIN` |
-| Historical map treated as current boundary | `ABSTAIN` / stale-state hold |
-| Modeled service area treated as entitlement | `DENY` |
-| Candidate place merge treated as canonical identity | `HOLD` / `ABSTAIN` |
-| Synthetic dependency graph treated as operational truth | `DENY` |
-| Map label or generated summary presented as evidence | `DENY` |
-
-Because repository documents contain more than one role vocabulary, configuration must reference an accepted profile/version rather than invent local aliases.
-
----
+- census geography as legal municipal authority;
+- a gazetteer as proof of current legal status;
+- operator-provided coverage as independently verified service availability;
+- a model or inferred graph edge as an observed dependency;
+- a map label as identity proof;
+- a published derivative as the source record it summarizes.
 
 ## Time, freshness, and stale state
 
-Keep time meanings separate where material:
+Keep material time kinds distinct. At minimum, do not silently collapse source vintage, observation time, validity/effective time, retrieval time, release time, and correction time.
 
-| Time kind | Meaning |
-|---|---|
-| source/publication time | When the source record or edition was published. |
-| observed time | When a condition or event was observed. |
-| valid/effective time | When a legal status, boundary, service area, operator assignment, or restriction applies. |
-| retrieval time | When KFM acquired the material. |
-| processing/run time | When a consumer transformed or validated it. |
-| review/release time | When reviewers approved a derivative/release. |
-| correction/supersession/withdrawal time | When prior state changed or became invalid. |
+A future config may reference an accepted freshness profile and choose how stale state is displayed. It must not extend official validity, hide stale state, substitute a cached historical value as current, or convert missing data into a reassuring fallback.
 
-Config may reference accepted freshness profiles but must not:
+## Critical infrastructure, facilities, services, and dependencies
 
-- replace an old source vintage with the current clock;
-- hide stale or superseded status;
-- treat missing valid time as current;
-- treat a current map as proof of current legal or operational status;
-- use a default freshness window to override source authority;
-- keep caches/public surfaces active after withdrawal, correction, or rollback.
+Infrastructure detail is consequence-sensitive. Missing classification or uncertain public-safety posture must not default to precision.
 
-Operational or service-related context requires explicit stale-state behavior and official-source limits.
+Configuration may reference an accepted public-safe profile, but it cannot decide that exact geometry, operator detail, condition, access information, dependency topology, vulnerability, service availability, or private-property context is safe to expose.
 
----
+Public-facing views should prefer the least precise representation that still serves the released claim. When exactness would create security, privacy, cultural, sovereignty, archaeological, or private-land risk, use accepted generalization, aggregation, suppression, delay, or denial and preserve transform provenance.
 
-## Critical infrastructure, facilities, and dependencies
-
-Critical infrastructure and sensitive facility context defaults to restricted review.
-
-Configuration must never carry real:
-
-- exact restricted facility locations;
-- access routes, security zones, credentials, control systems, internal topology, vulnerabilities, or emergency procedures;
-- operator-sensitive details;
-- condition observations that reveal exploitable state;
-- dependency chains that reveal critical failure paths;
-- private endpoints or non-public service metadata.
-
-A future public-safe configuration may reference accepted profile IDs for:
-
-- generalization;
-- clustering;
-- aggregation;
-- suppression;
-- geometry withholding;
-- zoom/display limits;
-- delayed publication;
-- staged access;
-- review routing.
-
-But configuration alone cannot decide:
-
-- that an asset is non-sensitive;
-- that clustering is sufficient;
-- that exact geometry may be released;
-- that service/dependency data is harmless;
-- that a transform satisfied policy.
-
-A public derivative needs policy decision, transformation/aggregation/redaction receipt, evidence, review state, release manifest, correction path, and rollback target.
-
----
-
-## Geometry, service areas, access, and public-safe representation
-
-Geometry can support representation and analysis. It does not prove:
-
-- legal boundary;
-- jurisdiction;
-- ownership or title;
-- access or public permission;
-- service entitlement or availability;
-- facility operation or safety;
-- network connectivity or dependency completeness;
-- emergency suitability.
-
-Service areas and dependency graphs are often derived, modeled, administrative, or provider-specific. Config must preserve:
-
-- method and source role;
-- source vintage and valid time;
-- uncertainty and coverage limits;
-- rights and sensitivity;
-- aggregation/generalization state;
-- public-safe versus internal geometry;
-- correction and supersession state.
-
-Do not create a single `public: true` or `safe: true` switch that bypasses profile, policy, receipt, review, and release requirements.
-
----
+No configuration value may promise that a facility is open, a utility is available, a road/bridge is safe, a service area confers entitlement, a dependency is complete, or a site is appropriate to visit.
 
 ## Historic, cultural, community, and sovereignty context
 
-Townsites, ghost towns, forts, missions, reservation communities, historic neighborhoods, cultural places, and adjacent archaeology require bounded representation.
+Settlement history can intersect tribal sovereignty, missions, forts, reservation communities, archaeology, cemeteries, sacred places, and living communities. Configuration must not flatten these contexts into a neutral place-name list or expose precise sensitive locations merely because geometry is available.
 
-Config must not:
+When authority, rights, cultural review, or precision is unresolved, the safe outcome is redaction, generalization, restricted review, or abstention according to governing policy—not a config-local exception.
 
-- infer exact location from uncertain historical evidence;
-- convert a corridor, map symbol, oral history, or approximate point into precise site truth;
-- expose sacred, burial, archaeological, or culturally restricted context;
-- treat public-source availability as cultural permission;
-- equate census/community geography with tribal, sovereign, or cultural authority;
-- bypass rights-holder, tribal, family, institutional, or community review.
+## Validation and test matrix
 
-Accepted configuration may reference a reviewed uncertainty or cultural-access profile. It cannot grant permission or represent a community.
+Default validation should be deterministic, synthetic, and no-network.
 
----
-
-## Logging, telemetry, and observability
-
-Allowed operational metadata may include:
-
-- config file ID and version;
-- consumer/version;
-- schema/profile IDs;
-- validation outcome and reason code;
-- digest/hash;
-- timing and retry metadata;
-- release/correction/rollback references.
-
-Do not log:
-
-- secret values;
-- private endpoints;
-- exact restricted facility geometry;
-- operator-sensitive details;
-- condition/dependency payloads;
-- private-property or living-person joins;
-- cultural/archaeology-sensitive locations;
-- unredacted source payloads.
-
-Telemetry is not evidence, policy, or release authority. Logs must not become a shadow registry or sensitive data store.
-
----
-
-## Failure behavior
-
-| Condition | Required behavior |
+| Gate | Expected result |
 |---|---|
-| File missing | Explicit inactive/HOLD/ERROR per consumer contract; no permissive fallback. |
-| Syntax/type/schema failure | `ERROR`; no partial activation. |
-| Unknown key | Error or explicit bounded handling; never silent broadening. |
-| Missing consumer/version | `HOLD`. |
-| Unknown source role/rights | `ABSTAIN` or `DENY`; no fetch/use/publication. |
-| Unresolved legal status/place identity | `ABSTAIN`; preserve competing assertions. |
-| Stale/missing time | Mark stale/HOLD/ABSTAIN; never present as current. |
-| Exact/reconstructable sensitive detail | `DENY`; remove/quarantine and assess exposure. |
-| Missing exposure/cultural review profile | `DENY` / `ABSTAIN`. |
-| Missing evidence | `ABSTAIN`. |
-| Missing policy/release state | `DENY`. |
-| Unresolved path/registry conflict | `HOLD`; do not write duplicate authority. |
-| Validator/runtime exception | `ERROR`; failure is not permission. |
+| UTF-8 / parseability / supported version | reject malformed or unsupported input atomically |
+| Unknown and duplicate keys | reject unless an accepted compatibility rule says otherwise |
+| Placeholder and secret hygiene | reject secret-like values, unsafe real identifiers, or undocumented substitutions |
+| Consumer binding | reject absent or ambiguous consumer identity before executable use |
+| Authority/profile references | reject unresolved or incompatible binding for executable use |
+| Time/freshness | preserve time kinds and expose stale/unknown state |
+| Place/legal-status boundary | reject inference from labels, census geography, proximity, or config-local aliases |
+| Infrastructure sensitivity | deny exact/reconstructable exposure without accepted public-safe posture |
+| Source role | preserve role; reject role upcast |
+| Evidence/release | config cannot satisfy evidence, approval, release, or publication gates |
+| Negative fixtures | prove malformed, stale, ambiguous, unsupported, sensitive, and authority-conflicting inputs fail safely |
+| Network | default tests perform no live source requests |
 
----
+Current workflow evidence establishes readiness/static checks and explicit holds, not domain semantic validation or release readiness. Exact-head hosted results remain separate evidence.
+
+## Review burden
+
+A README-only wording correction is low runtime risk but can still affect governance interpretation. Review should confirm:
+
+1. the path remains inside the accepted `configs/` authority boundary;
+2. legal-status and place-identity language does not overclaim authority;
+3. critical-infrastructure and public-safe geometry limits remain fail closed;
+4. cultural/sovereignty-sensitive context is not reduced to ordinary public location data;
+5. source-role and time distinctions remain explicit;
+6. test/workflow language does not turn readiness checks or holds into passing semantic validation;
+7. no statement implies release, deployment, publication, emergency operation, or service guarantees.
+
+CODEOWNERS routing is not proof of specialist review or accepted ownership.
 
 ## Governed AI and generated language
 
-AI may help interpret released, policy-safe Settlements/Infrastructure evidence. It is not root truth.
+AI may summarize already-released evidence through governed interfaces. It may not infer municipal status, place continuity, facility condition, access rights, service availability, infrastructure vulnerability, dependency completeness, cultural authority, or public-safety posture from this configuration.
 
-Configuration cannot authorize an AI system to:
+A generated answer that lacks admissible evidence must abstain. Generated language cannot become source truth, policy, approval, or release state.
 
-- infer municipal/legal status;
-- assert facility condition, service availability, dependency, access, or safety;
-- reveal critical-asset or culturally sensitive detail;
-- merge place identities without governed evidence;
-- turn map geometry, graph edges, search results, or model output into facts;
-- answer without resolving evidence, policy, sensitivity, review, and release state.
+## Rollback, correction, supersession, and invalidation
 
-A governed AI consumer should retrieve released evidence, resolve `EvidenceRef` to `EvidenceBundle`, apply policy and sensitivity checks, preserve source role/time/uncertainty, and return a cited answer, bounded caveat, abstention, denial, or error.
+Configuration changes must be reversible independently of source data and release state.
 
----
+A future binding should record the prior config version/digest, current config version/digest, consumer, activation state, affected outputs, migration reason, disable/revert procedure, and whether derived caches or views require invalidation.
 
-## Migration and anti-bypass posture
+Rollback of configuration does not roll back source evidence, legal status, infrastructure condition, policy, review, or release state. Those families require their own governed correction/rollback procedures.
 
-If misplaced material is found here:
+If this README is later found inaccurate, correct it forward or revert the documentation change through normal review. Do not rewrite source evidence, receipts, or release history to make the documentation appear retrospectively correct.
 
-1. freeze activation and authority claims;
-2. identify its true responsibility;
-3. remove/quarantine secrets or protected details immediately;
-4. preserve provenance, consumers, digests, and review state;
-5. move meaning to contracts;
-6. move shape to the accepted schema home;
-7. move policy to accepted policy roots;
-8. move source/rights/activation records to the accepted registry;
-9. move lifecycle, receipt, proof, catalog, graph, and published objects to `data/`;
-10. move release/correction/rollback decisions to `release/`;
-11. move code to packages/pipelines/tools/apps/runtime/infra as appropriate;
-12. update bindings, tests, docs, drift records, correction paths, and rollback;
-13. remove compatibility config after the transition closes.
+## Definition of done for the first executable payload
 
-Anti-bypass rules:
+The first non-README config payload is not complete merely because it parses. Before executable binding, require:
 
-- no `allow_all`, `public: true`, `skip_review`, `disable_redaction`, `assume_current`, or equivalent shortcut;
-- no local alias to resolve `settlement`/`settlements-infrastructure` or policy/registry conflicts;
-- no config-only municipal-status, service-availability, facility-exposure, or publication decision;
-- no public client reading config as data;
-- no watcher, model, graph, or pipeline publishing because a config exists.
+1. named consumer and accountable owner;
+2. accepted placement and profile references;
+3. restrictive schema/contract binding;
+4. deterministic parser/loader behavior;
+5. no-network synthetic positive and negative fixtures;
+6. explicit unknown-key/version/duplicate/fallback behavior;
+7. secret and sensitive-value controls;
+8. place-identity and legal-status anti-collapse checks;
+9. critical-infrastructure/public-safe geometry checks;
+10. source-role and material-time checks;
+11. documented rollback/deactivation;
+12. applicable review and CI evidence.
 
----
+Source admission, deployment, release, publication, emergency operation, and public exposure remain separate transitions.
 
-## Rollback, correction, and deactivation
+## Related folders
 
-Rollback triggers include:
-
-- secret/live binding introduced;
-- exact or reconstructable protected detail committed;
-- legal status or place identity inferred by config;
-- stale status displayed as current;
-- facility/service/dependency context overexposed;
-- config begins acting as policy, registry, schema, evidence, lifecycle, or release authority;
-- recursive discovery or permissive fallback activates behavior;
-- path/registry conflicts create duplicate authority;
-- public or downstream consumers depend on unsafe state.
-
-Preferred response:
-
-1. deactivate consumer binding;
-2. remove/quarantine unsafe values;
-3. rotate/revoke credentials if needed;
-4. restore the prior reviewed file/blob;
-5. invalidate caches, exports, generated explanations, and public derivatives when affected;
-6. issue correction/withdrawal/rollback records through release governance;
-7. move durable content to the owning root;
-8. add tests/scanners/validators to prevent recurrence;
-9. confirm downstream cleanup and rollback completion.
-
-This revision's prior blob is recorded in the metadata for mechanical restoration.
-
----
-
-## Definition of done for the first payload
-
-Before the first non-README file is accepted:
-
-- [ ] exact consumer and owner verified;
-- [ ] config class, parser, binding, precedence, missing-file, unknown-key, and fallback behavior defined;
-- [ ] accepted non-empty schema validates;
-- [ ] contracts and policy/profile references verified;
-- [ ] source IDs, roles, rights, cadence, attribution, and freshness verified;
-- [ ] place identity and legal-status anti-inference tests pass;
-- [ ] object-family separation tests pass;
-- [ ] time/freshness/stale/supersession tests pass;
-- [ ] critical-asset, condition, service-area, dependency, access, private-property, and operator-sensitive denial tests pass;
-- [ ] cultural/sovereignty/archaeology and historic-overprecision tests pass;
-- [ ] public-safe geometry/aggregation/redaction profile requires policy, receipt, review, and release;
-- [ ] no secrets/private endpoints/restricted values;
-- [ ] no-network parse/validation where practical;
-- [ ] logging is redacted;
-- [ ] no lifecycle/trust/catalog/graph/release objects stored here;
-- [ ] consumer tests and negative states pass;
-- [ ] reviewers approve;
-- [ ] deactivation, correction, cache invalidation, and rollback are tested;
-- [ ] documentation and evidence ledger updated.
-
----
-
-## Verification backlog
-
-| Item | Status |
-|---|---:|
-| Recursive config inventory | `NEEDS VERIFICATION` |
-| Direct consumer/loader | `UNKNOWN` |
-| Discovery/precedence/fallback | `UNKNOWN` |
-| `settlements-infrastructure` vs `settlement` path resolution | `CONFLICTED` |
-| Infrastructure sensitivity-policy path | `CONFLICTED / NEEDS VERIFICATION` |
-| Registry topology | `CONFLICTED / NEEDS VERIFICATION` |
-| Source-role vocabulary | `CONFLICTED / NEEDS VERIFICATION` |
-| Package implementation | `PLACEHOLDER METADATA / NEEDS VERIFICATION` |
-| Pipeline implementation | `PLACEHOLDER` |
-| Pipeline specs | `EMPTY STAGE LISTS` |
-| Policy completeness | `PROPOSED / INCOMPLETE` |
-| Schema completeness | `PROPOSED STUBS` |
-| Validators | `NOT IMPLEMENTED IN INSPECTED FILES` |
-| Workflow enforcement | `TODO SCAFFOLD` |
-| Executable tests/pass rates | `NEEDS VERIFICATION` |
-| Consumer route/app wiring | `NEEDS VERIFICATION` |
-| Source rights/endpoints/cadence | `NEEDS VERIFICATION` |
-| Legal-status evidence profiles | `NEEDS VERIFICATION` |
-| Identity/merge rules | `NEEDS VERIFICATION` |
-| Freshness/stale budgets | `NEEDS VERIFICATION` |
-| Critical-asset exposure profiles | `NEEDS VERIFICATION` |
-| Service-area/dependency semantics | `NEEDS VERIFICATION` |
-| Cultural/sovereignty review profiles | `NEEDS VERIFICATION` |
-| Secret/sensitive scanners | `NEEDS VERIFICATION` |
-| Ownership/branch protection | `NEEDS VERIFICATION` |
-| Runtime/release/publication | `UNKNOWN` |
-
----
-
-## Safe language rules
-
-| Avoid | Prefer |
+| Responsibility | Reference |
 |---|---|
-| “The pipeline uses this config.” | “This file names an intended consumer; direct binding is `NEEDS VERIFICATION`.” |
-| “This is a municipality.” | “A source-attributed legal-status assertion supports this classification for a stated time.” |
-| “The census boundary is the city boundary.” | “Census and municipal geographies remain distinct.” |
-| “This facility is operational.” | “A cited time-bound source reports status; KFM provides no operational assurance.” |
-| “Service is available here.” | “A source/method-specific service-area context is shown; availability and entitlement are not guaranteed.” |
-| “This dependency is complete.” | “A derived, evidence-bounded dependency projection is shown.” |
-| “This map proves access/ownership.” | “Geometry does not prove access, title, ownership, or legal boundary.” |
-| “This asset is safe to publish.” | “An accepted policy, transform receipt, review, and release authorize a public-safe derivative.” |
-| “Exact ghost-town/mission/fort location.” | “Evidence-backed interpretation with uncertainty and sensitivity review.” |
-| “Schema is active.” | “Inspected schema is a `PROPOSED` stub until contracts, fixtures, validators, registry, and review close.” |
-| “CI validates this domain.” | “The inspected workflow currently runs TODO echo jobs.” |
+| Parent domain config boundary | [`../README.md`](../README.md) |
+| Config root | [`../../README.md`](../../README.md) |
+| Human domain doctrine | [`../../../docs/domains/settlements-infrastructure/README.md`](../../../docs/domains/settlements-infrastructure/README.md) |
+| Directory governance | [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) |
+| Accepted Directory Rules decision | [`../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Semantic contract lane | [`../../../contracts/domains/settlements-infrastructure/README.md`](../../../contracts/domains/settlements-infrastructure/README.md) |
+| Schema lane | [`../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md`](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) |
+| Policy lane | [`../../../policy/domains/settlements-infrastructure/README.md`](../../../policy/domains/settlements-infrastructure/README.md) |
+| Fixture lane | [`../../../fixtures/domains/settlements-infrastructure/README.md`](../../../fixtures/domains/settlements-infrastructure/README.md) |
+| Test lane | [`../../../tests/domains/settlements-infrastructure/README.md`](../../../tests/domains/settlements-infrastructure/README.md) |
+| Validator boundary | [`../../../tools/validators/domains/settlements-infrastructure/README.md`](../../../tools/validators/domains/settlements-infrastructure/README.md) |
+| Source registry | [`../../../data/registry/sources/settlements-infrastructure/README.md`](../../../data/registry/sources/settlements-infrastructure/README.md) |
+| Proof lane | [`../../../data/proofs/settlements-infrastructure/README.md`](../../../data/proofs/settlements-infrastructure/README.md) |
+| Release-candidate lane | [`../../../release/candidates/settlements-infrastructure/README.md`](../../../release/candidates/settlements-infrastructure/README.md) |
+| Domain workflow | [`../../../.github/workflows/domain-settlements-infrastructure.yml`](../../../.github/workflows/domain-settlements-infrastructure.yml) |
 
----
+## Last reviewed
 
-## Evidence ledger
+**2026-09-04** — repository-currentness pass against `main@9e152476cda7bd9b80a2afac8031619a1898eceb`.
 
-| Evidence | State | Supports | Does not prove |
-|---|---|---|---|
-| Target README | prior blob `47a1b267…` | v0.1 boundary and rollback. | Consumers or payloads. |
-| Parent config README | blob `2c5e8b70…`, v0.4 | Child-lane no-secret/no-authority contract. | Domain runtime behavior. |
-| Bounded config search | README only | No indexed payload/direct consumer. | Exhaustive absence. |
-| Domain README | blob `bccb04cd…` | Scope, object families, lifecycle, sensitivity, cross-lane doctrine. | Current implementation. |
-| Canonical paths | blob `a388ccbf…` | Slug/path and policy variance. | Accepted ADR resolution. |
-| Package README / pyproject | blobs `521d570b…`, `d4728c97…` | Intended package boundary; version `0.0.0`. | Working helpers. |
-| Pipeline README | blob `333222ac…` | Intended executable boundary and alias warning. | Implemented processing. |
-| Pipeline files | placeholder comments | Inspected entrypoints are greenfield placeholders. | All possible code elsewhere. |
-| Pipeline specs | `stages: []` | Declarative paths exist. | Executable stage wiring. |
-| Policy files | default-only proposed/stub rules | Policy paths exist with fail-closed intent. | Complete policy or runtime enforcement. |
-| Schema README and domain observation schema | greenfield/proposed stub | Schema path and placeholder shape exist. | Meaningful field coverage or strict validation. |
-| Validators | raise `NotImplementedError` | Paths exist. | Executable validation. |
-| Domain workflow | TODO echo jobs | Trigger/job scaffolding exists. | Substantive CI/proof/release. |
-| Tests README | domain test index; executable coverage unverified | Intended negative-state/no-network guardrails. | Passing tests. |
-| Explorer feature README | README boundary confirmed | Intended public UI boundary. | Route/module/runtime implementation. |
-| Registry README | domain-first path plus topology warning | Existing registry routing and conflict. | Canonical/active registry records. |
+### Open verification
 
----
-
-<details>
-<summary><strong>Appendix A — no-loss preservation note</strong></summary>
-
-v0.1 established the lane, non-authoritative scope, no secrets/live bindings, object-role separation, critical-asset sensitivity, and no operational/publication authority.
-
-v0.2 preserves those controls and adds pinned evidence, bounded inventory, scaffold maturity, path/policy/registry/source-role conflicts, place/legal-status/object-family rules, critical-asset/facility/service/dependency safeguards, cultural and historical context, time/stale-state rules, configuration taxonomy and file contract, explicit binding, validation/review, migration, deactivation/correction/rollback, definition of done, backlog, safe language, and an evidence ledger.
-
-</details>
-
-<details>
-<summary><strong>Appendix B — documentation-only boundary</strong></summary>
-
-This revision changes no payload, consumer, loader, source record, schema, contract, policy, code, validator, test, fixture, workflow, lifecycle/trust/catalog/graph/release object, map/API/UI surface, municipal status, facility status, service behavior, emergency operation, or deployment.
-
-</details>
-
-## Status summary
-
-`configs/domains/settlements-infrastructure/` is a README-only, non-secret, non-authoritative configuration-support lane. The surrounding repository contains extensive documentation and many implementation-shaped paths, but the inspected package, pipeline, spec, policy, schema, validator, test, workflow, app, and registry surfaces remain draft, scaffolded, placeholder, conflicted, or unverified. No direct config consumer is established. Future payloads require explicit binding, accepted authority references, place/legal-status anti-inference, source-role/time/stale preservation, critical-asset and cultural safeguards, validation, review, policy, release, correction, and rollback.
-
-<p align="right"><a href="#top">Back to top</a></p>
+- accountable Settlements/Infrastructure stewardship and independent review roles;
+- exact executable config consumer, loader, precedence, and reload behavior;
+- accepted source-role vocabulary and source admission state;
+- legal-status authority and place-identity conflict resolution;
+- cultural/sovereignty review routing;
+- exact critical-infrastructure sensitivity policy and public-safe profiles;
+- semantic validation, negative fixtures, and exact-head hosted results;
+- proof production, release integration, deployment, publication, correction propagation, and rollback drills.

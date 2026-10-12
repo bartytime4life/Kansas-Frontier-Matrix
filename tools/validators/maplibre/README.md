@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-maplibre-readme
 title: tools/validators/maplibre README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; executable mixed-maturity validator lane; performance-envelope machine contract implemented
 owner: TODO-tooling-qa-owner-plus-maplibre-steward-plus-ui-steward-plus-publication-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-09-08
 policy_label: repository-facing; maplibre-validator-index; renderer-boundary; map-runtime-boundary; evidence-drawer-aware; pmtiles-aware; cog-aware; layer-descriptor-aware; release-gated; public-surface-deny-by-default; non-authoritative
 owning_root: tools/
 responsibility: broad MapLibre validator routing index for checking renderer trust-boundary posture, released map artifact eligibility, source/layer/style descriptor readiness, PMTiles/COG/GeoParquet/TileJSON integrity references, MapReleaseManifest or release-reference linkage, EvidenceRef/EvidenceBundle and citation-validation linkage, policy/review/freshness/correction/rollback posture, forbidden browser operations, negative state propagation, and public-surface denial while deferring renderer implementation, UI shell code, contracts, schemas, policy decisions, proof records, receipts, lifecycle data, and release authority to their owning roots
-truth_posture: cite-or-abstain; implementation claims require current repo evidence
+truth_posture: CONFIRMED executable envelope, source-metadata, acquisition-inventory, and v6-readiness validators plus schema wrappers; HOLD aggregate performance, trust-output, runtime, release, and publication maturity
 related:
   - ../README.md
   - ../_common/README.md
@@ -22,6 +22,11 @@ related:
   - ../joins/README.md
   - ../../../packages/maplibre/README.md
   - ../../../packages/maplibre/src/README.md
+  - ../../../configs/maplibre/perf-envelope.v1.json
+  - ../../../schemas/maplibre/perf-envelope.schema.json
+  - ../../../tests/fixtures/maplibre/perf-envelope/README.md
+  - ../../../tests/maplibre/test_perf_envelope_contract.py
+  - ../../../.github/workflows/schema-validation.yml
   - ../../../docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
   - ../../../docs/architecture/map-shell.md
   - ../../../docs/architecture/evidence-drawer.md
@@ -41,7 +46,7 @@ related:
   - ../../../data/receipts/
   - ../../../release/
 notes:
-  - "This README replaces an empty file at tools/validators/maplibre/README.md. It does not confirm executable validator code."
+  - "The lane now includes executable mixed-maturity validators. The bounded performance-envelope validator is fixture-backed; broader trust and release validators remain placeholders or held."
   - "MapLibre is the disciplined renderer and interaction runtime inside the governed KFM shell; it is not the canonical truth store, source registry, policy engine, citation authority, review authority, publication authority, or AI authority."
   - "packages/maplibre/ is a helper-code package for MapLibre adapter utilities and descriptor preparation. This validator lane checks readiness and boundary posture; it does not implement the renderer."
   - "KFM Geo Manifest is a release-candidate integrity manifest for PMTiles, COG, and GeoParquet bytes, not a release decision, policy engine, or sovereign truth source."
@@ -85,8 +90,10 @@ The answer should be a deterministic validation result or routing decision. This
 | `packages/maplibre/README.md` | **CONFIRMED README / implementation NEEDS VERIFICATION** | Shared helper-code package for MapLibre adapter utilities and validated descriptor preparation; renderer remains downstream and non-authoritative. |
 | `docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md` | **CONFIRMED architecture doc / implementation NEEDS VERIFICATION** | Defines the map runtime boundary and states MapLibre is downstream of trust, never upstream of it. |
 | `docs/architecture/publication/GEO_MANIFEST.md` | **CONFIRMED architecture doc / implementation NEEDS VERIFICATION** | Defines KFM Geo Manifest as release-candidate integrity manifest for PMTiles, COG, and GeoParquet bytes, not a release decision or truth source. |
-| MapLibre validator executable | **NEEDS VERIFICATION** | No script name, registry wiring, runtime route, report destination, receipt path, or CI check is claimed here. |
-| Source/layer/style schemas, fixtures, policy bundles, release manifests, artifact digests, browser tests, and public runtime integration | **NEEDS VERIFICATION** | This README is routing documentation only. |
+| `validate_perf_envelope.py` | **IMPLEMENTED / BOUNDED** | Validates explicit files or two positive/fourteen negative fixtures against the closed v1 configuration schema from any working directory; emits no artifact. |
+| Source-metadata, acquisition, and v6-readiness validators | **IMPLEMENTED / BOUNDED** | Dedicated no-network lanes exist with their own outcomes and tests. |
+| Seven trust-output schema wrappers and aggregate performance verifiers | **PLACEHOLDER / HOLD** | Do not treat their presence as semantic, runtime, evidence, or release validation. |
+| Browser tests, accepted benchmark semantics, release manifests, and public runtime integration | **NEEDS VERIFICATION / HOLD** | Configuration validity does not close these gates. |
 
 [Back to top](#top)
 
@@ -109,15 +116,18 @@ The answer should be a deterministic validation result or routing decision. This
 | Policy | `policy/` | Validator reports gaps; it does not decide policy. |
 | Release decisions and rollback | `release/` | Release authority remains in release records, promotion decisions, correction notices, rollback targets, and withdrawal records. |
 | Lifecycle checks | `tools/validators/lifecycle/` | Map surfaces must not bypass lifecycle gates. |
-| Tests and fixtures | `tests/validators/maplibre/`, `tests/packages/maplibre/`, `fixtures/`, or accepted conventions | Deterministic tests and synthetic fixtures prove behavior. |
+| Tests and fixtures | `tests/maplibre/`, `tests/fixtures/maplibre/`, and accepted package-local lanes | Deterministic tests and synthetic fixtures prove only their declared behavior. |
 
 [Back to top](#top)
 
 ---
 
-## Proposed validation focus
+## Implemented and held validation focus
 
-Until executable behavior and field-level schemas are verified, this README treats the following as proposed validation concepts:
+The performance-envelope configuration, local source-metadata projection,
+acquisition inventory, and v6-readiness classifier are executable within their
+documented boundaries. The broader concepts below remain proposed or held unless
+a named validator and test prove otherwise:
 
 | Concept | Validator question | Must not become |
 |---|---|---|
@@ -172,13 +182,14 @@ A MapLibre-bound candidate should fail closed, deny, abstain, or route to stewar
 | Policy rules and release gates | `policy/` |
 | Release decisions, correction, rollback, withdrawal | `release/` |
 | Public API and UI runtime | `apps/`, `ui/`, `web/`, or repo-confirmed runtime homes |
-| Tests and fixtures | `tests/validators/maplibre/`, `tests/packages/maplibre/`, `fixtures/`, or accepted conventions |
+| Tests and fixtures | `tests/maplibre/`, `tests/fixtures/maplibre/`, and accepted package-local lanes |
 
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
 - **PROPOSED:** validator code may live here when it checks declared MapLibre renderer-boundary, source/layer/style descriptor, artifact-integrity, evidence, policy, release, correction, rollback, and public-surface rules and writes reports/receipts only to accepted roots.
-- **NEEDS VERIFICATION:** exact executable names, accepted schemas, source registry topology, fixture shape, policy bundles, report destinations, receipt emission, package bindings, browser-test behavior, release integration, and CI wiring.
+- **CONFIRMED:** exact executable names and focused fixture/test/CI bindings for the performance envelope, source-metadata projection, acquisition inventory, and v6 readiness.
+- **NEEDS VERIFICATION:** accepted canonical schema families, policy bundles, report destinations, receipt emission, broader package/browser behavior, release integration, and public-runtime wiring.
 - **DENY:** using this folder as renderer implementation, UI shell, source registry, source payload store, lifecycle data store, catalog store, tile store, screenshot/export store, proof store, receipt store, policy home, release record store, public runtime surface, AI answer authority, or publication authority.
 
 [Back to top](#top)
@@ -250,9 +261,9 @@ Good fits for `tools/validators/maplibre/` include checks that:
 
 ---
 
-## Minimal future implementation sketch
+## Remaining implementation sketch
 
-Future implementation should remain small and reversible:
+Any general dispatcher remains future work and should stay small and reversible:
 
 ```text
 tools/validators/maplibre/
@@ -278,14 +289,15 @@ This README is complete for documentation purposes when:
 - [x] It links map artifact integrity posture to the KFM Geo Manifest and release/publication roots.
 - [x] It preserves downstream-renderer, Evidence Drawer, source/layer/style descriptor, artifact integrity, evidence, policy, release, correction, rollback, and public-surface denial posture.
 - [x] It routes machine shape, policy, fixtures, evidence, receipts, release, lifecycle data, tests, and semantic meaning to their owning roots.
-- [x] It marks executable behavior, registry wiring, schema bindings, policy bundles, fixture files, receipt emission, runtime behavior, package bindings, browser-test behavior, and CI wiring as **NEEDS VERIFICATION**.
+- [x] It distinguishes the implemented focused validators from held registry, policy, receipt, runtime, browser, and release work.
 
 Future implementation is not complete until:
 
 - [ ] Validator registry or CLI references to `maplibre/` are searched and classified.
 - [ ] Accepted source/layer/style/tile/map schema homes, policy homes, fixture homes, test paths, and report destinations are verified.
 - [ ] Tests exercise valid and invalid descriptor, artifact-integrity, release-reference, evidence-reference, stale-state, forbidden-browser-operation, rollback-mismatch, and public-surface leakage cases.
-- [ ] CI invokes the relevant MapLibre validators in deterministic order.
+- [x] CI invokes the envelope and other focused MapLibre validators in their
+  named workflows; the aggregate performance verifiers remain held.
 - [ ] Any generated validation outputs write only to accepted report, proof, receipt, or artifact roots.
 
 [Back to top](#top)
@@ -297,3 +309,4 @@ Future implementation is not complete until:
 | Date | Change | Status |
 |---|---|---|
 | 2026-07-08 | Replaced empty README with MapLibre validator routing documentation. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
+| 2026-09-08 | Recorded the fixture-backed performance-envelope validator and current mixed-maturity lane without changing runtime/release holds. | **IMPLEMENTED BOUNDED SLICE** |

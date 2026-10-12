@@ -1,0 +1,165 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/tiles3d-stac-item-adapter.yml": "sha256:9edb920f0fbb4eff7147f1fea0073c34ce02bb57bcf51b04d92761f5a77b6742",
+    "contracts/map/tiles3d_stac_item_adapter.md": "sha256:4a70f8ddb096941f9d803aa1eb63dc48621a2fe33c97e733abf2362c415fc6eb",
+    "fixtures/map/tiles3d_stac_item_adapter/README.md": "sha256:386f3c42f098bfd253c0b01c101a133634a85001136ac0bf57d8b7e386431101",
+    "fixtures/map/tiles3d_stac_item_adapter/expected/valid_item.json": "sha256:67a71dd183212a73c961d7ce41151bf2a1d440cfbbde5b0dec78cdf10647a07d",
+    "fixtures/map/tiles3d_stac_item_adapter/expected_findings_manifest.json": "sha256:598f83366defbdbe1093adc3fe6054ba6859234398830a79841adff9733b6b82",
+    "fixtures/map/tiles3d_stac_item_adapter/package/subtrees/0/0/0.subtree": "sha256:272b26abb1f0b46058105abaea06768309e85ef78fb0c7c8da09793c2da88396",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tiles/0/0/0.glb": "sha256:b09f4a48521eeca2cac087d6fb0c5f1acad7bc9d0e7b4dc08fb4be871a903797",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tileset.json": "sha256:90681fb3cd007fb6bde3133e943ef7d5d768cd06bb327afdaeb6e34875070217",
+    "fixtures/map/tiles3d_stac_item_adapter/schema_invalid/request_missing_evidence.json": "sha256:bc271a49ee808a4ddb78209666b35c3af6ce6f7db87d9c1fbc8cc9618b8ef41e",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_authority_overreach.json": "sha256:12bd043f008418c3a63ee853eb334efb5c9564de10edc625698162c5dd5f8567",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_digest_drift.json": "sha256:1cede3e8709b5247f79d6bc751ae379debec3a6d42ba71db4f96c37e4faac567",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/manifest.json": "sha256:d8bb222274211da9a49e0332c1287e807f803afb949ebb5298ffd5ef200a0f56",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/request.json": "sha256:2b098a2db31a4f3b6f3cef50469f6099825bc040bfbbd11d1c360b030b48a65d",
+    "schemas/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json": "sha256:0f1f5daabb6804589b77ad494c5c230c21dc3033160a5fbbef666a52bc611ca3",
+    "tests/validators/map/tiles3d_stac_item_adapter/test_build_tiles3d_stac_item.py": "sha256:7eb9dfd15d5adfd568ab5875e6f5b6b98da32f5de493f7b6a17f4a44e3f027ab",
+    "tools/validators/map/tiles3d_stac_item_adapter/build_tiles3d_stac_item.py": "sha256:eaaefd87909f2df4cd0419ad85a526e90548be666bc2b8fe76f597db7a516ba5"
+  },
+  "artifact_paths": [
+    ".github/workflows/tiles3d-stac-item-adapter.yml",
+    "contracts/map/tiles3d_stac_item_adapter.md",
+    "fixtures/map/tiles3d_stac_item_adapter/README.md",
+    "fixtures/map/tiles3d_stac_item_adapter/expected/valid_item.json",
+    "fixtures/map/tiles3d_stac_item_adapter/expected_findings_manifest.json",
+    "fixtures/map/tiles3d_stac_item_adapter/package/subtrees/0/0/0.subtree",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tiles/0/0/0.glb",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tileset.json",
+    "fixtures/map/tiles3d_stac_item_adapter/schema_invalid/request_missing_evidence.json",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_authority_overreach.json",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_digest_drift.json",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/manifest.json",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/request.json",
+    "schemas/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json",
+    "tests/validators/map/tiles3d_stac_item_adapter/test_build_tiles3d_stac_item.py",
+    "tools/validators/map/tiles3d_stac_item_adapter/build_tiles3d_stac_item.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0007",
+      "id": "attachment:pass31-tiles3d-stac-adapter",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/map/tiles3d_tree_hash_manifest.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:tiles3d-tree-manifest",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/standards/STAC_KFM_PROFILE.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:kfm-stac-profile",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/catalog/validate_catalog_health.py@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:catalog-health-validator",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T05:50:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0007",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0010",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0011",
+      "repo:contracts/map/tiles3d_tree_hash_manifest.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/standards/STAC_KFM_PROFILE.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:tools/validators/catalog/validate_catalog_health.py@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Deterministic no-network adapter from an integrity-only 3D Tiles tree manifest plus an evidence-bound request to an unreleased STAC Item candidate. It does not create evidence, policy approval, promotion, release, publication, or public-scene authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f4606fcd989c4f80197a91080e26f27c13da4237ecd7564b5fa181ac06c5d0cd",
+  "receipt_id": "genrec-tiles3d-stac-item-adapter-20260808",
+  "truth_labels": {
+    ".github/workflows/tiles3d-stac-item-adapter.yml": "CONFIRMED",
+    "contracts/map/tiles3d_stac_item_adapter.md": "PROPOSED",
+    "fixtures/map/tiles3d_stac_item_adapter/README.md": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/expected/valid_item.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/package/subtrees/0/0/0.subtree": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tiles/0/0/0.glb": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/package/tileset.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/schema_invalid/request_missing_evidence.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_authority_overreach.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/semantic_invalid/manifest_digest_drift.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/manifest.json": "CONFIRMED",
+    "fixtures/map/tiles3d_stac_item_adapter/valid/request.json": "CONFIRMED",
+    "schemas/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json": "PROPOSED",
+    "tests/validators/map/tiles3d_stac_item_adapter/test_build_tiles3d_stac_item.py": "CONFIRMED",
+    "tools/validators/map/tiles3d_stac_item_adapter/build_tiles3d_stac_item.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Four deterministic adapter unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Positive and negative fixtures matched exact finite outcomes and reason codes."
+    },
+    {
+      "gate": "local-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every emitted asset checksum and size matched the synthetic local bytes."
+    },
+    {
+      "gate": "catalog-health-equivalent-check",
+      "outcome": "PASS",
+      "reason": "Required STAC fields, provenance links, safe local asset paths, roles, sizes, and SHA-256 bindings passed local profile-equivalent checks; the repository validator remains part of hosted CI."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+IN_SITU_MERGE_FORBIDDEN	$.anti_collapse.merged_with_in_situ

@@ -271,9 +271,10 @@ Generated outputs should include placeholders where owner, reviewer, source-righ
 | Schema example generator | `tools/generators/generate_schema_examples.py` | Produce example JSON from accepted schema surfaces. | **PROPOSED** |
 | Catalog stub generator | `tools/generators/generate_catalog_stub.py` | Create candidate catalog records from validated local metadata. | **PROPOSED** |
 | Docs index generator | `tools/generators/generate_docs_index.py` | Create a deterministic documentation inventory for review. | **PROPOSED** |
+| Soil yearly-diff builder | `tools/generators/build_soil_yearly_diff.py` | Compare two local synthetic SSURGO/gNATSGO snapshot manifests and emit a candidate diff report plus validated profile. | **CONFIRMED** |
 
 > [!NOTE]
-> These names are recommended first-slice targets, not proof of current implementation. Confirm file presence on the active branch before invoking them.
+> Rows labeled **PROPOSED** are recommended first-slice targets, not proof of current implementation. Confirm file presence on the active branch before invoking any proposed helper.
 
 [Back to top](#top)
 

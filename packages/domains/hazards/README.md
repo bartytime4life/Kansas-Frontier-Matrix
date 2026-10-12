@@ -44,13 +44,13 @@ Shared implementation package for KFM hazards helpers that preserve source roles
 - [Source-role anti-collapse rules](#source-role-anti-collapse-rules)
 - [Public-safety boundary](#public-safety-boundary)
 - [Trust-boundary flow](#trust-boundary-flow)
-- [Proposed directory map](#proposed-directory-map)
-- [Finite outcomes](#finite-outcomes)
-- [Validation and quality gates](#validation-and-quality-gates)
-- [Development rules](#development-rules)
-- [Definition of done](#definition-of-done)
-- [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Proposed directory map
+- Finite outcomes
+- Validation and quality gates
+- Development rules
+- Definition of done
+- Verification checklist
+- Rollback
 
 ---
 

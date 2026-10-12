@@ -31,6 +31,9 @@ notes:
   - "v0.3 downgrades unverified repo-path and sibling-link claims to NEEDS VERIFICATION unless supported by mounted-repo evidence, current repo scan, accepted ADR, or generated artifact."
   - "v0.3 retains the v0.2 doctrinal correction: type remains register, not profile."
   - "v0.3 keeps ADR-0014 for temporal vocabulary as NEEDS VERIFICATION. The six time-kinds vocabulary remains doctrine-supported; the specific ADR identifier must be reconciled against the active ADR ledger."
+owning_root: docs/
+responsibility: "Documentation for Source catalog profiles register; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source Catalog Profiles Register
@@ -62,13 +65,13 @@ notes:
   - [2. KFM-DCAT profile](#2-kfm-dcat-profile)
   - [3. KFM-PROV profile](#3-kfm-prov-profile)
 - [KFM-namespaced extension obligations](#kfm-namespaced-extension-obligations)
-- [Temporal vocabulary: six time-kinds](#temporal-vocabulary-six-time-kinds)
-- [Placement model](#placement-model)
-- [Maintenance rules](#maintenance-rules)
-- [Validation checklist](#validation-checklist)
-- [Open questions](#open-questions)
-- [Related docs](#related-docs)
-- [Final status](#final-status)
+- Temporal vocabulary: six time-kinds
+- Placement model
+- Maintenance rules
+- Validation checklist
+- Open questions
+- Related docs
+- Final status
 
 ---
 

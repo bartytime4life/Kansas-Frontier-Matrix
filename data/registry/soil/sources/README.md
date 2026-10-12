@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/registry/soil/sources/readme
 name: Soil Source Registry README
+title: Soil Source Registry Compatibility View
 path: data/registry/soil/sources/README.md
 type: data-registry-soil-sources-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners:
   - <registry-steward>
@@ -17,14 +18,16 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-08-24
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
+owning_root: data/
+responsibility: Preserve and route the non-canonical domain-first Soil source templates without independent descriptor writes
 artifact_family: registry
-registry_scope: soil-source-descriptor-records
+registry_scope: soil-domain-first-source-compatibility-view
 domain: soil
-path_posture: existing-thin-readme-replaced; domain-first-registry-path-confirmed; cross-domain-source-registry-parent-confirms-data-registry-sources-domain-pattern; soil-domain-registry-points-to-data-registry-sources-soil-or-accepted-source-registry-lane; exact-topology-needs-verification
+path_posture: existing-thin-readme-replaced; domain-first-compatibility-view; independent-writes-denied; canonical-writer-data-registry-sources-soil; migration-needs-verification
 sensitivity_posture: registry-internal; no-public-path; source-role-preserving; support-type-separation-required; scale-and-resolution-aware; private-land-and-parcel-joins-reviewed; field-verification-not-implied; rights-aware; evidence-aware; policy-aware; release-blocked-until-gates-close
 related:
   - ../README.md
@@ -97,15 +100,16 @@ tags:
 notes:
   - "This README expands the thin README at `data/registry/soil/sources/README.md`."
   - "Soil source registry records are admission and authority-control records. They do not store source payloads, prove soil claims, define contracts, enforce schemas, hold policy, close catalogs, or publish artifacts."
-  - "The cross-domain source registry parent confirms `data/registry/sources/<domain>/` as a permitted source-registry pattern. This requested domain-first path exists in the repository but remains layout-NEEDS VERIFICATION until registry topology is reconciled."
+  - "Accepted ADR-0029 and Directory Rules DIR-SOURCE-001 through DIR-SOURCE-004 make data/registry/sources/ the canonical source-registry writer and permit this domain-first path only as a generated or compatibility view."
+  - "The four retained templates are migration-visible compatibility material. Do not add, correct, or supersede canonical source facts here."
   - "NRCS and other soil source families must not be collapsed into one source role, cadence, scale, support type, rights posture, or release posture."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Soil Source Registry
+# Soil Source Registry Compatibility View
 
-Domain-first registry lane for Soil source descriptor and source-admission records.
+Domain-first compatibility lane for retained Soil source-descriptor templates and routing.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -116,16 +120,30 @@ Domain-first registry lane for Soil source descriptor and source-admission recor
   <img alt="Exposure: no public path" src="https://img.shields.io/badge/exposure-no%20public%20path-critical">
 </p>
 
-**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Soil source boundary](#soil-source-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Suggested descriptor shape](#suggested-descriptor-shape) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
+**Quick links:** [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Soil source boundary](#soil-source-boundary) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Suggested directory shape](#suggested-directory-shape) · [Descriptor authoring](#descriptor-authoring-boundary) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
-> `data/registry/soil/sources/` is a source-registry lane for Soil admission and authority-control records. It is not RAW source storage, WORK staging, QUARANTINE, PROCESSED data, catalog output, proof, receipt storage, semantic contract authority, schema authority, policy, release authority, public API/UI material, parcel truth, field-verification truth, conservation-compliance truth, soil-claim truth, or generated-answer authority.
+> `data/registry/soil/sources/` is not an independent source-registry writer.
+> It is also not RAW source storage, WORK staging, QUARANTINE, PROCESSED data,
+> catalog output, proof, receipt storage, semantic contract authority, schema
+> authority, policy, release authority, public API/UI material, parcel truth,
+> field-verification truth, conservation-compliance truth, soil-claim truth, or
+> generated-answer authority.
 
 ---
 
 ## Scope
 
-This directory documents and may hold Soil source descriptor records, activation/admission sidecars, source-family indexes, source-role review notes, source-head references, supersession references, and registry-local indexes for sources that may feed the Soil lane.
+This directory preserves four existing greenfield templates and documents their
+compatibility and migration boundary. Canonical Soil source identity and
+descriptor work belongs under
+[`data/registry/sources/soil/`](../../sources/soil/README.md).
+
+Do not add, correct, supersede, or independently review source facts in this
+path. A future generated view requires an accepted canonical input mapping,
+generator identity and version, content digest, regeneration command,
+no-manual-edit policy, consumer handling, and rollback target. Retirement or
+redirect requires equivalent lineage and link closure.
 
 Soil source registry records describe how a source may be treated before source material reaches RAW. They may record:
 
@@ -158,7 +176,14 @@ data/registry/sources/<domain>/
 
 The Soil domain registry README points to `data/registry/sources/soil/` or an accepted source registry lane for source identity, role, rights, cadence, authority limits, and access posture. NRCS catalog documentation also states that human-facing product pages do not replace authoritative `SourceDescriptor` records in `data/registry/sources/`.
 
-Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS VERIFICATION topology**. If `data/registry/sources/soil/` is later accepted as canonical, this domain-first path should either redirect to that lane or be migrated with a clear manifest, retained history, and rollback target. Do not maintain divergent descriptor sets.
+Accepted ADR-0029 adopts Directory Rules `DIR-SOURCE-001` through
+`DIR-SOURCE-004`. They make `data/registry/sources/` the canonical machine
+source-registry writer and permit `data/registry/<domain>/sources/` only as a
+generated view rather than an independent writer.
+
+Therefore, this path is **CONFIRMED compatibility presence / independent writes
+denied**. Its mapping, generation, redirect, or retirement remains **NEEDS
+VERIFICATION**. Do not maintain divergent descriptor sets.
 
 ---
 
@@ -166,8 +191,9 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 
 | Responsibility | Home | Boundary |
 |---|---|---|
-| Soil source descriptor/admission records | `data/registry/soil/sources/` and/or reconciled `data/registry/sources/soil/` | Source identity, role, rights, terms, cadence, activation, authority limits, support type, scale, and caveats. |
-| Domain-first registry parent | `data/registry/soil/` | Parent currently exists as a stub; topology remains NEEDS VERIFICATION. |
+| Canonical Soil source descriptor/admission records | `data/registry/sources/soil/` | Accepted writer for source identity, role, rights, terms, cadence, authority limits, support type, scale, and caveats. |
+| This compatibility view | `data/registry/soil/sources/` | Four retained templates plus routing; independent writes denied pending migration. |
+| Domain-first registry parent | `data/registry/soil/` | Compatibility parent; not a source-registry writer. |
 | Cross-domain source registry parent | `data/registry/sources/README.md` | General source registry doctrine and subtype-first source registry pattern. |
 | Soil domain registry records | `data/registry/domains/soil/` | Domain-state records; not source descriptor instances. |
 | Soil source payloads | `data/raw/soil/`, `data/work/soil/`, `data/quarantine/soil/`, `data/processed/soil/` | Actual data belongs in lifecycle lanes, not registry records. |
@@ -189,6 +215,7 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 | Rule | Handling |
 |---|---|
 | Registry record is admission control | It governs how a source may be admitted and used; it does not contain the source payload. |
+| Compatibility view is not a writer | Canonical source facts are created and corrected only under `data/registry/sources/`; this path is held pending migration. |
 | Source role is fixed at admission | Primary, corroborating, context, restricted, modeled, aggregate, candidate, or other accepted source roles must not be upgraded by processing, normalization, joining, cataloging, rendering, or generated explanation. |
 | Soil support type is preserved | Map-unit support, component support, horizon support, station/depth support, gridded support, satellite/model support, and interpretation support must not be silently collapsed. |
 | Scale and resolution matter | SSURGO-like survey material, generalized products, station observations, gridded products, and remote-sensing products must preserve intended scale, resolution, support, and uncertainty. |
@@ -207,20 +234,21 @@ Therefore, this requested path is treated as **CONFIRMED path presence / NEEDS V
 
 ## Accepted material
 
-Accepted content is limited to Soil source registry records and registry-local support files:
+Accepted future content in this compatibility path is limited to reviewed
+routing and migration support:
 
-- SourceDescriptor instances or pointers;
-- SourceActivationDecision references or activation sidecars where accepted;
-- SourceIntakeRecord references and source-head metadata summaries;
-- source-family README files and local indexes;
-- source-role review notes and role-assignment records;
-- rights, license, attribution, redistribution, cadence, access, endpoint, terms, steward, authority-scope, and caveat metadata;
-- source vintage, survey area, geography, spatial precision, temporal precision, scale, resolution, support type, attribute-support notes, retrieval refs, and stale-state notes;
-- supersession, withdrawal, correction, embargo, stale-state, quarantine, and rollback references;
-- registry-local manifests, checksums, signatures, and index sidecars;
-- pointers to validation/unit/support/aggregation receipts, proof packs, catalog records, release candidates, release manifests, correction notices, and rollback cards.
+- this README and bounded migration or redirect notes;
+- pointer-only compatibility indexes that do not become independent authority;
+- generated views only after canonical input mapping, generator identity/version,
+  digest, regeneration command, and no-manual-edit policy are accepted; and
+- lineage, consumer-closure, correction, withdrawal, and rollback references for
+  the compatibility migration itself.
 
-Keep records compact and pointer-based. Do not embed source payloads, full soil survey tables, raster grids, station readings, proof packs, policy decisions, catalog records, release manifests, or Soil claims in this lane.
+The four existing templates remain held for migration visibility. Keep them
+unchanged until a reviewed migration binds each one to canonical records or
+authorizes retirement. Do not embed source payloads, full soil survey tables,
+raster grids, station readings, proof packs, policy decisions, catalog records,
+release manifests, or Soil claims in this lane.
 
 ---
 
@@ -251,88 +279,38 @@ Keep records compact and pointer-based. Do not embed source payloads, full soil 
 
 ## Suggested directory shape
 
-The map below is **PROPOSED** documentation guidance, not proof that child folders or records exist.
+The map below records the inspected compatibility contents. It is not an
+authoring template.
 
 ```text
 data/registry/soil/sources/
 ├── README.md
-├── nrcs_ssurgo/
-│   ├── README.md
-│   └── index.local.json
-├── nrcs_gssurgo/
-│   ├── README.md
-│   └── index.local.json
-├── nrcs_gnatsgo/
-│   ├── README.md
-│   └── index.local.json
-├── nrcs_soil_data_access/
-│   ├── README.md
-│   └── index.local.json
-├── nrcs_web_soil_survey/
-│   ├── README.md
-│   └── index.local.json
-├── station_observations/
-│   ├── README.md
-│   └── index.local.json
-├── gridded_remote_sensing/
-│   ├── README.md
-│   └── index.local.json
-└── index.local.json
+├── ksu_soil_moisture.yaml
+├── nrcs_ssurgo.yaml
+├── nrcs_statsgo2.yaml
+└── smap_soil_moisture.yaml
 ```
 
-If `data/registry/sources/soil/` is accepted as canonical, this domain-first path should either redirect to that lane or be migrated with a clear manifest, retained history, and rollback target. Do not maintain divergent descriptor sets.
+This domain-first path should become a reproducible generated view, a bounded
+pointer/redirect, or a retired compatibility surface only through a reviewed
+migration with exact mapping, retained history, consumer closure, and rollback.
 
 ---
 
-## Suggested descriptor shape
+## Descriptor authoring boundary
 
-The exact schema remains **NEEDS VERIFICATION**. A Soil source registry record should be structured enough for audit, admission, validation, stale-state handling, correction, and rollback.
-
-```json
-{
-  "id": "kfm-source:soil:<stable-source-id>",
-  "record_type": "source_descriptor",
-  "domain": "soil",
-  "source_family": "nrcs_ssurgo | nrcs_gssurgo | nrcs_gnatsgo | nrcs_soil_data_access | nrcs_web_soil_survey | station_observations | gridded_remote_sensing | other",
-  "source_name": "Human-readable source name",
-  "source_role": "primary | corroborating | context | restricted | modeled | aggregate | candidate | synthetic | needs-review",
-  "authority_scope": "What this source may and may not support",
-  "support_type": "map_unit | component | horizon | station_depth | grid_cell | model_surface | interpretation | other",
-  "rights_posture": "open | attribution-required | restricted | unknown | denied | needs-review",
-  "sensitivity_posture": "public-safe | generalized | restricted | denied | needs-review",
-  "cadence": "one-time | periodic | event-driven | user-supplied | unknown",
-  "source_time_kind_refs": [],
-  "stale_state_refs": [],
-  "source_head_refs": [],
-  "retrieval_refs": [],
-  "activation_refs": [],
-  "intake_refs": [],
-  "policy_refs": [],
-  "validation_receipt_refs": [],
-  "unit_receipt_refs": [],
-  "support_receipt_refs": [],
-  "aggregation_receipt_refs": [],
-  "evidence_refs": [],
-  "proof_refs": [],
-  "catalog_refs": [],
-  "review_refs": [],
-  "release_refs": [],
-  "correction_refs": [],
-  "rollback_refs": [],
-  "blockers": [],
-  "public_exposure": "none | eligible-after-review | released-public-safe | permissioned | restricted | denied",
-  "created_at": "timestamp",
-  "updated_at": "timestamp"
-}
-```
-
-Do not treat this JSON block as a live schema. It is a maintainer-facing sketch until paired contracts, schemas, validators, fixtures, examples, CI, and review workflows are verified.
+Do not author a descriptor shape in this compatibility lane. The canonical
+SourceDescriptor schema and its migration aliases remain **NEEDS VERIFICATION**
+across the current schema variants. Bind that decision through the governing
+contract, schema, fixtures, validators, tests, registry mapping, and rollback
+plan before changing any retained template.
 
 ---
 
 ## Required checks before use
 
-- [ ] Confirm whether `data/registry/soil/sources/` or `data/registry/sources/soil/` is the accepted canonical descriptor lane before adding real descriptor payloads.
+- [x] Route canonical source-descriptor work to `data/registry/sources/soil/` under ADR-0029 and `DIR-SOURCE-001` through `DIR-SOURCE-004`.
+- [ ] Deny independent writes here until a reviewed generated-view, redirect, or retirement migration is complete.
 - [ ] Confirm the object is a source registry record, not source data, dataset registry record, crosswalk, domain registry record, rights record, sensitivity record, layer record, proof, receipt, catalog record, release decision, policy, schema, validator, fixture, test, connector, or pipeline.
 - [ ] Confirm source identity, source role, rights posture, terms, cadence, source head, source vintage, source scale, support type, resolution, retrieval time, valid/effective time, and authority limits are preserved.
 - [ ] Confirm source role and support type are not upgraded by normalization, joins, aggregation, interpolation, modeling, cataloging, release review, API shaping, map rendering, or generated explanation.
@@ -354,13 +332,14 @@ Do not treat this JSON block as a live schema. It is a maintainer-facing sketch 
 |---|---:|
 | This README expands the thin README at `data/registry/soil/sources/README.md`. | CONFIRMED authored |
 | The target path existed in the live repository with a short source-descriptor note before this edit. | CONFIRMED by GitHub contents API during this edit |
-| `data/registry/soil/README.md` exists and is currently a greenfield stub. | CONFIRMED by GitHub contents API during this edit |
+| `data/registry/soil/README.md` exists as the domain-first compatibility parent. | CONFIRMED at `main@366cfa9185b0d10ca27f128a8a041ca8c5312896` |
 | Cross-domain `data/registry/sources/README.md` says source registry records are admission and authority-control records and that per-domain subfolders such as `data/registry/sources/<domain>/` are permitted. | CONFIRMED by GitHub contents API during this edit |
 | Soil domain registry README says Soil source registry records belong in `data/registry/sources/soil/` or an accepted source registry lane and names Soil source families including SSURGO, SDA, gSSURGO, gNATSGO, Mesonet, SCAN, USCRN, SMAP, and SoilGrids. | CONFIRMED by GitHub contents API during this edit |
 | NRCS Soil Data Access documentation says product pages do not replace authoritative SourceDescriptor records in `data/registry/sources/`. | CONFIRMED by GitHub contents API during this edit |
 | NRCS connector README says NRCS products are multi-product and role-specific and must not be collapsed under one source role, cadence, scale, or release posture. | CONFIRMED by GitHub contents API during this edit |
-| Concrete Soil source descriptor payloads exist under this requested lane. | UNKNOWN |
-| The final accepted topology between domain-first and subtype-first source registry lanes is resolved. | NEEDS VERIFICATION |
+| Four unresolved greenfield templates exist under this compatibility lane. | CONFIRMED |
+| Accepted ADR-0029 and Directory Rules make the subtype-first registry the canonical writer. | CONFIRMED |
+| A generated-view, redirect, mapping, or retirement migration is complete. | NEEDS VERIFICATION |
 | A canonical Soil source descriptor schema is enforced. | NEEDS VERIFICATION |
 | CI validates Soil source registry records. | UNKNOWN |
 | This README grants public access to Soil source registry internals. | DENY |

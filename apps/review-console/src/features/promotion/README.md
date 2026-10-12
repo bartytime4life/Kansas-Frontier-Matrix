@@ -1,17 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://app/review-console/src/features/promotion/readme
 title: Review Console Promotion — Governed Readiness Boundary
-type: app-readme; directory-readme; feature-boundary
-version: v0.2
+type: readme
+version: v0.3
 status: draft; repository-grounded; shape-validation-executable; promotion-held; feature-not-implemented
 owners: OWNER_TBD — Review steward · Promotion steward · Release steward · Policy steward · Evidence steward · Security steward · API steward · UI steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-19
+updated: 2026-10-01
 policy_label: "restricted-review; role-gated; evidence-bound; release-subordinate; no-local-promotion; no-file-move; no-publication-authority"
 current_path: apps/review-console/src/features/promotion/README.md
 owning_root: apps/
 responsibility: define the app-local promotion-readiness projection and bounded recommendation handoff without creating or mutating PromotionDecision, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, lifecycle state, release records, evidence, policy, receipts, proofs, or published artifacts
-truth_posture: CONFIRMED existing v0.1 README, executable PromotionDecision shape validation, hydrology fixtures, hard-coded APPROVE promoter stub, unresolved smoke record, read-only promotion-gate hold, policy stubs, placeholder semantic validators, and thin ReleaseManifest and RollbackCard schemas / PROPOSED governed UI projection and recommendation handoff / CONFLICTED promotion, review, policy, release, and UI vocabularies / UNKNOWN authoritative API, evaluator, writer, cross-domain runtime, deployment, and full-suite state
+truth_posture: CONFIRMED existing v0.1 README, executable PromotionDecision shape validation, hydrology fixtures, finite HOLD promoter entry point, historical unresolved APPROVE smoke record, read-only promotion-gate hold, policy stubs, placeholder semantic validators, and thin ReleaseManifest and RollbackCard schemas / PROPOSED governed UI projection and recommendation handoff / CONFLICTED promotion, review, policy, release, and UI vocabularies / UNKNOWN authoritative API, evaluator, writer, cross-domain runtime, deployment, and full-suite state
 base_commit: 74c669f23e675fc48fbff72a5c0c9bb055fb1080
 prior_blob: eee28922e3e74019fd2d35a2a03da3f9cd9c81ef
 related:
@@ -86,7 +86,7 @@ It must not infer readiness from a path, green CI check, smoke record, dashboard
 | Promotion policy | Non-enforcing stubs | No real active rules. |
 | Promotion-gate validator | Placeholder | No semantic gate. |
 | ReviewRecord validator | Placeholder | No accountable-review enforcement. |
-| Hydrology promoter | Stub | Hard-codes `APPROVE`. |
+| Hydrology promoter | Inert entry point | Returns `HOLD` / `PROMOTION_NOT_IMPLEMENTED` without writing. |
 | Hydrology smoke record | Unresolved | Automation review; evidence and rollback refs unresolved. |
 | Promotion-gate workflow | Read-only hold | Proves scaffold remains held; does not promote. |
 | ReleaseManifest/RollbackCard schemas | Thin | Only `id` required; readiness is not enforced. |
@@ -122,7 +122,7 @@ The feature may render governed projections and submit a recommendation intent t
 
 ## Hydrology smoke path
 
-The hydrology promoter writes hard-coded `APPROVE` with reviewer `automation-smoke`, ticket `REL-SMOKE`, and path-shaped evidence and rollback refs. The promotion-gate workflow confirms those refs do not resolve and deliberately does not execute the promoter.
+The historical smoke record declares `APPROVE` with reviewer `automation-smoke`, ticket `REL-SMOKE`, and unresolved evidence and rollback refs. The hydrology promoter entry point now returns `HOLD` without writing. The promotion-gate workflow keeps the smoke record held and checks the non-writing promoter boundary.
 
 Required UI state:
 
@@ -203,7 +203,7 @@ Required proof layers: schema, semantic validator, policy, evidence resolution, 
 
 - [ ] Owners, feature inventory, and vocabulary mappings are confirmed.
 - [ ] Real promotion policy and semantic validators exist.
-- [ ] Hard-coded `APPROVE` is removed or disabled.
+- [x] The executable hard-coded `APPROVE` path is disabled; the historical smoke record remains held.
 - [ ] Evidence, validation, policy, review, rollback, correction, and manifest refs resolve.
 - [ ] ReleaseManifest and RollbackCard readiness is machine-checkable.
 - [ ] Governed API projection and server-revalidated handoff are tested.

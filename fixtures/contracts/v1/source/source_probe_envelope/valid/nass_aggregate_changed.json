@@ -1,0 +1,38 @@
+{
+  "object_type": "SourceProbeEnvelope",
+  "schema_version": "1.0.0",
+  "probe_id": "source-probe:nass-kansas-crop-progress-v1",
+  "profile": "NASS_AGGREGATE",
+  "observed_at": "2026-04-12T12:00:00Z",
+  "source_descriptor_ref": "data/registry/sources/agriculture/nass_crop_progress.yaml",
+  "source_head": {
+    "etag": "\"fixture\"",
+    "last_modified": "Sun, 12 Apr 2026 12:00:00 GMT",
+    "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "scope": {
+    "geography_level": "STATE",
+    "geography_id": "KS"
+  },
+  "materiality": {
+    "status": "CHANGED",
+    "reason_codes": [
+      "CANONICAL_ROWS_CHANGED"
+    ]
+  },
+  "profile_data": {
+    "source_role": "aggregate",
+    "row_count": 128,
+    "canonical_rows_sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "field_level_claim": false
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_access": "DENIED",
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:1b30177efa3c949cfdd42f8faa8c353200864731d03c30c097a1614d2097bd0f"
+}

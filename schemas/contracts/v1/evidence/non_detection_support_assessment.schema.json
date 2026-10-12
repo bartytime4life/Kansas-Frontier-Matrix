@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/non_detection_support_assessment.schema.json",
+  "title": "NonDetectionSupportAssessment",
+  "description": "Fixture-first coherence record for a sampling event, detection opportunity, and bounded detection or non-detection statement.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "subject_ref",
+    "target_ref",
+    "sampling_event",
+    "detection_opportunity",
+    "assertion",
+    "evaluated_at",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "NonDetectionSupportAssessment"},
+    "schema_version": {"const": "0.1.0"},
+    "profile": {"const": "kfm.evidence.non-detection-support.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:non-detection-support:[a-f0-9]{64}$"},
+    "subject_ref": {"$ref": "#/$defs/ref"},
+    "target_ref": {"$ref": "#/$defs/ref"},
+    "sampling_event": {"$ref": "#/$defs/sampling_event"},
+    "detection_opportunity": {"$ref": "#/$defs/detection_opportunity"},
+    "assertion": {"$ref": "#/$defs/assertion"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "ref": {"type": "string", "minLength": 8, "maxLength": 320},
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sampling_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_ref", "protocol_id", "protocol_version", "started_at", "ended_at",
+        "spatial_support_ref", "temporal_support_ref", "complete_checklist",
+        "effort_duration_minutes", "effort_distance_km", "observer_or_instrument_count",
+        "coverage_current", "privacy_class", "privacy_transform_ref"
+      ],
+      "properties": {
+        "event_ref": {"$ref": "#/$defs/ref"},
+        "protocol_id": {"$ref": "#/$defs/code"},
+        "protocol_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "ended_at": {"type": "string", "format": "date-time"},
+        "spatial_support_ref": {"$ref": "#/$defs/ref"},
+        "temporal_support_ref": {"$ref": "#/$defs/ref"},
+        "complete_checklist": {"type": "boolean"},
+        "effort_duration_minutes": {"type": "integer", "minimum": 0, "maximum": 1440},
+        "effort_distance_km": {"type": ["number", "null"], "minimum": 0, "maximum": 1000},
+        "observer_or_instrument_count": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "coverage_current": {"type": "boolean"},
+        "privacy_class": {"enum": ["PUBLIC_SAFE", "GENERALIZED", "RESTRICTED"]},
+        "privacy_transform_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "detection_opportunity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_in_protocol_scope", "method_suitable", "season_supported", "opportunity_state", "detectability_limits"],
+      "properties": {
+        "target_in_protocol_scope": {"type": "boolean"},
+        "method_suitable": {"enum": ["YES", "NO", "UNKNOWN"]},
+        "season_supported": {"enum": ["YES", "NO", "UNKNOWN"]},
+        "opportunity_state": {"enum": ["ADEQUATE", "INADEQUATE", "UNKNOWN", "SUPPRESSED"]},
+        "detectability_limits": {
+          "type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/code"}
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "observed_count", "decision", "statement_scope", "reason_codes", "obligations", "evidence_bundle_refs"],
+      "properties": {
+        "state": {"enum": ["OBSERVED_DETECTION", "SUPPORTED_NON_DETECTION", "NOT_SAMPLED", "INCOMPLETE_EFFORT", "UNKNOWN_EFFORT", "SUPPRESSED_RESULT", "STALE_COVERAGE"]},
+        "observed_count": {"type": ["integer", "null"], "minimum": 0, "maximum": 1000000},
+        "decision": {"enum": ["ANSWER", "ABSTAIN", "DENY"]},
+        "statement_scope": {"const": "WITHIN_DECLARED_SAMPLING_EFFORT"},
+        "reason_codes": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "obligations": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}},
+        "evidence_bundle_refs": {"type": "array", "minItems": 1, "maxItems": 20, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "no_network", "lifecycle_write", "truth_authority", "policy_authority", "review_authority", "release_authority", "publication_authority"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "no_network": {"const": true},
+        "lifecycle_write": {"const": false},
+        "truth_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

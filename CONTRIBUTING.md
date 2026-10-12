@@ -2,6 +2,12 @@
 
 > KFM treats every consequential repository change as a governed, evidence-backed, reviewable, and reversible event.
 
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-contributor-paths-dark.svg" /><img src="docs/brand/readme/kfm-contributor-paths.svg" alt="Six contributor paths — Explorer developer, data engineer, historian and archivist, scientist and ecologist, cartographer and designer, accessibility reviewer — each flowing into a small draft pull request." width="100%" /></picture>
+</p>
+
+<sub>Every kind of expertise has a starting place; every path ends in a small, inspectable draft pull request. Illustration — see <a href="docs/brand/readme/README.md">README artwork</a>.</sub>
+
 This guide explains how to contribute code, documentation, schemas, policies, fixtures, tests, data-lifecycle artifacts, and release-supporting changes without weakening the Kansas Frontier Matrix trust membrane.
 
 ## Status and evidence boundary
@@ -9,14 +15,15 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Field | Current status |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot for this revision | `main@99337e68ba4299b667f27d5dd35c3dc92295933e` |
-| Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Evidence snapshot for this revision | `main@87099f58986e9795e7152eaea0b27d9568754ccb` (reverified 2026-09-04) |
+| Directory-governance authority reverified | `main@87099f58986e9795e7152eaea0b27d9568754ccb`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact pinned bytes at [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) |
 | Document role | Root contribution guide |
-| Truth posture | Cite-or-abstain; use the core four truth labels |
-| Review route | Focused branch and draft pull request by default |
+| Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
+| Review route | Focused branch and draft pull request |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
-| Review-routing limitation | The listed GitHub teams and branch-protection enforcement remain **NEEDS VERIFICATION** |
-| Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), targeted package or subsystem commands |
+| GitHub protection snapshot | 2026-09-25 readback: ruleset `15484585` (`Protect`) retains deletion, non-fast-forward, pull-request and review-thread-resolution protection; the owner-requested transition-check retirement removes its required-status-check rule |
+| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; routing is not independent review. The ruleset still has zero required approvals and an owner always-bypass entry |
+| Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), [`.pre-commit-config.yaml`](.pre-commit-config.yaml), [`package.json`](package.json), and targeted package or subsystem commands |
 | Implementation limit | A documented rule, planned path, stub workflow, or passing check is not automatically proof of runtime behavior or release authority |
 
 > [!IMPORTANT]
@@ -31,9 +38,29 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 > material placement drift in
 > [`docs/registers/DRIFT_REGISTER.md`](docs/registers/DRIFT_REGISTER.md).
 
+## Documentation authority and cross-system roles
+
+GitHub is the canonical current implementation and operational contributor-contract surface. This file and the repository's current [pull-request template](.github/PULL_REQUEST_TEMPLATE.md) are the repository-facing contribution authorities.
+
+Notion is a coordination surface for current work, owners, stale pointers, source lineage, and open verification. It does not establish repository implementation, review approval, release authority, or publication state.
+
+Google Drive and attached or reference material are proposal, research, doctrine-lineage, and design-pressure inputs unless the repository has explicitly adopted them. They do not override current GitHub evidence or authorize a new path, source admission, review, merge, release, deployment, promotion, or publication.
+
+When an operational contributor rule changes, update GitHub first. Update Notion or Drive pointers only as coordination or lineage; do not maintain a competing executable copy of this contract.
+
+GitHub's actual pull-request fields and timeline are authoritative for `Draft`/`Ready`, review, check, closed, merged, and base/merge state. Body prose, comments, generated receipts, badges, and tool intent may support the record but cannot override GitHub metadata.
+
+The owner retired the repository transition check and its incident-specific
+branch-only delivery requirement on 2026-09-25. The workflow is disabled in
+GitHub and the corresponding required status rule is removed. Authorized branch
+work may proceed to draft pull requests. Ready, approval, merge, settings,
+release, deployment, publication and source admission still require their own
+applicable authorization. See the [retirement record](docs/governance/repository_transition_control_source.md).
+
 ## Quick navigation
 
 - [Operating rules](#operating-rules)
+- [Documentation authority and cross-system roles](#documentation-authority-and-cross-system-roles)
 - [Before you start](#before-you-start)
 - [Choose the owning responsibility root](#choose-the-owning-responsibility-root)
 - [Keep meaning, shape, admissibility, and proof separate](#keep-meaning-shape-admissibility-and-proof-separate)
@@ -111,7 +138,7 @@ At minimum:
 
 1. Read the target file in full.
 2. Read the nearest parent README and relevant adjacent documentation.
-3. Inspect path-scoped instructions such as `AGENTS.md` when present. A root `AGENTS.md` was not verified at the evidence snapshot; do not assume one will remain absent.
+3. Inspect path-scoped instructions such as `AGENTS.md` when present. No root `AGENTS.md` was present at the current evidence snapshot; do not assume that nested or future instructions are absent.
 4. Read the current [Directory Rules](docs/doctrine/directory-rules.md) and accepted
    [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). Treat the
    architecture-path copy as read-only compatibility, not current authority.
@@ -133,6 +160,29 @@ A revision should:
 - preserve IDs, anchors, public links, and compatibility surfaces unless the change intentionally migrates them;
 - state conflicts rather than flattening them;
 - avoid turning a polished document into implementation proof.
+
+### 4. Use the optional proof rhythm when it helps
+
+For a bounded contribution that crosses several trust responsibilities, the
+following sequence can organize the work and its handoffs:
+
+| Session | Question | Handoff to existing owners |
+|---|---|---|
+| `FRAME` | What current claim, place/time scope, user value, owner, non-goals, and stop conditions bound the work? | Task contract, issue, or pull-request scope |
+| `TRACE` | Which source roles, rights, sensitivity, identity, temporal model, and evidence target control the claim? | Existing source, evidence, rights, sensitivity, identity, and temporal surfaces |
+| `PROVE` | Which contract, schema, fixture, validator, policy dependency, and positive and negative cases establish the bounded behavior? | Responsibility-owning contracts, schemas, policy, fixtures, tests, and receipts |
+| `SHOW` | How will a governed API, map, drawer, or Focus interaction keep `ABSTAIN`, `DENY`, `HOLD`, stale, conflict, and correction states visible? | Existing carrier and public-safe interaction surfaces |
+| `REHEARSE` | Which human review, dry run, correction, rollback, unresolved items, and next decision complete the handoff? | Existing review, release, correction, rollback, and continuation records |
+
+This rhythm is optional contributor organization, not a KFM state machine. It
+does not rename the lifecycle, create a policy or gate outcome, prove a claim,
+or authorize review, merge, promotion, release, deployment, publication, or
+public use. A session may be omitted when it does not apply, but the owning
+responsibility and any unresolved risk must remain explicit.
+
+Proposal provenance: *KFM Living Compass Working Edition 1.0*, `TRAIL 12 - A
+five-session mission rhythm`, reconciled through the
+[circled-source distinctive-delta map](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#32-five-session-contributor-rhythm).
 
 ## Choose the owning responsibility root
 
@@ -295,9 +345,11 @@ Minimum expectations:
 
 ### Pull requests
 
-Use [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) and keep every section. Mark a section `Not applicable` with a reason instead of deleting it.
+Use [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) and keep every heading. At draft opening, complete the core review boundary and mark each non-triggered conditional section `Not applicable` with one reason. Do not fabricate evidence or delete the visible tokens required by the current proposed Rego companion.
 
-A complete pull request identifies:
+GitHub's actual pull-request fields and timeline are authoritative for delivery state. Do not rely on a PR body saying `DRAFT`, `DO NOT MERGE`, or `READY`; read back the GitHub `draft`, review, check, base, head, conflict, closed, and merged fields before making a delivery-state claim.
+
+At draft opening, the core review boundary identifies:
 
 - goal and status labels;
 - pinned evidence inspected;
@@ -311,6 +363,8 @@ A complete pull request identifies:
 - anti-prompt-injection result;
 - generated-receipt path for AI-authored work;
 - ADR triggers and links.
+
+Before `READY_PR` or a merge recommendation, complete every applicable conditional section and resolve, narrow, or explicitly hold each material unknown that blocks that transition. Non-critical unknowns may remain on a draft when their affected scope and later gate are explicit.
 
 Draft pull requests are the default for substantial, governance-significant, AI-authored, or not-yet-fully-validated changes. Do not self-approve, merge, enable auto-merge, dismiss reviews, or mark ready for review unless explicitly authorized.
 
@@ -328,6 +382,19 @@ Use these labels for material claims:
 | **NEEDS VERIFICATION** | Checkable, but not yet checked strongly enough to act as fact |
 
 `INFERRED`, `CONFLICTED`, `SUPERSEDED`, `RETAINED`, or similar terms may qualify a claim's relationship or lifecycle, but they do not replace the core four evidence labels.
+
+### Capability maturity is a separate axis
+
+Whenever a pull request makes a material claim about a repository capability, report two independent answers at a pinned evidence snapshot:
+
+| Axis | Pull-request vocabulary | Question answered | Must not imply |
+|---|---|---|---|
+| Authority / epistemic posture | `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` | How strongly may the exact claim be relied on? | Implementation, deployment, activation, release, or publication |
+| Capability maturity | `IMPLEMENTED`, `PARTIAL`, `DRAFT`, `DEPRECATED`, `ABSENT`, `NOT INSPECTED` | What implementation evidence exists for the exact capability and scope? | Acceptance, evidence sufficiency, rights clearance, policy approval, review, release, publication, or public fitness |
+
+Do not infer either axis from the other. An implemented validator may enforce only a proposed inactive profile; an accepted placement decision may be only partially implemented; a confirmed source fact may remain held by rights or sensitivity controls. When a capability was not inspected, use `NOT INSPECTED` instead of inferring maturity from prose, filenames, schemas, workflow names, or check status.
+
+This is a reporting discipline, not a new machine enum, lifecycle state, gate result, policy outcome, ADR status, release state, or publication authority. Its proposal lineage and bounded non-effects are recorded in [`circled-whole-system-sources-distinctive-delta-source-map.md`](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#31-two-axis-assessment-authority-is-not-maturity).
 
 ### Evidence requirements
 
@@ -379,6 +446,27 @@ For an AI-authored or substantively AI-modified artifact:
 8. Do not represent the receipt as proof, factual authority, policy permission, release approval, or publication authority.
 
 The current pull-request template requires this receipt. The breadth of automated enforcement remains **NEEDS VERIFICATION**.
+### Turn an AI-assisted result into a reviewable contribution
+
+A useful handoff connects the user's question to a concrete artifact and a check.
+For example, a historical-year control should preserve its selected product and
+report missing imagery without reusing another year's pixels. A change to that
+behavior should explain the trigger, identify the owning callback, protect its
+negative states, and show the actual validation performed.
+
+| Stage | Reviewable output |
+|---|---|
+| Human direction | User-visible outcome, constraints and acceptance criteria |
+| Source research | Exact component, revision, source semantics and unresolved assumptions |
+| AI-assisted implementation | Focused diff with its affected callers and recovery path |
+| Verification | Named commands and interaction observations tied to the tested revision |
+| Review | Actual GitHub review state and the generated-work receipt with honest review status |
+
+The [wiki contribution walkthrough](docs/wiki/Contributing.md) gives a worked
+example, and [development and validation](docs/wiki/Development-and-Validation.md)
+separates source, test, runtime and browser evidence. These reading aids do not
+replace the contribution requirements above or authorize a merge or release.
+
 
 ## Validation
 
@@ -391,20 +479,28 @@ The root project currently requires Python 3.11 or newer and exposes this baseli
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
+python -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
 
 make validate
 git diff --check
 ```
 
+The Python installer uses the committed hash locked test profile. `pre-commit` is a separate optional developer tool, so its install above is not covered by that lock. For the current component-specific dependency and configuration paths, see [Installation](docs/installation.md).
+
 At the evidence snapshot:
 
-- `make validate` runs `make schemas` and `make test`;
-- `make schemas` invokes `python tools/validators/_common/run_all.py`;
-- `make test` runs `python -m pytest tests/schemas tests/contracts -q`;
-- many other Make targets and root JavaScript `lint`, `test`, and `build` scripts remain explicit TODO placeholders.
+- `make validate` delegates to `make schemas test`.
+- `make schemas` invokes `python tools/validators/_common/run_all.py`.
+- `make test` runs `python -m pytest tests/schemas tests/contracts -q`.
+- Implemented Make targets include repository guardrails, governed-API checks, deny/boundary checks, release dry-run checks, and MapLibre validation surfaces; read each target before relying on it.
+- Readiness lanes run through `tools/readiness/run_lane.py`: `policy` runs the Pass 12 Rego pair and `proof-slice` runs the synthetic no-network Hydrology proof slice; `fixtures` and `catalog` exit with a named HOLD (status 3) and do not prove validation.
+- The root JavaScript workspace in [`package.json`](package.json) pins `pnpm@11.17.0` and Node `>=22.13 <23`; its root `lint`, `test`, and `build` scripts intentionally exit with `WORKFLOW_HOLD`, so they are not validation. Use affected package commands for JavaScript/TypeScript changes.
+- [`pnpm-workspace.yaml`](pnpm-workspace.yaml) carries an `allowBuilds` policy. Do not bypass or rewrite that policy merely to make a check green.
 
-Do not report a TODO target as validation. Run targeted subsystem checks in addition to the baseline.
+Do not report a TODO target or `WORKFLOW_HOLD` script as validation. Run targeted subsystem checks in addition to the baseline.
 
 ### Targeted examples
 
@@ -413,9 +509,7 @@ Run only when the change affects the named surface:
 ```bash
 make governed-api-smoke
 make boundary-guards
-make maplibre-perf
-make maplibre-govern
-make maplibre-proof
+make proof-slice
 ```
 
 Read the corresponding Make target, package metadata, workflow, and tests before relying on a command. A command's presence does not prove dependencies are installed or the check passes.
@@ -520,6 +614,8 @@ Release-affecting rollback must use the repository's governed release, correctio
 ### Validation and delivery
 
 - [ ] Repository-native baseline and targeted checks were run, or every omission has a reason.
+- [ ] `pre-commit run --all-files` was run, or its omission or failure is recorded with a reason.
+- [ ] GitHub metadata, not PR body prose, was used for delivery-state claims.
 - [ ] Positive and negative behavior were tested where applicable.
 - [ ] Markdown structure and links were checked for documentation changes.
 - [ ] Final diff contains only authorized paths.

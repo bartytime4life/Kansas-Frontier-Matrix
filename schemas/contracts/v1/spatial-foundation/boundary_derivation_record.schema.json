@@ -1,0 +1,528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/spatial-foundation/boundary_derivation_record.schema.json",
+  "title": "BoundaryDerivationRecord",
+  "description": "Synthetic survey-control and derived-boundary provenance record. Validation grants no title, ownership, legal-boundary, source, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "derivation_id",
+    "hash_profile",
+    "spec_hash",
+    "source_context",
+    "controls",
+    "derivation",
+    "lineage",
+    "limitations",
+    "review",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "BoundaryDerivationRecord"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "derivation_id": {
+      "type": "string",
+      "pattern": "^boundary-derivation:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_refs",
+        "source_record_refs",
+        "source_roles",
+        "survey_generation",
+        "legal_context"
+      ],
+      "properties": {
+        "source_descriptor_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "source_record_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "source_roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CONTROL_GEOMETRY",
+              "HISTORICAL_SURVEY",
+              "FIELD_NOTE",
+              "ADJUSTMENT",
+              "CONTEXT"
+            ]
+          }
+        },
+        "survey_generation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "legal_context": {
+          "const": "NON_TITLE_CONTEXT_ONLY"
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "control_id",
+          "observation_ref",
+          "control_status",
+          "coordinate_ref",
+          "method",
+          "observed_at",
+          "uncertainty_meters",
+          "evidence_refs"
+        ],
+        "properties": {
+          "control_id": {
+            "type": "string",
+            "pattern": "^survey-control:[a-z0-9][a-z0-9_.:-]{4,240}$"
+          },
+          "observation_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "control_status": {
+            "enum": [
+              "OBSERVED",
+              "MONUMENTED",
+              "ACCEPTED",
+              "DESTROYED",
+              "REESTABLISHED",
+              "UNKNOWN"
+            ]
+          },
+          "coordinate_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "method": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "\\S"
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+          },
+          "uncertainty_meters": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_id",
+        "method_version",
+        "parameters_digest",
+        "adjustment_type",
+        "input_control_ids",
+        "residual_summary",
+        "output_geometry_ref",
+        "output_geometry_digest"
+      ],
+      "properties": {
+        "method_id": {
+          "type": "string",
+          "pattern": "^derivation-method:[a-z0-9][a-z0-9_.:-]{4,200}$"
+        },
+        "method_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "parameters_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "adjustment_type": {
+          "enum": [
+            "NONE",
+            "LEAST_SQUARES",
+            "RUBBER_SHEET",
+            "GEOREFERENCE",
+            "OTHER"
+          ]
+        },
+        "input_control_ids": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          }
+        },
+        "residual_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rmse_meters",
+            "max_residual_meters",
+            "point_count",
+            "units"
+          ],
+          "properties": {
+            "rmse_meters": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            "max_residual_meters": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000
+            },
+            "point_count": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 128
+            },
+            "units": {
+              "const": "meters"
+            }
+          }
+        },
+        "output_geometry_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "output_geometry_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_refs",
+        "transform_receipt_ref",
+        "derived_from_refs",
+        "supersedes_derivation_ref"
+      ],
+      "properties": {
+        "input_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "transform_receipt_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "derived_from_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "supersedes_derivation_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legal_boundary_authority",
+        "title_or_ownership_authority",
+        "parcel_authority",
+        "source_geometry_overwritten",
+        "use_class",
+        "limitation_codes"
+      ],
+      "properties": {
+        "legal_boundary_authority": {
+          "const": false
+        },
+        "title_or_ownership_authority": {
+          "const": false
+        },
+        "parcel_authority": {
+          "const": false
+        },
+        "source_geometry_overwritten": {
+          "const": false
+        },
+        "use_class": {
+          "const": "ANALYTIC_DERIVATION_ONLY"
+        },
+        "limitation_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reviewed_at",
+        "review_record_ref",
+        "analysis_use_allowed",
+        "unresolved",
+        "reason_codes",
+        "evidence_refs"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ACCEPTED_FOR_ANALYSIS",
+            "HOLD",
+            "REJECTED"
+          ]
+        },
+        "reviewed_at": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_record_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 640,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "analysis_use_allowed": {
+          "type": "boolean"
+        },
+        "unresolved": {
+          "type": "boolean"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "run_receipt_ref",
+        "input_refs"
+      ],
+      "properties": {
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "run_receipt_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        "input_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "legal_boundary_certified",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "evidence_closure_claimed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "legal_boundary_certified": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/spatial-foundation/boundary_derivation_record.md",
+    "fixtures_root": "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/",
+    "validator": "tools/validators/validate_boundary_derivation_record.py",
+    "tests": "tests/validators/test_validate_boundary_derivation_record.py",
+    "authority": "survey_control_and_boundary_derivation_provenance_only",
+    "non_effects": [
+      "does_not_create_title_ownership_parcel_or_legal_boundary_authority",
+      "does_not_overwrite_source_geometry",
+      "does_not_admit_sources_or_close_evidence",
+      "does_not_authorize_release_publication_or_public_use"
+    ]
+  }
+}

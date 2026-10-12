@@ -2,19 +2,20 @@
 doc_id: kfm://doc/tools-ingest-cdl-watch-readme
 title: tools/ingest/cdl_watch README
 type: README
-version: v0.1
-status: draft
+version: v0.2
+status: draft; bounded fixture-only implementation
 owner: TODO-tooling-qa-owner-plus-agriculture-source-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-02
 policy_label: public
 owning_root: tools/
-responsibility: proposed CDL watcher helper boundary for detecting review-worthy USDA NASS Cropland Data Layer changes
+responsibility: bounded synthetic CDL sidecar comparator and proposed live-watcher boundary for review-worthy USDA NASS Cropland Data Layer changes
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../../README.md
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/sources/catalog/usda/usda-nass-cdl.md
+  - ../../../docs/intake/exploratory/cdl-material-change-watcher-source-map.md
   - ../../../docs/domains/agriculture/SOURCE_REGISTRY.md
   - ../../../docs/domains/agriculture/SOURCES.md
   - ../../../connectors/nass/README.md
@@ -24,9 +25,11 @@ related:
   - ../../../data/quarantine/
   - ../../../data/receipts/
   - ../../../data/proofs/
+  - ../../../tests/ingest/cdl_watch/README.md
+  - ../../../.github/workflows/domain-agriculture.yml
   - ../../../release/
 notes:
-  - "This README defines a proposed CDL watcher tooling boundary, not a confirmed implementation."
+  - "The frozen fixture-only comparator is implemented; live CDL access, cadence, source admission, canonical thresholds, policy, receipts, promotion, and publication remain unimplemented."
   - "The watcher may detect material changes and emit review signals; it must not publish, promote, or mutate source-role truth."
   - "CDL product doctrine lives in docs/sources/catalog/usda/usda-nass-cdl.md; source activation lives in data/registry/sources/."
 [/KFM_META_BLOCK_V2] -->
@@ -42,7 +45,7 @@ notes:
 ![publication](https://img.shields.io/badge/publication-never--from--watcher-red)
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 
-> **One-line purpose.** `tools/ingest/cdl_watch/` is the proposed tooling lane for detecting review-worthy changes in USDA NASS Cropland Data Layer inputs and emitting governed watcher reports. It is not a connector, not a downloader of record, not a publication path, and not an authority for crop truth.
+> **One-line purpose.** `tools/ingest/cdl_watch/` contains a bounded fixture-only CDL sidecar comparator and the proposed boundary for future live change detection. It is not a connector, downloader of record, publication path, or authority for crop truth.
 
 ---
 
@@ -56,6 +59,7 @@ notes:
 - [What does not belong here](#what-does-not-belong-here)
 - [CDL watcher posture](#cdl-watcher-posture)
 - [Material-change model](#material-change-model)
+- [Executable fixture profile](#executable-fixture-profile)
 - [Inputs and outputs](#inputs-and-outputs)
 - [Report envelope](#report-envelope)
 - [Validation](#validation)
@@ -85,10 +89,11 @@ The answer should be a review signal, not a publication decision.
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/ingest/cdl_watch/README.md` | **CONFIRMED** | This README defines the lane boundary. |
-| `tools/ingest/README.md` | **NEEDS VERIFICATION / absent in current check** | Parent lane README should be added before expanding ingest tooling broadly. |
-| CDL watcher executable | **PROPOSED-to-create** | No script name is claimed as implemented by this README. |
+| `tools/ingest/README.md` | **CONFIRMED** | Parent boundary exists and keeps helpers outside connector, lifecycle, proof, policy, and release authority. |
+| CDL fixture comparator | **CONFIRMED bounded executable** | `cdl_watch.py` compares only caller-supplied local synthetic-profile sidecars. |
+| Live CDL watcher | **PROPOSED / not implemented** | No endpoint, source descriptor, source access, polling, or operational cadence is selected here. |
 | CDL watcher cadence | **PROPOSED** | Product docs describe weekly HEAD and histogram-drift ideas; operational cadence requires steward approval. |
-| CDL materiality thresholds | **PROPOSED / NEEDS VERIFICATION** | Thresholds must be fixture-tested and reviewed before becoming CI or workflow gates. |
+| CDL materiality thresholds | **Fixture-tested inputs; canonical policy PROPOSED** | The synthetic profile tests caller-supplied integer thresholds without adopting them as KFM policy. |
 | CDL source descriptor | **OUTSIDE THIS FOLDER** | Source activation belongs in `data/registry/sources/`. |
 | CDL connector | **OUTSIDE THIS FOLDER** | Source admission belongs in `connectors/nass/` or the ratified NASS connector home. |
 | Publication authority | **DENY here** | Watchers do not publish. |
@@ -104,13 +109,13 @@ The answer should be a review signal, not a publication decision.
 
 `tools/` is the repo-wide tooling root for validators, generators, builders, QA helpers, release helpers, and other durable executable support.
 
-`tools/ingest/cdl_watch/` is narrower than a connector and should remain a helper lane until the repository has a documented parent `tools/ingest/` contract or an accepted ADR clarifying long-lived ingest tooling placement.
+`tools/ingest/cdl_watch/` is narrower than a connector. The adopted Directory Governance Standard and the confirmed parent `tools/ingest/` boundary place deterministic review-signal helpers here without granting source or lifecycle authority.
 
 Safe interpretation for now:
 
 - **CONFIRMED:** this README exists at `tools/ingest/cdl_watch/README.md`.
-- **PROPOSED:** CDL watcher code may live here if it is deterministic, bounded, and review-signal-only.
-- **NEEDS VERIFICATION:** whether `tools/ingest/` should become a broader canonical sub-tree under `tools/`.
+- **CONFIRMED:** the frozen fixture comparator is deterministic, bounded, no-network, and review-signal-only.
+- **PROPOSED / NEEDS VERIFICATION:** live source access, source identity, cadence, threshold policy, and cross-watcher report alignment.
 - **DENY:** any use of this path as a connector, raw-data sink, publication path, or policy authority.
 
 [Back to top](#top)
@@ -222,20 +227,45 @@ If a future helper emits a `PROPOSED_WORK_RECORD`, that record should say what c
 
 ## Material-change model
 
-The CDL catalog page describes a proposed watcher family with metadata checks, sidecar records, county histogram drift, classmap drift, and county geometry hash checks. This README keeps those ideas bounded as proposed implementation guidance.
+The CDL catalog page describes a watcher family with metadata checks, sidecar records, county histogram drift, classmap drift, and county geometry hash checks. The frozen synthetic profile now proves those comparison mechanics without implementing the live watcher or adopting final materiality policy.
 
 Recommended first material-change checks:
 
 | Check | Purpose | First-slice posture |
 |---|---|---|
-| Source metadata drift | Detect changed `etag`, `last_modified`, `content_length`, digest, or declared release metadata. | **PROPOSED** |
-| CDL year drift | Detect a new CDL year candidate. | **PROPOSED** |
-| Classmap version drift | Fail closed when class IDs or meanings change. | **PROPOSED** |
-| County histogram drift | Compare county-bounded class distributions across releases. | **PROPOSED** |
-| County geometry hash drift | Avoid false crop-change signals caused by changed county geometry. | **PROPOSED** |
-| Threshold report | Explain why a change did or did not propose work. | **PROPOSED** |
+| Source metadata drift | Detect changed `etag`, `last_modified`, `content_length`, or digest. | **CONFIRMED in synthetic profile; live source PROPOSED** |
+| CDL year drift | Detect a newer or regressed sidecar year. | **CONFIRMED in synthetic profile; release semantics PROPOSED** |
+| Classmap version drift | Fail closed before interpreting histograms. | **CONFIRMED in synthetic profile** |
+| County histogram drift | Compare integer class areas under caller-supplied bounds. | **CONFIRMED in synthetic profile** |
+| County geometry hash drift | Avoid false crop-change signals caused by changed geometry. | **CONFIRMED in synthetic profile** |
+| Threshold report | Explain why a change did or did not propose review. | **CONFIRMED in synthetic profile; canonical thresholds PROPOSED** |
 
 Thresholds should be configured, documented, and fixture-tested. Do not hard-code final materiality rules without review.
+
+Metadata or CDL-year drift is reported in `checks` but is not independently
+material. Only a relative or absolute histogram threshold reached under an
+unchanged profile returns `PROPOSED_WORK_RECORD`.
+
+[Back to top](#top)
+
+---
+
+## Executable fixture profile
+
+`cdl_watch.py` implements `kfm-cdl-watch-fixture-v1`, a deliberately narrow
+integer/string JSON profile. It accepts only the non-real county sentinel
+`99999`, the synthetic reference `fixture://source/usda-nass-cdl`, local files,
+and caller-supplied thresholds that match across the prior/current pair.
+
+The profile hash excludes observation time so equivalent material state is
+stable across runs. It is a local `profile_hash`, not a generic RFC 8785
+implementation and not KFM-wide `spec_hash` authority. Reports always carry
+`publication: false` and `promotion_required: true`.
+
+The implementation never performs network access. Explicit report output is
+create-only and denied everywhere inside the repository, including through
+cwd-relative traversal. Callers may use standard output or an existing external
+temporary directory.
 
 Recommended first finite outcomes:
 
@@ -243,7 +273,7 @@ Recommended first finite outcomes:
 |---|---|
 | `NO_MATERIAL_CHANGE` | Valid comparison found no review-worthy change under configured rules. |
 | `PROPOSED_WORK_RECORD` | Valid comparison found review-worthy change; downstream review is required. |
-| `STALE_INPUT` | Input metadata or sidecar is older than the configured acceptable window. |
+| `STALE_INPUT` | Current CDL year, observation time, or source-modified time regresses behind the prior sidecar. |
 | `CLASSMAP_DRIFT` | CDL class semantics changed or could not be resolved safely. |
 | `GEOMETRY_DRIFT` | County geometry hash changed and crop drift cannot be interpreted directly. |
 | `ABSTAIN` | The watcher cannot decide with the available evidence. |
@@ -292,35 +322,42 @@ Outputs should be written only to explicit caller-selected paths. A watcher shou
 
 ## Report envelope
 
-A first-slice watcher report should be compact and deterministic.
+The fixture-profile watcher report is compact and deterministic.
 
 ```json
 {
   "tool": "cdl-watch",
   "status": "PROPOSED_WORK_RECORD",
-  "source_id": "usda-nass-cdl",
-  "cdl_year": 2026,
-  "county_fips": "20115",
+  "source_descriptor_ref": "fixture://source/usda-nass-cdl",
+  "report_profile": "kfm-cdl-watch-fixture-v1",
+  "cdl_year": 2025,
+  "county_fips": "99999",
   "inputs": {
-    "prior_sidecar": "tests/ingest/cdl_watch/fixtures/prior_sidecar.json",
-    "current_sidecar": "tests/ingest/cdl_watch/fixtures/current_sidecar.json"
+    "prior_sidecar": "tests/ingest/cdl_watch/fixtures/relative_threshold/prior_sidecar.json",
+    "current_sidecar": "tests/ingest/cdl_watch/fixtures/relative_threshold/current_sidecar.json"
   },
   "checks": {
-    "metadata_drift": "changed",
+    "metadata_drift": "same",
+    "cdl_year": "same",
     "classmap_drift": "same",
     "county_geometry_hash": "same",
-    "histogram_drift": "material"
+    "histogram_drift": "material",
+    "threshold_profile": "same",
+    "maximum_class_change_m2": 2000000,
+    "absolute_change_threshold_m2": 2500000
   },
   "decision": {
     "outcome": "PROPOSED_WORK_RECORD",
-    "reason_codes": ["CDL_HISTOGRAM_DRIFT_THRESHOLD_EXCEEDED"],
-    "blocking": false
+    "reason_codes": ["CDL_HISTOGRAM_RELATIVE_THRESHOLD_REACHED"],
+    "blocking": false,
+    "publication": false,
+    "promotion_required": true
   },
   "next_review": [
-    "confirm source descriptor",
-    "run CDL connector/admission workflow if approved",
-    "validate rights and source terms",
-    "route through catalog and release gates before public use"
+    "confirm the canonical source descriptor and rights posture",
+    "review the caller-supplied materiality profile",
+    "run source admission and pipeline workflows only if separately approved",
+    "require evidence, policy, review, release, correction, and rollback closure before public use"
   ]
 }
 ```
@@ -333,7 +370,7 @@ The report may be used by reviewers or CI. It is not a receipt unless a separate
 
 ## Validation
 
-Recommended first test surface:
+Implemented test surface:
 
 ```text
 tests/ingest/cdl_watch/
@@ -343,13 +380,16 @@ tests/ingest/cdl_watch/
     ├── no_material_change/
     │   ├── prior_sidecar.json
     │   └── current_sidecar.json
-    ├── material_change/
+    ├── metadata_change/
     │   ├── prior_sidecar.json
     │   └── current_sidecar.json
     ├── classmap_drift/
     │   ├── prior_sidecar.json
     │   └── current_sidecar.json
-    └── geometry_drift/
+    ├── geometry_drift/       # each case contains prior/current sidecars
+    ├── below_threshold/      # each case contains prior/current sidecars
+    ├── relative_threshold/   # each case contains prior/current sidecars
+    └── absolute_threshold/   # each case contains prior/current sidecars
         ├── prior_sidecar.json
         └── current_sidecar.json
 ```
@@ -365,22 +405,23 @@ Recommended assertions:
 - no test fixture contains real sensitive or private data;
 - no helper writes to lifecycle or release roots without explicit workflow control.
 
-Suggested future command pattern:
+Run the proof with:
 
 ```bash
-pytest -q tests/ingest/cdl_watch
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest tests.ingest.cdl_watch.test_cdl_watch --verbose
 ```
 
 ```bash
 python tools/ingest/cdl_watch/cdl_watch.py \
   --prior tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json \
   --current tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json \
-  --output .tmp/cdl-watch-report.json \
   --dry-run
 ```
 
 > [!NOTE]
-> The command above is a proposed interface, not proof that `cdl_watch.py` exists.
+> `--output` is optional, create-only, and caller-selected. Omitting it prints a
+> deterministic compact JSON report to standard output without writing files.
 
 [Back to top](#top)
 
@@ -412,11 +453,12 @@ Before adding or changing CDL watcher code, reviewers should confirm:
 | Step | Status | Outcome |
 |---|---|---|
 | Replace empty README with watcher lane contract | **DONE in this README** | Establishes CDL watcher boundaries and non-publication rule. |
-| Add parent `tools/ingest/README.md` | **PROPOSED** | Clarifies broader ingest tooling under `tools/`. |
-| Add `cdl_watch.py` dry-run helper | **PROPOSED** | Emits deterministic watcher report from local sidecars. |
-| Add public-safe watcher fixtures | **PROPOSED** | Proves no-change, material-change, classmap-drift, and geometry-drift behavior. |
+| Add parent `tools/ingest/README.md` | **DONE** | Clarifies broader ingest tooling under `tools/`. |
+| Add `cdl_watch.py` dry-run helper | **DONE — fixture profile** | Emits deterministic review-only reports from local synthetic sidecars. |
+| Add public-safe watcher fixtures | **DONE** | Proves no-change, metadata change, below/boundary thresholds, classmap drift, and geometry drift. |
 | Add proposed-work-record schema alignment | **PROPOSED / NEEDS VERIFICATION** | Align report envelope with accepted contracts/schemas when available. |
-| Wire into CI as non-blocking review signal | **PROPOSED / later** | Surfaces CDL drift without publication side effects. |
+| Wire bounded proof into Agriculture CI | **DONE** | Runs the no-network fixture proof while the broader Agriculture domain lane stays held. |
+| Add a live watcher | **PROPOSED / later** | Requires a reviewed source descriptor, rights, endpoint, cadence, policy thresholds, receipts, and steward operations. |
 
 [Back to top](#top)
 
@@ -426,6 +468,6 @@ Before adding or changing CDL watcher code, reviewers should confirm:
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for existing empty file. |
-| Next smallest safe change | Add parent `tools/ingest/README.md`, then add `tools/ingest/cdl_watch/cdl_watch.py` with public-safe fixtures under `tests/ingest/cdl_watch/`. |
+| Last reviewed | 2026-08-02 |
+| Review state | Bounded fixture-only comparator implemented and tested; live watcher remains proposed. |
+| Next smallest safe change | Review canonical watcher-report alignment without selecting live source or materiality policy by implication. |

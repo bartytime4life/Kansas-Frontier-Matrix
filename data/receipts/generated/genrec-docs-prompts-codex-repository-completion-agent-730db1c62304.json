@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-docs-prompts-codex-repository-completion-agent-730db1c62304",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/prompts/codex-repository-completion-agent.md"
+  ],
+  "artifact_hashes": {
+    "docs/prompts/codex-repository-completion-agent.md": "sha256:730db1c6230460d7fd0b6c0e9a8a9815ad4a2193893d10317620346d7050836b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub CLI",
+      "GitHub app",
+      "deterministic local validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:a087657f5cafb83366785028a1e1206340f1a8f272e3ef326a577d38898d88ea",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d",
+      "sha256:c6f730a68486cc0e70df956bb1793030ddbca064be1e0ef4ca4f7c7fa8c21394",
+      "sha256:694bb4cdff218c7a779beab1de3bacd61b33b1dd8afe2cb9f9578cc02b6f8785"
+    ],
+    "attached_docs": [
+      "User-provided Codex Repository Completion Agent source prompt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2357b20fbe2de39995b792f0ecb36d61dd8c0963",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/control_plane/repository_control_state.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/prompts/ai-builder-system-prompts.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/prompts/codex-repository-completion-agent.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-base-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "The bounded branch starts from main@2357b20fbe2de39995b792f0ecb36d61dd8c0963; adopted Directory Rules place reusable AI prompt documents under docs/prompts/, where an existing prompt collection is already tracked."
+    },
+    {
+      "gate": "activation-version-runtime-consistency",
+      "outcome": "PASS",
+      "reason": "The final document carries one standalone activation line using RUN KFM_COMPLETION_V3, prompt version 3.0.1 in its metadata and runtime, and one parseable fenced KFM_RUN runtime block."
+    },
+    {
+      "gate": "safety-and-evidence-gating-preservation",
+      "outcome": "PASS",
+      "reason": "The final document preserves fail-closed authorization, evidence, placement, validation, rollback, no-network, and publication gates. It starts BLOCKED and does not grant repository authority to itself."
+    },
+    {
+      "gate": "markdown-structure-and-local-links",
+      "outcome": "PASS",
+      "reason": "The document has exactly one H1, a balanced YAML fence, a final newline, and a Markdown metadata table. The repository-owned no-network link checker passed one document with zero local or external targets."
+    },
+    {
+      "gate": "generated-receipt-json-schema-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON, validates against the Draft 2020-12 generated-receipt schema with date-time format checking, artifact_paths/artifact_hashes/truth_labels have identical keys, and the final prompt SHA-256 was recomputed. The receipt is excluded from its own artifact map to avoid recursive self-hashing."
+    },
+    {
+      "gate": "repository-aggregate-schema-validators",
+      "outcome": "PASS",
+      "reason": "The repository aggregate validator runner completed on Python 3.12 across its configured fixture families, including the expected invalid-fixture diagnostics."
+    },
+    {
+      "gate": "declared-jsonschema-version-floor",
+      "outcome": "SKIPPED",
+      "reason": "The configured package index did not provide the repository-declared jsonschema 4.26.0 floor. Targeted Draft 2020-12 validation completed with jsonschema 4.25.1; hosted validation against the declared dependency remains pending."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check passes and the bounded change adds only the prompt and its non-authoritative generated receipt."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head workflow results do not exist until the draft pull request is published. The repository-control readiness hold is expected while the pull request remains draft."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/2357b20fbe2de39995b792f0ecb36d61dd8c0963"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "ai-build-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "repository-control-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2357b20fbe2de39995b792f0ecb36d61dd8c0963/control_plane/repository_control_state.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T06:13:17Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds the reconciled README-driven repository completion prompt at the existing docs/prompts responsibility lane. The embedded prompt remains inert repository content until its activation token is directly supplied; publishing this document does not execute or authorize the prompt. It has one activation token name, one version, and one runtime block, and keeps repository mutation blocked unless fresh exact authorization is verified. The prompt and receipt are PROPOSED process artifacts, not repository authority, approval, release, merge, publication, or evidence of hosted CI. Human review remains pending; the receipt is intentionally excluded from its own artifact map."
+}

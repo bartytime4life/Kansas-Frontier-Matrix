@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/archaeology/expansion-plan
 title: Archaeology Domain — Expansion Plan
 type: standard
-version: v0.3
+version: v0.3.1
 status: draft
 owners: TODO — Archaeology lane steward; Docs steward
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-10-11
 policy_label: public
 contract_version: "3.0.0"
 related:
@@ -18,10 +18,10 @@ related:
   - docs/domains/README.md
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/maplibre-3d.md
   - docs/standards/PROV.md
   - control_plane/domain_lane_register.yaml
 tags: [kfm, domain, archaeology, cultural-heritage, expansion-plan, sensitivity, doctrine-adjacent]
@@ -32,6 +32,10 @@ notes:
   - "Normative language follows RFC 2119 / RFC 8174 per ai-build-operating-contract.md §5.1.1."
   - Temporal claims align with EDTF, OWL-Time, CIDOC CRM E52, Allen interval algebra, STAC datetime, and W3C PROV-O; no implicit timezones; Julian dates carry a calendar flag.
   - "v0.3 corrections: Directory Rules is the live v1.3 edition; the fixtures 'no two competing homes' rule is Directory Rules §6.6 (the v0.2 §13.5 citation was wrong — §13.5 is the anti-patterns section); the §23.2 county/region floor is named the authoritative public floor and H3 r7 is reframed as a PROPOSED lane refinement; the watcher invariant cites §13.5."
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Expansion Plan
@@ -51,12 +55,12 @@ notes:
 |---|---|
 | **Status** | Draft |
 | **Owners** | TODO — Archaeology lane steward; Docs steward |
-| **Last updated** | 2026-05-29 |
+| **Last updated** | 2026-10-11 |
 | **Operating contract** | `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) |
 | **Directory Rules** | v1.3 (renderer-decision refresh) |
 | **Authority of doctrine** | CONFIRMED via `[DOM-ARCH]`, `[ENCY] §7.13` / Atlas Ch. 15, `[DIRRULES]` |
 | **Authority of paths** | PROPOSED — no mounted repo inspected this session |
-| **Supersedes** | v0.2 (this v0.3 revision) |
+| **Supersedes** | v0.3 (this v0.3.1 revision) |
 
 ---
 
@@ -283,7 +287,7 @@ packages/domains/archaeology/                   # shared library (if needed)
 pipelines/domains/archaeology/                  # executable pipeline logic
 pipeline_specs/archaeology/                     # declarative pipeline config
 
-data/raw/archaeology/                           # immutable source captures (T4)
+data/raw/archaeology/README.md                  # compatibility/reference lane; no payloads (immutable source-first RAW capture placement HOLD, DIR-SOURCE-001; T4)
 data/work/archaeology/                          # in-flight normalization
 data/quarantine/archaeology/                    # failures and holds (incl. prompt-injection holds)
 data/processed/archaeology/                     # validated normalized objects
@@ -319,7 +323,7 @@ flowchart TB
 
   subgraph D["Lifecycle Data"]
     direction LR
-    RAW["data/raw/archaeology/"]:::data
+    RAW["RAW (source-first capture,<br/>placement HOLD)"]:::data
     WORK["data/work/archaeology/<br/>data/quarantine/archaeology/"]:::data
     PROC["data/processed/archaeology/"]:::data
     CAT["data/catalog/domain/archaeology/<br/>data/triplets/archaeology/"]:::data
@@ -660,6 +664,12 @@ A correction is a **publication-class event**, not an edit. It emits its own rec
 
 ## Changelog
 
+### v0.3 → v0.3.1
+
+| Change | Type (per `[CONTRACT] §37`) | Reason |
+|---|---|---|
+| **2026-10-11:** §6 scaffolding tree now lists `data/raw/archaeology/README.md` as a compatibility/reference lane with no payloads, and the §6 diagram RAW node reads source-first capture with placement **HOLD**; added `data/raw/README.md` to `related` and §17 | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-001` makes capture identity source-first; no physical placement decision is accepted. The T4 default, deny-by-default, and every sensitivity, sovereignty, and cultural-review rule are unchanged. Documentation only. |
+
 ### v0.2 → v0.3
 
 | Change | Type (per `[CONTRACT] §37`) | Reason |
@@ -722,16 +732,17 @@ This document is done enough to enter the repository when:
 | [`docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) | Sibling file ledger for this lane. |
 | [`docs/domains/archaeology/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) | Sibling map/UI contracts for this lane. |
 | [`docs/domains/README.md`](../README.md) | Cross-domain lane index (TODO). |
-| [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Canonical placement and lifecycle doctrine, **v1.3**. `[DIRRULES]` |
+| [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Canonical placement and lifecycle doctrine, **v1.3**; §12.3 `DIR-SOURCE-001`–`004` (source-first capture identity). `[DIRRULES]` |
+| [`data/raw/README.md`](../../../data/raw/README.md) | Source-first RAW contract; physical placement HOLD; `data/raw/archaeology/` is a compatibility/reference lane. |
 | [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) | Truth-label and authority source order. `[AUTH-LADDER]` |
 | [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) | Lifecycle invariant (TODO — link target NEEDS VERIFICATION). |
 | [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) | Public-path discipline (TODO — link target NEEDS VERIFICATION). |
-| [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) | MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR). |
+| `docs/architecture/maplibre-3d.md` (not present) | MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR). |
 | [`docs/standards/PROV.md`](../../standards/PROV.md) | W3C PROV-O / PAV provenance crosswalk. |
 | [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) | Deny-by-default policy bundle (PROPOSED home). |
 | [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) | Machine-checkable object shapes (PROPOSED home). |
 | [`schemas/contracts/v1/receipts/`](../../../schemas/contracts/v1/receipts/) | `GENERATED_RECEIPT.json` schema home (PROPOSED per `[CONTRACT] §47`). |
-| [`schemas/contracts/v1/3d/`](../../../schemas/contracts/v1/3d/) | 3D-asset schema home (PROPOSED per Directory Rules v1.3 §6.4). |
+| `schemas/contracts/v1/3d/` (not present) | 3D-asset schema home (PROPOSED per Directory Rules v1.3 §6.4). |
 | [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/) | Object-family meaning (PROPOSED home). |
 | Atlas v1.1 Ch. 15 + §24.4.13 + §24.5 + §24.7 | Doctrine extension; cross-lane edges; sensitivity tier matrix; reviewer separation. `[ATLAS-v1.1]` |
 | Encyclopedia §7.13 + §21 | Domain spine; programming-possibilities backlog. `[ENCY]` |
@@ -744,7 +755,7 @@ This document is done enough to enter the repository when:
 
 **Kansas Frontier Matrix · Archaeology Domain · Expansion Plan**
 
-`v0.3 · 2026-05-29 · draft · CONTRACT_VERSION 3.0.0 · Directory Rules v1.3`
+`v0.3.1 · 2026-10-11 · draft · CONTRACT_VERSION 3.0.0 · Directory Rules v1.3`
 
 [Changelog](#changelog) · [Definition of done](#definition-of-done) · [Related docs](#17-related-documents) · [Verification backlog](#16-verification-backlog--open-questions) · [↑ Back to top](#contents)
 

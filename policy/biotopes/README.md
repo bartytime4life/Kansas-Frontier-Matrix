@@ -1,18 +1,44 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/biotopes
 title: Biotopes Policy Compatibility Guardrail
-type: policy-readme
-version: v0.2
-status: draft; CONFLICTED; compatibility-guardrail; non-authoritative
-owners: OWNER_TBD — Habitat steward · Policy steward · Sensitivity steward · Flora steward · Fauna steward · Release steward · Docs steward
+type: policy-readme; directory-readme; boundary-compact; compatibility-guardrail
+version: v0.3
+status: draft; repository-grounded; current-state-reconciled; CONFLICTED; compatibility-guardrail; non-authoritative; documentation-only; evaluator-unbound; non-release; non-publication
+owners: OWNER_TBD — Habitat steward · Policy steward · Sensitivity steward · Flora steward · Fauna steward · Release steward · Docs steward; CODEOWNERS routing is not accepted role assignment
 created: 2026-06-15
-updated: 2026-07-14
-policy_label: restricted
-supersedes: v0.1 (2026-06-15)
-path: policy/biotopes/README.md
+updated: 2026-08-13
+policy_label: restricted; compatibility; fail-closed; no-independent-authority; no-release-authority; no-publication-authority
+supersedes: v0.2 (2026-07-14)
+current_path: policy/biotopes/README.md
+owning_root: policy/
+local_scope_id: NEEDS VERIFICATION — the document ID is not an accepted evaluator scope or policy family
+canonical_relationship: compatibility-only guardrail for a non-canonical umbrella term; operational policy remains with accepted Habitat or shared policy lanes and canonical object families
+directory_governance: accepted ADR-0029 adopts Directory Rules v2; policy/ is the singular policy-source root; this BOUNDARY_COMPACT README does not upgrade the lane to implemented status
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
+  base_ref: main
+  base_commit: a893b30f4dd1edfed151620c529734f4fd789a89
+  target_baseline_blob: cb1f7144290951fc8209f094b3ccacfacf006c92
+  target_tree: a0b5896b91bd6403281848fa89cbba575fa85ae7
+  contracts_compatibility_tree: 6367c1e4ff8178a13f7ba0a06e08f4fa75161ea5
+  schemas_compatibility_tree: 62458cf021a53cfbe71e4b46a9b3d0ee29cdaa32
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  direct_lane_files_confirmed:
+    - policy/biotopes/.gitkeep
+    - policy/biotopes/README.md
+  open_overlapping_pull_requests_found: "0 at preflight"
+  inventory_method: authenticated GitHub reads of the exact target, history, complete recursive tree, governing doctrine and ADR, root registry, compatibility siblings, Habitat policy and tests, shared policy contracts and schemas, runtime/API scaffolds, workflows, CODEOWNERS, contribution controls, branches, and open pull requests
+  bounded_inventory_note: no executable rule, fixture, test, bundle manifest, evaluator binding, decision instance, release record, or publisher exists directly in policy/biotopes; bounded absence is not proof of permanent absence
 related:
   - ../README.md
   - ../domains/habitat/README.md
+  - ../sensitivity/README.md
+  - ../sensitivity/habitat_classes.yaml
   - ../../contracts/policy/policy_input_bundle.md
   - ../../contracts/policy/policy_decision.md
   - ../../contracts/biotopes/README.md
@@ -28,18 +54,26 @@ related:
   - ../../docs/domains/flora/README.md
   - ../../docs/domains/fauna/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/architecture/trust-membrane.md
+  - ../../control_plane/root_registry.yaml
   - ../../packages/policy-runtime/README.md
   - ../../apps/governed-api/README.md
   - ../../tests/policy/README.md
-tags: [kfm, policy, biotopes, habitat, compatibility, guardrail, non-canonical, sensitivity, geoprivacy, source-role, classifier-vintage, deny-by-default, migration, rollback]
+  - ../../tests/domains/habitat/policy/README.md
+  - ../../.github/workflows/policy-test.yml
+  - ../../.github/workflows/domain-habitat.yml
+  - ../../.github/CODEOWNERS
+  - ../../CONTRIBUTING.md
+  - ../../.github/PULL_REQUEST_TEMPLATE.md
+tags: [kfm, policy, biotopes, habitat, compatibility, guardrail, non-canonical, sensitivity, geoprivacy, source-role, classifier-vintage, deny-by-default, migration, rollback, boundary-compact]
+truth_posture: "CONFIRMED exact two-file direct lane, three README-plus-marker compatibility lanes, singular policy root, accepted ADR-0029 placement, Habitat docs vocabulary boundary, eighteen default-only Habitat Rego stubs, placeholder Habitat policy tests, shared PolicyInputBundle and PolicyDecision candidates, placeholder general policy runtime, abstain-only governed API scaffold, and non-evaluating broad policy readiness workflow / PROPOSED future placement disposition, active Habitat rule semantics, policy-family composition, reason codes, obligations, fixtures, negative tests, evaluator binding, decision receipts, migration, and deprecation / CONFLICTED top-level compatibility paths versus the no-parallel-authority doctrine and umbrella Biotope vocabulary versus canonical Habitat and Flora objects / UNKNOWN accepted local owner, active bundle, evaluator, governed consumer, branch-protection significance, production enforcement, release integration, public behavior, and external consumers"
 notes:
-  - "v0.2 preserves policy/biotopes as a compatibility guardrail and does not activate it as a policy family or executable policy lane."
-  - "Biotopes evidence was first inspected on main at commit 65a0d9f6159efa03aba0711d38a51eb203079c3f and rechecked unchanged at branch base 30f7bdda720310a14376791b6d1e02e1d3639e91."
-  - "The repository contains parallel compatibility READMEs at policy/biotopes, contracts/biotopes, and schemas/biotopes, while Habitat biotopes doctrine explicitly forbids those topic-name paths from becoming independent authority."
-  - "policy/domains/habitat/README.md exists as a PROPOSED greenfield Habitat policy scaffold; policy/sensitivity/habitat/README.md was not found at the tested path."
-  - "PolicyInputBundle and PolicyDecision are the shared policy contracts. Runtime-facing PolicyDecision outcomes are ANSWER | ABSTAIN | DENY | ERROR; biotopes is not a permitted policy_family value."
-  - "No active policy module, package-local biotopes policy test lane, biotopes fixture lane, deployed evaluator wiring, release behavior, or public runtime behavior is claimed."
+  - "v0.3 reconciles the existing v0.2 guardrail against current main while preserving its substantive purpose, scope, gates, negative cases, migration discipline, and trust boundaries."
+  - "The direct policy/biotopes lane remains README plus zero-byte marker only."
+  - "The eighteen Rego files under policy/domains/habitat are explicitly PROPOSED default-only stubs; their presence does not establish rule semantics, native Habitat Rego tests, bundle activation, evaluator binding, or runtime enforcement."
+  - "policy/sensitivity/habitat contains only a marker; habitat_classes.yaml is a separate PROPOSED placeholder."
+  - "This revision changes documentation only and creates no policy decision, rule behavior, schema, contract, fixture, evaluator, release, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -48,27 +82,26 @@ notes:
 
 `policy/biotopes/`
 
-> Compatibility and drift-prevention boundary for a **non-canonical topic-name path**. This directory may explain why biotope-like policy concerns must be evaluated through Habitat-owned objects and the shared KFM policy contracts; it must not become a sovereign `biotopes` policy family, sensitivity authority, object authority, or publication gate.
+> **One-line purpose.** Preserve a fail-closed compatibility and drift-prevention boundary for a non-canonical topic-name path without creating a sovereign `biotopes` policy family, sensitivity authority, object authority, release gate, or publication surface.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-1f6feb)
-![posture](https://img.shields.io/badge/posture-compatibility__guardrail-orange)
-![authority](https://img.shields.io/badge/authority-non--canonical-critical)
-![conflict](https://img.shields.io/badge/path-CONFLICTED-yellow)
-![default](https://img.shields.io/badge/default-fail__closed-d62728)
-![publication](https://img.shields.io/badge/publication-not__authorized-critical)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#2-current-repository-state)
+[![Version: v0.3](https://img.shields.io/badge/version-v0.3-1f6feb?style=flat-square)](#26-changelog)
+[![Lane: two tracked files](https://img.shields.io/badge/lane-README%20%2B%20marker-0969da?style=flat-square)](#15-directory-contract)
+[![Authority: compatibility only](https://img.shields.io/badge/authority-compatibility%20only-d97706?style=flat-square)](#5-authority-boundary)
+[![Habitat rules: default-only stubs](https://img.shields.io/badge/Habitat%20rules-default--only%20stubs-8250df?style=flat-square)](#17-validation-and-test-strategy)
+[![Runtime: evaluator unbound](https://img.shields.io/badge/runtime-evaluator%20unbound-b42318?style=flat-square)](#8-runtime-policy-interface)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#12-lifecycle-and-public-trust-boundary)
 
 > [!IMPORTANT]
-> **Repository branch base:** `main` at `30f7bdda720310a14376791b6d1e02e1d3639e91`  
-> **Initial biotopes evidence snapshot:** `65a0d9f6159efa03aba0711d38a51eb203079c3f`; the target blob remained unchanged at the branch base  
-> **Owning root:** `policy/` — admissibility and exposure policy  
-> **Owning domain:** Habitat, through canonical Habitat object families  
-> **Current path posture:** compatibility guardrail only  
-> **Runtime policy family:** never `biotopes`; use an accepted shared family such as `sensitivity`, `render`, `capability`, or `access` according to the evaluated operation  
-> **Implementation depth:** active policy code, fixtures, tests, evaluator wiring, and deployed enforcement are not established by this README
+> **Safe current conclusion:** at `main@a893b30f4dd1edfed151620c529734f4fd789a89`, the complete direct lane is this README plus a zero-byte marker. The adjacent Habitat policy lane contains eighteen Rego files, but every one is an explicitly proposed default-only stub: sixteen expose only `default allow := false` and two expose only `default deny := false`. No native Habitat Rego test, active bundle, evaluator binding, emitted `PolicyDecision`, governed consumer, release integration, or production enforcement was established.
 
 > [!CAUTION]
-> `Biotope` is not KFM ubiquitous language and is not an accepted object family. In operational policy, use the canonical object being evaluated—`HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, or a Flora-owned `Vegetation Community` reference—and preserve its owning lane, source role, classifier version, time, evidence, rights, sensitivity, review, and release state.
+> `Biotope` is not KFM ubiquitous language and is not an accepted object family. Operational policy must name the canonical object being evaluated—such as `HabitatPatch`, `LandCoverObservation`, `EcologicalSystem`, or a Flora-owned `Vegetation Community` reference—and preserve its owner, source role, classifier version, time, evidence, rights, sensitivity, review, and release state.
+
+> [!WARNING]
+> File presence is not policy activation. A default-only Rego stub, passing schema or validator, green workflow, merged pull request, generated receipt, API scaffold, or map rendering must never be interpreted as an allow decision, evidence closure, review approval, release, or publication.
+
+**Evidence snapshot:** `main@a893b30f4dd1edfed151620c529734f4fd789a89` · target baseline blob `cb1f7144290951fc8209f094b3ccacfacf006c92` · no overlapping open PR at preflight.
 
 ---
 
@@ -99,6 +132,7 @@ notes:
 - [23. Open verification register](#23-open-verification-register)
 - [24. Evidence ledger](#24-evidence-ledger)
 - [25. Maintainer checklist](#25-maintainer-checklist)
+- [26. Changelog](#26-changelog)
 
 ---
 
@@ -133,40 +167,51 @@ It does not grant authority merely because it is under the canonical `policy/` r
 
 ## 2. Current repository state
 
-The table separates repository evidence from proposed policy design.
+Evidence snapshot: `main@a893b30f4dd1edfed151620c529734f4fd789a89`; target baseline blob `cb1f7144290951fc8209f094b3ccacfacf006c92`.
 
-| Surface | Evidence at inspected ref | Status | Consequence |
-|---|---|---|---|
-| `policy/biotopes/README.md` | Existing v0.1 guardrail README was read from `main`. | **CONFIRMED** | This revision updates the guardrail in place. |
-| [`policy/README.md`](../README.md) | Declares singular `policy/` authority for allow, deny, restrict, abstain, redaction, sensitivity, promotion, and release policy. | **CONFIRMED root README / status PROPOSED** | A child path still requires a coherent policy responsibility; topic naming alone is insufficient. |
-| [`docs/domains/habitat/sublanes/biotopes.md`](../../docs/domains/habitat/sublanes/biotopes.md) | States that `Biotope` is not KFM ubiquitous language and the sublane is a docs-only grouping over canonical objects. | **CONFIRMED document / sublane convention PROPOSED** | This path must not create independent policy authority. |
-| [`contracts/biotopes/README.md`](../../contracts/biotopes/README.md) | Exists as a non-canonical compatibility contract guardrail. | **CONFIRMED compatibility README** | The same drift exists under the contract root; it is not corroboration for a new object family. |
-| [`schemas/biotopes/README.md`](../../schemas/biotopes/README.md) | Exists as a schema compatibility index and forbids new canonical schema definitions there without a decision. | **CONFIRMED compatibility README** | The same drift exists under the schema root; it must not become machine-shape authority. |
-| [`policy/domains/habitat/README.md`](../domains/habitat/README.md) | Exists and calls itself the canonical Habitat policy lane, with status `PROPOSED (greenfield scaffold)`. | **CONFIRMED path / PROPOSED scaffold** | It is the strongest repository candidate for Habitat-owned policy, but implemented behavior remains unverified. |
-| `policy/sensitivity/habitat/README.md` | Exact path returned no file. | **CONFIRMED absent at tested path** | Do not claim a dedicated Habitat sensitivity sublane currently exists. |
-| [`contracts/policy/policy_input_bundle.md`](../../contracts/policy/policy_input_bundle.md) | Shared semantic input contract exists; paired schema is a permissive placeholder requiring only `id`. | **CONFIRMED contract / schema incomplete** | Future policy must supply explicit context without pretending the schema enforces all semantics. |
-| [`contracts/policy/policy_decision.md`](../../contracts/policy/policy_decision.md) | Shared decision contract and strict paired schema exist. | **CONFIRMED contract and field surface** | Runtime-facing outcomes and policy-family values must align with the shared contract. |
-| `tests/policy/biotopes/README.md` | Exact path returned no file. | **CONFIRMED absent at tested path** | No dedicated biotopes policy-test lane is documented. |
-| `fixtures/policy/biotopes/README.md` | Exact path returned no file. | **CONFIRMED absent at tested path** | No dedicated synthetic fixture lane is documented. |
-| Open pull requests containing `biotopes` | Search returned no open PR before this update. | **CONFIRMED search result** | No known concurrent PR was found for the target. |
-| Active policy modules under this directory | Indexed search found the guardrail README, not executable policy. Complete recursive tree evidence was unavailable. | **NOT OBSERVED / search-limited** | Do not claim active policy or categorical directory emptiness beyond tested paths. |
-| Runtime evaluation and public enforcement | No runtime logs, deployed bundles, audit receipts, or route behavior were inspected. | **UNKNOWN** | This README is not implementation proof. |
+| Surface | Current repository evidence | Safe conclusion |
+|---|---|---|
+| `policy/biotopes/` direct inventory | **CONFIRMED exactly two tracked files** | This README and a zero-byte `.gitkeep` are the complete direct lane. No local rule, fixture, test, bundle, decision, release record, or publisher exists. |
+| Existing target and history | **CONFIRMED populated v0.2 baseline** | v0.3 reconciles the guardrail in place; it does not create behavior. |
+| `contracts/biotopes/` | **CONFIRMED README plus marker** | Compatibility contract guidance exists; it is not semantic authority for a new object family. |
+| `schemas/biotopes/` | **CONFIRMED README plus marker** | The index is frozen for new schemas and requires object-by-object routing; it is not machine-shape authority for `Biotope`. |
+| Directory governance | **CONFIRMED adopted** | ADR-0029 adopts Directory Rules v2. `policy/` is the singular policy-source root, and this lane requires a `BOUNDARY_COMPACT` contract because authority changes here. |
+| Root registry projection | **CONFIRMED `root.policy`** | Policy source is internal, versioned, and durable; the projection creates no local owner, activation, evaluator, decision, or public permission. |
+| Habitat Biotopes doctrine | **CONFIRMED draft docs grouping** | `Biotope` is not KFM ubiquitous language and must not introduce independent contract, schema, policy, data, or object-family authority. |
+| `policy/domains/habitat/README.md` | **CONFIRMED canonical-placement claim / PROPOSED greenfield scaffold** | It is the current candidate Habitat policy home, but its README does not prove active enforcement. |
+| Habitat Rego inventory | **CONFIRMED eighteen default-only proposed stubs** | Sixteen contain only a package declaration plus `default allow := false`; `abstain_on_ambiguous.rego` and `deny_unpublished.rego` contain only package declarations plus `default deny := false` and commented examples. No operative Habitat rule body was established. |
+| Habitat sensitivity surfaces | **CONFIRMED marker plus separate placeholder** | `policy/sensitivity/habitat/` contains only `.gitkeep`; sibling `habitat_classes.yaml` is explicitly `PROPOSED`. No dedicated Habitat sensitivity README or active rule was established there. |
+| Dedicated Biotopes fixtures/tests | **CONFIRMED absent from exact candidate paths** | `tests/policy/biotopes/` and `fixtures/policy/biotopes/` do not exist in the complete tree. Do not create them merely for topic symmetry. |
+| Habitat policy-test lane | **CONFIRMED README plus marker** | `tests/domains/habitat/policy/` documents a proposed test boundary but contains no executable test module. |
+| Named Habitat policy tests | **CONFIRMED three docstring-only placeholders** | The modeled-as-critical, occurrence-geoprivacy, and critical-habitat-source-role Python files contain no test functions or assertions. |
+| Broad `policy-test` workflow | **CONFIRMED static readiness hold** | It inventories all Rego files but recognizes only the bounded Pass 12 test as a native Rego test; it evaluates no repository-wide or Habitat policy and emits no `PolicyDecision`. |
+| `domain-habitat` workflow | **CONFIRMED bounded mixed workflow** | It executes synthetic land-cover materiality validation, while Habitat proof and release dry-run remain explicit holds. It does not evaluate the Habitat Rego stubs. |
+| `PolicyInputBundle` | **CONFIRMED semantic contract / permissive PROPOSED schema stub** | The paired schema requires only `id` and permits additional properties; schema validity cannot prove complete policy input. |
+| `PolicyDecision` | **CONFIRMED contract and closed PROPOSED schema** | Outcomes are `ANSWER / ABSTAIN / DENY / ERROR` and policy families exclude `biotopes`. Shape validity is not decision authenticity or permission. |
+| General policy runtime | **CONFIRMED `0.0.0` placeholder** | `core.py` is comment-only, the namespace initializer is empty, and the root `make policy` target prints a TODO. No general evaluator is established. |
+| Governed API | **CONFIRMED fail-closed scaffold** | Three scaffold routes return generic `ABSTAIN` / `NOT_IMPLEMENTED` envelopes; none is a Biotopes or Habitat evaluator. |
+| Open-PR overlap | **CONFIRMED none at preflight** | The sole open PR changed Consent files only; no target-path overlap was found. |
+| Accepted owners, active bundle, evaluator, required checks, deployment, release integration, public behavior | **UNKNOWN / NEEDS VERIFICATION** | Repository bytes and workflow definitions do not establish production operation or repository-settings significance. |
 
-### Evidence boundary
+### Current direct map
 
 ```text
-guardrail README present                  = CONFIRMED
-parallel compatibility roots present     = CONFIRMED
-Habitat policy scaffold present          = CONFIRMED path / PROPOSED behavior
-dedicated Habitat sensitivity README     = NOT FOUND at tested path
-shared PolicyInputBundle contract        = CONFIRMED
-shared PolicyDecision contract/schema    = CONFIRMED
-active biotopes policy module             = NOT OBSERVED
-dedicated biotopes tests/fixtures         = NOT OBSERVED
-runtime enforcement                       = UNKNOWN
-release behavior                          = UNKNOWN
-public API/UI behavior                     = UNKNOWN
+policy/biotopes/
+├── .gitkeep   # Zero-byte marker; no authority or implementation
+└── README.md  # This documentation-only compatibility boundary
 ```
+
+### Evidence limits and truth labels
+
+- **CONFIRMED** — verified from the pinned repository state in this update.
+- **PROPOSED** — a design, rule, placement, fixture, obligation, or implementation step not established as accepted active behavior.
+- **PARTIAL** — a bounded implementation or route exists, but its complete authority or enforcement chain is not proved.
+- **CONFLICTED** — inspected paths or vocabularies disagree and must not be silently normalized.
+- **UNKNOWN** — available evidence is insufficient for a current-state claim.
+- **NEEDS VERIFICATION** — a concrete owner, code, runtime, review, ruleset, or release check is required.
+- **NOT ESTABLISHED** — the inspected evidence does not support treating a capability as active.
+
+A bounded non-observation is not proof of permanent absence. Re-verify any later branch, bundle, runtime, repository setting, deployment, or external consumer at its own exact revision.
 
 [Back to top](#top)
 
@@ -251,38 +296,41 @@ This directory may answer:
 
 It must not independently answer:
 
-> **May this Habitat object be exposed, rendered, joined, exported, promoted, or published?**
+> **May this Habitat or Flora object be exposed, rendered, joined, exported, promoted, released, or published?**
 
-That operational question belongs to active policy under an accepted Habitat or sensitivity policy lane, consuming shared policy contracts and returning a governed `PolicyDecision`.
+That operational question belongs to accepted policy source under the singular `policy/` root, evaluated through an accepted bundle and evaluator against explicit input, normalized into a governed decision, and enforced by the owning consumer and release process.
 
-```text
-policy/biotopes/                  = compatibility and drift guardrail
-policy/domains/habitat/           = existing Habitat policy scaffold; runtime depth unknown
-policy/sensitivity/<accepted>/    = sensitivity/geoprivacy policy if and when established
-contracts/policy/                 = shared policy-object meaning
-schemas/contracts/v1/policy/      = shared policy-object machine shape
-contracts/domains/habitat/        = Habitat object meaning
-schemas/contracts/v1/domains/...  = Habitat object machine shape, subject to schema-home decisions
-packages/policy-runtime/          = reusable evaluation helpers
-apps/governed-api/                = governed executable interface
-tests/policy/                     = policy enforceability
-fixtures/                         = synthetic valid/invalid inputs
-data/                             = lifecycle objects, receipts, proofs, registries
-release/                          = promotion, correction, withdrawal, rollback
-```
+| Responsibility | Owning surface | Role of `policy/biotopes/` |
+|---|---|---|
+| Policy source and reviewed bundles | [`policy/`](../README.md) and an accepted child lane | Route by responsibility; never create a second authority or infer activation. |
+| Habitat policy source candidate | [`policy/domains/habitat/`](../domains/habitat/README.md) | Point to the current scaffold while preserving its default-only, unbound maturity. |
+| Shared sensitivity policy | [`policy/sensitivity/`](../sensitivity/README.md) | Require accepted sensitivity/geoprivacy handling; never invent Habitat rules from a marker or placeholder. |
+| Shared policy-object meaning | [`contracts/policy/`](../../contracts/policy/policy_decision.md) | Consume contract semantics; never redefine them. |
+| Shared policy-object shape | [`schemas/contracts/v1/policy/`](../../schemas/contracts/v1/policy/policy_decision.schema.json) | Require the accepted profile; never treat validation as permission. |
+| Habitat object meaning and shape | [`contracts/domains/habitat/`](../../contracts/domains/habitat/README.md) and [`schemas/contracts/v1/domains/habitat/`](../../schemas/contracts/v1/domains/habitat/README.md) | Preserve canonical object ownership and maturity. |
+| Evaluator helper implementation | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) | External implementation surface; currently a placeholder and never policy authority. |
+| Governed API | [`apps/governed-api/`](../../apps/governed-api/README.md) | Enforce accepted decisions at the trust membrane; current generic abstain scaffold is not Habitat policy. |
+| Enforceability proof | [`tests/`](../../tests/policy/README.md) and accepted fixtures | Prove bounded behavior; test pass is not a decision or release. |
+| Lifecycle objects, receipts, and proofs | `data/` responsibility lanes | Supply governed inputs and records; never author policy here. |
+| Promotion, release, correction, withdrawal, rollback | `release/` | Own release-facing decisions; policy output is only one required input. |
 
-This README does not:
+### BOUNDARY_COMPACT responsibility signature
 
-- authorize executable policy;
-- bind a runtime package;
-- declare an OPA/Rego package name;
-- create a sensitivity tier;
-- make a source authoritative;
-- grant access;
-- release a layer;
-- approve a geoprivacy transform;
-- supersede Habitat, Flora, or Fauna policy;
-- resolve the schema-home conflict.
+| Field | Current boundary |
+|---|---|
+| Purpose and inherited parent | Compatibility and drift guardrail beneath the singular [`policy/`](../README.md) root. |
+| Local owner and scope ID | **NEEDS VERIFICATION.** CODEOWNERS routes `/policy/` to `@bartytime4life`; accepted Habitat/Policy stewardship, independent review, and executable local scope remain unproved. |
+| Belongs here | This README, a marker, compatibility rationale, placement dispositions, migration/deprecation pointers, evidence ledger, and rollback guidance. |
+| Prohibited | Active rules, sovereign `biotopes` family registration, contracts, schemas, fixtures, data, decision instances, receipts, proofs, release records, credentials, sensitive coordinates, or public artifacts. |
+| Inputs | Proposed path change, canonical object identity, operation, audience, source role, classifier/time context, evidence, rights, sensitivity, review, release, correction, and rollback context. |
+| Outputs | Documentation-only placement disposition, verification item, migration pointer, or drift record; never runtime permission. |
+| Exposure | Root projection is `internal`. Public repository visibility and rendered Markdown do not make this a public runtime interface. |
+| Mutation and retention | `versioned` and `durable` under `root.policy`; history and supersession remain reviewable. |
+| Validation | Exact direct inventory, metadata/Markdown/link checks, no-active-payload guard, reference search, governing-doctrine checks, and exact-head PR CI. |
+| Related trust set | Habitat and shared policy source, contracts, schemas, fixtures, tests, evaluator, governed consumer, receipts/proofs, release, correction, and rollback surfaces. |
+| Status and open items | **CONFLICTED compatibility guardrail; evaluator unbound.** Ownership, final path disposition, active policy home, normalization, enforcement, external consumers, and release integration remain open. |
+
+This README does not authorize executable policy, bind a runtime package, declare an OPA/Rego package, create a sensitivity tier, make a source authoritative, grant access, release a layer, approve a geoprivacy transform, supersede Habitat/Flora/Fauna authority, resolve schema placement, or create public behavior.
 
 [Back to top](#top)
 
@@ -349,62 +397,65 @@ notes: "Documentation disposition only; not a runtime PolicyDecision."
 
 ## 8. Runtime policy interface
 
-Any future active Habitat policy triggered by a biotope-like concern should consume the shared semantic contracts:
+Any future active Habitat policy triggered by a biotope-like concern must use explicit, accepted policy interfaces:
 
 ```text
-PolicyInputBundle
-  -> active policy under accepted policy lane
+PolicyInputBundle or accepted successor
+  -> selected immutable policy bundle and evaluator
+  -> engine-native result
+  -> accepted normalization
   -> PolicyDecision
-  -> governed runtime/release gate
+  -> obligation-capable governed consumer
+  -> separate review and release gates
 ```
 
 ### Shared input contract
 
-[`PolicyInputBundle`](../../contracts/policy/policy_input_bundle.md) is the explicit input carrier. The current paired schema is a greenfield placeholder, so semantic completeness cannot be inferred from schema validity alone.
+[`PolicyInputBundle`](../../contracts/policy/policy_input_bundle.md) is the current semantic input carrier. Its paired schema remains a permissive `PROPOSED` stub requiring only `id`, so semantic completeness cannot be inferred from schema validity.
 
-A future Habitat evaluator must not:
+A future evaluator must not:
 
-- silently fetch missing evidence or source facts;
-- read RAW/WORK/QUARANTINE as a public shortcut;
+- silently fetch missing evidence, rights, source, sensitivity, review, or release facts;
+- read RAW, WORK, QUARANTINE, candidate, or internal stores as a public shortcut;
 - infer rights from public availability;
 - infer sensitivity from absence of a flag;
 - trust map/UI state as policy truth;
 - use model prose or embeddings as authorization;
-- mutate the input bundle after evaluation.
+- mutate the input bundle during evaluation;
+- treat a default-only Rego result as a complete decision.
 
 ### Shared decision contract
 
-[`PolicyDecision`](../../contracts/policy/policy_decision.md) requires:
-
-- `decision_id`;
-- `outcome`;
-- `policy_family`;
-- `reasons`;
-- `obligations`;
-- `evaluated_at`.
-
-The paired schema permits only these policy families:
+[`PolicyDecision`](../../contracts/policy/policy_decision.md) requires `decision_id`, `outcome`, `policy_family`, `reasons`, `obligations`, and `evaluated_at`. The paired schema permits only:
 
 ```text
-promotion
-access
-render
-capability
-consent
-sensitivity
+outcome:       ANSWER | ABSTAIN | DENY | ERROR
+policy_family: promotion | access | render | capability | consent | sensitivity
 ```
 
-`biotopes` is not a permitted policy family. A Habitat object may be evaluated by one or more accepted families according to the operation:
+`biotopes` is not a permitted policy family. Engine-native `allow` or `deny` booleans must not be serialized into this closed outward schema without an accepted, tested normalization that preserves reasons, obligations, input identity, bundle/evaluator identity, and failure semantics.
 
-| Operation | Likely shared policy family | Example |
+| Operation | Candidate shared family | Boundary example |
 |---|---|---|
-| Public map display | `render` or `sensitivity` | Generalize a habitat patch before display. |
-| Restricted steward review | `access` | Permit a bounded reviewer to inspect restricted evidence. |
-| Cross-lane analytical join | `capability` and/or `sensitivity` | Block joining public habitat geometry to restricted occurrence data. |
-| Public export | `sensitivity` or `capability` | Deny exact-coordinate export or require aggregation. |
-| Promotion/release handoff | `promotion` plus prior sensitivity decisions | Require evidence, rights, review, correction, and rollback closure. |
+| Public map display | `render` or `sensitivity` | Generalize a supported Habitat geometry before display. |
+| Restricted steward review | `access` | Permit a bounded reviewer to inspect restricted support. |
+| Cross-lane analytical join | `capability` and/or `sensitivity` | Deny or restrict a join that could reveal protected occurrence detail. |
+| Public export | `sensitivity` or `capability` | Deny exact-coordinate export or require an accepted transform. |
+| Promotion/release handoff | `promotion` plus prerequisite policy results | Require evidence, rights, sensitivity, review, correction, and rollback closure. |
 
-Exact policy-family composition is **PROPOSED / NEEDS VERIFICATION** until executable policy and integration tests establish it.
+Exact family composition remains **PROPOSED / NEEDS VERIFICATION** until accepted executable policy and integration tests establish it.
+
+### Current implementation qualification
+
+- all eighteen inspected Habitat Rego files are default-only proposed stubs;
+- no native Habitat Rego test was found;
+- the broad `policy-test` workflow performs static readiness checks and evaluates no Habitat rule;
+- the general policy runtime remains a comment-only `0.0.0` placeholder;
+- the root `make policy` command still prints a TODO;
+- the governed API emits generic `ABSTAIN / NOT_IMPLEMENTED` scaffolds and has no Habitat route;
+- no accepted bundle selector, evaluator binding, decision receipt, obligation interpreter, cache invalidation, correction propagation, promotion integration, or production consumer was established.
+
+Therefore this section defines a future interface boundary, not current runtime behavior.
 
 [Back to top](#top)
 
@@ -751,49 +802,50 @@ If the answer is no, redirect it.
 
 ## 15. Directory contract
 
-Directory Rules assign files by responsibility, not topic. This path is within the correct **root** for policy documentation but has an unresolved **lane** name.
+Directory Rules assign files by responsibility, not topic. This path sits under the correct policy root but remains a contested compatibility lane. Its `BOUNDARY_COMPACT` map must show direct children only.
+
+### Current direct lane
+
+```text
+policy/biotopes/
+├── .gitkeep   # Zero-byte compatibility marker; no authority
+└── README.md  # Documentation-only drift and placement guardrail
+```
 
 ### Current compatibility cluster
 
-```text
-policy/biotopes/README.md       # compatibility guardrail
-contracts/biotopes/README.md    # compatibility contract warning
-schemas/biotopes/README.md      # compatibility schema index
-```
+| Path | Complete direct inventory at the pinned snapshot | Authority posture |
+|---|---|---|
+| `policy/biotopes/` | `.gitkeep`, `README.md` | Compatibility policy guardrail only. |
+| `contracts/biotopes/` | `.gitkeep`, `README.md` | Compatibility semantic warning only. |
+| `schemas/biotopes/` | `.gitkeep`, `README.md` | Frozen compatibility/migration index only. |
 
-### Existing and candidate owning surfaces
+Three matching names are drift evidence, not three-way confirmation of a canonical family.
 
-```text
-policy/domains/habitat/README.md                    # present; PROPOSED scaffold
-contracts/domains/habitat/habitat_patch.md          # present
-contracts/domains/habitat/land_cover_observation.md # present
-contracts/domains/habitat/ecological_system.md      # present
-schemas/contracts/v1/domains/habitat/               # repository surface; exact schema maturity varies
-```
+### Existing candidate owning surfaces
 
-### Unresolved sensitivity surface
+| Surface | Current evidence | Limitation |
+|---|---|---|
+| `policy/domains/habitat/` | README, eighteen default-only Rego stubs, and marker-only subdirectories | Proposed scaffold; no accepted Habitat bundle/evaluator or native Rego test. |
+| `policy/sensitivity/habitat/` | Zero-byte marker only | No dedicated README or active Habitat sensitivity rule. |
+| `policy/sensitivity/habitat_classes.yaml` | Explicit `PROPOSED` placeholder | No class semantics or enforcement. |
+| `contracts/domains/habitat/` | Typed Habitat semantic contracts | Individual maturity varies; semantic meaning is not policy execution. |
+| `schemas/contracts/v1/domains/habitat/` | Typed Habitat machine-shape surfaces | Individual maturity varies; schema validity is not policy permission. |
+| `tests/domains/habitat/policy/` | README plus marker | Proposed test boundary; no executable module in that child lane. |
 
-```text
-policy/sensitivity/habitat/README.md  # not found at tested path
-```
-
-Do not create the missing sensitivity path merely to make the documentation symmetrical. First determine whether:
-
-- Habitat-specific sensitivity rules belong under `policy/domains/habitat/`;
-- a shared sensitivity lane should own them;
-- an accepted policy package convention already exists elsewhere;
-- an ADR or migration record is required.
+Do not create missing symmetry. First determine whether a concern belongs to Habitat-owned policy, shared sensitivity/access/render/capability policy, a contract/schema family, executable tests, or a separately governed release surface.
 
 ### Path decision rule
 
 | Proposed change | Required response |
 |---|---|
-| Edit this guardrail without changing authority | Routine docs review plus Habitat and Policy steward awareness. |
-| Add active Habitat policy under `policy/domains/habitat/` | Policy, Habitat, contracts/schema, fixtures/tests, and runtime review. |
-| Add `policy/sensitivity/habitat/` | Verify Directory Rules and policy-root conventions first; document owner and migration. |
-| Make `policy/biotopes/` canonical | ADR and full object/policy migration plan required. |
-| Remove this directory | Confirm no consumers; add forward link/migration note; preserve history and rollback. |
-| Create new parallel biotope roots | Deny absent accepted ADR. |
+| Edit this guardrail without changing authority | Scoped docs review plus Habitat/Policy awareness; preserve exact evidence and rollback. |
+| Add an active file here | Reject or hold. Route by responsibility unless an accepted ADR and migration explicitly canonicalize this lane. |
+| Graduate a Habitat Rego stub | Require accepted semantics, package/entrypoint identity, native positive/negative tests, fixtures, bundle membership, evaluator binding, normalization, consumer enforcement, receipts, and rollback. |
+| Add Habitat sensitivity rules | Verify accepted owner and home; marker or placeholder presence is insufficient. |
+| Make `policy/biotopes/` canonical | Require accepted ADR, object/policy migration manifest, consumer inventory, deprecation window, correction propagation, and rollback proof. |
+| Remove this directory | Confirm zero writers/consumers and link closure; preserve history and a forward target. |
+| Create another parallel Biotopes root | Deny absent accepted authority and a bounded compatibility plan. |
 
 [Back to top](#top)
 
@@ -866,61 +918,61 @@ For active policy, require together:
 
 ## 17. Validation and test strategy
 
-No dedicated `tests/policy/biotopes/README.md` or `fixtures/policy/biotopes/README.md` was found at the tested paths. The tests below are **PROPOSED**.
+### Confirmed current test and workflow posture
 
-### Guardrail tests
+| Surface | What exists | What it proves |
+|---|---|---|
+| `policy/biotopes/` | README and marker only | No local executable coverage or policy payload. |
+| `tests/policy/biotopes/` | No path in the complete tree | No dedicated cross-cutting Biotopes test lane. |
+| `fixtures/policy/biotopes/` and `fixtures/policy/habitat/` | No paths in the complete tree | No dedicated policy fixture family at those exact homes. |
+| `tests/domains/habitat/policy/` | README and marker | Proposed testing responsibility only. |
+| Three named Habitat policy Python files | Docstring-only placeholders | No assertions, case matrix, or policy execution. |
+| Eighteen Habitat Rego files | Package declaration plus one default each | Parseable-looking source presence only; no operative case rules or complete decision semantics. |
+| `policy-test` workflow | Static inventory/readiness checks | It preserves the general OPA hold and evaluates no Habitat policy. |
+| `domain-habitat` workflow | Synthetic land-cover materiality validation plus proof/release holds | Bounded contract/fixture evidence, not Biotopes policy or public authorization. |
+| General policy runtime | Comment-only `core.py` and `0.0.0` package | Placeholder identity only. |
+| Governed API boundary tests | Generic abstain routes and structural guards | Fail-closed scaffold containment, not Habitat policy enforcement. |
 
-| Test | Expected result |
+A green repository or pull-request check must be interpreted at its exact workflow scope. It does not activate these stubs.
+
+### Required guardrail tests
+
+The following remain **PROPOSED** until placed under an accepted test owner:
+
+| Test | Required result |
 |---|---|
-| Only allowed compatibility docs exist under `policy/biotopes/`. | Pass; unexpected active file fails. |
-| No runtime import references `policy/biotopes/`. | Pass; import is a boundary failure. |
-| No policy bundle registers `biotopes` as a policy family. | Pass; registration fails. |
-| Contract/schema compatibility folders contain no canonical active definitions. | Pass or drift failure. |
-| Links resolve to current Habitat/shared policy surfaces. | Pass. |
-| Deletion/migration retains forward and rollback references. | Pass. |
+| Complete direct inventory contains only allowed compatibility documentation and marker files. | Pass; an unexpected active payload fails. |
+| No bundle, evaluator, runtime import, or consumer selects `policy/biotopes/`. | Pass; operational dependency is a boundary failure. |
+| No contract/schema registry creates `Biotope` as an object or policy family without accepted governance. | Pass or explicit migration hold. |
+| Each Habitat Rego stub remains visibly proposed until graduated with operative rules and native tests. | Pass; silent graduation fails. |
+| `biotopes` is absent from the closed `PolicyDecision.policy_family` vocabulary. | Pass. |
+| Compatibility links, forward targets, deprecation notes, and rollback references resolve. | Pass. |
+| Public examples contain no real restricted coordinates or reverse-inference payloads. | Pass. |
 
-### Runtime-policy negative cases
+### Future policy negative cases
 
-| Scenario | Expected outcome |
+| Scenario | Required fail-closed posture |
 |---|---|
-| Umbrella term supplied without canonical object/owner | `ABSTAIN` or `ERROR`, depending input validity |
+| Umbrella term supplied without canonical object and owner | `ABSTAIN` or `ERROR` according to input validity |
 | Source role unresolved | `ABSTAIN` / `DENY` |
-| Rights unresolved | `DENY` or `ABSTAIN` per accepted rights policy |
-| Classifier version missing | `ABSTAIN` |
+| Rights unresolved | `DENY` or `ABSTAIN` under accepted rights policy |
+| Classifier or vocabulary version missing | `ABSTAIN` |
 | Unverified crosswalk used as equivalence | `ABSTAIN` / `DENY` |
 | Model output presented as observation | `DENY` |
 | Regulatory designation presented as ecological classification | `DENY` |
-| Public join includes restricted occurrence | `DENY` |
-| Exact geometry lacks public-safe transform | `DENY` |
+| Public join includes restricted occurrence detail | `DENY` |
+| Exact geometry lacks accepted public-safe transform | `DENY` |
 | Generalization still permits reverse inference | `DENY` |
-| Evidence unresolved | `ABSTAIN` |
-| Policy bundle stale or evaluator unavailable | `ERROR` |
-| Release state absent for public render | `DENY` / `ABSTAIN` |
-| All checks pass with required generalization | `ANSWER` with obligations; not release approval |
+| Evidence unresolved or stale | `ABSTAIN` |
+| Bundle stale, missing, digest-mismatched, or evaluator unavailable | `ERROR` |
+| Release state absent for public render/export | `DENY` / `ABSTAIN` |
+| All checks pass with enforceable generalization | `ANSWER` with obligations; still not release approval |
 
 ### Fixture posture
 
-Fixtures must be:
+Any future fixtures must be synthetic, public-safe, no-network by default, explicit about source role/classifier/time, paired positive/negative, incapable of being mistaken for production records, and free of actual rare-species, rare-plant, cultural, private, or protected coordinates.
 
-- synthetic;
-- generalized;
-- free of actual rare-species, rare-plant, cultural, or private-location coordinates;
-- explicit about source role and classifier version;
-- paired valid/invalid cases;
-- incapable of being mistaken for production records;
-- no-network by default.
-
-### Suggested test homes
-
-These are **PROPOSED** and require placement verification before creation:
-
-```text
-tests/policy/test_biotopes_compatibility_guardrail.py
-tests/domains/habitat/test_biotope_like_policy.py
-fixtures/policy/habitat/biotope_like/
-```
-
-Prefer tests organized by the **owning policy/domain responsibility**, not by the rejected umbrella term.
+Prefer placement by the owning policy/domain responsibility. Candidate paths must be reviewed before creation; the rejected umbrella term must not determine authority.
 
 [Back to top](#top)
 
@@ -1020,45 +1072,26 @@ Automated checks may support these duties but cannot replace required human revi
 
 When this README is wrong:
 
-1. identify the unsupported or stale claim;
-2. cite current repo/doctrine evidence;
-3. update the truth label;
-4. preserve the previous version in Git history;
-5. note any affected migrations or active policy consumers.
+1. identify the unsupported, stale, or overbroad claim;
+2. pin the current repository/doctrine evidence;
+3. update the truth label and affected evidence entry;
+4. preserve prior bytes in Git history;
+5. record affected migrations, consumers, decisions, releases, and caches where any exist;
+6. prefer a transparent forward correction when a simple revert would reintroduce known inaccuracy.
 
 ### Policy supersession
 
-Active policy decisions must be superseded through new immutable decisions, not overwritten.
-
-Triggers include:
-
-- source rights change;
-- classifier or crosswalk correction;
-- new sensitive occurrence information;
-- sensitivity-policy revision;
-- changed geometry transform;
-- release withdrawal;
-- evaluator or bundle vulnerability;
-- correction to domain ownership.
+Future active policy must be superseded through versioned source, bundles, decisions, and governed transition records rather than overwritten in place. Material triggers include source-rights change, classifier/crosswalk correction, new sensitivity information, changed geometry transforms, evaluator/bundle vulnerability, owner/path correction, release withdrawal, or correction to domain meaning.
 
 ### Migration rollback
 
-A migration away from this path must record:
+A migration away from this path must record source and destination paths, exact blobs/commits, compatibility class/window, writers and consumers, registry/`$ref`/import changes, tests, forward and rollback commands, affected decisions/releases, correction propagation, cache invalidation, and whether old paths are removed, redirected, or retained as guardrails.
 
-- source and destination paths;
-- commit/blob hashes;
-- compatibility window;
-- affected imports/configs;
-- tests run;
-- forward and rollback commands;
-- policy decisions or releases affected;
-- whether old paths are removed, mirrored, or guardrail-only.
-
-Rollback must restore safe behavior, not restore duplicate authority.
+Rollback must restore one safe authority surface; it must not restore duplicate authority.
 
 ### This README rollback
 
-Revert the documentation commit or close its draft PR without merging. Do not rewrite shared history.
+Before merge, close the draft PR and leave main unchanged. After merge, revert only the scoped README commit or issue a reviewed forward correction, then rerun the exact documentation and hosted checks. The v0.2 preimage is blob `cb1f7144290951fc8209f094b3ccacfacf006c92`. Do not rewrite shared history, activate old stubs, or alter release/publication state as part of documentation rollback.
 
 [Back to top](#top)
 
@@ -1066,44 +1099,47 @@ Revert the documentation commit or close its draft PR without merging. Do not re
 
 ## 21. Validation commands
 
-These commands are inspection aids, not proof that the referenced tests or tools exist.
+The commands below are repository inspection aids. They do not prove runtime enforcement or release authority.
 
 ```bash
-#: Inspect compatibility paths.
-find policy/biotopes contracts/biotopes schemas/biotopes \
-  -maxdepth 4 -type f -print | sort
+#: Pin the revision before inspection.
+git rev-parse HEAD
 
-#: Locate references that could make the compatibility path operational.
-git grep -nE 'policy/biotopes|contracts/biotopes|schemas/biotopes'
+#: Verify the three direct compatibility lanes.
+git ls-tree -r --name-only HEAD --   policy/biotopes contracts/biotopes schemas/biotopes
 
-#: Inspect likely owning policy and policy contracts.
-find policy/domains/habitat contracts/policy schemas/contracts/v1/policy \
-  -maxdepth 5 -type f -print | sort
+#: Inventory Habitat policy source and exact candidate test/fixture homes.
+git ls-tree -r --name-only HEAD --   policy/domains/habitat policy/sensitivity/habitat   tests/domains/habitat/policy tests/policy/biotopes   fixtures/policy/biotopes fixtures/policy/habitat
 
-#: Inspect Habitat contracts and policy-related tests.
-find contracts/domains/habitat tests/policy tests/domains/habitat \
-  -maxdepth 5 -type f -print | sort
+#: Find path, vocabulary, bundle, evaluator, and consumer references.
+git grep -nEi   'policy/biotopes|contracts/biotopes|schemas/biotopes|biotope|biotopes'   -- . ':(exclude)policy/biotopes/README.md'
+
+#: Inspect active non-comment statements in Habitat Rego files.
+for f in policy/domains/habitat/*.rego; do
+  printf '%s\n' "$f"
+  sed -E '/^[[:space:]]*(#|$)/d' "$f"
+done
+
+#: Confirm the root evaluator hold; this prints TODO at the pinned snapshot.
+make policy
 ```
 
-Proposed documentation checks:
+Documentation checks for this update:
 
 ```bash
-#: One top-level H1.
-grep -c '^# ' policy/biotopes/README.md
+#: One H1 and one metadata block.
+test "$(grep -c '^# ' policy/biotopes/README.md)" -eq 1
+test "$(grep -c '\[KFM_META_BLOCK_V2\]' policy/biotopes/README.md)" -eq 1
+test "$(grep -c '\[/KFM_META_BLOCK_V2\]' policy/biotopes/README.md)" -eq 1
 
-#: No active-policy file extensions in the compatibility directory.
-find policy/biotopes -type f \
-  ! -name 'README.md' \
-  ! -name '*migration*.md' \
-  ! -name '*deprecation*.md' \
-  -print
+#: No unexpected active payload in the compatibility lane.
+find policy/biotopes -mindepth 1 -maxdepth 1 -type f   ! -name 'README.md' ! -name '.gitkeep' -print
 
-#: Confirm no prohibited biotopes policy-family claim.
-git grep -nE 'policy_family.*biotopes|package[[:space:]]+biotopes' -- \
-  policy packages apps tests
+#: No prohibited Biotopes policy-family or package declaration.
+git grep -nEi   'policy_family[^[:alnum:]]*[:=][^[:alnum:]]*biotopes?|package[[:space:]].*biotopes?'   -- policy packages apps tests   ':(exclude)policy/biotopes/README.md'
 ```
 
-Any future executable command must be taken from verified repository tooling and CI configuration.
+Run repository-native Markdown, metadata, link, topology, schema, policy, documentation, and domain checks through the pull request. Interpret each result at its exact scope and classify unrelated inherited failures instead of weakening the guardrail.
 
 [Back to top](#top)
 
@@ -1145,22 +1181,23 @@ The path is fully resolved only when:
 
 ## 23. Open verification register
 
-| ID | Question | Status | Evidence needed |
+| ID | Question | Current status | Evidence needed |
 |---|---|---|---|
-| `BIO-POL-001` | Should `policy/biotopes/` remain README-only, be deprecated, or be removed? | NEEDS VERIFICATION | Steward disposition and recursive inventory. |
-| `BIO-POL-002` | Is `policy/domains/habitat/` the accepted active home for all Habitat policy? | NEEDS VERIFICATION | Current policy convention, imports, tests, ADRs. |
-| `BIO-POL-003` | Should Habitat sensitivity live under the domain policy lane or a shared sensitivity lane? | UNKNOWN | Policy architecture decision and existing bundle structure. |
-| `BIO-POL-004` | Are there unindexed files or consumers under the three compatibility paths? | NEEDS VERIFICATION | Recursive tree and code/config search. |
-| `BIO-POL-005` | Is *biotope* retained as docs-only vocabulary or renamed to habitat types? | PROPOSED owner decision | Habitat steward vocabulary decision and doc migration. |
-| `BIO-POL-006` | What reason-code registry and obligation interpreter govern Habitat policy? | UNKNOWN | Active policy bundle, contract, tests, runtime adapter. |
-| `BIO-POL-007` | What object contract/schema versions are production-ready? | UNKNOWN | Schema registry, validators, fixtures, CI evidence. |
-| `BIO-POL-008` | What public-safe geometry transforms are accepted? | UNKNOWN | Sensitivity policy, transform contract, receipts, tests. |
-| `BIO-POL-009` | How is reverse-join and differencing risk tested? | UNKNOWN | Threat model, fixtures, regression tests, release gate. |
-| `BIO-POL-010` | Which sources and crosswalks are activated for Habitat classifications? | UNKNOWN | Source descriptors, activation decisions, rights review. |
-| `BIO-POL-011` | Is policy decision caching used, and how is it invalidated? | UNKNOWN | Runtime implementation, cache key, revocation tests. |
-| `BIO-POL-012` | Which CI workflow enforces compatibility and Habitat policy boundaries? | UNKNOWN | Workflow, logs, required-check settings. |
-| `BIO-POL-013` | Does any public API or map surface depend on this path? | UNKNOWN | Route/import audit and runtime tests. |
-| `BIO-POL-014` | What rollback target applies to future path migration? | NEEDS VERIFICATION | Migration record and release/consumer inventory. |
+| `BIO-POL-001` | Should `policy/biotopes/` remain README-only, be deprecated, or be removed? | **PARTIAL — exact two-file lane confirmed; disposition open** | Habitat/Policy owner decision, consumer closure, and migration/deprecation record. |
+| `BIO-POL-002` | Is `policy/domains/habitat/` the accepted active home for Habitat policy? | **PLACEMENT CANDIDATE CONFIRMED / ACTIVATION UNKNOWN** | Accepted package/entrypoint convention, bundle/evaluator binding, native tests, consumers, and ADR if required. |
+| `BIO-POL-003` | Should Habitat sensitivity live under the domain lane, shared sensitivity lane, or both through explicit composition? | **UNKNOWN** | Policy architecture decision, owner assignments, input/output contract, and bundle composition. |
+| `BIO-POL-004` | Are there hidden files or direct consumers under the three compatibility paths? | **DIRECT INVENTORIES CONFIRMED / INBOUND CONSUMERS NEED VERIFICATION** | Content-aware repository and external-consumer search at migration time. |
+| `BIO-POL-005` | Is `biotope` retained as docs-only vocabulary, renamed to habitat types, or fully deprecated? | **PROPOSED owner decision** | Habitat/Flora vocabulary decision and reference migration. |
+| `BIO-POL-006` | What reason-code registry and obligation interpreter govern Habitat policy? | **UNKNOWN** | Accepted policy contract, evaluator, consumer, tests, and registry. |
+| `BIO-POL-007` | Which Habitat contract/schema profiles are production-ready? | **MIXED / NEEDS VERIFICATION** | Per-object contract, schema, fixtures, validators, registry, CI, and consumer evidence. |
+| `BIO-POL-008` | What public-safe geometry transforms are accepted? | **UNKNOWN** | Sensitivity policy, transform contract, fixtures, receipts, tests, and release gate. |
+| `BIO-POL-009` | How is reverse-join, differencing, and composition risk tested? | **UNKNOWN** | Threat model, synthetic negative fixtures, runtime tests, and correction/rollback behavior. |
+| `BIO-POL-010` | Which sources, classifiers, and crosswalks are active for Habitat classifications? | **UNKNOWN** | Source descriptors, activation decisions, rights review, version pins, and release records. |
+| `BIO-POL-011` | Is policy-decision caching used, and how is it invalidated? | **UNKNOWN** | Runtime implementation, cache keys, expiry/revocation/correction tests, and receipts. |
+| `BIO-POL-012` | Which CI enforces this compatibility boundary and Habitat policy behavior? | **PARTIAL** | `policy-test` is a static readiness hold and `domain-habitat` does not evaluate Rego; a dedicated accepted guard/evaluator workflow and required-check evidence remain absent. |
+| `BIO-POL-013` | Does any public API, map, export, graph, search, or AI surface depend on this path? | **UNKNOWN** | Complete internal and external consumer inventory plus runtime tests. |
+| `BIO-POL-014` | What rollback target applies to a future path migration? | **README PREIMAGE CONFIRMED / MIGRATION TARGET OPEN** | Accepted migration manifest, zero-writer/consumer checks, forward pointer, and rollback drill. |
+| `BIO-POL-015` | What graduates the eighteen Habitat Rego stubs from default-only scaffolds? | **NEEDS VERIFICATION** | Operative rules, stable identities, positive/negative native tests, fixtures, bundle membership, evaluator binding, normalization, consumers, receipts, and rollback. |
 
 [Back to top](#top)
 
@@ -1172,48 +1209,59 @@ Repository evidence inspected for this revision:
 
 | Evidence | Blob / ref | What it supports | Limitation |
 |---|---|---|---|
-| `policy/biotopes/README.md` v0.1 | `70f291293f31f525369ec57d289d252958ca8d98` | Existing guardrail and conflict posture. | Does not prove full directory inventory. |
-| `docs/domains/habitat/sublanes/biotopes.md` | `6690a312fcac8464a749f4e8d470404afa80adec` | Docs-only grouping, canonical object crosswalk, no parallel authority, sensitive-join posture. | Sublane convention itself is PROPOSED. |
-| `contracts/biotopes/README.md` | `4ae31607df03c3d1f4de99b783f88b99946e184a` | Contract compatibility-path conflict and Habitat/Flora ownership. | Does not prove complete contract inventory. |
-| `schemas/biotopes/README.md` | `3206e6ffce1cb0054e3542318e4485c5accc19a0` | Schema compatibility/index posture and no-new-canonical-schema rule. | Does not prove full schema inventory or CI. |
-| `policy/README.md` | `09cd966ab188d5e831960869117522a98274cb7f` | Singular policy responsibility root. | Root README status remains PROPOSED. |
-| `policy/domains/habitat/README.md` | `8456c65196354695b8eb5b8178ecb61cfc12b7dd` | Existing Habitat policy scaffold. | Greenfield scaffold; no runtime proof. |
-| `contracts/policy/policy_input_bundle.md` | `545c352681dd0db0cd4d169a5d2f9c364356457c` | Explicit policy-input semantics and no-hidden-fetch rule. | Paired schema is a placeholder. |
-| `contracts/policy/policy_decision.md` | `ebfe97f98263e6309db6d2772cb2c5e548819650` | Runtime outcomes, policy-family enum, reasons, obligations, timestamp. | Executable policy and wiring remain unverified. |
-| `docs/domains/habitat/CANONICAL_PATHS.md` | `837aa111f70b8df678b5545c72f92c1fdca73b66` | Proposed Habitat responsibility-root placement and deny-by-default joins. | Specific paths are PROPOSED; schema slug is conflicted. |
-| `docs/doctrine/directory-rules.md` | `2affb080e6f0043867c64c7f06c1ca52030fbd55` | Responsibility-root placement, conflict handling, and domain placement law. | Does not prove implementation presence. |
-| `tests/policy/README.md` | `e64e81df769ac9f6b398f40fd46875f30eda5c8f` | Policy-test root and fail-closed negative-test posture. | Dedicated biotopes tests not found. |
-| Initial biotopes evidence snapshot | `65a0d9f6159efa03aba0711d38a51eb203079c3f` | Commit-pinned detailed inspection context. | Runtime, branch protection, and full recursive tree not inspected. |
-| Review-branch base | `30f7bdda720310a14376791b6d1e02e1d3639e91` | Target blob rechecked unchanged; intervening commits changed unrelated paths. | Does not add runtime evidence. |
+| `policy/biotopes/README.md` v0.2 | `cb1f7144290951fc8209f094b3ccacfacf006c92` | Existing substantive guardrail and rollback preimage. | Documentation only. |
+| Complete repository tree | `main@a893b30f4dd1edfed151620c529734f4fd789a89` | Exact direct-lane inventories and candidate-path presence/absence. | Does not inspect external consumers, runtime, or repository settings. |
+| `docs/domains/habitat/sublanes/biotopes.md` | `6690a312fcac8464a749f4e8d470404afa80adec` | Docs-only grouping, object crosswalk, no-parallel-authority, sensitivity posture. | Draft docs convention; not executable authority. |
+| `contracts/biotopes/README.md` | `4ae31607df03c3d1f4de99b783f88b99946e184a` | Contract compatibility conflict and owning object families. | Does not prove complete semantic maturity. |
+| `schemas/biotopes/README.md` | `6a892088d5a0f8be5a8554a8b866ded1da595c8e` | Frozen compatibility/index posture and object-split migration rule. | Does not select or activate schemas. |
+| `policy/README.md` | `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35` | Singular policy root and current policy maturity boundary. | Root doctrine does not activate this child lane. |
+| Directory Rules v2 | `fd49a0b83e55cef52c1124281f093e263526898d` | Mandatory contract/schema/policy split and `BOUNDARY_COMPACT` fields. | Does not decide Biotopes disposition or implementation. |
+| ADR-0029 | `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | Accepted exact Directory Rules identity and single human authority. | Does not activate a local policy family. |
+| Root registry | `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | `root.policy` responsibility, exposure, mutation, retention, and non-effects. | Machine projection only. |
+| `policy/domains/habitat/README.md` | `8456c65196354695b8eb5b8178ecb61cfc12b7dd` | Current canonical-placement claim and explicit greenfield status. | Does not prove rules, bundle, or runtime. |
+| Eighteen Habitat Rego files | pinned recursive tree plus exact file reads | All operative content is package declaration plus one default; sixteen default-allow-false and two default-deny-false. | Parse, bundle selection, evaluator execution, and consumers were not established. |
+| Habitat sensitivity placeholder | `864474071907172a69a892054662abb38f67cab2` | `habitat_classes.yaml` is explicitly `PROPOSED`. | Supplies no active class semantics or enforcement. |
+| Habitat policy-test README | `b09092132fbadefadece14a30c3d0e49a1048c0f` | Proposed test ownership and fail-closed expectations. | Child lane has no executable test module. |
+| Three named Habitat policy Python files | `dc61a31288d2c8e47b370179758de60448fa7478`, `03bd5dbcaf46ceb1263cd7f84875d017b1366f4d`, `0446c47b6cb83a35aed3687b60b8072234de912a` | They are docstring-only placeholders. | No assertions or policy execution. |
+| `PolicyInputBundle` contract/schema | `545c352681dd0db0cd4d169a5d2f9c364356457c` / `b89db4b1730c61258441e0eed037276b910b1990` | Explicit-input semantics and permissive placeholder shape. | Schema requires only `id`. |
+| `PolicyDecision` contract/schema | `ebfe97f98263e6309db6d2772cb2c5e548819650` / `1472d26a42c73f17545b4464a275412ffa1d098e` | Closed outcomes, policy-family enum, reasons, obligations, timestamp. | No decision authenticity, evaluator, or enforcement proof. |
+| `policy-test` workflow | `ac8f125e8a4d3634d86f66836d2aa2c0e3925e75` | Static general OPA readiness hold and exact bounded native-test exception. | Evaluates no Habitat policy and emits no decision. |
+| `domain-habitat` workflow | `59771c027f688d7028a46c4635c0ec710b34e3ab` | Bounded materiality validation plus explicit proof/release holds. | Does not execute Habitat Rego. |
+| Policy runtime core | `e7e14cf39ae6919fbbc80f1b471de6b907292edb` | Comment-only general runtime placeholder. | No evaluator API. |
+| Governed API stub | `5d7c137d2e78ddfca35a1356a96333ac2e84952b` | Generic `ABSTAIN / NOT_IMPLEMENTED` envelope. | No Habitat/Biotopes policy or release behavior. |
+| Root Makefile | `c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326` | `make policy` remains a TODO echo. | No repository-wide policy execution. |
+| CODEOWNERS | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | `/policy/` review routing. | Routing is not accepted role assignment or independent approval. |
+| Open pull-request inventory | preflight API read | One open Consent PR; zero target overlap. | Must be refreshed immediately before write. |
 
 ### Truth summary
 
 ```text
 CONFIRMED:
-  target exists
-  conflict is documented
-  parallel compatibility READMEs exist
-  canonical Habitat objects and owner lanes are documented
-  shared policy contracts exist
-  PolicyDecision finite field surface exists
-  Habitat policy scaffold exists
-  dedicated tested README paths were absent
+  exact README-plus-marker direct lane
+  README-plus-marker compatibility siblings
+  accepted singular policy root and BOUNDARY_COMPACT requirement
+  docs-only Biotope vocabulary posture
+  eighteen Habitat default-only proposed Rego stubs
+  placeholder Habitat policy tests
+  shared candidate input and decision shapes
+  static policy readiness hold
+  placeholder policy runtime and generic abstain API scaffold
 
 PROPOSED:
-  migration sequence
-  reason codes and obligations
-  future fixture/test locations
-  exact policy-family composition
-  active Habitat sensitivity home
+  final path disposition and migration
+  active Habitat rule semantics and policy-family composition
+  reason codes, obligations, fixtures, tests, bundle/evaluator binding
+  decision receipts, consumer enforcement, correction propagation
 
-UNKNOWN:
-  executable policy
-  complete tree inventory
-  evaluator integration
-  CI enforcement
-  public route behavior
-  release behavior
-  production source/crosswalk activation
+CONFLICTED:
+  parallel topic-name paths versus no-parallel-authority doctrine
+  umbrella Biotope term versus canonical Habitat and Flora object families
+
+UNKNOWN / NEEDS VERIFICATION:
+  accepted owners and independent approval
+  active evaluator, bundle, runtime consumer, and policy receipts
+  required-check significance and production enforcement
+  external consumers, release integration, deployment, and public behavior
 ```
 
 [Back to top](#top)
@@ -1240,10 +1288,47 @@ Before editing this directory:
 - [ ] Keep public clients behind governed interfaces.
 - [ ] Mark unresolved implementation claims `UNKNOWN` or `NEEDS VERIFICATION`.
 
+## 26. Changelog
+
+### v0.3 — 2026-08-13
+
+- pinned the exact current main commit, target preimage, complete tree, open-PR inventory, and governing evidence;
+- adopted the required `BOUNDARY_COMPACT` responsibility signature without changing authority;
+- resolved the direct-lane inventory to README plus marker and refreshed both compatibility siblings;
+- reconciled the current Habitat policy scaffold: eighteen default-only proposed Rego files, placeholder policy tests, non-evaluating broad workflow, placeholder runtime, and generic abstain API;
+- updated Directory Rules from superseded v1.4 evidence to accepted v2 through ADR-0029 and the active root-registry projection;
+- preserved the v0.2 purpose, language boundary, placement dispositions, input model, outcome semantics, sensitive-join rules, lifecycle boundary, allowed/prohibited contents, migration phases, negative cases, review separation, correction/rollback discipline, definition of done, verification register, and maintainer checklist;
+- changed documentation only.
+
+### No-loss reconciliation ledger
+
+| v0.2 content family | v0.3 disposition |
+|---|---|
+| Compatibility purpose and non-canonical language | Preserved and tightened. |
+| Habitat/Flora object crosswalk and anti-collapse rules | Preserved. |
+| Authority, lifecycle, public-trust, sensitivity, rights, AI, and publication boundaries | Preserved and grounded in current evidence. |
+| Placement dispositions and migration phases | Preserved. |
+| Required inputs, finite outcomes, reasons, and obligations | Preserved as proposed design; current implementation caveats added. |
+| Guardrail and runtime negative cases | Preserved; current test gaps made explicit. |
+| Review, separation of duties, correction, supersession, and rollback | Preserved; exact v0.2 blob added. |
+| Open verification items | Preserved by stable IDs and updated with current partial resolutions. |
+| Evidence ledger | Superseded with current blobs, workflows, implementation stubs, and limitations. |
+
+### v0.2 — 2026-07-14
+
+Established the substantive compatibility guardrail, conflict statement, object-family routing, fail-closed policy design, migration sequence, security posture, verification register, and evidence ledger.
+
+[Back to top](#top)
+
+---
+
 ## Status summary
 
-`policy/biotopes/` remains a **non-canonical compatibility guardrail**.
+`policy/biotopes/` remains a **non-canonical, documentation-only compatibility guardrail**. The complete direct lane is this README plus a marker.
 
-It may help maintainers route Habitat classification and sensitive-join policy to the correct owning surfaces. It must not acquire executable policy, a new policy family, schema/contract authority, source or lifecycle data, or release power without an accepted architectural decision and a reversible migration.
+The current Habitat policy candidate contains eighteen explicit default-only stubs, not an accepted evaluator or active policy family. This lane may route Habitat classification, source-role, sensitivity, geoprivacy, and join concerns to their owning surfaces, but it must not acquire executable rules, `biotopes` family registration, contract/schema authority, source or lifecycle data, decision instances, release power, or publication behavior without accepted governance and a reversible migration.
 
 <p align="right"><a href="#top">Back to top</a></p>
+
+---
+

@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-site-v170-slice-access-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+    "apps/site/source/app/aquifer-volume-view.tsx",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/subsurface-slice.ts",
+    "apps/site/source/app/subsurface-three.tsx",
+    "apps/site/source/app/subsurface.module.css",
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/tests/component-harness.mjs",
+    "apps/site/source/tests/subsurface-slice.test.mjs",
+    "data/receipts/generated/site-v170-slice-access-20261007.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:4d07e8ff3e7b38f7ba122ab2729f3892f4767cc00a9e15a326391fb9a1e4140c",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "sha256:077b3522a502e1c6bdaafcecb67c8aa05dab6b89fcc9ae1aa1aeb61a054fc444",
+    "apps/site/source/app/aquifer-volume-view.tsx": "sha256:8b1afefca9a7b5549f84c3cb7b59a7ff881208cf5705a51ee4b03a26c7de65f4",
+    "apps/site/source/app/globals.css": "sha256:93731d7f369ae3b436e1302034c49fe39ea62b87a539d971d5f22444a46c18b8",
+    "apps/site/source/app/subsurface-slice.ts": "sha256:51962fe45a1e85d5c353d8b926e1962a032856add47b86444db645c8214f747e",
+    "apps/site/source/app/subsurface-three.tsx": "sha256:64c092d51546cf3cf06fc9b9a2a6a7fa9616968ae2e5f339c24cb36ae5bd814b",
+    "apps/site/source/app/subsurface.module.css": "sha256:b5029712319005771fa40f07678da795f889fecacb35802e1c3cd44037daaf45",
+    "apps/site/source/app/underground-panel.tsx": "sha256:bac39c3784a703b87984446ffd4dc3f42ee7c9d1edce769c405ec67cb1d1b4de",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:0928af81b22dc1145b0bbf6f3c5403c36e6327464a4441a3264ffdbf59649356",
+    "apps/site/source/docs/underground-explorer.md": "sha256:03931d54fe18e0ef57414696ac4a420fd91478675ac675799b9b96f745575cea",
+    "apps/site/source/tests/component-harness.mjs": "sha256:4fe2de0e98794461e443495a167de9611e0c2f758f08a6d8a0b68a558074d114",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "sha256:3747c865072cc872dfd7e055001a65dff62f234b39b57054f5204220bc49afbb",
+    "data/receipts/generated/site-v170-slice-access-20261007.json": "sha256:29638d4485b866c0a0a2ad89243b066189d229a3aa153ff015448b6fc64dd046"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "Sites",
+      "GitHub-readback",
+      "independent-source-review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:57981d0340bfedcc16d0071cedc247cab6812bcc",
+      "standalone-site-source:54e3f661d3dcede372ef8ae90dee99cd0798e3b9",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "CONFIRMED",
+    "apps/site/source/app/aquifer-volume-view.tsx": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/subsurface-slice.ts": "CONFIRMED",
+    "apps/site/source/app/subsurface-three.tsx": "CONFIRMED",
+    "apps/site/source/app/subsurface.module.css": "CONFIRMED",
+    "apps/site/source/app/underground-panel.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/docs/underground-explorer.md": "CONFIRMED",
+    "apps/site/source/tests/component-harness.mjs": "CONFIRMED",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v170-slice-access-20261007.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact source parity",
+      "outcome": "PASS",
+      "reason": "All 707 source paths match pushed standalone source."
+    },
+    {
+      "gate": "Application validation",
+      "outcome": "PASS",
+      "reason": "Build, TypeScript and 586 tests pass; 39 focused tests and independent 11-test slice review pass."
+    },
+    {
+      "gate": "Fresh browser visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Admin-enforced browser policy check unavailable on three attempts. No bypass; prior v169 visual checks do not qualify v170."
+    },
+    {
+      "gate": "Local install and data preservation",
+      "outcome": "PASS",
+      "reason": "Exact source/build installed; isolated 12-route rehearsal, 8 SQLite checks and 15,840 blob hashes verified."
+    },
+    {
+      "gate": "Historical mirror review",
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED retained; no review waiver."
+    },
+    {
+      "gate": "Exact-head CI and independent human acceptance",
+      "outcome": "SKIPPED",
+      "reason": "CI follows push; no independent human acceptance supplied."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v170-slice-access-20261007.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T06:55:34.922058+00:00",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": 4914,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, binding final authored artifact bytes except this self-referential record. No prompts, secrets, private payloads, hidden reasoning or review approvals. Source, deployment, runtime, browser and dataset-release states remain separate."
+}

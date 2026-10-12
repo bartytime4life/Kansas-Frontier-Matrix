@@ -18,10 +18,10 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - docs/domains/agriculture/policy/README.md
@@ -33,6 +33,9 @@ notes:
   - Sibling docs reference cross-lane edges; this doc specifies them.
   - All identity/join-key claims and validator names are PROPOSED until repo verification.
   - Where Atlas v1.0 disagrees with this doc, Atlas v1.0 governs and the conflict is filed against this doc.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Cross-Lane Edge Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -54,7 +57,7 @@ notes:
 | `draft` | TODO — Agriculture Domain Steward · Architecture Steward · Policy Steward · Cross-Domain Reviewers | 2026-05-26 | `CONTRACT_VERSION = "3.0.0"` |
 
 > [!IMPORTANT]
-> **What this doc is — and what it is not.** This is the **per-edge operational contract** for Agriculture cross-lane relationships. The architectural overview lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md) §10; the wire-level envelope contract lives in [`api-contracts.md`](./api-contracts.md) §9; the carry-forward register lives in [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) §8. **This doc is where you go when the question is *"how exactly does this edge work?"***.
+> **What this doc is — and what it is not.** This is the **per-edge operational contract** for Agriculture cross-lane relationships. The architectural overview lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md) §10; the wire-level envelope contract lives in [`api-contracts.md`](API_CONTRACTS.md) §9; the carry-forward register lives in [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) §8. **This doc is where you go when the question is *"how exactly does this edge work?"***.
 
 > [!CAUTION]
 > **Source-role discipline applies on every edge.** A cross-lane edge **never** upgrades a source role. A NASS aggregate joined to a People/Land parcel is still an aggregate; an SMAP modeled grid joined to a Soil map-unit is still modeled; a CDL classification joined to a Hydrology HUC is still modeled. Promotion across an edge is forbidden. `[CONFIRMED — Atlas §24.1, §24.9.3.]`
@@ -105,7 +108,7 @@ This document specifies, for each cross-lane edge that Agriculture participates 
 - **Validators** that enforce edge conformance.
 - **Correction-cascade direction** when an upstream claim is corrected.
 
-It does **not** specify wire-level DTO field names (those live in [`api-contracts.md`](./api-contracts.md) §5) or repo placement (that lives in [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) §9). Where this doc touches those concerns, it cross-references.
+It does **not** specify wire-level DTO field names (those live in [`api-contracts.md`](API_CONTRACTS.md) §5) or repo placement (that lives in [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) §9). Where this doc touches those concerns, it cross-references.
 
 [⤴ Back to top](#top)
 
@@ -123,7 +126,7 @@ It does **not** specify wire-level DTO field names (those live in [`api-contract
 | Finite policy outcomes; sensitive lanes default to `DENY` | [`policy-aware.md`](../../doctrine/policy-aware.md) | **CONFIRMED doctrine** |
 | Cite-or-abstain truth posture | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| `CorrectionNotice` + `RollbackCard` lineage | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| `CorrectionNotice` + `RollbackCard` lineage | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Agriculture cross-lane edge baseline | Atlas v1.1 §9.F + §24.4.7 (`[DOM-AG]`, `[ENCY]`) | **CONFIRMED doctrine** |
 | Habitat → Agriculture edges | Atlas §24.4.4 | **CONFIRMED doctrine** |
 | Fauna → Agriculture edges | Atlas §24.4.5 | **CONFIRMED doctrine** |
@@ -269,7 +272,7 @@ flowchart TB
 | **Forbidden** | Citing `NFHLZone` as if it were an observed flood event in Agriculture context. Re-publishing flow observations under Agriculture. Joining private water-withdrawal records into a public Agriculture surface. |
 
 > [!IMPORTANT]
-> **NFHL regulatory provenance MUST be preserved across this edge.** Agriculture surfaces that cite NFHL regulatory zones MUST render them with the regulatory banner per [`api-contracts.md`](./api-contracts.md) §3 — never as observed events. `[CONFIRMED — Atlas §24.1.2; §24.9.2.]`
+> **NFHL regulatory provenance MUST be preserved across this edge.** Agriculture surfaces that cite NFHL regulatory zones MUST render them with the regulatory banner per [`api-contracts.md`](API_CONTRACTS.md) §3 — never as observed events. `[CONFIRMED — Atlas §24.1.2; §24.9.2.]`
 
 [⤴ Back to top](#top)
 
@@ -661,7 +664,7 @@ Each pattern below MUST be enforced as `DENY` by the appropriate validator. Forb
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
 | **OQ-AG-CL-01** | Final join keys for each edge (MUKEY confirmed for Soil; `huc_id` / `reach_id` for Hydrology; `taxon_id` for Fauna; others PROPOSED). | Contract / schema steward | Schema authoring + ADR per edge. |
-| **OQ-AG-CL-02** | Whether `parcel_id` is a People/Land canonical identifier or an Agriculture-derived identifier. | People/Land steward + Agriculture steward | ADR; resolves alongside [`api-contracts.md`](./api-contracts.md) OQ-AG-API-11. |
+| **OQ-AG-CL-02** | Whether `parcel_id` is a People/Land canonical identifier or an Agriculture-derived identifier. | People/Land steward + Agriculture steward | ADR; resolves alongside [`api-contracts.md`](API_CONTRACTS.md) OQ-AG-API-11. |
 | **OQ-AG-CL-03** | Exact k-anon threshold values for the §13 People/Land edge. | Sensitivity reviewer + Policy steward | ADR; resolves alongside `api-contracts.md` OQ-AG-API-12. |
 | **OQ-AG-CL-04** | Whether the `validate_no_person_parcel_join_public` validator is schema-level (envelope `audience_class` enum) or middleware-level (`apps/governed-api/`). | API owner + Architecture steward | ADR; resolves alongside `api-contracts.md` OQ-AG-API-08 + `CANONICAL_PATHS.md` OQ-AG-CP-09. |
 | **OQ-AG-CL-05** | Whether Fauna `DiseaseObservation` crosses to Agriculture as advisory or is purely Fauna-owned with no Agriculture edge. | Fauna steward + Agriculture domain steward | Atlas §24.4.5 reconciliation; ADR if Agriculture surfaces cite. |
@@ -801,13 +804,13 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 23.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract (cross-lane summary at §10).
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract (cross-lane envelope details at §9).
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract (cross-lane envelope details at §9).
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path crosswalk (cross-lane file placement at §9).
 - [`docs/domains/agriculture/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — continuity register (cross-lane relations at §8).
 - [`docs/domains/agriculture/policy/README.md`](./policy/README.md) — sensitivity / release / review aspect index.

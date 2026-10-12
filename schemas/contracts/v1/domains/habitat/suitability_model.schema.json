@@ -3,12 +3,19 @@
   "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/habitat/suitability_model.schema.json",
   "title": "Suitability Model",
   "type": "object",
-  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/habitat/suitability_model.schema.json. Fields are to be defined by the owning domain steward.",
+  "description": "PROPOSED SuitabilityModel schema. It declares only the optional model_card_ref that tools/validators/domains/habitat/validate_suitability_model.py already enforces; that validator additionally requires the referenced file to pass ModelCardEnvelope validation. Identity, model-versus-observed source role, uncertainty, evidence, and release fields remain for the owning domain steward to define (see contracts/domains/habitat/suitability_model.md), so other members stay open.",
   "x-kfm": {
     "status": "PROPOSED",
     "source_doc": "docs/domains/habitat/MISSING_OR_PLANNED_FILES.md",
-    "contract_doc": "contracts/domains/habitat/suitability_model.md"
+    "contract_doc": "contracts/domains/habitat/suitability_model.md",
+    "validator": "tools/validators/domains/habitat/validate_suitability_model.py"
   },
-  "properties": {},
+  "properties": {
+    "model_card_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional repository-root-relative or absolute path to a ModelCardEnvelope JSON document."
+    }
+  },
   "additionalProperties": true
 }

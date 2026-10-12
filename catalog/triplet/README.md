@@ -1,478 +1,281 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-triplet-readme
-title: catalog/triplet/ — Triplet Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Triplet steward · Graph steward · Catalog steward · Data steward · Evidence steward · Receipt steward · Proof steward · Release steward · Policy steward · Schema steward · Docs steward
+title: catalog/triplet/ — Deprecated Triplet Compatibility Redirect
+type: readme; deprecated-root-descendant; compatibility-redirect; drift-containment; non-authoritative
+version: v0.3.0
+status: repository-grounded; deprecated; redirect-only; deny-new-trust-writes; integration-held
+owners: NEEDS VERIFICATION — docs, data/triplets, graph, evidence, policy, release, correction, and rollback stewards
 created: 2026-06-16
-updated: 2026-07-10
-policy_label: public
-related:
-  - ../README.md
-  - bundles/README.md
-  - ../../data/README.md
-  - ../../data/triplets/README.md
-  - ../../data/triplets/bundles/README.md
-  - ../../data/catalog/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../../data/published/README.md
-  - ../../data/registry/README.md
-  - ../../release/README.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
-  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
-  - ../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, triplet, triplets, graph, graph-projection, relationship-projection, bundles, compatibility-root, redirect, data-triplets, receipt-proof-catalog-publication-separation, non-authoritative, drift-fence, no-public-use]
+updated: 2026-09-04
+policy_label: public-review; deprecated; fail-closed; no-direct-public-path; correction-aware
+current_path: catalog/triplet/README.md
+owning_root: catalog/
+root_class: deprecated
+canonical_target: data/triplets/
+truth_posture: >-
+  CONFIRMED exact path, current tracked child inventory, adopted deprecated-root posture,
+  canonical data/triplets responsibility, and current parent redirect contract /
+  PROPOSED this documentation correction /
+  UNKNOWN ignored, untracked, externally hosted, producer, consumer, runtime, and deployment state /
+  NEEDS VERIFICATION exact frozen-root transition authority, recursive no-write enforcement,
+  migration closure, correction propagation, and rollback drill
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  prior_blob: 270725cc2e907a4f94d928f7c71759f4b6becd0b
+  parent_readme_blob: 44378e14fe7470f19df20ebfc9914ad1e3d2a6a9
+  canonical_triplets_readme_blob: 88fff67cec61f54c5607391c95641245b0a2cc8f
+  direct_children: [README.md, bundles/]
+  bundles_children: [.gitkeep, README.md]
+  method: exact current main read, direct subtree inventory, parent-root contract review, and canonical-lane review
 notes:
-  - "Refreshes the root-level catalog/triplet compatibility-redirect fence."
-  - "Root-level catalog/triplet/ is compatibility and drift-control documentation only, not canonical triplet authority, graph authority, catalog authority, receipt authority, proof authority, release authority, publication authority, schema authority, policy authority, producer authority, hosting authority, or UI authority."
-  - "Canonical graph-compatible relationship projections belong under data/triplets/. Dedicated bundle placement remains under data/triplets/ authority and requires target-ref verification before use."
-  - "The child catalog/triplet/bundles/ README is a child compatibility redirect, not a trust-bearing graph bundle store."
-  - "Catalog records belong under data/catalog/; receipts belong under data/receipts/; proof support belongs under data/proofs/; release-governance records belong under release/; published delivery artifacts belong under data/published/ after governed release."
-  - "ADR-0011 is proposed and is used here only as separation evidence, not accepted-rule proof."
-  - "Do not add triplet records, graph assertion sets, relationship exports, EvidenceBundles, receipts, release records, catalog records, schemas, policy rules, generated outputs, public artifacts, or producer targets here without an ADR/migration note."
-  - "Actual current contents beyond README files, historical producers, workflow writes, migration status, triplet schema maturity, graph-export maturity, CI/review enforcement, public-client/producer exclusion, dedicated bundle sublane maturity, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical data/triplets alignment, child bundle redirect posture, family-separation posture, minimum safe redirect slice, anti-bypass matrix, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "This path is inside deprecated root catalog/ and remains redirect-only."
+  - "Canonical graph-compatible relationship projections belong under data/triplets/."
+  - "This README update removes obsolete language that could be read as permission to add migration notes, drift logs, temporary markers, graph payloads, or other new content under the frozen root."
+  - "The existing catalog/triplet/bundles/ child remains a compatibility redirect containing only README.md and a zero-byte .gitkeep at the pinned base."
+  - "No triplet payload, graph export, catalog record, receipt, proof, release object, schema, policy, code, generated artifact, or public product is authorized here."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
+# `catalog/triplet/` — Deprecated Triplet Compatibility Redirect
 
-# Triplet Compatibility Redirect
+> **One-line purpose.** Preserve a visible redirect from the deprecated root-level triplet path to the canonical `data/triplets/` lane without creating a parallel graph, evidence, catalog, release, or publication authority.
 
-`catalog/triplet/`
-
-**Root-level compatibility and drift-control fence for legacy or accidental triplet placement. Canonical graph-compatible relationship projections belong under `data/triplets/`; supporting catalog, receipt, proof, release, publication, and registry records stay in their own roots.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![triplet home](https://img.shields.io/badge/triplet__home-data%2Ftriplets-blue)
-![graph](https://img.shields.io/badge/graph-projection%20not%20truth-red)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical homes](#2-canonical-homes) · [Boundary](#3-authority-boundary) · [Allowed](#5-allowed-contents) · [Forbidden](#6-forbidden-contents) · [Child lanes](#8-child-redirect-lanes) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+[![Status: deprecated](https://img.shields.io/badge/status-DEPRECATED-b42318?style=flat-square)](#status)
+[![Authority: none](https://img.shields.io/badge/authority-non--authoritative-b42318?style=flat-square)](#authority-level)
+[![Canonical triplets: data/triplets](https://img.shields.io/badge/canonical%20triplets-data%2Ftriplets-0969da?style=flat-square)](#related-folders)
+[![Tracked payloads: none](https://img.shields.io/badge/tracked%20payloads-none-2da44e?style=flat-square)](#current-tracked-tree-inventory)
+[![Mutation: frozen](https://img.shields.io/badge/mutation-frozen-d4a72c?style=flat-square)](#status)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/triplet/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical triplet home:** `data/triplets/`  
-> **Dedicated bundle placement:** must remain under `data/triplets/` authority if created or accepted  
-> **Catalog home:** `data/catalog/`  
-> **Receipt home:** `data/receipts/`  
-> **Proof home:** `data/proofs/`  
-> **Release-governance home:** `release/`  
-> **Published artifact home:** `data/published/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Graph-compatible relationship projections belong under `data/triplets/`; catalog records belong under `data/catalog/`; receipts belong under `data/receipts/`; proof support belongs under `data/proofs/`; release decisions, manifests, correction, rollback, withdrawal, supersession, and signatures belong under `release/`; released public-safe delivery artifacts belong under `data/published/`. Root-level `catalog/triplet/` is a compatibility redirect only and must not become a parallel triplet, graph, catalog, receipt, proof, release, publication, schema, policy, source-registry, pipeline, package, tool, search, hosting, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/README.md` exists and treats `catalog/` as compatibility redirect / CONFIRMED child `catalog/triplet/bundles/README.md` exists as a child compatibility redirect / CONFIRMED `data/triplets/README.md` exists and treats `data/triplets/` as the canonical graph-compatible relationship projection lane / CONFIRMED `data/catalog/README.md` exists and treats catalog as paired CATALOG-stage data, not release approval / CONFIRMED `data/receipts/README.md` exists and marks receipts as process memory / CONFIRMED `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement / CONFIRMED `release/README.md` exists and treats `release/` as release-governance root / CONFIRMED ADR-0011 document exists and states proposed receipt/proof/catalog/publication separation / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/triplet/` redirect contract / UNKNOWN actual files beyond README files, historical producers, workflow writes, migration status, triplet schema maturity, graph-export maturity, CI/review guard, public-client/producer exclusion, dedicated bundle sublane maturity, and ADR disposition
+> The parent `catalog/` root is adopted as **deprecated, immutable, `frozen_no_writes`, and `redirect_only`**. This README is preservation of a compatibility surface, not permission to add new files or data beneath it.
 
 > [!CAUTION]
-> Do not make `catalog/triplet/` a parallel graph, triplet, proof, release, or catalog authority. KFM triplet records, graph assertion sets, relationship projection exports, graph deltas, bundles, and claim-support graph material belong under `data/triplets/` or an accepted sublane under that data-lifecycle authority. Triplets are projections, not root truth. Evidence support, receipts, catalog records, release decisions, published artifacts, schemas, contracts, policies, source registries, code, generated previews, and unpublished lifecycle data stay in their own roots.
+> Triplets, graph-compatible relationship projections, graph deltas, relationship exports, and released graph subsets belong under `data/triplets/` and its accepted descendants. A graph edge or triplet is a derived carrier; it is not sovereign truth and does not replace evidence, policy, review, release, correction, or rollback state.
 
----
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#current-tracked-tree-inventory) · [Routing](#canonical-routing) · [Migration](#migration-and-retirement) · [Verification](#open-verification-register)
 
-## Quick jump
+## Purpose
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical homes](#2-canonical-homes)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Child redirect lanes](#8-child-redirect-lanes)
-- [9. Minimum safe redirect slice](#9-minimum-safe-redirect-slice)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Diagram](#12-diagram)
-- [13. Inspection path](#13-inspection-path)
-- [14. Validation expectations](#14-validation-expectations)
-- [15. Safe change pattern](#15-safe-change-pattern)
-- [16. Rollback and correction posture](#16-rollback-and-correction-posture)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-- [19. Safe language rules](#19-safe-language-rules)
+`catalog/triplet/` exists only as a deprecated compatibility redirect and drift fence.
 
----
+It preserves discoverability for historical or accidental references while directing canonical work to `data/triplets/`. It must not accumulate new payloads, operational metadata, generated artifacts, schemas, policy, code, release objects, or public products.
 
-## 0. Evidence basis for this revision
+The long-term posture is retirement after migration and dependency closure are proven. This README does not itself migrate, delete, promote, release, publish, or retire anything.
 
-This README is a documentation boundary, not migration proof, graph-export proof, triplet-schema proof, release approval proof, publication-hosting proof, or CI enforcement proof. The 2026-07-10 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/triplet/` with the canonical `data/triplets/` graph-compatible relationship projection lane, the paired `data/catalog/` catalog lane, the separate `data/receipts/` process-memory root, the separate `data/proofs/` proof-support root, the `release/` release-governance root, and Directory Rules placement posture.
+## Authority level
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/triplet/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, public-client exclusion, graph-export maturity, or ADR disposition. |
-| `catalog/README.md` exists and treats root-level `catalog/` as a compatibility redirect, not canonical catalog authority. | CONFIRMED root redirect posture | `catalog/triplet/` should inherit root-level redirect/fence behavior. | It does not prove all root-level catalog/triplet drift has been removed. |
-| `catalog/triplet/bundles/README.md` exists as a child redirect. | CONFIRMED child redirect path | `bundles/` is a child compatibility lane, not a graph-bundle authority. | It does not prove child migration, producer exclusion, enforcement, or dedicated canonical bundle-lane maturity. |
-| `data/triplets/README.md` exists and treats `data/triplets/` as the parent lane for graph-compatible relationship projections at the `CATALOG / TRIPLET` lifecycle stage. | CONFIRMED canonical triplets-lane posture | Canonical graph-compatible relationship projections belong under `data/triplets/`. | It does not prove concrete inventories, schemas, validators, graph-build receipts, release approvals, or public route behavior. |
-| `data/catalog/README.md` exists and states catalog records help discovery but do not make claims true, replace EvidenceBundle support, or approve publication. | CONFIRMED catalog-root posture | Catalog records belong under `data/catalog/` and must not be treated as triplet proof, graph authority, or publication approval. | It does not prove concrete catalog inventory, validators, receipts, or route behavior. |
-| `data/receipts/README.md` exists and marks receipts as process-memory artifacts. | CONFIRMED receipt-root posture | Graph-build, validation, migration, AI, and release-support receipts belong under `data/receipts/`. | It does not prove emitted receipt inventories, signing, validators, or release integration. |
-| `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement. | CONFIRMED proof-root posture | EvidenceBundle/ProofPack support belongs under `data/proofs/`, not this redirect path. | It does not prove emitted proof inventories, schemas, validators, fixtures, CI workflows, or release-gate enforcement. |
-| `release/README.md` exists and treats `release/` as release-governance root. | CONFIRMED release-root posture | Release decisions, correction, rollback, withdrawal, supersession, and signatures belong under `release/`. | It does not prove release workflow maturity or active release approval. |
-| `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` exists and states the proposed separation rule `receipt ≠ proof ≠ catalog ≠ publication`. | CONFIRMED ADR document presence; PROPOSED decision status | Supports family-separation language while keeping ADR acceptance bounded. | It does not prove ADR acceptance or validator enforcement. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/triplet/` must remain a compatibility fence; triplets, catalog, receipts, proofs, release records, and published artifacts belong under their owning roots. | It does not prove live repo drift has been fully audited. |
+**CONFIRMED existing path / non-authoritative / migration-bound.**
 
-[Back to top](#top)
+This path owns no KFM truth, graph semantics, contract/schema authority, evidence authority, policy authority, review authority, release authority, runtime authority, or publication authority.
 
----
+Canonical responsibility is split by object family:
 
-## 1. Purpose
-
-`catalog/triplet/` is a **root-level compatibility redirect** for triplet path drift.
-
-It exists only to prevent accidental, legacy, generated, copied, or externally imported graph/triplet material from becoming a parallel authority outside KFM's governed lifecycle data and release roots.
-
-This folder should not be used for canonical:
-
-- triplet records, graph assertion sets, graph deltas, relationship projection exports, graph-compatible relationship snapshots, graph export packages, or bundle payloads;
-- claim-support graph material, citation-bearing relationship sets, proof-backed graph extracts, inferred relationship bundles, or AI-generated relationship projections;
-- catalog records, STAC/DCAT/PROV records, CatalogMatrix records, catalog indexes, source descriptors, or discovery carriers;
-- process receipts, graph-build receipts, validation receipts, migration receipts, rollback receipts, release dry-run receipts, AI receipts, or telemetry receipts;
-- EvidenceBundles, ProofPacks, citation-validation bundles, catalog-closure proof, release-readiness proof, graph integrity proof, rollback proof, correction proof, or claim-support records;
-- release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices, supersession records, signatures, release-state records, public-safe artifacts, reports, stories, tiles, PMTiles, API payload snapshots, public indexes, allowlists, caveat summaries, or digest sidecars;
-- source descriptors, rights rows, sensitivity rows, registry rows, schemas, contracts, policy rules, producer code, generated previews, build outputs, or unpublished lifecycle data.
-
-This README does not prove that any triplet material currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that triplet schemas are implemented, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
-
-## 2. Canonical homes
-
-Graph-compatible relationship projections belong under:
-
-```text
-data/triplets/
-```
-
-A dedicated bundle sublane may become an accepted location only under the `data/triplets/` authority and only when the target ref confirms it:
-
-```text
-data/triplets/bundles/  # NEEDS VERIFICATION unless target-ref evidence confirms the lane
-```
-
-Catalog records and discovery/interchange carriers belong under:
-
-```text
-data/catalog/
-```
-
-Process-memory receipts belong under:
-
-```text
-data/receipts/
-```
-
-Proof support belongs under:
-
-```text
-data/proofs/
-```
-
-Release-governance material belongs under:
-
-```text
-release/
-```
-
-Released public-safe delivery artifacts belong under:
-
-```text
-data/published/
-```
-
-Source, rights, sensitivity, and registry rows belong under:
-
-```text
-data/registry/
-```
-
-The root-level `catalog/triplet/` directory is a redirect/fence only.
-
-```text
-catalog/triplet/  # compatibility redirect only; do not add triplet or graph records here
-data/triplets/    # graph-compatible relationship projections
-data/catalog/     # catalog-stage lifecycle records
-data/receipts/    # process-memory records
-data/proofs/      # proof-support records
-release/          # release, correction, rollback, withdrawal, supersession, and governance records
-data/published/   # released public-safe delivery artifacts
-data/registry/    # source, rights, sensitivity, and registry records
-```
-
-If a future ADR or migration changes triplet placement, this README should be updated to cite the accepted target, producer-configuration evidence, validation evidence, and any migration, correction, or rollback records.
-
-## 3. Authority boundary
-
-`catalog/triplet/` has **no canonical triplet authority**, **no graph authority**, **no catalog authority**, **no receipt authority**, **no proof authority**, **no release authority**, and **no publication authority**. It may hold only redirect guidance, child redirect READMEs, migration notes, drift logs, or temporary markers while misplaced material is reviewed and moved into its proper owning root.
-
-```text
-WRONG / LEGACY ROOT          TRIPLET / GRAPH HOME             SUPPORT HOMES
-catalog/triplet/        -->  data/triplets/              -->  data/catalog/
-compatibility fence only     relationship projections         data/receipts/
-not authoritative            graph deltas / exports           data/proofs/
-                                                            release/
-                                                            data/published/
-                                                            data/registry/
-```
-
-A triplet record outside `data/triplets/` should be treated as triplet-family drift. A catalog record outside `data/catalog/`, a receipt outside `data/receipts/`, a proof outside `data/proofs/`, a release record outside `release/`, or a public artifact outside `data/published/` should be treated as family drift until reviewed and migrated.
-
-## 4. Default posture
-
-Anything found under root-level `catalog/triplet/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
-
-Do not expose, publish, index, cite, search, cache, export, tile, host, or depend on root-level triplet files as canonical graph or triplet records. First confirm object family, source, provenance, rights, sensitivity, evidence resolution, schema validity, policy decision, lifecycle state, receipt support, proof support, catalog closure, release state, digest/sidecar integrity, rollback path, correction path, and whether the object is actually a triplet projection, graph export, catalog carrier, receipt, proof, registry row, release-governance record, published artifact, or unpublished candidate.
-
-## 5. Allowed contents
-
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Child redirect README | `bundles/README.md` | Child compatibility guidance only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize triplet, graph, catalog, receipt, proof, release, policy, schema, or public-output content |
-
-## 6. Forbidden contents
-
-| Forbidden here | Correct home |
+| Object family | Governing home |
 |---|---|
-| Triplet records, graph assertion sets, relationship projection exports, graph deltas, graph snapshots, graph export packages, or bundle payloads | `data/triplets/` or an accepted sublane under it |
-| Claim-support graph material, citation-bearing graph extracts, graph integrity proof | `data/triplets/` and `data/proofs/` as appropriate |
-| Catalog records, catalog indexes, STAC/DCAT/PROV records, CatalogMatrix records | `data/catalog/` |
-| Receipts, graph-build receipts, validation receipts, redaction/generalization receipts, AI receipts, release dry-run receipts, rollback receipts, migration receipts | `data/receipts/` |
-| EvidenceBundles, ProofPacks, attestations, citation-validation bundles, release-readiness proof, rollback proof, correction proof, claim-support records | `data/proofs/` |
-| ReleaseManifest, PromotionDecision, release decision, RollbackCard, CorrectionNotice, withdrawal, supersession, signature, release-state record | `release/` |
-| Released artifacts, public-safe graph exports, reports, stories, downloads, API payload snapshots, public indexes, allowlists, caveat summaries, digest sidecars, tiles, PMTiles | `data/published/` after governed release |
-| Source descriptors, source registry rows, rights rows, sensitivity rows | `data/registry/` or governed registry homes |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers, preview generators | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, unpublished candidate, or restricted lifecycle data | `data/` lifecycle subtrees |
+| Graph-compatible relationship projections, graph deltas, relationship exports | `data/triplets/` |
+| Catalog records and discovery metadata | `data/catalog/` |
+| Process receipts | `data/receipts/` |
+| Proof support and EvidenceBundle-related proof artifacts | `data/proofs/` |
+| Source/rights/sensitivity registries | `data/registry/` |
+| Release decisions, manifests, correction, withdrawal, supersession, rollback | `release/` |
+| Released public-safe delivery artifacts | `data/published/` |
+| Semantic contracts | `contracts/` |
+| Machine schemas | `schemas/` |
+| Policy | `policy/` |
 
-## 7. Directory shape
+## Status
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+| Field | Current evidence-bounded result |
+|---|---|
+| Path | `catalog/triplet/` |
+| Root class | inherited `deprecated` from `catalog/` |
+| Mutation posture | immutable / frozen / redirect-only |
+| Canonical target | `data/triplets/` |
+| Base inspected | `main@bb3eb695e6068b38453ca3ded8f1394a8fdebc20` |
+| Prior README blob | `270725cc2e907a4f94d928f7c71759f4b6becd0b` |
+| Direct tracked children | `README.md`, `bundles/` |
+| Tracked descendants under `bundles/` | `README.md`, zero-byte `.gitkeep` |
+| Tracked triplet/graph payloads at this path | none observed in the exact pinned subtree |
+| Ignored, untracked, external, cached, or generated bytes | `UNKNOWN` |
+| Producers/consumers/runtime/host references | `NEEDS VERIFICATION` |
+| Migration/retirement | not performed by this document |
+| Public readiness | `DENY` |
+
+## What belongs here
+
+Only already-tracked compatibility material required to keep the deprecated path understandable:
+
+- this redirect README;
+- the existing child redirect README under `bundles/`;
+- the existing zero-byte `bundles/.gitkeep` until a separately reviewed migration removes it.
+
+No new placeholder, migration-note file, drift-log file, temporary marker, payload, or generated artifact should be added here. Migration, correction, rollback, and retirement records belong in their governing roots and should be linked from this README when they exist.
+
+## What does NOT belong here
+
+Do not place any of the following under `catalog/triplet/`:
+
+- triplet records, graph assertions, graph deltas, relationship exports, graph snapshots, graph indexes, graph bundles, or inferred relationship sets;
+- canonical domain records, source payloads, RAW/WORK/QUARANTINE/PROCESSED data, or unpublished lifecycle data;
+- catalog records, STAC/DCAT/PROV objects, source descriptors, registry rows, manifests, or indexes;
+- receipts, proofs, EvidenceBundles, ProofPacks, validation reports, or signatures;
+- release manifests, promotion decisions, correction notices, rollback cards, withdrawal/supersession records, or release-state rows;
+- schemas, contracts, policy rules, validators, pipelines, workflows, application/runtime code, configuration, caches, previews, or generated outputs;
+- public tiles, PMTiles, reports, stories, exports, API payload snapshots, or other released artifacts.
+
+## Inputs
+
+This redirect accepts no operational data inputs.
+
+For documentation maintenance, inputs are current repository evidence only: the parent `catalog/` contract, the canonical `data/triplets/` lane, relevant accepted directory governance, migration/correction records if they exist, and exact tracked-tree evidence.
+
+## Outputs
+
+The only intended output is human-readable routing guidance that:
+
+1. points contributors to the canonical triplet lane;
+2. prevents new authority from forming under the deprecated root;
+3. keeps family separation visible; and
+4. records unresolved migration and verification work without converting it into implementation claims.
+
+This path is not a public data endpoint, graph service, producer target, package surface, search index, or AI retrieval authority.
+
+## Validation
+
+A change to this README should verify, at minimum:
+
+- the exact target path and base commit;
+- the current parent `catalog/` redirect/frozen posture;
+- the current `data/triplets/` canonical-lane posture;
+- the tracked subtree inventory for this path;
+- relative links and Markdown anchors;
+- no new payloads or authority-bearing files under the deprecated subtree;
+- no language that implies release, publication, source admission, migration completion, or runtime enforcement without evidence.
+
+A passing documentation check proves only the checked documentation surface. It does not prove zero producers, zero consumers, source admission, policy enforcement, release readiness, deployment, or public operation.
+
+## Review burden
+
+Accountable ownership remains **NEEDS VERIFICATION**.
+
+Because this path sits under a deprecated frozen root, review should distinguish two separate questions:
+
+1. **Is the redirect text accurate and useful?**
+2. **Is this exact frozen-root content transition authorized for integration?**
+
+The first can be reviewed as documentation. The second requires the current repository's applicable frozen-root transition authority and must not be inferred from a useful diff, a green check, or a previous sibling README merge.
+
+CODEOWNERS routing, generation, validation, or PR creation is not approval evidence.
+
+## Related folders
+
+- Parent deprecated redirect: [`catalog/`](../README.md)
+- Child compatibility redirect: [`catalog/triplet/bundles/`](bundles/README.md)
+- Canonical triplet lane: [`data/triplets/`](../../data/triplets/README.md)
+- Catalog lane: [`data/catalog/`](../../data/catalog/README.md)
+- Receipts: [`data/receipts/`](../../data/receipts/README.md)
+- Proofs: [`data/proofs/`](../../data/proofs/README.md)
+- Registry: [`data/registry/`](../../data/registry/README.md)
+- Published artifacts: [`data/published/`](../../data/published/README.md)
+- Release governance: [`release/`](../../release/README.md)
+- Contracts: [`contracts/`](../../contracts/README.md)
+- Schemas: [`schemas/`](../../schemas/README.md)
+- Policy: [`policy/`](../../policy/README.md)
+- Directory doctrine: [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md)
+
+## ADRs
+
+Accepted Directory Rules governance controls root placement and the deprecated `catalog/` posture. Other ADRs may define catalog/triplet family separation, public-client boundaries, schema authority, or migration behavior; their current acceptance and applicability must be checked at the transition that depends on them.
+
+This README does not accept, amend, supersede, or implement an ADR.
+
+## Last reviewed
+
+- **Date:** 2026-09-04
+- **Repository snapshot:** `main@bb3eb695e6068b38453ca3ded8f1394a8fdebc20`
+- **Review type:** exact target read, parent redirect review, canonical `data/triplets/` review, direct subtree inventory, open-PR overlap search
+- **Recursive runtime/producer/consumer audit:** not performed
+- **Frozen-root integration authority:** needs verification before merge
+
+Re-review when directory governance, triplet authority, child layout, producer/consumer references, migration, correction, rollback, or public-serving behavior changes.
+
+## Current tracked tree inventory
+
+At the pinned repository snapshot, the tracked subtree is:
 
 ```text
 catalog/triplet/
-├── README.md                 # compatibility redirect / drift fence
-├── bundles/README.md         # child compatibility redirect / drift fence when present
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced triplet material is found
+├── README.md
+└── bundles/
+    ├── .gitkeep   # zero bytes
+    └── README.md
 ```
 
-> [!WARNING]
-> Do not treat this suggested shape as complete repo inventory. Verify actual contents before making inventory, producer, enforcement, triplet-schema, graph-export, hosting, or migration claims.
+No tracked triplet, graph, catalog, receipt, proof, release, schema, policy, code, generated, or public payload file was observed in this subtree.
 
-## 8. Child redirect lanes
+This exact tracked-tree result does not cover ignored files, untracked local files, external object stores, caches, deployed systems, or historical references.
 
-Child lanes under root-level `catalog/triplet/` are compatibility guidance only unless an accepted ADR or migration note says otherwise.
+## Canonical routing
 
-| Child lane | Status | Canonical target | Boundary |
-|---|---|---|---|
-| `catalog/triplet/bundles/` | Compatibility redirect path when present | `data/triplets/` or an accepted `data/triplets/` child lane | Must not store triplet bundles, graph exports, receipts, proofs, catalog records, release records, public artifacts, schemas, policies, or producer output. |
-
-A child redirect README may be updated before this parent. Treat any child state as target-ref evidence only; do not claim a dedicated canonical bundle sublane under `data/triplets/` exists unless that path is verified.
-
-## 9. Minimum safe redirect slice
-
-A smallest safe `catalog/triplet/` state should prove only that the folder prevents drift; it should not contain graph, trust-bearing, or public-delivery material.
-
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `data/triplets/` for graph-compatible projections | Prevents parallel graph authority |
-| No triplet records | No graph export packages, graph deltas, relationship projection bundles, triplet records, or graph snapshots | Preserves data lifecycle triplet root |
-| No catalog records | No STAC, DCAT, PROV, CatalogMatrix, source descriptor, or catalog index files | Preserves catalog and registry roots |
-| No receipt records | No graph-build receipt, validation receipt, AI receipt, migration receipt, release dry-run receipt, rollback receipt, or redaction receipt | Preserves receipt/process-memory root |
-| No proof records | No EvidenceBundle, ProofPack, release attestation, citation validation, rollback proof, correction proof, or claim-support files | Preserves proof-support root |
-| No release/public artifacts | No ReleaseManifest, release decision, RollbackCard, published graph export, public index, PMTiles, report, story, API snapshot, or digest | Preserves release and published roots |
-| Child-lane guard | `bundles/` remains compatibility-only | Prevents nested drift from hardening into graph authority |
-| Drift procedure | Explains how to inspect and migrate misplaced records | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable graph material here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, static hosting, and indexes must not read from this path as canonical | Preserves governed access path |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
-
-## 10. Migration posture
-
-If triplet files are found here:
-
-1. Do not publish, cite, index, search, cache, export, tile, host, or depend on them.
-2. Identify whether they are triplet records, graph assertion sets, graph deltas, relationship projection exports, public graph exports, catalog records, CatalogMatrix/STAC/DCAT/PROV records, receipts, proof support, source registry rows, schemas, policy records, release records, published-output material, unpublished lifecycle material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move triplet projection material into `data/triplets/` or an accepted sublane under it.
-5. Move catalog records into `data/catalog/` and source/rights/sensitivity registry records into `data/registry/`.
-6. Move receipts into `data/receipts/`.
-7. Move proof support into `data/proofs/`.
-8. Move release-governance records into `release/`.
-9. Move or regenerate released public-safe graph artifacts into `data/published/` only after governed release approval and required sidecar/digest/citation/caveat support.
-10. Move schemas, contracts, policy rules, code, and producer outputs into their owning roots.
-11. Preserve provenance, source refs, digests, graph-build receipts, proof refs, catalog refs, review notes, producer identity, release refs, correction refs, and rollback path.
-12. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-13. Add or update validation checks so producers do not recreate root-level triplet drift.
-14. Leave `catalog/triplet/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
-
-## 11. Runtime and producer anti-bypass matrix
-
-| Bypass risk | Required behavior | Review signal |
-|---|---|---|
-| Producer writes triplet records or bundles to `catalog/triplet/` | Fail review/CI; write to `data/triplets/` or an accepted sublane instead | Producer config and output paths checked |
-| Producer writes catalog records here | Fail review/CI; write to `data/catalog/` instead | Catalog path check passes |
-| Producer writes receipts here | Fail review/CI; write to `data/receipts/` instead | Receipt path check passes |
-| Producer writes proofs here | Fail review/CI; write to `data/proofs/` instead | Proof path check passes |
-| Producer writes release records here | Fail review/CI; write to `release/` instead | Release path check passes |
-| Producer writes public graph exports here | Fail review/CI; write to `data/published/` only after release | Published path and release-state checks pass |
-| Public client reads root-level triplet path | Deny; route through governed API/release/public-safe path | Client/search/index/hosting config excludes this path |
-| Root-level triplet file is treated as canonical graph truth | Mark as drift; resolve evidence/proof/catalog/release support before use | Migration note references canonical target |
-| Claim-bearing relationship lacks EvidenceBundle support | Hold, restrict, or abstain; do not cite root-level triplet material as evidence | EvidenceRef/proof validation passes |
-| Sensitive relationship join appears here | Deny, quarantine, redact, generalize, aggregate, or remove | Sensitivity/publication review passes |
-| AI-generated relationship projection appears here | Treat as candidate or generated carrier only; route to work/quarantine/review lanes | AI boundary and evidence-review checks pass |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Search/cache/export/tile/static-hosting pipeline consumes this path | Deny as canonical; switch to governed triplet/release/published source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
-
-## 12. Diagram
-
-```mermaid
-flowchart TD
-    wrong["catalog/triplet/\nroot-level redirect"] --> review["review for triplet / graph / catalog / receipt / proof / release drift"]
-    review --> classify["classify object family"]
-    classify --> triplets["data/triplets/\ngraph-compatible relationship projections"]
-    classify --> catalog["data/catalog/\ncatalog records / discovery carriers"]
-    classify --> receipts["data/receipts/\nprocess memory"]
-    classify --> proofs["data/proofs/\nEvidenceBundle / ProofPack support"]
-    classify --> release["release/\nrelease / correction / rollback governance"]
-    classify --> published["data/published/\nreleased public-safe delivery artifacts"]
-    classify --> registry["data/registry/\nsource / rights / sensitivity rows"]
-    wrong --> child["catalog/triplet/bundles/\nchild redirect only"]
-    child -. "must not be graph truth" .-> triplets
-    triplets --> catalog
-    catalog --> release
-    receipts --> release
-    proofs --> release
-    release --> published
-    wrong -. "must not be canonical" .-> triplets
-    wrong -. "must not be producer target" .-> release
+```text
+legacy / accidental reference
+        |
+        v
+catalog/triplet/                 # deprecated redirect only
+        |
+        +--> data/triplets/      # canonical relationship/graph projections
+        +--> data/catalog/       # catalog/discovery records
+        +--> data/receipts/      # process memory
+        +--> data/proofs/        # proof support
+        +--> data/registry/      # source/rights/sensitivity registry
+        +--> release/            # release/correction/rollback authority
+        +--> data/published/     # released public-safe carriers
 ```
 
-## 13. Inspection path
+The redirect is documentation. It is not a lifecycle transition and does not move bytes.
 
-Actual root-level contents, producers, workflow writes, migration status, triplet schema maturity, graph-export maturity, hosting readiness, CI/review enforcement, public-client/index exclusion, dedicated bundle sublane status, and current ADR disposition remain `NEEDS VERIFICATION`.
+## Migration and retirement
 
-```bash
-find catalog/triplet -maxdepth 6 -type f | sort
-find data/triplets data/catalog data/receipts data/proofs data/published data/registry release schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 6 -type f 2>/dev/null | grep -Ei 'triplet|triple|graph|relationship|bundle|export|delta|catalog|receipt|proof|EvidenceBundle|ProofPack|ReleaseManifest|PromotionDecision|RollbackCard|CorrectionNotice|manifest|stac|dcat|prov|rights|sensitivity|schema|policy|validator|workflow|migration|drift|published|api|search|host' | sort
-```
+Retirement remains a governed future transition, not a documentation cleanup task.
 
-## 14. Validation expectations
+Before removing this path, current evidence should establish at least:
 
-Useful validation for this folder should cover:
+1. all known producers have stopped writing to it;
+2. all consumers have migrated to canonical homes;
+3. links, aliases, generators, workflows, scripts, and docs have been reconciled;
+4. historical/correction references remain resolvable;
+5. rollback and recovery behavior are documented and tested as appropriate; and
+6. the applicable accepted authority explicitly permits removal.
 
-- no triplet records, graph assertion sets, relationship projection exports, graph deltas, graph snapshots, graph export packages, or bundle payloads are stored here;
-- no catalog records, STAC, DCAT, PROV, CatalogMatrix records, source registry rows, receipts, proofs, policy rules, schemas, source code, pipelines, tools, producer outputs, release records, public artifacts, or unpublished lifecycle data are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- child redirect lanes do not store graph, proof, receipt, catalog, release, schema, policy, or public-output records;
-- producer tools, scripts, generated outputs, workflows, indexes, search services, public clients, exports, tile jobs, static hosting, map runtimes, graph runtimes, story/focus/evidence surfaces, and caches do not target `catalog/triplet/` as canonical;
-- links point users to `data/triplets/`, `data/catalog/`, `data/receipts/`, `data/proofs/`, `release/`, `data/published/`, `data/registry/`, and other owning roots;
-- dedicated bundle sublane claims are not made until `data/triplets/bundles/` or an accepted equivalent is verified;
-- CI or review checks flag root-level `catalog/triplet/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+Until then, preserve the redirect and do not broaden it.
 
-## 15. Safe change pattern
+## Open verification register
 
-For changes under `catalog/triplet/`:
+| Item | Status | Evidence needed |
+|---|---:|---|
+| Exact frozen-root transition authority for this README change | `NEEDS VERIFICATION` | Current accepted correction/mutation authority bound to this path/base |
+| Recursive no-write enforcement | `NEEDS VERIFICATION` | Validator/ruleset behavior proving descendant write controls |
+| Producers and consumers | `UNKNOWN` | Search of tools, workflows, generators, runtime, APIs, UI, docs, deployed systems |
+| Ignored/untracked/external bytes | `UNKNOWN` | Local/runtime/storage inventory beyond Git tree |
+| Migration and retirement closure | `NOT PROVEN` | Zero-producer/zero-consumer evidence, migration record, correction/rollback evidence |
+| Public serving | `UNKNOWN` | Governed route, release, host, cache, correction, and withdrawal evidence |
 
-1. Confirm the change is redirect documentation, migration support, drift documentation, child redirect documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel triplet, graph, catalog, receipt, proof, release, publication, schema, policy, or public-hosting authority.
-3. Confirm durable triplet projection records are placed under `data/triplets/` or an accepted sublane under it.
-4. Confirm catalog records remain under `data/catalog/`.
-5. Confirm receipts remain under `data/receipts/`.
-6. Confirm proof support remains under `data/proofs/`.
-7. Confirm release-governance records remain under `release/`.
-8. Confirm released public-safe graph artifacts are placed under `data/published/` only after governed release approval.
-9. Confirm registry rows remain under `data/registry/`.
-10. Confirm no public client, search index, map runtime, graph runtime, export job, tile job, story/focus/evidence surface, static host, publication producer, release producer, or cache reads this path as canonical.
-11. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-12. Update docs and validation rules when behavior materially changes.
+Unknowns narrow claims and block higher-risk transitions; they do not authorize plausible defaults.
 
-## 16. Rollback and correction posture
+## Change history
 
-If material was added here by mistake, rollback should be small and auditable:
+### v0.3.0 — 2026-09-04
 
-- remove or revert the misplaced file from `catalog/triplet/`;
-- move triplet projection material into `data/triplets/` or an accepted child lane under it;
-- move catalog, receipt, proof, registry, schema, contract, policy, code, and producer material into their owning roots;
-- move release-governance records into `release/` through the appropriate release review path;
-- regenerate or move released public-safe graph artifacts into `data/published/` only through governed release controls;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, generated downstream, search, export, cache, release, map, story, report, API, graph, or catalog artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+- re-pinned the README to current repository evidence;
+- aligned descendant language with the parent deprecated/frozen `catalog/` contract;
+- confirmed the current tracked subtree as one root README plus the existing `bundles/` redirect and zero-byte placeholder;
+- removed obsolete wording that could be read as permission to add migration notes, drift logs, temporary markers, or payloads beneath the frozen root;
+- clarified canonical routing to `data/triplets/` and adjacent trust/release families;
+- separated documentation correctness from frozen-root integration authority;
+- preserved migration, correction, rollback, public-client, and evidence boundaries without claiming runtime enforcement.
 
-## 17. Definition of done
+### v0.2 — 2026-07-10
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/triplet/` contents are verified.
-- [ ] Actual child contents under `catalog/triplet/bundles/` are verified.
-- [ ] Any misplaced triplet or graph material is migrated or documented as drift.
-- [ ] `data/triplets/` is confirmed as the canonical triplet home in current docs.
-- [ ] Any dedicated bundle sublane under `data/triplets/` is verified before use.
-- [ ] No trust-bearing records live here.
-- [ ] No triplet records, graph assertion sets, bundles, receipts, proofs, catalog records, release records, published artifacts, schemas, contracts, policy rules, source code, producer outputs, or lifecycle data live here.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
-- [ ] Public clients, indexes, map runtimes, graph runtimes, exports, static hosts, story/focus/evidence surfaces, and caches exclude this path as canonical.
-
-## 18. Open verification items
-
-| Item | Why it matters |
-|---|---|
-| Confirm actual files under root-level `catalog/triplet/` | Prevents overclaiming or missing drift |
-| Confirm actual child files under `catalog/triplet/bundles/` | Prevents child redirect from becoming graph authority |
-| Confirm whether `data/triplets/bundles/` exists or should be created | Required before dedicated bundle-lane claims |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm triplet schema and graph-export maturity | Required before implementation claims |
-| Confirm migration status to `data/triplets/` | Required before canonical-home claims beyond doctrine |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/triplet/` and child `bundles/` | Required before long-term retention claims |
-
-## 19. Safe language rules
-
-Use careful wording for this path:
-
-| Avoid saying | Say instead |
-|---|---|
-| "Triplet bundles are in `catalog/triplet/`." | "Root-level `catalog/triplet/` is a compatibility redirect; canonical triplet material belongs under `data/triplets/`." |
-| "This graph export is approved because it is in the catalog triplet path." | "Graph export approval requires evidence, policy, receipts, proofs, review, release state, correction path, and rollback support." |
-| "Triplets prove the relationship." | "Triplets are graph-compatible relationship projections and require EvidenceBundle/proof support for claim-bearing use." |
-| "The bundle sublane exists." | "The bundle sublane is `NEEDS VERIFICATION` until target-ref evidence confirms its README/path and authority boundary." |
-| "CI blocks misuse here." | "CI/review enforcement is `NEEDS VERIFICATION` unless current run/check evidence is cited." |
-
-<details>
-<summary>Appendix A — no-loss preservation note</summary>
-
-The previous v0.1 README already established `catalog/triplet/` as a compatibility redirect and warned against parallel triplet authority. This v0.2 update preserves that boundary while adding current evidence basis, Directory Rules placement posture, child `bundles/` redirect posture, family separation, no-public-use safeguards, producer anti-bypass expectations, migration/rollback posture, and safe language rules. It does not claim triplet files, migration work, CI enforcement, producer workflows, triplet schema maturity, graph-export maturity, or ADR disposition are implemented.
-
-</details>
-
-## Status summary
-
-`catalog/triplet/` is a root-level compatibility redirect and triplet drift fence. It is not the canonical triplet, graph, proof, release, publication, or catalog home.
-
-Triplet authority belongs under `data/triplets/`; catalog records belong under `data/catalog/`; receipts belong under `data/receipts/`; proofs belong under `data/proofs/`; release decisions belong under `release/`; published artifacts belong under `data/published/`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+- established the prior detailed compatibility-redirect boundary and family-separation guidance.

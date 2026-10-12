@@ -1,530 +1,915 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/fgdc-csdgm
-title: FGDC CSDGM — KFM Conformance Profile
-type: standard
-version: v0.1
-status: draft
-owners: <TODO: docs steward + spatial-foundation domain steward>
+title: FGDC CSDGM — KFM Legacy-Compatibility and Conformance Boundary
+type: standard; metadata-guidance; legacy-compatibility-boundary
+version: v2.0-draft
+status: "draft; repository-grounded; upstream-currentness-refreshed; no-adoption; no-conformance-proof; no-release; no-publication"
+owners:
+  - "@bartytime4life — verified default GitHub review route through the standards-lane boundary"
+  - "NEEDS VERIFICATION — metadata/catalog, geospatial, interoperability, evidence, policy, release, correction, and independent-review stewards"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-18
+policy_label: "repository-facing; standards-guidance; metadata; geospatial; legacy-compatibility; public"
+owning_root: docs/
+current_path: docs/standards/FGDC-CSDGM.md
+responsibility: >
+  Explain the official FGDC Content Standard for Digital Geospatial Metadata,
+  its current legacy-and-transition posture, the bounded circumstances in which
+  KFM may need a CSDGM-compatible projection, and the evidence required before
+  KFM may claim profile conformance or expose a CSDGM record.
+truth_posture: >
+  CONFIRMED current path, standards-lane placement, default review route,
+  official CSDGM identifier/version/section model, official transition guidance,
+  current repository absence of a dedicated CSDGM contract-schema-validator
+  family in bounded search, canonical PolicyDecision outward vocabulary, and
+  bounded synthetic STAC-DCAT-PROV closure surfaces / PROPOSED CSDGM
+  applicability rules, shared-metadata crosswalk, candidate conformance record,
+  fixture matrix, validator behavior, migration sequence, and consumer binding /
+  UNKNOWN KFM adoption, accepted CSDGM profile, production emitter, XML
+  encoding, downstream clearinghouse requirement, runtime consumer,
+  release integration, operational conformance, and accountable specialist
+  stewardship.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: f9a515a1124f9f5397996f6bc7cb3fd1a3534c40
+  target_prior_blob: 298b05433138435ae2ce785489131bf3a0bbd591
+  standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
+  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  synthetic_catalog_closure_contract_blob: f14fa7f1a173e62cae253c76fcd75ae2fbea0dcf
+  bounded_search: "CSDGM, FGDC-STD-001-1998, and catalog_metadata_conformance_report across the current repository"
+external_currentness_review:
+  access_date: 2026-08-18
+  issuer: Federal Geographic Data Committee
+  official_baseline: "FGDC-STD-001-1998, CSDGM Version 2, revised June 1998"
+  transition_posture: "CSDGM remains the current FGDC-authored version and a legacy standard; FGDC encourages transition to ISO geospatial metadata standards"
 related:
-  - docs/standards/STAC_KFM_PROFILE.md   # PROPOSED, not verified
-  - docs/standards/ISO-19115.md          # PROPOSED, not verified
-  - docs/standards/DCAT.md               # PROPOSED, not verified
-  - docs/standards/PROV-O.md             # PROPOSED, not verified
-  - docs/doctrine/directory-rules.md
-tags: [kfm, standards, metadata, geospatial, fgdc, csdgm, catalog]
+  - ./README.md
+  - ./ISO-19115.md
+  - ./DCAT.md
+  - ./PROV-O.md
+  - ./STAC_KFM_PROFILE.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - ../registers/VERIFICATION_BACKLOG.md
+  - ../../contracts/data/synthetic_release_catalog_closure_profile.md
+  - ../../contracts/policy/policy_decision.md
+  - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py
+  - ../../tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py
+  - ../../.github/CODEOWNERS
+tags: [kfm, standards, fgdc, csdgm, metadata, geospatial, catalog, interoperability, iso-19115, legacy-compatibility]
 notes:
-  - "PROPOSED conformance profile; not a release gate."
-  - "Mandatory-status of FGDC per artifact family is NEEDS VERIFICATION (KFM-P18-INV-242)."
+  - "Same-path documentation modernization only; no contract, schema, policy, profile, emitter, fixture, validator, workflow, source, catalog record, release object, runtime, deployment, or public artifact changes."
+  - "The prior XML-first characterization is corrected: CSDGM is a content standard and does not prescribe a computer implementation or transfer encoding; XML DTD/XSD files are implementation representations."
+  - "The prior deprecation language is narrowed: official FGDC pages call Version 2 the current FGDC-authored version and encourage migration to ISO; this page does not claim formal withdrawal or retirement."
+  - "The current synthetic catalog-closure slice proves bounded STAC/DCAT/PROV agreement only; it does not implement or validate CSDGM."
+  - "Legacy title and numbered section anchors are retained for inbound-link compatibility."
 [/KFM_META_BLOCK_V2] -->
 
-# FGDC CSDGM — KFM Conformance Profile
+<a id="top"></a>
+<a id="fgdc-csdgm--kfm-conformance-profile"></a>
 
-> How the Kansas Frontier Matrix relates to the **FGDC Content Standard for Digital Geospatial Metadata (CSDGM)**: scope, crosswalk to the KFM evidence stack, conformance gate, and posture toward the FGDC → ISO transition.
+# FGDC CSDGM — KFM Legacy-Compatibility and Conformance Boundary
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![authority](https://img.shields.io/badge/authority-standards--profile-blue)
-![doctrine](https://img.shields.io/badge/doctrine-PROPOSED-yellow)
-![scope](https://img.shields.io/badge/scope-external--standard-lightgrey)
-![lifecycle](https://img.shields.io/badge/lifecycle-RAW%20%E2%86%92%20PUBLISHED-informational)
-![release-gate](https://img.shields.io/badge/release--gate-not--yet--enforced-red)
+> **Purpose.** Explain when KFM may need a projection compatible with the Federal Geographic Data Committee's Content Standard for Digital Geospatial Metadata—without turning a legacy metadata record, XML validation, crosswalk, badge, or clearinghouse export into evidence, policy approval, release authority, or publication proof.
 
-| Field | Value |
+![status](https://img.shields.io/badge/status-v2.0--draft-d4a72c?style=flat-square)
+![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
+![upstream](https://img.shields.io/badge/upstream-FGDC--STD--001--1998-0969da?style=flat-square)
+![posture](https://img.shields.io/badge/posture-legacy__compatibility-b54708?style=flat-square)
+![adoption](https://img.shields.io/badge/KFM_adoption-NOT__ESTABLISHED-6e7781?style=flat-square)
+![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)
+
+> [!IMPORTANT]
+> **CSDGM metadata is descriptive support, not sovereign truth.** A complete record does not establish source authority, factual correctness, rights clearance, sensitivity clearance, evidence closure, review completion, release approval, or public safety.
+
+> [!CAUTION]
+> **Current KFM CSDGM implementation is not established.** Bounded repository search found this standards page, the companion ISO page, and the standards index, but did not surface a dedicated CSDGM semantic contract, machine schema, fixture family, validator, producer, consumer, workflow, emitted record, or release binding.
+
+> [!WARNING]
+> **Do not describe CSDGM as XML-first or formally deprecated.** The FGDC standard defines metadata content and explicitly leaves implementation and transfer form to implementers. FGDC supplies XML DTD/XSD representations, but those are encodings of the content standard. FGDC calls Version 2 the current FGDC-authored version while encouraging transition to ISO metadata.
+
+| Field | Current bounded result |
 |---|---|
-| **Status** | `draft` — **PROPOSED** profile, not a release gate |
-| **Authority class** | Standards reference (external standard KFM may conform to) |
-| **Owners** | `<TODO: docs steward + spatial-foundation domain steward>` |
-| **Last reviewed** | 2026-05-14 |
-| **External standard** | `FGDC-STD-001-1998` (CSDGM v2.0, June 1998) — EXTERNAL |
-| **KFM doctrinal basis** | `KFM-P18-INV-242` (metadata-standard conformance as a catalog gate) — CONFIRMED |
-| **Mandatory for KFM?** | **NEEDS VERIFICATION** — per-artifact-family applicability unresolved |
+| **Evidence snapshot** | `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40` |
+| **Directory result** | `PLACE` at the existing `docs/standards/FGDC-CSDGM.md` path; accepted Directory Rules assign human-readable standards guidance to `docs/standards/` |
+| **Official baseline** | `FGDC-STD-001-1998`, CSDGM Version 2, revised June 1998 |
+| **Official standing** | Current FGDC-authored CSDGM version and continuing legacy standard; FGDC encourages transition to ISO geospatial metadata |
+| **KFM adoption** | **UNKNOWN / NOT ESTABLISHED**; no accepted decision was established that makes CSDGM mandatory for a KFM artifact family |
+| **Machine implementation** | **NOT ESTABLISHED in bounded search**; no dedicated CSDGM contract-schema-validator-producer-consumer chain surfaced |
+| **Adjacent proof** | A bounded synthetic STAC/DCAT/PROV closure profile exists; it does not include FGDC CSDGM and creates no CSDGM authority |
+| **Public effect** | None; this page cannot authorize a source, catalog record, release, endpoint, export, deployment, or publication |
+
+**Quick navigation:** [Status](#0-status-authority-and-evidence-boundary) · [Purpose](#1-purpose) · [Scope](#2-scope-and-authority) · [Standard](#3-what-fgdc-csdgm-is) · [KFM posture](#4-kfm-posture-and-rationale) · [Stack](#5-where-this-fits-in-the-kfm-stack) · [Crosswalk](#6-csdgm--kfm-crosswalk) · [Conformance](#7-catalog-conformance-gate-proposed) · [Validation](#8-validators-and-validation-outputs-proposed) · [ISO transition](#9-fgdc--iso-19115-transition-posture) · [Profiles](#10-profiles-and-extensions-relevant-to-kfm) · [Open work](#11-tensions-and-open-questions) · [Checklist](#12-validation-checklist) · [Related](#13-related-docs) · [Sections](#appendix-a--csdgm-section-reference) · [Example](#appendix-b--kfm-crosswalk-worked-example-illustrative) · [Evidence ledger](#appendix-c--evidence-ledger)
 
 ---
 
-## Quick jump
+<a id="0-status-authority-and-evidence-boundary"></a>
 
-- [1. Purpose](#1-purpose)
-- [2. Scope and authority](#2-scope-and-authority)
-- [3. What FGDC CSDGM is](#3-what-fgdc-csdgm-is)
-- [4. KFM posture and rationale](#4-kfm-posture-and-rationale)
-- [5. Where this fits in the KFM stack](#5-where-this-fits-in-the-kfm-stack)
-- [6. CSDGM ↔ KFM crosswalk](#6-csdgm--kfm-crosswalk)
-- [7. Catalog conformance gate (PROPOSED)](#7-catalog-conformance-gate-proposed)
-- [8. Validators and validation outputs (PROPOSED)](#8-validators-and-validation-outputs-proposed)
-- [9. FGDC → ISO 19115 transition posture](#9-fgdc--iso-19115-transition-posture)
-- [10. Profiles and extensions relevant to KFM](#10-profiles-and-extensions-relevant-to-kfm)
-- [11. Tensions and open questions](#11-tensions-and-open-questions)
-- [12. Validation checklist](#12-validation-checklist)
-- [13. Related docs](#13-related-docs)
-- [Appendix A — CSDGM section reference](#appendix-a--csdgm-section-reference)
-- [Appendix B — KFM crosswalk worked example (illustrative)](#appendix-b--kfm-crosswalk-worked-example-illustrative)
+## 0. Status, authority, and evidence boundary
+
+### 0.1 Authority by question
+
+| Question | Owning authority | Role of this page |
+|---|---|---|
+| What CSDGM means | The official FGDC standard and its endorsed profiles/extensions | Record the checked baseline; do not redefine upstream semantics |
+| Whether KFM must emit CSDGM | An accepted KFM architecture/catalog decision with identified consumers and migration obligations | State that the decision remains open |
+| What a KFM mapping or conformance record means | A reviewed semantic contract under `contracts/` | Describe candidate responsibilities without creating object authority |
+| What machine shape is valid | A reviewed schema under `schemas/` | State graduation needs; do not host schema authority |
+| What is allowed, withheld, generalized, or denied | `policy/`, qualified review, and a governed `PolicyDecision` | Supply metadata facts as inputs only |
+| Whether evidence supports a claim | `EvidenceRef` resolution to `EvidenceBundle` | Require traceability; do not replace evidence |
+| Whether an artifact may release | Policy, review, proof, release, correction, and rollback authorities | Explain prerequisites; never approve release |
+| Whether KFM conforms | Exact-revision profile decision, contract, schema/encoding rule, fixtures, validator, producer, consumer, tests, and emitted artifact | State only the checked boundary |
+
+### 0.2 Truth labels
+
+- **CONFIRMED** — verified from current repository bytes or authoritative FGDC material at the named snapshot.
+- **PROPOSED** — a KFM applicability rule, mapping, object, profile, path, validator, fixture, workflow, or migration step not established as current behavior.
+- **UNKNOWN** — evidence is insufficient for a stronger current claim.
+- **NEEDS VERIFICATION** — a concrete repository, standards, consumer, rights, policy, implementation, or operational check can resolve the question.
+- **CONFLICTED** — current repository or source surfaces overlap or disagree in identity, role, vocabulary, profile, or authority.
+- **HOLD** — an implementation or release posture; do not activate the profile until closure evidence exists. It is not a public runtime outcome.
+
+### 0.3 Current repository evidence
+
+| Surface | CONFIRMED observation | Safe conclusion |
+|---|---|---|
+| [`FGDC-CSDGM.md`](./FGDC-CSDGM.md) | Existing May 2026 draft contained proposal-era paths, invented object families, and unmounted-repository language | Same-path modernization is warranted |
+| [`docs/standards/README.md`](./README.md) | Identifies this lane as human-readable standards guidance and explicitly separates path presence, adoption, implementation, validation, release, and publication states | This page may explain but cannot adopt or prove conformance |
+| [`ISO-19115.md`](./ISO-19115.md) | Separate draft companion for ISO metadata | CSDGM-to-ISO relationship must be explicit; neither page silently supersedes the other |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Canonical outward outcomes are `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` | A CSDGM validator must not invent a competing public decision vocabulary |
+| [`Synthetic Release Catalog Closure Profile`](../../contracts/data/synthetic_release_catalog_closure_profile.md) | Deterministic, no-network synthetic agreement across STAC, DCAT, and PROV projections | Useful adjacent proof only; it does not implement CSDGM |
+| [`ADR-0022`](../adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Remains `proposed` while bounded closure slices exist | Catalog-profile experiments do not establish accepted CSDGM authority |
+| Bounded CSDGM search | `CSDGM` and `FGDC-STD-001-1998` surfaced this page, the ISO companion, and the standards index; no dedicated executable family surfaced | Implementation remains **UNKNOWN / not established by this review** |
+
+Absence statements are bounded to indexed repository search and inspected paths. They are not claims that private systems, historical branches, unindexed files, or external institutional workflows never existed.
+
+### 0.4 Official upstream checkpoint
+
+The official FGDC material checked on 2026-08-18 establishes the following bounded facts:
+
+- [CSDGM Version 2](https://www.fgdc.gov/metadata/csdgm-standard) is the current version of the FGDC-authored and endorsed standard.
+- The recommended citation identifies `FGDC-STD-001-1998` and the June 1998 revision.
+- The standard defines metadata content needed to discover a geospatial dataset, assess fitness for use, understand access, and support transfer.
+- The standard does **not** prescribe a computer implementation, transfer encoding, or presentation.
+- FGDC provides HTML/PDF publications, a workbook, a graphical representation, a DTD, and XSD representations for XML-encoded records.
+- FGDC describes CSDGM as a long-lived legacy and encourages transition to endorsed ISO geospatial metadata standards under federal standards policy.
+- No official source inspected here declared CSDGM Version 2 withdrawn or formally retired.
+
+### 0.5 Non-effects
+
+This revision does **not**:
+
+- adopt CSDGM or make it mandatory for a KFM artifact family;
+- accept a base profile, Biological Data Profile, Shoreline Profile, or Remote Sensing extension for KFM;
+- create a CSDGM contract, schema, XML DTD/XSD copy, mapping table, profile lock, fixture, validator, producer, consumer, workflow, endpoint, or catalog record;
+- validate or migrate a real metadata collection;
+- activate a source or inspect restricted source content;
+- approve evidence, rights, sensitivity, review, release, export, deployment, or publication;
+- accept ADR-0022 or alter current catalog authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="1-purpose"></a>
 
 ## 1. Purpose
 
-> [!NOTE]
-> This document **describes** an external standard and **proposes** how KFM relates to it. It does not declare FGDC CSDGM mandatory for any KFM artifact family. That decision is **NEEDS VERIFICATION** and tracked as `KFM-P18-INV-242` until resolved by ADR.
+This page owns human-readable guidance for answering four questions:
 
-This standards profile exists to:
+1. What does the official CSDGM require at the content-model level?
+2. When is CSDGM a legitimate KFM interoperability target rather than unnecessary legacy coupling?
+3. Which KFM authorities would supply each metadata concept without collapsing evidence, policy, release, and catalog roles?
+4. What must be proven before KFM may claim that a specific record conforms to a named CSDGM baseline or profile?
 
-1. State plainly what FGDC CSDGM is and how it is currently positioned by its issuing body (EXTERNAL).
-2. Place CSDGM in relation to the rest of the KFM catalog stack — STAC (with the KFM provenance namespace), DCAT, PROV-O, and the EvidenceBundle (CONFIRMED doctrine; PROPOSED realization).
-3. Define a **crosswalk** from CSDGM compound elements to KFM's governance fields so that records destined for clearinghouses expecting CSDGM can be emitted without losing KFM provenance, rights, sensitivity, review, or release semantics.
-4. Define a **catalog conformance report** shape that lets KFM's validators record CSDGM conformance per record without coupling the standard to publication (publication remains governed by policy, not by CSDGM presence).
+### 1.1 In scope
 
-What this document does **not** decide:
+- official standard identity, history, section model, and implementation-neutral posture;
+- current FGDC transition guidance toward ISO geospatial metadata;
+- base CSDGM versus profile/extension distinction;
+- KFM applicability and legacy-compatibility decision criteria;
+- conceptual crosswalk from CSDGM sections to KFM authority families;
+- conformance, encoding, governance, and release state separation;
+- positive and negative verification expectations;
+- correction, supersession, withdrawal, migration, and rollback implications.
 
-- Whether CSDGM is mandatory for any specific KFM artifact family. That requires an ADR.
-- The schema home or validator path. That follows `directory-rules.md §0` schema-home convention and remains **PROPOSED** until verified.
-- Whether KFM publishes CSDGM-encoded records, ISO 19115-encoded records, both, or neither.
+### 1.2 Out of scope
+
+- legal advice or a federal-compliance determination;
+- automatic conversion of a real CSDGM collection;
+- copying the FGDC standard into KFM schemas;
+- selecting an XML library or metadata editor;
+- adopting an ISO profile;
+- deciding a downstream clearinghouse's current submission rules without direct consumer evidence;
+- source activation, release approval, endpoint serving, or publication.
+
+### 1.3 Four distinct objects that must not collapse
+
+| Object | Job | What it does not prove |
+|---|---|---|
+| **CSDGM content profile** | Names the base standard plus any endorsed profile/extension and KFM constraints | That a record exists or validates |
+| **Encoded metadata record** | Carries metadata in a selected serialization, commonly XML | That content is complete, accurate, current, or safe |
+| **Conformance result** | Records which content and encoding assertions were checked at a specific revision | Evidence support, policy approval, release approval, or publication |
+| **Released compatibility projection** | Delivers an approved record to an identified consumer with correction/rollback lineage | Canonical KFM truth or authority over source data |
+
+[Back to top](#top)
 
 ---
+
+<a id="2-scope-and-authority"></a>
 
 ## 2. Scope and authority
 
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | External-standards profile under `docs/standards/` | CONFIRMED by `directory-rules.md §6.1` (`docs/standards/` is the home for "external standards KFM conforms to (STAC, DCAT, PROV, etc.)") |
-| Path | `docs/standards/FGDC-CSDGM.md` | PROPOSED — placement consistent with `directory-rules.md §6.1`; filename and casing not yet verified against any existing convention in the mounted repo |
-| Authority order | Doctrine and ADRs > Directory Rules > this profile > worked examples | CONFIRMED per `directory-rules.md §2.1` |
-| Change discipline | Edits follow normal docs PR; adopting CSDGM as a **release gate** for any artifact family requires an ADR per `directory-rules.md §2.4` | CONFIRMED |
-| Conformance language | RFC 2119-style (MUST / SHOULD / MAY) per `directory-rules.md §2.2` | CONFIRMED |
+### 2.1 Directory Rules basis
 
-> [!IMPORTANT]
-> Per `directory-rules.md §2.5`, if anything in this profile conflicts with the mounted repo's actual catalog or validator behavior, the repo wins and a `DRIFT_REGISTER.md` entry is opened. Nothing in this profile can short-circuit policy, evidence, or release gates.
+Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [`directory-rules.md`](../doctrine/directory-rules.md). The target already exists under the standards-guidance lane, so the owning root is `docs/` and the same-path update receives the existing-file placement presumption.
+
+This page does not move or name a machine home. A future implementation must route responsibilities independently:
+
+| Responsibility | Owning root |
+|---|---|
+| Human-readable CSDGM guidance | `docs/standards/` |
+| KFM mapping/conformance semantics | `contracts/` after an accepted object-family decision |
+| Machine-valid profile and record shape | `schemas/` after profile and encoding decisions |
+| Allow/deny/restrict/abstain rules | `policy/` |
+| Synthetic inputs and expected results | `fixtures/` |
+| Executable checks | `tools/` |
+| Regression proof | `tests/` |
+| Catalog records | `data/catalog/` or the accepted logical catalog home |
+| Receipts/proofs | Their distinct accepted accountability homes |
+| Release decision and rollback | `release/` and accepted rollback/correction homes |
+
+### 2.2 State separation
+
+Do not collapse these independent states:
+
+| State | Meaning |
+|---|---|
+| Upstream publication state | FGDC has published CSDGM Version 2 and supporting representations |
+| KFM applicability state | KFM has decided that a named artifact family or consumer requires CSDGM |
+| KFM profile state | KFM has selected base CSDGM and any profile/extension constraints |
+| Encoding state | KFM has selected and pinned an encoding representation and validation rule |
+| Mapping state | Every target element has a governed source or an explicit unmapped disposition |
+| Implementation state | A producer and consumer operate against the profile |
+| Validation state | Positive and negative fixtures are evaluated deterministically |
+| Review state | Accountable metadata/domain/security reviewers approved the bounded use |
+| Release state | A governed release contains the compatibility projection and rollback target |
+| Publication state | A consumer can retrieve the approved public-safe record |
+| Correction state | Supersession, withdrawal, cache invalidation, and rollback are traceable |
+
+A green XML schema check proves only the assertions represented by that encoding schema. It does not prove metadata accuracy, source authority, KFM policy approval, or release readiness.
+
+[Back to top](#top)
 
 ---
+
+<a id="3-what-fgdc-csdgm-is"></a>
 
 ## 3. What FGDC CSDGM is
 
-The Federal Geographic Data Committee's **Content Standard for Digital Geospatial Metadata** is the long-standing US federal metadata standard for digital geospatial data sets.
+CSDGM is the FGDC content standard for documenting digital geospatial data. It establishes compound elements, data elements, definitions, value domains, and obligation/conditionality rules so prospective users can discover data, assess fitness for use, understand access, and transfer the data successfully.
 
-| Field | Value | Source |
-|---|---|---|
-| Identifier | `FGDC-STD-001-1998` | FGDC, "Content Standard for Digital Geospatial Metadata (CSDGM)"  |
-| Version | 2.0 (revised June 1998) | FGDC standard page  |
-| Originally mandated by | Executive Order 12906 (directed Federal agencies to document geospatial resources using this standard) | FGDC, CSDGM standard page  |
-| Section count | 10 (7 main + 3 supporting), loaded as separate XML schema modules in the official XSD | IOOS `fgdc-std-001-1998.xsd` — "the primary XML Schema and loads the definitions for sections 1-10"  |
-| Current status (federal) | Legacy / still in use; FGDC encourages transition to the ISO 19100 series under OMB Circular A-119 | FGDC base-metadata page and Geospatial Metadata Standards page  |
+### 3.1 Official baseline
 
-**Section list (CSDGM v2.0):** Identification Information; Data Quality Information; Spatial Data Organization Information; Spatial Reference Information; Entity and Attribute Information; Distribution Information; Metadata Reference Information; plus supporting sections Citation Information, Time Period Information, and Contact Information. FGDC CSDGM table of contents 
+| Field | Official result |
+|---|---|
+| Standard | Content Standard for Digital Geospatial Metadata |
+| Identifier | `FGDC-STD-001-1998` |
+| Version | Version 2, revised June 1998 |
+| Prior version | Version 1, approved June 1994; Version 2 supersedes it and is described by FGDC as backward compatible |
+| Maintenance authority | FGDC Secretariat |
+| Historical federal context | Executive Order 12906 directed federal agencies to document new geospatial data using the FGDC standard under development |
+| Current program posture | Continuing CSDGM legacy plus encouraged migration to ISO metadata |
+| Copyright/access | FGDC publications are publicly available; downstream reuse still must preserve attribution and any applicable organizational obligations |
 
-Detailed section roles and obligations are in [Appendix A](#appendix-a--csdgm-section-reference).
+### 3.2 Section model
 
-> [!NOTE]
-> The CSDGM was designed before STAC, DCAT, JSON-LD, and content addressing existed. Its element model is XML-first, eight-character short names, and order-significant. IOOS XSD schema documentation: "Element names are a maximum of 8-characters long … Generally the order of elements is now significant."  Treating it as **one** of KFM's metadata surfaces — not the only one — is intentional.
+The standard has one metadata root, seven principal numbered sections, and three supporting reusable sections:
+
+1. Identification Information;
+2. Data Quality Information;
+3. Spatial Data Organization Information;
+4. Spatial Reference Information;
+5. Entity and Attribute Information;
+6. Distribution Information;
+7. Metadata Reference Information;
+8. Citation Information;
+9. Time Period Information; and
+10. Contact Information.
+
+Identification Information and Metadata Reference Information are mandatory. Other principal sections are mandatory when applicable. Citation, time-period, and contact structures are supporting compound sections used from multiple locations.
+
+### 3.3 Content standard, not one encoding
+
+The official specification states that CSDGM is not an implementation design and does not prescribe how metadata is organized in a computer system, transferred, transmitted, communicated, or presented.
+
+Consequences for KFM:
+
+- base-standard conformance is a **content** question;
+- XML is one possible implementation representation, not the standard's sole identity;
+- DTD or XSD validation is an **encoding** check and must name the exact representation used;
+- short names and element order in an XML representation must not be mistaken for KFM canonical field names;
+- a KFM mapping must preserve the upstream content semantics even when the internal model uses longer identifiers, JSON, RDF, or typed contracts.
+
+### 3.4 Profiles and extensions
+
+CSDGM Appendix D describes user-defined extensions, and Appendix E describes profiles. An extension adds elements; a profile constrains or specializes the base standard and may add elements under the documented rules.
+
+A KFM-specific mapping is not automatically a CSDGM profile. KFM may only claim profile conformance when the target profile is identified, its constraints are represented, and validation evidence covers those constraints.
+
+[Back to top](#top)
 
 ---
+
+<a id="4-kfm-posture-and-rationale"></a>
 
 ## 4. KFM posture and rationale
 
-KFM's working position on FGDC CSDGM, drawn from project doctrine:
+### 4.1 Bounded recommendation
 
-| Position | Status | Basis |
+**PROPOSED:** Treat CSDGM as an **on-demand legacy-compatibility target**, not KFM's default metadata authority and not the sole metadata representation for new KFM products.
+
+This recommendation is appropriate because:
+
+- FGDC still publishes Version 2 as the current FGDC-authored version;
+- inherited federal, state, local, university, and partner collections may still carry CSDGM records;
+- some consumers or archival workflows may explicitly require CSDGM-compatible content;
+- FGDC encourages migration to ISO metadata for modern systems;
+- KFM already has distinct evidence, policy, release, catalog, and provenance responsibilities that CSDGM does not replace.
+
+### 4.2 Applicability decision matrix
+
+| Situation | Candidate disposition | Reason |
 |---|---|---|
-| CSDGM is **one of several** candidate metadata standards KFM may need to satisfy per artifact family. STAC, DCAT, FGDC, ISO 19115, and the KFM profile are all on the table. | PROPOSED | `KFM-P18-INV-242`: "Which metadata standards are mandatory for each artifact family: STAC, DCAT, FGDC, ISO, or KFM profile?" is **NEEDS VERIFICATION** |
-| Catalog records SHOULD run **metadata-standard conformance checks** and record missing requirements before public release. Conformance is a **validation result**, not an editorial afterthought. | CONFIRMED doctrine / PROPOSED implementation | `KFM-P18-INV-242` Normalized statement |
-| CSDGM conformance is a **catalog completeness signal**, not by itself a release gate. Release gates remain `policy/`-governed and evidence-bound. | PROPOSED | Pass 10 C4 / C5 split: catalogs publish; policy decides |
-| KFM SHOULD NOT fork CSDGM. Where additional governance fields are required, KFM extends through its own namespace and crosswalks (STAC pattern). | PROPOSED | Consistent with the STAC-KFM Profile approach in `New Ideas 5-8-26`: "KFM should NOT fork STAC. Instead: remain STAC 1.0 compliant, extend via namespaced properties" |
-| Mandatory-vs-optional CSDGM conformance MUST NOT be inferred from convenience or topic; it requires an ADR per `directory-rules.md §2.4(5)` if it creates a parallel publication path. | CONFIRMED | `directory-rules.md §2.4` |
+| Downstream consumer contract explicitly requires CSDGM Version 2 | **PROPOSED ADMIT**, after consumer/version/profile verification | Compatibility requirement is concrete and testable |
+| Existing source collection supplies CSDGM records that must be preserved | **PROPOSED PRESERVE**, with source-native bytes and migration lineage | Avoid destructive normalization and loss of source caveats |
+| KFM is migrating an inherited CSDGM collection to ISO | **PROPOSED BRIDGE**, with dual validation and correction plan | Supports staged migration without silent reinterpretation |
+| New KFM spatiotemporal asset has no CSDGM consumer | **DEFAULT HOLD / NOT APPLICABLE** | Do not create legacy coupling without a use case |
+| Record concerns a service, sensor system, complex acquisition chain, or modern resource relationship better modeled by ISO | **PREFER ISO REVIEW** | FGDC guidance identifies broader ISO resource coverage |
+| CSDGM would expose restricted contact, exact geometry, infrastructure, archaeology, living-person, or other sensitive material | **DENY public projection until transformed and reviewed** | Interoperability never overrides KFM sensitivity policy |
+| Profile, encoding, or consumer requirement is unknown | **ABSTAIN from conformance claim** | Cite-or-abstain; do not guess |
 
-> [!WARNING]
-> Do **not** treat CSDGM presence as a substitute for an EvidenceBundle, a RunReceipt, a PromotionDecision, or a ReleaseManifest. A CSDGM record is **metadata**; KFM's truth posture is **evidence-first**. A complete CSDGM record with unresolved `EvidenceRef` MUST still fail closed at the publication gate.
+### 4.3 Anti-collapse rules
+
+CSDGM must not be treated as:
+
+- an `EvidenceBundle`;
+- a `SourceDescriptor` or source-admission decision;
+- a rights or sensitivity policy result;
+- a review record;
+- a release manifest;
+- a proof pack or receipt;
+- a STAC, DCAT, or PROV replacement;
+- a complete modern metadata model for services, sensors, APIs, or all KFM object families;
+- a public-data authorization merely because the record contains access or use constraints.
+
+[Back to top](#top)
 
 ---
+
+<a id="5-where-this-fits-in-the-kfm-stack"></a>
 
 ## 5. Where this fits in the KFM stack
 
 ```mermaid
 flowchart LR
-    subgraph KFM["KFM evidence stack (CONFIRMED doctrine)"]
-        SD[SourceDescriptor]
-        EB[EvidenceBundle]
-        RR[RunReceipt]
-        PD[PromotionDecision]
-        RM[ReleaseManifest]
-    end
+    A["Source-native material\n+ source identity"] --> B["KFM evidence / domain / release authorities"]
+    B --> C["Shared released metadata facts\nidentity · title · extent · time · quality · lineage · rights · distribution"]
+    C --> D["STAC projection"]
+    C --> E["DCAT projection"]
+    C --> F["PROV projection"]
+    C --> G["CSDGM compatibility projection\nonly when admitted"]
+    C --> H["ISO metadata projection\nwhen admitted"]
+    G --> I["Named legacy consumer"]
 
-    subgraph CAT["Catalog surfaces (PROPOSED realization)"]
-        STAC["STAC Item / Collection<br/>+ kfm:provenance namespace"]
-        DCAT["DCAT Dataset / Distribution"]
-        ISO["ISO 19115 / 19115-2"]
-        FGDC["FGDC CSDGM<br/>(this profile)"]
-    end
-
-    subgraph CLR["Public / clearinghouse consumers"]
-        STACAPI[STAC-aware clients]
-        DATAGOV[data.gov / regional CKAN]
-        FGDCCHC[NSDI / FGDC clearinghouse legacy]
-        ISOCAT[ISO-aware national catalogs]
-    end
-
-    SD --> EB --> RR --> PD --> RM
-    RM --> STAC
-    RM --> DCAT
-    RM --> ISO
-    RM --> FGDC
-
-    STAC --> STACAPI
-    DCAT --> DATAGOV
-    FGDC --> FGDCCHC
-    ISO --> ISOCAT
-
-    classDef proposed stroke-dasharray: 4 3;
-    class CAT,FGDC,ISO,STAC,DCAT proposed;
+    J["Policy / review / release / correction"] --> C
+    J --> G
+    J --> H
 ```
 
-> [!NOTE]
-> **Diagram is doctrinal**, not a claim of implementation. None of the catalog-surface nodes is asserted to exist in the current mounted repo. Per `directory-rules.md §0`, all path-level claims remain **PROPOSED** until verified against repo evidence.
+The diagram is a **PROPOSED responsibility model**, not current runtime proof.
 
-Key relationships:
+### 5.1 Non-collapse responsibility table
 
-- **STAC** is the primary spatial catalog surface for KFM and carries the `kfm:provenance` block (CONFIRMED in Pass 10 C4-01; PROPOSED namespace pin per `New Ideas 5-8-26`).
-- **DCAT** covers what STAC does not — non-spatial datasets, entity bundles, policy bundles (CONFIRMED in Pass 10 C4-05).
-- **ISO 19115 / 19115-2** is the international successor that FGDC itself now encourages. FGDC: "federal agencies and NSDI Stakeholders are encouraged to make the transition to ISO metadata." 
-- **FGDC CSDGM** remains a real consumer expectation for legacy NSDI workflows and some state clearinghouses. Vermont Center for Geographic Information: "FGDC CSDGM is a U.S. federal government-unique standard that remains in use … still a viable option to meet the Vermont Level 2 - Full metadata standard." 
+| Surface | Primary responsibility | Boundary relative to CSDGM |
+|---|---|---|
+| EvidenceBundle | Claim-support evidence and limitations | CSDGM may cite or summarize lineage; it cannot replace evidence closure |
+| STAC | Asset- and collection-oriented spatiotemporal discovery | CSDGM is not derived from STAC by assumption; both should draw from governed shared facts |
+| DCAT | Dataset, distribution, data-service, series, record, and catalog discovery | Distribution and dataset concepts overlap, but neither vocabulary is sovereign over the other |
+| PROV | Entity/activity/agent provenance | CSDGM lineage may summarize provenance; detailed derivation remains in provenance authorities |
+| ISO 19115 family | Broader international geospatial metadata model and modern transition target | Strategic companion or successor target; exact profile/encoding still requires decision |
+| CSDGM | Legacy geospatial dataset metadata content and compatibility | On-demand projection only after applicability, profile, encoding, and consumer decisions |
+| PolicyDecision | Finite admissibility result | Determines whether and how a projection may be exposed; conformance cannot override policy |
+| ReleaseManifest | Released artifact binding | Identifies the approved compatibility record and rollback/correction lineage |
+
+### 5.2 Current repository boundary
+
+The repository's synthetic catalog-closure profile derives mutually consistent STAC, DCAT, and PROV projections from one synthetic release candidate. Its contract explicitly limits the proof to deterministic local projection agreement and denies publication authority.
+
+**CONFIRMED:** FGDC CSDGM is not part of that checked projection set. Extending the set would require a separate reviewed contract/schema/fixture/validator decision rather than documentation-only implication.
+
+[Back to top](#top)
 
 ---
+
+<a id="6-csdgm--kfm-crosswalk"></a>
 
 ## 6. CSDGM ↔ KFM crosswalk
 
-The following crosswalk binds CSDGM compound elements to the KFM governance fields they should reflect when KFM emits a CSDGM record. Field shapes (JSON Schema) are governed by `schemas/contracts/v1/…` per `directory-rules.md §0` ADR-0001 — paths below are **PROPOSED**.
+The table below is a **PROPOSED conceptual crosswalk**. It deliberately names KFM authority families rather than inventing unverified field paths.
 
-| CSDGM compound element | CSDGM short name | KFM-side source | Truth label |
-|---|---|---|---|
-| Identification Information → Citation | `idinfo / citation` | `SourceDescriptor.citation`, EvidenceBundle `kfm:sources[*]` | PROPOSED |
-| Identification Information → Description (Abstract, Purpose, Supplemental) | `idinfo / descript` | `LayerManifest.description`, governance posture string from Collection summary | PROPOSED |
-| Identification Information → Status (Progress, Maintenance) | `idinfo / status` | `kfm:review_state`, `kfm:release_state` (KFM STAC profile) | PROPOSED |
-| Identification Information → Spatial Domain (Bounding Coordinates, G-Polygon) | `idinfo / spdom` | STAC `bbox` / `geometry`, KFM-canonical geometry hash | PROPOSED |
-| Identification Information → Use Constraints | `idinfo / useconst` | `kfm:rights_status`, `kfm:sensitivity`, CARE block | PROPOSED |
-| Data Quality Information → Lineage | `dataqual / lineage` | PROV-O `prov:wasGeneratedBy` chain, `RunReceipt`, `OpenLineage` events | CONFIRMED doctrinal mapping (Pass 10 C8-03) / PROPOSED field realization |
-| Data Quality Information → Positional/Attribute Accuracy | `dataqual / posacc`, `attracc` | Validator outputs (geometry sanity, schema validation), `UncertaintySurface` | PROPOSED |
-| Spatial Data Organization Information | `spdoinfo` | TileArtifactManifest, vector format declarations | PROPOSED |
-| Spatial Reference Information | `spref` | Coordinate Reference Profile, Projection Transform Receipt | PROPOSED |
-| Entity and Attribute Information | `eainfo` | Schema for the layer's feature shape (`schemas/contracts/v1/…`) | PROPOSED |
-| Distribution Information | `distinfo` | `ReleaseManifest`, asset hrefs, checksums, `kfm:spec_hash` | PROPOSED |
-| Metadata Reference Information | `metainfo` | Metadata authoring receipt, KFM Meta Block v2 fields | PROPOSED |
+| CSDGM section or concept | KFM authority that would supply it | Required guardrail |
+|---|---|---|
+| Identification — citation, title, originator, publication date | Source identity, catalog descriptor, released metadata facts | Preserve source-native citation and issuing authority |
+| Identification — abstract, purpose, supplemental information | Reviewed catalog/domain documentation | Distinguish source description from KFM interpretation |
+| Identification — time period, status, maintenance | Temporal authority, source/release state, correction lineage | Keep observation, validity, publication, retrieval, and correction times distinct |
+| Identification — spatial domain | Released public-safe geometry and spatial extent | Never use a guessed centroid or style-only hiding for sensitive geometry |
+| Identification — keywords | Controlled vocabulary assignments plus source keywords | Record vocabulary/version; do not silently normalize away source terms |
+| Identification — access/use constraints | Rights and sensitivity policy plus public-safe obligations | Do not expose internal denial reasons or sensitive facts in public metadata |
+| Data Quality — attribute/positional accuracy, completeness, consistency | Validation reports, uncertainty/quality records, source caveats | A passing schema check is not a quality claim |
+| Data Quality — lineage and process steps | Evidence, provenance, receipts, and transformation lineage | Preserve derivation and caveats; do not flatten all provenance into one sentence |
+| Spatial Data Organization | Released artifact organization and geometry/raster representation | Describe the actual released carrier, not an internal or superseded one |
+| Spatial Reference | CRS/datum/vertical reference and transformation evidence | Pin identifiers and preserve axis/unit/vertical semantics |
+| Entity and Attribute | Accepted semantic contract, schema, or feature catalog | Do not publish restricted field definitions or unsupported semantics |
+| Distribution | Released distribution carrier, locator, media type, checksum/digest, access method | Bind to a released artifact; catalog presence is not release authorization |
+| Metadata Reference | Metadata record identity, date, responsible party, standard/profile/version, language/charset | Separate metadata authoring identity from data-source identity |
+| Citation / Time / Contact supporting structures | Source, temporal, and contact authorities | Minimize personal data; use role/organization contacts where appropriate |
 
-> [!IMPORTANT]
-> The CSDGM crosswalk **must not erase source-specific caveats**. Per `KFM-P18-INV-242` neighbor doctrine on adapter mapping receipts: over-translation can erase source-specific caveats needed for evidence review. The crosswalk MUST be paired with an `adapter_mapping_receipt` recording dropped fields, caveats, and unmapped values.
+### 6.1 Mapping invariants
+
+A future crosswalk must:
+
+1. name the source record and target CSDGM baseline/profile;
+2. use only released or explicitly authorized metadata facts for a public projection;
+3. preserve source-native values alongside normalized values where meaning could drift;
+4. record each lossy, derived, defaulted, redacted, generalized, omitted, or unmapped element;
+5. never convert silence into permission, accuracy, completeness, or public availability;
+6. keep source time, observation time, valid time, publication time, retrieval time, metadata date, and correction time distinct where material;
+7. keep exact internal geometry separate from public-safe extent;
+8. bind the projection to the release and correction lineage that produced it;
+9. be deterministic for the same admitted inputs and profile version; and
+10. support rollback to the prior projection without rewriting historical records.
+
+### 6.2 Crosswalk loss register
+
+**PROPOSED minimum information for any mapping receipt or report:**
+
+- input object/reference and digest;
+- target standard identifier and profile/extension identifiers;
+- encoding representation identifier;
+- mapping-table version and digest;
+- mapped source-to-target element ledger;
+- defaults and generated values;
+- omissions and unmapped values;
+- redactions/generalizations and governing reason references;
+- source caveats preserved;
+- warnings/conflicts;
+- output digest;
+- predecessor/correction/rollback references.
+
+This list is guidance, not a canonical object contract.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-catalog-conformance-gate-proposed"></a>
 
 ## 7. Catalog conformance gate (PROPOSED)
 
+A future CSDGM path needs four separate decisions. Passing one must not imply passing the others.
+
 ```mermaid
 flowchart TB
-    A["Catalog record<br/>STAC + KFM profile"] --> B{"Run CSDGM conformance?"}
-    B -- "policy says yes" --> C["CSDGMConformanceCheck"]
-    B -- "policy says no" --> Z["Skip; record skipped"]
-    C --> D{"Required CSDGM<br/>elements present?"}
-    D -- yes --> E["catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[]<br/>warnings=[…]<br/>decision=ALLOW"]
-    D -- no --> F["catalog_metadata_conformance_report:<br/>profile=CSDGM<br/>missing_required_fields=[…]<br/>decision=ABSTAIN or DENY<br/>per policy"]
-    E --> G["Release gate reads report<br/>+ EvidenceBundle + policy"]
-    F --> G
-    G --> H{"Promotion allowed?"}
-    H -- ALLOW --> I["PromotionDecision → PUBLISHED"]
-    H -- "DENY/ABSTAIN" --> J["Quarantine path<br/>+ correction notice if released"]
+    A["1. Applicability\nIs CSDGM required for this artifact/consumer?"] --> B["2. Content profile\nBase standard + profiles/extensions + KFM constraints"]
+    B --> C["3. Encoding\nSelected representation validates deterministically"]
+    C --> D["4. Governance and release\nEvidence · rights · sensitivity · review · release · rollback"]
+    D --> E["Released compatibility projection"]
+
+    A -. not applicable .-> F["No CSDGM projection"]
+    B -. unresolved .-> G["ABSTAIN / HOLD"]
+    C -. invalid .-> H["FAIL / ERROR"]
+    D -. blocked .-> I["DENY"]
 ```
 
-The proposed `catalog_metadata_conformance_report` shape is informed by `KFM-P18-INV-242` expansion fields:
+### 7.1 Gate semantics
 
-- `profile` — `CSDGM` | `ISO-19115` | `STAC-KFM-v1` | `DCAT` | other
-- `profile_version` — `"FGDC-STD-001-1998"` for CSDGM
-- `missing_required_fields[]` — CSDGM short names, e.g. `idinfo/citation/title`
-- `warnings[]` — CSDGM-permitted but KFM-preferred fields
-- `decision` — `ALLOW` | `ABSTAIN` | `DENY`
-- `decision_reason` — machine-readable reason code
-- `spec_hash` — JCS-canonicalized SHA-256 of the report (per Pass 10 C1-02 doctrine)
+| Gate | Question | Safe failure posture |
+|---|---|---|
+| Applicability | Is there a named artifact family, consumer, agreement, or migration need? | No projection; do not manufacture one |
+| Content profile | Which base version, profile, extension, and KFM constraints apply? | Abstain from conformance claim |
+| Mapping completeness | Does every required/applicable element have a governed source or explicit disposition? | Fail/abstain with bounded findings |
+| Encoding | Does the selected record conform to the pinned DTD/XSD or other accepted representation? | Fail or error; do not continue silently |
+| Semantic integrity | Are time, extent, quality, lineage, rights, distribution, and metadata identity internally coherent? | Deny or abstain according to owning policy/validator contract |
+| Cross-profile parity | Do shared identity, digest, extent, rights, release, and correction facts agree across admitted projections? | Deny promotion until conflict is resolved |
+| Governance | Are evidence, policy, review, release, correction, and rollback prerequisites satisfied? | `DENY`, `ABSTAIN`, or `ERROR` through the governed envelope |
 
-> [!CAUTION]
-> The conformance **report** is not the **decision**. The publication decision is owned by `policy/` and consumes this report. A CSDGM-clean record may still fail the release gate on rights, sensitivity, evidence, or review-state grounds.
+### 7.2 Result vocabularies remain separate
+
+- A **content/encoding validator** may eventually use internal states such as `PASS`, `FAIL`, `NOT_APPLICABLE`, and `ERROR`, but that vocabulary requires an accepted contract.
+- The repository's canonical outward `PolicyDecision` vocabulary remains `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
+- A validator `PASS` is never equivalent to policy `ANSWER`, review approval, release, or publication.
+- `HOLD` is a review/workflow posture, not a currently schema-confirmed outward `PolicyDecision` outcome.
+
+[Back to top](#top)
 
 ---
+
+<a id="8-validators-and-validation-outputs-proposed"></a>
 
 ## 8. Validators and validation outputs (PROPOSED)
 
-> [!NOTE]
-> Validator paths and CI workflow names below are **PROPOSED**. None has been verified against a mounted repo in this session. They follow the validator surface pattern in `New Ideas 5-8-26` (CLI contract, JSON-mode output, exit-code grammar).
+### 8.1 Current implementation boundary
 
-**CLI contract (illustrative):**
-
-```bash
-python tools/validators/standards/csdgm/check_conformance.py \
-  --input data/catalog/stac/<item>.json \
-  --crosswalk schemas/contracts/v1/standards/csdgm_crosswalk.schema.json \
-  --emit catalog_metadata_conformance_report \
-  --fail-on-missing-required
-```
-
-**Exit codes** (consistent with the validator exit-code grammar elsewhere in KFM):
-
-| Code | Meaning |
+| Surface | Current evidence |
 |---|---|
-| `0` | PASS — required CSDGM elements present |
-| `1` | FAIL — required CSDGM elements missing |
-| `2` | ERROR — validator runtime error |
-| `3` | ABSTAIN — element presence cannot be determined (insufficient inputs) |
+| CSDGM contract/schema | Not surfaced in bounded repository search |
+| CSDGM fixture corpus | Not surfaced |
+| CSDGM validator or workflow | Not surfaced |
+| CSDGM producer/consumer | Not surfaced |
+| CSDGM release artifact | Not surfaced |
+| Adjacent catalog closure | Synthetic STAC/DCAT/PROV contract, schema, fixtures, validator, tests, and workflow exist for a bounded no-network proof |
 
-**Output shape (JSON, illustrative):**
+This page therefore names **acceptance properties**, not executable commands or settled file paths.
 
-```json
-{
-  "object_type": "catalog_metadata_conformance_report",
-  "profile": "CSDGM",
-  "profile_version": "FGDC-STD-001-1998",
-  "subject_ref": "kfm://catalog/stac/<id>",
-  "missing_required_fields": [],
-  "warnings": [
-    {
-      "field": "idinfo/keywords/theme",
-      "note": "No ISO 19115 topic category equivalent recorded; recommended for cross-profile parity."
-    }
-  ],
-  "decision": "ALLOW",
-  "decision_reason": "all_required_csdgm_elements_present",
-  "spec_hash": "sha256:<TODO>"
-}
-```
+### 8.2 Minimum future validator properties
 
-**Negative-path fixtures** that any future validator MUST exercise (per the negative-state rule for KFM validators):
+A future validator should be:
 
-- A STAC item with no `idinfo/citation/title` mapping → `DENY` or `ABSTAIN` per policy
-- A record claiming CSDGM conformance with `Distribution Information` missing for a released asset → `DENY`
-- A record where `Use Constraints` conflicts with the KFM `kfm:rights_status` value → `DENY` with conflict reason
-- A record where `Time Period Information` cannot be derived from KFM temporal fields → `ABSTAIN`
+- deterministic for fixed inputs and profile/encoding versions;
+- no-network by default, with official standards representations pinned through a governed dependency process;
+- explicit about base standard, profile, extension, and encoding;
+- capable of distinguishing missing, not-applicable, invalid, conflicting, and unevaluable conditions;
+- bounded in findings so sensitive source values, contacts, paths, geometry, or internal policy reasons are not leaked;
+- able to emit machine-readable results with stable reason codes;
+- able to replay the same fixture to the same bytes/digest where identity rules require it;
+- subordinate to policy, review, release, correction, and rollback;
+- accompanied by a producer/consumer test, not only a schema test; and
+- registered in the accepted validator inventory and aggregate validation path before enforcement claims are made.
+
+### 8.3 Required fixture classes
+
+| Fixture class | Expected bounded behavior |
+|---|---|
+| Base CSDGM record with all mandatory/applicable content | Content check passes for the named baseline only |
+| Valid XML against the selected representation | Encoding check passes; no quality/release claim follows |
+| Missing Identification Information | Fail with stable reason code |
+| Missing Metadata Reference Information | Fail with stable reason code |
+| Data-quality section omitted when clearly applicable | Fail or abstain according to accepted applicability rule |
+| Unknown or unpinned profile/extension | Abstain from conformance claim |
+| Unknown encoding representation | Error or abstain; never assume XML profile |
+| Rights/use-constraint conflict | Deny downstream exposure through policy; validator records conflict only |
+| Exact sensitive geometry in public extent | Deny public projection before encoding |
+| Metadata date/source date/release date collapsed | Fail temporal-integrity check |
+| Distribution points to unreleased/internal artifact | Deny release binding |
+| CSDGM and ISO/STAC/DCAT shared facts disagree | Deny cross-profile closure until resolved |
+| Corrected record with missing predecessor/correction reference | Fail correction-lineage check |
+| Byte-stable replay | Same admitted inputs produce the same accepted projection identity/digest |
+
+### 8.4 What validation cannot prove
+
+A validator cannot establish:
+
+- truth of the described data;
+- completeness of the source collection;
+- legal sufficiency or federal compliance;
+- rights to redistribute data or metadata;
+- public safety of exact geometry or contacts;
+- correctness of a human-authored abstract;
+- fitness for every downstream use;
+- acceptance by a clearinghouse not represented in tests;
+- release approval or publication.
+
+[Back to top](#top)
 
 ---
+
+<a id="9-fgdc--iso-19115-transition-posture"></a>
 
 ## 9. FGDC → ISO 19115 transition posture
 
-> [!IMPORTANT]
-> The issuing body itself encourages transition away from CSDGM toward the ISO 19100 series.
+### 9.1 Official guidance
 
-| Fact | Source |
+FGDC's current guidance says:
+
+- CSDGM will retain a legacy for many years;
+- federal standards policy favors voluntary consensus standards over government-unique standards;
+- federal agencies and NSDI stakeholders are encouraged to transition to endorsed ISO geospatial metadata;
+- a largely static CSDGM collection may remain in CSDGM until software and fiscal conditions support migration;
+- a geospatial software lifecycle refresh is an appropriate time to include CSDGM-to-ISO conversion; and
+- standard selection depends on the resource and publication process.
+
+See [Selecting a Geospatial Metadata Standard](https://www.fgdc.gov/metadata/selecting-a-geospatial-metadata-standard), [Geospatial Metadata Standards and Guidelines](https://www.fgdc.gov/metadata/geospatial-metadata-standards), and [Benefits of ISO Metadata](https://www.fgdc.gov/metadata/benefits-of-iso).
+
+### 9.2 KFM disposition
+
+**PROPOSED:**
+
+1. Preserve source-native CSDGM records and their hashes when ingested as evidence or migration inputs.
+2. Prefer an accepted modern ISO profile for new non-STAC geospatial metadata interoperability when the consumer supports it.
+3. Emit CSDGM only for a verified legacy consumer, inherited collection, contractual obligation, or staged migration.
+4. Generate CSDGM and ISO projections from the same governed released metadata facts rather than converting one lossy projection into another when avoidable.
+5. When conversion is necessary, preserve both source and target records, mapping version, losses, warnings, and correction lineage.
+6. Do not silently reinterpret historical records under a new profile or metadata date.
+7. Remove a CSDGM compatibility surface only through a reviewed consumer inventory, migration proof, deprecation window, and rollback plan.
+
+### 9.3 Migration states
+
+| State | Meaning |
 |---|---|
-| FGDC has endorsed several ISO metadata standards; federal agencies and NSDI stakeholders are encouraged to make the transition to ISO metadata. | FGDC, "Geospatial Metadata Standards and Guidelines"  |
-| OMB Circular A-119 (revised) directs agencies to use voluntary consensus standards in lieu of government-unique standards such as the CSDGM. | FGDC, base-metadata project page  |
-| CSDGM "will continue to have a legacy for many years" and is still in active use in state and federal workflows. | FGDC base-metadata page; Vermont Center for Geographic Information  |
+| `PRESERVED_NATIVE` | Original CSDGM bytes retained with provenance and no semantic rewrite |
+| `MAPPED_CANDIDATE` | Proposed normalized mapping exists but is not approved |
+| `DUAL_VALIDATED` | Source CSDGM and target ISO/shared facts pass their bounded checks |
+| `MIGRATION_APPROVED` | Qualified review accepts losses, obligations, and consumer plan |
+| `SUPERSEDED_FOR_NEW_AUTHORING` | New metadata is authored under the accepted successor profile while legacy records remain resolvable |
+| `WITHDRAWN` | A previously released projection is withdrawn with correction and rollback lineage |
 
-**KFM posture (PROPOSED):**
+These names are explanatory guidance, not canonical machine enums.
 
-1. KFM SHOULD treat **ISO 19115 (with ISO 19115-2 extension)** as the strategic clearinghouse metadata surface where a non-STAC catalog surface is required.
-2. KFM SHOULD treat **CSDGM** as a **bridge / legacy compatibility profile**, emitted only when a downstream clearinghouse explicitly requires it.
-3. Where both surfaces are needed, the **same KFM-side fields** (EvidenceBundle, rights, sensitivity, lineage, spec_hash) MUST drive both crosswalks. A divergent CSDGM record and ISO record from the same source is a drift symptom.
-
-> [!WARNING]
-> Treating CSDGM as the **sole** metadata surface for new KFM artifacts would couple KFM to a deprecating government-unique standard. Do not do this without an ADR documenting the tradeoff and a sunset plan.
+[Back to top](#top)
 
 ---
+
+<a id="10-profiles-and-extensions-relevant-to-kfm"></a>
 
 ## 10. Profiles and extensions relevant to KFM
 
-CSDGM has several FGDC-endorsed profiles and extensions; the ones with the clearest KFM relevance are:
+Official FGDC materials identify these CSDGM-specific surfaces:
 
-| Profile / extension | Identifier | KFM domain | Status |
+| Surface | Identifier | Official role | KFM posture |
 |---|---|---|---|
-| Biological Data Profile | `FGDC-STD-001.1-1999` | Fauna, Flora, Habitat domains | EXTERNAL FGDC standards publications;  KFM applicability **PROPOSED** |
-| Metadata Profile for Shoreline Data | `FGDC-STD-001.2-2001` | Hydrology, hazards (coastal change) — limited Kansas relevance | EXTERNAL FGDC standards publications;  KFM applicability **UNKNOWN** |
-| Remote Sensing Metadata Extensions | `FGDC-STD-012-2002` | Imagery / DEM / COG layers; spatial foundation | EXTERNAL FGDC standards publications;  KFM applicability **PROPOSED** for remote-sensing imagery families |
-| Classification of Wetlands and Deepwater Habitats | `FGDC-STD-004` | Habitat | EXTERNAL FGDC standards publications;  classification rather than metadata standard — not a CSDGM profile in the strict sense |
-| National Vegetation Classification Standard v2.0 | `FGDC-STD-005-2008` | Flora, habitat | EXTERNAL FGDC standards publications;  classification standard |
+| Base CSDGM Version 2 | `FGDC-STD-001-1998` | General metadata content for digital geospatial datasets | Legacy compatibility candidate; not adopted |
+| Biological Data Profile | `FGDC-STD-001.1-1999` | Profile for biological resources data and information | Potentially relevant to biodiversity lanes, but applicability and sensitivity review remain open |
+| Metadata Profile for Shoreline Data | `FGDC-STD-001.2-2001` | Profile for shoreline and related coastal datasets | Limited direct Kansas relevance; admit only for a concrete dataset/consumer |
+| Remote Sensing Metadata Extensions | `FGDC-STD-012-2002` | Additional metadata for remotely sensed data, sensors, platforms, processing, and geolocation | Potential migration/legacy relevance for imagery; compare against ISO 19115-2 before adoption |
 
-> [!NOTE]
-> KFM has not, in this session, pinned any of these profiles as in-scope for a release gate. Per `directory-rules.md §2.4(5)`, adopting any of them as a parallel publication or proof home requires an ADR.
+Official sources:
+
+- [CSDGM publications and tools](https://www.fgdc.gov/metadata/csdgm-standard)
+- [Biological Data Profile](https://www.fgdc.gov/standards/projects/metadata/biometadata)
+- [Shoreline Metadata Profile](https://www.fgdc.gov/standards/projects/FGDC-standards-projects/metadata/shoreline-metadata/)
+- [Remote Sensing Metadata Extensions](https://www.fgdc.gov/standards/projects/csdgm_rs_ex/remote-sensing-metadata)
+
+### 10.1 Boundary correction
+
+Wetlands classification, vegetation classification, cadastral content, positional accuracy, and other FGDC standards may be relevant to KFM domains, but they are not CSDGM profiles merely because they are FGDC standards. They require their own standards guidance and adoption decisions.
+
+### 10.2 Profile admission questions
+
+Before admitting a profile or extension, verify:
+
+- official identifier, version, maintenance authority, and current status;
+- target resource family and downstream consumer;
+- relationship to modern ISO profiles;
+- additional mandatory/conditional elements;
+- source authority for every added element;
+- public-safety and privacy implications;
+- encoding representation and validator support;
+- migration, correction, and rollback behavior; and
+- accountable reviewer roles.
+
+[Back to top](#top)
 
 ---
+
+<a id="11-tensions-and-open-questions"></a>
 
 ## 11. Tensions and open questions
 
-| # | Tension / question | Status | Where it goes |
+| ID | Question | Status | Closure evidence |
 |---|---|---|---|
-| 1 | Which metadata standards are mandatory for each KFM artifact family: STAC, DCAT, FGDC, ISO, or the KFM profile? | NEEDS VERIFICATION | `docs/registers/VERIFICATION_BACKLOG.md`; resolve via ADR |
-| 2 | If both ISO 19115 and CSDGM are emitted, which is canonical and which is a derived mirror? | OPEN | ADR candidate |
-| 3 | Does KFM emit CSDGM XML directly, or only crosswalk-on-demand from STAC+KFM profile? | OPEN | ADR candidate |
-| 4 | How are version-sensitive CSDGM elements (e.g., short names with 8-char limits) reconciled with KFM's longer, namespaced field names without loss? | OPEN | Captured by `adapter_mapping_receipt` |
-| 5 | For sensitive lanes (archaeology, people-DNA-land, rare-species locations), can CSDGM `Use Constraints` carry KFM `kfm:sensitivity` semantics faithfully, or does it require redaction before emission? | OPEN | Conservative default: redact and quarantine until proven |
-| 6 | Should CSDGM conformance results live in `data/proofs/` (proof object) or `data/receipts/` (receipt) — or both? | OPEN | Trust-content placement question; `directory-rules.md §16` checklist applies |
+| FGDC-01 | Which KFM artifact families or consumers, if any, require CSDGM? | NEEDS VERIFICATION | Consumer inventory plus accepted applicability decision |
+| FGDC-02 | Is base CSDGM sufficient, or is a named profile/extension required? | NEEDS VERIFICATION | Dataset/consumer analysis and profile review |
+| FGDC-03 | Which encoding representation and version would KFM validate? | UNKNOWN | Accepted encoding decision plus pinned dependency/digest |
+| FGDC-04 | Does KFM produce CSDGM from shared released metadata facts, migrate source-native CSDGM, or support both? | PROPOSED decision | ADR/contract with fixture-backed flows |
+| FGDC-05 | What semantic object records applicability, mapping losses, and conformance? | UNKNOWN | Object-family decision; no parallel receipt/proof authority |
+| FGDC-06 | How does CSDGM parity join the existing synthetic STAC/DCAT/PROV closure without accepting ADR-0022 by implication? | NEEDS VERIFICATION | Bounded design review and separate additive profile if justified |
+| FGDC-07 | How are contacts minimized and protected in public records? | NEEDS VERIFICATION | Privacy/security policy and public-safe fixtures |
+| FGDC-08 | How are sensitive exact extents represented without leaking withheld facts? | NEEDS VERIFICATION | Domain policy, transform receipt, and negative tests |
+| FGDC-09 | Which ISO profile is the intended migration target? | UNKNOWN | Current official/consumer requirements and accepted ISO profile decision |
+| FGDC-10 | What downstream system proves interoperability? | UNKNOWN | Named consumer test and accepted sample exchange |
+| FGDC-11 | What is the deprecation window for any future CSDGM output? | PROPOSED | Consumer inventory, migration plan, correction and rollback drill |
+| FGDC-12 | Who owns metadata/catalog stewardship and independent review? | NEEDS VERIFICATION | Named accountable roles; do not invent people |
+
+Open items belong in the appropriate verification or decision register. This page does not create an ADR or issue automatically.
+
+[Back to top](#top)
 
 ---
+
+<a id="12-validation-checklist"></a>
 
 ## 12. Validation checklist
 
-When proposing CSDGM emission for any KFM artifact family, work through this list:
+### Applicability and authority
 
-- [ ] **Doctrine alignment** — Does an accepted ADR pin CSDGM as in-scope for this artifact family? If no, stop and open one.
-- [ ] **Crosswalk completeness** — Every CSDGM mandatory element in §6 has a defined KFM-side source.
-- [ ] **No source-caveat loss** — `adapter_mapping_receipt` records dropped fields, caveats, and unmapped values.
-- [ ] **Evidence path intact** — The CSDGM record's lineage (`dataqual/lineage`) resolves to a PROV-O / RunReceipt / EvidenceBundle chain.
-- [ ] **Rights / sensitivity consistent** — CSDGM `Use Constraints` does not contradict `kfm:rights_status` or `kfm:sensitivity`.
-- [ ] **Release-gate separation** — CSDGM conformance is consumed by `policy/`, not enforced by the validator itself.
-- [ ] **Negative-path tests** — Validator exercises DENY / ABSTAIN / ERROR paths on at least the fixtures named in §8.
-- [ ] **Bridge to ISO 19115** — If both surfaces are emitted, the same KFM-side fields drive both.
-- [ ] **Catalog conformance report emitted** — `catalog_metadata_conformance_report` written with `profile=CSDGM`, `decision`, and `spec_hash`.
-- [ ] **Rollback target named** — Per KFM publication doctrine, every released CSDGM record carries a rollback target.
+- [ ] A named artifact family, source collection, consumer, agreement, or migration requires CSDGM.
+- [ ] An accepted decision authorizes the bounded use without creating a parallel catalog/release authority.
+- [ ] Accountable metadata, domain, privacy/security, policy, release, and independent-review roles are identified.
 
-> [!TIP]
-> A clean checklist does **not** publish the record. Publication still flows through `policy/` and the release gates.
+### Upstream profile
+
+- [ ] `FGDC-STD-001-1998` and every admitted profile/extension are identified exactly.
+- [ ] Official source, version/date, access date, maintenance authority, and currentness risk are recorded.
+- [ ] The selected encoding representation and its digest/version are pinned separately from the content standard.
+
+### Mapping
+
+- [ ] Every mandatory/applicable target element has a governed source or explicit disposition.
+- [ ] Source-native values and caveats are preserved where normalization could alter meaning.
+- [ ] Defaults, omissions, losses, redactions, generalizations, and unmapped values are recorded.
+- [ ] Temporal, spatial-reference, quality, rights, lineage, distribution, and metadata-identity semantics remain distinct.
+
+### Validation and safety
+
+- [ ] Positive, negative, not-applicable, conflict, correction, and error fixtures exist.
+- [ ] Validation is deterministic and no-network by default.
+- [ ] Findings do not leak sensitive values, contacts, paths, geometry, or internal denial reasons.
+- [ ] Producer and consumer tests prove the admitted interchange boundary.
+- [ ] Shared facts agree with other admitted catalog/provenance projections.
+
+### Release and correction
+
+- [ ] Evidence, rights, sensitivity, policy, review, release, and rollback prerequisites pass independently.
+- [ ] Public records contain only released public-safe locators and extents.
+- [ ] The release binds record digest, profile/encoding version, consumer, and predecessor/correction lineage.
+- [ ] Withdrawal, cache invalidation, supersession, and rollback are tested.
+
+A complete checklist is review evidence, not publication authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="13-related-docs"></a>
 
 ## 13. Related docs
 
-| Path | Purpose | Status |
+| Path | Relationship | Current bounded status |
 |---|---|---|
-| `docs/standards/STAC_KFM_PROFILE.md` | KFM STAC profile (`kfm-stac-profile-v1`) — primary spatial catalog surface | PROPOSED (referenced in Pass 10 C4-01) |
-| `docs/standards/ISO-19115.md` | ISO 19115 / 19115-2 — strategic clearinghouse surface | PROPOSED |
-| `docs/standards/DCAT.md` | DCAT v3 — non-spatial dataset catalog surface | PROPOSED (referenced in Pass 10 C4-05) |
-| `docs/standards/PROV-O.md` | W3C PROV-O — claim-level provenance vocabulary | PROPOSED (referenced in Pass 10 C8-03) |
-| `docs/standards/STAC_DWC_PROFILE.md` | STAC × Darwin Core hybrid — biodiversity | PROPOSED (referenced in Pass 10 C4-03) |
-| `docs/doctrine/directory-rules.md` | Placement law; governs `docs/standards/` | CONFIRMED |
-| `docs/adr/ADR-0001-schema-home.md` | Schema-home convention (`schemas/contracts/v1/…`) | CONFIRMED reference |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Where `KFM-P18-INV-242` open question lives | CONFIRMED reference |
+| [`README.md`](./README.md) | Standards-lane boundary and state-separation rules | Repository-grounded lane authority |
+| [`ISO-19115.md`](./ISO-19115.md) | Strategic ISO metadata companion | Present draft; needs its own currentness reconciliation |
+| [`DCAT.md`](./DCAT.md) | Dataset/distribution/service/catalog discovery boundary | Repository-grounded guidance; no CSDGM adoption effect |
+| [`PROV-O.md`](./PROV-O.md) | Provenance vocabulary guidance | Present; no CSDGM implementation proof |
+| [`STAC_KFM_PROFILE.md`](./STAC_KFM_PROFILE.md) | KFM STAC profile guidance | Present draft; adoption and machine parity must be checked separately |
+| [`directory-rules.md`](../doctrine/directory-rules.md) | Placement authority | Adopted through ADR-0029 |
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Directory Rules adoption | Accepted placement decision |
+| [`ADR-0022`](../adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md) | Proposed STAC/DCAT/PROV closure decision | Proposed; not extended by this page |
+| [`Synthetic Release Catalog Closure Profile`](../../contracts/data/synthetic_release_catalog_closure_profile.md) | Bounded no-network STAC/DCAT/PROV agreement proof | Implemented proposed synthetic slice; excludes CSDGM |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Canonical policy-result semantics | Present draft/schema-paired contract |
+| [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Home for unresolved checkable questions | Present register; entry creation is outside this change |
+
+[Back to top](#top)
 
 ---
+
+<a id="appendix-a--csdgm-section-reference"></a>
 
 ## Appendix A — CSDGM section reference
 
-<details>
-<summary>CSDGM v2.0 — 10 sections and obligation classes (EXTERNAL)</summary>
+The table is a compact reading aid, not a replacement for the official standard.
 
-The CSDGM defines 7 main sections plus 3 supporting sections. The production rule from the standard is:
+| # | Section | Short name | Base obligation | Role |
+|---:|---|---|---|---|
+| 1 | Identification Information | `idinfo` | Mandatory | Identity, citation, description, time, status, domain, keywords, constraints, contacts, browse/security/context information |
+| 2 | Data Quality Information | `dataqual` | Mandatory if applicable | Attribute/positional accuracy, logical consistency, completeness, lineage, cloud cover |
+| 3 | Spatial Data Organization Information | `spdoinfo` | Mandatory if applicable | Indirect/direct spatial reference method, vector/raster organization |
+| 4 | Spatial Reference Information | `spref` | Mandatory if applicable | Horizontal/vertical coordinate-reference details |
+| 5 | Entity and Attribute Information | `eainfo` | Mandatory if applicable | Detailed or overview feature/entity/attribute definitions |
+| 6 | Distribution Information | `distinfo` | Mandatory if applicable; repeatable | Distributor, liability, format, transfer, ordering, availability |
+| 7 | Metadata Reference Information | `metainfo` | Mandatory | Metadata date, reviewer/contact, standard name/version, access/use/security, extensions |
+| 8 | Citation Information | `citation` | Supporting compound section | Originator, publication date, title, edition, presentation form, identifiers, online links |
+| 9 | Time Period Information | `timeinfo` | Supporting compound section | Single date/time, multiple dates/times, or range |
+| 10 | Contact Information | `cntinfo` | Supporting compound section | Person/organization, address, phone, email, hours/instructions |
 
-```text
-Metadata =
-    Identification_Information
-  + 0{Data_Quality_Information}1
-  + 0{Spatial_Data_Organization_Information}1
-  + 0{Spatial_Reference_Information}1
-  + 0{Entity_and_Attribute_Information}1
-  + 0{Distribution_Information}n
-  + Metadata_Reference_Information
-```
+Official references:
 
-FGDC CSDGM v2.0 production rule (excerpt) 
+- [CSDGM HTML specification](https://www.fgdc.gov/metadata/csdgm)
+- [CSDGM graphical representation](https://www.fgdc.gov/csdgmgraphical/index.html)
+- [CSDGM publications, DTD, XSD, workbook, and tools](https://www.fgdc.gov/metadata/csdgm-standard)
 
-| # | Section | Short name | Obligation | One-line role |
-|---|---|---|---|---|
-| 1 | Identification Information | `idinfo` | **Mandatory** | Basic information about the data set |
-| 2 | Data Quality Information | `dataqual` | Mandatory if applicable | Accuracy, completeness, lineage |
-| 3 | Spatial Data Organization Information | `spdoinfo` | Mandatory if applicable | Vector / raster organization |
-| 4 | Spatial Reference Information | `spref` | Mandatory if applicable | Horizontal / vertical reference systems |
-| 5 | Entity and Attribute Information | `eainfo` | Mandatory if applicable | Feature attribute definitions |
-| 6 | Distribution Information | `distinfo` | Mandatory if applicable | How the data set is obtained |
-| 7 | Metadata Reference Information | `metainfo` | **Mandatory** | Currency, contact, standard used |
-| 8 | Citation Information | `citation` | Supporting (used by §1, §2, etc.) | Standardized citation block |
-| 9 | Time Period Information | `timeinfo` | Supporting | Single date, range, or multiple dates |
-| 10 | Contact Information | `cntinfo` | Supporting | Person / organization contact |
+### Appendix A.1 Obligation caution
 
-FGDC CSDGM section list and obligation classes; image map and v2.0 text 
+“Mandatory if applicable” requires an applicability decision grounded in the resource being documented. A mapper must not omit a section merely because source fields are inconvenient, and must not fabricate values merely to make the section appear applicable and complete.
 
-**Encoding note.** The official XSD loads sections 1–10 as separate schema modules; element names are limited to 8 characters and element order is significant. IOOS metadataTransformations XSD documentation 
-
-[Back to top ↑](#fgdc-csdgm--kfm-conformance-profile)
-
-</details>
-
-<details>
-<summary>CSDGM extensibility (EXTERNAL)</summary>
-
-CSDGM explicitly supports **extensibility and profiles**: producers may define additional elements under documented guidelines (Appendix D of the standard). FGDC CSDGM Workbook: "Extensibility and Profiles"  KFM-namespaced elements emitted into a CSDGM record MUST follow this extension discipline rather than redefining base elements.
-
-[Back to top ↑](#fgdc-csdgm--kfm-conformance-profile)
-
-</details>
+[Back to top](#top)
 
 ---
+
+<a id="appendix-b--kfm-crosswalk-worked-example-illustrative"></a>
 
 ## Appendix B — KFM crosswalk worked example (illustrative)
 
 > [!NOTE]
-> The example below is **illustrative**, not extracted from any mounted KFM repo. It demonstrates the crosswalk shape; concrete values are placeholders. Per `directory-rules.md §0`, every path implied here is PROPOSED.
+> This is a conceptual example only. It is not a repository contract, schema, emitted record, or claim of CSDGM conformance.
 
-<details>
-<summary>STAC + KFM profile → CSDGM crosswalk (illustrative)</summary>
+### Scenario
 
-**Input — STAC Item with KFM provenance (illustrative):**
+A governed release contains one public-safe vector dataset and an identified legacy consumer requires base CSDGM Version 2 XML.
 
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "kfm-example-<id>",
-  "properties": {
-    "datetime": "2025-07-01T16:22:09Z",
-    "kfm:evidence_bundle": "kfm://bundle/<sha256>",
-    "kfm:run_receipt": "kfm://run/<sha256>",
-    "kfm:source_role": "observation",
-    "kfm:rights_status": "controlled",
-    "kfm:sensitivity": "review_required",
-    "kfm:review_state": "approved",
-    "kfm:release_state": "released",
-    "kfm:spec_hash": "sha256:<TODO>"
-  }
-}
-```
+### Shared released facts
 
-**Output — CSDGM excerpt (illustrative, abbreviated):**
+| Fact | Governed source |
+|---|---|
+| Dataset identity/title/issuing authority | Source and catalog authorities |
+| Public-safe extent and CRS | Released artifact/layer metadata plus transformation evidence |
+| Observation/validity/publication/retrieval dates | Temporal authority |
+| Quality and lineage | Validation, evidence, provenance, and receipts |
+| Rights/use constraints | Rights and sensitivity policy decision |
+| Distribution locator/media type/digest | Release manifest and released distribution carrier |
+| Metadata contact/date/profile | Metadata authoring/review record |
+
+### Conceptual CSDGM projection
 
 ```xml
 <metadata>
   <idinfo>
     <citation>
       <citeinfo>
-        <title><!-- from SourceDescriptor.citation.title --></title>
+        <title>Released public-safe dataset title</title>
       </citeinfo>
     </citation>
-    <status>
-      <progress><!-- from kfm:review_state mapping --></progress>
-    </status>
-    <useconst>
-      <!-- from kfm:rights_status + CARE block; sensitive content redacted -->
-    </useconst>
+    <descript>
+      <abstract>Reviewed description; source facts and KFM interpretation remain distinguishable.</abstract>
+      <purpose>Purpose of the released compatibility projection.</purpose>
+    </descript>
+    <spdom>
+      <!-- public-safe released extent only -->
+    </spdom>
+    <useconst>Public-safe rights and use constraints.</useconst>
   </idinfo>
   <dataqual>
     <lineage>
-      <!-- from PROV-O wasGeneratedBy chain rooted at kfm:run_receipt -->
+      <!-- bounded lineage summary with resolvable external evidence/provenance references where the encoding permits -->
     </lineage>
   </dataqual>
+  <spref>
+    <!-- released CRS/datum/units -->
+  </spref>
+  <eainfo>
+    <!-- public feature/entity/attribute definitions -->
+  </eainfo>
   <distinfo>
-    <!-- from ReleaseManifest assets + kfm:spec_hash -->
+    <!-- released locator, format, access, ordering, and liability facts -->
   </distinfo>
   <metainfo>
-    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdn>Content Standard for Digital Geospatial Metadata</metstdn>
     <metstdv>FGDC-STD-001-1998</metstdv>
   </metainfo>
 </metadata>
 ```
 
-**Adapter mapping receipt (illustrative):**
+### Required companion evidence before release
 
-```json
-{
-  "object_type": "adapter_mapping_receipt",
-  "source": "kfm://catalog/stac/<id>",
-  "target_profile": "CSDGM",
-  "source_fields": ["kfm:evidence_bundle", "kfm:run_receipt", "kfm:spec_hash"],
-  "canonical_fields": ["dataqual/lineage", "metainfo"],
-  "dropped_fields": [],
-  "caveats": ["kfm:evidence_bundle has no native CSDGM home; surfaced via lineage description and link"],
-  "unmapped_values": []
-}
-```
+- applicability/consumer decision;
+- selected profile and encoding representation;
+- mapping-loss ledger;
+- content and encoding validation results;
+- cross-profile parity result where other projections exist;
+- policy and review decisions;
+- release-manifest binding;
+- correction/predecessor reference; and
+- rollback target.
 
-[Back to top ↑](#fgdc-csdgm--kfm-conformance-profile)
+The XML excerpt is never sufficient by itself.
 
-</details>
+[Back to top](#top)
 
 ---
 
-> [!TIP]
-> When in doubt, narrow the claim, mark the status, preserve reversibility, and let evidence carry the answer. CSDGM is one of several catalog surfaces KFM **may** speak. It is never the truth source.
+<a id="appendix-c--evidence-ledger"></a>
 
----
+## Appendix C — Evidence ledger
 
-**Related**: [STAC KFM Profile (PROPOSED)](STAC_KFM_PROFILE.md) · [ISO 19115 (PROPOSED)](ISO-19115.md) · [DCAT (PROPOSED)](DCAT.md) · [PROV-O (PROPOSED)](PROV-O.md) · [Directory Rules](../doctrine/directory-rules.md)
+### C.1 Official upstream sources checked on 2026-08-18
 
-**Last reviewed**: 2026-05-14 · **Profile version**: v0.1 · [Back to top ↑](#fgdc-csdgm--kfm-conformance-profile)
+| Source | Supports | Does not prove |
+|---|---|---|
+| [CSDGM standard](https://www.fgdc.gov/metadata/csdgm) | Content-model purpose, section structure, implementation-neutral posture, citation | KFM adoption or implementation |
+| [CSDGM publications and tools](https://www.fgdc.gov/metadata/csdgm-standard) | Current Version 2 statement, profiles/extensions, DTD/XSD/workbook/tool references | That a particular KFM encoding or tool is accepted |
+| [Base metadata project](https://www.fgdc.gov/standards/projects/metadata/base-metadata/index_html) | Identifier, maintenance authority, history, EO 12906 context, legacy/ISO transition posture | Current downstream consumer requirements |
+| [Selecting a metadata standard](https://www.fgdc.gov/metadata/selecting-a-geospatial-metadata-standard) | FGDC migration guidance and resource-type distinctions | A KFM ISO profile decision |
+| [Geospatial metadata standards](https://www.fgdc.gov/metadata/geospatial-metadata-standards) | CSDGM and ISO coexistence plus transition encouragement | Formal CSDGM retirement |
+| [Benefits of ISO metadata](https://www.fgdc.gov/metadata/benefits-of-iso) | Rationale for broader ISO resource coverage | KFM conformance or migration completion |
+| [Biological Data Profile](https://www.fgdc.gov/standards/projects/metadata/biometadata) | Profile identity, scope, maintenance/history | KFM biodiversity suitability or release safety |
+| [Shoreline Metadata Profile](https://www.fgdc.gov/standards/projects/FGDC-standards-projects/metadata/shoreline-metadata/) | Profile identity and shoreline scope | Kansas applicability |
+| [Remote Sensing Extensions](https://www.fgdc.gov/standards/projects/csdgm_rs_ex/remote-sensing-metadata) | Extension identity and remote-sensing scope | Preference over ISO 19115-2 |
+
+### C.2 Repository evidence
+
+| Evidence | Bounded conclusion |
+|---|---|
+| Current target and standards index | Human-readable path and lane exist |
+| Companion ISO page | Overlapping metadata guidance exists and needs explicit relationship |
+| Current PolicyDecision contract/schema | Outward finite vocabulary is `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Synthetic STAC/DCAT/PROV closure profile | Adjacent deterministic no-network catalog proof exists; CSDGM is excluded |
+| CSDGM-specific bounded search | Dedicated executable CSDGM family was not established |
+
+### C.3 Rollback
+
+Restore prior blob `298b05433138435ae2ce785489131bf3a0bbd591` through normal reviewed history. No contract, schema, policy, catalog, source, release, runtime, deployment, or public-artifact migration is required.
+
+[Back to top](#top)

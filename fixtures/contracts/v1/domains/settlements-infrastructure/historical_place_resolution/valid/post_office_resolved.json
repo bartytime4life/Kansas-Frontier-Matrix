@@ -1,0 +1,110 @@
+{
+  "fixture_id": "fixture://historical-place-resolution/post-office-resolved",
+  "profile_id": "kfm-settlements-infrastructure-historical-place-resolution-v1",
+  "object_family": "HistoricalPlaceResolutionCandidate",
+  "schema_version": "1.0.0",
+  "query": {
+    "name": "Prairie Post",
+    "year": 1890,
+    "state_code": "KS",
+    "county_hint": "Synthetic Central County"
+  },
+  "candidates": [
+    {
+      "candidate_ref": "fixture://place-candidate/prairie-post-office",
+      "canonical_name": "Prairie Post Office",
+      "variants": [
+        "Prairie Post"
+      ],
+      "feature_type": "post_office",
+      "authority_ids": {
+        "gnis": "fixture://authority/gnis/prairie-post-office",
+        "bgn_decision": null,
+        "kshs_po": "fixture://authority/kshs-po/prairie-post-1882",
+        "ahcb_slice": "fixture://authority/ahcb/ks/synthetic-central/1880-1899"
+      },
+      "valid_time": {
+        "start_year": 1882,
+        "end_year": 1898
+      },
+      "county_at_query_time": "Synthetic Central County",
+      "source_support": [
+        {
+          "source_role": "federal_name_authority",
+          "source_ref": "fixture://source/gnis-prairie-post",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "canonical_name",
+            "variant_name",
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "gnis-prairie-post"
+          }
+        },
+        {
+          "source_role": "historical_county_authority",
+          "source_ref": "fixture://source/ahcb-synthetic-central-1880-1899",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "county_at_query_time"
+          ],
+          "scan_ids": {
+            "fixture_record": "ahcb-synthetic-central-1880-1899"
+          }
+        },
+        {
+          "source_role": "post_office_lifespan",
+          "source_ref": "fixture://source/kshs-po-prairie-post",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "valid_time",
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "kshs-po-prairie-post"
+          }
+        }
+      ]
+    }
+  ],
+  "evidence_refs": [
+    "fixture://evidence/post-office-resolved/1",
+    "fixture://evidence/post-office-resolved/2",
+    "fixture://evidence/post-office-resolved/3"
+  ],
+  "derived": {
+    "resolution_id": "sha256:0b6244c87b30c9a2725f18950112d10bbd84d67b2e2e9bf993ad43f2996ae325",
+    "resolved_candidate_ref": "fixture://place-candidate/prairie-post-office",
+    "place_id": "urn:kfm:place:sha256:61ff2af99f598e1a5ffab3d2d4d2c0db8ee638c914432f1c3aad85d8e45d7a73",
+    "primary_authority": "gnis",
+    "confidence": "high",
+    "disposition": "candidate_review",
+    "reason_codes": [
+      "UNIQUE_TIME_SCOPED_MATCH",
+      "GNIS_AUTHORITY_PRESENT",
+      "AHCB_SLICE_MATCH",
+      "POST_OFFICE_LIFESPAN_MATCH"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "historical_only": true,
+    "network_accessed": false,
+    "live_source_activation": false,
+    "review_state": "candidate_review",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_exposure": false
+  },
+  "limitations": [
+    "synthetic_fixture_only",
+    "no_live_source_access",
+    "no_current_legal_status_claim",
+    "no_boundary_or_title_claim",
+    "no_public_release",
+    "no_policy_approval",
+    "no_source_rights_determination"
+  ],
+  "spec_hash": "sha256:919feea7eb3e6f8988caa8e894c6d7eeb9a6b7962093d07472ffa0934f8947bb"
+}

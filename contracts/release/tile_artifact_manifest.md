@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-release-tile-artifact-manifest
 title: contracts/release/tile_artifact_manifest.md — TileArtifactManifest Contract
 type: contract
-version: v0.2
-status: draft; PROPOSED; map-asset-family; schema-missing; release-artifact-pointer
-owners: OWNER_TBD — Release steward · Tile steward · Map/UI steward · Layer steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Rights steward · Sensitivity steward · Rollback steward · Docs steward
+version: v0.3
+status: draft; PROPOSED; map-asset-family; schema-family-unresolved; compatibility-profile-implemented; release-artifact-pointer
+owner: OWNER_TBD — Contracts steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-03
 policy_label: public; contracts; release; tile-artifact-manifest; pmtiles; cog; tile-archive; map-publication; artifact-digest; release-gated; no-artifact-store; no-runtime-authority
 tags: [kfm, contracts, release, tile-artifact-manifest, tile-artifact, pmtiles, cog, vector-tiles, raster-tiles, tilejson, digest, release-manifest, map-release-manifest, evidence-ref, rights, sensitivity, rollback]
 related:
@@ -20,7 +20,9 @@ related:
   - ../data/layer_manifest.md
   - ../data/layer_descriptor.md
   - ../data/layer_catalog_item.md
-  - ../../schemas/contracts/v1/release/tile_artifact_manifest.schema.json
+  - ../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - ../../tools/validators/pmtiles/validate_attestation_bundle.py
+  - ../../fixtures/pmtiles/attestation/README.md
   - ../../policy/release/
   - ../../policy/data/
   - ../../policy/sensitivity/
@@ -32,7 +34,9 @@ related:
   - ../../docs/standards/RELEASE_MANIFEST.md
 notes:
   - "Expanded from a scaffold created from a domain-document inventory reference."
-  - "No `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` was verified in this session; schema behavior remains UNKNOWN / NEEDS VERIFICATION."
+  - "This contract has one contracts-steward authority-owner role; assignment NEEDS VERIFICATION. Release, tile, Map/UI, layer, schema, policy, evidence, rights, sensitivity, rollback, and docs stewards are review roles. CODEOWNERS routes review to @bartytime4life."
+  - "The proposed release-family schema path is absent while a permissive map-family placeholder exists; canonical schema home and behavior remain unresolved."
+  - "The PMTiles validator exposes an opt-in, non-canonical v3/MVT declared-manifest compatibility profile with authority NONE."
   - "`docs/standards/RELEASE_MANIFEST.md` names the map-asset family, including `TileArtifactManifest`, as belonging in its own contracts/schemas homes, not in the standards document."
   - "TileArtifactManifest is an artifact metadata/digest manifest. It must not store PMTiles, COGs, vector tiles, raster tiles, sprites, glyphs, style JSON, proof packs, receipts, public API payloads, UI state, or AI output."
   - "Rollback target for this expansion is previous scaffold blob SHA `30bab07c0746f7c1fe0eef0ef7ae19ae3476fbb0`."
@@ -48,20 +52,30 @@ notes:
   <img alt="Status: proposed" src="https://img.shields.io/badge/status-PROPOSED-yellow">
   <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts-blue">
   <img alt="Object: TileArtifactManifest" src="https://img.shields.io/badge/object-TileArtifactManifest-0a7ea4">
-  <img alt="Schema: missing" src="https://img.shields.io/badge/schema-missing-red">
+  <img alt="Schema family: unresolved" src="https://img.shields.io/badge/schema%20family-unresolved-orange">
   <img alt="Artifacts: referenced only" src="https://img.shields.io/badge/artifacts-referenced__only-lightgrey">
   <img alt="Publication: release gated" src="https://img.shields.io/badge/publication-release__gated-critical">
 </p>
 
-**Status:** draft / PROPOSED / schema missing  
-**Path:** `contracts/release/tile_artifact_manifest.md`  
-**Release manifest companion:** [`./release_manifest.md`](./release_manifest.md)  
-**Map release companion:** [`./map_release_manifest.md`](./map_release_manifest.md)  
-**Layer release companion:** [`./layer_manifest.md`](./layer_manifest.md)  
-**Expected schema path:** `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` — NEEDS VERIFICATION; not found in this session  
-**Policy authority:** `policy/release/`, `policy/data/`, `policy/sensitivity/`, rights/access policy roots, not this contract  
-**Release artifact authority:** `release/`, not this contract  
-**Truth posture:** CONFIRMED target scaffold replaced · CONFIRMED no paired release schema found in this session · CONFIRMED release standards place map-asset family object meaning in contracts/schemas, not the standards doc · PROPOSED fields until schema/fixtures/validator/policy/release integration are implemented
+**Status:** draft / PROPOSED / schema family unresolved / non-canonical PMTiles compatibility profile implemented
+
+**Path:** `contracts/release/tile_artifact_manifest.md`
+
+**Release manifest companion:** [`./release_manifest.md`](./release_manifest.md)
+
+**Map release companion:** [`./map_release_manifest.md`](./map_release_manifest.md)
+
+**Layer release companion:** [`./layer_manifest.md`](./layer_manifest.md)
+
+**Schema posture:** proposed `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` is absent; permissive `schemas/contracts/v1/map/tile_artifact_manifest.schema.json` exists; canonical home remains unresolved
+
+**Compatibility evidence:** `kfm.pmtiles.tile-artifact-manifest.compat.v1` is an opt-in structural validator profile, not canonical schema conformance
+
+**Policy authority:** `policy/release/`, `policy/data/`, `policy/sensitivity/`, rights/access policy roots, not this contract
+
+**Release artifact authority:** `release/`, not this contract
+
+**Truth posture:** CONFIRMED target scaffold replaced · CONFIRMED release schema absent and permissive map schema present · CONFIRMED bounded PMTiles v3/MVT compatibility fixtures and validator · PROPOSED canonical fields until schema-family, policy, and release integration decisions are accepted
 
 ## Quick jumps
 
@@ -123,7 +137,8 @@ The manifest should be digest-bound and release-aware. It should support downstr
 | Map release binding | `contracts/release/map_release_manifest.md` | Map-publication envelope that may reference tile artifacts. |
 | Layer release bridge | `contracts/release/layer_manifest.md` | Layer-in-release relationship companion. |
 | Canonical layer meaning | `contracts/data/layer_manifest.md` | Layer trust-spine authority. |
-| Machine schema | `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` | Expected but not verified. |
+| Machine schema | proposed `schemas/contracts/v1/release/`; existing placeholder `schemas/contracts/v1/map/` | Canonical family remains unresolved; this slice does not select one. |
+| PMTiles declared-manifest compatibility evidence | `tools/validators/pmtiles/validate_attestation_bundle.py`, `fixtures/pmtiles/attestation/` | Opt-in PMTiles v3/MVT structural check with `authority: NONE`; not schema authority. |
 | Release policy | `policy/release/` | Admissibility / gate authority. |
 | Sensitivity/rights policy | `policy/sensitivity/`, rights/access policy roots | Public-safe map exposure decisions. |
 | Release artifacts | `release/` or accepted artifact roots | Tile payloads and release records; not this contract. |
@@ -166,7 +181,12 @@ A tile artifact manifest SHOULD preserve:
 
 ## Proposed fields
 
-No paired schema was verified in this session. These fields are therefore PROPOSED semantic targets only:
+No canonical paired schema has been selected. These fields therefore remain
+PROPOSED semantic targets. A bounded subset—artifact name/ref, media type,
+digest, byte size, `spec_hash`, versioned source-ref syntax, generator-identifier
+syntax, PMTiles version/format/scheme, zoom, bounds, and vector-layer id/field
+maps—is exercised only by
+the non-canonical `kfm.pmtiles.tile-artifact-manifest.compat.v1` fixture profile:
 
 | Field | Meaning | Required posture |
 |---|---|---|
@@ -233,7 +253,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 | Do not put this here | Correct home | Reason |
 |---|---|---|
 | PMTiles, COGs, vector/raster tile payloads | `release/`, lifecycle artifact roots, or accepted artifact stores | Contracts do not store payloads. |
-| JSON Schema | `schemas/contracts/v1/release/` or accepted schema home | Schemas own machine shape. |
+| JSON Schema | ADR-selected home under `schemas/contracts/v1/` | Schemas own machine shape; this contract does not resolve the current family conflict. |
 | Release JSON instances | `release/` | Contracts do not store release records. |
 | Proofs, receipts, signatures, DSSE/SLSA/in-toto attestations | `data/proofs/`, `data/receipts/`, signing/release roots | Trust artifacts remain separately auditable. |
 | Rego/OPA/equivalent policy rules | `policy/release/`, `policy/data/`, sensitivity/rights roots | Policy owns admissibility. |
@@ -244,12 +264,13 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ## Validation expectations
 
-NEEDS VERIFICATION before treating this contract as implementation-backed:
+NEEDS VERIFICATION before treating this contract as canonically
+implementation-backed:
 
 - accepted object name and canonical home for `TileArtifactManifest`;
 - paired schema creation or compatibility decision;
-- fixture home and minimum fixtures for PMTiles, COG, vector tile, raster tile, TileJSON, sensitive generalized artifact, rights-denied artifact, missing digest, missing rollback target, corrected artifact, withdrawn artifact, and rollback artifact;
-- validator path and CI wiring;
+- accepted fixture families for COG, raster tile, TileJSON, sensitive generalized artifact, rights-denied artifact, missing rollback target, corrected artifact, withdrawn artifact, and rollback artifact; the PMTiles v3/MVT compatibility descriptors are only non-canonical evidence;
+- canonical validator and CI integration; the current PMTiles validator path is opt-in, structural, and non-authoritative;
 - policy rules for tile release, render, access, sensitivity, rights, export, and AI interaction;
 - proof/receipt binding to artifact digests and ReleaseManifest;
 - public API/UI/map tests proving no pre-PUBLISHED or sensitive tile leakage.
@@ -271,5 +292,8 @@ NEEDS VERIFICATION before treating this contract as implementation-backed:
 Rollback is required if this file is used to store tile payloads, publish tiles, bypass ReleaseManifest/MapReleaseManifest, bypass schema/policy/review/evidence/release gates, expose sensitive exact locations, hide correction lineage, or authorize public map/UI/AI exposure directly.
 
 Rollback target for this expansion: previous scaffold blob SHA `30bab07c0746f7c1fe0eef0ef7ae19ae3476fbb0`.
+The 2026-08-03 compatibility evidence can be rolled back independently by
+removing the opt-in validator flag and the `manifest_` fixture descriptors;
+that action does not alter either competing schema path.
 
 <p align="right"><a href="#top">Back to top</a></p>

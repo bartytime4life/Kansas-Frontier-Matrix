@@ -1,0 +1,20 @@
+{
+  "invalid_missing_metric.json": [
+    "METRIC_MISSING"
+  ],
+  "invalid_negative_area.json": [
+    "ANALYSIS_UNIT_AREA_INVALID"
+  ],
+  "invalid_noncanonical_refs.json": [
+    "REFS_NOT_CANONICAL"
+  ],
+  "invalid_time_order.json": [
+    "BASELINE_AFTER_CANDIDATE"
+  ],
+  "invalid_unknown_field.json": [
+    "INPUT_FIELD_UNKNOWN"
+  ],
+  "invalid_zero_digest.json": [
+    "DIGEST_PLACEHOLDER"
+  ]
+}

@@ -1,469 +1,562 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governed-ai/prompt-injection
-title: Prompt Injection — Governed AI Defense Doctrine
-type: standard
-version: v1
-status: draft
-owners: governed-ai subsystem owner; security steward; docs steward
+title: Governed AI — Prompt Injection Threat Model and Defense Boundary
+type: architecture-security-standard
+version: v2.0.0-draft
+status: draft; repository-grounded; bounded-proof-present; end-to-end-defense-hold; no-live-provider; no-release; no-publication
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent governed-AI, Governed API, runtime, evidence, policy, citation, security, privacy, incident-response, correction, and release review"
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-20
 policy_label: public
+owning_root: docs/
+current_path: docs/architecture/governed-ai/PROMPT_INJECTION.md
+responsibility: >-
+  Explain prompt-injection threats at KFM's governed-AI boundary, distinguish current
+  bounded repository proof from proposed end-to-end controls, assign authority to the
+  correct responsibility roots, and define fail-closed validation, incident, correction,
+  rollback, and provider-admission gates without becoming executable security policy.
+truth_posture: CONFIRMED current repository evidence / PROPOSED complete defense composition / UNKNOWN deployed and live-provider behavior
+repository: bartytime4life/Kansas-Frontier-Matrix
+base_commit: 21cdb5ff7d630a39f70fc03d44b31b91eb63b1aa
+target_prior_blob: ebc8af5bf8d9937ee0c387b3c022bead10ac8e3c
+directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+mock_adapter_test_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
+ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
+runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
+ai_receipt_validator_blob: eb80e77aed15f478c32215c8f773f308a87a092a
+evidence_before_model_placeholder_blob: 06b714d90874d69e6ba64cd674ff0c7dfe40e774
+governed_api_route_registry_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+inspection_boundary: >-
+  Current-session GitHub reads covered the complete prior target, accepted Directory
+  Rules and ADR-0029, CODEOWNERS, governed-AI companion pages, the executable
+  MockAdapter and focused tests, the Ollama placeholder, current finite-envelope and
+  AIReceipt schemas and validators, the evaluator and AI-output-artifact validators,
+  the evidence-before-model placeholder, Focus policy posture, and the Governed API
+  route registry. No live model, credential, prompt registry, evidence resolver service,
+  active Focus policy evaluator, citation service, tool broker, AIReceipt store, deployed
+  Focus route, incident drill, correction propagation, release environment, or public
+  transaction was exercised.
 related:
-  - docs/architecture/governed-ai/README.md
-  - docs/architecture/governed-ai/BOUNDARIES.md
-  - docs/architecture/governed-ai/STATE_OWNERSHIP.md
-  - docs/architecture/governed-ai/ROUTE_MAP.md
-  - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - docs/security/README.md
-tags: [kfm, governed-ai, security, doctrine, prompt-injection]
+  - ./README.md
+  - ./BOUNDARIES.md
+  - ./FOCUS_FLOW.md
+  - ./ADAPTER_CONTRACT.md
+  - ./MOCK_FIRST.md
+  - ./AI_RECEIPTS.md
+  - ./OLLAMA_INTEGRATION.md
+  - ./ROUTE_MAP.md
+  - ../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../security/README.md
+  - ../../../runtime/model_adapters/MockAdapter.py
+  - ../../../runtime/model_adapters/OllamaAdapter.py
+  - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - ../../../schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - ../../../tools/validators/validate_ai_receipt.py
+  - ../../../tools/validators/ai/validate_ai_evaluator_harness.py
+  - ../../../tools/validators/ai/validate_ai_output_artifact.py
+  - ../../../tools/validators/ai/validate_evidence_before_model.py
+  - ../../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py
+  - ../../../apps/governed-api/src/governed_api/routes/registry.py
+tags: [kfm, architecture, governed-ai, security, prompt-injection, trust-boundary, evidence-before-model, finite-outcomes, citation-validation, ai-receipt, fail-closed, correction, rollback]
 notes:
-  - "Path PROPOSED per Whole-UI + Governed AI Expansion Report; repository not mounted this session."
-  - "All implementation-bearing claims (routes, packages, file paths) labeled PROPOSED until verified against mounted-repo evidence."
+  - "v2.0.0-draft replaces a proposal-only memo with a current repository-grounded architecture-security boundary."
+  - "This same-path revision changes documentation and its generated authoring receipt only."
+  - "It introduces no live attack payload, prompt text, credential, chain-of-thought, protected evidence, or precise sensitive location."
+  - "No provider, route, policy bundle, source, runtime, release, deployment, publication, or repository setting is activated."
 [/KFM_META_BLOCK_V2] -->
 
-# 🛡️ Prompt Injection — Governed AI Defense Doctrine
+<a id="top"></a>
+<a id="-prompt-injection--governed-ai-defense-doctrine"></a>
 
-> KFM treats prompt injection as a **governance and architecture** problem, not a prompt-engineering problem. Defenses live at the trust membrane, the adapter boundary, and the policy gates — not inside the model.
+# Governed AI — Prompt Injection Threat Model and Defense Boundary
 
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Type](https://img.shields.io/badge/doc-architecture-blue)
-![Subsystem](https://img.shields.io/badge/subsystem-governed--ai-6f42c1)
-![Policy](https://img.shields.io/badge/policy-public-2ea44f)
-![Version](https://img.shields.io/badge/version-v1-lightgrey)
-![Updated](https://img.shields.io/badge/updated-2026--05--14-informational)
+> **Operating boundary.** Treat every user string, source fragment, connector result, tool response, model candidate, citation identifier, and provider diagnostic as untrusted data. KFM must remain safe even when a model follows an attacker's instructions perfectly; authority stays in governed composition outside the model.
 
-| Field | Value |
+[![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#0-current-repository-checkpoint)
+[![proof](https://img.shields.io/badge/current%20proof-bounded-2da44e?style=flat-square)](#02-current-bounded-proof)
+[![defense](https://img.shields.io/badge/end--to--end%20defense-HOLD-d4a72c?style=flat-square)](#03-current-holds)
+[![provider](https://img.shields.io/badge/live%20provider-none%20admitted-6e7781?style=flat-square)](#03-current-holds)
+[![publisher](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#status-and-authority)
+
+> [!IMPORTANT]
+> **Prompt injection is a trust-boundary problem, not a prompt-authoring contest.** The model is an untrusted candidate generator. Evidence resolution, policy, citation validation, final outcome selection, client-envelope construction, correction, release, and rollback remain outside provider control.
+
+> [!CAUTION]
+> **Current repository evidence does not establish an operational prompt-injection defense.** It establishes isolated, useful proof for deterministic mock selection, finite envelope shape, AIReceipt shape/local consistency, evaluator fixtures, and inactive AI-output artifact validation. Those pieces are not composed into a live Focus transaction.
+
+> [!WARNING]
+> **Do not store or publish raw prompts, adversarial payloads, credentials, private chain-of-thought, protected evidence, or precise sensitive locations in routine fixtures, receipts, logs, screenshots, telemetry, issues, or public diagnostics.** Use synthetic markers and payload-safe findings.
+
+**Quick navigation:** [Checkpoint](#0-current-repository-checkpoint) · [Posture](#1-posture) · [Scope](#2-scope-and-non-goals) · [Threats](#3-threat-model) · [Entry surfaces](#4-where-injection-enters--surfaces-and-gates) · [Defenses](#5-defense-doctrine--mechanisms-mapped-to-threats) · [Required behavior](#6-required-behaviors-per-surface) · [Forbidden practices](#7-forbidden-practices) · [Validation](#8-validation-requirements) · [Incident and rollback](#9-incident-response-and-rollback) · [Open work](#10-open-questions-and-verification-backlog) · [Glossary](#11-glossary) · [Related](#12-related-docs)
+
+---
+
+<a id="0-current-repository-checkpoint"></a>
+
+## 0. Current repository checkpoint
+
+<a id="status-and-authority"></a>
+
+### Status and authority
+
+| Question | Current evidence-backed answer |
 |---|---|
-| **Status** | Draft (PROPOSED) |
-| **Authority** | Doctrine — implementation-bearing claims remain PROPOSED until repo evidence is mounted |
-| **Owners** | governed-AI subsystem owner · security steward · docs steward |
-| **Last reviewed** | 2026-05-14 |
-| **Supersedes** | None (new doc) |
+| Is this a tracked architecture document? | **CONFIRMED.** The target exists at this path and the prior blob is pinned above. |
+| Is same-path placement valid? | **CONFIRMED.** Accepted ADR-0029 adopts Directory Rules v2; this remains a human architecture-security explanation under `docs/`. |
+| Is this executable security policy? | **No.** Contracts own meaning, schemas own shape, policy owns admissibility, runtime/app roots own execution, and release objects own public-use decisions. |
+| Is a Focus/model route registered? | **No at the pinned base.** The inspected registry contains bootstrap, layers, and evidence routes only. |
+| Is a production provider implemented? | **No verified implementation.** `OllamaAdapter.py` is a one-line placeholder. |
+| Is prompt/profile identity enforced? | **Not established.** No executable prompt registry or hash-verification path was verified. |
+| Is evidence-before-model enforced? | **No.** The named validator is a short `PROPOSED` placeholder. |
+| Is Focus policy active? | **No verified activation.** The repository-present lane is documented as scaffold/inactive. |
+| Is there bounded executable proof? | **Yes.** Mock selection, finite-envelope shape, AIReceipt shape/local consistency, evaluator fixtures, and inactive AI-output artifact checks are independently testable. |
+| Does this page release or publish anything? | **No.** It changes documentation and authoring provenance only. |
+
+### Directory Rules basis
+
+The current path receives `PLACE` because it explains architecture and security to humans without owning machine authority.
+
+| Responsibility | Owning surface | This page may do |
+|---|---|---|
+| Threat model and architecture explanation | `docs/architecture/governed-ai/` | Explain current evidence, target controls, failures, review burden, and open gates. |
+| Semantic object meaning | `contracts/` | Link and summarize; never redefine silently. |
+| Machine grammar | `schemas/` | Cite current shapes; never add prose-only fields to closed profiles. |
+| Admission and obligations | `policy/` | State required checks; never claim a decision executed. |
+| Provider and tool execution | approved runtime/app/package lanes | Record maturity and required boundaries. |
+| Tests and validators | `fixtures/`, `tests/`, `tools/`, `.github/` | Cite bounded proof and define missing exact-negative proof. |
+| Receipts, evidence, release, correction | their governed object families | Preserve separation and fail closed. |
+
+<a id="01-what-changed"></a>
+
+### 0.1 What changed from the prior edition
+
+The prior page had a sound central principle but mixed doctrine, future design, and implementation claims. This edition:
+
+- removes unsupported claims that prompt hashes, provider parameters, confidence thresholds, active citation services, active Focus policy, signed runtime receipts, and incident runbooks already form one defense;
+- narrows `MockAdapter` to its verified deterministic fixture-selector role;
+- records the absent Focus route, provider placeholder, inactive policy, and evidence-before-model placeholder;
+- preserves the closed RuntimeResponseEnvelope and nine-field AIReceipt profiles rather than inventing fields;
+- defines a complete target control chain as **PROPOSED**, with explicit HOLDs and graduation evidence.
+
+<a id="02-current-bounded-proof"></a>
+
+### 0.2 Current bounded proof
+
+| Surface | What current bytes prove | What they do **not** prove |
+|---|---|---|
+| `MockAdapter.py` and focused tests | Deterministic deep-copy selection from a complete synthetic four-outcome matrix; no filesystem, network, clock, randomness, secrets, or dynamic execution | Request interpretation, injection detection, evidence resolution, policy, citations, provider safety, or receipt emission |
+| RuntimeResponseEnvelope schema/fixtures | Closed client shape with `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; answer-only evidence/precision requirements | Correct semantic outcome, authentic evidence, policy permission, or public safety |
+| AIReceipt schema/validator/tests | Closed nine-field shape and limited local consistency with payload-safe findings | Prompt identity, evidence closure, policy/citation authentication, signing, persistence, retention, release, or truth |
+| AI evaluator harness | Deterministic fixture replay; network-enabled or nondeterministic records fail closed | A live provider, request pipeline, or Focus policy evaluator |
+| AI output artifact validator | Strict checks for inactive per-input artifact and batch profiles, lineage, refs, hashes, and governance non-effects | Active generation, client delivery, injection resistance, or publication |
+| Focus workflow | Static readiness plus finite-envelope/mock proof; explicit mock-Focus HOLD | An executable end-to-end Focus runtime |
+
+<a id="03-current-holds"></a>
+
+### 0.3 Current HOLDs
+
+Before a live provider or public AI route, KFM needs reviewed and executable proof for:
+
+- bounded caller request, minimized adapter input, structured candidate, and client envelope;
+- release/correction/scope/policy checks before provider invocation;
+- instruction-versus-data separation and context minimization;
+- independent tool capability validation with no model-owned authorization;
+- structural candidate parsing before any output reaches a public projection;
+- citation/support validation against the request's admitted evidence set;
+- post-model policy and finite outcome selection outside provider control;
+- minimized receipt emission and protected persistence;
+- synthetic direct and indirect injection fixtures with exact-negative assertions;
+- resource budgets, cancellation, safe logging, monitoring, kill switch, incident response, correction, rollback, hosted exact-head validation, and independent security review.
+
+[Back to top](#top)
 
 ---
 
-## 📑 Contents
-
-1. [Posture](#1-posture)
-2. [Scope and non-goals](#2-scope-and-non-goals)
-3. [Threat model](#3-threat-model)
-4. [Where injection enters — surfaces and gates](#4-where-injection-enters--surfaces-and-gates)
-5. [Defense doctrine — mechanisms mapped to threats](#5-defense-doctrine--mechanisms-mapped-to-threats)
-6. [Required behaviors per surface](#6-required-behaviors-per-surface)
-7. [Forbidden practices](#7-forbidden-practices)
-8. [Validation requirements](#8-validation-requirements)
-9. [Incident response and rollback](#9-incident-response-and-rollback)
-10. [Open questions and verification backlog](#10-open-questions-and-verification-backlog)
-11. [Glossary](#11-glossary)
-12. [Related docs](#12-related-docs)
-
----
+<a id="1-posture"></a>
 
 ## 1. Posture
 
-Prompt injection is the family of inputs — direct or smuggled through content — that try to convert a language model from a **candidate generator** into a **sovereign truth source**. KFM doctrine forecloses that route at the architecture level, not at the prompt: the model is one stage in a governed pipeline, and **EvidenceBundle outranks generated language at every gate**.
+Prompt injection is any attempt to make untrusted content change the authority, instruction, capability, disclosure, or output boundaries of an AI-mediated operation. It can be direct or carried indirectly through evidence, source material, connector/tool results, metadata, filenames, markup, prior generated text, or provider diagnostics.
 
-The defense, therefore, is not cleverer prompting. It is the same set of invariants KFM applies to every other untrusted input — a trust membrane, fixed contracts, deterministic transforms, policy pre- and postchecks, citation validation, and finite outcomes — applied uniformly to the model adapter.
+The governing assumption is stronger than “the model may misunderstand”: **assume the model can be fully manipulated**. A control is valid only when it remains effective outside the model.
 
-> [!IMPORTANT]
-> **Doctrinal precedence.** A prompt-injection mitigation that depends on the model "behaving correctly" is not a mitigation. Defenses must remain effective even if the model is fully compromised, fully hallucinating, or fully cooperating with the attacker.
+KFM therefore separates:
 
-A useful framing: in KFM, the model is permitted to be wrong. The governance layer is not. The defenses below preserve that property.
+```text
+untrusted content
+  -> governed admission and context construction
+  -> provider-neutral adapter
+  -> untrusted structured candidate
+  -> independent support, policy, and disclosure checks
+  -> finite RuntimeResponseEnvelope
+```
+
+EvidenceBundle outranks generated language. A receipt records what occurred; it does not make the output true. A schema validates shape; it does not authenticate evidence or policy. A green test proves only its declared scope.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-scope-and-non-goals"></a>
 
 ## 2. Scope and non-goals
 
-**This document covers** the governed-AI subsystem's posture toward prompt-injection attacks — direct, indirect, and exfiltrative — at every surface where untrusted text can reach a model adapter, and at every surface where model output can reach a public client.
+### In scope
 
-**In scope**
+- direct free-text requests and multi-turn state;
+- indirect content from released evidence, sources, connectors, tools, metadata, markup, and prior outputs;
+- provider input/output, tool-call candidates, citations, logs, receipts, telemetry, exports, review surfaces, and public projections;
+- builder-side AI where repository content itself may contain hostile instructions;
+- correction, withdrawal, rollback, provider disablement, and incident evidence preservation.
 
-- Focus Mode (user query plane) and any AI-adjacent governed-API surface that accepts free text.
-- The evidence plane: any text drawn from `EvidenceBundle` content resolved from an `EvidenceRef` and passed into model context.
-- The ingestion plane: pre-RAW and RAW intake of source text that may later become evidence.
-- The output plane: response envelopes, exports, telemetry, and any artifact that could leak prompt content, system context, or unsanitized model output.
+### Out of scope
 
-**Out of scope**
+This page does not:
 
-- Model selection, model training, or model fine-tuning. The provider-neutral adapter contract is governed elsewhere; injection robustness must not depend on a specific provider.
-- General application security (authn/authz, CORS, rate limits, network egress) — covered under `docs/security/`.
-- Operational runbooks for active incidents — operational steps belong in `docs/runbooks/governed_ai_*` and are referenced here, not inlined.
+- publish operational attack payloads or system prompts;
+- claim prompt wording alone provides security;
+- define provider selection or admit a model;
+- create contracts, schemas, policy, fixtures, validators, routes, workers, stores, release records, or runbooks;
+- replace broader authentication, authorization, rate-limit, dependency, secret, network, or infrastructure security controls;
+- authorize live source access, release, deployment, publication, or repository-setting changes.
 
-> [!NOTE]
-> If a control listed below depends on a route, contract, or test that has not been verified against the mounted repository, it is marked **PROPOSED**. Promotion of a PROPOSED control to CONFIRMED requires actual repo evidence per Directory Rules §0.
+[Back to top](#top)
 
 ---
+
+<a id="3-threat-model"></a>
 
 ## 3. Threat model
 
-KFM organizes prompt-injection threats by **where the adversarial text enters the trust membrane**, not by the cleverness of the payload. The threat names below are conventional security vocabulary; the entry points and defenses are KFM-specific.
+| ID | Threat | Entry path | Required failure posture |
+|---|---|---|---|
+| `PI-01` | Direct instruction override | User request or conversation state | Treat as data; preserve system/capability boundaries; finite non-answer when unsafe |
+| `PI-02` | Indirect evidence/source injection | Evidence fragment, document, markup, metadata, filename | Keep source content typed as data; do not execute embedded instructions |
+| `PI-03` | Connector/tool-result injection | API result, scrape, retrieval result, tool output | Revalidate every proposed action; tool output carries no authority |
+| `PI-04` | Tool escalation | Candidate requests unauthorized tool, scope, target, or argument | Deny outside allowlist/capability/purpose; model cannot grant itself authority |
+| `PI-05` | Citation fabrication or smuggling | Candidate cites unknown, global, stale, corrected, or out-of-scope refs | Block `ANSWER`; validate against admitted request evidence |
+| `PI-06` | Sensitive-data exfiltration | Candidate, diagnostic, error, log, receipt, export, telemetry | Redact or deny; protected input must not be echoed |
+| `PI-07` | Configuration tampering | Prompt/profile/provider/tool/policy identity changes | Reject unapproved or floating identity; require reviewed change lineage |
+| `PI-08` | Parser/schema confusion | Prose leakage, duplicate keys, non-finite values, extra fields, oversized output | Parse strictly; fail closed with payload-safe findings |
+| `PI-09` | Replay and stale-state abuse | Old evidence, policy, correction, model, or receipt reused as current | Bind current identities and states; reject revoked/superseded/stale support |
+| `PI-10` | Resource amplification | Runaway context, recursion, tool loops, output, or cost | Enforce budgets, timeout, cancellation, and finite failure outside provider control |
+| `PI-11` | Cross-scope contamination | Prior user/feature/domain context leaks into current request | Bind request, actor, audience, geography, time, feature, and admitted refs |
+| `PI-12` | Public-path bypass | Browser/provider, browser/internal store, raw candidate/public response | Deny normal-path bypass; use Governed API and governed envelopes only |
 
-| # | Threat | How it arrives | Adversary goal | KFM-relevant artifact at risk |
-|---|---|---|---|---|
-| T-1 | **Direct prompt injection** | Free-text user query at the Focus Mode surface | Override the pinned prompt; force uncited answers; extract system context | `FocusRequest`, `AIReceipt`, `DecisionEnvelope` |
-| T-2 | **Indirect injection — in-evidence** | Adversarial text embedded in a source artifact that later resolves through an `EvidenceRef` to an `EvidenceBundle` | Hijack the model during summarization or claim resolution | `EvidenceBundle`, `EvidenceDrawerPayload`, `CitationValidationReport` |
-| T-3 | **Indirect injection — connector/tool** | Adversarial text in a connector response, scraped HTML attribute, or third-party API payload | Smuggle instructions during pre-RAW intake | Pre-RAW event family (`event_envelope`, `prefilter_output`, `event_run_receipt`) |
-| T-4 | **Prompt-schema attack** | Runtime attempt to alter the pinned prompt template or response format | Strip the "JSON-only / cite-or-abstain" constraints from the request | `prompt_schema_hash`, `AIReceipt.prompt.schema_hash` |
-| T-5 | **System-prompt / credential exfiltration** | Output channel | Echo system prompt, secrets, or unpublished evidence back to the user | `RuntimeResponseEnvelope`, telemetry payload |
-| T-6 | **Citation forgery** | Output channel | Emit plausible-looking `evidence_ref` IDs that do not resolve, or that resolve outside the policy-allowed scope | `CitationValidationReport` |
-| T-7 | **Telemetry exfiltration** | "Safe" telemetry endpoint | Round-trip adversarial content out via logs or analytics | UI telemetry pipeline |
-| T-8 | **Replay drift** | Same evidence, prompt, model, and seed produce a different receipt after policy or model swap | Cause silent admissibility drift, then point to old "approved" results | `RunReceipt`, `policy_bundle_hash`, `model_bin_hash` |
+Threat status is **PROPOSED** as a complete profile; current repository bytes do not yet prove all entry paths or controls.
 
-```mermaid
-flowchart LR
-  subgraph Untrusted["Untrusted input planes"]
-    direction TB
-    U1["Focus Mode<br/>user query (T-1)"]
-    U2["Source content<br/>pre-RAW (T-3)"]
-    U3["EvidenceBundle<br/>content (T-2)"]
-  end
-
-  subgraph Membrane["KFM Trust Membrane"]
-    direction TB
-    Q["QUARANTINE / pre-RAW gates"]
-    PC["Policy precheck"]
-    ER["EvidenceRef → EvidenceBundle"]
-    MA["ModelAdapterPort<br/>(provider-neutral)"]
-    CV["CitationValidator"]
-    PP["Policy postcheck"]
-    RR["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
-  end
-
-  U1 --> PC
-  U2 --> Q
-  U3 --> ER
-  Q --> ER
-  PC --> ER
-  ER --> MA
-  MA --> CV
-  CV --> PP
-  PP --> RR
-
-  classDef untrusted fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
-  classDef gate fill:#fef3c7,stroke:#b45309,color:#78350f;
-  classDef safe fill:#dcfce7,stroke:#15803d,color:#14532d;
-  class U1,U2,U3 untrusted;
-  class Q,PC,ER,MA,CV,PP gate;
-  class RR safe;
-```
-
-> [!NOTE]
-> The diagram is **PROPOSED**: it expresses the doctrinal flow defined in the Whole-UI + Governed-AI Expansion Report, not a verified implementation. Module names align with `MapRuntimePort` / `ModelAdapterPort` naming in that report and remain PROPOSED until reconciled with the mounted repo.
+[Back to top](#top)
 
 ---
+
+<a id="4-where-injection-enters--surfaces-and-gates"></a>
 
 ## 4. Where injection enters — surfaces and gates
 
-Each surface is a place adversarial content can cross or attempt to cross the trust membrane. The doctrine for each is the same: **the surface fails closed unless governed by an explicit, hashable contract.**
+```mermaid
+flowchart LR
+  A[Untrusted request] --> B[Request shape and scope]
+  B --> C[Release / correction / policy precheck]
+  C --> D[EvidenceRef resolution]
+  D --> E[Context minimization and instruction/data separation]
+  E --> F[Provider-neutral adapter]
+  F --> G[Untrusted structured candidate]
+  G --> H[Strict parse and schema validation]
+  H --> I[Tool, citation, support, precision, and freshness validation]
+  I --> J[Policy postcheck and finite outcome selection]
+  J --> K[AIReceipt candidate]
+  J --> L[RuntimeResponseEnvelope]
+  L --> M[Governed client]
+```
 
-### 4.1 User query plane (Focus Mode)
+The flow is **PROPOSED**. Required gate ownership:
 
-The browser **never** speaks to a model runtime. Free-text queries are submitted to the governed API's Focus route, which performs policy precheck → `EvidenceRef` resolution → adapter call → citation validation → policy postcheck before any envelope leaves the membrane.
+| Gate | Owner outside the model | Injection rule |
+|---|---|---|
+| Request and scope | Governed API/orchestration | User text cannot rewrite operation, role, resource, or response grammar |
+| Release/correction/policy precheck | Release/evidence/policy services | Do not call provider when support is inadmissible |
+| Evidence resolution | Evidence service | Admit only released, authorized, task-relevant fragments |
+| Context construction | Orchestration | Separate instructions from data structurally; minimize context |
+| Adapter | Runtime/provider lane | Translate and invoke; return candidate only |
+| Tool broker | Capability/runtime policy | Validate every call independently; no candidate-owned authority |
+| Structural validation | Schema/validator lane | Strict parser, closed fields, bounded sizes, payload-safe errors |
+| Citation/support validation | Evidence/citation lane | Resolve request-local support and verify claim coverage |
+| Postcheck/outcome | Policy/orchestration | Select finite public outcome outside provider control |
+| Receipt and client projection | Receipt/API/UI lanes | Persist minimum accountability; never expose raw candidate or protected content |
 
-- Free-text query is treated as **untrusted input**, not as an instruction to the model.
-- The prompt template assembled by the backend is selected by ID and pinned via `prompt_schema_hash`. The user query is inserted into a fixed `USER` slot, never into the `SYSTEM` slot or any field that could rewrite the response contract.
-- Length, character class, and unicode normalization (NFC) are enforced server-side before the query is rendered into the template.
-
-### 4.2 Evidence plane
-
-The model never reads raw source text. It receives only fields drawn from the resolved `EvidenceBundle` that the policy precheck has admitted into scope.
-
-- `EvidenceBundle` resolution is the **only** path by which source-derived text enters the prompt context.
-- Fields passed into the prompt are explicitly enumerated by the adapter contract — not inferred from the bundle shape.
-- Sensitive geometry, restricted rights, and unreviewed content are filtered before bundle resolution returns, not by relying on the model to ignore them.
-
-### 4.3 Ingestion plane (pre-RAW / RAW / QUARANTINE)
-
-Adversarial text injected upstream — in a scraped page, a CSV cell, an HTML attribute, a CDN payload — is captured under the pre-RAW event family long before it can reach a model. Zero-trust ingest, content-addressed staging, and `SourceDescriptor` rights/sensitivity intake apply uniformly.
-
-- External blobs are staged by digest with signed logs **before** transforms.
-- Content with unknown rights, undetermined sensitivity, or failed integrity checks is held in `QUARANTINE`. It does not enter `WORK`, `PROCESSED`, or any evidence path.
-- Promotion to `EvidenceBundle` is a governed state transition, not a file move; the transition itself emits a `PromotionDecision` with gate results.
-
-### 4.4 Output plane
-
-The output is a `RuntimeResponseEnvelope` carrying one of four finite outcomes plus a `CitationValidationReport`. Raw model text never reaches a public client.
-
-- Public surfaces receive only governed envelopes, released artifacts, evidence references, and policy-safe summaries.
-- Telemetry is safe by construction: no raw evidence, no prompt text, no restricted geometry, no secrets, no full `EvidenceBundle` copies.
-- Exports preserve citations and manifest/version references; an uncited export is denied at the export gate.
+[Back to top](#top)
 
 ---
+
+<a id="5-defense-doctrine--mechanisms-mapped-to-threats"></a>
 
 ## 5. Defense doctrine — mechanisms mapped to threats
 
-The matrix below maps existing KFM mechanisms to the threats from §3. Mechanism names follow established KFM vocabulary; specific file paths remain **PROPOSED** until verified.
+| Mechanism | Primary threats | Current status |
+|---|---|---|
+| Governed API trust membrane; no browser-to-provider/internal-store path | `PI-01`, `PI-06`, `PI-12` | CONFIRMED doctrine; end-to-end runtime HOLD |
+| Evidence before model | `PI-02`, `PI-05`, `PI-09`, `PI-11` | Named placeholder only |
+| Instruction/data separation and context minimization | `PI-01`, `PI-02`, `PI-03` | PROPOSED |
+| Provider-neutral adapter returning candidate, not public envelope | `PI-01`, `PI-07`, `PI-12` | Bounded MockAdapter proof; production seam PROPOSED |
+| External tool broker with allowlisted operations and arguments | `PI-03`, `PI-04`, `PI-10` | UNKNOWN |
+| Strict closed candidate and client schemas | `PI-08`, `PI-12` | Finite client envelope proved; adapter-candidate profile NEEDS VERIFICATION |
+| Request-local citation/support validation | `PI-05`, `PI-09`, `PI-11` | Contract/schema surface present; service UNKNOWN |
+| Policy precheck and postcheck | `PI-01`, `PI-04`, `PI-06`, `PI-12` | Focus lane inactive/scaffold |
+| Finite outcomes outside provider control | all | Closed envelope profile and mock proof present; semantic orchestration HOLD |
+| Minimal AIReceipt and safe diagnostics | `PI-06`, `PI-07`, `PI-09` | Nine-field shape/local validator present; emission/store UNKNOWN |
+| Resource budgets and cancellation | `PI-10` | UNKNOWN |
+| Synthetic exact-negative fixtures and stage-order proof | all | PROPOSED follow-on |
+| Correction, provider disablement, route kill switch, rollback | `PI-06`, `PI-07`, `PI-09`, `PI-12` | Required doctrine; operational proof UNKNOWN |
 
-| Mechanism | What it does | Threats addressed | Status |
-|---|---|---|---|
-| **Trust membrane** — public clients use governed APIs only | Denies any browser → model, browser → RAW/WORK/QUARANTINE, browser → canonical store path. | T-1, T-5, T-7 | CONFIRMED doctrine; PROPOSED implementation |
-| **Adapter boundary** — `ModelAdapterPort` is the sole module that speaks the provider runtime | Removes the model runtime from the public surface; lets the model be swapped without changing the contract; enables `MockAdapter` for tests. | T-1, T-4, T-5 | PROPOSED |
-| **Pinned prompt template + `prompt_schema_hash`** | Every approved prompt is byte-pinned. OPA `deny` fires on `input.prompt.schema_hash != data.allowed.prompt_schema_hash`. | T-4 | CONFIRMED doctrine; PROPOSED implementation |
-| **Strict JSON response contract** | The model is instructed to emit only JSON with a fixed schema (`{"decision","confidence","items"}` for prefilter; analogous shapes for Focus Mode). A "prose-leak" check rejects characters outside the outer JSON object. | T-1, T-5 | CONFIRMED doctrine; PROPOSED implementation |
-| **Schema validation of model output** | JSON-Schema validation with `additionalProperties: false`, strict enums (`"ALLOW"/"DENY"/"ABSTAIN"/"ERROR"` and `"ANSWER"/"ABSTAIN"/"DENY"/"ERROR"`), bounded numerics. Fail closed on parse error or schema drift. | T-1, T-5, T-6 | CONFIRMED doctrine; PROPOSED implementation |
-| **Policy precheck** | Runs before model adapter is invoked. Confirms request scope, source-role admissibility, rights/sensitivity, and `prompt_schema_hash`. | T-1, T-2, T-4 | CONFIRMED doctrine; PROPOSED implementation |
-| **`EvidenceRef → EvidenceBundle` resolver** | The only mechanism by which evidence text enters the prompt. Resolves only released, policy-allowed bundles. | T-2 | CONFIRMED doctrine; PROPOSED implementation |
-| **`CitationValidator`** | Every cited `evidence_ref` in the model output must resolve to a released `EvidenceBundle` within the policy-allowed scope. Unresolved or out-of-scope refs → DENY/ABSTAIN. | T-6 | CONFIRMED doctrine; PROPOSED implementation |
-| **Policy postcheck** | Runs after model adapter. Applies obligations, confidence floor (e.g., `< 0.70 → DENY`), rights re-check, and the "no public model output" rule. | T-5, T-6 | CONFIRMED doctrine; PROPOSED implementation |
-| **Finite outcomes** — `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` | The envelope cannot emit a free-form state. There is no "almost answered" path. | T-1, T-2 | CONFIRMED doctrine |
-| **`AIReceipt` + `RunReceipt`** | Records prompt schema hash, model bin hash, policy bundle hash, seed, temperature, confidence, citation status, timestamp. Receipts are evidence, not truth. | T-4, T-8 | CONFIRMED doctrine; PROPOSED implementation |
-| **DSSE-signed receipts (cosign)** | Tamper detection on the receipt itself; enables replay verification and publication auditability. | T-8 | PROPOSED |
-| **Zero-trust ingest** | Sidecar fetch, content-addressed staging, signed logs, short-lived OIDC, license-first checks. | T-3 | CONFIRMED doctrine; PROPOSED implementation |
-| **`QUARANTINE` lifecycle phase** | Governed holding state for rights, sensitivity, validation, source-role, evidence, temporal, or policy defects. Adversarial source text never escapes it without a promotion decision. | T-2, T-3 | CONFIRMED doctrine |
-| **Telemetry safety contract** | No prompt text, no raw evidence, no restricted geometry, no secrets, no full bundles. | T-5, T-7 | CONFIRMED doctrine; PROPOSED implementation |
-| **No-public-model-output rule** | OPA `deny[msg] { input.publication.includes_raw_model_output }`. | T-5 | PROPOSED |
+### Defense invariants
 
-> [!TIP]
-> The mechanisms above compose. A successful prompt-injection attack must defeat **every** gate it crosses. The doctrine deliberately rejects single-layer defenses — including any defense that lives inside the prompt text itself.
+1. No model output becomes policy, evidence, citation closure, release, or publication authority.
+2. No tool operation runs merely because the model requested it.
+3. No citation is trusted because it looks plausible.
+4. No protected input is echoed in a public error or receipt.
+5. No schema-valid object is treated as semantically valid without owning checks.
+6. No fifth public outcome is admitted beyond `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
+7. No provider/profile enters service without reviewed identity, capability, tests, disablement, and rollback.
+
+[Back to top](#top)
 
 ---
+
+<a id="6-required-behaviors-per-surface"></a>
 
 ## 6. Required behaviors per surface
 
-### 6.1 Focus Mode (user query plane)
+### Request and conversation state
 
-| Required behavior | Rationale | Status |
-|---|---|---|
-| The browser MUST NOT call a model runtime (Ollama, OpenAI, local llama.cpp, or any other) directly. | Trust membrane; removes T-1, T-5 entry vectors. | CONFIRMED doctrine |
-| The Focus route MUST accept user query text only into a fixed `USER` slot of a pinned, hash-identified prompt template. | Closes T-4. | CONFIRMED doctrine |
-| The Focus route MUST run `policy precheck` before adapter invocation and `policy postcheck` before envelope return. | Bracketed gating. | CONFIRMED doctrine |
-| Adapter invocation MUST use `temperature=0`, fixed `seed`, and the response-format constraint of the provider (e.g., `response_format: {type:"json_object"}`). | Determinism enables replay verification; closes T-8. | CONFIRMED doctrine |
-| Output MUST be JSON-Schema-validated with `additionalProperties: false` and strict outcome enum. Fail closed on any deviation. | Closes T-1, T-5. | CONFIRMED doctrine |
-| Every cited `evidence_ref` MUST resolve to a released `EvidenceBundle` within policy scope. | Closes T-6. | CONFIRMED doctrine |
-| The runtime envelope MUST be one of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` — no free-form state. | Finite outcomes. | CONFIRMED doctrine |
+- Normalize and bound operation, actor, audience, geography, time, feature, domain, and allowed evidence references.
+- Treat request text as data, not as permission or configuration.
+- Bind every turn to one explicit request identity and prevent cross-user/cross-feature state reuse.
+- Deny unknown operations; do not silently broaden scope.
 
-### 6.2 Evidence plane
+### Evidence and retrieved content
 
-| Required behavior | Rationale | Status |
-|---|---|---|
-| Only fields explicitly enumerated by the adapter contract are passed into prompt context. | Reduces T-2 attack surface to a bounded list. | CONFIRMED doctrine |
-| Evidence content fields SHOULD be passed under content-typed wrappers (e.g., role tags, structured fields), not concatenated free-form. | Reduces ambiguity between instructions and content. | PROPOSED |
-| `EvidenceBundle` resolution MUST verify release state, policy label, sensitivity, rights, and freshness before content is returned to the adapter. | Sensitive or unreleased content cannot reach the model. | CONFIRMED doctrine |
-| `EvidenceRef` IDs cited by the model MUST be validated against the **resolved set** for this request, not against the full registry. | Prevents cross-request reference smuggling (T-6). | PROPOSED |
+- Resolve `EvidenceRef` through the governed evidence boundary before provider invocation.
+- Admit only released, current, authorized, task-relevant fragments.
+- Preserve source and field boundaries; do not concatenate content into system instructions.
+- Apply rights, sensitivity, precision, freshness, correction, supersession, and revocation checks before context assembly.
 
-### 6.3 Ingestion plane
+### Adapter and provider
 
-| Required behavior | Rationale | Status |
-|---|---|---|
-| External fetches MUST occur in a sidecar, with content-addressed staging by digest and signed logs. | Closes T-3 at admission. | CONFIRMED doctrine |
-| `SourceDescriptor` MUST record source identity, rights, sensitivity, role (`authority`/`observation`/`context`/`model`), license SPDX, and cadence before any promotion. | Promotion gates have something to fail closed on. | CONFIRMED doctrine |
-| Unknown rights, unknown sensitivity, unknown license, or failed integrity → `QUARANTINE`. | Fail-closed default. | CONFIRMED doctrine |
-| Pre-RAW event receipts (`event_envelope`, `prefilter_output`, `event_run_receipt`) MUST be emitted for every admission attempt. | Auditability of attempted intake. | CONFIRMED doctrine |
-| Promotion from `QUARANTINE` to `WORK` or `PROCESSED` MUST be a `PromotionDecision`, not a file move. | Governance over lifecycle. | CONFIRMED doctrine |
+- Accept only a minimized, contract-shaped internal request.
+- Return an untrusted candidate, not a public response or policy decision.
+- Have no direct access to credentials, lifecycle stores, release state, or unrestricted tools.
+- Enforce timeout, cancellation, size, recursion, and resource budgets outside the provider.
+- Produce safe failure categories without echoing provider payloads.
 
-### 6.4 Output plane
+### Tools and connectors
 
-| Required behavior | Rationale | Status |
-|---|---|---|
-| Public clients receive only governed envelopes, released artifacts, evidence references, and policy-safe summaries. | "No raw model output" rule. | CONFIRMED doctrine |
-| Telemetry MUST NOT carry prompt text, raw evidence, restricted geometry, secrets, or full `EvidenceBundle` copies. | Closes T-7. | CONFIRMED doctrine |
-| Exports MUST preserve citations and manifest/version references; an uncited export is denied at the export gate. | Closes T-5 via the export channel. | CONFIRMED doctrine |
-| `RuntimeResponseEnvelope` MUST link to `AIReceipt` and `CitationValidationReport`; receipts are queryable through the review console, not the public client. | Auditability without leakage. | CONFIRMED doctrine; PROPOSED implementation |
+- Require a reviewed capability ID, operation, target, purpose, argument schema, and actor context for each call.
+- Validate a call independently of model text before execution and validate the result before reuse.
+- Deny shell, filesystem, network, secret, source-activation, release, publication, and settings operations unless explicitly admitted for the operation.
+- Prevent connector/tool responses from changing instruction or capability boundaries.
+
+### Candidate, citations, and public response
+
+- Parse with duplicate-key and non-finite-number rejection, closed fields, bounded arrays/text, and size limits.
+- Validate citations against the admitted evidence set for this request, not a global registry alone.
+- Require claim-level support for `ANSWER`; unsupported candidates become `ABSTAIN` or `DENY` according to the owning policy.
+- Select the finite outcome and build RuntimeResponseEnvelope outside provider control.
+- Return no raw provider stream, hidden reasoning, prompt, or protected context to clients.
+
+### Receipts, logs, and telemetry
+
+- Record minimum stable identities, digests, refs, and finite outcome required by the accepted profile.
+- Do not add unreviewed fields to the closed AIReceipt schema.
+- Do not store prompt text, adversarial payloads, credentials, chain-of-thought, raw evidence, or precise sensitive locations.
+- Keep payload-safe reason codes and findings separate from sensitive incident evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-forbidden-practices"></a>
 
 ## 7. Forbidden practices
 
-> [!WARNING]
-> **Hard DENY surfaces.** The practices below are not "discouraged." They are violations of governed-AI doctrine and SHOULD be enforced at the policy layer or by code review. Each forbidden practice maps to a threat in §3 and a defense in §5.
+- Direct browser-to-model, browser-to-tool, browser-to-policy, browser-to-lifecycle-store, or browser-to-canonical-store calls in the normal public path.
+- Concatenating user, evidence, connector, tool, metadata, or prior-output text into authority-bearing instructions.
+- Allowing the model to choose its role, provider, prompt/profile, evidence scope, tools, policy, public outcome, or release state.
+- Treating temperature, seed, model confidence, or a “follow system instructions” prompt as a security boundary.
+- Passing tool calls through without capability, target, argument, and purpose validation.
+- Accepting fabricated, global, stale, corrected, revoked, or out-of-scope citations.
+- Returning raw model text when candidate parsing, citation validation, policy, or receipt construction fails.
+- Logging or publishing protected content, system prompts, credentials, payloads, or chain-of-thought.
+- Treating MockAdapter success, schema validity, an AIReceipt, a workflow badge, or this document as end-to-end defense proof.
+- Activating a provider, route, source, or public operation from a documentation-only change.
 
-- **Direct browser → model calls.** Including direct fetch to Ollama, OpenAI, a local llama.cpp endpoint, or any vector index. The only client of a model runtime is the backend `ModelAdapterPort`.
-- **Mixing user input into the `SYSTEM` slot.** Free text from a user, a scraped source, an EvidenceBundle field, or any other untrusted plane MUST NOT be concatenated into a position that can redefine the response contract.
-- **Unpinned prompt templates.** Any model invocation whose `prompt_schema_hash` is not present in the allowed bundle SHOULD fail OPA precheck.
-- **Free-form outcome states.** Anything other than `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` (runtime) or `ALLOW`/`DENY`/`ABSTAIN`/`ERROR` (governance) emitted by the envelope is invalid.
-- **Citing the rendered map or rendered features as evidence.** Rendered features are *selection candidates*; evidence support comes from `EvidenceBundle`. AI answers based only on rendered features must `ABSTAIN` or `DENY`.
-- **Raw model output in publication.** Including pass-through summaries, screenshots of model answers, or copy-pasted "AI suggested" text without governed envelope and citation validation.
-- **Prompt text or raw evidence in telemetry, logs, or error responses.** Even truncated. Even hashed without canonical normalization. Telemetry is safe by construction or it is denied.
-- **Treating an `AIReceipt` as truth.** Receipts record what happened. They do not *make* a claim true. Only the underlying `EvidenceBundle` does.
-- **Admin shortcuts that bypass the governed adapter.** Admin tooling MAY exist; it MUST NOT become the normal public path, and it MUST emit its own receipts.
-- **Style-only hiding of sensitive geometry as a substitute for redaction.** Style filters do not protect data; if a CARE/locality restriction applies, transform, redact, generalize, restricted-tier, or deny before any public surface receives the geometry.
+[Back to top](#top)
 
 ---
+
+<a id="8-validation-requirements"></a>
 
 ## 8. Validation requirements
 
 > [!IMPORTANT]
-> A defense without a negative-path fixture is not a defense. Every mechanism in §5 has at least one fixture in the test plan below.
+> A control without exact-negative proof is not established. Tests must prove both the required outcome and the absence of forbidden calls, fields, disclosures, and side effects.
 
-### 8.1 Negative-path fixtures (required)
+### Required synthetic fixture classes
 
-The fixture lane proposed by KFM doctrine is `tools/validators/ai/fixtures/{valid,invalid}/`. Each invalid fixture SHOULD produce a `DENY` from the governed pipeline.
+| Fixture class | Expected proof |
+|---|---|
+| Direct instruction override marker | Candidate cannot alter operation, authority, tool set, or response grammar |
+| Instruction-like evidence fragment | Fragment remains typed data; no embedded instruction is executed |
+| Hostile connector/tool result | Result cannot grant capability or change context authority |
+| Unauthorized tool-call candidate | Tool broker denies; no tool invocation occurs |
+| Fabricated/out-of-scope/stale/corrected citation | `ANSWER` is impossible; safe finite result returned |
+| Protected-marker exfiltration attempt | Marker absent from response, receipt, logs, telemetry, and diagnostics |
+| Duplicate key, extra field, non-finite value, oversized or malformed candidate | Structural validation fails closed before public projection |
+| Cross-request reference or conversation reuse | Scope binding rejects contamination |
+| Runaway tool/context/output request | Budget/cancellation produces safe bounded failure |
+| Provider/profile identity mismatch | Invocation denied before provider call |
 
-| Fixture | Threat | Expected outcome |
-|---|---|---|
-| `prose_outside_json.json` | T-1, T-5 | DENY |
-| `prompt_hash_mismatch.json` | T-4 | DENY |
-| `temperature_nonzero.json` | T-8 | DENY |
-| `missing_seed.json` | T-8 | DENY |
-| `unknown_decision_enum.json` | T-1, T-5 | DENY |
-| `confidence_below_floor.json` | T-1 | DENY |
-| `confidence_nan.json` | T-1 | DENY |
-| `duplicate_item_ids.json` | T-1 | DENY |
-| `unresolved_evidence_ref.json` | T-6 | DENY |
-| `out_of_scope_evidence_ref.json` | T-6 | DENY |
-| `restricted_geometry_payload.json` | T-2, T-5 | DENY |
-| `telemetry_contains_prompt_text.json` | T-7 | DENY |
-| `raw_model_output_in_publication.json` | T-5 | DENY |
-| `injected_user_text_in_system_slot.json` | T-1, T-4 | DENY |
-| `quarantined_source_promoted_without_decision.json` | T-3 | DENY |
-| `malformed_utf8.json` | T-1, T-3 | DENY |
+### Stage-order and exact-negative assertions
 
-> All fixture paths are **PROPOSED**. The list above synthesizes the negative-path matrix from KFM's prior governed-AI design memos with the threat model in §3.
+A future runner must prove:
 
-### 8.2 Replay verification
+1. policy/release/evidence denial prevents adapter invocation;
+2. adapter invocation cannot occur without minimized admitted context;
+3. tool execution cannot occur without broker approval;
+4. failed parsing prevents citation and public response construction;
+5. failed citation/support validation prevents `ANSWER`;
+6. protected markers never appear in public artifacts or routine accountability records;
+7. negative outcomes contain no answer payload or precision disclosure;
+8. one final envelope and one bounded accountability record are emitted where required;
+9. reruns are deterministic for the fixture profile;
+10. the suite performs no network access and no provider call.
 
-The invariant is:
+### Graduation gates
 
-> **same evidence + same prompt + same model + same seed + same policy bundle ⇒ same receipt hash.**
+A live provider/route remains on HOLD until all are reviewed:
 
-A canonical CI target (PROPOSED) is `make ai-replay-check`, which re-runs the prefilter against a pinned fixture and verifies the receipt's `outputs_checksum` and signature against an expected value.
+- accepted object boundaries and schemas;
+- admitted provider/profile and prompt/config identity;
+- evidence, policy, citation, tool, and receipt composition;
+- positive and exact-negative fixtures;
+- no-network deterministic suite plus bounded live-provider evaluation in a non-public environment;
+- security/privacy/threat-model review;
+- safe telemetry, retention, incident, kill-switch, correction, and rollback proof;
+- hosted exact-head checks and independent reviewer disposition.
 
-### 8.3 Policy bundle hashing
-
-`AIReceipt` SHOULD include `policy_bundle_hash`. The same model output under a different policy is **not** the same outcome; the receipt must record which policy approved it.
-
-### 8.4 CI gates (PROPOSED)
-
-```text
-ai-prefilter            # produce prefilter_run_receipt.json
-ai-replay-check         # diff outputs_checksum against expected
-ai-schema-validate      # JSON Schema validation, strict enums
-ai-policy-eval          # OPA / conftest, fail closed
-ai-attest-sign          # DSSE / cosign on the receipt
-ai-citation-validate    # CitationValidationReport must pass for ANSWER
-ai-telemetry-safety     # negative fixtures for prompt/evidence leakage
-```
+[Back to top](#top)
 
 ---
+
+<a id="9-incident-response-and-rollback"></a>
 
 ## 9. Incident response and rollback
 
-> [!CAUTION]
-> If a prompt-injection event reaches a release state, treat it as a **governed correction**, not as a hotfix. KFM's correction path preserves auditability; ad-hoc edits do not.
+An injection event is a security and governance incident when it causes or attempts unauthorized capability use, disclosure, citation support, public outcome, release, or publication.
 
-The operational steps belong in a runbook (PROPOSED home: `docs/runbooks/governed_ai_PROMPT_INJECTION_INCIDENT.md`). At the doctrinal level, the response posture is:
+### Minimum incident sequence
 
-<details>
-<summary><strong>1. Contain</strong> — disable the affected route or adapter</summary>
+1. **Contain** — disable the affected provider/profile/route/tool capability without weakening non-AI evidence browsing.
+2. **Preserve** — retain minimized request/candidate digests, refs, policy/citation decisions, safe findings, version identities, and access records under incident controls.
+3. **Assess** — identify exposed users, evidence, tools, artifacts, releases, caches, exports, and downstream consumers.
+4. **Correct** — issue correction, supersession, withdrawal, credential rotation, cache invalidation, or release rollback through owning processes.
+5. **Reproduce safely** — add a synthetic fixture that captures the attack class without persisting operational payload or protected content.
+6. **Revalidate** — rerun focused, regression, security, correction, and rollback proof before re-enablement.
+7. **Review** — record root cause, control failure, reviewer disposition, and residual risk.
 
-- Disable the Focus route via feature flag; the Evidence Drawer and layer browsing remain intact.
-- Swap the adapter to `MockAdapter` for any test or sandbox surface.
-- Withdraw any released artifact that was generated under the suspect receipt (rollback target → prior `MapReleaseManifest`).
+### Rollback targets
 
-</details>
+| Surface | Rollback action |
+|---|---|
+| Provider/profile | Disable or restore the exact reviewed identity |
+| Tool capability | Revoke capability and affected credentials/tokens |
+| Runtime/API route | Disable or revert route while preserving safe non-AI paths |
+| Policy/configuration | Restore prior reviewed bundle/profile and re-evaluate affected results |
+| Public AI artifact | Withdraw or supersede and propagate correction state |
+| Release | Use the owning release rollback target; a documentation revert is not a release rollback |
 
-<details>
-<summary><strong>2. Preserve evidence</strong> — receipts, fixtures, and DSSE envelopes are now incident artifacts</summary>
+This page does not claim an operational runbook exists; incident ownership and drill evidence remain **NEEDS VERIFICATION**.
 
-- Capture the offending `AIReceipt`, `RunReceipt`, `CitationValidationReport`, and `PolicyDecision` at their DSSE-signed form.
-- Snapshot the active policy bundle hash and prompt schema hash; both are now incident inputs.
-- File a `DRIFT_REGISTER` entry referencing the incident.
-
-</details>
-
-<details>
-<summary><strong>3. Correct</strong> — issue a CorrectionNotice and invalidate derivatives</summary>
-
-- A `CorrectionNotice` MUST list invalidated derivatives. Tile, style, and catalog caches MUST be invalidated by `cache invalidation record`.
-- If the prompt template, schema, or policy bundle is at fault, issue an ADR for the replacement; retain the old artifact with `status: superseded` and a forward link.
-
-</details>
-
-<details>
-<summary><strong>4. Rollback</strong> — reversible release pointer</summary>
-
-- Use the `rollback target` recorded in the prior `ReleaseManifest`.
-- Verify the rollback restored the prior layer/tile/style/story-node version; emit the rollback receipt.
-
-</details>
-
-<details>
-<summary><strong>5. Re-validate</strong> — add a fixture for the realized attack</summary>
-
-- Add a negative-path fixture under `tools/validators/ai/fixtures/invalid/` reproducing the attack class.
-- Add an ADR or runbook entry explaining what changed and why.
-- Move the verification item from "incident" to the verification backlog if any control remains PROPOSED.
-
-</details>
+[Back to top](#top)
 
 ---
+
+<a id="10-open-questions-and-verification-backlog"></a>
 
 ## 10. Open questions and verification backlog
 
-The following items are flagged for verification once repository evidence is mounted. They are not blockers for adopting the doctrine; they are blockers for any claim that the doctrine is **implemented**.
+- **NEEDS VERIFICATION:** accepted request, adapter-input, candidate, tool-call, citation-report, receipt-linkage, and client-envelope contract/schema convergence.
+- **UNKNOWN:** executable EvidenceRef resolver and pre-model release/correction/policy/scope service.
+- **UNKNOWN:** active claim-level citation/support validator and Focus policy evaluator binding.
+- **UNKNOWN:** tool capability registry, broker, runtime egress/filesystem/secret restrictions, and provider budgets.
+- **UNKNOWN:** prompt/profile/configuration identity, approval, change control, and rollback without storing raw prompts in receipts.
+- **UNKNOWN:** AIReceipt emission, persistence, retention, access, signing, correction, and query behavior.
+- **NEEDS VERIFICATION:** final synthetic fixture and runner home, payload-safe reason codes, client projection convergence, and correction consumer inventory.
+- **NEEDS VERIFICATION:** incident owner, kill-switch operator, independent security reviewer, required hosted checks, and provider-admission approval route.
 
-- **NEEDS VERIFICATION** — Whether `apps/governed-api/src/ai/ModelAdapterPort.ts` (or equivalent) exists in the mounted repo, and whether it is the **only** module that imports the model provider SDK.
-- **NEEDS VERIFICATION** — Whether `apps/governed-api/src/ai/CitationValidator.ts` (or equivalent) enforces resolution against the **resolved evidence set** for the current request rather than the global registry.
-- **NEEDS VERIFICATION** — Whether telemetry middleware on the governed API explicitly strips prompt text and `EvidenceBundle` contents (not just by convention).
-- **NEEDS VERIFICATION** — Whether OPA `deny` rules exist for: `temperature != 0`, missing `seed`, missing `model_bin_hash`, unapproved `prompt_schema_hash`, confidence below floor, and `includes_raw_model_output`.
-- **NEEDS VERIFICATION** — Whether the pre-RAW event family (`event_envelope`, `prefilter_output`, `event_run_receipt`) is enforced for connector intake, or only for some lanes.
-- **UNKNOWN** — Whether DSSE/cosign signing is wired in CI for `AIReceipt` and `RunReceipt`, or only proposed.
-- **UNKNOWN** — Whether `policy_label` vocabulary is normalized to a canonical enum (`public`/`open`/`controlled`/`restricted`/`unknown`) across access and publication policies. A prior governance-gap note records this drift risk.
-- **PROPOSED** — Whether `EvidenceBundle` content should be passed to the adapter under structured wrappers (role-tagged fields) rather than concatenated text. The doctrine prefers structured wrappers; the implementation choice is open.
-- **PROPOSED** — Whether the prompt-template registry lives under `tools/validators/ai/prompts/`, `apps/governed-api/src/ai/prompts/`, or `packages/policy-runtime/prompts/`. Path requires ADR or repo evidence.
+### Recommended smallest follow-on slice
 
-> [!NOTE]
-> Items in this section MUST migrate into `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED home) for tracking and SHOULD be closed by a follow-up PR rather than by edits to this doc.
+**PROPOSED:** one deterministic, no-network stage-order and injection-containment proof using synthetic markers only. It should preserve current RuntimeResponseEnvelope and AIReceipt shapes, prove pre-model denial prevents adapter invocation, prove instruction-like evidence remains data, prove fabricated/out-of-scope citations prevent `ANSWER`, prove protected markers never enter public diagnostics or receipts, and introduce no live provider, route, source activation, release, or publication.
 
-[⬆ Back to top](#-prompt-injection--governed-ai-defense-doctrine)
+[Back to top](#top)
 
 ---
+
+<a id="11-glossary"></a>
 
 ## 11. Glossary
 
-<details>
-<summary><strong>KFM-specific terms used in this doc</strong> (expand)</summary>
-
-| Term | Definition (per KFM doctrine) |
+| Term | Meaning |
 |---|---|
-| **`AIReceipt`** | AI runtime receipt recording the model/provider, prompt envelope, evidence IDs, policy decisions, output outcome, citation validation, and runtime metadata. Evidence, not truth. |
-| **`CitationValidationReport`** | Pass/fail report verifying that every citation in an answer or export resolves to released evidence within policy scope. |
-| **`DecisionEnvelope`** | Governed runtime result that wraps the policy decision, the receipt, and evidence references. |
-| **`EvidenceBundle`** | Canonical evidence support resolved from an `EvidenceRef`. Outranks UI projection and generated language. |
-| **`EvidenceRef`** | Pointer that resolves to an `EvidenceBundle` under the membrane. |
-| **Finite outcomes** | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` (runtime); `ALLOW` / `DENY` / `ABSTAIN` / `ERROR` (governance). No free-form states. |
-| **`ModelAdapterPort`** | Provider-neutral model adapter interface; the sole module permitted to import a model runtime SDK. |
-| **`MockAdapter`** | Deterministic adapter used for tests, fixtures, and rollback states. |
-| **`PolicyDecision`** | Subject/resource/purpose/sensitivity/rights/role decision record with reasons and obligations. |
-| **`PromotionDecision`** | Governed state-transition record enumerating Promotion Gates as auditable promotion memory. |
-| **`prompt_schema_hash`** | Byte-pinned hash of the approved prompt template. Mismatch → policy DENY. |
-| **`QUARANTINE`** | Governed holding state for rights, sensitivity, validation, source-role, evidence, temporal, or policy defects. |
-| **`ReleaseManifest`** | Record of published artifact set, digests, policy posture, release state, correction path, and rollback target. |
-| **`RollbackCard` / rollback target** | Reversible release pointer to a prior layer/tile/style/story-node version. |
-| **`RunReceipt`** | Execution record pinning inputs, outputs, hashes, tool versions, timestamps, failures, policy posture, and evidence refs. |
-| **`RuntimeResponseEnvelope`** | Typed governed response with a finite outcome and references to receipts and citation reports. |
-| **`SourceDescriptor`** | Versioned source shape recording identity, rights, sensitivity, role, license, cadence. |
-| **`spec_hash`** | Canonical hash that pins the spec inputs for replay verification. |
-| **Trust membrane** | Boundary ensuring public/UI/AI surfaces consume governed APIs and released artifacts, not raw or internal stores. |
+| Prompt injection | Untrusted content attempting to change authority, instructions, tools, disclosure, or output boundaries. |
+| Direct / indirect injection | Attack supplied by the requester / carried through sources, evidence, connectors, tools, metadata, or prior output. |
+| Instruction/data separation | Structural boundary preventing content from becoming authority-bearing configuration; prose delimiters alone are insufficient. |
+| Context minimization | Supplying only released, authorized, task-relevant fragments and metadata. |
+| Model adapter | Provider translation/invocation boundary returning an untrusted candidate; owns no evidence, policy, citation, release, or public outcome authority. |
+| Tool broker | External capability gate validating every proposed operation independently of the model. |
+| Candidate | Untrusted provider output awaiting structural, support, freshness, correction, precision, and policy checks. |
+| Exact-negative test | Proof that a forbidden call, field, disclosure, route, state, or side effect did not occur. |
+| Safe diagnostic | Bounded finding identifying failure class without echoing untrusted or protected content. |
+| AIReceipt | Bounded accountability trace; not evidence truth, policy permission, review, release, or publication. |
+| Kill switch | Reversible control disabling a provider, profile, route, or tool without rewriting history. |
 
-</details>
+[Back to top](#top)
 
 ---
+
+<a id="12-related-docs"></a>
 
 ## 12. Related docs
 
-| Path | Relation | Status |
+| Path | Relation | Current posture |
 |---|---|---|
-| `docs/architecture/governed-ai/README.md` | Subsystem overview and adapter-first runtime boundary | PROPOSED |
-| `docs/architecture/governed-ai/BOUNDARIES.md` | No direct model browser call; no RAW/WORK/QUARANTINE; no prompt telemetry leakage | PROPOSED |
-| `docs/architecture/governed-ai/STATE_OWNERSHIP.md` | Focus request, evidence retrieval, adapter, citation validation, response envelope state ownership | PROPOSED |
-| `docs/architecture/governed-ai/ROUTE_MAP.md` | Focus and AI-adjacent API surfaces | PROPOSED |
-| `docs/architecture/governed-ai/CONTINUITY_NOTES.md` | Carries prior governed-AI report forward | PROPOSED |
-| `docs/doctrine/trust-membrane.md` | Membrane doctrine across the system | PROPOSED |
-| `docs/doctrine/truth-posture.md` | Cite-or-abstain rule | PROPOSED |
-| `docs/security/README.md` | Cross-subsystem threat model, exposure posture, incident response | PROPOSED |
-| `docs/runbooks/governed_ai_PROMPT_INJECTION_INCIDENT.md` | Operational response runbook for an active incident | TODO — propose in follow-up PR |
-| `tools/validators/ai/README.md` | Validator lane for prompt-injection negative fixtures, replay checks, schema validation | PROPOSED |
-| `docs/adr/ADR-focus-model-adapter-boundary.md` | ADR for the adapter boundary | PROPOSED |
+| [`README.md`](README.md) | Governed-AI overview and maturity map | Repository-present; verify against implementation |
+| [`BOUNDARIES.md`](BOUNDARIES.md) | AI authority and trust-membrane boundaries | Architecture companion |
+| [`FOCUS_FLOW.md`](FOCUS_FLOW.md) | Bounded client proof and proposed server orchestration | Live server transaction HOLD |
+| [`ADAPTER_CONTRACT.md`](ADAPTER_CONTRACT.md) | Bounded MockAdapter proof and proposed provider-neutral seam | Production seam PROPOSED |
+| [`MOCK_FIRST.md`](MOCK_FIRST.md) | Deterministic mock discipline and graduation gates | End-to-end Focus runtime HOLD |
+| [`AI_RECEIPTS.md`](AI_RECEIPTS.md) | Current AIReceipt shape and accountability limits | Operational emitter/store HOLD |
+| [`OLLAMA_INTEGRATION.md`](OLLAMA_INTEGRATION.md) | Local-provider integration proposal | Reconcile before operational use |
+| [`ROUTE_MAP.md`](ROUTE_MAP.md) | Governed-AI-adjacent route architecture | Verify against executable registry |
+| [ADR-0019](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Adapter and finite-envelope decision | Proposed; this page does not accept it |
+| [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Directory placement authority | Accepted |
+| [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) | Builder-side untrusted-content law | Doctrine; not runtime proof |
+| [Security overview](../../security/README.md) | Broader exposure, security, and incident context | Operational maturity requires verification |
+
+### Change discipline and rollback
+
+This revision changes one explanatory document and its generated authoring receipt only. It does not alter contracts, schemas, policy, fixtures, validators, tests, workflows, providers, runtime, routes, tools, data, runtime-emitted receipts, evidence, release state, deployment, publication, or repository settings.
+
+Before merge, rollback is closing the draft pull request or reverting the feature branch. After an authorized merge, revert the document and authoring receipt through normal reviewed Git history. No data migration, provider shutdown, cache invalidation, release withdrawal, or public correction is required for this documentation-only change.
 
 ---
 
-> **Doctrine over polish.** If a prompt-injection control depends on the model behaving correctly, it is not a control. The defenses in this document remain effective even when the model is wrong, hallucinating, or fully cooperating with the attacker.
+> **Final rule.** Assume the provider can be manipulated. Keep authority, capabilities, evidence, citations, policy, finite outcomes, receipts, correction, release, and rollback outside it—and prove every boundary with exact-negative tests before admitting a live route.
 
----
-
-*Last updated: 2026-05-14 — owners: governed-AI subsystem owner · security steward · docs steward.*
-
-[⬆ Back to top](#-prompt-injection--governed-ai-defense-doctrine)
+[Back to top](#top)

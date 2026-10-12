@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-evidence-drawer-view-state-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
+    "apps/explorer-web/src/adapters/README.md",
+    "apps/explorer-web/src/features/README.md",
+    "apps/explorer-web/src/features/evidence_drawer/README.md",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/src/main.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "tests/fixtures/ui/README.md",
+    "tests/fixtures/ui/evidence_drawer/abstain-stale.json",
+    "tests/fixtures/ui/evidence_drawer/answer.json",
+    "tests/fixtures/ui/evidence_drawer/deny-sensitive.json",
+    "tests/fixtures/ui/evidence_drawer/error-upstream.json",
+    "tests/fixtures/ui/evidence_drawer/invalid-answer-missing-evidence.json",
+    "tests/fixtures/ui/evidence_drawer/invalid-extra-field.json",
+    "tests/ui/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/README.md": "sha256:4fd158e280b4275e82b2f6bc6eddf4ef88642099b6977e476f99a8521a53bbe0",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:e7d280a0fb766918b850e84a3e0fa2dd5bed69abb5371698d07084776d443a68",
+    "apps/explorer-web/src/adapters/README.md": "sha256:2871dc88995101c34f386082700ea503c3577dbe826474461e2e05c99dbd098c",
+    "apps/explorer-web/src/features/README.md": "sha256:9c54281fc5afaf794e2911dbf0ffd0077bd51f667d8d421dd9a5ab9c75878d03",
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "sha256:dceeac34b22df6995b65cc6c5df9bbbe0531d8a0cad5653025dc50b83df4eed4",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:b6e2a70beb449899dca5a1baa14cefc7921af077ad1cfb27dab83a2f641a6817",
+    "apps/explorer-web/src/main.ts": "sha256:d1c5524ee5eb1aacc6960d2658c7ca0720db7bf91f88f1e028d35d191271893d",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:18da7d5e7a33b2659ed2024c04060c12c8c5c083ad9774b75a981b3b33b55ec4",
+    "tests/fixtures/ui/README.md": "sha256:fb323f163d3644a4a7f96472cfc6cb82a0fa36a2958f351730e23813b717727f",
+    "tests/fixtures/ui/evidence_drawer/abstain-stale.json": "sha256:120954705e97993367d811643c35eb623b82adfca64d58eca61665da1d927898",
+    "tests/fixtures/ui/evidence_drawer/answer.json": "sha256:3fd4b1d36fcbe832af6c12894af51dcd72c109a3fce15e1ac51ef9e0b633648e",
+    "tests/fixtures/ui/evidence_drawer/deny-sensitive.json": "sha256:c88c69d73cc3255675b3337d4af2203499e8ecb90099f6b83e5c7b9511762dd0",
+    "tests/fixtures/ui/evidence_drawer/error-upstream.json": "sha256:5c043393a380ab419f2b532859c38affe82d9857dae879b5037d27305f353e73",
+    "tests/fixtures/ui/evidence_drawer/invalid-answer-missing-evidence.json": "sha256:4c914746fb4f9bba3f39cc5b873b74a21fc9d13107f5beee7cb5158fe8ee96c5",
+    "tests/fixtures/ui/evidence_drawer/invalid-extra-field.json": "sha256:5b1acb1b0115b6388938c1c7bbc4b56bbf103a7dc9bd30766d82ed5eae414b6b",
+    "tests/ui/README.md": "sha256:7bcfa57db6fa2afea829f26e8fb22e529e8ed63fa71de5dc17b4b8896544555b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF text extraction and rendered-page inspection",
+      "Git",
+      "GitHub connector",
+      "pnpm and Vite",
+      "isolated declared Python test environment",
+      "deterministic no-network validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90"
+    ],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Master MapLibre Components-Functions-Features.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/architecture/ui/BOUNDARIES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/apps/explorer-web/src/features/evidence_drawer/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+      "attachment://KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages=6,7,13,14,17",
+      "attachment://Master MapLibre Components-Functions-Features.pdf#pages=77,80,81,82"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/README.md": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "CONFIRMED",
+    "apps/explorer-web/src/adapters/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "CONFIRMED",
+    "apps/explorer-web/src/main.ts": "CONFIRMED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "CONFIRMED",
+    "tests/fixtures/ui/README.md": "PROPOSED",
+    "tests/fixtures/ui/evidence_drawer/abstain-stale.json": "CONFIRMED",
+    "tests/fixtures/ui/evidence_drawer/answer.json": "CONFIRMED",
+    "tests/fixtures/ui/evidence_drawer/deny-sensitive.json": "CONFIRMED",
+    "tests/fixtures/ui/evidence_drawer/error-upstream.json": "CONFIRMED",
+    "tests/fixtures/ui/evidence_drawer/invalid-answer-missing-evidence.json": "CONFIRMED",
+    "tests/fixtures/ui/evidence_drawer/invalid-extra-field.json": "CONFIRMED",
+    "tests/ui/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, exact base main@23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5, accepted Directory Rules and ADR-0029, current Explorer code, UI schemas, workflows, branches, pull requests, and the merged environmental-observation predecessor were inspected. Work remains on a non-default branch with draft-review delivery only."
+    },
+    {
+      "gate": "curation-and-slice-selection",
+      "outcome": "PASS",
+      "reason": "The supplied MapLibre manuals propose a click-to-EvidenceBundle-to-EvidenceDrawerPayload flow with finite trust-visible outcomes. Current repository evidence showed the Evidence Drawer entry and GovernedClient adapter were placeholders while the Explorer shell and locked test/build surface were executable. The selected dependency-closed slice implements strict fixture projection and fail-closed view state without claiming live transport or canonical schema adoption."
+    },
+    {
+      "gate": "directory-and-authority-placement",
+      "outcome": "PASS",
+      "reason": "Deployable adapter, feature, shell, and tests extend the existing apps/explorer-web root; synthetic unit fixtures extend tests/fixtures/ui; the generated receipt uses the existing process-memory lane. No schema, contract, policy, evidence, source, lifecycle, release, publication, or top-level authority root is created."
+    },
+    {
+      "gate": "explorer-web-test-and-build",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test passed 11 tests across two files, including ANSWER, stale ABSTAIN, DENY and ERROR no-leak behavior, malformed and boundary cases, and structural network/lifecycle-store denial. pnpm --filter explorer-web build passed TypeScript and Vite compilation. The local Node 24 runtime emitted the declared >=22.13 <23 engine warning; hosted UI CI pins Node 22 and remains pending."
+    },
+    {
+      "gate": "explorer-browser-boundary-policy",
+      "outcome": "PASS",
+      "reason": "The existing tests/policy/test_explorer_web_adapter_boundary.py suite passed both cases in the isolated repository-declared test environment. The new feature test additionally rejects fetch calls, lifecycle-store path literals, and model-runtime references in the bounded adapter and resolver source."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "make validate passed with no network: all configured aggregate validators preserved valid/expected-invalid fixture polarity, and 139 schema/contract tests passed."
+    },
+    {
+      "gate": "documentation-json-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "The documentation checker's own 18 tests passed; all changed-document local links resolved; six fixture files parsed as JSON; git diff --check passed; artifact paths, labels, and final SHA-256 hashes are bound in this receipt, which is excluded from its own map."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. No hosted result will be treated as source admission, policy approval, evidence truth, human review, release, deployment, publication, or promotion authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ai-build-operating-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-governance-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "explorer-ui-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/23de9aee98c16d5e810ab5b25b80edcdf6ccfdb5/docs/architecture/ui/BOUNDARIES.md"
+    },
+    {
+      "id": "maplibre-governed-ui-planning-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages=6,7,13,14,17"
+    },
+    {
+      "id": "maplibre-evidence-drawer-planning-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://Master MapLibre Components-Functions-Features.pdf#pages=77,80,81,82"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T17:44:27Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch converts the Explorer Evidence Drawer and GovernedClient placeholders into a bounded, fixture-only, fail-closed view-state slice. It validates closed public-safe projections, renders explicit ANSWER/ABSTAIN/DENY/ERROR states, preserves text trust labels, and prevents denied, error, unknown-field, lifecycle-store, model-runtime, and network leakage in the tested boundary. It does not establish live governed API transport, map-click resolution, canonical EvidenceDrawerPayload schema authority, runtime policy execution, citation authority, full browser interaction, complete accessibility, evidence truth, review, release, deployment, publication, promotion, or source activation. Rollback is a clean revert of the feature commit; no migration or published state exists."
+}

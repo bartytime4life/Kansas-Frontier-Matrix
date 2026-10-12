@@ -1,0 +1,56 @@
+{
+  "assessment_id": "material-change:soil:missing-baseline-hold",
+  "baseline_ref": "kfm://soil/fixture/baseline",
+  "candidate_ref": "kfm://soil/fixture/missing-baseline-hold",
+  "classification": {
+    "change_class": "UNDETERMINED",
+    "material": null,
+    "outcome": "HOLD",
+    "reason_codes": [
+      "MISSING_BASELINE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:6f6a2825a13dcd71e6ce6b288a617edb8634547ab8ba17c38400c77a0c2171ae",
+    "byte_changed": true,
+    "candidate_digest": "sha256:6e520e9e74fdd4b79dbd46de1eea4479a2864909e07428e8556f49f4679a3082",
+    "semantic_changed": null
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": "kfm://validation/soil/missing-baseline-hold/diff",
+    "source_refs": [
+      "kfm://source/nrcs-ssurgo"
+    ],
+    "validation_report_refs": [
+      "kfm://validation/soil/missing-baseline-hold/integrity"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:b0b6184a40806046117b1e120d0a66097f808fa0654d919fa77f3a97435947a7"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:f09f5db9fbe536de0eecbf051c6a38fc21ef18519a0e8a6610be707782be6682"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://soil/fixture/kansas-static-survey",
+  "timing": {
+    "assessed_at": "2026-08-03T00:00:00Z",
+    "baseline_as_of": null,
+    "candidate_as_of": "2026-08-02T00:00:00Z"
+  }
+}

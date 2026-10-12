@@ -1,0 +1,52 @@
+{
+  "chain_id": "chain:sample:held",
+  "evaluated_at": "2026-08-07T19:00:00Z",
+  "outcome": "HELD",
+  "policy_decision": {
+    "decision_id": "policy:sample:held",
+    "evaluated_at": "2026-08-07T19:00:00Z",
+    "obligations": [],
+    "outcome": "ABSTAIN",
+    "policy_family": "promotion",
+    "reasons": [
+      "fixture outcome"
+    ]
+  },
+  "promotion_decision": null,
+  "quarantine_record": {
+    "obligations": [
+      "resolve the recorded policy hold"
+    ],
+    "policy_decision_ref": "policy:sample:held",
+    "reason_codes": [
+      "POLICY_NOT_CLEARED"
+    ],
+    "record_id": "quarantine:sample:held",
+    "recorded_at": "2026-08-07T19:00:00Z",
+    "run_receipt_ref": "run:sample:held",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "state": "HELD",
+    "subject_ref": "kfm://candidate/sample"
+  },
+  "run_receipt": {
+    "code_ref": "repo:c9f9c6674df604c7ce247fdb23212607fe155357",
+    "inputs": [
+      "kfm://raw/sample"
+    ],
+    "outcome": "SUCCESS",
+    "outputs": [
+      "kfm://processed/sample"
+    ],
+    "run_id": "run:sample:held",
+    "source_descriptor_refs": [
+      "kfm://source/sample"
+    ],
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "stage": "promotion_candidate",
+    "validation_refs": [
+      "kfm://validation/sample"
+    ]
+  },
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "subject_ref": "kfm://candidate/sample"
+}

@@ -8,6 +8,10 @@ owners: <PLACEHOLDER — Docs steward + Source steward for idigbio>
 created: 2026-05-20
 updated: 2026-05-21
 policy_label: public
+responsibility_root: docs/
+owning_root: docs/
+responsibility: Human-readable proposed iDigBio aggregate-count surface and its source-role, temporal, and catalog boundaries.
+truth_posture: cite-or-abstain; aggregate counts do not become observations or publication authority.
 related:
   - docs/sources/catalog/idigbio/README.md
   - docs/sources/catalog/README.md
@@ -291,7 +295,7 @@ All paths above are **PROPOSED / NEEDS VERIFICATION** until a mounted repo confi
 - [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — catalog-level Collection identity convention (PROPOSED).
 - [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — catalog-level rights and sensitivity routing (PROPOSED).
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules (CONFIRMED v1.2).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema home for SourceDescriptor (CONFIRMED).
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — proposed schema-home decision.
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O profile *(CONFIRMED authored; naming variance vs `PROVENANCE.md` per OPEN-DR-01)*.
 
 ---

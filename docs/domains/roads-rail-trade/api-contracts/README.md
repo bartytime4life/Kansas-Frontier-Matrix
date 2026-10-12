@@ -16,7 +16,7 @@ related: [
   contracts/domains/roads-rail-trade/,
   schemas/contracts/v1/domains/roads-rail-trade/,
   policy/domains/roads-rail-trade/,
-  docs/architecture/governed-api.md
+  docs/architecture/governed-api/README.md
 ]
 tags: [kfm, roads-rail-trade, api, contracts, governed-api, decision-envelope]
 notes: [
@@ -127,7 +127,7 @@ flowchart LR
 | **Cross-cutting meaning** | `contracts/runtime/`, `contracts/release/`, `contracts/evidence/` | Envelope, receipt, manifest meaning *(PROPOSED)* |
 | **Shape** | `schemas/contracts/v1/domains/roads-rail-trade/` | Domain `.schema.json` *(PROPOSED)* |
 | **Admissibility** | `policy/domains/roads-rail-trade/` | Policy gates *(PROPOSED)* |
-| **Architecture** | `docs/architecture/governed-api.md` | Governed-API doctrine *(PROPOSED)* |
+| **Architecture** | `docs/architecture/governed-api/README.md` | Governed-API doctrine *(PROPOSED)* |
 | **Domain dossier** | Atlas §13.J | Doctrinal evidence `[DOM-ROADS] [ENCY]` |
 
 > [!CAUTION]
@@ -330,7 +330,7 @@ Proposed checks protecting these surfaces. All `PROPOSED` `[DOM-ROADS] [ENCY]`:
 <details>
 <summary><strong>What is the route for the feature resolver?</strong></summary>
 
-`UNKNOWN`. The dossier marks every Roads/Rail route as TBD; this doc does not invent routes. Confirm against the mounted `apps/governed-api/` and `docs/architecture/governed-api.md`. `PROPOSED`.
+`UNKNOWN`. The dossier marks every Roads/Rail route as TBD; this doc does not invent routes. Confirm against the mounted `apps/governed-api/` and `docs/architecture/governed-api/README.md`. `PROPOSED`.
 </details>
 
 <details>
@@ -413,7 +413,7 @@ This document is done enough to enter the repository when:
 - `schemas/contracts/v1/domains/roads-rail-trade/` — object shape *(TODO / PROPOSED)*
 - `schemas/contracts/v1/runtime/decision_envelope.schema.json` — base envelope *(TODO / PROPOSED)*
 - `policy/domains/roads-rail-trade/` — admissibility gates *(TODO / PROPOSED)*
-- `docs/architecture/governed-api.md` — governed-API doctrine *(TODO / PROPOSED)*
+- `docs/architecture/governed-api/README.md` — governed-API doctrine *(TODO / PROPOSED)*
 - `directory-rules.md` — placement & lifecycle doctrine
 - `ai-build-operating-contract.md` — operating law, `CONTRACT_VERSION = "3.0.0"`
 - Atlas §13.J *Roads, Rail, and Trade Routes — API, contract, and schema surfaces* `[DOM-ROADS] [ENCY]`

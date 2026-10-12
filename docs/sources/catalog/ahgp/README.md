@@ -340,7 +340,7 @@ CONFIRMED doctrine — AI is interpretive, not the root truth source. For AHGP-d
 - [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain
 - [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — public-surface boundary
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance
-- [`docs/architecture/governed-api.md`](../../../architecture/governed-api.md) — public read path *(PROPOSED — verify path)*
+- [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — public read path *(PROPOSED — verify path)*
 - [`docs/architecture/contract-schema-policy-split.md`](../../../architecture/contract-schema-policy-split.md) — contracts vs schemas vs policy
 
 [↑ Back to top](#ahgp--american-history-and-genealogy-project)

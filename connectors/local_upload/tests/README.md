@@ -22,8 +22,6 @@ related:
   - ../src/README.md
   - ../src/local_upload/README.md
   - ../src/local_upload/__init__.py
-  - ../src/local_upload/fetch.py
-  - ../src/local_upload/admit.py
   - ../src/local_upload/descriptor.yaml
   - ../../../CONTRIBUTING.md
   - ../../../.github/CODEOWNERS
@@ -60,6 +58,9 @@ notes:
 <a id="top"></a>
 
 # Local Upload Greenfield Test and Trust-Edge Proof Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/local_upload/admit.py` and `src/local_upload/fetch.py` were removed from `connectors/local_upload/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Repository-grounded test boundary for `connectors/local_upload/tests/`. The lane currently contains documentation, not an executable suite. Its future job is to prove that local-upload package mechanics treat every submitted file as untrusted bytes plus unverified claims and cannot bypass KFM source, policy, lifecycle, evidence, release, correction, or public-access controls.
 
@@ -150,8 +151,6 @@ connectors/local_upload/
 │   └── local_upload/
 │       ├── README.md                      # package trust-edge boundary v0.2
 │       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
 │       └── descriptor.yaml                # four-field placeholder
 └── tests/
     └── README.md                          # this test boundary

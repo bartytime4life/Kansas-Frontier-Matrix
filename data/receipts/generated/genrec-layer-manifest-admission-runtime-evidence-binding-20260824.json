@@ -1,0 +1,133 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/layer-manifest-admission.yml": "sha256:acae72b12b1659289b36e430ad8067931892b7bbd72b1fe7ebc34ccb6b9794ec",
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "sha256:1347117504200b4f42c2b162723bf99f8ceba26f8a8b2e5c01c208d94b078d1b",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "sha256:e4c6f046a2d579bce22d1ff1a6a5f94787d9f6697f07874364f3ecc9c6e3e205",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts": "sha256:24bd6b68b6ad49a248bd0dbbce8cd277d09914e1a6304d286626802d7d6c8cee",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts": "sha256:8482dd4b0b6b86e1c777e6ae58d2236714cd3bd76663266e2f03f678000fa729",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts": "sha256:491e65d42b0629d8a3adf48774b600f79340f2d96c8aa353c48ee1d86322e727"
+  },
+  "artifact_paths": [
+    ".github/workflows/layer-manifest-admission.yml",
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts"
+  ],
+  "citations": [
+    {
+      "id": "repository:merged-layer-admission-slice",
+      "validated": true,
+      "evidence_ref": "repo:pull/3526@396549a33676987ef980b824649f3d8acc0f0f8d"
+    },
+    {
+      "id": "repository:focused-receipt-failure",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/32774237586#validate-generated-authoring-receipt"
+    },
+    {
+      "id": "attachment:maplibre-runtime-integrity",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#pages=12,19,22"
+    },
+    {
+      "id": "attachment:atlas-renderer-and-trust-laws",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Full_Atlas_seed_cards.md#L1027-L1252"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-24T20:52:28Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "repo:pull/3526@396549a33676987ef980b824649f3d8acc0f0f8d",
+      "repo:actions/run/32774237586#validate-generated-authoring-receipt",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex (GPT-5)",
+    "provider": "OpenAI",
+    "version": "2026-08-24"
+  },
+  "notes": "Corrective provenance closure for the merged #3526 runtime-evidence-binding slice. The workflow now replays the prior pending receipt against its exact ancestor bytes and validates this new receipt against current bytes. This record grants no review, merge, release, deployment, publication, evidence, policy, or public-answer authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft PR delivery",
+      "uploaded-file read-only inspection",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3ad77a5a1756f9cd1ff6fff3faae2e94468cbbbd2c7a344c202d722b060352f3",
+  "receipt_id": "genrec-layer-manifest-admission-runtime-evidence-binding-20260824",
+  "truth_labels": {
+    ".github/workflows/layer-manifest-admission.yml": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts": "CONFIRMED",
+    "apps/explorer-web/tests/layer-manifest-admission.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/map-runtime-evidence-binding.test.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "explorer-focused-unit-and-build",
+      "outcome": "PASS",
+      "reason": "Hosted exact-head run 32774237586 completed the focused LayerManifest unit test and Explorer build successfully."
+    },
+    {
+      "gate": "repository-guardrails-refreshed-branch",
+      "outcome": "PASS",
+      "reason": "The corrective branch based on current main 91c90744753fdb81c1e6a11ae1a6f826dce267fa passed repository registry, workflow-security, and topology ratchets."
+    },
+    {
+      "gate": "artifact-sha256-recomputation",
+      "outcome": "PASS",
+      "reason": "All six listed current artifact bytes were recomputed locally and match this receipt."
+    },
+    {
+      "gate": "local-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local environment does not provide the locked jsonschema dependency; hosted workflow validation remains required."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the corrective branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

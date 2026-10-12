@@ -1,5 +1,6 @@
 <!-- KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/greenwood-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Greenwood County Focus Mode Build Plan — Flint Hills Prescribed Fire, Fall River Lake, and the No-Burn-Decision / No-Live-Smoke-Guidance Boundary
 type: standard
 version: v1
@@ -7,7 +8,7 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-10-12
 policy_label: public_draft
 selected_county: Greenwood County, Kansas
 proof_slice: Flint Hills prescribed-fire and smoke-currentness restraint + Fall River Lake / Verdigris basin reservoir + generalized prairie and public-landscape context

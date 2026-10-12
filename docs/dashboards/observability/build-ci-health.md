@@ -6,14 +6,20 @@ version: v0.1
 status: draft
 owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + CI owner
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-10-12
 policy_label: internal
+owning_root: docs/
+responsibility: Specify the Build & CI health dashboard for runner conformance and build-job health; specification only, not runtime, policy, or release authority.
+truth_posture: PROPOSED specification; source card and implementation NEEDS VERIFICATION
 related:
   - kfm://doc/dashboards-observability-readme
-  - kfm://card/p8-prog-0026                    # CONFIRMED: OTel CI observability stack
+  - docs/dashboards/observability/OPENTELEMETRY_STACK.md
+related_unresolved:
+  - "kfm://card/p8-prog-0026                    # CONFIRMED: OTel CI observability stack"
 tags: [kfm, dashboards, observability, ci, build, workflow, runners]
 notes:
-  - Workflow-side rollup of the same stack as opentelemetry-stack.md.
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up); required owning_root, responsibility, and truth_posture added; kfm ids with no in-repo target moved to related_unresolved"
+  - Workflow-side rollup of the same stack as OPENTELEMETRY_STACK.md.
   - Focus is build/CI runner conformance to the single-agent shape, plus build-job health metrics.
 [/KFM_META_BLOCK_V2] -->
 
@@ -112,7 +118,7 @@ notes:
 - **Governance dashboards consuming this signal:** `docs/dashboards/governance/release-readiness.md` *(workflow pass-rate feeds the doctrinal "is the release green" indicator).*
 - **Per-domain breakdown:** N/A.
 - **Release-lifecycle view:** `docs/dashboards/release/ci-by-release.md` *(PROPOSED sibling).*
-- **Related observability specs:** `opentelemetry-stack.md` *(stack side of the same coverage);* `validator-orchestrator-health.md`.
+- **Related observability specs:** `OPENTELEMETRY_STACK.md` *(stack side of the same coverage);* `validator-orchestrator-health.md`.
 
 [↑ back to top](#top)
 

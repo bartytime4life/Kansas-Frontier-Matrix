@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec-adr-0006-maplibre-boundary-6506d5ac",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "sha256:6506d5ac41e47b0b77cdc56fe1e25d2de275c589dea5b2797a25b7d4ceda09bf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "exact repository tree, file, history, branch, pull-request, and workflow inspection",
+      "local apply_patch authoring",
+      "Poppler PDF extraction and page rendering",
+      "repository metadata, freshness, link, document-graph, ADR-index, topology, and MapLibre readiness validators",
+      "deterministic unittest, boundary, syntax, Markdown, and artifact-integrity checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:5148c85acaef7f299864df5b1804eb07498cb81ab4c4bcc39a9625287ee2817b",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md",
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/695748928f254c2c234b9058bf41cdb23f27e3c6",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/packages/maplibre/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/packages/maplibre/src/index.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/apps/explorer-web/src/adapters/MapLibreAdapter.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/tests/policy/test_explorer_web_adapter_boundary.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/tools/validators/maplibre/validate_v6_readiness.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/tests/maplibre/test_validate_v6_readiness.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/.github/workflows/briefing-implementation-campaign.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/scripts/maplibre-smoke-perf.mjs",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/.github/workflows/maplibre-perf-governance.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31759518767",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/jobs/94642665467"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-authority-and-overlap-check",
+      "outcome": "PASS",
+      "reason": "Pinned current main at 695748928f254c2c234b9058bf41cdb23f27e3c6, tree 7faf955013a020cbf0bf64f3a013ec68af427b77, ADR tree 2172a10e9b0e97b9ecb46c04d307417381f5c6c8, and prior target blob 2e40267d80a474dc53ceda81e5bbf9fce3939149; no open pull request modifies ADR-0006."
+    },
+    {
+      "gate": "adr-status-and-placement-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "The candidate preserves source draft and effective proposed status, reconciles 34 numbered records with ADR-0029 alone accepted, and corrects Directory Rules to packages/ responsibility authority rather than a MapLibre child-name choice."
+    },
+    {
+      "gate": "current-implementation-reconciliation",
+      "outcome": "PASS",
+      "reason": "Inspected the dependency-free package, placeholder export, comment-only Explorer adapter, pnpm workspace lock, real Explorer toolchain, app-local heuristic, bounded v6 classifier, live-CDN v5.5 harness, and held workflows without claiming adapter maturity."
+    },
+    {
+      "gate": "maplibre-boundary-and-v6-readiness",
+      "outcome": "PASS",
+      "reason": "Seven no-network unit tests and five synthetic fixture cases pass; both current Explorer boundary functions pass. The current v6 scan exits 3 with HOLD, exact reasons MAPLIBRE_DEPENDENCY_UNPINNED and RUNTIME_PROBES_PENDING, and all six probes NOT_RUN."
+    },
+    {
+      "gate": "boundary-coverage-and-dependency-owner-analysis",
+      "outcome": "PASS",
+      "reason": "The candidate distinguishes the v6 validator's package-only bounded scan from the app-local adapters-only policy test and records that v6 dependency detection reads root/Explorer manifests rather than the proposed package owner. Analysis is documentation evidence, not implementation remediation."
+    },
+    {
+      "gate": "current-hosted-maplibre-workflow-evidence",
+      "outcome": "PASS",
+      "reason": "Inspected applicable run 31759518767 and job 94642665467 on head 9205823798b19f37ba7c4dc2761850584948b027, later merged through PR #2753. The job succeeded while explicitly recording WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD and producing no browser or trust output."
+    },
+    {
+      "gate": "supplied-architecture-lineage",
+      "outcome": "PASS",
+      "reason": "Extracted and visually inspected selected pages from both supplied MapLibre PDFs and reconciled the supplied MapLibre 3D, implementation, and repository-structure Markdown. All five are hash-bound contextual design lineage, not repository implementation, acceptance, runtime, or release proof."
+    },
+    {
+      "gate": "no-loss-reconciliation",
+      "outcome": "PASS",
+      "reason": "Every v1.2 H2 section and the top anchor remain; status, decision, contract, enforcement, consequence, alternative, migration, rollback, open-work, reference, and appendix substance is preserved and updated through an explicit no-loss ledger."
+    },
+    {
+      "gate": "documentation-metadata-and-freshness",
+      "outcome": "PASS",
+      "reason": "Required-profile metadata has zero failures and one valid block; bounded-required freshness has zero failures at the explicit 2026-08-13 as-of date. Unsupported nested metadata remains warning-only rather than invented cleanup scope."
+    },
+    {
+      "gate": "markdown-structure-links-and-parse",
+      "outcome": "PASS",
+      "reason": "One H1, monotonic heading levels outside fenced examples, balanced fences/details/meta delimiters, zero trailing whitespace, and all 85 local targets resolve. Four badge hosts are classified without network requests."
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "PASS",
+      "reason": "The deterministic no-network full documentation graph reports no finding involving the candidate; empty formal supersession arrays remain graph-resolvable without inventing a successor. Historical repository findings remain outside this slice."
+    },
+    {
+      "gate": "adr-index-coherence",
+      "outcome": "PASS",
+      "reason": "The full repository ADR validator passes with 34 numbered records and 12 unassigned scaffolds; coherence grants no acceptance or implementation authority."
+    },
+    {
+      "gate": "adjacent-syntax-and-whitespace-checks",
+      "outcome": "PASS",
+      "reason": "The MapLibre smoke harness passes Node syntax checking and git diff whitespace validation passes."
+    },
+    {
+      "gate": "topology-ratchet-base-comparison",
+      "outcome": "PASS",
+      "reason": "The staged candidate and untouched pinned base produce the same four failing topology fingerprints: scope-alias:air, scope-alias:people, scope-alias:settlement, and scaffold-only-leaf-directories. This documentation slice adds, removes, edits, or waives none of them."
+    },
+    {
+      "gate": "generated-receipt-json-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Standard JSON parsing with duplicate-key rejection, path/hash/label parity, contract version, pending-review state, null override, citations, and the declared ADR SHA-256 binding pass."
+    },
+    {
+      "gate": "repository-python-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the repository-declared jsonschema dependency required by tools/validators/validate_generated_receipt.py; hosted exact-head validation remains required."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin only after the immutable draft branch is published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not acceptance or approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "adr-index-status",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/adr/INDEX.md"
+    },
+    {
+      "id": "adopted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "maplibre-package-and-adapter-posture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/packages/maplibre/package.json"
+    },
+    {
+      "id": "maplibre-v6-boundary-readiness",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/tools/validators/maplibre/validate_v6_readiness.py"
+    },
+    {
+      "id": "explorer-app-local-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/695748928f254c2c234b9058bf41cdb23f27e3c6/tests/policy/test_explorer_web_adapter_boundary.py"
+    },
+    {
+      "id": "maplibre-performance-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31759518767"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T02:54:21Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path ADR-0006 reconciliation plus one generated provenance receipt only. The decision remains proposed; the package and named adapter remain placeholders; the current readiness result remains HOLD. This receipt grants no ADR acceptance, dependency or plugin admission, package migration, validator remediation, exception, policy authority, release, deployment, promotion, rollback execution, merge, or publication authority."
+}

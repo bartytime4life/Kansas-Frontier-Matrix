@@ -16,7 +16,7 @@ contract_version: "3.0.0"
 related:
   - docs/domains/hazards/README.md
   - docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - schemas/contracts/v1/hazards/
   - contracts/hazards/
   - policy/domains/hazards/
@@ -468,7 +468,7 @@ These items remain `NEEDS VERIFICATION` or `OPEN` before promotion from `draft` 
 
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards domain landing page. `TODO` link target.
 - [`docs/domains/hazards/SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) — Source refresh runbook for hazards feeds.
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Governed API trust membrane and route inventory. `TODO` link target.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Governed API trust membrane and route inventory. `TODO` link target.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — How `contracts/`, `schemas/`, `policy/`, and `tests/` divide responsibilities. `TODO` link target.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle law (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED). `TODO` link target.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust-membrane doctrine. `TODO` link target.
@@ -651,7 +651,7 @@ These items remain `NEEDS VERIFICATION` or `OPEN` before promotion from `draft` 
 
 ---
 
-**Related docs:** [Hazards README (TODO)](./README.md) · [Source Refresh Runbook](./SOURCE_REFRESH_RUNBOOK.md) · [Governed API architecture (TODO)](../../architecture/governed-api.md) · [Directory Rules](../../doctrine/directory-rules.md)
+**Related docs:** [Hazards README (TODO)](./README.md) · [Source Refresh Runbook](./SOURCE_REFRESH_RUNBOOK.md) · [Governed API architecture (TODO)](../../architecture/governed-api/README.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
 **Last updated:** 2026-06-05 · **Doc id:** `kfm://doc/domains/hazards/api-contracts` · **Version:** v2 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 

@@ -1,0 +1,4 @@
+{
+  "note": "model_card_ref does not resolve to any existing file.",
+  "model_card_ref": "fixtures/domains/habitat/suitability_model/support/does_not_exist.json"
+}

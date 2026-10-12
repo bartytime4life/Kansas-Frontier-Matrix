@@ -111,7 +111,7 @@ This lane should not contain raw source captures, working candidates, held mater
 | [`../../catalog/domain/habitat/`](../../catalog/domain/habitat/) | Catalog records. | Discovery and lineage, not release authority. |
 | [`../../triplets/habitat/`](../../triplets/habitat/) | Graph projection. | Not public by itself. |
 | [`../../proofs/habitat/`](../../proofs/habitat/) | Proof support. | Support, not published carrier. |
-| [`../../proofs/validation_report/habitat/`](../../proofs/validation_report/habitat/) | Validation reports. | Gate support, not publication authority. |
+| `../../proofs/validation_report/habitat/` (not present) | Validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts do not publish. |
 | [`../../../release/`](../../../release/) | Release authority. | Manifests, correction, withdrawal, rollback, signatures. |
 | [`../../../contracts/`](../../../contracts/) | Semantic meaning. | Published artifacts conform; they do not define meaning. |

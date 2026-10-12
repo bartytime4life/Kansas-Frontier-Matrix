@@ -213,6 +213,7 @@ Re-review when the sibling inventory changes, a source is activated or retired, 
 
 | Page | Source or product | Documentation posture |
 |---|---|---|
+| [`dasc-geoportal.md`](./dasc-geoportal.md) | Kansas Geoportal / Data Access and Support Center (DASC) | Live public discovery catalog confirmed; per-item admission, rights, sensitivity, and release remain separate |
 | [`ksgs.md`](./ksgs.md) | Kansas Geological Survey | Product page; not activation |
 | [`kdwp.md`](./kdwp.md) | Kansas Department of Wildlife and Parks | Product page; sensitivity review required by product |
 | [`khri.md`](./khri.md) | Kansas Historic Resources Inventory | Product page; cultural sensitivity applies |

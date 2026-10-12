@@ -1,0 +1,12 @@
+{
+  "stable": {
+    "b": 2,
+    "a": 1
+  },
+  "shared_changed": "before",
+  "nested_changed": {
+    "state": "before"
+  },
+  "omega_removed": true,
+  "beta_removed": 2
+}

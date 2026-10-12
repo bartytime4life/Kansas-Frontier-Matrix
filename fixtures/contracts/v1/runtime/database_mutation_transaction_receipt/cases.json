@@ -1,0 +1,350 @@
+{
+  "object_type": "DatabaseMutationTransactionReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.runtime.database-mutation-transaction-receipt.fixture.v1",
+  "base_candidate": {
+    "schema_version": "1.0.0",
+    "object_type": "DatabaseMutationTransactionReceiptCandidate",
+    "profile": "kfm.runtime.database-mutation-transaction-receipt.fixture.v1",
+    "execution_mode": "FIXTURE_ONLY_DECLARATION",
+    "source_card": "KFM-P18-INV-404",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "observed_at": "2026-08-10T12:05:00Z",
+    "run_receipt": {
+      "run_id": "run:database-mutation:synthetic-001",
+      "stage": "database_mutation",
+      "inputs": [
+        "artifact:synthetic:mutation-batch-001"
+      ],
+      "outputs": [
+        "artifact:synthetic:mutation-result-001"
+      ],
+      "code_ref": "git:synthetic-database-mutation-adapter",
+      "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "source_descriptor_refs": [
+        "source:synthetic:database-fixture"
+      ],
+      "validation_refs": [
+        "validation:synthetic:mutation-batch-001"
+      ],
+      "outcome": "SUCCESS"
+    },
+    "run_receipt_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "transaction": {
+      "transaction_id": "tx:synthetic:001",
+      "mode": "APPLY",
+      "began_at": "2026-08-10T12:00:00Z",
+      "ended_at": "2026-08-10T12:02:00Z",
+      "isolation_level": "SERIALIZABLE",
+      "outcome": "COMMITTED",
+      "persisted_state": "PERSISTED"
+    },
+    "mutations": [
+      {
+        "statement_id": "statement:0001",
+        "operation": "UPDATE",
+        "relation_ref": "kfm:relation:synthetic:catalog_item",
+        "attempted_rows": 10,
+        "affected_rows": 8,
+        "validation_ref": "validation:synthetic:statement-0001"
+      },
+      {
+        "statement_id": "statement:0002",
+        "operation": "INSERT",
+        "relation_ref": "kfm:relation:synthetic:audit_entry",
+        "attempted_rows": 5,
+        "affected_rows": 5,
+        "validation_ref": "validation:synthetic:statement-0002"
+      }
+    ],
+    "totals": {
+      "statement_count": 2,
+      "attempted_rows": 15,
+      "affected_rows": 13
+    },
+    "recovery_target": {
+      "ref": "kfm:recovery-target:synthetic:snapshot-001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "authority_claims": {
+      "deterministic_assessment": true,
+      "validator_network_accessed": false,
+      "database_connected": false,
+      "transaction_executed": false,
+      "transaction_outcome_authenticated": false,
+      "affected_rows_authenticated": false,
+      "recovery_target_authenticated": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_committed_apply",
+      "patch": {},
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_rollback_rehearsal",
+      "patch": {
+        "transaction": {
+          "mode": "ROLLBACK_REHEARSAL",
+          "outcome": "ROLLED_BACK",
+          "persisted_state": "NOT_PERSISTED"
+        }
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_failed_before_commit",
+      "patch": {
+        "run_receipt": {
+          "outcome": "FAIL"
+        },
+        "transaction": {
+          "outcome": "FAILED_BEFORE_COMMIT",
+          "persisted_state": "NOT_PERSISTED"
+        }
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "abstain_indeterminate_transaction",
+      "patch": {
+        "run_receipt": {
+          "outcome": "PARTIAL"
+        },
+        "transaction": {
+          "outcome": "INDETERMINATE",
+          "persisted_state": "UNKNOWN"
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "TRANSACTION_OUTCOME_INDETERMINATE"
+        ]
+      }
+    },
+    {
+      "name": "abstain_unresolved_recovery_target",
+      "patch": {
+        "recovery_target": {
+          "resolution": "UNRESOLVED"
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "RECOVERY_TARGET_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "deny_profile_hash_mismatch",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PROFILE_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_run_receipt_digest_mismatch",
+      "patch": {},
+      "tamper": "run_receipt_digest",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PROFILE_SPEC_HASH_MISMATCH",
+          "RUN_RECEIPT_DIGEST_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_totals_mismatch",
+      "patch": {
+        "totals": {
+          "affected_rows": 12
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "TOTALS_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_affected_rows_exceed_attempted",
+      "patch": {
+        "mutations": [
+          {
+            "statement_id": "statement:0001",
+            "operation": "UPDATE",
+            "relation_ref": "kfm:relation:synthetic:catalog_item",
+            "attempted_rows": 2,
+            "affected_rows": 3,
+            "validation_ref": "validation:synthetic:statement-0001"
+          }
+        ],
+        "totals": {
+          "statement_count": 1,
+          "attempted_rows": 2,
+          "affected_rows": 3
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "AFFECTED_ROWS_EXCEED_ATTEMPTED"
+        ]
+      }
+    },
+    {
+      "name": "deny_run_outcome_mismatch",
+      "patch": {
+        "run_receipt": {
+          "outcome": "FAIL"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "RUN_OUTCOME_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_persisted_state_mismatch",
+      "patch": {
+        "transaction": {
+          "persisted_state": "UNKNOWN"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PERSISTED_STATE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_rehearsal_cannot_commit",
+      "patch": {
+        "transaction": {
+          "mode": "ROLLBACK_REHEARSAL"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "MODE_OUTCOME_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_reversed_transaction_boundary",
+      "patch": {
+        "transaction": {
+          "ended_at": "2026-08-10T11:59:59Z"
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "TRANSACTION_BOUNDARY_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "deny_observation_precedes_transaction_end",
+      "patch": {
+        "observed_at": "2026-08-10T12:01:00Z"
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "OBSERVATION_PRECEDES_TRANSACTION_END"
+        ]
+      }
+    },
+    {
+      "name": "deny_statement_order_not_canonical",
+      "patch": {
+        "mutations": [
+          {
+            "statement_id": "statement:0002",
+            "operation": "UPDATE",
+            "relation_ref": "kfm:relation:synthetic:catalog_item",
+            "attempted_rows": 10,
+            "affected_rows": 8,
+            "validation_ref": "validation:synthetic:statement-0002"
+          },
+          {
+            "statement_id": "statement:0001",
+            "operation": "INSERT",
+            "relation_ref": "kfm:relation:synthetic:audit_entry",
+            "attempted_rows": 5,
+            "affected_rows": 5,
+            "validation_ref": "validation:synthetic:statement-0001"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "STATEMENT_ORDER_NOT_CANONICAL"
+        ]
+      }
+    },
+    {
+      "name": "error_read_only_operation_excluded",
+      "patch": {
+        "mutations": [
+          {
+            "statement_id": "statement:0001",
+            "operation": "SELECT",
+            "relation_ref": "kfm:relation:synthetic:catalog_item",
+            "attempted_rows": 10,
+            "affected_rows": 0,
+            "validation_ref": "validation:synthetic:statement-0001"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {
+        "unreviewed_extension": true
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}

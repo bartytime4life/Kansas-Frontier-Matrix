@@ -1,0 +1,73 @@
+{
+  "profile": "kfm.domains.agriculture.public-safe-map-feature.v1",
+  "status": "PROPOSED_INACTIVE",
+  "object_type": "AgricultureMapFeatureCandidate",
+  "version": "1.0.0",
+  "id": "ag-map-feature:559b5822d2a2754277c828a5",
+  "spec_hash": "sha256:559b5822d2a2754277c828a55a451edca3939e240d2106fbfaf29e3f1f3433e2",
+  "domain": "agriculture",
+  "object_family": "CropRotation",
+  "semantic_role": "DERIVED_CONTEXT",
+  "support": {
+    "kind": "GENERALIZED_GRID",
+    "key": "KS-GRID-20KM-038-024",
+    "generalized": true,
+    "precision_class": "GENERALIZED_PUBLIC_SAFE"
+  },
+  "temporal": {
+    "kind": "CROP_YEAR",
+    "year": 2025,
+    "start": "2024-09-01",
+    "end": "2025-08-31",
+    "source_vintage": "2025-09-18"
+  },
+  "freshness": {
+    "evaluated_at": "2025-10-01",
+    "max_age_days": 90,
+    "state": "CURRENT"
+  },
+  "indicator": {
+    "key": "crop_rotation_class",
+    "label": "Synthetic generalized crop rotation context",
+    "unit": "CLASS",
+    "value_role": "MODELED_OR_DERIVED",
+    "value": "GRAIN_TO_OILSEED"
+  },
+  "uncertainty": {
+    "state": "BOUNDED",
+    "label": "Synthetic derived rotation context; not a field-level planting record."
+  },
+  "evidence_refs": [
+    "evidence:synthetic:agriculture:crop-rotation:v1"
+  ],
+  "rights_state": "SYNTHETIC_ONLY",
+  "sensitivity": {
+    "exact_field_geometry": false,
+    "operator_identity": false,
+    "parcel_owner_join": false,
+    "private_address": false,
+    "sensitive_infrastructure": false,
+    "proprietary_value": false,
+    "transform_parameters": false
+  },
+  "authority": {
+    "hydrology_observation": false,
+    "water_right": false,
+    "habitat_occurrence": false,
+    "geology_truth": false,
+    "atmosphere_forecast": false,
+    "hazard_alert": false
+  },
+  "release": {
+    "state": "UNRELEASED_CANDIDATE",
+    "policy_evaluated": false,
+    "review_approved": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "published": false
+  },
+  "limitations": [
+    "Derived generalized-grid context only; not observed field or planting truth.",
+    "Synthetic no-network fixture; no farm, operator, parcel, or publication authority."
+  ]
+}

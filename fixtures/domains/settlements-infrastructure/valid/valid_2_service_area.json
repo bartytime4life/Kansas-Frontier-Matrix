@@ -1,0 +1,10 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/service-area-001",
+  "version": "v0",
+  "object_family": "ServiceArea",
+  "feature_role": "service_area",
+  "sensitivity_tier": "T1",
+  "public_geometry_policy": "AGGREGATE_FOOTPRINT_ONLY",
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/settlements-infrastructure/service-area-cell-007",
+  "fixture_posture": "synthetic; valid; domain-level positive case"
+}

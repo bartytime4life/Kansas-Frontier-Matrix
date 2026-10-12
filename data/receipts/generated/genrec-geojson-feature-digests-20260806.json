@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-geojson-feature-digests-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/spec-hash.yml",
+    "packages/hashing/src/hashing/__init__.py",
+    "packages/hashing/src/hashing/cli.py",
+    "packages/hashing/src/hashing/geojson.py",
+    "tests/validators/test_validate_spec_hash_geojson.py",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/spec-hash.yml": "sha256:2f8163719dfd706f546144c152a51f508a50d69f5e143ec370543ac8d39f32c5",
+    "packages/hashing/src/hashing/__init__.py": "sha256:288e6783711382dd1a3953f79613b4294eec9907e3716f378b1d10e15f83fc5d",
+    "packages/hashing/src/hashing/cli.py": "sha256:155cfac4ff345967cb2cfe9fe6890ef066d04ea6f8f4969efc279b99366ae568",
+    "packages/hashing/src/hashing/geojson.py": "sha256:491ed9f7eb84202299e5c174b1c2bd598de4d3883df6095849e5f7e780471eb6",
+    "tests/validators/test_validate_spec_hash_geojson.py": "sha256:681f02b7e38cb71200a6ef7d09613de898491a2a602d0c4ac784bb475b8f844a",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "sha256:25f4efe988dc613c7545274f5a1b042ae6e9cbd866c609ccd9927a792600d5b0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:22251a0f1604b769d1d7ae0c33ff3c75e34dea0d8083bf104260a80b60c32cbb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas.pdf#verifiable-digests-attestations-stac-pmtiles-cog",
+      "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:tools/spec_hash/README.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/spec-hash.yml": "CONFIRMED",
+    "packages/hashing/src/hashing/__init__.py": "CONFIRMED",
+    "packages/hashing/src/hashing/cli.py": "CONFIRMED",
+    "packages/hashing/src/hashing/geojson.py": "CONFIRMED",
+    "tests/validators/test_validate_spec_hash_geojson.py": "CONFIRMED",
+    "tools/spec_hash/GEOJSON_FEATURE_DIGESTS.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "Three deterministic no-network GeoJSON digest tests passed, including a golden vector, hash-domain separation, explicit profile inputs, fail-closed invalid input, and bounded CLI behavior."
+    },
+    {
+      "gate": "local-python-compile",
+      "outcome": "PASS",
+      "reason": "Changed Python modules and the new focused test compiled successfully."
+    },
+    {
+      "gate": "local-rfc8785-dependency-parity",
+      "outcome": "SKIPPED",
+      "reason": "The execution image did not expose the repository-pinned rfc8785 distribution; focused local tests used a test-only compatible canonicalization stand-in that is not committed. Exact dependency parity is delegated to hosted CI."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every declared authored artifact is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-geojson-digests",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas.pdf#verifiable-digests-attestations-stac-pmtiles-cog"
+    },
+    {
+      "id": "repository:hashing-core",
+      "validated": true,
+      "evidence_ref": "repo:packages/hashing/src/hashing/core.py@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a6bbaa2a7986858bd72629cf3a77181b9e72a761"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T04:03:38Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2099,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive structural GeoJSON Feature digest profile using the repository RFC 8785 JCS plus SHA-256 implementation. The profile binds declared CRS and precision, emits separate geometry and record digests, and never claims topology or spatial equivalence. No source, evidence, policy, review, promotion, release, publication, or public-use authority is created."
+}

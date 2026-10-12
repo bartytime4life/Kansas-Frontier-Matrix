@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-compositional-units-6669ec9eb464",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/cross-domain/compositional-units.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/cross-domain/compositional-units.md": "sha256:6669ec9eb4645fca33132dc8e9b8623314b345483f83ffb23356c8aa104b5d0e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:docs/architecture/cross-domain/compositional-units.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=60fd278707d3773e2361e34d7f75f8a798d81838",
+      "repo:docs/architecture/cross-domain/README.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=3353a0a0ab5fe3f8f5fdea937b8eecfa34b81032",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:control_plane/domain_lane_register.yaml@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "repo:control_plane/cross_domain_seam_register.yaml@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29",
+      "repo:docs/focus-mode/README.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:contracts/evidence/frontier_definition.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=066976e0b859474191548d8ef06ad328c1c78299",
+      "repo:contracts/data/county_year_panel.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=6c8ea550ce9c550539d00bf677e0d8485c759b52",
+      "repo:contracts/evidence/frontier_classification.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=0c178ec594043119790200b5f4f0df541cc8bfeb",
+      "repo:.github/workflows/frontier-classification.yml@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=b74d891cc04f1aa004c6c9117aef9645936a7a8b",
+      "github-actions:frontier-classification:31961861956@d1fec3151a4d46032830afe8247963f03f59731b",
+      "repo:docs/architecture/planetary-3d.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=41e26697a05c9479fc78b43d5112279d9125a492",
+      "repo:contracts/map/three_d_admission_decision.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=e71692ce8897596e3477a8dafc0ef5c12fcd130a",
+      "repo:contracts/receipts/representation_receipt.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#blob=4e4a7e4d1d98c8592a76d0d3127eb90233906614",
+      "attachment:file_000000000c2081f6aee6e4898dc25f82"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/cross-domain/compositional-units.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "kfm-meta-block-yaml",
+      "outcome": "PASS",
+      "reason": "KFM_META_BLOCK_V2 parsed as YAML and retained the stable doc_id, same path, H1, created date, and legacy explicit anchors."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, valid UTF-8/LF text, no trailing whitespace or tabs, and a final newline were verified locally."
+    },
+    {
+      "gate": "internal-anchor-resolution",
+      "outcome": "PASS",
+      "reason": "All internal fragment links resolve under GitHub-style heading and explicit-anchor rules."
+    },
+    {
+      "gate": "repository-relative-link-preflight",
+      "outcome": "PASS",
+      "reason": "All 26 unique repository-relative targets were reconciled against the pinned main tree and direct current-session path reads."
+    },
+    {
+      "gate": "mermaid-source-check",
+      "outcome": "PASS",
+      "reason": "Two Mermaid source blocks passed deterministic fence, bracket, and quoted-label checks; host rendering remains a hosted-review concern."
+    },
+    {
+      "gate": "repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision distinguishes accepted Directory Rules authority, proposed machine projections, bounded fixture-first implementation, unresolved seams, and unknown runtime/publication state."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds the final Markdown bytes to sha256:6669ec9eb4645fca33132dc8e9b8623314b345483f83ffb23356c8aa104b5d0e."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt validates against the current schemas/contracts/v1/receipts/generated_receipt.schema.json Draft 2020-12 shape."
+    },
+    {
+      "gate": "repository-native-documentation-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted repository workflows begin after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; CODEOWNERS routing is not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "repository:composition-scope-law",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f#section=12.4"
+    },
+    {
+      "id": "repository:domain-lane-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "repository:cross-domain-seam-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/cross_domain_seam_register.yaml@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "repository:focus-mode-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "repository:frontier-classification-packet",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/frontier_classification.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "repository:frontier-classification-hosted-run",
+      "validated": true,
+      "evidence_ref": "github-actions:31961861956@d1fec3151a4d46032830afe8247963f03f59731b"
+    },
+    {
+      "id": "repository:planetary-3d-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/planetary-3d.md@5451e5bc1ae7ffd8d721197b930cadd827fbbd7f"
+    },
+    {
+      "id": "attachment:implementation-agent-v6",
+      "validated": true,
+      "evidence_ref": "attachment:file_000000000c2081f6aee6e4898dc25f82"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T02:42:30Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path v0.3.0 modernization of the cross-domain compositional-units architecture reference. It distinguishes Focus Mode scope composition, Frontier Matrix analytical composition, and Planetary/3D representation composition; preserves authority and source-role boundaries; records current bounded implementation and five held seams; and keeps unresolved classification, naming, stewardship, policy, review, release, correction, and rollback work visible. No domain, seam, contract, schema, policy, source, runtime, lifecycle, release, deployment, or publication state changes."
+}
