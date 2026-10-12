@@ -44,7 +44,9 @@ The candidate binds opaque references and bounded classifications for:
 
 Exact observer, target, site, or obstacle coordinates are outside the closed
 schema. Geometry is referenced only as `EXACT_RESTRICTED`, `GENERALIZED`, or
-`WITHHELD`. A public candidate cannot carry an exact-restricted posture.
+`WITHHELD`. A public candidate cannot carry an exact-restricted posture, and
+its geometry references must be opaque `fixture:` or `kfm:` identifiers rather
+than coordinate-bearing URIs, external URLs, or filesystem paths.
 
 ## Finite result
 

@@ -73,6 +73,20 @@ class ThreeDVisibilityAssumptionDisclosureTests(unittest.TestCase):
         for name in ("deny_public_exact_geometry", "deny_public_release_closure_missing"):
             self.assertEqual(MODULE.validate_candidate(self._candidate(name)).outcome, "DENY")
 
+    def test_public_candidate_rejects_non_opaque_geometry_references(self) -> None:
+        for unsafe_ref in (
+            "geo:38.123456,-95.123456;crs=wgs84",
+            "file:data/raw/site-001.json",
+            "https://example.test/geometry/38.123456,-95.123456",
+        ):
+            with self.subTest(unsafe_ref=unsafe_ref):
+                candidate = self._candidate("pass_public_generalized_and_withheld")
+                candidate["observers"]["geometry_ref"] = unsafe_ref
+                candidate["spec_hash"], candidate["disclosure_id"] = MODULE.compute_identity(candidate)
+                result = MODULE.validate_candidate(candidate)
+                self.assertEqual(result.outcome, "DENY")
+                self.assertIn("PUBLIC_GEOMETRY_REFERENCE_UNSAFE", result.codes)
+
     def test_unknown_assumptions_abstain(self) -> None:
         for name in (
             "abstain_model_resolution_unresolved",
