@@ -19,7 +19,7 @@ acceptance.
   application content and its successful browser/build checks did not change.
 - The primary PC repository was fast-forwarded from merged #5029 to that main
   commit with a clean checkout. Other worktrees were preserved.
-- The PC Site now uses `KFM-Explorer-Site-browser-checked-20261011-v246` through
+- The PC Site was updated to `KFM-Explorer-Site-browser-checked-20261011-v246` through
   its existing current-version alias and existing port 4173 service. All 954
   tracked source paths and 427 build files match the authoritative checkout.
 - The v229 folder and the existing v109 persistent store remain recoverable.
@@ -109,4 +109,41 @@ For local application rollback, atomically point `KFM-Explorer-Site-current`
 back to the retained v229 folder and restart only the existing local Site
 service. Keep its existing persistent-store path. For repository rollback,
 revert this mirror follow-up and restore its v232 selector; the old receipt
-remains unchanged. This batch did not alter or redeploy the authoritative Site.
+remains unchanged. The subsequent CI correction published v247 as described below.
+
+
+## CI correction and final identity
+
+The first exact-head hosted run rejected a test fixture's `this` alias and
+three new uppercase documentation paths. The same corrections were applied
+to the authoritative Site and its mirror: the mock retains its closest-ancestor
+behavior, and the new documents now use lowercase names under the same owning
+root. No lint rule or topology baseline was weakened. Topology reports zero
+new drift and 110 inherited warnings; all 29 topology tests pass after fetching
+the exact historical baseline commit omitted from the shallow clone. Full Site
+lint has zero errors and 66 existing warnings.
+
+Final owner-private Site v247 source is
+`b2bf41b1149d393d49909c4962e320f7f05cc422`, saved version
+`appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_67b88754cc64819195a2d721b2a03ea7`,
+successfully deployed as `appgdep_6acc2c0c694c8191bbab77f1c75d7b04`.
+All production `app/` source and client assets match the v246 browser-tested
+application. Three generated server/manifest files differ after rebuilding;
+full deployment bytes are therefore not claimed identical. The PC retains a
+complete v247 copy in `KFM-Explorer-Site-browser-checked-20261011-v247`, alongside
+v246 and v229. Persisted state and bindings remain unchanged.
+
+The append-only [v247 receipt](../../data/receipts/generated/site-v247-underground-ci-corrections-20261011.json)
+is selected for CONTENT_PARITY_ONLY checks; its review and human-acceptance
+holds remain explicit. The 17-minute endurance evidence describes v246, with
+post-correction v247 smoke and code/client-content comparison as separate proof.
+
+Post-correction local and owner-private hosted smoke restored the same 50
+records, 28 columns, aquifer withholding, and complete 2048 × 1718 surface
+with no console warnings/errors. Both corrected full suites reran successfully
+(1,096 standalone / 1,129 composed). GitHub records owner merge of #5057 at
+its earlier head `6ccd1a9721b7402085a4775e2b55c8a137f36837` while these
+corrections were being checked; merge commit is
+`79d401c069d927e6595b7166d732cc52606f381d`. The correction follow-up retains
+that merge and its initial failures as history, rather than claiming they
+passed or rewriting it.
