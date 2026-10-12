@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.4
-# Updated: 2026-08-28
+# Version: v1.5
+# Updated: 2026-10-11
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
@@ -14,8 +14,9 @@
 #   dependency can be reviewed once across matching manifests.
 # - npm, GitHub Actions, and pre-commit major updates remain individual for
 #   focused compatibility and workflow-boundary review.
-# - SemVer ecosystems use 30-day major, 7-day minor, and 3-day patch
-#   stabilization windows. Pre-commit hooks use a 7-day default window.
+# - pip/npm use 30-day major, 7-day minor, and 3-day patch stabilization
+#   windows. GitHub Actions uses one 30-day default window because SemVer
+#   cooldown fields are unsupported; pre-commit hooks use 7 days.
 # - Configured labels are advisory routing only. GitHub ignores a configured
 #   label that does not already exist; labels never establish compatibility,
 #   security, approval, or merge readiness.
@@ -163,10 +164,9 @@ updates:
       day: "wednesday"
       time: "06:00"
       timezone: "America/Chicago"
+    # Actions supports one cooldown window; retain the longest prior delay.
     cooldown:
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
+      default-days: 30
     open-pull-requests-limit: 3
     assignees:
       - "bartytime4life"
