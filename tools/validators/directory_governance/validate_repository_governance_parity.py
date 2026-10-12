@@ -412,7 +412,10 @@ def _validate_shape(instance: Mapping[str, Any], schema: Mapping[str, Any]) -> l
 
 
 def validate_current(
-    *, repo_root: Path = REPO_ROOT, instance_path: Path = INSTANCE_PATH
+    *,
+    repo_root: Path = REPO_ROOT,
+    instance_path: Path = INSTANCE_PATH,
+    trusted_base_ref: str | None = None,
 ) -> tuple[list[Finding], dict[str, Any]]:
     instance = _load_yaml(instance_path)
     schema = _load_schema(repo_root / SCHEMA_PATH.relative_to(REPO_ROOT))
@@ -425,10 +428,18 @@ def validate_current(
     if findings:
         return sorted(set(findings)), _report(findings, lane_results, topology_summary)
 
-    base_ref = _resolve_commit(repo_root, str(instance["base_ref"]))
+    profile_base_ref = _resolve_commit(repo_root, str(instance["base_ref"]))
+    # CI supplies the pull request's base SHA outside the source-controlled tree.
+    # Keep the profile checkpoint for pinned evidence, but never let it select the
+    # topology comparison base when that trusted boundary is available.
+    topology_base_ref = (
+        _resolve_commit(repo_root, trusted_base_ref)
+        if trusted_base_ref is not None
+        else profile_base_ref
+    )
     for index, item in enumerate(instance["governing_refs"]):
         try:
-            blob = _read_pinned_blob(repo_root, base_ref, str(item["path"]))
+            blob = _read_pinned_blob(repo_root, profile_base_ref, str(item["path"]))
         except ParityError:
             findings.append(Finding("GOVERNING_REF_UNRESOLVED", f"/governing_refs/{index}/path"))
             continue
@@ -451,13 +462,13 @@ def validate_current(
 
     try:
         current_findings, tracked_count = topology.scan(repo_root)
-        base_findings, base_tracked_count = _scan_ref(repo_root, base_ref)
+        base_findings, base_tracked_count = _scan_ref(repo_root, topology_base_ref)
         baseline_path = repo_root / topology.BASELINE_REPOSITORY_PATH
         baseline_data, baseline_entries = topology._load_baseline_bytes(
             baseline_path.read_bytes(), label="current"
         )
         topology.enforce_trusted_baseline(
-            repo_root, baseline_data, baseline_entries, base_ref
+            repo_root, baseline_data, baseline_entries, topology_base_ref
         )
         _topology_code, topology_report = topology.evaluate(
             current_findings,
@@ -607,7 +618,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(json.dumps(result, sort_keys=True, separators=(",", ":")))
             return 0 if ok else 1
         findings, report = validate_current(
-            repo_root=args.repo_root.resolve(), instance_path=args.instance.resolve()
+            repo_root=args.repo_root.resolve(),
+            instance_path=args.instance.resolve(),
+            trusted_base_ref=os.environ.get("KFM_TRUSTED_BASE_REF"),
         )
     except (OSError, UnicodeError, ValueError, ParityError) as exc:
         report = {
