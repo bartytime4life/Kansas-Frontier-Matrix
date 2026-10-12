@@ -1,5 +1,6 @@
 <!-- KFM_META_BLOCK_V2
- doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/pratt-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
  title: Pratt County Focus Mode Build Plan — Pratt Sandhills, South Fork Ninnescah, County Lake, and Wildlife-Access / Non-Live-Safety Boundary
  type: standard
  version: v1

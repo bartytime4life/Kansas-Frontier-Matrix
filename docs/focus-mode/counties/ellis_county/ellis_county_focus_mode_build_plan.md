@@ -1,12 +1,13 @@
 <!-- KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/ellis-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; one broken Appendix A navigation anchor repaired; no other content changed"
 title: Ellis County Focus Mode Build Plan
 type: standard
 version: v1
 status: draft
 owners: [NEEDS_VERIFICATION]
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-10-12
 policy_label: public_draft
 repository_path: NEEDS_VERIFICATION - candidate only: docs/focus-mode/counties/ellis_county/ellis_county_focus_mode_build_plan.md
 schema_contract_policy_homes: NEEDS_VERIFICATION - inspect accepted ADRs, root README contracts, shared KFM object families and current authority homes before extending contracts, schemas, policy, fixtures, validators, source registries, receipts, proofs, release records or published-artifact paths
@@ -62,7 +63,7 @@ notes:
 
 ## Quick links
 
-[Executive build note](#executive-build-note) · [Evidence boundary](#evidence-boundary-table) · [Operating posture](#1-operating-posture) · [Why Ellis County](#2-why-this-county) · [Product thesis](#3-product-thesis) · [Scope boundary](#4-scope-boundary) · [First demo layers](#5-first-demo-layers) · [User journeys](#6-user-journeys) · [UI surfaces](#7-ui-surfaces) · [Governed object model](#8-governed-object-model) · [Repository shape](#9-proposed-repository-shape) · [Build phases](#10-build-phases) · [First PR sequence](#11-first-pr-sequence) · [Acceptance checklist](#12-acceptance-checklist) · [Fixture plan](#13-fixture-plan) · [Risk register](#14-risk-register) · [Source seeds](#15-source-seed-list) · [Verification questions](#16-open-verification-questions) · [First milestone](#17-recommended-first-milestone) · [Appendices](#appendix-a---public-safe-narrative-skeleton)
+[Executive build note](#executive-build-note) · [Evidence boundary](#evidence-boundary-table) · [Operating posture](#1-operating-posture) · [Why Ellis County](#2-why-this-county) · [Product thesis](#3-product-thesis) · [Scope boundary](#4-scope-boundary) · [First demo layers](#5-first-demo-layers) · [User journeys](#6-user-journeys) · [UI surfaces](#7-ui-surfaces) · [Governed object model](#8-governed-object-model) · [Repository shape](#9-proposed-repository-shape) · [Build phases](#10-build-phases) · [First PR sequence](#11-first-pr-sequence) · [Acceptance checklist](#12-acceptance-checklist) · [Fixture plan](#13-fixture-plan) · [Risk register](#14-risk-register) · [Source seeds](#15-source-seed-list) · [Verification questions](#16-open-verification-questions) · [First milestone](#17-recommended-first-milestone) · [Appendices](#appendix-a--public-safe-narrative-skeleton)
 
 <a id="executive-build-note"></a>
 

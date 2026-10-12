@@ -1,11 +1,18 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/sheridan-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+type: county-focus-mode-build-plan
+version: NEEDS_VERIFICATION
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Sheridan County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Sheridan County Focus Mode Build Plan
 county_name: Sheridan County
 county_slug: sheridan_county
 kansas_county_fips: "20179"
 created: 2026-06-11
-updated: 2026-06-11
+updated: 2026-10-12
 artifact_filename: sheridan_county_focus_mode_build_plan.md
 status: PROPOSED
 release_status: NEEDS_VERIFICATION
@@ -45,15 +52,15 @@ collision_search_results:
   supplied_completed_collision_register: CONFIRMED_ABSENT:Sheridan County was absent from the user-supplied completed/collision register.
   live_county_index: CONFIRMED:Sheridan row is present as not-started in accessible repo index, but not-started is not proof of absence.
   filename_content_search: CONFIRMED_NO_HIT_ACCESSIBLE:sheridan_county, sheridan-county, Sheridan County Focus Mode, and county_focus_mode_build_plan accessible searches returned no file/PR/issue hit in available repo connector results.
-  rejected_material_collisions:
-    - Greeley County: existing accessible repo file docs/focus-mode/counties/greeley_county/greeley_county_focus_mode_build.md
-    - Smith County: existing accessible repo file docs/focus-mode/counties/smith_county/smith_county_build_plan.md
-    - Wichita County: existing accessible repo file docs/focus-mode/counties/wichita_county/wichita_county_build_plan.md
-    - Lincoln County: existing accessible repo file docs/focus-mode/counties/lincoln_county/lincoln_county_focus_mode_build_plan.md
-    - Nemaha County: existing accessible repo file docs/focus-mode/counties/nemaha_county/nemaha_county_build_plan.md
-    - Ness County: existing accessible repo file docs/focus-mode/counties/ness_county/ness_county_focus_mode_build_plan.md
-    - Stanton County: generated in the immediately previous artifact in this chat and therefore not eligible.
   exhaustive_absence: NEEDS_VERIFICATION:private branches, prior chats, local artifact stores, and unmounted worktrees were not fully inspectable.
+collision_search_results_rejected_material_collisions:
+  - "Greeley County: existing accessible repo file docs/focus-mode/counties/greeley_county/greeley_county_focus_mode_build.md"
+  - "Smith County: existing accessible repo file docs/focus-mode/counties/smith_county/smith_county_build_plan.md"
+  - "Wichita County: existing accessible repo file docs/focus-mode/counties/wichita_county/wichita_county_build_plan.md"
+  - "Lincoln County: existing accessible repo file docs/focus-mode/counties/lincoln_county/lincoln_county_focus_mode_build_plan.md"
+  - "Nemaha County: existing accessible repo file docs/focus-mode/counties/nemaha_county/nemaha_county_build_plan.md"
+  - "Ness County: existing accessible repo file docs/focus-mode/counties/ness_county/ness_county_focus_mode_build_plan.md"
+  - "Stanton County: generated in the immediately previous artifact in this chat and therefore not eligible."
 directory_rules_basis:
   checked: CONFIRMED
   basis: >

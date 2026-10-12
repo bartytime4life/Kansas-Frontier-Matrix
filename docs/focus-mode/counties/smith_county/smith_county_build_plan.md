@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/smith-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Smith County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Smith County Focus Mode Build Plan
 type: county-focus-mode-build-plan
 version: v0.1-proposed
@@ -9,18 +14,18 @@ county_name: Smith County
 county_slug: smith
 lane_slug: smith-county
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-10-12
 owners:
-  focus_mode_owner: NEEDS_VERIFICATION
-  evidence_steward: NEEDS_VERIFICATION
-  geodesy_cartography_reviewer: NEEDS_VERIFICATION
-  cultural_history_reviewer: NEEDS_VERIFICATION
-  agriculture_reviewer: NEEDS_VERIFICATION
-  municipal_water_reviewer: NEEDS_VERIFICATION
-  privacy_property_reviewer: NEEDS_VERIFICATION
-  infrastructure_security_reviewer: NEEDS_VERIFICATION
-  rights_reviewer: NEEDS_VERIFICATION
-  release_approver: NEEDS_VERIFICATION
+  - focus_mode_owner: NEEDS_VERIFICATION
+  - evidence_steward: NEEDS_VERIFICATION
+  - geodesy_cartography_reviewer: NEEDS_VERIFICATION
+  - cultural_history_reviewer: NEEDS_VERIFICATION
+  - agriculture_reviewer: NEEDS_VERIFICATION
+  - municipal_water_reviewer: NEEDS_VERIFICATION
+  - privacy_property_reviewer: NEEDS_VERIFICATION
+  - infrastructure_security_reviewer: NEEDS_VERIFICATION
+  - rights_reviewer: NEEDS_VERIFICATION
+  - release_approver: NEEDS_VERIFICATION
 defining_public_safe_boundary: >-
   Smith County's geographic-center marker, Lebanon visitor context, Home on the
   Range history, agriculture, property-inspection notices, municipal utilities,
@@ -45,14 +50,14 @@ collision_search:
   issue_search: CONFIRMED no matching issue returned
   accessible_project_materials: CONFIRMED no Smith County Focus Mode build plan found
   exhaustive_absence_private_branches_deleted_files_local_artifacts_prior_chats: NEEDS_VERIFICATION
-  rejected_material_collisions:
-    - Butler County: generated in this conversation
-    - Cheyenne County: generated in this conversation
-    - Nemaha County: generated in this conversation
-    - Russell County: generated in this conversation
-    - Sumner County: generated in this conversation
-    - Wichita County: generated in this conversation
-    - Graham County: live county index marks draft
+collision_search_rejected_material_collisions:
+  - "Butler County: generated in this conversation"
+  - "Cheyenne County: generated in this conversation"
+  - "Nemaha County: generated in this conversation"
+  - "Russell County: generated in this conversation"
+  - "Sumner County: generated in this conversation"
+  - "Wichita County: generated in this conversation"
+  - "Graham County: live county index marks draft"
 directory_rules_basis:
   governing_principle: responsibility root outranks topic name
   observed_live_plan_template: docs/focus-mode/counties/<county-slug>-county/build-plan.md

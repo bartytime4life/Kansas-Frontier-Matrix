@@ -1,12 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/intake/exploratory/readme
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Hold exploratory intake packets and source maps for review without granting them doctrine or canonical status.
+truth_posture: CONFIRMED path and source-map convention; owners and policy labels NEEDS VERIFICATION
 title: Exploratory Intake README
 type: readme
 version: v0.4
 status: draft; repository-grounded
 owners: Docs steward / OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-02
+updated: 2026-10-12
 policy_label: public
 related: [../README.md, ../new-ideas-register.md, ../NEW_IDEAS_INDEX.md, ../canonicalization-policy.md, ./new-ideas-4-13-source-map.md, ./geology-natural-resources-architecture-source-map.md, ./cdl-material-change-watcher-source-map.md, ./evidence-resolution-source-map.md, ../../archive/exploratory/README.md, ../../doctrine/authority-ladder.md, ../../doctrine/truth-posture.md]
 tags: [kfm, intake, exploratory, governance, documentation]

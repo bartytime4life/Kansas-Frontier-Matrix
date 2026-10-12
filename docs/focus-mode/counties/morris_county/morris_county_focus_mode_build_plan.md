@@ -1,6 +1,7 @@
 <!--
 KFM_META_BLOCK_V2
- doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/morris-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
  title: Morris County Focus Mode Build Plan — Council Grove, Neosho River, Tallgrass Working Lands, and Kaw/Osage Cultural-Sovereignty Boundary
  type: standard
  version: v0.1-draft

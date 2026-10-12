@@ -1,12 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/data/registry/sources/habitat/readme
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Habitat Source Registry
 type: standard
 version: v1
 status: draft
 owners: OWNER_TBD
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-10-12
 policy_label: restricted-review
 related: [../README.md, ../../README.md, ../../habitat/README.md, ../../habitat/sources/README.md, ecoregions/README.md, ../../../../docs/domains/habitat/SOURCE_REGISTRY.md, ../../../../docs/domains/habitat/SOURCE_FAMILIES.md, ../../../../docs/domains/habitat/HABITAT_SOURCE_LEDGER.md]
 tags: [kfm, data, registry, sources, habitat, source-descriptor, source-role, rights, sensitivity, evidence, provenance, admission, release-gated, no-public-path]

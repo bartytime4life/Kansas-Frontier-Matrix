@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION — <REGISTERED_KFM_DOC_ID>
+doc_id: kfm://doc/focus-mode/counties/decatur-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Decatur County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Decatur County Focus Mode Build Plan — Northern Cheyenne Exodus Memory and Drought Currentness Without Unreviewed Cultural, Site-Precision, or Emergency Conclusions
 type: county-focus-mode-build-plan
 version: v0.1-draft
@@ -7,7 +12,7 @@ status: draft
 county: Decatur County, Kansas
 county_slug: decatur
 created: 2026-06-08
-updated: 2026-06-08
+updated: 2026-10-12
 owners:
   - NEEDS_VERIFICATION — <OWNER:focus-mode-steward>
   - NEEDS_VERIFICATION — <OWNER:tribal-sovereignty-and-cultural-reviewer>

@@ -1,6 +1,7 @@
 <!--
 KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/osage-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Osage County Focus Mode Build Plan
 type: standard
 version: v1
@@ -8,7 +9,7 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION
-updated: NEEDS_VERIFICATION
+updated: 2026-10-12
 policy_label: public-plan
 related:
   - docs/doctrine/directory-rules.md
