@@ -150,7 +150,8 @@ docs/runbooks/hazards/
 ├── PROMOTION_RUNBOOK.md
 ├── ROLLBACK_DRILL.md
 ├── ROLLBACK_RUNBOOK.md
-└── SOURCE_REFRESH_RUNBOOK.md
+├── SOURCE_REFRESH_RUNBOOK.md
+└── storm-events-pilot.md
 ```
 
 This map is intentionally direct-only. Contracts, schemas, fixtures, validators, tests, source records, policy, proofs, candidates, and released artifacts remain in their owning roots.
