@@ -4,7 +4,7 @@
 Serves the standalone Intake Desk at http://127.0.0.1:8771/ and a JSON API used by
 the desk and the Explorer's local library page. The security envelope matches
 the other local companions: exact loopback Host, an Origin allowlist, a
-per-process session token on every POST, bounded JSON bodies, and no file paths
+operator-provisioned per-process session token on every API request, bounded JSON bodies, and no file paths
 chosen by the browser. Analysis and bounded private atlas previews are review
 material; they never grant source admission, release, or publication authority.
 """
@@ -23,6 +23,7 @@ from urllib.parse import parse_qs, urlsplit
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 from tools.local_data import intake, intake_route, atlas  # noqa: E402
+from tools.local_data.loopback_session import session_matches, print_connection_links  # noqa: E402
 
 PORT = 8771
 SELF_ORIGIN = f"http://127.0.0.1:{PORT}"
@@ -218,7 +219,7 @@ def handler(desk: Desk):
 
         def do_GET(self):
             # Host pins the loopback name (DNS-rebinding defence). A present Origin must be
-            # allowlisted; a missing Origin is a same-origin or top-level read, never a write.
+            # allowlisted. Neither header authenticates a local process; API reads need a capability.
             if not self.host_ok() or ("Origin" in self.headers and self.origin() is None):
                 return self.answer(403, {"error": "ORIGIN_REJECTED"})
             parsed = urlsplit(self.path)
@@ -226,10 +227,10 @@ def handler(desk: Desk):
             if path in ASSETS:
                 name, content_type = ASSETS[path]
                 content = (DESK / name).read_bytes()
-                if name == "index.html":
-                    content = content.replace(b"__KFM_SESSION__", desk.token.encode())
                 return self.answer(200, content, content_type=content_type,
                                    extra=(("Content-Security-Policy", CSP), ("X-Frame-Options", "DENY")))
+            if not session_matches(self.headers, desk.token):
+                return self.answer(403, {"error": "SESSION_REJECTED"})
             try:
                 if path == "/api/status":
                     body = desk.status()
@@ -273,7 +274,7 @@ def handler(desk: Desk):
             return self.answer(404, {"error": "NOT_FOUND"})
 
         def do_POST(self):
-            if not self.host_ok() or self.origin() is None or not secrets.compare_digest(self.headers.get("X-KFM-Session", ""), desk.token):
+            if not self.host_ok() or self.origin() is None or not session_matches(self.headers, desk.token):
                 return self.answer(403, {"error": "SESSION_REJECTED"})
             if self.headers.get("Content-Type") != "application/json" or self.headers.get("Transfer-Encoding"):
                 return self.answer(415, {"error": "JSON_REQUIRED"})
@@ -333,6 +334,7 @@ def main(argv: list[str] | None = None) -> int:
         desk.start({})
         threading.Thread(target=desk.refresh_periodically, args=(args.refresh_seconds, stop_refresh), daemon=True, name="kfm-intake-refresh").start()
     print(f"KFM Intake Desk: {SELF_ORIGIN}/  (store {root}; Ctrl+C to stop)", flush=True)
+    print_connection_links(desk.token, "intake", ORIGINS)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

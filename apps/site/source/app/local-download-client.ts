@@ -1,3 +1,4 @@
+import { companionSession } from "./local-companion-session";
 import { readBoundedJson } from "./bounded-json";
 
 export const LOCAL_DOWNLOAD_ORIGIN = "http://127.0.0.1:8769";
@@ -60,8 +61,8 @@ export type DownloadEndpoint = "/status" | "/library" | "/library/refresh" | "/d
 export async function localDownloadRequest(path: DownloadEndpoint, signal: AbortSignal, payload?: unknown, sessionToken?: string) {
   const combined = AbortSignal.any([signal, AbortSignal.timeout(path === "/downloads" ? 10_000 : 8_000)]);
   combined.throwIfAborted();
-  const response = await fetch(`${LOCAL_DOWNLOAD_ORIGIN}${path}`, { signal: combined, credentials: "omit", cache: "no-store",
-    ...(payload === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": sessionToken ?? "" }, body: JSON.stringify(payload) }) });
+  const response = await fetch(`${LOCAL_DOWNLOAD_ORIGIN}${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error", headers: { "X-KFM-Session": companionSession("downloads") },
+    ...(payload === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": sessionToken ?? companionSession("downloads") }, body: JSON.stringify(payload) }) });
   const body = await readBoundedJson(response, path === "/status" || path === "/library" || path === "/library/refresh" ? 256_000 : 64_000, combined);
   combined.throwIfAborted();
   return { response, body };

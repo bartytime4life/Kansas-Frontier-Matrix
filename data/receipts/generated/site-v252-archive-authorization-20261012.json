@@ -4,14 +4,14 @@
   "canonical_tool_mappings": {
     "scripts/basemap-cache.py": {
       "destination": "tools/local_data/basemap_cache.py",
-      "difference": "none",
-      "repository_sha256": "02b5da7306f4384bf56ef125feff4089a7465100f38d888f48f1c3840f97576d",
+      "difference": "Repository-only session capability and authorization overlay; Site source is unchanged.",
+      "repository_sha256": "52b7835e81947727a4f9114b79d20e1471c28b1368165913f0e20fad49ea6db2",
       "site_sha256": "02b5da7306f4384bf56ef125feff4089a7465100f38d888f48f1c3840f97576d"
     },
     "tests/basemap_cache_test.py": {
       "destination": "tests/local_data/test_basemap_cache.py",
-      "difference": "canonical import path only",
-      "repository_sha256": "425379ad95acdfe93ca151a60c0f79f0a3e0a3b300d81385d9a62e8060bd1985",
+      "difference": "Repository-only session capability and authorization overlay; Site source is unchanged.",
+      "repository_sha256": "0fb888e71643ed17440eb26bd9e89416d77d23d51361cad7b2f3137dbecda431",
       "site_sha256": "9c2050840d4a2aa123ead8351d9ef27a204207899b0b82b2189e21a3cd9520ea"
     }
   },
@@ -527,9 +527,9 @@
       "state": "identical"
     },
     "app/basemap-cache.ts": {
-      "mirror_sha256": "0c78028c9263bdcec4ec844e6b1fa7f3a2579ed05a9b3d266b7d5839c9d0c8a2",
+      "mirror_sha256": "5a7125de9b43688eecd4d62ae7809f55c80cb7695fe0df547ad212501e3f6fd3",
       "site_sha256": "0c78028c9263bdcec4ec844e6b1fa7f3a2579ed05a9b3d266b7d5839c9d0c8a2",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/blm-plss-inspector.tsx": {
       "mirror_sha256": "611445e527f334d9c3cb25f81e37f646922e827462a2c93ad1d9df01a8d6c247",
@@ -1171,9 +1171,9 @@
       "state": "identical"
     },
     "app/intake-desk-client.ts": {
-      "mirror_sha256": "1d6183ad7bc19c78f4d4742d5a6b97485fe8b1cb46abd97be358bc71e1041f1c",
+      "mirror_sha256": "4c2e3e80f3f92e45e0762af2e73f47b9620687516becf356feda0c45db554fb3",
       "site_sha256": "1d6183ad7bc19c78f4d4742d5a6b97485fe8b1cb46abd97be358bc71e1041f1c",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/intake-desk-summary.module.css": {
       "mirror_sha256": "ba4a40291a820e95f0cbda87b535cf452be58639f00c7d9a4903c53da42d4faf",
@@ -1341,9 +1341,9 @@
       "state": "identical"
     },
     "app/local-atlas-client.ts": {
-      "mirror_sha256": "e9177c77c0cc95d310c12324e565b8c2a200b280767505aa2079268020fe332b",
+      "mirror_sha256": "1374bb52863808be90c90006982cf5f9032a86a42583267b0466318dd0b1aa4c",
       "site_sha256": "e9177c77c0cc95d310c12324e565b8c2a200b280767505aa2079268020fe332b",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/local-atlas-control.tsx": {
       "mirror_sha256": "17f889f29cd2f318f1c64f7f468755bcec35e23917cc2ffd2850a6f42bdc952f",
@@ -1375,10 +1375,14 @@
       "site_sha256": "abd9731f930bde93762d04cf9392c3496ee1cbb2011df962c92bc5ee4c547529",
       "state": "identical"
     },
+    "app/local-companion-session.ts": {
+      "mirror_sha256": "a0cc480461791f1d5df260fe40da9acf616ef4c79291e66101a32ec21122c8b4",
+      "state": "repository_only_overlay"
+    },
     "app/local-download-client.ts": {
-      "mirror_sha256": "fe984cb058bb34bbf6bda197db431492936221dfa64632d75f200efc40065a16",
+      "mirror_sha256": "5eb4f42a8eb13a6cbb1c7edf0a18ff2c18167c01b6fecba81e42e0314075a06c",
       "site_sha256": "fe984cb058bb34bbf6bda197db431492936221dfa64632d75f200efc40065a16",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/local-geopdf-map.ts": {
       "mirror_sha256": "3522f71b60a99ee918a4c667b12c97030d2357d5e2570832d6dd61dac02b0b72",
@@ -1591,9 +1595,9 @@
       "state": "identical"
     },
     "app/public-map-client.ts": {
-      "mirror_sha256": "c043263fb61e4624902749ee53cc72f17a6dfd0cf6c79b50de890abc6e355ea9",
+      "mirror_sha256": "6fa139296abbce1c3c936b24a0f0315283dc267fd215f2ac2185f0265b3083a9",
       "site_sha256": "c043263fb61e4624902749ee53cc72f17a6dfd0cf6c79b50de890abc6e355ea9",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/public-map-download-state.ts": {
       "mirror_sha256": "47944abc43c379e1563c1d76a848be9cc942e3570b70715c011980c38302f262",
@@ -2101,9 +2105,9 @@
       "state": "identical"
     },
     "docs/basemap-cache.md": {
-      "mirror_sha256": "2e958be0f689732258192f4b0f714ba462bb5881dc5b0db734cb99d6e15d62c3",
+      "mirror_sha256": "ac717abed0897e61ef40bc81afdf5b848804a68eea4bcbec92112522ae2fe5f8",
       "site_sha256": "2e958be0f689732258192f4b0f714ba462bb5881dc5b0db734cb99d6e15d62c3",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "docs/cinematic-scene-effects.md": {
       "mirror_sha256": "312ec59690f37b860e0f3e1b6b59a186a60415abe6d71ad09d644a0f452dba99",
@@ -4054,9 +4058,9 @@
       "state": "identical"
     },
     "tests/basemap-cache.test.mjs": {
-      "mirror_sha256": "fb0f406a69be791e744c9c5fa5b30d1d3f1d319e6777927c05ae6ff445855b1e",
+      "mirror_sha256": "19ca626e0751e057eaa327e03f2cd04b137a3e05deccb08fe4b096177e9bb36b",
       "site_sha256": "fb0f406a69be791e744c9c5fa5b30d1d3f1d319e6777927c05ae6ff445855b1e",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/blm-plss-records.test.mjs": {
       "mirror_sha256": "f85ba31eba2724ff1c3a744debbe25b6307dcbbd63d1b7c632f00aaffb2a7da1",
@@ -4074,9 +4078,9 @@
       "state": "identical"
     },
     "tests/cache-budget.test.mjs": {
-      "mirror_sha256": "4524e6d7c662bc6f035ba2265f2b401a3554133a748c58bead79560efd9b3719",
+      "mirror_sha256": "4f11e60317e8ac7b387efc54e3d3e69d1a2cf20dc7add20617aed52e3d0032df",
       "site_sha256": "4524e6d7c662bc6f035ba2265f2b401a3554133a748c58bead79560efd9b3719",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/cinematic-scene-effects.test.mjs": {
       "mirror_sha256": "436c608f618924dfb8f0f69b28687cf9e11e5ae5161fb5719d9bf6fd2d18e466",
@@ -4179,9 +4183,9 @@
       "state": "identical"
     },
     "tests/download-center.test.mjs": {
-      "mirror_sha256": "faba3fc02d26322df72466c99078b84d81ca275fc511cd727a24fae3f7a10527",
+      "mirror_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
       "site_sha256": "faba3fc02d26322df72466c99078b84d81ca275fc511cd727a24fae3f7a10527",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/download-focus.test.mjs": {
       "mirror_sha256": "6569b4f835534d22e79135ce4fdc7d1811d07fb5ea87c05b2fb4cd5030997e23",
@@ -4189,9 +4193,9 @@
       "state": "identical"
     },
     "tests/download-workbench-runtime.test.mjs": {
-      "mirror_sha256": "2d3c8ceede5e448ada63a7f5b4d9e2eb06e966dceefcf506b57dbba77d5fd8ec",
+      "mirror_sha256": "5504dfc64627b18443d869a54d4e48c53b9834f6ef8687565fe5493f8a5e1483",
       "site_sha256": "2d3c8ceede5e448ada63a7f5b4d9e2eb06e966dceefcf506b57dbba77d5fd8ec",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/download-workspace-ui.test.mjs": {
       "mirror_sha256": "08939da851a21527e1050c2f84ccaebeef756c393285b35a4f6938f749e5817d",
@@ -4590,9 +4594,9 @@
       "state": "identical"
     },
     "tests/intake-desk.test.mjs": {
-      "mirror_sha256": "fe111c54f6fb64c0af7be334513b516595072debe2da705819d4ba265d75ab0c",
+      "mirror_sha256": "52a351ccc751d492778ba704d223ceebc3416d1ea4940c1e693a55d338d2af51",
       "site_sha256": "fe111c54f6fb64c0af7be334513b516595072debe2da705819d4ba265d75ab0c",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/intake-worker.test.mjs": {
       "mirror_sha256": "a72ace9a0f6374bacd384c218b530ad0f45e668b79303dfacba472efdd1d1a64",
@@ -4660,9 +4664,13 @@
       "state": "identical"
     },
     "tests/local-atlas.test.mjs": {
-      "mirror_sha256": "79466956d0994c939c1e0e1ab058a3a33db19cab3741bb86a2c69d9343bacdf9",
+      "mirror_sha256": "0c2bbecec6e6eacaab1d254c6f434a9daae8a9039a10c9084a0c340029ffe224",
       "site_sha256": "79466956d0994c939c1e0e1ab058a3a33db19cab3741bb86a2c69d9343bacdf9",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
+    },
+    "tests/local-companion-session.test.mjs": {
+      "mirror_sha256": "6e678661700847894d1cc484ebbbe05a8de7f0ff462998f0e5a03578caa85c08",
+      "state": "repository_only_overlay"
     },
     "tests/local-geopdf-review.test.mjs": {
       "mirror_sha256": "b93827eb5ec8956df9a0a4674462f8f00fa95fb75cab6b4bd35ad2108aa095d3",
@@ -4775,9 +4783,9 @@
       "state": "identical"
     },
     "tests/public-map-catalog.test.mjs": {
-      "mirror_sha256": "f9967890b5e74ca4e0903f83e8358a4bfb2b6a4b12278fccb8ca879d6e97d8cf",
+      "mirror_sha256": "d4e2ee2255d895694f7146c80526ecd7a5847417856ff2dfabc0a538995598a5",
       "site_sha256": "f9967890b5e74ca4e0903f83e8358a4bfb2b6a4b12278fccb8ca879d6e97d8cf",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/public-map-preview-lifecycle.test.mjs": {
       "mirror_sha256": "1efaf56b36650a411ca341a989d46ebc540b5b92836a5f99cc898631e3cee7c7",
@@ -5122,18 +5130,18 @@
   },
   "counts": {
     "canonical_tool_mappings": 2,
-    "identical": 973,
-    "inherited_repository_overlay": 9,
+    "identical": 960,
+    "inherited_repository_overlay": 22,
     "missing": 0,
-    "repository_only_overlay": 43,
-    "source_paths": 1027,
+    "repository_only_overlay": 45,
+    "source_paths": 1029,
     "unexpected_difference": 0
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "19007f7ee34844f939848bfbb8a2212879aefe78d2bd88bba957c4fa94ca1360",
-  "notes": "Append-only version252 archive parity evidence. All unrelated inherited repository overlays retain prior hashes and states. Parity does not establish review acceptance or deployment of repository overlays.",
-  "predecessor_receipt": "site-v251-storm-events-layer-overlay-20261012.json",
+  "inventory_sha256": "2d6fbcfc89865fdcb486cdeff8f1a250509cf0091358fcd6a9d065763323decf",
+  "notes": "Version252 archive authorization reconciled with current main; all unrelated current-main mirror bytes and overlay classifications retained. Human review pending; no deployment of repository overlays implied.",
+  "predecessor_receipt": "site-v251-loopback-session-overlay-20261011.json",
   "profile": "kfm.site-mirror-receipt/v1",
   "reconciliation": {
     "changes": [
@@ -5208,6 +5216,7 @@
   },
   "recorded_at": "2026-10-12",
   "repository_base": "3f0c59bb4b8dcf6e72ab43501cf3f728d220e5ee",
+  "repository_reconciled_base": "f6d4fa5db1203b016c361b9450454b58cd195b94",
   "review": {
     "blocking_checks": [
       "repository_review",

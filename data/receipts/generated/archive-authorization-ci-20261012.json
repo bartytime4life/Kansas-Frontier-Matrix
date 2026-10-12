@@ -6,7 +6,7 @@
     "tools/qa/site_mirror.py"
   ],
   "artifact_hashes": {
-    "data/receipts/generated/site-v252-archive-authorization-20261012.json": "sha256:f56e7dfe53a143609f7d5b9583b36e4f5ea8a4c5abe29b23ee1638a25e786425",
+    "data/receipts/generated/site-v252-archive-authorization-20261012.json": "sha256:17b78b0c07fd309a3e0c1b64a17ab2fc033e20d5160e3367391b054d5fe594a5",
     "tools/qa/site_mirror.py": "sha256:d99b862b42bab21d593a0a22079a062eaff8c5a1de297dbe5f3d7e0fd70c292e"
   },
   "model_identity": {
@@ -32,7 +32,8 @@
     "evidence_refs": [
       "github:3f0c59bb4b8dcf6e72ab43501cf3f728d220e5ee",
       "github-actions:38202153726",
-      "sites-source:190d16acb2f866cb9c2eb108dbd204ca30465269"
+      "sites-source:190d16acb2f866cb9c2eb108dbd204ca30465269",
+      "github:f6d4fa5db1203b016c361b9450454b58cd195b94"
     ]
   },
   "truth_labels": {
@@ -48,7 +49,7 @@
     {
       "gate": "Recorded mirror content parity",
       "outcome": "PASS",
-      "reason": "1025 files; 973 identical and 52 retained repository overlays; review not evaluated."
+      "reason": "1027 files; all current-main overlays retained; review not evaluated."
     },
     {
       "gate": "tests/qa/test_site_mirror.py",
