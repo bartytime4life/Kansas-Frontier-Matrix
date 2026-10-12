@@ -5245,7 +5245,7 @@
   },
   "recorded_at": "2026-10-12T01:18:34.290902+00:00",
   "repository_base": "b194938f9e8abc076f82c75b32e0dbec25add8ca",
-  "repository_reconciled_base": "b194938f9e8abc076f82c75b32e0dbec25add8ca",
+  "repository_reconciled_base": "d9887c7e2a8b5625a5151e51e6543239cb57637e",
   "review": {
     "blocking_checks": [
       "repository_review",
@@ -5277,13 +5277,44 @@
   "site_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_baf0ea9a63088191abe53b55f9387b89",
   "status": "REVIEW_ONLY",
   "validation": {
-    "browser": "PENDING fresh installed local smoke; prior v246 endurance remains historical",
+    "browser": {
+      "at": "2026-10-12T01:23:50.049Z",
+      "hosted": {
+        "aquiferRegions": 1,
+        "columns": 28,
+        "console": [],
+        "records": 50,
+        "surface": "2048 x 1718 at zoom 13.4"
+      },
+      "local": {
+        "aquiferRegions": 1,
+        "canvasCount": 5,
+        "columns": 28,
+        "console": [],
+        "focusTransfer": "loading close to workspace close observed",
+        "records": 50,
+        "surface": "2048 x 1718 at zoom 13.4"
+      },
+      "version": 251
+    },
     "composed_mirror_build": "PASS",
     "composed_mirror_lint": "0 errors; 66 existing warnings",
     "composed_mirror_tests": 1146,
     "composed_mirror_typecheck": "PASS",
     "data_activation": false,
     "hosted_equivalence": false,
+    "local_install": {
+      "build_files": 428,
+      "current": "/home/bartytime/Projects/KFM-Explorer-Site-final-reviewed-20261011-v251",
+      "data_migration": false,
+      "health": "PASS",
+      "previous": "/home/bartytime/Projects/KFM-Explorer-Site-browser-checked-20261011-v247",
+      "retained_old_assets": 24,
+      "source_commit": "4d81543389496b6c789a47a9282a3d10740542c9",
+      "source_files": 980,
+      "state": "/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state"
+    },
+    "merged_main_python_checks": 45,
     "mirror_water_weather_python_checks": 45,
     "site_build": "PASS",
     "site_lint": "0 errors; 66 existing warnings",

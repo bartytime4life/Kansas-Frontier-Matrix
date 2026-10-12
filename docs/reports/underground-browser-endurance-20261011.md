@@ -192,3 +192,22 @@ follow-up and restores the historical v247 selector.
 Fresh browser evidence and follow-up exact-head CI are recorded separately.
 The earlier long-session observations do not establish v251 physical-device,
 GPU/heap, hardware-throttling, multi-hour or hosted-rollback acceptance.
+
+
+Fresh v251 installed-local and private-hosted browser checks both restored 50
+records, 28 plotted columns, one aquifer region, partial coverage and unbounded-
+class withholding, with a complete 2048 × 1718 surface at zoom 13.4. No captured
+console warnings/errors were returned. Loading focus entered Close Underground
+and transferred to the mounted close control; explicit re-entry focused it again.
+Observed local canvases were three with Underground closed and five after
+reapplying the example; this is a smoke check, not leak proof. Closing the
+workspace and reopening requires applying the example/area again. The main
+map also disclosed one external-source issue; no claim that all live sources
+were ready is made by this Underground verification.
+
+Main advanced through #5060/#5061 to
+`d9887c7e2a8b5625a5151e51e6543239cb57637e` during review. Those changes did not
+modify the Site mirror or receipt validator; the branch was merged without
+conflict and all 45 Python checks and topology were rerun successfully. The
+primary PC repository was fast-forwarded safely; other worktrees were retained.
+Follow-up PR #5063 carries this reconciliation and the stale-provenance fix.
