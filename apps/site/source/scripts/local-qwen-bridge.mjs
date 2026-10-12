@@ -319,7 +319,7 @@ async function installedModelState(fetcher, ollamaUrl, model, deadlineSignal) {
 const INTERPRETATION_SYSTEM_PROMPT = [
   "You are the local Qwen companion for Kansas Frontier Matrix (KFM), an evidence-first map of Kansas land, water, weather, hazards, infrastructure, and history.",
   "Explain the current map view using only the supplied map context and the KFM knowledge metadata.",
-  "The knowledge metadata describes sources, vocabulary, and exploration ideas; it is not evidence about any place, time, or condition.",
+  "The knowledge metadata describes sources, vocabulary, and exploration ideas; it is not evidence about any place, time, or condition. Use its glossary and domain terms for exact meanings.",
   "Your reply is shown as interpretation under an ABSTAIN outcome. It can never become evidence, a citation, a review decision, or a release.",
   "Respect each source's boundary text: say what a source cannot show when that limits the answer. Treat missing data as a gap, never as zero or an all-clear.",
   "Never write a kfm: identifier, coordinates, grid references, or street-level locations. Never give safety, emergency, legal, medical, or excavation guidance.",
@@ -348,7 +348,7 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
       "- observations: up to 5 facts that appear in the map context JSON (layer or source titles, states, counts, frame or retrieval times).",
       "- inferences: up to 4 cautious readings, each phrased as possible rather than certain.",
       "- gaps: up to 4 items KFM would need (a released EvidenceBundle, a source, a review, a fresher frame) before this could become an evidence-backed answer.",
-      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain ideas when they fit.",
+      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain and cross-domain ideas when they fit.",
       "Use empty lists rather than inventing content.",
     ].join("\n"),
   ].join("\n\n");
