@@ -3,7 +3,7 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.10
+version: v0.11
 prior_version: v0.9
 status: historical snapshot; current app placement noted below
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
@@ -450,9 +450,9 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 | Aspect | Rule |
 |---|---|
 | Scope | Only receipt entries under `apps/site/source/` that exist upstream (they carry an upstream digest). Repository-only overlays, files missing from the receipt, and every other path under `apps/` follow the default lowercase grammar. |
-| What is relaxed | The uppercase path-grammar check alone. The mirror is registered as `mirror.apps-site-source` in [`control_plane/external_mirror_register.yaml`](../control_plane/external_mirror_register.yaml), which the topology validator reads. The relaxation applies only while the entry is `ACTIVE` and its receipt and parity check are tracked. |
+| What is relaxed | The uppercase path-grammar check alone. The mirror is registered as `mirror.apps-site-source` in [`control_plane/external_mirror_register.yaml`](../control_plane/external_mirror_register.yaml), which the topology validator reads. The relaxation applies only while the entry is `ACTIVE`, its parity check (`tools/qa/site_mirror.py`) is tracked, and the receipt that check pins with its single `RECEIPT` constant is tracked. |
 | What still applies | Unsafe-path checks (control characters, non-NFC, symlinks, trailing dots or spaces, Windows reserved names) and the nonportable-punctuation check. |
-| How names change | Rename upstream in the site source, then bring the new names in through a mirror sync with a fresh receipt. Update the register's `receipt_path` in the same change; a test checks it against `site_mirror.py`. Never rename a mirrored file in place. |
+| How names change | Rename upstream in the site source, then bring the new names in through a mirror sync with a fresh receipt. The validator reads the new receipt from `site_mirror.py`'s `RECEIPT` constant, so the register needs no change. Never rename a mirrored file in place. |
 | Baseline effect | The `path-grammar:uppercase` topology waiver shrank by the ten mirror paths it held. No waiver was added (#5060). |
 | Authority limit | ADR-0048 interprets §13.2 without changing Directory Rules bytes; the literal §13.2 text waits for the next doctrine revision. Nothing here grants the mirror any source, release, or publication authority. |
 
