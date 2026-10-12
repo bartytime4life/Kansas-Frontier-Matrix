@@ -16,6 +16,7 @@
 //   KFM_SITE_OUT      output directory           (default apps/public-site/dist)
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -51,6 +52,17 @@ const STATUS_COPY = Object.freeze({
 
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
+
+const escapeRegex = (value) => String(value).replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+
+// Stable asset names get a content-hash query so long cache lifetimes never
+// pair a new page with stale CSS or artwork.
+function fingerprintAssets(html, out) {
+  return html.replace(/\b(href|src|srcset)="(\/(?:assets\/[^"?#]+|favicon\.svg))"/g, (match, attr, ref) => {
+    const digest = createHash("sha256").update(readFileSync(join(out, ref.slice(1)))).digest("hex").slice(0, 12);
+    return `${attr}="${ref}?v=${digest}"`;
+  });
+}
 
 function requireHttpsUrl(name, value) {
   let url;
@@ -168,7 +180,7 @@ export async function build(env = process.env) {
     FEATURE_SECTIONS: renderFeatureSections(features),
   };
   for (const page of ["index.html", "404.html"]) {
-    writeFileSync(join(out, page), fill(readFileSync(join(SRC, page), "utf8"), values));
+    writeFileSync(join(out, page), fingerprintAssets(fill(readFileSync(join(SRC, page), "utf8"), values), out));
   }
 
   // Values land in mod_rewrite patterns and substitutions; strip characters
@@ -177,7 +189,7 @@ export async function build(env = process.env) {
   writeFileSync(
     join(out, ".htaccess"),
     fill(readFileSync(join(REPO, "infra/godaddy/htaccess.template"), "utf8"), {
-      CANONICAL_HOST: canonicalHost.replace(/\./g, "\\."),
+      CANONICAL_HOST: escapeRegex(canonicalHost),
       CANONICAL_HOST_PLAIN: canonicalHost,
       EXPLORER_URL: explorerUrl.replace(/[\\$%\s"]/g, ""),
     }),

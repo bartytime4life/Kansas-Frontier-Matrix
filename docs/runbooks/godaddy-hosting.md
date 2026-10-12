@@ -72,7 +72,17 @@ Today both apex and `www` return HTTP 401 to the public because the Explorer is 
 
 ## 2. Configure GitHub
 
-In **GitHub → Settings → Environments**, create an environment named **`godaddy-production`**. Optionally add yourself as a required reviewer and limit it to the `main` branch. Then add the following to that environment.
+In **GitHub → Settings → Environments**, create an environment named **`godaddy-production`**. Under **Deployment branches and tags**, choose **Selected branches and tags** and allow only `main`. This is required, not optional: it keeps the hosting credentials away from any other branch even if the workflow file is edited there. The workflow also refuses to deploy from any ref but `main`. Optionally add yourself as a required reviewer. Then add the following to that environment.
+
+To create the environment with the `main`-only policy from a terminal:
+
+```bash
+gh api -X PUT repos/bartytime4life/Kansas-Frontier-Matrix/environments/godaddy-production --input - <<<'{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+```
+
+```bash
+gh api -X POST repos/bartytime4life/Kansas-Frontier-Matrix/environments/godaddy-production/deployment-branch-policies -f name=main -f type=branch
+```
 
 **Environment secrets**
 
@@ -104,7 +114,11 @@ The site can be uploaded and checked before any DNS moves.
 
 1. Actions → **godaddy-public-site** → **Run workflow** with **dry_run** checked. The log lists every file that would be uploaded.
 2. Run again without dry run. The final step, *Verify the live site serves this commit*, will fail until DNS points at GoDaddy. That is expected on this first run.
-3. Preview the uploaded site through cPanel's temporary URL or the hosting plan's **preview domain**, if the plan offers one.
+3. Preview the uploaded site before DNS moves by sending the real host name to the GoDaddy IP. Any other host name, such as a cPanel preview domain, redirects to `kansasfrontiermatrix.com` by design. Until AutoSSL runs after the DNS move, the certificate won't match, so `-k` is needed for this check only:
+
+   ```bash
+   curl -skI --resolve kansasfrontiermatrix.com:443:SHARED-IP https://kansasfrontiermatrix.com/
+   ```
 
 ## 4. Move the Explorer to `explorer.kansasfrontiermatrix.com`
 
@@ -173,7 +187,7 @@ Also confirm that `/explorer` redirects to the Explorer, that a missing page sho
 
 ## Rollback
 
-- **Content:** revert the offending commit on `main`, or use Actions → **godaddy-public-site** → **Run workflow** from an earlier good commit (`Use workflow from` → tag or branch). The deploy mirrors that commit's bundle.
+- **Content:** revert the offending commit on `main` through a reviewed pull request. The merge deploys the reverted bundle. Deploys never run from other branches or tags, so a rollback always goes through `main`.
 - **Turn deploys off:** set `GODADDY_DEPLOY_ENABLED` to `false`. The site keeps serving the last upload.
 - **DNS:** restore the two apex `A` records and the `www` CNAME from the [Current DNS](#current-dns-recorded-2026-10-12) table, re-add the apex custom domain in ChatGPT Sites, and let it re-issue its validation records. Allow for the record TTL to expire.
 

@@ -2,7 +2,7 @@
 // Fail-closed checks on the built public-site bundle before it may be deployed.
 // Usage: node apps/public-site/check.mjs [distDir]
 
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -54,10 +54,12 @@ let total = 0;
 for (const path of files) {
   const rel = relative(dist, path);
   const ext = rel === ".htaccess" ? "" : extname(rel);
-  total += statSync(path).size;
+  // Read each file once and size the same bytes that are scanned.
+  const bytes = readFileSync(path);
+  total += bytes.length;
   if (!ALLOWED_EXT.has(ext) || (ext === "" && rel !== ".htaccess")) fail(`unexpected file type ${rel}`);
   if (ext === ".png") continue;
-  const text = readFileSync(path, "utf8");
+  const text = bytes.toString("utf8");
   for (const [pattern, label] of FORBIDDEN) if (pattern.test(text)) fail(`${rel} contains ${label}`);
 }
 if (total > MAX_TOTAL_BYTES) fail(`bundle is ${total} bytes; limit ${MAX_TOTAL_BYTES}`);

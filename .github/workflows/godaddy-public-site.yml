@@ -2,7 +2,7 @@
 #
 # Every pull request and main push builds apps/public-site/ into a static
 # bundle, runs its fail-closed bundle checks, and uploads the bundle for review.
-# Deployment runs only on main pushes or a manual dispatch, only when the
+# Deployment runs only on main pushes or a manual dispatch of main, only when the
 # repository variable GODADDY_DEPLOY_ENABLED is "true", and only through the
 # godaddy-production environment that holds the hosting secrets. The page
 # restates repository facts at the built commit; a green run or a deploy grants
@@ -81,7 +81,10 @@ jobs:
 
   deploy:
     needs: build
-    if: ${{ vars.GODADDY_DEPLOY_ENABLED == 'true' && ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch') }}
+    # Only reviewed main reaches the hosting credentials: a dispatch from any
+    # other branch or tag never runs this job. The godaddy-production
+    # environment must also restrict deployments to main (see the runbook).
+    if: ${{ vars.GODADDY_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     concurrency:
