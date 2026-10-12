@@ -141,8 +141,8 @@ expect() {
 
 expect GET / 200
 expect GET /daily-archive 200
-expect GET /api/daily-archive 200 storage.used 0
-expect POST /api/daily-archive 403
+expect GET /api/daily-archive 401
+expect POST /api/daily-archive 401
 
 # Storage-backed reads answer from the empty migrated D1 schema.
 expect GET /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT

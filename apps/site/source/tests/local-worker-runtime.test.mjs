@@ -165,6 +165,8 @@ test("built local runtime survives abandoned denials and rejects forged authorit
     assert.equal(await probe("/api/earth-engine-context/catalog", "GET", { "oai-authenticated-user-email": "owner@example.com" }), 403);
     assert.equal(await probe("/api/earth-engine-context/catalog", "GET", { Host: "attacker.invalid" }), 403);
     assert.equal(await probe("/api/earth-engine-context/catalog"), 401);
+    for (const query of ["", "?id=11111111-1111-4111-8111-111111111111", "?id=11111111-1111-4111-8111-111111111111&action=download"]) assert.equal(await probe(`/api/daily-archive${query}`), 401);
+    for (const action of ["capture&feed=usgs-earthquakes", "review", "settings"]) assert.equal(await probe(`/api/daily-archive?action=${action}`, "POST", { "X-KFM-Archive-Writer": "daily-v1" }), 401);
     assert.equal(await probe("/maplibre/maplibre-gl-worker.mjs"), 200);
   } finally {
     child.kill("SIGTERM");
