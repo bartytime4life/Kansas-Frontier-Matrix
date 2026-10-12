@@ -1,0 +1,80 @@
+{
+  "receipt_id": "archive-authorization-ci-20261012",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/receipts/generated/site-v252-archive-authorization-20261012.json",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "data/receipts/generated/site-v252-archive-authorization-20261012.json": "sha256:f56e7dfe53a143609f7d5b9583b36e4f5ea8a4c5abe29b23ee1638a25e786425",
+    "tools/qa/site_mirror.py": "sha256:d99b862b42bab21d593a0a22079a062eaff8c5a1de297dbe5f3d7e0fd70c292e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "session-version-unreported"
+  },
+  "prompt_or_contract": "sha256:f92274a2a92a9305d30004e98690c3945e89e10b2554e6359d7ca23b4c96a716",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "focused execution",
+      "read-only independent review",
+      "GitHub connector"
+    ],
+    "base_revision": "3f0c59bb4b8dcf6e72ab43501cf3f728d220e5ee"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:3f0c59bb4b8dcf6e72ab43501cf3f728d220e5ee",
+      "github-actions:38202153726",
+      "sites-source:190d16acb2f866cb9c2eb108dbd204ca30465269"
+    ]
+  },
+  "truth_labels": {
+    "data/receipts/generated/site-v252-archive-authorization-20261012.json": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Predecessor mirror hashes and deployed source inventory",
+      "outcome": "PASS",
+      "reason": "All unrelated mirror bytes retained; 11 changed/new archive paths match deployed version252."
+    },
+    {
+      "gate": "Recorded mirror content parity",
+      "outcome": "PASS",
+      "reason": "1025 files; 973 identical and 52 retained repository overlays; review not evaluated."
+    },
+    {
+      "gate": "tests/qa/test_site_mirror.py",
+      "outcome": "PASS",
+      "reason": "20 passed, including rejection of content and file-set drift."
+    },
+    {
+      "gate": "Generated receipt validation",
+      "outcome": "PASS",
+      "reason": "2 artifact hashes bound; review pending; no approval claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-12T04:14:33.466125Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": 5088,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "CI mirror receipt reconciliation only; no application behavior changes. Human review remains pending; no deployment or capture run."
+}
