@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0048
 adr_id: ADR-0048
 title: "ADR-0048 — Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2"
 type: adr
-version: v2.0
+version: v2.2
 status: accepted
 effective_decision_status: accepted
 accepted_on: 2026-10-12
@@ -84,10 +84,10 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 | Condition | Current instance (`apps/site/source/`) |
 |---|---|
 | The mirror copies a named external source | The external site source; `site_candidate_commit` is recorded per receipt |
-| A generated receipt pins the file set, digests and upstream presence | The receipt `tools/qa/site_mirror.py` checks (currently `site-v251-final-review-reconciliation-20261011.json`); `REVIEW_ONLY`, so it pins content, not human acceptance |
+| A generated receipt pins the file set, digests and upstream presence | The receipt pinned by `RECEIPT` in `tools/qa/site_mirror.py` (it changes with each mirror sync); `REVIEW_ONLY`, so it pins content, not human acceptance |
 | An enforced parity check fails on drift | `tools/qa/site_mirror.py --check` (water-pilot workflow) |
 | The mirror is registered with its receipt, check and relaxed rule | `mirror.apps-site-source` in `control_plane/external_mirror_register.yaml` |
-| The validator relaxes only the uppercase rule, only for upstream-backed receipt entries | `_external_mirror_prefixes` / `_external_mirror_exempt_paths` in `validate_repository_topology.py` |
+| The validator relaxes only the uppercase rule, only for upstream-backed receipt entries | `_external_mirror_entries` / `_external_mirror_exempt_paths` in `validate_repository_topology.py` |
 
 ## 4. Consequences
 
@@ -117,7 +117,9 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 
 ## 6. Validation
 
-- The topology validator raises on a malformed or digest-unbound register. It relaxes nothing for an absent register, a `RETIRED` entry, an untracked receipt or parity check, or a receipt entry without an upstream digest.
+- The topology validator raises on a malformed register, or one not bound to the adopted doctrine digest and to `ADR-0048`.
+- It relaxes nothing when this ADR is missing or its metadata no longer records `status` and `effective_decision_status` as accepted. It also relaxes nothing for an absent register, a `RETIRED` entry, or an untracked receipt or parity check.
+- Within an entry, only receipt records in an upstream-backed state (`identical`, `inherited_repository_overlay`, `merged_water_overlay`) with a well-formed upstream digest qualify. Repository-only states never do.
 - The tests cover each of these cases, plus a live check that the register's `receipt_path` equals `site_mirror.py`'s pinned receipt.
 - The doctrine revision that adds the §4 text must re-pin every digest reference and keep the topology, root-registry, path-alias, domain-lane, cross-domain-seam and governance-parity checks green.
 
@@ -129,7 +131,7 @@ Supersede this ADR with a new accepted decision. Removing the exemption would th
 
 | ID | Question | Owner |
 |---|---|---|
-| OQ-ADR-0048-01 | **Resolved 2026-10-12 (owner):** mirrors are listed in `control_plane/external_mirror_register.yaml`, which the topology validator reads. Follow-up: the topology run context (`render_repository_topology_diagnostics.py`, receipt-pinned) does not yet record this register's digest among its indexed governance inputs. | Directory governance steward |
+| OQ-ADR-0048-01 | **Resolved 2026-10-12 (owner):** mirrors are listed in `control_plane/external_mirror_register.yaml`, which the topology validator reads. The topology run context (v3) also records the register as an indexed governance input, under successor authoring receipt `genrec-topology-mirror-register-context-20261012`. | Directory governance steward |
 | OQ-ADR-0048-02 | Which other pending Directory Rules edits should share the §13.2 revision, to pay the re-pin cost once? | Directory governance steward |
 
 ## 9. Change history
@@ -138,6 +140,8 @@ Supersede this ADR with a new accepted decision. Removing the exemption would th
 |---|---|---|
 | v1.0 | 2026-10-12 | Proposed (owner-requested) after #5060 and the apps/ root naming decision. |
 | v1.1 | 2026-10-12 | OQ-ADR-0048-01 resolved: the mirror is listed in `control_plane/external_mirror_register.yaml`. |
+| v2.1 | 2026-10-12 | Topology execution context v3 records `external_mirror_register` among its indexed governance inputs (successor receipt `genrec-topology-mirror-register-context-20261012`). |
+| v2.2 | 2026-10-12 | §6: the validator now requires the register's `decision_ref` to be ADR-0048 and this ADR to remain accepted, and requires an upstream-backed receipt state and a well-formed upstream digest (review on #5065). |
 | v2.0 | 2026-10-12 | Accepted by @bartytime4life as the operative interpretation of §13.2, in response to review on #5064. Scope narrowed to upstream-backed receipt entries, and the receipt described as content-pinned (`REVIEW_ONLY`), not human-reviewed. |
 
 <p align="right"><a href="#top">Back to top</a></p>

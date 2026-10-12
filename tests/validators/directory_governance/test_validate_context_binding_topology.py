@@ -30,6 +30,7 @@ GOVERNANCE_INPUTS = {
     "path_alias_register": "control_plane/path_alias_register.yaml",
     "directory_rules": "docs/doctrine/directory-rules.md",
     "directory_adoption": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "external_mirror_register": "control_plane/external_mirror_register.yaml",
 }
 
 
@@ -274,7 +275,7 @@ class ContextBindingTests(unittest.TestCase):
 
     def test_indexed_governance_matches_independently_hashed_bytes(self):
         value = self.context()
-        self.assertEqual("kfm.topology-execution-context.v2", value["version"])
+        self.assertEqual("kfm.topology-execution-context.v3", value["version"])
         self.assertEqual(set(GOVERNANCE_INPUTS), set(value["indexed_governance"]))
         for label, relative in GOVERNANCE_INPUTS.items():
             raw = local_git(self.root, "show", ":" + relative)
@@ -325,7 +326,7 @@ class ContextBindingTests(unittest.TestCase):
         with mock.patch.object(DOUBLE, "_git", wraps=local_git) as call:
             self.context()
         reads = [c for c in call.call_args_list if "cat-file" in c.args]
-        self.assertEqual(8, len(reads))
+        self.assertEqual(2 * len(GOVERNANCE_INPUTS), len(reads))
         self.assertTrue(all(c.args[1] == "cat-file" for c in reads))
         self.assertTrue(all(c.kwargs == {"no_lazy_fetch": True} for c in reads))
         def missing(root, *args, no_lazy_fetch=False):

@@ -38,7 +38,9 @@ def _entry(finding: object) -> dict[str, object]:
     return entry
 
 
-def _mirror_register(*mirrors: dict[str, object], sha256: str | None = None) -> bytes:
+def _mirror_register(
+    *mirrors: dict[str, object], sha256: str | None = None, decision_ref: str = "ADR-0048"
+) -> bytes:
     return json.dumps(
         {
             "registry": "external_mirror_register",
@@ -48,8 +50,20 @@ def _mirror_register(*mirrors: dict[str, object], sha256: str | None = None) -> 
                 "decision_ref": "ADR-0029",
             },
             "mirrors": list(mirrors),
+            "decision_ref": decision_ref,
         }
     ).encode("utf-8")
+
+
+def _mirror_decision(status: str = "accepted", effective: str = "accepted") -> bytes:
+    return (
+        "<!-- [KFM_META_BLOCK_V2]\nadr_id: ADR-0048\ntype: adr\n"
+        f"status: {status}\neffective_decision_status: {effective}\n"
+        "[/KFM_META_BLOCK_V2] -->\n"
+    ).encode("utf-8")
+
+
+ACCEPTED_MIRROR_DECISION = _mirror_decision()
 
 
 SITE_MIRROR = {
@@ -309,6 +323,7 @@ class RepositoryTopologyTests(unittest.TestCase):
                 {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
             ),
             module.EXTERNAL_MIRROR_REGISTER: _mirror_register(SITE_MIRROR),
+            module.EXTERNAL_MIRROR_DECISION_PATH: ACCEPTED_MIRROR_DECISION,
             SITE_MIRROR["receipt_path"]: _mirror_receipt(
                 tuple(path.removeprefix("apps/site/source/") for path in paths[:3])
             ),
@@ -336,13 +351,15 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
         )
 
-    def _uppercase_members(self, paths, register=None, receipt=None):
+    def _uppercase_members(self, paths, register=None, receipt=None, decision=ACCEPTED_MIRROR_DECISION):
         modes = {path: "100644" for path in paths}
         blobs = {
             "control_plane/root_registry.yaml": _root_registry(
                 {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
             )
         }
+        if decision is not None:
+            blobs[module.EXTERNAL_MIRROR_DECISION_PATH] = decision
         if register is not None:
             blobs[module.EXTERNAL_MIRROR_REGISTER] = register
         if receipt is not None:
@@ -377,6 +394,54 @@ class RepositoryTopologyTests(unittest.TestCase):
         members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
 
         self.assertEqual((overlay, unlisted), members)
+
+    def test_mirror_exception_requires_upstream_backed_state_and_digest(self) -> None:
+        backed = "apps/site/source/README.md"
+        claimed = "apps/site/source/docs/LOCAL_OVERLAY.md"
+        malformed = "apps/site/source/docs/MALFORMED.md"
+        paths = (backed, claimed, malformed) + SITE_MIRROR_EVIDENCE
+        receipt = json.dumps(
+            {
+                "comparison": {
+                    "README.md": {"state": "inherited_repository_overlay", "site_sha256": "c" * 64},
+                    # A repository-only state never qualifies, even with an upstream digest.
+                    "docs/LOCAL_OVERLAY.md": {"state": "repository_only_overlay", "site_sha256": "d" * 64},
+                    "docs/MALFORMED.md": {"state": "identical", "site_sha256": "not-a-digest"},
+                }
+            }
+        ).encode("utf-8")
+
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual((claimed, malformed), members)
+
+    def test_mirror_exception_requires_accepted_adr_0048(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",))
+        register = _mirror_register(SITE_MIRROR)
+        self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        for decision in (
+            None,
+            _mirror_decision(status="proposed"),
+            _mirror_decision(effective="proposed"),
+            _mirror_decision().replace(b"ADR-0048", b"ADR-0049"),
+        ):
+            with self.subTest(decision=decision):
+                self.assertEqual((mirrored,), self._uppercase_members(paths, register, receipt, decision))
+
+    def test_registered_decision_is_accepted_adr_0048(self) -> None:
+        register = json.loads(
+            (REPO_ROOT / module.EXTERNAL_MIRROR_REGISTER).read_text(encoding="utf-8")
+        )
+        self.assertEqual(module.EXTERNAL_MIRROR_DECISION, register["decision_ref"])
+        self.assertEqual(module.EXTERNAL_MIRROR_DECISION_PATH, register["decision_path"])
+        blobs = {
+            module.EXTERNAL_MIRROR_DECISION_PATH: (
+                REPO_ROOT / module.EXTERNAL_MIRROR_DECISION_PATH
+            ).read_bytes()
+        }
+        self.assertTrue(module._external_mirror_decision_accepted(blobs))
 
     def test_registered_receipt_matches_site_mirror_check(self) -> None:
         register = json.loads(
@@ -421,6 +486,7 @@ class RepositoryTopologyTests(unittest.TestCase):
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/site/source")),
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/../docs/")),
             _mirror_register(SITE_MIRROR, dict(SITE_MIRROR)),
+            _mirror_register(SITE_MIRROR, decision_ref="ADR-0029"),
         )
         for register in bad_registers:
             with self.subTest(register=register):

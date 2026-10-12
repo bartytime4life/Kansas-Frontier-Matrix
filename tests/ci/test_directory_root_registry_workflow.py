@@ -5,9 +5,10 @@ They do not execute the receipt validator or contact GitHub. Native integrity is
 checked separately by the workflow at the actual checkout. The exact writer
 branch is a bounded CI delivery route, not PR-state or publication authority.
 Retire its trigger through a successor receipt, never by rewriting old hashes.
-The #4485 follow-up and its Git-compatible successor keep seven historical
-receipts separate from one current five-artifact binding, including the
-unchanged merged v2 implementation.
+The #4485 follow-up and its Git-compatible successor kept seven historical
+receipts separate from one current five-artifact binding. The mirror-register
+successor (context v3) replays the no-lazy-fetch binding as an eighth historical
+receipt at its last matching main commit.
 Native context tests must run, not merely trigger CI. Old hashes are immutable.
 """
 from __future__ import annotations
@@ -47,7 +48,9 @@ PREVIOUS_CURRENT = (
 V1_ANCESTOR = "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
 INDEXED_CONTEXT = PREFIX + "genrec-topology-indexed-context-closure-20260911.json"
 INDEXED_CONTEXT_ANCESTOR = "c388e1063927abfb266eb1a8db518f5f277f6e78"
-CURRENT = (PREFIX + "genrec-topology-no-lazy-fetch-context-closure-20260920.json",)
+NO_LAZY_FETCH = PREFIX + "genrec-topology-no-lazy-fetch-context-closure-20260920.json"
+NO_LAZY_FETCH_ANCESTOR = "4fee3f975af9495c86a8862ff227ce6f89b6c4c0"
+CURRENT = (PREFIX + "genrec-topology-mirror-register-context-20261012.json",)
 # Independent complete inventory; do not infer coverage from the receipt itself.
 BOUND_ARTIFACTS = (
     ".github/workflows/directory-root-registry.yml",
@@ -125,7 +128,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
             "tools/ci/python-dependency-lock-migration.json", "pyproject.toml",
             "tests/validators/directory_governance/test_validate_output_security_topology.py",
             "tests/validators/directory_governance/test_validate_context_binding_topology.py",
-            HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, *CURRENT,
+            HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, NO_LAZY_FETCH, *CURRENT,
+            "control_plane/external_mirror_register.yaml",
         ]
         for event in ("pull_request", "push"):
             patterns = self.workflow["on"][event]["paths"]
@@ -168,6 +172,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
               for path in PREVIOUS_CURRENT],
             [HELPER, INDEXED_CONTEXT, "--repo-root", ".", "--artifact-git-ref",
              INDEXED_CONTEXT_ANCESTOR],
+            [HELPER, NO_LAZY_FETCH, "--repo-root", ".", "--artifact-git-ref",
+             NO_LAZY_FETCH_ANCESTOR],
         ]), (code, calls))
 
     def test_current_artifacts_never_use_historical_replay(self) -> None:
@@ -175,7 +181,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual((0, [[HELPER, p, "--repo-root", "."] for p in CURRENT]), (code, calls))
 
     def test_every_receipt_failure_propagates_and_stops_later_commands(self) -> None:
-        for name, count in ((HISTORICAL_STEP, 7), (CURRENT_STEP, 1)):
+        for name, count in ((HISTORICAL_STEP, 8), (CURRENT_STEP, 1)):
             for fail_at in range(count):
                 with self.subTest(step=name, fail_at=fail_at):
                     code, calls = _run(self.steps[name]["run"], fail_at)
@@ -247,7 +253,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         step = self.steps["Record trust boundary"]
         self.assertEqual("always()", step["if"])
         self.assertIn('Result: ${{ job.status }}.', step["run"])
-        self.assertIn("Seven immutable ancestor replays plus one current five-artifact successor binding",
+        self.assertIn("Eight immutable ancestor replays plus one current five-artifact successor binding",
                       step["run"])
         self.assertNotIn("GENERATED_RECEIPT_VALID", step["run"])
 
@@ -284,14 +290,15 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
     def test_historical_and_current_receipt_inventory_is_disjoint_and_complete(self) -> None:
         historical = _run(self.steps[HISTORICAL_STEP]["run"])[1]
         current = _run(self.steps[CURRENT_STEP]["run"])[1]
-        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, INDEXED_CONTEXT],
+        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, INDEXED_CONTEXT,
+                          NO_LAZY_FETCH],
                          [args[1] for args in historical])
         self.assertEqual(list(CURRENT), [args[1] for args in current])
         paths = [args[1] for args in historical + current]
-        self.assertEqual(8, len(paths))
-        self.assertEqual(8, len(set(paths)))
+        self.assertEqual(9, len(paths))
+        self.assertEqual(9, len(set(paths)))
         self.assertFalse({HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT,
-                          INDEXED_CONTEXT} & set(CURRENT))
+                          INDEXED_CONTEXT, NO_LAZY_FETCH} & set(CURRENT))
         # These explicit expected refs must not drift to a mutable branch or HEAD.
         for args in historical:
             self.assertRegex(args[-1], r"^[0-9a-f]{40}$")
