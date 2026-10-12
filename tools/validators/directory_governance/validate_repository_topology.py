@@ -552,8 +552,9 @@ def _external_mirror_entries(
     name inside a registered byte mirror of an external source is externally
     fixed (Directory Rules 13.2) when its pinned receipt shows the path exists
     upstream. Only rules in ``RELAXABLE_MIRROR_RULES`` may be relaxed, so unsafe
-    and nonportable path checks always apply. An absent register relaxes
-    nothing; a malformed or unbound register raises.
+    and nonportable path checks always apply. An absent register, or one whose
+    ``decision_ref`` is not ADR-0048, relaxes nothing (so a base tree with an
+    older register still scans); a malformed or digest-unbound register raises.
     """
     if EXTERNAL_MIRROR_REGISTER not in blobs:
         return ()
@@ -565,7 +566,6 @@ def _external_mirror_entries(
         or not isinstance(doctrine, dict)
         or doctrine.get("sha256") != f"sha256:{ADOPTED_SHA256}"
         or doctrine.get("decision_ref") != "ADR-0029"
-        or register.get("decision_ref") != EXTERNAL_MIRROR_DECISION
     ):
         raise TopologyError("external mirror register binding is invalid")
     mirrors = register.get("mirrors")
@@ -599,6 +599,8 @@ def _external_mirror_entries(
         seen.add(mirror_id)
         if entry["status"] == "ACTIVE" and rule in relaxed:
             entries.append((prefix, entry["receipt_path"], entry["parity_check"]))
+    if register.get("decision_ref") != EXTERNAL_MIRROR_DECISION:
+        return ()
     return tuple(sorted(entries))
 
 

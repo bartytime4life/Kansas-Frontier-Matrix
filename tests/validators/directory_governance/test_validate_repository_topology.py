@@ -421,6 +421,12 @@ class RepositoryTopologyTests(unittest.TestCase):
         receipt = _mirror_receipt(("AGENTS.md",))
         register = _mirror_register(SITE_MIRROR)
         self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # A register not bound to ADR-0048 relaxes nothing (it does not raise, so
+        # a base tree with an older register remains scannable for parity).
+        for decision_ref in ("ADR-0029", None):
+            with self.subTest(decision_ref=decision_ref):
+                unbound = _mirror_register(SITE_MIRROR, decision_ref=decision_ref)
+                self.assertEqual((mirrored,), self._uppercase_members(paths, unbound, receipt))
         for decision in (
             None,
             _mirror_decision(status="proposed"),
@@ -486,7 +492,6 @@ class RepositoryTopologyTests(unittest.TestCase):
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/site/source")),
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/../docs/")),
             _mirror_register(SITE_MIRROR, dict(SITE_MIRROR)),
-            _mirror_register(SITE_MIRROR, decision_ref="ADR-0029"),
         )
         for register in bad_registers:
             with self.subTest(register=register):
