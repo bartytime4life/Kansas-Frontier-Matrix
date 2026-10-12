@@ -43,7 +43,7 @@ Future lanes may add bedrock, boreholes, well logs, stratigraphy, geophysics, re
 - `../../map-ui/README.md`
 - `../../source_role/README.md`
 - `../../cross_sections/README.md`
-- `../../../../../docs/domains/geology/sublanes/surficial.md`
+- `../../../../../docs/domains/geology/surficial.md`
 - `../../../../../docs/domains/geology/FILE_SYSTEM_PLAN.md`
 - `../../../../../docs/domains/geology/MAP_UI_CONTRACTS.md`
 - `../../../../../docs/domains/geology/API_CONTRACTS.md`
@@ -107,7 +107,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 - Target README: populated from empty placeholder content.
 - Parent geology fixture README: present but still a greenfield stub during this update.
 - Fixture payload inventory: no payloads verified in this directory during this update.
-- Surficial doctrine alignment: PARTIALLY VERIFIED against `docs/domains/geology/sublanes/surficial.md`.
+- Surficial doctrine alignment: PARTIALLY VERIFIED against `docs/domains/geology/sublanes/surficial.md` (merged into `docs/domains/geology/surficial.md` on 2026-10-12; re-verify against the merged file).
 - Sublane path convention: NEEDS VERIFICATION / ADR-sensitive because the surficial doctrine marks `sublanes/` as PROPOSED.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Sibling fixture alignment: PARTIALLY VERIFIED against populated `golden/`, `invalid/`, `map-ui/`, `source_role/`, and `cross_sections/` READMEs.

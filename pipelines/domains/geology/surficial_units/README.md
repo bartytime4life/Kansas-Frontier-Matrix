@@ -17,7 +17,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-12
 policy_label: public-with-gates
 path: pipelines/domains/geology/surficial_units/README.md
 related:
@@ -26,7 +26,7 @@ related:
   - pipelines/domains/README.md
   - pipelines/domains/geology/README.md
   - docs/domains/geology/README.md
-  - docs/domains/geology/sublanes/surficial.md
+  - docs/domains/geology/surficial.md
   - docs/domains/geology/POLICY.md
   - docs/domains/geology/PRESERVATION_MATRIX.md
   - docs/sources/catalog/kansas/ksgs.md
@@ -67,6 +67,7 @@ tags:
   - policy
   - governance
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills the blank pipelines/domains/geology/surficial_units path as a nested executable Geology surficial-units sublane."
   - "Surficial-units pipeline logic is executable implementation support only; it does not own source descriptors, source catalog profiles, connectors, schemas, policy, lifecycle data, catalog truth, soil truth, hydrology truth, hazards risk truth, archaeology truth, or release decisions."
   - "Surficial units are Geology-context records for Quaternary/unconsolidated cover and related boundary versions; they must not collapse into soil map units, bedrock units, aquifer measurements, hazards risk, archaeology context, or public release state."
@@ -148,7 +149,7 @@ This directory implements or will implement the **how** of surficial-unit proces
 | Why `domains/geology/`? | Geology is a domain lane under the domain-pipeline umbrella. | CONFIRMED path responsibility pattern; behavior NEEDS VERIFICATION |
 | Why `surficial_units/`? | This is a narrow executable sublane for surficial map-unit and boundary-version processing. | PROPOSED / NEEDS VERIFICATION |
 | Is this a connector? | No. Source fetching belongs in `connectors/<source>` or an accepted source-edge home. | CONFIRMED separation |
-| Does this own surficial doctrine? | No. Human-facing doctrine remains in `docs/domains/geology/sublanes/surficial.md`; object meaning belongs in contracts. | CONFIRMED doc separation |
+| Does this own surficial doctrine? | No. Human-facing doctrine remains in `docs/domains/geology/surficial.md`; object meaning belongs in contracts. | CONFIRMED doc separation |
 | Does this own source profiles? | No. KGS/source-family profiles remain under `docs/sources/catalog/...`; SourceDescriptors remain in registry homes. | CONFIRMED source separation |
 | Can this sublane publish? | No. It may prepare candidates and release handoffs only through governed workflow. | CONFIRMED doctrine posture |
 

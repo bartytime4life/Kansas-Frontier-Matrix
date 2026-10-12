@@ -30,7 +30,7 @@ related:
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/sublanes/stratigraphy.md
   - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
-  - ../../../docs/domains/geology/sublanes/surficial.md
+  - ../../../docs/domains/geology/surficial.md
   - ../../../docs/domains/geology/sublanes/boreholes-wells.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../pipelines/domains/geology/cross_sections/README.md
@@ -43,6 +43,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
   - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a Geology CrossSection semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/CrossSection.schema.json was not found in this session; schema shape and casing remain NEEDS VERIFICATION."

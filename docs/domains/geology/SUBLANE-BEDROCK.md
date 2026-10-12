@@ -611,7 +611,7 @@ This document is done enough to enter the repository when:
 - `ai-build-operating-contract.md` — operating law (`CONTRACT_VERSION = "3.0.0"`).
 - Atlas Ch. 10 §10.A (bedrock/surficial identity); §10.B / §10.C (object families); §10.G (bedrock unit map viewing product); §10.I (sensitivity); §24.14 (tier defaults).
 - Sibling sublane docs *(PROPOSED)*: `SUBLANE-SURFICIAL.md`, `SUBLANE-BOREHOLES.md`, `SUBLANE-RESOURCES.md`.
-- Existing sibling docs *(merged list)*: [`surficial.md`](./surficial.md); [`sublanes/README.md`](./sublanes/README.md) (sublanes index); [`sublanes/structures.md`](./sublanes/structures.md), [`sublanes/stratigraphy.md`](./sublanes/stratigraphy.md), [`sublanes/boreholes-wells.md`](./sublanes/boreholes-wells.md), [`sublanes/resources.md`](./sublanes/resources.md), [`sublanes/surficial.md`](./sublanes/surficial.md).
+- Existing sibling docs *(merged list)*: [`surficial.md`](./surficial.md); [`sublanes/README.md`](./sublanes/README.md) (sublanes index); [`sublanes/structures.md`](./sublanes/structures.md), [`sublanes/stratigraphy.md`](./sublanes/stratigraphy.md), [`sublanes/boreholes-wells.md`](./sublanes/boreholes-wells.md), [`sublanes/resources.md`](./sublanes/resources.md).
 - [`sublanes/bedrock.md`](./sublanes/bedrock.md) — redirect stub; merged here 2026-10-12.
 - [`sublanes/bedrock_geology.md`](./sublanes/bedrock_geology.md) — redirect stub; merged here 2026-10-12 (v1.2).
 - [`docs/runbooks/geology/BEDROCK_REVIEW.md`](../../runbooks/geology/BEDROCK_REVIEW.md) — bedrock review runbook (Appendix A's promotion target).
