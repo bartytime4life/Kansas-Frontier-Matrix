@@ -22,11 +22,12 @@ from datetime import date, datetime, timezone
 from pathlib import Path, PurePosixPath
 
 from tools.local_data import intake_crs
-from tools.local_data.file_io import open_regular
+from tools.local_data.file_io import open_regular, read_regular
 
 PROFILE_SCHEMA = "kfm-intake-profile/v1"
-ANALYZER_VERSION = "1"
+ANALYZER_VERSION = "2"
 SNIFF_BYTES = 64 * 1024
+MAX_PRJ_BYTES = 64 * 1024
 MAX_TEXT_PARSE_BYTES = 64 * 1024 * 1024
 MAX_CSV_ROWS = 2_000_000
 MAX_ZIP_MEMBERS = 20_000
@@ -786,7 +787,7 @@ def profile_file(path: Path, *, display_path: str | None = None, declared: dict 
             elif shown.lower().endswith(".shp") and _shp_header(head):
                 sibling = path.with_suffix(".prj")
                 dbf = path.with_suffix(".dbf")
-                prj = sibling.read_bytes()[:65536].decode("latin-1", "replace") if sibling.is_file() and not sibling.is_symlink() else None
+                prj = read_regular(sibling, MAX_PRJ_BYTES).decode("latin-1", "replace") if sibling.is_file() and not sibling.is_symlink() else None
                 dbf_head = dbf.open("rb").read(32 + 32 * (MAX_FIELDS + 1)) if dbf.is_file() and not dbf.is_symlink() else None
                 _apply_shapefile(p, head, prj, dbf_head)
             elif b"\0" not in head[:8192]:
