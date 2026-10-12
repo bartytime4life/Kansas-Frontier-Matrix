@@ -120,7 +120,7 @@ printf 'Starting wrangler dev (%s); its proxy can return a stray 500 after a rej
 # rather than leave the browser and capture runner with unexplained 401s.
 archive_access="${HOME:-}/.config/kfm/daily-archive-access"
 if [[ -n "${HOME:-}" && ( -e "$archive_access" || -L "$archive_access" ) ]]; then
-  printf 'Daily archive local access is not loaded by wrangler dev; archive requests will return 401. Use the direct runtime (loopback host, Node 22.x, no .env or .dev.vars files) for archive work.\n' >&2
+  printf 'wrangler dev does not load %s; archive requests return 401 unless KFM_ARCHIVE_LOCAL_OWNER_TOKEN and KFM_ARCHIVE_WORKER_TOKEN are configured for Wrangler separately. The direct runtime (loopback host, Node 22.x, no .env or .dev.vars files) uses the access file.\n' "$archive_access" >&2
 fi
 exec "$wrangler" dev --config "$config" --local \
   --persist-to "$local_state" --ip "$host" --port "$port"
