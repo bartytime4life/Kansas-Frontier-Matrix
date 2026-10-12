@@ -97,6 +97,7 @@ def test_candidate_selects_kansas_withholds_quarantined_events_and_validates():
     result = candidate()
     assert [r["event_id"] for r in result["observations"]] == [9000101, 9000102, 9000103, 9000104, 9000105, 9000106]
     assert result["withheld_counts"] == {"CASUALTY_UNPARSEABLE": 0, "DAMAGE_UNPARSEABLE": 1, "END_BEFORE_BEGIN": 1}
+    assert result["withheld_rows"] == 2
     assert (result["source_file"], result["vintage_created"], result["latest_event_date"]) == (DETAILS, "2025-10-20", "2025-08-03")
     assert (result["freshness_at_capture"], result["coverage"], result["review_state"],
             result["source_admission"], result["release_state"]) == ("CURRENT", "NOT_ESTABLISHED", "PENDING", "PENDING", "UNRELEASED")
@@ -124,6 +125,15 @@ def test_source_strings_parsed_values_and_flags_stay_side_by_side():
     assert (flood["damage_property_usd"], flood["damage_crops_usd"], flood["begin_utc"], flood["flags"]) == (
         2000000, 10000, None, ["UTC_OFFSET_UNKNOWN"])
     assert event(result, 9000106)["flags"] == ["EVENT_TYPE_OUTSIDE_DIRECTIVE"]
+
+
+def test_a_row_with_two_defects_counts_once_per_reason_and_once_as_a_row():
+    # 9000107 already has unreadable damage; an unreadable injury count adds a second blocking reason.
+    double = details_only(lambda text: text.replace("SYN,20-05-25 13:00:00,CST-6,20-05-25 13:00:00,0,", "SYN,20-05-25 13:00:00,CST-6,20-05-25 13:00:00,x,", 1))
+    result = candidate(double)
+    assert result["withheld_counts"] == {"CASUALTY_UNPARSEABLE": 1, "DAMAGE_UNPARSEABLE": 1, "END_BEFORE_BEGIN": 1}
+    assert result["withheld_rows"] == 2
+    assert validate_candidate(result)["withheld"] == 2
 
 
 def test_no_narrative_text_reaches_the_candidate():
@@ -195,6 +205,8 @@ def test_validation_refuses_forged_records_and_authority():
         (lambda c: c.update(source_file="StormEvents_details-ftp_v1.0_d2024_c20251020.csv.gz"), "CANDIDATE_SOURCE_FILE_INVALID"),
         (lambda c: c.update(vintage_created="2025-10-21"), "CANDIDATE_SOURCE_FILE_INVALID"),
         (lambda c: c.update(withheld_counts={"DAMAGE_UNPARSEABLE": 0}), "WITHHELD_COUNTS_INVALID"),
+        (lambda c: c.update(withheld_rows=3), "WITHHELD_COUNTS_INVALID"),
+        (lambda c: c.update(withheld_rows=0), "WITHHELD_COUNTS_INVALID"),
         (lambda c: c.update(latest_event_date="2025-12-31"), "LATEST_EVENT_DATE_MISMATCH"),
         (lambda c: c.update(freshness_at_capture="STALE"), "FRESHNESS_MISMATCH"),
         (lambda c: c["observations"].reverse(), "RECORD_ORDER_OR_DUPLICATE"),
@@ -210,10 +222,12 @@ def test_validation_refuses_forged_records_and_authority():
         ("flags", [], "RECORD_FLAGS_MISMATCH"),
         ("event_id", 9000201, "RECORD_IDENTITY_MISMATCH"),
         ("begin_local", "2024-04-28T17:12", "RECORD_TIME_INVALID"),
+        # 9000105 is in CDT, which has no offset, so no UTC re-derivation would catch an impossible day.
+        ("begin_local", "2025-07-99T03:00", "RECORD_TIME_INVALID"),
         ("end_lat", None, "RECORD_COORDINATE_INVALID"),
     ]:
         forged = deepcopy(base)
-        index = 4 if field == "flags" else 0
+        index = 4 if field == "flags" or value == "2025-07-99T03:00" else 0
         forged["observations"][index][field] = value
         reseal(forged["observations"][index], "record_digest")
         with pytest.raises(ValueError, match=reason):

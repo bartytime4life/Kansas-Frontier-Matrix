@@ -53,8 +53,10 @@ measurement, a hazard footprint, a current warning or a disaster declaration.
 ## Withheld rows
 
 Rows the parser routes to quarantine are not records. The candidate counts
-them by reason in `withheld_counts`: `CASUALTY_UNPARSEABLE`,
-`DAMAGE_UNPARSEABLE` and `END_BEFORE_BEGIN`. A missing record does not mean no
+them in `withheld_rows`, and counts every blocking reason they carry in
+`withheld_counts`: `CASUALTY_UNPARSEABLE`, `DAMAGE_UNPARSEABLE` and
+`END_BEFORE_BEGIN`. A row with two defects adds one row and one to each of its
+reasons. A missing record does not mean no
 hazard occurred.
 
 ## Candidate
@@ -81,8 +83,8 @@ self-release ADR covers this source.
 ## Validation
 
 `pipelines/domains/hazards/storm_events_validate.py` checks every record
-against the schema and re-derives its identity, digest, damage values, UTC
-times and flags. It also re-derives the candidate's file vintage, latest event
+against the schema, parses both local times (even when no UTC can be derived),
+and re-derives its identity, digest, damage values, UTC times and flags. It also re-derives the candidate's file vintage, latest event
 date and freshness. `tests/domains/hazards/test_storm_events_candidate.py`
 covers listing selection, schema drift, withholding, the narrative exclusion,
 tamper denial and identity stability across vintages.

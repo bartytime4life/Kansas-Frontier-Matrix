@@ -5,8 +5,9 @@ nor release. Each Kansas event keeps its source strings (damage, magnitude,
 F/EF scale, time zone) verbatim beside parsed values, and carries the parser's
 review flags. Narratives are never copied into a candidate (only whether one
 exists), because they are unreviewed free text. Events the parser routes to
-quarantine (unreadable casualties or damage, end before begin) are withheld and
-counted by reason. A parsed file proves neither completeness nor that the
+quarantine (unreadable casualties or damage, end before begin) are withheld:
+``withheld_rows`` counts the rows and ``withheld_counts`` counts every blocking
+reason, so a row with two defects adds to both reasons. A parsed file proves neither completeness nor that the
 absence of a record means no hazard.
 """
 from __future__ import annotations
@@ -105,11 +106,14 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes]) -> dict:
     if len(kansas) > MAX_EVENTS:
         raise ValueError("EVENT_COUNT_LIMIT")
     withheld = {reason: 0 for reason in WITHHELD}
+    withheld_rows = 0
     records = []
     for event in sorted(kansas, key=lambda e: e.event_id):
-        blocking = [reason for reason in event.reasons if reason in WITHHELD]
+        blocking = {reason for reason in event.reasons if reason in WITHHELD}
         if blocking:
-            withheld[blocking[0]] += 1
+            withheld_rows += 1
+            for reason in blocking:
+                withheld[reason] += 1
             continue
         records.append(record(event, details_page))
     created = parsed.vintage.created
@@ -118,7 +122,7 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes]) -> dict:
                  "state_fips": STATE_FIPS, "data_year": year, "source_file": details_page["key"],
                  "vintage_created": vintage, "retrieved_at": manifest["captured_at"], "observations": records,
                  "latest_event_date": max((r["begin_local"][:10] for r in records), default=None),
-                 "withheld_counts": withheld, "freshness_at_capture": freshness(vintage, manifest["captured_at"]),
+                 "withheld_rows": withheld_rows, "withheld_counts": withheld, "freshness_at_capture": freshness(vintage, manifest["captured_at"]),
                  "stale_after_days": STALE_AFTER_DAYS, "coverage": "NOT_ESTABLISHED",
                  "review_state": "PENDING", "source_admission": "PENDING", "release_state": "UNRELEASED"}
     candidate["candidate_id"] = digest_bytes(canonical_bytes(candidate))

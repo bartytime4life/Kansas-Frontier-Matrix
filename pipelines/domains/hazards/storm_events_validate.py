@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "schemas/contracts/v1/domains/hazards/storm_event_record.schema.json"
 CANDIDATE_KEYS = {
     "profile", "capture_id", "source_id", "state_fips", "data_year", "source_file", "vintage_created",
-    "retrieved_at", "observations", "latest_event_date", "withheld_counts", "freshness_at_capture",
+    "retrieved_at", "observations", "latest_event_date", "withheld_rows", "withheld_counts", "freshness_at_capture",
     "stale_after_days", "coverage", "review_state", "source_admission", "release_state", "candidate_id",
 }
 
@@ -65,9 +65,11 @@ def validate_candidate(candidate: dict) -> dict:
     if (vintage.data_year != year or candidate["vintage_created"] != f"{created[:4]}-{created[4:6]}-{created[6:]}"
             or str(candidate["retrieved_at"])[:10] < candidate["vintage_created"]):
         raise ValueError("CANDIDATE_SOURCE_FILE_INVALID")
-    counts = candidate["withheld_counts"]
-    if (not isinstance(counts, dict) or set(counts) != set(WITHHELD)
-            or any(type(n) is not int or n < 0 for n in counts.values())):
+    counts, rows = candidate["withheld_counts"], candidate["withheld_rows"]
+    # Each withheld row carries one to len(WITHHELD) blocking reasons.
+    if (not isinstance(counts, dict) or set(counts) != set(WITHHELD) or type(rows) is not int
+            or any(type(n) is not int or not 0 <= n <= rows for n in counts.values())
+            or not rows <= sum(counts.values()) <= rows * len(WITHHELD)):
         raise ValueError("WITHHELD_COUNTS_INVALID")
     validator = Draft202012Validator(json.loads(SCHEMA.read_text()), format_checker=FormatChecker())
     observations = candidate["observations"]
@@ -85,7 +87,12 @@ def validate_candidate(candidate: dict) -> dict:
         if record["event_id"] <= previous:
             raise ValueError("RECORD_ORDER_OR_DUPLICATE")
         previous = record["event_id"]
-        if record["begin_local"][:4] != str(year) or record["end_local"] < record["begin_local"]:
+        # Parsed whether or not the zone has an offset, so an impossible local time never passes.
+        try:
+            begin, end = datetime.fromisoformat(record["begin_local"]), datetime.fromisoformat(record["end_local"])
+        except ValueError:
+            raise ValueError("RECORD_TIME_INVALID") from None
+        if begin.year != year or end < begin:
             raise ValueError("RECORD_TIME_INVALID")
         if record["retrieved_at"] > candidate["retrieved_at"]:
             raise ValueError("RECORD_TIME_INVALID")
@@ -108,7 +115,7 @@ def validate_candidate(candidate: dict) -> dict:
     if candidate["freshness_at_capture"] != freshness(candidate["vintage_created"], candidate["retrieved_at"]):
         raise ValueError("FRESHNESS_MISMATCH")
     report = {"profile": "kfm.storm-events-validation/v1", "candidate_id": expected, "outcome": "PASS",
-              "observations": len(observations), "withheld": sum(counts.values()),
+              "observations": len(observations), "withheld": rows,
               "review_required": True, "promotion_authorized": False,
               "release_authorized": False, "publication_authorized": False}
     report["receipt_digest"] = digest_bytes(canonical_bytes(report))
