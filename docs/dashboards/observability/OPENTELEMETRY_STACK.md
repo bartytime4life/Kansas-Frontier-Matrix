@@ -2,26 +2,34 @@
 doc_id: kfm://doc/dashboards-observability-opentelemetry-stack
 title: OpenTelemetry Observability Stack — dashboard specification
 type: standard
-version: v0.2
+version: v0.3
 status: draft
-owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + docs steward + platform/infra owner
+owners: OWNER_TBD
 created: 2026-05-20
-updated: 2026-06-12
+updated: 2026-10-12
 policy_label: public
+owning_root: docs/
+responsibility: "Specify the proposed OpenTelemetry CI/pipeline observability substrate and its stack-health dashboard without treating telemetry as evidence or release authority."
+truth_posture: "CONFIRMED spec file and sibling lane files / PROPOSED stack shape, signals, panels, thresholds, and lane placement / NEEDS VERIFICATION running stack, collector config, retention, owners, and KFM-P8-PROG-0026 implementation status"
 related:
   - docs/dashboards/README.md
   - docs/dashboards/observability/README.md
+  - docs/dashboards/observability/opentelemetry-stack.md
   - docs/dashboards/DASHBOARD_CATALOG.md
   - docs/dashboards/operational/SLO_LIVE_FEEDS.md
   - docs/dashboards/operational/REALTIME_FEED_FRESHNESS.md
   - docs/dashboards/observability/validator-orchestrator-health.md
+  - docs/dashboards/observability/telemetry-contract-health.md
+  - docs/dashboards/observability/build-ci-health.md
   - docs/standards/TELEMETRY_MINIMUMS.md
   - docs/standards/OPENLINEAGE_FACETS.md
   - docs/doctrine/directory-rules.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-tags: [kfm, dashboards, observability, opentelemetry, otel, tempo, mimir, loki, ci, telemetry, specification]
+tags: [kfm, dashboards, observability, opentelemetry, otel, collector, tempo, mimir, loki, ci, telemetry, specification]
 notes:
+  - "2026-10-12: merged unique content from docs/dashboards/observability/opentelemetry-stack.md (which shared this doc_id) — owner-directed duplicate removal"
+  - "Owners NEEDS VERIFICATION: observability steward + docs steward + platform/infra owner (+ SRE implementation owner per merged sibling)."
   - "v0.2 polish pass: preserves the KFM-P8-PROG-0026 source-card lineage and the telemetry-is-carrier-not-truth boundary."
   - "This is a dashboard/substrate specification, not proof of a running OpenTelemetry stack."
   - "Mounted-repo implementation status remains NEEDS VERIFICATION unless infra configs, services, telemetry exports, and dashboard queries are inspected."
@@ -38,7 +46,7 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue">
-  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
+  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
   <img alt="Lane: PROPOSED" src="https://img.shields.io/badge/lane-PROPOSED-orange">
   <img alt="Scope: specification only" src="https://img.shields.io/badge/scope-specification%20only-blueviolet">
   <img alt="Category: observability" src="https://img.shields.io/badge/category-observability-9cf">
@@ -48,7 +56,9 @@ notes:
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy--label-public-lightgrey">
 </p>
 
-**Status:** draft · **Owner:** `OWNER_TBD` · **Last reviewed:** 2026-06-12 · **Implementation depth:** NEEDS VERIFICATION
+**Status:** draft · **Version:** v0.3 · **Owner:** `OWNER_TBD` · **Last updated:** 2026-10-12 · **Implementation depth:** NEEDS VERIFICATION
+
+> 2026-10-12: merged unique content from `docs/dashboards/observability/opentelemetry-stack.md` (which shared this doc_id) — owner-directed duplicate removal. Its stack-health dashboard spec now lives in [§6.1](#61-stack-health-dashboard-merged); that path is a redirect stub.
 
 > [!IMPORTANT]
 > **Telemetry is a carrier, not truth.** Traces, metrics, and logs help operate KFM. They do not establish trust in data, do not admit a source, do not promote an artifact, and do not publish a claim. Consequential trust still comes from source descriptors, receipts, validators, EvidenceBundles, policy decisions, review records, release manifests, correction lineage, and rollback targets.
@@ -76,6 +86,7 @@ notes:
 14. [Validation and drift handling](#14-validation-and-drift-handling)
 15. [Open questions](#15-open-questions)
 16. [Evidence basis](#16-evidence-basis)
+17. [Change record](#17-change-record)
 
 ---
 
@@ -111,7 +122,10 @@ docs/
     ├── governance/                              # governance posture specs
     └── observability/                           # THIS LANE — telemetry/substrate specs
         ├── README.md
-        ├── OPENTELEMETRY_STACK.md               # this file
+        ├── OPENTELEMETRY_STACK.md               # this file (canonical stack spec + stack-health dashboard)
+        ├── opentelemetry-stack.md               # redirect stub → this file (merged 2026-10-12)
+        ├── telemetry-contract-health.md         # surfaces a degraded stack via missing-field spikes
+        ├── build-ci-health.md                   # workflow-side rollup of the same stack
         └── validator-orchestrator-health.md     # system-health spec for validator orchestration
 ```
 
@@ -216,6 +230,40 @@ OpenTelemetry-compatible emitters
 | Log hygiene | redaction rate, sensitive-field drop count, parse errors | No raw sensitive material; parse errors investigated. | Log parser / redaction rule | Does not expose raw stderr. |
 | Retention posture | oldest queryable trace / metric / log by backend | Meets configured retention window. | Retention config | Retention values NEEDS VERIFICATION. |
 | Telemetry minimums | conformance to telemetry-minimum requirements | All required signals present or exception recorded. | `TELEMETRY_MINIMUMS.md` / validator | Standard path NEEDS VERIFICATION. |
+| Agent-shape conformance | % CI runners reporting the canonical single agent shape | 100%. | Runner-fleet inventory + Collector handshake | Does not imply runner jobs are correct. |
+
+### 6.1 Stack-health dashboard (merged)
+
+*Merged 2026-10-12 from the former `opentelemetry-stack.md` ("OpenTelemetry Stack Health", v0.1, created 2026-05-26). This is the concrete, internal-only system-health view of the panels above.*
+
+**Scope.** Source anchor `KFM-P8-PROG-0026`: OTel Collector + Tempo (traces) + Mimir (metrics) + Loki (logs), with a single agent shape across runners. **Audience:** SRE on-call, observability steward, infra owner. **Aggregation scope:** stack-wide, per backend, and per-runner agent conformance.
+
+| Signal | What it carries | Healthy posture (PROPOSED threshold) | Emitting adapter / path |
+|:---|:---|:---|:---|
+| `otel.collector.spans_received` | Spans ingested by the Collector (per second) | > 0 during active CI; non-zero during business hours | OTel Collector self-telemetry |
+| `otel.collector.queue_depth` | Receiver queue depth | p95 < 50% of configured limit | OTel Collector self-telemetry |
+| `otel.collector.dropped_spans` | Spans dropped by queue overflow or processor failure | 0 over a 1h window | OTel Collector self-telemetry |
+| `tempo.query.p95_latency_ms` | Tempo trace lookup p95 | < 500 ms | Tempo self-telemetry |
+| `mimir.query.p95_latency_ms` | Mimir metric query p95 | < 1000 ms | Mimir self-telemetry |
+| `loki.query.p95_latency_ms` | Loki log query p95 | < 2000 ms | Loki self-telemetry |
+| `otel.runners.agent_shape_conformance` | % CI runners reporting the canonical agent shape | 100% | Runner-fleet inventory + Collector handshake |
+
+Signal names and thresholds are **PROPOSED** until confirmed against the collector and backend configs.
+
+**Sensitive-content posture.** T0: stack-internal self-telemetry only (uptime, ingest rate, queue depth, query latency). No span bodies, log lines, or domain content is shown. Redaction at emission is N/A for self-telemetry. Sampling is 100% of stack-health signals. Trace-body retention is N/A because no bodies are shown. Dashboard access is internal-only (SRE + observability steward). If a metric label could carry sensitive content (for example a `domain` label from an archaeology emitter), bucket it before display.
+
+**Public-exposure exception.** Default INTERNAL. A derived public service-status page MAY show a tri-state rollup only (`healthy` / `degraded` / `down`) for "observability backend". It must give no per-runner, per-backend, or per-component detail, and needs explicit sensitivity-reviewer sign-off under the parent README's public-exposure rules. Where it lives is `OPEN-DASH-OBS-STACK-02`.
+
+**Implementation pointer (PROPOSED; NEEDS VERIFICATION).**
+
+- Dashboard UI: Grafana, with internal URL pattern `grafana.internal.kfm/d/otel-stack-health`, or alternatively `apps/admin/observability/otel-stack/` (path not present).
+- Telemetry source: OTel Collector self-telemetry endpoint and Tempo / Mimir / Loki self-telemetry.
+- Standard: `docs/standards/OPENTELEMETRY.md` (not present; `OPEN-DASH-OBS-08`).
+- Policy bundle: `policy/observability/agent-shape/` (not present; Pass 10 C5-06).
+
+**Cross-links.** No governance dashboard consumes this view directly. A degraded stack shows up through [`telemetry-contract-health.md`](telemetry-contract-health.md) as missing-field counter spikes. [`build-ci-health.md`](build-ci-health.md) is the workflow-side rollup of the same stack. Per-domain breakdown is N/A because stack health is whole-stack. A release-lifecycle view, `docs/dashboards/release/observability-stack-by-release.md`, is an optional PROPOSED sibling that does not exist yet.
+
+**Review cadence.** Quarterly. Also triggered by an OTel Collector / Tempo / Mimir / Loki version bump (the parent README's stack-version sync rule), an agent-shape contract change, or a runner-fleet topology change.
 
 [↑ back to top](#top)
 
@@ -332,6 +380,7 @@ Mounted-repo / infrastructure evidence is **NEEDS VERIFICATION** for the produce
 | Raw logs | INTERNAL | Logs can accidentally contain sensitive paths, artifact names, or source details. |
 | Raw metrics | INTERNAL | Metrics can reveal source freshness, backlog, or operational weakness. |
 | Aggregated public status | PROPOSED / restricted | Only after policy review, aggregation, and documented public-safe wording. |
+| Stack-health tri-state rollup | PROPOSED exception | `healthy` / `degraded` / `down` only, with sensitivity-reviewer sign-off (§6.1). |
 | Security / incident metrics | DENY public by default | Operational security risk. |
 
 ### 10.1 Redaction-at-emission rules
@@ -350,6 +399,10 @@ Mounted-repo / infrastructure evidence is **NEEDS VERIFICATION** for the produce
 | Path / object | Role | Status |
 |---|---|---:|
 | `docs/dashboards/observability/OPENTELEMETRY_STACK.md` | This human-facing stack specification. | draft |
+| `docs/dashboards/observability/opentelemetry-stack.md` | Redirect stub to this file (merged 2026-10-12). | redirect |
+| Grafana `otel-stack-health` board or `apps/admin/observability/otel-stack/` | Stack-health dashboard UI (§6.1). | PROPOSED / NEEDS VERIFICATION |
+| `docs/standards/OPENTELEMETRY.md` | Proposed OTel standard (`OPEN-DASH-OBS-08`). | PROPOSED — not present |
+| `policy/observability/agent-shape/` | Proposed agent-shape policy bundle (Pass 10 C5-06). | PROPOSED — not present |
 | `docs/dashboards/observability/README.md` | Observability-lane orientation and spec template. | CONFIRMED file inspected |
 | `docs/dashboards/DASHBOARD_CATALOG.md` | Catalog row should index this spec. | NEEDS VERIFICATION |
 | `docs/standards/TELEMETRY_MINIMUMS.md` | Claimed telemetry conformance baseline. | NEEDS VERIFICATION |
@@ -369,7 +422,8 @@ Mounted-repo / infrastructure evidence is **NEEDS VERIFICATION** for the produce
 | Observability steward | Owns stack shape, signal conventions, store health, and dashboard substrate. | OWNER_TBD |
 | Docs steward | Maintains this specification and dashboard-lane consistency. | OWNER_TBD |
 | Platform / infra owner | Owns collector deployment, store deployment, retention, access controls. | OWNER_TBD |
-| Security / sensitivity reviewer | Reviews public exposure, retention, redaction, and operational-risk leakage. | OWNER_TBD / conditional |
+| Implementation owner | SRE team that owns and operates the OTel stack. | OWNER_TBD |
+| Security / sensitivity reviewer | Reviews public exposure, retention, redaction, and operational-risk leakage. Not needed for the T0 stack-health view; needed before any public derivation (§6.1). | OWNER_TBD / conditional |
 | Release steward | Reviews whether telemetry context is allowed to inform release readiness without substituting for release proof. | OWNER_TBD / conditional |
 
 Review is required when any of the following changes:
@@ -382,6 +436,8 @@ Review is required when any of the following changes:
 - public exposure posture;
 - downstream dashboards that consume this stack;
 - relationship between telemetry and release gates.
+
+Scheduled review is quarterly, plus the stack-version, agent-shape, and runner-topology triggers in §6.1.
 
 [↑ back to top](#top)
 
@@ -444,6 +500,9 @@ If this spec and the running stack disagree:
 | **OTEL-OQ-05** | Decide whether public-safe aggregate telemetry summaries are allowed, and under what policy. | Policy / security | PROPOSED — deny by default |
 | **OTEL-OQ-06** | Confirm whether OpenLineage facets are required for every pipeline span or only release-relevant spans. | Contract | NEEDS VERIFICATION |
 | **OTEL-OQ-07** | Decide whether telemetry-minimum failures block release candidates or only create review warnings. | Release governance | NEEDS VERIFICATION |
+| **OPEN-DASH-OBS-STACK-01** | Reconcile `OPENTELEMETRY_STACK.md` with the kebab-case `opentelemetry-stack.md`: supersede, merge, or keep as distinct artifacts? | Naming / identity | **RESOLVED 2026-10-12**: merged here (owner-directed); kebab-case path is a redirect stub. Repointing inbound links and the case-insensitive near-collision remain follow-ups. |
+| **OPEN-DASH-OBS-STACK-02** | Should the derived public tri-state status rollup (§6.1) live here or in a `release/` sibling? | Placement / exposure | OPEN |
+| **OTEL-OQ-08** | Merged sibling said `KFM-P8-PROG-0026` and the stack itself are "CONFIRMED in corpus" (Pass 32 baseline); this spec treats the card lineage and running stack as NEEDS VERIFICATION. Reconcile against the corpus and infra evidence. | Card lineage / truth posture | CONFLICT recorded — NEEDS VERIFICATION |
 
 [↑ back to top](#top)
 
@@ -458,7 +517,22 @@ If this spec and the running stack disagree:
 | `docs/doctrine/directory-rules.md` | CONFIRMED doctrine inspected | Responsibility split: docs explain; infra/runtime/apps/tools/schemas/policy/data/release own their respective artifacts. | Does not prove every named subpath exists. |
 | `docs/standards/TELEMETRY_MINIMUMS.md` | NEEDS VERIFICATION | Referenced by v0.1 as conformance baseline. | File existence and contents not verified in this pass. |
 | `docs/standards/OPENLINEAGE_FACETS.md` | NEEDS VERIFICATION | Referenced by v0.1 as related telemetry/lineage standard. | File existence and contents not verified in this pass. |
-| `KFM-P8-PROG-0026` source card | LINEAGE / NEEDS VERIFICATION | Names the intended stack shape in the draft. | Current card status and implementation status not independently verified here. |
+| `KFM-P8-PROG-0026` source card | LINEAGE / NEEDS VERIFICATION | Names the intended stack shape in the draft. | Current card status and implementation status not independently verified here. The merged sibling reported it CONFIRMED in corpus (Pass 32 baseline); see OTEL-OQ-08. |
+| `docs/dashboards/observability/opentelemetry-stack.md` v0.1 (2026-05-26) | Merged 2026-10-12; now a redirect stub | §6.1 stack-health signals, thresholds, T0 posture, tri-state exception, implementation pointer, review cadence. | Its `policy_label: internal` described the dashboard surface; this spec keeps `public` for the document and INTERNAL as the dashboard default (§10). |
+| Pass 10 C5-06 (Observability as Code via OPA) | Cited by merged sibling as CONFIRMED in corpus | §6.1 `policy/observability/agent-shape/` pointer. | Corpus not re-inspected here; policy path does not exist. |
+| Atlas v1.1 §24.10 (Risk Register) | Cited by merged sibling as CONFIRMED | §6.1 sensitive-content and exposure posture. | Not re-inspected here. |
+
+[↑ back to top](#top)
+
+---
+
+## 17. Change record
+
+| Version | Date | Change |
+|---|---|---|
+| v0.1 | 2026-05-20 | Initial card-driven substrate spec. |
+| v0.2 | 2026-06-12 | Polish pass; source-card lineage and telemetry-is-carrier boundary preserved. |
+| v0.3 | 2026-10-12 | Owner-directed merge of `opentelemetry-stack.md` (shared doc_id): added §6.1 stack-health dashboard, agent-shape panel, tri-state exposure row, implementation-owner role, review cadence, OPEN-DASH-OBS-STACK-01/02, OTEL-OQ-08 conflict row, and evidence rows; meta block completed (owning_root, responsibility, truth_posture). |
 
 [↑ back to top](#top)
 

@@ -1,14 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/sources-catalog-blm
+doc_id: kfm://doc/sources-catalog-blm-family-readme
 title: Source Catalog Entry — Bureau of Land Management (BLM)
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: TODO — Sources steward (confirm); secondary: People/DNA/Land steward, Frontier Matrix steward
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-10-12
 policy_label: public
 related:
+  - docs/sources/catalog/blm.md
+  - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/sources/README.md
   - docs/standards/
@@ -19,6 +21,7 @@ tags: [kfm, sources, federal, land, blm, glo, plss, public-domain]
 notes:
   - All KFM-specific repo paths PROPOSED until verified against mounted repo.
   - BLM technical surfaces sourced externally; see "External sources" in review notes.
+  - "2026-10-12 (v1.1): doc_id changed from kfm://doc/sources-catalog-blm (shared with the flat docs/sources/catalog/blm.md source profile, a KFM-TOPO-016 duplicate) to kfm://doc/sources-catalog-blm-family-readme; the two are distinct documents (family catalog entry vs agency-level source-use profile), so nothing was merged. Repo-fit self-path now names blm/README.md."
 owning_root: docs/
 responsibility: "Documentation for Source Catalog Entry — Bureau of Land Management (BLM); not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -40,7 +43,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 |---|---|
 | **Status** | `PROPOSED` — catalog entry only; not an activation decision |
 | **Owners** | Sources steward (primary); People/DNA/Land + Frontier Matrix stewards (consumers) — `TODO` confirm names |
-| **Last updated** | 2026-05-13 |
+| **Last updated** | 2026-10-12 *(v1.1 doc_id/path reconciliation; content not re-reviewed)* |
 | **Activation state** | `NEEDS VERIFICATION` — no `SourceActivationDecision` verified in this session |
 | **Authority of this entry** | Catalog documentation, not policy. Admission decisions live in `policy/`, `control_plane/`, and `data/registry/`. |
 
@@ -93,7 +96,7 @@ This entry is **not**:
 
 ## 2. Repo fit
 
-**Proposed path:** `docs/sources/catalog/blm.md`
+**Current path:** `docs/sources/catalog/blm/README.md` (per-family folder layout; see [`INDEX.md`](../INDEX.md)). The flat [`docs/sources/catalog/blm.md`](../blm.md) is a **separate** agency-level BLM source-use profile (access handles, source-descriptor baseline, identity/crosswalk, EvidenceBundle mapping, refresh and staleness rules) with its own doc_id; it is not an older copy of this entry.
 
 **Directory Rules basis:** `docs/sources/` is the CONFIRMED home for "source-descriptor standards, source families" under `docs/`, the human-facing control plane (Directory Rules §6.1). A `catalog/` subdirectory under `docs/sources/` is `PROPOSED` and `NEEDS VERIFICATION`: it is not explicitly named in Directory Rules, but follows the doctrine principle that `docs/` *explains* while `control_plane/`, `contracts/`, `schemas/`, and `policy/` carry machine and decision authority. If a different convention is in force (e.g., `docs/sources/families/`, or per-source files directly under `docs/sources/`), this file should be moved and a `DRIFT_REGISTER.md` entry opened.
 
@@ -101,8 +104,11 @@ This entry is **not**:
 docs/
 └── sources/
     ├── README.md                 # PROPOSED — landing/index for source documentation
-    ├── catalog/                  # PROPOSED — per-source-family human entries
-    │   ├── blm.md                # <-- this file
+    ├── catalog/                  # per-source-family human entries
+    │   ├── blm.md                # agency-level BLM source-use profile (separate doc)
+    │   ├── blm/
+    │   │   ├── README.md         # <-- this file (family catalog entry)
+    │   │   └── <product>.md      # glo-land-patents, glo-survey-plats, glo-field-notes, plss-cadnsdi, pad-us
     │   ├── usgs.md               # PROPOSED — sibling entries
     │   ├── census.md             # PROPOSED — sibling entries
     │   ├── noaa.md               # PROPOSED — sibling entries
@@ -467,6 +473,8 @@ notes: |
 
 [Back to top](#-quick-jump)
 
+- [`docs/sources/catalog/blm.md`](../blm.md) — agency-level BLM source-use profile (separate document)
+- [`docs/sources/catalog/README.md`](../README.md) — catalog landing page
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
 - [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — `TODO` confirm path
 - [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — `TODO` confirm path
@@ -479,6 +487,6 @@ notes: |
 
 ---
 
-> _Last updated: 2026-05-13 · Status: PROPOSED · Owners: TODO confirm_
+> _Last updated: 2026-10-12 · Version: v1.1 · Status: PROPOSED · Owners: TODO confirm_
 
 [Back to top](#-quick-jump)

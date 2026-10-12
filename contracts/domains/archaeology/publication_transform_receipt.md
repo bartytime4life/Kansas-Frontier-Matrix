@@ -2,12 +2,15 @@
 doc_id: kfm://contract/domains/archaeology/publication-transform-receipt
 title: contracts/domains/archaeology/publication_transform_receipt.md — PublicationTransformReceipt Contract
 type: contract
-version: v0.2
+version: v0.3
 status: draft
-owners: OWNER_TBD — Archaeology steward · Release steward · Policy steward · Review steward · Evidence steward · Contract steward · Schema steward · Validation steward · Docs steward
+owners: OWNER_TBD — Archaeology steward · Release steward · Policy steward · Review steward · Evidence steward · Contract steward · Receipt steward · Schema steward · Validation steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-12
 policy_label: public; contracts; domains; archaeology; publication-transform-receipt; semantic-contract; release; receipt; sensitive-lane
+owning_root: contracts/
+responsibility: Define the semantic meaning of the Archaeology PublicationTransformReceipt without performing transforms or granting policy, review, evidence, or release authority.
+truth_posture: CONFIRMED canonical contract path and scaffold schema; field vocabulary, validators, fixtures, and runtime behavior are PROPOSED or NEEDS VERIFICATION.
 tags: [kfm, contracts, archaeology, publication, transform, receipt, release, policy, review, sensitivity, evidence, correction, rollback, governance]
 related:
   - ./README.md
@@ -29,15 +32,21 @@ related:
   - ../../../docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md
   - ../../../docs/domains/archaeology/ARCHITECTURE.md
   - ../../../docs/domains/archaeology/DATA_LIFECYCLE.md
+  - ../../../docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - ../../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
   - ../../../schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json
   - ../../../policy/sensitivity/archaeology/
+  - ../../../data/receipts/
   - ../../../data/proofs/
   - ../../../release/
+  - ./PublicationTransformReceipt.md
 notes:
+  - "2026-10-12: merged unique content from contracts/domains/archaeology/PublicationTransformReceipt.md (which shared this doc_id) — owner-directed duplicate removal"
   - "Expanded from a planned-file scaffold into the object-level PublicationTransformReceipt semantic contract."
   - "The paired schema is currently a PROPOSED scaffold with empty properties and additionalProperties enabled."
   - "OBJECT_MAP.md maps PublicationTransformReceipt to publication_transform_receipt.md and publication_transform_receipt.schema.json as NEEDS VERIFICATION."
   - "Scaffold source and schema source differ: the Markdown scaffold cites CANONICAL_PATHS.md while the schema cites MISSING_OR_PLANNED_FILES.md. This remains NEEDS VERIFICATION."
+  - "Casing conflict resolved 2026-10-12: snake_case publication_transform_receipt.md is canonical (sibling contracts, schema contract_doc, OBJECT_MAP.md); PublicationTransformReceipt.md is a redirect stub."
   - "This contract defines receipt meaning; it does not authorize release, policy approval, review approval, evidence proof, or public publication by itself."
 [/KFM_META_BLOCK_V2] -->
 
@@ -60,7 +69,7 @@ notes:
 
 ## Quick jumps
 
-[Status](#status) · [Meaning](#meaning) · [Repo fit](#repo-fit) · [Receipt boundary](#receipt-boundary) · [Schema posture](#schema-posture) · [Accepted uses](#accepted-uses) · [Exclusions](#exclusions) · [Recommended fields](#recommended-fields) · [Invariants](#invariants) · [Lifecycle](#lifecycle) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+[Status](#status) · [Meaning](#meaning) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Receipt boundary](#receipt-boundary) · [Schema posture](#schema-posture) · [Accepted uses](#accepted-uses) · [Exclusions](#exclusions) · [Recommended fields](#recommended-fields) · [Invariants](#invariants) · [Lifecycle](#lifecycle) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
 
 ---
 
@@ -72,6 +81,9 @@ notes:
 > **Contract path:** `contracts/domains/archaeology/publication_transform_receipt.md`  
 > **Schema path:** `schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json`  
 > **Truth posture:** `CONFIRMED` target path, current update, paired scaffold schema, object-map row, and uploaded authoring guidance. Transform implementation, validator behavior, fixtures, policy behavior, evidence-bundle implementation, review workflow, release workflow, API behavior, UI behavior, and runtime behavior remain `NEEDS VERIFICATION`.
+
+> [!NOTE]
+> 2026-10-12 (v0.3): merged unique content from `PublicationTransformReceipt.md` (which shared this doc_id) — owner-directed duplicate removal. That path is now a redirect stub to this file.
 
 > [!CAUTION]
 > This contract defines receipt meaning only. It does **not** authorize publication, release, policy approval, review approval, proof closure, public geometry, or public exposure of controlled archaeology records.
@@ -85,25 +97,48 @@ notes:
 A publication transform receipt may record:
 
 - the source object or artifact transformed;
-- the transform applied;
+- the transform applied, including the named transformation method or profile;
 - the reason the transform was required;
 - the output representation created;
 - policy, review, validation, and release references;
+- the evidence and source references that must stay attached to the output;
 - integrity hashes or lineage pointers;
 - correction, supersession, withdrawal, and rollback links.
+
+The receipt records process memory and review support: it records that a governed transformation step occurred.
 
 It is not:
 
 - the transform code itself;
+- the transformed artifact payload;
 - a PolicyDecision;
 - a ReviewRecord;
 - an EvidenceBundle;
 - a ReleaseManifest;
 - a MapReleaseManifest;
+- a CorrectionNotice or RollbackCard;
+- catalog truth;
 - a public layer descriptor;
 - proof that the source claim is true;
 - proof that release has been approved;
 - permission to expose controlled details outside a governed release path.
+
+---
+
+## Path posture
+
+Canonical contract path (resolved 2026-10-12):
+
+```text
+contracts/domains/archaeology/publication_transform_receipt.md
+```
+
+| Path | Status | Notes |
+|---|---|---|
+| `publication_transform_receipt.md` | `CONFIRMED` canonical | snake_case matches every sibling contract in this folder, the schema `contract_doc`, `OBJECT_MAP.md`, `CANONICAL_PATHS.md`, and `MISSING_OR_PLANNED_FILES.md`. Originally a scaffold sourced from `CANONICAL_PATHS.md`. |
+| `PublicationTransformReceipt.md` | `CONFIRMED` redirect stub | Former CamelCase scaffold sourced from `CONTINUITY_INVENTORY.md`; it shared this doc_id and diverged. Its unique content was merged here on 2026-10-12; the path is kept so existing links resolve. |
+| `publication_transform_receipt.schema.json` | `CONFIRMED scaffold` | Schema metadata points to the canonical snake_case contract path. |
+| ADR or migration note for the casing decision | `NEEDS VERIFICATION` | The prior CamelCase file asked for an ADR, migration note, or redirect rule; the redirect stub is in place, an ADR is not. |
 
 ---
 
@@ -114,6 +149,8 @@ contracts/
 └── domains/
     └── archaeology/
         ├── README.md
+        ├── OBJECT_MAP.md
+        ├── PublicationTransformReceipt.md   # redirect stub → publication_transform_receipt.md
         ├── publication_transform_receipt.md
         ├── sensitivity_transform.md
         ├── cultural_review.md
@@ -132,7 +169,9 @@ Adjacent roots and object families:
 | `./domain_layer_descriptor.md` | Layer descriptor that may reference receipt-backed public-safe outputs. |
 | `./domain_observation.md`, `./candidate_feature.md`, `./archaeological_site.md`, `./site_component.md` | Example source-object families that may require transformation before public use. |
 | `../../../schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json` | Current scaffold schema. |
+| `./PublicationTransformReceipt.md` | Redirect stub for the former CamelCase path. |
 | `../../../policy/sensitivity/archaeology/` | Policy gate home; behavior not verified here. |
+| `../../../data/receipts/` | Receipt instance family candidate. |
 | `../../../data/proofs/` | EvidenceBundle/proof support. |
 | `../../../release/` | Release, correction, supersession, and rollback authority. |
 
@@ -171,7 +210,7 @@ Current schema evidence:
 | Schema properties are empty | `CONFIRMED` |
 | `additionalProperties` is `true` | `CONFIRMED` |
 | Schema `source_doc` points to `docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md` | `CONFIRMED` |
-| Schema `contract_doc` points to this contract | `CONFIRMED` |
+| Schema `contract_doc` points to this contract (snake_case path) | `CONFIRMED` — consistent with the 2026-10-12 canonical-path decision |
 | Prior Markdown scaffold source points to `docs/domains/archaeology/CANONICAL_PATHS.md` | `CONFIRMED` |
 | Source-ledger mismatch between scaffold and schema | `CONFLICTED / NEEDS VERIFICATION` |
 | Validator implementation | `UNKNOWN / NOT FOUND IN THIS TASK` |
@@ -187,11 +226,14 @@ This contract defines semantic expectations for future schema and validator work
 | Defining the meaning of a publication transform receipt | Yes | Must preserve source, transform, output, policy, review, evidence, validation, release, and rollback posture. |
 | Recording that a public-safe representation was produced | Yes | Must identify source, output, transform class, reason, and lineage. |
 | Supporting release gates | Conditional | May inform release gates but cannot approve release. |
-| Supporting correction, supersession, or rollback | Yes | Must preserve prior receipt and output lineage. |
+| Linking input and output evidence context | Yes | Evidence support remains separate but must stay traceable. |
+| Supporting correction, supersession, or rollback | Yes | Must preserve prior receipt and output lineage and rollback target references where material. |
 | Treating the receipt as a PolicyDecision | No | Policy authority remains separate. |
 | Treating the receipt as review approval | No | Review authority remains separate. |
 | Treating the receipt as EvidenceBundle proof | No | Evidence proof remains separate. |
 | Treating the receipt as publication approval | No | Release authority remains separate. |
+| Treating the receipt as MapReleaseManifest or ReleaseManifest | No | Release authority remains separate. |
+| Treating the receipt as the transformed artifact payload | No | Payloads remain in data/artifact lifecycle roots. |
 | Using schema validity as proof of safe publication | No | Schema shape is not policy, review, evidence, or release proof. |
 
 ---
@@ -202,8 +244,9 @@ This contract defines semantic expectations for future schema and validator work
 |---|---|
 | Machine field shape | `../../../schemas/contracts/v1/domains/archaeology/publication_transform_receipt.schema.json`. |
 | Transform implementation | Package/tool roots after placement review. |
+| Validator code | `../../../tools/validators/...`. |
 | Fixtures and tests | `../../../fixtures/...`, `../../../tests/...`. |
-| Raw, work, quarantine, processed, or released data payloads | Lifecycle data and release roots. |
+| Raw, work, quarantine, processed, or released data payloads, including the full transformed payload | Lifecycle data and released artifact roots. |
 | EvidenceBundle/proof content | `../../../data/proofs/`. |
 | Sensitivity, access, admissibility, or release policy | `../../../policy/...`. |
 | Steward/cultural review records | Governance/review contract and record homes. |
@@ -223,6 +266,8 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `source_object_family` | Contract family or object type of the transformed input. |
 | `source_lifecycle_state` | RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, release-candidate, or other reviewed state. |
 | `transform_type` | Redaction, generalization, suppression, aggregation, masking, delay, summary, public-safe layer, or other reviewed transform class. |
+| `transform_profile` | Named transform profile or rule bundle. |
+| `transform_method` | Method or process used. |
 | `transform_reason` | Why the transform was required. |
 | `transform_policy_refs` | SensitivityTransform, PolicyDecision, policy rule, or policy receipt references. |
 | `review_refs` | StewardReview, CulturalReview, or release review references. |
@@ -239,7 +284,11 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `lineage_refs` | Prior, successor, supersession, correction, or rollback receipt records. |
 | `correction_refs` | CorrectionNotice or correction receipt references. |
 | `rollback_refs` | RollbackCard or rollback target references. |
+| `rollback_target` | Prior known-safe object or artifact reference. |
 | `spec_hash` | Integrity pin for the receipt representation. |
+
+> [!NOTE]
+> **Field-naming conflict (merged 2026-10-12, `NEEDS VERIFICATION`).** The former `PublicationTransformReceipt.md` proposed singular/digest names for overlapping fields: `receipt_id` (vs. `publication_transform_receipt_id`), `input_ref` / `input_digest` (vs. `source_object_refs` / `input_hashes`), `output_ref` / `output_digest` (vs. `output_refs` / `output_hashes`), `policy_decision_ref` (vs. `transform_policy_refs`), `review_record_ref` (vs. `review_refs`), and `release_ref` (vs. `release_refs`). The names in the table above are retained; the schema/validator work must choose one vocabulary.
 
 ---
 
@@ -254,7 +303,9 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - transform code, transformed output, policy decision, review record, release manifest, correction notice, and rollback target must remain separate object families;
 - source object, output object, transform reason, policy references, review references, validation references, and release references must remain inspectable;
 - unresolved policy, review, evidence, validation, or release gaps must remain visible;
-- schema validity is not proof of safe publication;
+- schema validity is not proof of safe publication or of transformation correctness;
+- transform inputs and outputs must remain traceable;
+- path or casing conflicts must remain visible until resolved (the CamelCase/snake_case conflict is resolved by the redirect stub; an ADR remains open);
 - public-facing use must be downstream of governed release artifacts and public-safe transforms;
 - publication is a governed state transition, not a file move.
 
@@ -272,6 +323,8 @@ flowchart LR
   VALIDATE -->|eligible| RELEASE[Release manifest / public-safe artifact]
 ```
 
+The receipt fans out to evidence refs, policy/review refs, and the output artifact or candidate; the release decision that consumes it carries correction, supersession, and rollback lineage.
+
 The contract defines the meaning of a publication-transform receipt. It does not replace transform execution, evidence resolution, schema validation, policy enforcement, review approval, release approval, correction, or rollback systems.
 
 ---
@@ -284,7 +337,9 @@ Before relying on this contract, verify:
 - validator implementation and fixture coverage;
 - canonical receipt ID and deterministic identity rules;
 - source-object and output-object reference rules;
-- transform vocabulary and policy-linkage requirements;
+- transform vocabulary (including accepted transform-profile vocabulary) and policy-linkage requirements;
+- input/output digest requirements;
+- the field-naming conflict recorded under Recommended fields;
 - EvidenceRef/EvidenceBundle requirements;
 - review, validation, release, correction, and rollback references;
 - source-ledger mismatch between scaffold and schema;
@@ -300,6 +355,10 @@ Before relying on this contract, verify:
 | Prior `publication_transform_receipt.md` scaffold | `CONFIRMED` | Target file existed as a planned-file scaffold and cited `CANONICAL_PATHS.md`. | Scaffold did not define authoritative semantics. |
 | `publication_transform_receipt.schema.json` | `CONFIRMED scaffold` | Schema exists, is `PROPOSED`, has empty properties, allows additional properties, points to this contract, and cites `MISSING_OR_PLANNED_FILES.md`. | Does not enforce full receipt semantics. |
 | `OBJECT_MAP.md` | `CONFIRMED current map` | Maps `PublicationTransformReceipt` to `publication_transform_receipt.md` and `publication_transform_receipt.schema.json` with status `NEEDS VERIFICATION`. | Does not prove validator, fixture, policy, review, transform, or release behavior. |
+| Prior `PublicationTransformReceipt.md` scaffold and contract (merged 2026-10-12) | `CONFIRMED` | CamelCase file existed, was sourced from `CONTINUITY_INVENTORY.md`, and was expanded into a parallel contract sharing this doc_id. | Duplicate identity; now a redirect stub. |
+| `docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md` | `CONFIRMED planning ledger` | Lists snake_case `publication_transform_receipt.md` and schema path as planned. | Planning ledger is not implementation proof. |
+| `docs/domains/archaeology/CONTINUITY_INVENTORY.md` | `CONFIRMED lineage / continuity register` | Threads PublicationTransformReceipt through archaeology continuity responsibilities. | Does not prove implementation; still cites the CamelCase path. |
+| `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` | `PROPOSED ADR / CONFIRMED text` | States receipt/proof/catalog/publication separation. | ADR does not prove validators or emitted artifacts exist. |
 | Uploaded authoring prompt v2 | `CONFIRMED user-supplied guidance` | Requires evidence-grounded, implementation-honest Markdown with verification and rollback posture. | Authoring guidance, not implementation proof. |
 
 ---
@@ -308,7 +367,7 @@ Before relying on this contract, verify:
 
 Rollback is required if this contract is used to claim schema completeness, validator coverage, transform execution, policy enforcement, review completion, release execution, API/UI behavior, evidence proof, publication permission, or implementation maturity not verified in this task.
 
-Rollback target: prior scaffold blob SHA `36578c7faf061f41280dcb0be1ddfcd45f4b7042`.
+Rollback target: prior scaffold blob SHA `36578c7faf061f41280dcb0be1ddfcd45f4b7042`. The merged CamelCase file's prior scaffold content SHA was `9cb4906d391dc9bafd05eaf65ff01b1423ee96fb`.
 
 ---
 
@@ -316,6 +375,10 @@ Rollback target: prior scaffold blob SHA `36578c7faf061f41280dcb0be1ddfcd45f4b70
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [ ] Source-ledger mismatch between Markdown scaffold and schema source doc is resolved or documented.
+- [x] Casing/path conflict resolved in favor of snake_case, with `PublicationTransformReceipt.md` kept as a redirect stub (2026-10-12).
+- [ ] Casing decision recorded in an ADR or migration note.
+- [ ] Downstream docs link to the one accepted canonical path.
+- [ ] Transform-profile vocabulary and the recorded field-naming conflict are resolved.
 - [ ] Publication-transform receipt vocabulary is reviewed by the Archaeology steward, policy steward, review steward, and release steward.
 - [ ] Boundary between `PublicationTransformReceipt`, `SensitivityTransform`, `PolicyDecision`, `ReviewRecord`, `EvidenceBundle`, `ReleaseManifest`, `CorrectionNotice`, and `RollbackCard` is accepted.
 - [ ] Paired JSON Schema is expanded from scaffold status.

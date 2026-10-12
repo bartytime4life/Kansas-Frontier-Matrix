@@ -2,13 +2,17 @@
 doc_id: kfm://doc/sources-catalog-noaa
 title: National Oceanic and Atmospheric Administration Source Catalog Profile
 type: source_catalog_profile
-version: v0.1
+version: v0.2
 status: draft
 owners: <PLACEHOLDER — Source steward · Docs steward · Catalog profile owner>
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-10-12
 policy_label: public
+owning_root: docs/
+responsibility: Agency-level NOAA source-use profile (access handles, descriptor baseline, identity/crosswalk, EvidenceBundle mapping, refresh and staleness rules); not the NOAA family catalog entry, source admission, policy, release, or publication authority.
+truth_posture: PROPOSED guidance for governed NOAA source use; external access points and product facts NEED VERIFICATION at each refresh; DENY source admission, activation, or publication from this profile's presence.
 related:
+  - docs/sources/catalog/noaa/README.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/CROSSWALKS.md
   - docs/sources/catalog/IDENTITY.md
@@ -19,18 +23,22 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/governance/separation-of-duties.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
   - schemas/contracts/v1/source/
 tags: [kfm, sources, catalog, noaa, nws, ncei, weather, climate, radar, nexrad, storm-events, climate-normals, atlas-14, warnings, forecasts, nowcoast, digital-coast, hazards]
 notes:
   - "v0.1 — Initial NOAA source catalog profile for governed KFM ingestion, evidence use, and public-release boundaries."
   - "This profile describes source use. It does not authorize direct public-client reads from NOAA, NWS, NCEI, nowCOAST, or other NOAA systems."
   - "Weather, warning, forecast, radar, and hazard feeds require strict time-awareness and stale-data suppression."
-] -->
+  - "2026-09-20: appended the 1991–2020 U.S. Climate Normals AWS intake-candidate section (updated date was not bumped at the time)."
+  - "2026-10-12 (v0.2): resolved the KFM-TOPO-016 duplicate doc_id shared with docs/sources/catalog/noaa/README.md by classifying the two as distinct documents (this agency-level source profile vs the NOAA family catalog entry); this file keeps kfm://doc/sources-catalog-noaa and the family README took kfm://doc/sources-catalog-noaa-family-readme, matching the nrcs precedent. Also repaired the meta-block closing marker, added owning_root/responsibility/truth_posture, and repointed the missing docs/governance/separation-of-duties.md related entry to ADR-0024."
+[/KFM_META_BLOCK_V2] -->
 
-National Oceanic and Atmospheric Administration Source Catalog Profile
+# National Oceanic and Atmospheric Administration Source Catalog Profile
 
 Path: docs/sources/catalog/noaa.md
+
+> **Document role.** This flat file is the agency-level NOAA **source-use profile**: access handles, source-descriptor baseline, identity and crosswalk policy, EvidenceBundle mapping, public API/tile policy, and refresh/staleness rules. The NOAA **family catalog entry** (source-role posture, domains served, receipts, open questions) and the per-product pages live under [`noaa/`](./noaa/README.md). The two are separate documents with separate doc_ids; neither admits, activates, or publishes a NOAA source.
 
 1. Purpose
 
@@ -925,6 +933,7 @@ If any term is missing, the record is not publishable.
 This profile is intentionally conservative. It does not reduce the value of NOAA data. It protects KFM from making legal, regulatory, emergency, engineering, insurance, access, operational, ecological, cultural, private-loss, or public-safety claims that the source does not support.
 
 NOAA data should enter KFM as evidence-bearing source material, not as sovereign runtime truth. KFM outputs must remain governed, cited, reviewable, time-aware, reversible, safety-gated, and policy-safe.
+
 ## 1991–2020 U.S. Climate Normals — AWS intake candidate
 
 **Checkpoint: 2026-09-20. Status: CANDIDATE; not source activation or climate-layer release.**
