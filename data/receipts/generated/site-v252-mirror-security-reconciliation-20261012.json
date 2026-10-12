@@ -5466,7 +5466,7 @@
   "status": "REVIEW_ONLY",
   "validation": {
     "anonymous_archive_read": "401; no archive content returned",
-    "container_scan": "PENDING hosted exact-head build; local Docker registry DNS prevented build",
+    "container_scan": "PASS hosted image build and unchanged Trivy HIGH/CRITICAL gate at ac9ecf2891542c9475cf2ac76a490cb9eab1fd39, job 114904200188; final-head CI separate",
     "data_activation": false,
     "hosted_equivalence": false,
     "local_browser": {
@@ -5501,6 +5501,7 @@
     "site_tests": 1138,
     "site_typecheck": "PASS",
     "source_lint": "0 errors; 66 existing warnings",
-    "topology": "PASS; zero new drift/invariants, 93 inherited warnings; baseline unchanged"
+    "topology": "PASS; zero new drift/invariants, 93 inherited warnings; baseline unchanged",
+    "worker_smoke": "PASS local isolated store on port 4189: 103 checks across 74 routes; 9 provider-only routes listed"
   }
 }

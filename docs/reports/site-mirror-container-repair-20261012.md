@@ -87,3 +87,13 @@ The script now requires that status and the explicit owner-access error text.
 This repairs the dependent test rather than weakening archive authorization.
 The actual hosted image build/scan and water conformance already passed at
 head ac9ecf2891542c9475cf2ac76a490cb9eab1fd39; final-head execution is separate.
+
+
+The isolated local Worker smoke passes all 103 checks across 74 routes after
+the expectation fix (port 4189, fresh empty test store, no operator-store changes).
+Owner merged #5097 at ac9ecf2891542c9475cf2ac76a490cb9eab1fd39 while that
+fix was being pushed. That exact head had 108 successes, two skipped and one
+Site smoke failure; do not call it fully passing. Its image build, container
+scan, security-result and water-conformance passed. The small follow-up retains
+that merge and updates only the dependent smoke expectations and this evidence.
+Final follow-up CI execution is separate from the earlier successful scans.
