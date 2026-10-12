@@ -5238,7 +5238,7 @@
         "path": "tests/workspace-map-navigation.test.mjs"
       }
     ],
-    "conflict_disposition": "Retained repository soil additions at five page.tsx conflicts. Weather catalog test retained because it already includes the Site weather changes plus soil. Other differences preserve existing soil/admin/test overlays.",
+    "conflict_disposition": "Retained repository soil additions at four page.tsx conflicts. Weather catalog test retained because it already includes the Site weather changes plus soil. Other differences preserve existing soil/admin/test overlays.",
     "conflicts": [],
     "current_site": "4d81543389496b6c789a47a9282a3d10740542c9",
     "deleted_paths": []

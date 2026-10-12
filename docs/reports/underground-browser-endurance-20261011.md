@@ -166,7 +166,7 @@ The authoritative Site had advanced concurrently to v251 source
 `4d81543389496b6c789a47a9282a3d10740542c9`, deployed successfully as
 `appgdep_6acc33d78064819196684fc4ef727761`, owner-only at environment revision 5.
 The new mirror starts from merged main and preserves soil, review and release
-controls. Five page conflicts were retained repository-only soil additions;
+controls. Four page conflicts were retained repository-only soil additions;
 the weather catalog test already includes the weather changes plus soil.
 Source aquifer/Underground geometry, public data assets, native values and the
 2048/4096 detail controls are unchanged from v247. The Site's new focus, hover,
