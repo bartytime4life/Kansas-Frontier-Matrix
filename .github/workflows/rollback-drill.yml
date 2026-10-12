@@ -88,6 +88,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import ast
+          import hashlib
           from pathlib import Path
           import json
           import subprocess
@@ -143,21 +144,22 @@ jobs:
               "no-write tests before retaining this readiness hold"
           )
 
-          rollback_apply = rollback_apply_path.read_text(encoding="utf-8")
-          assert "greenfield placeholder" not in rollback_apply, (
-              "rollback_apply.py regressed to an unimplemented placeholder"
-          )
-          helper_markers = [
-              ".kfm-synthetic-rollback-rehearsal",
-              "NON_SYNTHETIC_INPUT_DENIED",
-              '"public_state_mutated": False',
-          ]
-          missing_helper_markers = [
-              marker for marker in helper_markers if marker not in rollback_apply
-          ]
-          assert not missing_helper_markers, (
-              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
-              f"{missing_helper_markers}"
+          expected_rehearsal_digests = {
+              rollback_apply_path: (
+                  "6969b626bda6a6d2279a1e0b0e4beb7f266980b450d63dce87982071a20521e1"
+              ),
+              rehearsal_test_path: (
+                  "0a233ea6002bd25c490726e4f6763d3f14c830d727eb8529461aa1eee678aca0"
+              ),
+          }
+          rehearsal_digests = {
+              path: hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in expected_rehearsal_digests
+          }
+          assert rehearsal_digests == expected_rehearsal_digests, (
+              "the reviewed synthetic rollback helper or its behavioral contract changed; "
+              "review the complete diff and deliberately update the pinned digests: "
+              f"{rehearsal_digests}"
           )
 
           generic_validator = generic_validator_path.read_text(encoding="utf-8")
@@ -288,8 +290,8 @@ jobs:
               ]
 
           print("CONFIRMED: the production rollback pipeline and generic RollbackCard entrypoint remain placeholders.")
-          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
-          print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
+          print("CONFIRMED: rollback_apply.py and its behavioral contract match their reviewed digests.")
+          print("CONFIRMED: the pinned, non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
           print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
           print("CONFIRMED: direct Agriculture drill inventory contains guidance only.")
@@ -306,7 +308,7 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py is a marker-protected synthetic-only rehearsal covered by non-vacuous isolated-root tests."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py and its non-vacuous isolated-root behavioral contract match their reviewed digests."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
             echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
