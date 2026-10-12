@@ -36,6 +36,15 @@ In pull-request CI the proposed baseline is also compared with the trusted base
 commit: waiver additions, waiver mutation, metadata changes, and deadline
 extensions fail. These diagnostics do not authorize a new bootstrap or waiver.
 
+The uppercase path-grammar check exempts numbered `docs/adr/ADR-NNNN-*.md`
+files and, under accepted ADR-0048, upstream-backed entries of external byte
+mirrors registered in `control_plane/external_mirror_register.yaml` (currently
+`apps/site/source/`). An entry applies only while it is `ACTIVE` and its pinned
+receipt and parity check are tracked, and only to receipt entries that carry an
+upstream digest. Repository-only overlays keep the default grammar.
+Nonportable-punctuation and unsafe-path checks always apply. The register is a
+fixed scanner input and an indexed context input.
+
 `render_repository_topology_diagnostics.py` is a bounded diagnostic projection
 for failed ratchet runs. It preserves the ratchet exit code and reports only the
 failure disposition, rule id, subject, and fingerprint for new drift, invariant
@@ -87,12 +96,14 @@ run ID, attempt and event fields are included when present; absent values are
 explicitly null. No branch/trusted-base ref, arbitrary environment value, file
 content, evidence member or per-finding evidence digest is emitted.
 
-Context version `kfm.topology-execution-context.v2` additionally binds four
+Context version `kfm.topology-execution-context.v3` additionally binds five
 fixed governance inputs from the **Git index**, not their working-file copies:
 `root_registry` (`control_plane/root_registry.yaml`), `path_alias_register`
 (`control_plane/path_alias_register.yaml`), `directory_rules`
-(`docs/doctrine/directory-rules.md`), and `directory_adoption`
-(`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`). Each fixed label
+(`docs/doctrine/directory-rules.md`), `directory_adoption`
+(`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`), and
+`external_mirror_register` (`control_plane/external_mirror_register.yaml`).
+v3 (2026-10-12) adds the mirror register; v2 bound only the first four. Each fixed label
 records its Git blob ID, byte count and SHA-256. Blob framing is independently
 rehashed against the index ID before the entry is included. Missing, duplicate,
 unmerged, non-regular, oversized or mismatched objects make context unavailable;

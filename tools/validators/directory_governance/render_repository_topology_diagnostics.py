@@ -204,6 +204,7 @@ CONTEXT_INDEX_INPUTS = {
     b"control_plane/path_alias_register.yaml": "path_alias_register",
     b"docs/doctrine/directory-rules.md": "directory_rules",
     b"docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md": "directory_adoption",
+    b"control_plane/external_mirror_register.yaml": "external_mirror_register",
 }
 
 
@@ -290,7 +291,7 @@ def execution_context(repo_root: Path, baseline: Path) -> dict[str, object]:
     if len(index) > CONTEXT_MAX_INDEX_BYTES:
         raise ValueError("context index too large")
     context: dict[str, object] = {
-        "version": "kfm.topology-execution-context.v2",
+        "version": "kfm.topology-execution-context.v3",
         "checkout_commit": identities[0],
         "checkout_tree": identities[1],
         "index_sha256": hashlib.sha256(index).hexdigest(),
