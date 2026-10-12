@@ -110,6 +110,27 @@ INLINE_GEOMETRY_KEYS = frozenset(
         "y",
     }
 )
+INLINE_GEOMETRY_KEY_PARTS = frozenset(
+    {
+        "geohash",
+        "linestring",
+        "multipoint",
+        "polygon",
+        "point",
+        "shape",
+        "wkb",
+        "wkt",
+    }
+)
+WKT_VALUE = re.compile(
+    r"^\s*(?:SRID=\d+\s*;\s*)?(?:POINT|LINESTRING|POLYGON|MULTIPOINT|"
+    r"MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*(?:Z|M|ZM)?\s*\(",
+    re.IGNORECASE,
+)
+COORDINATE_PAIR_VALUE = re.compile(
+    r"^\s*[\[(]?\s*(-?\d{1,3}\.\d+)\s*(?:,|\s)\s*(-?\d{1,2}\.\d+)\s*[\])]??\s*$"
+)
+
 TRUST_BEARING_TRUE_KEYS = frozenset(
     {
         "approved",
@@ -697,6 +718,32 @@ def _validate_time(candidate: Mapping[str, Any], findings: set[Finding]) -> None
         _add(findings, "SIGNAL_EXPIRY_PRECEDES_BRIEFING", "$.expires_at")
 
 
+def _contains_inline_geometry(key: object, value: object) -> bool:
+    if isinstance(key, str):
+        normalized = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", key).lower()
+        parts = set(filter(None, re.split(r"[^a-z0-9]+", normalized)))
+        # References to governed geometry are permitted; only inline data is not.
+        is_reference = normalized.endswith("_ref") or normalized.endswith("ref")
+        if not is_reference and (
+            normalized in INLINE_GEOMETRY_KEYS
+            or bool(parts & INLINE_GEOMETRY_KEY_PARTS)
+        ):
+            return True
+
+    if isinstance(value, str):
+        if WKT_VALUE.match(value):
+            return True
+        match = COORDINATE_PAIR_VALUE.match(value)
+        if match:
+            first, second = (float(part) for part in match.groups())
+            return (
+                abs(first) <= 180 and abs(second) <= 90
+            ) or (
+                abs(first) <= 90 and abs(second) <= 180
+            )
+    return False
+
+
 def _validate_payload(candidate: Mapping[str, Any], findings: set[Finding]) -> None:
     payload = candidate.get("candidate_payload")
     if not isinstance(payload, Mapping):
@@ -708,10 +755,10 @@ def _validate_payload(candidate: Mapping[str, Any], findings: set[Finding]) -> N
         dotted = "$.candidate_payload.attributes." + ".".join(
             str(part) for part in path
         )
+        if _contains_inline_geometry(key, value):
+            _add(findings, "INLINE_GEOMETRY_FORBIDDEN", dotted)
         if isinstance(key, str):
             normalized_key = key.casefold()
-            if normalized_key in INLINE_GEOMETRY_KEYS:
-                _add(findings, "INLINE_GEOMETRY_FORBIDDEN", dotted)
             if normalized_key in SECRET_LIKE_KEYS:
                 _add(findings, "SECRET_LIKE_FIELD_FORBIDDEN", dotted)
             if normalized_key in TRUST_BEARING_TRUE_KEYS and value is True:

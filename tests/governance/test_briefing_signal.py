@@ -194,6 +194,34 @@ class BriefingSignalTests(unittest.TestCase):
             findings,
         )
 
+    def test_inline_geometry_aliases_and_encoded_values_are_rejected(self):
+        base = _load(FIXTURE_ROOT / "valid/valid_1.json")
+        cases = {
+            "location_wkt": "POINT(-99.123456 38.654321)",
+            "shape": "encoded-shape-data",
+            "innocent_name": "-99.123456, 38.654321",
+        }
+        for key, value in cases.items():
+            with self.subTest(key=key):
+                candidate = copy.deepcopy(base)
+                candidate["candidate_payload"]["attributes"][key] = value
+                findings = validate_candidate(candidate)
+                self.assertIn(
+                    "INLINE_GEOMETRY_FORBIDDEN",
+                    {item.code for item in findings},
+                )
+
+    def test_governed_geometry_references_remain_allowed(self):
+        candidate = _load(FIXTURE_ROOT / "valid/valid_1.json")
+        attributes = candidate["candidate_payload"]["attributes"]
+        attributes["location_wkt_ref"] = "fixture:geometry:alpha"
+        attributes["polygonRef"] = None
+        findings = validate_candidate(candidate)
+        self.assertNotIn(
+            "INLINE_GEOMETRY_FORBIDDEN",
+            {item.code for item in findings},
+        )
+
     def test_examples_remain_non_authoritative_and_issue_idempotent(self):
         for path in sorted(EXAMPLES):
             payload = _load(path)
