@@ -5,7 +5,7 @@ import { INTAKE_DESK_ORIGIN } from "./intake-desk-client";
 import { AtlasRequestGate, atlasErrorMessage, atlasRequest, atlasSession, parseAtlasCatalog, parseAtlasCoverage, parseAtlasFrames, parseAtlasGroups, parseAtlasPreview,
   type AtlasCatalog, type AtlasCoverage, type AtlasFrames, type AtlasGroup, type AtlasItem, type AtlasPreview, type AtlasRaster } from "./local-atlas-client";
 import { atlasCollectionLabel, atlasInspectorLabel, atlasMobilePadding } from "./local-atlas-presentation";
-import { PreparedCollectionControl } from "./prepared-collection-control";
+import { PreparedCollectionControl, type PreparedCompactReview } from "./prepared-collection-control";
 import { ATLAS_COLORS, atlasPointsOnly, atlasScale, attachAtlasPreview } from "./local-atlas-map";
 
 type Props = { map: AtlasMap | null; styleReady: boolean; flatMap: boolean; suspended: boolean; compact: boolean; collapsed: boolean; onViewMap: () => void; onExpand: () => void; reducedMotion: boolean; onFlatMap: () => void; onArchive: () => void; onPrivateView: () => void };
@@ -15,6 +15,7 @@ const featureName = (p: GeoJSON.GeoJsonProperties, i: number) => String(p?.name 
 const bytes = (n: number) => n >= 1e9 ? `${(n / 1e9).toFixed(1)} GB` : n >= 1e6 ? `${(n / 1e6).toFixed(1)} MB` : `${Math.ceil(n / 1000)} KB`;
 
 export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact, collapsed, onViewMap, onExpand, reducedMotion, onFlatMap, onArchive, onPrivateView }: Props) {
+  const [preparedReview, setPreparedReview] = useState<PreparedCompactReview | null>(null);
   const [section, setSection] = useState<"prepared" | "climate" | "files" | "coverage">("prepared");
   const [connection, setConnection] = useState<"connecting" | "connected" | "offline">("connecting");
   const [connectionKey, setConnectionKey] = useState(0), [token, setToken] = useState("");
@@ -135,7 +136,19 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     }));
   };
   return <section ref={controlRef} className="local-atlas map-utility-section" data-collapsed={collapsed || undefined} aria-label="Local Atlas">
-    {collapsed && <div className="local-atlas-peek" aria-label="Local preview on map">
+    {collapsed && section === "prepared" && <div className="local-atlas-peek" aria-label="Prepared preview on map">
+      <div className="local-atlas-peek-title"><strong>{preparedReview?.title ?? "Prepared collection review"}</strong><span>{preparedReview?.detail ?? "Show controls to choose a prepared folder"}</span></div>
+      {preparedReview?.range && <div className="local-atlas-peek-range">{preparedReview.range}</div>}
+      {preparedReview?.hasPreview && <>
+        <small role="status">{preparedReview.status}</small>
+        {preparedReview.selected && <strong className="local-atlas-peek-selection">{preparedReview.selected}</strong>}
+        <div className="local-atlas-peek-actions"><button type="button" disabled={!preparedReview.canFit} onClick={preparedReview.fit}>Fit review</button><button type="button" onClick={preparedReview.toggle}>{preparedReview.visible ? "Hide review" : "Show review"}</button><button type="button" onClick={preparedReview.inspect}>{preparedReview.selected ? "Inspect details" : "Inspect features"}</button><button type="button" onClick={preparedReview.clearMap}>Clear map</button></div>
+      </>}
+      {preparedReview?.busy && <button type="button" onClick={preparedReview.cancel}>Cancel verification</button>}
+      {preparedReview?.error && <p role="alert">{preparedReview.error}</p>}
+      <small>Private device review · not admitted · unreleased</small>
+    </div>}
+    {collapsed && section !== "prepared" && <div className="local-atlas-peek" aria-label="Local preview on map">
       <div className="local-atlas-peek-title"><strong>{preview?.title ?? (busy ? "Preparing local preview…" : "Local Atlas · map view")}</strong><span>{preview ? `${preview.units || "Units not supplied"} · ${preview.time.label}` : "Show controls to choose local data"}</span></div>
       {preview && <>
         <div className="local-atlas-peek-range">{raster?.paletteType === "categorical" ? "Source class palette · legend in controls" : density ? "Relative point density" : scale ? `${number(scale.min)} to ${number(scale.max)} ${preview.units ?? ""}${previewDifference ? " · B − A" : ""}` : "Uniform features · no numerical scale"}</div>
@@ -153,7 +166,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     {connection === "offline" && <div className="local-atlas-message"><p>Start the Intake Desk on this computer, then reconnect. Your local files are not uploaded to the Site.</p><a href={INTAKE_DESK_ORIGIN} target="_blank" rel="noreferrer">Open Intake Desk ↗</a></div>}</>}
     <nav className="local-atlas-sections" aria-label="Local Atlas views">{(["prepared", "climate", "files", "coverage"] as const).map(id => <button key={id} type="button" aria-pressed={section === id} onClick={() => changeSection(id)}>{id === "prepared" ? "Prepared review" : id === "climate" ? "Climate" : id === "files" ? "Local files" : "Coverage"}</button>)}</nav>
     {suspended && <p className="local-atlas-message" role="status">Finish measuring or close Underground to show a local map preview.</p>}
-    {section === "prepared" && <PreparedCollectionControl map={map} styleReady={styleReady} flatMap={flatMap} suspended={suspended} reducedMotion={reducedMotion} onFlatMap={onFlatMap} onPrivateView={onPrivateView} />}
+    {section === "prepared" && <PreparedCollectionControl map={map} styleReady={styleReady} flatMap={flatMap} suspended={suspended} compact={compact} onViewMap={onViewMap} onExpand={onExpand} onCompactReview={setPreparedReview} reducedMotion={reducedMotion} onFlatMap={onFlatMap} onPrivateView={onPrivateView} />}
     {section === "climate" && <>
       <div className="local-atlas-intro"><span>PRISM · COUNTY / GRID</span><h3>See a climate period</h3><p>Explore county means or the source raster. Compare matching periods with B minus A.</p></div>
       <label>Climate collection<select value={groupId} disabled={!groups.length} onChange={e => { clear(); setGroupId(e.target.value); setFrameOffset(0); setComparing(false); }}><option value="" disabled>{connection === "connected" && !groups.length ? "No processed PRISM frames" : "Choose a collection"}</option>{groups.map(g => <option key={g.id} value={g.id}>{atlasCollectionLabel(g)} · {g.series}</option>)}</select></label>

@@ -104,7 +104,7 @@
 .local-atlas-peek-title strong { font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
 .local-atlas-peek-title span { color: var(--muted); font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
 .local-atlas-peek-range { color: var(--water); font-size: 12px; font-variant-numeric: tabular-nums; }
-.local-atlas-peek-actions { display: flex; gap: 6px; }
+.local-atlas-peek-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .local-atlas-peek-actions button { flex: 1; padding: 5px 8px; min-height: 40px; }
 .local-atlas-peek-selection { display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; border-top: 1px solid var(--line); padding-top: 8px; }
 .local-atlas-peek-selection strong { font-size: 13px; }
@@ -155,3 +155,5 @@
 .prepared-review-scale i { display: block; height: 8px; border-radius: 4px; }
 .prepared-review-holds { color: var(--gold-soft); font-size: 12px; }
 .prepared-review footer { color: var(--muted); font-size: 11px; border-top: 1px solid var(--line); padding-top: 10px; }
+
+@media (max-width: 760px) { .local-atlas-peek[aria-label="Prepared preview on map"] .local-atlas-peek-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .local-atlas-peek[aria-label="Prepared preview on map"] button { min-height: 44px; } }
