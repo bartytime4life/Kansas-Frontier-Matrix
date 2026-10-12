@@ -11,7 +11,8 @@ owner-private Site v252 source `190d16acb2f866cb9c2eb108dbd204ca30465269`.
 
 The authoritative v252 archive-authorization changes are copied exactly into
 the mirror. They overlap eleven Site paths in open #5088; no obsolete receipt,
-selector, approval or unrelated smoke-script change from that PR is imported.
+selector or approval from that PR is imported. The dependent smoke checks are
+aligned with v252 owner authorization as described below.
 Existing Qwen, companion-session, governed water/weather/soil/storm-event/
 earthquake and release overlays remain in the repository. No file is deleted.
 The receipt records 953 identical application paths, 29 inherited overlays,
@@ -77,3 +78,22 @@ Twenty-three mirror/infra Python checks pass. The topology ratchet passes with
 zero new drift/invariants and 93 inherited warnings; its baseline is unchanged.
 The local copy includes 428 prepared build files and 44 retained prior assets.
 Actual container repair verification remains the hosted exact-head scan.
+
+
+Hosted Site CI initially failed only the local Worker smoke: the old script
+expected an anonymous archive GET to return an empty catalog (200) and POST to
+return its old CSRF denial (403). v252 denies both before storage access (401).
+The script now requires that status and the explicit owner-access error text.
+This repairs the dependent test rather than weakening archive authorization.
+The actual hosted image build/scan and water conformance already passed at
+head ac9ecf2891542c9475cf2ac76a490cb9eab1fd39; final-head execution is separate.
+
+
+The isolated local Worker smoke passes all 103 checks across 74 routes after
+the expectation fix (port 4189, fresh empty test store, no operator-store changes).
+Owner merged #5097 at ac9ecf2891542c9475cf2ac76a490cb9eab1fd39 while that
+fix was being pushed. That exact head had 108 successes, two skipped and one
+Site smoke failure; do not call it fully passing. Its image build, container
+scan, security-result and water-conformance passed. The small follow-up retains
+that merge and updates only the dependent smoke expectations and this evidence.
+Final follow-up CI execution is separate from the earlier successful scans.

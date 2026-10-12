@@ -5428,7 +5428,7 @@
     "conflicts": [],
     "current_site": "190d16acb2f866cb9c2eb108dbd204ca30465269",
     "deleted_paths": [],
-    "overlap": "The eleven authoritative v252 archive authorization paths overlap open PR #5088; this mirror takes only those exact Site bytes, not its obsolete mirror receipt or unrelated smoke-script edit."
+    "overlap": "The eleven authoritative v252 archive authorization paths and the dependent smoke expectations overlap open PR #5088. Exact Site bytes are retained; smoke assertions require the explicit anonymous authority denial. Its obsolete mirror receipts and selector are not imported."
   },
   "recorded_at": "2026-10-12T16:13:21.266621+00:00",
   "repository_base": "62479504bba719ca5da066b93febb8e37ab3faf8",
@@ -5466,7 +5466,7 @@
   "status": "REVIEW_ONLY",
   "validation": {
     "anonymous_archive_read": "401; no archive content returned",
-    "container_scan": "PENDING hosted exact-head build; local Docker registry DNS prevented build",
+    "container_scan": "PASS hosted image build and unchanged Trivy HIGH/CRITICAL gate at ac9ecf2891542c9475cf2ac76a490cb9eab1fd39, job 114904200188; final-head CI separate",
     "data_activation": false,
     "hosted_equivalence": false,
     "local_browser": {
@@ -5497,9 +5497,11 @@
     "mirror_typecheck": "PASS",
     "python_checks": 23,
     "site_build": "PASS",
+    "site_ci_followup": "Hosted smoke reproduced two obsolete expectations: anonymous GET 200 and POST 403. Both now require v252 401 with the explicit owner-access error; no auth control was weakened.",
     "site_tests": 1138,
     "site_typecheck": "PASS",
     "source_lint": "0 errors; 66 existing warnings",
-    "topology": "PASS; zero new drift/invariants, 93 inherited warnings; baseline unchanged"
+    "topology": "PASS; zero new drift/invariants, 93 inherited warnings; baseline unchanged",
+    "worker_smoke": "PASS local isolated store on port 4189: 103 checks across 74 routes; 9 provider-only routes listed"
   }
 }
