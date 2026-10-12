@@ -50,12 +50,17 @@ def load_budget(path: Path = BUDGET_PATH, baseline: Path | None = BASELINE_PATH)
     for row in value["committed"]:
         if not isinstance(row, dict) or not isinstance(row.get("bytes"), int) or row["bytes"] < 0 or row.get("id") in ids:
             raise BudgetError("BUDGET_COMMITTED_INVALID")
+        if "data_archive_bytes" in row and (not isinstance(row["data_archive_bytes"], int)
+                or isinstance(row["data_archive_bytes"], bool) or not 0 <= row["data_archive_bytes"] <= row["bytes"]):
+            raise BudgetError("BUDGET_COMMITTED_INVALID")
         ids.add(row["id"])
     value["baseline_check"] = "not-checked"
     if baseline is not None and baseline.is_file():
         manifest = json.loads(baseline.read_text("utf-8"))
         release = next((r for r in value["committed"] if r["id"] == "release:" + str(manifest.get("release_tag"))), None)
-        value["baseline_check"] = "match" if release and release["bytes"] == manifest.get("data_archive_bytes") else "mismatch"
+        # Total hosted asset bytes include manifests/checksums as well as data.
+        # Cross-check the data portion separately without undercounting storage.
+        value["baseline_check"] = "match" if release and release.get("data_archive_bytes", release["bytes"]) == manifest.get("data_archive_bytes") else "mismatch"
     return value
 
 
@@ -69,6 +74,9 @@ def budget_state(budget: dict, planned_bytes: int = 0) -> dict:
     return {
         "schema": "kfm-github-storage-state/v1",
         "github_limit_bytes": budget["github_limit_bytes"],
+        "limit_basis": budget.get("limit_basis", "owner-policy; not a GitHub platform quota"),
+        "storage_scope": budget.get("storage_scope", ["repository-history", "release-assets"]),
+        "local_pc_subject_to_this_limit": False,
         "reserved_for_code_and_interface_bytes": budget["reserved_for_code_and_interface_bytes"],
         "data_ceiling_bytes": ceiling,
         "committed_bytes": committed,

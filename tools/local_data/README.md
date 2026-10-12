@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-local-data-readme
 title: Local PC data tools
 type: readme
-version: v1.2
-status: repository-integrated; quarantine-only
+version: v1.3
+status: repository-integrated baseline; draft consolidation extension; quarantine-only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-10-09
+updated: 2026-10-11
 policy_label: public
 owning_root: tools/
 responsibility: Describe bounded workstation inspection and offline quarantine capture tools.
-truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy decision; hosted validation and native host acceptance need verification.
+truth_posture: CONFIRMED b194938f9e8a baseline and targeted local tests; PROPOSED unmerged extensions; host acceptance NEEDS VERIFICATION.
 [/KFM_META_BLOCK_V2] -->
 
 > **Raw-data intake addition — 2026-10-09:** `intake.py` profiles RAW and
@@ -18,8 +18,14 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 > to the local store, intake database, WORK review lane, a Git metadata card or a
 > GitHub release candidate (`intake_route.py`), and applies a placement only on
 > request. `intake_service.py` serves the Intake Desk on `127.0.0.1:8771`, and
-> `catalogs/github-storage-budget.json` keeps 20 GB of GitHub's 100 GB for code and
+> `catalogs/github-storage-budget.json` keeps 20 GB of the owner's 100 GB GitHub-hosted budget for code and
 > interface work. See [the intake runbook](../../docs/runbooks/raw-data-intake.md).
+
+The GitHub-hosted budget includes Site files in repository history, release
+assets, and recorded Actions artifacts/caches. It does not cap local PC storage
+and is not a provider quota. Keep actual GitHub file/push/LFS limits separate.
+For workstation inventory and explicit, verified copy plans, see
+[Projects consolidation](../../docs/runbooks/kfm-projects-consolidation.md).
 
 > **Water pilot addition — 2026-09-30:** `water_pilot.py` captures/replays bounded
 > USGS v1 data into quarantine and WORK; `water_job.py` prepares hourly candidates.

@@ -21,7 +21,7 @@ from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from tools.local_data import intake, intake_route  # noqa: E402
+from tools.local_data import intake, intake_route, atlas  # noqa: E402
 
 PORT = 8771
 SELF_ORIGIN = f"http://127.0.0.1:{PORT}"
@@ -40,10 +40,12 @@ MAX_MAP_FEATURES = 5000
 class Desk:
     """Holds the store, the configured inbox and the single background analysis job."""
 
-    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None):
+    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None, raster_python: Path | None = None, *, max_files: int = intake.MAX_FILES):
         self.root = root
+        self.atlas = atlas.Atlas(root, raster_python=raster_python)
         self.inbox = inbox
         self.budget = budget or intake_route.load_budget()
+        self.max_files = intake.file_limit(max_files)
         self.token = secrets.token_urlsafe(32)
         self.lock = threading.RLock()
         self.cancel_event = threading.Event()
@@ -54,7 +56,7 @@ class Desk:
         with self.lock:
             job = dict(self.job)
         return {"schema": "kfm-intake-desk/v1", "analyzerVersion": intake.ANALYZER_VERSION, "inboxConfigured": self.inbox is not None,
-                "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
+                "maxFiles": self.max_files, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
 
     def start(self, value: dict) -> dict:
         if not isinstance(value, dict) or set(value) - {"includeInbox"} or not isinstance(value.get("includeInbox", False), bool):
@@ -82,9 +84,16 @@ class Desk:
         with self.lock:
             self.job.update({k: summary.get(k, self.job.get(k)) for k in ("discovered", "analyzed", "reused", "failed", "run_id")})
 
+    def refresh_periodically(self, seconds: int, stop: threading.Event) -> None:
+        """Honor an existing operator-selected schedule without overlapping scans."""
+        while not stop.wait(seconds):
+            with self.lock:
+                if self.job["state"] != "running":
+                    self.start({})
+
     def _run(self, inbox: Path | None) -> None:
         try:
-            summary = intake.analyze(self.root, inbox=inbox, budget=self.budget, progress=self._progress, cancel=self.cancel_event)
+            summary = intake.analyze(self.root, inbox=inbox, budget=self.budget, progress=self._progress, cancel=self.cancel_event, max_files=self.max_files)
             with self.lock:
                 self._progress(summary)
                 self.job["state"] = summary["state"]
@@ -93,7 +102,7 @@ class Desk:
                 self.job.update(state="failed", error=str(error) if ERROR.fullmatch(str(error)) else "ANALYSIS_FAILED")
 
     def extents(self, query: dict) -> dict:
-        listing = intake.list_items(self.root, limit=intake.LIST_LIMIT, **query)
+        listing = intake.list_items(self.root, **query)
         features = []
         for item in listing["items"][:MAX_MAP_FEATURES]:
             b = item["bbox_wgs84"]
@@ -105,7 +114,9 @@ class Desk:
                              "properties": {"id": item["id"], "status": item["status"], "domain": item["domain"], "kind": item["kind"],
                                             "label": item["name"][:120]}})
         return {"type": "FeatureCollection", "features": features, "total": listing["total"],
-                "note": "Bounding boxes of indexed files; analysis extents, not released map layers."}
+                "offset": listing["offset"], "limit": listing["limit"], "scannedCount": len(listing["items"]),
+                "displayedCount": len(features), "nextOffset": listing["offset"] + len(listing["items"]) if listing["offset"] + len(listing["items"]) < listing["total"] else None,
+                "note": "Bounding boxes on this catalog page; file extents, not measured coverage or released map layers."}
 
 
 def _query(raw: str) -> dict:
@@ -235,9 +246,19 @@ def handler(desk: Desk):
                     return self.answer(200, intake.get_item(desk.root, identity))
                 if path == "/api/extents":
                     query = _query(parsed.query)
-                    query.pop("limit", None)
-                    query.pop("offset", None)
                     return self.answer(200, desk.extents(query), content_type="application/geo+json")
+                if path == "/api/atlas/catalog":
+                    return self.answer(200, desk.atlas.catalog(**_query(parsed.query)))
+                if path == "/api/atlas/prism/groups":
+                    if parsed.query:
+                        raise ValueError("ATLAS_QUERY_INVALID")
+                    return self.answer(200, desk.atlas.groups())
+                if path == "/api/atlas/prism/frames":
+                    params = parse_qs(parsed.query, max_num_fields=5)
+                    if set(params) - {"group", "year", "offset", "limit"} or any(len(v) != 1 for v in params.values()):
+                        raise ValueError("ATLAS_QUERY_INVALID")
+                    return self.answer(200, desk.atlas.frames(params.get("group", [""])[0], year=params.get("year", [None])[0],
+                                       offset=int(params.get("offset", ["0"])[0]), limit=int(params.get("limit", ["366"])[0])))
                 if path == "/api/budget":
                     return self.answer(200, intake_route.budget_state(desk.budget))
                 if path == "/api/release-plan":
@@ -261,7 +282,9 @@ def handler(desk: Desk):
                     raise ValueError("REQUEST_BYTE_LIMIT")
                 self.connection.settimeout(5)
                 value = json.loads(self.rfile.read(length))
-                if self.path == "/api/analyze":
+                if self.path == "/api/atlas/preview":
+                    result = desk.atlas.preview(value)
+                elif self.path == "/api/analyze":
                     result = desk.start(value)
                 elif self.path == "/api/cancel":
                     if value != {}:
@@ -290,21 +313,31 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", help="initialized private store (default: KFM_DATA_ROOT)")
     parser.add_argument("--inbox", type=Path, help="read-only downloads directory the desk may analyze (e.g. ~/Downloads/KFM)")
+    parser.add_argument("--max-files", type=int, default=intake.MAX_FILES, help="explicit discovery ceiling, at most 5,000,000 files")
+    parser.add_argument("--refresh-seconds", type=int, default=0, help="0 disables automatic analysis; otherwise repeat on a 300 to 86400 second interval")
+    parser.add_argument("--raster-python", type=Path, help="trusted local Python with rasterio, numpy and pyshp for bounded map previews")
     args = parser.parse_args(argv)
+    if args.refresh_seconds != 0 and not 300 <= args.refresh_seconds <= 86400:
+        parser.error("--refresh-seconds must be 0 or between 300 and 86400")
     root = intake.resolve_root(args.root)
     inbox = None
     if args.inbox:
         inbox = args.inbox.expanduser().resolve()
         if not inbox.is_dir() or inbox == root or root in inbox.parents or inbox in root.parents:
             parser.error("--inbox must be an existing directory separate from the store")
-    desk = Desk(root, inbox)
+    desk = Desk(root, inbox, raster_python=args.raster_python, max_files=args.max_files)
     server = ThreadingHTTPServer(("127.0.0.1", PORT), handler(desk))
+    stop_refresh = threading.Event()
+    if args.refresh_seconds:
+        desk.start({})
+        threading.Thread(target=desk.refresh_periodically, args=(args.refresh_seconds, stop_refresh), daemon=True, name="kfm-intake-refresh").start()
     print(f"KFM Intake Desk: {SELF_ORIGIN}/  (store {root}; Ctrl+C to stop)", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
     finally:
+        stop_refresh.set()
         desk.cancel_event.set()
         server.server_close()
     return 0

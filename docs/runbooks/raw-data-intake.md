@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbooks/raw-data-intake
 title: Analyze raw data and route it to the right place
 type: runbook
-version: v1.0
+version: v1.1
 status: implemented; local verification; owner acceptance pending
 owners: ["@bartytime4life"]
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-11
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Explain the intake pipeline, its loopback desk and Explorer summary, placement rules across local store, database, WORK lane, Git and GitHub releases, and the GitHub storage budget.
-truth_posture: CONFIRMED synthetic local tests and a local browser run; NEEDS VERIFICATION native-PC acceptance on real holdings and owner review of the storage policy.
+truth_posture: CONFIRMED base contracts and targeted local tests; NEEDS VERIFICATION real-holdings reanalysis, host installation and owner review.
 related:
   - docs/runbooks/local-pc-data-store.md
   - docs/runbooks/github-data-baseline.md
@@ -126,7 +126,10 @@ declarations from the quarantine bindings.
 
 ## GitHub storage budget
 
-GitHub is limited to **100 GB** for this project. The policy file keeps
+The owner limits GitHub-hosted KFM material to **100 GB** for this project.
+This includes Site source in Git history, release assets and recorded CI
+artifacts/caches. It does not cap local PC storage and is not a GitHub platform
+quota. The policy file keeps
 **20 GB permanently reserved for code, interface and feature work**, leaving an
 80 GB data ceiling — the same ceiling the
 [curated baseline release](github-data-baseline.md) already uses.
@@ -135,10 +138,14 @@ GitHub is limited to **100 GB** for this project. The policy file keeps
 python3 tools/local_data/intake.py budget
 ```
 
-At this commit the committed usage is 234,924,032 bytes of repository history plus
-36,710,723,546 bytes in the `curated-data-20261008` release, leaving about
-43.05 GB for new curated data. The loader checks the release figure against the
-baseline manifest and reports `baseline_check: match` or `mismatch`. After
+The October 11, 2026 snapshot records 244,829,184 provider-reported repository
+bytes, 36,710,792,263 bytes across all 40 baseline release assets, 6,150,059
+artifact bytes and 7,064,414,678 cache bytes. The reported total is
+44,026,186,184 bytes, leaving about 35.97 GB beneath the conservative 80 GB
+working ceiling. Repository size is approximate; CI storage is mutable and
+LFS needs separate accounting if used. Re-read the ledger before an upload.
+The loader compares the release's separate data-archive portion against the
+preserved baseline manifest and reports `baseline_check: match` or `mismatch`. After
 publishing a new release, add a `committed` entry with its exact asset bytes.
 The desk warns at 85% of the data ceiling and denies candidates that would exceed it.
 
