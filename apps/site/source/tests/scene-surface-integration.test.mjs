@@ -101,14 +101,14 @@ test("renderer probe callback ignores disposed/replaced maps and never leaks a r
 });
 
 test("both real generic hover/click fallbacks exclude scene display sources while retaining evidence and basemap picks", () => {
-  const candidates = nodesMatching(pageTree, (node) => ts.isVariableDeclaration(node) && node.name.getText(pageTree) === "externalCandidate" && node.initializer?.getText(pageTree).includes("queryRenderedFeatures"));
+  const candidates = nodesMatching(pageTree, (node) => ts.isVariableDeclaration(node) && node.name.getText(pageTree) === "externalCandidate" && node.initializer?.getText(pageTree).includes("renderedHits.find"));
   assert.equal(candidates.length, 2);
   const feature = (source) => ({ source, properties: { name: source }, geometry: { type: "Point", coordinates: [-98, 38] } });
   const basemap = feature("openmaptiles"), official = feature("external-usgs-streamflow");
   for (const candidateNode of candidates) {
     let features = [feature("scene-terrain-drawing"), feature("scene-kansas-glow"), feature("kfm-focus"), feature("registered-evidence"), basemap];
     let queries = 0;
-    const context = { candidate: undefined, officialCandidate: undefined, map: { queryRenderedFeatures() { queries += 1; return features; } }, event: { point: [1, 2] }, LAYER_REGISTRY: [{ sourceId: "registered-evidence" }] };
+    const context = { candidate: undefined, officialCandidate: undefined, map: { queryRenderedFeatures() { queries += 1; return features; } }, event: { point: [1, 2] }, get renderedHits() { return features; }, LAYER_REGISTRY: [{ sourceId: "registered-evidence" }] };
     assert.equal(evaluate(candidateNode.initializer, context), basemap);
     features = features.slice(0, -1);
     assert.equal(evaluate(candidateNode.initializer, context), undefined, "display-only hits produce no generic selection or report");
@@ -225,7 +225,7 @@ test("compact evidence autofocus waits for active surface inspection and preserv
     const focus = [], closed = [], listeners = new Map();
     const first = { focus() { focus.push("first"); } }, last = { focus() { focus.push("last"); } };
     const drawer = { addEventListener(type, fn) { listeners.set(type, fn); }, removeEventListener(type, fn) { assert.equal(listeners.get(type), fn); listeners.delete(type); } };
-    const context = { isCompact: true, surfaceInspectionOpen: active && surface !== "off", terrainSurfaceMode: surface, mapUtilityOpen: false, rightOpen: true, leftOpen: false, timelineOpen: false, rightPanelRef: { current: drawer }, visibleFocusableElements: () => [first, last], document: { activeElement: new Element(true) }, Element, closeRightPanel() { closed.push(true); } };
+    const context = { primaryWorkspace: "map", isCompact: true, surfaceInspectionOpen: active && surface !== "off", terrainSurfaceMode: surface, mapUtilityOpen: false, rightOpen: true, leftOpen: false, timelineOpen: false, rightPanelRef: { current: drawer }, visibleFocusableElements: () => [first, last], document: { activeElement: new Element(true) }, Element, closeRightPanel() { closed.push(true); } };
     const cleanup = evaluate(effect.arguments[0], context)();
     if (context.surfaceInspectionOpen) {
       assert.equal(listeners.size, 0); assert.deepEqual(focus, [], "tapped evidence does not steal focus behind Scene");

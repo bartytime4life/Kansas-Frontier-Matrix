@@ -539,6 +539,19 @@ const evidenceFilterForRecord = (record: (typeof LAYER_REGISTRY)[number], eviden
   return clusteredRecordMatches ? undefined : ["==", ["get", "fid"], "__no_matching_feature__"] as FilterSpecification;
 };
 
+// Weak renderer keys invalidate automatically after a style replacement.
+const registryFilters = new WeakMap<object, string>();
+const registryZooms = new WeakMap<object, string>();
+const registryOrders = new WeakMap<MapLibreMap, { layers: object[]; order: string }>();
+const setRegistryFilter = (map: MapLibreMap, id: string, filter: FilterSpecification | undefined) => {
+  const layer = map.getLayer(id);
+  if (!layer) return;
+  const key = JSON.stringify(filter ?? null);
+  if (registryFilters.get(layer) === key) return;
+  map.setFilter(id, filter ?? null);
+  registryFilters.set(layer, key);
+};
+
 /** Update only renderer filters during time playback. Sources, paint, zoom
  * ranges, and draw order remain untouched so large registries do not churn on
  * every frame. */
@@ -556,7 +569,7 @@ export const applyTemporalRegistryFilters = (
         record.temporal ? temporalFilter(year, record.temporal.mode, temporalQuery) : undefined,
         evidenceFilterForRecord(record, evidenceFilter),
       );
-      map.setFilter(renderer.id, filter ?? null);
+      setRegistryFilter(map, renderer.id, filter);
     }
   }
 };
@@ -583,19 +596,28 @@ export const applyRegistryState = (
 
     for (const renderer of record.renderers) {
       if (!map.getLayer(renderer.id)) map.addLayer(renderer.spec as LayerSpecification);
-      map.setLayerZoomRange(renderer.id, record.minZoom, record.maxZoom);
-
-      map.setLayoutProperty(renderer.id, "visibility", visibility[record.id] ? "visible" : "none");
+      const layer = map.getLayer(renderer.id)!;
+      const zoom = `${record.minZoom}:${record.maxZoom}`;
+      if (registryZooms.get(layer) !== zoom) {
+        map.setLayerZoomRange(renderer.id, record.minZoom, record.maxZoom);
+        registryZooms.set(layer, zoom);
+      }
+      const nextVisibility = visibility[record.id] ? "visible" : "none";
+      if ((map.getLayoutProperty(renderer.id, "visibility") ?? "visible") !== nextVisibility)
+        map.setLayoutProperty(renderer.id, "visibility", nextVisibility);
       const filter = mergeFilters(
         renderer.baseFilter,
         record.temporal ? temporalFilter(year, record.temporal.mode, temporalQuery) : undefined,
         evidenceFilterForRecord(record, evidenceFilter),
       );
-      map.setFilter(renderer.id, filter ?? null);
+      setRegistryFilter(map, renderer.id, filter);
 
       for (const property of renderer.opacityProperties ?? []) {
         if (property === "fill-opacity") requestFillOpacity(map, renderer.id, opacity[record.id] ?? record.defaultOpacity);
-        else map.setPaintProperty(renderer.id, property, opacity[record.id] ?? record.defaultOpacity);
+        else {
+          const value = opacity[record.id] ?? record.defaultOpacity;
+          if (map.getPaintProperty(renderer.id, property) !== value) map.setPaintProperty(renderer.id, property, value);
+        }
       }
     }
   }
@@ -731,6 +753,13 @@ export const lngLatToTile = (longitude: number, latitude: number, zoom: number):
 };
 
 export const reorderRegistryLayers = (map: MapLibreMap, order: string[]) => {
+  const layers = LAYER_REGISTRY.flatMap(record => record.renderers.map(renderer => map.getLayer(renderer.id))).filter((layer): layer is NonNullable<typeof layer> => Boolean(layer));
+  const key = JSON.stringify(order);
+  const prior = registryOrders.get(map);
+  if (prior?.order === key && prior.layers.length === layers.length && prior.layers.every((layer, index) => layer === layers[index])) {
+    composeMapLayers(map);
+    return;
+  }
   for (const layerId of order) {
     const record = LAYER_REGISTRY.find((candidate) => candidate.id === layerId);
     for (const renderer of record?.renderers ?? []) {
@@ -739,6 +768,7 @@ export const reorderRegistryLayers = (map: MapLibreMap, order: string[]) => {
   }
   for (const id of SYSTEM_LAYER_IDS) if (map.getLayer(id)) map.moveLayer(id);
   composeMapLayers(map);
+  registryOrders.set(map, { layers, order: key });
 };
 
 export const updateSelectionSource = (map: MapLibreMap, selection?: Feature<Geometry> | null) => {

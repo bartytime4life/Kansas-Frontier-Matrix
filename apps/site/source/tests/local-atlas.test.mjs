@@ -59,18 +59,18 @@ test('a failed owned source clears the partial display without marking other sou
  const h=harness(),c=h.start();h.listeners.get('error')({sourceId:'unrelated'});assert.equal(h.state(),'visible');h.listeners.get('error')({sourceId:'kfm-local-atlas-source'});assert.equal(h.state(),'unavailable');assert.equal(h.sources.size,0);assert.equal(h.layers.size,0);c.dispose();assert.equal(h.listeners.size,0);
 });
 test('the integrated utility mounts only while open and diverts its own feature clicks',async()=>{
- const page=await readFile('app/page.tsx','utf8');assert.match(page,/mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl/);assert.match(page,/if \(localAtlasHit\(map, event.point\)\) return/);assert.match(page,/suspended=\{Boolean\(measureMode\) \|\| undergroundOpen\}/);
+ const page=await readFile('app/page.tsx','utf8');assert.match(page,/mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl/);assert.match(page,/if \(localAtlasHit\(map, event.point, renderedHits\)\) return/);assert.match(page,/suspended=\{Boolean\(measureMode\) \|\| undergroundOpen\}/);
  const css=await readFile('app/local-atlas.css','utf8');assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);
 });
 
-test('actual global click callback yields local hits before any official query', async () => {
+test('actual global click callback yields local hits before official selection with one shared query', async () => {
  const page=await readFile('app/page.tsx','utf8');
  const click=page.slice(page.indexOf('        map.on("click", (event) => {'));
  const prefix=click.slice(click.indexOf('{')+1,click.indexOf('          const availableLayers'));
  const handler=new Function('map','event','undergroundOpenRef','measureModeRef','localAtlasHit',prefix+"return 'official';");
- let hits=0;const local=()=>{hits++;return true;};
- assert.equal(handler({}, {point:{x:1,y:2}}, {current:false},{current:null},local),undefined);assert.equal(hits,1);
- assert.equal(handler({}, {point:{x:1,y:2}}, {current:false},{current:null},()=>false),'official');
+ let hits=0,queries=0;const map={queryRenderedFeatures:()=>{queries++;return [];}};const local=()=>{hits++;return true;};
+ assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},local),undefined);assert.equal(hits,1);
+ assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},()=>false),'official');assert.equal(queries,2);
 });
 test('raster image bounds own only visible local clicks without claiming pixel values', () => {
  const h=harness(),p=preview({kind:'raster',data:{imageDataUrl:'data:image/png;base64,aGVsbG8=',coordinates:[[-100,39],[-99,39],[-99,38],[-100,38]]}}),c=h.start(p);
@@ -129,4 +129,11 @@ test('mobile fitting reserves only the displayed bottom sheet and keeps an expos
  assert.deepEqual(presentation.atlasMobilePadding(86,784,585),{top:32,left:24,right:24,bottom:215});
  const p=presentation.atlasMobilePadding(86,784,650);assert.ok(p.bottom<200);assert.ok(784-86-p.top-p.bottom>450);
  const tiny=presentation.atlasMobilePadding(0,160,0);assert.ok(tiny.bottom<=60);
+});
+
+test('a supplied vector hit stack avoids another query without losing local ownership',()=>{
+ const h=harness(),c=h.start();h.map.queryRenderedFeatures=()=>{throw new Error('duplicate query');};
+ const id=[...h.layers.keys()].find(id=>id.includes('point'));
+ assert.equal(renderer.localAtlasHit(h.map,{x:0,y:0},[{layer:{id}}]),true);
+ assert.equal(renderer.localAtlasHit(h.map,{x:0,y:0},[]),false);c.dispose();
 });

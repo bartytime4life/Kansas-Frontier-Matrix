@@ -21,10 +21,10 @@ export function atlasColor(field: string | null, scale: AtlasScale | null): stri
     : ["interpolate", ["linear"], value, scale.min, ATLAS_COLORS.low, (scale.min + scale.max) / 2, ATLAS_COLORS.mid, scale.max, ATLAS_COLORS.high];
   return ["case", ["==", ["typeof", value], "number"], ramp, ATLAS_COLORS.missing];
 }
-export function localAtlasHit(map: AtlasMap, point: MapMouseEvent["point"]): boolean {
+export function localAtlasHit(map: AtlasMap, point: MapMouseEvent["point"], rendered?: readonly { layer: { id: string } }[]): boolean {
   try {
     const layers = LAYERS.filter(id => id !== LAYERS[4] && Boolean(map.getLayer(id)));
-    if (layers.length > 0 && map.queryRenderedFeatures(point, { layers }).length > 0) return true;
+    if (layers.length > 0 && (rendered ? rendered.some(feature => layers.includes(feature.layer.id)) : map.queryRenderedFeatures(point, { layers }).length > 0)) return true;
     // Raster images have no rendered features. Own clicks within their displayed
     // image bounds, including nodata pixels; this does not promise pixel lookup.
     if (!map.getLayer(LAYERS[4]) || map.getLayoutProperty(LAYERS[4], "visibility") === "none"
