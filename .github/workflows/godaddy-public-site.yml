@@ -16,6 +16,7 @@ name: godaddy-public-site
       - ".github/workflows/godaddy-public-site.yml"
       - "apps/public-site/**"
       - "infra/godaddy/**"
+      - "docs/runbooks/godaddy-hosting.md"
       - "docs/brand/readme/**"
       - "apps/site/source/app/site-features.ts"
       - "apps/site/source/public/favicon.svg"
@@ -25,6 +26,7 @@ name: godaddy-public-site
       - ".github/workflows/godaddy-public-site.yml"
       - "apps/public-site/**"
       - "infra/godaddy/**"
+      - "docs/runbooks/godaddy-hosting.md"
       - "docs/brand/readme/**"
       - "apps/site/source/app/site-features.ts"
       - "apps/site/source/public/favicon.svg"
@@ -58,6 +60,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 1
+          ref: ${{ github.sha }}
 
       - name: Set up Node 22
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -69,6 +72,12 @@ jobs:
 
       - name: Check bundle
         run: node apps/public-site/check.mjs
+
+      - name: Install local Apache test runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq apache2-bin
+
+      - name: Test deployment and hosting boundaries without credentials
+        run: node --experimental-strip-types --no-warnings --test apps/public-site/tests/security.test.mjs
 
       - name: Upload bundle for review
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -84,7 +93,7 @@ jobs:
     # Only reviewed main reaches the hosting credentials: a dispatch from any
     # other branch or tag never runs this job. The godaddy-production
     # environment must also restrict deployments to main (see the runbook).
-    if: ${{ vars.GODADDY_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ vars.GODADDY_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && github.ref_protected == true && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     concurrency:
@@ -102,6 +111,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 1
+          ref: ${{ github.sha }}
 
       - name: Set up Node 22
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

@@ -21,9 +21,9 @@ AddType text/plain .txt
   RewriteCond %{HTTP_HOST} !^{{CANONICAL_HOST}}$ [NC]
   RewriteRule ^ https://{{CANONICAL_HOST_PLAIN}}%{REQUEST_URI} [R=301,L]
 
-  # HTTPS only.
+  # Direct cPanel Apache hosting: only the server's TLS state is trusted.
+  # A client-supplied forwarding header must not bypass HTTPS redirection.
   RewriteCond %{HTTPS} !=on
-  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteRule ^ https://{{CANONICAL_HOST_PLAIN}}%{REQUEST_URI} [R=301,L]
 
   # Short link to the Explorer (owner-private preview until it is released).
@@ -49,10 +49,10 @@ AddType text/plain .txt
   <FilesMatch "\.(html|json|xml|txt)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  # Pages reference these with a ?v=<content hash> query, so a changed file
-  # gets a new URL. The og.png share image is the only unversioned reference.
+  # Stable paths, including the unversioned social preview, are mutable.
+  # Revalidate even when callers omit the page's content-hash query.
   <FilesMatch "\.(svg|png|css|ico)$">
-    Header set Cache-Control "public, max-age=604800"
+    Header set Cache-Control "public, no-cache"
   </FilesMatch>
   <FilesMatch "^(features|kfm-site)\.json$">
     Header set Access-Control-Allow-Origin "*"

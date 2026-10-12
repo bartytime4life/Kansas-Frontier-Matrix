@@ -43,6 +43,18 @@ node apps/public-site/check.mjs
 
 The bundle is written to `apps/public-site/dist/`, which git ignores. Preview it with any static server, for example `python3 -m http.server -d apps/public-site/dist 8090`.
 
+Run the focused security regression suite with Node 22 and Apache 2.4
+(`apache2-bin` on Ubuntu):
+
+```bash
+node --experimental-strip-types --no-warnings --test apps/public-site/tests/security.test.mjs
+```
+
+It evaluates the committed deployment predicate, checks secret scope and
+immutable checkout, builds synthetic local bundles, and exercises redirects,
+TLS, cache headers, AutoSSL exceptions, and denied dotfiles on a loopback-only
+Apache server. It uses no hosting credentials and makes no external requests.
+
 Build settings come from environment variables: `KFM_SITE_ORIGIN`, `KFM_EXPLORER_URL`, `KFM_BUILD_COMMIT`, `KFM_BUILD_TIME` and `KFM_SITE_OUT`. Each is described at the top of [`build.mjs`](build.mjs).
 
 ## Output
