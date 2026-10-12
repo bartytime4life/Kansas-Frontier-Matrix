@@ -195,6 +195,10 @@ The repository-local
 `.gitattributes` remains outside `source/`; private hosted D1/R2 records and
 local development state are excluded.
 
+### Mirrored file names
+
+Files under `source/` keep the names they have in the external site source, including uppercase names such as `docs/RIVER_DELIVERY_2026-10-11.md`. Do not rename a mirrored file here: `tools/qa/site_mirror.py --check` requires the mirrored file set to match the reviewed receipt. To rename one, change it upstream and bring it in through a reviewed mirror sync. The repository topology check exempts this directory from its uppercase rule only. See the [apps/ root naming decision](../README.md#root-naming-decision-external-site-mirror).
+
 ## Run locally
 
 The repository-wide dependency and configuration map is in [Installation](../../docs/installation.md). This Site uses its own npm lockfile, separate from the root pnpm workspace.
