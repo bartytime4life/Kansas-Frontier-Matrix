@@ -20,6 +20,8 @@ FAMILIES = {
     "soil": {"packages": "soil_packages", "active": "soil_active", "events": "soil_activation_events", "objects": "soil-objects"},
     "storm_events": {"packages": "storm_events_packages", "active": "storm_events_active",
                      "events": "storm_events_activation_events", "objects": "storm-events-objects"},
+    "earthquakes": {"packages": "earthquakes_packages", "active": "earthquakes_active",
+                    "events": "earthquakes_activation_events", "objects": "earthquakes-objects"},
 }
 
 
