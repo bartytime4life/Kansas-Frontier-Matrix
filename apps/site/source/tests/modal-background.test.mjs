@@ -13,10 +13,8 @@ class Element {
   removeAttribute(name) { this.attributes.delete(name); }
   getClientRects() { return this.boxes; }
   closest(selector) {
-    for (let e = this; e; e = e.parentElement) {
-      if (selector === ".site-root" ? e.root : e.inert || e.attributes.has("hidden")) return e;
-    }
-    return null;
+    if (selector === ".site-root" ? this.root : this.inert || this.attributes.has("hidden")) return this;
+    return this.parentElement?.closest(selector) ?? null;
   }
 }
 class Details extends Element {
