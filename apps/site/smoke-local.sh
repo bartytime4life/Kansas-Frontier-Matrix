@@ -25,6 +25,8 @@ smoke_routes=(
   governed/water-admin/activate governed/water-admin/stage governed/water-admin/status governed/water-admin/withdraw
   "governed/weather/v1/[view]"
   governed/weather-admin/activate governed/weather-admin/stage governed/weather-admin/status governed/weather-admin/withdraw
+  "governed/soil/v1/[view]"
+  governed/soil-admin/activate governed/soil-admin/stage governed/soil-admin/status governed/soil-admin/withdraw
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
@@ -151,6 +153,11 @@ expect GET /api/governed/weather/v1/layers 200 envelope.reason_code NO_APPROVED_
 expect GET /api/governed/weather/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
 expect GET /api/governed/weather/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
 expect GET '/api/governed/weather/v1/layers?station_id=USGS-06892518' 400 envelope.reason_code INVALID_QUERY
+expect GET /api/governed/soil/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/soil/v1/layers 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/soil/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/soil/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
+expect GET '/api/governed/soil/v1/layers?station_id=USW00003928' 400 envelope.reason_code INVALID_QUERY
 expect GET /api/crop-casma/availability 200 code NO_APPROVED_SOIL_PACKAGE
 
 # Missing or invalid parameters are refused before any upstream call.
@@ -204,6 +211,7 @@ expect GET /api/historical-topo/review/tiles/1/package/0/0/0.png 401
 expect GET /api/historical-topo/tiles/1/package/0/0/0.png 401
 expect GET /api/governed/water-admin/status 401 reason_code SIGN_IN_REQUIRED
 expect GET /api/governed/weather-admin/status 401 reason_code SIGN_IN_REQUIRED
+expect GET /api/governed/soil-admin/status 401 reason_code SIGN_IN_REQUIRED
 
 # Writes without this Site's origin are refused before authentication.
 expect POST /api/data-submissions 403
@@ -214,12 +222,15 @@ expect POST /api/governed/water-admin/activate 403 reason_code SAME_ORIGIN_REQUI
 expect POST /api/governed/water-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
 expect POST /api/governed/weather-admin/activate 403 reason_code SAME_ORIGIN_REQUIRED
 expect POST /api/governed/weather-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
+expect POST /api/governed/soil-admin/activate 403 reason_code SAME_ORIGIN_REQUIRED
+expect POST /api/governed/soil-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
 
 # Features whose secret or endpoint is unset stay closed.
 expect GET /api/historical-topo/queue 503
 expect PUT /api/historical-topo/stage 503
 expect POST /api/governed/water-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/governed/weather-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
+expect POST /api/governed/soil-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/qwen 503 status disabled '{"question":"Where is Topeka?","context":{}}'
 
 if (( failures > 0 )); then

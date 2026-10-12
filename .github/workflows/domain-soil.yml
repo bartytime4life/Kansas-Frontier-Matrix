@@ -117,7 +117,10 @@ jobs:
             tests/domains/soil/test_uscrn_daily_candidate.py \
             tests/tools/test_uscrn_daily_pilot.py \
             tests/tools/test_soil_release.py \
-            tests/tools/test_soil_serving.py
+            tests/tools/test_soil_serving.py \
+            tests/tools/test_soil_hosted.py
+          # The Site's soil fixtures must still be what the Python release code produces.
+          python tools/fixtures/soil_site_fixtures.py
 
       - name: Record Soil validation scope
         if: always()
@@ -131,7 +134,8 @@ jobs:
           It also runs the USCRN daily soil pilot candidate and release tests
           (`tests/domains/soil/test_uscrn_daily_candidate.py`,
           `tests/tools/test_uscrn_daily_pilot.py`, `tests/tools/test_soil_release.py`,
-          `tests/tools/test_soil_serving.py`)
+          `tests/tools/test_soil_serving.py`, `tests/tools/test_soil_hosted.py`) and checks that the
+          Site's soil fixtures match the Python release code (`tools/fixtures/soil_site_fixtures.py`)
           on synthetic daily01 fixtures with no network, and validates the admitted
           `data/registry/sources/soil/noaa-uscrn.yaml` descriptor (ADR-0046). The
           release and serving tests use only temporary stores and a loopback server.
