@@ -59,9 +59,13 @@ def main() -> int:
         if sensitivity in {"RESTRICTED", "STEWARD_ONLY"}:
             violations.append(f"{path}: restricted sensitivity cannot be public fixture")
         if obj.get("geometry") and has_precise_coords(obj["geometry"]):
-            if obj.get("sensitivity") == "PUBLIC_SAFE" and "domains/hydrology" in str(path):
-                # synthetic polygon is allowed for baseline hydrology public-safe fixture.
+            if "domains/hydrology" in str(path) and (
+                obj.get("sensitivity") == "PUBLIC_SAFE" or obj.get("knowledge_character") == "SYNTHETIC_TEST"
+            ):
+                # synthetic polygon is allowed for baseline hydrology fixture.
                 pass
+            else:
+                violations.append(f"{path}: precise geometry cannot be public fixture")
 
     if violations:
         print("FAIL", violations)
