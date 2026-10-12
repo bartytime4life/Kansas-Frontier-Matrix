@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kansas Frontier Matrix</title>
+  <meta name="description" content="A map-first, time-aware, evidence-first atlas of Kansas. Pick a place, scrub through two centuries, and see where every answer came from." />
+  <link rel="canonical" href="{{ORIGIN}}/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="alternate" type="application/json" href="/kfm-site.json" title="Site manifest" />
+  <meta name="color-scheme" content="light dark" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Kansas Frontier Matrix" />
+  <meta property="og:title" content="Kansas Frontier Matrix — Place. Time. Evidence." />
+  <meta property="og:description" content="A map-first, time-aware, evidence-first atlas of Kansas, built in the open." />
+  <meta property="og:url" content="{{ORIGIN}}/" />
+  <meta property="og:image" content="{{ORIGIN}}/assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="/">Kansas Frontier Matrix</a>
+      <ul>
+        <li><a href="#explorer">Explorer</a></li>
+        <li><a href="#data">Data</a></li>
+        <li><a href="#trust">Trust</a></li>
+        <li><a href="#involved">Get involved</a></li>
+        <li><a href="{{REPO_URL}}">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <img class="hero-art" src="/assets/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers, observation points and a time sweep from 1800 to today." width="1280" height="440" />
+      <h1>Pick a place in Kansas. Scrub through two centuries. See exactly where every answer came from.</h1>
+      <p class="lede">A map-first, time-aware, evidence-first atlas of Kansas — built in the open. Its design goals are Kansas-first scope, auditable evidence, and reversible changes.</p>
+      <p class="actions">
+        <a class="button primary" href="{{REPO_URL}}">Explore the project on GitHub</a>
+        <a class="button" href="{{EXPLORER_URL}}" rel="noopener">Explorer (private preview)</a>
+      </p>
+      <aside class="note" role="note">
+        <strong>KFM is an active build, and this page says so plainly.</strong>
+        The Explorer is real and connects to public providers today, but it is an owner-only preview. Its live layers are labelled <em>external context</em>, and nothing on its map is yet a released KFM dataset. Every picture on this page is an illustration, not a screenshot.
+      </aside>
+    </section>
+
+    <section class="wrap" aria-labelledby="why">
+      <h2 id="why">Why KFM</h2>
+      <p>Most maps answer <strong>where</strong>. KFM is being built to answer <strong>where, when, what supports the claim, what changed, and what can responsibly be shown</strong>.</p>
+      <ul class="pillars">
+        <li><h3>Connected systems</h3><p>Move from a place to its water, ground, sky, history and infrastructure — on one map, on one clock.</p></li>
+        <li><h3>Every layer keeps its clock</h3><p>Observation, publication, retrieval and release times stay separate, so a reading never masquerades as a map edition.</p></li>
+        <li><h3>Click anything, see its receipts</h3><p>The Evidence Drawer shows source, time, role, uncertainty and limits for what you selected.</p></li>
+        <li><h3>Gaps stay visible</h3><p>Missing, stale or unsupported data becomes an honest gap, hold or abstain — never a confident guess or an implied all-clear.</p></li>
+        <li><h3>Sensitive places stay protected</h3><p>Archaeology, burials, rare species, living people and critical infrastructure are generalized, withheld or denied by default.</p></li>
+      </ul>
+    </section>
+
+    <section class="wrap" id="explorer" aria-labelledby="explorer-h">
+      <h2 id="explorer-h">The Explorer</h2>
+      <p>From a place to a shareable, evidence-bounded result in eight moves: map, area, layers, time, inspect, evidence, report, share.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/assets/kfm-explorer-walkthrough-dark.svg" />
+        <img src="/assets/kfm-explorer-walkthrough.svg" alt="Animated illustration of the Explorer journey: open the map, frame an area, switch on layers, move the time control, inspect a stream gauge, read the Evidence Drawer, draft a report and copy a share link." width="1280" height="720" loading="lazy" />
+      </picture>
+
+      <h3 class="section-sub">What the Explorer does today</h3>
+      <p>Read straight from the Explorer's own feature registry at commit <a href="{{COMMIT_URL}}"><code>{{BUILD_COMMIT_SHORT}}</code></a>: <strong>{{FEATURE_TOTAL}}</strong> registered features, <strong>{{LIVE_UI_TOTAL}}</strong> working in the interface and <strong>{{ACTIVE_CONTEXT_TOTAL}}</strong> showing live provider context from <strong>{{PROVIDER_TOTAL}}</strong> named public sources. Statuses are the code's own declarations, not hosted acceptance or release. Also available as <a href="/features.json">features.json</a>.</p>
+{{FEATURE_SECTIONS}}
+    </section>
+
+    <section class="wrap" aria-labelledby="time-h">
+      <h2 id="time-h">Travel through time</h2>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/assets/kfm-time-depth-dark.svg" />
+        <img src="/assets/kfm-time-depth.svg" alt="Illustrated time ribbon from 1800 to today showing how far back different kinds of Kansas sources reach." width="1280" height="300" loading="lazy" />
+      </picture>
+    </section>
+
+    <section class="wrap" id="data" aria-labelledby="data-h">
+      <h2 id="data-h">Where the data comes from</h2>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/assets/kfm-source-lanes-dark.svg" />
+        <img src="/assets/kfm-source-lanes.svg" alt="Seven themed clusters of public data providers — water, sky and air, earth and geology, land and agriculture, living things, history and people, built world and hazards — connected to a central evidence gate." width="1280" height="700" loading="lazy" />
+      </picture>
+      <p>KFM draws on public data from federal, state, university and community sources. It reaches KFM in two ways:</p>
+      <ul>
+        <li><strong>Live context in the Explorer.</strong> A fixed allowlist of official providers rendered as attributed external context: visible and inspectable, never silently promoted to evidence.</li>
+        <li><strong>Connector lanes in the repository.</strong> Source-specific capture, parsing and admission code. A lane existing does not mean the source is active, admitted or published.</li>
+      </ul>
+      <p>Browse every theme and lane in the <a href="{{REPO_URL}}#where-the-data-comes-from">project README</a> or the <a href="{{REPO_URL}}/tree/main/connectors">connectors directory</a>. Every source keeps its own terms, attribution and access limits.</p>
+    </section>
+
+    <section class="wrap" id="trust" aria-labelledby="trust-h">
+      <h2 id="trust-h">How KFM protects meaning</h2>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/assets/kfm-trust-membrane-dark.svg" />
+        <img src="/assets/kfm-trust-membrane.svg" alt="The trust membrane: public clients read released artifacts and call a Governed API that returns ANSWER, ABSTAIN, DENY or ERROR, while internal stores stay behind a membrane that refuses direct reads." width="1280" height="500" loading="lazy" />
+      </picture>
+      <p>Public clients never reach into internal stores. Every source moves through the same lifecycle — <strong>RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLETS → PUBLISHED</strong> — and promotion is a governed decision, not a file move.</p>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="/assets/kfm-trust-path-dark.svg" />
+        <img src="/assets/kfm-trust-path.svg" alt="The trust path from RAW to PUBLISHED, separated by gates: one item reaches PUBLISHED, one is held at quarantine, one ends in ABSTAIN or DENY." width="1280" height="350" loading="lazy" />
+      </picture>
+      <p>When KFM is asked something it answers with a finite outcome: <code>ANSWER</code> when evidence supports it, <code>ABSTAIN</code> when support is missing or stale, <code>DENY</code> when policy forbids it, and <code>ERROR</code> when something failed.</p>
+    </section>
+
+    <section class="wrap" id="involved" aria-labelledby="involved-h">
+      <h2 id="involved-h">Get involved</h2>
+      <ul class="links">
+        <li><a href="{{REPO_URL}}">Source code and documentation</a> — Apache-2.0</li>
+        <li><a href="{{REPO_URL}}/blob/main/CONTRIBUTING.md">Contributing guide</a></li>
+        <li><a href="{{REPO_URL}}/blob/main/docs/runbooks/github-data-baseline.md">Download curated source data</a></li>
+        <li><a href="{{REPO_URL}}/blob/main/CITATION.cff">Cite KFM</a></li>
+        <li><a href="{{REPO_URL}}/blob/main/SECURITY.md">Security policy</a> · <a href="/.well-known/security.txt">security.txt</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <img src="/assets/kfm-divider.svg" alt="" width="1280" height="44" loading="lazy" />
+      <p>Kansas Frontier Matrix · built from <a href="{{COMMIT_URL}}"><code>{{BUILD_COMMIT_SHORT}}</code></a> on {{BUILD_DATE}} · <a href="/kfm-site.json">site manifest</a></p>
+      <p class="muted">All artwork is illustrative — not screenshots, map products or released data. This page restates repository facts; it is not a KFM data release.</p>
+    </div>
+  </footer>
+</body>
+</html>

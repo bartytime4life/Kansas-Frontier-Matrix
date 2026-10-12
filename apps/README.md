@@ -121,10 +121,11 @@ notes:
 
 `apps/` owns independently deployable processes and user-facing service boundaries for Kansas Frontier Matrix. It is where app-local entry points, routes, user interfaces, operator commands, background runners, app-local tests, and deployable composition belong.
 
-The current root contains seven direct lanes:
+The current root contains eight direct lanes:
 
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
 - [`site/`](site/README.md) — GPT Site v74-derived source mirror under `site/source/` for local hosting;
+- [`public-site/`](public-site/README.md) — static public front door for kansasfrontiermatrix.com on GoDaddy hosting, built from repository facts and illustrative artwork;
 - [`review-console/`](review-console/README.md) — role-gated steward review surface;
 - the operator CLI lives in [`packages/kfm-cli`](../packages/kfm-cli/README.md) (the former `apps/cli/` scaffold was removed);
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
@@ -390,6 +391,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
 | [`site/`](site/README.md) | Reconciled source mirror of the deployed GPT Site v74 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
+| [`public-site/`](public-site/README.md) | Zero-dependency static build of the kansasfrontiermatrix.com front door; Explorer feature cards generated from `site/source/app/site-features.ts` | `node --experimental-strip-types apps/public-site/build.mjs`; `node apps/public-site/check.mjs`; `godaddy-public-site` | No browser scripts, lifecycle stores or data release; deploy is off unless `GODADDY_DEPLOY_ENABLED` is `true` |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
 | CLI | Removed 2026-09-29; the operator CLI is the installable [`packages/kfm-cli`](../packages/kfm-cli/README.md) (`doctor`, `diff`, `release-diff`, `telemetry`) | `kfm --help` after `tools/ci/install_kfm_cli.py` | Read-only local comparisons and bounded validator handoffs; no review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |

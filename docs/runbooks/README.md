@@ -211,6 +211,7 @@ docs/runbooks/
 ├── flora_BACKBONE_ROTATION.md
 ├── flora_SOURCE_REFRESH.md
 ├── geology/
+├── godaddy-hosting.md
 ├── habitat/
 ├── hazards/
 ├── hydrology/
@@ -259,6 +260,7 @@ intake database, WORK review lane, Git metadata card or GitHub release — use
 | Sensitivity escalation | [`SENSITIVITY_ESCALATION.md`](./SENSITIVITY_ESCALATION.md) | Unknown rights, sovereignty, consent, or harmful precision fails closed |
 | Internal KFM incident response | [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) | Not a public emergency-response or life-safety procedure |
 | Doctrine artifact intake | [`DOCTRINE_ARTIFACT_PREFLIGHT.md`](./DOCTRINE_ARTIFACT_PREFLIGHT.md) | A document cannot adopt itself or authorize dependent structural work |
+| Public website on GoDaddy hosting | [`godaddy-hosting.md`](./godaddy-hosting.md) | The front door restates repository facts; a deploy is not a data release |
 | Validator orchestration guidance | [`VALIDATOR_ORCHESTRATOR.md`](./VALIDATOR_ORCHESTRATOR.md) | Documentation does not replace the executable orchestrator or its tests |
 
 [Back to top](#top)
