@@ -145,7 +145,7 @@ registry. Existing source admission or ADR-0045 does not authorize uploading,
 serving, activating or releasing this separate full-history package. Current
 rights, sensitivity, source-role and release review remain independent.
 
-Validate with `tests/local_data/test_ghcnd_archive_review.py`, which covers
+Validate with `tests/tools/test_ghcnd_archive_review.py`, which covers
 historical records outside the pilot window, missing/QC/trace semantics,
 duplicate identities, changed input bytes, damaged outputs/receipts, unsafe ZIP
 members, links, busy writers, insufficient space and retained partial failures.
