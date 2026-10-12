@@ -31,6 +31,9 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
   const [field, setField] = useState<string | null>(null), [density, setDensity] = useState(false), [opacity, setOpacity] = useState(.8);
   const [mapState, setMapState] = useState(""), [inspected, setInspected] = useState<Record<string, unknown> | null>(null), [inspectQuery, setInspectQuery] = useState("");
   const controlRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (collapsed) controlRef.current?.closest(".map-utility-scroll")?.scrollTo({ top: 0, behavior: "instant" });
+  }, [collapsed]);
   const gate = useRef(new AtlasRequestGate());
   const overlay = useRef<ReturnType<typeof attachAtlasPreview> | null>(null);
   const clear = useCallback(() => { gate.current.clear(); overlay.current?.dispose(); overlay.current = null; setPreview(null); setInspected(null); setBusy(false); setPlaying(false); setMapState(""); }, []);

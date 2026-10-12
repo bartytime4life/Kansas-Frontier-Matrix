@@ -125,6 +125,7 @@
   .map-utility-panel[data-view=localAtlas] .map-utility-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   .site-root[data-local-atlas-open=true] .map-utility-panel[data-view=localAtlas][data-peek=true] { height: auto; max-height: min(38dvh, 310px); border-radius: 12px 12px 0 0; }
   .map-utility-panel[data-view=localAtlas][data-peek=true] .map-utility-heading { padding: 5px 12px; }
+  .map-utility-panel[data-view=localAtlas][data-peek=true] .explorer-controls-navigation,
   .map-utility-panel[data-view=localAtlas][data-peek=true] .panel-kicker,
   .map-utility-panel[data-view=localAtlas][data-peek=true] .map-utility-tabs { display: none; }
   .map-utility-panel[data-view=localAtlas][data-peek=true] .map-utility-heading h2 { font-size: 15px; margin: 0; }
