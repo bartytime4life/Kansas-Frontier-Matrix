@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-topology-mirror-register-context-20261012",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:7db9953b850a0ce3c94f428d7268ea3e847510bdb2c1428ea4ab61fa01a9799a",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:88adf03142a48a5741116c2d7994745c07ad6d4ffbbc84c367c7d445111204b1",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "sha256:65fa4ab58e42d61db70b3c38f624e6dfb0e2f22758e4bd1e76b019f80bc72db2",
+    "tools/validators/directory_governance/README.md": "sha256:e3f3140e752afaed986fa0db434d289e1785464ca541a09636c776cc7503a5e5",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:bdfe18407d8144e887f0d9a493ea06040b8ae2673578aa50da8b6386b8e4f3f2"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:dbc35f0e3a6b909d101067f9503c08c4ca4eb95e4a891c4d7596c654c844ee0d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7db9953b850a0ce3c94f428d7268ea3e847510bdb2c1428ea4ab61fa01a9799a",
+      "sha256:88adf03142a48a5741116c2d7994745c07ad6d4ffbbc84c367c7d445111204b1",
+      "sha256:65fa4ab58e42d61db70b3c38f624e6dfb0e2f22758e4bd1e76b019f80bc72db2",
+      "sha256:e3f3140e752afaed986fa0db434d289e1785464ca541a09636c776cc7503a5e5",
+      "sha256:bdfe18407d8144e887f0d9a493ea06040b8ae2673578aa50da8b6386b8e4f3f2"
+    ],
+    "evidence_refs": [
+      "git:4fee3f975af9495c86a8862ff227ce6f89b6c4c0",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+      "data/receipts/generated/genrec-topology-no-lazy-fetch-context-closure-20260920.json",
+      "control_plane/external_mirror_register.yaml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "CONFIRMED",
+    "tests/ci/test_directory_root_registry_workflow.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-receipt-replay",
+      "outcome": "PASS",
+      "reason": "The superseded no-lazy-fetch five-artifact receipt validates at exact ancestor 4fee3f975af9495c86a8862ff227ce6f89b6c4c0."
+    },
+    {
+      "gate": "current-binding-and-focused-regressions",
+      "outcome": "SKIPPED",
+      "reason": "Candidate validation follows emission and must be reported from the exact resulting tree; this receipt does not predict it."
+    },
+    {
+      "gate": "topology-conformance-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent review remains a separate held gate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-authority",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "mirror-register-decision",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    },
+    {
+      "id": "immutable-predecessor-binding",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-topology-no-lazy-fetch-context-closure-20260920.json@4fee3f975af9495c86a8862ff227ce6f89b6c4c0"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-12T02:14:17Z",
+  "emitter": "Claude Code",
+  "links": {
+    "pr_number": 5071,
+    "adr_link": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+  },
+  "notes": "Current successor binding for topology execution context v3, which adds control_plane/external_mirror_register.yaml as a fifth indexed governance input. The no-lazy-fetch predecessor receipt remains byte-identical and replays only at its exact ancestor on main. This receipt binds implementation bytes; it does not accept topology drift, grant review, merge, release, deployment, promotion, or publication authority."
+}
