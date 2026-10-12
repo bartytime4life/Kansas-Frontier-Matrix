@@ -5183,7 +5183,7 @@
   },
   "recorded_at": "2026-10-12T00:41:21.092647+00:00",
   "repository_base": "e960d6d47e5c43813b25e7aa6f1a9c7100469e89",
-  "repository_reconciled_base": "9196163527b79787192d04b163e29b40ec5c5221",
+  "repository_reconciled_base": "79d401c069d927e6595b7166d732cc52606f381d",
   "review": {
     "blocking_checks": [
       "repository_review",
@@ -5224,6 +5224,22 @@
     "focused_underground_tests": 115,
     "hosted_equivalence": false,
     "merged_main_python_checks": 43,
+    "post_correction_mirror_tests": 1129,
+    "post_correction_smoke": {
+      "at": "2026-10-12T00:43:10.541Z",
+      "hosted": {
+        "console": [],
+        "records": true,
+        "surface": "- status: Surface detail ready \u00b7 2048 \u00d7 1718 pixels \u00b7 map zoom 13.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution."
+      },
+      "local": {
+        "console": [],
+        "records": true,
+        "surface": "- status: Surface detail ready \u00b7 2048 \u00d7 1718 pixels \u00b7 map zoom 13.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution."
+      },
+      "version": 247
+    },
+    "post_correction_source_tests": 1096,
     "site_build": "PASS",
     "site_tests": 1096,
     "site_typecheck": "PASS"

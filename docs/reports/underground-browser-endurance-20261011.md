@@ -137,3 +137,13 @@ The append-only [v247 receipt](../../data/receipts/generated/site-v247-undergrou
 is selected for CONTENT_PARITY_ONLY checks; its review and human-acceptance
 holds remain explicit. The 17-minute endurance evidence describes v246, with
 post-correction v247 smoke and code/client-content comparison as separate proof.
+
+Post-correction local and owner-private hosted smoke restored the same 50
+records, 28 columns, aquifer withholding, and complete 2048 × 1718 surface
+with no console warnings/errors. Both corrected full suites reran successfully
+(1,096 standalone / 1,129 composed). GitHub records owner merge of #5057 at
+its earlier head `6ccd1a9721b7402085a4775e2b55c8a137f36837` while these
+corrections were being checked; merge commit is
+`79d401c069d927e6595b7166d732cc52606f381d`. The correction follow-up retains
+that merge and its initial failures as history, rather than claiming they
+passed or rewriting it.
