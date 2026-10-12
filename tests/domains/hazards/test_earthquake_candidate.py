@@ -247,21 +247,15 @@ def test_validation_refuses_forged_records_and_authority():
         validate_candidate({**base, "data_year": 2024})
 
 
-def test_the_proposed_descriptor_is_not_admitted(tmp_path):
-    with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
-        earthquake_admission.load_admission()
+def test_the_admitted_descriptor_supplies_only_rights_and_sensitivity(tmp_path):
+    admission = earthquake_admission.load_admission()
+    assert admission["source_ref"] == "kfm://source/usgs-earthquakes"
+    assert admission["license"].startswith("U.S. Public Domain")
+    # A descriptor that is not approved, active and releasable is refused.
     descriptor = json.loads(earthquake_admission.DESCRIPTOR.read_text())
-    assert descriptor["source_id"] == earthquake_admission.SOURCE_REF
-    assert (descriptor["review_state"], descriptor["lifecycle"]["registry_state"], descriptor["public_release"]["allowed"]) == (
-        "needs_review", "proposed", False)
-    # Admission would need all three changes; any one alone is still refused.
-    for change in ({"review_state": "approved"}, {"lifecycle": {**descriptor["lifecycle"], "registry_state": "active"}},
-                   {"public_release": {**descriptor["public_release"], "allowed": True}}):
+    for change in ({"review_state": "needs_review"}, {"lifecycle": {**descriptor["lifecycle"], "registry_state": "proposed"}},
+                   {"public_release": {**descriptor["public_release"], "allowed": False}}):
         path = tmp_path / "descriptor.json"
         path.write_text(json.dumps({**descriptor, **change}))
         with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
             earthquake_admission.load_admission(path)
-    admitted = {**descriptor, "review_state": "approved", "lifecycle": {**descriptor["lifecycle"], "registry_state": "active"},
-                "public_release": {**descriptor["public_release"], "allowed": True}}
-    path.write_text(json.dumps(admitted))
-    assert earthquake_admission.load_admission(path)["source_ref"] == "kfm://source/usgs-earthquakes"

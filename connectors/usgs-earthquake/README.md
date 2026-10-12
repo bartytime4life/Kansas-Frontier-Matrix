@@ -69,6 +69,9 @@ notes:
 > **Mode:** source-admission connector lane  
 > **Truth posture:** `CONFIRMED` file path and README content; connector code, source descriptors, endpoint configuration, fixtures, tests, CI wiring, emitted receipts, and release behavior remain `NEEDS VERIFICATION`.
 
+> [!NOTE]
+> **Kansas pilot capture and admission (2026-10-12).** The implementation lives in the USGS family package, not this README-only lane. `connectors/usgs/src/usgs/earthquake_capture.py` fetches one data year as twelve calendar-month ComCat FDSN queries over the Kansas context envelope, host-locked, size-bounded and without redirects. `pipelines/domains/hazards/earthquake_{normalize,validate}.py` build and check a closed candidate (`contracts/domains/hazards/earthquake_record.md`). The repository owner admitted the source on 2026-10-12 (`data/registry/sources/hazards/usgs.earthquakes.yaml`) and accepted [ADR-0049](../../docs/adr/ADR-0049-owner-self-release-for-admitted-public-earthquake-data.md) for owner self-release; `tools/release/earthquake_release.py` prepares month-bundled packages and writes release decisions. DYFI, ShakeMap and PAGER products remain out of scope. Nothing here serves or publishes, and this lane remains README-only.
+
 ---
 
 ## Scope
