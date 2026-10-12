@@ -203,6 +203,16 @@ export const normalizeStreamflowIsoTime = (value: string): string | null => {
   return new Date(milliseconds).toISOString() === canonical ? canonical : null;
 };
 
+/** A UTC archive day cannot silently clamp a future request to the present. */
+export const validStreamflowArchiveDay = (day: string, today: string): boolean => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || day < "1800-01-01" || day > today) return false;
+  const instant = Date.parse(`${day}T00:00:00.000Z`);
+  return Number.isFinite(instant) && new Date(instant).toISOString().slice(0, 10) === day;
+};
+
+export const restoreStreamflowArchiveDay = (day: string | null, stationId: string | null, today: string): string | null =>
+  day && stationId && normalizeUsgsStationId(stationId) && validStreamflowArchiveDay(day, today) ? day : null;
+
 export const isStreamflowIsoTime = (value: unknown): value is string => (
   typeof value === "string" && normalizeStreamflowIsoTime(value) !== null
 );

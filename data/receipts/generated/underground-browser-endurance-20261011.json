@@ -1,0 +1,153 @@
+{
+  "startedAt": "2026-10-12T00:10:27.127Z",
+  "hosted": [
+    {
+      "step": "initial-area",
+      "ms": 2916,
+      "at": "2026-10-12T00:11:10.071Z"
+    },
+    {
+      "step": "rapid-timeline-surface-roundtrip",
+      "cycle": 0,
+      "canvases": 5,
+      "at": "2026-10-12T00:11:22.669Z"
+    },
+    {
+      "step": "rapid-timeline-surface-roundtrip",
+      "cycle": 1,
+      "canvases": 5,
+      "at": "2026-10-12T00:11:26.581Z"
+    },
+    {
+      "step": "rapid-timeline-surface-roundtrip",
+      "cycle": 2,
+      "canvases": 5,
+      "at": "2026-10-12T00:11:31.571Z"
+    },
+    {
+      "step": "rapid-timeline-surface-roundtrip",
+      "cycle": 3,
+      "canvases": 5,
+      "at": "2026-10-12T00:11:34.440Z"
+    },
+    {
+      "step": "narrow-battery-saver-time-and-keyboard",
+      "at": "2026-10-12T00:14:25.204Z"
+    },
+    {
+      "step": "closed-teardown",
+      "canvases": 3,
+      "at": "2026-10-12T00:17:07.857Z"
+    },
+    {
+      "step": "reopen-restored",
+      "canvases": 5,
+      "at": "2026-10-12T00:17:52.834Z"
+    },
+    {
+      "step": "maximum-detail-confirmed",
+      "at": "2026-10-12T00:19:02.036Z",
+      "status": "- status: Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution."
+    },
+    {
+      "step": "record-time-playback-start",
+      "at": "2026-10-12T00:19:17.783Z"
+    },
+    {
+      "step": "playback-completed-at-final-2019-record-year",
+      "at": "2026-10-12T00:20:50.165Z"
+    }
+  ],
+  "local": [
+    {
+      "step": "initial-area-settled-after-first-wait",
+      "at": "2026-10-12T00:15:16.175Z",
+      "records": 50,
+      "columns": 28
+    },
+    {
+      "step": "time-and-surface-roundtrip",
+      "cycle": 0,
+      "canvases": 5,
+      "at": "2026-10-12T00:15:20.500Z"
+    },
+    {
+      "step": "time-and-surface-roundtrip",
+      "cycle": 1,
+      "canvases": 5,
+      "at": "2026-10-12T00:15:22.330Z"
+    },
+    {
+      "step": "time-and-surface-roundtrip",
+      "cycle": 2,
+      "canvases": 5,
+      "at": "2026-10-12T00:15:24.062Z"
+    },
+    {
+      "step": "time-and-surface-roundtrip",
+      "cycle": 3,
+      "canvases": 5,
+      "at": "2026-10-12T00:15:30.060Z"
+    },
+    {
+      "step": "time-and-surface-roundtrip",
+      "cycle": 4,
+      "canvases": 5,
+      "at": "2026-10-12T00:15:36.157Z"
+    },
+    {
+      "step": "scope-zoom-in",
+      "at": "2026-10-12T00:22:54.532Z"
+    },
+    {
+      "step": "scope-zoom-out",
+      "at": "2026-10-12T00:23:11.859Z"
+    },
+    {
+      "step": "installed-close",
+      "cycle": 0,
+      "canvases": 3,
+      "at": "2026-10-12T00:24:05.595Z"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "narrow-battery-saver",
+      "width": 390,
+      "height": 844,
+      "at": "2026-10-12T00:13:22.398Z"
+    },
+    {
+      "name": "restored-high-detail",
+      "at": "2026-10-12T00:26:51.061Z"
+    }
+  ],
+  "issues": [],
+  "mirror": {
+    "at": "2026-10-12T00:27:48.846Z",
+    "status": "            - status: Surface detail ready \u00b7 2048 \u00d7 1718 pixels \u00b7 map zoom 13.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+    "records": true,
+    "console": []
+  },
+  "completedAt": "2026-10-12T00:27:48.850Z",
+  "elapsedMinutes": 17.36205,
+  "profile": "kfm.underground-browser-endurance/v1",
+  "site_version": 246,
+  "site_commit": "7f3f89e9b181f213ce3a32080cc1c4cdda672f52",
+  "repository_base": "e960d6d47e5c43813b25e7aa6f1a9c7100469e89",
+  "authority": "REVIEW_ONLY",
+  "human_acceptance": false,
+  "limitations": [
+    "Browser Battery saver and narrow viewport tested; CPU/GPU/network throttling and physical devices not available in this connector.",
+    "Canvas counts and console observations do not prove heap/GPU-memory bounds.",
+    "Automation had transient locator deadlines; final results were checked through fresh DOM/screenshot observations.",
+    "No new geological interpolation, source admission, release activation, or telemetry exporter."
+  ],
+  "source_record": {
+    "id": "WWC5 312847",
+    "date": "2000-05-12",
+    "intervals": 10,
+    "depth_reference": "ft / land-surface; no common elevation registration",
+    "location": "PLSS / KGS NAD83 to WGS84 EPSG:1188 approximation (4 m)"
+  }
+}

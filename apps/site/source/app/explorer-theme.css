@@ -129,7 +129,7 @@ button:active:not(:disabled) { transform: translateY(1px); }
 .header-overflow-menu > summary,
 .top-actions button, .top-actions a, .icon-close { border-radius: 10px; }
 
-.guide-trigger {
+.top-actions .guide-trigger {
   display: grid;
   place-items: center;
   width: 44px;
@@ -332,8 +332,8 @@ button:active:not(:disabled) { transform: translateY(1px); }
 .explorer-guide-footer > div { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .explorer-guide-footer label { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; color: var(--muted); font-size: 12.5px; }
 .explorer-guide-footer input { width: 16px; height: 16px; accent-color: var(--gold); }
-.explorer-guide-link { border: 0; background: none; color: var(--water); padding: 0; font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
-.explorer-guide-primary {
+.explorer-guide .explorer-guide-link { display: inline-flex; align-items: center; min-height: 44px; border: 0; background: none; color: var(--water); padding: 0; font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
+.explorer-guide .explorer-guide-primary {
   min-height: 44px; border: 0; border-radius: 12px;
   background: var(--kfm-accent); color: #1a1205;
   padding: 0 18px; font-weight: 800; letter-spacing: .01em;
