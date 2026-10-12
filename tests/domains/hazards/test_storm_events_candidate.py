@@ -240,6 +240,15 @@ def test_validation_refuses_forged_records_and_authority():
         validate_candidate({**base, "data_year": 2024})
 
 
-def test_the_proposed_descriptor_is_not_admitted():
-    with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
-        storm_events_admission.load_admission()
+def test_the_admitted_descriptor_supplies_only_rights_and_sensitivity(tmp_path):
+    admission = storm_events_admission.load_admission()
+    assert admission["source_ref"] == "kfm://source/noaa-storm-events"
+    assert admission["license"].startswith("U.S. Public Domain")
+    # A descriptor that is not approved, active and releasable is refused.
+    descriptor = json.loads(storm_events_admission.DESCRIPTOR.read_text())
+    for change in ({"review_state": "needs_review"}, {"lifecycle": {**descriptor["lifecycle"], "registry_state": "proposed"}},
+                   {"public_release": {**descriptor["public_release"], "allowed": False}}):
+        path = tmp_path / "descriptor.json"
+        path.write_text(json.dumps({**descriptor, **change}))
+        with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
+            storm_events_admission.load_admission(path)

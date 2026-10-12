@@ -75,10 +75,20 @@ reports; each vintage is a separate source state.
 
 A record is a review candidate. It carries no source admission, review,
 release or publication authority. The source descriptor
-`data/registry/sources/hazards/noaa.storm_events.yaml` is `needs_review`, and
-`pipelines/domains/hazards/storm_events_admission.py` refuses it
-(`SOURCE_NOT_ADMITTED`) until the repository owner approves it. No owner
-self-release ADR covers this source.
+`data/registry/sources/hazards/noaa.storm_events.yaml` was admitted by the
+repository owner on 2026-10-12; releasing a package still requires a
+`kfm.storm-events-release-decision/v1` record that passes the storm events
+serving gate
+([ADR-0047](../../../docs/adr/ADR-0047-owner-self-release-for-admitted-public-storm-events-data.md)).
+
+`pipelines/domains/hazards/storm_events_package.py` packages a candidate under
+the `kfm.storm-events-snapshot/v1` profile. The manifest interval is the data
+year (`YYYY-01-01` to `YYYY-12-31`). Evidence is one bundle per month that has
+events, by the local begin month, split into numbered parts of 127 records so
+each bundle stays inside the resolver's 128-member limit; records are `record`
+members. A year with more than 5000 events is refused (`OBSERVATION_LIMIT`)
+rather than exceeding the 8 MiB package limit, and a year with no Kansas
+events has nothing to package (`NO_EVENTS_TO_PACKAGE`).
 
 ## Validation
 
