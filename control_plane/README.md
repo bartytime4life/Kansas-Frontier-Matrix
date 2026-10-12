@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-readme
 title: control_plane/ — Machine-Readable Governance Index Root
-version: v0.7
+version: v0.8
 type: README
 status: "draft; repository-grounded; canonical-root-confirmed; directory-rules-v2-adopted; required-register-packet-enforced; mixed-validation-profiles; register-population-partial; specialized-projections-present; non-authoritative"
 owners: "OWNER_TBD — Control-plane steward · Register steward · Architecture steward · Docs steward · affected authority-root owners · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
 created: 2026-06-24
-updated: 2026-10-01
+updated: 2026-10-12
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; control-plane; machine-registers; authority-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/README.md
@@ -79,6 +79,7 @@ related:
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
   - "Earlier v0.6 content at this same path remains available in Git history; no separate superseded document path is asserted."
+  - "v0.8 adds external_mirror_register.yaml to the direct-child map and authority notes; it projects the apps/ root naming decision for receipt-pinned external byte mirrors and is read by the topology validator; no other register, binding, or authority changes."
   - "v0.7 repins the same-path README to current main, reconciles the direct-child map, records the topology-correction projection, and adds named current-main validation outcomes without changing authority."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
   - "A validation pass proves only the boundary exercised by that validator."
@@ -415,6 +416,7 @@ Escalate unresolved authority to the owning root or ADR process. Escalate rights
 - [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is **accepted** and adopts the exact Directory Rules v2 bytes.
 - Other ADR status must be read from its current record/index; this README does not promote any proposal.
 - `root_registry.yaml`, `path_alias_register.yaml`, `domain_lane_register.yaml`, and `cross_domain_seam_register.yaml` are projections with explicit non-effects.
+- `external_mirror_register.yaml` (2026-10-12) projects root naming decisions that treat file names inside a receipt-pinned external byte mirror as externally fixed (Directory Rules §13.2). The topology validator reads it to relax only the listed path-grammar rule (currently `path-grammar:uppercase` for `apps/site/source/`). It fails closed when the entry is not `ACTIVE`, or when its receipt or parity check is untracked. It does not amend doctrine; ADR-0048 proposes explicit §13.2 wording.
 
 ### Current alias and migration posture
 
@@ -447,6 +449,7 @@ control_plane/
 ├── domain_lane_register.yaml
 ├── domains/
 ├── earth_observation_harvest_authority_matrix.json
+├── external_mirror_register.yaml
 ├── graph_runtime_compatibility_matrix.json
 ├── hash_profile_readiness_matrix.json
 ├── normalized_summary_consumer_readiness.yaml
@@ -773,6 +776,12 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 ---
 
 ## Change history
+
+### v0.8 — 2026-10-12
+
+- added `external_mirror_register.yaml` to the direct-child map. It projects the apps/ root naming decision that file names inside a receipt-pinned external byte mirror are externally fixed (Directory Rules §13.2), and the topology validator reads it;
+- added an authority note: the register relaxes only the listed path-grammar rule, fails closed, and does not amend doctrine. ADR-0048 (proposed) carries the doctrine wording;
+- other bindings, counts, and validation observations are unchanged and were not re-pinned.
 
 ### v0.7 — 2026-09-06
 

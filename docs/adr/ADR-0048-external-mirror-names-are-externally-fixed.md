@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0048
 adr_id: ADR-0048
 title: "ADR-0048 — Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2"
 type: adr
-version: v1.0
+version: v1.1
 status: proposed
 owners:
   - "NEEDS VERIFICATION — directory governance steward"
@@ -28,6 +28,7 @@ related:
   - apps/site/README.md
   - tools/qa/site_mirror.py
   - tools/validators/directory_governance/validate_repository_topology.py
+  - control_plane/external_mirror_register.yaml
 tags: [kfm, adr, directory-governance, path-grammar, mirror, apps]
 notes:
   - "Proposed only. It does not change docs/doctrine/directory-rules.md bytes, its adopted digest, or ADR-0029; the wording below takes effect only through an accepted ADR and a reviewed Directory Rules revision."
@@ -74,7 +75,7 @@ The record also proposes these conditions for any mirror to qualify:
 | A reviewed receipt pins the file set and digests | `data/receipts/generated/site-v246-underground-browser-review-20261011.json` and its successors |
 | An enforced parity check fails on drift | `tools/qa/site_mirror.py --check` (water-pilot workflow) |
 | The owning root records the decision | `apps/README.md` §Root naming decision |
-| The validator exemption is scoped to the mirror prefix and the uppercase rule only | `_is_external_site_mirror_path` in `validate_repository_topology.py` |
+| The mirror is registered, and the validator relaxes only the listed rule for that prefix | `mirror.apps-site-source` in `control_plane/external_mirror_register.yaml`, read by `validate_repository_topology.py` (`_external_mirror_prefixes`) |
 
 A new mirror that does not meet every condition follows the default lowercase grammar.
 
@@ -122,7 +123,7 @@ If this ADR is rejected:
 
 | ID | Question | Owner |
 |---|---|---|
-| OQ-ADR-0048-01 | Should qualifying mirrors be listed in a machine register (for example under `control_plane/`) instead of as a validator prefix constant? | Directory governance steward |
+| OQ-ADR-0048-01 | ~~Should qualifying mirrors be listed in a machine register instead of as a validator prefix constant?~~ **Resolved 2026-10-12 (owner):** yes. `control_plane/external_mirror_register.yaml` lists them, and the validator reads it and fails closed. The register projects the current §13.2 interpretation and the apps/ root decision; it does not adopt this ADR. Follow-up: the topology run context (`render_repository_topology_diagnostics.py`, receipt-pinned) does not yet record this register's digest among its indexed governance inputs. | Directory governance steward |
 | OQ-ADR-0048-02 | Which other pending Directory Rules edits should share the same re-adoption, to pay the re-pin cost once? | Directory governance steward |
 
 ## 9. Change history
@@ -130,5 +131,6 @@ If this ADR is rejected:
 | Version | Date | Change |
 |---|---|---|
 | v1.0 | 2026-10-12 | Proposed (owner-requested) after #5060 and the apps/ root naming decision. |
+| v1.1 | 2026-10-12 | OQ-ADR-0048-01 resolved: the mirror is listed in `control_plane/external_mirror_register.yaml`, which the topology validator reads. Status remains proposed. |
 
 <p align="right"><a href="#top">Back to top</a></p>

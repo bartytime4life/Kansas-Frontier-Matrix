@@ -1,0 +1,49 @@
+{
+  "version": "v1",
+  "registry": "external_mirror_register",
+  "status": "ACTIVE",
+  "authority": "machine_projection_only",
+  "updated_at": "2026-10-12",
+  "coverage_scope": "byte_mirrors_of_external_sources_with_externally_fixed_names",
+  "doctrine": {
+    "path": "docs/doctrine/directory-rules.md",
+    "document_id": "kfm://doctrine/directory-governance/v2",
+    "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "decision_ref": "ADR-0029",
+    "rule_refs": [
+      "13.2 Safe path grammar (externally fixed names)",
+      "2.3 Amendment classes (root naming decision)"
+    ]
+  },
+  "proposed_doctrine_wording": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+  "owner": "@bartytime4life",
+  "reviewers": [
+    "@bartytime4life"
+  ],
+  "description": "Projection of root-level naming decisions that treat file names inside a receipt-pinned byte mirror of an external source as externally fixed under Directory Rules 13.2. The repository topology validator relaxes only the listed path-grammar rules for an ACTIVE entry, and only while its receipt and parity check are tracked.",
+  "non_effects": [
+    "does_not_accept_or_amend_an_adr",
+    "does_not_amend_directory_rules",
+    "does_not_relax_unsafe_or_nonportable_path_rules",
+    "does_not_grant_source_release_or_publication_authority",
+    "does_not_authorize_in_place_renames_of_mirrored_files"
+  ],
+  "mirrors": [
+    {
+      "mirror_id": "mirror.apps-site-source",
+      "status": "ACTIVE",
+      "path_prefix": "apps/site/source/",
+      "external_source": "external KFM site source repository (site_candidate_commit recorded per receipt)",
+      "root_decision_ref": "apps/README.md#root-naming-decision-external-site-mirror",
+      "receipt_path": "data/receipts/generated/site-v246-underground-browser-review-20261011.json",
+      "parity_check": "tools/qa/site_mirror.py",
+      "parity_command": "python tools/qa/site_mirror.py --check",
+      "relaxed_rules": [
+        "path-grammar:uppercase"
+      ],
+      "rename_rule": "rename upstream, then mirror through a reviewed sync with a fresh receipt; never rename in place",
+      "registered_on": "2026-10-12",
+      "registered_by_change": "PR #5060 (validator exemption); PR #5064 (register)"
+    }
+  ]
+}

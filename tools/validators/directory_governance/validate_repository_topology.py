@@ -532,16 +532,72 @@ def _is_conventional_uppercase_path(path: str) -> bool:
     )
 
 
-def _is_external_site_mirror_path(path: str) -> bool:
-    """Mirrored external site bytes keep upstream names.
+EXTERNAL_MIRROR_REGISTER = "control_plane/external_mirror_register.yaml"
+RELAXABLE_MIRROR_RULES = frozenset({"path-grammar:uppercase"})
 
-    ``apps/site/source/`` is a byte mirror of the external site source. Its
-    file set and digests are pinned by the reviewed mirror receipt and checked
-    by ``tools/qa/site_mirror.py --check``, so renaming a file here to satisfy
-    KFM path grammar would break mirror parity. Only the uppercase grammar is
-    relaxed; unsafe and nonportable path checks still apply.
+
+def _external_mirror_prefixes(
+    blobs: Mapping[str, bytes], path_set: set[str], rule: str
+) -> tuple[str, ...]:
+    """Return registered external byte-mirror prefixes that relax ``rule``.
+
+    A byte mirror of an external source keeps upstream file names: renaming a
+    mirrored file to satisfy KFM path grammar would break its receipt-pinned
+    parity. ``control_plane/external_mirror_register.yaml`` lists such mirrors
+    (Directory Rules 13.2 externally fixed names). An ACTIVE entry applies only
+    while its receipt and parity check are tracked; otherwise it fails closed.
+    Only rules in ``RELAXABLE_MIRROR_RULES`` may be relaxed, so unsafe and
+    nonportable path checks always apply. An absent register relaxes nothing.
     """
-    return path.startswith("apps/site/source/")
+    if EXTERNAL_MIRROR_REGISTER not in blobs:
+        return ()
+    register = _blob_json(blobs, EXTERNAL_MIRROR_REGISTER)
+    doctrine = register.get("doctrine")
+    if (
+        register.get("registry") != "external_mirror_register"
+        or register.get("authority") != "machine_projection_only"
+        or not isinstance(doctrine, dict)
+        or doctrine.get("sha256") != f"sha256:{ADOPTED_SHA256}"
+        or doctrine.get("decision_ref") != "ADR-0029"
+    ):
+        raise TopologyError("external mirror register binding is invalid")
+    mirrors = register.get("mirrors")
+    if not isinstance(mirrors, list):
+        raise TopologyError("external mirror register has no mirrors array")
+    prefixes: list[str] = []
+    seen: set[str] = set()
+    for entry in mirrors:
+        if not isinstance(entry, dict):
+            raise TopologyError("external mirror register entry is malformed")
+        mirror_id = entry.get("mirror_id")
+        prefix = entry.get("path_prefix")
+        relaxed = entry.get("relaxed_rules")
+        if (
+            not isinstance(mirror_id, str)
+            or not mirror_id
+            or mirror_id in seen
+            or entry.get("status") not in {"ACTIVE", "RETIRED"}
+            or not isinstance(prefix, str)
+            or not prefix.endswith("/")
+            or len(PurePosixPath(prefix).parts) < 2
+            or ".." in PurePosixPath(prefix).parts
+            or prefix.startswith("/")
+            or not isinstance(relaxed, list)
+            or not relaxed
+            or not set(relaxed) <= RELAXABLE_MIRROR_RULES
+            or not isinstance(entry.get("receipt_path"), str)
+            or not isinstance(entry.get("parity_check"), str)
+        ):
+            raise TopologyError("external mirror register entry is malformed")
+        seen.add(mirror_id)
+        if (
+            entry["status"] == "ACTIVE"
+            and rule in relaxed
+            and entry["receipt_path"] in path_set
+            and entry["parity_check"] in path_set
+        ):
+            prefixes.append(prefix)
+    return tuple(sorted(prefixes))
 
 
 def _is_site_api_route_parameter(path: str, segment: str) -> bool:
@@ -567,6 +623,7 @@ def _path_findings(
         "nonportable-punctuation": [],
         "uppercase": [],
     }
+    uppercase_mirrors = _external_mirror_prefixes(blobs, path_set, "path-grammar:uppercase")
 
     for path in paths:
         unsafe: list[str] = []
@@ -590,7 +647,7 @@ def _path_findings(
             if (
                 segment != "README.md"
                 and not _is_conventional_uppercase_path(path)
-                and not _is_external_site_mirror_path(path)
+                and not path.startswith(uppercase_mirrors)
                 and any(character.isupper() for character in segment)
             ):
                 grammar_groups["uppercase"].append(path)
@@ -957,6 +1014,7 @@ def scan(repo_root: Path) -> tuple[tuple[Finding, ...], int]:
     root = repo_root.resolve()
     paths, modes, object_ids = tracked_index(root)
     fixed = {
+        EXTERNAL_MIRROR_REGISTER,
         "control_plane/path_alias_register.yaml",
         "control_plane/root_registry.yaml",
         "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
