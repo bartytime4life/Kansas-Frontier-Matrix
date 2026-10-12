@@ -24,14 +24,16 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from connectors.usgs.water_data.pilot_capture import capture
 from connectors_core.captured_json import canonical_bytes, decode_object
-from pipelines.domains.hydrology.admission import SOURCE_REF
+from pipelines.domains.hydrology.admission import SOURCE_REF, load_admission
+from pipelines.domains.hydrology.normalize import normalize_capture
+from pipelines.domains.hydrology.package import prepare_water_package
 from pipelines.domains.hydrology.validate import validate_candidate
 from release.core import DIGEST, validate_snapshot
 from release.local_admin import activate, stage
 from release.water_projection import project
 from tools.local_data.file_io import read_regular
 from tools.local_data.manage import external_root, init_store, store_lock
-from tools.local_data.water_pilot import immutable, stage as stage_capture
+from tools.local_data.water_pilot import immutable, load_capture, stage as stage_capture
 from tools.release.water_snapshot import prepare
 
 MAX_SNAPSHOT_BYTES = 8 * 1024 * 1024
@@ -47,9 +49,36 @@ def _snapshot(root: Path, package_id: str) -> bytes:
     if not DIGEST.fullmatch(package_id):
         raise ValueError("PACKAGE_ID_INVALID")
     raw = read_regular(root / "release/candidates/hydrology" / package_id.split(":")[1] / "snapshot.json", MAX_SNAPSHOT_BYTES)
-    manifest, _ = validate_snapshot(raw)
+    manifest, values = validate_snapshot(raw)
     if manifest["package_id"] != package_id:
         raise ValueError("PACKAGE_PATH_ID_MISMATCH")
+    # validate_snapshot checks hashes and bindings only; a resealed package must also
+    # pass the domain validator and carry exactly the receipt it produces.
+    candidate = values["candidate.json"]
+    if validate_candidate(candidate) != values["validation.json"]:
+        raise ValueError("VALIDATION_RECEIPT_MISMATCH")
+    # Provenance: the candidate must be exactly what the immutable capture it names normalizes to.
+    try:
+        capture = load_capture(root, candidate["capture_id"])
+    except FileNotFoundError:
+        raise ValueError("CAPTURE_NOT_IN_STORE") from None
+    except ValueError as exc:
+        if str(exc) == "DIRECTORY_MISSING":
+            raise ValueError("CAPTURE_NOT_IN_STORE") from None
+        raise
+    if normalize_capture(capture.manifest, capture.objects, stale_after_seconds=candidate["stale_after_seconds"]) != candidate:
+        raise ValueError("CANDIDATE_CAPTURE_MISMATCH")
+    # Evidence: bundle rights, sensitivity and hashes are unkeyed, so the package must be exactly
+    # what the trusted builder makes from this candidate, either on hold or under the current admission.
+    builds = [prepare_water_package(candidate, rollback_target=manifest["rollback_target"], admission=None)]
+    try:
+        admission = load_admission()
+    except ValueError:
+        admission = None
+    if admission is not None:
+        builds.append(prepare_water_package(candidate, rollback_target=manifest["rollback_target"], admission=admission))
+    if all(canonical_bytes(build) != raw for build in builds):
+        raise ValueError("PACKAGE_NOT_REPRODUCIBLE")
     return raw
 
 

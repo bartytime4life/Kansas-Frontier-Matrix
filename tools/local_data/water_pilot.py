@@ -96,8 +96,9 @@ def stage(root: Path, acquired: Capture) -> dict:
     return receipt
 
 
-def replay(root: Path, capture_id: str) -> dict:
-    if not DIGEST.fullmatch(capture_id):
+def load_capture(root: Path, capture_id: str) -> Capture:
+    """Read a staged capture back from the quarantine store; writes nothing."""
+    if not isinstance(capture_id, str) or not DIGEST.fullmatch(capture_id):
         raise ValueError("INVALID_CAPTURE_ID")
     path = root / "data/quarantine/usgs-nwis/runs" / capture_id.split(":")[1] / "manifest.json"
     manifest = decode_object(read_regular(path, 256 * 1024), limit=256 * 1024)
@@ -107,7 +108,13 @@ def replay(root: Path, capture_id: str) -> dict:
         raise ValueError("CAPTURE_PAGE_LIMIT")
     objects = {page["sha256"]: read_regular(object_path(root, page["sha256"]), MAX_PAGE_BYTES)
                for page in manifest["pages"]}
-    return stage(root, Capture(manifest, objects))
+    if any(digest_bytes(raw) != digest for digest, raw in objects.items()):
+        raise ValueError("PAGE_DIGEST_MISMATCH")
+    return Capture(manifest, objects)
+
+
+def replay(root: Path, capture_id: str) -> dict:
+    return stage(root, load_capture(root, capture_id))
 
 
 def main(argv=None, *, allowed_operations=None):

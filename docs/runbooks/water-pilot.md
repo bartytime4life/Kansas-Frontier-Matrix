@@ -894,6 +894,13 @@ A package prepared without `--admitted-source` keeps the rights hold, and
 `decide` refuses it with `INDEPENDENT_REVIEW_REQUIRED`. Use `--rollback-target`
 with the currently active package when you prepare a replacement.
 
+Before writing a decision (and before `stage-hosted` uploads), `decide` also
+re-runs the candidate validator, rebuilds the candidate from the stored
+capture it names (`CANDIDATE_CAPTURE_MISMATCH`, or `CAPTURE_NOT_IN_STORE` when
+that capture is not under `--root`), and requires the package to be exactly
+what the trusted builder makes from it (`PACKAGE_NOT_REPRODUCIBLE`). Run it
+against the same `--root` that captured.
+
 **Local serving.** Stage and activate into a private serving store, then start
 the governed API against it:
 

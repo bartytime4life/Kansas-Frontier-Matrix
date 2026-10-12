@@ -264,3 +264,100 @@ def test_cycle_cli_defaults_to_the_24_hours_before_the_current_hour(tmp_path, ca
     assert end.endswith(":00:00Z") and (result["start"], result["end"]) == (start, end)
     parse = lambda value: datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
     assert parse(end) - parse(start) == timedelta(hours=24)
+
+
+# Release-time integrity (as soil and weather, #5051): a resealed package is refused before any decision.
+NOW = datetime(2026, 10, 11, 13, 0, tzinfo=timezone.utc)
+
+
+def _snapshot_path(root, package_id):
+    return root / "release/candidates/hydrology" / package_id.split(":")[1] / "snapshot.json"
+
+
+def _write(root, snapshot):
+    from connectors_core.captured_json import canonical_bytes
+    package_id = snapshot["manifest"]["package_id"]
+    path = _snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    return package_id
+
+
+def _values(root, package_id):
+    snapshot = json.loads(_snapshot_path(root, package_id).read_text())
+    return snapshot, {name: json.loads(text) for name, text in snapshot["artifacts"].items()}
+
+
+def test_decide_requires_the_candidate_to_match_its_stored_capture(tmp_path):
+    # A value is changed consistently in the observation and its revision history, every digest and
+    # the receipt are rebuilt by the normal package builder; only the stored capture disagrees.
+    from connectors_core.captured_json import canonical_bytes, digest_bytes
+    from pipelines.domains.hydrology.admission import load_admission
+    from pipelines.domains.hydrology.package import prepare_water_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = _values(root, preparation["package_id"])
+    candidate = values["candidate.json"]
+    target = candidate["observations"][0]["id"]
+    for record in candidate["observations"] + candidate["revision_history"]:
+        if record["id"] == target:
+            record["value"] = record["value"] + 1
+            record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    package_id = _write(root, prepare_water_package(candidate, admission=load_admission()))
+    with pytest.raises(ValueError, match="CANDIDATE_CAPTURE_MISMATCH"):
+        water_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
+
+
+def test_decide_refuses_a_receipt_that_differs_from_revalidation(tmp_path, monkeypatch):
+    from connectors_core.captured_json import canonical_bytes, digest_bytes
+    from pipelines.domains.hydrology import package as water_package
+    from pipelines.domains.hydrology.admission import load_admission
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = _values(root, preparation["package_id"])
+
+    def miscounting(_candidate):
+        report = {k: v for k, v in values["validation.json"].items() if k != "receipt_digest"}
+        report["observations"] += 1
+        report["receipt_digest"] = digest_bytes(canonical_bytes(report))
+        return report
+    monkeypatch.setattr(water_package, "validate_candidate", miscounting)
+    package_id = _write(root, water_package.prepare_water_package(values["candidate.json"], admission=load_admission()))
+    with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
+        water_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+
+
+def test_a_held_package_resealed_as_admitted_cannot_be_self_released(tmp_path):
+    from connectors_core.captured_json import canonical_bytes, digest_bytes
+    from hashing import compute_spec_hash
+    from pipelines.domains.hydrology.admission import load_admission
+    root, preparation = prepared(tmp_path, admitted=False)
+    snapshot, values = _values(root, preparation["package_id"])
+    evidence = values["evidence.json"]
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["rights"] = {"license": load_admission()["license"]}
+        bundle["sensitivity"] = {**bundle["sensitivity"], "level": "public", "reason": "forged"}
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+    text = canonical_bytes(evidence).decode()
+    manifest = snapshot["manifest"]
+    manifest["artifacts"]["evidence.json"] = digest_bytes(text.encode())
+    snapshot["artifacts"]["evidence.json"] = text
+    manifest["package_id"] = compute_spec_hash({k: v for k, v in manifest.items() if k != "package_id"})
+    package_id = _write(root, snapshot)
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
+        water_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
+
+
+def test_decide_and_hosted_staging_need_the_stored_capture(tmp_path, monkeypatch):
+    import shutil
+    root, preparation = prepared(tmp_path, admitted=True)
+    shutil.rmtree(root / "data/quarantine/usgs-nwis/runs")
+    with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
+        water_release.decide(root, preparation["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    monkeypatch.setenv("KFM_WATER_WORKER_TOKEN", "t" * 40)
+    opener = FakeOpener({})
+    with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
+        water_release.stage_hosted(root, preparation["package_id"], "https://kfm.example.test", opener=opener)
+    assert opener.requests == []
