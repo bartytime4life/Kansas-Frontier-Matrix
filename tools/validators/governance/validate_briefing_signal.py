@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -35,6 +36,27 @@ INLINE_GEOMETRY_KEYS = frozenset(
         "x",
         "y",
     }
+)
+
+INLINE_GEOMETRY_KEY_PARTS = frozenset(
+    {
+        "geohash",
+        "linestring",
+        "multipoint",
+        "polygon",
+        "point",
+        "shape",
+        "wkb",
+        "wkt",
+    }
+)
+WKT_VALUE = re.compile(
+    r"^\s*(?:SRID=\d+\s*;\s*)?(?:POINT|LINESTRING|POLYGON|MULTIPOINT|"
+    r"MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*(?:Z|M|ZM)?\s*\(",
+    re.IGNORECASE,
+)
+COORDINATE_PAIR_VALUE = re.compile(
+    r"^\s*[\[(]?\s*(-?\d{1,3}\.\d+)\s*(?:,|\s)\s*(-?\d{1,2}\.\d+)\s*[\])]??\s*$"
 )
 
 TRUST_BEARING_TRUE_KEYS = frozenset(
@@ -87,6 +109,32 @@ def _load_schema() -> Mapping[str, object]:
     return payload
 
 
+def _contains_inline_geometry(key: object, value: object) -> bool:
+    if isinstance(key, str):
+        normalized = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", key).lower()
+        parts = set(filter(None, re.split(r"[^a-z0-9]+", normalized)))
+        # References to governed geometry are permitted; only inline data is not.
+        is_reference = normalized.endswith("_ref") or normalized.endswith("ref")
+        if not is_reference and (
+            normalized in INLINE_GEOMETRY_KEYS
+            or bool(parts & INLINE_GEOMETRY_KEY_PARTS)
+        ):
+            return True
+
+    if isinstance(value, str):
+        if WKT_VALUE.match(value):
+            return True
+        match = COORDINATE_PAIR_VALUE.match(value)
+        if match:
+            first, second = (float(part) for part in match.groups())
+            return (
+                abs(first) <= 180 and abs(second) <= 90
+            ) or (
+                abs(first) <= 90 and abs(second) <= 180
+            )
+    return False
+
+
 def validate_candidate(candidate: object) -> tuple[Finding, ...]:
     findings: list[Finding] = []
 
@@ -120,7 +168,7 @@ def validate_candidate(candidate: object) -> tuple[Finding, ...]:
         if isinstance(attributes, Mapping):
             for path, key, value in _walk(attributes):
                 dotted = "$.candidate_payload.attributes." + ".".join(str(part) for part in path)
-                if isinstance(key, str) and key.lower() in INLINE_GEOMETRY_KEYS:
+                if _contains_inline_geometry(key, value):
                     _add(findings, "INLINE_GEOMETRY_FORBIDDEN", dotted)
                 if (
                     isinstance(key, str)

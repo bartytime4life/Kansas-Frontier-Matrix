@@ -11,7 +11,11 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
-from tools.validators.governance.validate_briefing_signal import main, validate_file
+from tools.validators.governance.validate_briefing_signal import (
+    main,
+    validate_candidate,
+    validate_file,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -72,6 +76,27 @@ class BriefingSignalTests(unittest.TestCase):
                 findings = validate_file(fixture_path)
                 actual = {(finding.code, finding.path) for finding in findings}
                 self.assertEqual(actual, expected_findings)
+
+    def test_inline_geometry_aliases_and_encoded_values_are_rejected(self):
+        base = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        cases = {
+            "location_wkt": "POINT(-99.123456 38.654321)",
+            "shape": "encoded-shape-data",
+            "innocent_name": "-99.123456, 38.654321",
+        }
+        for key, value in cases.items():
+            with self.subTest(key=key):
+                candidate = json.loads(json.dumps(base))
+                candidate["candidate_payload"]["attributes"][key] = value
+                findings = validate_candidate(candidate)
+                self.assertIn("INLINE_GEOMETRY_FORBIDDEN", {item.code for item in findings})
+
+    def test_governed_geometry_references_remain_allowed(self):
+        candidate = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        attributes = candidate["candidate_payload"]["attributes"]
+        attributes["location_wkt_ref"] = "fixture:geometry:alpha"
+        attributes["polygonRef"] = None
+        self.assertEqual(validate_candidate(candidate), ())
 
     def test_real_source_examples_remain_non_authoritative(self):
         self.assertEqual(set(EXAMPLE_ROOT.glob("*.json")), EXAMPLES)
