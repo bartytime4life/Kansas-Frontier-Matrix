@@ -876,7 +876,7 @@ input[type="range"] { accent-color: var(--gold); }
 .capability-gates strong { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
 .capability-gates span { color: var(--muted); font-size: 12px; line-height: 1.35; }
 .map-utility-panel { position: absolute; z-index: 16; top: var(--map-overlay-top); right: 62px; bottom: 16px; display: flex; flex-direction: column; width: min(430px, calc(100% - 92px)); overflow: hidden; border: 1px solid var(--line-strong); border-radius: 18px; background: rgba(7,25,27,.97); box-shadow: 0 28px 90px rgba(0,0,0,.48); opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(18px); transition: opacity .2s ease, transform .22s ease, visibility .22s; backdrop-filter: blur(18px); }
-.map-utility-panel[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+.map-utility-panel[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: none; transition: opacity .2s ease, transform .22s ease; }
 .map-utility-panel[data-view="report"] { width: min(720px, calc(100% - 92px)); }
 .map-utility-panel[data-view="scene"] { width: min(560px, calc(100% - 92px)); }
 .map-utility-panel[data-view="places"] { width: min(590px, calc(100% - 92px)); }

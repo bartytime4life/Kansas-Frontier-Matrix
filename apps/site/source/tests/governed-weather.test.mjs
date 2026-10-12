@@ -2,10 +2,18 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import { isAbsolute, join } from "node:path";
 const require = createRequire(import.meta.url), ts = require("typescript");
 const compile = text => ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const url = text => "data:text/javascript;base64," + Buffer.from(compile(text)).toString("base64");
 const read = path => readFile(new URL(path, import.meta.url), "utf8");
+// Standalone Sites retain a separate source repository. Keep the live Python
+// parity checks mandatory, with an explicit checkout instead of assuming layout.
+const repositoryRoot = process.env.KFM_WEATHER_REPOSITORY_ROOT;
+if (repositoryRoot && !isAbsolute(repositoryRoot)) throw new Error("KFM_WEATHER_REPOSITORY_ROOT must be absolute");
+const readRepository = path => repositoryRoot
+  ? readFile(join(repositoryRoot, path), "utf8")
+  : read(`../../../../${path}`);
 const waterUrl = url(await read("../app/governed-water.ts"));
 const weather = await import(url((await read("../app/governed-weather.ts")).replace('"./governed-water"', JSON.stringify(waterUrl))));
 const fixture = async name => JSON.parse(await read(`./fixtures/governed-weather/${name}.json`));
@@ -69,7 +77,7 @@ test("tampered artifacts, water packages and impossible dates are rejected", asy
 });
 
 test("the Site and Python weather license lists agree", async () => {
-  const python = await read("../../../../packages/policy-runtime/src/policy_runtime/core.py");
+  const python = await readRepository("packages/policy-runtime/src/policy_runtime/core.py");
   const block = /WEATHER_SELF_RELEASE_LICENSES = frozenset\(\{\s*"([^"]+)",\s*\}\)/.exec(python);
   assert.ok(block); assert.deepEqual([...weather.WEATHER_SELF_RELEASE_LICENSES], [block[1]]);
 });
@@ -121,7 +129,7 @@ test("inner provenance and record rules match the Python validator", async () =>
 });
 
 test("the Site and Python station-local offsets agree", async () => {
-  const python = await read("../../../../packages/release/src/release/weather_projection.py");
+  const python = await readRepository("packages/release/src/release/weather_projection.py");
   const block = /STANDARD_OFFSET_HOURS = (\{[^}]+\})/.exec(python);
   assert.ok(block); assert.deepEqual(weather.STANDARD_OFFSET_HOURS, JSON.parse(block[1]));
   assert.deepEqual(Object.keys(weather.STANDARD_OFFSET_HOURS).sort(), [...weather.WEATHER_STATIONS].sort());

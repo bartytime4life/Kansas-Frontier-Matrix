@@ -147,3 +147,48 @@ corrections were being checked; merge commit is
 `79d401c069d927e6595b7166d732cc52606f381d`. The correction follow-up retains
 that merge and its initial failures as history, rather than claiming they
 passed or rewriting it.
+
+
+## Final #5059 review and current-source alignment
+
+PR #5059 was already owner-merged to `b194938f9e8abc076f82c75b32e0dbec25add8ca`
+when final review began. Its exact head had 107 successful and two skipped checks;
+merged main completed 104 successful and two skipped checks. The automated review
+identified stale v246 reconciliation metadata in the historical v247 receipt.
+That historical receipt is retained unchanged. A new append-only
+[reconciliation receipt](../../data/receipts/generated/site-v251-final-review-reconciliation-20261011.json)
+binds the selected current source and current paths. The parity validator now
+rejects a declared reconciliation naming another source or a removed path;
+receipts without that historical section remain readable. These checks do not
+grant human acceptance, source admission or data activation.
+
+The authoritative Site had advanced concurrently to v251 source
+`4d81543389496b6c789a47a9282a3d10740542c9`, deployed successfully as
+`appgdep_6acc33d78064819196684fc4ef727761`, owner-only at environment revision 5.
+The new mirror starts from merged main and preserves soil, review and release
+controls. Five page conflicts were retained repository-only soil additions;
+the weather catalog test already includes the weather changes plus soil.
+Source aquifer/Underground geometry, public data assets, native values and the
+2048/4096 detail controls are unchanged from v247. The Site's new focus, hover,
+layer-order and request-retirement fixes are retained. No source edits or
+publication were made to the authoritative Site in this review.
+
+Current validation: 1,131 standalone tests and 1,146 composed tests passed;
+both TypeScript checks and builds passed; 45 mirror/water/weather Python checks
+passed. Both full lint runs have zero errors and 66 existing warnings. Topology
+passes with zero new drift or invariants and 93 inherited warnings on the current
+main baseline; this follow-up did not alter that baseline. The mirror records
+969 identical application files, nine retained overlays, 21 repository-only
+paths and two canonical tool mappings; no authoritative path is missing.
+
+The PC now has a separate exact v251 source copy (980 tracked files), its
+prepared build (428 files), and 24 retained prior client assets for already-open
+tabs. The existing current alias and port 4173 service use this copy. The v247,
+v246 and v229 copies and v109 persistent store remain in place. No migration
+or data activation ran. Rollback switches the alias to retained v247 and restarts
+the existing service, retaining that store; repository rollback reverts this
+follow-up and restores the historical v247 selector.
+
+Fresh browser evidence and follow-up exact-head CI are recorded separately.
+The earlier long-session observations do not establish v251 physical-device,
+GPU/heap, hardware-throttling, multi-hour or hosted-rollback acceptance.

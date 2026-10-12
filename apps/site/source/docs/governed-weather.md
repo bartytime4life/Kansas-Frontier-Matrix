@@ -50,6 +50,10 @@ release, and a fresh single-station export is withheld if the selection changes
 while it is in flight. The owner releases packages at `/governed/weather-release`.
 
 Local conformance: `node --test tests/governed-weather*.test.mjs`.
+In a standalone Site checkout, set `KFM_WEATHER_REPOSITORY_ROOT` to the absolute
+path of the verified KFM repository before running tests. The Python license
+and station-offset parity checks remain mandatory; the variable selects their
+source checkout and does not configure runtime policy or enable a release.
 
 Rollback before activation is to leave the weather tables empty; the layer then
 answers `NO_APPROVED_SNAPSHOT`. After activation, roll back to the previous

@@ -28,6 +28,7 @@ function harness(workspace = 'reports') {
     setTimelineOpen:v=>{state.timeline=typeof v==='function'?v(state.timeline):v;},
     setLeftOpen:v=>{state.left=v;}, setLeftPanelMode:v=>{state.mode=v;},
     setMapUtilityOpen:v=>{state.utility=v;}, setMapUtilityView:v=>{state.view=v;},
+    setMapUtilityFocusRequest:()=>{},
     setMapContextOpen:()=>{}, setCurrentWorkspace:()=>{}, setRightOpen:()=>{}, dismissMapUtilityWithoutFocus:()=>{},
     setScenePanelOpen:()=>{}, setLocalAtlasPeek:()=>{}, setHelpOpen:()=>{}, setSourceStatusOpen:()=>{},
     mapUtilityReturnRef:{current:null}, sourceSearchFocusPendingRef:{current:false},
@@ -63,20 +64,30 @@ test('map utilities and Compare reveal the map before opening the requested tool
   assert.equal(compare.state.primary,'map');assert.deepEqual(compare.calls,['compare']);
 });
 
-test('map utility focus waits for a committed animation frame and is suppressed in draft workspaces',()=>{
-  let effect;
+test('map utility focus waits through its opening paint, suppresses draft focus and cancels stale frames',()=>{
+  let effect,dependencies;
   function visit(node) {
-    if(ts.isCallExpression(node) && node.expression.getText(ast)==='useEffect' && node.arguments[0]?.getText(ast).includes('const panel = mapUtilityPanelRef.current')) effect=node.arguments[0].getText(ast);
+    if(ts.isCallExpression(node) && node.expression.getText(ast)==='useEffect' && node.arguments[0]?.getText(ast).includes('const panel = mapUtilityPanelRef.current')) {effect=node.arguments[0].getText(ast);dependencies=node.arguments[1].elements.map(n=>n.getText(ast));}
     ts.forEachChild(node,visit);
   }
-  visit(ast);assert.ok(effect);
+  visit(ast);assert.ok(effect);assert.ok(dependencies.includes('mapUtilityFocusRequest'),'same-view requests must rerun the committed focus effect');
   const code=ts.transpileModule(`return ${effect};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-  for(const primaryWorkspace of ['reports','stories','map']) {
-    const frames=[],focused=[],cancelled=[];
-    const scope={primaryWorkspace,mapUtilityOpen:true,mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>focused.push(primaryWorkspace)}],window:{requestAnimationFrame(fn){frames.push(fn);return 17;},cancelAnimationFrame(id){cancelled.push(id);}}};
+  for(const primaryWorkspace of ['reports','stories','map'])for(const mapUtilityOpen of [false,true])for(const cancelAt of ['commit','paint','after-focus']){
+    const frames=[],focused=[],cancelled=new Set();let painted=false;
+    const scope={primaryWorkspace,mapUtilityOpen,mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>{assert.equal(painted,true);focused.push(primaryWorkspace);}}],window:{requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(id){cancelled.add(id);}}};
     const cleanup=new Function(...Object.keys(scope),code)(...Object.values(scope))();
-    assert.deepEqual(focused,[],'no focus during the workspace commit');
-    assert.equal(frames.length,primaryWorkspace==='map'?1:0);
-    if(primaryWorkspace==='map'){frames[0]();assert.deepEqual(focused,['map']);cleanup();assert.deepEqual(cancelled,[17]);}
+    assert.deepEqual(focused,[]);const active=primaryWorkspace==='map'&&mapUtilityOpen;
+    assert.equal(frames.length,active?1:0);
+    if(!active)continue;
+    if(cancelAt==='commit'){cleanup();assert.deepEqual([...cancelled],[1]);continue;}
+    frames[0]();assert.deepEqual(focused,[]);assert.equal(frames.length,2);
+    if(cancelAt==='paint'){cleanup();assert.deepEqual([...cancelled],[1,2]);continue;}
+    painted=true;frames[1]();assert.deepEqual(focused,['map']);cleanup();assert.deepEqual([...cancelled],[1,2]);
   }
+});
+test('each utility action requests focus even when the same tool is already open',()=>{
+  const h=harness('map');let requests=0;h.scope.setMapUtilityFocusRequest=update=>{requests=update(requests);};
+  const open=execute('openMapUtility',h.scope),trigger={};
+  open('navigate',trigger);open('navigate',trigger);open('localAtlas',trigger);
+  assert.equal(requests,3);assert.equal(h.state.primary,'map');assert.equal(h.state.utility,true);assert.equal(h.state.view,'localAtlas');assert.equal(h.scope.mapUtilityReturnRef.current,trigger);
 });

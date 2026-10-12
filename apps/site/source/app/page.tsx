@@ -5,6 +5,8 @@ import { browserJsonRequest } from "./browser-json-request";
 import { explorerHistoryParams, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
 import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
+import { createMapHoverSampler } from "./map-hover-sampler";
+import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { basemapCacheRequest } from "./basemap-cache";
@@ -1451,6 +1453,7 @@ export default function Home() {
   }, []);
   const [styleReady, setStyleReady] = useState(false);
   const [renderQuality, setRenderQuality] = useState<RenderQuality>("auto");
+  const [renderEfficient, setRenderEfficient] = useState(false);
   useEffect(() => { setRenderQuality(readRenderQuality()); }, []);
   useEffect(() => {
     const map = mapRef.current; if (!map) return;
@@ -1465,7 +1468,11 @@ export default function Home() {
     apply(); window.addEventListener("resize", apply);
     return () => { disposed = true; window.removeEventListener("resize", apply); };
   }, [renderQuality, runMapMutation, styleReady]);
-  useEffect(() => { renderEfficientRef.current = browserRenderBudget(renderQuality).efficient; }, [renderQuality]);
+  useEffect(() => {
+    const efficient = browserRenderBudget(renderQuality).efficient;
+    renderEfficientRef.current = efficient;
+    setRenderEfficient(efficient);
+  }, [renderQuality]);
   const chooseRenderQuality = (value: RenderQuality) => { setRenderQuality(value); try { localStorage.setItem(QUALITY_STORAGE_KEY, value); } catch { /* The current session still uses the selected quality. */ } };
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
@@ -1476,6 +1483,7 @@ export default function Home() {
   const [fireReportContext, setFireReportContext] = useState<FireReportContext | null>(null);
   const [researchReportContext, setResearchReportContext] = useState<ResearchContext | null>(null);
   const [undergroundOpen, setUndergroundOpen] = useState(false);
+  const [undergroundFocusRequest, setUndergroundFocusRequest] = useState(0);
   const undergroundOpenRef = useRef(false);
   undergroundOpenRef.current = undergroundOpen;
   const [subsurfaceContext, setSubsurfaceContext] = useState<SubsurfaceContext | null>(null);
@@ -1530,6 +1538,7 @@ export default function Home() {
   const [measurement, setMeasurement] = useState("Select a measurement tool");
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
+  const [mapUtilityFocusRequest, setMapUtilityFocusRequest] = useState(0);
   const [localAtlasPeek, setLocalAtlasPeek] = useState(false);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const composerRef = useRef<HTMLElement>(null);
@@ -4281,6 +4290,7 @@ export default function Home() {
     setLocalAtlasPeek(false);
     setMapUtilityView(nextView);
     setMapUtilityOpen(true);
+    setMapUtilityFocusRequest((request) => request + 1);
     setCurrentWorkspace("explore");
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
     if (nextView === "report") setReportGeneratedAt(new Date().toISOString());
@@ -4294,14 +4304,20 @@ export default function Home() {
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !mapUtilityOpen) return;
-    // The map may have just lost inert when a draft workspace unmounted.
-    // Wait for its committed layout, after header-menu focus cleanup.
-    const frame = window.requestAnimationFrame(() => {
-      const panel = mapUtilityPanelRef.current;
-      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+    // Wait for the committed workspace and the panel's first opening paint.
+    // A repeated request must also re-enter retained controls after a menu closes.
+    let focusFrame: number | undefined;
+    const commitFrame = window.requestAnimationFrame(() => {
+      focusFrame = window.requestAnimationFrame(() => {
+        const panel = mapUtilityPanelRef.current;
+        if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+      });
     });
-    return () => window.cancelAnimationFrame(frame);
-  }, [primaryWorkspace, mapUtilityOpen, mapUtilityView]);
+    return () => {
+      window.cancelAnimationFrame(commitFrame);
+      if (focusFrame !== undefined) window.cancelAnimationFrame(focusFrame);
+    };
+  }, [primaryWorkspace, mapUtilityOpen, mapUtilityView, mapUtilityFocusRequest]);
 
   useEffect(() => {
     if (!isCompact || !mapUtilityOpen || mapUtilityView !== "localAtlas") setLocalAtlasPeek(false);
@@ -4969,6 +4985,7 @@ export default function Home() {
   useEffect(() => {
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
+    let cancelHoverSample = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
     let terrainRetryTimer: number | null = null;
@@ -5113,6 +5130,7 @@ export default function Home() {
         };
 
         const syncStyle = (): boolean => {
+          cancelHoverSample();
           styleDocumentLoadedRef.current = true;
           styleGenerationReadyRef.current = false;
           mapMutationErrorRef.current = null;
@@ -5222,13 +5240,10 @@ export default function Home() {
           setHoverSummary((current) => current?.id === summary.id && current.title === summary.title
             && current.subtitle === summary.subtitle && current.state === summary.state ? current : summary);
         };
-        let lastHoverSample = -Infinity;
-        map.on("mousemove", (event) => {
+        const hoverSampler = createMapHoverSampler<MapMouseEvent>((event) => {
+          if (disposed || !styleGenerationReadyRef.current || document.hidden) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
-          const now = performance.now();
           if (map.isMoving()) { clearHoverCandidate(); return; }
-          if (now - lastHoverSample < 80) return;
-          lastHoverSample = now;
           if (scenePresetRef.current === "elevation-3d" && styleGenerationReadyRef.current
             && attachedTerrainProviderRef.current === terrainProviderRef.current
             && map.getTerrain()?.source === TERRAIN_SOURCE_ID
@@ -5317,7 +5332,16 @@ export default function Home() {
             hoveredRef.current = null;
           }
         });
+        cancelHoverSample = hoverSampler.cancel;
+        map.on("mousemove", (event) => {
+          if (map.isMoving() || !styleGenerationReadyRef.current || document.hidden
+            || undergroundOpenRef.current && !measureModeRef.current) {
+            hoverSampler.cancel(); clearHoverCandidate(); return;
+          }
+          hoverSampler.push(event);
+        });
         map.getCanvas().addEventListener("mouseleave", () => {
+          hoverSampler.cancel();
           if (hoveredRef.current && map.getSource(hoveredRef.current.source)) {
             try { map.setFeatureState(hoveredRef.current, { hover: false }); } catch { /* Source teardown can race a pointer exit. */ }
           }
@@ -5327,7 +5351,7 @@ export default function Home() {
           setTerrainElevationReading(null);
           setTerrainElevationUnavailable(null);
         });
-        map.on("movestart", clearHoverCandidate);
+        map.on("movestart", () => { hoverSampler.cancel(); clearHoverCandidate(); });
 
         map.on("click", (event) => {
           if (undergroundOpenRef.current && !measureModeRef.current) return;
@@ -5729,6 +5753,7 @@ export default function Home() {
       if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
+      cancelHoverSample();
       resizeObserver?.disconnect();
       styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
@@ -8807,7 +8832,10 @@ export default function Home() {
   const runExplorerGuideAction = (action: ExplorerGuideAction) => {
     if (action === "layers") openAtlasPanel("layers");
     else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
-    else if (action === "underground") { if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground(); }
+    else if (action === "underground") {
+      if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
+      setUndergroundFocusRequest((request) => request + 1);
+    }
     else if (action === "qwen") openQwenCompanion(null);
     if (action === "layers" || action === "time") window.requestAnimationFrame(() => {
       // Guide dismissal restores its trigger synchronously. Enter the destination
@@ -9656,7 +9684,7 @@ export default function Home() {
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !browserRenderBudget(renderQuality).efficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
@@ -9871,7 +9899,7 @@ export default function Home() {
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering</summary><div className="explorer-secondary-body">
                 <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
@@ -10130,7 +10158,7 @@ export default function Home() {
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>
 
-          {undergroundOpen && <UndergroundPanel basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
+          {undergroundOpen && <UndergroundPanel entryFocusRequest={undergroundFocusRequest} basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
             redacted={subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current}
             onTerrain={() => activateMapRepresentation("terrain")} onFlatMap={() => activateMapRepresentation("2d")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
             isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}
@@ -10143,7 +10171,7 @@ export default function Home() {
         </section>
 
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
-        {runtime.kind !== "unsupported" && !undergroundOpen && !mapUtilityOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+        {runtime.kind !== "unsupported" && !undergroundOpen && !mapUtilityOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
           {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">

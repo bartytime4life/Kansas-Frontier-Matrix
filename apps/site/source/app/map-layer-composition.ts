@@ -56,7 +56,31 @@ export const composeMapLayers = (map: MapLibreMap): void => {
   const layers = currentLayers(map);
   const desired = orderedOverlayIds(layers);
   if (!desired.length || desired.every((id, index) => layers[layers.length - desired.length + index]?.id === id)) return;
-  for (const id of desired) map.moveLayer(id);
+  // Keep the longest already ordered run above the basemap/custom layers.
+  // Adding one raster then moves that raster once instead of invalidating
+  // every settled overlay. All remaining moves use MapLibre's beforeId.
+  const positions = new Map(layers.map((layer, index) => [layer.id, index]));
+  let lastBase = -1;
+  layers.forEach((layer, index) => { if (!isOverlay(layer)) lastBase = index; });
+  const tails: number[] = [];
+  const previous = new Array<number>(desired.length).fill(-1);
+  desired.forEach((id, index) => {
+    const position = positions.get(id)!;
+    if (position <= lastBase) return;
+    let low = 0, high = tails.length;
+    while (low < high) {
+      const middle = (low + high) >>> 1;
+      if (positions.get(desired[tails[middle]])! < position) low = middle + 1;
+      else high = middle;
+    }
+    if (low) previous[index] = tails[low - 1];
+    tails[low] = index;
+  });
+  const retained = new Set<string>();
+  for (let index = tails.at(-1) ?? -1; index !== -1; index = previous[index]) retained.add(desired[index]);
+  for (let index = desired.length - 1; index >= 0; index--) {
+    if (!retained.has(desired[index])) map.moveLayer(desired[index], desired[index + 1]);
+  }
 };
 
 // Keep the user's slider values as requests so hiding a raster restores the others.

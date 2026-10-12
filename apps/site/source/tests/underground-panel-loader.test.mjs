@@ -9,7 +9,10 @@ async function harness(importer) {
   let imports = 0;
   const deps = {};
   Object.defineProperty(deps, "./underground-panel", { get() { imports++; return importer(); } });
-  const h = await componentHarness("app/underground-panel-loader.tsx", deps, {}, "\nexports.loadForTest = loadUnderground;");
+  // This lifecycle fixture has no rendered DOM; focus ownership is covered by
+  // underground-entry-focus.test.mjs and the production browser checks.
+  const document = { querySelector: () => null, activeElement: null, body: {} };
+  const h = await componentHarness("app/underground-panel-loader.tsx", deps, { document }, "\nexports.loadForTest = loadUnderground;");
   return { ...h, count: () => imports, panel(props = {}) { return h.render(h.exports.default, props); } };
 }
 function status(tree) {
@@ -68,4 +71,16 @@ test("the record inspector uses the shared module and forwards the current recor
   assert.equal(tree.type, Inspector);
   for (const [key, value] of Object.entries(props)) assert.equal(tree.props[key], value, `forward current ${key}`);
   h.commit(); await settle(); assert.equal(h.count(), 1); h.dispose();
+});
+
+test("entry requests preserve the cached module and stay outside the panel's data props", async () => {
+  const h = await harness(() => undergroundModule);
+  await h.exports.loadForTest();
+  const initialContext = { recordIds: ["record-1"] };
+  h.panel({ year: 1998, initialContext, entryFocusRequest: 1 }); h.commit(); await settle();
+  const tree = h.panel({ year: 1998, initialContext, entryFocusRequest: 2 }); h.commit(); await settle();
+  assert.equal(h.count(), 1, "entry requests do not acquire the module again");
+  assert.equal(tree.type, Panel); assert.equal(tree.props.initialContext, initialContext);
+  assert.equal(tree.props.year, 1998); assert.equal("entryFocusRequest" in tree.props, false);
+  h.dispose();
 });
