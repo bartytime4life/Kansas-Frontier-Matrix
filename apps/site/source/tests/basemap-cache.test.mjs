@@ -9,7 +9,7 @@ const source=await readFile('app/basemap-cache.ts','utf8');
 const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 const url='https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/8/97/58';
 const status={schema:'kfm-basemap-cache/v1',limitBytes:10_000_000_000,usedBytes:4096,destination:'/pc/basemap-cache',sessionToken:'a'.repeat(43),job:{state:'idle'}};
-function harness(fetch){const exports={},saved=new Map();vm.runInNewContext(code,{exports,URL,Date,fetch,AbortSignal,DOMException,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)}});return exports;}
+function harness(fetch){const exports={},saved=new Map();vm.runInNewContext(code,{require:()=>({companionSession:()=>status.sessionToken}),exports,URL,Date,fetch,AbortSignal,DOMException,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)}});return exports;}
 test('only allowed basemap tiles use the local transport; observation and evidence URLs stay exact',()=>{
  const m=harness();
  for(const u of ['/api/fire?day=2026-10-08','https://gibs.earthdata.nasa.gov/fire/2026-10-08.png','https://nowcoast.noaa.gov/wms?TIME=2026-10-08T12:02:00Z','/earth-engine/2023/1.png','https://tile.openstreetmap.org/8/1/2.png','https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/8/1/2',url+'?TIME=2020',url.replace('https:','http:'),url.replace('nationalmap.gov','nationalmap.gov.evil')]) assert.equal(m.basemapCacheRequest(u,'Tile').url,u);

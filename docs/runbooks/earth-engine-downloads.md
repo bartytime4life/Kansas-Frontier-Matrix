@@ -33,7 +33,7 @@ The root must already be an initialized, owner-private KFM local store. Keep the
 operator running, or install it as an owner user service. Both the local Site
 (`http://127.0.0.1:4173`) and the existing private hosted KFM Site are allowlisted.
 The browser may request local-network access. Other origins and Host values are
-denied; writes also require the per-process in-memory session token.
+denied; private reads and writes also require the operator-provisioned session token.
 
 ## Link Google and download
 
@@ -190,3 +190,22 @@ date and never mark it as a complete live Earth Engine catalog.
 Public sources: [USDA files](https://www.nass.usda.gov/Research_and_Science/Cropland/Release/),
 [CHIRPS annual files](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/),
 and [Earth Engine catalog](https://developers.google.com/earth-engine/datasets).
+
+### Private browser connection
+
+Each service start prints private connection links in its operator terminal.
+Open the link for the browser origin you use. The `kfm-downloads`, `kfm-intake`,
+or `kfm-basemap` URL fragment provisions that service's per-process capability;
+the browser removes the fragment and keeps it in memory and tab-scoped session
+storage. Fragments are not sent in HTTP requests. Open each service's link in
+the same Explorer tab to connect multiple companions, and open the Intake Desk
+link separately for its standalone UI. After a service restart, open its new
+link. A bare URL does not provision authority.
+
+Every private API GET and POST requires `X-KFM-Session`, including status and
+catalog reads. The Intake Desk HTML/CSS/JS shell is public and contains no
+capability. Host, Origin, CORS and PNA checks remain browser protections; they
+do not identify an OS user. Keep terminal output and connection links private.
+The capability does not isolate the service from code that can read the owner's
+terminal or browser state. Earth Engine OAuth callbacks continue to use their
+separate expiring, single-use state and PKCE checks.

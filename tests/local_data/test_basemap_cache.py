@@ -24,6 +24,15 @@ class Tests(unittest.TestCase):
     def tearDown(self):
         self.cache.db.close(); m.os.close(self.cache.file_lock); self.tmp.cleanup()
     def url(self, x): return f'{m.TOPO}/8/97/{x}'
+    def test_reviewed_single_file_installation_has_no_repository_dependency(self):
+        import subprocess
+        import sys
+        script = self.root / "basemap-cache.py"
+        script.write_bytes(Path(m.__file__).read_bytes())
+        result = subprocess.run([sys.executable, "-I", str(script), "--help"], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("--root", result.stdout)
+
     def test_eviction_and_integrity(self):
         c = self.cache
         c.get(self.url(1)); c.get(self.url(2)); self.assertEqual(c.get(self.url(1))[2], 'hit')
@@ -97,7 +106,8 @@ class Tests(unittest.TestCase):
             return output
         for headers in [{},{'Origin':'https://evil.example'},{'Origin':origin+'\r\nX-Injected: true'},{'Origin':origin,'Host':'evil.example'}]:
             self.assertEqual(request('/status',headers)['code'],403)
-        self.assertEqual(json.loads(request('/status',{'Origin':origin})['body'])['schema'],'kfm-basemap-cache/v1')
+        self.assertEqual(request('/status',{'Origin':origin})['code'],403)
+        self.assertEqual(json.loads(request('/status',{'Origin':origin,'X-KFM-Session':self.cache.token})['body'])['schema'],'kfm-basemap-cache/v1')
         path='/resource?url='+urllib.parse.quote(self.url(1))
         self.assertEqual(request(path,{'Origin':origin})['code'],403)
         self.assertEqual(request(path,{'Origin':origin,'X-KFM-Session':self.cache.token})['body'],b'raw-provider-bytes')
