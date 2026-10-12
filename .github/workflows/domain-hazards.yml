@@ -1,5 +1,6 @@
 # KFM Hazards bounded validation and readiness workflow.
-# Status: executable synthetic USDM materiality validation is established;
+# Status: executable synthetic USDM materiality validation is established,
+# plus the NOAA Storm Events Kansas pilot candidate tests;
 # governed proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -36,7 +37,7 @@ env:
 jobs:
   validate-hazards:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out Hazards boundaries
@@ -101,6 +102,21 @@ jobs:
           tests.domains.hazards.test_domain_hazards_workflow_binding
           -v
 
+      # The Storm Events pilot uses the shared capture, hashing and release
+      # packages, so it installs the hash-locked water-pilot profile (same lock).
+      - name: Install Storm Events pilot dependencies
+        run: python tools/ci/install_python_ci.py water-pilot
+
+      - name: Run the Storm Events pilot candidate tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Proposed NOAA Storm Events descriptor: must stay schema-valid and unadmitted until the owner decides.
+          python tools/validators/domains/hazards/validate_source_descriptor.py data/registry/sources/hazards/noaa.storm_events.yaml
+          python -m pytest -q \
+            tests/domains/hazards/test_storm_events_candidate.py \
+            tests/tools/test_storm_events_pilot.py
+
       - name: Record Hazards validation scope
         if: always()
         shell: bash
@@ -111,6 +127,7 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Executed commands: \`python -m unittest -v tests.domains.hazards.test_hazards_smoke\`, \`make hazards-validate\`, and \`python -m unittest tests.domains.hazards.test_domain_hazards_workflow_binding -v\`."
             echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity; USDM material-change unit tests and exact synthetic fixture polarity; and the hosted trigger, environment, command, proof-hold, and release-hold workflow bindings."
+            echo "- Storm Events pilot: \`tests/domains/hazards/test_storm_events_candidate.py\` and \`tests/tools/test_storm_events_pilot.py\` on synthetic NCEI details-file fixtures with no network, plus validation of the proposed \`data/registry/sources/hazards/noaa.storm_events.yaml\` descriptor. Neither admits the source, approves review or releases data."
             echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
             echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
           } >> "$GITHUB_STEP_SUMMARY"
