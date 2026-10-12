@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
     "docs/runbooks/kfm-projects-consolidation.md": "sha256:c0dbca66a97fd2e5b45ae65cc668e879f440e1560e1c183ceafdbff5e613141d",
-    "docs/runbooks/raw-data-intake.md": "sha256:150e2a93a0eb39a704aa5e8e8b82f1abca350a1c7e16059a17849ef9ddd3629a",
+    "docs/runbooks/raw-data-intake.md": "sha256:b2d4b546815807c2f9622e7fd2a961bdfc270467cc1db3b967baf5d3874d6dcf",
     "tests/local_data/test_atlas.py": "sha256:663037ee1f0274b10762829cdff72e333a5ebd1612ba737ac3c440c236202cca",
     "tests/local_data/test_consolidate.py": "sha256:65eaee90b42927880ba0c05affe05a78253f22d890d727f569de08e88608493e",
     "tests/local_data/test_intake.py": "sha256:442e8939407d6b38b0cb2999c884dde3e854898c28efb410fe9fd6177e89948d",
@@ -15,7 +15,7 @@
     "tools/local_data/intake_desk/desk.js": "sha256:50fdccedc307584e781d7f01d1df271f3b268ea18506ace3435e70bcea61bb03",
     "tools/local_data/intake_desk/index.html": "sha256:45086b415bba7442d200e78fd267fc5d5bdbede8be0e626d1a3a9b4795acc0a4",
     "tools/local_data/intake_route.py": "sha256:032b50f2f513036c77ae0da64e901def7615f708eae5e47feb67d63c7dd22916",
-    "tools/local_data/intake_service.py": "sha256:b1d66f23cceafcc2e99bab1f275be5bbe8780d3e4b4b483eb2aed3f9321ba188"
+    "tools/local_data/intake_service.py": "sha256:1df1d767027244daddd91b40538ea46db6c3aa5dd5e8054b108e78a2e601ac5c"
   },
   "artifact_paths": [
     "docs/runbooks/kfm-projects-consolidation.md",
@@ -58,7 +58,7 @@
     }
   ],
   "contract_version": "3.0.0",
-  "created_at": "2026-10-12T02:06:08.179721+00:00",
+  "created_at": "2026-10-12T02:25:44.944262+00:00",
   "emitter": "Codex owning conversation",
   "human_review": {
     "reviewer_ids": [],
@@ -139,9 +139,14 @@
       "reason": "node --check completed successfully"
     },
     {
-      "gate": "host installation, full real-holdings reanalysis, security workflow and browser acceptance",
+      "gate": "host installation, full real-holdings reanalysis and browser acceptance",
       "outcome": "SKIPPED",
       "reason": "These independent steps remain pending; no deployment or public release performed"
+    },
+    {
+      "gate": "Codex Security native immutable diff review",
+      "outcome": "PASS",
+      "reason": "Scan1a53c867-00e0-4ff8-8691-4bc6a9d28a3f completed on b194938f9e8a..f394fef548f0 with9source files and8supporting artifacts, zero reportable findings. Final delta corrects documentation/docstring only and was manually checked; no executable behavior changed."
     }
   ]
 }

@@ -5,7 +5,8 @@ Serves the standalone Intake Desk at http://127.0.0.1:8771/ and a JSON API used 
 the desk and the Explorer's local library page. The security envelope matches
 the other local companions: exact loopback Host, an Origin allowlist, a
 per-process session token on every POST, bounded JSON bodies, and no file paths
-chosen by the browser. Analysis output is review material, never a map layer.
+chosen by the browser. Analysis and bounded private atlas previews are review
+material; they never grant source admission, release, or publication authority.
 """
 from __future__ import annotations
 

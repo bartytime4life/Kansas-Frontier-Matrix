@@ -25,7 +25,9 @@ The intake pipeline answers one question for every file already on this PC:
 `KFM_DATA_ROOT` store prepared by the [local-PC runbook](local-pc-data-store.md),
 profiles each file by its content, recommends a placement, records everything in a
 local SQLite index, and applies a placement only when you ask. It never downloads,
-uploads, commits, deletes, admits a source, or turns a file into a map layer.
+uploads, commits, deletes, or admits a source. The optional local atlas offers
+bounded private map previews while retaining review holds; it does not release
+datasets or publish map layers.
 
 | Part | File | What it does |
 |---|---|---|
@@ -37,8 +39,11 @@ uploads, commits, deletes, admits a source, or turns a file into a map layer.
 | Explorer | [`intake-desk-summary.tsx`](../../apps/site/source/app/intake-desk-summary.tsx) | Read-only summary on **Data & downloads → My library** |
 | Storage policy | [`github-storage-budget.json`](../../tools/local_data/catalogs/github-storage-budget.json) | GitHub limit, reserved interface room and committed usage |
 
-Everything uses the Python 3.11+ standard library. GDAL, pyproj and network access
-are not required.
+The base intake pipeline uses the Python 3.11+ standard library. GDAL, pyproj and
+network access are not required for that path. Optional atlas raster/shapefile
+previews require an explicitly selected trusted Python with rasterio, numpy and
+pyshp; projection-grid networking remains disabled. See the
+[consolidation runbook](kfm-projects-consolidation.md) for those bounded previews.
 
 ## Quick start
 
@@ -223,7 +228,8 @@ those older outputs.
 
 The index can be rebuilt at any time: stop the service, move `index.sqlite` aside,
 and run `analyze` again. Receipts, staged copies and cards are never overwritten. A
-second writer waits for the first (`INTAKE_BUSY`). To undo a staged copy, remove
+second writer is rejected with `INTAKE_BUSY` and may retry after the first
+finishes. To undo a staged copy, remove
 that copy after review; its receipt stays as history.
 
 ## Validation
