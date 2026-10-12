@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/hazards/earthquake_record.schema.json",
+  "title": "Earthquake Record",
+  "description": "Closed v1 projection of one USGS ComCat earthquake event whose epicenter lies in the Kansas context envelope (-102.1 to -94.5 longitude, 36.9 to 40.1 latitude), for the Kansas earthquake pilot. A record is a catalog solution (origin time, epicenter, depth, magnitude) as ComCat published it at retrieval; it is not a shaking estimate, damage report, induced-seismicity attribution, alert or forecast. The envelope is not the state boundary: records outside a coarse Kansas rectangle carry CONTEXT_MARGIN. Coordinates, depth and magnitude are the source values rounded to four decimal places; feature_sha256 binds the unrounded source feature. Source authority and release eligibility require separate evidence, policy and review checks. See contracts/domains/hazards/earthquake_record.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile", "id", "event_id", "aliases", "origin_utc", "updated_utc", "longitude", "latitude", "depth_km",
+    "magnitude", "magnitude_type", "review_status", "net", "place", "flags", "feature_sha256", "page_digest",
+    "retrieved_at", "evidence_ref", "record_digest"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.earthquake-record/v1"},
+    "id": {"type": "string", "pattern": "^kfm:quake:[a-f0-9]{64}$"},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "aliases": {
+      "type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"}
+    },
+    "origin_utc": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"},
+    "updated_utc": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"},
+    "longitude": {"type": "number", "minimum": -102.1, "maximum": -94.5},
+    "latitude": {"type": "number", "minimum": 36.9, "maximum": 40.1},
+    "depth_km": {"type": ["number", "null"], "minimum": -10, "maximum": 1000},
+    "magnitude": {"type": ["number", "null"], "minimum": -2, "maximum": 10},
+    "magnitude_type": {"type": ["string", "null"], "minLength": 1, "maxLength": 16},
+    "review_status": {"type": ["string", "null"], "minLength": 1, "maxLength": 16},
+    "net": {"type": ["string", "null"], "minLength": 1, "maxLength": 16},
+    "place": {"type": ["string", "null"], "minLength": 1, "maxLength": 256},
+    "flags": {
+      "type": "array", "uniqueItems": true, "maxItems": 5,
+      "items": {"enum": ["MAGNITUDE_ABSENT", "DEPTH_ABSENT", "REVIEW_AUTOMATIC", "REVIEW_STATUS_UNKNOWN", "CONTEXT_MARGIN"]}
+    },
+    "feature_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "page_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "evidence_ref": {"type": "string", "pattern": "^kfm:evidence:quake:[a-f0-9]{64}$"},
+    "record_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

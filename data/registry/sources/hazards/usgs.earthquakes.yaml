@@ -1,0 +1,103 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/usgs-earthquakes",
+  "descriptor_version": "0.1.0",
+  "title": "USGS ANSS Comprehensive Catalog (ComCat): Kansas earthquake pilot",
+  "description": "Proposed scope: earthquakes (FDSN eventtype=earthquake) whose epicenter lies in the Kansas context envelope (-102.1 to -94.5 longitude, 36.9 to 40.1 latitude) in one data year, captured as twelve calendar-month FDSN event queries (format=geojson, limit 5000, orderby=time-asc, nodata=204) by connectors/usgs/src/usgs/earthquake_capture.py. Pipeline records carry the short source_id usgs-earthquakes. The envelope includes margins of Oklahoma, Missouri, Nebraska and Colorado; it is not the state boundary. Awaiting the repository owner's admission decision; until review_state is approved and public_release.allowed is true, pipelines/domains/hazards/earthquake_admission.py refuses it. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": ["hazards"],
+  "source_type": "official_government_dataset",
+  "source_role": "observation",
+  "authority_rank": "authoritative_for_role",
+  "authority_notes": "The USGS National Earthquake Information Center publishes ComCat, the Advanced National Seismic System catalog, merging solutions from contributing networks (for example us, ok, nm). A record is the preferred catalog solution at retrieval: origin time, epicenter, depth and magnitude estimated from seismograph data. Automatic solutions are later reviewed and may change or be deleted; the preferred event id can change when contributing solutions are associated. A solution is not a shaking estimate, damage report or attribution of cause (for example induced seismicity).",
+  "publisher": {
+    "name": "U.S. Geological Survey, Earthquake Hazards Program",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://earthquake.usgs.gov/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "USGS National Earthquake Information Center (ANSS ComCat)",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://earthquake.usgs.gov/data/comcat/"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "U.S. Public Domain (USGS works, 17 U.S.C. 105); ComCat solutions subject to revision",
+    "attribution_required": true,
+    "attribution_text": "U.S. Geological Survey, Earthquake Hazards Program, ANSS Comprehensive Earthquake Catalog (ComCat). Solutions may be revised.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-10-12T14:00:00Z",
+    "verified_by": "repository owner USGS rights decision of 2026-09-28 (connectors/usgs/src/usgs/descriptor.yaml: role observed, public-domain-us-government-work); ComCat scope confirmation pending"
+  },
+  "sensitivity_default": "public",
+  "sensitivity_notes": "Records carry an epicenter, depth, magnitude, network codes and ComCat's place text (a distance and direction from a named place). No personal data. Felt reports (DYFI), ShakeMap and PAGER products are out of scope and are never copied.",
+  "cadence": {
+    "update_cadence": "near_realtime",
+    "freshness_expectation": "ComCat adds automatic solutions within minutes and revises them for weeks to months. The pilot marks a data year OPEN while the capture falls inside it and CLOSED afterwards; a closed year can still be revised, so each capture is a separate source state.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "rest_api",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "FDSN event web service (query)",
+        "uri": "https://earthquake.usgs.gov/fdsnws/event/1/query",
+        "purpose": "download"
+      },
+      {
+        "label": "FDSN event web service documentation",
+        "uri": "https://earthquake.usgs.gov/fdsnws/event/1/",
+        "purpose": "documentation"
+      },
+      {
+        "label": "ANSS Comprehensive Earthquake Catalog",
+        "uri": "https://earthquake.usgs.gov/data/comcat/",
+        "purpose": "metadata"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "U.S. Geological Survey, ANSS Comprehensive Earthquake Catalog (ComCat), event {event_id} (M{magnitude} {magnitude_type}, {origin_utc}), accessed {accessed_at}, https://earthquake.usgs.gov/earthquakes/eventpage/{event_id}.",
+    "citation_guidance": "Cite the preferred event id, origin time and retrieval time, and state that solutions may be revised."
+  },
+  "source_head": {
+    "observed_at": "2026-10-12T14:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "fdsnws-event 1",
+      "source_head_uri": "https://earthquake.usgs.gov/fdsnws/event/1/"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["observation", "historical_context", "map_display", "citation_support"],
+    "prohibited_claim_roles": ["not_for_life_safety"],
+    "limitations": "Proposed scope covers ComCat earthquakes in the Kansas context envelope for one data year. A record is a catalog solution at retrieval, not a measurement of shaking, damage or felt intensity, and not an attribution of cause. Epicenters are estimates with kilometre-scale uncertainty; coordinates, depth and magnitude are rounded to four decimal places. Records outside a coarse Kansas rectangle carry CONTEXT_MARGIN; inside it is not proof of Kansas. Magnitudes of different types (ml, md, mb_lg, mww) are not interchangeable. Deleted solutions are withheld and counted. A month whose query reaches the 5000-event limit refuses the capture. The catalog's detection threshold varies with time and place, so the absence of a record does not mean no earthquake occurred.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "The repository owner approves this admission (review_state approved, registry_state active, public_release.allowed true).",
+      "Owner self-release requires its own accepted ADR; ADR-0044 to ADR-0047 cover water, GHCN-Daily weather, USCRN soil and NOAA Storm Events only.",
+      "Every release keeps the ComCat citation and the revision notice, and no release presents a solution as a shaking or damage estimate."
+    ]
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-10-12T14:00:00Z",
+    "updated_at": "2026-10-12T14:00:00Z"
+  }
+}

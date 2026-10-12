@@ -1,0 +1,140 @@
+{
+ "type": "FeatureCollection",
+ "metadata": {
+  "generated": 1761998400000,
+  "url": "synthetic fixture",
+  "title": "USGS Earthquakes",
+  "status": 200,
+  "api": "1.14.1",
+  "limit": 5000,
+  "offset": 1,
+  "count": 3
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "id": "us7000p004",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -96.8,
+     39.2,
+     null
+    ]
+   },
+   "properties": {
+    "mag": 2.1,
+    "place": "synthetic: 10 km E of Manhattan, Kansas",
+    "time": 1746280931004,
+    "updated": 1746282600000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000p004",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "automatic",
+    "tsunami": 0,
+    "sig": 50,
+    "net": "us",
+    "code": "7000p004",
+    "ids": ",us7000p004,",
+    "sources": "us",
+    "types": ",origin,phase-data,",
+    "nst": 12,
+    "dmin": 0.1,
+    "rms": 0.3,
+    "gap": 80,
+    "magType": "mb_lg",
+    "type": "earthquake",
+    "title": "M 2.1 - synthetic: 10 km E of Manhattan, Kansas"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ok2025p005",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.62,
+     36.95,
+     4.7
+    ]
+   },
+   "properties": {
+    "mag": 2.8,
+    "place": "synthetic: 10 km N of Medford, Oklahoma",
+    "time": 1747626000500,
+    "updated": 1748174400000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/ok2025p005",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 50,
+    "net": "ok",
+    "code": "2025p005",
+    "ids": ",ok2025p005,us7000p005,",
+    "sources": "ok,us",
+    "types": ",origin,phase-data,",
+    "nst": 12,
+    "dmin": 0.1,
+    "rms": 0.3,
+    "gap": 80,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 2.8 - synthetic: 10 km N of Medford, Oklahoma"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "us7000p006",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -100.256789,
+     38.9,
+     3.0
+    ]
+   },
+   "properties": {
+    "mag": null,
+    "place": null,
+    "time": 1748384109330,
+    "updated": 1748764800000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000p006",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 50,
+    "net": "us",
+    "code": "7000p006",
+    "ids": ",us7000p006,",
+    "sources": "us",
+    "types": ",origin,phase-data,",
+    "nst": 12,
+    "dmin": 0.1,
+    "rms": 0.3,
+    "gap": 80,
+    "magType": null,
+    "type": "earthquake",
+    "title": "M ? - None"
+   }
+  }
+ ],
+ "bbox": [
+  -102.1,
+  36.9,
+  -10,
+  -94.5,
+  40.1,
+  10
+ ]
+}
