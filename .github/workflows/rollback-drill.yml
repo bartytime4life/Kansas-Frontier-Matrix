@@ -173,10 +173,28 @@ jobs:
               "repository-root modules shadow the standard library for the "
               f"rehearsal test run: {stdlib_shadows}"
           )
+          # unittest imports each package on the rehearsal module paths before
+          # the pinned test modules; refuse unpinned initializers there. The
+          # existing Hazards initializer is pinned below.
+          hazards_package_init = Path("tests/domains/hazards/__init__.py")
+          package_inits = [
+              path.as_posix()
+              for path in (
+                  Path("tests/__init__.py"),
+                  Path("tests/release/__init__.py"),
+                  Path("tests/domains/__init__.py"),
+              )
+              if path.exists()
+          ]
+          assert not package_inits, (
+              "unpinned package initializers would run before the rehearsal tests: "
+              f"{package_inits}"
+          )
 
           # Exact digests of the reviewed synthetic helper, its behavioral tests,
-          # and the complete Hazards fixture tree. Any drift fails closed and must
-          # be reviewed before these pins are deliberately updated.
+          # the Hazards test package initializer, and the complete Hazards fixture
+          # tree. Any drift fails closed and must be reviewed before these pins
+          # are deliberately updated.
           expected_rehearsal_digests = {
               rollback_apply_path.as_posix(): (
                   "6969b626bda6a6d2279a1e0b0e4beb7f266980b450d63dce87982071a20521e1"
@@ -186,6 +204,9 @@ jobs:
               ),
               hazards_rehearsal_test_path.as_posix(): (
                   "2df162eb9254b08f3a643e69fb027b4fc5ec68086c9f32bff3a585ffdecc0ba1"
+              ),
+              hazards_package_init.as_posix(): (
+                  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
               ),
               (hazards_rehearsal_fixture_root / "README.md").as_posix(): (
                   "13de6257591235b31576d25152d8c415a7cdd9335c77cb013e4dbc41d5579e00"
@@ -237,6 +258,7 @@ jobs:
               rollback_apply_path.as_posix(),
               rehearsal_test_path.as_posix(),
               hazards_rehearsal_test_path.as_posix(),
+              hazards_package_init.as_posix(),
           } | {
               path.as_posix()
               for path in hazards_rehearsal_fixture_root.rglob("*")
@@ -390,7 +412,7 @@ jobs:
 
           print("CONFIRMED: the production rollback pipeline remains a placeholder while the generic RollbackCard entrypoint delegates to the canonical release validator.")
           print("CONFIRMED: generic and canonical RollbackCard fixture execution is byte-identical.")
-          print("CONFIRMED: rollback_apply.py, its generic and Hazards behavioral tests, and the Hazards rehearsal fixture match their reviewed SHA-256 digests.")
+          print("CONFIRMED: rollback_apply.py, its generic and Hazards behavioral tests, the Hazards test package initializer, and the Hazards rehearsal fixture match their reviewed SHA-256 digests.")
           print("CONFIRMED: the generic and Hazards synthetic rollback rehearsal profiles ran 12 non-vacuous tests in isolated temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
           print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
