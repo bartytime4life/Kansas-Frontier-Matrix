@@ -164,3 +164,12 @@ new authority root or generated writer. Removing this appended section and its
 observation file reverses the documentation change; application rollback remains
 the retained v251 copy and existing persistent store described above. No rollback
 was invoked during these checks.
+
+Follow-up documentation validation used the same changed-range metadata profile
+as CI: zero new failures, seven historical registry-parser warnings. An initial
+unratcheted registry check reported those seven existing findings as failures;
+the exact-base comparison attributed them to retained registry content rather
+than this append. No registry or validator was edited. The topology check passed
+with zero new drift/invariants and 93 inherited warnings; whitespace, JSON
+readback and the existing mirror parity check passed. The observation follow-up's
+exact-head hosted CI remains separate from the completed main run above.

@@ -1609,5 +1609,17 @@
     "kfm-v252-local-maximum-browser.jpg": "0c175b80c1519d02cf04cac73d93ac1ec819becfc48ce43a5f16d83fb339a688",
     "kfm-v252-hosted-browser-maximum.jpg": "da466ae1557e29ea49816dfb506dd4b0076a7e90ca010fe72a0c3a39a24a5410",
     "kfm-v252-local-browser-final.jpg": "0f7952e990528827981a39a56474e1ab8bad016899b1c4cfa67033ddcc430b01"
+  },
+  "documentation_checks": {
+    "metadata_changed_range": "WARN_ONLY",
+    "metadata_new_failures": 0,
+    "metadata_inherited_warnings": 7,
+    "topology": "PASS",
+    "topology_new_drift": 0,
+    "topology_invariants": 0,
+    "topology_inherited_warnings": 93,
+    "mirror": "CONTENT_PARITY_ONLY",
+    "json_readback": "PASS",
+    "whitespace": "PASS"
   }
 }
