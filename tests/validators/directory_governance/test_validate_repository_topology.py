@@ -63,6 +63,14 @@ SITE_MIRROR = {
 SITE_MIRROR_EVIDENCE = (SITE_MIRROR["receipt_path"], SITE_MIRROR["parity_check"])
 
 
+def _mirror_receipt(upstream: tuple[str, ...], repository_only: tuple[str, ...] = ()) -> bytes:
+    comparison = {name: {"state": "identical", "site_sha256": "a" * 64, "mirror_sha256": "a" * 64}
+                  for name in upstream}
+    comparison.update({name: {"state": "repository_only_overlay", "mirror_sha256": "b" * 64}
+                       for name in repository_only})
+    return json.dumps({"comparison": comparison}).encode("utf-8")
+
+
 def _root_registry(*roots: dict[str, object]) -> bytes:
     normalized_roots = []
     for root in roots:
@@ -301,6 +309,9 @@ class RepositoryTopologyTests(unittest.TestCase):
                 {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
             ),
             module.EXTERNAL_MIRROR_REGISTER: _mirror_register(SITE_MIRROR),
+            SITE_MIRROR["receipt_path"]: _mirror_receipt(
+                tuple(path.removeprefix("apps/site/source/") for path in paths[:3])
+            ),
         }
         object_ids = {path: "a" * 40 for path in paths}
 
@@ -325,7 +336,7 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
         )
 
-    def _uppercase_members(self, paths, register=None):
+    def _uppercase_members(self, paths, register=None, receipt=None):
         modes = {path: "100644" for path in paths}
         blobs = {
             "control_plane/root_registry.yaml": _root_registry(
@@ -334,6 +345,8 @@ class RepositoryTopologyTests(unittest.TestCase):
         }
         if register is not None:
             blobs[module.EXTERNAL_MIRROR_REGISTER] = register
+        if receipt is not None:
+            blobs[SITE_MIRROR["receipt_path"]] = receipt
         object_ids = {path: "a" * 40 for path in paths}
         findings = module._path_findings(paths, modes, object_ids, blobs)
         for finding in findings:
@@ -349,26 +362,54 @@ class RepositoryTopologyTests(unittest.TestCase):
             "docs/SHOUT.md",
         ) + SITE_MIRROR_EVIDENCE
 
-        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR))
+        receipt = _mirror_receipt(("docs/RIVER_DELIVERY_2026-10-11.md", "AGENTS.md"))
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
 
         self.assertEqual(("apps/siteextra/SHOUT.md", "docs/SHOUT.md"), members)
+
+    def test_repository_only_overlay_inside_mirror_keeps_default_grammar(self) -> None:
+        upstream = "apps/site/source/AGENTS.md"
+        overlay = "apps/site/source/docs/LOCAL_OVERLAY.md"
+        unlisted = "apps/site/source/docs/UNLISTED.md"
+        paths = (upstream, overlay, unlisted) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",), repository_only=("docs/LOCAL_OVERLAY.md",))
+
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual((overlay, unlisted), members)
+
+    def test_registered_receipt_matches_site_mirror_check(self) -> None:
+        register = json.loads(
+            (REPO_ROOT / "control_plane/external_mirror_register.yaml").read_text(encoding="utf-8")
+        )
+        site_mirror = (REPO_ROOT / "tools/qa/site_mirror.py").read_text(encoding="utf-8")
+        for entry in register["mirrors"]:
+            if entry["mirror_id"] == "mirror.apps-site-source":
+                self.assertIn(f'RECEIPT = ROOT / "{entry["receipt_path"]}"', site_mirror)
+                self.assertTrue((REPO_ROOT / entry["receipt_path"]).is_file())
+                break
+        else:
+            self.fail("mirror.apps-site-source is not registered")
 
     def test_mirror_exception_fails_closed_without_register_or_evidence(self) -> None:
         mirrored = "apps/site/source/AGENTS.md"
         # No register: nothing is relaxed.
         self.assertEqual((mirrored,), self._uppercase_members((mirrored,) + SITE_MIRROR_EVIDENCE))
         # Register present but the pinned receipt is not tracked.
+        receipt = _mirror_receipt(("AGENTS.md",))
         self.assertEqual(
             (mirrored,),
             self._uppercase_members(
-                (mirrored, SITE_MIRROR["parity_check"]), _mirror_register(SITE_MIRROR)
+                (mirrored, SITE_MIRROR["parity_check"]), _mirror_register(SITE_MIRROR), receipt
             ),
         )
         # Retired entries relax nothing.
         retired = dict(SITE_MIRROR, status="RETIRED")
         self.assertEqual(
             (mirrored,),
-            self._uppercase_members((mirrored,) + SITE_MIRROR_EVIDENCE, _mirror_register(retired)),
+            self._uppercase_members(
+                (mirrored,) + SITE_MIRROR_EVIDENCE, _mirror_register(retired), receipt
+            ),
         )
 
     def test_mirror_register_rejects_unsafe_or_unbound_entries(self) -> None:

@@ -536,18 +536,17 @@ EXTERNAL_MIRROR_REGISTER = "control_plane/external_mirror_register.yaml"
 RELAXABLE_MIRROR_RULES = frozenset({"path-grammar:uppercase"})
 
 
-def _external_mirror_prefixes(
-    blobs: Mapping[str, bytes], path_set: set[str], rule: str
-) -> tuple[str, ...]:
-    """Return registered external byte-mirror prefixes that relax ``rule``.
+def _external_mirror_entries(
+    blobs: Mapping[str, bytes], rule: str
+) -> tuple[tuple[str, str, str], ...]:
+    """Return ``(path_prefix, receipt_path, parity_check)`` for mirrors relaxing ``rule``.
 
-    A byte mirror of an external source keeps upstream file names: renaming a
-    mirrored file to satisfy KFM path grammar would break its receipt-pinned
-    parity. ``control_plane/external_mirror_register.yaml`` lists such mirrors
-    (Directory Rules 13.2 externally fixed names). An ACTIVE entry applies only
-    while its receipt and parity check are tracked; otherwise it fails closed.
-    Only rules in ``RELAXABLE_MIRROR_RULES`` may be relaxed, so unsafe and
-    nonportable path checks always apply. An absent register relaxes nothing.
+    ``control_plane/external_mirror_register.yaml`` projects ADR-0048: a file
+    name inside a registered byte mirror of an external source is externally
+    fixed (Directory Rules 13.2) when its pinned receipt shows the path exists
+    upstream. Only rules in ``RELAXABLE_MIRROR_RULES`` may be relaxed, so unsafe
+    and nonportable path checks always apply. An absent register relaxes
+    nothing; a malformed or unbound register raises.
     """
     if EXTERNAL_MIRROR_REGISTER not in blobs:
         return ()
@@ -564,7 +563,7 @@ def _external_mirror_prefixes(
     mirrors = register.get("mirrors")
     if not isinstance(mirrors, list):
         raise TopologyError("external mirror register has no mirrors array")
-    prefixes: list[str] = []
+    entries: list[tuple[str, str, str]] = []
     seen: set[str] = set()
     for entry in mirrors:
         if not isinstance(entry, dict):
@@ -590,14 +589,38 @@ def _external_mirror_prefixes(
         ):
             raise TopologyError("external mirror register entry is malformed")
         seen.add(mirror_id)
-        if (
-            entry["status"] == "ACTIVE"
-            and rule in relaxed
-            and entry["receipt_path"] in path_set
-            and entry["parity_check"] in path_set
-        ):
-            prefixes.append(prefix)
-    return tuple(sorted(prefixes))
+        if entry["status"] == "ACTIVE" and rule in relaxed:
+            entries.append((prefix, entry["receipt_path"], entry["parity_check"]))
+    return tuple(sorted(entries))
+
+
+def _external_mirror_exempt_paths(
+    blobs: Mapping[str, bytes], path_set: set[str], rule: str
+) -> frozenset[str]:
+    """Tracked mirror paths whose upstream-fixed names may skip ``rule``.
+
+    An entry applies only while its receipt and parity check are tracked
+    (fail closed otherwise). Within it, only receipt comparison entries that
+    carry an upstream digest (``site_sha256``) qualify: repository-only overlays
+    have no upstream name and keep the default grammar (ADR-0048).
+    """
+    exempt: set[str] = set()
+    for prefix, receipt_path, parity_check in _external_mirror_entries(blobs, rule):
+        if receipt_path not in path_set or parity_check not in path_set:
+            continue
+        comparison = _blob_json(blobs, receipt_path).get("comparison")
+        if not isinstance(comparison, dict):
+            raise TopologyError("external mirror receipt has no comparison map")
+        for name, record in comparison.items():
+            if (
+                isinstance(name, str)
+                and isinstance(record, dict)
+                and isinstance(record.get("site_sha256"), str)
+                and record["site_sha256"]
+                and prefix + name in path_set
+            ):
+                exempt.add(prefix + name)
+    return frozenset(exempt)
 
 
 def _is_site_api_route_parameter(path: str, segment: str) -> bool:
@@ -623,7 +646,7 @@ def _path_findings(
         "nonportable-punctuation": [],
         "uppercase": [],
     }
-    uppercase_mirrors = _external_mirror_prefixes(blobs, path_set, "path-grammar:uppercase")
+    uppercase_mirror_paths = _external_mirror_exempt_paths(blobs, path_set, "path-grammar:uppercase")
 
     for path in paths:
         unsafe: list[str] = []
@@ -647,7 +670,7 @@ def _path_findings(
             if (
                 segment != "README.md"
                 and not _is_conventional_uppercase_path(path)
-                and not path.startswith(uppercase_mirrors)
+                and path not in uppercase_mirror_paths
                 and any(character.isupper() for character in segment)
             ):
                 grammar_groups["uppercase"].append(path)
@@ -1010,6 +1033,18 @@ def _content_findings(paths: Sequence[str], blobs: Mapping[str, bytes]) -> list[
     return findings
 
 
+def _external_mirror_receipt_paths(
+    repo_root: Path, object_ids: Mapping[str, str]
+) -> set[str]:
+    """Receipt paths named by the mirror register, so their blobs are indexed."""
+    blobs = _index_blobs(repo_root, object_ids, {EXTERNAL_MIRROR_REGISTER})
+    try:
+        entries = _external_mirror_entries(blobs, "path-grammar:uppercase")
+    except TopologyError:
+        return set()  # _path_findings re-reads the register and raises there.
+    return {receipt for _, receipt, _ in entries}
+
+
 def scan(repo_root: Path) -> tuple[tuple[Finding, ...], int]:
     root = repo_root.resolve()
     paths, modes, object_ids = tracked_index(root)
@@ -1027,6 +1062,7 @@ def scan(repo_root: Path) -> tuple[tuple[Finding, ...], int]:
         or _is_app_text_path(path)
         or path.startswith("artifacts/")
     } | fixed
+    content_paths |= _external_mirror_receipt_paths(root, object_ids)
     blobs = _index_blobs(root, object_ids, content_paths)
     findings = _path_findings(paths, modes, object_ids, blobs) + _content_findings(paths, blobs)
     unique = tuple(sorted(set(findings)))

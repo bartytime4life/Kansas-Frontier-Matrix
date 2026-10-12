@@ -79,7 +79,7 @@ related:
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
   - "Earlier v0.6 content at this same path remains available in Git history; no separate superseded document path is asserted."
-  - "v0.8 adds external_mirror_register.yaml to the direct-child map and authority notes; it projects the apps/ root naming decision for receipt-pinned external byte mirrors and is read by the topology validator; no other register, binding, or authority changes."
+  - "v0.8 adds external_mirror_register.yaml to the direct-child map and authority notes; it projects accepted ADR-0048 for upstream-backed entries in receipt-pinned external byte mirrors and is read by the topology validator; no other register, binding, or authority changes."
   - "v0.7 repins the same-path README to current main, reconciles the direct-child map, records the topology-correction projection, and adds named current-main validation outcomes without changing authority."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
   - "A validation pass proves only the boundary exercised by that validator."
@@ -416,7 +416,7 @@ Escalate unresolved authority to the owning root or ADR process. Escalate rights
 - [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is **accepted** and adopts the exact Directory Rules v2 bytes.
 - Other ADR status must be read from its current record/index; this README does not promote any proposal.
 - `root_registry.yaml`, `path_alias_register.yaml`, `domain_lane_register.yaml`, and `cross_domain_seam_register.yaml` are projections with explicit non-effects.
-- `external_mirror_register.yaml` (2026-10-12) projects root naming decisions that treat file names inside a receipt-pinned external byte mirror as externally fixed (Directory Rules §13.2). The topology validator reads it to relax only the listed path-grammar rule (currently `path-grammar:uppercase` for `apps/site/source/`). It fails closed when the entry is not `ACTIVE`, or when its receipt or parity check is untracked. It does not amend doctrine; ADR-0048 proposes explicit §13.2 wording.
+- `external_mirror_register.yaml` (2026-10-12) projects accepted ADR-0048. A file name inside a registered byte mirror of an external source is externally fixed (Directory Rules §13.2) when the mirror's pinned receipt shows the path exists upstream. The topology validator reads the register to relax only the listed path-grammar rule (currently `path-grammar:uppercase` for upstream-backed `apps/site/source/` entries). It fails closed when the entry is not `ACTIVE` or its receipt or parity check is untracked, and repository-only overlays keep the default grammar. It does not change Directory Rules bytes.
 
 ### Current alias and migration posture
 
@@ -779,8 +779,8 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 
 ### v0.8 — 2026-10-12
 
-- added `external_mirror_register.yaml` to the direct-child map. It projects the apps/ root naming decision that file names inside a receipt-pinned external byte mirror are externally fixed (Directory Rules §13.2), and the topology validator reads it;
-- added an authority note: the register relaxes only the listed path-grammar rule, fails closed, and does not amend doctrine. ADR-0048 (proposed) carries the doctrine wording;
+- added `external_mirror_register.yaml` to the direct-child map. It projects accepted ADR-0048: upstream-backed file names inside a receipt-pinned external byte mirror are externally fixed (Directory Rules §13.2). The topology validator reads it;
+- added an authority note: the register relaxes only the listed path-grammar rule for upstream-backed entries, fails closed, and does not change doctrine bytes;
 - other bindings, counts, and validation observations are unchanged and were not re-pinned.
 
 ### v0.7 — 2026-09-06
