@@ -6,7 +6,7 @@ version: v1.0
 status: draft; operator implemented; host migration incomplete
 owners: ["@bartytime4life"]
 created: 2026-10-11
-updated: 2026-10-11
+updated: 2026-10-12
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Explain bounded folder inventory, explicit verified copies, discovery limits and independent storage boundaries.
@@ -52,6 +52,60 @@ the checkout. Selecting the canonical repository as the desired organization
 center does not authorize bypassing that guard. Keep source bytes and lifecycle
 stores external until a separately reviewed storage-boundary migration resolves
 the conflict. Canonical manifests can reference the external store.
+
+## Inspect prepared WORK packages
+
+`review_packages.py` extends the existing offline owner-operated Intake Desk;
+it does not create a canonical catalog, registry or release authority. Directory
+Rules 10.1 and DIR-EXEC-007 place this explicit inspector in the existing
+`tools/local_data/` operator boundary, its client beside the existing desk, and
+its tests under `tests/local_data/`. Candidate bytes remain external under
+`data/work/<responsibility>/...` under sections 11.2–11.4. This compatibility
+extension does not graduate the local operator into a production application.
+
+Select each package by its exact relative `review-manifest.json` and SHA-256:
+
+```bash
+python3 tools/local_data/intake_service.py --root "$KFM_DATA_ROOT" \
+  --port 8772 --read-only \
+  --review-package "data/work/hydrology/SELECTED_VERSION/review-manifest.json@VERIFIED_SHA256"
+```
+
+Replace the version and digest with checked values; there are no built-in
+workstation paths or auto-discovered packages. The initial supported profiles
+are `kfm-map-document-review/v1` and
+`kfm-water-metadata-availability-review/v1`. Both must explicitly record pending
+review and false release/publication. The root retains the existing initialized,
+private, external-store safeguards. Startup validates pins. Browser selections
+use opaque package/member IDs; neither paths nor file names are read requests.
+
+Open the private connection link printed by the operator. The capability is
+kept in the URL fragment and session storage, removed from the address bar and
+required on every API read. Existing Host, Origin, no-store, no-referrer and
+content-type protections remain. WORK routes reject Explorer/hosted origins,
+even when authenticated. `--read-only` disables every POST operation and direct
+analysis. A non-default loopback port lets it coexist with a running indexer.
+In this mode only status and selected review-package reads are enabled; the
+index database and its routing/actions are not accessed by the review view.
+
+The view lists explicitly pinned members, checks the full selected member
+digest, and presents at most 64 KiB of text or 40 matching rows. It states when
+the preview is limited; the full file stays in the private store. Map labels
+come from the verified document index, including filename-conflict warnings.
+PNG dimensions are bounded; raw PDFs, HTML, SVG and archives are never served.
+OCR text and filename years remain clues; pixels and station coordinates do not
+establish historical geometry, continuous observations or source admission.
+
+Limits are 16 selected packages, 1,000 members per package, 256 KiB manifests,
+16 MiB per member, 256 MiB declared output per package, and two concurrent
+member previews. The existing regular-file checks deny static symlinks and
+special files and detect concurrent byte changes; they are not an OS sandbox
+against another process owned by the same user replacing directory ancestors.
+
+Rollback stops the parallel review process and removes its consumer binding;
+retain the exact package, original captures and copy receipts. It does not
+restore, replace or empty the intake database, change the existing indexer's
+service, clear source holds, or authorize cleanup/publication.
 
 ## Inspect and prepare an explicit copy
 

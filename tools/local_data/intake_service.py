@@ -22,7 +22,7 @@ from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from tools.local_data import intake, intake_route, atlas  # noqa: E402
+from tools.local_data import intake, intake_route, atlas, review_packages  # noqa: E402
 from tools.local_data.loopback_session import session_matches, print_connection_links  # noqa: E402
 
 PORT = 8771
@@ -31,8 +31,9 @@ SITE_ORIGINS = {"http://127.0.0.1:4173", "https://kansas-frontier-matrix-explore
 ORIGINS = SITE_ORIGINS | {SELF_ORIGIN}
 DESK = Path(__file__).resolve().parent / "intake_desk"
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"), "/desk.js": ("desk.js", "text/javascript; charset=utf-8"),
+          "/reviews.js": ("reviews.js", "text/javascript; charset=utf-8"),
           "/desk.css": ("desk.css", "text/css; charset=utf-8")}
-CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; "
+CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data: blob:; "
        "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 ID = re.compile(r"[a-f0-9]{32}\Z")
 ERROR = re.compile(r"[A-Z][A-Z0-9_]{2,90}(:[A-Z][A-Z0-9_]{2,90})?\Z")
@@ -42,9 +43,11 @@ MAX_MAP_FEATURES = 5000
 class Desk:
     """Holds the store, the configured inbox and the single background analysis job."""
 
-    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None, raster_python: Path | None = None, *, max_files: int = intake.MAX_FILES):
+    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None, raster_python: Path | None = None, *, max_files: int = intake.MAX_FILES, review_bindings=(), read_only=False):
         self.root = root
         self.atlas = atlas.Atlas(root, raster_python=raster_python)
+        self.reviews = review_packages.ReviewPackages(root, review_bindings)
+        self.read_only = read_only
         self.inbox = inbox
         self.budget = budget or intake_route.load_budget()
         self.max_files = intake.file_limit(max_files)
@@ -58,9 +61,11 @@ class Desk:
         with self.lock:
             job = dict(self.job)
         return {"schema": "kfm-intake-desk/v1", "analyzerVersion": intake.ANALYZER_VERSION, "inboxConfigured": self.inbox is not None,
-                "maxFiles": self.max_files, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
+                "maxFiles": self.max_files, "analysisAllowed": not self.read_only, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
 
     def start(self, value: dict) -> dict:
+        if self.read_only:
+            raise ValueError("READ_ONLY_DESK")
         if not isinstance(value, dict) or set(value) - {"includeInbox"} or not isinstance(value.get("includeInbox", False), bool):
             raise ValueError("ANALYZE_REQUEST_INVALID")
         include = value.get("includeInbox", False)
@@ -150,7 +155,9 @@ def _query(raw: str) -> dict:
     return out
 
 
-def handler(desk: Desk):
+def handler(desk: Desk, *, port=PORT):
+    self_origin = f"http://127.0.0.1:{port}"
+    origins = SITE_ORIGINS | {self_origin}
     class Handler(BaseHTTPRequestHandler):
         server_version = "KFMIntakeDesk"
         sys_version = ""
@@ -159,11 +166,11 @@ def handler(desk: Desk):
             pass
 
         def host_ok(self) -> bool:
-            return self.headers.get("Host") == f"127.0.0.1:{PORT}"
+            return self.headers.get("Host") == f"127.0.0.1:{port}"
 
         def origin(self) -> str | None:
             value = self.headers.get("Origin")
-            if value not in ORIGINS:
+            if value not in origins:
                 return None
             try:
                 return self._safe_header_value(value)
@@ -191,7 +198,7 @@ def handler(desk: Desk):
             encoded = body if isinstance(body, bytes) else json.dumps(body, sort_keys=True).encode()
             self.send_response(status)
             origin = self.origin()
-            if origin is not None and origin != SELF_ORIGIN:
+            if origin is not None and origin != self_origin:
                 self._send_header_safe("Access-Control-Allow-Origin", origin)
             self._send_header_safe("Vary", "Origin")
             self._send_header_safe("Cache-Control", "no-store")
@@ -206,7 +213,7 @@ def handler(desk: Desk):
 
         def do_OPTIONS(self):
             origin = self.origin()
-            if not self.host_ok() or origin is None or origin == SELF_ORIGIN:
+            if not self.host_ok() or origin is None or origin == self_origin:
                 return self.answer(403, {"error": "ORIGIN_REJECTED"})
             self.send_response(204)
             self._send_header_safe("Access-Control-Allow-Origin", origin)
@@ -231,7 +238,24 @@ def handler(desk: Desk):
                                    extra=(("Content-Security-Policy", CSP), ("X-Frame-Options", "DENY")))
             if not session_matches(self.headers, desk.token):
                 return self.answer(403, {"error": "SESSION_REJECTED"})
+            # WORK review is local to this desk, not a new Explorer/public data route.
+            if path.startswith("/api/reviews") and "Origin" in self.headers and self.origin() != self_origin:
+                return self.answer(403, {"error": "PRIVATE_REVIEW_ORIGIN_REQUIRED"})
+            if desk.read_only and path != "/api/status" and not path.startswith("/api/reviews"):
+                return self.answer(403, {"error": "READ_ONLY_DESK"})
             try:
+                if path == "/api/reviews":
+                    if parsed.query:
+                        raise ValueError("REVIEW_QUERY_INVALID")
+                    return self.answer(200, desk.reviews.catalog())
+                if path.startswith("/api/reviews/"):
+                    parts = path.split("/")
+                    params = parse_qs(parsed.query, max_num_fields=2, keep_blank_values=True)
+                    if (len(parts) != 5 or not all(review_packages.ID.fullmatch(p) for p in parts[3:])
+                            or set(params) - {"text"} or any(len(v) != 1 for v in params.values())):
+                        raise ValueError("REVIEW_REQUEST_INVALID")
+                    body, content_type = desk.reviews.preview(parts[3], parts[4], text=params.get("text", [""])[0])
+                    return self.answer(200, body, content_type=content_type)
                 if path == "/api/status":
                     body = desk.status()
                     if self.origin() in SITE_ORIGINS:
@@ -276,6 +300,8 @@ def handler(desk: Desk):
         def do_POST(self):
             if not self.host_ok() or self.origin() is None or not session_matches(self.headers, desk.token):
                 return self.answer(403, {"error": "SESSION_REJECTED"})
+            if desk.read_only:
+                return self.answer(403, {"error": "READ_ONLY_DESK"})
             if self.headers.get("Content-Type") != "application/json" or self.headers.get("Transfer-Encoding"):
                 return self.answer(415, {"error": "JSON_REQUIRED"})
             try:
@@ -314,11 +340,17 @@ def handler(desk: Desk):
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", help="initialized private store (default: KFM_DATA_ROOT)")
+    parser.add_argument("--port", type=int, default=PORT, help="loopback port, 1024–65535; default 8771")
+    parser.add_argument("--read-only", action="store_true", help="disable all POST operations and analysis; suitable for a parallel private review desk")
     parser.add_argument("--inbox", type=Path, help="read-only downloads directory the desk may analyze (e.g. ~/Downloads/KFM)")
     parser.add_argument("--max-files", type=int, default=intake.MAX_FILES, help="explicit discovery ceiling, at most 5,000,000 files")
     parser.add_argument("--refresh-seconds", type=int, default=0, help="0 disables automatic analysis; otherwise repeat on a 300 to 86400 second interval")
     parser.add_argument("--raster-python", type=Path, help="trusted local Python with rasterio, numpy and pyshp for bounded map previews")
+    parser.add_argument("--review-package", action="append", default=[], metavar="WORK_MANIFEST@SHA256",
+                        help="explicit relative WORK review-manifest.json and exact digest; private desk only, at most 16")
     args = parser.parse_args(argv)
+    if not 1024 <= args.port <= 65535 or (args.read_only and args.refresh_seconds):
+        parser.error("--port must be 1024–65535; --read-only requires --refresh-seconds 0")
     if args.refresh_seconds != 0 and not 300 <= args.refresh_seconds <= 86400:
         parser.error("--refresh-seconds must be 0 or between 300 and 86400")
     root = intake.resolve_root(args.root)
@@ -327,14 +359,15 @@ def main(argv: list[str] | None = None) -> int:
         inbox = args.inbox.expanduser().resolve()
         if not inbox.is_dir() or inbox == root or root in inbox.parents or inbox in root.parents:
             parser.error("--inbox must be an existing directory separate from the store")
-    desk = Desk(root, inbox, raster_python=args.raster_python, max_files=args.max_files)
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), handler(desk))
+    desk = Desk(root, inbox, raster_python=args.raster_python, max_files=args.max_files, review_bindings=args.review_package, read_only=args.read_only)
+    server = ThreadingHTTPServer(("127.0.0.1", args.port), handler(desk, port=args.port))
     stop_refresh = threading.Event()
     if args.refresh_seconds:
         desk.start({})
         threading.Thread(target=desk.refresh_periodically, args=(args.refresh_seconds, stop_refresh), daemon=True, name="kfm-intake-refresh").start()
-    print(f"KFM Intake Desk: {SELF_ORIGIN}/  (store {root}; Ctrl+C to stop)", flush=True)
-    print_connection_links(desk.token, "intake", ORIGINS)
+    self_origin = f"http://127.0.0.1:{args.port}"
+    print(f"KFM Intake Desk: {self_origin}/  (store {root}; Ctrl+C to stop)", flush=True)
+    print_connection_links(desk.token, "intake", SITE_ORIGINS | {self_origin})
     try:
         server.serve_forever()
     except KeyboardInterrupt:

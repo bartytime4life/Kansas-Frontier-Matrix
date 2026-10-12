@@ -27,6 +27,14 @@ and is not a provider quota. Keep actual GitHub file/push/LFS limits separate.
 For workstation inventory and explicit, verified copy plans, see
 [Projects consolidation](../../docs/runbooks/kfm-projects-consolidation.md).
 
+The same operator can run a parallel read-only private review desk with
+`--read-only --port 8772 --review-package WORK_MANIFEST@SHA256`. Its pinned
+WORK-package reader offers searchable map-document metadata, bounded text
+previews and PNG page images without walking the store or changing lifecycle
+state. Only the desk's authenticated local client may use those review routes;
+they are not Explorer or public data endpoints. See the
+[private review procedure](../../docs/runbooks/kfm-projects-consolidation.md#inspect-prepared-work-packages).
+
 > **Water pilot addition — 2026-09-30:** `water_pilot.py` captures/replays bounded
 > USGS v1 data into quarantine and WORK; `water_job.py` prepares hourly candidates.
 > Both preserve review/release holds. `doctor.py --water-runtime` inspects dependencies

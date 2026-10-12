@@ -123,12 +123,15 @@ function fillSelect(select, values, blank) {
 function renderJob(status) {
   const job = status.job;
   state.running = job.state === "running";
-  $("analyze").disabled = state.running;
+  $("analyze").disabled = state.running || status.analysisAllowed === false;
+  $("analyze").hidden = status.analysisAllowed === false;
   $("cancel").hidden = !state.running;
-  $("include-inbox").disabled = !status.inboxConfigured;
+  $("include-inbox").disabled = !status.inboxConfigured || status.analysisAllowed === false;
+  $("include-inbox").parentElement.hidden = status.analysisAllowed === false;
   $("include-inbox").parentElement.title = status.inboxConfigured ? "" : "Start the service with --inbox to analyze downloads";
   const counts = `${job.discovered} found · ${job.analyzed} analyzed · ${job.reused} unchanged${job.failed ? ` · ${job.failed} failed` : ""}`;
   $("job").textContent = state.running ? `Analyzing… ${counts}` : job.state === "idle" ? "" : `Last run ${job.state}: ${counts}${job.error ? ` (${job.error})` : ""}`;
+  if (status.analysisAllowed === false) $("job").textContent = "Private review · analysis is disabled";
 }
 async function poll() {
   try {
@@ -396,5 +399,16 @@ $("analyze").addEventListener("click", async () => {
 });
 $("cancel").addEventListener("click", () => api("/api/cancel", {}).catch((error) => toast(error.message)));
 setupBrush();
-refresh();
-poll();
+async function boot() {
+  try {
+    const status = await api("/api/status");
+    renderJob(status);
+    if (status.analysisAllowed === false) {
+      for (const id of ["indexing-summary", "indexing-workspace", "indexing-release-plan"]) $(id).hidden = true;
+      $("desk-subtitle").textContent = "Inspect selected local collections, their source evidence and pending review.";
+      return;
+    }
+    refresh(); poll();
+  } catch (error) { $("job").textContent = `Service unavailable (${error.message})`; }
+}
+boot();
