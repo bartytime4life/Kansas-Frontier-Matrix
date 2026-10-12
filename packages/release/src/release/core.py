@@ -29,6 +29,24 @@ def _thirty_day_interval(start: str, end: str) -> bool:
     return (date.fromisoformat(end) - date.fromisoformat(start)).days == 29
 
 
+def _calendar_year_interval(start: str, end: str) -> bool:
+    if not all(isinstance(v, str) and len(v) == 10 for v in (start, end)):
+        return False
+    first, last = date.fromisoformat(start), date.fromisoformat(end)
+    return (first.month, first.day, last.month, last.day) == (1, 1, 12, 31) and first.year == last.year
+
+
+def _data_year_window(candidate: dict) -> tuple:
+    year = candidate.get("data_year")
+    if type(year) is not int or not 1 <= year <= 9999:
+        return None, None
+    return f"{year:04d}-01-01", f"{year:04d}-12-31"
+
+
+# A month bundle holds its dataset ref plus at most this many records (resolver cap 128).
+MONTH_PART_SIZE = 127
+
+
 @dataclass(frozen=True)
 class SnapshotProfile:
     """What a snapshot family fixes. The caller names the expected profile; it is
@@ -44,6 +62,30 @@ class SnapshotProfile:
     series_field: str | None = None
     series_values: tuple = ()  # integers
     series_label: str = ""
+    # "station" profiles bundle evidence per station (and series). "month" profiles have no
+    # stations: records are bundled by the month of ``month_field`` and split into numbered
+    # parts of MONTH_PART_SIZE, and ``window`` derives the manifest interval from the candidate.
+    grouping: str = "station"
+    month_field: str = ""
+    member_kind: str = "measurement"
+    window: Callable[[dict], tuple] | None = None
+
+    def candidate_window(self, candidate: dict) -> tuple:
+        if self.window is not None:
+            return self.window(candidate)
+        return candidate.get("start"), candidate.get("end")
+
+    def month_groups(self, observations: list) -> list[tuple]:
+        """(month, part, records) for every month that has records, in month and part order."""
+        groups = []
+        for month in range(1, 13):
+            records = [r for r in observations if r[self.month_field][5:7] == f"{month:02d}"]
+            for first in range(0, len(records), MONTH_PART_SIZE):
+                groups.append((month, first // MONTH_PART_SIZE + 1, records[first:first + MONTH_PART_SIZE]))
+        return groups
+
+    def month_ref(self, start: str, month: int, part: int, candidate_id: str) -> str:
+        return self.evidence_prefix + f"{start[:4]}-{month:02d}/part-{part}/" + candidate_id.split(":")[1]
 
     def evidence_keys(self) -> list[tuple]:
         """(station_id, series) for every evidence entry the profile requires; series is None without series."""
@@ -69,6 +111,14 @@ WEATHER = SnapshotProfile("kfm.weather-snapshot/v1", "noaa-ghcnd",
 SOIL = SnapshotProfile("kfm.soil-snapshot/v1", "noaa-uscrn", frozenset({"03067", "53974"}),
                        "kfm://soil/station/", 600, _thirty_day_interval,
                        series_field="depth_cm", series_values=(5, 10, 20, 50, 100), series_label="depth-{}cm")
+# NOAA Storm Events Kansas pilot: one data year of event records, no stations; one
+# evidence bundle per month with events, split into parts of 127 records. 5000
+# events package to about 7.4 MiB, inside MAX_PACKAGE_BYTES; a larger year is
+# refused here rather than at the byte limit.
+STORM_EVENTS = SnapshotProfile("kfm.storm-events-snapshot/v1", "noaa-storm-events", frozenset(),
+                               "kfm://hazards/storm-events/", 5000, _calendar_year_interval,
+                               grouping="month", month_field="begin_local", member_kind="record",
+                               window=_data_year_window)
 
 
 def prepare_snapshot(candidate: dict, catalog: dict, evidence: dict, validation: dict, *, rollback_target=None,
@@ -77,8 +127,9 @@ def prepare_snapshot(candidate: dict, catalog: dict, evidence: dict, validation:
         raise ValueError("INVALID_ROLLBACK_TARGET")
     values = dict(zip(ARTIFACTS, (candidate, catalog, evidence, validation)))
     artifacts = {name: canonical_bytes(value).decode("utf-8") for name, value in values.items()}
+    start, end = profile.candidate_window(candidate)
     manifest = {"profile": profile.profile, "candidate_id": candidate["candidate_id"],
-                "source_id": profile.source_id, "start": candidate["start"], "end": candidate["end"],
+                "source_id": profile.source_id, "start": start, "end": end,
                 "created_at": candidate["retrieved_at"], "artifacts": {name: digest_bytes(text.encode()) for name, text in artifacts.items()},
                 "review_requirements": REVIEW_REQUIREMENTS, "rollback_target": rollback_target}
     manifest["package_id"] = compute_spec_hash(manifest)
@@ -122,7 +173,7 @@ def validate_snapshot(raw: bytes, profile: SnapshotProfile = WATER) -> tuple[dic
     if any(item.get("candidate_id") != manifest["candidate_id"] for item in (candidate, catalog, evidence, validation)):
         raise ValueError("CANDIDATE_BINDING_MISMATCH")
     if (digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"})) != manifest["candidate_id"]
-            or candidate.get("start") != manifest["start"] or candidate.get("end") != manifest["end"]
+            or profile.candidate_window(candidate) != (manifest["start"], manifest["end"])
             or candidate.get("retrieved_at") != manifest["created_at"]):
         raise ValueError("CANDIDATE_IDENTITY_MISMATCH")
     if (validation.get("outcome") != "PASS"
@@ -133,6 +184,9 @@ def validate_snapshot(raw: bytes, profile: SnapshotProfile = WATER) -> tuple[dic
         raise ValueError("CARRIER_CANNOT_SELF_APPROVE")
     if not isinstance(candidate.get("observations"), list) or len(candidate["observations"]) > profile.max_observations:
         raise ValueError("OBSERVATION_LIMIT")
+    if profile.grouping == "month":
+        _check_month_evidence(profile, manifest, candidate, evidence, validation)
+        return manifest, values
     if not isinstance(evidence.get("entries"), list) or len(evidence["entries"]) != len(profile.evidence_keys()):
         raise ValueError("EVIDENCE_CLOSURE_INVALID")
     if {e["station_id"] for e in evidence["entries"]} != {s["id"] for s in candidate["stations"]}:
@@ -164,3 +218,31 @@ def validate_snapshot(raw: bytes, profile: SnapshotProfile = WATER) -> tuple[dic
         if entry["verification_history"]["subject_ref"] != expected_ref:
             raise ValueError("HISTORY_SUBJECT_MISMATCH")
     return manifest, values
+
+
+def _check_month_evidence(profile: SnapshotProfile, manifest: dict, candidate: dict, evidence: dict, validation: dict) -> None:
+    """Evidence must be exactly one bundle per (month, part) the candidate's records produce, in order."""
+    try:
+        groups = profile.month_groups(candidate["observations"])
+    except (KeyError, TypeError):
+        raise ValueError("OBSERVATION_SHAPE_INVALID") from None
+    entries = evidence.get("entries")
+    if not groups or not isinstance(entries, list) or len(entries) != len(groups):
+        raise ValueError("EVIDENCE_CLOSURE_INVALID")
+    for entry, (month, part, records) in zip(entries, groups):
+        if type(entry.get("month")) is not int or type(entry.get("part")) is not int or (entry["month"], entry["part"]) != (month, part):
+            raise ValueError("SERIES_EVIDENCE_MISMATCH")
+        bundle = entry["bundle"]
+        ref = entry["evidence_ref"]
+        expected_ref = profile.month_ref(manifest["start"], month, part, candidate["candidate_id"])
+        if ref != {"ref": expected_ref, "kind": "dataset", "bundle_ref": bundle["bundle_id"]}:
+            raise ValueError("DATASET_EVIDENCE_MISMATCH")
+        members = [ref] + [{"ref": r["evidence_ref"], "kind": profile.member_kind, "bundle_ref": bundle["bundle_id"]} for r in records]
+        if bundle["evidence_refs"] != members or len(members) > 128:
+            raise ValueError("MEASUREMENT_EVIDENCE_MISMATCH")
+        if bundle["checksums"] != {"candidate": candidate["candidate_id"], "validation": validation["receipt_digest"]}:
+            raise ValueError("BUNDLE_CONTENT_BINDING_MISMATCH")
+        if bundle["source_records"] != sorted({r["page_digest"] for r in records}):
+            raise ValueError("SOURCE_RECORD_BINDING_MISMATCH")
+        if entry["verification_history"]["subject_ref"] != expected_ref:
+            raise ValueError("HISTORY_SUBJECT_MISMATCH")
