@@ -147,9 +147,9 @@ def hosted_active(site_url: str, *, opener=None) -> str | None:
 def stage_hosted(root: Path, package_id: str, site_url: str, *, opener=None) -> dict:
     """Upload a prepared weather package to the Site's staging route; activation stays owner-only there."""
     netloc = _site_origin(site_url)
+    # The same checks as decide: carrier, domain revalidation, the stored capture and a reproducible package.
+    _snapshot(root, package_id)
     raw = read_regular(root / SNAPSHOTS / _short(package_id, "PACKAGE_ID_INVALID") / "snapshot.json", MAX_SNAPSHOT_BYTES)
-    if validate_snapshot(raw, profile=WEATHER)[0]["package_id"] != package_id:
-        raise ValueError("PACKAGE_PATH_ID_MISMATCH")
     body = _site_call(netloc, "stage", data=raw, opener=opener, admin="weather-admin")
     if body.get("package_id") != package_id or body.get("state") != "STAGED" or body.get("activated") is not False:
         raise ValueError("HOSTED_STAGING_UNEXPECTED_RESPONSE")
