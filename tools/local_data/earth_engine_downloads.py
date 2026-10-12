@@ -25,6 +25,7 @@ from tools.local_data.candidate_capture import create_candidate, write_candidate
 from tools.local_data.file_io import check_directory, read_regular, hash_regular, write_new
 from tools.local_data.manage import utc_now
 from tools.local_data.earth_engine_auth import SignIn, credentials as ee_credentials
+from tools.local_data.loopback_session import session_matches, print_connection_links
 from tools.local_data.library import LocalLibrary
 from tools.local_data.public_map_downloads import PublicMapDownloads
 
@@ -185,13 +186,14 @@ def handler(manager):
                 self.send_response(200);self.send_header("Content-Type","text/html; charset=utf-8");self.send_header("Content-Length",str(len(body)));self.send_header("Cache-Control","no-store");self.send_header("Referrer-Policy","no-referrer");self.send_header("Content-Security-Policy","default-src 'none'; frame-ancestors 'none'");self.end_headers();self.wfile.write(body)
                 return
             if not self.authorized(): return self.answer(403,{"error":"ORIGIN_REJECTED"})
+            if not session_matches(self.headers,manager.token): return self.answer(403,{"error":"SESSION_REJECTED"})
             if self.path=="/public-maps/catalog": return self.answer(200,manager.public_maps.catalog())
             if self.path=="/public-maps/status": return self.answer(200,{**manager.public_maps.health(),"sessionToken":manager.token})
             if self.path=="/library": return self.answer(200,manager.library.snapshot(start=True))
             if self.path!="/status": return self.answer(404,{"error":"NOT_FOUND"})
             self.answer(200,manager.health())
         def do_POST(self):
-            if not self.authorized() or not secrets.compare_digest(self.headers.get("X-KFM-Session",""),manager.token): return self.answer(403,{"error":"SESSION_REJECTED"})
+            if not self.authorized() or not session_matches(self.headers,manager.token): return self.answer(403,{"error":"SESSION_REJECTED"})
             if self.headers.get("Content-Type")!="application/json" or self.headers.get("Transfer-Encoding"): return self.answer(415,{"error":"JSON_REQUIRED"})
             try:
                 length=int(self.headers.get("Content-Length","0"))
@@ -255,6 +257,7 @@ def main():
     else:
         server=ThreadingHTTPServer(("127.0.0.1",PORT),handler(manager))
         print(f"KFM Earth Engine download control: 127.0.0.1:{PORT}",flush=True)
+        print_connection_links(manager.token,"downloads",ORIGINS)
         try: server.serve_forever()
         finally: manager.cancel_event.set();manager.public_maps.close();server.server_close()
 

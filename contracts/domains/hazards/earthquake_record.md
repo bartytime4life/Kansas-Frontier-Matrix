@@ -18,6 +18,8 @@ related:
   - ../../../connectors/usgs/src/usgs/earthquake_capture.py
   - ../../../pipelines/domains/hazards/earthquake_normalize.py
   - ../../../pipelines/domains/hazards/earthquake_validate.py
+  - ../../../pipelines/domains/hazards/earthquake_package.py
+  - ../../../docs/adr/ADR-0049-owner-self-release-for-admitted-public-earthquake-data.md
 notes:
   - "Closed v1 record for the USGS ComCat Kansas earthquake pilot."
 [/KFM_META_BLOCK_V2] -->
@@ -84,9 +86,21 @@ occurred.
 
 A record is a review candidate. It carries no source admission, review,
 release or publication authority. The source descriptor
-`data/registry/sources/hazards/usgs.earthquakes.yaml` is proposed
-(`needs_review`); `pipelines/domains/hazards/earthquake_admission.py` refuses
-it until the repository owner admits it.
+`data/registry/sources/hazards/usgs.earthquakes.yaml` was admitted by the
+repository owner on 2026-10-12; releasing a package still requires a
+`kfm.earthquake-release-decision/v1` record that passes the earthquake serving
+gate
+([ADR-0049](../../../docs/adr/ADR-0049-owner-self-release-for-admitted-public-earthquake-data.md)).
+
+`pipelines/domains/hazards/earthquake_package.py` packages a candidate under
+the `kfm.earthquake-snapshot/v1` profile. The manifest interval is the data
+year (`YYYY-01-01` to `YYYY-12-31`). Evidence is one bundle per UTC origin
+month that has events, split into numbered parts of 127 records so each
+bundle stays inside the resolver's 128-member limit; records are `record`
+members. A year with more than 6000 events is refused (`OBSERVATION_LIMIT`);
+6000 events of typical size package to about 7 MiB, and a package whose texts
+push it past the 8 MiB limit is refused (`JSON_BYTE_LIMIT`). A year with no
+events has nothing to package (`NO_EVENTS_TO_PACKAGE`).
 
 ## Validation
 

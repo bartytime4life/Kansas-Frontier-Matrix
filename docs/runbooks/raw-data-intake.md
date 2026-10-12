@@ -180,8 +180,8 @@ All commands print JSON. Errors go to standard error as
 
 | Method and path | Purpose |
 |---|---|
-| `GET /` | The Intake Desk (session token embedded; strict CSP; no external resources) |
-| `GET /api/status` | Job state; adds `sessionToken` only for allowlisted Explorer origins |
+| `GET /` | Public Intake Desk shell (no session token; strict CSP; no external resources) |
+| `GET /api/status` | Authenticated job state; adds `sessionToken` only for authenticated Explorer origins |
 | `GET /api/overview` | Totals by status, domain, format and lane; GitHub budget |
 | `GET /api/items?status=&lane=&domain=&family=&text=&bbox=&limit=&offset=` | Filtered list (max 500 per page) |
 | `GET /api/items/{id}` | Full profile, decision and applied actions |
@@ -261,3 +261,22 @@ on a native Windows host.
   declarations.
 - Staged WORK copies are review material. Normalization, PROCESSED outputs,
   catalog entries, release and map activation remain separate governed steps.
+
+### Private browser connection
+
+Each service start prints private connection links in its operator terminal.
+Open the link for the browser origin you use. The `kfm-downloads`, `kfm-intake`,
+or `kfm-basemap` URL fragment provisions that service's per-process capability;
+the browser removes the fragment and keeps it in memory and tab-scoped session
+storage. Fragments are not sent in HTTP requests. Open each service's link in
+the same Explorer tab to connect multiple companions, and open the Intake Desk
+link separately for its standalone UI. After a service restart, open its new
+link. A bare URL does not provision authority.
+
+Every private API GET and POST requires `X-KFM-Session`, including status and
+catalog reads. The Intake Desk HTML/CSS/JS shell is public and contains no
+capability. Host, Origin, CORS and PNA checks remain browser protections; they
+do not identify an OS user. Keep terminal output and connection links private.
+The capability does not isolate the service from code that can read the owner's
+terminal or browser state. Earth Engine OAuth callbacks continue to use their
+separate expiring, single-use state and PKCE checks.

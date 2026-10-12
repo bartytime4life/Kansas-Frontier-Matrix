@@ -7,7 +7,9 @@ strings, and JSON documents embedded in string values. A location is precise
 when either axis literal carries more decimal places than the coarse synthetic
 fixtures in this repository use. A precise location passes only when an
 enclosing record explicitly declares it non-public and no enclosing record
-declares it public.
+declares it public. Hydrology fixtures keep a narrow exception: a precise
+location passes when an enclosing record declares ``sensitivity`` as
+``PUBLIC_SAFE`` or ``knowledge_character`` as ``SYNTHETIC_TEST``.
 
 Expected-negative fixture lanes (``invalid``, ``*_invalid``, ``negative``,
 ``deny`` and similar) are skipped because they deliberately carry defects.
@@ -48,6 +50,15 @@ LAT_LON_KEY_PAIRS = (
 )
 EXPOSURE_KEYS = frozenset({"coordinate_exposure", "geometry_exposure"})
 NON_PUBLIC_EXPOSURE_VALUES = frozenset({"RESTRICTED", "STEWARD_ONLY", "WITHHELD"})
+
+# Synthetic baseline hydrology fixtures may carry precise geometry when they
+# declare one of these exact values. The exception applies only inside a
+# domains/hydrology fixture lane.
+HYDROLOGY_LANE = ("domains", "hydrology")
+HYDROLOGY_EXCEPTION_VALUES = {
+    "sensitivity": "PUBLIC_SAFE",
+    "knowledge_character": "SYNTHETIC_TEST",
+}
 
 WKT_VALUE = re.compile(
     r"^\s*(?:SRID=\d+\s*;\s*)?(?:POINT|LINESTRING|POLYGON|MULTIPOINT|"
@@ -91,11 +102,13 @@ class Finding:
 class _Posture:
     non_public: bool = False
     public: bool = False
+    hydrology_exception: bool = False
 
     def merge(self, other: _Posture) -> _Posture:
         return _Posture(
             non_public=self.non_public or other.non_public,
             public=self.public or other.public,
+            hydrology_exception=self.hydrology_exception or other.hydrology_exception,
         )
 
 
@@ -165,6 +178,8 @@ def _own_posture(record: dict) -> _Posture:
                 posture = posture.merge(_Posture(non_public=True))
             elif exposure.startswith("PUBLIC"):
                 posture = posture.merge(_Posture(public=True))
+        if HYDROLOGY_EXCEPTION_VALUES.get(key) == value:
+            posture = posture.merge(_Posture(hydrology_exception=True))
     return posture
 
 
@@ -248,9 +263,15 @@ def _scan(
                 yield from _scan(embedded, path, posture, embedded_depth + 1)
 
 
-def validate_document(document: object, file: str = "<memory>") -> list[Finding]:
+def validate_document(
+    document: object,
+    file: str = "<memory>",
+    hydrology_lane: bool = False,
+) -> list[Finding]:
     findings: set[Finding] = set()
     for path, posture in _scan(document, "$", _Posture(), 0):
+        if hydrology_lane and posture.hydrology_exception:
+            continue
         if posture.public:
             findings.add(Finding(file, "PRECISE_GEOMETRY_DECLARED_PUBLIC", path))
         elif not posture.non_public:
@@ -267,13 +288,21 @@ def _repo_relative(path: Path) -> str | None:
         return None
 
 
+def _in_hydrology_lane(path: Path) -> bool:
+    parts = path.parts[:-1]
+    return any(
+        parts[index : index + len(HYDROLOGY_LANE)] == HYDROLOGY_LANE
+        for index in range(len(parts))
+    )
+
+
 def validate_file(path: Path) -> list[Finding]:
     file = _repo_relative(path) or path.as_posix()
     try:
         if path.stat().st_size > MAX_FIXTURE_BYTES:
             return [Finding(file, "FIXTURE_TOO_LARGE", "$")]
         document = _loads(path.read_text(encoding="utf-8"))
-        return validate_document(document, file)
+        return validate_document(document, file, _in_hydrology_lane(Path(file)))
     except (OSError, UnicodeError, ValueError, InvalidOperation, RecursionError):
         return [Finding(file, "FIXTURE_JSON_INVALID", "$")]
 

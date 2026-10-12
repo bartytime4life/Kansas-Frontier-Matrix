@@ -293,6 +293,7 @@ python tools/validators/sensitive_geometry/validate_public_fixture_geometry.py p
 | Locations detected | GeoJSON `coordinates` and `bbox` arrays, latitude/longitude field pairs (including Darwin Core `decimalLatitude`/`decimalLongitude`), WKT strings, and JSON documents embedded in string values. |
 | Precise | An axis literal carries more decimal places than the precision floor defined in the validator module. Coarse synthetic coordinates pass. |
 | Passes | A precise location whose enclosing record (or that record's `governance` object) declares `public_use_allowed: false` or an `INTERNAL*`, `RESTRICTED`, `STEWARD_ONLY`, or `WITHHELD` `coordinate_exposure`/`geometry_exposure`. |
+| Hydrology exception | Inside a `domains/hydrology` fixture lane, a precise location also passes when an enclosing record declares `sensitivity: "PUBLIC_SAFE"` or `knowledge_character: "SYNTHETIC_TEST"` (exact string values), for synthetic baseline hydrology fixtures. |
 | `PRECISE_GEOMETRY_WITHOUT_NON_PUBLIC_DECLARATION` | A precise location has no enclosing non-public declaration. |
 | `PRECISE_GEOMETRY_DECLARED_PUBLIC` | An enclosing record declares `public_use_allowed: true` or a `PUBLIC*` exposure, even if another record declares non-public. |
 | `FIXTURE_JSON_INVALID` / `FIXTURE_TOO_LARGE` | A positive fixture cannot be decoded safely. |
@@ -357,3 +358,4 @@ Future implementation is not complete until:
 |---|---|---|
 | 2026-07-08 | Replaced empty placeholder with sensitive-geometry validator parent README. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
 | 2026-10-12 | Added `validate_public_fixture_geometry.py`, its tests, and CI workflow. | **CONFIRMED validator** |
+| 2026-10-12 | Restored the synthetic hydrology fixture exception. | **CONFIRMED validator** |

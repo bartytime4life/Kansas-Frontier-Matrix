@@ -207,6 +207,41 @@ class PublicFixtureGeometryFileTests(unittest.TestCase):
             },
         )
 
+    def test_hydrology_exception_requires_lane_and_declaration(self):
+        public_safe = {"sensitivity": "PUBLIC_SAFE", "geometry": PRECISE_POINT}
+        synthetic = {
+            "knowledge_character": "SYNTHETIC_TEST",
+            "public_use_allowed": True,
+            "features": [{"geometry": PRECISE_POINT}],
+        }
+        self._write("fixtures/domains/hydrology/baseline/public_safe.json", public_safe)
+        self._write("fixtures/domains/hydrology/baseline/synthetic.json", synthetic)
+        self._write(
+            "fixtures/domains/hydrology/baseline/undeclared.json",
+            {"geometry": PRECISE_POINT},
+        )
+        self._write(
+            "fixtures/domains/hydrology/baseline/nested_object.json",
+            {"sensitivity": {"state": "PUBLIC_SAFE"}, "geometry": PRECISE_POINT},
+        )
+        self._write(
+            "fixtures/domains/hydrology/baseline/sibling.json",
+            {"records": [{"sensitivity": "PUBLIC_SAFE"}, {"geometry": PRECISE_POINT}]},
+        )
+        self._write("fixtures/domains/flora/baseline/public_safe.json", public_safe)
+        self._write("fixtures/hydrology/baseline/public_safe.json", public_safe)
+        _, findings = self._validate()
+        self.assertEqual(
+            {finding.file for finding in findings},
+            {
+                "fixtures/domains/hydrology/baseline/undeclared.json",
+                "fixtures/domains/hydrology/baseline/nested_object.json",
+                "fixtures/domains/hydrology/baseline/sibling.json",
+                "fixtures/domains/flora/baseline/public_safe.json",
+                "fixtures/hydrology/baseline/public_safe.json",
+            },
+        )
+
     def test_exemption_suppresses_only_its_own_file(self):
         exempt = "fixtures/source/input/native.json"
         self._write(exempt, {"decimalLatitude": 38.123456, "decimalLongitude": -98.1})
