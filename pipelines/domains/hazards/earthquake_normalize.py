@@ -25,6 +25,8 @@ from connectors.usgs.src.usgs.earthquake_capture import (
 CANDIDATE_PROFILE = "kfm.earthquake-candidate/v1"
 RECORD_PROFILE = "kfm.earthquake-record/v1"
 DIGEST = re.compile(r"sha256:[a-f0-9]{64}\Z")
+# The UTC instant form the capture clock and fetcher emit: seconds, optional fraction, "Z".
+UTC_INSTANT = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{1,6})?Z\Z")
 WITHHELD = ("STATUS_DELETED",)
 FLAGS = ("MAGNITUDE_ABSENT", "DEPTH_ABSENT", "REVIEW_AUTOMATIC", "REVIEW_STATUS_UNKNOWN", "CONTEXT_MARGIN")
 # Coarse Kansas rectangle (west, south, east, north): 102°03'W, 37°N, 94°35'W, 40°N. Outside it the
@@ -155,10 +157,13 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes]) -> dict:
         boundary = (datetime.fromisoformat(plan.end_exclusive.replace("Z", "+00:00"))
                     - earthquake.EPOCH) // timedelta(milliseconds=1)
         # The FDSN query includes both endpoints; anything returned but not owned must be the next month's
-        # boundary event. Any other event outside the window, envelope or type is upstream drift.
+        # boundary event, inside the envelope. Any other event outside the window, envelope or type is drift.
+        west, south, east, north = BOUNDS
         owned_ids = {event.event_id for event in owned}
         for event in snapshot.events:
-            if event.event_id not in owned_ids and (event.event_type != "earthquake" or event.origin_ms != boundary):
+            if event.event_id not in owned_ids and (
+                    event.event_type != "earthquake" or event.origin_ms != boundary
+                    or not (west <= event.longitude <= east and south <= event.latitude <= north)):
                 raise ValueError("WINDOW_SCOPE_MISMATCH")
         kept = 0
         for event in owned:

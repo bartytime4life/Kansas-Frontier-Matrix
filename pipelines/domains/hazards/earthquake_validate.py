@@ -7,7 +7,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from connectors_core.captured_json import canonical_bytes, digest_bytes
 from connectors.usgs.src.usgs.earthquake_capture import BOUNDS, SOURCE_ID, data_year
 from pipelines.domains.hazards.earthquake_normalize import (
-    CANDIDATE_PROFILE, DIGEST, MAX_EVENTS, WITHHELD, expected_flags, identity, number, year_state,
+    CANDIDATE_PROFILE, DIGEST, MAX_EVENTS, UTC_INSTANT, WITHHELD, expected_flags, identity, number, year_state,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -32,9 +32,12 @@ def validate_candidate(candidate: dict) -> dict:
     expected = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
     if expected != candidate["candidate_id"]:
         raise ValueError("CANDIDATE_DIGEST_MISMATCH")
+    # A UTC instant, never a date or a zone-free time, so year_state and record ordering compare instants.
     try:
         year = data_year(candidate["data_year"])
-        retrieved = datetime.fromisoformat(str(candidate["retrieved_at"]).replace("Z", "+00:00"))
+        if not isinstance(candidate["retrieved_at"], str) or not UTC_INSTANT.fullmatch(candidate["retrieved_at"]):
+            raise ValueError
+        retrieved = datetime.fromisoformat(candidate["retrieved_at"].replace("Z", "+00:00"))
     except ValueError:
         raise ValueError("CANDIDATE_TIME_INVALID") from None
     if retrieved.year < year or candidate["year_state"] != year_state(year, candidate["retrieved_at"]):
@@ -70,7 +73,8 @@ def validate_candidate(candidate: dict) -> dict:
                 datetime.fromisoformat(record["updated_utc"].replace("Z", "+00:00"))
         except ValueError:
             raise ValueError("RECORD_TIME_INVALID") from None
-        if origin.year != year or record["retrieved_at"] > candidate["retrieved_at"]:
+        if (origin.year != year or not UTC_INSTANT.fullmatch(record["retrieved_at"])
+                or record["retrieved_at"] > candidate["retrieved_at"]):
             raise ValueError("RECORD_TIME_INVALID")
         per_month[origin.month - 1] += 1
         if any(number(record[field]) != record[field] or type(number(record[field])) is not type(record[field])

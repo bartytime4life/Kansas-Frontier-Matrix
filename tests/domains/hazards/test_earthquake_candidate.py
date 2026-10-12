@@ -161,6 +161,9 @@ def test_upstream_drift_truncation_and_conflicts_fail_closed():
         candidate(in_month("2025-05", lambda d: (d["features"][0]["properties"].update(type="quarry blast"), d)[1]))
     with pytest.raises(ValueError, match="WINDOW_SCOPE_MISMATCH"):
         candidate(in_month("2025-05", lambda d: (d["features"][0]["geometry"].update(coordinates=[-93.0, 39.0, 5]), d)[1]))
+    # A boundary event is exempt only inside the envelope.
+    with pytest.raises(ValueError, match="WINDOW_SCOPE_MISMATCH"):
+        candidate(in_month("2025-01", lambda d: (d["features"][1]["geometry"].update(coordinates=[-93.0, 37.05, 6.2]), d)[1]))
     # One alias naming events in two months.
     with pytest.raises(ValueError, match="IDENTITY_CONFLICT"):
         candidate(in_month("2025-05", lambda d: (d["features"][0]["properties"].update(ids=",us7000p004,ok2025a001,"), d)[1]))
@@ -202,6 +205,9 @@ def test_validation_refuses_forged_records_and_authority():
         (lambda c: c.update(coverage="COMPLETE"), "CANDIDATE_AUTHORITY_OR_PROFILE_INVALID"),
         (lambda c: c.update(bounds=[-102.0, 37.0, -94.6, 40.0]), "CANDIDATE_AUTHORITY_OR_PROFILE_INVALID"),
         (lambda c: c.update(year_state="CLOSED"), "CANDIDATE_TIME_INVALID"),
+        (lambda c: c.update(retrieved_at="2025-12-31"), "CANDIDATE_TIME_INVALID"),
+        (lambda c: c.update(retrieved_at="2025-11-01T12:00:00"), "CANDIDATE_TIME_INVALID"),
+        (lambda c: c.update(retrieved_at="2025-11-01T06:00:00-06:00"), "CANDIDATE_TIME_INVALID"),
         (lambda c: c.update(withheld_counts={}), "WITHHELD_COUNTS_INVALID"),
         (lambda c: c.update(withheld_counts={"STATUS_DELETED": -1}), "WITHHELD_COUNTS_INVALID"),
         (lambda c: c.update(latest_event_date="2025-12-31"), "LATEST_EVENT_DATE_MISMATCH"),
@@ -226,6 +232,7 @@ def test_validation_refuses_forged_records_and_authority():
         (0, "depth_km", 5.0, "RECORD_NUMBER_NOT_CANONICAL"),
         (0, "latitude", 37.27412, "RECORD_NUMBER_NOT_CANONICAL"),
         (0, "review_status", "deleted", "RECORD_STATUS_WITHHELD"),
+        (0, "retrieved_at", "2025-11-01T06:00:00-06:00", "RECORD_TIME_INVALID"),
     ]:
         forged = deepcopy(base)
         forged["observations"][index][field] = value
