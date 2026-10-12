@@ -37,7 +37,7 @@
       "state": "identical"
     },
     "README.md": {
-      "mirror_sha256": "999183b51879922c7fb0991c0322b52c392c2ac030fd643628ce1a58f31e4bcf",
+      "mirror_sha256": "c45afbb03484f39eb67e6bf55b1a28b7d3f970b976152b41f24b5a197625c6b3",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -3868,7 +3868,7 @@
       "state": "identical"
     },
     "scripts/build-qwen-knowledge-pack.mjs": {
-      "mirror_sha256": "3302e02a351488b5304ac7e44b6795d37c4280c26aa426c6781ee4dd8263d505",
+      "mirror_sha256": "51dc2ed44523bbe7f83cb44962ac8957bba5067714ca0d6d8686800c153e8df7",
       "site_sha256": "bfc2ab4cb9f5adc3ca00d80687544fa087c91d193f367f0f17109fa6df2ae694",
       "state": "inherited_repository_overlay"
     },
@@ -3933,7 +3933,7 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "mirror_sha256": "fc630186bfe5480b3605626136ba0d0bce26081321bd5c0e836fdc08c601881d",
+      "mirror_sha256": "30799c2ab3ae4e4f8b77f74cf1866a32e0f89cc5f526443143d1f210b3bc0b7e",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -3968,17 +3968,17 @@
       "state": "identical"
     },
     "scripts/qwen-knowledge-curated.mjs": {
-      "mirror_sha256": "427cf2dc195186ccdcc90d6a25092d46728381e2b57e7c106af936f68a1048bf",
+      "mirror_sha256": "68a5a35f4bb017b859733936f24dec3ec69394718a5b623ed82df949d3f872bd",
       "site_sha256": "9ba39698d40aa885d20dbbf9dbcb3a4f4a17c2ab974d352d127afdee003a7efb",
       "state": "inherited_repository_overlay"
     },
     "scripts/qwen-knowledge-pack.mjs": {
-      "mirror_sha256": "4ce87d56e063ccad2e3c44ef85c79eb6e5c1a8890992a3d100b07eef28880d2c",
+      "mirror_sha256": "a2dcb13d75ce4efd09e0ea50a7c5f10e7c60b8d987afbc55169b6ffd892a91cd",
       "site_sha256": "4e3615b8e8b76467675f044a12319cb459854ed5eb25fac070ddb6187a51de62",
       "state": "inherited_repository_overlay"
     },
     "scripts/qwen-knowledge.mjs": {
-      "mirror_sha256": "3ea9877bc9e9e6cf4ec28fdacfb29883c615bff6a11d53a058f4100892cec5ed",
+      "mirror_sha256": "da243d9d0d123a2c8597b10078ee4fdc8dc9589afa56202fdfdcbc96daedd730",
       "site_sha256": "6bbceb21118795be4d6d1f388af56f5b30349359d579196692a241e8a186b11d",
       "state": "inherited_repository_overlay"
     },
@@ -4783,7 +4783,7 @@
       "state": "identical"
     },
     "tests/qwen-knowledge.test.mjs": {
-      "mirror_sha256": "0e43455e856ecae9e5e1dcde5de47b60ae5e6d5f70c8331c342f7094fd0f101a",
+      "mirror_sha256": "79eee91d0be8e9a1d6cc1232704802908d0475acd387383d9631b9c59d0583a2",
       "site_sha256": "c89132d49cb0124507981e82348a179ab4502da1a2f788474a925ed6d0be5277",
       "state": "inherited_repository_overlay"
     },
@@ -5121,7 +5121,7 @@
   "destination": "apps/site/source",
   "followup_scope": "Record the tested local companion session changes in PR #5085 as repository overlays. No Site deployment, data admission, release, hosted equivalence, or human acceptance is asserted.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "4f0dd84d8be480f46adfc2f3be659e94879b3b70c6149892cc0a4122fa9db68f",
+  "inventory_sha256": "e79cc672d4dff49f301d29c9c1cd0066c96e8da7c90d579c5ab8c168dbf148fa",
   "overlay": {
     "changed_paths": [
       {
@@ -5241,7 +5241,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "999183b51879922c7fb0991c0322b52c392c2ac030fd643628ce1a58f31e4bcf",
+        "mirror_sha256": "c45afbb03484f39eb67e6bf55b1a28b7d3f970b976152b41f24b5a197625c6b3",
         "path": "README.md",
         "previous_mirror_sha256": "5ab25e2395496159306a869a01bb375e90f875e3d1ed0581a15173b7676c7e03",
         "previous_state": "inherited_repository_overlay",
@@ -5249,7 +5249,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "3302e02a351488b5304ac7e44b6795d37c4280c26aa426c6781ee4dd8263d505",
+        "mirror_sha256": "51dc2ed44523bbe7f83cb44962ac8957bba5067714ca0d6d8686800c153e8df7",
         "path": "scripts/build-qwen-knowledge-pack.mjs",
         "previous_mirror_sha256": "bfc2ab4cb9f5adc3ca00d80687544fa087c91d193f367f0f17109fa6df2ae694",
         "previous_state": "identical",
@@ -5257,7 +5257,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "fc630186bfe5480b3605626136ba0d0bce26081321bd5c0e836fdc08c601881d",
+        "mirror_sha256": "30799c2ab3ae4e4f8b77f74cf1866a32e0f89cc5f526443143d1f210b3bc0b7e",
         "path": "scripts/local-qwen-bridge.mjs",
         "previous_mirror_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
         "previous_state": "identical",
@@ -5265,7 +5265,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "427cf2dc195186ccdcc90d6a25092d46728381e2b57e7c106af936f68a1048bf",
+        "mirror_sha256": "68a5a35f4bb017b859733936f24dec3ec69394718a5b623ed82df949d3f872bd",
         "path": "scripts/qwen-knowledge-curated.mjs",
         "previous_mirror_sha256": "9ba39698d40aa885d20dbbf9dbcb3a4f4a17c2ab974d352d127afdee003a7efb",
         "previous_state": "identical",
@@ -5273,7 +5273,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "4ce87d56e063ccad2e3c44ef85c79eb6e5c1a8890992a3d100b07eef28880d2c",
+        "mirror_sha256": "a2dcb13d75ce4efd09e0ea50a7c5f10e7c60b8d987afbc55169b6ffd892a91cd",
         "path": "scripts/qwen-knowledge-pack.mjs",
         "previous_mirror_sha256": "4e3615b8e8b76467675f044a12319cb459854ed5eb25fac070ddb6187a51de62",
         "previous_state": "identical",
@@ -5281,7 +5281,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "3ea9877bc9e9e6cf4ec28fdacfb29883c615bff6a11d53a058f4100892cec5ed",
+        "mirror_sha256": "da243d9d0d123a2c8597b10078ee4fdc8dc9589afa56202fdfdcbc96daedd730",
         "path": "scripts/qwen-knowledge.mjs",
         "previous_mirror_sha256": "6bbceb21118795be4d6d1f388af56f5b30349359d579196692a241e8a186b11d",
         "previous_state": "identical",
@@ -5289,7 +5289,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "0e43455e856ecae9e5e1dcde5de47b60ae5e6d5f70c8331c342f7094fd0f101a",
+        "mirror_sha256": "79eee91d0be8e9a1d6cc1232704802908d0475acd387383d9631b9c59d0583a2",
         "path": "tests/qwen-knowledge.test.mjs",
         "previous_mirror_sha256": "c89132d49cb0124507981e82348a179ab4502da1a2f788474a925ed6d0be5277",
         "previous_state": "identical",

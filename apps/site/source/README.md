@@ -902,6 +902,8 @@ The model is grounded in metadata rather than raw data.
 organization, domain, cadence, freshness, `boundary` — what each source is
 *not* — and fallback), plus the curated `scripts/qwen-knowledge-curated.mjs`:
 KFM principles, a glossary of outcomes, evidence, release, and public states,
+source kinds, connection states, and the map-context fields the model reads,
+technical terms for each domain (sent only when that domain is relevant),
 six exploration ideas per domain, cross-domain ideas offered only when both of
 their domains are in view, and project ideas. For each question the bridge
 ranks sources by what is displayed and what was asked, sends full metadata for

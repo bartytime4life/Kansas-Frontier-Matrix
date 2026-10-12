@@ -76,8 +76,8 @@ const byteLength = (value) => Buffer.byteLength(JSON.stringify(value));
 /**
  * Trim the least specific sections first until the payload fits the byte
  * budget the bridge has left after the map context: the source index, then
- * basemap details, then project, cross-domain and domain ideas, then detailed
- * sources from the least relevant.
+ * basemap details, then project, cross-domain and domain ideas, then domain
+ * terms, then detailed sources from the least relevant.
  */
 function fitToBudget(payload, maxBytes) {
   if (!Number.isFinite(maxBytes) || byteLength(payload) <= maxBytes) return payload;
@@ -87,6 +87,7 @@ function fitToBudget(payload, maxBytes) {
     () => { fitted.projectIdeas = []; },
     () => { fitted.crossDomainIdeas = []; },
     () => { fitted.domainIdeas = []; },
+    () => { fitted.domainTerms = []; },
   ];
   for (const step of steps) {
     if (byteLength(fitted) <= maxBytes) return fitted;
@@ -126,6 +127,9 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
       : QWEN_KNOWLEDGE_PACK.displaySources.map((source) => `${source.title} · ${source.kind}`),
     domainIdeas: (ideaDomains.length ? ideaDomains : QWEN_KNOWLEDGE_PACK.domains.map((domain) => domain.name).slice(0, MAX_IDEA_DOMAINS))
       .map((name) => ({ domain: name, ideas: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.ideas ?? [] })),
+    domainTerms: ideaDomains
+      .map((name) => ({ domain: name, terms: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.terms ?? {} }))
+      .filter((entry) => Object.keys(entry.terms).length > 0),
     crossDomainIdeas: QWEN_KNOWLEDGE_PACK.crossDomainIdeas
       .filter((entry) => entry.domains.every((domain) => inView.has(domain)))
       .slice(0, MAX_CROSS_DOMAIN_IDEAS)

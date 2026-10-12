@@ -61,10 +61,14 @@ test("knowledge selection is bounded, indexes everything, and trims to the promp
   );
   assert.equal(full.payload.authority, "METADATA_NOT_EVIDENCE");
   assert.ok(full.payload.displaySources.every((source) => typeof source === "object"), "basemap questions get basemap boundaries");
-  assert.ok(Buffer.byteLength(JSON.stringify(full.payload)) < QWEN_LOCAL_INTERPRETATION_PROMPT_BUDGET_BYTES / 2);
+  // Even this adversarial view leaves 20 KiB for map context, about twice the real
+  // 48-source browser envelope; larger contexts are handled by the trimming below.
+  assert.ok(Buffer.byteLength(JSON.stringify(full.payload)) <= QWEN_LOCAL_INTERPRETATION_PROMPT_BUDGET_BYTES - 20 * 1024);
 
-  const tight = selectQwenKnowledge("basemap terrain aquifer bridges", everything, { maxBytes: 6_000 });
-  assert.ok(Buffer.byteLength(JSON.stringify(tight.payload)) <= 6_000);
+  // The smallest budget the bridge can pass is 44 KiB minus a 32 KiB maximum request.
+  const tight = selectQwenKnowledge("basemap terrain aquifer bridges", everything, { maxBytes: 8_000 });
+  assert.ok(Buffer.byteLength(JSON.stringify(tight.payload)) <= 8_000);
+  assert.deepEqual(tight.payload.domainTerms, [], "domain terms are trimmed before detailed sources");
   assert.deepEqual(tight.payload.principles, QWEN_KNOWLEDGE_PACK.principles, "principles are never trimmed");
   assert.deepEqual(tight.payload.glossary, QWEN_KNOWLEDGE_PACK.glossary, "the glossary is never trimmed");
   assert.deepEqual(tight.sourceIds, tight.payload.relevantSources.map((source) => source.id));
@@ -112,6 +116,36 @@ test("cross-domain ideas appear only when both of their domains are in view", ()
   const expected = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
     entry.domains.includes("Living waters") && entry.domains.includes("Aquifers & groundwater")).idea;
   assert.ok(riverAndAquifer.payload.crossDomainIdeas.includes(expected));
-  const trimmed = selectQwenKnowledge("What is visible?", view(["usgs-streamflow", "kgs-aquifer-alluvial"]), { maxBytes: 7_000 });
+  const trimmed = selectQwenKnowledge("What is visible?", view(["usgs-streamflow", "kgs-aquifer-alluvial"]), { maxBytes: 9_000 });
   assert.deepEqual(trimmed.payload.crossDomainIdeas, [], "cross-domain ideas are trimmed before domain ideas");
+});
+
+test("the glossary defines the context fields, states and kinds the model reads, plus terms for every domain", () => {
+  const { glossary } = QWEN_KNOWLEDGE_PACK;
+  const officialKinds = new Set(QWEN_KNOWLEDGE_PACK.officialSources.map((source) => source.kind));
+  const displayKinds = new Set(QWEN_KNOWLEDGE_PACK.displaySources.map((source) => source.kind));
+  for (const kind of [...officialKinds, ...displayKinds]) assert.ok(glossary.sourceKinds[kind], `source kind ${kind}`);
+  for (const state of ["idle", "loading", "ready", "empty", "partial", "error"]) assert.ok(glossary.connectionStates[state], state);
+  for (const field of ["officialSources.selected", "officialSources.displayed", "officialSources.retrievedAt", "camera.locationRedacted"]) {
+    assert.ok(glossary.contextFields[field], field);
+  }
+  for (const domain of QWEN_KNOWLEDGE_PACK.domains) {
+    assert.ok(Object.keys(domain.terms).length >= 3, `${domain.name} has domain terms`);
+  }
+  const definitions = [
+    ...Object.values(glossary).flatMap((section) => Object.values(section)),
+    ...QWEN_KNOWLEDGE_PACK.domains.flatMap((domain) => Object.values(domain.terms)),
+  ];
+  for (const definition of definitions) {
+    assert.ok(typeof definition === "string" && definition.length > 0 && definition.length <= 300, definition);
+    assert.equal(localQwenAnswerHasOverPreciseLocation(definition), false, definition);
+  }
+});
+
+test("domain terms follow the relevant domains and are trimmed before detailed sources", () => {
+  const view = (ids) => ({ officialSources: ids.map((id) => ({ id, displayed: true, selected: true })) });
+  const river = selectQwenKnowledge("What is the discharge at these gauges?", view(["usgs-streamflow"]));
+  assert.deepEqual(river.payload.domainTerms.map((entry) => entry.domain), ["Living waters"]);
+  assert.ok(river.payload.domainTerms[0].terms.Discharge);
+  assert.deepEqual(selectQwenKnowledge("What is visible?", view([])).payload.domainTerms, []);
 });
