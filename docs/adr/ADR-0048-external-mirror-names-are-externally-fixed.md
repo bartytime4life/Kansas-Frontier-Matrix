@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0048
 adr_id: ADR-0048
 title: "ADR-0048 — Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2"
 type: adr
-version: v2.2
+version: v2.3
 status: accepted
 effective_decision_status: accepted
 accepted_on: 2026-10-12
@@ -117,8 +117,8 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 
 ## 6. Validation
 
-- The topology validator raises on a malformed register, or one not bound to the adopted doctrine digest and to `ADR-0048`.
-- It relaxes nothing when this ADR is missing or its metadata no longer records `status` and `effective_decision_status` as accepted. It also relaxes nothing for an absent register, a `RETIRED` entry, or an untracked receipt or parity check.
+- The topology validator raises on a malformed register, or one not bound to the adopted doctrine digest.
+- It relaxes nothing when the register's `decision_ref` is not `ADR-0048`, or when this ADR is missing or its leading `KFM_META_BLOCK_V2` block no longer records `adr_id: ADR-0048` and `status` and `effective_decision_status` as accepted, each exactly once. Lines elsewhere in the file do not count. It also relaxes nothing for an absent register, a `RETIRED` entry, or an untracked receipt or parity check.
 - Within an entry, only receipt records in an upstream-backed state (`identical`, `inherited_repository_overlay`, `merged_water_overlay`) with a well-formed upstream digest qualify. Repository-only states never do.
 - The tests cover each of these cases, plus a live check that the register's `receipt_path` equals `site_mirror.py`'s pinned receipt.
 - The doctrine revision that adds the §4 text must re-pin every digest reference and keep the topology, root-registry, path-alias, domain-lane, cross-domain-seam and governance-parity checks green.
@@ -131,7 +131,7 @@ Supersede this ADR with a new accepted decision. Removing the exemption would th
 
 | ID | Question | Owner |
 |---|---|---|
-| OQ-ADR-0048-01 | **Resolved 2026-10-12 (owner):** mirrors are listed in `control_plane/external_mirror_register.yaml`, which the topology validator reads. The topology run context (v3) also records the register as an indexed governance input, under successor authoring receipt `genrec-topology-mirror-register-context-20261012`. | Directory governance steward |
+| OQ-ADR-0048-01 | **Resolved 2026-10-12 (owner):** mirrors are listed in `control_plane/external_mirror_register.yaml`, which the topology validator reads. The topology run context records the register (v3) and this ADR (v4) as indexed governance inputs; the current successor authoring receipt is `genrec-topology-mirror-decision-context-20261012`. | Directory governance steward |
 | OQ-ADR-0048-02 | Which other pending Directory Rules edits should share the §13.2 revision, to pay the re-pin cost once? | Directory governance steward |
 
 ## 9. Change history
@@ -141,7 +141,8 @@ Supersede this ADR with a new accepted decision. Removing the exemption would th
 | v1.0 | 2026-10-12 | Proposed (owner-requested) after #5060 and the apps/ root naming decision. |
 | v1.1 | 2026-10-12 | OQ-ADR-0048-01 resolved: the mirror is listed in `control_plane/external_mirror_register.yaml`. |
 | v2.1 | 2026-10-12 | Topology execution context v3 records `external_mirror_register` among its indexed governance inputs (successor receipt `genrec-topology-mirror-register-context-20261012`). |
-| v2.2 | 2026-10-12 | §6: the validator now requires the register's `decision_ref` to be ADR-0048 and this ADR to remain accepted, and requires an upstream-backed receipt state and a well-formed upstream digest (review on #5065). |
+| v2.2 | 2026-10-12 | §6: the validator now relaxes nothing unless the register's `decision_ref` is ADR-0048 and this ADR remains accepted, and requires an upstream-backed receipt state and a well-formed upstream digest (review on #5065). |
+| v2.3 | 2026-10-12 | §6: acceptance is read only from this file's leading metadata block. Topology execution context v4 records this ADR as the `external_mirror_decision` indexed input (successor receipt `genrec-topology-mirror-decision-context-20261012`; review on #5071). |
 | v2.0 | 2026-10-12 | Accepted by @bartytime4life as the operative interpretation of §13.2, in response to review on #5064. Scope narrowed to upstream-backed receipt entries, and the receipt described as content-pinned (`REVIEW_ONLY`), not human-reviewed. |
 
 <p align="right"><a href="#top">Back to top</a></p>

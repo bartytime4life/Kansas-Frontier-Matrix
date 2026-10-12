@@ -421,11 +421,27 @@ class RepositoryTopologyTests(unittest.TestCase):
         receipt = _mirror_receipt(("AGENTS.md",))
         register = _mirror_register(SITE_MIRROR)
         self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # A register not bound to ADR-0048 relaxes nothing (it does not raise, so
+        # a base tree with an older register remains scannable for parity).
+        for decision_ref in ("ADR-0029", None):
+            with self.subTest(decision_ref=decision_ref):
+                unbound = _mirror_register(SITE_MIRROR, decision_ref=decision_ref)
+                self.assertEqual((mirrored,), self._uppercase_members(paths, unbound, receipt))
         for decision in (
             None,
             _mirror_decision(status="proposed"),
             _mirror_decision(effective="proposed"),
             _mirror_decision().replace(b"ADR-0048", b"ADR-0049"),
+            # Accepted lines quoted in the body do not count; only the leading block does.
+            _mirror_decision(status="superseded", effective="superseded")
+            + b"\n```yaml\nadr_id: ADR-0048\nstatus: accepted\neffective_decision_status: accepted\n```\n",
+            # The metadata block must lead the file.
+            b"# ADR-0048\n\n" + _mirror_decision(),
+            # Each field must appear exactly once, at top level.
+            _mirror_decision().replace(b"status: accepted\neff", b"status: accepted\nstatus: proposed\neff"),
+            _mirror_decision(status="proposed").replace(
+                b"status: proposed\n", b"status: proposed\nnotes:\n  status: accepted\n"
+            ),
         ):
             with self.subTest(decision=decision):
                 self.assertEqual((mirrored,), self._uppercase_members(paths, register, receipt, decision))
@@ -486,7 +502,6 @@ class RepositoryTopologyTests(unittest.TestCase):
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/site/source")),
             _mirror_register(dict(SITE_MIRROR, path_prefix="apps/../docs/")),
             _mirror_register(SITE_MIRROR, dict(SITE_MIRROR)),
-            _mirror_register(SITE_MIRROR, decision_ref="ADR-0029"),
         )
         for register in bad_registers:
             with self.subTest(register=register):

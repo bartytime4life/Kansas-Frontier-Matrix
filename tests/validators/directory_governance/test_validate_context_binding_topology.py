@@ -31,6 +31,7 @@ GOVERNANCE_INPUTS = {
     "directory_rules": "docs/doctrine/directory-rules.md",
     "directory_adoption": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "external_mirror_register": "control_plane/external_mirror_register.yaml",
+    "external_mirror_decision": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
 }
 
 
@@ -275,7 +276,7 @@ class ContextBindingTests(unittest.TestCase):
 
     def test_indexed_governance_matches_independently_hashed_bytes(self):
         value = self.context()
-        self.assertEqual("kfm.topology-execution-context.v3", value["version"])
+        self.assertEqual("kfm.topology-execution-context.v4", value["version"])
         self.assertEqual(set(GOVERNANCE_INPUTS), set(value["indexed_governance"]))
         for label, relative in GOVERNANCE_INPUTS.items():
             raw = local_git(self.root, "show", ":" + relative)
