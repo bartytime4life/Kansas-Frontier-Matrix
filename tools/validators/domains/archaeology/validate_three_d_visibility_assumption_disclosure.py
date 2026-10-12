@@ -13,6 +13,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -25,6 +26,9 @@ SCHEMA_PATH = ROOT / "schemas/contracts/v1/domains/archaeology/three_d_visibilit
 FIXTURE_PATH = ROOT / "fixtures/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure/cases.json"
 MAX_FILE_BYTES = 1_048_576
 IDENTITY_PREFIX = "kfm:archaeology:visibility-disclosure:"
+PUBLIC_GEOMETRY_REF = re.compile(
+    r"^(?:fixture|kfm):[A-Za-z][A-Za-z0-9_-]*(?::[A-Za-z][A-Za-z0-9_-]*)+$"
+)
 
 
 class DuplicateKeyError(ValueError):
@@ -178,6 +182,13 @@ def _actor_coherence(role: str, actor: Mapping[str, object]) -> set[Finding]:
     return findings
 
 
+def _public_geometry_ref_is_safe(value: object) -> bool:
+    """Accept only opaque repository identifiers at the public boundary."""
+    return value is None or (
+        isinstance(value, str) and PUBLIC_GEOMETRY_REF.fullmatch(value) is not None
+    )
+
+
 def _coherence_findings(candidate: Mapping[str, object]) -> list[Finding]:
     findings: set[Finding] = set()
     scene = candidate["scene_model"]
@@ -233,6 +244,11 @@ def _coherence_findings(candidate: Mapping[str, object]) -> list[Finding]:
     if intended_use == "PUBLIC_CANDIDATE":
         if observers["geometry_posture"] == "EXACT_RESTRICTED" or targets["geometry_posture"] == "EXACT_RESTRICTED":
             findings.add(Finding("PUBLIC_EXACT_GEOMETRY_FORBIDDEN"))
+        if not all(
+            _public_geometry_ref_is_safe(actor["geometry_ref"])
+            for actor in (observers, targets)
+        ):
+            findings.add(Finding("PUBLIC_GEOMETRY_REFERENCE_UNSAFE"))
         if governance["sensitivity_state"] != "PUBLIC_SAFE_REVIEWED":
             findings.add(Finding("PUBLIC_SENSITIVITY_REVIEW_REQUIRED"))
         if any(governance[key] is None for key in release_keys):
