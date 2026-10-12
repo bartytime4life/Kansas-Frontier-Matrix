@@ -66,3 +66,14 @@ Placement follows adopted Directory Rules v2 / ADR-0029: application mirror
 under apps/site/source, exposure/build-image configuration under infra/docker,
 review documentation under docs/reports and immutable recorded comparison
 under data/receipts/generated, consumed by existing tools/qa/site_mirror.py.
+
+
+Fresh installed-local browser verification rendered 50 records, 28 plotted
+columns, one aquifer region and a complete 2048 × 1718 surface at zoom 13.4.
+Partial coverage and one withheld unbounded class remain visible. No captured
+console warnings or errors were returned. A bounded anonymous archive GET
+returns 401, preserving v252 authorization rather than serving private content.
+Twenty-three mirror/infra Python checks pass. The topology ratchet passes with
+zero new drift/invariants and 93 inherited warnings; its baseline is unchanged.
+The local copy includes 428 prepared build files and 44 retained prior assets.
+Actual container repair verification remains the hosted exact-head scan.

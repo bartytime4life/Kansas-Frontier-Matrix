@@ -5465,10 +5465,20 @@
   "site_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_0b7123d49fe08191b4216b7a78bbe8ee",
   "status": "REVIEW_ONLY",
   "validation": {
+    "anonymous_archive_read": "401; no archive content returned",
     "container_scan": "PENDING hosted exact-head build; local Docker registry DNS prevented build",
     "data_activation": false,
     "hosted_equivalence": false,
-    "local_browser": "PENDING",
+    "local_browser": {
+      "aquiferRegions": 1,
+      "at": "2026-10-12T16:19:48.443Z",
+      "columns": 28,
+      "console": [],
+      "coverage": "partial; one unbounded class withheld",
+      "records": 50,
+      "surface": "2048 x 1718 at zoom 13.4",
+      "version": 252
+    },
     "local_install": {
       "build_files": 428,
       "current": "/home/bartytime/Projects/KFM-Explorer-Site-aligned-v252-20261012",
