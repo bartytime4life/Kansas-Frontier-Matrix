@@ -158,7 +158,8 @@ export const QWEN_KNOWLEDGE_DOMAIN_IDEAS = Object.freeze({
 
 /**
  * Ideas that only make sense when two domains are in view together. The
- * bridge offers one when every named domain is among the relevant sources.
+ * bridge offers one only when the map is displaying a source from each named
+ * domain; a question that merely mentions a domain does not qualify.
  */
 export const QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS = Object.freeze([
   Object.freeze({ domains: Object.freeze(["Living waters", "Aquifers & groundwater"]), idea: "Compare gauged reaches with the alluvial and High Plains aquifer extents to ask where rivers and groundwater may interact, leaving the connection unproven." }),

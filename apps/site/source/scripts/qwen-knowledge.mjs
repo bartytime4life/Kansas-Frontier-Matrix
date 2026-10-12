@@ -16,6 +16,14 @@ export const QWEN_KNOWLEDGE_VERSION = QWEN_KNOWLEDGE_PACK.version;
 export const QWEN_KNOWLEDGE_DIGEST = `sha256:${createHash("sha256").update(JSON.stringify(QWEN_KNOWLEDGE_PACK)).digest("hex")}`;
 export const QWEN_KNOWLEDGE_MAX_DETAILED_SOURCES = 8;
 const MAX_IDEA_DOMAINS = 3;
+const MAX_CROSS_DOMAIN_IDEAS = 3;
+const DOMAIN_BY_SOURCE_ID = new Map(QWEN_KNOWLEDGE_PACK.officialSources.map((source) => [source.id, source.domain]));
+
+/** Domains of the sources the map is actually displaying; question words do not count. */
+const displayedDomains = (context) => new Set((Array.isArray(context?.officialSources) ? context.officialSources : [])
+  .filter((source) => source?.displayed === true)
+  .map((source) => DOMAIN_BY_SOURCE_ID.get(source.id))
+  .filter(Boolean));
 
 const STOP_WORDS = new Set([
   "about", "and", "are", "can", "does", "for", "from", "has", "have", "how", "into", "its", "kansas",
@@ -101,6 +109,7 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
   const detailedIds = new Set(detailed.map((source) => source.id));
   const ideaDomains = [...new Set(detailed.map((source) => source.domain))].slice(0, MAX_IDEA_DOMAINS);
   const wantsDisplaySources = DISPLAY_SOURCE_TOPICS.test(normalize(question));
+  const inView = displayedDomains(context);
   const payload = fitToBudget({
     knowledgeVersion: QWEN_KNOWLEDGE_VERSION,
     authority: "METADATA_NOT_EVIDENCE",
@@ -118,7 +127,8 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
     domainIdeas: (ideaDomains.length ? ideaDomains : QWEN_KNOWLEDGE_PACK.domains.map((domain) => domain.name).slice(0, MAX_IDEA_DOMAINS))
       .map((name) => ({ domain: name, ideas: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.ideas ?? [] })),
     crossDomainIdeas: QWEN_KNOWLEDGE_PACK.crossDomainIdeas
-      .filter((entry) => entry.domains.every((domain) => ideaDomains.includes(domain)))
+      .filter((entry) => entry.domains.every((domain) => inView.has(domain)))
+      .slice(0, MAX_CROSS_DOMAIN_IDEAS)
       .map((entry) => entry.idea),
     projectIdeas: QWEN_KNOWLEDGE_PACK.projectIdeas,
   }, maxBytes);

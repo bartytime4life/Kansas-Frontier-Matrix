@@ -97,6 +97,17 @@ test("cross-domain ideas appear only when both of their domains are in view", ()
   const view = (ids) => ({ officialSources: ids.map((id) => ({ id, displayed: true, selected: true })) });
   const riverOnly = selectQwenKnowledge("What is visible?", view(["usgs-streamflow"]));
   assert.ok(riverOnly.payload.crossDomainIdeas.every((idea) => !/aquifer/i.test(idea)));
+  // Asking about aquifers pulls aquifer metadata into the prompt but does not put an aquifer layer in view.
+  const askedOnly = selectQwenKnowledge("How does this river interact with the alluvial aquifer?", view(["usgs-streamflow"]));
+  assert.ok(askedOnly.payload.relevantSources.some((source) => source.domain === "Aquifers & groundwater"));
+  assert.deepEqual(askedOnly.payload.crossDomainIdeas, []);
+  const selectedNotDisplayed = selectQwenKnowledge("What is visible?", {
+    officialSources: [
+      { id: "usgs-streamflow", displayed: true, selected: true },
+      { id: "kgs-aquifer-alluvial", displayed: false, selected: true },
+    ],
+  });
+  assert.deepEqual(selectedNotDisplayed.payload.crossDomainIdeas, []);
   const riverAndAquifer = selectQwenKnowledge("What is visible?", view(["usgs-streamflow", "kgs-aquifer-alluvial"]));
   const expected = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
     entry.domains.includes("Living waters") && entry.domains.includes("Aquifers & groundwater")).idea;
