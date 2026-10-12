@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/geology-sublane-bedrock-geology-redirect
+doc_id: kfm://doc/geology-sublane-bedrock-geology
 title: "Geology Sublane — Bedrock Geology (redirect)"
 type: redirect
 version: v2
@@ -15,7 +15,7 @@ truth_posture: "CONFIRMED redirect (merge done 2026-10-12); all content claims l
 related:
   - docs/domains/geology/SUBLANE-BEDROCK.md
 notes:
-  - "2026-10-12: content merged into docs/domains/geology/SUBLANE-BEDROCK.md (former doc_id kfm://doc/geology-sublane-bedrock-geology) — owner-directed duplicate removal; this stub keeps existing links resolving."
+  - "2026-10-12: content merged into docs/domains/geology/SUBLANE-BEDROCK.md — owner-directed duplicate removal; this stub keeps its issued doc_id and existing links resolving, and the canonical file links back via supersedes (DOCUMENT_REGISTRY doc_id stability rule; id restored 2026-10-12 after a brief rename)."
 [/KFM_META_BLOCK_V2] -->
 
 # Geology Sublane — Bedrock Geology (redirect)

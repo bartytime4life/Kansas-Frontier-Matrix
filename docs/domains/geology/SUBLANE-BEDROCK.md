@@ -11,6 +11,9 @@ policy_label: public
 owning_root: docs/
 responsibility: "Human-facing scoped slice of the geology lane for bedrock geology (units, lithology, stratigraphy, age, structures, cross-sections); not evidence, policy, release, or publication authority."
 truth_posture: "Doctrine statements are CONFIRMED where cited to Atlas Ch. 10; sublane layout, paths, tiers beyond §24.14, and products are PROPOSED or NEEDS VERIFICATION."
+supersedes:
+  - kfm://doc/geology-sublane-bedrock-redirect
+  - kfm://doc/geology-sublane-bedrock-geology
 related:
   - docs/domains/geology/README.md
   - docs/domains/geology/SCOPE.md

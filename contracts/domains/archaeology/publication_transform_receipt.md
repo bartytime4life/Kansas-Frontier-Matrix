@@ -12,6 +12,8 @@ owning_root: contracts/
 responsibility: Define the semantic meaning of the Archaeology PublicationTransformReceipt without performing transforms or granting policy, review, evidence, or release authority.
 truth_posture: CONFIRMED canonical contract path and scaffold schema; field vocabulary, validators, fixtures, and runtime behavior are PROPOSED or NEEDS VERIFICATION.
 tags: [kfm, contracts, archaeology, publication, transform, receipt, release, policy, review, sensitivity, evidence, correction, rollback, governance]
+supersedes:
+  - kfm://contract/domains/archaeology/publication-transform-receipt-redirect
 related:
   - ./README.md
   - ./OBJECT_MAP.md

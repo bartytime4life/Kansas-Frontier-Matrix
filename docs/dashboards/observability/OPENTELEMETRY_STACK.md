@@ -11,6 +11,8 @@ policy_label: public
 owning_root: docs/
 responsibility: "Specify the proposed OpenTelemetry CI/pipeline observability substrate and its stack-health dashboard without treating telemetry as evidence or release authority."
 truth_posture: "CONFIRMED spec file and sibling lane files / PROPOSED stack shape, signals, panels, thresholds, and lane placement / NEEDS VERIFICATION running stack, collector config, retention, owners, and KFM-P8-PROG-0026 implementation status"
+supersedes:
+  - kfm://doc/dashboards-observability-opentelemetry-stack-redirect
 related:
   - docs/dashboards/README.md
   - docs/dashboards/observability/README.md

@@ -11,6 +11,8 @@ policy_label: public
 owning_root: docs/
 responsibility: "Human-facing scoped slice of the geology lane for surficial geology (unconsolidated cover, SurficialUnit) and its cross-lane context edges; not evidence, policy, release, or publication authority."
 truth_posture: "Doctrine statements are CONFIRMED where cited to Atlas Ch. 10; sublane layout, paths, tiers beyond §24.14, sources outside §10.D, and products are PROPOSED or NEEDS VERIFICATION."
+supersedes:
+  - kfm://doc/domains/geology/sublanes/surficial
 related:
   - docs/domains/geology/README.md
   - docs/domains/geology/SCOPE.md
@@ -28,7 +30,7 @@ related:
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, geology, surficial, sublane, quaternary, governance]
 notes:
-  - "2026-10-12: merged unique content from docs/domains/geology/sublanes/surficial.md (former doc_id kfm://doc/domains/geology/sublanes/surficial; its footer already named this file's doc_id) — owner-directed duplicate removal"
+  - "2026-10-12: merged unique content from docs/domains/geology/sublanes/surficial.md (its doc_id kfm://doc/domains/geology/sublanes/surficial is retained by the redirect stub and listed under supersedes; its footer already named this file's doc_id) — owner-directed duplicate removal"
   - Sublane slice of the geology lane scoped to SURFICIAL geology — unconsolidated surface cover (SurficialUnit). Sibling to the bedrock sublane.
   - Doctrine-adjacent; pins CONTRACT_VERSION = "3.0.0".
   - Bedrock/surficial split is CONFIRMED (Atlas §10.A identity; §10.G names a distinct "surficial unit map" viewing product; §10.C records SurficialUnit as a distinct term).
@@ -59,7 +61,7 @@ notes:
 | **Version** | v1.1 |
 | **Updated** | 2026-10-12 |
 
-> 2026-10-12: merged unique content from `docs/domains/geology/sublanes/surficial.md` (former doc_id `kfm://doc/domains/geology/sublanes/surficial`) — owner-directed duplicate removal
+> 2026-10-12: merged unique content from `docs/domains/geology/sublanes/surficial.md` (doc_id `kfm://doc/domains/geology/sublanes/surficial`, retained by the redirect stub and listed under `supersedes`) — owner-directed duplicate removal
 
 > [!IMPORTANT]
 > This sublane doc is a **scoped slice**, not a second copy of the lane. The lane-wide boundary, sources, sensitivity, and release rules live in `SCOPE.md`, `SOURCES.md`, `SENSITIVITY.md`, and `RELEASE_INDEX.md`; this doc narrows them to surficial geology. Where this doc and a lane-wide doc disagree, the lane-wide doc governs and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`.

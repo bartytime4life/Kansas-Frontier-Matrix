@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/geology-sublane-surficial-redirect
+doc_id: kfm://doc/domains/geology/sublanes/surficial
 title: "Geology · Surficial Sublane (redirect)"
 type: redirect
 version: v0.3
@@ -15,7 +15,7 @@ truth_posture: "CONFIRMED redirect (merge done 2026-10-12); all content claims l
 related:
   - docs/domains/geology/surficial.md
 notes:
-  - "2026-10-12: content merged into docs/domains/geology/surficial.md (former doc_id kfm://doc/domains/geology/sublanes/surficial) — owner-directed duplicate removal; this stub keeps existing links resolving."
+  - "2026-10-12: content merged into docs/domains/geology/surficial.md — owner-directed duplicate removal; this stub keeps its issued doc_id and existing links resolving, and the canonical file links back via supersedes (DOCUMENT_REGISTRY doc_id stability rule)."
 [/KFM_META_BLOCK_V2] -->
 
 # Geology · Surficial Sublane (redirect)

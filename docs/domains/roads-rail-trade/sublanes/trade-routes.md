@@ -11,6 +11,8 @@ policy_label: public (sublane scaffold) — content tiers vary; historic/Indigen
 owning_root: docs/
 responsibility: "Human-facing dossier for the historic / trade / Indigenous corridor sublane of the Roads, Rail & Trade Routes domain; not evidence, policy, release, or publication authority."
 truth_posture: "Doctrine statements are CONFIRMED where cited; sublane structure, paths, routes, schemas, tiers, and tests are PROPOSED or NEEDS VERIFICATION."
+supersedes:
+  - kfm://doc/docs-domains-roads-rail-trade-sublanes-trade-routes-redirect
 related:
   - docs/domains/roads-rail-trade/README.md
   - docs/domains/roads-rail-trade/sublanes/README.md
