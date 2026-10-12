@@ -348,7 +348,7 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
       "- observations: up to 5 facts that appear in the map context JSON (layer or source titles, states, counts, frame or retrieval times).",
       "- inferences: up to 4 cautious readings, each phrased as possible rather than certain.",
       "- gaps: up to 4 items KFM would need (a released EvidenceBundle, a source, a review, a fresher frame) before this could become an evidence-backed answer.",
-      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain ideas when they fit.",
+      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain and cross-domain ideas when they fit.",
       "Use empty lists rather than inventing content.",
     ].join("\n"),
   ].join("\n\n");

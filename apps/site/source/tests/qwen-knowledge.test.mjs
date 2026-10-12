@@ -9,7 +9,11 @@ import {
   rankQwenKnowledgeSources,
   selectQwenKnowledge,
 } from "../scripts/qwen-knowledge.mjs";
-import { QWEN_LOCAL_INTERPRETATION_PROMPT_BUDGET_BYTES, QWEN_LOCAL_KNOWLEDGE_VERSION } from "../scripts/qwen-local-contract.mjs";
+import {
+  QWEN_LOCAL_INTERPRETATION_PROMPT_BUDGET_BYTES,
+  QWEN_LOCAL_KNOWLEDGE_VERSION,
+  localQwenAnswerHasOverPreciseLocation,
+} from "../scripts/qwen-local-contract.mjs";
 
 test("the committed knowledge pack matches the Site source registries", async () => {
   assert.equal(
@@ -65,4 +69,38 @@ test("knowledge selection is bounded, indexes everything, and trims to the promp
   assert.deepEqual(tight.payload.glossary, QWEN_KNOWLEDGE_PACK.glossary, "the glossary is never trimmed");
   assert.deepEqual(tight.sourceIds, tight.payload.relevantSources.map((source) => source.id));
   assert.equal(tight.digest, QWEN_KNOWLEDGE_DIGEST);
+});
+
+test("every domain has a full set of exploration ideas that stay questions, not findings", () => {
+  const domainNames = QWEN_KNOWLEDGE_PACK.domains.map((domain) => domain.name);
+  for (const domain of QWEN_KNOWLEDGE_PACK.domains) {
+    assert.ok(domain.ideas.length >= 6, `${domain.name} has ${domain.ideas.length} ideas`);
+    assert.equal(new Set(domain.ideas).size, domain.ideas.length, `${domain.name} repeats an idea`);
+  }
+  assert.ok(QWEN_KNOWLEDGE_PACK.crossDomainIdeas.length > 0);
+  for (const entry of QWEN_KNOWLEDGE_PACK.crossDomainIdeas) {
+    assert.equal(entry.domains.length, 2, entry.idea);
+    assert.ok(entry.domains.every((domain) => domainNames.includes(domain)), entry.idea);
+  }
+  const allIdeas = [
+    ...QWEN_KNOWLEDGE_PACK.domains.flatMap((domain) => domain.ideas),
+    ...QWEN_KNOWLEDGE_PACK.crossDomainIdeas.map((entry) => entry.idea),
+    ...QWEN_KNOWLEDGE_PACK.projectIdeas,
+  ];
+  for (const idea of allIdeas) {
+    assert.ok(idea.length <= 400, idea);
+    assert.equal(localQwenAnswerHasOverPreciseLocation(idea), false, idea);
+  }
+});
+
+test("cross-domain ideas appear only when both of their domains are in view", () => {
+  const view = (ids) => ({ officialSources: ids.map((id) => ({ id, displayed: true, selected: true })) });
+  const riverOnly = selectQwenKnowledge("What is visible?", view(["usgs-streamflow"]));
+  assert.ok(riverOnly.payload.crossDomainIdeas.every((idea) => !/aquifer/i.test(idea)));
+  const riverAndAquifer = selectQwenKnowledge("What is visible?", view(["usgs-streamflow", "kgs-aquifer-alluvial"]));
+  const expected = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
+    entry.domains.includes("Living waters") && entry.domains.includes("Aquifers & groundwater")).idea;
+  assert.ok(riverAndAquifer.payload.crossDomainIdeas.includes(expected));
+  const trimmed = selectQwenKnowledge("What is visible?", view(["usgs-streamflow", "kgs-aquifer-alluvial"]), { maxBytes: 7_000 });
+  assert.deepEqual(trimmed.payload.crossDomainIdeas, [], "cross-domain ideas are trimmed before domain ideas");
 });
