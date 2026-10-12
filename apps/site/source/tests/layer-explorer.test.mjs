@@ -76,6 +76,26 @@ test("Explore, Appearance and Measure are primary; every advanced view invokes t
   assert.equal(new Set(changes).size, 12, "all existing control views remain reachable");
   h.dispose();
 });
+test("focus boundaries ignore closed disclosure contents even when the browser retains their layout boxes", () => {
+  class Details {
+    constructor(parentElement, open) { this.parentElement = parentElement; this.open = open; }
+    querySelector(selector) { assert.equal(selector, ":scope > summary"); return this.summary; }
+  }
+  const container = { parentElement: null, contains(node) { while (node) { if (node === this) return true; node = node.parentElement; } return false; } };
+  const element = (parentElement, blocked = false, tabIndex = 0, rects = 1) => ({ parentElement, tabIndex, closest: () => blocked ? {} : null, getClientRects: () => Array(rects).fill({ width: 40, height: 44 }) });
+  const close = element(container), disclosure = new Details(container, false);
+  disclosure.summary = element(disclosure);
+  const closedButton = element(disclosure), nested = new Details(disclosure, true);
+  nested.summary = element(nested);
+  const nestedButton = element(nested), hidden = element(container, true), negative = element(container, false, -1), unrendered = element(container, false, 0, 0);
+  container.querySelectorAll = () => [close, disclosure.summary, closedButton, nested.summary, nestedButton, hidden, negative, unrendered];
+  const list = new Function("HTMLDetailsElement", compile(`const FOCUSABLE_SELECTOR = ${declarations.get("FOCUSABLE_SELECTOR")}; const list = ${declarations.get("visibleFocusableElements")}; return list;`))(Details);
+  assert.deepEqual(list(container), [close, disclosure.summary], "closed bodies cannot become the final focus target");
+  disclosure.open = true;
+  assert.deepEqual(list(container), [close, disclosure.summary, closedButton, nested.summary, nestedButton], "opening the disclosure restores its controls");
+  nested.open = false;
+  assert.deepEqual(list(container), [close, disclosure.summary, closedButton, nested.summary], "a nested closed summary remains reachable but its body does not");
+});
 
 test("reviewed water remains selected and hideable when a refresh withholds its package", async () => {
   const availability = await pure("governed-water-availability.ts");

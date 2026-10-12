@@ -68,10 +68,10 @@ test("quick start routes only to existing controls and tolerates blocked storage
   assert.match(guide, /role="dialog" aria-modal="false"/);
   assert.match(guide, /panelRef\.current\?\.contains\(document\.activeElement\)/, "Escape only closes when focus is inside");
   assert.doesNotMatch(guide, /fetch\(|import\(.*api/);
-  assert.match(page, /<ExplorerGuide open=\{guideOpen\}/);
+  assert.match(page, /<ExplorerGuide open=\{guideOpen && primaryWorkspace === "map"\}/);
   assert.match(page, /className="guide-trigger" type="button" aria-label="Open the quick start guide"/);
   assert.match(page, /if \(action === "layers"\) openAtlasPanel\("layers"\)/);
-  assert.match(page, /else if \(action === "time"\) setTimelineOpen\(true\)/);
+  assert.match(page, /else if \(action === "time"\) \{ setPrimaryWorkspace\("map"\); setTimelineOpen\(true\); \}/);
   assert.match(page, /else if \(action === "qwen"\) openQwenCompanion\(null\)/);
   assert.match(page, /onMore=\{\(\) => setHelpOpen\(true\)\}/, "reconnects the existing map guide");
   assert.match(page, /aria-pressed=\{undergroundOpen\} onClick=\{toggleUnderground\}/);

@@ -4,7 +4,10 @@ import {pathToFileURL} from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
 import ts from 'typescript';
-let js=ts.transpileModule(await readFile('app/api/hydrology/streamflow/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace('import { env } from "cloudflare:workers";', 'const env = { USGS_WATER_API_KEY: "test-key-only-not-a-real-key" };').replace('from "next/server"',`from ${JSON.stringify(pathToFileURL(path.resolve('node_modules/next/server.js')).href)}`);
+const transportJs = ts.transpileModule(await readFile('app/streamflow-transport.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+const transportUrl = `data:text/javascript;base64,${Buffer.from(transportJs).toString('base64')}`;
+const { decodeStreamflowTransport } = await import(transportUrl);
+let js=ts.transpileModule(await readFile('app/api/hydrology/streamflow/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace('import { env } from "cloudflare:workers";', 'const env = { USGS_WATER_API_KEY: "test-key-only-not-a-real-key" };').replace('from "../../../streamflow-transport"', `from ${JSON.stringify(transportUrl)}`).replace('from "next/server"',`from ${JSON.stringify(pathToFileURL(path.resolve('node_modules/next/server.js')).href)}`);
 let {GET}=await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
 const time=new Date(Date.now()-600000).toISOString();
 const ids=Array.from({length:100},(_,i)=>`USGS-${String(6800000+i).padStart(8,'0')}`);
@@ -49,4 +52,28 @@ test('network cache preserves original timestamps and avoids another provider fa
  const {body}=await run();const original=globalThis.fetch;
  globalThis.fetch=async()=>{throw new Error('cache must avoid upstream');};
  try{const response=await GET(request());assert.equal(response.headers.get('X-KFM-Network-Cache'),'HIT');assert.deepEqual(await response.json(),body);}finally{globalThis.fetch=original;}
+});
+
+test('compact and legacy cache variants retain the same complete capture without refetching', async () => {
+ const { body } = await run(); const original = globalThis.fetch;
+ globalThis.fetch = async () => { throw new Error('encoding must not cause provider fan-out'); };
+ try {
+  const compactRequest = { nextUrl: new URL(request().nextUrl + '&encoding=columns-v1') };
+  const first = await GET(compactRequest), wire = await first.json();
+  assert.equal(first.status, 200); assert.equal(first.headers.get('X-KFM-Network-Cache'), 'HIT');
+  assert.deepEqual(decodeStreamflowTransport(wire), body);
+  assert.deepEqual(await (await GET(compactRequest)).json(), wire);
+  assert.deepEqual(await (await GET(request())).json(), body);
+ } finally { globalThis.fetch = original; }
+});
+
+test('invalid, duplicate and station-mode encoding cannot alter provider query boundaries', async () => {
+ const original = globalThis.fetch; let calls = 0;
+ globalThis.fetch = async () => { calls++; throw new Error('invalid input must not fetch'); };
+ try {
+  for (const query of ['mode=network&range=24h&encoding=unknown', 'mode=network&range=24h&encoding=columns-v1&encoding=columns-v1', 'mode=station&range=24h&station=USGS-06864500&parameter=00060&encoding=columns-v1']) {
+   assert.equal((await GET({ nextUrl: new URL('https://local/api/hydrology/streamflow?' + query) })).status, 400);
+  }
+  assert.equal(calls, 0);
+ } finally { globalThis.fetch = original; }
 });

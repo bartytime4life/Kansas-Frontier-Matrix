@@ -1,4 +1,10 @@
 "use client";
+import { isolateModalBackground, modalReturnTarget } from "./modal-background";
+import { decodeStreamflowTransport } from "./streamflow-transport";
+import { browserJsonRequest } from "./browser-json-request";
+import { explorerHistoryParams, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
+import { LayerJsonReads } from "./layer-json-reads";
+import { layerHitStack } from "./layer-hit-stack";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { basemapCacheRequest } from "./basemap-cache";
@@ -297,6 +303,8 @@ import {
   restoreStreamflowLocations,
   normalizeUsgsStationId,
   parseStreamflowBundle,
+  validStreamflowArchiveDay,
+  restoreStreamflowArchiveDay,
   streamflowDisplayFrames,
   streamflowExactFrames,
   streamflowBundleForUtcDay,
@@ -613,9 +621,13 @@ const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number]
 });
 const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const FOCUSABLE_SELECTOR = "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, a[href], [tabindex]:not([tabindex='-1'])";
-const visibleFocusableElements = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) =>
-  element.tabIndex >= 0 && !element.closest("[hidden], [inert]") && element.getClientRects().length > 0
-);
+const visibleFocusableElements = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) => {
+  if (!(element.tabIndex >= 0 && !element.closest("[hidden], [inert]") && element.getClientRects().length > 0)) return false;
+  for (let ancestor = element.parentElement; ancestor && container.contains(ancestor); ancestor = ancestor.parentElement) {
+    if (ancestor instanceof HTMLDetailsElement && !ancestor.open && ancestor.querySelector(":scope > summary") !== element) return false;
+  }
+  return true;
+});
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
   evidence: "Data",
@@ -680,6 +692,16 @@ const escapeReportHtml = (value: unknown) => String(value)
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
+const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
+  if (!value || typeof value !== "object") return false;
+  const payload = value as Partial<OfficialContextPayload>;
+  return payload.feed === feed && (!day || (payload.sourceDay === undefined && feed !== "nasa-gibs-fire-points") || payload.sourceDay === day)
+    && ["ready", "empty", "partial"].includes(payload.state ?? "")
+    && payload.data?.type === "FeatureCollection" && Array.isArray(payload.data.features)
+    && payload.featureCount === payload.data.features.length
+    && typeof payload.retrievedAt === "string" && Number.isFinite(Date.parse(payload.retrievedAt));
+};
+
 const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/evidence"]);
 
 const loadConfiguredMapLibre = async () => {
@@ -1169,9 +1191,12 @@ export default function Home() {
   const buildYearCurrentRef = useRef(true);
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
+  const explorerRestoredRef = useRef(false);
   const officialArchiveDaysRef = useRef<Partial<Record<OfficialContextFeedId, string>>>({});
   const officialArchivePayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const smokeTransitionsRef = useRef(new HmsFrameTransitions());
+  const layerJsonReadsRef = useRef<LayerJsonReads | null>(null);
+  layerJsonReadsRef.current ??= new LayerJsonReads();
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
   const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
   const terrainRasterViewRef = useRef(new TerrainRasterViewTracker());
@@ -1265,6 +1290,8 @@ export default function Home() {
   const replayingCameraHistoryRef = useRef(false);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const leftPanelRef = useRef<HTMLElement>(null);
+  const leftPanelReturnRef = useRef<HTMLElement | null>(null);
+  const sourceSearchFocusPendingRef = useRef(false);
   const rightPanelRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLElement>(null);
   const repositoryButtonRef = useRef<HTMLButtonElement>(null);
@@ -1289,6 +1316,7 @@ export default function Home() {
   const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
   const [buildYearCurrent, setBuildYearCurrent] = useState(true);
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
+  const [officialReadPhases, setOfficialReadPhases] = useState<Partial<Record<OfficialContextId, "queued" | "fetching">>>({});
   const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
   const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const [officialArchiveDays, setOfficialArchiveDays] = useState<Partial<Record<OfficialContextFeedId, string>>>({});
@@ -1505,6 +1533,7 @@ export default function Home() {
   const [localAtlasPeek, setLocalAtlasPeek] = useState(false);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const composerRef = useRef<HTMLElement>(null);
+  const mapGuideRef = useRef<HTMLElement>(null);
   const composerTriggerRef = useRef<HTMLButtonElement>(null);
   const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("navigate");
   const [mapFeatureQuery, setMapFeatureQuery] = useState("");
@@ -2633,6 +2662,7 @@ export default function Home() {
     params.set("l", activeLayers.map((layer) => layer.id).join(","));
     params.set("o", LAYER_REGISTRY.map((layer) => `${layer.id}:${(opacity[layer.id] ?? layer.defaultOpacity).toFixed(2)}`).join(","));
     params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
+    params.set("ctxd", Object.entries(officialArchiveDays).filter(([, day]) => day).map(([feed, day]) => `${feed}:${day}`).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     serializeSoilMapState(params, soilMapState);
     params.set("sunDay", daylightDay);
@@ -2645,12 +2675,11 @@ export default function Home() {
       params.set("radarSpeed", String(noaaRadarPlaybackSpeed));
       params.set("radarFollow", noaaRadarFollowLatest ? "latest" : "selected");
     }
-    if (officialVisibility["usgs-streamflow"]) {
-      params.set("hydroRange", streamflowRange);
-      params.set("hydroSpeed", String(streamflowPlaybackSpeed));
-      if (streamflowFrameTime) params.set("hydroTime", streamflowFrameTime);
-      if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
-    }
+    params.set("hydroRange", streamflowRange);
+    params.set("hydroSpeed", String(streamflowPlaybackSpeed));
+    if (streamflowFrameTime) params.set("hydroTime", streamflowFrameTime);
+    if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
+    if (streamflowArchiveDay) params.set("hydroDay", streamflowArchiveDay);
     if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
     params.set("t", String(year));
     params.set("tm", temporalMode);
@@ -2688,7 +2717,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3115,7 +3144,7 @@ export default function Home() {
       return;
     }
     const archiveEndMilliseconds = archiveDay ? Math.min(Date.now(), Date.parse(`${archiveDay}T00:00:00.000Z`) + 86_400_000) : null;
-    if (archiveDay && (!/^\d{4}-\d{2}-\d{2}$/.test(archiveDay)
+    if (archiveDay && (!validStreamflowArchiveDay(archiveDay, currentUtcDay())
       || !Number.isFinite(archiveEndMilliseconds)
       || new Date(Date.parse(`${archiveDay}T00:00:00.000Z`)).toISOString().slice(0, 10) !== archiveDay
       || archiveEndMilliseconds! > Date.now()
@@ -3126,7 +3155,7 @@ export default function Home() {
     const path = archiveDay
       ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
       : requestedRange === "24h"
-      ? "/api/hydrology/streamflow?mode=network&range=24h"
+      ? "/api/hydrology/streamflow?mode=network&range=24h&encoding=columns-v1"
       : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
     // The statewide adapter answers a second concurrent network request with 429,
     // and aborting here does not stop its upstream work. Let an identical request
@@ -3157,15 +3186,16 @@ export default function Home() {
     setOfficialStates((current) => ({ ...current, "usgs-streamflow": "loading" }));
     setOfficialErrors((current) => ({ ...current, "usgs-streamflow": undefined }));
     try {
-      const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
-      const candidate = await readBoundedJson(response, 64 * 1024 * 1024) as unknown;
+      const { response, body: candidate } = await browserJsonRequest(path, {
+        signal: controller.signal, maxBytes: 64 * 1024 * 1024, timeoutMs: 60_000, headers: { Accept: "application/json" },
+      });
       if (!response.ok) {
         const message = candidate && typeof candidate === "object" && ("error" in candidate || "message" in candidate)
           ? String((candidate as { error?: unknown; message?: unknown }).error ?? (candidate as { message?: unknown }).message ?? `HTTP ${response.status}`)
           : `HTTP ${response.status}`;
         throw new Error(message);
       }
-      const parsedBundle = parseStreamflowBundle(candidate);
+      const parsedBundle = parseStreamflowBundle(decodeStreamflowTransport(candidate));
       if (generation !== streamflowRequestGenerationRef.current) return;
       const bundle = archiveDay ? streamflowBundleForUtcDay(parsedBundle, archiveDay) : parsedBundle;
       const frames = archiveDay ? streamflowExactFrames(bundle) : streamflowDisplayFrames(bundle);
@@ -3210,19 +3240,25 @@ export default function Home() {
     }
   }, [announce]);
 
+  const refreshSelectedStreamflow = useCallback((quiet = false) => {
+    const archiveDay = streamflowArchiveDayRef.current;
+    return refreshStreamflow(archiveDay ? "24h" : streamflowRange, streamflowSelectedStationId, quiet, archiveDay);
+  }, [refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
+
   const refreshNoaaHydrologyNetwork = useCallback(async (quiet = false) => {
     if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
       if (!quiet) announce(buildYearCurrentRef.current ? "NOAA hydrology remains held outside the operational-present atlas frame" : "This site build does not match the UTC year; rebuild before refreshing NOAA hydrology");
       return;
     }
-    noaaHydrologyRequestRef.current?.abort();
+    if (noaaHydrologyRequestRef.current && !noaaHydrologyRequestRef.current.signal.aborted) return;
     const controller = new AbortController();
     noaaHydrologyRequestRef.current = controller;
     setOfficialStates((current) => ({ ...current, "noaa-nwps-gauges": "loading" }));
     setOfficialErrors((current) => ({ ...current, "noaa-nwps-gauges": undefined }));
     try {
-      const response = await fetch(NOAA_HYDROLOGY_NETWORK_API_PATH, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
-      const candidate = await response.json() as unknown;
+      const { response, body: candidate } = await browserJsonRequest(NOAA_HYDROLOGY_NETWORK_API_PATH, {
+        signal: controller.signal, maxBytes: 8 * 1024 * 1024, timeoutMs: 30_000, headers: { Accept: "application/json" },
+      });
       if (!response.ok) throw new Error(`NOAA hydrology adapter returned HTTP ${response.status}.`);
       if (controller.signal.aborted || noaaHydrologyRequestRef.current !== controller) return;
       const network = parseNoaaGaugeNetwork(candidate);
@@ -3375,18 +3411,21 @@ export default function Home() {
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(new Error("Source request timed out. Try again.")), 30_000);
     officialRequestsRef.current.set(feed, controller);
     setOfficialStates((current) => ({ ...current, [feed]: "loading" }));
     setOfficialErrors((current) => ({ ...current, [feed]: undefined }));
     try {
-      const response = await fetch(source.apiPath!, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
-      const candidate = await readBoundedJson(response, 8 * 1024 * 1024) as Partial<OfficialContextPayload> & { error?: string };
+      const { response, body } = await layerJsonReadsRef.current!.read(source.apiPath!, {
+        signal: controller.signal, maxBytes: 8 * 1024 * 1024,
+        validate: value => validLayerPayload(value, feed),
+        onProgress: phase => { if (!controller.signal.aborted && officialRequestsRef.current.get(feed) === controller) setOfficialReadPhases(current => ({ ...current, [feed]: phase })); },
+      });
+      const candidate = body as Partial<OfficialContextPayload> & { error?: string };
       const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
       if (!response.ok || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number" || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
         throw new Error(candidate.error ?? `Fixed source adapter returned HTTP ${response.status}.`);
       }
-      if (officialRequestsRef.current.get(feed) !== controller) return;
+      if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
       const payload = candidate as OfficialContextPayload;
       officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: payload };
       setOfficialPayloads(officialPayloadsRef.current);
@@ -3397,7 +3436,7 @@ export default function Home() {
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
         : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
     } catch (error) {
-      if (officialRequestsRef.current.get(feed) !== controller) return;
+      if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
       const message = error instanceof Error ? error.message : "Official context request failed.";
       // A failed current refresh cannot leave an earlier operational snapshot
       // mapped under an unavailable status. The payload change reapplies an
@@ -3421,7 +3460,6 @@ export default function Home() {
       setOfficialErrors((current) => ({ ...current, [feed]: message }));
       announce(`${source.shortTitle} unavailable; previous mapped features were cleared and no fallback inference was used`);
     } finally {
-      window.clearTimeout(timer);
       if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
   }, [announce, runMapMutation, runtimeOfficialVisibility]);
@@ -3475,7 +3513,7 @@ export default function Home() {
     }
   }), []);
 
-  const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string) => {
+  const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string, force = false) => {
     if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
       || !/^\d{4}-\d{2}-\d{2}$/.test(day)
       || !Number.isFinite(Date.parse(`${day}T00:00:00.000Z`))
@@ -3483,6 +3521,7 @@ export default function Home() {
       || day > currentUtcDay()
       || (feed === "nasa-gibs-fire-points" && day < "2018-01-01")
       || (feed === "noaa-hms-smoke" && day < "2005-08-05")) return;
+    if (officialArchiveDaysRef.current[feed] === day && !officialRequestsRef.current.get(feed)?.signal.aborted && officialRequestsRef.current.has(feed)) return;
     officialRequestsRef.current.get(feed)?.abort();
     const controller = new AbortController();
     officialRequestsRef.current.set(feed, controller);
@@ -3498,14 +3537,20 @@ export default function Home() {
     try {
       const source = OFFICIAL_CONTEXT_BY_ID[feed];
       const cached = feed === "nasa-gibs-fire-points" ? await readFireDay(day) : null;
-      const response = cached ? null : await fetch(`${source.apiPath!}&day=${encodeURIComponent(day)}`, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
-      const candidate = (cached ?? await readBoundedJson(response!, 8 * 1024 * 1024)) as Partial<OfficialContextPayload> & { error?: string };
+      controller.signal.throwIfAborted();
+      const read = cached ? null : await layerJsonReadsRef.current!.read(`${source.apiPath!}&day=${encodeURIComponent(day)}`, {
+        signal: controller.signal, maxBytes: 8 * 1024 * 1024, cacheMs: force ? 0 : 300_000,
+        validate: value => validLayerPayload(value, feed, day),
+        onProgress: phase => { if (!controller.signal.aborted && officialRequestsRef.current.get(feed) === controller) setOfficialReadPhases(current => ({ ...current, [feed]: phase })); },
+      });
+      const response = read?.response;
+      const candidate = (cached ?? read?.body) as Partial<OfficialContextPayload> & { error?: string };
       const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
       if ((response && !response.ok) || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number"
         || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
         throw new Error(candidate.error ?? `Dated source adapter returned HTTP ${response?.status ?? "invalid cached response"}.`);
       }
-      if (officialRequestsRef.current.get(feed) !== controller) return;
+      if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
       const payload = candidate as OfficialContextPayload;
       officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: payload };
       const smokeTimes = feed === "noaa-hms-smoke" ? smokeValidityTimes(payload, day) : [];
@@ -3520,7 +3565,7 @@ export default function Home() {
         setEarthquakeArchiveFrameIndex(times.length - 1);
       }
       announce(payload.featureCount
-        ? `${source.shortTitle}: ${payload.featureCount} dated source records loaded for ${day} UTC${cached ? " from this browser's map directory" : ""}`
+        ? `${source.shortTitle}: ${payload.featureCount} dated source records loaded for ${day} UTC${cached ? " from this browser's map directory" : read?.cache === "memory" ? " from the dated snapshot kept on this page; original retrieval time retained" : ""}`
         : `${source.shortTitle}: no mapped records returned for ${day} UTC; no earlier day was carried forward`);
     } catch (error) {
       if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
@@ -3591,8 +3636,18 @@ export default function Home() {
     const next = { ...officialVisibilityRef.current, [id]: visible };
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
-    if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
-    if (id === "usgs-streamflow" && visible && !streamflowBundleRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId);
+    if (!visible && source.apiPath) {
+      const feed = id as OfficialContextFeedId;
+      officialRequestsRef.current.get(feed)?.abort();
+      officialRequestsRef.current.delete(feed);
+      setOfficialStates(current => ({ ...current, [id]: officialPayloadsRef.current[feed]?.state ?? "idle" }));
+    }
+    if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) {
+      const feed = id as OfficialContextFeedId, day = officialArchiveDaysRef.current[feed];
+      if (day) void loadOfficialArchiveDay(feed, day);
+      else void refreshOfficialContext(feed);
+    }
+    if (id === "usgs-streamflow" && visible && !streamflowBundleRef.current) void refreshSelectedStreamflow();
     if (id === "noaa-nwps-gauges" && visible && !officialPayloadsRef.current["noaa-nwps-gauges"]) void refreshNoaaHydrologyNetwork();
     if (id === "nws-radar" && visible && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaRadarManifest();
     if (id === "nws-radar" && !visible) { noaaRadarAutoStartRef.current = false; setNoaaRadarPlaying(false); }
@@ -3615,7 +3670,7 @@ export default function Home() {
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
       }
     }
-  }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, runtimeOfficialVisibility, streamflowRange, streamflowSelectedStationId]);
+  }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshSelectedStreamflow, runtimeOfficialVisibility]);
 
   const retryOfficialLayer = (id: OfficialContextId) => {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
@@ -3623,11 +3678,11 @@ export default function Home() {
     if (source.apiPath) {
       const feed = id as OfficialContextFeedId;
       const archiveDay = officialArchiveDaysRef.current[feed];
-      if (archiveDay) void loadOfficialArchiveDay(feed, archiveDay);
+      if (archiveDay) void loadOfficialArchiveDay(feed, archiveDay, true);
       else void refreshOfficialContext(feed);
       return;
     }
-    if (id === "usgs-streamflow") { void refreshStreamflow(streamflowRange, streamflowSelectedStationId); return; }
+    if (id === "usgs-streamflow") { void refreshSelectedStreamflow(); return; }
     if (id === "noaa-nwps-gauges") { void refreshNoaaHydrologyNetwork(); return; }
     if (id === "nws-radar") { void refreshNoaaRadarManifest(); return; }
     if (id === "noaa-lightning-density") { setLightningPlaying(false); setLightningReloadToken((value) => value + 1); return; }
@@ -3694,6 +3749,11 @@ export default function Home() {
 
   const hideAllOfficialContext = useCallback(() => {
     setSoilMapState(current => hideSoilContext(current));
+    for (const [feed, controller] of officialRequestsRef.current) {
+      controller.abort();
+      setOfficialStates(current => ({ ...current, [feed]: officialPayloadsRef.current[feed]?.state ?? "idle" }));
+    }
+    officialRequestsRef.current.clear();
     const next = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, false])) as Record<OfficialContextId, boolean>;
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
@@ -3761,7 +3821,14 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+      for (const [feed, controller] of officialRequestsRef.current) {
+        if (officialArchiveDaysRef.current[feed]) continue;
+        controller.abort(); officialRequestsRef.current.delete(feed);
+        setOfficialStates(current => ({ ...current, [feed]: officialPayloadsRef.current[feed]?.state ?? "idle" }));
+      }
+      return;
+    }
     // Hydrate selected current sources on first entry and when returning from history.
     // Archived and historical frames never initiate a current-source request.
     const timer = window.setTimeout(() => {
@@ -4129,6 +4196,18 @@ export default function Home() {
     window.setTimeout(() => (repositoryButtonRef.current?.closest("details")?.querySelector<HTMLElement>("summary") ?? repositoryButtonRef.current)?.focus(), 0);
   }, [rightOpen]);
 
+  const closeMapGuide = useCallback(() => {
+    setHelpOpen(false);
+    if (mapGuideRef.current?.contains(document.activeElement)) {
+      document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!helpOpen) return;
+    mapGuideRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close map guide"]')?.focus({ preventScroll: true });
+  }, [helpOpen]);
+
   const closeRightPanel = useCallback(() => {
     setRightOpen(false);
     setCurrentWorkspace("explore");
@@ -4143,8 +4222,15 @@ export default function Home() {
   const closeLeftPanel = useCallback(() => {
     setLeftOpen(false);
     setCurrentWorkspace("explore");
-    window.setTimeout(() => mapContainerRef.current?.focus(), 0);
+    const returnTarget = leftPanelReturnRef.current;
+    leftPanelReturnRef.current = null;
+    window.setTimeout(() => modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true }), 0);
   }, []);
+
+  const toggleTimelinePanel = useCallback(() => {
+    setPrimaryWorkspace("map");
+    setTimelineOpen((open) => primaryWorkspace !== "map" || !open);
+  }, [primaryWorkspace]);
 
   const closeTimelinePanel = useCallback(() => {
     setTimelineOpen(false);
@@ -4153,6 +4239,8 @@ export default function Home() {
   }, []);
 
   const openSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
+    setPrimaryWorkspace("map");
+    setGuideOpen(false);
     sourceStatusReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : mapContainerRef.current);
     setSourceStatusOpen(true);
@@ -4187,6 +4275,7 @@ export default function Home() {
   }, []);
 
   const openMapUtility = useCallback((nextView: MapUtilityView, returnElement?: HTMLElement | null) => {
+    setPrimaryWorkspace("map");
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
     setLocalAtlasPeek(false);
@@ -4204,13 +4293,15 @@ export default function Home() {
   }, [isCompact]);
 
   useEffect(() => {
-    if (!mapUtilityOpen) return;
-    const timer = window.setTimeout(() => {
+    if (primaryWorkspace !== "map" || !mapUtilityOpen) return;
+    // The map may have just lost inert when a draft workspace unmounted.
+    // Wait for its committed layout, after header-menu focus cleanup.
+    const frame = window.requestAnimationFrame(() => {
       const panel = mapUtilityPanelRef.current;
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [mapUtilityOpen, mapUtilityView]);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [primaryWorkspace, mapUtilityOpen, mapUtilityView]);
 
   useEffect(() => {
     if (!isCompact || !mapUtilityOpen || mapUtilityView !== "localAtlas") setLocalAtlasPeek(false);
@@ -4228,7 +4319,13 @@ export default function Home() {
     window.requestAnimationFrame(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>(".local-atlas-peek-toggle")?.focus({ preventScroll: true }));
   }, []);
 
-  const openAtlasPanel = useCallback((mode: LeftPanelMode) => {
+  const openAtlasPanel = useCallback((mode: LeftPanelMode, returnElement?: HTMLElement | null) => {
+    leftPanelReturnRef.current = returnElement ?? null;
+    setPrimaryWorkspace("map");
+    if (primaryWorkspace !== "map" && !sourceSearchFocusPendingRef.current) window.setTimeout(() => {
+      const panel = leftPanelRef.current;
+      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+    }, 0);
     setMapContextOpen(false);
     setCurrentWorkspace("knowledge");
     setLeftPanelMode(mode);
@@ -4236,7 +4333,7 @@ export default function Home() {
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) setTimelineOpen(false);
-  }, [dismissMapUtilityWithoutFocus, isCompact]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, primaryWorkspace]);
 
   const openMapSettings = useCallback(() => {
     openMapUtility("scene");
@@ -4279,15 +4376,16 @@ export default function Home() {
       }
       if (event.key.toLowerCase() === "l") {
         event.preventDefault();
+        setPrimaryWorkspace("map");
         dismissMapUtilityWithoutFocus();
         setLeftPanelMode("layers");
-        setLeftOpen((current) => !current);
+        setLeftOpen((current) => primaryWorkspace !== "map" || !current);
         if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
       }
     };
     document.addEventListener("keydown", handleWorkspaceShortcut);
     return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
-  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -4455,11 +4553,16 @@ export default function Home() {
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
   }, []);
 
-  const closeHeaderOverflow = useCallback((action: HTMLElement) => {
+  const closeHeaderOverflow = useCallback((action: HTMLElement, restoreTriggerFocus = true) => {
     const menu = action.closest("details");
     const summary = menu?.querySelector<HTMLElement>("summary");
     menu?.removeAttribute("open");
-    window.setTimeout(() => summary?.focus({ preventScroll: true }), 0);
+    if (!restoreTriggerFocus) return;
+    window.setTimeout(() => {
+      // A workspace or compact panel may already have taken focus after commit.
+      // Restore the menu trigger only when its closing action left focus behind.
+      if (document.activeElement === document.body || menu?.contains(document.activeElement)) summary?.focus({ preventScroll: true });
+    }, 0);
   }, []);
 
   const inspectWorkspaceEvidence = useCallback((record: EvidenceRecord) => {
@@ -4572,7 +4675,7 @@ export default function Home() {
   }, []);
 
   const restoreExplorerFromUrl = useCallback(() => {
-      const params = new URLSearchParams(window.location.search);
+      const params = explorerHistoryParams(window.location.search, window.history.state);
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
       daylightDayRef.current = restoredSolar.day;
       daylightThroughDayRef.current = restoredSolar.throughDay;
@@ -4647,6 +4750,18 @@ export default function Home() {
         : defaultOfficialVisibility;
       officialVisibilityRef.current = nextOfficialVisibility;
       setOfficialVisibility(nextOfficialVisibility);
+      const restoredDays = restoreArchiveViewDays(params.get("ctxd"), currentUtcDay());
+      for (const feed of new Set([...Object.keys(officialArchiveDaysRef.current), ...Object.keys(restoredDays)]) as Set<OfficialContextFeedId>) {
+        if (officialArchiveDaysRef.current[feed] === restoredDays[feed as keyof typeof restoredDays]) continue;
+        officialRequestsRef.current.get(feed)?.abort();
+        officialRequestsRef.current.delete(feed);
+        officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+        officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+      }
+      officialArchiveDaysRef.current = restoredDays;
+      setOfficialArchiveDays(restoredDays);
+      setOfficialArchiveDraftDays({ "noaa-hms-smoke": currentUtcDay(), ...restoredDays });
+      setOfficialPayloads(officialPayloadsRef.current);
       setSoilMapState(restoreSoilMapState(params));
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
@@ -4673,7 +4788,11 @@ export default function Home() {
       const normalizedHydroStation = restoredHydroStation ? normalizeUsgsStationId(restoredHydroStation) : null;
       const requestedHydroRange = params.get("hydroRange");
       const candidateHydroRange: HydrologyRange = requestedHydroRange === "7d" || requestedHydroRange === "30d" || requestedHydroRange === "1y" ? requestedHydroRange : "24h";
-      const restoredHydroRange: HydrologyRange = candidateHydroRange !== "24h" && !normalizedHydroStation ? "24h" : candidateHydroRange;
+      const restoredHydroDay = restoreStreamflowArchiveDay(params.get("hydroDay"), normalizedHydroStation, currentUtcDay());
+      const restoredHydroRange: HydrologyRange = restoredHydroDay || candidateHydroRange !== "24h" && !normalizedHydroStation ? "24h" : candidateHydroRange;
+      streamflowArchiveDayRef.current = restoredHydroDay;
+      setStreamflowArchiveDay(restoredHydroDay);
+      setStreamflowArchiveDraftDay(restoredHydroDay ?? currentUtcDay());
       const restoredHydroSpeed = Number(params.get("hydroSpeed"));
       const normalizedHydroTime = params.get("hydroTime") && Number.isFinite(Date.parse(params.get("hydroTime")!))
         ? new Date(Date.parse(params.get("hydroTime")!)).toISOString()
@@ -4686,7 +4805,10 @@ export default function Home() {
       const restoredLiveInstrument = params.get("live");
       setLiveInstrument(restoredLiveInstrument === "radar" || restoredLiveInstrument === "lightning" ? restoredLiveInstrument : "river");
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
-        if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+        if (!nextOfficialVisibility[source.id] || !source.apiPath) continue;
+        const feed = source.id as OfficialContextFeedId, day = officialArchiveDaysRef.current[feed];
+        if (day) void loadOfficialArchiveDay(feed, day);
+        else if (!officialPayloadsRef.current[feed]) void refreshOfficialContext(feed);
       }
       const restoredYear = Number(params.get("t"));
       const nextYear = KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : OFFICIAL_CONTEXT_PRESENT_FRAME;
@@ -4694,7 +4816,7 @@ export default function Home() {
       setYear(nextYear);
       setPreviewYear(nextYear);
       if (nextOfficialVisibility["nws-radar"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaRadarManifest(true);
-      if (nextOfficialVisibility["usgs-streamflow"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshStreamflow(restoredHydroRange, normalizedHydroStation, true);
+      if (nextOfficialVisibility["usgs-streamflow"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshStreamflow(restoredHydroRange, normalizedHydroStation, true, restoredHydroDay);
       if (nextOfficialVisibility["noaa-nwps-gauges"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaHydrologyNetwork(true);
       const restoredTemporalMode = params.get("tm");
       const nextTemporalMode: TemporalSweepMode = restoredTemporalMode === "moving-window" || restoredTemporalMode === "event-stepping" || restoredTemporalMode === "accumulation" || restoredTemporalMode === "comparison" ? restoredTemporalMode : "snapshot";
@@ -4827,7 +4949,12 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
+      explorerRestoredRef.current = true;
+  }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
+
+  useEffect(() => {
+    if (explorerRestoredRef.current) saveExplorerHistoryView(buildExplorerParams(), window.history);
+  }, [buildExplorerParams]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -5119,7 +5246,12 @@ export default function Home() {
             setTerrainElevationReading(null);
             setTerrainElevationUnavailable(null);
           }
-          if (map.queryRenderedFeatures(event.point)[0]?.source === LIVING_WATERS_SOURCE) {
+          const renderedHits = map.queryRenderedFeatures(event.point).filter(feature => {
+            const source = OFFICIAL_CONTEXT_BY_SOURCE_ID[feature.source];
+            const record = findLayerByRenderer(feature.layer.id);
+            return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
+          });
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -5127,7 +5259,7 @@ export default function Home() {
             return;
           }
           // Local previews own their hover; clear any older official candidate.
-          if (localAtlasHit(map, event.point)) {
+          if (localAtlasHit(map, event.point, renderedHits)) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
             map.getCanvas().style.cursor = "pointer";
@@ -5136,11 +5268,8 @@ export default function Home() {
           }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
-          const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
-          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nifc-fire-reports") ?? officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
-          const candidate = fireCandidate ? undefined : (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
-          const officialCandidate = candidate ? null : fireCandidate ?? officialFeatures[0];
-          const externalCandidate = candidate ? null : officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
+          const { candidate, officialCandidate } = layerHitStack(renderedHits, availableLayers, availableOfficialLayers);
+          const externalCandidate = candidate ? null : officialCandidate ?? renderedHits.find((feature) => {
             const sourceId = typeof feature.source === "string" ? feature.source : "";
             const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
             return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
@@ -5220,24 +5349,25 @@ export default function Home() {
             return;
           }
 
+          const renderedHits = map.queryRenderedFeatures(event.point).filter(feature => {
+            const source = OFFICIAL_CONTEXT_BY_SOURCE_ID[feature.source];
+            const record = findLayerByRenderer(feature.layer.id);
+            return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
+          });
           // Local previews own their selection; never inspect official features beneath them.
-          if (localAtlasHit(map, event.point)) return;
+          if (localAtlasHit(map, event.point, renderedHits)) return;
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           // The fixture control owns synthetic selection; never select provider
           // context underneath its schematic as evidence for that schematic.
-          if (map.queryRenderedFeatures(event.point)[0]?.source === LIVING_WATERS_SOURCE) {
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
             setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
             return;
           }
-          const renderedCandidates = availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [];
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
-          const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
-          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nifc-fire-reports") ?? officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
-          const candidate = fireCandidate ? undefined : renderedCandidates[0];
+          const { candidate, officialCandidate, registryHits: renderedCandidates } = layerHitStack(renderedHits, availableLayers, availableOfficialLayers);
           if (!candidate) {
             setMapQueryCandidates([]);
-            const officialCandidate = fireCandidate ?? officialFeatures[0];
-            const externalCandidate = officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
+            const externalCandidate = officialCandidate ?? renderedHits.find((feature) => {
               const sourceId = typeof feature.source === "string" ? feature.source : "";
               const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
               return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
@@ -6679,7 +6809,22 @@ export default function Home() {
   }, [repositoryOpen, closeRepository]);
 
   useEffect(() => {
-    if (!isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
+    if (primaryWorkspace !== "map" || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
+    const panel = leftPanelRef.current;
+    if (!panel) return;
+    const restoreBackground = isolateModalBackground(panel, panel.closest<HTMLElement>(".site-root"));
+    const keepFocusInside = (event: FocusEvent) => {
+      if (event.target instanceof Node && !panel.contains(event.target)) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+    };
+    document.addEventListener("focusin", keepFocusInside, true);
+    return () => {
+      document.removeEventListener("focusin", keepFocusInside, true);
+      restoreBackground();
+    };
+  }, [primaryWorkspace, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
+
+  useEffect(() => {
+    if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
@@ -6703,7 +6848,13 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+
+  useEffect(() => {
+    if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;
+    leftPanelRef.current?.querySelector<HTMLInputElement>('.catalog-search input[type="search"]')?.focus({ preventScroll: true });
+    sourceSearchFocusPendingRef.current = false;
+  }, [primaryWorkspace, globalQuery, leftOpen, leftPanelMode, officialSourceQuery]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -6712,7 +6863,7 @@ export default function Home() {
       else if (sourceStatusOpen) closeSourceStatus();
       else if (qwenOpen) closeQwenCompanion();
       else if (mapContextOpen) setMapContextOpen(false);
-      else if (helpOpen) setHelpOpen(false);
+      else if (helpOpen) closeMapGuide();
       else if (mapUtilityOpen) closeMapUtility();
       else if (measureModeRef.current) {
         measureModeRef.current = null;
@@ -6729,14 +6880,21 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus]);
+  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
+    setPrimaryWorkspace("map");
+    if (primaryWorkspace !== "map" && item.kind !== "source") window.setTimeout(() => mapContainerRef.current?.focus(), 0);
     setGlobalQuery("");
     if (item.kind === "source") {
-      setLeftPanelMode("layers");
+      sourceSearchFocusPendingRef.current = true;
+      openAtlasPanel("layers");
+      setLayerCatalogView("official");
+      setOfficialWorkspace("all");
+      setOfficialCatalogFilter("all");
+      setOfficialSourceQuery(item.title);
       setOfficialContextVisible(item.officialContextId, true);
-      announce(`Opened ${item.title} in official data connections`);
+      announce(`Opened ${item.title} in Map layers`);
       return;
     }
     if (item.kind === "feature" && item.featureId) {
@@ -7141,6 +7299,7 @@ export default function Home() {
   };
 
   const activateMapRepresentation = (mode: "2d" | "terrain" | "globe" | "compare") => {
+    setPrimaryWorkspace("map");
     if (mode === "compare") {
       openMapUtility("compare");
       announce("Compare opened · choose two layers and dates without changing the active map time");
@@ -8626,28 +8785,51 @@ export default function Home() {
     }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
   </nav> : null;
 
-  const toggleUnderground = () => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); };
-  const closeExplorerGuide = (rememberDismissal: boolean) => { setGuideOpen(false); writeExplorerGuideDismissed(rememberDismissal); };
+  const toggleUnderground = () => { const open = primaryWorkspace !== "map" || !undergroundOpen; if (open) activateMapRepresentation("2d"); setUndergroundOpen(open); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); };
+  const openMapGuideDiagnostics = () => {
+    openMapUtility("diagnostics");
+    // Re-enter retained controls, or let a newly opening panel paint past its
+    // initial visibility transition before focusing after help has unmounted.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      const panel = mapUtilityPanelRef.current;
+      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+    }));
+  };
+  const toggleExplorerGuide = () => {
+    setPrimaryWorkspace("map");
+    setGuideOpen((open) => primaryWorkspace !== "map" || !open);
+  };
+  const closeExplorerGuide = (rememberDismissal: boolean) => {
+    setGuideOpen(false);
+    writeExplorerGuideDismissed(rememberDismissal);
+    if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+  };
   const runExplorerGuideAction = (action: ExplorerGuideAction) => {
     if (action === "layers") openAtlasPanel("layers");
-    else if (action === "time") setTimelineOpen(true);
-    else if (action === "underground") { if (!undergroundOpen) toggleUnderground(); }
+    else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
+    else if (action === "underground") { if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground(); }
     else if (action === "qwen") openQwenCompanion(null);
+    if (action === "layers" || action === "time") window.requestAnimationFrame(() => {
+      // Guide dismissal restores its trigger synchronously. Enter the destination
+      // after the requested panel has committed, including retained open panels.
+      const panel = action === "layers" ? leftPanelRef.current : timelineRef.current;
+      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+    });
   };
   const mapRepresentationControls = () => <>
-              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
               {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
               <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("globe"); }}><b>Globe</b><span>◎</span></button>
-              <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+              <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
   </>;
 
   return (
     <div className="site-root" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
-      <a className="skip-link" href="#map-canvas">Skip to the map</a>
+      <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
@@ -8671,22 +8853,22 @@ export default function Home() {
               {mapRepresentationControls()}
             </div>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
-              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
-              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
-              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
+              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
+              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
+              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => { setPrimaryWorkspace("map"); setBasemap(event.target.value as BasemapKey); }} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
               <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
               <button className="map-dock-action map-dock-wide-only" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "localAtlas"} onClick={(event) => openMapUtility("localAtlas", event.currentTarget)}><strong>Local Atlas</strong><b>PC</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
                 <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
-                  <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { if ((event.target as HTMLElement).closest("button")) closeHeaderOverflow(event.currentTarget); }}>
+                  <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { const button = (event.target as HTMLElement).closest("button"); if (button) closeHeaderOverflow(event.currentTarget, !button.hasAttribute("data-map-panel")); }}>
                     {mapRepresentationControls()}
                   </div>
                   <div className="map-dock-menu-quick" role="group" aria-label="Quick map controls">
-                    <button type="button" aria-pressed={timelineOpen} onClick={(event) => { closeHeaderOverflow(event.currentTarget); setTimelineOpen((open) => !open); }}>Time · {formatTimelineStep(year)}</button>
-                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>
-                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("places"); }}>Places · {savedWorkspaces.length}</button>
+                    <button type="button" aria-pressed={timelineOpen} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); toggleTimelinePanel(); }}>Time · {formatTimelineStep(year)}</button>
+                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("layers", event.currentTarget); }}>Layers · {selectedMapLayerCount}</button>
+                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("places", event.currentTarget); }}>Places · {savedWorkspaces.length}</button>
                   </div>
                   <button type="button" aria-label="Local Atlas: climate, local files, and data coverage" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("localAtlas", summary); }}><strong>Local Atlas</strong><small>Climate, local files, and data coverage on this PC</small></button>
                   <button className="map-dock-compact-only" type="button" aria-label="Style and basemap" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
@@ -8696,7 +8878,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
-          <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen} onClick={() => setGuideOpen((open) => !open)}>?</button>
+          <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
           <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
           <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
@@ -8742,13 +8924,13 @@ export default function Home() {
           </details>
         </div>
 
-        {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
-          <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
+        {helpOpen && <aside ref={mapGuideRef} className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
+          <button className="icon-close" type="button" onClick={closeMapGuide} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
           <p>Choose a real source layer or select a mapped feature to inspect its provider, time, and limits. External context is not admitted KFM evidence.</p>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
-          <button className="map-guide-start" type="button" onClick={() => openMapUtility("diagnostics")}>Map diagnostics</button>
+          <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
       </header>
 
@@ -9122,7 +9304,7 @@ export default function Home() {
             <nav className="layer-source-switch" aria-label="Layer views">
               {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === id} data-active={layerCatalogView === id} onClick={() => { setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
             </nav>
-            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
+            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
@@ -9153,6 +9335,16 @@ export default function Home() {
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} hidden={!listedOfficialSources.some(item => item.id === source.id)} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
+                {officialVisibility[source.id] && state === "loading" && source.apiPath && <small role="status">{officialReadPhases[source.id] === "queued" ? "Waiting for a loading slot…" : "Receiving source data…"} You can hide this layer to cancel.</small>}
+                {officialVisibility[source.id] && state === "error" && <div className="layer-request-recovery">
+                  <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
+                  <button type="button" disabled={heldAtFrame} onClick={(event) => {
+                    // The recovery button disappears after retry; keep keyboard
+                    // focus on this layer's stable control throughout acquisition.
+                    event.currentTarget.closest("article")?.querySelector<HTMLInputElement>('input[type="checkbox"]')?.focus({ preventScroll: true });
+                    retryOfficialLayer(source.id);
+                  }}>Retry layer</button>
+                </div>}
                 <span hidden={!officialVisibility[source.id]} className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
                 {(needsCloserView || needsFlatMap || heldAtFrame) && <div className="reference-layer-guidance">
                   <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
@@ -9193,7 +9385,8 @@ export default function Home() {
                     <output>{streamflowFrames.length > 0 && streamflowFrameTime ? `${streamflowFrameTime.slice(0, 19).replace("T", " ")} UTC · frame ${safeStreamflowFrameIndex + 1}/${streamflowFrames.length}` : streamflowState === "error" ? "Source unavailable · no archive point displayed" : "No observed frame loaded"}</output>
                     <small>{streamflowBundle ? `Loaded ${streamflowBundle.query.start.slice(0, 10)} → ${streamflowBundle.query.end.slice(0, 10)} UTC; this is the checked request window, not the station’s full record.` : "Choose a station to check an older day. Provider coverage differs by station."}</small>
                     <small>{streamflowCoverage?.continuous ? `Station continuous record: ${streamflowCoverage.continuous.start.slice(0, 10)} → ${streamflowCoverage.continuous.end.slice(0, 10)} UTC${streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within this span.${streamflowCoverage.daily ? ` Daily means start ${streamflowCoverage.daily.start.slice(0, 10)}; inspect that older resolution in Observatory.` : ""}` : streamflowCoverage?.daily ? `No continuous span declared in this response. Daily mean record starts ${streamflowCoverage.daily.start.slice(0, 10)}; daily values are not intraday frames.` : streamflowCoverageMessage}</small>
-                    <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !streamflowArchiveDraftDay || streamflowState === "loading" || heldAtFrame} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
+                    <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} aria-invalid={Boolean(streamflowArchiveDraftDay && !validStreamflowArchiveDay(streamflowArchiveDraftDay, riverArchiveMaxDay ?? currentUtcDay()))} aria-describedby={streamflowArchiveDraftDay && !validStreamflowArchiveDay(streamflowArchiveDraftDay, riverArchiveMaxDay ?? currentUtcDay()) ? "river-archive-day-guidance" : undefined} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !validStreamflowArchiveDay(streamflowArchiveDraftDay, riverArchiveMaxDay ?? currentUtcDay()) || heldAtFrame || streamflowState === "loading" && streamflowArchiveDraftDay === streamflowArchiveDay} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
+                    {streamflowArchiveDraftDay && !validStreamflowArchiveDay(streamflowArchiveDraftDay, riverArchiveMaxDay ?? currentUtcDay()) && <small id="river-archive-day-guidance" role="status">Choose a valid UTC day from 1800 through {riverArchiveMaxDay ?? currentUtcDay()}; station coverage may be shorter.</small>}
                     {riverArchiveMinDay && riverArchiveMaxDay && <ArchiveDaySlider sourceLabel="River Pulse" minDay={riverArchiveMinDay} maxDay={riverArchiveMaxDay} day={streamflowArchiveDraftDay} onSelect={setStreamflowArchiveDraftDay} nextAction="Check day on map" />}
                   </> : source.id === "noaa-goes-geocolor" ? <>
                     <p>{noaaSatelliteManifest ? `${noaaSatelliteManifest.frameCount} dated ${noaaSatelliteManifest.product === "geocolor" ? "GOES GeoColor" : "GOES visible fallback"} images · latest ${drawerTimestamp(noaaSatelliteManifest.frames.at(-1)!.observedAt)}${noaaSatelliteManifest.freshness === "delayed" ? " · DELAYED" : ""}${noaaSatelliteManifest.partial ? " · PARTIAL CATALOG" : ""}` : state === "loading" ? "Checking NOAA image times…" : "No dated NOAA image catalog loaded."}</p>
@@ -9227,9 +9420,9 @@ export default function Home() {
                     <div className="source-time-actions"><button type="button" onClick={() => openPrimaryWorkspace("reports", true, buildFireReportContext("nifc-fire-reports", null, officialPayloads["nifc-fire-reports"]?.retrievedAt, officialPayloads["nifc-fire-reports"]?.state ?? "unavailable", officialPayloads["nasa-gibs-fire-points"]?.state ?? "unavailable", []))}>Build Kansas fire report</button><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb incident updates ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">National fire news ↗</a></div>
                   </> : source.id === "noaa-hms-smoke" ? <HmsSmokePlayback enabled={Boolean(effectiveOfficialVisibility["noaa-hms-smoke"] && styleReady)} reducedMotion={reducedMotion} displayedDay={officialArchiveDays["noaa-hms-smoke"]} payload={officialPayloads["noaa-hms-smoke"]} onReserve={reserveSmokePlayback} onFrame={commitSmokePlayback} onCurrent={() => returnOfficialSourceToCurrent("noaa-hms-smoke")} /> : ["usgs-earthquakes", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
                     <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
-                    <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
-                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `${officialPayloads["nasa-gibs-fire-points"]?.sourceDay ? `NASA image day ${officialPayloads["nasa-gibs-fire-points"]!.sourceDay} UTC` : "Current UTC day · check source"}${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded${officialPayloads["nasa-gibs-fire-points"]!.state === "partial" ? " · partial" : ""}` : ""}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
-                    {source.id === "usgs-earthquakes" && officialArchiveDays["usgs-earthquakes"] && <><input type="range" min="0" max={Math.max(0, earthquakeArchiveFrames.length - 1)} value={Math.max(0, earthquakeArchiveFrameIndex)} disabled={earthquakeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekEarthquakeArchiveFrame(Number(event.target.value))} aria-label="Earthquakes through exact event time on selected UTC day" aria-valuetext={earthquakeArchiveFrames[earthquakeArchiveFrameIndex] ?? "No event frame"} /><small>{earthquakeArchiveFrames.length ? `Events through ${earthquakeArchiveFrames[Math.max(0, earthquakeArchiveFrameIndex)].slice(11, 19)} UTC · ${Math.max(0, earthquakeArchiveFrameIndex + 1)}/${earthquakeArchiveFrames.length} returned event times. Empty intervals remain empty.` : "No returned event times for this checked day; no slider frame invented."}</small></>}
+                    <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || heldAtFrame || state === "loading" && officialArchiveDraftDays[source.id as OfficialContextFeedId] === officialArchiveDays[source.id as OfficialContextFeedId]} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
+                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : !officialArchivePayloadsRef.current[source.id as OfficialContextFeedId] ? "Day not loaded · turn on layer to resume" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `${officialPayloads["nasa-gibs-fire-points"]?.sourceDay ? `NASA image day ${officialPayloads["nasa-gibs-fire-points"]!.sourceDay} UTC` : "Current UTC day · check source"}${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded${officialPayloads["nasa-gibs-fire-points"]!.state === "partial" ? " · partial" : ""}` : ""}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
+                    {source.id === "usgs-earthquakes" && officialArchiveDays["usgs-earthquakes"] && <><input type="range" min="0" max={Math.max(0, earthquakeArchiveFrames.length - 1)} value={Math.max(0, earthquakeArchiveFrameIndex)} disabled={earthquakeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekEarthquakeArchiveFrame(Number(event.target.value))} aria-label="Earthquakes through exact event time on selected UTC day" aria-valuetext={earthquakeArchiveFrames[earthquakeArchiveFrameIndex] ?? "No event frame"} /><small>{earthquakeArchiveFrames.length ? `Events through ${earthquakeArchiveFrames[Math.max(0, earthquakeArchiveFrameIndex)].slice(11, 19)} UTC · ${Math.max(0, earthquakeArchiveFrameIndex + 1)}/${earthquakeArchiveFrames.length} returned event times. Empty intervals remain empty.` : officialArchivePayloadsRef.current["usgs-earthquakes"] ? "No returned event times for this checked day; no slider frame invented." : "Day not loaded; no event frame available."}</small></>}
                   </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}
                   {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
                 </section>
@@ -9342,7 +9535,7 @@ export default function Home() {
           <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
             <header>
               <div><span>SELECTED LAYERS</span><strong>{visibleCount} domain · {visibleOfficialCount} sources · {selectedEarthEngineCount} snapshots</strong></div>
-              <button type="button" onClick={() => openAtlasPanel("layers")}>Manage</button>
+              <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Manage</button>
             </header>
             <div className="map-legend-list">
               {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
@@ -9377,7 +9570,7 @@ export default function Home() {
             downstreamPathCount={downstreamPaths.length}
             downstreamAnalysis={downstreamAnalysis}
             sourceSwitcher={liveObservationSwitcher}
-            onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId, false, streamflowArchiveDayRef.current); }}
+            onRefresh={() => { void refreshSelectedStreamflow(); }}
             onTogglePlay={toggleStreamflowPlayback}
             onStep={stepStreamflow}
             onSeek={seekStreamflow}
@@ -9457,13 +9650,13 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
           <button className="qwen-map-launch" type="button" aria-label="Ask Qwen about this map view" title="Ask Qwen about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !browserRenderBudget(renderQuality).efficient ? "on" : undefined} tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !browserRenderBudget(renderQuality).efficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
@@ -9780,7 +9973,7 @@ export default function Home() {
                     <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.kind === "SNAPSHOT_GEOJSON" ? "DATED SNAPSHOT" : source.apiPath || source.managedAdapterPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
                     <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath || source.managedAdapterPath || source.kind === "SNAPSHOT_GEOJSON" ? "NOT LOADED" : "RASTER TILES · NO FEATURES")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : "No tile retrieval clock"}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
                     <p>{limitation ?? source.boundary}</p><aside><strong>Failure boundary</strong><span>{source.fallback}</span></aside>
-                    <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}{source.id === "usgs-streamflow" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshStreamflow(streamflowRange, streamflowSelectedStationId)}>Refresh observations</button>}{source.id === "noaa-nwps-gauges" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshNoaaHydrologyNetwork()}>Refresh status</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a><a href={source.serviceUrl} target="_blank" rel="noreferrer">{source.id === "raspberry-shake-stations" ? "StationView ↗" : "Service ↗"}</a></footer>
+                    <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}{source.id === "usgs-streamflow" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshSelectedStreamflow()}>Refresh observations</button>}{source.id === "noaa-nwps-gauges" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshNoaaHydrologyNetwork()}>Refresh status</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a><a href={source.serviceUrl} target="_blank" rel="noreferrer">{source.id === "raspberry-shake-stations" ? "StationView ↗" : "Service ↗"}</a></footer>
                   </article>)}</div>
                   <footer className="official-pipeline-contract"><span>Governance: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">#3393 source-family decision</a></span><span>Hydrology: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3372" target="_blank" rel="noreferrer">#3372 governed slice</a></span><span>Deployment: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418" target="_blank" rel="noreferrer">#4418 receipt hold</a></span></footer>
                 </section>
@@ -9930,8 +10123,8 @@ export default function Home() {
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
           <nav className="map-mobile-actions" aria-label="Mobile map actions">
-            <button type="button" onClick={() => openAtlasPanel("layers")}>Map layers <b>{selectedMapLayerCount}</b></button>
-            <button type="button" onClick={() => openAtlasPanel("places")}>Places <b>{savedWorkspaces.length}</b></button>
+            <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
+            <button type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" onClick={(event) => { openSourceStatus(event.currentTarget); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={openMapSettings}>Style</button>
@@ -9944,9 +10137,9 @@ export default function Home() {
             readTransect={() => measurementGeometryModeRef.current === "distance" && !measureModeRef.current ? measureCoordinatesRef.current.map(p => [...p] as [number, number]) : []}
             onContext={setSubsurfaceContext}
             onInspect={inspection => { returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setSubsurfaceInspection(inspection); setResearchOpen(false); setRightOpen(true); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-subsurface-inspector]")?.focus()); }}
-            onClose={() => { setUndergroundOpen(false); mapContainerRef.current?.focus(); }} onSave={saveCurrentWorkspace}
+            onClose={() => { setUndergroundOpen(false); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }} onSave={saveCurrentWorkspace}
             onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} />}
-          <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
+          <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {selectedMapLayerCount} map layers selected. Check Map layers for visibility and source status. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
         </section>
 
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
