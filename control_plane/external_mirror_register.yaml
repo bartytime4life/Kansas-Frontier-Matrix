@@ -34,7 +34,7 @@
       "path_prefix": "apps/site/source/",
       "external_source": "external KFM site source repository (site_candidate_commit recorded per receipt)",
       "root_decision_ref": "apps/README.md#root-naming-decision-external-site-mirror",
-      "receipt_path": "data/receipts/generated/site-v251-final-review-reconciliation-20261011.json",
+      "receipt_path": "data/receipts/generated/site-v251-storm-events-layer-overlay-20261012.json",
       "parity_check": "tools/qa/site_mirror.py",
       "parity_command": "python tools/qa/site_mirror.py --check",
       "relaxed_rules": [

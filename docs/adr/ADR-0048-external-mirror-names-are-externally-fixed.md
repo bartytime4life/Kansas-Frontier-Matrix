@@ -84,7 +84,7 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 | Condition | Current instance (`apps/site/source/`) |
 |---|---|
 | The mirror copies a named external source | The external site source; `site_candidate_commit` is recorded per receipt |
-| A generated receipt pins the file set, digests and upstream presence | The receipt `tools/qa/site_mirror.py` checks (currently `site-v251-final-review-reconciliation-20261011.json`); `REVIEW_ONLY`, so it pins content, not human acceptance |
+| A generated receipt pins the file set, digests and upstream presence | The receipt pinned by `RECEIPT` in `tools/qa/site_mirror.py` (it changes with each mirror sync); `REVIEW_ONLY`, so it pins content, not human acceptance |
 | An enforced parity check fails on drift | `tools/qa/site_mirror.py --check` (water-pilot workflow) |
 | The mirror is registered with its receipt, check and relaxed rule | `mirror.apps-site-source` in `control_plane/external_mirror_register.yaml` |
 | The validator relaxes only the uppercase rule, only for upstream-backed receipt entries | `_external_mirror_prefixes` / `_external_mirror_exempt_paths` in `validate_repository_topology.py` |
