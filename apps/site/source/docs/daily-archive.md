@@ -60,9 +60,34 @@ For hosted execution, obtain current service access from Sites `get_site` for
 `appgprj_6aa0b1c41bc08191bfd86003920f1631`, verify it remains owner-private, and
 run this script with `--hosted-stdin`, passing `{ "token": "…" } through hidden
 stdin. Never save/print the token or put it in a command line or schedule prompt.
-The writer uses Sites' private dispatch boundary; do not share or make the Site
-public without adding explicit writer authorization. Browser writes also require
-a same-origin request and `X-KFM-Archive-Writer: daily-v1`; no CORS is granted.
+Configure `KFM_ARCHIVE_WORKER_TOKEN` in this Site's runtime settings as the
+hex SHA-256 of `kfm-daily-archive-worker/v1` followed by a NUL byte and this
+Site's service-access token. The runner derives this separate archive capability
+from the current Sites service access in memory, preserving the existing hidden
+stdin `{ "token": "…" }` interface and daily cloud schedule. If Sites service
+access rotates, update this runtime secret and deploy the current saved version
+before the next run. For independently provisioned access, include `workerToken`
+alongside `token` in the hidden stdin JSON instead. Sites access admits dispatch; the archive
+credential independently permits only capture and `GET ?action=status` receipt
+readback. Status contains capture IDs/status and storage totals, never review
+notes, object keys or payloads. It cannot change reviews or settings.
+
+Hosted browser reads, downloads (including held bytes), capture, review and
+settings require a signed-in owner listed in `KFM_ARCHIVE_OWNER_IDS` or
+`KFM_ARCHIVE_OWNER_EMAILS`. A missing allowlist fails closed. Browser writes also
+require same-origin checks and `X-KFM-Archive-Writer: daily-v1`; that public marker
+is only a CSRF defense. No CORS is granted. Keep the existing owner-private audience.
+
+For local hosting, create `~/.config/kfm/daily-archive-access` as an owner-only
+regular file (mode 0600) containing `{ "ownerToken": "…", "workerToken": "…" }`.
+Generate each value independently from 32 cryptographically random bytes,
+encoded as base64url (43 characters); the values must differ. The launcher and
+scheduled runner read this same file without printing it. Restart the launcher
+after changing credentials. Missing configuration leaves archive access closed;
+other local features still work. The existing timer needs no credential in argv.
+Enter the owner token in the local archive page's access field. It stays only in
+page memory, and downloads send it in a header. Reloading closes access. The
+worker token grants capture/status only. Loopback placement grants no authority.
 
 Apply only the additive `0005_daily_archive.sql` migration to an existing local
 store after backing it up. Hosted publication applies the appended migration.

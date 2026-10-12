@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { before, after, test } from "node:test";
 import ts from "typescript";
-import { captureDaily } from "../scripts/capture-daily-archive.mjs";
+import { captureDaily, hostedArchiveWorkerToken } from "../scripts/capture-daily-archive.mjs";
 const compile=source=>`data:text/javascript;base64,${Buffer.from(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).toString("base64")}`;
 const modelUrl=compile(await readFile(new URL("../app/daily-archive.ts",import.meta.url),"utf8"));
 const model=await import(modelUrl);
@@ -89,6 +89,29 @@ test("append-only review holds the exact capture, while checksum tampering fails
  await bucket.put(saved.entry.object_key,new Uint8Array(saved.entry.bytes));await assert.rejects(store.readArchiveCapture(db,bucket,result.id),/checksum/);
 });
 
+test("route denies held-byte disclosure and worker curation while retaining authenticated owner download",async()=>{
+ await reset();const capture=await store.captureArchive(db,bucket,feed,reply());await store.reviewArchive(db,capture.id,"held","Private review fixture");
+ const ownerToken="o".repeat(43),workerToken="w".repeat(43);
+ globalThis.__archiveRouteIntegration={env:{BUCKET:bucket,KFM_ARCHIVE_LOCAL_OWNER_TOKEN:ownerToken,KFM_ARCHIVE_WORKER_TOKEN:workerToken},db};
+ const envUrl=compile('export const env=globalThis.__archiveRouteIntegration.env;');
+ const dbUrl=compile('export const getRawDb=()=>globalThis.__archiveRouteIntegration.db;');
+ const userUrl=compile('export async function getChatGPTUser(){return null}');
+ const nextUrl=compile('export class NextRequest extends Request {get nextUrl(){return new URL(this.url)}}');
+ const storeUrl=compile((await readFile(new URL("../app/daily-archive-store.ts",import.meta.url),"utf8")).replace('"./daily-archive"',JSON.stringify(modelUrl)));
+ const authUrl=compile((await readFile(new URL("../app/daily-archive-auth.ts",import.meta.url),"utf8")).replace('"cloudflare:workers"',JSON.stringify(envUrl)).replace('"./chatgpt-auth"',JSON.stringify(userUrl)).replace('"./daily-archive-store"',JSON.stringify(storeUrl)));
+ let source=await readFile(new URL("../app/api/daily-archive/route.ts",import.meta.url),"utf8");
+ for(const [name,url] of Object.entries({"cloudflare:workers":envUrl,"next/server":nextUrl,"../../../db":dbUrl,"../../daily-archive":modelUrl,"../../daily-archive-store":storeUrl,"../../daily-archive-auth":authUrl,"../live-context/route":compile('export async function GET(){throw Error("No provider calls in this test")}')}))source=source.replace(JSON.stringify(name),JSON.stringify(url));
+ const route=await import(compile(source));const {NextRequest}=await import(nextUrl);
+ const request=(query,token,method="GET",body)=>new NextRequest(`http://127.0.0.1:4173/api/daily-archive${query}`,{method,headers:{...(token?{Authorization:`Bearer ${token}`}:{ }),"X-KFM-Archive-Writer":"daily-v1","Content-Type":"application/json"},...(body?{body:JSON.stringify(body)}:{})});
+ for(const token of [null,workerToken])assert.equal((await route.GET(request(`?id=${capture.id}&action=download`,token))).status,401);
+ const download=await route.GET(request(`?id=${capture.id}&action=download`,ownerToken));assert.equal(download.status,200);assert.equal(await store.archiveHash(new Uint8Array(await download.arrayBuffer())),capture.sha256);
+ assert.equal((await route.GET(request(`?id=${capture.id}`,ownerToken))).status,409,"held bytes stay hidden from the map");
+ assert.equal((await route.POST(request("?action=review",workerToken,"POST",{id:capture.id,state:"reviewed",note:"unauthorized"}))).status,401);
+ assert.equal((await route.POST(request("?action=settings",workerToken,"POST",{budget:16777216,paused:true}))).status,401);
+ const status=await route.GET(request("?action=status",workerToken));assert.equal(status.status,200);assert.deepEqual((await status.json()).entries,[{id:capture.id,status:"ready"}]);
+ assert.equal((await store.readArchiveCapture(db,bucket,capture.id,true)).entry.review,"held");assert.equal((await store.archiveStorage(db)).paused,false);
+});
+
 test("no capture for a missing day and no fabricated empty map payload",async()=>{
  await reset();const catalog=await store.archiveCatalog(db,"2000-01-01");assert.deepEqual(catalog.entries,[]);assert.deepEqual(catalog.days,[]);
  await assert.rejects(store.readArchiveCapture(db,bucket,crypto.randomUUID()),/No stored capture/);
@@ -97,7 +120,19 @@ test("no capture for a missing day and no fabricated empty map payload",async()=
 test("runner rejects credential redirection and stops paused runs before writes",async()=>{
  for(const origin of ["https://evil.test","http://localhost:4173","http://127.0.0.1:4173/path"])await assert.rejects(captureDaily(origin),/UNSUPPORTED/);
  await assert.rejects(captureDaily("http://127.0.0.1:4173","secret"),/DO_NOT_SEND/);
- let calls=0;const result=await captureDaily("http://127.0.0.1:4173",null,async()=>{calls++;return Response.json({storage:{paused:true}});});assert.equal(result.outcome,"paused");assert.equal(calls,1);
+ let calls=0;const result=await captureDaily("http://127.0.0.1:4173",null,async(url,options)=>{calls++;assert.match(url,/action=status/);assert.equal(options.headers.Authorization,`Bearer ${"w".repeat(43)}`);return Response.json({storage:{paused:true}});},"w".repeat(43));assert.equal(result.outcome,"paused");assert.equal(calls,1);
+});
+
+test("hosted runner preserves service-access-only stdin through a distinct derived archive capability",async()=>{
+ const siteToken="synthetic-service-access-only";
+ const {createHash}=await import("node:crypto");
+ const expected=createHash("sha256").update("kfm-daily-archive-worker/v1\0").update(siteToken).digest("hex");
+ assert.equal(hostedArchiveWorkerToken(siteToken),expected);assert.notEqual(expected,siteToken);
+ let calls=0;
+ const result=await captureDaily("https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site",siteToken,async(url,options)=>{
+  calls++;assert.match(url,/action=status/);assert.equal(options.headers.Authorization,`Bearer ${expected}`);assert.equal(options.headers["OAI-Sites-Authorization"],`Bearer ${siteToken}`);assert.equal(options.redirect,"error");return Response.json({storage:{paused:true}});
+ });
+ assert.equal(result.outcome,"paused");assert.equal(calls,1);
 });
 
 test("archive screen server-renders safely before a day or capture is loaded",async()=>{
@@ -128,7 +163,7 @@ test("runner verifies separate capture days when a run crosses midnight",async()
   const day=parsed.searchParams.get("day")??"2026-10-10";requestedDays.push(day);
   return Response.json({day,storage:{paused:false},entries:records.filter(row=>row.day===day)});
  };
- const result=await captureDaily("http://127.0.0.1:4173",null,request);assert.equal(result.outcome,"complete");assert.equal(result.results.length,9);assert.ok(requestedDays.includes("2026-10-09"));
+ const result=await captureDaily("http://127.0.0.1:4173",null,request,"w".repeat(43));assert.equal(result.outcome,"complete");assert.equal(result.results.length,9);assert.ok(requestedDays.includes("2026-10-09"));
 });
 
 
