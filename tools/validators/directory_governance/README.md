@@ -36,16 +36,6 @@ In pull-request CI the proposed baseline is also compared with the trusted base
 commit: waiver additions, waiver mutation, metadata changes, and deadline
 extensions fail. These diagnostics do not authorize a new bootstrap or waiver.
 
-The uppercase path-grammar check exempts paths that are fixed outside KFM, as
-Directory Rules §13.2 allows: numbered `docs/adr/ADR-NNNN-*.md` files, and (since
-2026-10-12) everything under `apps/site/source/`. That directory is a byte mirror
-of the external site source. Its file set and digests are pinned by the reviewed
-mirror receipt and enforced by `tools/qa/site_mirror.py --check`, so its file
-names follow upstream. Renaming a mirrored file to satisfy KFM grammar would
-break mirror parity. The nonportable-punctuation and unsafe-path checks still
-apply to the mirror. When the exemption was added, the `path-grammar:uppercase`
-waiver shrank by the ten mirror paths it had held, and no waiver was added.
-
 `render_repository_topology_diagnostics.py` is a bounded diagnostic projection
 for failed ratchet runs. It preserves the ratchet exit code and reports only the
 failure disposition, rule id, subject, and fingerprint for new drift, invariant
