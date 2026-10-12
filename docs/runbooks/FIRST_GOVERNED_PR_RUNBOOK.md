@@ -138,14 +138,14 @@ Run, in order:
 
 1. **Schema meta-validation.**
    ```bash
-   python3 -c "import json; from jsonschema import Draft202012Validator; \
+   python3 -P -c "import json; from jsonschema import Draft202012Validator; \
      Draft202012Validator.check_schema(json.load(open('schemas/contracts/v1/example/example_object.schema.json')))"
    ```
    Expected: silent exit (status 0).
 
 2. **Valid fixture.**
    ```bash
-   python3 -c "import json; from jsonschema import Draft202012Validator; \
+   python3 -P -c "import json; from jsonschema import Draft202012Validator; \
      s=json.load(open('schemas/contracts/v1/example/example_object.schema.json')); \
      v=Draft202012Validator(s); \
      errs=list(v.iter_errors(json.load(open('fixtures/example_object/valid/minimal.json')))); \
@@ -155,7 +155,7 @@ Run, in order:
 
 3. **Invalid fixture.**
    ```bash
-   python3 -c "import json; from jsonschema import Draft202012Validator; \
+   python3 -P -c "import json; from jsonschema import Draft202012Validator; \
      s=json.load(open('schemas/contracts/v1/example/example_object.schema.json')); \
      v=Draft202012Validator(s); \
      errs=list(v.iter_errors(json.load(open('fixtures/example_object/invalid/missing_id.json')))); \
