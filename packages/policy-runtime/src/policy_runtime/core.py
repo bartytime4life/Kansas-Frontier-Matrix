@@ -29,10 +29,16 @@ SOIL_SELF_RELEASE_LICENSES = frozenset({
 STORM_EVENTS_SELF_RELEASE_LICENSES = frozenset({
     "U.S. Public Domain (NOAA federal records, 17 U.S.C. 105); Storm Events data subject to revision",
 })
+# ADR-0049: the admitted USGS ComCat earthquake license, used only by the earthquake
+# gate; disjoint from every other list for the same reason.
+EARTHQUAKE_SELF_RELEASE_LICENSES = frozenset({
+    "U.S. Public Domain (USGS works, 17 U.S.C. 105); ComCat solutions subject to revision",
+})
 WATER_DECISION_PROFILE = "kfm.water-release-decision/v1"
 WEATHER_DECISION_PROFILE = "kfm.weather-release-decision/v1"
 SOIL_DECISION_PROFILE = "kfm.soil-release-decision/v1"
 STORM_EVENTS_DECISION_PROFILE = "kfm.storm-events-release-decision/v1"
+EARTHQUAKE_DECISION_PROFILE = "kfm.earthquake-release-decision/v1"
 
 
 def _self_release_eligible(evidence: dict, licenses=SELF_RELEASE_LICENSES) -> bool:

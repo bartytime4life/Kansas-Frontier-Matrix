@@ -10,11 +10,11 @@ CAPTURED_AT = "2025-11-01T12:00:00Z"
 
 
 def fixture_bytes(key, mutate=None):
-    """A month's committed page as bytes, or b"" (HTTP 204) when the month has no fixture."""
+    """A month's committed page as bytes, or b"" (HTTP 204) when the month has no fixture.
+
+    ``mutate(key, document)`` sees None for a month with no fixture and may return a document for it."""
     path = FIXTURES / f"{key}.geojson"
-    if not path.is_file():
-        return b""
-    document = json.loads(path.read_text())
+    document = json.loads(path.read_text()) if path.is_file() else None
     if mutate:
         document = mutate(key, document)
     return b"" if document is None else json.dumps(document).encode()

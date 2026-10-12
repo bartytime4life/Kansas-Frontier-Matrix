@@ -119,6 +119,15 @@ STORM_EVENTS = SnapshotProfile("kfm.storm-events-snapshot/v1", "noaa-storm-event
                                "kfm://hazards/storm-events/", 5000, _calendar_year_interval,
                                grouping="month", month_field="begin_local", member_kind="record",
                                window=_data_year_window)
+# USGS ComCat Kansas earthquake pilot: one data year of catalog solutions in the
+# Kansas context envelope, no stations; one evidence bundle per UTC origin month,
+# split into parts of 127 records. EARTHQUAKE_LIMIT is set so a full package stays
+# inside MAX_PACKAGE_BYTES (see tests/tools/test_earthquake_release.py).
+EARTHQUAKE_LIMIT = 6000
+EARTHQUAKES = SnapshotProfile("kfm.earthquake-snapshot/v1", "usgs-earthquakes", frozenset(),
+                              "kfm://hazards/earthquakes/", EARTHQUAKE_LIMIT, _calendar_year_interval,
+                              grouping="month", month_field="origin_utc", member_kind="record",
+                              window=_data_year_window)
 
 
 def prepare_snapshot(candidate: dict, catalog: dict, evidence: dict, validation: dict, *, rollback_target=None,
