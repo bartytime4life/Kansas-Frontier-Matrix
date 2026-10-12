@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; structure-feature; fault-structure; structural-context; source-role-aware; release-gated; hazards-boundary
 tags: [kfm, contracts, geology, StructureFeature, FaultStructure, structure-feature, fault, fold, joint, lineament, structural-geology, geometry-fingerprint, map-provenance, evidence, source-role, hazards-boundary, policy, release, correction, rollback]
 related:
@@ -28,7 +28,7 @@ related:
   - ../../../docs/domains/geology/SCOPE.md
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../docs/domains/geology/sublanes/geophysics.md
   - ../../../schemas/contracts/v1/domains/geology/structure_feature.schema.json
   - ../../../schemas/contracts/v1/domains/geology/
@@ -39,6 +39,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a Geology StructureFeature semantic contract."
   - "A lower-case schema scaffold exists at schemas/contracts/v1/domains/geology/structure_feature.schema.json, while this requested contract path uses PascalCase. The schema's x-kfm.contract_doc points to contracts/domains/geology/structure_feature.md, creating a casing/path drift that remains CONFLICTED / NEEDS VERIFICATION."
   - "Object-family docs explicitly surface Fault Structure ↔ StructureFeature spelling drift. This contract preserves StructureFeature by requested path and records FaultStructure as the unresolved alternate family spelling."

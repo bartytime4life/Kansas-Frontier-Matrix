@@ -1,20 +1,25 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION
+doc_id: kfm://doc/atlases/maplibre-master
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; required owning_root, responsibility, and truth_posture fields added; body unchanged"
+owning_root: docs/
+responsibility: Carry the Master MapLibre components atlas and renderer-decision overlay into docs as a navigation aid; not renderer, policy, or release authority.
+truth_posture: PROPOSED carrier; Master atlas remains the doctrinal anchor; owners, ADR numbers, and related paths NEEDS VERIFICATION
 title: MapLibre Master Atlas Carrier
 type: standard
 version: v0.1
 status: draft
 owners: OWNER_TBD
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-10-12
 policy_label: public
 related:
-  - Master_MapLibre_Components-Functions-Features_v2.1_FULL.md
-  - docs/architecture/maplibre-3d.md
   - docs/atlases/receipt-catalog.md
   - docs/atlases/pipeline-gate-reference.md
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/doctrine/directory-rules.md
+related_unresolved:
+  - Master_MapLibre_Components-Functions-Features_v2.1_FULL.md
+  - docs/architecture/maplibre-3d.md
   - packages/maplibre-runtime/
   - schemas/contracts/v1/maplibre/
   - schemas/contracts/v1/3d/

@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Archaeology steward · Contract steward · Evidence steward · Schema steward · Policy steward · Review steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-10-12
 policy_label: public; contracts; domains; archaeology; archaeological-site; semantic-contract
 tags: [kfm, contracts, archaeology, archaeological-site, site, evidence, review, policy, lifecycle, governance]
 related:
@@ -15,7 +15,7 @@ related:
   - ./candidate_feature.md
   - ./site_component.md
   - ./provenience_context.md
-  - ./PublicationTransformReceipt.md
+  - ./publication_transform_receipt.md
   - ../../../docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md
   - ../../../docs/domains/archaeology/CANONICAL_PATHS.md
   - ../../../docs/domains/archaeology/ARCHITECTURE.md
@@ -25,6 +25,7 @@ related:
   - ../../../data/proofs/
   - ../../../release/
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Expanded from a planned-file scaffold into the object-level ArchaeologicalSite semantic contract."
   - "The paired schema is a PROPOSED scaffold with empty properties and additionalProperties enabled."
   - "No validator implementation was found in this task."

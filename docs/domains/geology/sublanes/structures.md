@@ -6,25 +6,44 @@ version: v1
 status: draft
 owners: <geology-domain-steward> (placeholder — verify against repo CODEOWNERS)
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-10-12
 policy_label: public
+owning_root: docs/
+responsibility: Describe the Structures geology sublane scope, boundaries, and sensitivity posture; documentation only, not schema, policy, or release authority.
+truth_posture: PROPOSED sublane doctrine; repository paths, owners, and implementation NEEDS VERIFICATION
 related:
-  - docs/domains/geology/README.md                       # PROPOSED — verify presence
-  - docs/domains/geology/sublanes/bedrock_geology.md      # PROPOSED sibling (structures ride on bedrock maps)
-  - docs/domains/geology/sublanes/stratigraphy.md         # PROPOSED sibling (offsets cut intervals)
-  - docs/domains/geology/sublanes/geophysics.md           # PROPOSED sibling (anomaly ≠ mapped structure)
-  - docs/domains/geology/sublanes/boreholes-wells.md      # PROPOSED sibling (well evidence for structure)
-  - docs/domains/hazards/                                 # cross-lane: fault / subsidence / seismicity RISK
-  - docs/domains/hydrology/                               # cross-lane: structural control on aquifers
-  - schemas/contracts/v1/domains/geology/                 # PROPOSED schema home (ADR-0001 default)
-  - contracts/domains/geology/                            # PROPOSED semantic contract home
-  - policy/domains/geology/                                # PROPOSED policy home
-  - data/published/layers/geology/                        # PROPOSED layer outputs
-  - ai-build-operating-contract.md                        # canonical operating contract
-  - directory-rules.md                                    # §12 Domain Placement Law, §5 Canonical Root Tree
-  - docs/registers/DRIFT_REGISTER.md                      # naming-convention + sublane-folder routing
+  - docs/domains/geology/README.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
+  - docs/domains/geology/sublanes/stratigraphy.md
+  - docs/domains/geology/sublanes/geophysics.md
+  - docs/domains/geology/sublanes/boreholes-wells.md
+  - docs/domains/hazards/
+  - docs/domains/hydrology/
+  - schemas/contracts/v1/domains/geology/
+  - contracts/domains/geology/
+  - policy/domains/geology/
+  - data/published/layers/geology/
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+related_notes:
+  - "docs/domains/geology/README.md — PROPOSED — verify presence"
+  - "docs/domains/geology/SUBLANE-BEDROCK.md — PROPOSED sibling (structures ride on bedrock maps)"
+  - "docs/domains/geology/sublanes/stratigraphy.md — PROPOSED sibling (offsets cut intervals)"
+  - "docs/domains/geology/sublanes/geophysics.md — PROPOSED sibling (anomaly ≠ mapped structure)"
+  - "docs/domains/geology/sublanes/boreholes-wells.md — PROPOSED sibling (well evidence for structure)"
+  - "docs/domains/hazards/ — cross-lane: fault / subsidence / seismicity RISK"
+  - "docs/domains/hydrology/ — cross-lane: structural control on aquifers"
+  - "schemas/contracts/v1/domains/geology/ — PROPOSED schema home (ADR-0001 default)"
+  - "contracts/domains/geology/ — PROPOSED semantic contract home"
+  - "policy/domains/geology/ — PROPOSED policy home"
+  - "data/published/layers/geology/ — PROPOSED layer outputs"
+  - "docs/registers/DRIFT_REGISTER.md — naming-convention + sublane-folder routing"
+  - "docs/doctrine/ai-build-operating-contract.md — canonical operating contract"
+  - "docs/doctrine/directory-rules.md — §12 Domain Placement Law, §5 Canonical Root Tree"
 tags: [kfm, geology, structures, faults, folds, contacts, sublane]
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal); required owning_root, responsibility, and truth_posture added; related entries split into resolvable paths, related_notes (former inline comments), and related_unresolved"
   - "CONTRACT_VERSION = 3.0.0 pinned per ai-build-operating-contract.md."
   - "PUBLIC-SAFE LANE. Structural features (faults, folds, contacts) on geologic maps are generally public; no exact-location sensitivity like boreholes/geochemistry/geophysics. policy_label public; T0/T1 posture similar to bedrock_geology.md / stratigraphy.md."
   - "OBJECT NAME: this lane owns 'StructureFeature' (Atlas §10C/E canonical). The form 'FaultStructure' used in some earlier drafts is DRIFT and is corrected to StructureFeature here. Routed to DRIFT_REGISTER."
@@ -109,7 +128,7 @@ docs/
     └── geology/
         ├── README.md                   # PROPOSED — domain landing
         └── sublanes/                   # PROPOSED — see §13 Open Questions
-            ├── bedrock_geology.md      # PROPOSED sibling (structures ride on bedrock maps)
+            ├── bedrock_geology.md      # redirect stub → ../SUBLANE-BEDROCK.md (merged 2026-10-12)
             ├── surficial_geology.md    # PROPOSED sibling
             ├── stratigraphy.md         # PROPOSED sibling (offsets cut intervals)
             ├── structures.md           # <— THIS FILE
@@ -169,7 +188,7 @@ Material that **does not** belong here, and where it goes instead:
 
 | Out of scope for structures sublane | Lives in | Canonical object family |
 |---|---|---|
-| Bedrock map **unit polygons** | `docs/domains/geology/sublanes/bedrock_geology.md` *(PROPOSED)* | `GeologicUnit`, `Lithology` |
+| Bedrock map **unit polygons** | `docs/domains/geology/SUBLANE-BEDROCK.md` | `GeologicUnit`, `Lithology` |
 | Stratigraphic **nomenclature / correlation** | `docs/domains/geology/sublanes/stratigraphy.md` *(PROPOSED)* | `Stratigraphic Interval`, `StratigraphicCorrelation` |
 | Geophysical surveys / anomalies | `docs/domains/geology/sublanes/geophysics.md` *(PROPOSED)* | *(geophysics object — verify; anomaly ≠ structure)* |
 | Borehole / well-log **point records** | `docs/domains/geology/sublanes/boreholes-wells.md` *(PROPOSED)* | `BoreholeReference`, `Well LogReference` |
@@ -482,7 +501,7 @@ This document is done enough to enter the repository when:
 PROPOSED — verify each path against the mounted repo before linking.
 
 - `docs/domains/geology/README.md` — Geology lane charter.
-- `docs/domains/geology/sublanes/bedrock_geology.md` — Sibling sublane (structures ride on bedrock maps).
+- `docs/domains/geology/SUBLANE-BEDROCK.md` — Sibling sublane (structures ride on bedrock maps).
 - `docs/domains/geology/sublanes/stratigraphy.md` — Sibling sublane (faults offset intervals).
 - `docs/domains/geology/sublanes/geophysics.md` — Sibling sublane (anomaly ≠ mapped structure).
 - `docs/domains/geology/sublanes/boreholes-wells.md` — Sibling sublane (well evidence for structure).

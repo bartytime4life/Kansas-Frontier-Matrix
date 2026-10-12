@@ -1,5 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/russell-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged except the Appendix A heading, whose mis-encoded em dash was repaired so its navigation anchor resolves"
+policy_label: NEEDS_VERIFICATION — proposed_public_draft
+owning_root: docs/
+responsibility: Plan a public-safe Russell County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Russell County Focus Mode Build Plan
 type: county-focus-mode-build-plan
 version: v0.1-proposed
@@ -9,18 +14,18 @@ county_name: Russell County
 county_slug: russell
 lane_slug: russell-county
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-10-12
 owners:
-  focus_mode_owner: NEEDS_VERIFICATION
-  evidence_steward: NEEDS_VERIFICATION
-  reservoir_hydrology_reviewer: NEEDS_VERIFICATION
-  geology_paleontology_reviewer: NEEDS_VERIFICATION
-  ecology_recreation_reviewer: NEEDS_VERIFICATION
-  archaeology_cultural_reviewer: NEEDS_VERIFICATION
-  agriculture_reviewer: NEEDS_VERIFICATION
-  infrastructure_security_reviewer: NEEDS_VERIFICATION
-  rights_reviewer: NEEDS_VERIFICATION
-  release_approver: NEEDS_VERIFICATION
+  - focus_mode_owner: NEEDS_VERIFICATION
+  - evidence_steward: NEEDS_VERIFICATION
+  - reservoir_hydrology_reviewer: NEEDS_VERIFICATION
+  - geology_paleontology_reviewer: NEEDS_VERIFICATION
+  - ecology_recreation_reviewer: NEEDS_VERIFICATION
+  - archaeology_cultural_reviewer: NEEDS_VERIFICATION
+  - agriculture_reviewer: NEEDS_VERIFICATION
+  - infrastructure_security_reviewer: NEEDS_VERIFICATION
+  - rights_reviewer: NEEDS_VERIFICATION
+  - release_approver: NEEDS_VERIFICATION
 defining_public_safe_boundary: >-
   Wilson Lake, Saline River, Smoky Hills, Rocktown, wildlife, fossil, archaeology,
   recreation, agriculture, and energy-history evidence may support generalized,
@@ -40,11 +45,11 @@ collision_search:
   live_repo_proof_slice_search: CONFIRMED no Wilson Lake Russell County plan result returned
   accessible_project_materials: CONFIRMED no Russell County Focus Mode build plan found
   exhaustive_absence_all_private_branches_deleted_files_local_artifacts_prior_chats: NEEDS_VERIFICATION
-  rejected_material_collisions:
-    - Butler County: rejected because generated in this conversation
-    - Cheyenne County: rejected because generated in this conversation
-    - Nemaha County: rejected because generated in this conversation
-    - Graham County: rejected because live county index marks draft
+collision_search_rejected_material_collisions:
+  - "Butler County: rejected because generated in this conversation"
+  - "Cheyenne County: rejected because generated in this conversation"
+  - "Nemaha County: rejected because generated in this conversation"
+  - "Graham County: rejected because live county index marks draft"
 directory_rules_basis:
   governing_principle: responsibility root outranks topic name
   observed_live_plan_template: docs/focus-mode/counties/<county-slug>-county/build-plan.md
@@ -1707,7 +1712,7 @@ Create a no-network, fixture-only demonstration that:
 
 ---
 
-# Appendix A â Public-safe narrative skeleton
+# Appendix A — Public-safe narrative skeleton
 
 ## A.1 Working title
 

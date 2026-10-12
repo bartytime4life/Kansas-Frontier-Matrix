@@ -1,12 +1,13 @@
 <!-- KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/logan-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Logan County Focus Mode Build Plan
 type: standard
 version: v1
 status: draft
 owners: [NEEDS_VERIFICATION]
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-10-12
 policy_label: public_draft
 repository_path: NEEDS_VERIFICATION — candidate only: docs/focus-modes/logan-county/logan_county_focus_mode_build_plan.md
 schema_contract_policy_homes: NEEDS_VERIFICATION — inspect the live repository, accepted ADRs, root READMEs and verified shared object families before adding or extending any authority-bearing home

@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; lithology; material-character; vocabulary-versioned; source-role-aware; release-gated
 tags: [kfm, contracts, geology, Lithology, material-character, rock, sediment, descriptor-set, vocabulary, geologic-unit, stratigraphic-interval, core-sample, evidence, source-role, policy, release, correction, rollback]
 related:
@@ -30,7 +30,7 @@ related:
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../docs/domains/geology/sublanes/stratigraphy.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../schemas/contracts/v1/domains/geology/Lithology.schema.json
   - ../../../schemas/contracts/v1/domains/geology/
   - ../../../policy/domains/geology/
@@ -39,6 +39,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a Geology Lithology semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/Lithology.schema.json was not found in this session; schema shape and casing remain NEEDS VERIFICATION."
   - "Lithology is a material-character descriptor for units, samples, and intervals. It does not replace GeologicUnit, StratigraphicInterval, CoreSample, GeochemistrySample, GeologicAge, Soil objects, resource claims, or public release state."

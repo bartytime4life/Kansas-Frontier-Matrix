@@ -6,7 +6,7 @@ version: v1.1.2
 status: draft
 owners: archaeology-domain-steward + docs-steward    # PLACEHOLDER — NEEDS VERIFICATION
 created: 2026-05-15
-updated: 2026-10-11
+updated: 2026-10-12
 policy_label: public                                 # Document is public; subject content is sensitivity-gated
 owning_root: docs/
 responsibility: "Register what Archaeology lane doctrine carries forward, extends, or retires for human readers; not evidence, policy, release, or publication authority."
@@ -33,6 +33,7 @@ related:
   - schemas/contracts/v1/domains/archaeology/
 tags: [kfm, archaeology, continuity, governance, evidence, sensitivity, doctrine-adjacent]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "2026-10-11: inline status comments were dropped from related entries so each entry resolves as a repository path; every target exists on main."
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §1.3 / §8 (truth labels) and §37 (versioning + CONTRACT_VERSION pinning convention)."
   - "All file-path-shaped claims are PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §7 current-session evidence limit)."
@@ -370,7 +371,7 @@ PROPOSED. When a material change affects an archaeology entity, schema, policy, 
 |---|---|---|---|---|---|---|---|
 | `Archaeological Site` schema change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/` | `tests/fixtures/domains/archaeology/sites/` | `policy/domains/archaeology/` | `GENERATED_RECEIPT.json` if AI-authored | this file (§5) | `release/rollback_cards/<release_id>/` |
 | `CandidateFeature → Archaeological Site` promotion rule | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/` | `tests/fixtures/domains/archaeology/promotion/` | `policy/domains/archaeology/promotion/` | `EvidenceBundle` closure + `ReviewRecord` | this file (§4, §6) | `release/rollback_cards/<release_id>/` |
-| H3 r7 floor or generalization profile change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/PublicationTransformReceipt.md` | `tests/fixtures/domains/archaeology/sensitive_geometry/` | `policy/sensitivity/archaeology/` | `RedactionReceipt` + `MapReleaseManifest` re-issue | this file (§8) | revert profile bundle; fail closed |
+| H3 r7 floor or generalization profile change | `docs/domains/archaeology/README.md` | `contracts/domains/archaeology/publication_transform_receipt.md` | `tests/fixtures/domains/archaeology/sensitive_geometry/` | `policy/sensitivity/archaeology/` | `RedactionReceipt` + `MapReleaseManifest` re-issue | this file (§8) | revert profile bundle; fail closed |
 | Source descriptor change for SHPO / NRHP-like / tribal review feed | `docs/domains/archaeology/README.md` | `contracts/source/` | `tests/fixtures/domains/archaeology/source/` | `policy/domains/archaeology/source/` | `SourceDescriptor` change log | this file (§4) | source-activation rollback |
 | Steward / cultural / tribal review record schema | `docs/domains/archaeology/README.md` | `contracts/governance/ReviewRecord.md` | `tests/fixtures/domains/archaeology/review/` | `policy/domains/archaeology/review/` | `ReviewRecord` schema bump | this file (§4) | revert review bundle |
 | Archaeology API surface (feature resolver, layer manifest, Evidence Drawer payload, Focus Mode answer) | `docs/architecture/governed-api/archaeology.md` *(PROPOSED)* | `contracts/runtime/RuntimeResponseEnvelope.md` | `tests/fixtures/domains/archaeology/api/` | `policy/runtime/archaeology/` | `AIReceipt` + `RuntimeResponseEnvelope` | this file (§4) | revert route + feature flag |

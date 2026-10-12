@@ -15,7 +15,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — scaffold existed before v0.2 expansion
-updated: 2026-07-04
+updated: 2026-10-12
 policy_label: public; schemas; contracts-v1; transport; roads-rail-trade; compatibility-path; schema-boundary; no-parallel-authority
 tags: [kfm, schemas, contracts, v1, transport, roads-rail-trade, roads, rail, trade-routes, decision-envelope, compatibility, no-parallel-authority]
 related:
@@ -26,11 +26,12 @@ related:
   - ../network/README.md
   - ../crossings/README.md
   - ../../../../docs/domains/roads-rail-trade/README.md
-  - ../../../../docs/domains/roads-rail-trade/sublanes/trade_routes.md
+  - ../../../../docs/domains/roads-rail-trade/sublanes/trade-routes.md
   - ../../../../contracts/domains/roads-rail-trade/
   - ../../../../fixtures/
   - ../../../../tests/
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Expanded from a short scaffold at schemas/contracts/v1/transport/README.md."
   - "Current GitHub search surfaced roads_rail_decision_envelope.schema.json directly under this flat transport path."
   - "The inspected roads_rail_decision_envelope.schema.json is a PROPOSED empty scaffold with empty properties, additionalProperties true, and contract_doc null."

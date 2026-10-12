@@ -6,16 +6,26 @@ version: v0.1
 status: draft
 owners: <Geology domain steward — TODO confirm>; <docs steward — TODO confirm>
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-10-12
 policy_label: restricted
+owning_root: docs/
+responsibility: Describe the Resources (pointer / alias) geology sublane scope, boundaries, and sensitivity posture; documentation only, not schema, policy, or release authority.
+truth_posture: PROPOSED sublane doctrine; repository paths, owners, and implementation NEEDS VERIFICATION
 related:
-  - docs/domains/geology/sublanes/natural_resources.md   # CANONICAL home for this scope
-  - docs/domains/geology/README.md                       # PROPOSED — verify exists
-  - directory-rules.md                                    # §2.4 (parallel-home ADR), §12, §13 (drift)
-  - ai-build-operating-contract.md                        # canonical operating contract
-  - docs/registers/DRIFT_REGISTER.md                      # duplicate-authority routing
+  - docs/domains/geology/sublanes/natural_resources.md
+  - docs/domains/geology/README.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+related_notes:
+  - "docs/domains/geology/sublanes/natural_resources.md — CANONICAL home for this scope"
+  - "docs/domains/geology/README.md — PROPOSED — verify exists"
+  - "docs/registers/DRIFT_REGISTER.md — duplicate-authority routing"
+  - "docs/doctrine/directory-rules.md — §2.4 (parallel-home ADR), §12, §13 (drift)"
+  - "docs/doctrine/ai-build-operating-contract.md — canonical operating contract"
 tags: [kfm, domain, geology, resources, natural-resources, pointer, alias]
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal); required owning_root, responsibility, and truth_posture added; related entries split into resolvable paths, related_notes (former inline comments), and related_unresolved"
   - "CONTRACT_VERSION = 3.0.0 pinned per ai-build-operating-contract.md."
   - "INTENTIONALLY A POINTER, NOT A PARALLEL AUTHORITY DOC. The Atlas Ch. 10 is 'Geology and Natural Resources'; the resource object families (Mineral Occurrence, Resource Deposit, ResourceEstimate, Extraction Site, Reclamation Record) are governed by natural_resources.md. A second full doc for the same scope would create a duplicate-authority / parallel-home condition that Directory Rules §2.4 and §13 prohibit without an ADR."
   - "Prior geology sublane docs (bedrock_geology.md, boreholes-wells.md, geochemistry.md, geophysics.md) referenced a sibling 'resources.md'. That reference and the existing 'natural_resources.md' are the SAME scope under two filenames. Reconcile to ONE canonical filename via ADR — see OQ-GEOL-RES-01."
@@ -138,7 +148,7 @@ This pointer is resolved when:
 ## Related Docs
 
 - **[`natural_resources.md`](./natural_resources.md)** — **canonical** resource sublane doc (scope, objects, sources, tiers, pipeline, AI).
-- `./bedrock_geology.md` — sibling sublane (bedrock / stratigraphy / structures).
+- [`../SUBLANE-BEDROCK.md`](../SUBLANE-BEDROCK.md) — bedrock sublane (absorbed `bedrock_geology.md` on 2026-10-12) (bedrock / stratigraphy / structures).
 - `./boreholes-wells.md` — sibling sublane (shared subsurface objects).
 - `./geochemistry.md` — sibling sublane (assay ≠ deposit).
 - `./geophysics.md` — sibling sublane (anomaly ≠ deposit).

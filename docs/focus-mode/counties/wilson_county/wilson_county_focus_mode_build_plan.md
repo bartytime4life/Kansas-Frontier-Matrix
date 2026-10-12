@@ -1,5 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/wilson-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+owning_root: docs/
+responsibility: Plan a public-safe Wilson County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Wilson County Focus Mode Build Plan — Industrial Heritage Without Present-Condition Overclaim
 type: standard
 version: v1
@@ -7,7 +11,7 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-10-12
 policy_label: public_draft
 artifact_filename: wilson_county_focus_mode_build_plan.md
 repository_edit_status: "CONFIRMED: no repository change was made in this run"
@@ -27,6 +31,10 @@ collision_search:
   exhaustive_status: "NEEDS_VERIFICATION: a validator run and full repository/project-corpus reconciliation were not executed here"
 source_check_date: 2026-05-24
 related:
+  - docs/doctrine/directory-rules.md
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - tools/validators/validate_focus_mode_index.py
+related_unresolved:
   - "CONFIRMED INSPECTED: docs/doctrine/directory-rules.md §6.7 (live GitHub read-only evidence)"
   - "CONFIRMED INSPECTED: docs/focus-mode/counties/COUNTY_INDEX.md (live GitHub read-only evidence)"
   - "CONFIRMED INSPECTED: tools/validators/validate_focus_mode_index.py (live GitHub read-only evidence; status marked PROPOSED in its own header)"

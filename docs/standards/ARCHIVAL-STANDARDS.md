@@ -1,14 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/archival-standards
 title: Archival Standards — Repository Boundary, Interoperability, and Preservation Map
-type: standard; interoperability-reference; preservation-boundary
+type: standard
+secondary_type: interoperability-reference; preservation-boundary
 version: v2.0-draft
 status: draft; repository-grounded; upstream-currentness-refreshed; mixed-maturity; no-adoption; no-conformance-proof; no-release; no-publication
 owners:
   - "@bartytime4life — verified GitHub review route through CODEOWNERS"
   - "NEEDS VERIFICATION — archival-description, digital-preservation, rights, cultural-sovereignty, accessibility, security, and release stewards"
 created: 2026-05-13
-updated: 2026-08-18
+updated: 2026-10-12
 policy_label: public
 owning_root: docs/
 responsibility: >
@@ -59,7 +60,6 @@ related:
   - ./PROVENANCE.md
   - ./PROV/README.md
   - ./CANONICALIZATION.md
-  - ./canonicalization.md
   - ./OPENLINEAGE_FACETS.md
   - ./RUN_RECEIPT.md
   - ./RELEASE_MANIFEST.md
@@ -78,6 +78,7 @@ related:
   - ../../tests/README.md
   - ../../release/README.md
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Same-path standards-document modernization only."
   - "No standard or KFM profile is adopted, activated, certified, or made release-significant by this revision."
   - "No child standard file, contract, schema, policy rule, source descriptor, connector, fixture, validator, test, workflow, receipt, proof, release object, deployment, or public artifact is created or changed."
@@ -229,7 +230,7 @@ This page does not:
 | OAI-PMH identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; do not select, rename, merge, or delete from this umbrella page. |
 | IIIF identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; case-only migration requires consumer and cross-filesystem evidence. |
 | Provenance family | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` coexist | Roles and writable authority are unresolved; do not collapse PREMIS, provenance, lineage events, and scholarly attribution into one file by prose. |
-| Canonicalization family | Both `CANONICALIZATION.md` and `canonicalization.md` exist | Identity and edit authority remain conflicted. |
+| Canonicalization family | `CANONICALIZATION.md` is canonical; `canonicalization.md` is a redirect stub (merged 2026-10-12) | Identity and edit authority are settled; the case-only path collision remains (`CANON-Q11`). |
 | Source-descriptor meaning and shape | Contract files and both singular/plural schema-family paths are present; ADR-0001 remains proposed while adopted Directory Rules already define the default machine-schema route | Presence is real; final family/compatibility reconciliation remains open. |
 | LOC connector | [`connectors/loc/src/loc/README.md`](../../connectors/loc/src/loc/README.md) records a `0.0.0` scaffold, empty initializer, comment-only retrieval/admission modules, nonconforming local descriptor, no executable tests, and TODO-only workflows | No supported LOC, IIIF, LCNAF, LCSH, maps, newspaper, or archival connector behavior is established. |
 | Archival validators | Bounded code search for the prior page's proposed validator names surfaced only this document | A dedicated executable archival-conformance suite was not established by the search; exhaustive absence outside the indexed repository remains `NEEDS VERIFICATION`. |
@@ -929,7 +930,7 @@ This document performs none of those transitions.
 | `ARC-C02` | `OAI-PMH.md` and `oai-pmh.md` coexist | `HOLD`; inventory identities, links, writers, and consumers before any case-only migration. |
 | `ARC-C03` | `IIIF.md` and `iiif.md` coexist | `HOLD`; same case-collision discipline. |
 | `ARC-C04` | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` overlap | `HOLD / NEEDS VERIFICATION`; define ontology, general profile, implementation lane, and edit authority separately. |
-| `ARC-C05` | `CANONICALIZATION.md` and `canonicalization.md` coexist | `HOLD`; do not select one by casing preference. |
+| `ARC-C05` | `CANONICALIZATION.md` and `canonicalization.md` coexist | Content merged into `CANONICALIZATION.md` on 2026-10-12 (owner-directed); the lowercase path is a redirect stub. Case-only path collision still `HOLD` (`CANON-Q11`). |
 | `ARC-C06` | Existing `snac-eac-cpf.md` records EAC-CPF 2.0.1 while official 2026 EAS materials identify EAC-CPF 3.0 and EAC-F 1.0 alongside EAD4 | `STALE / NEEDS VERIFICATION`; file-specific currentness and migration update required. |
 | `ARC-C07` | METS 2 is available while METS 1 remains supported and widely relevant | Select per source/consumer profile; do not call unqualified “METS” conformance. |
 | `ARC-C08` | PREMIS preservation events, PROV-O provenance, OpenLineage runtime events, and KFM receipts can overlap | Define mapping and non-duplication rules before implementation. |

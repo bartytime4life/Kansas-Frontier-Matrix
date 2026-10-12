@@ -1,5 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/franklin-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+owning_root: docs/
+responsibility: Plan a public-safe Franklin County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
 title: Franklin County Focus Mode Build Plan — Ottawa Nation Authority, Marais des Cygnes Time-Bounded Flood Context, and Public-History Restraint
 type: standard
 version: v1
@@ -7,36 +10,31 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-10-12
 policy_label: public_draft
 area:
   name: Franklin County
   state: Kansas
   scope: county
   area_slug: franklin-county
-truth_posture:
-  - evidence_first
-  - map_first
-  - time_aware
-  - cite_or_abstain
-  - fail_closed
+truth_posture: "cite-or-abstain; evidence_first map_first time_aware cite_or_abstain fail_closed"
 primary_public_safe_boundary: Nation-authoritative Ottawa history and culturally sensitive or burial-related material require Ottawa Tribe authority and appropriate review before public representation; historic or floodplain sources do not become current flood-safety, emergency, title, access, or living-person conclusions.
 collision_search:
   result: no Franklin County Focus Mode plan surfaced in the supplied register, the live county index reviewed in this run, targeted live-repository search, or targeted available-project-material search
   exhaustive_status: NEEDS_VERIFICATION
-  checked:
-    - user-supplied completed/collision register, including Butler County and Wilson County created in this continuing series
-    - live repository file docs/focus-mode/counties/COUNTY_INDEX.md on branch main, retrieved 2026-05-24
-    - live repository targeted searches for franklin_county_focus_mode_build_plan, Franklin County Focus Mode, and franklin-county, retrieved 2026-05-24
-    - targeted available-project-material and File Library searches for Franklin County Focus Mode plan collisions, retrieved 2026-05-24
+collision_search_checked:
+  - user-supplied completed/collision register, including Butler County and Wilson County created in this continuing series
+  - live repository file docs/focus-mode/counties/COUNTY_INDEX.md on branch main, retrieved 2026-05-24
+  - live repository targeted searches for franklin_county_focus_mode_build_plan, Franklin County Focus Mode, and franklin-county, retrieved 2026-05-24
+  - targeted available-project-material and File Library searches for Franklin County Focus Mode plan collisions, retrieved 2026-05-24
 repository_evidence:
   repository: bartytime4life/Kansas-Frontier-Matrix
   branch_inspected: main
-  live_files_inspected:
-    - docs/focus-mode/counties/COUNTY_INDEX.md
-    - docs/doctrine/directory-rules.md
-    - tools/validators/validate_focus_mode_index.py
   path_divergence: Live county index is under docs/focus-mode/counties/, while Directory Rules v1.2 and validator text define docs/focus-modes/<area>-county/ as the intended control-plane pattern; placement remains NEEDS_VERIFICATION pending reconciliation.
+repository_evidence_live_files_inspected:
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - docs/doctrine/directory-rules.md
+  - tools/validators/validate_focus_mode_index.py
 intended_landing_path: PROPOSED / NEEDS_VERIFICATION — docs/focus-modes/franklin-county/build-plan.md
 schema_contract_policy_homes: NEEDS_VERIFICATION
 review_assignments: NEEDS_VERIFICATION

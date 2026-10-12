@@ -1,5 +1,6 @@
 <!-- KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/butler-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Butler County Focus Mode Build Plan — El Dorado Oil Legacy, Walnut River / Lake, and No-Exposure-Judgment Boundary
 type: standard
 version: v1
@@ -7,7 +8,7 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-10-12
 policy_label: public_draft
 selected_county: Butler County, Kansas
 proof_slice: El Dorado oil-history + Walnut River / El Dorado Lake multipurpose reservoir + Flint Hills-edge wildlife context + environmental-remediation restraint

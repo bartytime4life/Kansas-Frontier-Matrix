@@ -7,7 +7,8 @@ county_slug: edwards_county
 county_lane_slug_observed_index: edwards-county
 created_date: 2026-06-11
 updated_date: 2026-06-11
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/edwards-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 owners:
   docs_steward: NEEDS_VERIFICATION
   county_lane_owner: NEEDS_VERIFICATION

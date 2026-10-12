@@ -2,13 +2,17 @@
 doc_id: kfm://doc/sources-catalog-blm
 title: Bureau of Land Management Source Catalog Profile
 type: source_catalog_profile
-version: v0.1
+version: v0.2
 status: draft
 owners: <PLACEHOLDER — Source steward · Docs steward · Catalog profile owner>
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-10-12
 policy_label: public
+owning_root: docs/
+responsibility: Agency-level BLM source-use profile (access handles, descriptor baseline, identity/crosswalk, EvidenceBundle mapping, refresh and staleness rules); not the BLM family catalog entry, source admission, policy, release, or publication authority.
+truth_posture: PROPOSED guidance for governed BLM source use; external access points and dataset facts NEED VERIFICATION at each refresh; DENY source admission, activation, or publication from this profile's presence.
 related:
+  - docs/sources/catalog/blm/README.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/CROSSWALKS.md
   - docs/sources/catalog/IDENTITY.md
@@ -19,17 +23,20 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/governance/separation-of-duties.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
   - schemas/contracts/v1/source/
 tags: [kfm, sources, catalog, blm, bureau-of-land-management, doi, federal, public-lands, plss, cadastral, geospatial, arcgis, land-records]
 notes:
   - "v0.1 — Initial BLM source catalog profile for governed KFM ingestion, evidence use, and public-release boundaries."
   - "This profile describes source use. It does not authorize direct public-client reads from BLM systems."
-] -->
+  - "2026-10-12 (v0.2): resolved the KFM-TOPO-016 duplicate doc_id shared with docs/sources/catalog/blm/README.md by classifying the two as distinct documents (this agency-level source profile vs the BLM family catalog entry); this file keeps kfm://doc/sources-catalog-blm and the family README took kfm://doc/sources-catalog-blm-family-readme, matching the nrcs precedent. Also repaired the meta-block closing marker, added owning_root/responsibility/truth_posture, and repointed the missing docs/governance/separation-of-duties.md related entry to ADR-0024."
+[/KFM_META_BLOCK_V2] -->
 
 # Bureau of Land Management Source Catalog Profile
 
 Path: `docs/sources/catalog/blm.md`
+
+> **Document role.** This flat file is the agency-level BLM **source-use profile**: access handles, source-descriptor baseline, identity and crosswalk policy, EvidenceBundle mapping, public API/tile policy, and refresh/staleness rules. The BLM **family catalog entry** (candidate datasets, `source_role` analysis, rights/sensitivity, domain consumers, admission gate) and the per-product pages live under [`blm/`](./blm/README.md). The two are separate documents with separate doc_ids; neither admits, activates, or publishes a BLM source.
 
 ## 1. Purpose
 

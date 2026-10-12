@@ -1,12 +1,13 @@
 <!-- KFM_META_BLOCK_V2
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/scott-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Scott County Focus Mode Build Plan
 type: standard
 version: v1
 status: draft
 owners: [NEEDS_VERIFICATION]
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-10-12
 policy_label: NEEDS_VERIFICATION — proposed_public_draft
 repository_path: NEEDS_VERIFICATION — PROPOSED docs/focus-modes/scott-county/scott_county_focus_mode_build_plan.md
 contract_home: NEEDS_VERIFICATION — PROPOSED only after repository and ADR verification

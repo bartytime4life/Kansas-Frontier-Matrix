@@ -1,23 +1,25 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/00000000-0000-0000-0000-000000000000   # PLACEHOLDER — mint at first PR
+doc_id: kfm://doc/standards/stac
+doc_id_assignment: "2026-10-12: all-zero placeholder doc_id replaced with a unique path-derived id; document-registry entry NEEDS VERIFICATION"
 title: STAC in KFM — Standard Conformance and `kfm-stac-profile-v1`
 type: standard
 version: v1
 status: draft
 owners: Docs steward + Catalog/Standards subsystem owner   # PLACEHOLDER — confirm at PR
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-10-12
 policy_label: public
 related:
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
-  - docs/standards/canonicalization.md
+  - docs/standards/CANONICALIZATION.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/lifecycle-law.md
   - schemas/contracts/v1/stac/
 tags: [kfm, stac, catalog, standards, profile, governance]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Doctrine is CONFIRMED from Pass 10 §6.4 and Master MapLibre v1.8. Repo paths are PROPOSED until verified against a mounted repo."
   - "Namespace choice (kfm: vs ks-kfm:) is an open question carried from C4-01 — see §3.2."
 owning_root: docs/
@@ -389,7 +391,7 @@ Implications for STAC records:
 - A change to *any* identity-bearing field **rotates** the hash and therefore rotates the Item's identity.
 
 > [!WARNING]
-> **JCS vs URDNA2015 is still open (C8-05, OPEN — ADR-class).** JCS canonicalizes JSON; URDNA2015 canonicalizes RDF. STAC payloads are JSON, so JCS is the working default. JSON-LD evidence bundles MAY require URDNA2015 in some scenarios. The profile schema MUST pin one default per object family. See `docs/standards/canonicalization.md` *(PROPOSED)* for the decision matrix.
+> **JCS vs URDNA2015 is still open (C8-05, OPEN — ADR-class).** JCS canonicalizes JSON; URDNA2015 canonicalizes RDF. STAC payloads are JSON, so JCS is the working default. JSON-LD evidence bundles MAY require URDNA2015 in some scenarios. The profile schema MUST pin one default per object family. See `docs/standards/CANONICALIZATION.md` §4.1 for the decision matrix.
 
 [↑ Back to top](#contents)
 
@@ -536,7 +538,7 @@ The CI workflow that gates STAC promotion is **PROPOSED** at `.github/workflows/
 - `docs/doctrine/lifecycle-law.md` — RAW → … → PUBLISHED (CONFIRMED).
 - `docs/standards/dcat.md` — DCAT profile for non-spatial datasets (PROPOSED companion).
 - `docs/standards/prov.md` — PROV-O profile for graph-layer provenance (PROPOSED companion).
-- `docs/standards/canonicalization.md` — JCS vs URDNA2015 decision matrix (PROPOSED companion).
+- `docs/standards/CANONICALIZATION.md` — JCS vs URDNA2015 decision matrix (PROPOSED companion).
 - `docs/standards/STAC_KFM_PROFILE.md` — deep profile spec (PROPOSED — companion that expands §5).
 - `docs/standards/STAC_DWC_PROFILE.md` — biodiversity hybrid profile (PROPOSED — companion that expands §8).
 - `contracts/evidence/` — `EvidenceRef`, `EvidenceBundle` contracts (per `directory-rules.md` §6.3).
@@ -668,4 +670,4 @@ The CI workflow that gates STAC promotion is **PROPOSED** at `.github/workflows/
 
 **Last reviewed:** 2026-05-14 · **Next review:** flagged at 2026-11-14 (per Directory Rules §15 — older than 6 months)
 
-**Related docs:** [`directory-rules.md`](../doctrine/directory-rules.md) · [`dcat.md`](DCAT.md) *(PROPOSED)* · [`prov.md`](PROV.md) *(PROPOSED)* · [`canonicalization.md`](./canonicalization.md) *(PROPOSED)*
+**Related docs:** [`directory-rules.md`](../doctrine/directory-rules.md) · [`dcat.md`](DCAT.md) *(PROPOSED)* · [`prov.md`](PROV.md) *(PROPOSED)* · [`CANONICALIZATION.md`](./CANONICALIZATION.md) *(PROPOSED)*

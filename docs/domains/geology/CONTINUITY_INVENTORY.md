@@ -7,7 +7,7 @@ prior_version: v1.1.1
 status: draft
 owners: TODO — Geology domain steward; Directory Rules owner
 created: 2026-05-16
-updated: 2026-10-11
+updated: 2026-10-12
 policy_label: public
 owning_root: docs/
 responsibility: Navigational register of every artifact Geology doctrine expects across responsibility roots, recording tree-verified presence, status label, and doctrine source; not evidence, policy, release, or publication authority.
@@ -29,6 +29,7 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, geology, natural-resources, continuity, inventory, register, directory-rules]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "2026-10-11 (v2.0.0): replaces the placeholder copy of CANONICAL_PATHS.md with a real continuity inventory"
   - "Presence claims come from a git ls-files inventory of the working tree on 2026-10-11; presence is not source admission, evidence closure, policy approval, release, or publication."
   - "Placement authority stays with Directory Rules and CANONICAL_PATHS.md; drift found here is reported in section 8 and is not fixed by this file."
@@ -402,7 +403,7 @@ Reported here, not fixed here. Each item belongs to its owning doc, register, or
 | D-06 | `data/registry/geology/sources/` holds six hand-written YAML entries (`ksgs_*`, `usgs_*`, `kgs_gmd3_aem_2026`); `DIR-SOURCE-004` allows only a generated view. The one JSON descriptor sits at `data/registry/sources/geology/` (domain segment) rather than a `<source_id>` folder. | `git ls-files data/registry` | Source steward |
 | D-07 | Validators are split across `tools/validators/domains/geology/`, `tools/validators/geology/`, and top-level `tools/validators/validate_geology_*.py`; the public-safe geometry validator is real under `geology/` and a 6-line shim under `domains/geology/`. | Line counts | Validation steward |
 | D-08 | Three overlapping catalog-closure test folders: `tests/domains/geology/catalog-closure/`, `catalog_closure/`, `test_catalog_closure/` (all README-only). | `git ls-files tests/domains/geology` | Test steward |
-| D-09 | Bedrock has three docs (`SUBLANE-BEDROCK.md`, `sublanes/bedrock.md`, `sublanes/bedrock_geology.md`) and surficial two (`surficial.md`, `sublanes/surficial.md`) with different `doc_id`s and content. | `cmp`, titles | Geology docs steward |
+| D-09 | Bedrock had three docs (`SUBLANE-BEDROCK.md`, `sublanes/bedrock.md`, `sublanes/bedrock_geology.md`); on 2026-10-12 both sublane drafts were merged into `SUBLANE-BEDROCK.md` and are now redirect stubs, so the bedrock half is resolved (OQ-GEOL-BED-05). Surficial has two (`surficial.md`, `sublanes/surficial.md`) with different `doc_id`s and content. | `cmp`, titles | Geology docs steward |
 | D-10 | Pipelines sit at `pipelines/domains/geology/` while Directory Rules §12.2 illustrates `pipelines/<stage>/<domain>/`. | `git ls-files pipelines` | Pipeline steward |
 | D-11 | Empty-scaffold markers (`.gitkeep`) in `data/triplets/geology/`, `data/triplets/exports/geology/`, `catalog/domain/geology/`, and `policy/domains/geology/sublanes/surficial/`; `DIR-SCOPELANE-003` prohibits empty symmetry scaffolding. | `git ls-files` | Directory Rules owner |
 | D-12 | The Explorer route `geology-legend/route.ts` fetches an upstream KGS ArcGIS legend at request time, outside `apps/governed-api/`. `apps/site/source/public/data/subsurface/geophysics.json` carries a KGS "All Rights Reserved" attribution, and the hydrology-facing `kgs-monitoring-wells.geojson` holds exact well points. Trust-membrane, rights, and exact-point posture for these need review. | File reads | Explorer owner; rights and sensitivity reviewers |

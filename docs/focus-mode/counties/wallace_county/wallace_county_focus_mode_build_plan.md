@@ -1,5 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION — <REGISTERED_KFM_DOC_ID>
+doc_id: kfm://doc/focus-mode/counties/wallace-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+owning_root: docs/
+responsibility: Plan a public-safe Wallace County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
+truth_posture: cite-or-abstain; PROPOSED planning content; NEEDS VERIFICATION for owners, repository landing, source admission, and release
 title: Wallace County Focus Mode Build Plan — Mount Sunflower Private-Land Context and Sinkhole Science Without Live Access or Hazard Verdicts
 type: county-focus-mode-build-plan
 version: v0.1-draft
@@ -9,7 +13,7 @@ owners:
   - NEEDS_VERIFICATION — <OWNER:geology-and-geohazards-reviewer>
   - NEEDS_VERIFICATION — <OWNER:land-access-and-public-safety-reviewer>
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-10-12
 policy_label: public_draft
 county: Wallace County, Kansas
 county_slug: wallace

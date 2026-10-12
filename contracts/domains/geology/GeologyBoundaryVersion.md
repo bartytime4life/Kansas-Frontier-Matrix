@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; boundary-version; geometry-lineage; source-role-aware; metadata-public; release-gated
 tags: [kfm, contracts, geology, GeologyBoundaryVersion, boundary-version, geometry-lineage, map-units, geologic-unit, surficial-unit, topology, provenance, evidence, source-role, release, correction, rollback]
 related:
@@ -26,7 +26,7 @@ related:
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../docs/domains/geology/sublanes/surficial.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../schemas/contracts/v1/domains/geology/GeologyBoundaryVersion.schema.json
   - ../../../schemas/contracts/v1/domains/geology/
   - ../../../policy/domains/geology/
@@ -35,6 +35,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a GeologyBoundaryVersion semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/GeologyBoundaryVersion.schema.json was not found in this session. Object-family docs explicitly ask whether this warrants its own schema or remains metadata on GeologicUnit; schema shape remains NEEDS VERIFICATION."
   - "GeologyBoundaryVersion is a lineage/version object for geology boundary geometry and topology. It does not replace GeologicUnit, SurficialUnit, source maps, tiles, release manifests, correction notices, or public layer truth."

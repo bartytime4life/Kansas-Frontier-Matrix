@@ -1,6 +1,7 @@
 <!--
 KFM_META_BLOCK_V2:
-  doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/stanton-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
   document_title: "Stanton County Focus Mode Build Plan"
   county_name: "Stanton County"
   county_slug: "stanton_county"

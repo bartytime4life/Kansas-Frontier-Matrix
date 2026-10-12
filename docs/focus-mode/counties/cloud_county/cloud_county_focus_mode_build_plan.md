@@ -1,7 +1,8 @@
 <!--
 KFM_META_BLOCK_V2
 
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/cloud-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; no other content changed"
 title: Cloud County Focus Mode Build Plan
 document_class: human-facing planning artifact
 version: v0.1-draft

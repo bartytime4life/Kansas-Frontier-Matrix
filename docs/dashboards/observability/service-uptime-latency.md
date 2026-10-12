@@ -6,14 +6,20 @@ version: v0.1
 status: draft
 owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + service owner
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-10-12
 policy_label: internal
+owning_root: docs/
+responsibility: Specify the governed-API uptime and latency SLO dashboard; specification only, not runtime, policy, or release authority.
+truth_posture: PROPOSED specification; SLO targets and implementation NEEDS VERIFICATION
 related:
   - kfm://doc/dashboards-observability-readme
-  - kfm://doc/standard-opentelemetry           # PROPOSED
-  - kfm://operating-law-invariant-1            # public clients use governed interfaces
+  - docs/dashboards/observability/OPENTELEMETRY_STACK.md
+related_unresolved:
+  - "kfm://doc/standard-opentelemetry           # PROPOSED"
+  - "kfm://operating-law-invariant-1            # public clients use governed interfaces"
 tags: [kfm, dashboards, observability, uptime, latency, slo, governed-api]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up); required owning_root, responsibility, and truth_posture added; kfm ids with no in-repo target moved to related_unresolved"
   - Anchored to operating-law invariant 1 — public clients consume governed interfaces, not canonical stores.
   - Sensitive-content posture is T1 by default; per-endpoint labels MUST NOT encode T2+ identifiers.
 [/KFM_META_BLOCK_V2] -->
@@ -117,7 +123,7 @@ notes:
 - **Governance dashboards consuming this signal:** `docs/dashboards/governance/evidence-and-source.md` *(EvidenceRef resolver SLO informs the doctrinal "is provenance reachable" indicator).*
 - **Per-domain breakdown:** N/A *(service surfaces are domain-agnostic at the governed-API layer).*
 - **Release-lifecycle view:** `docs/dashboards/release/slo-burn-by-release.md` *(PROPOSED sibling).*
-- **Related observability specs:** `pmtiles-range-diagnostics.md` *(tile-serving sub-surface);* `opentelemetry-stack.md`.
+- **Related observability specs:** `pmtiles-range-diagnostics.md` *(tile-serving sub-surface);* `OPENTELEMETRY_STACK.md`.
 
 [↑ back to top](#top)
 

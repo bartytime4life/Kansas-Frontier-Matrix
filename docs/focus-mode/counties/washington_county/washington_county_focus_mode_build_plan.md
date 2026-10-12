@@ -1,5 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: NEEDS_VERIFICATION
+doc_id: kfm://doc/focus-mode/counties/washington-county/build-plan
+doc_id_assignment: "2026-10-12: placeholder doc_id replaced with a unique path-derived id (owner-directed duplicate doc_id removal); document-registry entry NEEDS VERIFICATION; metadata normalized to the bounded flat profile (required fields added, nested owners and orphan lists flattened, values preserved); body unchanged"
+owning_root: docs/
+responsibility: Plan a public-safe Washington County Focus Mode as a PROPOSED county planning artifact; confers no source admission, release, or publication authority.
 title: Washington County Focus Mode Build Plan — Hollenberg Station, Overland Trails, and the No-Burial-Precision / No-Live-Travel-Guidance Boundary
 type: standard
 version: v1
@@ -7,7 +10,7 @@ status: draft
 owners:
   - NEEDS_VERIFICATION
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-10-12
 policy_label: public_draft
 selected_county: Washington County, Kansas
 download_filename: washington_county_focus_mode_build_plan.md
@@ -23,11 +26,7 @@ primary_public_safe_boundary: >-
   travel, access, safety, title, legal, emergency, or property conclusions; and must not generate
   culturally authoritative or displacement narratives without appropriate authoritative evidence and review.
 source_check_date: 2026-05-23
-truth_posture:
-  confirmed: verified in this run from attached doctrine, inspected live repository evidence, generated artifact, or authoritative checked public sources
-  proposed: design, path, object, schema, policy, fixture, UI, workflow, release step, layer, or implementation recommendation not verified as implemented
-  needs_verification: checkable but not sufficiently verified to act as admitted, reviewed, implemented, promoted, or publishable fact
-  unknown: unsupported or unresolved from available evidence
+truth_posture: "confirmed: verified in this run from attached doctrine, inspected live repository evidence, generated artifact, or authoritative checked public sources proposed: design, path, object, schema, policy, fixture, UI, workflow, release step, layer, or implementation recommendation not verified as implemented needs_verification: checkable but not sufficiently verified to act as admitted, reviewed, implemented, promoted, or publishable fact unknown: unsupported or unresolved from available evidence"
 collision_check:
   supplied_register: "CONFIRMED: Washington County is absent from the completed/collision register supplied for this series."
   current_session_additions: "CONFIRMED: Butler County, Greenwood County, Comanche County, and Pratt County were already built in this continuation and excluded from selection."
@@ -53,12 +52,15 @@ correction_path: NEEDS_VERIFICATION
 rollback_path: NEEDS_VERIFICATION
 release_status: NEEDS_VERIFICATION / no implementation, review, promotion, or publication claimed
 related:
-  - "Directory Rules.pdf (inspected attached doctrine)"
-  - "docs/focus-mode/counties/COUNTY_INDEX.md (live repository read during collision control)"
-  - "docs/focus-mode/counties/README.md (live repository read; placement reconciliation evidence)"
-  - "Kansas Historical Society — Hollenberg Pony Express Station (official source checked)"
-  - "Washington County, Kansas — official website and county maps/emergency management pages checked"
-  - "FEMA Flood Map Service Center (official source-family route checked)"
+  - docs/focus-mode/counties/COUNTY_INDEX.md
+  - docs/focus-mode/counties/README.md
+related_unresolved:
+  - Directory Rules.pdf (inspected attached doctrine)
+  - docs/focus-mode/counties/COUNTY_INDEX.md (live repository read during collision control)
+  - docs/focus-mode/counties/README.md (live repository read; placement reconciliation evidence)
+  - Kansas Historical Society — Hollenberg Pony Express Station (official source checked)
+  - Washington County, Kansas — official website and county maps/emergency management pages checked
+  - FEMA Flood Map Service Center (official source-family route checked)
 tags:
   - kfm
   - focus-mode

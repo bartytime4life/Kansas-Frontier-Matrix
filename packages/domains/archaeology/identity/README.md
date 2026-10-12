@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - Cultural/sensitivity/sovereignty/privacy steward
   - OWNER_TBD - Evidence/policy/validation/release/docs steward
 created: 2026-06-13
-updated: 2026-07-20
+updated: 2026-10-12
 supersedes: v0.1
 policy_label: public-review; packages; archaeology; deterministic-identity; source-crosswalk; no-network; fail-closed; non-authoritative; restricted-location-safe
 path: packages/domains/archaeology/identity/README.md
@@ -54,7 +54,7 @@ related:
   - ../../../../docs/doctrine/directory-rules.md
   - ../../../../docs/domains/archaeology/IDENTITY_MODEL.md
   - ../../../../docs/domains/archaeology/ubiquitous-language.md
-  - ../../../../docs/standards/canonicalization.md
+  - ../../../../docs/standards/CANONICALIZATION.md
   - ../../../../contracts/domains/archaeology/domain_feature_identity.md
   - ../../../../contracts/domains/archaeology/site.md
   - ../../../../contracts/domains/archaeology/archaeological_site.md
@@ -63,6 +63,7 @@ related:
   - ../../../../fixtures/domains/archaeology/README.md
 tags: [kfm, archaeology, identity, deterministic-identity, crosswalk, lineage, candidate-feature, archaeological-site, aliases, privacy, governance]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "v0.2 replaces planning-only package claims with commit-pinned repository evidence and bounded absence checks."
   - "The existing parent archaeology.identity module and this subdirectory describe overlapping implementation homes; no second package should be created until ownership is decided."
   - "The README and its required generated-work provenance receipt are the only intended changes."

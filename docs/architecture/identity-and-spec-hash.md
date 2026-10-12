@@ -11,7 +11,7 @@ owners:
   - "NEEDS VERIFICATION — repository documentation review route"
   - "NEEDS VERIFICATION — identity and canonicalization steward"
 created: 2026-05-25
-updated: 2026-08-19
+updated: 2026-10-12
 policy_label: public; architecture; identity; hashing; integrity; no-release-authority
 current_path: docs/architecture/identity-and-spec-hash.md
 owning_root: docs/
@@ -46,7 +46,6 @@ related:
   - docs/architecture/evidence-identity.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/standards/CANONICALIZATION.md
-  - docs/standards/canonicalization.md
   - contracts/common/spec_hash.md
   - contracts/runtime/run_receipt.md
   - schemas/contracts/v1/common/spec_hash.schema.json
@@ -67,6 +66,7 @@ related:
   - .github/workflows/spec-hash.yml
 tags: [kfm, architecture, identity, content-identity, activity-identity, object-identity, spec-hash, run-id, rfc8785, jcs, sha256, receipts, replay, migration, governance]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "v1.1 replaces the May 2026 proposal-only posture with a current-repository architecture explanation pinned to main@232f7aeda87abbc46c85a8dd37b75cc9def8a2c5."
   - "Current executable content identity is RFC 8785 JCS plus SHA-256 serialized as sha256:<64-lowercase-hex>."
   - "ADR-0013 remains proposed; jcs:sha256:<hex> and run:<orchestrator>:<ULID> are candidate target grammars, not current write behavior."
@@ -541,7 +541,7 @@ None of these tensions permits guessing. They define bounded next decisions and 
 | OQ-IDH-04 | `PROPOSED` | Create an object-family hash-domain registry only if existing contracts cannot carry profile, exclusions, normalization, and version cleanly. |
 | OQ-IDH-05 | `NEEDS VERIFICATION` | Establish cross-language RFC 8785 and digest vectors before non-Python producers are admitted. |
 | OQ-IDH-06 | `NEEDS VERIFICATION` | Define and implement a governed `run_id` generator, parser, retry/collision behavior, and migration path. |
-| OQ-IDH-07 | `HOLD` | Resolve the `CANONICALIZATION.md` / `canonicalization.md` case collision without losing anchors or consumers. |
+| OQ-IDH-07 | `PARTLY RESOLVED` | 2026-10-12: `canonicalization.md` was merged into `CANONICALIZATION.md` and kept as a redirect stub, so identity is settled and links resolve. The case-only path collision remains (`CANON-Q11` in `CANONICALIZATION.md`). |
 | OQ-IDH-08 | `UNKNOWN` | Determine whether any real KFM object family needs RDF dataset identity and RDFC-1.0. |
 | OQ-IDH-09 | `NEEDS VERIFICATION` | Recheck exact-head `spec-hash` workflow and generated-receipt integrity when implementation surfaces change. |
 | OQ-IDH-10 | `NEEDS VERIFICATION` | Identify any production, runtime-promotion, catalog, or release consumer that treats digest match as a gate, and verify its fail-closed behavior. |

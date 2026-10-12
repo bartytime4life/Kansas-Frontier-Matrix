@@ -24,7 +24,7 @@ reviewers_required:
   - Security reviewer
   - Docs steward
 created: 2026-05-11
-updated: 2026-09-13
+updated: 2026-10-12
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -71,7 +71,7 @@ related:
   - docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/identity-and-spec-hash.md
-  - docs/standards/canonicalization.md
+  - docs/standards/CANONICALIZATION.md
   - contracts/common/spec_hash.md
   - contracts/runtime/run_receipt.md
   - schemas/contracts/v1/common/spec_hash.schema.json
@@ -90,6 +90,7 @@ related:
   - .github/workflows/spec-hash.yml
 tags: [kfm, adr, identity, deterministic-identity, activity-identity, spec-hash, run-id, jcs, sha256, receipts, provenance, migration, fail-closed]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "v1.2 is a same-path, repository-grounded modernization. It preserves source metadata and effective decision status `proposed`; it does not accept ADR-0013 or change executable identity behavior."
   - "A bounded RFC 8785 JCS + SHA-256 implementation, CLI, validator, tests, and dedicated workflow now exist under the current `sha256:<hex>` grammar."
   - "The candidate `jcs:sha256:<hex>` wire form remains conflicted with current contracts, schemas, fixtures, and code; this revision does not silently relabel existing identifiers."
@@ -445,7 +446,7 @@ The diagram combines an implemented hash computation slice with proposed domain,
 | [`tests/validators/test_validate_run_receipt.py`](../../tests/validators/test_validate_run_receipt.py) | Exercises RunReceipt and Smart Sync validation behavior | Does not close candidate identity grammar |
 | [`packages/identity/pyproject.toml`](../../packages/identity/pyproject.toml) | Remains a `0.0.0` package scaffold | No verified Run-ID generator/parser implementation |
 | [`packages/hashing/README.md`](../../packages/hashing/README.md) | Still describes an earlier scaffold state | Documentation drift; current code and manifest are stronger evidence of executable behavior |
-| [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md) and [`docs/standards/canonicalization.md`](../standards/canonicalization.md) | Retain candidate-prefixed and earlier implementation narratives | Proposed/stale prose must not override current bytes |
+| [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md) and [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) | Retain candidate-prefixed and earlier implementation narratives | Proposed/stale prose must not override current bytes |
 
 ### Bounded v1.3 current readback
 
@@ -887,7 +888,7 @@ A migration rollback must restore compatible producer and consumer behavior toge
 ### Identity, contracts, and machine shapes
 
 - [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md)
-- [`docs/standards/canonicalization.md`](../standards/canonicalization.md)
+- [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md)
 - [`contracts/common/spec_hash.md`](../../contracts/common/spec_hash.md)
 - [`schemas/contracts/v1/common/spec_hash.schema.json`](../../schemas/contracts/v1/common/spec_hash.schema.json)
 - [`contracts/runtime/run_receipt.md`](../../contracts/runtime/run_receipt.md)

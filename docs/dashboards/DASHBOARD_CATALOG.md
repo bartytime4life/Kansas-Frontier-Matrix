@@ -7,7 +7,7 @@ status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
 created: 2026-05-20
-updated: 2026-08-21
+updated: 2026-10-12
 policy_label: public
 owning_root: docs/
 responsibility: Dashboard specification inventory only; not runtime, indicator, policy, release, or publication authority.
@@ -23,6 +23,7 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, docs, dashboards, catalog, index, governance-health, observability]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "Every dashboard spec under docs/dashboards/ MUST appear in this catalog."
   - "Spec-file presence is separate from running-surface verification."
   - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
@@ -160,7 +161,7 @@ Observability dashboards specify telemetry and substrate visibility. They carry 
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | File presence | Runtime status |
 |---|---|---|---|---|---|---|
 | [`observability/OPENTELEMETRY_STACK.md`](observability/OPENTELEMETRY_STACK.md) | CI/pipeline observability via OpenTelemetry Collector → Tempo (traces) + Mimir (metrics) + Loki (logs), one agent shape across runners. | KFM-P8-PROG-0026 | Observability steward | `OpenTelemetry stack (Tempo · Mimir · Loki)` | CONFIRMED | PROPOSED |
-| [`observability/opentelemetry-stack.md`](observability/opentelemetry-stack.md) | Lowercase OpenTelemetry stack spec path observed alongside `OPENTELEMETRY_STACK.md`; likely naming-convention duplicate requiring reconciliation. | NEEDS VERIFICATION — duplicate/naming reconciliation | Observability steward | `OpenTelemetry stack (Tempo · Mimir · Loki)` | CONFIRMED | NEEDS VERIFICATION |
+| [`observability/opentelemetry-stack.md`](observability/opentelemetry-stack.md) | Redirect stub. Its content was merged into [`OPENTELEMETRY_STACK.md`](observability/OPENTELEMETRY_STACK.md) on 2026-10-12 (owner-directed duplicate removal); link to the canonical file. | Merged into `OPENTELEMETRY_STACK.md` | Observability steward | — | CONFIRMED (stub) | N/A — redirect |
 | [`observability/build-ci-health.md`](observability/build-ci-health.md) | Build and CI health dashboard specification; tracks workflow health, failing checks, and CI observability posture. | NEEDS VERIFICATION — observed spec file; source card not yet reconciled in this catalog | Observability steward · CI steward | `OpenTelemetry / CI dashboards` | CONFIRMED | PROPOSED |
 | [`observability/energy-carbon-footprint.md`](observability/energy-carbon-footprint.md) | Energy/carbon footprint observability specification; tracks compute/resource telemetry where supported. | NEEDS VERIFICATION — observed spec file; source card not yet reconciled in this catalog | Observability steward · Sustainability steward | `OpenTelemetry / external carbon telemetry` | CONFIRMED | PROPOSED |
 | [`observability/focus-overlay-telemetry.md`](observability/focus-overlay-telemetry.md) | Focus-overlay telemetry dashboard specification; tracks Focus Mode UI telemetry without exposing unsafe data. | NEEDS VERIFICATION — observed spec file; source card not yet reconciled in this catalog | Observability steward · Focus Mode steward | `OpenTelemetry / apps/review-console/` | CONFIRMED | PROPOSED |
@@ -172,7 +173,7 @@ Observability dashboards specify telemetry and substrate visibility. They carry 
 | [`observability/validator-orchestrator-health.md`](observability/validator-orchestrator-health.md) | Validator-orchestrator health dashboard specification; tracks orchestrator availability, validator outcomes, retries, and failure classes. | NEEDS VERIFICATION — observed spec file; source card not yet reconciled in this catalog | Observability steward · Validator steward | `OpenTelemetry / validator reports` | CONFIRMED | PROPOSED |
 
 > [!WARNING]
-> `observability/OPENTELEMETRY_STACK.md` and `observability/opentelemetry-stack.md` both appear in accessible repo search. Treat this as a naming-convention and possible duplicate-spec reconciliation item until a steward chooses the canonical file and records a migration/supersession path.
+> `observability/OPENTELEMETRY_STACK.md` is the canonical OpenTelemetry stack spec. On 2026-10-12 the kebab-case `observability/opentelemetry-stack.md` was merged into it (owner-directed duplicate removal) and kept only as a redirect stub so existing links resolve.
 
 [↑ back to top](#dashboard-catalog--docsdashboardsdashboard_catalogmd)
 

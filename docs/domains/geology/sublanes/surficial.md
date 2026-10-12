@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: <kfm-geology-stewards>   # placeholder — confirm against CODEOWNERS
 created: 2026-05-17
-updated: 2026-06-03
+updated: 2026-10-12
 policy_label: public-with-gates
 owning_root: docs/
 responsibility: "Human-readable documentation for Geology · Surficial Sublane; not policy, evidence, review, release, or publication authority."
@@ -461,7 +461,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/OGC-API-TILES.md`](../../../standards/OGC-API-TILES.md) — OGC API Tiles delivery
 - [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — ISO 19115 crosswalk
 - [`docs/standards/OAI-PMH.md`](../../../standards/OAI-PMH.md) — OAI-PMH harvest governance
-- *(PROPOSED siblings)* `docs/domains/geology/sublanes/bedrock.md`, `structures.md`, `boreholes.md`, `resources.md`, `reclamation.md`, `hydrostratigraphy.md`
+- *(PROPOSED siblings)* `docs/domains/geology/SUBLANE-BEDROCK.md` (bedrock; `sublanes/bedrock.md` is a redirect stub), `structures.md`, `boreholes.md`, `resources.md`, `reclamation.md`, `hydrostratigraphy.md`
 - *(PROPOSED adjacent)* `docs/domains/soil/README.md`, `docs/domains/hydrology/README.md`, `docs/domains/hazards/README.md`
 
 > [!NOTE]
