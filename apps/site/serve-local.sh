@@ -33,7 +33,7 @@ elif [[ "$schema_count" != 2 ]]; then
   exit 1
 fi
 
-# Later journal entries back the governed water, weather, soil and storm events,
+# Later journal entries back the governed water, weather, soil, storm events and earthquakes,
 # Kansas knowledge and crop CASMA routes. They are additive, so reapply them on every launch; refuse any
 # entry whose statements are not all CREATE ... IF NOT EXISTS.
 # The already-published archive migration stays immutable; a hash-bound local

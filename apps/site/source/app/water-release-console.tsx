@@ -5,8 +5,8 @@ import { expiryText, expiryWarning } from "./water-release-expiry";
 type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number; decision_expires_at: string | null };
 type Result = { outcome: string; reason_code?: string; package_id?: string; revision?: number };
 
-export type ReleaseKind = "water" | "weather" | "soil" | "storm-events";
-const TOOL: Record<ReleaseKind, string> = { water: "water_release.py", weather: "weather_release.py", soil: "soil_release.py", "storm-events": "storm_events_release.py" };
+export type ReleaseKind = "water" | "weather" | "soil" | "storm-events" | "earthquakes";
+const TOOL: Record<ReleaseKind, string> = { water: "water_release.py", weather: "weather_release.py", soil: "soil_release.py", "storm-events": "storm_events_release.py", earthquakes: "earthquake_release.py" };
 const reasonText: Record<string, string> = {
   OWNER_REQUIRED: "This account is not on the release owner list (KFM_WATER_OWNER_IDS / KFM_WATER_OWNER_EMAILS).",
   WATER_RELEASE_NOT_CONFIGURED: "Set KFM_WATER_OWNER_IDS or KFM_WATER_OWNER_EMAILS in Sites runtime settings.",

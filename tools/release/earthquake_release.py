@@ -8,7 +8,8 @@ earthquake serving gate (ADR-0049) answers ELIGIBLE for it and every evidence
 bundle replays. ``stage``/``activate``/``rollback`` operate the earthquake
 tables of a local serving store (the one ``KFM_RELEASE_STORE`` points
 kfm-governed-api at, which serves /v1/earthquakes/*). Nothing here fetches
-source data or activates on the Site.
+source data or activates on the Site. ``stage-hosted`` uploads a prepared package to the
+Site and ``cycle`` runs capture through decision (and hosted staging); neither activates.
 """
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -28,10 +29,12 @@ from release.core import DIGEST, EARTHQUAKES, validate_snapshot
 from release.local_admin import activate, stage
 from release.water_projection import replay_evidence
 from tools.local_data.file_io import read_regular
-from tools.local_data.manage import external_root, store_lock
+from tools.local_data.manage import external_root, init_store, store_lock
 from tools.local_data import earthquake_pilot
 from tools.local_data.earthquake_pilot import LANE
 from tools.local_data.water_pilot import immutable
+from tools.release.water_release import _site_call, _site_origin
+from connectors.usgs.src.usgs.earthquake_capture import capture
 
 MAX_SNAPSHOT_BYTES = 8 * 1024 * 1024
 MAX_VALID_DAYS = 30
@@ -134,6 +137,61 @@ def decide(root: Path, package_id: str, *, reviewer: str, releaser: str, valid_d
             "decision_path": relative.as_posix(), "expires_at": decision["expires_at"], "activated": False}
 
 
+def hosted_active(site_url: str, *, opener=None) -> str | None:
+    """The earthquake package the Site is serving now; a replacement must name it as its rollback target."""
+    body = _site_call(_site_origin(site_url), "status", opener=opener, admin="earthquakes-admin")
+    active = body.get("active_package_id")
+    if active is not None and not (isinstance(active, str) and DIGEST.fullmatch(active)):
+        raise ValueError("HOSTED_UNEXPECTED_RESPONSE")
+    return active
+
+
+def stage_hosted(root: Path, package_id: str, site_url: str, *, opener=None) -> dict:
+    """Upload a prepared earthquake package to the Site's staging route; activation stays owner-only there."""
+    netloc = _site_origin(site_url)
+    # The same checks as decide: carrier, domain revalidation, the stored capture and a reproducible package.
+    _snapshot(root, package_id)
+    raw = read_regular(root / SNAPSHOTS / _short(package_id, "PACKAGE_ID_INVALID") / "snapshot.json", MAX_SNAPSHOT_BYTES)
+    body = _site_call(netloc, "stage", data=raw, opener=opener, admin="earthquakes-admin")
+    if body.get("package_id") != package_id or body.get("state") != "STAGED" or body.get("activated") is not False:
+        raise ValueError("HOSTED_STAGING_UNEXPECTED_RESPONSE")
+    return {"outcome": "STAGED_HOSTED", "package_id": package_id, "site": netloc, "activated": False}
+
+
+def cycle(root: Path, *, year: int, owner: str, valid_days: int, clock=None,
+          site_url: str | None = None, rollback_target: str | None = None, acquire=None, opener=None) -> dict:
+    """Capture -> candidate -> admitted package -> decision [-> hosted staging]. Never activates.
+
+    With ``site_url`` the rollback target is read from the Site before capturing, so the
+    package binds to whatever earthquake package is active there now.
+    """
+    if site_url and rollback_target is not None:
+        raise ValueError("ROLLBACK_TARGET_FROM_SITE")
+    if rollback_target is not None and not DIGEST.fullmatch(rollback_target):
+        raise ValueError("ROLLBACK_TARGET_INVALID")
+    if not 1 <= valid_days <= MAX_VALID_DAYS:
+        raise ValueError("VALID_DAYS_OUT_OF_RANGE")
+    if site_url:
+        rollback_target = hosted_active(site_url, opener=opener)
+    run = earthquake_pilot.stage(root, (acquire or capture)(year))
+    if run["outcome"] != "CANDIDATE_READY":
+        raise ValueError("CAPTURE_NOT_READY")
+    package = prepare(root, run["candidate_id"], rollback_target=rollback_target, admitted_source=True)
+    # The package carries the capture's retrieval time and the gate requires created_at <= reviewed_at,
+    # so the decision time is read only after capture.
+    now = (clock or (lambda: datetime.now(timezone.utc)))()
+    decided = decide(root, package["package_id"], reviewer=owner, releaser=owner, valid_days=valid_days, now=now)
+    result = {"profile": "kfm.earthquake-release-cycle/v1", "outcome": "DECIDED", "data_year": year,
+              "capture_id": run["capture_id"], "candidate_id": run["candidate_id"], "package_id": package["package_id"],
+              "rollback_target": rollback_target, "decision_path": decided["decision_path"],
+              "expires_at": decided["expires_at"], "staged_hosted": False, "activated": False}
+    if site_url:
+        stage_hosted(root, package["package_id"], site_url, opener=opener)
+        result |= {"outcome": "STAGED_HOSTED", "staged_hosted": True,
+                   "next": f"https://{_site_origin(site_url)}/governed/earthquakes-release"}
+    return result
+
+
 def _decision(path: Path) -> dict:
     decision = decode_object(read_regular(path, 64 * 1024), limit=64 * 1024)
     if decision.get("profile") != EARTHQUAKE_DECISION_PROFILE:
@@ -156,6 +214,18 @@ def main(argv=None) -> int:
     rule.add_argument("--reviewer", required=True)
     rule.add_argument("--releaser", required=True)
     rule.add_argument("--valid-days", type=int, default=7)
+    hosted = commands.add_parser("stage-hosted", help="upload a prepared package to the Site; never activates")
+    hosted.add_argument("--root", required=True)
+    hosted.add_argument("--package-id", required=True)
+    hosted.add_argument("--site-url", required=True, help="https origin of the KFM Site")
+    refresh = commands.add_parser("cycle", help="capture, package, decide and (with --site-url) stage; never activates")
+    refresh.add_argument("--root", required=True, help="private acquisition/candidate store")
+    refresh.add_argument("--year", required=True, type=int, help="data year; one ComCat query per calendar month is captured")
+    refresh.add_argument("--owner", required=True, help="reviewer and releaser under ADR-0049")
+    refresh.add_argument("--valid-days", type=int, default=7)
+    target = refresh.add_mutually_exclusive_group()
+    target.add_argument("--site-url", help="https origin of the KFM Site; reads the rollback target from it and stages there")
+    target.add_argument("--rollback-target", help="active earthquake package id for a local-only cycle")
     for name in ("stage", "activate", "rollback"):
         sub = commands.add_parser(name)
         sub.add_argument("--root", required=True, help="private acquisition/candidate store")
@@ -170,6 +240,15 @@ def main(argv=None) -> int:
     now = datetime.now(timezone.utc)
     try:
         root = external_root(args.root)
+        if args.command in ("cycle", "stage-hosted"):
+            if args.command == "cycle":
+                init_store(root)
+                result = cycle(root, year=args.year, owner=args.owner, valid_days=args.valid_days,
+                               site_url=args.site_url, rollback_target=args.rollback_target)
+            else:
+                result = stage_hosted(root, args.package_id, args.site_url)
+            print(canonical_bytes(result).decode())
+            return 0
         if args.command == "stage":
             # The same checks as decide: carrier, domain revalidation, stored capture and reproducibility.
             _snapshot(root, args.package_id)

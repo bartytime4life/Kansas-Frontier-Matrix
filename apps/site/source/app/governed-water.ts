@@ -66,7 +66,7 @@ export function capturedCanonical(value: CapturedValue, omit?: string): string {
   if (Array.isArray(value)) return `[${value.map(item => capturedCanonical(item)).join(",")}]`;
   return `{${Object.keys(value).filter(key => key !== omit).sort(codepointOrder).map(key => `${JSON.stringify(key)}:${capturedCanonical(value[key])}`).join(",")}}`;
 }
-function pythonFloatToken(value: number): string {
+export function pythonFloatToken(value: number): string {
   if (value === 0) return Object.is(value, -0) ? "-0.0" : "0.0";
   const [mantissa, exponent = "0"] = Math.abs(value).toString().split("e");
   let digits = mantissa.replace(".", ""), magnitude = Number(exponent) + (mantissa.includes(".") ? mantissa.indexOf(".") : mantissa.length) - 1;
