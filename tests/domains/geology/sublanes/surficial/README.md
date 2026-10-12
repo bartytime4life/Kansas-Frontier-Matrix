@@ -6,16 +6,17 @@ status: draft
 truth_posture: CONFIRMED path / PROPOSED test matrix / UNKNOWN enforcement completeness
 owner: <geology-domain-steward> + <surficial-geology-steward> + <test-steward>
 created: 2026-07-05
-updated: 2026-07-05
+updated: 2026-10-12
 policy_label: public
 related:
   - docs/domains/geology/OBJECT_FAMILIES.md
-  - docs/domains/geology/sublanes/bedrock_geology.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
   - tests/domains/geology/source_role/README.md
   - tests/domains/geology/catalog-closure/README.md
   - tests/domains/geology/public-safe-geometry/README.md
 tags: [kfm, tests, geology, sublanes, surficial, surficial-unit, parent-material, cross-lane, fail-closed]
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "This README documents the intended Surficial Geology sublane test contract."
   - "It does not claim executable tests, fixtures, validators, or CI wiring already exist."
 [/KFM_META_BLOCK_V2] -->

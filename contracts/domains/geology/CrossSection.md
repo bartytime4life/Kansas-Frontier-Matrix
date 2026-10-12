@@ -19,7 +19,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contract; geology; cross-section; interpretation-versioned; source-role-aware; release-gated; reality-boundary-required
 tags: [kfm, contracts, geology, CrossSection, cross-section, subsurface, stratigraphy, bedrock, surficial, borehole, well-log, geophysics, interpretation, evidence, source-role, policy, release, correction, rollback]
 related:
@@ -29,7 +29,7 @@ related:
   - ../../../docs/domains/geology/SCOPE.md
   - ../../../docs/domains/geology/OBJECT_FAMILIES.md
   - ../../../docs/domains/geology/sublanes/stratigraphy.md
-  - ../../../docs/domains/geology/sublanes/bedrock_geology.md
+  - ../../../docs/domains/geology/SUBLANE-BEDROCK.md
   - ../../../docs/domains/geology/sublanes/surficial.md
   - ../../../docs/domains/geology/sublanes/boreholes-wells.md
   - ../../../docs/domains/geology/CANONICAL_PATHS.md
@@ -43,6 +43,7 @@ related:
   - ../../../data/registry/sources/geology/
   - ../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "Expanded from a thin scaffold into a Geology CrossSection semantic contract."
   - "The exact paired schema path schemas/contracts/v1/domains/geology/CrossSection.schema.json was not found in this session; schema shape and casing remain NEEDS VERIFICATION."
   - "CrossSection is a 2D/2.5D interpretive subsurface section with explicit interpretation version, line geometry, evidence basis, vertical exaggeration disclosure, and reality-boundary requirements."

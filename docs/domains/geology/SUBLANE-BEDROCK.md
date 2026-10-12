@@ -2,7 +2,7 @@
 doc_id: kfm://doc/geology-sublane-bedrock
 title: Geology — Bedrock Sublane
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: <geology-domain-steward> · <docs-steward>   # placeholder — confirm in CODEOWNERS
 created: 2026-06-04
@@ -29,7 +29,7 @@ related:
 tags: [kfm, geology, bedrock, sublane, stratigraphy, governance]
 notes:
   - "2026-10-12: merged unique content from docs/domains/geology/sublanes/bedrock.md (which shared this doc_id) — owner-directed duplicate removal"
-  - "A third bedrock draft, docs/domains/geology/sublanes/bedrock_geology.md (doc_id kfm://doc/geology-sublane-bedrock-geology), still exists and is not merged here; see OQ-GEOL-BED-05."
+  - "2026-10-12: merged unique content from docs/domains/geology/sublanes/bedrock_geology.md (third bedrock draft, doc_id kfm://doc/geology-sublane-bedrock-geology) — owner-directed duplicate removal; OQ-GEOL-BED-05 resolved"
   - Sublane slice of the geology lane scoped to BEDROCK geology. Owns bedrock units, lithology, stratigraphy, age, structures, and cross-sections; explicitly excludes surficial cover (the surficial sublane) and subsurface point records (the boreholes/logs sublane).
   - Doctrine-adjacent; pins CONTRACT_VERSION = "3.0.0".
   - Bedrock/surficial split is CONFIRMED (Atlas §10.A identity; §10.G names a distinct "bedrock unit map" viewing product). Object-family naming drift (§10.B short vs §10.E/§10.C Reference forms) surfaced as CONFLICTED.
@@ -55,16 +55,18 @@ notes:
 | **Parent lane** | Geology / Natural Resources — `[DOM-GEOL]`, Atlas Ch. 10 |
 | **Sublane scope** | Bedrock geology (Atlas §10.A bedrock/surficial split; §10.G "bedrock unit map") |
 | **Default sensitivity** | Mostly **T0** (`GeologicUnit`/`Lithology` CONFIRMED T0 per §24.14) |
-| **Version** | v1.1 |
+| **Version** | v1.2 |
 | **Updated** | 2026-10-12 |
 
 > 2026-10-12: merged unique content from `docs/domains/geology/sublanes/bedrock.md` (which shared this doc_id) — owner-directed duplicate removal
+
+> 2026-10-12: merged unique content from `docs/domains/geology/sublanes/bedrock_geology.md` (third bedrock draft, own doc_id) — owner-directed duplicate removal
 
 > [!IMPORTANT]
 > This sublane doc is a **scoped slice**, not a second copy of the lane. The lane-wide boundary, sources, sensitivity, and release rules live in `SCOPE.md`, `SOURCES.md`, `SENSITIVITY.md`, and `RELEASE_INDEX.md`; this doc narrows them to bedrock. Where this doc and a lane-wide doc disagree, the lane-wide doc governs and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`.
 
 > [!NOTE]
-> **Merged from `sublanes/bedrock.md` (v2, 2026-06-03).** That file carried this doc's `doc_id` and is now a redirect stub. Its unique content is folded in: repo fit and inputs (§1.1–§1.2), the ubiquitous-language/identity table and identity rule (§2.1), extra exclusions, the anti-collapse warning, and the lifecycle/cross-lane map (§3.1), the full Atlas §10D source ledger, source-role warning, license gate, and activation tip (§4), extra sensitivity rules (§5), extra viewing products (§6.1), and three new sections — spatial & temporal model (§8), pipeline shape (§9), cross-lane relations (§10) — plus its open questions, verification items, changelog, definition-of-done items, and Appendices A–B. Naming disagreements between the two drafts are recorded, not resolved (§2, OQ-GEOL-BED-02). A **third** bedrock draft, [`sublanes/bedrock_geology.md`](./sublanes/bedrock_geology.md), has its own `doc_id` and is **not** merged here (OQ-GEOL-BED-05).
+> **Merged from `sublanes/bedrock.md` (v2, 2026-06-03).** That file carried this doc's `doc_id` and is now a redirect stub. Its unique content is folded in: repo fit and inputs (§1.1–§1.2), the ubiquitous-language/identity table and identity rule (§2.1), extra exclusions, the anti-collapse warning, and the lifecycle/cross-lane map (§3.1), the full Atlas §10D source ledger, source-role warning, license gate, and activation tip (§4), extra sensitivity rules (§5), extra viewing products (§6.1), and three new sections — spatial & temporal model (§8), pipeline shape (§9), cross-lane relations (§10) — plus its open questions, verification items, changelog, definition-of-done items, and Appendices A–B. Naming disagreements between the two drafts are recorded, not resolved (§2, OQ-GEOL-BED-02). A **third** bedrock draft, [`sublanes/bedrock_geology.md`](./sublanes/bedrock_geology.md) (v1, 2026-06-03, own `doc_id`), was merged in v1.2 and is also a redirect stub now. It largely paralleled `sublanes/bedrock.md`; its unique content is the API/contract/schema surfaces, governed-AI posture, and validator list (§9.1–§9.2), the per-object-class tier table (§5.1), extra checklist items (Appendix A), and its open questions (OQ-GEOL-BED-14, -15). Its `sublanes/surficial_geology.md` and `sublanes/boreholes_wells.md` sibling paths were not carried over because those files do not exist (the real files are `surficial.md` / `sublanes/surficial.md` and `sublanes/boreholes-wells.md`).
 
 ---
 
@@ -151,7 +153,7 @@ The bedrock-relevant subset of the lane's `§10.B` owns-list plus the bedrock `�
 > `HydrostratigraphicUnit` is the **bridge** object to hydrology and is owned by the lane, but it is the geology↔hydrology reframing of the bedrock/aquifer framework rather than a pure bedrock object; it is governed primarily through the cross-lane edge (`SCOPE.md §4`), not this sublane.
 
 > [!NOTE]
-> **Merge conflict recorded (2026-10-12).** `sublanes/bedrock.md` v2 took a firmer position than this file: it treats **`StructureFeature`** as the Atlas v1.1 §10C canonical name and calls `FaultStructure` (and by extension the `Fault Structure` short form) **drift**. This file lists both as CONFLICTED. Both positions are kept; resolution stays with OQ-GEOL-BED-02. The merged draft also used spaced Atlas casings for sibling families (`Well LogReference`, `Geochemistry SampleReference`, `Mineral Occurrence`, `Resource Deposit`, `Extraction Site`) and asked that they not be silently renamed.
+> **Merge conflict recorded (2026-10-12).** `sublanes/bedrock.md` v2 took a firmer position than this file: it treats **`StructureFeature`** as the Atlas v1.1 §10C canonical name and calls `FaultStructure` (and by extension the `Fault Structure` short form) **drift**. This file lists both as CONFLICTED. Both positions are kept; resolution stays with OQ-GEOL-BED-02. The merged draft also used spaced Atlas casings for sibling families (`Well LogReference`, `Geochemistry SampleReference`, `Mineral Occurrence`, `Resource Deposit`, `Extraction Site`) and asked that they not be silently renamed. `sublanes/bedrock_geology.md` (merged v1.2) took the same position as `sublanes/bedrock.md`: Atlas v1.1 §10C/E casing, `FaultStructure` deliberately not used.
 
 ### 2.1 Ubiquitous language and identity (merged from `sublanes/bedrock.md` §6)
 
@@ -317,6 +319,21 @@ Additional rules (merged from `sublanes/bedrock.md` §11; Atlas v1.1 §10; ENCY 
 > [!IMPORTANT]
 > **A bedrock map is not a resource map.** A user clicking a bedrock polygon sees the **bedrock unit identity** plus its `EvidenceBundle` — never a resource estimate, extraction location, or borehole location, unless those are independently released by their own sublanes.
 
+<a id="5-1-tier-by-object-class"></a>
+
+### 5.1 Tier by object class, with transforms and gates (PROPOSED, merged from `sublanes/bedrock_geology.md` §12)
+
+Atlas v1.1 §10I; ENCY §7.8; operating contract §23.2; T0–T4 tier scheme (PROPOSED, ADR-S-05).
+
+| Object class | Default tier | Allowed transform | Required gates |
+|---|---|---|---|
+| Bedrock unit polygon (generalized) | **T0 / T1** | Generalization where scale demands it. | Standard release gates; `RedactionReceipt` if generalized. |
+| Bedrock `StructureFeature` overlay | **T0 / T1** | Generalization; uncertainty classes. | Standard release gates. |
+| Exact borehole / sample / well-log location | **T2–T4** *(sibling sublanes)* | Generalize / restrict; never on the bedrock layer. | `RedactionReceipt` + `ReviewRecord` + `PolicyDecision`. |
+
+> [!NOTE]
+> **Merge conflict recorded (2026-10-12).** The merged draft put bedrock unit polygons at **T0 / T1** and exact borehole / sample / well-log / private-well locations at **T2–T4** ("restricted or generalized"). This file puts `GeologicUnit` at **T0** (CONFIRMED, §24.14) and a `Borehole` point at **T4 by default** (§3). Both are kept; see OQ-GEOL-BED-15 and `CONTINUITY_INVENTORY.md` D-05, which records the same lane-level disagreement.
+
 [↑ Back to top](#top)
 
 ---
@@ -408,6 +425,36 @@ The lane-wide anti-collapse rules (`SOURCE_ROLE_MATRIX.md §5`) apply; the bedro
 > [!CAUTION]
 > **Watcher-as-non-publisher.** A bedrock watcher that detects a KGS map-series update **MAY emit a candidate `PromotionDecision`**; it MUST NOT write to processed or published geology paths directly. Promotion is reserved to the governed pipeline.
 
+<a id="9-1-api-contract--schema-surfaces"></a>
+
+### 9.1 API, contract & schema surfaces (PROPOSED, merged from `sublanes/bedrock_geology.md` §11)
+
+Governed surfaces per Atlas v1.1 §10J. All routes are **UNKNOWN** until verified in the repo (OQ-GEOL-BED-14); outcomes are the canonical finite set.
+
+| Surface | DTO / schema | Finite outcomes | Status |
+|---|---|---|---|
+| Geology feature / detail resolver | `GeologyDecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; exact route UNKNOWN |
+| Geology layer manifest resolver | `LayerManifest` / domain layer descriptor | `ANSWER` / `DENY` / `ERROR` | PROPOSED; public-safe release only |
+| Geology Evidence Drawer payload | `EvidenceDrawerPayload` + `EvidenceBundle` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; evidence- and policy-filtered |
+| Geology Focus Mode answer | `Runtime Response Envelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | PROPOSED; AI never root truth |
+| Schema responsibility root | `schemas/contracts/v1/` | finite validator outcomes | PROPOSED; slug per OQ-GEOL-BED-07 and ADR-0001 |
+
+> [!NOTE]
+> **Governed AI behavior (Atlas §10L).** AI may summarize released geology `EvidenceBundle`s, compare evidence, explain limitations, and draft steward-review notes. AI MUST `ABSTAIN` when evidence is insufficient and `DENY` where policy, rights, sensitivity, or release state blocks the request. `EvidenceBundle` outranks generated language.
+
+<a id="9-2-validators-tests-and-fixtures"></a>
+
+### 9.2 Validators, tests, and fixtures (PROPOSED, Atlas §10K; merged)
+
+None verified against the repo:
+
+- Source-role validators (a map source is not silently a subsurface authority).
+- Resource-class anti-collapse tests (no `ResourceEstimate` / `Mineral Occurrence` content on a bedrock layer).
+- Public-safe geometry tests (generalization rule applied; receipt emitted).
+- Borehole / well-log rights tests (sibling sublanes; the bedrock layer must not surface them).
+- Catalog closure tests (`EvidenceRef` resolves to a populated `EvidenceBundle`).
+- AI evidence-before-model tests (`EvidenceBundle` outranks generated language).
+
 [↑ Back to top](#top)
 
 ---
@@ -444,7 +491,7 @@ The lane-wide anti-collapse rules (`SOURCE_ROLE_MATRIX.md §5`) apply; the bedro
 | OQ-GEOL-BED-02 | Resolve object-family naming drift (`Fault Structure`/`StructureFeature`; `GeologyBoundaryVersion`; `StratigraphicCorrelation`). | `<geology-domain-steward>` | ADR or schema PR; drift entry |
 | OQ-GEOL-BED-03 | Ratify the bedrock tier rows beyond the two §24.14-grounded ones (structures, cross-sections, boundary versions). | `<geology-domain-steward>` + `<policy-steward>` | ADR-S-05 extension |
 | OQ-GEOL-BED-04 | Confirm the "bedrock unit map" viewing product, its layer manifests, and Evidence Drawer payload. | `<geology-domain-steward>` | `apps/governed-api/` + `schemas/contracts/v1/map/` |
-| OQ-GEOL-BED-05 | Reconcile the remaining third bedrock draft `sublanes/bedrock_geology.md` (own `doc_id`; near-duplicate of the merged `sublanes/bedrock.md`; most inbound links from contracts, pipelines, tests, and sibling sublanes). Also covers `CONTINUITY_INVENTORY.md` D-09 and `BEDROCK_REVIEW.md` BEDROCK-OPEN-001. | docs steward + `<geology-domain-steward>` | Owner decision; fold into this file and redirect, then repoint links |
+| OQ-GEOL-BED-05 | ~~Reconcile the remaining third bedrock draft `sublanes/bedrock_geology.md`.~~ **RESOLVED 2026-10-12 (v1.2):** merged here; that path is a redirect stub. Inbound-link repointing is tracked by the docs steward. Also closes the bedrock half of `CONTINUITY_INVENTORY.md` D-09 and `BEDROCK_REVIEW.md` BEDROCK-OPEN-001, and the merged draft's own OQ-GEOL-BEDROCK-06 ("`bedrock_geology.md` vs `bedrock.md` — only one canonical"). | docs steward + `<geology-domain-steward>` | Done — owner-directed merge |
 | OQ-GEOL-BED-06 | Accept `sublanes/` subfolder vs flat `SUBLANE-*.md` prefix under `docs/domains/geology/` (was OQ-GEOL-BEDROCK-01 in the merged draft). | docs steward + directory-rules owner | ADR amending Directory Rules §12; DRIFT_REGISTER entry until resolved |
 | OQ-GEOL-BED-07 | Confirm geology contract/schema homes — `schemas/contracts/v1/domains/geology/` (ADR-0001 default, merged draft) vs `schemas/contracts/v1/geology/` (sublanes index); both directories exist (was OQ-GEOL-BEDROCK-02). | `<geology-domain-steward>` | Repo inspection + ADR-0001 check |
 | OQ-GEOL-BED-08 | Designate the default authoritative KGS bedrock map series and scale (was OQ-GEOL-BEDROCK-03). | `<geology-domain-steward>` + source authority | Source-activation decision under the source registry |
@@ -453,8 +500,10 @@ The lane-wide anti-collapse rules (`SOURCE_ROLE_MATRIX.md §5`) apply; the bedro
 | OQ-GEOL-BED-11 | Generalization rule for the public-safe bedrock unit map (target scale, simplification tolerance, attribute redaction). | `<geology-domain-steward>` + `<policy-steward>` | Policy entry under `policy/domains/geology/` + generalization-receipt fixture |
 | OQ-GEOL-BED-12 | How `GeologyBoundaryVersion` diffs surface in the Evidence Drawer and correction notices; whether `CrossSection`s need a representation receipt distinct from the source map's. | `<geology-domain-steward>` | Evidence Drawer payload contract; correction-notice schema; ADR on 2.5D/3D representation receipts |
 | OQ-GEOL-BED-13 | Exact name of the source-activation outcome object (`SourceActivationDecision` is PROPOSED). | `<geology-domain-steward>` | `contracts/` inspection |
+| OQ-GEOL-BED-14 | Confirm the finite-outcome resolver routes for the geology surfaces in §9.1 (Atlas §10J marks routes TBD/UNKNOWN). From `bedrock_geology.md` OQ-GEOL-BEDROCK-05. | `<geology-domain-steward>` + API owner | Repo route inspection under `apps/governed-api/` |
+| OQ-GEOL-BED-15 | Reconcile default tiers: bedrock unit polygon T0 (§5, §24.14) vs T0/T1 (§5.1); exact borehole / well-log points T4 by default (§3) vs T2–T4 (§5.1). | `<geology-domain-steward>` + sensitivity reviewer | `SENSITIVITY.md` + ADR-S-05; aligns with `CONTINUITY_INVENTORY.md` D-05 |
 
-> The merged draft's OQ-GEOL-BEDROCK-05 (`StructureFeature` vs `FaultStructure` drift sweep) is folded into OQ-GEOL-BED-02.
+> The `sublanes/bedrock.md` draft's OQ-GEOL-BEDROCK-05 (`StructureFeature` vs `FaultStructure` drift sweep) is folded into OQ-GEOL-BED-02. **ID collision:** `sublanes/bedrock_geology.md` used the same ID, OQ-GEOL-BEDROCK-05, for a different question (resolver routes), now OQ-GEOL-BED-14. Its OQ-GEOL-BEDROCK-01…04 match OQ-GEOL-BED-06…09, and its OQ-GEOL-BEDROCK-06 is resolved under OQ-GEOL-BED-05.
 
 ### Open verification backlog
 
@@ -463,13 +512,35 @@ These items remain `NEEDS VERIFICATION` before this document promotes from `draf
 1. The bedrock/surficial object partition (OQ-GEOL-BED-01).
 2. The canonical bedrock object-family name set (OQ-GEOL-BED-02).
 3. The bedrock unit map viewing-product wiring (OQ-GEOL-BED-04).
-4. Sublane doc layout and the third bedrock draft (OQ-GEOL-BED-05, -06).
+4. Sublane doc layout (OQ-GEOL-BED-06); the third bedrock draft is resolved (OQ-GEOL-BED-05).
 5. Geology contract/schema homes against the repo and ADR-0001 (OQ-GEOL-BED-07).
 6. Default KGS bedrock map series and scale (OQ-GEOL-BED-08).
 7. KGS/USGS license and attribution for tile/COG publication (OQ-GEOL-BED-09).
 8. Source-activation outcome object name (OQ-GEOL-BED-13).
 9. `GeologicAge` vocabulary and the public-safe generalization rule + receipt fixture (OQ-GEOL-BED-10, -11).
 10. MapLibre-dossier clause IDs governing geology tile publication (unverified; not relied on).
+11. Resolver route names for geology surfaces (OQ-GEOL-BED-14) and the tier-default conflict (OQ-GEOL-BED-15).
+
+## Changelog v1.1 → v1.2 (2026-10-12)
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Merged unique content from `sublanes/bedrock_geology.md` (v1, own `doc_id` `kfm://doc/geology-sublane-bedrock-geology`); that path is now a redirect stub | reconciliation | Owner-directed duplicate removal; resolves OQ-GEOL-BED-05 and the merged draft's OQ-GEOL-BEDROCK-06 |
+| Added §5.1 tier-by-object-class table, §9.1 API/contract/schema surfaces + governed-AI note, §9.2 validators/tests list, Appendix A items | new | Content existed only in `bedrock_geology.md` |
+| Added OQ-GEOL-BED-14 (resolver routes) and OQ-GEOL-BED-15 (tier-default conflict); recorded the OQ-GEOL-BEDROCK-05 ID collision | new | Preserve open questions; record conflicts instead of dropping them |
+
+<details>
+<summary><b>History carried from the merged draft — <code>sublanes/bedrock_geology.md</code> changelog v0 → v1 (2026-06-03)</b></summary>
+
+| Change | Type | Reason |
+|---|---|---|
+| New sublane doc created at `docs/domains/geology/sublanes/bedrock_geology.md` | new | First bedrock-geology sublane doc under the requested filename. |
+| Object families set to Atlas v1.1 §10C/E canonical casing (`StructureFeature`, `SurficialUnit`, …) | new | Terminology fidelity; `FaultStructure` deliberately not used. |
+| Source families set to the Atlas §10D ledger with bedrock-relevance flags | new | Mirror the actual lane ledger. |
+| Added API/contract/schema surfaces from Atlas §10J–L | new | Surface governed resolvers, finite outcomes, and AI posture. |
+| Added T0–T4 tier mapping for bedrock object classes | new | Ground sensitivity in the per-domain matrix. |
+
+</details>
 
 ## Changelog v1 → v1.1 (2026-10-12)
 
@@ -516,7 +587,8 @@ This document is done enough to enter the repository when:
 - any conflict with lane-wide docs or the dossier is logged in `docs/registers/DRIFT_REGISTER.md`;
 - the `GENERATED_RECEIPT.json` planned in the authoring notes is wired into CI;
 - future changes follow `ai-build-operating-contract.md §37` lifecycle;
-- the sublane-folder question (OQ-GEOL-BED-06) and the third bedrock draft (OQ-GEOL-BED-05) are resolved, so only one bedrock doc is authoritative *(merged)*;
+- the sublane-folder question (OQ-GEOL-BED-06) is resolved; the bedrock-doc duplication (OQ-GEOL-BED-05) was resolved in v1.2, so this is the only authoritative bedrock doc *(merged)*;
+- the filename and sublane-folder questions are logged in `docs/registers/DRIFT_REGISTER.md` *(merged from `bedrock_geology.md`)*;
 - the `StructureFeature` naming drift is logged in `docs/registers/DRIFT_REGISTER.md` *(merged)*.
 
 [↑ Back to top](#top)
@@ -541,7 +613,7 @@ This document is done enough to enter the repository when:
 - Sibling sublane docs *(PROPOSED)*: `SUBLANE-SURFICIAL.md`, `SUBLANE-BOREHOLES.md`, `SUBLANE-RESOURCES.md`.
 - Existing sibling docs *(merged list)*: [`surficial.md`](./surficial.md); [`sublanes/README.md`](./sublanes/README.md) (sublanes index); [`sublanes/structures.md`](./sublanes/structures.md), [`sublanes/stratigraphy.md`](./sublanes/stratigraphy.md), [`sublanes/boreholes-wells.md`](./sublanes/boreholes-wells.md), [`sublanes/resources.md`](./sublanes/resources.md), [`sublanes/surficial.md`](./sublanes/surficial.md).
 - [`sublanes/bedrock.md`](./sublanes/bedrock.md) — redirect stub; merged here 2026-10-12.
-- [`sublanes/bedrock_geology.md`](./sublanes/bedrock_geology.md) — third bedrock draft, not yet reconciled (OQ-GEOL-BED-05).
+- [`sublanes/bedrock_geology.md`](./sublanes/bedrock_geology.md) — redirect stub; merged here 2026-10-12 (v1.2).
 - [`docs/runbooks/geology/BEDROCK_REVIEW.md`](../../runbooks/geology/BEDROCK_REVIEW.md) — bedrock review runbook (Appendix A's promotion target).
 - Cross-lane: [`docs/domains/hydrology/README.md`](../hydrology/README.md), [`docs/domains/soil/README.md`](../soil/README.md), [`docs/domains/hazards/README.md`](../hazards/README.md).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — terminology drift + sublane-folder routing.
@@ -554,7 +626,7 @@ This document is done enough to enter the repository when:
 <details>
 <summary><b>Appendix A · Bedrock-sublane reviewer checklist (PROPOSED; merged from <code>sublanes/bedrock.md</code>)</b></summary>
 
-A non-normative checklist for PRs that touch bedrock-sublane artifacts; the fuller review procedure is `docs/runbooks/geology/BEDROCK_REVIEW.md`.
+A non-normative checklist for PRs that touch bedrock-sublane artifacts (merged from `sublanes/bedrock.md` and `sublanes/bedrock_geology.md`); the fuller review procedure is `docs/runbooks/geology/BEDROCK_REVIEW.md`.
 
 - [ ] **Source activation** — `SourceDescriptor` exists; activation decision records role, rights, license, attribution.
 - [ ] **Source role** — bedrock map source declared as a map authority; not silently used as a subsurface authority.
@@ -562,7 +634,8 @@ A non-normative checklist for PRs that touch bedrock-sublane artifacts; the full
 - [ ] **Identity** — `GeologicUnit` identity binds `source_id + object_role + temporal_scope + normalized_digest`.
 - [ ] **Interpretation versioning** — every refit produces a new `GeologyBoundaryVersion`; prior versions preserved.
 - [ ] **Temporal fields** — source / observed / valid / retrieval / release / correction times carried where material.
-- [ ] **Public-safe geometry** — generalization rule applied; generalization receipt emitted.
+- [ ] **Public-safe geometry** — generalization rule applied; generalization receipt (`RedactionReceipt` where generalized) emitted.
+- [ ] **Finite outcomes** — resolvers return `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` only *(merged from `bedrock_geology.md`)*.
 - [ ] **Anti-collapse** — no resource, extraction, or borehole-detail content rides in on the bedrock layer.
 - [ ] **Evidence closure** — `EvidenceRef` resolves to a populated `EvidenceBundle`.
 - [ ] **Release inputs** — `ReleaseManifest`, correction path, rollback target, review/policy state all present.
@@ -581,16 +654,16 @@ A non-normative checklist for PRs that touch bedrock-sublane artifacts; the full
 |---|---|---|
 | **Map-as-truth** | A bedrock polygon is treated as verified subsurface presence at depth. | Restate as a *mapped* unit at the source scale; require borehole / geophysics evidence for depth claims. |
 | **Lithology = unit** | UI labels the polygon "Limestone" without referencing the `GeologicUnit`. | Render unit identity first (e.g., "Stone Corral Fm"); `Lithology` is a descriptor of the unit. |
-| **Silent re-bound** | A new KGS release overwrites the prior unit polygon without a new `GeologyBoundaryVersion`. | Treat every refit as a new version; preserve prior in lineage; emit a correction notice if a published artifact changes. |
+| **Silent re-bound** | A new KGS release overwrites the prior unit polygon without a new `GeologyBoundaryVersion`. | Treat every refit as a new version; preserve prior in lineage; emit a `CorrectionNotice` if a published artifact changes. |
 | **License skipped** | A KGS-derived COG / PMTiles bundle goes to release without recorded license / attribution. | Fail release; require license review and attribution in the `LayerManifest`. |
 | **Resource bleed** | A bedrock layer surfaces resource-estimate attributes on click. | Strip resource attributes; route resource claims through the resources sublane. |
 | **Term drift** | A doc reuses `FaultStructure`. | Use `StructureFeature` per Atlas §10C/E (pending OQ-GEOL-BED-02); log drift in DRIFT_REGISTER. |
-| **Watcher publishes** | A bedrock watcher writes to processed or published geology paths. | Watcher emits a candidate decision only; promotion is governed. |
+| **Watcher publishes** | A bedrock watcher writes to processed or published geology paths. | Watcher emits a candidate `PromotionDecision` only; promotion is governed. |
 
 </details>
 
 ---
 
-*Last updated: 2026-10-12 · Version: v1.1 · Status: `draft` · `CONTRACT_VERSION = "3.0.0"` · `[DOM-GEOL]` · sublane: bedrock*
+*Last updated: 2026-10-12 · Version: v1.2 · Status: `draft` · `CONTRACT_VERSION = "3.0.0"` · `[DOM-GEOL]` · sublane: bedrock*
 
 [↑ Back to top](#top)

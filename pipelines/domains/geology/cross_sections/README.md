@@ -17,7 +17,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-12
 policy_label: restricted-by-default-for-exact-subsurface-and-sensitive-section-context
 path: pipelines/domains/geology/cross_sections/README.md
 related:
@@ -29,7 +29,7 @@ related:
   - pipelines/domains/geology/surficial_units/README.md
   - docs/domains/geology/README.md
   - docs/domains/geology/sublanes/stratigraphy.md
-  - docs/domains/geology/sublanes/bedrock_geology.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
   - docs/domains/geology/sublanes/surficial.md
   - docs/domains/geology/POLICY.md
   - docs/domains/geology/PRESERVATION_MATRIX.md
@@ -71,6 +71,7 @@ tags:
   - restricted
   - governance
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills the blank pipelines/domains/geology/cross_sections path as a nested executable Geology cross-section sublane."
   - "Cross-section pipeline logic is executable implementation support only; it does not own source descriptors, source catalog profiles, connectors, schemas, policy, lifecycle data, catalog truth, stratigraphic truth, bedrock truth, surficial truth, well-log truth, geophysics truth, or release decisions."
   - "Cross sections are interpretive 2D subsurface projections assembled from evidence-bearing inputs; they are not direct observations, canonical map facts, reserve/resource estimates, permit decisions, or public-safe artifacts by default."

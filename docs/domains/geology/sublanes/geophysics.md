@@ -6,28 +6,50 @@ version: v1
 status: draft
 owners: <geology-domain-steward> (placeholder — verify against repo CODEOWNERS)
 created: 2026-06-03
-updated: 2026-06-03
+updated: 2026-10-12
 policy_label: restricted
+owning_root: docs/
+responsibility: Describe the Geophysics geology sublane scope, boundaries, and sensitivity posture; documentation only, not schema, policy, or release authority.
+truth_posture: PROPOSED sublane doctrine; repository paths, owners, and implementation NEEDS VERIFICATION
 related:
-  - docs/domains/geology/README.md                       # PROPOSED — verify presence
-  - docs/domains/geology/sublanes/bedrock_geology.md      # PROPOSED sibling
-  - docs/domains/geology/sublanes/structures.md           # PROPOSED sibling (anomaly ≠ mapped structure)
-  - docs/domains/geology/sublanes/boreholes-wells.md      # PROPOSED sibling (survey ↔ well tie)
-  - docs/domains/geology/sublanes/geochemistry.md         # PROPOSED sibling
-  - docs/domains/geology/sublanes/resources.md            # PROPOSED sibling (anomaly ≠ deposit)
-  - docs/domains/hazards/                                 # cross-lane: fault / subsidence context
-  - docs/domains/people-dna-land/                         # cross-lane: survey-on-private-land
-  - schemas/contracts/v1/domains/geology/                 # PROPOSED schema home (ADR-0001 default)
-  - schemas/contracts/v1/receipts/                        # PROPOSED receipt schema home
-  - contracts/domains/geology/                            # PROPOSED semantic contract home
-  - policy/domains/geology/                                # PROPOSED policy home
-  - policy/sensitivity/geology/                            # PROPOSED sensitivity home
-  - data/published/layers/geology/                        # PROPOSED layer outputs
-  - ai-build-operating-contract.md                        # canonical operating contract
-  - directory-rules.md                                    # §12 Domain Placement Law, §5 Canonical Root Tree
-  - docs/registers/DRIFT_REGISTER.md                      # object-name + naming-convention routing
+  - docs/domains/geology/README.md
+  - docs/domains/geology/SUBLANE-BEDROCK.md
+  - docs/domains/geology/sublanes/structures.md
+  - docs/domains/geology/sublanes/boreholes-wells.md
+  - docs/domains/geology/sublanes/geochemistry.md
+  - docs/domains/geology/sublanes/resources.md
+  - docs/domains/hazards/
+  - docs/domains/people-dna-land/
+  - schemas/contracts/v1/domains/geology/
+  - schemas/contracts/v1/receipts/
+  - contracts/domains/geology/
+  - policy/domains/geology/
+  - data/published/layers/geology/
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+related_notes:
+  - "docs/domains/geology/README.md — PROPOSED — verify presence"
+  - "docs/domains/geology/SUBLANE-BEDROCK.md — PROPOSED sibling"
+  - "docs/domains/geology/sublanes/structures.md — PROPOSED sibling (anomaly ≠ mapped structure)"
+  - "docs/domains/geology/sublanes/boreholes-wells.md — PROPOSED sibling (survey ↔ well tie)"
+  - "docs/domains/geology/sublanes/geochemistry.md — PROPOSED sibling"
+  - "docs/domains/geology/sublanes/resources.md — PROPOSED sibling (anomaly ≠ deposit)"
+  - "docs/domains/hazards/ — cross-lane: fault / subsidence context"
+  - "docs/domains/people-dna-land/ — cross-lane: survey-on-private-land"
+  - "schemas/contracts/v1/domains/geology/ — PROPOSED schema home (ADR-0001 default)"
+  - "schemas/contracts/v1/receipts/ — PROPOSED receipt schema home"
+  - "contracts/domains/geology/ — PROPOSED semantic contract home"
+  - "policy/domains/geology/ — PROPOSED policy home"
+  - "data/published/layers/geology/ — PROPOSED layer outputs"
+  - "docs/registers/DRIFT_REGISTER.md — object-name + naming-convention routing"
+  - "docs/doctrine/ai-build-operating-contract.md — canonical operating contract"
+  - "docs/doctrine/directory-rules.md — §12 Domain Placement Law, §5 Canonical Root Tree"
+related_unresolved:
+  - "policy/sensitivity/geology/ # PROPOSED sensitivity home"
 tags: [kfm, geology, geophysics, seismic, gravity, magnetics, sensitive, sublane]
 notes:
+  - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal); required owning_root, responsibility, and truth_posture added; related entries split into resolvable paths, related_notes (former inline comments), and related_unresolved"
   - "CONTRACT_VERSION = 3.0.0 pinned per ai-build-operating-contract.md."
   - "OBJECT-NAME GAP. Atlas §10B scope names 'Geophysical Observation' as an owned object class, but the §10C/E object-family tables and the §2.2 cross-domain spine do NOT enumerate a geophysics reference-form. The reference-form name (GeophysicalObservation? GeophysicalObservationReference?) is therefore NEEDS VERIFICATION and is NOT invented here. See Open Questions OQ-GEOL-GPHYS-03."
   - "SENSITIVE LANE. A geophysical anomaly is a classic prospect signal; seismic / proprietary surveys carry rights and resource-sensitivity. policy_label set to restricted; public derivatives are generalized/aggregated with a RedactionReceipt or AggregationReceipt plus a ReviewRecord and PolicyDecision."
@@ -112,7 +134,7 @@ docs/
     └── geology/
         ├── README.md                   # PROPOSED — domain landing
         └── sublanes/                   # PROPOSED — see §13 Open Questions
-            ├── bedrock_geology.md      # PROPOSED sibling
+            ├── bedrock_geology.md      # redirect stub → ../SUBLANE-BEDROCK.md (merged 2026-10-12)
             ├── surficial_geology.md    # PROPOSED sibling
             ├── stratigraphy.md         # PROPOSED sibling
             ├── structures.md           # PROPOSED sibling (anomaly ≠ mapped structure)
@@ -174,7 +196,7 @@ Material that **does not** belong here, and where it goes instead:
 | Out of scope for geophysics sublane | Lives in | Canonical object family |
 |---|---|---|
 | Mapped faults / folds / contacts as map fact | `docs/domains/geology/sublanes/structures.md` *(PROPOSED)* | `StructureFeature` |
-| Bedrock map units, lithostratigraphy | `docs/domains/geology/sublanes/bedrock_geology.md` *(PROPOSED)* | `GeologicUnit`, `Lithology` |
+| Bedrock map units, lithostratigraphy | `docs/domains/geology/SUBLANE-BEDROCK.md` | `GeologicUnit`, `Lithology` |
 | Borehole / well-log location & log records | `docs/domains/geology/sublanes/boreholes-wells.md` *(PROPOSED)* | `BoreholeReference`, `Well LogReference` |
 | Geochemistry samples and assays | `docs/domains/geology/sublanes/geochemistry.md` *(PROPOSED)* | `Geochemistry SampleReference` |
 | Mineral occurrences, resource deposits/estimates, extraction | `docs/domains/geology/sublanes/resources.md` *(PROPOSED)* | `Mineral Occurrence`, `Resource Deposit`, `ResourceEstimate`, `Extraction Site` |
@@ -491,7 +513,7 @@ PROPOSED — verify each path against the mounted repo before linking.
 
 - `docs/domains/geology/README.md` — Geology lane charter.
 - `docs/domains/geology/sublanes/structures.md` — Sibling sublane (mapped-structure authority; anomaly ≠ structure).
-- `docs/domains/geology/sublanes/bedrock_geology.md` — Sibling sublane (unit / horizon evidence).
+- `docs/domains/geology/SUBLANE-BEDROCK.md` — Sibling sublane (unit / horizon evidence).
 - `docs/domains/geology/sublanes/boreholes-wells.md` — Sibling sublane (survey ↔ well tie; location handling).
 - `docs/domains/geology/sublanes/resources.md` — Sibling sublane (deposit / estimate authority; anomaly ≠ deposit).
 - `docs/domains/hazards/` — Cross-lane (subsidence / seismic context).
