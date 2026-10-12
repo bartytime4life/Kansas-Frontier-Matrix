@@ -6,6 +6,7 @@ import { createRequire } from "node:module";
 import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readArchiveAccess } from "./archive-access.mjs";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const versions = { wrangler: "4.127.1", miniflare: "5.20260828.0-alpha" };
@@ -150,6 +151,11 @@ export async function serve(args = process.argv.slice(2)) {
   const worker = prepareWorker(translated, server, client, modules, settings.localReviewedImagery, settings.port);
   const usgsKey = readUsgsApiKey();
   if (usgsKey) worker.bindings.USGS_WATER_API_KEY = usgsKey;
+  const archiveAccess = readArchiveAccess();
+  if (archiveAccess) {
+    worker.bindings.KFM_ARCHIVE_LOCAL_OWNER_TOKEN = archiveAccess.ownerToken;
+    worker.bindings.KFM_ARCHIVE_WORKER_TOKEN = archiveAccess.workerToken;
+  }
   const temporary = mkdtempSync(path.join(tmpdir(), "kfm-local-worker-"));
   let runtime;
   let stopping;

@@ -4,6 +4,7 @@ import { getRawDb } from "../../../db";
 import { archiveFeed } from "../../daily-archive";
 import { ArchiveError, archiveHeaders, archiveCatalog, captureArchive, readArchiveCapture, reviewArchive, type ArchiveBucket } from "../../daily-archive-store";
 import { GET as liveContext } from "../live-context/route";
+import { archiveOwner, archiveWorker } from "../../daily-archive-auth";
 
 export const dynamic = "force-dynamic";
 const store = () => {
@@ -19,7 +20,15 @@ function query(request: NextRequest) {
 }
 export async function GET(request: NextRequest) {
   try {
+    // Workers can verify capture receipts, but never read review notes or bytes.
+    const workerStatus = request.nextUrl.searchParams.get("action") === "status" && archiveWorker(request);
+    if (!workerStatus) await archiveOwner(request);
     const p = query(request); const { db, bucket } = store();
+    if (workerStatus) {
+      if (p.has("id") || p.has("feed")) throw new ArchiveError("Unsupported archive status query.");
+      const catalog = await archiveCatalog(db, p.get("day") ?? new Date().toISOString().slice(0, 10));
+      return Response.json({ day: catalog.day, storage: catalog.storage, entries: catalog.entries.map(({ id, status }) => ({ id, status })) }, { headers: archiveHeaders });
+    }
     if (p.has("id")) {
       const result = await readArchiveCapture(db, bucket, p.get("id")!, p.get("action") === "download");
       if (p.get("action") === "download") return new Response(result.bytes as Uint8Array<ArrayBuffer>, { headers: { ...archiveHeaders, "Content-Type": "application/json", "Content-Disposition": `attachment; filename="${result.entry.day}-${result.entry.feed}-${result.entry.id}.json"` } });
@@ -30,12 +39,12 @@ export async function GET(request: NextRequest) {
   } catch (error) { return fail(error); }
 }
 
-/** Shared archive only, protected by this Site's owner-private dispatch boundary.
- * Local runtime rejects forged Host/edge identity. The custom header plus same-
- * origin check prevents browser cross-origin writes; there is no CORS grant.
- * Do not expose this writer if the Site audience becomes public/shared. */
+/** Owner curation and capture-only worker access; browser checks are additional
+ * CSRF defenses, never archive authority. No CORS is granted. */
 export async function POST(request: NextRequest) {
   try {
+    const workerCapture = request.nextUrl.searchParams.get("action") === "capture" && archiveWorker(request);
+    if (!workerCapture) await archiveOwner(request);
     const origin = request.headers.get("origin");
     if (request.headers.get("x-kfm-archive-writer") !== "daily-v1" || (origin && origin !== request.nextUrl.origin) || request.headers.get("sec-fetch-site") === "cross-site") throw new ArchiveError("Archive writer authority rejected.", 403);
     const p = query(request); const { db, bucket } = store(); const action = p.get("action");
