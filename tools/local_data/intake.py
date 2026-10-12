@@ -48,12 +48,20 @@ DEFAULT_HASH_LIMIT = 4 * 1024 ** 3
 DEFAULT_STAGE_LIMIT = 8 * 1024 ** 3
 FREE_SPACE_RESERVE = 1024 ** 3
 MAX_FILES = 200_000
+MAX_CONFIGURED_FILES = 5_000_000
 MAX_DEPTH = 32
 LIST_LIMIT = 500
 
 
 class IntakeError(ValueError):
     pass
+
+
+def file_limit(value: int) -> int:
+    """Explicit discovery ceiling, independent of local byte/cache budgets."""
+    if not isinstance(value, int) or isinstance(value, bool) or not 1 <= value <= MAX_CONFIGURED_FILES:
+        raise IntakeError("INTAKE_FILE_LIMIT_INVALID")
+    return value
 
 
 def intake_dir(root: Path) -> Path:
@@ -87,12 +95,23 @@ def _walk(base: Path, prefix: str = "", *, skip: set[str] | None = None, counter
             child = f"{rel}/{entry.name}" if rel else entry.name
             if skip and child in skip:
                 continue
-            info = entry.stat(follow_symlinks=False)
+            try:
+                info = entry.stat(follow_symlinks=False)
+            except FileNotFoundError:
+                counters["changed_skipped"] = counters.get("changed_skipped", 0) + 1
+                continue
             if stat.S_ISLNK(info.st_mode):
                 counters["symlinks_skipped"] = counters.get("symlinks_skipped", 0) + 1
             elif stat.S_ISDIR(info.st_mode):
                 stack.append((Path(entry.path), child, depth + 1))
             elif stat.S_ISREG(info.st_mode):
+                path = Path(entry.path)
+                if lowered.endswith((".part", ".partial", ".tmp", "-wal", "-shm", "-journal")):
+                    counters["transient_skipped"] = counters.get("transient_skipped", 0) + 1
+                    continue
+                if any(path.with_name(path.name + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+                    counters["live_database_skipped"] = counters.get("live_database_skipped", 0) + 1
+                    continue
                 yield child, Path(entry.path), info
             else:
                 counters["special_skipped"] = counters.get("special_skipped", 0) + 1
@@ -123,16 +142,17 @@ def quarantine_bindings(root: Path) -> dict[tuple[str, str], list[dict]]:
     return found
 
 
-def discover(root: Path, inbox: Path | None = None, counters: dict | None = None):
+def discover(root: Path, inbox: Path | None = None, counters: dict | None = None, *, max_files: int = MAX_FILES):
     """Yield candidate items from RAW, QUARANTINE payloads and an optional inbox."""
     counters = counters if counters is not None else {}
     bindings = quarantine_bindings(root)
+    max_files = file_limit(max_files)
     count = 0
 
     def bump():
         nonlocal count
         count += 1
-        if count > MAX_FILES:
+        if count > max_files:
             raise IntakeError("INTAKE_FILE_LIMIT")
 
     raw = root / "data/raw"
@@ -251,21 +271,28 @@ ITEM_COLUMNS = ("id", "lane", "relative_path", "store_path", "size_bytes", "mtim
 # --- analysis -------------------------------------------------------------
 
 def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None, hash_limit: int = DEFAULT_HASH_LIMIT,
-            progress=lambda _state: None, cancel: threading.Event | None = None) -> dict:
+            progress=lambda _state: None, cancel: threading.Event | None = None, max_files: int = MAX_FILES) -> dict:
     """Profile and route every discovered file; reuse profiles of unchanged files."""
     budget = budget or intake_route.load_budget()
+    max_files = file_limit(max_files)
     run_id = time.strftime("intake-%Y%m%dT%H%M%SZ-", time.gmtime()) + uuid.uuid4().hex[:8]
     counters: dict = {}
     summary = {"run_id": run_id, "started_at": utc_now(), "discovered": 0, "analyzed": 0, "reused": 0, "failed": 0,
-               "by_status": {}, "by_family": {}, "by_lane": {}, "skipped": counters}
+               "by_status": {}, "by_family": {}, "by_lane": {}, "skipped": counters, "max_files": max_files}
     with writer_lock(root), open_index(root, allow_stale_bindings=True) as conn:
         current_bindings = conn.execute("SELECT value FROM meta WHERE key='quarantine_binding_version'").fetchone() == (QUARANTINE_BINDING_VERSION,)
+        # Acquiring this lock proves that no earlier analyze writer still owns it.
+        # Preserve interrupted history instead of leaving stale 'running' rows.
+        for (old_run,) in conn.execute("SELECT run_id FROM runs WHERE state='running'").fetchall():
+            interrupted = {"run_id": old_run, "state": "interrupted", "finished_at": utc_now()}
+            conn.execute("UPDATE runs SET state='interrupted', finished_at=?, summary_json=? WHERE run_id=?",
+                         (interrupted["finished_at"], json.dumps(interrupted), old_run))
         conn.execute("INSERT INTO runs(run_id, started_at, state) VALUES (?, ?, 'running')", (run_id, summary["started_at"]))
         conn.commit()
         seen: set[str] = set()
         state = "complete"
         try:
-            for found in discover(root, inbox, counters):
+            for found in discover(root, inbox, counters, max_files=max_files):
                 if cancel is not None and cancel.is_set():
                     state = "cancelled"
                     break
@@ -282,6 +309,8 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                 if (previous and previous[0] == info.st_size and previous[1] == info.st_mtime_ns
                         and previous[2] == ANALYZER_VERSION
                         and (found["lane"] != "quarantine" or current_bindings)
+                        and (previous[4] is not None or sha256 is not None or info.st_size > hash_limit)
+                        and "format_reader_failed" not in json.loads(previous[3]).get("issues", [])
                         and (json.loads(previous[5]) if previous[5] else None) == found["declared"]):
                     profile = json.loads(previous[3])
                     sha256 = sha256 or previous[4]
@@ -294,9 +323,14 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                             sha256, _size = hash_regular(found["path"], hash_limit, expected_size=info.st_size)
                         elif sha256 is None:
                             profile["issues"] = sorted(set(profile["issues"]) | {"not_hashed_size_limit"})
+                        after = found["path"].stat(follow_symlinks=False)
+                        if (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns) != (
+                                after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+                            raise IntakeError("INPUT_CHANGED_DURING_ANALYSIS")
                         summary["analyzed"] += 1
                     except (ValueError, OSError) as error:
                         summary["failed"] += 1
+                        sha256 = None
                         profile = {"schema": "kfm-intake-profile/v1", "analyzer_version": ANALYZER_VERSION,
                                    "format": {"family": "unknown", "kind": "unknown", "media_type": "application/octet-stream"},
                                    "spatial": {"crs": None, "native_bbox": None, "bbox_wgs84": None, "kansas": "unknown", "geometry_types": {}},
@@ -575,6 +609,7 @@ def parser() -> argparse.ArgumentParser:
     a = sub.add_parser("analyze", help="profile and route RAW/QUARANTINE files (and an optional inbox)")
     a.add_argument("--inbox", type=Path, help="read-only directory of downloads not yet captured")
     a.add_argument("--hash-limit", type=int, default=DEFAULT_HASH_LIMIT, help="largest RAW file to hash (bytes)")
+    a.add_argument("--max-files", type=int, default=MAX_FILES, help="explicit candidate-file ceiling (1 to 5,000,000; unrelated to byte budgets)")
     ls = sub.add_parser("list", help="filter indexed items")
     for name in ("status", "domain", "family", "lane", "text"):
         ls.add_argument("--" + name)
@@ -606,7 +641,7 @@ def main(argv: list[str] | None = None) -> int:
                     inbox = args.inbox.expanduser().resolve()
                     if not inbox.is_dir() or inbox == root or root in inbox.parents or inbox in root.parents:
                         raise IntakeError("INBOX_MUST_BE_SEPARATE_DIRECTORY")
-                result = analyze(root, inbox=inbox, hash_limit=args.hash_limit,
+                result = analyze(root, inbox=inbox, hash_limit=args.hash_limit, max_files=args.max_files,
                                  progress=lambda s: print(f"… {s['discovered']} files", file=sys.stderr, flush=True))
             elif args.command == "list":
                 bbox = [float(v) for v in args.bbox.split(",")] if args.bbox else None

@@ -74,7 +74,7 @@ function renderOverview(o) {
   level.textContent = b.level === "ok" ? "within budget" : b.level === "warn" ? "nearing ceiling" : "over ceiling";
   level.className = `chip ${b.level}`;
   const segments = [
-    ["Committed (repo + releases)", b.committed_bytes, "var(--committed)"],
+    ["Recorded GitHub storage", b.committed_bytes, "var(--committed)"],
     ["Planned release candidates", b.planned_bytes, "var(--planned)"],
     ["Free for new data", b.available_for_new_data_bytes, "var(--free)"],
     ["Reserved for code & interface", b.reserved_for_code_and_interface_bytes, "var(--reserve)"],
@@ -92,7 +92,7 @@ function renderOverview(o) {
     swatch.style.background = color;
     legend.append(el("li", {}, swatch, `${label} ${bytes(value)}`));
   }
-  gauge.setAttribute("aria-label", `GitHub storage: ${bytes(b.committed_bytes)} committed of ${bytes(b.github_limit_bytes)}; ${bytes(b.available_for_new_data_bytes)} free for data`);
+  gauge.setAttribute("aria-label", `Project GitHub budget: ${bytes(b.committed_bytes)} recorded of ${bytes(b.github_limit_bytes)}; ${bytes(b.available_for_new_data_bytes)} free for data. Local PC storage is separate.`);
   fillSelect($("f-family"), Object.keys(o.by_family), "Any format");
   fillSelect($("f-domain"), Object.keys(o.by_domain).filter((d) => d !== "None"), "Any domain");
 }

@@ -215,6 +215,8 @@ class RouteTests(unittest.TestCase):
         state = intake_route.budget_state(real)
         self.assertEqual(state["data_ceiling_bytes"] + state["reserved_for_code_and_interface_bytes"], 100_000_000_000)
         self.assertEqual(state["reserved_for_code_and_interface_bytes"], 20_000_000_000)
+        self.assertEqual(state["limit_basis"], "owner-policy; not a GitHub platform quota")
+        self.assertFalse(state["local_pc_subject_to_this_limit"])
         self.assertGreater(state["available_for_new_data_bytes"], 0)
 
     def test_public_data_inside_budget_is_a_release_candidate_with_card_and_stage(self):
@@ -266,6 +268,19 @@ class RouteTests(unittest.TestCase):
             path.write_text(json.dumps(budget(committed=[{"id": "a", "bytes": 1}, {"id": "a", "bytes": 2}])))
             with self.assertRaises(intake_route.BudgetError):
                 intake_route.load_budget(path, None)
+
+    def test_total_asset_bytes_include_metadata_and_bound_the_archive_portion(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "b.json"
+            manifest = Path(directory) / "manifest.json"
+            manifest.write_text(json.dumps({"release_tag": "sample", "data_archive_bytes": 1000}))
+            path.write_text(json.dumps(budget(committed=[{"id": "release:sample", "bytes": 1100, "data_archive_bytes": 1000}])))
+            loaded = intake_route.load_budget(path, manifest)
+            self.assertEqual(loaded["baseline_check"], "match")
+            self.assertEqual(intake_route.budget_state(loaded)["committed_bytes"], 1100)
+            path.write_text(json.dumps(budget(committed=[{"id": "release:sample", "bytes": 900, "data_archive_bytes": 1000}])))
+            with self.assertRaises(intake_route.BudgetError):
+                intake_route.load_budget(path, manifest)
 
 
 class PipelineTests(unittest.TestCase):
