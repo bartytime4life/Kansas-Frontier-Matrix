@@ -123,3 +123,16 @@ def test_cli_cycle_reports_errors_as_reason_codes(tmp_path, capsys, monkeypatch)
     code = weather_release.main(["cycle", "--root", str(tmp_path / "store"), "--end-date", "2026-13-01", "--owner", OWNER,
                                  "--rollback-target", "active"])
     assert (code, json.loads(capsys.readouterr().out)["reason_code"]) == (1, "ROLLBACK_TARGET_INVALID")
+
+
+def test_stage_hosted_refuses_a_package_without_its_stored_capture(tmp_path, monkeypatch):
+    import shutil
+    root = store(tmp_path)
+    candidate_id = ghcnd_daily_pilot.stage(root, acquired())["candidate_id"]
+    package_id = weather_release.prepare(root, candidate_id, admitted_source=True)["package_id"]
+    shutil.rmtree(root / "data/quarantine" / ghcnd_daily_pilot.LANE / "runs")
+    monkeypatch.setenv("KFM_WATER_WORKER_TOKEN", "t" * 40)
+    opener = SiteOpener(None)
+    with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
+        weather_release.stage_hosted(root, package_id, SITE, opener=opener)
+    assert opener.requests == []
