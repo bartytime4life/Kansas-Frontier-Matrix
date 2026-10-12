@@ -61,6 +61,9 @@ def app(environ, start_response):
     if path in {"/v1/storm-events/bootstrap", "/v1/storm-events/layers", "/v1/storm-events/evidence"}:
         from governed_api import storm_events
         return storm_events.respond(environ, start_response, _RELEASE_STORE)
+    if path in {"/v1/earthquakes/bootstrap", "/v1/earthquakes/layers", "/v1/earthquakes/evidence"}:
+        from governed_api import earthquakes
+        return earthquakes.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":

@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from unittest.mock import patch
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -190,6 +190,32 @@ class PublicFixtureGeometryFileTests(unittest.TestCase):
                 )
             ],
         )
+
+    def test_hydrology_metadata_does_not_exempt_precise_geometry(self):
+        for lane in ("hydrology", "hydrology-extra"):
+            for name, metadata in (
+                ("omitted", {}),
+                ("public_safe", {"sensitivity": "PUBLIC_SAFE"}),
+                ("synthetic", {"knowledge_character": "SYNTHETIC_TEST"}),
+            ):
+                self._write(
+                    f"fixtures/domains/{lane}/valid/{name}.json",
+                    {"geometry": PRECISE_POINT, **metadata},
+                )
+        scanned, findings = self._validate()
+        self.assertEqual(scanned, 6)
+        self.assertEqual(len(findings), 6)
+        self.assertEqual(
+            {finding.code for finding in findings},
+            {"PRECISE_GEOMETRY_WITHOUT_NON_PUBLIC_DECLARATION"},
+        )
+
+    def test_fixture_lane_classification_is_portable(self):
+        for path_type in (PurePosixPath, PureWindowsPath):
+            for lane, expected in (("invalid", True), ("valid", False)):
+                with self.subTest(path_type=path_type, lane=lane):
+                    path = path_type(f"domains/hydrology/{lane}/feature.json")
+                    self.assertEqual(validator.is_expected_negative(path), expected)
 
     def test_geojson_files_are_scanned_and_invalid_json_fails_closed(self):
         self._write("fixtures/a/area.geojson", {"geometry": PRECISE_POINT})

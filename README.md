@@ -47,6 +47,7 @@ notes:
 <p align="center">
   <strong>Pick a place in Kansas. Scrub through two centuries. See exactly where every answer came from.</strong><br />
   A map-first, time-aware, evidence-first atlas of Kansas — built in the open.
+  KFM's design goals are Kansas-first scope, auditable evidence, and reversible changes.
 </p>
 
 <p align="center">

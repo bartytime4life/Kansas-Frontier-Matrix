@@ -151,6 +151,7 @@ docs/runbooks/hazards/
 ├── ROLLBACK_DRILL.md
 ├── ROLLBACK_RUNBOOK.md
 ├── SOURCE_REFRESH_RUNBOOK.md
+├── earthquakes-pilot.md
 └── storm-events-pilot.md
 ```
 
