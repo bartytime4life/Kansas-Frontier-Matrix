@@ -85,6 +85,7 @@ NON_FIXTURE_ARGUMENTS = {
         "--repository-root",
         ".",
     ],
+    "public-fixture-precise-geometry": [],
     "repository-topology": [],
     "workflow-security": [],
     "critical-doc-structure": [
@@ -159,7 +160,7 @@ class FixtureRootContractTests(unittest.TestCase):
         self.assertTrue(result.ok, result.findings)
         self.assertEqual(result.outcome, "PASS")
         self.assertEqual(result.direct_child_directories, 2)
-        self.assertEqual(result.aggregate_validators, 14)
+        self.assertEqual(result.aggregate_validators, 15)
 
     def test_root_full_heading_order_fails_closed(self) -> None:
         path = self.root / "fixtures/README.md"

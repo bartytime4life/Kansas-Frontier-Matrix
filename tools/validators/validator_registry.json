@@ -52,7 +52,8 @@
       "pipeline-spec-declaration-fixtures",
       "critical-doc-structure",
       "workflow-security",
-      "repository-topology"
+      "repository-topology",
+      "public-fixture-precise-geometry"
     ]
   },
   "validators": [
@@ -631,6 +632,19 @@
         "tests/validators/directory_governance/test_validate_repository_topology.py",
         "tools/validators/directory_governance/repository_topology_baseline.json",
         "tools/validators/directory_governance/validate_repository_topology.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "public-fixture-precise-geometry",
+      "description": "Fail closed when a positive fixture carries precise coordinates without an explicit non-public declaration.",
+      "script": "tools/validators/sensitive_geometry/validate_public_fixture_geometry.py",
+      "args": [],
+      "path_globs": [
+        "fixtures/**",
+        "tests/validators/test_validate_public_fixture_geometry.py",
+        "tools/validators/sensitive_geometry/**"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []

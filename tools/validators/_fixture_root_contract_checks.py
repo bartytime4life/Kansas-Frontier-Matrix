@@ -13,6 +13,7 @@ NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
         "--repository-root",
         ".",
     ),
+    "public-fixture-precise-geometry": (),
     "repository-topology": (),
     "workflow-security": (),
     "critical-doc-structure": (
