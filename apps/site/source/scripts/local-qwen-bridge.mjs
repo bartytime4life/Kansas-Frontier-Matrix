@@ -365,7 +365,7 @@ const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|forma
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
-const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
+const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|(?<!blue )mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
@@ -399,21 +399,32 @@ const SENSITIVE_QUESTION = new RegExp([
 ].join("|"));
 
 // Any other mention of a sensitive site abstains, whatever the verb (show, list, plot, point out …),
-// except a plain count or county-level summary. A question (not a command) may also be about policy,
-// map presentation, or the layer, dataset or source itself (its freshness, license or provenance).
+// unless the whole request has one of a few recognised shapes: a count or county-level summary, a
+// "why" or "how is it generalized" policy question, a definition, a question about map symbols, or a
+// question about the layer, dataset or source itself. A matching word elsewhere is not enough.
 const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
 const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|i (?:want|d like|would like) (?:to (?:see|view|know) )?|let me (?:see|view|know) )?(?:show|plot|map|list|display|highlight|mark|point|identify|find|give|tell|guide|take|draw|label|zoom|navigate|direct|locate|pin|pinpoint|reveal|get|fetch|return|output|print)\b/;
-const SITE_AGGREGATE = /\b(?:how many|numbers?|counts?|counted|totals?|summar\w*|percent\w*|share|densest|densit\w*|trends?|(?:per|by) (?:county|counties|state|region|year|decade)|statewide)\b/;
-const SITE_ABOUT = /\b(?:why|polic\w+|rules?|generaliz\w*|withh[eo]ld\w*|redact\w*|sensitiv\w*|protect\w*|symbol\w*|legend|defin\w+|means?|meaning|layers?|datasets?|data|sources?|surveys?|monitoring|licen[cs]\w*|updated?|current|fresh\w*|stale|provenance|metadata|agenc\w+|manag\w+|compar\w+|coverage|relat\w+|overlap\w*)\b/;
-// "Protected nests", "withheld archaeological sites": an adjective on the site, not a question about policy.
-const SITE_ADJECTIVE = new RegExp(`\\b(?:protected|sensitive|withheld|redacted|generali[sz]ed|known|recorded|mapped|documented|surveyed|monitored)(?=(?: \\w+){0,2} ${SENSITIVE_SITE}\\b)`, "g");
-const SENSITIVE_SITE_DEFINITION = new RegExp(`^what (?:is|are) (?:an? )?(?:\\w+ ){0,2}${SENSITIVE_SITE}$`);
+const SITE_COMMAND_SOURCE = SITE_COMMAND.source.slice(1);
+const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
+const SITE_ALLOWED_SHAPES = [
+  // Counts and summaries.
+  /^how many\b/,
+  new RegExp(`^(?:what|which) (?:is|are|was|were) the ${AGGREGATE_NOUN} of\\b`),
+  new RegExp(`^${SITE_COMMAND_SOURCE} (?:me )?(?:the )?${AGGREGATE_NOUN} (?:of|by|per)\\b`),
+  new RegExp(`\\b${SENSITIVE_SITE}\\b(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)$`),
+  // Policy, definitions and map presentation.
+  /^why\b/,
+  new RegExp(`^(?:how|why) (?:are|is|were|was|do|does) (?:\\w+ ){0,4}${SENSITIVE_SITE}\\b(?: \\w+){0,3} (?:generali[sz]\\w*|withh[eo]ld|redact\\w*|protect\\w*|symboli[sz]\\w*|shown|displayed|represented|handled|treated|coarsened)\\b`),
+  new RegExp(`^what (?:is|are) (?:an? )?${SENSITIVE_SITE}$|^what (?:does|do) (?:the )?(?:word |term )?${SENSITIVE_SITE} mean$|^define (?:an? )?${SENSITIVE_SITE}$`),
+  /^what (?:symbols?|colou?rs?|icons?|styles?|legend)\b/,
+];
+// A question about the layer, dataset or source itself, unless it asks which sites it contains.
+const SITE_METADATA_QUESTION = /^(?:is|are|was|were|when|how (?:fresh|current|old|recent|often)|what|which|who|compare)\b.*\b(?:layers?|datasets?|data|sources?|surveys?|records?|licen[cs]\w*|provenance|metadata|agenc\w+)\b/;
+const SITE_ENUMERATION = new RegExp(`^(?:what|which) (?:(?:are|is|were|was) )?(?:the |all |any )?(?:\\w+ )?${SENSITIVE_SITE}\\b`);
 
 function sensitiveSiteMentionAllowed(text) {
-  if (SENSITIVE_SITE_DEFINITION.test(text)) return true;
-  const rest = text.replace(SITE_ADJECTIVE, " ");
-  if (SITE_AGGREGATE.test(rest)) return true;
-  return !SITE_COMMAND.test(text) && SITE_ABOUT.test(rest);
+  if (SITE_ALLOWED_SHAPES.some((shape) => shape.test(text))) return true;
+  return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text);
 }
 
 // Coordinate and ZIP terms ask for a precise value unless the question is about the term itself
