@@ -47,7 +47,7 @@ function request(path, { tls = false, host = "kansasfrontiermatrix.com", headers
   return new Promise((resolve, reject) => {
     const transport = tls ? https : http;
     transport.get({ hostname: "127.0.0.1", port: tls ? httpsPort : httpPort, path,
-      rejectUnauthorized: false, headers: { Host: host, ...headers }, timeout: 2000 }, (response) => {
+      rejectUnauthorized: true, headers: { Host: host, ...headers }, timeout: 2000 }, (response) => {
       response.resume();
       response.on("end", () => resolve({ status: response.statusCode, headers: response.headers }));
     }).on("error", reject).on("timeout", function () { this.destroy(new Error("local Apache request timeout")); });
