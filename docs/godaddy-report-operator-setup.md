@@ -6,7 +6,7 @@ still returns `REPORT_SERVICE_NOT_CONFIGURED`; no live reports are sold.
 
 ## Owner configuration
 
-Supply the currency and configured amounts for brief/standard/technical
+The owner selected USD on 2026-10-13. Supply configured USD amounts for brief/standard/technical
 report value, source-context/corroborated/measured evidence bands, the
 replacement-effort hourly rate, minimum/maximum totals and quote lifetime.
 Every monetary value is an integer in the currency's minor units. Estimates

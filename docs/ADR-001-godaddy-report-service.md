@@ -11,6 +11,7 @@ except verified stewards/admins. The map is deployed at commit 49ccc422.
 The existing report workspaces produce browser-local drafts; those drafts
 cannot serve as authoritative evidence assessments or payment entitlements.
 No staff sign-in service, role list or monetary policy was supplied.
+The owner selected USD for report quotes on 2026-10-13; monetary rates remain to be proposed and configured.
 
 An existing Kansas Frontier Matrix Commerce store is visible in the owner's
 GoDaddy dashboard. That proves a store exists, not merchant activation or
