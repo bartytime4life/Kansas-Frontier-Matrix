@@ -191,3 +191,9 @@ test("question words match metadata and idea text across simple plurals", () => 
   const selected = selectQwenKnowledge("How many gauges are active in each county?", view);
   assert.equal(selected.payload.crossDomainIdeas[0], gaugesPerCounty, "the idea the question describes comes first");
 });
+
+test("plural forms of stop words stay stopped", () => {
+  for (const question of ["What maps are visible?", "Which views show this?", "What do these layers show?", "What does this show?"]) {
+    assert.deepEqual(rankQwenKnowledgeSources(question, { officialSources: [] }), [], question);
+  }
+});
