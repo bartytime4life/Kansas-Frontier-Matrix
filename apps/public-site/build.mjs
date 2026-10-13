@@ -53,10 +53,10 @@ const STATUS_COPY = Object.freeze({
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
 
-const escapeRegex = (value) => String(value).replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+export const escapeRegex = (value) => String(value).replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
 
-// Stable asset names get a content-hash query so long cache lifetimes never
-// pair a new page with stale CSS or artwork.
+// Content-hash queries give changed page assets distinct URLs in addition to
+// the server's revalidation policy for their stable paths.
 function fingerprintAssets(html, out) {
   return html.replace(/\b(href|src|srcset)="(\/(?:assets\/[^"?#]+|favicon\.svg))"/g, (match, attr, ref) => {
     const digest = createHash("sha256").update(readFileSync(join(out, ref.slice(1)))).digest("hex").slice(0, 12);

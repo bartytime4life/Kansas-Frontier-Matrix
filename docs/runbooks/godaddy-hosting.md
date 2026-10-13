@@ -108,6 +108,24 @@ gh api -X POST repos/bartytime4life/Kansas-Frontier-Matrix/environments/godaddy-
 
 Secrets live only in the `godaddy-production` environment and are passed to the single deploy step; nothing is written to the repository.
 
+Before enabling deployments, inspect the environment's **complete** policy list:
+
+```bash
+gh api repos/bartytime4life/Kansas-Frontier-Matrix/environments/godaddy-production
+gh api --paginate repos/bartytime4life/Kansas-Frontier-Matrix/environments/godaddy-production/deployment-branch-policies
+```
+
+Require `custom_branch_policies: true`, `protected_branches: false`, and exactly
+one allowed policy: branch `main`. Remove extra branch patterns and all tag
+policies before enabling deployments. Protect `main` against direct unreviewed
+changes to the workflow, transfer script, and site inputs. Keep hosting secrets
+in this environment only; repository or organization copies would bypass its
+ref restrictions. These are mandatory operator checks, not state verified by
+the repository tests. Leave `GODADDY_DEPLOY_ENABLED` unset or `false` until those
+checks and separate production authorization are complete. The workflow also
+requires GitHub to report `main` as protected (`github.ref_protected`). A credential-bearing
+dry run needs the same protections as an upload.
+
 ## 3. First deploy (before DNS changes)
 
 The site can be uploaded and checked before any DNS moves.
@@ -188,6 +206,12 @@ Also confirm that `/explorer` redirects to the Explorer, that a missing page sho
 ## Rollback
 
 - **Content:** revert the offending commit on `main` through a reviewed pull request. The merge deploys the reverted bundle. Deploys never run from other branches or tags, so a rollback always goes through `main`.
+- Revert only the affected content paths when practical. Retain the deployment
+  gate, environment protections, transport checks, and hosting security rules;
+  never roll back by dispatching an old branch/tag or checking out arbitrary
+  rollback code inside the credential-bearing job. Build and test the revert
+  before review and merge. With deployments disabled, merging a revert remains
+  a code correction and does not upload anything.
 - **Turn deploys off:** set `GODADDY_DEPLOY_ENABLED` to `false`. The site keeps serving the last upload.
 - **DNS:** restore the two apex `A` records and the `www` CNAME from the [Current DNS](#current-dns-recorded-2026-10-12) table, re-add the apex custom domain in ChatGPT Sites, and let it re-issue its validation records. Allow for the record TTL to expire.
 
@@ -196,3 +220,8 @@ Also confirm that `/explorer` redirects to the Explorer, that a missing page sho
 - Deploys never remove `.well-known/acme-challenge/`, `.well-known/pki-validation/`, `cgi-bin/`, `.user.ini` or `.htpasswd` on the server. With `GODADDY_DELETE` off (the default), they also leave any other existing remote file in place.
 - HSTS is sent without `includeSubDomains`, so it cannot affect other subdomains.
 - The build is reproducible: it stamps the commit time, not the wall-clock time.
+- HTTPS redirects trust Apache's TLS state, not caller forwarding headers.
+  A future TLS-terminating proxy requires a separately reviewed trusted-proxy
+  configuration before use.
+- Mutable CSS, artwork, favicon, and social-preview paths require cache
+  revalidation; pages also retain their content-hash asset queries.
