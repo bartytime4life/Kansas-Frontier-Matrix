@@ -275,7 +275,8 @@ export const QWEN_KNOWLEDGE_DOMAIN_IDEAS = Object.freeze({
 /**
  * Ideas that only make sense when two domains are in view together. The
  * bridge offers one only when the map is displaying a source from each named
- * domain; a question that merely mentions a domain does not qualify.
+ * domain; a question that merely mentions a domain does not qualify. A pair
+ * may have more than one idea.
  */
 export const QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS = Object.freeze([
   Object.freeze({ domains: Object.freeze(["Living waters", "Aquifers & groundwater"]), idea: "Compare gauged reaches with the alluvial and High Plains aquifer extents to ask where rivers and groundwater may interact, leaving the connection unproven." }),
@@ -287,6 +288,29 @@ export const QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS = Object.freeze([
   Object.freeze({ domains: Object.freeze(["Land records & survey", "Aquifers & groundwater"]), idea: "Compare BLM mineral lease areas with aquifer extents to frame subsurface-resource questions without implying impact." }),
   Object.freeze({ domains: Object.freeze(["Geology & hazards", "Reference boundaries & locators"]), idea: "Count earthquakes per county as orientation, then name the station-coverage limits that shape those counts." }),
   Object.freeze({ domains: Object.freeze(["Roads, rail & movement", "Terrain & landforms"]), idea: "Compare where 1918 roads and rail lines follow valleys or ridges on hillshade, as a route-history question." }),
+  Object.freeze({ domains: Object.freeze(["Living waters", "Aquifers & groundwater"]), idea: "Set depth-to-water wells near gauged streams beside River Pulse observations to ask about baseflow, leaving any connection unproven." }),
+  Object.freeze({ domains: Object.freeze(["Living waters", "Weather & hazards"]), idea: "Compare FEMA flood zones with gauges that have NWS forecast points to see which mapped floodplains also have flood-stage forecasts." }),
+  Object.freeze({ domains: Object.freeze(["Living waters", "Fire, smoke & hazards"]), idea: "Set spring Flint Hills fire detections beside downstream gauges to ask what later observations would be needed to study runoff after burns; these layers cannot show water-quality effects." }),
+  Object.freeze({ domains: Object.freeze(["Living waters", "Reference boundaries & locators"]), idea: "Count active gauges per county to show where river observations are dense or sparse, as orientation rather than a statistic." }),
+  Object.freeze({ domains: Object.freeze(["Living waters", "Land records & survey"]), idea: "Use PLSS sections to describe where a gauged reach crosses the survey grid, at section scale and without coordinates." }),
+  Object.freeze({ domains: Object.freeze(["Aquifers & groundwater", "Terrain & landforms"]), idea: "Compare the High Plains aquifer extent with the flat High Plains surface on the slope layer, and ask where the aquifer edge follows landforms." }),
+  Object.freeze({ domains: Object.freeze(["Aquifers & groundwater", "Reference boundaries & locators"]), idea: "Name which counties overlie the High Plains or Dakota aquifers so groundwater questions can be framed by county." }),
+  Object.freeze({ domains: Object.freeze(["Aquifers & groundwater", "Weather & hazards"]), idea: "Place FEMA flood zones beside alluvial aquifer extents to discuss how floodplains and shallow aquifers share the same river valleys." }),
+  Object.freeze({ domains: Object.freeze(["Weather & hazards", "Reference boundaries & locators"]), idea: "For one event, compare counties with FEMA declarations against counties under NWS alerts to show declaration geography versus warning geography." }),
+  Object.freeze({ domains: Object.freeze(["Weather & hazards", "Atmosphere"]), idea: "Compare forecast wind with the NWS alert types issued on a severe-weather day, keeping forecasts and warnings as distinct products." }),
+  Object.freeze({ domains: Object.freeze(["Weather & hazards", "Terrain & landforms"]), idea: "Overlay FEMA flood zones on hillshade to show how mapped floodplains follow valley floors." }),
+  Object.freeze({ domains: Object.freeze(["Weather & hazards", "Fire, smoke & hazards"]), idea: "Set NWS fire-weather alerts beside FIRMS detections for the same day as timing context, without implying that any alert caused or predicted a fire." }),
+  Object.freeze({ domains: Object.freeze(["Fire, smoke & hazards", "Reference boundaries & locators"]), idea: "Count fire detections by county for one season, stating that detections are not acres burned and that cloud cover hides some fires." }),
+  Object.freeze({ domains: Object.freeze(["Fire, smoke & hazards", "Terrain & landforms"]), idea: "Compare Flint Hills fire detections with the slope and hillshade of the Flint Hills to describe where burning occurs on the landscape." }),
+  Object.freeze({ domains: Object.freeze(["Fire, smoke & hazards", "Roads, rail & movement"]), idea: "Note fire detections near highways and rail lines as a question only; these sources record no ignition causes." }),
+  Object.freeze({ domains: Object.freeze(["Roads, rail & movement", "Land records & survey"]), idea: "Compare rural road alignments with PLSS section lines to discuss how many Kansas roads follow the survey grid." }),
+  Object.freeze({ domains: Object.freeze(["Roads, rail & movement", "Reference boundaries & locators"]), idea: "Compare 1918 road coverage by county with today's network to frame which counties gained or lost connections." }),
+  Object.freeze({ domains: Object.freeze(["Land records & survey", "Reference boundaries & locators"]), idea: "Compare township grids with county lines to show where county boundaries follow survey lines and where rivers or older lines intervene." }),
+  Object.freeze({ domains: Object.freeze(["Land records & survey", "Terrain & landforms"]), idea: "Compare the straight survey grid with river valleys on hillshade to discuss where survey lines meet natural features." }),
+  Object.freeze({ domains: Object.freeze(["Geology & hazards", "Roads, rail & movement"]), idea: "List bridges near recent earthquake locations as a question for inspection records; these layers contain no damage or condition information." }),
+  Object.freeze({ domains: Object.freeze(["Geology & hazards", "Terrain & landforms"]), idea: "Compare earthquake locations with landforms at overview scale, noting that surface landforms do not reveal the faults involved." }),
+  Object.freeze({ domains: Object.freeze(["Atmosphere", "Terrain & landforms"]), idea: "Compare forecast wind over the High Plains with wind in eastern river valleys to ask how terrain shapes surface wind." }),
+  Object.freeze({ domains: Object.freeze(["Atmosphere", "Reference boundaries & locators"]), idea: "Describe forecast wind by county region (west, central, east) to talk about statewide patterns without point values." }),
 ]);
 
 /** Cross-domain ideas for building KFM itself: gaps the Site could close next. */

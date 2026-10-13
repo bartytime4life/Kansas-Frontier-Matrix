@@ -149,3 +149,21 @@ test("domain terms follow the relevant domains and are trimmed before detailed s
   assert.ok(river.payload.domainTerms[0].terms.Discharge);
   assert.deepEqual(selectQwenKnowledge("What is visible?", view([])).payload.domainTerms, []);
 });
+
+test("cross-domain ideas are distinct, reach every domain, and favour the question's domains under the cap", () => {
+  const ideas = QWEN_KNOWLEDGE_PACK.crossDomainIdeas;
+  assert.equal(new Set(ideas.map((entry) => entry.idea)).size, ideas.length, "no repeated cross-domain idea");
+  for (const entry of ideas) assert.notEqual(entry.domains[0], entry.domains[1], entry.idea);
+  for (const domain of QWEN_KNOWLEDGE_PACK.domains) {
+    const pairs = ideas.filter((entry) => entry.domains.includes(domain.name));
+    assert.ok(pairs.length >= 3, `${domain.name} appears in ${pairs.length} cross-domain ideas`);
+  }
+
+  const view = { officialSources: ["usgs-streamflow", "kgs-aquifer-alluvial", "noaa-hms-smoke", "nws-forecast-wind"]
+    .map((id) => ({ id, displayed: true, selected: true })) };
+  const smokeAndWind = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
+    entry.domains.includes("Fire, smoke & hazards") && entry.domains.includes("Atmosphere")).idea;
+  const selected = selectQwenKnowledge("Which way is the smoke drifting with the forecast wind?", view);
+  assert.ok(selected.payload.crossDomainIdeas.length <= 3);
+  assert.equal(selected.payload.crossDomainIdeas[0], smokeAndWind, "the pair matching the question comes first");
+});

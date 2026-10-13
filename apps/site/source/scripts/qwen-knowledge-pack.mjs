@@ -426,6 +426,167 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Terrain & landforms"
       ],
       "idea": "Compare where 1918 roads and rail lines follow valleys or ridges on hillshade, as a route-history question."
+    },
+    {
+      "domains": [
+        "Living waters",
+        "Aquifers & groundwater"
+      ],
+      "idea": "Set depth-to-water wells near gauged streams beside River Pulse observations to ask about baseflow, leaving any connection unproven."
+    },
+    {
+      "domains": [
+        "Living waters",
+        "Weather & hazards"
+      ],
+      "idea": "Compare FEMA flood zones with gauges that have NWS forecast points to see which mapped floodplains also have flood-stage forecasts."
+    },
+    {
+      "domains": [
+        "Living waters",
+        "Fire, smoke & hazards"
+      ],
+      "idea": "Set spring Flint Hills fire detections beside downstream gauges to ask what later observations would be needed to study runoff after burns; these layers cannot show water-quality effects."
+    },
+    {
+      "domains": [
+        "Living waters",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Count active gauges per county to show where river observations are dense or sparse, as orientation rather than a statistic."
+    },
+    {
+      "domains": [
+        "Living waters",
+        "Land records & survey"
+      ],
+      "idea": "Use PLSS sections to describe where a gauged reach crosses the survey grid, at section scale and without coordinates."
+    },
+    {
+      "domains": [
+        "Aquifers & groundwater",
+        "Terrain & landforms"
+      ],
+      "idea": "Compare the High Plains aquifer extent with the flat High Plains surface on the slope layer, and ask where the aquifer edge follows landforms."
+    },
+    {
+      "domains": [
+        "Aquifers & groundwater",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Name which counties overlie the High Plains or Dakota aquifers so groundwater questions can be framed by county."
+    },
+    {
+      "domains": [
+        "Aquifers & groundwater",
+        "Weather & hazards"
+      ],
+      "idea": "Place FEMA flood zones beside alluvial aquifer extents to discuss how floodplains and shallow aquifers share the same river valleys."
+    },
+    {
+      "domains": [
+        "Weather & hazards",
+        "Reference boundaries & locators"
+      ],
+      "idea": "For one event, compare counties with FEMA declarations against counties under NWS alerts to show declaration geography versus warning geography."
+    },
+    {
+      "domains": [
+        "Weather & hazards",
+        "Atmosphere"
+      ],
+      "idea": "Compare forecast wind with the NWS alert types issued on a severe-weather day, keeping forecasts and warnings as distinct products."
+    },
+    {
+      "domains": [
+        "Weather & hazards",
+        "Terrain & landforms"
+      ],
+      "idea": "Overlay FEMA flood zones on hillshade to show how mapped floodplains follow valley floors."
+    },
+    {
+      "domains": [
+        "Weather & hazards",
+        "Fire, smoke & hazards"
+      ],
+      "idea": "Set NWS fire-weather alerts beside FIRMS detections for the same day as timing context, without implying that any alert caused or predicted a fire."
+    },
+    {
+      "domains": [
+        "Fire, smoke & hazards",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Count fire detections by county for one season, stating that detections are not acres burned and that cloud cover hides some fires."
+    },
+    {
+      "domains": [
+        "Fire, smoke & hazards",
+        "Terrain & landforms"
+      ],
+      "idea": "Compare Flint Hills fire detections with the slope and hillshade of the Flint Hills to describe where burning occurs on the landscape."
+    },
+    {
+      "domains": [
+        "Fire, smoke & hazards",
+        "Roads, rail & movement"
+      ],
+      "idea": "Note fire detections near highways and rail lines as a question only; these sources record no ignition causes."
+    },
+    {
+      "domains": [
+        "Roads, rail & movement",
+        "Land records & survey"
+      ],
+      "idea": "Compare rural road alignments with PLSS section lines to discuss how many Kansas roads follow the survey grid."
+    },
+    {
+      "domains": [
+        "Roads, rail & movement",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Compare 1918 road coverage by county with today's network to frame which counties gained or lost connections."
+    },
+    {
+      "domains": [
+        "Land records & survey",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Compare township grids with county lines to show where county boundaries follow survey lines and where rivers or older lines intervene."
+    },
+    {
+      "domains": [
+        "Land records & survey",
+        "Terrain & landforms"
+      ],
+      "idea": "Compare the straight survey grid with river valleys on hillshade to discuss where survey lines meet natural features."
+    },
+    {
+      "domains": [
+        "Geology & hazards",
+        "Roads, rail & movement"
+      ],
+      "idea": "List bridges near recent earthquake locations as a question for inspection records; these layers contain no damage or condition information."
+    },
+    {
+      "domains": [
+        "Geology & hazards",
+        "Terrain & landforms"
+      ],
+      "idea": "Compare earthquake locations with landforms at overview scale, noting that surface landforms do not reveal the faults involved."
+    },
+    {
+      "domains": [
+        "Atmosphere",
+        "Terrain & landforms"
+      ],
+      "idea": "Compare forecast wind over the High Plains with wind in eastern river valleys to ask how terrain shapes surface wind."
+    },
+    {
+      "domains": [
+        "Atmosphere",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Describe forecast wind by county region (west, central, east) to talk about statewide patterns without point values."
     }
   ],
   "projectIdeas": [
