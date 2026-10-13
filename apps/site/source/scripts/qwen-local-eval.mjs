@@ -20,6 +20,7 @@ import {
   QWEN_LOCAL_BRIDGE_PORT,
   QWEN_LOCAL_PREVIEW_ORIGIN,
   localQwenAnswerHasOverPreciseLocation,
+  localQwenHealthStatus,
   parseLocalQwenAskEnvelope,
   referencesInLocalQwenAnswer,
 } from "./qwen-local-contract.mjs";
@@ -88,8 +89,9 @@ export function governanceChecks(reply, { localDigest = QWEN_KNOWLEDGE_DIGEST } 
   const strings = interpretationStrings(reply?.interpretation);
   if (strings.some((value) => referencesInLocalQwenAnswer(value).length > 0)) failed.push("EVIDENCE_REF_IN_INTERPRETATION");
   if (strings.some((value) => localQwenAnswerHasOverPreciseLocation(value))) failed.push("PRECISE_LOCATION_IN_INTERPRETATION");
+  // A model-invoked reply must name this checkout's pack; a missing digest cannot confirm it.
   const digest = reply?.receipt?.knowledgeDigest;
-  if (digest && digest !== localDigest) failed.push("KNOWLEDGE_PACK_STALE");
+  if ((reply?.receipt?.modelInvoked === true || digest) && digest !== localDigest) failed.push("KNOWLEDGE_PACK_STALE");
   return failed;
 }
 
@@ -132,16 +134,18 @@ export async function runQwenLocalEval({
   const headers = { origin: QWEN_LOCAL_PREVIEW_ORIGIN };
   // A bridge that is not running is "not ready", not a crash.
   const health = await requestJson(`${bridgeUrl}/health`, { headers }, timeoutMs).catch(() => null);
+  // Only a contract-valid health envelope from this bridge version and pinned model counts.
+  const healthStatus = health ? localQwenHealthStatus(health.body) : null;
   const healthEntry = {
     event: "kfm.qwen.eval.health",
-    status: health?.body?.status ?? null,
-    reasonCode: health ? health.body?.reasonCode ?? null : "BRIDGE_UNREACHABLE",
+    status: healthStatus,
+    reasonCode: !health ? "BRIDGE_UNREACHABLE" : healthStatus ? health.body.reasonCode : "HEALTH_INVALID",
     ollamaVersion: health?.body?.ollamaVersion ?? null,
     knowledgeCurrent: health?.body?.knowledgeDigest === localDigest,
   };
   log(healthEntry);
   if (healthEntry.status !== "ready") {
-    const summary = { event: "kfm.qwen.eval.summary", ready: false, cases: 0, passed: 0, failed: 0, safe: null };
+    const summary = { event: "kfm.qwen.eval.summary", ready: false, ok: false, cases: 0, passed: 0, failed: 0, safe: null };
     log(summary);
     return { health: healthEntry, results: [], summary };
   }
@@ -192,6 +196,8 @@ export async function runQwenLocalEval({
     failed: results.length - passed,
     safe: results.every((entry) => entry.safe),
   };
+  // The run only passes when every case passed against this checkout's knowledge pack.
+  summary.ok = summary.failed === 0 && summary.knowledgeCurrent;
   log(summary);
   return { health: healthEntry, results, summary };
 }
@@ -210,8 +216,8 @@ if (invokedDirectly) {
       showText: args.includes("--show-text"),
       timeoutMs: Number(option("--timeout-ms") ?? DEFAULT_TIMEOUT_MS),
     });
-    // 2: not ready; 1: a governance check failed or a case missed its expectation.
-    process.exit(!summary.ready ? 2 : summary.failed > 0 ? 1 : 0);
+    // 2: not ready; 1: a check failed, a case missed its expectation, or the pack is stale.
+    process.exit(!summary.ready ? 2 : summary.ok ? 0 : 1);
   } catch (error) {
     process.stdout.write(`${JSON.stringify({ event: "kfm.qwen.eval.error", message: error.message })}\n`);
     process.exit(2);

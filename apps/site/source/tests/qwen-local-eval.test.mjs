@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createLocalQwenBridge, LOCAL_QWEN_MODEL, LOCAL_QWEN_MODEL_DIGEST } from "../scripts/local-qwen-bridge.mjs";
-import { QWEN_LOCAL_OLLAMA_MIN_VERSION } from "../scripts/qwen-local-contract.mjs";
+import { QWEN_KNOWLEDGE_DIGEST } from "../scripts/qwen-knowledge.mjs";
+import { QWEN_LOCAL_OLLAMA_MIN_VERSION, localQwenAskEnvelope, localQwenHealthEnvelope } from "../scripts/qwen-local-contract.mjs";
 import { QWEN_LOCAL_EVAL_CASES, governanceChecks, runQwenLocalEval } from "../scripts/qwen-local-eval.mjs";
 
 const interpretation = (overrides = {}) => JSON.stringify({
@@ -32,6 +33,7 @@ test("a well-behaved model passes every case and the output carries no question 
     runQwenLocalEval({ bridgeUrl, log: (entry) => lines.push(entry) }));
   assert.deepEqual(results.filter((entry) => entry.failedChecks.length).map((entry) => [entry.id, entry.failedChecks]), []);
   assert.equal(summary.passed, QWEN_LOCAL_EVAL_CASES.length);
+  assert.equal(summary.ok, true);
   assert.equal(summary.safe, true);
   assert.equal(summary.knowledgeCurrent, true);
   assert.equal(results.find((entry) => entry.id === "gate-personal-location").modelInvoked, false);
@@ -53,6 +55,7 @@ test("a stale installed knowledge pack is reported", async () => {
   const { summary, results } = await withBridge(stubOllama(interpretation()), (bridgeUrl) =>
     runQwenLocalEval({ bridgeUrl, localDigest: stale, log: () => {} }));
   assert.equal(summary.knowledgeCurrent, false);
+  assert.equal(summary.ok, false, "a stale pack fails the run");
   assert.ok(results.find((entry) => entry.id === "view-gauges-per-county").failedChecks.includes("KNOWLEDGE_PACK_STALE"));
 });
 
@@ -89,7 +92,7 @@ test("a malformed envelope is reported as invalid and the run still completes", 
   const server = createServer((req, res) => {
     res.writeHead(200, { "content-type": "application/json" });
     res.end(JSON.stringify(req.url === "/health"
-      ? { status: "ready", reasonCode: "READY", knowledgeDigest: null }
+      ? localQwenHealthEnvelope("ready", "READY", { knowledgeDigest: QWEN_KNOWLEDGE_DIGEST, ollamaVersion: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : { outcome: "ABSTAIN", reasonCode: "CONTEXT_ONLY_INTERPRETATION", authority: "INTERPRETIVE_ONLY", evidenceRefs: [],
         interpretation: { summary: 5, observations: 3, inferences: "text", gaps: null, followUps: [1] }, receipt: { modelInvoked: true } }));
   });
@@ -100,4 +103,36 @@ test("a malformed envelope is reported as invalid and the run still completes", 
     assert.ok(results.every((entry) => entry.failedChecks.includes("ENVELOPE_INVALID")));
     assert.equal(summary.safe, false);
   } finally { await new Promise((resolve) => server.close(resolve)); }
+});
+
+async function withFakeBridge(handler, exercise) {
+  const { createServer } = await import("node:http");
+  const server = createServer((req, res) => {
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify(handler(req)));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try { return await exercise(`http://127.0.0.1:${server.address().port}`); }
+  finally { await new Promise((resolve) => server.close(resolve)); }
+}
+
+test("a health reply that is not a valid contract envelope is not ready", async () => {
+  const { summary, health } = await withFakeBridge(() => ({ status: "ready" }), (bridgeUrl) =>
+    runQwenLocalEval({ bridgeUrl, log: () => {} }));
+  assert.equal(summary.ready, false);
+  assert.equal(health.reasonCode, "HEALTH_INVALID");
+});
+
+test("a model-invoked reply without a knowledge digest is reported as stale", async () => {
+  const receipt = {
+    requestId: "00000000-0000-4000-8000-000000000000", profile: "context-interpretation-v1", modelInvoked: true,
+    contextSha256: `sha256:${"a".repeat(64)}`, knowledgeVersion: null, knowledgeDigest: null, knowledgeSourceIds: [],
+    promptTokens: 1, outputTokens: 1, latencyMs: 1,
+  };
+  const reply = localQwenAskEnvelope("ABSTAIN", "CONTEXT_ONLY_INTERPRETATION", { interpretation: JSON.parse(interpretation()), receipt });
+  const { results } = await withFakeBridge((req) => req.url === "/health"
+    ? localQwenHealthEnvelope("ready", "READY", { knowledgeDigest: QWEN_KNOWLEDGE_DIGEST, ollamaVersion: QWEN_LOCAL_OLLAMA_MIN_VERSION })
+    : reply, (bridgeUrl) => runQwenLocalEval({ bridgeUrl, log: () => {} }));
+  const gauges = results.find((entry) => entry.id === "view-gauges-per-county");
+  assert.ok(gauges.failedChecks.includes("KNOWLEDGE_PACK_STALE"), JSON.stringify(gauges.failedChecks));
 });

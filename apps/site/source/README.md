@@ -929,8 +929,10 @@ reports whether the installed knowledge pack matches this checkout, so a stale
 install shows up as `KNOWLEDGE_PACK_STALE`. Output is one JSON line per case
 with IDs, outcomes, failed checks, latency and token counts; question and
 interpretation text are printed only with `--show-text`. The exit code is 0
-when every case passes, 1 when any fails, and 2 when the bridge is not ready
-or the options are invalid.
+when every case passes against this checkout's knowledge pack, 1 when any case
+fails or the installed pack is stale, and 2 when the bridge is unreachable, its
+`/health` reply is not a valid contract envelope for this bridge and model, it
+is not ready, or the options are invalid.
 A pass is a local diagnostic, not evidence, review, or release.
 
 Loopback and origin checks protect the browser-to-companion boundary, but they
