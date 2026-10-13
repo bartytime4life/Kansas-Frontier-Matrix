@@ -44,31 +44,40 @@ const SOURCE_SEARCH_TEXT = new Map(QWEN_KNOWLEDGE_PACK.officialSources.map((sour
 
 const DISPLAY_SOURCE_TOPICS = /\b(?:basemap|imagery|satellite|aerial|street|streets|topo|topographic|terrain|elevation|3d|building|buildings|attribution)\b/;
 
-/** Rank official sources by what the user is looking at and what they asked. */
-export function rankQwenKnowledgeSources(question, context) {
+/**
+ * Score every official source. `score` adds what the user is looking at to what
+ * they asked; `questionScore` is the question and selection match alone, so
+ * displayed sources do not all look equally relevant to the question.
+ */
+function scoreQwenKnowledgeSources(question, context) {
   const questionTokens = tokensOf(question);
   const normalizedQuestion = ` ${normalize(question)} `;
   const contextSources = new Map((Array.isArray(context?.officialSources) ? context.officialSources : [])
     .map((source) => [source?.id, source]));
   const selectionTokens = tokensOf([context?.selection?.domain, context?.selection?.layerTitle].join(" "));
-  return QWEN_KNOWLEDGE_PACK.officialSources
-    .map((source, index) => {
-      const text = SOURCE_SEARCH_TEXT.get(source.id);
-      const active = contextSources.get(source.id);
-      let score = 0;
-      if (active?.displayed) score += 100;
-      else if (active?.selected) score += 60;
-      if (normalizedQuestion.includes(` ${normalize(source.domain)} `)) score += 20;
-      for (const token of questionTokens) {
-        if (text.heading.includes(` ${token} `)) score += 8;
-        else if (text.body.includes(` ${token} `)) score += 3;
-      }
-      for (const token of selectionTokens) if (text.heading.includes(` ${token} `)) score += 4;
-      return { source, index, score };
-    })
-    .filter((entry) => entry.score > 0)
-    .sort((left, right) => right.score - left.score || left.index - right.index)
-    .map((entry) => entry.source);
+  return QWEN_KNOWLEDGE_PACK.officialSources.map((source, index) => {
+    const text = SOURCE_SEARCH_TEXT.get(source.id);
+    const active = contextSources.get(source.id);
+    let questionScore = 0;
+    if (normalizedQuestion.includes(` ${normalize(source.domain)} `)) questionScore += 20;
+    for (const token of questionTokens) {
+      if (text.heading.includes(` ${token} `)) questionScore += 8;
+      else if (text.body.includes(` ${token} `)) questionScore += 3;
+    }
+    for (const token of selectionTokens) if (text.heading.includes(` ${token} `)) questionScore += 4;
+    const viewScore = active?.displayed ? 100 : active?.selected ? 60 : 0;
+    return { source, index, questionScore, score: viewScore + questionScore };
+  });
+}
+
+const rankScored = (scored) => scored
+  .filter((entry) => entry.score > 0)
+  .sort((left, right) => right.score - left.score || left.index - right.index)
+  .map((entry) => entry.source);
+
+/** Rank official sources by what the user is looking at and what they asked. */
+export function rankQwenKnowledgeSources(question, context) {
+  return rankScored(scoreQwenKnowledgeSources(question, context));
 }
 
 const byteLength = (value) => Buffer.byteLength(JSON.stringify(value));
@@ -106,11 +115,17 @@ function fitToBudget(payload, maxBytes) {
  * trimmed: they are what keeps an interpretation inside KFM's rules.
  */
 export function selectQwenKnowledge(question, context, { maxBytes = Infinity } = {}) {
-  const detailed = rankQwenKnowledgeSources(question, context).slice(0, QWEN_KNOWLEDGE_MAX_DETAILED_SOURCES);
+  const scored = scoreQwenKnowledgeSources(question, context);
+  const detailed = rankScored(scored).slice(0, QWEN_KNOWLEDGE_MAX_DETAILED_SOURCES);
   const detailedIds = new Set(detailed.map((source) => source.id));
   const ideaDomains = [...new Set(detailed.map((source) => source.domain))].slice(0, MAX_IDEA_DOMAINS);
   const wantsDisplaySources = DISPLAY_SOURCE_TOPICS.test(normalize(question));
   const inView = displayedDomains(context);
+  // A domain's question match is its best-matching source's question score.
+  const domainMatch = new Map();
+  for (const { source, questionScore } of scored) {
+    domainMatch.set(source.domain, Math.max(domainMatch.get(source.domain) ?? 0, questionScore));
+  }
   const payload = fitToBudget({
     knowledgeVersion: QWEN_KNOWLEDGE_VERSION,
     authority: "METADATA_NOT_EVIDENCE",
@@ -130,12 +145,18 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
     domainTerms: ideaDomains
       .map((name) => ({ domain: name, terms: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.terms ?? {} }))
       .filter((entry) => Object.keys(entry.terms).length > 0),
-    // Eligibility comes from what is displayed; order prefers pairs that touch
-    // the question's relevant domains, so the cap keeps the most useful ideas.
+    // Eligibility comes from what is displayed. Order prefers the pair the
+    // question matches most strongly, then pairs touching the relevant domains,
+    // so the cap keeps the most useful ideas.
     crossDomainIdeas: QWEN_KNOWLEDGE_PACK.crossDomainIdeas
       .filter((entry) => entry.domains.every((domain) => inView.has(domain)))
-      .map((entry, index) => ({ entry, index, relevance: entry.domains.filter((domain) => ideaDomains.includes(domain)).length }))
-      .sort((left, right) => right.relevance - left.relevance || left.index - right.index)
+      .map((entry, index) => ({
+        entry,
+        index,
+        match: entry.domains.reduce((sum, domain) => sum + (domainMatch.get(domain) ?? 0), 0),
+        relevance: entry.domains.filter((domain) => ideaDomains.includes(domain)).length,
+      }))
+      .sort((left, right) => right.match - left.match || right.relevance - left.relevance || left.index - right.index)
       .slice(0, MAX_CROSS_DOMAIN_IDEAS)
       .map(({ entry }) => entry.idea),
     projectIdeas: QWEN_KNOWLEDGE_PACK.projectIdeas,

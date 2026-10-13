@@ -167,3 +167,16 @@ test("cross-domain ideas are distinct, reach every domain, and favour the questi
   assert.ok(selected.payload.crossDomainIdeas.length <= 3);
   assert.equal(selected.payload.crossDomainIdeas[0], smokeAndWind, "the pair matching the question comes first");
 });
+
+test("among displayed domains, the pair the question names outranks pairs it only shares a view with", () => {
+  const view = { officialSources: ["fema-flood-zones", "kgs-aquifer-alluvial", "usgs-streamflow"]
+    .map((id) => ({ id, displayed: true, selected: true })) };
+  const floodAndAquifer = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
+    entry.domains.includes("Weather & hazards") && entry.domains.includes("Aquifers & groundwater")).idea;
+  const asked = selectQwenKnowledge("How do flood zones relate to the alluvial aquifer?", view);
+  assert.equal(asked.payload.crossDomainIdeas[0], floodAndAquifer);
+  // Without a question match, list order still decides, so the cap is stable.
+  const general = selectQwenKnowledge("What is visible?", view);
+  assert.equal(general.payload.crossDomainIdeas.length, 3);
+  assert.ok(!general.payload.crossDomainIdeas.includes(floodAndAquifer));
+});
