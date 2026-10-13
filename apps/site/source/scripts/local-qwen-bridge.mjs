@@ -405,6 +405,7 @@ const SENSITIVE_QUESTION = new RegExp([
 const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
 const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|i (?:want|d like|would like) (?:to (?:see|view|know) )?|let me (?:see|view|know) )?(?:show|plot|map|list|display|highlight|mark|point|identify|find|give|tell|guide|take|draw|label|zoom|navigate|direct|locate|pin|pinpoint|reveal|get|fetch|return|output|print)\b/;
 const SITE_COMMAND_SOURCE = SITE_COMMAND.source.slice(1);
+const WHY_POLICY = /^why\b(?! (?:not|don t|do not|won t|will not|can t|cannot|couldn t|could not|wouldn t|would not|shouldn t|should not)\b)/;
 const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
 const SITE_ALLOWED_SHAPES = [
   // Counts and summaries.
@@ -413,7 +414,8 @@ const SITE_ALLOWED_SHAPES = [
   new RegExp(`^${SITE_COMMAND_SOURCE} (?:me )?(?:the )?${AGGREGATE_NOUN} (?:of|by|per)\\b`),
   new RegExp(`\\b${SENSITIVE_SITE}\\b(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)$`),
   // Policy, definitions and map presentation.
-  /^why\b/,
+  // "Why not list …" and "why don't you show …" are commands, not policy questions.
+  WHY_POLICY,
   new RegExp(`^(?:how|why) (?:are|is|were|was|do|does) (?:\\w+ ){0,4}${SENSITIVE_SITE}\\b(?: \\w+){0,3} (?:generali[sz]\\w*|withh[eo]ld|redact\\w*|protect\\w*|symboli[sz]\\w*|shown|displayed|represented|handled|treated|coarsened)\\b`),
   new RegExp(`^what (?:is|are) (?:an? )?${SENSITIVE_SITE}$|^what (?:does|do) (?:the )?(?:word |term )?${SENSITIVE_SITE} mean$|^define (?:an? )?${SENSITIVE_SITE}$`),
   /^what (?:symbols?|colou?rs?|icons?|styles?|legend)\b/,
@@ -422,21 +424,49 @@ const SITE_ALLOWED_SHAPES = [
 const SITE_METADATA_QUESTION = /^(?:is|are|was|were|when|how (?:fresh|current|old|recent|often)|what|which|who|compare)\b.*\b(?:layers?|datasets?|data|sources?|surveys?|records?|licen[cs]\w*|provenance|metadata|agenc\w+)\b/;
 const SITE_ENUMERATION = new RegExp(`^(?:what|which) (?:(?:are|is|were|was) )?(?:the |all |any )?(?:\\w+ )?${SENSITIVE_SITE}\\b`);
 
+const SENSITIVE_SITE_LOCATING = SITE_ENUMERATION;
+
 function sensitiveSiteMentionAllowed(text) {
   if (SITE_ALLOWED_SHAPES.some((shape) => shape.test(text))) return true;
   return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text);
 }
 
-// Coordinate and ZIP terms ask for a precise value unless the question is about the term itself
+// Coordinate and ZIP terms ask for a precise value unless the clause is about the term itself
 // ("what does UTM mean", "which UTM zone", "why are coordinates withheld").
 const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\w*|lat lng|latlon\w*|latlng|utm|eastings?|northings?|zip(?: ?codes?)?|postal codes?)\b(?! (?:files?|archives?|downloads?)\b)/;
-const PRECISE_TERM_ABOUT = /\b(?:means?|meaning|stands? for|defin\w+|zones?|projection\w*|datum|reference system|system|formats?|precision|accura\w+|why|withh[eo]ld\w*|redact\w*|generaliz\w*|rounded|coarsen\w*)\b/;
+const PRECISE_TERM_ABOUT_SHAPES = [
+  /\b(?:means?|meaning|stands? for)$/,
+  /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
+  /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
+  /^(?:define|explain what)\b/,
+  WHY_POLICY,
+];
+
+// Each clause is checked on its own, so a harmless trailing clause ("… and why is the map
+// generalized?") cannot excuse a precise or locating request in another.
+const CLAUSE_BREAK = /[?;:!.,]+|\b(?:and|but|then|also|plus)\b/i;
+const LOCATING_CLAUSE = new RegExp(`^where\\b|${SITE_COMMAND.source}|\\b(?:near|nearby|nearest|closest|located|locations?)\\b`);
+
+function sensitiveSiteClause(clause, wholeAllowed) {
+  if (!SENSITIVE_SITE_MENTION.test(clause)) return LOCATING_CLAUSE.test(clause);
+  if (sensitiveSiteMentionAllowed(clause)) return false;
+  // A clause continuing an allowed question ("how many nests and leks are in Ellis County") is fine
+  // unless it locates or commands on its own.
+  return !wholeAllowed || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
+}
 
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
-  return SENSITIVE_QUESTION.test(text)
-    || (SENSITIVE_SITE_MENTION.test(text) && !sensitiveSiteMentionAllowed(text))
-    || (PRECISE_TERM.test(text) && (SITE_COMMAND.test(text) || !PRECISE_TERM_ABOUT.test(text)));
+  if (SENSITIVE_QUESTION.test(text)) return true;
+  const clauses = typeof question === "string"
+    ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
+    : [];
+  if (SENSITIVE_SITE_MENTION.test(text)) {
+    const wholeAllowed = sensitiveSiteMentionAllowed(text);
+    if (clauses.some((clause) => sensitiveSiteClause(clause, wholeAllowed))) return true;
+  }
+  return clauses.some((clause) => PRECISE_TERM.test(clause)
+    && (SITE_COMMAND.test(clause) || !PRECISE_TERM_ABOUT_SHAPES.some((shape) => shape.test(clause))));
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
