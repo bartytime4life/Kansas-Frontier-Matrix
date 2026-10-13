@@ -130,10 +130,14 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
     domainTerms: ideaDomains
       .map((name) => ({ domain: name, terms: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.terms ?? {} }))
       .filter((entry) => Object.keys(entry.terms).length > 0),
+    // Eligibility comes from what is displayed; order prefers pairs that touch
+    // the question's relevant domains, so the cap keeps the most useful ideas.
     crossDomainIdeas: QWEN_KNOWLEDGE_PACK.crossDomainIdeas
       .filter((entry) => entry.domains.every((domain) => inView.has(domain)))
+      .map((entry, index) => ({ entry, index, relevance: entry.domains.filter((domain) => ideaDomains.includes(domain)).length }))
+      .sort((left, right) => right.relevance - left.relevance || left.index - right.index)
       .slice(0, MAX_CROSS_DOMAIN_IDEAS)
-      .map((entry) => entry.idea),
+      .map(({ entry }) => entry.idea),
     projectIdeas: QWEN_KNOWLEDGE_PACK.projectIdeas,
   }, maxBytes);
   return Object.freeze({
