@@ -359,7 +359,7 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
  * not sent to the model at all. The deterministic ABSTAIN explains why.
  */
 // "Safe to show / publish / at its declared precision" asks about release status (PUBLIC_SAFE), not personal safety.
-const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
+const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|open|outside|online) )?(?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
 const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
 const NOT_AGGREGATE_LEAD = "(?! (?:me )?(?:(?:the|a|an) )?(?:number|numbers|count|counts|total|totals|summary|summaries|share|percent\\w*|density)\\b)";
@@ -393,8 +393,8 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
   // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
   // Counts and county-level summaries ("show the number of burials by county") stay interpretable.
-  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|map|mapping|nearest|closest)\\b${NOT_AGGREGATE_LEAD}(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
-  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?)\\b`,
+  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|(?<!(?:the|this|that|a|our|your|their|its) )map|mapping|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b${NOT_AGGREGATE_LEAD}(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
+  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?|near|nearby|close to|next to|adjacent to|around)\\b`,
   "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
 ].join("|"));
 

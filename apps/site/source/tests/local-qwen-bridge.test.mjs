@@ -557,6 +557,10 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "Show me the prairie-chicken nests",
     "List the archaeological sites in this view",
     "What ZIP is this gauge in?",
+    "Are there prairie-chicken nests nearby?",
+    "Are any archaeological sites near the selected gauge?",
+    "Which burial mounds are near this river?",
+    "Map the nests in this view",
   ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
   for (const question of [
     "What does the address field in the census layer mean?",
@@ -582,6 +586,9 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "List the count of burial records by county",
     "Show archaeological sites by county",
     "Download the layer as a zip file",
+    "What symbols does the map use for archaeological sites?",
+    "Is this data safe for public release?",
+    "Is this layer safe for external display?",
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 
