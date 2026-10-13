@@ -37,7 +37,7 @@
       "state": "identical"
     },
     "README.md": {
-      "mirror_sha256": "7555a18c45b4d3be3ae86ca204bd5e6a17ed602da0e95d29b65a37c9652b2fcd",
+      "mirror_sha256": "47c8b8422029f416836f85cb173b413daad4f358e86bee1eb4f6bcec0ff8a36e",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -4083,7 +4083,7 @@
       "state": "inherited_repository_overlay"
     },
     "scripts/qwen-knowledge.mjs": {
-      "mirror_sha256": "152861033090ec1242f456f078703dcf43b4a0bf6fb16e357e64293285d0208e",
+      "mirror_sha256": "269e945bff9b9b975c62d4b0c0b9cb13aded05fe0370757c9e99049f9cc7fd4e",
       "site_sha256": "6bbceb21118795be4d6d1f388af56f5b30349359d579196692a241e8a186b11d",
       "state": "inherited_repository_overlay"
     },
@@ -4961,7 +4961,7 @@
       "state": "identical"
     },
     "tests/qwen-knowledge.test.mjs": {
-      "mirror_sha256": "0baeab6adcef733554959cdf22129ac866604c96087a76210a0b67746d042492",
+      "mirror_sha256": "03a967deaa7bf81e2be03cd234b381982639a876670affb66729f4e240349b4f",
       "site_sha256": "c89132d49cb0124507981e82348a179ab4502da1a2f788474a925ed6d0be5277",
       "state": "inherited_repository_overlay"
     },
@@ -5298,7 +5298,7 @@
   "destination": "apps/site/source",
   "followup_scope": "Record the prepared-collection review and prepared-map mobile control paths merged in PRs #5103 and #5104 (and their earlier prepared-collection integration) as repository overlays on the v252 Site candidate. The selected Site candidate stays v252; no later Site version is selected, compared in full, or claimed deployed by this receipt.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "f482c1daa603a1a57b32b74af85a6306598b712bbc9bb0429be6189cfd2704e7",
+  "inventory_sha256": "9d60e857859a59982bf274b2f3e77041fbdf810f4aeb7bff5b4e83d5b9495b99",
   "overlay": {
     "changed_paths": [
       {
@@ -5417,7 +5417,7 @@
       },
       {
         "later_site_source_observation": null,
-        "mirror_sha256": "7555a18c45b4d3be3ae86ca204bd5e6a17ed602da0e95d29b65a37c9652b2fcd",
+        "mirror_sha256": "47c8b8422029f416836f85cb173b413daad4f358e86bee1eb4f6bcec0ff8a36e",
         "path": "README.md",
         "previous_mirror_sha256": "cb9851d4c337d9b457ed010456296aa3603a5a6fea62a2c2132501776ac56830",
         "previous_state": "inherited_repository_overlay",
@@ -5444,7 +5444,7 @@
       },
       {
         "later_site_source_observation": null,
-        "mirror_sha256": "152861033090ec1242f456f078703dcf43b4a0bf6fb16e357e64293285d0208e",
+        "mirror_sha256": "269e945bff9b9b975c62d4b0c0b9cb13aded05fe0370757c9e99049f9cc7fd4e",
         "path": "scripts/qwen-knowledge.mjs",
         "previous_mirror_sha256": "da243d9d0d123a2c8597b10078ee4fdc8dc9589afa56202fdfdcbc96daedd730",
         "previous_state": "inherited_repository_overlay",
@@ -5453,7 +5453,7 @@
       },
       {
         "later_site_source_observation": null,
-        "mirror_sha256": "0baeab6adcef733554959cdf22129ac866604c96087a76210a0b67746d042492",
+        "mirror_sha256": "03a967deaa7bf81e2be03cd234b381982639a876670affb66729f4e240349b4f",
         "path": "tests/qwen-knowledge.test.mjs",
         "previous_mirror_sha256": "79eee91d0be8e9a1d6cc1232704802908d0475acd387383d9631b9c59d0583a2",
         "previous_state": "inherited_repository_overlay",

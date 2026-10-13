@@ -60,6 +60,10 @@ The previous changelog recorded only the initial implementation milestones throu
 - Explorer interface refresh in `apps/site/source` (repository source; not yet deployed to the Site): navy theme, first-visit quick start, offline Kansas orientation on the local basemaps, a single zoom control set, and removal of a fixed place label and two mobile layout overlaps. See [refresh notes](apps/site/source/docs/explorer-interface-refresh.md).
 - Modernized the root changelog into an evidence-bounded repository-history contract with entry categories, source-link expectations, security guidance, a historical coverage notice, and an explicit release/publication boundary.
 
+### Fixed
+
+- Local Qwen knowledge pack cross-domain ideas in `apps/site/source` (repository source; not yet deployed): when three or more domains are on the map, the three ideas offered now go to the pairs the question matches most closely, so a question about flood zones and the alluvial aquifer gets that pair's idea rather than two about the river beside it.
+
 ## Legacy seed milestones — 2026-05-08 to 2026-05-09
 
 These entries preserve the scope and wording of the original changelog as repository lineage. They describe implementation work recorded at the time; they do not establish that the described state remains current or that a governed release or publication occurred.

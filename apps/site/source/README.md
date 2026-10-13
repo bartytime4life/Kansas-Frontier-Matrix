@@ -905,8 +905,8 @@ KFM principles, a glossary of outcomes, evidence, release, and public states,
 source kinds, connection states, and the map-context fields the model reads,
 technical terms for each domain (sent only when that domain is relevant),
 six exploration ideas per domain, cross-domain ideas offered only when both of
-their domains are in view (at most three, those touching the question's
-domains first), and project ideas. For each question the bridge
+their domains are in view (at most three, the pairs the question matches
+most closely first), and project ideas. For each question the bridge
 ranks sources by what is displayed and what was asked, sends full metadata for
 at most eight of them and a one-line index of the rest, and trims to a fixed
 byte budget alongside the map context. The pack ships with the companion, so a
