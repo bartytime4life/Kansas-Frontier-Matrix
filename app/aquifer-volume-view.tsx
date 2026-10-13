@@ -396,7 +396,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           <div className={s.cutawaySceneLabel}><span>{navigation==="pan"?"Drag to move":"Drag to orbit"} · scroll to zoom · select a source</span></div>
           <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {detailShown?"HIGH-DETAIL MAP":snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
         </div>}
-        {!recordsLoading&&!drawn?.recordCount&&<div className={s.areaEmptyRecords} role="status"><strong>No recorded intervals at this time.</strong><p>{recordStatus}</p><button type="button" onClick={onResetRecords}>Reset record filters</button><button type="button" onClick={example}>Try High Plains example</button></div>}
+        {!recordsLoading&&!drawn?.recordCount&&<div className={s.areaEmptyRecords} role="status"><strong>{records.length ? "Loaded records have no valid intervals inside the displayed depth range." : "No source columns are displayed."}</strong><p>{recordStatus}</p><button type="button" onClick={onResetRecords}>Reset record filters</button><button type="button" onClick={example}>Try High Plains example</button></div>}
         {recordsAvailable>0?recordNavigation:recordsLoading?<p className={s.areaLoading} role="status">Loading dated records for time navigation…</p>:null}
         </div>
         </>}

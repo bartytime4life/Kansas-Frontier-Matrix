@@ -71,6 +71,7 @@ async function run(q: Query, signal: AbortSignal) {
   });
   const ranked = area ? areaColumns(records, q.bounds!) : nearbyColumns(records, q.anchor, q.route);
   return { manifest, ...(area ? {bounds:q.bounds} : {}), columns: ranked.slice(0, 50), total: ranked.length, failures, rejected, timeHeld,
+    ...(selected.length > 0 && failures.length === selected.length ? {error:"Requested well/core files could not be loaded. This is a source-delivery failure, not evidence that no records exist."} : {}),
     partial: eligible.length > selected.length || failures.length > 0 || (area && ranked.length > 50),
     coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect ${area ? "the selected map area" : "the 25 km search corridor"}. ${ranked.length} eligible records ${area ? "inside the area in loaded tiles" : "in loaded data"}; showing ${Math.min(50,ranked.length)} of up to 50.${area && ranked.length>50 ? " Record limit reached; zoom to a smaller area for more detail." : ""} ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
 }

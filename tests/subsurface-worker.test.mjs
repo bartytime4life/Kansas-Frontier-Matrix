@@ -35,6 +35,11 @@ test('stale or canceled source requests cannot replace a newer result',async()=>
 test('missing and corrupt source tiles give explicit partial coverage with no invented records',async()=>{
  const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):gzipSync('[]')));
  h.send({});const r=await wait(h);assert.equal(r.columns.length,0);assert.equal(r.partial,true);assert.equal(r.failures.length,1);
+ assert.match(r.error,/source-delivery failure/);
+});
+test('all missing HTTP tiles are a delivery failure rather than a geological absence',async()=>{
+ const h=harness(async url=>url.endsWith('manifest.json')?new Response(JSON.stringify(manifest)):new Response('Not Found',{status:404}));
+ h.send({});const r=await wait(h);assert.equal(r.columns.length,0);assert.equal(r.partial,true);assert.match(r.error,/not evidence that no records exist/);
 });
 test('Kansas extent rejects outside probes; manifests cannot redirect reads to another origin',async()=>{
  const h=harness(async()=>new Response(JSON.stringify(manifest)));h.send({anchor:[0,0]});assert.match((await wait(h)).error,/Kansas/);
