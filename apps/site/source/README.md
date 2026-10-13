@@ -896,9 +896,9 @@ coordinates (`OVER_PRECISE_OUTPUT`), and never accompanies `ANSWER`, `DENY`, or
 emergencies, drinking or swimming, digging or excavation, legal or medical
 matters, exact or personal locations ("where exactly", "precisely", "near me",
 "nearest … to my house", "my property", "my basement", "where I live"), precise
-location systems (street addresses, ZIP codes, lat/lon, UTM, PLSS), or where
-sensitive sites are (burials, mounds, archaeological sites, nests, leks, dens,
-roosts) abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without calling the
+location systems (street addresses, ZIP codes, lat/lon, UTM, PLSS), or
+sensitive sites (burials, mounds, archaeological sites, nests, leks, dens,
+roosts) other than counts, county-level summaries, policy or map symbols abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without calling the
 model. This keyword gate is a first line only; the output checks above still
 apply to everything the model returns.
 

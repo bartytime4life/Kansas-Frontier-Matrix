@@ -561,6 +561,11 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "Are any archaeological sites near the selected gauge?",
     "Which burial mounds are near this river?",
     "Map the nests in this view",
+    "Plot all prairie-chicken nests",
+    "Point out the burial mounds",
+    "What is at 42 Elm Road?",
+    "Who lives at 18 Oak Lane?",
+    "Is 9 Pine Drive in the floodplain?",
   ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
   for (const question of [
     "What does the address field in the census layer mean?",
@@ -589,6 +594,12 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "What symbols does the map use for archaeological sites?",
     "Is this data safe for public release?",
     "Is this layer safe for external display?",
+    "Which layers are marked safe?",
+    "Is this record considered safe?",
+    "What does lek mean?",
+    "What is the population of Mound City?",
+    "How long is a 30 minute drive from the gauge?",
+    "Are there 3 rulings in district court?",
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 

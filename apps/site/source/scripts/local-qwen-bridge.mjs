@@ -362,13 +362,14 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
 const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|open|outside|online) )?(?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
 const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
-const NOT_AGGREGATE_LEAD = "(?! (?:me )?(?:(?:the|a|an) )?(?:number|numbers|count|counts|total|totals|summary|summaries|share|percent\\w*|density)\\b)";
+// "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
+const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
-const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
+const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
-  `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
-  // PUBLIC_SAFE is a KFM release label, not a safety question.
-  `\\b(?:is|are|how) (?:\\w+ ){0,5}(?<!public )(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
+  `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
+  // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
+  `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
   "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
@@ -380,7 +381,8 @@ const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   "\\baddress (?:of|for)\\b",
   "\\b(?:sec|section) \\d+\\b(?: \\w+){0,3} (?:twp|township) \\d+\\b|\\b(?:twp|township) \\d+(?: [ns])?(?: \\w+){0,2} (?:rge?|range) \\d+\\b|\\bt\\d{1,2}[ns] r\\d{1,2}[ew]\\b",
-  "\\b\\d{1,6}(?: [nsew]{1,2})? (?:\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|ln|ct|ter|terrace|pkwy|parkway|cir)\\b",
+  // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
+  "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
   // Exact or personal locations in other words: where exactly, precisely, near me, my house, where I live.
   "\\b(?:where exactly|exactly where|where precisely|precisely where|pinpoint\\w*)\\b",
@@ -392,14 +394,20 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
   "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
   // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
-  // Counts and county-level summaries ("show the number of burials by county") stay interpretable.
-  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|(?<!(?:the|this|that|a|our|your|their|its) )map|mapping|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b${NOT_AGGREGATE_LEAD}(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
-  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?|near|nearby|close to|next to|adjacent to|around)\\b`,
+  `\\b(?:where|locate|located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
+  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b`,
   "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
 ].join("|"));
 
+// Any other mention of a sensitive site abstains, whatever the verb (show, list, plot, point out …),
+// unless the question is plainly about counts, summaries, policy or map presentation.
+const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
+const SENSITIVE_SITE_SUMMARY = /\b(?:how many|numbers?|counts?|counted|totals?|summar\w*|percent\w*|share|densest|densit\w*|trends?|(?:per|by) (?:county|counties|state|region|year|decade)|statewide|why|polic\w+|rules?|generaliz\w*|withh[eo]ld\w*|redact\w*|sensitiv\w*|protect\w*|symbol\w*|legend|defin\w+|means?|meaning)\b/;
+
 export function isSensitiveQwenQuestion(question) {
-  return SENSITIVE_QUESTION.test(normalizeScopeText(question));
+  const text = normalizeScopeText(question);
+  return SENSITIVE_QUESTION.test(text)
+    || (SENSITIVE_SITE_MENTION.test(text) && !SENSITIVE_SITE_SUMMARY.test(text));
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
