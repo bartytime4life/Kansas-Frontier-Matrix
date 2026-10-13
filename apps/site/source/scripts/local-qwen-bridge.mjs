@@ -371,7 +371,7 @@ const SENSITIVE_QUESTION = new RegExp([
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
   `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
-  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
+  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|cattle|cows|horses|livestock|dogs|pets|animals|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
@@ -453,7 +453,8 @@ const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\
 const PRECISE_TERM_ABOUT_SHAPES = [
   // A direct definition ("what are coordinates", "what is a ZIP code"), not "what are the coordinates".
   new RegExp(`^what (?:is|are) (?:an? )?${PRECISE_TERM_WORDS}$`),
-  /\b(?:means?|meaning|stands? for)$/,
+  // A definition, not a value request that merely ends in "… what it means".
+  /^what (?:does|do) (?:the )?(?:\w+ ){0,3}(?:mean|stand for)$|^what is the meaning of\b/,
   /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
   /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
   /^(?:define|explain what)\b/,
@@ -489,13 +490,18 @@ function preciseClauseBlocked(clause, index, wholeAbout) {
   return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
 }
 
-// A capitalised word after the first names a place, unless the whole question is in title case
-// ("What Is a Lek?").
+// A capitalised word after the first names a place ("Ellis County nests", "Cheyenne Bottoms roost")
+// unless it is a question word, a site noun or an ordinary modifier, so title case ("What Is A
+// Prairie-Chicken Lek?") is not mistaken for a place name.
+const COMMON_CAPITALISED = new Set(("what which is are a an the of does do define mean means meaning "
+  + "burial burials grave graves mound mounds archaeological site sites nest nests nesting lek leks den dens roost "
+  + "roosts roosting hibernaculum hibernacula prairie chicken chickens lesser greater sage grouse bird birds eagle "
+  + "bald golden heron herons bat bats raptor raptors hawk owl crane cranes native ancient historic indian").split(" "));
+
 function hasProperNoun(question) {
   if (typeof question !== "string") return false;
-  const words = question.split(/\s+/).filter((word) => /^[A-Za-z]{3,}/.test(word));
-  if (words.length > 1 && words.every((word) => /^[A-Z]/.test(word))) return false;
-  return /\s[A-Z][a-z]/.test(question);
+  const words = question.match(/[A-Za-z]+/g) ?? [];
+  return words.slice(1).some((word) => /^[A-Z]/.test(word) && !COMMON_CAPITALISED.has(word.toLowerCase()));
 }
 
 export function isSensitiveQwenQuestion(question) {
