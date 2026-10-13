@@ -1,0 +1,68 @@
+.viewer {
+  position: absolute;
+  z-index: 11;
+  inset: 120px 18px 72px 66px;
+  display: flex;
+  min-width: 0;
+  min-height: 170px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(115, 199, 210, .42);
+  border-radius: 9px;
+  background: #07171a;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .3);
+}
+
+.header, .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  background: rgba(3, 24, 30, .96);
+}
+
+.header { border-bottom: 1px solid rgba(115, 199, 210, .28); }
+.header > div:first-child { display: grid; gap: 3px; }
+.header strong { color: #eef8f3; font-size: 13px; }
+.header small, .footer { color: #a8c4c3; font-size: 11px; }
+.controls { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.controls button, .empty button {
+  min-height: 31px;
+  border: 1px solid rgba(115, 199, 210, .5);
+  border-radius: 5px;
+  background: #15373d;
+  color: #f0f8f4;
+  padding: 5px 9px;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.controls button:disabled { opacity: .45; cursor: default; }
+.controls button:focus-visible, .empty button:focus-visible { outline: 2px solid #e3be70; outline-offset: 2px; }
+
+.viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #182720;
+  cursor: grab;
+  touch-action: none;
+}
+.viewport:active { cursor: grabbing; }
+.mosaic { position: absolute; transform-origin: top left; }
+.layer { position: absolute; inset: 0; }
+.layer img { position: absolute; display: block; max-width: none; user-select: none; }
+.empty { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center; }
+.empty strong { color: #eef8f3; font-size: 17px; }
+.empty p { max-width: 330px; margin: 0; color: #a8c4c3; font-size: 12px; }
+.footer { min-height: 35px; border-top: 1px solid rgba(115, 199, 210, .28); }
+.footer span:last-child { overflow: hidden; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 800px) {
+  .viewer { inset: 165px 8px 62px 62px; }
+  .header { align-items: flex-start; flex-wrap: wrap; }
+  .controls { justify-content: flex-start; }
+  .footer span:last-child { display: none; }
+}
