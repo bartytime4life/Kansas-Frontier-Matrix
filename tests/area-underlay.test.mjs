@@ -62,7 +62,7 @@ test('actual area controls retain renderer and camera, while record-time members
  findNode(h.tree,n=>n.props?.['aria-label']==='Basemap opacity').props.onChange({target:{value:'50'}});await h.render();assert.equal(h.renderers.length,1);assert.deepEqual(camera.position,pose);
  let column;h.renders.at(-1).scene.traverse(n=>{if(n.userData?.interval===record.intervals[0])column=n;});assert.ok(column);h.setHits([{object:column}]);h.events.get('pointerdown')({clientX:10,clientY:10,pointerId:1,isPrimary:true,button:0});h.events.get('pointerup')({clientX:10,clientY:10,pointerId:1,isPrimary:true,button:0});await h.render();assert.equal(h.inspections.at(-1)[0],record);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[record]});assert.equal(h.renderers.length,2);assert.equal(h.renderers[0].disposed,true);assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
- await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No recorded intervals at this time/);
+ await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No source columns are displayed/);
  h.h.dispose();assert.ok(h.renderers.every(r=>r.disposed&&r.contextReleased));assert.equal(h.events.size,0);
 });
 
@@ -127,7 +127,7 @@ test('a style-read exception preserves the apply intent and continues on map loa
 });
 test('settled absence of both logs and aquifer uses compact recovery without empty camera or time chrome',async()=>{
  const h=await harness({actualSession:true});await h.render({records:[],recordsAvailable:0});button(h.tree,'Show this area ↗').props.onClick();h.worker.onerror();await h.render();
- assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),undefined);assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No recorded intervals at this time/);h.h.dispose();
+ assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),undefined);assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No source columns are displayed/);h.h.dispose();
 });
 
 
