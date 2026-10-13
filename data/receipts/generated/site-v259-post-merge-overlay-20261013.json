@@ -1040,7 +1040,7 @@
     },
     "README.md": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section with the #5128 pressure-case requirement, and the #5132 sensitive-question gate extension note; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "a11e85821a61055f68ad615ac7c6e0cba66f18584fdaa4368cba54cd06c53dff",
+      "mirror_sha256": "a5a9d7bc15415e62371ced8fe0143a46ae43dccf5b995163a4aff45e5b3b5a6e",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -3782,7 +3782,7 @@
     },
     "scripts/local-qwen-bridge.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "86efe83a405057b8a8133932a8e488c7b8904bbc5dbd872f4f92804e001e4056",
+      "mirror_sha256": "94328ec47ff67d8d73f0c56ef25a6d3995b4586b85aedbbf6650abd78c9d737d",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4611,7 +4611,7 @@
     },
     "tests/local-qwen-bridge.test.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "4621d617b006a286b3e8eba356dbbefca1304a4862283531c0c6bad64714dcba",
+      "mirror_sha256": "aa96e93843c006885eea1c075ff774827d17a82826fa6805f7f7a7acc4a48ce5",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
       "state": "inherited_repository_overlay"
     },
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "55e8e61b4934a8edca2a7c98482b6cfea822d366cbec198f41f27249105c68c3",
+  "inventory_sha256": "a9524263c2b615cc65ecc2d09d9183da48394a5167b853d98d8ac5f131103aee",
   "overlay": {
     "withheld_paths": [
       {

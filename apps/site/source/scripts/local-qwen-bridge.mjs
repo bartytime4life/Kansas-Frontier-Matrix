@@ -375,12 +375,11 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
-  "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
-  // Other precise location systems: lat/lon, UTM, PLSS, street addresses and ZIP codes.
-  "\\b(?:lat lon\\w*|lat lng|latlon\\w*|latlng|utm|eastings?|northings?|plss|zip(?: ?codes?)?|postal codes?)\\b(?! (?:files?|archives?|downloads?)\\b)",
+  "\\bexact (?:location|spot|address|site)\\b",
+  // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
+  // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
   `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   "\\baddress (?:of|for)\\b",
-  "\\b(?:sec|section) \\d+\\b(?: \\w+){0,3} (?:twp|township) \\d+\\b|\\b(?:twp|township) \\d+(?: [ns])?(?: \\w+){0,2} (?:rge?|range) \\d+\\b|\\bt\\d{1,2}[ns] r\\d{1,2}[ew]\\b",
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
@@ -417,10 +416,16 @@ function sensitiveSiteMentionAllowed(text) {
   return !SITE_COMMAND.test(text) && SITE_ABOUT.test(rest);
 }
 
+// Coordinate and ZIP terms ask for a precise value unless the question is about the term itself
+// ("what does UTM mean", "which UTM zone", "why are coordinates withheld").
+const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\w*|lat lng|latlon\w*|latlng|utm|eastings?|northings?|zip(?: ?codes?)?|postal codes?)\b(?! (?:files?|archives?|downloads?)\b)/;
+const PRECISE_TERM_ABOUT = /\b(?:means?|meaning|stands? for|defin\w+|zones?|projection\w*|datum|reference system|system|formats?|precision|accura\w+|why|withh[eo]ld\w*|redact\w*|generaliz\w*|rounded|coarsen\w*)\b/;
+
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   return SENSITIVE_QUESTION.test(text)
-    || (SENSITIVE_SITE_MENTION.test(text) && !sensitiveSiteMentionAllowed(text));
+    || (SENSITIVE_SITE_MENTION.test(text) && !sensitiveSiteMentionAllowed(text))
+    || (PRECISE_TERM.test(text) && (SITE_COMMAND.test(text) || !PRECISE_TERM_ABOUT.test(text)));
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;

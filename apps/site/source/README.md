@@ -896,10 +896,12 @@ coordinates (`OVER_PRECISE_OUTPUT`), and never accompanies `ANSWER`, `DENY`, or
 emergencies, drinking or swimming, digging or excavation, legal or medical
 matters, exact or personal locations ("where exactly", "precisely", "near me",
 "nearest … to my house", "my property", "my basement", "where I live"), precise
-location systems (street addresses, ZIP codes, lat/lon, UTM, PLSS), or
+location values (street addresses, ZIP codes, lat/lon, UTM; questions about
+what those terms mean pass, and PLSS section-scale description is allowed), or
 sensitive sites (burials, mounds, archaeological sites, nests, leks, dens,
-roosts) other than counts, county-level summaries, policy or map symbols abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without calling the
-model. This keyword gate is a first line only; the output checks above still
+roosts) other than counts, county-level summaries, policy, map symbols or the
+layer's own metadata abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without
+calling the model. This keyword gate is a first line only; the output checks above still
 apply to everything the model returns.
 
 The model is grounded in metadata rather than raw data.
