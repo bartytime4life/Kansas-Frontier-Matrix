@@ -365,7 +365,11 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 // requests for a street address.
 // The web target must be the addressed thing itself and so end the phrase or be followed by a
 // preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
-const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their)\\b)\\w+ ){0,4}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
+// The name holds no preposition, determiner, relative clause or person ("the owner of the website",
+// "the developer for the API"). "Of" or "for" inside a capitalised proper name ("the University of
+// Kansas website") is removed before this check by joinProperNames; lower-case "of"/"for" is not.
+const WEB_TARGET_PERSON = "(?:owners?|developers?|publishers?|authors?|maintainers?|operators?|creators?|managers?|administrators?|admins?|webmasters?|contacts?|staff|employees?|directors?|founders?|registrants?|people|persons?|users?|team|company|companies|presidents?|chairs?|chairm[ae]n|deans?|ceos?|officers?|secretar(?:y|ies)|governors?|mayors?|commissioners?|contractors?|vendors?|agents?|representatives?|members?|partners?|sponsors?|clients?|customers?|heads?|chiefs?|leads?|editors?|curators?|coordinators?|supervisors?|employers?|residents?|tenants?|landlords?)";
+const WEB_TARGET = `(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their|his|her|whose|who|which|${WEB_TARGET_PERSON})\\b)\\w+ ){0,6}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)`;
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
@@ -387,10 +391,8 @@ const SENSITIVE_QUESTION = new RegExp([
   // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
   // Street, mailing, home and physical addresses are never web addresses.
   "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
-  `\\b(?:what|which|its|the|an?) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   // A person's address ("the owner's address for the website", "whose address") is never a web address.
   "\\b(?:whose|their|his|her|\\w+ s) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
-  `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
   // "What house number is …", "which street number has the well": a request for a street address.
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
@@ -410,6 +412,12 @@ const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:where|locate|located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
   `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b`,
   "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
+].join("|"));
+// "What is the address", "the address of …": a street address unless the thing addressed is a web
+// target. These two are tested after joinProperNames, so "the University of Kansas website" is one name.
+const ADDRESS_QUESTION = new RegExp([
+  `\\b(?:what|which|its|the|an?) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
+  `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
 ].join("|"));
 
 // Any other mention of a sensitive site abstains, whatever the verb (show, list, plot, point out …),
@@ -536,16 +544,34 @@ const HOUSE_NUMBER_ALLOWED = [
   /^what (?:is|are) (?:an? )?(?:house|street|building|mailbox|lot) numbers?$/,
 ];
 const HOUSE_NUMBER_COVERAGE = /^(?:how many|what (?:percent\w*|share|proportion|fraction)|(?:does|do|is|are) (?:the |this |that )?(?:\w+ ){0,3}(?:layers?|datasets?|data|points?|records?|sources?) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*))\b/;
+// "...in the address layer, and does it include street numbers": a later clause may refer back to a
+// layer or dataset an earlier clause named.
+const HOUSE_NUMBER_COVERAGE_REFERENCE = /^(?:does|do|is|are) (?:it|they|this|that|these|those) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*)\b/;
 const HOUSE_NUMBER_METADATA = /\b(?:layers?|datasets?|data|points?|records?|sources?)\b/;
 
-function houseNumberBlocked(text) {
-  if (!HOUSE_NUMBER.test(text) || HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))) return false;
-  return !(HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text) && !SITE_COMMAND.test(text));
+function houseNumberAllowed(text, metadataNamed = false) {
+  if (HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))) return true;
+  if (SITE_COMMAND.test(text)) return false;
+  return (HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text))
+    || (metadataNamed && HOUSE_NUMBER_COVERAGE_REFERENCE.test(text));
 }
+
+// Each clause is judged: a field question does not excuse a second request ("which house number fields
+// are present, and what is the house number for the selected well").
+function houseNumberClauseBlocked(clause, index, wholeAllowed, clauses) {
+  const metadataNamed = index > 0 && HOUSE_NUMBER_METADATA.test(clauses.slice(0, index).join(" "));
+  if (!HOUSE_NUMBER.test(clause) || houseNumberAllowed(clause, metadataNamed)) return false;
+  return !wholeAllowed || (index > 0 && NEW_QUESTION.test(clause));
+}
+
+// "The University of Kansas website": "of" or "for" between capitalised words belongs to a proper name.
+// "Address Of" in a title-cased question is not part of a name.
+const PROPER_NAME_LINK = /\b(?!Address(?:es)?\b)([A-Z][\w'-]*) (?:[Oo]f|[Ff]or|OF|FOR) (?=[A-Z])(?!(?:The|A|An|This|That|Its|Their|His|Her)\b)/g;
+const joinProperNames = (question) => typeof question === "string" ? question.replace(PROPER_NAME_LINK, "$1 ") : question;
 
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
-  if (SENSITIVE_QUESTION.test(text) || houseNumberBlocked(text)) return true;
+  if (SENSITIVE_QUESTION.test(text) || ADDRESS_QUESTION.test(normalizeScopeText(joinProperNames(question)))) return true;
   // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
   // records") does not excuse another mention ("ask visitors to drink this water").
   if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
@@ -554,6 +580,10 @@ export function isSensitiveQwenQuestion(question) {
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
   const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
+  if (HOUSE_NUMBER.test(text)) {
+    const wholeAllowed = judgedTogether && houseNumberAllowed(text);
+    if (clauses.some((clause, index) => houseNumberClauseBlocked(clause, index, wholeAllowed, clauses))) return true;
+  }
   if (SENSITIVE_SITE_MENTION.test(text)) {
     // A capitalised word after the first ("What are Ellis County nests?") names a place, not a kind.
     const options = { properNoun: hasProperNoun(question) };
