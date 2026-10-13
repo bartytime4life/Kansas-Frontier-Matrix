@@ -917,6 +917,24 @@ browser cannot alter it. Its digest is recorded in `/health` and in every
 interpretation receipt. `tests/qwen-knowledge.test.mjs` fails when the
 committed pack drifts from the registries; regenerate it after editing either.
 
+To check the installed companion against the real model, start the bridge and
+Ollama, then run `npm run eval:qwen-local` (`node scripts/qwen-local-eval.mjs`).
+It sends a fixed set of questions through the loopback bridge only:
+view-level questions that should get an interpretation, personal-location and
+safety questions that must abstain before the model, and an attempt to make the
+model invent evidence. It checks every reply against the governance rules (no
+`ANSWER` without a released selection, no EvidenceRefs, no precise locations,
+`INTERPRETIVE_ONLY` authority) and against the expected outcome. It also
+reports whether the installed knowledge pack matches this checkout, so a stale
+install shows up as `KNOWLEDGE_PACK_STALE`. Output is one JSON line per case
+with IDs, outcomes, failed checks, latency and token counts; question and
+interpretation text are printed only with `--show-text`. The exit code is 0
+when every case passes against this checkout's knowledge pack, 1 when any case
+fails or the installed pack is stale, and 2 when the bridge is unreachable, its
+`/health` reply is not a valid contract envelope for this bridge and model, it
+is not ready, or the options are invalid.
+A pass is a local diagnostic, not evidence, review, or release.
+
 Loopback and origin checks protect the browser-to-companion boundary, but they
 are not isolation from another process running as the same macOS user. The
 owner-local profile assumes that account and its Application Support and

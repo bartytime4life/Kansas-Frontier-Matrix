@@ -18,6 +18,7 @@
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
     "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",
     "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs",
+    "eval:qwen-local": "node scripts/qwen-local-eval.mjs",
     "validate:subsurface-public": "node scripts/validate-subsurface-public.mjs",
     "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client"
   },

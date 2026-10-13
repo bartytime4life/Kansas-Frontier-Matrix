@@ -1039,8 +1039,8 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "7c986129eca872057942fece70f8f0c805501fbdb606b151e80b525a4604162a",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "ab91914f3098b756c9f82605142b228f213cb0db298890e849880ab9415255bc",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -3617,8 +3617,8 @@
       "state": "identical"
     },
     "package.json": {
-      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
-      "mirror_sha256": "e6c02b30be6ea5290cc7a23f0ec6fe4bf3340f236dd8b185e67875c25eaa8ecf",
+      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment and the #5125 eval:qwen-local script; not claimed deployed to private Site v259.",
+      "mirror_sha256": "baf5fdfe197c95fff478431997ca0214c45c603f0733947893f2c23a45d0ccd3",
       "site_sha256": "89ab355f11b02fb412d1d0d71bba2290052e490c7c58180c3afb210800835941",
       "state": "inherited_repository_overlay"
     },
@@ -3839,6 +3839,11 @@
       "mirror_sha256": "bd03b06f9f17ee90d67a98a1fc722690987ee45a72fe63d2ad6ccc2f39103031",
       "site_sha256": "bd03b06f9f17ee90d67a98a1fc722690987ee45a72fe63d2ad6ccc2f39103031",
       "state": "identical"
+    },
+    "scripts/qwen-local-eval.mjs": {
+      "difference": "Repository-only local Qwen evaluation added in #5125; no Site deployment or data activation implied.",
+      "mirror_sha256": "a7ed229ab691c7eb66d8b8155617221424b03edccef06a5f1e5ea5e3659102ec",
+      "state": "repository_only_overlay"
     },
     "scripts/serve-local-worker.mjs": {
       "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
@@ -4742,6 +4747,11 @@
       "site_sha256": "c89132d49cb0124507981e82348a179ab4502da1a2f788474a925ed6d0be5277",
       "state": "inherited_repository_overlay"
     },
+    "tests/qwen-local-eval.test.mjs": {
+      "difference": "Repository-only local Qwen evaluation added in #5125; no Site deployment or data activation implied.",
+      "mirror_sha256": "690acd5df4dc8dd0db825d16bed0d38c95805ec3783347e7e931c6522eafc1cb",
+      "state": "repository_only_overlay"
+    },
     "tests/qwen-real-envelope-size.test.mjs": {
       "mirror_sha256": "45535bdbfbb90d3c8290d5e7516df5cded370c442f4d031921431965c7c8f272",
       "site_sha256": "45535bdbfbb90d3c8290d5e7516df5cded370c442f4d031921431965c7c8f272",
@@ -5072,14 +5082,14 @@
     "identical": 692,
     "inherited_repository_overlay": 41,
     "missing": 0,
-    "repository_only_overlay": 68,
+    "repository_only_overlay": 70,
     "repository_withheld": 258,
-    "source_paths": 801,
+    "source_paths": 803,
     "unexpected_difference": 0
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "3634b5ecc0189713b5d6e720d0bf0cf5f44f3a9c84eecd6d16c81c3e2f16a8e6",
+  "inventory_sha256": "f95c9ffdfb0f0e1ca1e17dfc688ed1b1a7ed39946b8f4deb31d33a6d5dfa466a",
   "overlay": {
     "withheld_paths": [
       {
@@ -6659,11 +6669,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison."
+    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
-  "repository_reconciled_base": "4ac28b612ef89c2c47555424c0d8aabfe11cf446",
+  "repository_reconciled_base": "37afe1253dbf0cbc53be2d6ac5bc25db5e15fc89",
   "review": {
     "blocking_checks": [
       "repository_review",
