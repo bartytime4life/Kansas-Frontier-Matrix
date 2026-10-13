@@ -284,8 +284,11 @@ with `MIRROR_REVIEW_REQUIRED` (the underlying error is
 the receipt:
 
 1. Set each drifted path's `mirror_sha256` to its current SHA-256 and name the
-   pull request in its `difference` note. A path recorded as `identical` becomes
-   `inherited_repository_overlay`; adjust both `counts` entries.
+   pull request in its `difference` note. The receipt stores bare hexadecimal:
+   drop the `sha256:` prefix that `--diagnose` prints in `working_tree_sha256`,
+   or the check fails with `MIRROR_DIGEST_INVALID`. A path recorded as
+   `identical` becomes `inherited_repository_overlay`; adjust both `counts`
+   entries.
 2. Recompute `inventory_sha256` as the SHA-256 of the compact
    (`separators=(",", ":")`) key-sorted JSON mapping every path to its
    `mirror_sha256`.
@@ -295,8 +298,9 @@ the receipt:
    review acceptance or evidence that the overlay is deployed.
 
 `--check` must then return `PASS` and `--diagnose` `RECORDED_BYTES_MATCH`.
-Added or deleted mirror files also change the recorded file set and need a new
-`comparison` entry or its removal. Precedents: `c0715ed13f` (#5112 Qwen
+Added or deleted mirror files also change the recorded file set: add or remove
+the `comparison` entry and increment or decrement the `counts` entry for its
+state, or the check fails with `MIRROR_RECEIPT_COUNTS_DRIFT`. Precedents: `c0715ed13f` (#5112 Qwen
 ranking) and [PR #5121](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5121)
 (#5118 personal-location guard).
 
