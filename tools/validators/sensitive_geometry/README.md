@@ -40,7 +40,7 @@ related:
   - ../../../fixtures/
   - ../../../tests/
 notes:
-  - "This README replaces an empty placeholder at tools/validators/sensitive_geometry/README.md. validate_public_fixture_geometry.py is a confirmed fixture-lint validator with its own CI workflow; it does not confirm registry wiring, policy bundles, transform implementation, or receipt emission."
+  - "This README replaces an empty placeholder at tools/validators/sensitive_geometry/README.md. validate_public_fixture_geometry.py is a confirmed fixture-lint validator with its own CI workflow and a full-profile entry (public-fixture-precise-geometry) in tools/validators/validator_registry.json; it does not confirm policy bundles, transform implementation, or receipt emission."
   - "Sensitive geometry validation is a routing/checking lane. It must not store exact geometry, publish public geometry, define redaction parameters, create receipts, decide policy, approve release, or authorize public surfaces."
   - "No exact coordinates, restricted identifiers, redaction radii, grid sizes, geohash precision, reconstruction thresholds, hidden policy values, or other reverse-engineering hints belong in this README or in repository-facing validator documentation."
   - "Public-safe geometry must be produced upstream by governed transforms and supported by receipts, policy, review, evidence, release, correction, and rollback posture before public use."
@@ -280,7 +280,7 @@ Good fits for `tools/validators/sensitive_geometry/` include:
 
 ## Public fixture precise-geometry check
 
-`validate_public_fixture_geometry.py` is a deterministic, no-network fixture lint. Tests: `tests/validators/test_validate_public_fixture_geometry.py`. CI: `.github/workflows/public-fixture-precise-geometry.yml`.
+`validate_public_fixture_geometry.py` is a deterministic, no-network fixture lint. Tests: `tests/validators/test_validate_public_fixture_geometry.py`. CI: `.github/workflows/public-fixture-precise-geometry.yml`. Registry: `public-fixture-precise-geometry` in the `full` profile of [`validator_registry.json`](../validator_registry.json), selected by `changed-area` for `fixtures/**` changes.
 
 ```bash
 python tools/validators/sensitive_geometry/validate_public_fixture_geometry.py            # scans fixtures/
@@ -359,3 +359,4 @@ Future implementation is not complete until:
 | 2026-07-08 | Replaced empty placeholder with sensitive-geometry validator parent README. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
 | 2026-10-12 | Added `validate_public_fixture_geometry.py`, its tests, and CI workflow. | **CONFIRMED validator** |
 | 2026-10-12 | Restored the synthetic hydrology fixture exception. | **CONFIRMED validator** |
+| 2026-10-13 | Registered the validator in `validator_registry.json` (`full` profile). | **CONFIRMED registry entry** |
