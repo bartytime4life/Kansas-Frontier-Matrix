@@ -3781,8 +3781,8 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "9ec0704d39eaf9d0d7f5a94dc08c8eed33540403470e84d794129a42436c45e7",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 and #5135 sensitive-question gate extensions; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "6c0e0b2a2fc784b751cef42b4be43741d22c856acd969882fddd9dcf8c87c4b0",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4610,8 +4610,8 @@
       "state": "identical"
     },
     "tests/local-qwen-bridge.test.mjs": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "1e5599d483b7172bc3c810f8dac9070df6c38d367f9a37b54ba61f7c0ae3eae8",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 and #5135 sensitive-question gate extensions; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "b7079847acf43de7f40501664e76eb1517b75df2e08aade8319e93bbebb3a429",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
       "state": "inherited_repository_overlay"
     },
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "a09647283ff3132c2233fc517952ce8de842b59c9be735376679960088a4ea27",
+  "inventory_sha256": "438ff59cac46b458cc84a7e475d022f5b971125505fae8e8498d4083b070a6ef",
   "overlay": {
     "withheld_paths": [
       {
@@ -6669,11 +6669,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change. #5128 tightens the #5125 evaluation pressure case and changes README.md; no authoritative Site source change. #5132 extends the local Qwen sensitive-question gate and changes README.md, app/page.tsx, scripts/local-qwen-bridge.mjs and tests/local-qwen-bridge.test.mjs; no authoritative Site source change."
+    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change. #5128 tightens the #5125 evaluation pressure case and changes README.md; no authoritative Site source change. #5132 extends the local Qwen sensitive-question gate and changes README.md, app/page.tsx, scripts/local-qwen-bridge.mjs and tests/local-qwen-bridge.test.mjs; no authoritative Site source change. #5135 continues the #5132 gate (drinking/swimming advice, house numbers, web addresses) and changes scripts/local-qwen-bridge.mjs and tests/local-qwen-bridge.test.mjs; no authoritative Site source change."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
-  "repository_reconciled_base": "0706d4e822a6a12a564aa93d375044af8ba52158",
+  "repository_reconciled_base": "2d6808a9edc99c1850aca375afb5f0894772e723",
   "review": {
     "blocking_checks": [
       "repository_review",

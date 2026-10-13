@@ -361,7 +361,12 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
 // "Safe to show / publish / at its declared precision" asks about release status (PUBLIC_SAFE), not personal safety.
 const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|open|outside|online) )?(?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
-const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
+// Address metadata (fields, formats, address-point layers) and web, API or email addresses are not
+// requests for a street address.
+// The web target must be the addressed thing itself and so end the phrase or be followed by a
+// preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
+const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ ){0,4}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
+const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
@@ -380,8 +385,17 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bexact (?:location|spot|address|site)\\b",
   // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
   // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
-  `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
-  "\\baddress (?:of|for)\\b",
+  // Street, mailing, home and physical addresses are never web addresses.
+  "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
+  `\\b(?:what|which|its|the|an?) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
+  // A person's address ("the owner's address for the website", "whose address") is never a web address.
+  "\\b(?:whose|their|his|her|\\w+ s) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
+  `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
+  // "What house number is …", "which street number has the well": a request for a street address.
+  // Field and definition questions ("which house number fields", "what does house number mean",
+  // "what is a house number") pass; "what is the house number for the well" does not.
+  "\\b(?:house|street|building|mailbox|lot) numbers?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|data|standards?|means?)\\b)(?!$)",
+  "^(?!what (?:is|are) (?:an? )?(?:house|street|building|mailbox|lot) numbers?$).*\\b(?:house|street|building|mailbox|lot) numbers?$",
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
@@ -508,9 +522,22 @@ function hasProperNoun(question) {
   return words.slice(1).some((word) => /^[A-Z]/.test(word) && !COMMON_CAPITALISED.has(word.toLowerCase()));
 }
 
+// Any mention of drinking, swimming or wading is advice unless the activity itself is part of a
+// metadata phrase ("the drinking water layer", "swimming beach records") or a definition, and the
+// question asks for no judgement, gives no command and is not about the asker.
+const WATER_ACTIVITY = /\b(?:drink\w*|swim\w*|wad(?:e|es|ing))\b/;
+const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*|avoid\w*|need|needs|ought|whether|i|we|me|us|my|our)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
+const WATER_ACTIVITY_METADATA_ALL = /\b(?:drinking|swimming|wading)(?: (?:water|beach|beaches|area|areas|hole|holes|site|sites))? (?:layers?|datasets?|data|sources?|records?|metadata|standards?|regulations?|rules?|surveys?|programs?|systems?|quality|beaches?)\b|^what (?:does|do) (?:the )?(?:term |word )?(?:drink\w*|swim\w*|wad\w+)(?: \w+)? mean\b/g;
+// "Drink from this source", "swim in this source": an instruction, not a metadata question.
+const WATER_ACTIVITY_IMPERATIVE = /^(?:please )?(?:drink|swim|wade|bathe)\b/;
+
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text)) return true;
+  // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
+  // records") does not excuse another mention ("ask visitors to drink this water").
+  if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
+    || WATER_ACTIVITY_IMPERATIVE.test(text) || WATER_ACTIVITY.test(text.replace(WATER_ACTIVITY_METADATA_ALL, " ")))) return true;
   const clauses = typeof question === "string"
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
