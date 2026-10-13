@@ -222,6 +222,78 @@ def test_repository_only_overlay_state_is_counted_and_unknown_states_fail(
         TOOL.check()
 
 
+def _withhold(document: dict, path: str = "public/data/held.json.gz") -> dict:
+    document.setdefault("overlay", {})["withheld_paths"] = [{
+        "path": path,
+        "previous_state": "identical",
+        "site_sha256": TOOL.sha(b"exact records\n").removeprefix("sha256:"),
+        "state": "repository_withheld",
+    }]
+    document["counts"]["repository_withheld"] = 1
+    return document
+
+
+def test_withheld_paths_must_stay_absent_from_the_mirror(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, destination, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = _withhold(json.loads(TOOL.RECEIPT.read_text(encoding="utf-8")))
+    TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
+    result = TOOL.check()
+    assert result["withheld_files"] == 1
+    assert "Withheld files confirmed absent" in TOOL.markdown_report(result)
+
+    held = destination / "public/data/held.json.gz"
+    held.parent.mkdir(parents=True)
+    held.write_bytes(b"exact records\n")
+    # Present on disk but untracked still fails: a local build would serve it.
+    with pytest.raises(ValueError, match="MIRROR_WITHHELD_PATH_PRESENT:public/data/held.json.gz"):
+        TOOL.check()
+    assert TOOL.diagnose()["withheld_paths_present"] == ["public/data/held.json.gz"]
+    assert TOOL.diagnose()["outcome"] == "REVIEW_REQUIRED"
+
+    _git(destination.parents[2], "add", ".")
+    with pytest.raises(ValueError, match="MIRROR_WITHHELD_PATH_PRESENT"):
+        TOOL.check()
+
+    held.unlink()
+    held.symlink_to(destination / "app/page.tsx")
+    with pytest.raises(ValueError, match="MIRROR_WITHHELD_PATH_PRESENT"):
+        TOOL.check()
+
+
+@pytest.mark.parametrize("damage", ["count", "state", "in_comparison", "duplicate", "unsafe", "digest", "not_list"])
+def test_withheld_entries_are_validated(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, damage: str
+) -> None:
+    _, _, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = _withhold(json.loads(TOOL.RECEIPT.read_text(encoding="utf-8")))
+    entry = document["overlay"]["withheld_paths"][0]
+    expected = "MIRROR_WITHHELD_INVALID"
+    if damage == "count":
+        document["counts"]["repository_withheld"] = 0
+        expected = "MIRROR_RECEIPT_COUNTS_DRIFT"
+    elif damage == "state":
+        entry["state"] = "identical"
+    elif damage == "in_comparison":
+        entry["path"] = "app/page.tsx"
+    elif damage == "duplicate":
+        document["overlay"]["withheld_paths"].append(dict(entry))
+        document["counts"]["repository_withheld"] = 2
+    elif damage == "unsafe":
+        entry["path"] = "../outside.json"
+        expected = "UNSAFE_MIRROR_PATH"
+    elif damage == "digest":
+        entry["site_sha256"] = "not-a-digest"
+    else:
+        document["overlay"]["withheld_paths"] = {"path": entry["path"]}
+    TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match=expected):
+        TOOL.check()
+
+
 @pytest.mark.parametrize("status", ["review_pending", "accepted", None])
 def test_parity_reports_review_declarations_without_evaluating_acceptance(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], status: str | None

@@ -59,6 +59,39 @@ def compare(source):
     return {"profile":"kfm.site-mirror-comparison/v1", "source_commit": source_commit, "source_dirty": False, "changes":changes,"unexpected_deletions": sorted(mirrored-set(names)),"authority":"REVIEW_ONLY"}
 
 
+def is_digest(value):
+    return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+
+
+def withheld_paths(receipt):
+    """Validate paths deliberately removed from the mirror and recorded by digest only.
+
+    A withheld path is outside the comparison: the mirror must not carry it, and
+    restoring its bytes is never a parity fix. Receipts without the list remain valid.
+    """
+    overlay = receipt.get("overlay")
+    entries = overlay.get("withheld_paths", []) if isinstance(overlay, dict) else []
+    if not isinstance(entries, list):
+        raise ValueError("MIRROR_WITHHELD_INVALID")
+    names = set()
+    for entry in entries:
+        if not isinstance(entry, dict) or entry.get("state") != "repository_withheld":
+            raise ValueError("MIRROR_WITHHELD_INVALID")
+        name = valid_name(entry.get("path"))
+        if name in receipt["comparison"] or name in names or not is_digest(entry.get("site_sha256")):
+            raise ValueError("MIRROR_WITHHELD_INVALID")
+        names.add(name)
+    if receipt["counts"].get("repository_withheld", 0) != len(names):
+        raise ValueError("MIRROR_RECEIPT_COUNTS_DRIFT")
+    return names
+
+
+def withheld_present(withheld, names):
+    """Withheld paths that are tracked or present on disk under the mirror."""
+    return sorted(name for name in withheld
+                  if name in names or (DESTINATION / name).is_symlink() or (DESTINATION / name).exists())
+
+
 def reviewed_receipt():
     """Validate recorded content, retaining the historical function name.
 
@@ -88,11 +121,12 @@ def reviewed_receipt():
     actual_counts = {state: sum(entry["state"] == state for entry in comparison.values()) for state in allowed}
     if any(receipt["counts"].get(state, 0) != count for state, count in actual_counts.items()):
         raise ValueError("MIRROR_RECEIPT_COUNTS_DRIFT")
+    withheld_paths(receipt)
     expected = {}
     for name, entry in comparison.items():
         valid_name(name)
         digest = entry["mirror_sha256"]
-        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+        if not is_digest(digest):
             raise ValueError("MIRROR_DIGEST_INVALID")
         if entry["state"] == "identical" and entry.get("site_sha256") != digest:
             raise ValueError("MIRROR_IDENTICAL_MISMATCH")
@@ -103,6 +137,10 @@ def reviewed_receipt():
 def check():
     receipt, expected = reviewed_receipt()
     names = {p.removeprefix("apps/site/source/") for p in files(ROOT) if p.startswith("apps/site/source/")}
+    withheld = withheld_paths(receipt)
+    present = withheld_present(withheld, names)
+    if present:
+        raise ValueError("MIRROR_WITHHELD_PATH_PRESENT:" + present[0])
     if names != set(expected):
         raise ValueError("MIRROR_FILE_SET_DRIFT")
     for name, digest in expected.items():
@@ -117,6 +155,7 @@ def check():
             "hosted_equivalence":False,"authority":"CONTENT_PARITY_ONLY",
             "receipt_file": RECEIPT.name, "file_states": file_states,
             "repository_overlay_files": sum(count for state, count in file_states.items() if state != "identical"),
+            "withheld_files": len(withheld),
             "review_acceptance": {
                 "outcome": "NOT_EVALUATED", "authority": "RECEIPT_DECLARATION_ONLY",
                 "receipt_status": receipt.get("status"),
@@ -134,6 +173,7 @@ def markdown_report(result):
         ("Receipt file", result.get("receipt_file")),
         ("Recorded file states", result.get("file_states")),
         ("Repository overlay files", result.get("repository_overlay_files")),
+        ("Withheld files confirmed absent", result.get("withheld_files")),
         ("Review acceptance evaluated by this check", review.get("outcome", "NOT_EVALUATED")),
         ("Review reporting authority", review.get("authority", "RECEIPT_DECLARATION_ONLY")),
         ("Declared receipt status", review.get("receipt_status")),
@@ -159,18 +199,20 @@ def diagnose():
     """Report current working-tree drift; this never approves a replacement receipt."""
     receipt, expected = reviewed_receipt()
     names = {p.removeprefix("apps/site/source/") for p in files(ROOT) if p.startswith("apps/site/source/")}
+    present = withheld_present(withheld_paths(receipt), names)
     changed = []
     for name in sorted(names & expected.keys()):
         current = sha(safe(DESTINATION, name).read_bytes())
         if current != expected[name]:
             changed.append({"path": name, "receipt_state": receipt["comparison"][name]["state"],
                             "recorded_sha256": expected[name], "working_tree_sha256": current})
-    return {"outcome": "REVIEW_REQUIRED" if changed or names != set(expected) else "RECORDED_BYTES_MATCH",
+    return {"outcome": "REVIEW_REQUIRED" if changed or present or names != set(expected) else "RECORDED_BYTES_MATCH",
             "authority": "REVIEW_ONLY", "byte_source": "working_tree",
             "repository_head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
             "repository_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT)),
             "site_candidate_commit_in_receipt": receipt["site_candidate_commit"],
             "changed": changed, "unrecorded_mirror_paths": sorted(names - expected.keys()),
+            "withheld_paths_present": present,
             "missing_mirror_paths": sorted(expected.keys() - names)}
 
 
