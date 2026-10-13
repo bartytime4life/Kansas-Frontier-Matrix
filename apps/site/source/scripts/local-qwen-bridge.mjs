@@ -389,8 +389,10 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bprecise (?:locations?|spots?|sites?|positions?|places?|address(?:es)?)\\b",
   "\\b(?:nearest|closest)\\b(?: \\w+){0,4} (?:(?:to|from) )?(?:my|our|me|us)\\b",
   "\\b(?:near|nearby|close to|around|next to) (?:me|us)\\b",
-  "\\b(?:my|our) (?:current )?(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts|basement|neighborhood|neighbourhood|street|block|place|apartment|well|field|pasture|ranch|acreage|driveway)\\b",
+  // "My parents' house", "our neighbor's farm": a possessor between "my" and the place.
+  "\\b(?:my|our) (?:current )?(?:(?:\\w+ s|\\w+s) ){0,2}(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts|basement|neighborhood|neighbourhood|street|block|place|apartment|well|field|pasture|ranch|acreage|driveway)\\b",
   "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
+  "\\bwhere (?:my|our) (?:\\w+ ){1,2}(?:live|lives|stay|stays|work|works)\\b",
   "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
   // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
   `\\b(?:where|locate|located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
@@ -433,11 +435,15 @@ const SITE_ENUMERATION = new RegExp(`^(?:what|which) (?:(?:are|is|were|was) )?(?
 
 const SENSITIVE_SITE_LOCATING = SITE_ENUMERATION;
 
+// "Which records contain the burial sites?", "which source lists the nests?": enumeration behind a
+// metadata noun.
+const SITE_CONTAINMENT = new RegExp(`\\b(?:contain\\w*|list\\w*|includ\\w*|has|have|show\\w*|maps?|marks?|locat\\w*|names?)\\b(?: \\w+){0,3} ${SENSITIVE_SITE}\\b`);
+
 function sensitiveSiteMentionAllowed(text, { properNoun = false } = {}) {
   if (SITE_AGGREGATE_SHAPES.some((shape) => shape.test(text))) return !ENUMERATION_TAIL.test(text);
   if (!properNoun && SITE_DEFINITION.test(text)) return true;
   if (SITE_ALLOWED_SHAPES.some((shape) => shape.test(text))) return true;
-  return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text);
+  return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text) && !SITE_CONTAINMENT.test(text);
 }
 
 // Coordinate and ZIP terms ask for a precise value unless the clause is about the term itself
