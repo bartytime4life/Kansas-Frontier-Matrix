@@ -1039,8 +1039,8 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "ab91914f3098b756c9f82605142b228f213cb0db298890e849880ab9415255bc",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section with the #5128 pressure-case requirement; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "cdc108af5a3838ce67570d4102de8d4dda4bfb8b7dd0362e5097b85d60db9eb2",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -3841,8 +3841,8 @@
       "state": "identical"
     },
     "scripts/qwen-local-eval.mjs": {
-      "difference": "Repository-only local Qwen evaluation added in #5125; no Site deployment or data activation implied.",
-      "mirror_sha256": "a7ed229ab691c7eb66d8b8155617221424b03edccef06a5f1e5ea5e3659102ec",
+      "difference": "Repository-only local Qwen evaluation added in #5125 and tightened in #5128; no Site deployment or data activation implied.",
+      "mirror_sha256": "454ccd957062d47911cb8aca050d9dd5cc4624745c09539270f2b995646087f1",
       "state": "repository_only_overlay"
     },
     "scripts/serve-local-worker.mjs": {
@@ -4748,8 +4748,8 @@
       "state": "inherited_repository_overlay"
     },
     "tests/qwen-local-eval.test.mjs": {
-      "difference": "Repository-only local Qwen evaluation added in #5125; no Site deployment or data activation implied.",
-      "mirror_sha256": "690acd5df4dc8dd0db825d16bed0d38c95805ec3783347e7e931c6522eafc1cb",
+      "difference": "Repository-only local Qwen evaluation added in #5125 and tightened in #5128; no Site deployment or data activation implied.",
+      "mirror_sha256": "af54e8e7eab8a66974283a8846aa30f671500a0a521cd08b7b2c4c0237966f28",
       "state": "repository_only_overlay"
     },
     "tests/qwen-real-envelope-size.test.mjs": {
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "f95c9ffdfb0f0e1ca1e17dfc688ed1b1a7ed39946b8f4deb31d33a6d5dfa466a",
+  "inventory_sha256": "97acea4392c5e8d199ad7868a3d70a9118a07eba3fa9b833faa8decdf128b4b5",
   "overlay": {
     "withheld_paths": [
       {
@@ -6669,11 +6669,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change."
+    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change. #5128 tightens the #5125 evaluation pressure case and changes README.md; no authoritative Site source change."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
-  "repository_reconciled_base": "37afe1253dbf0cbc53be2d6ac5bc25db5e15fc89",
+  "repository_reconciled_base": "f7a5e97b059a2a3fea79957a2006029ab6653cb5",
   "review": {
     "blocking_checks": [
       "repository_review",
