@@ -1,6 +1,32 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as GLMap } from "./maplibre-seam";
 
+/** Replacement camera moves can emit moveend before starting again in the same task. */
+export function createSettledMapCommit(
+  commit: () => void,
+  isMoving: () => boolean,
+  enqueue: (callback: () => void) => void = queueMicrotask,
+) {
+  let pending = false;
+  let generation = 0;
+  return {
+    schedule() {
+      if (pending) return;
+      pending = true;
+      const scheduled = generation;
+      enqueue(() => {
+        if (scheduled !== generation) return;
+        pending = false;
+        if (!isMoving()) commit();
+      });
+    },
+    cancel() {
+      generation++;
+      pending = false;
+    },
+  };
+}
+
 export type RenderQuality = "auto" | "efficient" | "detail";
 export const QUALITY_LABELS = { auto: "Balanced", efficient: "Battery saver", detail: "High detail" } as const;
 export const QUALITY_STORAGE_KEY = "kfm-render-quality-v1";

@@ -34,7 +34,7 @@ import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
 import { HmsFrameTransitions, hmsFade } from "./hms-smoke-playback";
 import { resetHmsSmokeFade, setHmsSmokeFade } from "./live-context";
-import { geoJSONHasData, waitForGeoJSON } from "./map-performance";
+import { createSettledMapCommit, geoJSONHasData, waitForGeoJSON } from "./map-performance";
 import { readBoundedJson } from "./bounded-json";
 import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
@@ -4989,6 +4989,7 @@ export default function Home() {
     let resizeObserver: ResizeObserver | null = null;
     let mapResizeFrame: number | undefined;
     let cancelHoverSample = () => {};
+    let cancelSettledViewCommit = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
     let terrainRetryTimer: number | null = null;
@@ -5515,11 +5516,8 @@ export default function Home() {
             syncNightSkyVisibility(map, renderEfficientRef.current);
           } catch { /* decorative only */ }
         });
-        map.on("movestart", () => {
-          const center = map.getCenter();
-          lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
-        });
-        map.on("moveend", () => {
+        let settledViewWasReplay = false;
+        const settledViewCommit = createSettledMapCommit(() => {
           syncTerrainRasterView();
           const center = map.getCenter();
           const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
@@ -5529,9 +5527,7 @@ export default function Home() {
           const cameraFov = map.getVerticalFieldOfView();
           fieldOfViewRef.current = cameraFov;
           setFieldOfView(cameraFov);
-          if (replayingCameraHistoryRef.current) {
-            replayingCameraHistoryRef.current = false;
-          } else if (!locationDerivedViewRef.current) {
+          if (!settledViewWasReplay && !locationDerivedViewRef.current) {
             const retained = cameraHistoryRef.current.slice(0, cameraHistoryIndexRef.current + 1);
             const previous = retained.at(-1);
             if (!previous || !cameraViewsEquivalent(previous, nextView)) {
@@ -5543,6 +5539,19 @@ export default function Home() {
               setCameraHistoryLength(nextHistory.length);
             }
           }
+        }, () => map.isMoving());
+        cancelSettledViewCommit = settledViewCommit.cancel;
+        map.on("movestart", () => {
+          settledViewCommit.cancel();
+          const center = map.getCenter();
+          lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
+        });
+        map.on("moveend", () => {
+          // Consume the replay marker at its original event boundary. A manual
+          // interruption must still record its eventual stopped view.
+          settledViewWasReplay = replayingCameraHistoryRef.current;
+          replayingCameraHistoryRef.current = false;
+          settledViewCommit.schedule();
         });
         map.on("error", (event) => {
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
@@ -5762,6 +5771,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       cancelHoverSample();
+      cancelSettledViewCommit();
       if (mapResizeFrame !== undefined) window.cancelAnimationFrame(mapResizeFrame);
       resizeObserver?.disconnect();
       styleDocumentLoadedRef.current = false;
