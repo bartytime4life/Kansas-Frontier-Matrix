@@ -63,6 +63,7 @@ The previous changelog recorded only the initial implementation milestones throu
 ### Fixed
 
 - Local Qwen knowledge pack cross-domain ideas in `apps/site/source` (repository source; not yet deployed): when three or more domains are on the map, the three ideas offered now go to the pairs the question matches most closely, so a question about flood zones and the alluvial aquifer gets that pair's idea rather than two about the river beside it.
+- Local Qwen knowledge pack matching in `apps/site/source` (repository source; not yet deployed): question words now match source metadata and cross-domain idea text across simple plurals ("county" finds "counties"), and each idea's own words count toward its rank, so "How many gauges are active in each county?" gets the gauges-per-county idea.
 
 ## Legacy seed milestones — 2026-05-08 to 2026-05-09
 

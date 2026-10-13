@@ -180,3 +180,14 @@ test("among displayed domains, the pair the question names outranks pairs it onl
   assert.equal(general.payload.crossDomainIdeas.length, 3);
   assert.ok(!general.payload.crossDomainIdeas.includes(floodAndAquifer));
 });
+
+test("question words match metadata and idea text across simple plurals", () => {
+  assert.ok(rankQwenKnowledgeSources("Which county is this?", { officialSources: [] })
+    .slice(0, 3).some((source) => source.id === "census-counties"), "county finds the counties source");
+  const view = { officialSources: ["usgs-streamflow", "census-counties", "kdot-bridges-state", "fema-flood-zones"]
+    .map((id) => ({ id, displayed: true, selected: true })) };
+  const gaugesPerCounty = QWEN_KNOWLEDGE_PACK.crossDomainIdeas.find((entry) =>
+    entry.domains.includes("Living waters") && entry.domains.includes("Reference boundaries & locators")).idea;
+  const selected = selectQwenKnowledge("How many gauges are active in each county?", view);
+  assert.equal(selected.payload.crossDomainIdeas[0], gaugesPerCounty, "the idea the question describes comes first");
+});
