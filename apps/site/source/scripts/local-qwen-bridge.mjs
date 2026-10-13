@@ -365,7 +365,7 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 // requests for a street address.
 // The web target must be the addressed thing itself and so end the phrase or be followed by a
 // preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
-const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ ){0,4}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
+const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their)\\b)\\w+ ){0,4}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
@@ -392,10 +392,6 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:whose|their|his|her|\\w+ s) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
   `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
   // "What house number is …", "which street number has the well": a request for a street address.
-  // Field and definition questions ("which house number fields", "what does house number mean",
-  // "what is a house number") pass; "what is the house number for the well" does not.
-  "\\b(?:house|street|building|mailbox|lot) numbers?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|data|standards?|means?)\\b)(?!$)",
-  "^(?!what (?:is|are) (?:an? )?(?:house|street|building|mailbox|lot) numbers?$).*\\b(?:house|street|building|mailbox|lot) numbers?$",
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
@@ -526,14 +522,30 @@ function hasProperNoun(question) {
 // metadata phrase ("the drinking water layer", "swimming beach records") or a definition, and the
 // question asks for no judgement, gives no command and is not about the asker.
 const WATER_ACTIVITY = /\b(?:drink\w*|swim\w*|wad(?:e|es|ing))\b/;
-const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*|avoid\w*|need|needs|ought|whether|i|we|me|us|my|our)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
+const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*|avoid\w*|need|needs|ought|whether|i|we|me|us|my|our|meets?|met|compl(?:y|ies|iant|iance)|exceeds?|violat\w*|pass(?:es)?|fails?|contaminat\w*|tested|potable)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
 const WATER_ACTIVITY_METADATA_ALL = /\b(?:drinking|swimming|wading)(?: (?:water|beach|beaches|area|areas|hole|holes|site|sites))? (?:layers?|datasets?|data|sources?|records?|metadata|standards?|regulations?|rules?|surveys?|programs?|systems?|quality|beaches?)\b|^what (?:does|do) (?:the )?(?:term |word )?(?:drink\w*|swim\w*|wad\w+)(?: \w+)? mean\b/g;
 // "Drink from this source", "swim in this source": an instruction, not a metadata question.
 const WATER_ACTIVITY_IMPERATIVE = /^(?:please )?(?:drink|swim|wade|bathe)\b/;
 
+// House numbers are street-level precision. Field and definition questions ("which house number
+// fields", "what is a house number") and coverage questions about a layer or dataset ("how many house
+// numbers are in the address-point layer") pass; "what is the house number for the well" does not.
+const HOUSE_NUMBER = /\b(?:house|street|building|mailbox|lot) numbers?\b/;
+const HOUSE_NUMBER_ALLOWED = [
+  /\b(?:house|street|building|mailbox|lot) numbers? (?:fields?|columns?|attributes?|metadata|formats?|schemas?|data|standards?|means?)\b/,
+  /^what (?:is|are) (?:an? )?(?:house|street|building|mailbox|lot) numbers?$/,
+];
+const HOUSE_NUMBER_COVERAGE = /^(?:how many|what (?:percent\w*|share|proportion|fraction)|(?:does|do|is|are) (?:the |this |that )?(?:\w+ ){0,3}(?:layers?|datasets?|data|points?|records?|sources?) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*))\b/;
+const HOUSE_NUMBER_METADATA = /\b(?:layers?|datasets?|data|points?|records?|sources?)\b/;
+
+function houseNumberBlocked(text) {
+  if (!HOUSE_NUMBER.test(text) || HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))) return false;
+  return !(HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text) && !SITE_COMMAND.test(text));
+}
+
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
-  if (SENSITIVE_QUESTION.test(text)) return true;
+  if (SENSITIVE_QUESTION.test(text) || houseNumberBlocked(text)) return true;
   // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
   // records") does not excuse another mention ("ask visitors to drink this water").
   if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
