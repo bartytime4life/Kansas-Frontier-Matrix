@@ -141,7 +141,8 @@ jobs:
         run: |
           origin="${KFM_SITE_ORIGIN:-https://kansasfrontiermatrix.com}"
           for attempt in 1 2 3 4 5 6; do
-            live="$(curl -fsS --max-time 20 "$origin/kfm-site.json" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).commit)}catch{console.log("")}})' || true)"
+            # Parse with jq, not an interpreter: piping a download into node reads as download-then-run.
+            live="$(curl -fsS --max-time 20 "$origin/kfm-site.json" | jq -r '.commit // empty' 2>/dev/null || true)"
             if [ "$live" = "$GITHUB_SHA" ]; then
               echo "Live site at $origin serves $GITHUB_SHA."
               exit 0
