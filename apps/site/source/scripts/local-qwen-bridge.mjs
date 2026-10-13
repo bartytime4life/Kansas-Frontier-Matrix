@@ -358,11 +358,15 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
  * Questions that would turn interpretation into guidance or precision are
  * not sent to the model at all. The deterministic ABSTAIN explains why.
  */
+// "Safe to show / publish / at its declared precision" asks about release status (PUBLIC_SAFE), not personal safety.
+const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
+// Address metadata (fields, formats, address-point layers) is not a request for an address.
+const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
 const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
-  "\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b",
+  `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
   // PUBLIC_SAFE is a KFM release label, not a safety question.
-  "\\b(?:is|are|how) (?:\\w+ ){0,5}(?<!public )(?:safe|unsafe|dangerous|hazardous)\\b",
+  `\\b(?:is|are|how) (?:\\w+ ){0,5}(?<!public )(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
   "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
@@ -371,7 +375,8 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
   // Other precise location systems: lat/lon, UTM, PLSS, street addresses and ZIP codes.
   "\\b(?:lat lon\\w*|lat lng|latlon\\w*|latlng|utm|eastings?|northings?|plss|zip ?codes?|postal codes?)\\b",
-  "\\b(?:street|mailing|home|physical|exact) address(?:es)?\\b|\\b(?:what|which|whose) address\\b|\\baddress (?:of|for)\\b",
+  `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
+  "\\baddress (?:of|for)\\b",
   "\\b(?:sec|section) \\d+\\b(?: \\w+){0,3} (?:twp|township) \\d+\\b|\\b(?:twp|township) \\d+(?: [ns])?(?: \\w+){0,2} (?:rge?|range) \\d+\\b|\\bt\\d{1,2}[ns] r\\d{1,2}[ew]\\b",
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|ln|ct|ter|terrace|pkwy|parkway|cir)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",

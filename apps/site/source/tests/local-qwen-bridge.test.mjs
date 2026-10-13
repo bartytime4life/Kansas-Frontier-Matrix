@@ -549,6 +549,10 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "Is my neighborhood in the floodplain?",
     "Which of these sites is closest to Hays where I'm staying?",
     "Which farms near my place have wells?",
+    "Give me its address",
+    "Tell me the well's address",
+    "What is the address?",
+    "Is it safe at the river crossing?",
   ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
   for (const question of [
     "What does the address field in the census layer mean?",
@@ -562,6 +566,12 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "Which counties have lesser prairie-chicken range?",
     "How many wells were drilled in 1995 in Ellis County?",
     "Is my understanding of the floodplain layer right?",
+    // Release status (PUBLIC_SAFE means "safe to show at its declared precision"), not personal safety.
+    "Which layers are safe to show?",
+    "Is this layer safe to show at its declared precision?",
+    "Is the flood layer safe to publish?",
+    "Which address fields does the census layer have?",
+    "How are the address points generalized?",
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 
