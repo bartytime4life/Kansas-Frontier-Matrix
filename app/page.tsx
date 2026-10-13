@@ -9798,7 +9798,7 @@ export default function Home() {
                     </div></section>}
                     {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
                     {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>No KFM domain records are released in this Site. A generated report preserves limitations and cannot admit or release data.</p></aside>}
-                    <footer><span role="status">Report checkout is being configured. Your map and draft are preserved.</span><div><button type="button" disabled>Copy report</button><button type="button" disabled>Report data .json</button><button className="report-download-primary" type="button" disabled>Report download unavailable</button></div></footer>
+                    <footer><span role="status">Free report exports</span><div><button type="button" onClick={() => { void copyCustomReport(); }}>Copy report</button><button type="button" onClick={() => downloadCustomReport("json")}>Report data .json</button><button className="report-download-primary" type="button" onClick={() => downloadCustomReport("html")}>Download report .html</button></div></footer>
                   </article>
                 </div>
               </section>}

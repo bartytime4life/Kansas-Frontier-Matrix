@@ -398,9 +398,9 @@ export default function ReportStoryWorkspaces({
             </article>)}{snapshotEvidence.length === 0 && <p className="empty-workspace-state">No claim-bearing evidence reference matches this map snapshot. The draft may record the gap, but it cannot publish a fallback claim.</p>}</div>
           </section>
           <div className="workspace-export-actions">
-            <p role="status">Report checkout is being configured. Your map and draft are preserved.</p>
-            <button type="button" disabled>Export Markdown</button>
-            <button type="button" disabled>Export report JSON</button>
+            <p role="status">Free exports · your draft stays on this device.</p>
+            <button type="button" onClick={() => exportReport("markdown")}>Export Markdown</button>
+            <button type="button" onClick={() => exportReport("json")}>Export report JSON</button>
             <button type="button" disabled title="Publication requires evidence, policy, review, and release gates">Publish unavailable</button>
           </div>
         </aside>
