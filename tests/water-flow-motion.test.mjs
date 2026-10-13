@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { runInNewContext } from "node:vm";
 import test from "node:test";
 import ts from "typescript";
 
@@ -187,4 +188,32 @@ test("nearest-first terrain queue preserves exact order while calculating each d
   }
   const median = values => values.sort((a,b) => a-b)[3];
   t.diagnostic(JSON.stringify({scenario: "synthetic-60000-vertex-order", runs: 7, beforeMedianMs: median(times.before), afterMedianMs: median(times.after), beforeDistanceCalls: beforeCalls / 8, afterDistanceCalls: vertices.length, exactOrder: true}));
+});
+
+test("actual terrain callbacks avoid sorting in 2D and skip interrupted camera priorities in 3D", async () => {
+  const source = await readFile("app/water-flow-layer.ts", "utf8");
+  const tree = ts.createSourceFile("water-flow-layer.ts", source, ts.ScriptTarget.Latest, true);
+  const names = ["queueTerrainSamples", "settledTerrainSamples", "markDirty", "cancelCameraSamples"], parts = {};
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && names.includes(node.name.getText(tree))) parts[node.name.getText(tree)] = `const ${node.getText(tree)};`;
+    ts.forEachChild(node, visit);
+  }
+  visit(tree); names.forEach(name => assert.ok(parts[name], name));
+  const {createSettledMapCommit} = await import(await compile("app/map-performance.ts"));
+  const {orderedFlowVertices} = await import(await compile("app/water-flow-layer.ts"));
+  let terrain = null, moving = false, center = {lng:-97,lat:38}, sorts = 0;
+  const vertices = [{lng:-97.02,lat:38,slots:[0]},{lng:-97.001,lat:38,slots:[1]}];
+  const ctx = {createSettledMapCommit, geometry:{vertices,segments:new Float32Array([7,8])}, sampleQueue:[1,0], sampleCursor:2,
+    map:{getTerrain:()=>terrain,isMoving:()=>moving,getCenter:()=>center},
+    orderedFlowVertices:(values, pose)=>{sorts++;return orderedFlowVertices(values, pose);}};
+  const js = ts.transpileModule(`${names.map(name=>parts[name]).join("\n")} globalThis.dirty=markDirty; globalThis.cancel=cancelCameraSamples;`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  runInNewContext(js,ctx);
+  ctx.dirty(); await Promise.resolve(); assert.equal(sorts,0); assert.equal(ctx.sampleQueue.length,0); assert.equal(ctx.sampleCursor,0);
+  terrain = {source:"dem"};
+  for (let i=0;i<48;i++) {moving=false;ctx.dirty();moving=true;ctx.cancel();await Promise.resolve();}
+  assert.equal(sorts,0);
+  moving=false;center={lng:-97.019,lat:38};ctx.dirty();await Promise.resolve();
+  assert.equal(sorts,1);assert.deepEqual([...ctx.sampleQueue],[0,1]);assert.equal(ctx.sampleCursor,0);
+  assert.deepEqual(ctx.geometry.segments,new Float32Array([7,8]));
+  ctx.dirty();ctx.cancel();await Promise.resolve();assert.equal(sorts,1,"disposal invalidates pending terrain work");
 });

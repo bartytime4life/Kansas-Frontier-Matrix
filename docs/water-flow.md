@@ -177,6 +177,44 @@ console errors. Browser-control calls were sometimes slow during startup;
 this is not a sustained responsiveness, mobile-device or hosted-browser pass.
 Publication and repository review are recorded separately in delivery receipts.
 
+## Interrupted camera updates — 2026-10-13
+
+This repair starts from GoDaddy revision
+`00576292b033542140e7b17bfc70f1c084107bf6`. The public Explorer's 12-second
+interrupted-pan test at zoom 10.5 reproduced 43.9 FPS with ten selected
+scientific layers and Flowing water enabled (2,311 directed reaches, one gauge
+cue, incomplete provider coverage). Continuous motion reached 59.9 FPS.
+Temporarily switching off only Flowing water restored 59.9 FPS in the interrupted
+test; it was immediately restored. Source GeoJSON/specification signatures
+remained unchanged. Earlier preview samples had different effect settings and
+therefore did not establish equivalent hosted acceptance.
+
+The water effect's own `moveend` listener still processed intermediate camera
+stops, including geometry rebuilds as the wanted cell set changed. It now uses
+the same microtask cancellation boundary as the Explorer camera: replacement
+movement invalidates the old work; the genuine final stop requests the exact
+final cells. Current river geometry remains visible during motion, as it already
+does during an uninterrupted pan. Provider/gauge completions keep their existing
+progressive display and next-frame coalescing. Disabling/removing the effect
+invalidates queued camera work.
+
+Terrain sampling also discards interrupted camera priority updates and avoids
+sorting vertices for a flat 2D map. Terrain-enabled sampling retains the same
+nearest-first ordering, height values and per-frame sample budget. No provider
+payload, geometry builder, gauge semantics, reach/segment budget, source date,
+cache/request limit, effect setting or motion speed changes.
+
+Regression tests execute the actual callbacks with 48 camera interruptions,
+preserve the current geometry without intermediate reads/requests/builds, and
+compare final geometry with the unchanged builder for the exact final cells.
+They also cover effect-off/removal cancellation and unchanged terrain segments.
+Existing roots `app/`, `tests/`, and `docs/` own this display repair, callback
+tests and explanation under Directory Rules v2 and accepted ADR-0029. This does
+not admit source data or modify the private Sites deployment. Preview and
+production verification with Flowing water enabled remain separate release
+checks. Reverting this repair returns to the revision above without changing
+stored data or preferences.
+
 ## Rollback
 
 Switch **Flowing water** off, or choose **Plain**. It is off by default, so

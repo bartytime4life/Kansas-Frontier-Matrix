@@ -1,6 +1,6 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
-import { uploadedGeoJSON } from "./map-performance";
+import { createSettledMapCommit, uploadedGeoJSON } from "./map-performance";
 import { effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
 import { createWaterFlowLayer, WATER_FLOW_PALETTES, type WaterFlowLayer } from "./water-flow-layer";
 import {
@@ -223,17 +223,24 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
   current.gaugeLayerId = options.gaugeLayerId;
   if (!current.listening) {
     current.listening = true;
-    const move = () => { try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ } };
+    const settledMove = createSettledMapCommit(() => {
+      if (states.get(map) !== current || !sceneEffectsFor(map).waterFlow) return;
+      try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ }
+    }, () => map.isMoving());
+    const move = () => settledMove.schedule();
+    const start = () => settledMove.cancel();
     const source = (event: { sourceId?: string }) => {
       if (event.sourceId === current.gaugeSourceId) scheduleRebuild(map, current);
     };
     const remove = () => {
       states.delete(map);
+      settledMove.cancel();
       clearPendingWork(current);
       current.layer = null;
-      map.off("moveend", move); map.off("sourcedata", source); map.off("remove", remove);
+      map.off("moveend", move); map.off("movestart", start); map.off("sourcedata", source); map.off("remove", remove);
     };
     map.on("moveend", move);
+    map.on("movestart", start);
     map.on("sourcedata", source);
     map.on("remove", remove);
   }
