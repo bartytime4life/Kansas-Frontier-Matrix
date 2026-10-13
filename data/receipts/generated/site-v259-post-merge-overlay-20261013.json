@@ -6659,11 +6659,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change."
+    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
-  "repository_reconciled_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
+  "repository_reconciled_base": "4ac28b612ef89c2c47555424c0d8aabfe11cf446",
   "review": {
     "blocking_checks": [
       "repository_review",
@@ -6836,7 +6836,7 @@
       "source_files": 993,
       "state": "existing-v109-persistent-store"
     },
-    "mirror_after_concurrent_merge": "PENDING_VALIDATION",
+    "mirror_after_concurrent_merge": "PASS_TARGETED_CONTENT_PARITY_AND_38_REGRESSION_TESTS",
     "mirror_before_concurrent_merge_tests": 1213,
     "mirror_current_main_qwen_retained": true,
     "mirror_final_tests": 1209,
@@ -6850,6 +6850,11 @@
     "post_merge_overlay_reconciliation": {
       "base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
       "changed_repository_paths": 3,
+      "ci": "EXACT_UPDATED_HEAD_PENDING; previous follow-up head e8a047bb2eb0974523fc5600667086acd2fb2589 completed 105 successes and two skipped checks",
+      "full_suite_after_5118": "NOT_RERUN; earlier full-suite counts are dated pre-5118 evidence",
+      "mirror_check": "PASS_CONTENT_PARITY_ONLY",
+      "mirror_regression_tests": 38,
+      "qwen_targeted_tests": 32,
       "review_authority": "REVIEW_ONLY; validation does not approve overlays or human acceptance",
       "source_unchanged": true
     },

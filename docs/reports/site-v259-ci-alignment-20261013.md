@@ -132,3 +132,9 @@ tests pass. New main CI is evaluated separately; superseded/cancelled jobs are
 not failures or passing evidence. The primary PC checkout has a concurrent
 workflow edit and its branch/work are preserved; the separate PC repository copy
 is the safe synchronization destination.
+
+Automated review of initial follow-up head `e8a047bb2e` identified an inherited
+`PENDING_VALIDATION` value. The successor now explicitly records targeted content
+parity and 38 regression tests as completed, alongside 32 Qwen tests; full-suite
+counts remain dated prior evidence and updated-head CI is separate. Merged #5119's
+public-site CI change is retained without altering Site v259 or comparison bytes.
