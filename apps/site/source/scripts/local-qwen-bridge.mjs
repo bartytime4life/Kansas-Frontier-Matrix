@@ -363,7 +363,8 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
 // Address metadata (fields, formats, address-point layers) and web, API or email addresses are not
 // requests for a street address.
-const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ )?(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)";
+// The web target must be the addressed thing itself, not its owner ("the website owner's address").
+const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ )?(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?\\b(?! (?:s )?(?:owners?|administrators?|admins?|operators?|maintainers?|managers?|authors?|creators?|staff|contacts?|persons?|people|founders?|directors?|employees?|users?|members?)\\b)";
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
@@ -383,10 +384,12 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bexact (?:location|spot|address|site)\\b",
   // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
   // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
-  `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
+  // Street, mailing, home and physical addresses are never web addresses.
+  "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|standards?)\\b)",
+  `\\b(?:what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
   // "What house number is …", "which street number has the well": a request for a street address.
-  "\\b(?:house|street|building|mailbox|lot) numbers?\\b",
+  "(?<!what (?:does|do|is) (?:a |the )?)\\b(?:house|street|building|mailbox|lot) numbers?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|data|standards?|mean|means)\\b)",
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
