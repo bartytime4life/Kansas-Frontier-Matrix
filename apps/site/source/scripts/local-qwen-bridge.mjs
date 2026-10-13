@@ -358,18 +358,36 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
  * Questions that would turn interpretation into guidance or precision are
  * not sent to the model at all. The deterministic ABSTAIN explains why.
  */
+const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b",
+  // PUBLIC_SAFE is a KFM release label, not a safety question.
+  "\\b(?:is|are|how) (?:\\w+ ){0,5}(?<!public )(?:safe|unsafe|dangerous|hazardous)\\b",
+  "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
+  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
   "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
-  // Exact or personal locations in other words: where exactly, near me, my house, where I live.
-  "\\b(?:where exactly|exactly where)\\b",
+  // Other precise location systems: lat/lon, UTM, PLSS, street addresses and ZIP codes.
+  "\\b(?:lat lon\\w*|lat lng|latlon\\w*|latlng|utm|eastings?|northings?|plss|zip ?codes?|postal codes?)\\b",
+  "\\b(?:street|mailing|home|physical|exact) address(?:es)?\\b|\\b(?:what|which|whose) address\\b|\\baddress (?:of|for)\\b",
+  "\\b(?:sec|section) \\d+\\b(?: \\w+){0,3} (?:twp|township) \\d+\\b|\\b(?:twp|township) \\d+(?: [ns])?(?: \\w+){0,2} (?:rge?|range) \\d+\\b|\\bt\\d{1,2}[ns] r\\d{1,2}[ew]\\b",
+  "\\b\\d{1,6}(?: [nsew]{1,2})? (?:\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|ln|ct|ter|terrace|pkwy|parkway|cir)\\b",
+  "\\b(?:ks|kansas) \\d{5}\\b",
+  // Exact or personal locations in other words: where exactly, precisely, near me, my house, where I live.
+  "\\b(?:where exactly|exactly where|where precisely|precisely where|pinpoint\\w*)\\b",
+  "\\bwhere\\b(?: \\w+){1,6} (?:exactly|precisely)\\b",
+  "\\bprecise (?:locations?|spots?|sites?|positions?|places?|address(?:es)?)\\b",
   "\\b(?:nearest|closest)\\b(?: \\w+){0,4} (?:(?:to|from) )?(?:my|our|me|us)\\b",
   "\\b(?:near|nearby|close to|around|next to) (?:me|us)\\b",
-  "\\b(?:my|our) (?:current )?(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts)\\b",
-  "\\bwhere (?:i|we) (?:am|are|live|stay|work)\\b",
+  "\\b(?:my|our) (?:current )?(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts|basement|neighborhood|neighbourhood|street|block|place|apartment|well|field|pasture|ranch|acreage|driveway)\\b",
+  "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
+  "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
+  // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
+  `\\b(?:where|locate|located|locations?)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b`,
+  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?)\\b`,
+  "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
 ].join("|"));
 
 export function isSensitiveQwenQuestion(question) {

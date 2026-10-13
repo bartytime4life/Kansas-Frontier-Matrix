@@ -1040,7 +1040,7 @@
     },
     "README.md": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section with the #5128 pressure-case requirement; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "cdc108af5a3838ce67570d4102de8d4dda4bfb8b7dd0362e5097b85d60db9eb2",
+      "mirror_sha256": "71f934508edc239fae99d0766760a2a2d63ee594f802fe426e1d25ec19d47e2d",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -2638,7 +2638,7 @@
     },
     "app/page.tsx": {
       "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
-      "mirror_sha256": "4fcf9128b2f1dff2af66fa49c8adcb4a7121d749f351acca7b87adeef89d6015",
+      "mirror_sha256": "f20d4f8c22a9a9c72abafc453e7fdfcb961e6f62000f9e71175c264cac0f91e0",
       "site_sha256": "fa5b1468a404ed38ca7b13e03e8ff420be13dd51ab93b8789673517b9e642f96",
       "state": "inherited_repository_overlay"
     },
@@ -3782,7 +3782,7 @@
     },
     "scripts/local-qwen-bridge.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "ea123349a4e529a97d7262c6c0910c52527183027e9118c3fc779b2aa0789286",
+      "mirror_sha256": "3cf0cc12b8aa7b98635080cd6289e9f0dfda4c9d6e97f6922530e1dc56c23b28",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4611,7 +4611,7 @@
     },
     "tests/local-qwen-bridge.test.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "90a6d9d32d29d709080846eb1c6b03777dc2cafdeb472d6ffd265b9aaad4ebf0",
+      "mirror_sha256": "b0356fbd27afdeaaaaa1229c4ee4588a186930cc791868db2f4244ef7c8788e4",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
       "state": "inherited_repository_overlay"
     },
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "97acea4392c5e8d199ad7868a3d70a9118a07eba3fa9b833faa8decdf128b4b5",
+  "inventory_sha256": "8145ce001d28f5f05109cc62e3bb1fff43e5add2904bbc5df01ff52b34526b5a",
   "overlay": {
     "withheld_paths": [
       {

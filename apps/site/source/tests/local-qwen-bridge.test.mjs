@@ -525,6 +525,46 @@ test("personal and exact-location questions are sensitive; place-level questions
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 
+test("addresses, other coordinate systems, sensitive sites and drinking-water safety are sensitive", () => {
+  for (const question of [
+    "What is the street address of the nearest gauge?",
+    "Give me the lat/lon of the Smoky Hill gauge",
+    "Which wells are on 123 Main Street, Salina?",
+    "What is at 1200 SW Harrison St Topeka KS 66612?",
+    "Who owns the parcel at section 12 township 14 range 2?",
+    "Is this in T14S R2W?",
+    "Give me the UTM easting and northing",
+    "Give me the PLSS location of the site",
+    "What zip code is this gauge in?",
+    "Which address is this well at?",
+    "What's the precise location of the burial site?",
+    "Where precisely is the archaeological site?",
+    "Pinpoint the nest location for me",
+    "Where can I find the burial mound?",
+    "Where do the prairie chickens lek exactly?",
+    "Where is the lek of the lesser prairie-chicken?",
+    "Is the water at this gauge safe to drink?",
+    "Can I drink from this well?",
+    "Will my basement flood?",
+    "Is my neighborhood in the floodplain?",
+    "Which of these sites is closest to Hays where I'm staying?",
+    "Which farms near my place have wells?",
+  ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
+  for (const question of [
+    "What does the address field in the census layer mean?",
+    "Are there 3 bridges on highway 50?",
+    "What is the flow range 100 to 200 cfs?",
+    "Is the PUBLIC_SAFE flag set on this layer?",
+    "How many archaeological surveys are summarized by county?",
+    "How do 4 or more lane roads cross rivers?",
+    "Where does the streamflow data come from?",
+    "Why are burial records withheld?",
+    "Which counties have lesser prairie-chicken range?",
+    "How many wells were drilled in 1995 in Ellis County?",
+    "Is my understanding of the floodplain layer right?",
+  ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
+});
+
 test("interpretations cannot carry EvidenceRefs, precise locations, or malformed shapes", async () => {
   for (const [content, status, outcome, reasonCode] of [
     [interpretationContent({ observations: ["Supported by kfm:evidence:invented"] }), 502, "ERROR", "UNDECLARED_EVIDENCE_REFERENCE"],
