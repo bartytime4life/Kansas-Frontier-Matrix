@@ -365,7 +365,10 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 // requests for a street address.
 // The web target must be the addressed thing itself and so end the phrase or be followed by a
 // preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
-const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their)\\b)\\w+ ){0,4}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
+// A name may contain "of" or "for" ("the University of Kansas website") but no second determiner,
+// relative clause or person ("the owner of the website", "the developer for the API").
+const WEB_TARGET_PERSON = "(?:owners?|developers?|publishers?|authors?|maintainers?|operators?|creators?|managers?|administrators?|admins?|webmasters?|contacts?|staff|employees?|directors?|founders?|registrants?|people|persons?|users?|team|company|companies)";
+const WEB_TARGET = `(?:(?:the|this|that|its|their) )?(?:(?!(?:to|from|by|at|on|in|with|the|a|an|this|that|its|their|his|her|whose|who|which|that|${WEB_TARGET_PERSON})\\b)\\w+ ){0,6}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)`;
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
@@ -538,14 +541,21 @@ const HOUSE_NUMBER_ALLOWED = [
 const HOUSE_NUMBER_COVERAGE = /^(?:how many|what (?:percent\w*|share|proportion|fraction)|(?:does|do|is|are) (?:the |this |that )?(?:\w+ ){0,3}(?:layers?|datasets?|data|points?|records?|sources?) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*))\b/;
 const HOUSE_NUMBER_METADATA = /\b(?:layers?|datasets?|data|points?|records?|sources?)\b/;
 
-function houseNumberBlocked(text) {
-  if (!HOUSE_NUMBER.test(text) || HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))) return false;
-  return !(HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text) && !SITE_COMMAND.test(text));
+function houseNumberAllowed(text) {
+  return HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))
+    || (HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text) && !SITE_COMMAND.test(text));
+}
+
+// Each clause is judged: a field question does not excuse a second request ("which house number fields
+// are present, and what is the house number for the selected well").
+function houseNumberClauseBlocked(clause, index, wholeAllowed) {
+  if (!HOUSE_NUMBER.test(clause) || houseNumberAllowed(clause)) return false;
+  return !wholeAllowed || (index > 0 && NEW_QUESTION.test(clause));
 }
 
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
-  if (SENSITIVE_QUESTION.test(text) || houseNumberBlocked(text)) return true;
+  if (SENSITIVE_QUESTION.test(text)) return true;
   // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
   // records") does not excuse another mention ("ask visitors to drink this water").
   if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
@@ -554,6 +564,10 @@ export function isSensitiveQwenQuestion(question) {
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
   const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
+  if (HOUSE_NUMBER.test(text)) {
+    const wholeAllowed = judgedTogether && houseNumberAllowed(text);
+    if (clauses.some((clause, index) => houseNumberClauseBlocked(clause, index, wholeAllowed))) return true;
+  }
   if (SENSITIVE_SITE_MENTION.test(text)) {
     // A capitalised word after the first ("What are Ellis County nests?") names a place, not a kind.
     const options = { properNoun: hasProperNoun(question) };
