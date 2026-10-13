@@ -407,17 +407,24 @@ const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|
 const SITE_COMMAND_SOURCE = SITE_COMMAND.source.slice(1);
 const WHY_POLICY = /^why\b(?! (?:not|don t|do not|won t|will not|can t|cannot|couldn t|could not|wouldn t|would not|shouldn t|should not)\b)/;
 const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
-const SITE_ALLOWED_SHAPES = [
-  // Counts and summaries.
+// A count that also asks for the sites themselves ("how many … can you list", "… please list them")
+// is an enumeration, not a summary.
+const ENUMERATION_TAIL = /\b(?:can|could|would|will) you (?:\w+ )?(?:list|show|name|map|plot|identify|tell|give)\b|\b(?:please|then|now) (?:list|show|name|map|plot|identify|tell|give)\b|\b(?:list|name|enumerate|identify) (?:them|those|these|each|all|every)\b|\bwhich ones\b|\bwhere\b/;
+const SITE_AGGREGATE_SHAPES = [
   /^how many\b/,
   new RegExp(`^(?:what|which) (?:is|are|was|were) the ${AGGREGATE_NOUN} of\\b`),
   new RegExp(`^${SITE_COMMAND_SOURCE} (?:me )?(?:the )?${AGGREGATE_NOUN} (?:of|by|per)\\b`),
   new RegExp(`\\b${SENSITIVE_SITE}\\b(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)$`),
-  // Policy, definitions and map presentation.
+];
+// Definitions may carry ordinary modifiers ("what is a prairie-chicken lek", "what are burial mounds"),
+// but not inventory words ("the known nests", "all archaeological sites") or proper nouns.
+const DEFINITION_MODIFIERS = "(?:(?!(?:the|all|any|these|those|known|mapped|recorded|documented|surveyed|monitored|protected|withheld|local|nearby|our|your|their|its)\\b)\\w+ ){0,3}";
+const SITE_DEFINITION = new RegExp(`^what (?:is|are) (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}$|^what (?:does|do) (?:the )?(?:word |term )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE} mean$|^define (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}$`);
+const SITE_ALLOWED_SHAPES = [
+  // Policy and map presentation.
   // "Why not list …" and "why don't you show …" are commands, not policy questions.
   WHY_POLICY,
   new RegExp(`^(?:how|why) (?:are|is|were|was|do|does) (?:\\w+ ){0,4}${SENSITIVE_SITE}\\b(?: \\w+){0,3} (?:generali[sz]\\w*|withh[eo]ld|redact\\w*|protect\\w*|symboli[sz]\\w*|shown|displayed|represented|handled|treated|coarsened)\\b`),
-  new RegExp(`^what (?:is|are) (?:an? )?${SENSITIVE_SITE}$|^what (?:does|do) (?:the )?(?:word |term )?${SENSITIVE_SITE} mean$|^define (?:an? )?${SENSITIVE_SITE}$`),
   /^what (?:symbols?|colou?rs?|icons?|styles?|legend)\b/,
 ];
 // A question about the layer, dataset or source itself, unless it asks which sites it contains.
@@ -426,7 +433,9 @@ const SITE_ENUMERATION = new RegExp(`^(?:what|which) (?:(?:are|is|were|was) )?(?
 
 const SENSITIVE_SITE_LOCATING = SITE_ENUMERATION;
 
-function sensitiveSiteMentionAllowed(text) {
+function sensitiveSiteMentionAllowed(text, { properNoun = false } = {}) {
+  if (SITE_AGGREGATE_SHAPES.some((shape) => shape.test(text))) return !ENUMERATION_TAIL.test(text);
+  if (!properNoun && SITE_DEFINITION.test(text)) return true;
   if (SITE_ALLOWED_SHAPES.some((shape) => shape.test(text))) return true;
   return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text);
 }
@@ -446,21 +455,21 @@ const PRECISE_TERM_ABOUT_SHAPES = [
 // generalized?") cannot excuse a precise or locating request in another. A clause that only
 // continues the first ("what do latitude | and longitude mean") is judged with the whole question,
 // but only when no later clause starts a question of its own ("… and which ranch has them").
-const CLAUSE_BREAK = /[?;:!.,]+|\b(?:and|but|then|also|plus)\b/i;
+const CLAUSE_BREAK = /[?;:!.,()\u2013\u2014]+|\b(?:and|but|then|also|plus)\b/i;
 const NEW_QUESTION = new RegExp(`^(?:what|which|where|how|when|who|whose|why|is|are|was|were|can|could|would|will|do|does|did)\\b|${SITE_COMMAND.source}`);
 const LOCATING_CLAUSE = new RegExp(`^where\\b|${SITE_COMMAND.source}|\\b(?:near|nearby|nearest|closest|located|locations?)\\b`);
 const POLICY_CLAUSE = /^(?:how|why) (?:are|is|were|was|do|does) (?:\w+ ){0,4}(?:generali[sz]\w*|withh[eo]ld|redact\w*|protect\w*|symboli[sz]\w*|shown|displayed|represented|handled|treated|coarsened)\b/;
 const preciseAbout = (text) => PRECISE_TERM_ABOUT_SHAPES.some((shape) => shape.test(text));
 
-function siteClauseBlocked(clause, index, wholeAllowed) {
+function siteClauseBlocked(clause, index, wholeAllowed, options) {
   const newQuestion = index > 0 && NEW_QUESTION.test(clause);
   if (SENSITIVE_SITE_MENTION.test(clause)) {
-    if (sensitiveSiteMentionAllowed(clause)) return false;
+    if (sensitiveSiteMentionAllowed(clause, options)) return false;
     return !wholeAllowed || newQuestion || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
   }
   if (LOCATING_CLAUSE.test(clause)) return true;
   // A later question about sites already named must itself be a summary, policy or metadata question.
-  return newQuestion && !sensitiveSiteMentionAllowed(clause) && !POLICY_CLAUSE.test(clause)
+  return newQuestion && !sensitiveSiteMentionAllowed(clause, options) && !POLICY_CLAUSE.test(clause)
     && !SITE_METADATA_QUESTION.test(clause);
 }
 
@@ -479,8 +488,10 @@ export function isSensitiveQwenQuestion(question) {
     : [];
   const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
   if (SENSITIVE_SITE_MENTION.test(text)) {
-    const wholeAllowed = judgedTogether && sensitiveSiteMentionAllowed(text);
-    if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed))) return true;
+    // A capitalised word after the first ("What are Ellis County nests?") names a place, not a kind.
+    const options = { properNoun: typeof question === "string" && /\s[A-Z][a-z]/.test(question) };
+    const wholeAllowed = judgedTogether && sensitiveSiteMentionAllowed(text, options);
+    if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed, options))) return true;
   }
   const wholeAbout = judgedTogether && !SITE_COMMAND.test(text) && preciseAbout(text);
   return clauses.some((clause, index) => preciseClauseBlocked(clause, index, wholeAbout));
