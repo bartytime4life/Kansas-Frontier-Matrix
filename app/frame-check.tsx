@@ -19,7 +19,7 @@ export async function displaySignature(map: GLMap) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(data)));
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
 }
-type Result = { browser: ReturnType<typeof frameStatistics>; map: ReturnType<typeof frameStatistics>; dataUnchanged: boolean; visibleLayers: number; selectedLayers:number; visibleDataFeatures:number; renderer: string; viewport: number[]; moving: boolean; interrupted:boolean; steps:number };
+type Result = { browser: ReturnType<typeof frameStatistics>; map: ReturnType<typeof frameStatistics>; dataUnchanged: boolean; visibleLayers: number; selectedLayers:number; visibleDataFeatures:number; renderer: string; viewport: number[]; canvasPixels: number[]; moving: boolean; interrupted:boolean; steps:number; movementEnds:number; inputDispatchMaxMs:number };
 /** Explicit diagnostic only; no listeners, polling or telemetry in ordinary views. */
 export function FrameCheck({ map, selectedLayers }: { map: GLMap | null; selectedLayers:number }) {
   const [running, setRunning] = useState(false), [result, setResult] = useState<Result | null>(null), [error, setError] = useState<string | null>(null);
@@ -30,10 +30,11 @@ export function FrameCheck({ map, selectedLayers }: { map: GLMap | null; selecte
     setRunning(true);setResult(null);setError(null);
     const center = map.getCenter(); const pose = {center:[center.lng,center.lat] as [number,number],zoom:map.getZoom(),bearing:map.getBearing(),pitch:map.getPitch()};
     let stopped=false, frame=0, timer:ReturnType<typeof setTimeout> | undefined, start=0, lastBrowser=0, lastMap=0, steps=0;
-    let keys:ReturnType<typeof setInterval> | undefined;
+    let keys:ReturnType<typeof setInterval> | undefined, movementEnds=0, inputDispatchMaxMs=0;
+    const ended=()=>{movementEnds++;};
     const browserIntervals:number[]=[],mapIntervals:number[]=[];
     const rendered=()=>{const now=performance.now();if(start && now>=start){if(lastMap)mapIntervals.push(now-lastMap);lastMap=now;}};
-    const stop=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(frame);if(timer)clearTimeout(timer);if(keys)clearInterval(keys);map.off("render",rendered);if(moving)map.stop();};
+    const stop=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(frame);if(timer)clearTimeout(timer);if(keys)clearInterval(keys);map.off("render",rendered);map.off("moveend",ended);if(moving)map.stop();};
     setCancel({run:stop});
     try {
       const before=await displaySignature(map);if(stopped)return;
@@ -41,19 +42,19 @@ export function FrameCheck({ map, selectedLayers }: { map: GLMap | null; selecte
       const renderer=debug ? String(gl!.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "Unavailable";
       const visibleDataFeatures=map.queryRenderedFeatures().filter(feature=>feature.source.startsWith("external-")||feature.source.startsWith("kfm-")).length;
       const visibleLayers=(map.getStyle().layers??[]).filter(layer=>map.getLayoutProperty(layer.id,"visibility")!=="none").length;
-      start=performance.now();map.on("render",rendered);
+      start=performance.now();map.on("render",rendered);map.on("moveend",ended);
       const sample=(now:number)=>{if(stopped)return;if(document.hidden){stop();setError("Keep the measured tab visible for the full sample.");setRunning(false);return;}if(lastBrowser)browserIntervals.push(now-lastBrowser);lastBrowser=now;frame=requestAnimationFrame(sample);};
       frame=requestAnimationFrame(sample);
       if(moving && !interrupted)map.easeTo({...pose,center:[center.lng+.6,center.lat],duration:12000,easing:value=>value});
       if(interrupted){
         canvas.focus();
-        keys=setInterval(()=>{const key=["ArrowRight","ArrowDown","ArrowLeft","ArrowUp"][steps++%4];canvas.dispatchEvent(new KeyboardEvent("keydown",{key,code:key,keyCode:({ArrowRight:39,ArrowDown:40,ArrowLeft:37,ArrowUp:38} as Record<string,number>)[key],bubbles:true}));},250);
+        keys=setInterval(()=>{const key=["ArrowRight","ArrowDown","ArrowLeft","ArrowUp"][steps++%4], dispatchStart=performance.now();canvas.dispatchEvent(new KeyboardEvent("keydown",{key,code:key,keyCode:({ArrowRight:39,ArrowDown:40,ArrowLeft:37,ArrowUp:38} as Record<string,number>)[key],bubbles:true}));inputDispatchMaxMs=Math.max(inputDispatchMaxMs,performance.now()-dispatchStart);},250);
       }
       timer=setTimeout(async()=>{
         const elapsed=performance.now()-start;stop();
         try {
           const after=await displaySignature(map);
-          setResult({browser:frameStatistics(browserIntervals,elapsed),map:frameStatistics(mapIntervals,elapsed),dataUnchanged:before===after,visibleLayers,selectedLayers,visibleDataFeatures,renderer,viewport:[canvas.clientWidth,canvas.clientHeight],moving,interrupted,steps});
+          setResult({browser:frameStatistics(browserIntervals,elapsed),map:frameStatistics(mapIntervals,elapsed),dataUnchanged:before===after,visibleLayers,selectedLayers,visibleDataFeatures,renderer,viewport:[canvas.clientWidth,canvas.clientHeight],canvasPixels:[canvas.width,canvas.height],moving,interrupted,steps,movementEnds,inputDispatchMaxMs});
         }catch{setError("The data comparison could not finish.");}
         if(moving)map.jumpTo(pose);setRunning(false);setCancel(null);
       },12000);

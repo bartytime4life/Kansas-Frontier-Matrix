@@ -51,3 +51,46 @@ The owner explicitly excluded Airo. Deploy through the existing GoDaddy
 Node hosting app and GitHub connection. The domain connection and original
 email records were restored before this repair. Preserve those DNS values;
 free report exports do not require routing, account or merchant changes.
+
+## Camera interruption repair candidate — 2026-10-13
+
+This change starts from the owner-approved free-export deployment,
+`70ee84754af956bf958f706a17eba6cad7887872`, on
+`a0-godaddy-free-reports`. Camera replacements can synchronously emit an older
+`moveend` before starting the replacement movement. Updating the large Explorer
+view, bounds, terrain status and history at each intermediate end creates work
+that the next movement immediately supersedes. The camera callback now queues
+one microtask and cancels it if movement restarts in the same task. A genuine
+stop commits the latest camera and bounds before the next task; it does not
+delay navigation, reduce map detail or modify source data. Teardown invalidates
+pending work. Replay markers still clear at the original event boundary, so
+interrupting a replay can record the final manual view. GPS-derived views retain
+their history/export exclusions.
+
+`tests/map-settled-view.test.mjs` executes the actual page callbacks, covering
+48 interrupted ends, final bounds/history, cancellation, duplicate ends,
+still-moving maps, GPS privacy and manual interruption of replay. The opt-in
+`frameCheck=1` diagnostic additionally records canvas pixel dimensions,
+movement-end count and maximum synthetic input-dispatch time. These are local
+aggregate counts only; ordinary visits gain no diagnostic listeners or telemetry.
+The existing 12-second workload and frame calculations are unchanged.
+
+The unchanged live free-export build reproduces 46.8 FPS with ten selected
+layers at zoom 10.5, 1280 × 576 CSS pixels, 144 visible style layers and 22
+visible data features. Its matching local production build already reaches
+60 FPS. Both keep the display-data signature unchanged. A live embedded
+isolation test with explicit High detail on both pages removes the roughly
+150 ms stalls (45.9 FPS top-level versus 58.8 FPS embedded), supporting the
+history-update hypothesis. Embedded presentation differs from ordinary visits;
+this is diagnostic evidence, not hosted acceptance of this candidate. Provider
+empty/partial states remain visible. The signature covers uploaded GeoJSON and
+source specifications, not every remote raster/vector tile's bytes.
+
+GoDaddy preview/publication of the exact new revision and a repeated normal
+top-level browser sample remain required before claiming the live repair.
+Rollback returns the hosting connection to the approved free-export revision
+above. DNS, merchant settings, public assets, dependencies, source values,
+governed store boundaries and the private Sites deployment are unchanged.
+Placement reuses this standalone application's existing `app/`, `tests/` and
+`docs/` responsibilities under Directory Rules v2 and accepted ADR-0029; it
+creates no parallel data, schema or release authority.
