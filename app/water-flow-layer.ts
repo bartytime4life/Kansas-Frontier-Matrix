@@ -1,4 +1,5 @@
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "./maplibre-seam";
+import { createSettledMapCommit } from "./map-performance";
 import { FLOW_SEGMENT_FLOATS, type FlowGeometry } from "./water-flow-motion";
 
 /**
@@ -182,13 +183,15 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
   let terrainWasOn = false;
 
   const queueTerrainSamples = () => {
-    if (!geometry || !map) { sampleQueue = []; return; }
+    if (!geometry || !map || !map.getTerrain()) { sampleQueue = []; sampleCursor = 0; return; }
     const center = map.getCenter();
     // Nearest vertices first, so the foreground settles onto the terrain first.
     sampleQueue = orderedFlowVertices(geometry.vertices, center);
     sampleCursor = 0;
   };
-  const markDirty = () => queueTerrainSamples();
+  const settledTerrainSamples = createSettledMapCommit(queueTerrainSamples, () => Boolean(map?.isMoving()));
+  const markDirty = () => settledTerrainSamples.schedule();
+  const cancelCameraSamples = () => settledTerrainSamples.cancel();
   const markDirtyForTerrain = (event: { sourceId?: string }) => {
     if (map && event.sourceId && event.sourceId === map.getTerrain()?.source) queueTerrainSamples();
   };
@@ -273,11 +276,14 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
       instanceBuffer = context.createBuffer();
       programs.set("mercator", link(context, MERCATOR_VERTEX_SHADER));
       nextMap.on("moveend", markDirty);
+      nextMap.on("movestart", cancelCameraSamples);
       nextMap.on("terrain", markDirty);
       nextMap.on("sourcedata", markDirtyForTerrain);
     },
     onRemove(oldMap, context) {
       oldMap.off("moveend", markDirty);
+      oldMap.off("movestart", cancelCameraSamples);
+      settledTerrainSamples.cancel();
       oldMap.off("terrain", markDirty);
       oldMap.off("sourcedata", markDirtyForTerrain);
       for (const program of programs.values()) { context.deleteVertexArray(program.vao); context.deleteProgram(program.program); }

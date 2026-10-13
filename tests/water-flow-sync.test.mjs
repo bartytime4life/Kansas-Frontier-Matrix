@@ -9,11 +9,14 @@ const transpile = (source) => ts.transpileModule(source, { compilerOptions: { mo
 
 async function loadSync() {
   const motionUrl = toUrl(transpile(await read("app/water-flow-motion.ts")));
-  const layerSource = (await read("app/water-flow-layer.ts")).replace('from "./water-flow-motion";', `from "${motionUrl}";`);
+  const performanceUrl = toUrl(transpile(await read("app/map-performance.ts")));
+  const performanceStub = toUrl(`export { createSettledMapCommit } from "${performanceUrl}"; export const uploadedGeoJSON = (source) => source?.data;`);
+  const layerSource = (await read("app/water-flow-layer.ts"))
+    .replace('from "./water-flow-motion";', `from "${motionUrl}";`)
+    .replace('from "./map-performance";', `from "${performanceStub}";`);
   const layerUrl = toUrl(transpile(layerSource));
   const sceneStub = toUrl(`export const sceneEffectsFor = (map) => map.fx;
 export const effectiveSceneLight = (_map, preset) => ({ preset, azimuth: 0, altitude: 30, source: "manual" });`);
-  const performanceStub = toUrl("export const uploadedGeoJSON = (source) => source?.data;");
   let source = await read("app/water-flow-sync.ts");
   for (const [before, after] of [
     ['from "./map-performance";', `from "${performanceStub}";`],
@@ -39,11 +42,12 @@ function fakeMap({ zoom = 11, center = [-97.2, 38.1], gaugeVisible = true, gauge
   const layout = new Map([[`${GAUGE_LAYER}:visibility`, gaugeVisible ? "visible" : "none"]]);
   const handlers = new Map();
   const map = {
-    fx: { waterFlow: true }, zoom, center, layers, layout, repaints: 0,
+    fx: { waterFlow: true }, zoom, center, layers, layout, repaints: 0, moving: false, boundsReads: 0,
+    isMoving: () => map.moving,
     sources: { [GAUGE_SOURCE]: { data: { type: "FeatureCollection", features: gauges } } },
     getZoom: () => map.zoom,
     getCenter: () => ({ lng: map.center[0], lat: map.center[1] }),
-    getBounds: () => ({ getWest: () => map.center[0] - 0.3, getEast: () => map.center[0] + 0.3, getSouth: () => map.center[1] - 0.2, getNorth: () => map.center[1] + 0.2 }),
+    getBounds: () => { map.boundsReads++; return { getWest: () => map.center[0] - 0.3, getEast: () => map.center[0] + 0.3, getSouth: () => map.center[1] - 0.2, getNorth: () => map.center[1] + 0.2 }; },
     getStyle: () => ({ layers }),
     getLayer: (id) => layers.find((layer) => layer.id === id),
     addLayer(layer, beforeId) {
@@ -181,6 +185,50 @@ test("map removal cancels pending geometry and network work", async (t) => {
   assert.equal(flow.waterFlowStatus(map).state, "off");
 });
 const fixtureReach = (id, coordinates) => ({ id, sequence: 4, downstream: null, levelpath: 3, name: "Fixture Creek", featureType: 1, coordinates });
+
+test("48 interrupted camera ends retain geometry and requests; the final view loads its exact cells", async (t) => {
+  const frames = displayFrames(t), flow = await loadSync();
+  const motion = await import(toUrl(transpile(await read("app/water-flow-motion.ts"))));
+  const requested = [];
+  const cellPayload = key => {
+    const [lng, lat] = key.split(",").map(Number);
+    return payload(key, [fixtureReach(key, [[lng + .01, lat + .01], [lng + .02, lat + .02]])]);
+  };
+  flow.setWaterFlowFetcher(async key => { requested.push(key); return cellPayload(key); });
+  const map = fakeMap(); flow.syncWaterFlow(map, OPTIONS); await drain(); frames.flush();
+  const layer = map.getLayer(flow.WATER_FLOW_LAYER_ID), initialRequests = requested.length, initialBounds = map.boundsReads;
+  let builds = 0, lastGeometry; const original = layer.setGeometry;
+  layer.setGeometry = geometry => { builds++; lastGeometry = geometry; original(geometry); };
+  const initialSegments = layer.segmentCount;
+  map.moving = true; map.fire("movestart");
+  for (let i = 0; i < 48; i++) {
+    map.center = [-99 + i / 50, 38.2]; map.moving = false; map.fire("moveend");
+    map.moving = true; map.fire("movestart"); await drain(); frames.flush();
+  }
+  assert.equal(builds, 0); assert.equal(requested.length, initialRequests);
+  assert.equal(map.boundsReads, initialBounds); assert.equal(layer.segmentCount, initialSegments);
+  map.center = [-99.2, 38.2]; map.moving = false; map.fire("moveend");
+  await drain(); frames.flush();
+  const finalKeys = motion.flowCellsForView({west:-99.5,east:-98.9,south:38,north:38.4}, map.center, map.zoom).map(motion.flowlineCellKey);
+  assert.deepEqual(requested.slice(initialRequests), finalKeys);
+  assert.equal(map.boundsReads, initialBounds + 1);
+  assert.deepEqual(lastGeometry, motion.buildFlowGeometry(finalKeys.flatMap(key => cellPayload(key).reaches), []), "final positions and source directions are unchanged");
+  assert.equal(flow.waterFlowStatus(map).reaches, finalKeys.length);
+});
+
+test("removal and switching the effect off invalidate a pending camera commit", async () => {
+  for (const action of ["remove", "off"]) {
+    const flow = await loadSync(), map = fakeMap();
+    flow.setWaterFlowFetcher(async key => payload(key, []));
+    flow.syncWaterFlow(map, OPTIONS); await settle();
+    const before = map.boundsReads;
+    map.center = [-99.2, 38.2]; map.fire("moveend");
+    if (action === "remove") map.fire("remove"); else map.fx = {waterFlow:false};
+    await drain(); assert.equal(map.boundsReads, before);
+    map.fire("movestart"); map.fire("moveend"); await drain();
+    assert.equal(map.boundsReads, before);
+  }
+});
 
 test("flowing water stays off, waits for river zoom, and draws provider reaches above the basemap", async () => {
   const flow = await loadSync();
