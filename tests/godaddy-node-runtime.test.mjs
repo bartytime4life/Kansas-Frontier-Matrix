@@ -3,15 +3,13 @@ import assert from "node:assert/strict";
 
 // Run against the production build, not a source-text or mocked auth check.
 const origin = process.env.KFM_NODE_TEST_ORIGIN ?? "http://127.0.0.1:5182";
-test("unconfigured checkout cannot create a free report from client assertions", async () => {
+test("legacy pricing endpoint is absent from the free Explorer", async () => {
   const response = await fetch(origin + "/api/reports/quote", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-role": "admin" },
     body: JSON.stringify({ role: "admin", paid: true, amount: 0 }),
   });
-  assert.equal(response.status, 503);
-  assert.equal((await response.json()).code, "REPORT_SERVICE_NOT_CONFIGURED");
-  assert.equal(response.headers.get("cache-control"), "private, no-store");
+  assert.equal(response.status, 404);
 });
 test("anonymous map is public", async () => {
   const response = await fetch(origin, { redirect: "manual" });

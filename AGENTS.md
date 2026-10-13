@@ -4,10 +4,13 @@ The owner requested this separate GoDaddy Node hosting composition on
 2026-10-13 and explicitly excluded Airo. Its destination is GoDaddy app
 `q9r9beo47t`; source starts at Explorer v259 commit
 `441c3e29581ffb0293d8e643e5c37eed50319032`.
-See `docs/godaddy-node-preview.md` for current verification and missing
-identity, storage and report-billing adapters. Keep this candidate separate
-from the original Sites source and do not publish it as a completed paid
-report service. Do not modify the original Site's audience or data bindings.
+On 2026-10-13 the owner canceled report pricing, checkout and payment setup
+and requested free reports/downloads. Keep report exports free and public;
+preserve draft labels, source limitations, privacy redaction and governed
+publication controls. Do not add checkout or payment setup to this scope.
+See `docs/godaddy-node-preview.md` for runtime and verification boundaries.
+Keep this composition separate from the original Sites source. Do not modify
+the original Site's audience or data bindings.
 
 # Original Sites preservation instructions
 
