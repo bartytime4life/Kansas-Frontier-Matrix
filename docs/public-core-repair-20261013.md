@@ -14,6 +14,12 @@ currently deployed GoDaddy revision remain separate facts; branch HEAD alone
 does not establish deployment. The candidate branch is
 `codex/godaddy-underground-availability-20261013`.
 
+While this candidate was being prepared, PR #5136 advanced the hosting branch
+to `422b64e52031c8ccb0e9000a80b54cf849539d8c`. Its four terrain-toggle status
+files do not overlap this repair. That exact revision was merged into the
+candidate without overwriting either change; composed verification follows
+below. The original 708183b baseline observations remain dated evidence.
+
 Placement follows the existing standalone application responsibilities:
 `app/` owns rendering and bounded reads; `vendor/` and the npm lock own the
 runtime repair; `tests/` owns synthetic checks; `docs/` records behavior and
@@ -101,6 +107,20 @@ No dataset was regenerated, imported, reseeded, migrated or activated.
 | Exact-base suite after its own Node build | 1,139 tests: 1,122 passed, the same 17 failed |
 | Public asset comparison and diff whitespace | No changes/errors |
 
+The full-suite rows above describe the original 708183b comparison before
+composition with #5136. They do not attest to tests newly added by that PR.
+
+After composition with exact `422b64e`, the production build and TypeScript
+passed again; 39 scoped runtime/core/terrain tests passed. The composed full
+suite executed 1,149 tests: 1,132 passed and the same 17 inherited failures
+remained, with no new failure names. Weather parity tests require
+`KFM_WEATHER_REPOSITORY_ROOT` set to an explicit monorepo checkout; the composed
+run used the pinned inspection checkout at
+`327fc336896b652192d5c8111d088a6d044ddaf9`. A first run without that setting
+also reported two missing Python file paths; the correctly configured rerun
+resolved them without code or guard changes. Changed-area ESLint had zero
+errors/warnings for this repair's application and test files.
+
 The 17 inherited failures are Cloudflare Worker-composition assumptions
 (`worker.fetch`/Wrangler) in this Node composition. They remain reported rather
 than removed or described as passing. This branch has no GitHub workflow tree;
@@ -122,6 +142,13 @@ unknown gaps stayed empty. Captured warning/error logs were empty. An unrelated
 counties/population provider warning means this is not all-source readiness.
 These are bounded local observations, not final hosted acceptance or a
 performance benchmark. The original local service and preferences were retained.
+
+A fresh browser load of the composed build repeated the High Plains result,
+complete surface, source inspection and core-only selection-to-map journey.
+The selected core area loaded one of one tiles and rendered one record/column
+at 1× depth with a complete 2048×1718 surface at zoom 15.4. Its ~1,491 m depth
+label and empty gaps remained visible; captured warning/error logs were empty.
+Temporary preview processes were isolated from the original service on 4173.
 
 ## Dependency disposition and remaining gates
 
