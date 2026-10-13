@@ -370,6 +370,8 @@ const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
   `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
+  // "Okay to drink", "would drinking this water be safe", "is swimming here fine".
+  `\\b(?:okay|ok|fine|alright|good) (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|eat\\w*)\\b|\\b(?:drinking|swimming|wading|eating) (?:\\w+ ){0,4}(?:be |is |are )?(?:safe|okay|ok|fine|alright|dangerous|harmful)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
   "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|cattle|cows|horses|livestock|dogs|pets|animals|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
@@ -407,7 +409,9 @@ const SENSITIVE_QUESTION = new RegExp([
 const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
 const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|i (?:want|d like|would like) (?:to (?:see|view|know) )?|let me (?:see|view|know) )?(?:show|plot|map|list|display|highlight|mark|point|identify|find|give|tell|guide|take|draw|label|zoom|navigate|direct|locate|pin|pinpoint|reveal|get|fetch|return|output|print)\b/;
 const SITE_COMMAND_SOURCE = SITE_COMMAND.source.slice(1);
-const WHY_POLICY = /^why\b(?! (?:not|don t|do not|won t|will not|can t|cannot|couldn t|could not|wouldn t|would not|shouldn t|should not)\b)/;
+// A policy question asks why something is withheld, generalized or protected, not "why is the mound at
+// Smith Ranch" or "why not list …".
+const WHY_POLICY = /^why (?:are|is|were|was|do|does|did|must|should|would) (?:\w+ ){0,5}(?:withh[eo]ld|redact\w*|generali[sz]\w*|protect\w*|hidden|restricted|sensitive|coarsened|rounded|removed|excluded|omitted|blurred|aggregated|private|confidential|kept|stale|missing|unavailable|delayed|limited|labell?ed|marked|treated|handled)\b/;
 const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
 // A count that also asks for the sites themselves ("how many … can you list", "… please list them")
 // is an enumeration, not a summary.
@@ -457,7 +461,7 @@ const PRECISE_TERM_ABOUT_SHAPES = [
   /^what (?:does|do) (?:the )?(?:\w+ ){0,3}(?:mean|stand for)$|^what is the meaning of\b/,
   /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
   /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
-  /^(?:define|explain what)\b/,
+  new RegExp(`^define (?:an? )?${PRECISE_TERM_WORDS}$|^explain what (?:an? )?${PRECISE_TERM_WORDS} (?:is|are|means?)$`),
   WHY_POLICY,
 ];
 
