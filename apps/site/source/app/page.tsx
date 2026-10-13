@@ -6,6 +6,7 @@ import { explorerHistoryParams, restoreArchiveViewDays, saveExplorerHistoryView 
 import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
+import { FrameCheck } from "./frame-check";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
@@ -1453,6 +1454,8 @@ export default function Home() {
       return false;
     }
   }, []);
+  const [frameCheckEnabled, setFrameCheckEnabled] = useState(false);
+  useEffect(() => { setFrameCheckEnabled(new URLSearchParams(window.location.search).get("frameCheck") === "1"); }, []);
   const [styleReady, setStyleReady] = useState(false);
   const [renderQuality, setRenderQuality] = useState<RenderQuality>("auto");
   const [renderEfficient, setRenderEfficient] = useState(false);
@@ -1462,7 +1465,9 @@ export default function Home() {
     let disposed = false;
     const apply = () => {
       const budget = browserRenderBudget(renderQuality);
-      runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
+      // setPixelRatio always calls resize, even when its value is unchanged.
+      if (map.getPixelRatio() !== budget.pixelRatio)
+        runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
       void loadMapLibre().then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
         if (!disposed) runMapMutation("MapLibre runtime update", () => { throw error; });
       });
@@ -4991,6 +4996,7 @@ export default function Home() {
   useEffect(() => {
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
+    let mapResizeFrame: number | undefined;
     let cancelHoverSample = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
@@ -5021,6 +5027,9 @@ export default function Home() {
           bearing: initialView.bearing,
           pitch: initialView.pitch,
           pixelRatio: renderBudget.pixelRatio,
+          // The Explorer owns a frame-coalesced container observer below.
+          // Avoid MapLibre's second observer doing the same canvas/camera work.
+          trackResize: false,
           maxTileCacheSize: renderBudget.tileCache,
           maxPitch: scenePresetRef.current === "elevation-3d" ? 72 : 60,
           renderWorldCopies: false,
@@ -5074,7 +5083,9 @@ export default function Home() {
         if (typeof ResizeObserver !== "undefined") {
           resizeObserver = new ResizeObserver((entries) => {
             if (disposed || !entries.some((entry) => entry.contentRect.width > 0 && entry.contentRect.height > 0)) return;
-            window.requestAnimationFrame(() => {
+            if (mapResizeFrame !== undefined) return;
+            mapResizeFrame = window.requestAnimationFrame(() => {
+              mapResizeFrame = undefined;
               if (!disposed) runMapMutation("Map container resize", () => map.resize());
             });
           });
@@ -5760,6 +5771,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       cancelHoverSample();
+      if (mapResizeFrame !== undefined) window.cancelAnimationFrame(mapResizeFrame);
       resizeObserver?.disconnect();
       styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
@@ -9692,6 +9704,7 @@ export default function Home() {
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
+          {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
