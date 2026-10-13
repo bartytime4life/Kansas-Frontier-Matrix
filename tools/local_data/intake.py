@@ -511,13 +511,17 @@ def _validated_identity(identity: str) -> str:
 
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
     identity = _validated_identity(identity)
-    if not re.fullmatch(r"[A-Za-z0-9._-]+", identity) or "/" in identity or "\\" in identity:
-        raise IntakeError("ITEM_ID_INVALID")
     if action not in ("stage", "card"):
         raise IntakeError("ACTION_UNSUPPORTED")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
-    write_new(root / relative, canonical(body))
+    # Lexical containment under the receipt root. normpath never follows
+    # symlinks, so write_new's real-directory chain check still sees them.
+    receipts = os.path.normpath(os.path.join(os.path.abspath(root), "data", "receipts", "intake"))
+    target = os.path.normpath(os.path.join(os.path.abspath(root), relative))
+    if not target.startswith(receipts + os.sep):
+        raise IntakeError("ITEM_ID_INVALID")
+    write_new(Path(target), canonical(body))
     return relative
 
 

@@ -70,3 +70,21 @@ def test_intake_apply_rejects_traversal_before_touching_store(tmp_path):
     with pytest.raises(intake.IntakeError, match="IDENTITY_INVALID"):
         intake.apply(root, "../" * 4 + "x", "card")
     assert not (root / "data").exists()
+
+
+def test_intake_receipt_stays_under_receipt_root(tmp_path):
+    identity = intake.item_id("quarantine", "usgs/objects/sha256/abc/payload")
+    relative = intake._receipt(tmp_path, identity, "card", {"ok": True})
+    assert relative.startswith(f"data/receipts/intake/{identity}/")
+    assert (tmp_path / relative).read_bytes()
+
+
+def test_intake_receipt_rejects_symlinked_receipt_root(tmp_path):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (tmp_path / "store" / "data" / "receipts").mkdir(parents=True)
+    (tmp_path / "store" / "data" / "receipts" / "intake").symlink_to(outside, target_is_directory=True)
+    identity = intake.item_id("quarantine", "usgs/objects/sha256/abc/payload")
+    with pytest.raises(ValueError, match="SYMLINK"):
+        intake._receipt(tmp_path / "store", identity, "card", {"ok": True})
+    assert not list(outside.iterdir())
