@@ -507,6 +507,11 @@ test("personal and exact-location questions are sensitive; place-level questions
     "Which bridge is nearest to our farm?",
     "Is my property in a flood zone?",
     "How deep is the aquifer under our land?",
+    "Which wells are near me?",
+    "Show wells close to my current location",
+    "Which well is nearest my location?",
+    "What gauges are around us?",
+    "Is there a stream where I live?",
   ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
   for (const question of [
     "What is the nearest gauge to this reach?",
@@ -514,6 +519,9 @@ test("personal and exact-location questions are sensitive; place-level questions
     "How does land cover relate to the aquifer?",
     "Which counties have no active gauge?",
     "What maps are visible?",
+    "Which gauges are near the Arkansas River?",
+    "What is close to the county line?",
+    "Which layers show location metadata?",
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 

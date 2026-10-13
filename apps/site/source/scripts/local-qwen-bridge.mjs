@@ -364,10 +364,12 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
   "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
-  // Exact or personal locations in other words: where exactly, nearest to me, my house.
+  // Exact or personal locations in other words: where exactly, near me, my house, where I live.
   "\\b(?:where exactly|exactly where)\\b",
-  "\\b(?:nearest|closest)\\b(?: \\w+){0,4} (?:to|from) (?:my|our|me|us)\\b",
-  "\\b(?:my|our) (?:house|home|address|property|yard|farm|land|lot|parcel)\\b",
+  "\\b(?:nearest|closest)\\b(?: \\w+){0,4} (?:(?:to|from) )?(?:my|our|me|us)\\b",
+  "\\b(?:near|nearby|close to|around|next to) (?:me|us)\\b",
+  "\\b(?:my|our) (?:current )?(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts)\\b",
+  "\\bwhere (?:i|we) (?:am|are|live|stay|work)\\b",
 ].join("|"));
 
 export function isSensitiveQwenQuestion(question) {
