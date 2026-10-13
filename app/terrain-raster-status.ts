@@ -30,12 +30,20 @@ export const terrainRasterNeedsCloserView = (selected: boolean, held: boolean, s
   selected && !held && state !== "error" && zoom < 7;
 
 export class TerrainRasterViewTracker {
+  private sources = new Map<TerrainRasterId, object>();
   private loaded = new Map<TerrainRasterId, Map<string, TerrainRasterTile>>();
   private failed = new Map<TerrainRasterId, Map<string, TerrainRasterTile>>();
   private sourceFailures = new Set<TerrainRasterId>();
 
   reset(id: TerrainRasterId): void { this.loaded.delete(id); this.failed.delete(id); this.sourceFailures.delete(id); }
-  resetAll(): void { this.loaded.clear(); this.failed.clear(); this.sourceFailures.clear(); }
+  resetAll(): void { this.sources.clear(); this.loaded.clear(); this.failed.clear(); this.sourceFailures.clear(); }
+  /** A visibility change keeps the same tile cache; a replacement source cannot inherit its proof. */
+  bindSource(id: TerrainRasterId, source: object | undefined): void {
+    if (this.sources.get(id) === source) return;
+    this.reset(id);
+    if (source) this.sources.set(id, source);
+    else this.sources.delete(id);
+  }
   markFailed(id: TerrainRasterId, tile?: TerrainRasterTile): void {
     if (!tile) { this.sourceFailures.add(id); return; }
     this.loaded.get(id)?.delete(`${tile.z}/${tile.x}/${tile.y}`);

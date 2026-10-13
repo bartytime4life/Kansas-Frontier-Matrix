@@ -3624,10 +3624,7 @@ export default function Home() {
   }, [smokeArchiveFrames]);
 
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
-    if (id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope") {
-      terrainRasterViewRef.current.reset(id);
-      officialRasterFailuresRef.current.delete(id);
-    }
+    const terrainRaster = id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope";
     if (id === "nws-radar" && visible) {
       noaaRadarAutoStartRef.current = true;
       noaaRadarReadyRef.current = Boolean(
@@ -3640,7 +3637,7 @@ export default function Home() {
     }
     if (id === "usgs-streamflow" && visible) setLiveInstrument("river");
     const source = OFFICIAL_CONTEXT_BY_ID[id];
-    if (visible && source.kind === "OPERATIONAL_WMS" && id !== "nws-radar") {
+    if (visible && source.kind === "OPERATIONAL_WMS" && id !== "nws-radar" && !terrainRaster) {
       officialRasterFailuresRef.current.delete(id);
       setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
     }
@@ -3676,6 +3673,20 @@ export default function Home() {
     if (map?.isStyleLoaded()) {
       try {
         applyOfficialContextState(map, runtimeOfficialVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+        if (terrainRaster) {
+          const rendererSource = map.getSource(source.sourceId);
+          terrainRasterViewRef.current.bindSource(id, rendererSource);
+          if (visible && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) {
+            const bounds = map.getBounds();
+            const viewBounds = { west: bounds.getWest(), east: bounds.getEast(), south: bounds.getSouth(), north: bounds.getNorth() };
+            const failed = terrainRasterViewRef.current.hasFailed(id, viewBounds, map.getZoom());
+            if (failed) officialRasterFailuresRef.current.add(id);
+            else officialRasterFailuresRef.current.delete(id);
+            const state = terrainRasterViewRef.current.status(id, viewBounds, map.getZoom(), Boolean(rendererSource && map.isSourceLoaded(source.sourceId)));
+            setOfficialStates(current => current[id] === state ? current : ({ ...current, [id]: state }));
+            if (!failed) setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
+          }
+        }
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
@@ -5496,6 +5507,8 @@ export default function Home() {
           const bounds = terrainRasterBounds();
           for (const id of ["usgs-3dep-hillshade", "usgs-3dep-slope"] as const) {
             if (!officialVisibilityRef.current[id] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) continue;
+            const source = map.getSource(OFFICIAL_CONTEXT_BY_ID[id].sourceId);
+            terrainRasterViewRef.current.bindSource(id, source);
             const failed = terrainRasterViewRef.current.hasFailed(id, bounds, map.getZoom());
             if (failed) officialRasterFailuresRef.current.add(id);
             else {
@@ -5503,7 +5516,6 @@ export default function Home() {
               const pendingRetry = rasterRetryTimers.get(id);
               if (pendingRetry !== undefined) { window.clearTimeout(pendingRetry); rasterRetryTimers.delete(id); }
             }
-            const source = map.getSource(OFFICIAL_CONTEXT_BY_ID[id].sourceId);
             const next = terrainRasterViewRef.current.status(id, bounds, map.getZoom(), Boolean(source && map.isSourceLoaded(OFFICIAL_CONTEXT_BY_ID[id].sourceId)));
             setOfficialStates(current => current[id] === next ? current : ({ ...current, [id]: next }));
             if (!failed) setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
@@ -5595,7 +5607,10 @@ export default function Home() {
             }
             officialRasterFailuresRef.current.add(id);
             if (id === "noaa-lightning-density") setLightningPlaying(false);
-            if (terrainRaster) terrainRasterViewRef.current.markFailed(id, erroredTile);
+            if (terrainRaster) {
+              terrainRasterViewRef.current.bindSource(id, map.getSource(affectedOfficialContext.sourceId));
+              terrainRasterViewRef.current.markFailed(id, erroredTile);
+            }
             const rasterBounds = terrainRaster ? terrainRasterBounds() : null;
             setOfficialStates(current => ({ ...current, [id]: terrainRaster
               ? terrainRasterViewRef.current.status(id, rasterBounds!, map.getZoom(), false)
@@ -5699,8 +5714,11 @@ export default function Home() {
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
           const terrainRaster = officialSource?.id === "usgs-3dep-hillshade" || officialSource?.id === "usgs-3dep-slope";
-          if (terrainRaster && event.tile?.state === "loaded" && officialVisibilityRef.current[officialSource.id]) {
-            terrainRasterViewRef.current.markLoaded(officialSource.id, event.coord?.canonical);
+          if (terrainRaster) {
+            const source = map.getSource(event.sourceId);
+            terrainRasterViewRef.current.bindSource(officialSource.id, source);
+            // A completion while hidden is still in this source's cache.
+            if (source && event.tile?.state === "loaded") terrainRasterViewRef.current.markLoaded(officialSource.id, event.coord?.canonical);
           }
           const rasterBounds = terrainRaster ? terrainRasterBounds() : null;
           if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath
