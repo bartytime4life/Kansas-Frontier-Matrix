@@ -1,7 +1,10 @@
 # Public front door for kansasfrontiermatrix.com on GoDaddy web hosting.
 #
-# Every pull request and main push builds apps/public-site/ into a static
-# bundle, runs its fail-closed bundle checks, and uploads the bundle for review.
+# Every pull request runs this workflow so `build` can be a required check; the
+# `changes` job skips `build` (reported as passing) when a pull request touches
+# none of the site paths below. Affected pull requests and main pushes build
+# apps/public-site/ into a static bundle, run its fail-closed bundle checks, and
+# upload the bundle for review.
 # Deployment runs only on main pushes or a manual dispatch of main, only when the
 # repository variable GODADDY_DEPLOY_ENABLED is "true", and only through the
 # godaddy-production environment that holds the hosting secrets. The page
@@ -11,15 +14,9 @@
 name: godaddy-public-site
 
 "on":
+  # No paths filter: a required check must report on every pull request.
+  # Keep the `changes` job's site paths in sync with the push filter below.
   pull_request:
-    paths:
-      - ".github/workflows/godaddy-public-site.yml"
-      - "apps/public-site/**"
-      - "infra/godaddy/**"
-      - "docs/runbooks/godaddy-hosting.md"
-      - "docs/brand/readme/**"
-      - "apps/site/source/app/site-features.ts"
-      - "apps/site/source/public/favicon.svg"
   push:
     branches: [main]
     paths:
@@ -45,7 +42,47 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      site: ${{ steps.scope.outputs.site }}
+    steps:
+      - name: Decide whether the public site is affected
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+        run: |
+          set -euo pipefail
+          # Pushes and dispatches are already scoped; build them unconditionally.
+          site=true
+          # The files API lists at most 3000 files; larger pull requests build.
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] && [ "${CHANGED_FILES:-0}" -le 3000 ]; then
+            files="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+              --jq '.[] | .filename, (.previous_filename // empty)')"
+            site=false
+            while IFS= read -r path; do
+              case "$path" in
+                .github/workflows/godaddy-public-site.yml | apps/public-site/* | infra/godaddy/* | \
+                docs/runbooks/godaddy-hosting.md | docs/brand/readme/* | \
+                apps/site/source/app/site-features.ts | apps/site/source/public/favicon.svg)
+                  site=true
+                  break
+                  ;;
+              esac
+            done <<< "$files"
+          fi
+          echo "site=$site" >> "$GITHUB_OUTPUT"
+          echo "Public site affected: $site" >> "$GITHUB_STEP_SUMMARY"
+
   build:
+    needs: changes
+    if: ${{ needs.changes.outputs.site == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     concurrency:
