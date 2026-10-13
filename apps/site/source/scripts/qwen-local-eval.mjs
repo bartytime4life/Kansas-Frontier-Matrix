@@ -124,14 +124,16 @@ export async function runQwenLocalEval({
   log = (entry) => process.stdout.write(`${JSON.stringify(entry)}\n`),
 } = {}) {
   if (!isLoopbackUrl(bridgeUrl)) throw new TypeError("The evaluation only talks to a loopback bridge.");
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new TypeError("The per-case timeout must be a positive number of milliseconds.");
   const headers = { origin: QWEN_LOCAL_PREVIEW_ORIGIN };
-  const health = await requestJson(`${bridgeUrl}/health`, { headers }, timeoutMs);
+  // A bridge that is not running is "not ready", not a crash.
+  const health = await requestJson(`${bridgeUrl}/health`, { headers }, timeoutMs).catch(() => null);
   const healthEntry = {
     event: "kfm.qwen.eval.health",
-    status: health.body?.status ?? null,
-    reasonCode: health.body?.reasonCode ?? null,
-    ollamaVersion: health.body?.ollamaVersion ?? null,
-    knowledgeCurrent: health.body?.knowledgeDigest === localDigest,
+    status: health?.body?.status ?? null,
+    reasonCode: health ? health.body?.reasonCode ?? null : "BRIDGE_UNREACHABLE",
+    ollamaVersion: health?.body?.ollamaVersion ?? null,
+    knowledgeCurrent: health?.body?.knowledgeDigest === localDigest,
   };
   log(healthEntry);
   if (healthEntry.status !== "ready") {
@@ -197,11 +199,16 @@ if (invokedDirectly) {
     const index = args.indexOf(name);
     return index >= 0 ? args[index + 1] : undefined;
   };
-  const { summary } = await runQwenLocalEval({
-    bridgeUrl: option("--bridge-url") ?? DEFAULT_BRIDGE_URL,
-    showText: args.includes("--show-text"),
-    timeoutMs: Number(option("--timeout-ms") ?? DEFAULT_TIMEOUT_MS),
-  });
-  // 2: not ready; 1: a governance check failed or a case missed its expectation.
-  process.exit(!summary.ready ? 2 : summary.failed > 0 ? 1 : 0);
+  try {
+    const { summary } = await runQwenLocalEval({
+      bridgeUrl: option("--bridge-url") ?? DEFAULT_BRIDGE_URL,
+      showText: args.includes("--show-text"),
+      timeoutMs: Number(option("--timeout-ms") ?? DEFAULT_TIMEOUT_MS),
+    });
+    // 2: not ready; 1: a governance check failed or a case missed its expectation.
+    process.exit(!summary.ready ? 2 : summary.failed > 0 ? 1 : 0);
+  } catch (error) {
+    process.stdout.write(`${JSON.stringify({ event: "kfm.qwen.eval.error", message: error.message })}\n`);
+    process.exit(2);
+  }
 }

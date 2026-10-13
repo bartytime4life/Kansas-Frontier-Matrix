@@ -69,3 +69,17 @@ test("the evaluation refuses non-loopback bridges and reports an unready bridge"
     (bridgeUrl) => runQwenLocalEval({ bridgeUrl, log: () => {} }));
   assert.equal(summary.ready, false);
 });
+
+test("no bridge listening reports not ready instead of crashing", async () => {
+  const { createServer } = await import("node:net");
+  const probe = createServer();
+  await new Promise((resolve) => probe.listen(0, "127.0.0.1", resolve));
+  const { port } = probe.address();
+  await new Promise((resolve) => probe.close(resolve));
+  const lines = [];
+  const { summary, health } = await runQwenLocalEval({ bridgeUrl: `http://127.0.0.1:${port}`, log: (entry) => lines.push(entry) });
+  assert.equal(summary.ready, false);
+  assert.equal(health.status, null);
+  assert.equal(health.reasonCode, "BRIDGE_UNREACHABLE");
+  await assert.rejects(runQwenLocalEval({ timeoutMs: Number.NaN, log: () => {} }), /timeout/);
+});
