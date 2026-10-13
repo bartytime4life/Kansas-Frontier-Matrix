@@ -45,9 +45,13 @@ const singular = (word) => {
   return word;
 };
 const searchText = (value) => ` ${normalize(value).split(" ").map(singular).join(" ")} `;
+// Stop words are checked before and after folding, so "maps" stays as stopped
+// as "map" and "does" cannot fold into an unstopped "doe".
+const isSearchToken = (token) => token.length >= 3 && !STOP_WORDS.has(token);
 const tokensOf = (value) => [...new Set(normalize(value).split(" ")
-  .filter((token) => token.length >= 3 && !STOP_WORDS.has(token))
-  .map(singular))];
+  .filter(isSearchToken)
+  .map(singular)
+  .filter(isSearchToken))];
 
 const SOURCE_SEARCH_TEXT = new Map(QWEN_KNOWLEDGE_PACK.officialSources.map((source) => [source.id, {
   heading: searchText([source.id, source.title, source.shortTitle, source.domain, source.organization].join(" ")),
