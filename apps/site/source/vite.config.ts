@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import vinext from "vinext";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json" with { type: "json" };
@@ -34,6 +36,7 @@ const localBindingConfig = {
 };
 
 export default defineConfig(async () => {
+  execFileSync(process.execPath, [fileURLToPath(new URL("./scripts/validate-subsurface-public.mjs", import.meta.url))], { stdio: "inherit" });
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";
