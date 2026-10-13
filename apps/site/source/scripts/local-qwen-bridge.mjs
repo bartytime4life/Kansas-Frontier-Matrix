@@ -400,14 +400,27 @@ const SENSITIVE_QUESTION = new RegExp([
 ].join("|"));
 
 // Any other mention of a sensitive site abstains, whatever the verb (show, list, plot, point out …),
-// unless the question is plainly about counts, summaries, policy or map presentation.
+// except a plain count or county-level summary. A question (not a command) may also be about policy,
+// map presentation, or the layer, dataset or source itself (its freshness, license or provenance).
 const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
-const SENSITIVE_SITE_SUMMARY = /\b(?:how many|numbers?|counts?|counted|totals?|summar\w*|percent\w*|share|densest|densit\w*|trends?|(?:per|by) (?:county|counties|state|region|year|decade)|statewide|why|polic\w+|rules?|generaliz\w*|withh[eo]ld\w*|redact\w*|sensitiv\w*|protect\w*|symbol\w*|legend|defin\w+|means?|meaning)\b/;
+const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|i (?:want|d like|would like) (?:to (?:see|view|know) )?|let me (?:see|view|know) )?(?:show|plot|map|list|display|highlight|mark|point|identify|find|give|tell|guide|take|draw|label|zoom|navigate|direct|locate|pin|pinpoint|reveal|get|fetch|return|output|print)\b/;
+const SITE_AGGREGATE = /\b(?:how many|numbers?|counts?|counted|totals?|summar\w*|percent\w*|share|densest|densit\w*|trends?|(?:per|by) (?:county|counties|state|region|year|decade)|statewide)\b/;
+const SITE_ABOUT = /\b(?:why|polic\w+|rules?|generaliz\w*|withh[eo]ld\w*|redact\w*|sensitiv\w*|protect\w*|symbol\w*|legend|defin\w+|means?|meaning|layers?|datasets?|data|sources?|surveys?|monitoring|licen[cs]\w*|updated?|current|fresh\w*|stale|provenance|metadata|agenc\w+|manag\w+|compar\w+|coverage|relat\w+|overlap\w*)\b/;
+// "Protected nests", "withheld archaeological sites": an adjective on the site, not a question about policy.
+const SITE_ADJECTIVE = new RegExp(`\\b(?:protected|sensitive|withheld|redacted|generali[sz]ed|known|recorded|mapped|documented|surveyed|monitored)(?=(?: \\w+){0,2} ${SENSITIVE_SITE}\\b)`, "g");
+const SENSITIVE_SITE_DEFINITION = new RegExp(`^what (?:is|are) (?:an? )?(?:\\w+ ){0,2}${SENSITIVE_SITE}$`);
+
+function sensitiveSiteMentionAllowed(text) {
+  if (SENSITIVE_SITE_DEFINITION.test(text)) return true;
+  const rest = text.replace(SITE_ADJECTIVE, " ");
+  if (SITE_AGGREGATE.test(rest)) return true;
+  return !SITE_COMMAND.test(text) && SITE_ABOUT.test(rest);
+}
 
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   return SENSITIVE_QUESTION.test(text)
-    || (SENSITIVE_SITE_MENTION.test(text) && !SENSITIVE_SITE_SUMMARY.test(text));
+    || (SENSITIVE_SITE_MENTION.test(text) && !sensitiveSiteMentionAllowed(text));
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
