@@ -390,7 +390,7 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
   "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
   // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
-  `\\b(?:where|locate|located|locations?)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b`,
+  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|map|mapping|nearest|closest)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b`,
   `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?)\\b`,
   "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
 ].join("|"));
