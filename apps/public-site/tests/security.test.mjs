@@ -23,6 +23,7 @@ let server;
 let httpPort;
 let httpsPort;
 let diagnostics = "";
+let localCa;
 
 function check(directory = dist, args = []) {
   return spawnSync(process.execPath, [...args, join(REPO, "apps/public-site/check.mjs"), directory], { encoding: "utf8" });
@@ -46,8 +47,10 @@ async function unusedPort() {
 function request(path, { tls = false, host = "kansasfrontiermatrix.com", headers = {} } = {}) {
   return new Promise((resolve, reject) => {
     const transport = tls ? https : http;
+    // Verify TLS against the throwaway local certificate rather than disabling validation.
+    const trust = tls ? { ca: localCa, servername: "localhost", rejectUnauthorized: true } : {};
     transport.get({ hostname: "127.0.0.1", port: tls ? httpsPort : httpPort, path,
-      rejectUnauthorized: true, headers: { Host: host, ...headers }, timeout: 2000 }, (response) => {
+      ...trust, headers: { Host: host, ...headers }, timeout: 2000 }, (response) => {
       response.resume();
       response.on("end", () => resolve({ status: response.statusCode, headers: response.headers }));
     }).on("error", reject).on("timeout", function () { this.destroy(new Error("local Apache request timeout")); });
@@ -63,8 +66,10 @@ before(async () => {
   writeFileSync(join(dist, ".well-known/pki-validation/token"), "local validation");
   writeFileSync(join(dist, ".private"), "never public");
   const cert = spawnSync("openssl", ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1",
-    "-subj", "/CN=localhost", "-keyout", join(scratch, "key.pem"), "-out", join(scratch, "cert.pem")], { encoding: "utf8" });
+    "-subj", "/CN=localhost", "-addext", "subjectAltName=DNS:localhost",
+    "-keyout", join(scratch, "key.pem"), "-out", join(scratch, "cert.pem")], { encoding: "utf8" });
   assert.equal(cert.status, 0, cert.stderr);
+  localCa = readFileSync(join(scratch, "cert.pem"));
   httpPort = await unusedPort();
   httpsPort = await unusedPort();
   const modules = process.env.KFM_APACHE_MODULES || "/usr/lib/apache2/modules";
