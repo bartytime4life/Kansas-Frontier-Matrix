@@ -112,3 +112,23 @@ same existing service using its same persistent store. No data rollback is neede
 Repository recovery reverts this follow-up while retaining merged #5110 protection;
 it must not restore the old public exact-geometry assets. The prior receipt remains
 available as historical review evidence. No recovery drill was newly executed here.
+
+## Post-merge concurrent overlay reconciliation
+
+The authorized #5117 merge is `0ccc3b5bc4fe8ebe19f84ea54f1faf32a7ef7030`;
+its exact head completed 109 successful and two skipped checks. Concurrent #5118
+then merged to `3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8`, changing three
+repository Qwen paths. Its changes preserve personal-location privacy,
+but its historical v252 receipt did not update the selected v259 comparison.
+The existing mirror checker correctly withheld parity for the newer bytes.
+
+The append-only [post-merge receipt](../../data/receipts/generated/site-v259-post-merge-overlay-20261013.json)
+records those exact already-merged bytes and retains the previous v259 receipt.
+No source, dependency, build, workflow, geometry, Site deployment or approval gate
+changes in this follow-up. REVIEW_ONLY / CONTENT_PARITY_ONLY remains explicit;
+692 identical paths, 41 inherited overlays, 68 repository-only paths and 258
+withheld precise-geometry paths remain. The selected checker and its 38 regression
+tests pass. New main CI is evaluated separately; superseded/cancelled jobs are
+not failures or passing evidence. The primary PC checkout has a concurrent
+workflow edit and its branch/work are preserved; the separate PC repository copy
+is the safe synchronization destination.
