@@ -92,6 +92,8 @@ trap - EXIT
 host="${SITE_HOST:-127.0.0.1}"
 port="${SITE_PORT:-4173}"
 
+node scripts/validate-subsurface-public.mjs dist/client
+
 # Prefer the Site's direct Miniflare launcher. Wrangler's development proxy can
 # answer 500 to the request after one whose body the Worker never read. The
 # direct launcher binds only to loopback, requires Node 22.x, refuses .dev.vars

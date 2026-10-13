@@ -6,6 +6,7 @@ import { createRequire } from "node:module";
 import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateSubsurfacePublic } from "./validate-subsurface-public.mjs";
 import { readArchiveAccess } from "./archive-access.mjs";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -134,6 +135,7 @@ export async function serve(args = process.argv.slice(2)) {
   const server = path.join(siteRoot, "dist/server");
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);
+  if (validateSubsurfacePublic(client).length) fail("SUBSURFACE_PUBLICATION_HELD");
   // Do not silently ignore developer secrets that Wrangler dev would load.
   assertNoLocalSecretFiles(siteRoot);
   const configPath = path.join(server, "wrangler.json");

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Validate fixture-only Geology subsurface public-geometry assessments.
+"""Validate Geology synthetic assessments or real Site static containment.
 
-The validator reads synthetic declarations only. It performs no network access,
-opens no restricted input, embeds or inspects no coordinates, executes no geometry
-transform or policy, authenticates no review, mutates no lifecycle state, and grants
-no release, publication, or public-use authority.
+Default/--fixtures mode reads synthetic declarations only. --site-public invokes
+the Site denial gate on real static JSON/gzip carriers. Neither mode accesses the
+network, executes geometry transforms or policy, authenticates review, mutates
+lifecycle state, or grants release, publication, or public-use authority.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ import argparse
 import copy
 import hashlib
 import json
+import subprocess
 import math
 from dataclasses import dataclass
 from datetime import datetime
@@ -323,7 +324,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("input", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
+    parser.add_argument("--site-public", action="store_true", help="Check real Site static assets for the subsurface publication hold")
     args = parser.parse_args(argv)
+    if args.site_public:
+        if args.input is not None or args.fixtures:
+            parser.error("--site-public cannot be combined with input or --fixtures")
+        script = Path(__file__).resolve().parents[2] / "apps/site/source/scripts/validate-subsurface-public.mjs"
+        return subprocess.run(["node", str(script)], check=False).returncode
     if args.fixtures:
         if args.input is not None:
             parser.error("input cannot be combined with --fixtures")
