@@ -396,3 +396,69 @@ def test_summary_escapes_receipt_text_without_hiding_declared_review_state() -> 
     }})
     assert "<script>" not in report
     assert "&lt;script&gt;bad&lt;/script&gt;&#124;\\n# ACCEPTED" in report
+
+
+@pytest.mark.parametrize("drift", [None, "source_name", "site_sha256", "repository_sha256", "outside_docs"])
+def test_canonical_document_mapping_binds_source_and_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drift: str | None
+) -> None:
+    _, destination, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    target = destination / "docs/prepared-review.md"
+    target.parent.mkdir()
+    target.write_text("review context\n")
+    _git(TOOL.ROOT, "add", "apps/site/source/docs/prepared-review.md")
+    digest = TOOL.sha(target.read_bytes()).removeprefix("sha256:")
+    receipt = json.loads(TOOL.RECEIPT.read_text())
+    receipt["counts"]["identical"] = 2
+    receipt["comparison"]["docs/prepared-review.md"] = {
+        "state": "identical", "site_source_path": "docs/PREPARED_REVIEW.md",
+        "site_sha256": digest, "mirror_sha256": digest,
+    }
+    mapping = {"destination": "apps/site/source/docs/prepared-review.md",
+               "site_sha256": digest, "repository_sha256": digest}
+    receipt["canonical_document_mappings"] = {"docs/PREPARED_REVIEW.md": mapping}
+    if drift == "source_name":
+        receipt["comparison"]["docs/prepared-review.md"]["site_source_path"] = "docs/other.md"
+    elif drift in ("site_sha256", "repository_sha256"):
+        mapping[drift] = "0" * 64
+    elif drift == "outside_docs":
+        mapping["destination"] = "apps/site/source/app/page.tsx"
+    TOOL.RECEIPT.write_text(json.dumps(receipt))
+    if drift:
+        with pytest.raises(ValueError, match="MIRROR_DOCUMENT_MAPPING_DRIFT"):
+            TOOL.check()
+    else:
+        assert TOOL.check()["outcome"] == "PASS"
+
+
+@pytest.mark.parametrize("drift", [None, "present", "invalid_path", "wrong_digest", "wrong_count"])
+def test_withheld_private_geometry_cannot_be_reintroduced_as_parity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drift: str | None
+) -> None:
+    _, destination, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    receipt = json.loads(TOOL.RECEIPT.read_text())
+    name = "public/data/subsurface/held.json.gz"
+    entry = {"path": name, "site_sha256": "0" * 64, "state": "repository_withheld",
+             "reason_code": "EXACT_GEOMETRY_PUBLICATION_HELD"}
+    receipt["counts"]["repository_withheld"] = 1
+    if drift == "present":
+        target = destination / name
+        target.parent.mkdir(parents=True)
+        target.write_bytes(b"private geometry")
+    elif drift == "invalid_path":
+        entry["path"] = "../not-geometry.ts"
+    elif drift == "wrong_digest":
+        entry["site_sha256"] = "invalid"
+    elif drift == "wrong_count":
+        receipt["counts"]["repository_withheld"] = 0
+    receipt["overlay"] = {"withheld_paths": [entry]}
+    TOOL.RECEIPT.write_text(json.dumps(receipt))
+    if drift:
+        with pytest.raises(ValueError, match="MIRROR_WITHHELD|MIRROR_RECEIPT_COUNTS_DRIFT|UNSAFE_MIRROR_PATH"):
+            TOOL.check()
+    else:
+        result = TOOL.check()
+        assert result["outcome"] == "PASS"
+        assert result["withheld_files"] == 1

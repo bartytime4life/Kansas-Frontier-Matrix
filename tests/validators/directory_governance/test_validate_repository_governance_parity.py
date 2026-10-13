@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
 from jsonschema import Draft202012Validator
 
 from tools.validators.directory_governance import (
@@ -189,6 +190,70 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
 
         self.assertEqual([], introduced)
         self.assertEqual([prior.fingerprint], resolved)
+
+
+class GovernanceParityWorkflowTests(unittest.TestCase):
+    """Exercise the actual workflow shell against disposable Git history."""
+
+    def setUp(self) -> None:
+        self.workspace = tempfile.TemporaryDirectory()
+        self.addCleanup(self.workspace.cleanup)
+        self.root = Path(self.workspace.name)
+        self.git("init", "--quiet")
+        self.commit()
+        self.first_commit = self.git("rev-parse", "HEAD").strip()
+        self.commit()
+        self.head_commit = self.git("rev-parse", "HEAD").strip()
+        workflow = parity.REPO_ROOT / ".github/workflows/repository-governance-parity.yml"
+        steps = yaml.safe_load(workflow.read_text())["jobs"][
+            "validate-repository-governance-parity"
+        ]["steps"]
+        step = next(s for s in steps if s["name"] == "Run deterministic MRTS-04 parity profile")
+        self.assertEqual("${{ github.event.pull_request.base.sha }}", step["env"]["KFM_PR_BASE_SHA"])
+        self.script = step["run"]
+        self.bin = self.root / "bin"
+        self.bin.mkdir()
+        make = self.bin / "make"
+        make.write_text('#!/bin/sh\nprintf "%s\\n%s\\n" "$KFM_TRUSTED_BASE_REF" "$*" > "$PARITY_TEST_LOG"\n')
+        make.chmod(0o700)
+        self.log = self.root / "invocation.txt"
+
+    def git(self, *args: str) -> str:
+        return subprocess.check_output(["git", *args], cwd=self.root, text=True)
+
+    def commit(self) -> None:
+        self.git("-c", "user.name=Parity test", "-c", "user.email=parity@example.invalid",
+                 "commit", "--quiet", "--allow-empty", "-m", "Test history")
+
+    def run_step(self, pr_base: str = "") -> subprocess.CompletedProcess[str]:
+        env = dict(os.environ, PATH=str(self.bin) + os.pathsep + os.environ["PATH"],
+                   KFM_PR_BASE_SHA=pr_base, PARITY_TEST_LOG=str(self.log))
+        return subprocess.run(["bash", "-c", self.script], cwd=self.root, env=env,
+                              capture_output=True, text=True, timeout=10)
+
+    def test_push_resolves_parent_before_calling_validator(self) -> None:
+        result = self.run_step()
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual([self.first_commit, "repository-governance-parity"], self.log.read_text().splitlines())
+
+    def test_pull_request_retains_exact_trusted_base(self) -> None:
+        result = self.run_step(self.head_commit)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(self.head_commit, self.log.read_text().splitlines()[0])
+
+    def test_symbolic_or_malformed_pr_base_fails_before_make(self) -> None:
+        for value in ("HEAD^", "a" * 39, "a" * 40 + "; printf unsafe"):
+            with self.subTest(value=value):
+                result = self.run_step(value)
+                self.assertNotEqual(0, result.returncode)
+                self.assertFalse(self.log.exists())
+
+    def test_missing_parent_fails_before_make(self) -> None:
+        # Rewind disposable test history only; never the project checkout.
+        self.git("reset", "--quiet", "--hard", self.first_commit)
+        result = self.run_step()
+        self.assertNotEqual(0, result.returncode)
+        self.assertFalse(self.log.exists())
 
 
 if __name__ == "__main__":

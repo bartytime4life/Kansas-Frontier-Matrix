@@ -8,7 +8,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-v252-prepared-collections-overlay-20261012.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v259-alignment-20261013.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
@@ -108,13 +108,33 @@ def reviewed_receipt():
     comparison = receipt["comparison"]
     if not comparison or any(entry.get("state") not in allowed for entry in comparison.values()):
         raise ValueError("MIRROR_RECEIPT_STATE_INVALID")
+    # A source document may retain its name while the repository uses its
+    # existing canonical spelling. Bind that alias to the compared bytes.
+    document_mappings = receipt.get("canonical_document_mappings", {})
+    if not isinstance(document_mappings, dict):
+        raise ValueError("MIRROR_DOCUMENT_MAPPING_DRIFT")
+    for source_name, mapping in document_mappings.items():
+        valid_name(source_name)
+        if not isinstance(mapping, dict):
+            raise ValueError("MIRROR_DOCUMENT_MAPPING_DRIFT")
+        destination = mapping.get("destination", "")
+        valid_name(destination)
+        if not source_name.startswith("docs/") or not destination.startswith("apps/site/source/docs/"):
+            raise ValueError("MIRROR_DOCUMENT_MAPPING_DRIFT")
+        target_name = destination.removeprefix("apps/site/source/")
+        entry = comparison.get(target_name, {})
+        if (entry.get("site_source_path") != source_name
+                or entry.get("site_sha256") != mapping.get("site_sha256")
+                or entry.get("mirror_sha256") != mapping.get("repository_sha256")):
+            raise ValueError("MIRROR_DOCUMENT_MAPPING_DRIFT")
     reconciliation = receipt.get("reconciliation")
     if reconciliation is not None:
         if not isinstance(reconciliation, dict) or reconciliation.get("current_site") != receipt["site_candidate_commit"]:
             raise ValueError("MIRROR_RECONCILIATION_SOURCE_DRIFT")
         # Historical receipts without this section remain readable. A declared
         # current reconciliation must describe the selected source and its paths.
-        current_paths = set(comparison) | set(receipt.get("canonical_tool_mappings", {}))
+        current_paths = (set(comparison) | set(receipt.get("canonical_tool_mappings", {}))
+                         | set(document_mappings))
         for change in reconciliation.get("changes", []):
             if not isinstance(change, dict) or change.get("path") not in current_paths:
                 raise ValueError("MIRROR_RECONCILIATION_PATH_DRIFT")
