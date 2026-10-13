@@ -34,13 +34,27 @@ const STOP_WORDS = new Set([
 const normalize = (value) => typeof value === "string"
   ? value.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()
   : "";
+/**
+ * Fold simple English plurals so "county" meets "counties" and "gauge" meets
+ * "gauges". Applied to both questions and metadata, so the rare over-fold
+ * (for example "news" to "new") stays consistent on both sides.
+ */
+const singular = (word) => {
+  if (word.length >= 5 && word.endsWith("ies")) return `${word.slice(0, -3)}y`;
+  if (word.length >= 4 && word.endsWith("s") && !/(?:ss|us|is)$/.test(word)) return word.slice(0, -1);
+  return word;
+};
+const searchText = (value) => ` ${normalize(value).split(" ").map(singular).join(" ")} `;
 const tokensOf = (value) => [...new Set(normalize(value).split(" ")
-  .filter((token) => token.length >= 3 && !STOP_WORDS.has(token)))];
+  .filter((token) => token.length >= 3 && !STOP_WORDS.has(token))
+  .map(singular))];
 
 const SOURCE_SEARCH_TEXT = new Map(QWEN_KNOWLEDGE_PACK.officialSources.map((source) => [source.id, {
-  heading: ` ${normalize([source.id, source.title, source.shortTitle, source.domain, source.organization].join(" "))} `,
-  body: ` ${normalize([source.cadence, source.freshness, source.boundary].join(" "))} `,
+  heading: searchText([source.id, source.title, source.shortTitle, source.domain, source.organization].join(" ")),
+  body: searchText([source.cadence, source.freshness, source.boundary].join(" ")),
 }]));
+const DOMAIN_SEARCH_TEXT = new Map(QWEN_KNOWLEDGE_PACK.domains.map((domain) => [domain.name, searchText(domain.name)]));
+const CROSS_DOMAIN_SEARCH_TEXT = new Map(QWEN_KNOWLEDGE_PACK.crossDomainIdeas.map((entry) => [entry, searchText(entry.idea)]));
 
 const DISPLAY_SOURCE_TOPICS = /\b(?:basemap|imagery|satellite|aerial|street|streets|topo|topographic|terrain|elevation|3d|building|buildings|attribution)\b/;
 
@@ -51,7 +65,7 @@ const DISPLAY_SOURCE_TOPICS = /\b(?:basemap|imagery|satellite|aerial|street|stre
  */
 function scoreQwenKnowledgeSources(question, context) {
   const questionTokens = tokensOf(question);
-  const normalizedQuestion = ` ${normalize(question)} `;
+  const normalizedQuestion = searchText(question);
   const contextSources = new Map((Array.isArray(context?.officialSources) ? context.officialSources : [])
     .map((source) => [source?.id, source]));
   const selectionTokens = tokensOf([context?.selection?.domain, context?.selection?.layerTitle].join(" "));
@@ -59,7 +73,7 @@ function scoreQwenKnowledgeSources(question, context) {
     const text = SOURCE_SEARCH_TEXT.get(source.id);
     const active = contextSources.get(source.id);
     let questionScore = 0;
-    if (normalizedQuestion.includes(` ${normalize(source.domain)} `)) questionScore += 20;
+    if (normalizedQuestion.includes(DOMAIN_SEARCH_TEXT.get(source.domain))) questionScore += 20;
     for (const token of questionTokens) {
       if (text.heading.includes(` ${token} `)) questionScore += 8;
       else if (text.body.includes(` ${token} `)) questionScore += 3;
@@ -121,6 +135,7 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
   const ideaDomains = [...new Set(detailed.map((source) => source.domain))].slice(0, MAX_IDEA_DOMAINS);
   const wantsDisplaySources = DISPLAY_SOURCE_TOPICS.test(normalize(question));
   const inView = displayedDomains(context);
+  const questionTokens = tokensOf(question);
   // A domain's question match is its best-matching source's question score.
   const domainMatch = new Map();
   for (const { source, questionScore } of scored) {
@@ -146,14 +161,16 @@ export function selectQwenKnowledge(question, context, { maxBytes = Infinity } =
       .map((name) => ({ domain: name, terms: QWEN_KNOWLEDGE_PACK.domains.find((domain) => domain.name === name)?.terms ?? {} }))
       .filter((entry) => Object.keys(entry.terms).length > 0),
     // Eligibility comes from what is displayed. Order prefers the pair the
-    // question matches most strongly, then pairs touching the relevant domains,
-    // so the cap keeps the most useful ideas.
+    // question matches most strongly, through its domains' sources and the
+    // idea's own words, then pairs touching the relevant domains, so the cap
+    // keeps the most useful ideas.
     crossDomainIdeas: QWEN_KNOWLEDGE_PACK.crossDomainIdeas
       .filter((entry) => entry.domains.every((domain) => inView.has(domain)))
       .map((entry, index) => ({
         entry,
         index,
-        match: entry.domains.reduce((sum, domain) => sum + (domainMatch.get(domain) ?? 0), 0),
+        match: entry.domains.reduce((sum, domain) => sum + (domainMatch.get(domain) ?? 0), 0)
+          + 8 * questionTokens.filter((token) => CROSS_DOMAIN_SEARCH_TEXT.get(entry).includes(` ${token} `)).length,
         relevance: entry.domains.filter((domain) => ideaDomains.includes(domain)).length,
       }))
       .sort((left, right) => right.match - left.match || right.relevance - left.relevance || left.index - right.index)
