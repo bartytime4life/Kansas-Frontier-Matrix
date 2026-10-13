@@ -499,6 +499,32 @@ test("sensitive questions abstain before any Ollama call", async () => {
   assert.equal(isSensitiveQwenQuestion("Which PUBLIC_SAFE layers are visible?"), false);
 });
 
+test("personal and exact-location questions are sensitive; place-level questions are not", () => {
+  for (const question of [
+    "Where exactly is the nearest well to my house?",
+    "Exactly where did this earthquake happen?",
+    "What is the closest gauge to me?",
+    "Which bridge is nearest to our farm?",
+    "Is my property in a flood zone?",
+    "How deep is the aquifer under our land?",
+    "Which wells are near me?",
+    "Show wells close to my current location",
+    "Which well is nearest my location?",
+    "What gauges are around us?",
+    "Is there a stream where I live?",
+  ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
+  for (const question of [
+    "What is the nearest gauge to this reach?",
+    "Where are the closest bridges in this view?",
+    "How does land cover relate to the aquifer?",
+    "Which counties have no active gauge?",
+    "What maps are visible?",
+    "Which gauges are near the Arkansas River?",
+    "What is close to the county line?",
+    "Which layers show location metadata?",
+  ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
+});
+
 test("interpretations cannot carry EvidenceRefs, precise locations, or malformed shapes", async () => {
   for (const [content, status, outcome, reasonCode] of [
     [interpretationContent({ observations: ["Supported by kfm:evidence:invented"] }), 502, "ERROR", "UNDECLARED_EVIDENCE_REFERENCE"],
