@@ -1039,8 +1039,8 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section with the #5128 pressure-case requirement; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "cdc108af5a3838ce67570d4102de8d4dda4bfb8b7dd0362e5097b85d60db9eb2",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, and the #5125 local evaluation section with the #5128 pressure-case requirement, and the #5132 sensitive-question gate extension note; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "a5a9d7bc15415e62371ced8fe0143a46ae43dccf5b995163a4aff45e5b3b5a6e",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -2637,8 +2637,8 @@
       "state": "identical"
     },
     "app/page.tsx": {
-      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
-      "mirror_sha256": "4fcf9128b2f1dff2af66fa49c8adcb4a7121d749f351acca7b87adeef89d6015",
+      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment and the #5132 sensitive-question gate extension abstention message; not claimed deployed to private Site v259.",
+      "mirror_sha256": "f20d4f8c22a9a9c72abafc453e7fdfcb961e6f62000f9e71175c264cac0f91e0",
       "site_sha256": "fa5b1468a404ed38ca7b13e03e8ff420be13dd51ab93b8789673517b9e642f96",
       "state": "inherited_repository_overlay"
     },
@@ -3781,8 +3781,8 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "ea123349a4e529a97d7262c6c0910c52527183027e9118c3fc779b2aa0789286",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "9ec0704d39eaf9d0d7f5a94dc08c8eed33540403470e84d794129a42436c45e7",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4610,8 +4610,8 @@
       "state": "identical"
     },
     "tests/local-qwen-bridge.test.mjs": {
-      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "90a6d9d32d29d709080846eb1c6b03777dc2cafdeb472d6ffd265b9aaad4ebf0",
+      "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
+      "mirror_sha256": "1e5599d483b7172bc3c810f8dac9070df6c38d367f9a37b54ba61f7c0ae3eae8",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
       "state": "inherited_repository_overlay"
     },
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "97acea4392c5e8d199ad7868a3d70a9118a07eba3fa9b833faa8decdf128b4b5",
+  "inventory_sha256": "a09647283ff3132c2233fc517952ce8de842b59c9be735376679960088a4ea27",
   "overlay": {
     "withheld_paths": [
       {
@@ -6669,11 +6669,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change. #5128 tightens the #5125 evaluation pressure case and changes README.md; no authoritative Site source change."
+    "overlap": "Merged #5117 CI/v259 alignment and concurrent #5118 Qwen personal-location safeguard retained; #5118 changed three recorded repository paths after #5117 review. No authoritative Site source change. Merged #5119 changes only public-site CI and is retained; it does not change the source comparison. #5125 adds a repository-only local Qwen evaluation script and test and changes README.md and package.json; no authoritative Site source change. #5128 tightens the #5125 evaluation pressure case and changes README.md; no authoritative Site source change. #5132 extends the local Qwen sensitive-question gate and changes README.md, app/page.tsx, scripts/local-qwen-bridge.mjs and tests/local-qwen-bridge.test.mjs; no authoritative Site source change."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "3d5d623df75a7ef366f8f3993ea18b0f2d4cfef8",
-  "repository_reconciled_base": "f7a5e97b059a2a3fea79957a2006029ab6653cb5",
+  "repository_reconciled_base": "0706d4e822a6a12a564aa93d375044af8ba52158",
   "review": {
     "blocking_checks": [
       "repository_review",

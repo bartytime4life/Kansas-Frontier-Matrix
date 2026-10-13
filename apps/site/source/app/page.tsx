@@ -746,7 +746,7 @@ const QWEN_ABSTAIN_GUIDANCE: Record<string, string> = {
   CONTEXT_ONLY_INTERPRETATION: "No KFM record is selected, so there is no evidence-backed answer for this view.",
   EVIDENCE_NOT_SUPPORTIVE: "The selected record is not released, reviewed and linked to a public layer, so it cannot support an answer.",
   QUESTION_OUTSIDE_SELECTION_SCOPE: "The question goes beyond what the selected released record states.",
-  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, or exact locations are not interpreted by the local model. Use the official source directly.",
+  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, addresses, exact or personal locations, or the locations of sensitive sites are not interpreted by the local model. Use the official source directly.",
   OVER_PRECISE_OUTPUT: "The model's reply contained precise location detail, so it was withheld.",
   CITATION_REQUIRED: "The model did not cite the selected record's exact EvidenceRef, so no answer was shown.",
   MODEL_ABSTAINED: "The model judged that the selected record does not answer the question.",
