@@ -362,6 +362,8 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
 const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
 const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
+const NOT_AGGREGATE_LEAD = "(?! (?:me )?(?:(?:the|a|an) )?(?:number|numbers|count|counts|total|totals|summary|summaries|share|percent\\w*|density)\\b)";
+const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
 const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|mounds?|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
@@ -374,7 +376,7 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
   "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
   // Other precise location systems: lat/lon, UTM, PLSS, street addresses and ZIP codes.
-  "\\b(?:lat lon\\w*|lat lng|latlon\\w*|latlng|utm|eastings?|northings?|plss|zip ?codes?|postal codes?)\\b",
+  "\\b(?:lat lon\\w*|lat lng|latlon\\w*|latlng|utm|eastings?|northings?|plss|zip(?: ?codes?)?|postal codes?)\\b(?! (?:files?|archives?|downloads?)\\b)",
   `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   "\\baddress (?:of|for)\\b",
   "\\b(?:sec|section) \\d+\\b(?: \\w+){0,3} (?:twp|township) \\d+\\b|\\b(?:twp|township) \\d+(?: [ns])?(?: \\w+){0,2} (?:rge?|range) \\d+\\b|\\bt\\d{1,2}[ns] r\\d{1,2}[ew]\\b",
@@ -390,7 +392,8 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
   "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
   // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
-  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|map|mapping|nearest|closest)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b`,
+  // Counts and county-level summaries ("show the number of burials by county") stay interpretable.
+  `\\b(?:where|locate|located|locations?|find\\w*|show\\w*|list\\w*|display\\w*|highlight\\w*|mark\\w*|identify\\w*|map|mapping|nearest|closest)\\b${NOT_AGGREGATE_LEAD}(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
   `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?)\\b`,
   "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
 ].join("|"));
