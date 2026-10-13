@@ -363,8 +363,9 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
 // Address metadata (fields, formats, address-point layers) and web, API or email addresses are not
 // requests for a street address.
-// The web target must be the addressed thing itself, not its owner ("the website owner's address").
-const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ )?(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?\\b(?! (?:s )?(?:owners?|administrators?|admins?|operators?|maintainers?|managers?|authors?|creators?|staff|contacts?|persons?|people|founders?|directors?|employees?|users?|members?)\\b)";
+// The web target must be the addressed thing itself and so end the phrase or be followed by a
+// preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
+const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ )?(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)";
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
@@ -385,7 +386,7 @@ const SENSITIVE_QUESTION = new RegExp([
   // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
   // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
   // Street, mailing, home and physical addresses are never web addresses.
-  "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|standards?)\\b)",
+  "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
   `\\b(?:what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
   `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
   // "What house number is …", "which street number has the well": a request for a street address.
@@ -524,12 +525,15 @@ function hasProperNoun(question) {
 // question asks for no judgement, gives no command and is not about the asker.
 const WATER_ACTIVITY = /\b(?:drink\w*|swim\w*|wad(?:e|es|ing))\b/;
 const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*|avoid\w*|need|needs|ought|whether|i|we|me|us|my|our)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
-const WATER_ACTIVITY_METADATA = /\b(?:drink\w*|swim\w*|wad\w+)\b(?: \w+){0,2} (?:layers?|datasets?|data|sources?|records?|metadata|standards?|regulations?|rules?|surveys?|programs?|systems?|quality|beaches?)\b|^what (?:does|do) (?:the )?(?:term |word )?(?:drink\w*|swim\w*|wad\w+)(?: \w+)? mean\b/;
+const WATER_ACTIVITY_METADATA = /\b(?:drinking|swimming|wading)(?: (?:water|beach|beaches|area|areas|hole|holes|site|sites))? (?:layers?|datasets?|data|sources?|records?|metadata|standards?|regulations?|rules?|surveys?|programs?|systems?|quality|beaches?)\b|^what (?:does|do) (?:the )?(?:term |word )?(?:drink\w*|swim\w*|wad\w+)(?: \w+)? mean\b/;
+// "Drink from this source", "swim in this source": an instruction, not a metadata question.
+const WATER_ACTIVITY_IMPERATIVE = /^(?:please )?(?:drink|swim|wade|bathe)\b/;
 
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text)) return true;
-  if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text) || !WATER_ACTIVITY_METADATA.test(text))) return true;
+  if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
+    || WATER_ACTIVITY_IMPERATIVE.test(text) || !WATER_ACTIVITY_METADATA.test(text))) return true;
   const clauses = typeof question === "string"
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
