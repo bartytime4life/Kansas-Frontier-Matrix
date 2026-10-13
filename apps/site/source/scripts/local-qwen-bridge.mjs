@@ -443,16 +443,32 @@ const PRECISE_TERM_ABOUT_SHAPES = [
 ];
 
 // Each clause is checked on its own, so a harmless trailing clause ("… and why is the map
-// generalized?") cannot excuse a precise or locating request in another.
+// generalized?") cannot excuse a precise or locating request in another. A clause that only
+// continues the first ("what do latitude | and longitude mean") is judged with the whole question,
+// but only when no later clause starts a question of its own ("… and which ranch has them").
 const CLAUSE_BREAK = /[?;:!.,]+|\b(?:and|but|then|also|plus)\b/i;
+const NEW_QUESTION = new RegExp(`^(?:what|which|where|how|when|who|whose|why|is|are|was|were|can|could|would|will|do|does|did)\\b|${SITE_COMMAND.source}`);
 const LOCATING_CLAUSE = new RegExp(`^where\\b|${SITE_COMMAND.source}|\\b(?:near|nearby|nearest|closest|located|locations?)\\b`);
+const POLICY_CLAUSE = /^(?:how|why) (?:are|is|were|was|do|does) (?:\w+ ){0,4}(?:generali[sz]\w*|withh[eo]ld|redact\w*|protect\w*|symboli[sz]\w*|shown|displayed|represented|handled|treated|coarsened)\b/;
+const preciseAbout = (text) => PRECISE_TERM_ABOUT_SHAPES.some((shape) => shape.test(text));
 
-function sensitiveSiteClause(clause, wholeAllowed) {
-  if (!SENSITIVE_SITE_MENTION.test(clause)) return LOCATING_CLAUSE.test(clause);
-  if (sensitiveSiteMentionAllowed(clause)) return false;
-  // A clause continuing an allowed question ("how many nests and leks are in Ellis County") is fine
-  // unless it locates or commands on its own.
-  return !wholeAllowed || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
+function siteClauseBlocked(clause, index, wholeAllowed) {
+  const newQuestion = index > 0 && NEW_QUESTION.test(clause);
+  if (SENSITIVE_SITE_MENTION.test(clause)) {
+    if (sensitiveSiteMentionAllowed(clause)) return false;
+    return !wholeAllowed || newQuestion || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
+  }
+  if (LOCATING_CLAUSE.test(clause)) return true;
+  // A later question about sites already named must itself be a summary, policy or metadata question.
+  return newQuestion && !sensitiveSiteMentionAllowed(clause) && !POLICY_CLAUSE.test(clause)
+    && !SITE_METADATA_QUESTION.test(clause);
+}
+
+function preciseClauseBlocked(clause, index, wholeAbout) {
+  if (!PRECISE_TERM.test(clause)) return false;
+  if (SITE_COMMAND.test(clause)) return true;
+  if (preciseAbout(clause)) return false;
+  return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
 }
 
 export function isSensitiveQwenQuestion(question) {
@@ -461,12 +477,13 @@ export function isSensitiveQwenQuestion(question) {
   const clauses = typeof question === "string"
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
+  const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
   if (SENSITIVE_SITE_MENTION.test(text)) {
-    const wholeAllowed = sensitiveSiteMentionAllowed(text);
-    if (clauses.some((clause) => sensitiveSiteClause(clause, wholeAllowed))) return true;
+    const wholeAllowed = judgedTogether && sensitiveSiteMentionAllowed(text);
+    if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed))) return true;
   }
-  return clauses.some((clause) => PRECISE_TERM.test(clause)
-    && (SITE_COMMAND.test(clause) || !PRECISE_TERM_ABOUT_SHAPES.some((shape) => shape.test(clause))));
+  const wholeAbout = judgedTogether && !SITE_COMMAND.test(text) && preciseAbout(text);
+  return clauses.some((clause, index) => preciseClauseBlocked(clause, index, wholeAbout));
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;

@@ -3782,7 +3782,7 @@
     },
     "scripts/local-qwen-bridge.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "e1482b9e1da7f923c3a6c00f24a6ab13bb082c3234c6d7df292d4ed67d60d98a",
+      "mirror_sha256": "12f63a48d8e6676f5dac07ea7f2281220f78a73af0af98834d41ea287e35ce21",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4611,7 +4611,7 @@
     },
     "tests/local-qwen-bridge.test.mjs": {
       "difference": "Retained merged #5118 personal-location privacy safeguard and regression tests, extended by the #5132 sensitive-question gate extension; repository-only overlay, not deployed to private Site v259.",
-      "mirror_sha256": "cd422fdbb5cae9ca9a39f7c136f36f3c3e635ef5dbcb6bc075d89866942fc001",
+      "mirror_sha256": "b50c082c197ee6e18ce275a125bf71db2ae17eb151c9913a77a01d077e53ef1a",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
       "state": "inherited_repository_overlay"
     },
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "df4e171904d68df0ef822b5015169c8074c5f088523aed027651be3770422947",
+  "inventory_sha256": "a7a39c35d3f5309cfb4a9a76ac6d42494ed98e9000f810dd5a9c7dba9a1a8f6a",
   "overlay": {
     "withheld_paths": [
       {
