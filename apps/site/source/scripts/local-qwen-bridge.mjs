@@ -371,7 +371,7 @@ const SENSITIVE_QUESTION = new RegExp([
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
   `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
-  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
+  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
   "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
@@ -411,7 +411,7 @@ const WHY_POLICY = /^why\b(?! (?:not|don t|do not|won t|will not|can t|cannot|co
 const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
 // A count that also asks for the sites themselves ("how many … can you list", "… please list them")
 // is an enumeration, not a summary.
-const ENUMERATION_TAIL = /\b(?:can|could|would|will) you (?:\w+ )?(?:list|show|name|map|plot|identify|tell|give)\b|\b(?:please|then|now) (?:list|show|name|map|plot|identify|tell|give)\b|\b(?:list|name|enumerate|identify) (?:them|those|these|each|all|every)\b|\bwhich ones\b|\bwhere\b/;
+const ENUMERATION_TAIL = /\b(?:can|could|would|will) you (?:\w+ )?(?:list|show|name|map|plot|identify|tell|give)\b|\b(?:please|then|now) (?:list|show|name|map|plot|identify|tell|give)\b|\b(?:list|name|enumerate|identify) (?:them|those|these|each|all|every)\b|\bwhich ones\b|\bwhere\b|\b(?:names?|named|identit\w*|locations?|each one|one by one|individually|itemi[sz]\w*)\b|\bbroken down by (?:name|site|location)\b/;
 const SITE_AGGREGATE_SHAPES = [
   /^how many\b/,
   new RegExp(`^(?:what|which) (?:is|are|was|were) the ${AGGREGATE_NOUN} of\\b`),
@@ -448,8 +448,11 @@ function sensitiveSiteMentionAllowed(text, { properNoun = false } = {}) {
 
 // Coordinate and ZIP terms ask for a precise value unless the clause is about the term itself
 // ("what does UTM mean", "which UTM zone", "why are coordinates withheld").
+const PRECISE_TERM_WORDS = "(?:coordinates?|gps(?: coordinates?)?|lat long|latitude|longitude|lat lon\\w*|lat lng|latlon\\w*|latlng|utm(?: coordinates?)?|eastings?|northings?|zip(?: ?codes?)?|postal codes?)";
 const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\w*|lat lng|latlon\w*|latlng|utm|eastings?|northings?|zip(?: ?codes?)?|postal codes?)\b(?! (?:files?|archives?|downloads?)\b)/;
 const PRECISE_TERM_ABOUT_SHAPES = [
+  // A direct definition ("what are coordinates", "what is a ZIP code"), not "what are the coordinates".
+  new RegExp(`^what (?:is|are) (?:an? )?${PRECISE_TERM_WORDS}$`),
   /\b(?:means?|meaning|stands? for)$/,
   /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
   /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
@@ -473,7 +476,7 @@ function siteClauseBlocked(clause, index, wholeAllowed, options) {
     if (sensitiveSiteMentionAllowed(clause, options)) return false;
     return !wholeAllowed || newQuestion || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
   }
-  if (LOCATING_CLAUSE.test(clause)) return true;
+  if (LOCATING_CLAUSE.test(clause) || ENUMERATION_TAIL.test(clause)) return true;
   // A later question about sites already named must itself be a summary, policy or metadata question.
   return newQuestion && !sensitiveSiteMentionAllowed(clause, options) && !POLICY_CLAUSE.test(clause)
     && !SITE_METADATA_QUESTION.test(clause);
@@ -486,6 +489,15 @@ function preciseClauseBlocked(clause, index, wholeAbout) {
   return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
 }
 
+// A capitalised word after the first names a place, unless the whole question is in title case
+// ("What Is a Lek?").
+function hasProperNoun(question) {
+  if (typeof question !== "string") return false;
+  const words = question.split(/\s+/).filter((word) => /^[A-Za-z]{3,}/.test(word));
+  if (words.length > 1 && words.every((word) => /^[A-Z]/.test(word))) return false;
+  return /\s[A-Z][a-z]/.test(question);
+}
+
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text)) return true;
@@ -495,7 +507,7 @@ export function isSensitiveQwenQuestion(question) {
   const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
   if (SENSITIVE_SITE_MENTION.test(text)) {
     // A capitalised word after the first ("What are Ellis County nests?") names a place, not a kind.
-    const options = { properNoun: typeof question === "string" && /\s[A-Z][a-z]/.test(question) };
+    const options = { properNoun: hasProperNoun(question) };
     const wholeAllowed = judgedTogether && sensitiveSiteMentionAllowed(text, options);
     if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed, options))) return true;
   }
