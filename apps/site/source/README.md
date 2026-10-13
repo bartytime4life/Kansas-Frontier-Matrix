@@ -922,7 +922,10 @@ Ollama, then run `npm run eval:qwen-local` (`node scripts/qwen-local-eval.mjs`).
 It sends a fixed set of questions through the loopback bridge only:
 view-level questions that should get an interpretation, personal-location and
 safety questions that must abstain before the model, and an attempt to make the
-model invent evidence. It checks every reply against the governance rules (no
+model invent evidence. That last case must reach the model and end safely (an
+interpretation, `UNDECLARED_EVIDENCE_REFERENCE`, or `OVER_PRECISE_OUTPUT`); an
+operational error such as a busy bridge or an unparseable reply fails it,
+because the model's response was never tested. It checks every reply against the governance rules (no
 `ANSWER` without a released selection, no EvidenceRefs, no precise locations,
 `INTERPRETIVE_ONLY` authority) and against the expected outcome. It also
 reports whether the installed knowledge pack matches this checkout, so a stale
