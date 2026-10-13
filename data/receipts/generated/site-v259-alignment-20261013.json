@@ -1039,8 +1039,8 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
-      "mirror_sha256": "3893be6aeeb00a9e6332f485958f763cc9db7ec0f878a387a27c7f51ac0bd735",
+      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment and #5118 personal-location guard; not claimed deployed to private Site v259.",
+      "mirror_sha256": "7c986129eca872057942fece70f8f0c805501fbdb606b151e80b525a4604162a",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -3781,8 +3781,8 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment; not claimed deployed to private Site v259.",
-      "mirror_sha256": "30799c2ab3ae4e4f8b77f74cf1866a32e0f89cc5f526443143d1f210b3bc0b7e",
+      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment and #5118 personal-location guard; not claimed deployed to private Site v259.",
+      "mirror_sha256": "ea123349a4e529a97d7262c6c0910c52527183027e9118c3fc779b2aa0789286",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -4605,9 +4605,10 @@
       "state": "identical"
     },
     "tests/local-qwen-bridge.test.mjs": {
-      "mirror_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
+      "difference": "Retained repository-specific safeguards and integrations, including merged #5110 public-geometry containment and #5118 personal-location guard; not claimed deployed to private Site v259.",
+      "mirror_sha256": "90a6d9d32d29d709080846eb1c6b03777dc2cafdeb472d6ffd265b9aaad4ebf0",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/local-qwen-installer.test.mjs": {
       "mirror_sha256": "ca2d3528011af4e71c5f9227b290c562cff3b981fc40f26229d2881d999355c8",
@@ -5068,8 +5069,8 @@
   "counts": {
     "canonical_document_mappings": 1,
     "canonical_tool_mappings": 2,
-    "identical": 693,
-    "inherited_repository_overlay": 40,
+    "identical": 692,
+    "inherited_repository_overlay": 41,
     "missing": 0,
     "repository_only_overlay": 68,
     "repository_withheld": 258,
@@ -5078,7 +5079,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "02bbe364cfa41988738684bb9b86ed4a656965360b3818dee42a4ac5cc1404cd",
+  "inventory_sha256": "3634b5ecc0189713b5d6e720d0bf0cf5f44f3a9c84eecd6d16c81c3e2f16a8e6",
   "overlay": {
     "withheld_paths": [
       {
@@ -6660,11 +6661,11 @@
     "conflicts": [],
     "current_site": "441c3e29581ffb0293d8e643e5c37eed50319032",
     "deleted_paths": [],
-    "overlap": "Merged #5110 publication containment and #5112 Qwen ranking preserved. Open #5113 may reconcile a historical v252 receipt separately; this v259 successor does not alter that predecessor."
+    "overlap": "Merged #5110 publication containment, #5112 Qwen ranking and #5118 personal-location guard preserved. Open #5113 may reconcile a historical v252 receipt separately; this v259 successor does not alter that predecessor."
   },
   "recorded_at": "2026-10-13",
   "repository_base": "c52ceb2dcc028dd35da266f2c7702ca6fa108e44",
-  "repository_reconciled_base": "3793a9cfc073d97bf3f38b79a316b8ae755df9c0",
+  "repository_reconciled_base": "4ac28b612ef89c2c47555424c0d8aabfe11cf446",
   "review": {
     "blocking_checks": [
       "repository_review",
