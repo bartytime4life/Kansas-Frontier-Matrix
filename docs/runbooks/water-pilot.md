@@ -273,6 +273,37 @@ Rollback: revert the reporting changes to the tool, workflow, tests and guidance
 Preserve both receipts and their selector; no private Site or data state is
 changed by this audit.
 
+### Changing a mirrored Site file
+
+Any pull request that edits a tracked file under `apps/site/source/` must update
+the active mirror receipt in the same pull request, or `water-conformance` fails
+with `MIRROR_REVIEW_REQUIRED` (the underlying error is
+`MIRROR_CONTENT_DRIFT:<path>`). The active receipt is the `RECEIPT` constant in
+[`site_mirror.py`](../../tools/qa/site_mirror.py). Run
+`python tools/qa/site_mirror.py --diagnose` to list the drifted paths, then in
+the receipt:
+
+1. Set each drifted path's `mirror_sha256` to its current SHA-256 and name the
+   pull request in its `difference` note. The receipt stores bare hexadecimal:
+   drop the `sha256:` prefix that `--diagnose` prints in `working_tree_sha256`,
+   or the check fails with `MIRROR_DIGEST_INVALID`. A path recorded as
+   `identical` becomes `inherited_repository_overlay`; adjust both `counts`
+   entries.
+2. Recompute `inventory_sha256` as the SHA-256 of the compact
+   (`separators=(",", ":")`) key-sorted JSON mapping every path to its
+   `mirror_sha256`.
+3. Advance `repository_reconciled_base` and name the pull request in
+   `reconciliation.overlap`.
+4. Leave `review` unchanged. The update records repository bytes only; it is not
+   review acceptance or evidence that the overlay is deployed.
+
+`--check` must then return `PASS` and `--diagnose` `RECORDED_BYTES_MATCH`.
+Added or deleted mirror files also change the recorded file set: add or remove
+the `comparison` entry and increment or decrement the `counts` entry for its
+state, or the check fails with `MIRROR_RECEIPT_COUNTS_DRIFT`. Precedents: `c0715ed13f` (#5112 Qwen
+ranking) and [PR #5121](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5121)
+(#5118 personal-location guard).
+
 ## Identity and placement
 
 Implementation starts at monorepo `6994a65843c4999313fda01183b63333213134f3`.
