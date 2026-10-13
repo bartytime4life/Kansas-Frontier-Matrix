@@ -361,7 +361,10 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
 // "Safe to show / publish / at its declared precision" asks about release status (PUBLIC_SAFE), not personal safety.
 const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|open|outside|online) )?(?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
 // Address metadata (fields, formats, address-point layers) is not a request for an address.
-const NOT_ADDRESS_METADATA = "(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)";
+// Address metadata (fields, formats, address-point layers) and web, API or email addresses are not
+// requests for a street address.
+const WEB_TARGET = "(?:(?:the|this|that|its|their) )?(?:\\w+ )?(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)";
+const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
@@ -381,7 +384,9 @@ const SENSITIVE_QUESTION = new RegExp([
   // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
   // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
   `\\b(?:street|mailing|home|physical|exact|what|which|whose|its|their|his|her|the|an?|\\w+ s) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
-  "\\baddress (?:of|for)\\b",
+  `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
+  // "What house number is …", "which street number has the well": a request for a street address.
+  "\\b(?:house|street|building|mailbox|lot) numbers?\\b",
   // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
   "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
   "\\b(?:ks|kansas) \\d{5}\\b",
@@ -508,9 +513,16 @@ function hasProperNoun(question) {
   return words.slice(1).some((word) => /^[A-Z]/.test(word) && !COMMON_CAPITALISED.has(word.toLowerCase()));
 }
 
+// Any mention of drinking, swimming or wading is advice unless it is plainly about a layer or source
+// ("is the drinking water layer current") and asks for no judgement.
+const WATER_ACTIVITY = /\b(?:drink\w*|swim\w*|wad(?:e|es|ing))\b/;
+const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
+const WATER_ACTIVITY_METADATA = /\b(?:layers?|datasets?|data|sources?|records?|metadata|licen[cs]\w*|provenance|agenc\w+|symbol\w*|legend|defin\w+|means?|meaning|standards?|regulations?|rules?)\b/;
+
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text)) return true;
+  if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || !WATER_ACTIVITY_METADATA.test(text))) return true;
   const clauses = typeof question === "string"
     ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
     : [];
