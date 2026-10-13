@@ -37,7 +37,7 @@
       "state": "identical"
     },
     "README.md": {
-      "mirror_sha256": "3893be6aeeb00a9e6332f485958f763cc9db7ec0f878a387a27c7f51ac0bd735",
+      "mirror_sha256": "b66c7fcfecdccb094cb9ad9e8c2d6907514d869d453141f12ecdfbaf0d60522a",
       "site_sha256": "9aead410aee35d539cdf7c3fb19f9855fcbad45723b7389433bfe8018f003004",
       "state": "inherited_repository_overlay"
     },
@@ -2748,7 +2748,7 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "mirror_sha256": "30799c2ab3ae4e4f8b77f74cf1866a32e0f89cc5f526443143d1f210b3bc0b7e",
+      "mirror_sha256": "777f1101b1e0fa544ff62bfb21698abaf546fa4ea7e387a15e6fb96e94a247e4",
       "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
       "state": "inherited_repository_overlay"
     },
@@ -3553,9 +3553,9 @@
       "state": "identical"
     },
     "tests/local-qwen-bridge.test.mjs": {
-      "mirror_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
+      "mirror_sha256": "ff5f1ff707d7d1458679a21e3752035439306513350a375ea158dcd524143b5a",
       "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/local-qwen-installer.test.mjs": {
       "mirror_sha256": "ca2d3528011af4e71c5f9227b290c562cff3b981fc40f26229d2881d999355c8",
@@ -4003,8 +4003,8 @@
   },
   "counts": {
     "canonical_tool_mappings": 2,
-    "identical": 682,
-    "inherited_repository_overlay": 42,
+    "identical": 681,
+    "inherited_repository_overlay": 43,
     "missing": 0,
     "repository_only_overlay": 74,
     "repository_withheld": 258,
@@ -4014,7 +4014,7 @@
   "destination": "apps/site/source",
   "followup_scope": "Record the prepared-collection review and prepared-map mobile control paths merged in PRs #5103 and #5104 (and their earlier prepared-collection integration) as repository overlays on the v252 Site candidate. The selected Site candidate stays v252; no later Site version is selected, compared in full, or claimed deployed by this receipt. Amended in place to record PR #5110's subsurface publication containment: 258 exact-coordinate assets withheld from the mirror (overlay.withheld_paths), 11 Site-identical paths now inherited repository overlays, and the new repository-only scripts/validate-subsurface-public.mjs.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "3395c677f7bcac52f16ebfdebb011c75196cb1a3025bef6ec7793fd9c34772b1",
+  "inventory_sha256": "e3754a9967d456c96addad4ff217f93f48ba63b0a30fe3fe3d7cc1626f603001",
   "overlay": {
     "changed_paths": [
       {
@@ -4133,7 +4133,7 @@
       },
       {
         "later_site_source_observation": null,
-        "mirror_sha256": "3893be6aeeb00a9e6332f485958f763cc9db7ec0f878a387a27c7f51ac0bd735",
+        "mirror_sha256": "b66c7fcfecdccb094cb9ad9e8c2d6907514d869d453141f12ecdfbaf0d60522a",
         "path": "README.md",
         "previous_mirror_sha256": "cb9851d4c337d9b457ed010456296aa3603a5a6fea62a2c2132501776ac56830",
         "previous_state": "inherited_repository_overlay",
@@ -4281,6 +4281,24 @@
         "path": "scripts/validate-subsurface-public.mjs",
         "previous_state": "unrecorded",
         "state": "repository_only_overlay"
+      },
+      {
+        "later_site_source_observation": null,
+        "mirror_sha256": "777f1101b1e0fa544ff62bfb21698abaf546fa4ea7e387a15e6fb96e94a247e4",
+        "path": "scripts/local-qwen-bridge.mjs",
+        "previous_mirror_sha256": "30799c2ab3ae4e4f8b77f74cf1866a32e0f89cc5f526443143d1f210b3bc0b7e",
+        "previous_state": "inherited_repository_overlay",
+        "site_sha256": "0de1e1a7e4b09d8d89ac381dbcd4d652be1398daa5872257a1d78cdfd43e5047",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "later_site_source_observation": null,
+        "mirror_sha256": "ff5f1ff707d7d1458679a21e3752035439306513350a375ea158dcd524143b5a",
+        "path": "tests/local-qwen-bridge.test.mjs",
+        "previous_mirror_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
+        "previous_state": "identical",
+        "site_sha256": "edde0d8084cce976b52b19734c229168d2cf070e8df61d5e75d47a928992dd41",
+        "state": "inherited_repository_overlay"
       }
     ],
     "later_site_source_observation_scope": "Per-path byte observations against the owner's local Site source checkout at commit 27af32a25eda0e56710207f0569ce391eec30551 (reported in PR #5104 as Site v257). They are provenance notes only: that commit is not the selected candidate, the remaining Site paths were not compared against it, and the observation does not record review acceptance. docs/prepared-collection-review.md was renamed in place from the upstream docs/PREPARED_COLLECTION_REVIEW.md (commit fe816c9446); it is recorded as a repository-only overlay because its repository name does not exist upstream, so ADR-0048's upstream-name relaxation does not apply to it.",
@@ -4395,6 +4413,7 @@
       "tests/layer-explorer.test.mjs",
       "tests/local-atlas.test.mjs",
       "tests/local-companion-session.test.mjs",
+      "tests/local-qwen-bridge.test.mjs",
       "tests/prepared-collections.test.mjs",
       "tests/prepared-mobile-controls.test.mjs",
       "tests/public-map-catalog.test.mjs",
