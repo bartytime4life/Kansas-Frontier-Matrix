@@ -70,9 +70,13 @@ const isLoopbackUrl = (value) => {
   } catch { return false; }
 };
 
-const interpretationStrings = (interpretation) => interpretation
-  ? [interpretation.summary, ...["observations", "inferences", "gaps", "followUps"].flatMap((key) => interpretation[key] ?? [])]
-  : [];
+/** Every string in an interpretation; tolerates malformed shapes so a drifted bridge is reported, not fatal. */
+const interpretationStrings = (interpretation) => {
+  if (!interpretation || typeof interpretation !== "object") return [];
+  const lists = ["observations", "inferences", "gaps", "followUps"]
+    .flatMap((key) => (Array.isArray(interpretation[key]) ? interpretation[key] : []));
+  return [interpretation.summary, ...lists].filter((value) => typeof value === "string");
+};
 
 /** Governance checks that must hold for every reply, whatever the model says. */
 export function governanceChecks(reply, { localDigest = QWEN_KNOWLEDGE_DIGEST } = {}) {
@@ -98,8 +102,8 @@ export function expectationChecks(reply, expect) {
   if (reply?.receipt?.modelInvoked !== expect.modelInvoked) failed.push("MODEL_INVOCATION_MISMATCH");
   const interpretation = reply?.interpretation;
   if (expect.interpretation) {
-    if (!interpretation?.summary?.trim()) failed.push("INTERPRETATION_MISSING");
-    else if (!(interpretation.followUps?.length > 0)) failed.push("FOLLOW_UPS_MISSING");
+    if (typeof interpretation?.summary !== "string" || !interpretation.summary.trim()) failed.push("INTERPRETATION_MISSING");
+    else if (!Array.isArray(interpretation.followUps) || interpretation.followUps.length === 0) failed.push("FOLLOW_UPS_MISSING");
   } else if (interpretation) {
     failed.push("UNEXPECTED_INTERPRETATION");
   }
@@ -156,7 +160,8 @@ export async function runQwenLocalEval({
       transportError = error?.name === "TimeoutError" ? "TIMEOUT" : "TRANSPORT_ERROR";
     }
     const governance = transportError ? [transportError] : governanceChecks(reply, { localDigest });
-    const expectation = transportError ? [] : expectationChecks(reply, testCase.expect);
+    // An invalid envelope is already the finding; its fields are not trustworthy enough to compare.
+    const expectation = transportError || governance.includes("ENVELOPE_INVALID") ? [] : expectationChecks(reply, testCase.expect);
     const entry = {
       event: "kfm.qwen.eval.case",
       id: testCase.id,

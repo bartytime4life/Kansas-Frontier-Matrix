@@ -83,3 +83,21 @@ test("no bridge listening reports not ready instead of crashing", async () => {
   assert.equal(health.reasonCode, "BRIDGE_UNREACHABLE");
   await assert.rejects(runQwenLocalEval({ timeoutMs: Number.NaN, log: () => {} }), /timeout/);
 });
+
+test("a malformed envelope is reported as invalid and the run still completes", async () => {
+  const { createServer } = await import("node:http");
+  const server = createServer((req, res) => {
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(JSON.stringify(req.url === "/health"
+      ? { status: "ready", reasonCode: "READY", knowledgeDigest: null }
+      : { outcome: "ABSTAIN", reasonCode: "CONTEXT_ONLY_INTERPRETATION", authority: "INTERPRETIVE_ONLY", evidenceRefs: [],
+        interpretation: { summary: 5, observations: 3, inferences: "text", gaps: null, followUps: [1] }, receipt: { modelInvoked: true } }));
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const { summary, results } = await runQwenLocalEval({ bridgeUrl: `http://127.0.0.1:${server.address().port}`, log: () => {} });
+    assert.equal(results.length, QWEN_LOCAL_EVAL_CASES.length, "every case is still reported");
+    assert.ok(results.every((entry) => entry.failedChecks.includes("ENVELOPE_INVALID")));
+    assert.equal(summary.safe, false);
+  } finally { await new Promise((resolve) => server.close(resolve)); }
+});

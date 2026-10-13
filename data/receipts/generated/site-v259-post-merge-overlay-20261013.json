@@ -3842,7 +3842,7 @@
     },
     "scripts/qwen-local-eval.mjs": {
       "difference": "Repository-only local Qwen evaluation; no Site deployment or data activation implied.",
-      "mirror_sha256": "27bf2e1dd175630e4a317b9b94c41ead5217caf92969cffde25788f13ebcdea1",
+      "mirror_sha256": "5dfee283426ba9734749ae5c4cd2f1751c9933209bba61231a69d7e135953852",
       "state": "repository_only_overlay"
     },
     "scripts/serve-local-worker.mjs": {
@@ -4749,7 +4749,7 @@
     },
     "tests/qwen-local-eval.test.mjs": {
       "difference": "Repository-only local Qwen evaluation; no Site deployment or data activation implied.",
-      "mirror_sha256": "6c23402811e8555fe36201b8c84eba6d4dd46e742483b2cb088ae835a031dfbf",
+      "mirror_sha256": "13c3c27d9d4ced69ef6ac9a98487fef7ac6baef675726dca4c2d29ca63df13b3",
       "state": "repository_only_overlay"
     },
     "tests/qwen-real-envelope-size.test.mjs": {
@@ -5089,7 +5089,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "2f068d561b76f20fcd70ad8aa4ab86a10f4c257b319eeda1f477b77b4ee0826a",
+  "inventory_sha256": "5e27ac101bcb0b6015baec8e0252172b7cadfd02bf7a6b427668197415e1f4ad",
   "overlay": {
     "withheld_paths": [
       {
