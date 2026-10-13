@@ -6281,7 +6281,7 @@
     "source_and_overlay_review": "PENDING"
   },
   "rollback": {
-    "mirror": "Point tools/qa/site_mirror.py RECEIPT back at site-v252-mirror-security-reconciliation-20261012.json; that receipt is unchanged.",
+    "mirror": "To undo the #5110 amendment, revert this receipt's in-place changes; site_mirror.py --check then reports MIRROR_REVIEW_REQUIRED until the hold is recorded again, because the hold itself is not rolled back. Do not point RECEIPT at site-v252-mirror-security-reconciliation-20261012.json or any earlier receipt: they still require the withheld public/data/subsurface assets, so using them would fail the file-set check or invite restoring those assets.",
     "site": "No Site deployment in this change.",
     "subsurface_hold": "Rolling back this amendment must keep #5110's publication hold. Do not restore the withheld public/data/subsurface assets to the mirror as an ordinary rollback; a future public carrier needs separate reviewed governance closure."
   },
