@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.6
-# Updated: 2026-10-13
+# Version: v1.7
+# Updated: 2026-10-14
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
@@ -151,6 +151,15 @@ updates:
       - "dependencies"
       - "ci"
       - "needs-review"
+    # A Python minor or major release changes the interpreter the image ships,
+    # not just its patch level, and release candidates were proposed this way
+    # (3.11 -> 3.14 -> 3.15.0rc3 within two days). Move those by hand after a
+    # compatibility review; patch updates within the current minor still flow.
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
     commit-message:
       prefix: "deps(docker)"
       include: "scope"
