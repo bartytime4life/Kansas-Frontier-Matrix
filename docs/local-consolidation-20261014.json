@@ -1,0 +1,79 @@
+{
+  "authority": "LOCAL_INSTALLATION_AND_BOUNDED_BROWSER_OBSERVATIONS",
+  "cleanup": {
+    "archive_sha256": "8d4bf77d351716deddd5adeb6177e9445cb495f9d02635cc4b97e7bbbf3493f3",
+    "former_live_archive_sha256": "134dac0a9ca6b0913386d151b0eca16d28d865ea7451962bbd9ed1edc36ea98c",
+    "obsolete_applications_removed": 80,
+    "recovery_files_verified": 115291,
+    "recovery_logical_bytes": 10108137999,
+    "remaining_old_site_folders": 0
+  },
+  "gates": {
+    "account_or_worker_configuration": "UNCHANGED; local login awaits owner setup",
+    "data_activation": false,
+    "human_acceptance": false,
+    "merge_authorization": "SEPARATE",
+    "native_publication": "SEPARATE",
+    "source_admission": false
+  },
+  "local_application": {
+    "build_files": 421,
+    "build_mismatches": [],
+    "old_site_folders": 1,
+    "source_commit": "6807b419b8db2bf4ed63a877b7290cbc5c2d9f13",
+    "source_files": 1188,
+    "source_mismatches": []
+  },
+  "main_repository": {
+    "after": "5ff78dacc4f035e92959625155994979a2640c17",
+    "before": "dfca2857f4a6082d733b5486e9af2a8ec8f5c292",
+    "branch_preserved": "claude/dependabot-crop-casma-tiles",
+    "clean": true,
+    "ignored_material_files_preserved": 29737,
+    "method": "FAST_FORWARD_ONLY"
+  },
+  "native_site": {
+    "deployed_by_this_batch": false,
+    "saved_only": true,
+    "source_commit": "358280aee889e2e2cf832bd598155ca21653c8de",
+    "version": 268
+  },
+  "node_inputs": [
+    "02bb2b5aca4e5c7ea5f8e6c3ec18bbda864d376f",
+    "1f3da64ca90e2d65c3cc588d1c1505c3de88b7a4"
+  ],
+  "profile": "kfm.local-consolidation-observations/v1",
+  "recorded_at": "2026-10-14T16:44:05.045086+00:00",
+  "status": "REVIEW_ONLY",
+  "storage": {
+    "data_activated": false,
+    "hosted_changed": false,
+    "http_status": 200,
+    "outcome": "CURRENT_LOCAL_INSTALLED",
+    "single_browser_origin": "http://127.0.0.1:4173",
+    "source_commit": "4ef5c3d820ddeb9319011f70a598762c00d48996",
+    "state_bytes_preserved": 920409107,
+    "state_files_preserved": 18469,
+    "state_inventory_sha256": "caaeac29c8e8a007e5cd24195874627bd704e14e4b76e3a58b1db5806ce86c2e"
+  },
+  "validation": {
+    "broad_mixed_runtime_suite": "NOT_GREEN; dated exploratory run: 1336 pass,47 fail,1 skipped; profile/context/UI expectation reconciliation remains separate.",
+    "browser": [
+      "Compact header, two tabs, Underground in Appearance, More includes Research & sign in.",
+      "Disposable composed High Plains: 50 records, 28 columns, complete 2048x1718 surface and partial-coverage disclosures.",
+      "Installed downloads route and existing saved cache budget remain available; browsing starts no transfer.",
+      "Installed reviewed Earth Engine active endpoint returns 200 with original NOT_ADMITTED boundary.",
+      "Invited login visible but Awaiting owner setup; no authentication gate weakened."
+    ],
+    "build": "PASS",
+    "focused_cases": 167,
+    "focused_failures": 0,
+    "full_new_security_scan": "NOT_RUN",
+    "hosted_equivalence": false,
+    "installed_http_checks": 12,
+    "installed_http_failures": 0,
+    "sqlite_integrity_failures": 0,
+    "sqlite_integrity_ok": 8,
+    "typescript": "PASS"
+  }
+}
