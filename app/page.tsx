@@ -1052,18 +1052,6 @@ const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [num
   return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
 };
 
-const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLat">, right: Pick<FeatureProperties, "focusLng" | "focusLat">) => {
-  const earthRadiusMiles = 3958.8;
-  const toRadians = (degrees: number) => degrees * (Math.PI / 180);
-  const latitudeDelta = toRadians(right.focusLat - left.focusLat);
-  const longitudeDelta = toRadians(right.focusLng - left.focusLng);
-  const leftLatitude = toRadians(left.focusLat);
-  const rightLatitude = toRadians(right.focusLat);
-  const haversine = Math.sin(latitudeDelta / 2) ** 2
-    + Math.cos(leftLatitude) * Math.cos(rightLatitude) * Math.sin(longitudeDelta / 2) ** 2;
-  return earthRadiusMiles * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
-};
-
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const windArrowCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1467,7 +1455,6 @@ export default function Home() {
   const [inspectViewportOnly, setInspectViewportOnly] = useState(false);
   const [inspectVisibleLayersOnly, setInspectVisibleLayersOnly] = useState(false);
   const [nearbyRadiusMiles, setNearbyRadiusMiles] = useState<ResearchRadius>(25);
-  const nearbyVisibleLayersOnly = true;
   const [compareTimeA, setCompareTimeA] = useState<number>(1910);
   const [compareTimeB, setCompareTimeB] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const [coordinateLatitude, setCoordinateLatitude] = useState(String(KANSAS_VIEW.center[1]));
@@ -1519,7 +1506,7 @@ export default function Home() {
   const [reviewedWeatherSelected, setReviewedWeatherSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
-  const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
+  const [, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
   const [toast, setToast] = useState("");
   const [isCompact, setIsCompact] = useState(false);
   const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
@@ -2205,18 +2192,6 @@ export default function Home() {
     isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
     && (mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
   )).length, 0), [mapEvidenceFilter, temporalQuery]);
-  const nearbyContext = useMemo(() => {
-    if (!selected || selectedTimeMismatch) return [];
-    return LAYER_REGISTRY
-      .filter((layer) => !nearbyVisibleLayersOnly || visibility[layer.id])
-      .flatMap((layer) => layer.data.features
-        .filter((feature) => feature.properties.fid !== selected.featureId)
-        .filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery))
-        .filter((feature) => mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
-        .map((feature) => ({ layer, feature, distanceMiles: anchorDistanceMiles(selected.properties, feature.properties) })))
-      .filter((row) => row.distanceMiles <= nearbyRadiusMiles)
-      .sort((left, right) => left.distanceMiles - right.distanceMiles);
-  }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
       isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
