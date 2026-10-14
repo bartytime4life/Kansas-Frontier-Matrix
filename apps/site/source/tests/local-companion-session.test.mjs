@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
+import { isAbsolute, join } from 'node:path';
 import ts from 'typescript';
 
 const source = await readFile('app/local-companion-session.ts', 'utf8');
@@ -74,7 +75,10 @@ test('every Explorer transport authenticates initial GET from the owner fragment
 test('standalone Desk consumes its fragment and authenticates API reads and writes', async () => {
   const env = browser(`#kfm-intake=${tokens.intake}`);
   const calls = [];
-  const desk = (await readFile('../../../tools/local_data/intake_desk/desk.js', 'utf8')).split('const project =')[0];
+  const repositoryRoot = process.env.KFM_WEATHER_REPOSITORY_ROOT;
+  if (repositoryRoot && !isAbsolute(repositoryRoot)) throw new Error('KFM_WEATHER_REPOSITORY_ROOT must be absolute');
+  const deskPath = repositoryRoot ? join(repositoryRoot, 'tools/local_data/intake_desk/desk.js') : '../../../tools/local_data/intake_desk/desk.js';
+  const desk = (await readFile(deskPath, 'utf8')).split('const project =')[0];
   const context = vm.createContext({ URLSearchParams, location: env.window.location, history: env.window.history, sessionStorage: env.window.sessionStorage,
     fetch: async (path, init) => { calls.push({ path, init }); return { ok: true, json: async () => ({}) }; } });
   vm.runInContext(desk, context);

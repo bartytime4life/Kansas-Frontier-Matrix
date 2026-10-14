@@ -11,7 +11,7 @@ const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, 
 const declarations = new Map();
 function walk(node) { if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) declarations.set(node.name.text, node.initializer.getText(ast)); ts.forEachChild(node, walk); }
 walk(ast);
-const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, reviewedSoilSelected, reviewedStormEventsSelected, reviewedEarthquakesSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
+const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, reviewedSoilSelected, reviewedStormEventsSelected, reviewedEarthquakesSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
 const catalogEntries = ${declarations.get("catalogEntries")};
 const selectedMapLayerCount = ${declarations.get("selectedMapLayerCount")};
 const matchingCatalogEntries = ${declarations.get("matchingCatalogEntries")};
@@ -28,7 +28,7 @@ test("actual page catalog includes every selected family; all tab/topic/search p
   const before = JSON.stringify(state), result = project(state);
   assert.equal(result.selectedMapLayerCount, 12, "includes held crop/water/weather/reviewed soil/storm events/earthquakes, daylight, soil, selected uninstalled imagery, official and registry");
   assert.equal(result.matchingCatalogEntries.length, result.selectedMapLayerCount);
-  for (const [query, topic, expected] of [["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop"]], ["solar", "terrain", ["daylight"]], ["nass", "land", ["crop", "ee-cdl"]], ["not present", "all", []]]) {
+  for (const [query, topic, expected] of [["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop", "reviewed-soil"]], ["solar", "terrain", ["daylight"]], ["nass", "land", ["crop", "ee-cdl"]], ["USCRN", "agriculture", ["reviewed-soil"]], ["NCEI", "history", ["reviewed-storm-events"]], ["ComCat", "geology", ["reviewed-earthquakes"]], ["GHCN", "weather", ["reviewed-weather"]], ["not present", "all", []]]) {
     const filtered = project({ ...state, officialWorkspace: topic, officialSourceQuery: query });
     assert.deepEqual(filtered.matchingCatalogEntries.map(entry => entry.id), expected);
     assert.equal(filtered.selectedMapLayerCount, 12, "count remains total selection, independent of search");
