@@ -1,6 +1,6 @@
 // Disposable, non-secret storage qualification. Never touches application data.
 import { DatabaseSync } from 'node:sqlite';
-import { mkdir, lstat, chmod, statfs } from 'node:fs/promises';
+import { mkdir, lstat, chmod, statfs, writeFile, rename } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { join, resolve } from 'node:path';
@@ -52,11 +52,18 @@ export async function qualifyPcStorage(root = '/private') {
     if (db.prepare('SELECT COUNT(*) AS n FROM disposable').get().n !== 0) throw new Error('PROBE_CRASH_ROLLBACK_FAILED');
     if (db.prepare('PRAGMA integrity_check').get().integrity_check !== 'ok') throw new Error('PROBE_INTEGRITY_FAILED');
     const fs = await statfs(root);
-    return { profile: marker, status: 'LOCAL_STORAGE_CHECKS_PASS', boots: Number(prior?.boots ?? 0)+1,
+    const receipt = { profile: marker, status: 'LOCAL_STORAGE_CHECKS_PASS', boots: Number(prior?.boots ?? 0)+1,
       priorSentinelPresent: Boolean(prior), crossProcessWriterLock: true, crashRollback: true,
       integrity: 'ok', filesystemType: fs.type, freeBytes: fs.bavail * fs.bsize,
       persistenceAcrossRestart: 'NEEDS_HOSTED_RESTART_AND_REDEPLOY', multiReplicaTopology: 'NEEDS_PROVIDER_VERIFICATION',
       node: process.versions.node };
+    // GoDaddy redacts structured log metadata. Keep non-secret test details
+    // readable through its authenticated private File Manager instead.
+    const receiptFile = join(directory,'receipt.json');
+    const temporary = join(directory,`receipt-${process.pid}.tmp`);
+    await writeFile(temporary,JSON.stringify(receipt,null,2)+'\n',{mode:0o600,flag:'wx'});
+    await rename(temporary,receiptFile);
+    return receipt;
   } finally { db.close(); }
 }
 
