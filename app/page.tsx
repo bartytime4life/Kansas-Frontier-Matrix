@@ -9891,12 +9891,12 @@ export default function Home() {
           <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">OLLAMA · YOUR PC</span><h2 id="qwen-panel-title">Chat with KFM</h2><p>Ask about this place and time. Answers require released evidence.</p></div>
+              <div><span className="qwen-eyebrow">OLLAMA · YOUR PC</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
+              <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
               <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
             </div>
             <AssistantWorkspace accountRequest={pcAccountRequest} onAccount={setPcAccount} place={selected ? String(selected.properties.title ?? "") : ""} />
