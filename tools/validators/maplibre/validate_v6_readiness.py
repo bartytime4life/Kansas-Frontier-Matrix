@@ -5,7 +5,11 @@ The validator combines bounded repository inspection with an optional committed
 probe-results record. It can prove accepted package-owned exact dependency
 selection, ESM/ES2022 posture, import-boundary hygiene, absence of known
 internal API use, and whether the required KFM browser/runtime probes were
-recorded. It cannot prove rendering equivalence, WebGL2 availability, CSP
+recorded. The consumer it inspects is the separately built Explorer Site in
+``apps/site/source`` (``apps/explorer-web`` was retired by PR #4691). Under the
+ADR-0006 section 2.6 Site exception, the Site manifest may declare
+``maplibre-gl`` when it matches the package-owned version, and the Site seam
+module is the only Site file allowed to import it. It cannot prove rendering equivalence, WebGL2 availability, CSP
 behavior, tile-query safety, resource reclamation, terrain behavior, Evidence
 Drawer stability, or headless parity unless those probes have actually been
 executed and supplied.
@@ -43,6 +47,26 @@ PROBE_NAMES = (
 )
 SOURCE_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".ts", ".tsx"})
 MAX_SOURCE_FILES = 1000
+CONSUMER_ROOT = "apps/site/source"
+CONSUMER_SOURCE_DIRS = ("app", "worker")
+# ADR-0006 section 2.6: the Site's single seam module, matching SITE_SEAM_PATHS in
+# assess_acquisition_inventory.py.
+SITE_SEAM_MODULE = "apps/site/source/app/maplibre-seam.ts"
+# Module-specifier forms, following PATTERNS in assess_acquisition_inventory.py,
+# except that the static form also matches side-effect imports such as
+# `import "maplibre-gl/dist/maplibre-gl.css"`.
+SPECIFIER_PATTERNS = (
+    re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from)?\s*['\"]([^'\"]+)['\"]"),
+    re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(
+        r"(?:^|\n)\s*export(?:\s+type)?(?:\s*\*(?:\s+as\s+[A-Za-z_$][\w$]*)?"
+        r"|\s*\{[\s\S]{0,160}?\})"
+        r"\s*from\s*['\"]([^'\"]+)['\"]"
+    ),
+    re.compile(r"\bimport\s*\.\s*meta\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(r"\brequire\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+)
 CASES_PATH = Path(__file__).resolve().parents[3] / "fixtures/maplibre/v6_readiness/cases.json"
 
 
@@ -124,7 +148,9 @@ def _version_reasons(version: str | None) -> list[str]:
 
 def _source_files(root: Path) -> tuple[list[Path], bool]:
     files: list[Path] = []
-    for base in (root / "apps/explorer-web/src", root / "packages/maplibre/src"):
+    bases = [root / CONSUMER_ROOT / name for name in CONSUMER_SOURCE_DIRS]
+    bases.append(root / "packages/maplibre/src")
+    for base in bases:
         if not base.is_dir():
             continue
         for path in sorted(base.rglob("*")):
@@ -135,11 +161,19 @@ def _source_files(root: Path) -> tuple[list[Path], bool]:
     return files, False
 
 
+def _acquires_maplibre(text: str) -> bool:
+    for pattern in SPECIFIER_PATTERNS:
+        for match in pattern.finditer(text):
+            specifier = match.group(1).lower()
+            if specifier == "maplibre-gl" or specifier.startswith("maplibre-gl/"):
+                return True
+    return False
+
+
 def _scan_sources(root: Path) -> tuple[list[str], list[str], bool]:
     internal: list[str] = []
     boundary: list[str] = []
     files, truncated = _source_files(root)
-    import_pattern = re.compile(r"(?:from\s+|import\s*\(|require\s*\()\s*['\"]maplibre-gl['\"]")
     internal_patterns = (
         re.compile(r"\bmap\s*\.\s*transform\b"),
         re.compile(r"\bmap\s*\[\s*['\"]transform['\"]\s*\]"),
@@ -153,7 +187,11 @@ def _scan_sources(root: Path) -> tuple[list[str], list[str], bool]:
         rel = path.relative_to(root).as_posix()
         if any(pattern.search(text) for pattern in internal_patterns):
             internal.append(rel)
-        if import_pattern.search(text) and not rel.startswith("packages/maplibre/"):
+        if (
+            _acquires_maplibre(text)
+            and not rel.startswith("packages/maplibre/")
+            and rel != SITE_SEAM_MODULE
+        ):
             boundary.append(rel)
     return sorted(set(internal)), sorted(set(boundary)), truncated
 
@@ -182,12 +220,12 @@ def _probe_results(root: Path) -> tuple[dict[str, str], str | None]:
 def scan_repository(root: Path) -> ReadinessResult:
     reasons: list[str] = []
     root_manifest, root_error = _load_json(root / "package.json")
-    explorer_manifest, explorer_error = _load_json(root / "apps/explorer-web/package.json")
+    consumer_manifest, consumer_error = _load_json(root / CONSUMER_ROOT / "package.json")
     package_manifest, package_error = _load_json(root / "packages/maplibre/package.json")
-    tsconfig, ts_error = _load_json(root / "apps/explorer-web/tsconfig.json")
+    tsconfig, ts_error = _load_json(root / CONSUMER_ROOT / "tsconfig.json")
     package_error = None if package_error == "FILE_NOT_FOUND" else package_error
     if (
-        explorer_error == "FILE_NOT_FOUND"
+        consumer_error == "FILE_NOT_FOUND"
         and ts_error == "FILE_NOT_FOUND"
         and root_error is None
     ):
@@ -202,7 +240,7 @@ def scan_repository(root: Path) -> ReadinessResult:
             return ReadinessResult(
                 Outcome.ERROR, errors, selected_version, None, None, probes
             )
-        reasons = ["EXPLORER_APP_RETIRED"]
+        reasons = ["MAPLIBRE_CONSUMER_ABSENT"]
         reasons.extend(_version_reasons(selected_version))
         if any(status == "FAIL" for status in probes.values()):
             reasons.append("RUNTIME_PROBE_FAILED")
@@ -211,25 +249,27 @@ def scan_repository(root: Path) -> ReadinessResult:
         return ReadinessResult(Outcome.HOLD, tuple(sorted(set(reasons))), selected_version, None, None, probes)
     if (
         root_error
-        or explorer_error
+        or consumer_error
         or package_error
         or ts_error
         or root_manifest is None
-        or explorer_manifest is None
+        or consumer_manifest is None
         or tsconfig is None
     ):
-        codes = [code for code in (root_error, explorer_error, package_error, ts_error) if code]
+        codes = [code for code in (root_error, consumer_error, package_error, ts_error) if code]
         return ReadinessResult(Outcome.ERROR, tuple(sorted(set(codes))), None, None, None, {})
 
     root_version = _dependency_version(root_manifest)
-    explorer_version = _dependency_version(explorer_manifest)
+    consumer_version = _dependency_version(consumer_manifest)
     package_version = _dependency_version(package_manifest) if package_manifest is not None else None
 
-    forbidden_versions = tuple(
-        version for version in (root_version, explorer_version) if version is not None
-    )
-    if forbidden_versions:
+    if root_version is not None:
         reasons.append("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION")
+    # The Site manifest may declare maplibre-gl (ADR-0006 section 2.6), but only the
+    # package-owned version selects the candidate and the Site must match it.
+    other_versions = tuple(
+        version for version in (root_version, consumer_version) if version is not None
+    )
 
     selected_version: str | None
     if package_version is None:
@@ -242,14 +282,14 @@ def scan_repository(root: Path) -> ReadinessResult:
         selected_version = package_version
         reasons.extend(_version_reasons(selected_version))
 
-    if "CONFLICT" in forbidden_versions:
+    if "CONFLICT" in other_versions:
         reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
     elif selected_version is not None and any(
-        version != selected_version for version in forbidden_versions
+        version != selected_version for version in other_versions
     ):
         reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
 
-    module_mode = explorer_manifest.get("type") if isinstance(explorer_manifest.get("type"), str) else None
+    module_mode = consumer_manifest.get("type") if isinstance(consumer_manifest.get("type"), str) else None
     if module_mode != "module":
         reasons.append("ESM_MODE_REQUIRED")
     compiler = tsconfig.get("compilerOptions") if isinstance(tsconfig.get("compilerOptions"), Mapping) else {}
