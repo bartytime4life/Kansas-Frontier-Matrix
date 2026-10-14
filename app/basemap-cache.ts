@@ -1,3 +1,4 @@
+import { companionSession } from "./local-companion-session";
 import type { MapOptions, RequestParameters } from "./maplibre-seam";
 
 export const BASEMAP_CACHE_ORIGIN = "http://127.0.0.1:8770";
@@ -35,7 +36,7 @@ export async function connectBasemapCache(force = false): Promise<BasemapCacheSt
   if (connecting) return connecting;
   connecting = (async () => {
     try {
-      const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/status`, { cache: "no-store", credentials: "omit", signal: AbortSignal.timeout(1500) });
+      const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/status`, { cache: "no-store", credentials: "omit", redirect: "error", headers: { "X-KFM-Session": companionSession("basemap") }, signal: AbortSignal.timeout(1500) });
       if (!r.ok) throw new Error("Unavailable");
       const text = await r.text();
       if (text.length > 8192) throw new Error("Invalid status");
@@ -52,7 +53,7 @@ export async function connectBasemapCache(force = false): Promise<BasemapCacheSt
 export async function basemapCacheAction(action: "overview" | "cancel"): Promise<BasemapCacheStatus | null> {
   const s = await connectBasemapCache(true);
   if (!s) throw new Error("Local cache is unavailable. Start the PC service, then reconnect.");
-  const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/${action}`, { method: "POST", headers: { "X-KFM-Session": s.sessionToken }, credentials: "omit", signal: AbortSignal.timeout(5000) });
+  const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/${action}`, { method: "POST", headers: { "X-KFM-Session": s.sessionToken }, credentials: "omit", redirect: "error", signal: AbortSignal.timeout(5000) });
   if (!r.ok) throw new Error("Local cache action failed.");
   return connectBasemapCache(true);
 }
@@ -69,7 +70,7 @@ export async function basemapCacheProtocol(request: RequestParameters, controlle
     if (signal.aborted) throw new DOMException("Aborted", "AbortError");
     if (s) {
       try {
-        const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/resource?url=${encodeURIComponent(url)}`, { headers: { "X-KFM-Session": s.sessionToken }, credentials: "omit", cache: "no-store", signal: AbortSignal.any([signal, AbortSignal.timeout(25_000)]) });
+        const r = await fetch(`${BASEMAP_CACHE_ORIGIN}/resource?url=${encodeURIComponent(url)}`, { headers: { "X-KFM-Session": s.sessionToken }, credentials: "omit", cache: "no-store", redirect: "error", signal: AbortSignal.any([signal, AbortSignal.timeout(25_000)]) });
         if (!r.ok) throw new Error("Cache unavailable");
         return { data: await r.arrayBuffer() };
       } catch { if (signal.aborted) throw new DOMException("Aborted", "AbortError"); }

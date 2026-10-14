@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 // Run against the production build, not a source-text or mocked auth check.
 const origin = process.env.KFM_NODE_TEST_ORIGIN ?? "http://127.0.0.1:5182";
+const localComposed = process.env.KFM_LOCAL_COMPOSED_TEST === "1";
 test("legacy pricing endpoint is absent from the free Explorer", async () => {
   const response = await fetch(origin + "/api/reports/quote", {
     method: "POST",
@@ -30,7 +31,8 @@ for (const path of [
       },
       redirect: "manual",
     });
-    assert.equal(response.status, 401);
+    assert.equal(response.status, localComposed ? 403 : 401);
+    if (localComposed) assert.equal(await response.text(), "Local request authority rejected.");
   });
 }
 test("map assets are served by the Node production server", async () => {
@@ -63,6 +65,7 @@ test('hosted source status honestly reports the unconfigured archive without cre
 for (const [path,method] of [['/api/source-pipeline/captures','GET'],['/api/source-pipeline/run','POST'],['/api/source-pipeline/control?action=resume','POST']]) {
   test('archive authority is denied to anonymous and forged staff requests: '+path,async()=>{
     const response=await fetch(origin+path,{method,headers:{'x-role':'admin','oai-authenticated-user-id':'203533328',Origin:'https://kansasfrontiermatrix.com'}});
-    assert.equal(response.status,401);
+    assert.equal(response.status,localComposed ? 403 : 401);
+    if (localComposed) assert.equal(await response.text(), "Local request authority rejected.");
   });
 }

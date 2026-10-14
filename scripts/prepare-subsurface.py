@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build pinned, public-context display assets; never write to an evidence DB.
+"""Prepare restricted subsurface candidates for private review; never publish.
 
 Requires Python 3.10+ and pyproj==3.7.1 for the documented NAD27 grid shift.
 Input archives and the PROJ grid are cached OUTSIDE the application tree.
@@ -28,7 +28,7 @@ ARCHIVES = {
     'coreLib': ('f087d0bbd88597fb88189bdbb16f91b29471343db5fda42d0d8d1558ce6ea2b0', '2026-09-11', '2026-10-06T02:23:15.997130+00:00'),
 }
 GRID_HASH = '44611d823c48e5347500ee6afe40ff33d2b88cf817bf59f705ed4a4c3bd687d7'
-PREFIX = '/data/subsurface/'
+PREFIX = ''  # Private candidate-relative paths; never a public delivery URL.
 MAX_TILE_BYTES = 3_000_000
 
 
@@ -118,7 +118,24 @@ def write_gzip(path, data):
     return {'sha256': digest(compressed), 'bytes': len(compressed), 'uncompressedBytes': len(raw)}
 
 
+def validate_storage(input_dir, output_dir):
+    """Reject tracked/deployed storage before dependencies, network or writes."""
+    site = Path(__file__).resolve().parents[1]
+    repo = next((p for p in site.parents if (p / '.git').exists()), site)
+    for label, directory in [('Input cache', input_dir), ('Restricted output', output_dir)]:
+        resolved = directory.resolve()
+        if resolved.is_relative_to(repo):
+            raise ValueError(label + ' must remain outside the repository/application tree')
+        if any(part.lower() in {'public', 'dist', '.next', 'published'} for part in resolved.parts):
+            raise ValueError(label + ' cannot use a deployed/published directory')
+    if output_dir.exists() and (not output_dir.is_dir() or any(output_dir.iterdir())):
+        raise ValueError('Restricted output must be a new or empty review directory')
+    if output_dir.resolve().is_relative_to(input_dir.resolve()) or input_dir.resolve().is_relative_to(output_dir.resolve()):
+        raise ValueError('Input cache and restricted output must be separate directories')
+
+
 def build(input_dir, output_dir):
+    validate_storage(input_dir, output_dir)
     import pyproj
     if pyproj.__version__ != '3.7.1':
         raise RuntimeError('Use pyproj==3.7.1 to reproduce the pinned horizontal transformation')
@@ -288,7 +305,7 @@ def build(input_dir, output_dir):
                     'wwc5_lith_log':'Original logged descriptions, with recorded gaps and overlaps. Not continuous geology between wells. Invalid depth ranges are counted and excluded.',
                     'interpreted_logs':'Older independent interpretation edition; only exact well/depth/normalized-description matches are attached. Codes are interpretations, not observations or measured hydraulic properties.',
                     'coreLib':'Inventory start/end spans may contain recovery gaps. Original drilling reference and deviation are unknown; ranges cannot be treated as true vertical depths or placed beneath terrain. Photos are external links only.'}[name]})
-        manifest = {'version':1, 'capturedAt':CAPTURED, 'status':'EXTERNAL_CONTEXT_ONLY',
+        manifest = {'version':1, 'capturedAt':CAPTURED, 'status':'RESTRICTED_REVIEW_REQUIRED',
             'sources':source_entries, 'tiles':tile_entries, 'totals':dict(sorted(stats.items())),
             'locator':{'url':PREFIX+'locator.json.gz','count':len(locator),'columns':['id','county','coordinates','tileId'],**locator_metrics},
             'counties':[{'name':name,'coordinates':[round(values[1]/values[0],6),round(values[2]/values[0],6)],'count':values[0]} for name,values in sorted(counties.items()) if name],
@@ -309,10 +326,12 @@ def build(input_dir, output_dir):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input-dir',type=Path,required=True,help='External cache for pinned original archives; never public/ or another deployed directory')
-    parser.add_argument('--output-dir',type=Path,default=Path(__file__).resolve().parents[1]/'public/data/subsurface')
+    parser.add_argument('--output-dir',type=Path,required=True,help='Explicit external restricted review directory; this command cannot publish')
     args = parser.parse_args()
-    if args.input_dir.resolve().is_relative_to(Path(__file__).resolve().parents[1]):
-        parser.error('Raw input cache must stay outside the application tree')
+    try:
+        validate_storage(args.input_dir, args.output_dir)
+    except ValueError as error:
+        parser.error(str(error))
     build(args.input_dir,args.output_dir)
 
 

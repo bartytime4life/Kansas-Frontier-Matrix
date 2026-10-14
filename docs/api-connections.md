@@ -1,0 +1,228 @@
+<!-- Packaging mirror of canonical docs/runbooks/api-connections.md. No additional doctrine, source, review or release authority. -->
+
+# API connections on both hosts
+
+The owner selected all 15 researched connections plus the previously implemented
+NOAA NCEI products, across the owner-private Sites Explorer and separate GoDaddy
+Node app q9r9beo47t. This change adds bounded backend acquisition and private
+frontend inspection. Source admission and public data release remain separate reviews.
+
+Both applications provide /connections and /api/connections. The interface
+selects a provider, station/county/AOI, product and supported dates. It shows
+native records, source geometry or georeferenced imagery, native-value plots,
+partial/empty/error states, original provenance and verified saved replay.
+Public callers can read connection metadata and host status. Receipt lists,
+capture, raw/bundle download and data previews require existing owner authority.
+A capture does not become a main-map evidence layer or a released export.
+
+## Owning roots and deployment mirrors
+
+Placement uses the checked Directory Rules v2 adopted by accepted ADR-0029:
+source-specific request builders and parsers extend connectors/; source-agnostic
+portable HTTP primitives extend packages/connectors-core/src/; orchestration
+uses pipelines/ingest/shared/; the operator uses tools/local_data/; host
+composition and user surfaces stay in the existing application; guidance uses
+docs/runbooks/. No registry, schema, policy or release home is replaced.
+
+The new ESM primitives coexist with the existing Python package. This is a
+bounded runtime extension, not a migration of Python consumers. Existing source
+lanes remain authoritative. The EPA AirNow/AQS adapter uses the existing EPA lane
+without claiming to resolve the older informational AirNow lane authority.
+KDOT uses existing connectors/kansas/kanplan provenance rather than claiming the
+parallel informational kdot lane is an admitted registry.
+
+tools/local_data/bundle_api_connections.mjs creates deterministic application
+mirrors under app/api-connections-runtime/. manifest.json binds both canonical
+and deployed hashes. These are packaging copies, never additional canonical
+connector, contract, source-registry or rights authorities. Regenerate them from
+the implementation roots and compare hashes; never fix an individual mirror.
+
+The final standalone Sites candidate preserves same-project v265 source
+3807302d474db8ff9411f7290d8d1f609d826d90, including the land-records addition, its subsequent edit correction and
+prior river-startup change. The API patch was replayed without overlapping those
+new files. The frozen security review retains its earlier v263 base902c1f5.
+The Node copy
+preserves navigation/capture candidate 1c2dc18a1d7e84787da75764aeba7ba6e3c084b7 and
+the subsequent exact-host-proxy repair 2418fc31630e066142d485cd26ea216d26b3ac17
+(replayed locally as 78146b5), plus navigation acceptance checkpoint c8adcd9
+(replayed as 16b2f6a). These histories are separate from the monorepo.
+Independent Underground repair fa27044c remains preserved in its own checkout;
+it is not silently replaced or represented as included here.
+
+## Provider profiles
+
+| Connection | Bounded support | Live verification / remaining gate |
+|---|---|---|
+| WQP | WQX 3.0 station preflight, fullPhysChem CSV, one public surface-water station, three allowlisted parameters, <=31 days | Header-only result verified; zero samples stays empty. Full-profile qualifiers, methods, fractions and limits retained |
+| NASS Quick Stats | Kansas county wheat, Survey/Census, year/statistic, count-first <=5,000 rows | NASS key and terms acceptance required; native suppression stays a string |
+| U.S. Drought Monitor | Kansas FIPS 20, categorical/cumulative area percentages, <=366 days | Capture/replay verified; weekly validity intervals retained; no polygon fabrication |
+| DASC imagery | Fixed NG911 2024 natural-color service, small AOI, 768×768 PNG plus service metadata | Raster capture/replay verified; item/vintage rights and per-pixel dates still reviewed separately |
+| USGS terrain transect | 21 explicit 3DEP multipoint samples; optional bounded NLDI process | 3DEP capture/replay verified, actual 1 m raster and reported NAVD88; NLDI upstream timed out |
+| Planetary Computer | Five Landsat/NAIP STAC scene records, dates/AOI, footprints and asset names | Empty selected-date response verified. No SAS asset downloads, license clearance or synthesized pixels |
+| NRCS SCAN | One of four Kansas SCAN stations, two sensor depths, daily <=31 days, QC/QA/original fields | Capture/replay verified. Depth inches, stored pct, derived daily status preserved; Tribal SCAN excluded |
+| USDA SDA | Fixed numeric-coordinate SQL, <=100 horizons; texture, AWC, OM, pH, drainage, conductivity | Capture/replay verified; alternatives/components and depth semantics retained |
+| AirNow + EPA AQS | Current reporting-area AQI; distinct AQS county January daily PM2.5 profile | Service credentials required; AirNow archive authorization also required |
+| OSM Overpass | Small AOI roads/buildings, <=250 ways; native IDs/versions/time, restricted classes omitted from view | Provider returned 406 in this environment; no successful live capture claim. ODbL duties pending review |
+| Census ACS | Kansas county 5-year estimate/MOE/annotation pairs, selected vintage | Current API requires Census key; anonymous call redirects to missing_key.html and is never followed |
+| EIA v2 | Kansas monthly generation, selected year, fixed facets, <=500 rows | EIA key required; returned native units/fuel classes stay separate; paging remains partial |
+| Library of Congress | Ten Kansas map catalog records per page, pages 1–20 | Capture/replay verified; pagination/rights/date limitations retained. No resource assets fetched |
+| IEM ASOS | Four Kansas airports, explicit temperature/wind/METAR columns, <=7 days, UTC/end-exclusive | Capture/replay verified; M/T and limited QC retained; one-second request pause |
+| KDOT KanPlan | Seven existing allowlisted layers, small AOI, <=100 GeoJSON features plus metadata | Layer metadata verified. Empty copyright/edit metadata does not clear rights; review flag required |
+| NOAA NCEI | Six selected products, four Kansas first-order stations, native fields/flags; hosted <=2 MiB/entity | Capture/replay verified. Daily <=366 days, annual summaries <=10 years; normal baselines remain explicit |
+
+NLDI's current executor accepts the legacy named-input list; its documentation
+shows an object that returned immediate InvalidParameterValue in this session.
+The list reached processing but the provider's elevation call timed out.
+The direct 3DEP adapter is the verified primary path; NLDI successful output
+remains NEEDS VERIFICATION.
+
+[Census's current key requirement](https://api.census.gov/data/missing_key.html)
+supersedes the older anonymous-access assumption in the initial research note.
+The UI includes the provider's required no-endorsement notice.
+
+## Transport, identity and storage
+
+Every request comes from a fixed provider builder. No caller-supplied URL, SQL,
+STAC asset href, pagination walk, redirect, archive root or key-bearing
+provenance URL is accepted. JSON duplicate keys, nesting, nonfinite values,
+structural surprises, byte/row caps and invalid geography fail closed.
+One provider acquisition has a 30-second total deadline. No automatic HTTP
+retry occurs. The shared lease serializes writes; IEM uses at least a one-second
+pause and LoC a three-second pause. Provider failures remain explicit.
+
+Plan identity binds version, provider, exact normalized selection, requests and
+time bucket. The archive stores a reversible response bundle with per-entity
+digests, metadata and a whole-bundle digest. It preserves anonymous decoded HTTP
+entities unchanged. Some credential-based providers echo keys in their metadata:
+credentialed JSON is validated first and decoded strings/property keys are
+scrubbed, including literal, mixed/full URI-encoded and JSON-escaped echoes. Percent hex
+digits accept either case; ordinary credential letters retain exact case. Malformed
+credentialed JSON and redaction key collisions are held before storage. MIME
+parameters are omitted; keyed ETag/Last-Modified headers are omitted. Received/
+stored body digests and redaction counts preserve the explicit transform. Such bundles are explicitly transformed, not
+byte-identical original responses. Keys are never kept in plans, receipts,
+browser state, source or public artifacts.
+
+Replay rebuilds the canonical request and checks the plan identity, stored
+lengths, whole-bundle and entity hashes, field structures and source scope.
+A successful fetch alone never produces a frontend review result: capture reads
+back the durable store, then replays the stored bytes. Invalid bounded responses
+from anonymous sources remain private for correction and cannot supply a data view.
+Credentialed malformed JSON is held without storing its unverified secret-bearing body.
+
+Node uses the existing MySQL ingestion store: verified TLS/hostname, owner-only
+GitHub identity, transactions, capacity reservations, fencing, chunked bytes and
+a shared 80,000,000,000 accounted-byte cap. The prior schema needs no new Node
+table for these bundles. Provider disk, database, index/log/backup capacity and
+real MySQL behavior still require hosted verification. D1/R2 remain unbound in
+this Node composition; that has not been disguised as governed-release support.
+
+Sites adds only drizzle/0010_api_connections.sql and its journal entry. The
+receipt index shares daily_archive_captures, its budget and writer lease; it
+does not allocate a second 80 GB archive. Its limit is the lesser of existing
+archive budget and 80,000,000,000 bytes. D1 tracks an R2 object before writing it
+and verifies exact object readback before a receipt can be served. Interrupted
+writes retain their reservation. Failed same-bucket D1 selections remain held,
+without deleting history or silently overwriting failed attempts.
+
+## Configuration handoff
+
+Enter values directly in each host's server settings, never in chat or source:
+
+- NASS_QUICK_STATS_KEY; KFM_NASS_TERMS_ACCEPTED=true only after actual acceptance.
+- CENSUS_API_KEY.
+- EIA_API_KEY.
+- AIRNOW_API_KEY; KFM_AIRNOW_ARCHIVE_AUTHORIZED=true only after documented provider authorization.
+- EPA_AQS_EMAIL and EPA_AQS_KEY for the AQS profile.
+- KFM_KDOT_RIGHTS_REVIEWED=true only after rights/currentness/sensitivity review.
+
+Consent-gated Kansas Mesonet remains outside these 15 executable profiles.
+No registration, email, paid subscription, terms acceptance or consent is
+fabricated by source changes.
+
+Node's existing DB/TLS/public-origin/trusted-host/owner-OAuth/published-role/
+capacity/enablement requirements remain in server/ingestion-config.mjs.
+Configure the additive MySQL migration from the prior candidate only after
+review; do not reset MySQL or import D1 migrations. Sites keeps its existing
+owner access, DB and BUCKET bindings. Apply its additive migration through the
+same reviewed Site workflow; do not reseed or replace persisted datasets.
+
+## Scheduled profiles
+
+/api/connections/run is a capture-only POST for existing owner or capture-worker
+authority. It never returns source bytes. A worker cannot choose a URL, source
+or query in its request. Configuration is disabled by default:
+
+- KFM_API_SCHEDULE_ENABLED=true only after exact-head/runtime/profile review.
+- KFM_API_CAPTURE_PROFILES: <=4,096 characters, at most 16 objects containing
+  sourceId, query and optional rollingDays (1–31, only date-enabled profiles).
+- A tick attempts at most two validated profiles; its hourly rotation provides
+  bounded progress. Cached exact plans do not reacquire. Missed historical
+  windows are not synthesized. Each capture uses its own fenced lease.
+
+Example non-secret configuration:
+
+~~~json
+[{"sourceId":"usdm-statistics","query":{"mode":"2"},"rollingDays":7},
+ {"sourceId":"nrcs-scan","query":{"station":"2092:KS:SCAN"},"rollingDays":7}]
+~~~
+
+The existing three-feed scheduler remains unchanged. The new configured-profile
+endpoint is an additional ready-to-wire trigger; no cron, cloud automation or
+profile activation is claimed. Verify the published host's authorization envelope
+and trigger credentials before scheduling it. Preview workers remain disabled
+on the shared Node database.
+
+## Verified implementation evidence
+
+- All 16 profile builders, including six NCEI products, have bounded request,
+  capture/replay, identity-mutation and holds coverage: 75 adapter cases pass.
+- Six native-series cases pass for units, datums, sensor depths, suppression,
+  censoring, missing/trace values and source order.
+- Seven actual disposable D1/R2 integration cases pass for accounting, pause,
+  lease fencing, interrupted reservations, stored tamper denial, route access
+  and configured-profile limits. No production bindings are used.
+- Eleven existing Node host-boundary cases pass; native hosted MySQL, owner
+  OAuth and configured secrets remain separate acceptance work.
+- Two frozen Codex Security reviews cover all 34 Node / 37 Sites changed files.
+  Twelve concrete credential-copy cases per host reproduced with synthetic
+  values. Exact owner-only read controls establish no unauthorized recipient
+  or privilege delta, so they are retained as correctness evidence, not
+  reportable vulnerabilities. The final candidate corrects the gaps and adds
+  regressions; the earlier sealed snapshots do not certify the later heads.
+- Ten live bounded provider responses were captured and saved-byte replayed,
+  including header-only WQP and empty STAC queries. Empty coverage is explicit.
+- Browser verification checks all 16 selectors/holds and representative private
+  saved views for all ten captures through a clearly labeled loopback replay
+  harness. Native hosted auth/storage, broad mobile/keyboard/WebGL acceptance
+  and public/main-map activation are not established by that harness.
+- The adopted topology ratchet passes with zero invariants/new drift. Its single
+  scaffold waiver strictly contracts after materializing connectors/drought-monitor;
+  no waiver or expiry is expanded.
+
+The broader Node rendered suite is not a passing gate: 26 pass / 7 fail on both
+the final candidate and a separately built c8adcd9 navigation baseline. Five
+failures use the older Worker fetch harness against the Node composition; two
+assert removed download labels. Those failures are inherited and do not become
+passes because the new connection cases pass. The two navigation mobile cases
+pass, and native hosted/browser acceptance remains separate.
+
+## Validation, promotion and rollback
+
+Validation evidence is retained separately from source and deployment assets.
+Synthetic tests are fixture evidence; live captures stay in a private task-local
+evidence directory. Neither class grants source admission, EvidenceBundle
+qualification, publication review, main-map activation or released exports.
+
+Before production activation: reconcile each host's current source, review exact
+heads and migrations, configure credentials/consent, verify native storage and
+owner denial cases, run real owner capture/replay, complete rendered keyboard/
+mobile/WebGL acceptance, and apply existing rights, sensitivity, provenance,
+review and release controls. GitHub incident #4024 remains branch-only for this
+writing path; do not create or merge a successor PR as a shortcut.
+
+Rollback removes the new routes/UI/profiles or pauses capture, preserving all
+captures, receipts, reservations, hashes and existing source histories. Revert
+the code through reviewed lifecycle controls. Do not drop either host's tables,
+delete R2 objects, reset MySQL, modify DNS/audiences, overwrite the private Site,
+or roll back unrelated pending Underground work.

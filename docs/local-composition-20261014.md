@@ -1,0 +1,19 @@
+# One current local Explorer
+
+The owner requested one current PC application on port 4173, incorporating the latest login, rendering, core and map-control work, with obsolete runnable copies removed after recoverable preservation.
+
+Source inputs are native Site v268 `358280aee889e2e2cf832bd598155ca21653c8de`, Node/login/render branch `02bb2b5aca4e5c7ea5f8e6c3ec18bbda864d376f`, reviewed Node core repair branch `1f3da64ca90e2d65c3cc588d1c1505c3de88b7a4`, and repository safety overlays from main `5ff78dacc4f035e92959625155994979a2640c17`. Native and Node hosting remain distinct; this local composition supersedes neither host's publication authority.
+
+The Node interface retains role-gated invited-user login, free reports, mobile menu fixes, coalesced navigation/water work and core depth/asset repairs. It also carries newer source pages, land records, almanacs, governed controls, local-session safeguards and the tidy Appearance/Measure layout. Native publication's subsurface hold is preserved in the native API capsule; the Node branch's existing source-context records remain its explicitly inherited data overlay, with their original source bytes and limitations. This does not admit, approve or activate those records or authorize a public deployment.
+
+`scripts/serve-local-composed.mjs` is the single loopback browser entry. Current Node UI/account routes and the exact native data runtime share this address. The native component supplies the existing D1/R2, USGS-key and reviewed-imagery responsibilities; its internal Worker listener cannot serve a second map. Its saved-source identity, files, runtime versions, DB/BUCKET declarations and publication hold are verified at startup. Forged owner headers and alternate origins are rejected. Busy/unavailable data requests fail safely. No caller approval fields are translated into authority.
+
+The old data store is retained byte-for-byte in a separate runtime-state home. Deleting obsolete application folders does not delete source captures, reviewed imagery, SQLite stores, secrets, user drafts, model stores or external KFM-data collections. Recovery archives remain private and are not runnable Site variants or deployment inputs.
+
+Local login remains visible but reports Awaiting owner setup: its existing configuration accepts qualified HTTPS hosted origins only. This local composition does not silently weaken that rule, create credentials, fabricate an account or grant a new role. Existing local Qwen and download/review companions remain separate support services, not additional maps.
+
+Placement reuses the application scripts/server/tests/docs responsibilities and external existing KFM-local-data/runtime storage. Directory Rules/ADR-0029 are the placement basis. Hosted environment variables, audience, storage, release pointers, credentials and DNS are unchanged.
+
+Build and TypeScript pass. 84 focused login/storage/core/mobile/render/routing checks and 15 actual HTTP/auth/static/runtime checks passed on disposable state. Native and monorepo suites were separately verified at 1336 and 1347 passes. A broad mixed-runtime exploratory run reported 1336 passes, 47 failures and one skipped: it incorrectly targets absent/old preview ports and loads a Node build as a Worker, and includes remaining UI/context expectation mismatches. It is not reported as a green unified full suite; follow-up profile reconciliation remains review work. Browser and installed alignment results are recorded in the final consolidation receipt.
+
+Rollback uses the private source/build/state recovery archive and service configuration. Never seed/reset or clear stores to restore an application version. Repository merge, native publication, account configuration, source admission and data activation retain their separate gates.

@@ -1,0 +1,28 @@
+.page { min-height: 100dvh; color: #e6edf5; background: #101923; padding: 24px clamp(16px, 4vw, 72px) 64px; }
+.header { display: flex; justify-content: space-between; gap: 16px; max-width: 1280px; margin: auto; }
+.page a { color: #a3d8df; text-underline-offset: 3px; }
+.header a, .actions a, .groups a { display: inline-flex; align-items: center; min-height: 44px; }
+.intro { max-width: 800px; margin: 42px 0 28px; }
+.intro h1 { font-size: clamp(30px, 5vw, 54px); letter-spacing: -.035em; margin: 10px 0; }
+.intro p, .card p { line-height: 1.6; color: #bfccd8; }
+.intro > p:first-child { color: #dbbd7b; font-size: 12px; letter-spacing: .16em; }
+.boundary, .limits { border-left: 2px solid #c3a260; padding-left: 12px; }
+.groups, .actions { display: flex; gap: 8px 18px; flex-wrap: wrap; }
+.groups { border-block: 1px solid #344151; padding: 8px 0; }
+.section { margin-top: 38px; scroll-margin-top: 20px; }
+.section h2 { color: #dbbd7b; font-size: 21px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 18px; }
+.card { min-width: 0; border: 1px solid #344151; border-radius: 14px; background: #172330; padding: 22px; scroll-margin-top: 20px; }
+.card h3 { font-size: 21px; margin: 0 0 8px; }
+.card p, .card li { font-size: 14px; }
+.card ul { padding-left: 20px; }
+.facets { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0 !important; }
+.facets li { background: #24384a; border-radius: 6px; padding: 5px 8px; color: #cfe2ee; }
+.actions { margin-bottom: 10px; }
+.actions a { font-size: 13px; }
+.card details { border-top: 1px solid #344151; }
+.card summary { cursor: pointer; min-height: 44px; padding: 12px 0; font-size: 14px; }
+.card details li { margin: 10px 0; overflow-wrap: anywhere; }
+.card small { display: block; margin-top: 4px; color: #9caebf; font-size: 12px; }
+.page :focus-visible { outline: 2px solid #e5c887; outline-offset: 4px; }
+@media (max-width: 480px) { .page { padding-top: 12px; } .intro { margin-top: 24px; } .card { padding: 16px; } }

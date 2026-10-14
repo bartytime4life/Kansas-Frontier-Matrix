@@ -25,9 +25,18 @@ python3 tools/local_data/basemap_cache.py --root /absolute/path/to/KFM-data
 
 The server listens only on `127.0.0.1:8770`. It requires the exact owner-private
 Site origin (or local preview ports 4173/4194), the loopback Host header, and a
-per-process session token for tile requests and download controls. Redirects,
+operator-provisioned per-process session token for status, tile requests and download controls. Redirects,
 arbitrary URLs and symlink roots are rejected. No credentials are forwarded to
 providers. The browser may require permission to access the local network.
+
+At startup the service prints private browser connection links. Open the link
+for your Explorer origin in the tab you use. Its `kfm-basemap` fragment never
+reaches the server; the browser removes it and retains the capability in memory
+and tab-scoped session storage. Open a new link after each service restart.
+Bare Site URLs do not provision authority. Keep these links and terminal output
+private. A user service's output must also stay owner-private; use the owner's
+journal to retrieve its connection link. This capability does not isolate code
+that can already read the owner's terminal, journal or browser state.
 
 **Layers → Tune this view → Basemaps on this PC** shows destination, usage,
 tile count, session disk hits and download progress. It offers reconnect, a
