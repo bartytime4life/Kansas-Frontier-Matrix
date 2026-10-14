@@ -177,3 +177,20 @@ test('capacity is reserved before async evidence work and preparing jobs cannot 
     assert.equal((await first).response.status,202);
   }finally{await f.close();}
 });
+test('actual worker monitor aborts inference when the backend cancels its lease',async()=>{
+  const stop=new AbortController();let checked=false,aborted=false,claimed=false;
+  const job={id:token(),lease:token(),packet:{question:question.question,...fixtureEvidence}};
+  const fetcher=async(url,options)=>{
+    if(url.endsWith('/api/version'))return Response.json({version:'0.35.1'});
+    if(url.endsWith('/api/tags'))return Response.json({models:[{name:QWEN_LOCAL_MODEL,digest:QWEN_LOCAL_MODEL_DIGEST}]});
+    if(url.endsWith('/heartbeat'))return Response.json({ready:true});
+    if(url.endsWith('/claim')){const value=claimed?null:job;claimed=true;return Response.json({job:value});}
+    if(url.endsWith('/check')){checked=true;return Response.json({active:false});}
+    if(url.endsWith('/api/chat'))return new Promise((_,reject)=>options.signal.addEventListener('abort',()=>{aborted=true;reject(new DOMException('Cancelled','AbortError'));},{once:true}));
+    if(url.endsWith('/result')){stop.abort();return Response.json({reasonCode:'LEASE_LOST'},{status:409});}
+    throw new Error('Unexpected worker endpoint');
+  };
+  const timeout=setTimeout(()=>stop.abort(),10000);
+  try{await createWorker({origin,workerToken:token()},fetcher)(stop.signal);assert.equal(checked,true);assert.equal(aborted,true);}
+  finally{clearTimeout(timeout);stop.abort();}
+});
