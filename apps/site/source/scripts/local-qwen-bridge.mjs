@@ -371,17 +371,19 @@ const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|o
 const WEB_TARGET_PERSON = "(?:owners?|developers?|publishers?|authors?|maintainers?|operators?|creators?|managers?|administrators?|admins?|webmasters?|contacts?|staff|employees?|directors?|founders?|registrants?|people|persons?|users?|team|company|companies|presidents?|chairs?|chairm[ae]n|deans?|ceos?|officers?|secretar(?:y|ies)|governors?|mayors?|commissioners?|contractors?|vendors?|agents?|representatives?|members?|partners?|sponsors?|clients?|customers?|heads?|chiefs?|leads?|editors?|curators?|coordinators?|supervisors?|employers?|residents?|tenants?|landlords?)";
 const WEB_TARGET = `(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their|his|her|whose|who|which|${WEB_TARGET_PERSON})\\b)\\w+ ){0,6}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)`;
 const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
-// Distress ("I'm in my car and trapped by flood water", "my son is hurt") is an emergency in other
-// words. The subject is a person and the state describes that subject: "how many people were injured
-// in 1955" is history, and "my dataset is missing", "I am mapping lost trails" or "we are missing a
-// layer" are about the map. Between them only adverbs and a short place phrase ("on the county road
-// and") may stand.
-const DISTRESS_PERSON = "(?:sons?|daughters?|child|children|kids?|bab(?:y|ies)|wife|husband|partner|friends?|family|dad|father|mom|mother|parents?|brothers?|sisters?|grand(?:ma|pa|mother|father|parents?)|neighbou?rs?|group|party|dogs?|horses?)";
-const DISTRESS_SUBJECT = `(?:i am|i m|im|we are|we re|someone is|somebody is|(?:my|our) (?:\\w+ )?${DISTRESS_PERSON} (?:is|are)|(?:an?|the) (?:child|kid|person|man|woman|hiker|driver|swimmer|camper) is)`;
+// Distress ("I'm in my car and trapped by flood water", "my uncle is hurt") is an emergency in other
+// words. A possessed subject is a person or animal unless it names the map or its data ("my dataset
+// is missing" is about the map), and only adverbs and a short place phrase without a verb ("on the
+// county road and") may stand between subject and state, so "I am mapping lost trails" and "how many
+// people were injured in 1955" are not distress. A state that goes on to modify a noun ("we are
+// missing a layer", "missing towns") is not distress either; any other continuation ("trapped beside
+// the creek", "stranded because of flooding", "hurt but conscious") still is.
+const DISTRESS_NOT_PERSON = "(?:map|maps|data|dataset|datasets|layer|layers|legend|query|search|file|files|record|records|chart|account|screen|view|app|computer|browser|link|page|connection|tile|tiles|download|upload|project|research|report|model|question|answer|source|sources|column|field|value|values|password|session|selection|area|study|analysis|work|code|results?)";
+const DISTRESS_SUBJECT = `(?:i am|i m|im|we are|we re|someone is|somebody is|(?:my|our) (?:\\w+ )?(?!${DISTRESS_NOT_PERSON}\\b)\\w+ (?:is|are)|(?:an?|the) (?:child|kid|person|man|woman|hiker|driver|swimmer|camper) is)`;
 const DISTRESS_ADVERBS = "(?:(?:currently|now|still|right now|being|getting|badly|seriously|completely|totally|really) )*";
-const DISTRESS_PLACE = "(?:(?:in|on|at|near|by|under|inside|outside|behind|beside|along) (?:\\w+ ){1,5}?(?:and )?)?";
-// The state ends the phrase or is followed by a place, cause or plea, never by a noun it modifies.
-const DISTRESS_STATE = "(?:trapped|stranded|stuck(?! (?:on|with) (?:how|what|which|why|this|the|that)\\b)|drowning|injured|hurt|bleeding|lost|missing)(?=$| (?:in|on|at|by|near|under|inside|outside|along|and|with|without|since|for|from|after|out|somewhere|here|there|now|what|how|please|help|can|should)\\b)";
+const DISTRESS_PLACE = "(?:(?:in|on|at|near|by|under|inside|outside|behind|beside|along) (?:(?!\\w+ing\\b)\\w+ ){1,5}?(?:and )?)?";
+const DISTRESS_STATE = "(?:trapped|stranded|stuck(?! (?:on|with) (?:how|what|which|why|this|the|that)\\b)|drowning|injured|hurt|bleeding|lost|missing)\\b"
+  + "(?! (?:a|an|the|this|that|these|those|some|any|my|our|data|information|records?|layers?|values?|fields?|files?|towns?|trails?|sites?|species|workers?|people|persons?|animals?|birds?|roads?|places?|links?|pages?|years?)\\b)";
 const DISTRESS = `\\b${DISTRESS_SUBJECT} ${DISTRESS_ADVERBS}${DISTRESS_PLACE}${DISTRESS_ADVERBS}${DISTRESS_STATE}`;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
