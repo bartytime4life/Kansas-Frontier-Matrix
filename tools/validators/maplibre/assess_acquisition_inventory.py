@@ -32,7 +32,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v14"
+PROFILE = "kfm-maplibre-acquisition-inventory-v15"
 TEXT_SUFFIXES = frozenset(
     {".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".css"}
 )
@@ -85,7 +85,7 @@ INPUT_ERROR_KINDS = frozenset(
 )
 
 PATTERNS = {
-    "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
+    "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from)?\s*['\"]([^'\"]+)['\"]"),
     "DYNAMIC_IMPORT": re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "REQUIRE": re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "RE_EXPORT": re.compile(

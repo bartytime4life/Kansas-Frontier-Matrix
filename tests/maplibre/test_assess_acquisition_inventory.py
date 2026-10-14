@@ -163,6 +163,38 @@ class AcquisitionInventoryTests(unittest.TestCase):
                 self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
                 self.assertFalse(any(finding.candidate_seam for finding in result.findings))
 
+    def test_side_effect_imports_outside_a_seam_fail(self) -> None:
+        for path, content in (
+            ("apps/site/source/app/page.tsx", 'import "maplibre-gl";\n'),
+            ("apps/site/source/app/page.tsx", 'import "maplibre-gl/dist/maplibre-gl.css";\n'),
+            ("apps/explorer/src/main.ts", "import 'maplibre-gl/dist/maplibre-gl.css'\n"),
+        ):
+            with self.subTest(path=path, content=content), self._root() as tmp:
+                root = Path(tmp)
+                self._write(root, path, content)
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+                self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+                self.assertEqual([finding.kind for finding in result.findings], ["STATIC_IMPORT"])
+
+    def test_side_effect_imports_inside_a_seam_hold(self) -> None:
+        for path in (
+            "apps/site/source/app/maplibre-seam.ts",
+            "packages/maplibre/src/maplibre-adapter.ts",
+        ):
+            with self.subTest(path=path), self._root() as tmp:
+                root = Path(tmp)
+                self._write(
+                    root,
+                    path,
+                    'import "maplibre-gl";\nimport "maplibre-gl/dist/maplibre-gl.css";\n',
+                )
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+                self.assertEqual(result.reasons, ("RENDERER_ACQUISITION_PRESENT",))
+                self.assertEqual({finding.kind for finding in result.findings}, {"STATIC_IMPORT"})
+                self.assertTrue(all(finding.candidate_seam for finding in result.findings))
+
     def test_package_local_maplibre_filename_is_not_raw_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -878,7 +910,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v14")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v15")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(
