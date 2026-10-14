@@ -4,11 +4,20 @@ import { meters, type Borehole, type DepthInterval } from "./subsurface-model";
 /** Independent record-depth diagrams; no correlation or common elevation is inferred. */
 export function cutawayRecords(volume: AquiferVolume, records: Borehole[]) {
   const [west, south, east, north] = volume.bounds;
-  const limit = volume.envelopes.length ? Math.max(...volume.envelopes.map(e => e.deepMeters)) + 50 : 500;
+  const selectedRecords = records.filter(record => { const [lon,lat]=record.coordinates; return lon>=west&&lon<=east&&lat>=south&&lat<=north; }).slice(0, 50);
+  // A shallow aquifer range is not a depth limit for an independently recorded core.
+  // Retain the existing shallow floor, then fit actual valid record depths within
+  // the application's 12 km diagram ceiling. Source intervals are never rewritten.
+  let requestedDepth = volume.envelopes.length ? Math.max(...volume.envelopes.map(e => e.deepMeters)) + 50 : 500;
+  for (const record of selectedRecords) for (const interval of record.intervals) {
+    const top = meters(interval.top, record.depthUnit), bottom = meters(interval.bottom, record.depthUnit);
+    if (Number.isFinite(top) && Number.isFinite(bottom) && top >= 0 && bottom > top) requestedDepth = Math.max(requestedDepth, bottom);
+  }
+  const limit = Math.min(12000, requestedDepth);
   const intervals: { record: Borehole; interval: DepthInterval; top: number; bottom: number }[] = [];
   const visible = new Set<string>();
   let clipped = false;
-  for (const record of records.filter(record => { const [lon,lat]=record.coordinates; return lon>=west&&lon<=east&&lat>=south&&lat<=north; }).slice(0, 50)) {
+  for (const record of selectedRecords) {
     const [lon, lat] = record.coordinates;
     if (lon < west || lon > east || lat < south || lat > north) continue;
     for (const interval of record.intervals) {

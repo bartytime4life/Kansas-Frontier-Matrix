@@ -51,6 +51,13 @@ test('source-search handoff keeps its dedicated search-focus effect',()=>{
   const h=harness();h.scope.sourceSearchFocusPendingRef.current=true;
   execute('openAtlasPanel',h.scope)('layers');h.flush();assert.equal(h.state.primary,'map');assert.deepEqual(h.focus,[]);
 });
+test('Layers and Places shortcuts exit the retained source-status view',()=>{
+  for(const mode of ['layers','places']){
+    const h=harness('map');h.state.sources=true;h.scope.setSourceStatusOpen=value=>{h.state.sources=value;};
+    execute('openAtlasPanel',h.scope)(mode);
+    assert.equal(h.state.mode,mode);assert.equal(h.state.left,true);assert.equal(h.state.sources,false);
+  }
+});
 test('Time reopens a retained open panel from Reports or Stories, while Map still toggles',()=>{
   for(const workspace of ['reports','stories','map']) {
     const h=harness(workspace);execute('toggleTimelinePanel',h.scope)();
@@ -129,4 +136,51 @@ test('opening source details from a layer keeps the outer Layers return target',
   execute('openSourceStatus',h.scope)(inner);
   assert.equal(h.scope.leftPanelReturnRef.current,outer);
   assert.equal(h.scope.sourceStatusReturnRef.current,inner);
+});
+
+test('touch focus transfer keeps header commands reachable; keyboard focus exit still dismisses',()=>{
+  const handlers=[];
+  function inspect(node){
+    if(ts.isJsxOpeningElement(node)&&node.tagName.getText(ast)==='details'){
+      const attributes=node.attributes.properties;
+      const menu=attributes.find(a=>a.name?.getText(ast)==='className')?.initializer?.text;
+      if(menu==='map-dock-menu map-dock-map-menu'||menu==='header-overflow-menu') handlers.push(attributes.find(a=>a.name?.getText(ast)==='onBlur').initializer.expression.getText(ast));
+    }
+    ts.forEachChild(node,inspect);
+  }
+  inspect(ast);assert.equal(handlers.length,2,'exercise both actual header handlers');
+  class FocusNode {}
+  for(const handler of handlers){
+    const code=ts.transpileModule(`return ${handler};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+    const blur=new Function('Node',code)(FocusNode), inside=new FocusNode(), outside=new FocusNode();
+    const menu={open:true,contains:target=>target===inside};
+    blur({currentTarget:menu,relatedTarget:null});
+    assert.equal(menu.open,true,'null focus between pointer-down and click must not hide the command');
+    blur({currentTarget:menu,relatedTarget:inside});assert.equal(menu.open,true);
+    blur({currentTarget:menu,relatedTarget:outside});assert.equal(menu.open,false,'Tab to another control closes the menu');
+  }
+});
+
+test('outside pointer dismissal preserves an inside tap, closes the other menu and cleans up',()=>{
+  let effect;
+  function inspect(node){
+    if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('const dismissHeaderMenus =')) effect=node.arguments[0].getText(ast);
+    ts.forEachChild(node,inspect);
+  }
+  inspect(ast);assert.ok(effect);
+  class PointerNode {}
+  const inside=new PointerNode(), outside=new PointerNode();
+  const map={open:true,contains:target=>target===inside},more={open:true,contains:()=>false};
+  let listener,removed;
+  const document={
+    addEventListener(type,callback,options){assert.equal(type,'pointerdown');assert.deepEqual(options,{capture:true,passive:true});listener=callback;},
+    removeEventListener(type,callback,capture){assert.equal(type,'pointerdown');assert.equal(capture,true);removed=callback;},
+    querySelectorAll(selector){assert.equal(selector,'details[data-explorer-menu][open]');return [map,more].filter(menu=>menu.open);},
+  };
+  const code=ts.transpileModule(`return ${effect};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  const cleanup=new Function('document','Node',code)(document,PointerNode)();
+  listener({target:inside});assert.equal(map.open,true);assert.equal(more.open,false);
+  listener({target:outside});assert.equal(map.open,false);
+  map.open=true;listener({target:null});assert.equal(map.open,true,'unknown destinations do not dismiss a pending command');
+  cleanup();assert.equal(removed,listener,'the page must remove its listener on unmount');
 });

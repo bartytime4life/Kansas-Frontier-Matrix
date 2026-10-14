@@ -243,3 +243,90 @@ incompatible cases); two report-label assertions fail on both the exact f44 base
 and this candidate. They are recorded separately, not reported as passing or as
 new capture/navigation failures. Actual Node HTTP checks pass against the rebuilt
 candidate. No full-suite pass is claimed.
+
+### Phone-control repair — October 14
+
+The phone screenshot still shows published `f44ce0c`. GoDaddy preview now runs
+`bf45476486712501bc3d495214877cc5fb5f5f58`, which contains the merged #5157
+navigation/capture candidate and the separate private-storage probe. This repair
+starts at the current hosting source `f93a545446a23d4057661f09daf2359afac44a01`
+(merged #5159), then rebased onto
+`0608b34004eee67793c4fe39627ff298d38aae77` after the separate PC-inference
+#5163 merged. Its PC research routes, worker, handler, store and private-storage
+probe are retained byte-for-byte. Other chats' unfinished PC/AI work is not
+edited or overwritten; a new preview change must be coordinated.
+
+Map and More previously closed on a focus-out event with a null destination.
+That can hide a command between touch pointer-down and click. They now dismiss
+on a real outside pointer or a known outside keyboard-focus target; inside taps
+and null focus hops keep the command available. Escape and focus return remain.
+Both menus use opaque backgrounds in the later-loaded theme as well as base
+styles; the theme previously overrode the base repair with transparent glass. Layers and Places explicitly leave the
+retained Source status view, and Places counts all selected map layers rather
+than reporting only the empty governed-domain registry as "0 visible layers."
+A temporary phone-test Place was saved and deleted successfully. Saved-place
+cards label their retained count as domain layers: public-source selections are
+not persisted by the existing workspace snapshot, so no source-restoration
+capability is claimed.
+
+The dependency-closed Underground repair from merged #5137 is composed here:
+the hash-verified kfm.2 runtime serves standalone gzip data without treating it
+as a transport variant, retains all original dataset bytes and compressed script
+negotiation, fits valid deeper recorded intervals within the existing 12 km
+ceiling, and distinguishes source delivery failures from absent geology. The
+existing 50-record/400-interval budgets and source depth references remain.
+
+Compare now offers a real 2010/2020 Census count comparison through the existing
+bounded county-edition APIs. Both complete 105-county editions must validate and
+join by FIPS before totals appear. Population and housing counts retain units;
+missing values stay missing and zero denominators have no percentage change.
+County selection, reversing A/B and a free provenance-bearing JSON download are
+supported. One successful public-source pair is cached for this page, with an
+explicit refresh; closing the panel aborts pending reads. No map-draw polling,
+archive write, source admission or release transition is added. Optional local
+road-linework comparison is collapsed; governed swipe comparison remains held.
+New files belong to the existing app/ display-model/component responsibility and
+tests/ validation responsibility under Directory Rules and ADR-0029; they create
+no new registry, contract, policy or release authority.
+
+Actual source checks matched all 105 FIPS: population 2,853,118 (2010) versus
+2,937,880 (2020), and housing 1,233,215 versus 1,275,689. Browser selection of Allen
+County and reversed years produced the matching free comparison download with
+source URLs, retrieval times and external-context/non-release labels. At 390 px
+the page has no horizontal overflow. The local High Plains cutaway reports 4/4
+files loaded, 224 eligible records, the bounded 50-record sample and 28 plotted
+columns; the high-detail surface reports 2048×2011 pixels. Coverage still labels
+the record cap and any unavailable selector-map image separately. A real gzip
+URL returns HTTP 200/application-gzip, no Content-Encoding, and the original
+210,103 bytes with SHA-256
+`d4a9897aa6bc291d0326c9b8454cb3b6579792d80d8d0207fe2d5ecc11889cce`.
+
+Browser command acknowledgments occasionally timed out even after an action
+completed; fresh accessibility state verified the result. An inspection timeout
+reset the browser-control session, recovered on the same existing tab. The
+cutaway renderer inspection retains its existing demand-driven frame scheduler;
+no speculative rendering change was made. Physical iPhone/Safari acceptance,
+new hosted-preview acceptance and 60 FPS remain separate open checks. Build,
+types, changed-area lint, unit and HTTP results must be recorded at the final
+head; no new deployment, publication, capture activation, DNS or payment change
+is established by this source repair.
+
+Final application-source validation at
+`c0b5cd6834dc6ec6c946bc34489b663efe9e8c45` on the #5163 base: production build
+and TypeScript pass; changed-area ESLint has zero errors and the same 41
+inherited page warnings. All 93 focused tests pass (79 phone, comparison,
+cutaway, gzip and capture checks plus 14 preserved PC-inference checks), and
+12 actual Node HTTP checks pass. The prior restricted run could not create its
+temporary gzip-test listener; the successful run used local-network permission.
+No inherited or unrun full-suite result is relabeled passing.
+
+The final rebuilt browser shows an opaque menu with all five map commands,
+working outside-pointer/Escape dismissal, Layers returning to Browse after
+Sources, Places reporting five selected map layers, and Map controls opening
+Explore. A final real statewide free JSON download contains all 105 counties,
+exact dated population/housing totals, source URLs and non-release flags.
+Source-data files and the preserved PC-inference implementation are unchanged
+relative to the exact base. Screenshots and download evidence are local review
+artifacts; they establish neither physical Safari acceptance nor hosted
+publication. Rollback is the exact prior hosting revision; archive captures,
+DNS, payments and publication remain outside this repair.
