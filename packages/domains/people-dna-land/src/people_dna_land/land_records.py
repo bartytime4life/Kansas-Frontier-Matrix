@@ -24,10 +24,12 @@ SOURCES = {
     "kshs-land-sales": {"hosts": {"www.kansashistory.gov", "www.kansasmemory.gov"}, "formats": {"mapped-csv"}},
     "sedgwick-deeds": {"hosts": {"www.sedgwickcounty.org", "www.sedgwick.gov"}, "formats": {"mapped-csv"}},
     "johnson-deeds": {"hosts": {"www.jocogov.org", "ims.jocogov.org"}, "formats": {"mapped-csv"}},
+    "shawnee-tax-sales": {"hosts": {"snco.gov", "www.snco.gov", "cdn.snco.gov"}, "formats": {"mapped-csv"}},
+    "leavenworth-tax-sales": {"hosts": {"www.leavenworthcounty.gov", "files.leavenworthcounty.gov"}, "formats": {"mapped-csv"}},
 }
-KINDS = {"patent", "deed", "warranty_deed", "quitclaim_deed", "railroad_sale", "tract_book_entry", "land_tenure_case", "sale_notice", "other_instrument"}
-STATES = {"RECORDED", "ISSUED", "PROPOSED", "CASE_ACTION", "UNKNOWN"}
-PRICE_KINDS = {"sale_price", "consideration", "nominal_consideration", "recorded_principal", "appraised_value", "minimum_bid"}
+KINDS = {"patent", "deed", "warranty_deed", "quitclaim_deed", "railroad_sale", "tract_book_entry", "land_tenure_case", "sale_notice", "other_instrument", "tax_foreclosure_sale"}
+STATES = {"RECORDED", "ISSUED", "PROPOSED", "CASE_ACTION", "UNKNOWN", "AUCTION_REPORTED"}
+PRICE_KINDS = {"sale_price", "consideration", "nominal_consideration", "recorded_principal", "appraised_value", "minimum_bid", "auction_purchase_price"}
 FIELDS = {"source_record_id", "instrument_type", "event_date", "recording_date", "county", "state", "transaction_status", "grantor", "grantee", "legal_description", "acres", "amount", "amount_kind", "currency", "notes"}
 REQUIRED = {"source_record_id", "instrument_type", "event_date", "state", "transaction_status"}
 HEX = re.compile(r"sha256:[a-f0-9]{64}\Z")
@@ -115,29 +117,39 @@ def _glo_rows(raw: bytes):
     cards = content.split("View Details\n")[1:]
     if len(cards) != end - start + 1:
         raise ValueError("GLO_PAGE_CARD_COUNT_MISMATCH")
-    rows = []
+    rows, excluded = [], []
     for ordinal, block in enumerate(cards, start):
-        match = re.fullmatch(r"(Control Document Index \(CDI\)|Patent) Details:\nName\(s\):\n(.*?)\nDate:\n(.*?)\nState:\n(.*?)\nCounty:\n(.*?)\nDocument#:\n(.*?)\nDocument Type:\n(.*?)\nLand Description(?:s \((\d+)\))?:\nMeridian\tTownship\tRange\tSection\(s\)\tSubdivision\n(.*)", block, re.S)
+        if block.startswith("Survey Details:\n"):
+            if not re.search(r"\nDocument Type:\n(?:Original Survey|Dependent Resurvey)\n", block) or "\nState:\nKansas\n" not in block or "Meridian\tTownship\tRange\tBoundary\n" not in block:
+                raise ValueError("GLO_SURVEY_FORMAT_DRIFT")
+            excluded.append({"locator": "result-card:" + str(ordinal), "reason": "SURVEY_NOT_LAND_INSTRUMENT"})
+            continue
+        match = re.fullmatch(r"(Control Document Index \(CDI\)|Patent) Details:\nName\(s\):\n(.*?)\nDate:\n(.*?)\nState:\n(.*?)\nCounty:\n(.*?)\nDocument#:\n(.*?)\nDocument Type:\n(.*?)(?:\nAccession #:\n([^\n]+)\nPage Count:\n(\d+))?\nLand Description(?:s \((\d+)\))?:\nMeridian\tTownship\tRange\tSection\(s\)\tSubdivision\n(.*)", block, re.S)
         if match is None:
             raise ValueError("GLO_CARD_FORMAT_DRIFT")
-        category, party, when, state, county, number, kind, nland, land = match.groups()
+        category, party, when, state, county, number, kind, accession, pages, nland, land = match.groups()
         land = re.split(r"\n\n?(?:Show More|\d+-\d+ of \d+ results)", land)[0].strip()
         lines = land.splitlines()
         if not lines or any(len(line.split("\t")) != 5 for line in lines):
             raise ValueError("GLO_LAND_TABLE_DRIFT")
         types = {"Patent": "patent", "Warranty deed": "warranty_deed", "Quit claim deed": "quitclaim_deed", "Act of congress": "other_instrument"}
+        if category == "Patent" and accession and kind in {"State Volume", "Serial Patent"}:
+            types[kind] = "patent"
         if kind not in types:
             raise ValueError("GLO_DOCUMENT_TYPE_UNMAPPED")
         when = datetime.strptime(when, "%m-%d-%Y").date().isoformat()
         key = digest(canonical([category, number, when, state, county, land]))
-        rows.append({"source_record_id": "index-composite:" + key[7:], "instrument_type": types[kind], "event_date": when,
+        rows.append({"source_record_id": "glo-accession:" + text(accession, 200, required=True) if accession else "index-composite:" + key[7:], "instrument_type": types[kind], "event_date": when,
                      "recording_date": None, "state": "KS" if state == "Kansas" else state, "county": county,
                      "transaction_status": "RECORDED", "grantor": None, "grantee": party,
                      "legal_description": land, "acres": None, "amount": None, "amount_kind": None, "currency": None,
-                     "notes": "GLO " + category + "; document " + number + "; " + kind,
-                     "_flags": ["INDEX_ENTRY_ONLY", "COMPOSITE_IDENTITY", "CURRENT_OWNERSHIP_NOT_ESTABLISHED"] + (["LEGAL_DESCRIPTION_PARTIAL"] if nland and int(nland) != len(lines) else []),
+                     "notes": "GLO " + category + "; document " + number + "; " + kind + ("; accession " + accession + "; pages " + pages if accession else ""),
+                     "_flags": ["INDEX_ENTRY_ONLY", "CURRENT_OWNERSHIP_NOT_ESTABLISHED"] + ([] if accession else ["COMPOSITE_IDENTITY"]) + (["LEGAL_DESCRIPTION_PARTIAL"] if nland and int(nland) != len(lines) else []),
                      "_locator": "result-card:" + str(ordinal)})
-    return rows, {"start": start, "end": end, "reported_total": total, "scope": "KEYWORD_RESULTS", "complete": start == 1 and end == total}
+    coverage = {"start": start, "end": end, "reported_total": total, "scope": "KEYWORD_RESULTS", "complete": start == 1 and end == total}
+    if excluded:
+        coverage["excluded"] = excluded
+    return rows, coverage
 
 
 def _csv_rows(raw: bytes, mapping: dict):
@@ -170,11 +182,17 @@ def make_record(row: dict, source: str, retrieved_at: str) -> dict:
                  "blm-mlrs": {"land_tenure_case", "sale_notice"},
                  "kshs-land-sales": {"railroad_sale", "tract_book_entry", "deed"},
                  "sedgwick-deeds": {"deed", "warranty_deed", "quitclaim_deed"},
-                 "johnson-deeds": {"deed", "warranty_deed", "quitclaim_deed"}}
+                 "johnson-deeds": {"deed", "warranty_deed", "quitclaim_deed"},
+                 "shawnee-tax-sales": {"tax_foreclosure_sale"},
+                 "leavenworth-tax-sales": {"tax_foreclosure_sale"}}
     if source not in permitted or kind not in permitted[source]:
         raise ValueError("SOURCE_ROLE_TYPE_MISMATCH")
     if (kind == "sale_notice" and status != "PROPOSED") or (kind == "land_tenure_case" and status not in {"CASE_ACTION", "UNKNOWN"}):
         raise ValueError("CASE_OR_NOTICE_NOT_COMPLETED_SALE")
+    if kind == "tax_foreclosure_sale" and status != "AUCTION_REPORTED":
+        raise ValueError("AUCTION_NOT_CONFIRMED_TITLE")
+    if status == "AUCTION_REPORTED" and kind != "tax_foreclosure_sale":
+        raise ValueError("AUCTION_SOURCE_ROLE_REQUIRED")
     event_date = iso_date(row["event_date"], required=True)
     recording_date = iso_date(row.get("recording_date"))
     if event_date > retrieved_at[:10] and status != "PROPOSED":
@@ -182,7 +200,7 @@ def make_record(row: dict, source: str, retrieved_at: str) -> dict:
     if recording_date and recording_date > retrieved_at[:10]:
         raise ValueError("RECORDING_DATE_IN_FUTURE")
     county = text(row.get("county"), 64)
-    expected_county = {"sedgwick-deeds": "Sedgwick", "johnson-deeds": "Johnson"}.get(source)
+    expected_county = {"sedgwick-deeds": "Sedgwick", "johnson-deeds": "Johnson", "shawnee-tax-sales": "Shawnee", "leavenworth-tax-sales": "Leavenworth"}.get(source)
     if expected_county and county != expected_county:
         raise ValueError("COUNTY_SOURCE_SCOPE_MISMATCH")
     amount = decimal(row.get("amount"))
@@ -191,6 +209,10 @@ def make_record(row: dict, source: str, retrieved_at: str) -> dict:
         raise ValueError("AMOUNT_ROLE_AND_CURRENCY_REQUIRED")
     if kind in {"land_tenure_case", "sale_notice"} and amount_kind in {"sale_price", "consideration", "recorded_principal"}:
         raise ValueError("CASE_OR_NOTICE_PRICE_NOT_SALE_PRICE")
+    if kind == "tax_foreclosure_sale" and amount_kind not in {None, "auction_purchase_price"}:
+        raise ValueError("AUCTION_PRICE_ROLE_REQUIRED")
+    if kind != "tax_foreclosure_sale" and amount_kind == "auction_purchase_price":
+        raise ValueError("AUCTION_SOURCE_ROLE_REQUIRED")
     parties = [{"role": role, "label": label, "living_status": "UNKNOWN"} for role, field in (("grantor", "grantor"), ("grantee", "grantee")) if (label := text(row.get(field), 256))]
     value = {"profile": PROFILE, "id": "kfm:land:" + digest(canonical([source, key]))[7:], "source_id": source,
              "source_record_id": key, "instrument_type": kind, "event_date": event_date, "recording_date": recording_date,
@@ -217,6 +239,8 @@ def normalize(raw: bytes, manifest: dict, *, mapping=None, max_records=100) -> d
     fmt = manifest["format"]
     if fmt not in SOURCES[source]["formats"]:
         raise ValueError("SOURCE_FORMAT_NOT_ALLOWED")
+    if source.endswith("tax-sales") and not manifest.get("documents"):
+        raise ValueError("AUCTION_ORIGINAL_DOCUMENT_REQUIRED")
     if fmt == "glo-text":
         if mapping is not None:
             raise ValueError("GLO_TEXT_MAP_NOT_ALLOWED")
@@ -227,7 +251,10 @@ def normalize(raw: bytes, manifest: dict, *, mapping=None, max_records=100) -> d
         search_term = params.get("searchTerm", [None])[0]
         if search_term:
             params = parse_qs(urlsplit(search_term).query)
-        if params.get("q") != ["Kansas"] or params.get("page") != [str((coverage["start"] - 1) // 25 + 1)] or params.get("pageSize") != ["25"]:
+        sizes = params.get("pageSize", [])
+        size = int(sizes[0]) if len(sizes) == 1 and sizes[0] in {"10", "25", "50", "100"} else 0
+        if (not size or params.get("q") != ["Kansas"] or params.get("page") != [str((coverage["start"] - 1) // size + 1)]
+                or (coverage["start"] - 1) % size or coverage["end"] > min(coverage["start"] + size - 1, coverage["reported_total"])):
             raise ValueError("GLO_QUERY_SCOPE_MISMATCH")
     else:
         rows, coverage = _csv_rows(raw, mapping)

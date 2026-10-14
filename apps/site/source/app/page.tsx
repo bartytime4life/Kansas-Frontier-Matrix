@@ -6726,7 +6726,8 @@ export default function Home() {
       return;
     }
     const refresh = () => {
-      if (!document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+      // Restoration starts the selected query; do not race it with defaults.
+      if (explorerRestoredRef.current && !document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     };
     refresh();
     const timer = window.setInterval(refresh, 300_000);
