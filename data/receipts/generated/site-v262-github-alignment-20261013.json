@@ -865,7 +865,7 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Repository overlay from #5142: question-gate corpus section; not deployed to private Site v262.",
+      "difference": "Repository overlay from #5142 and #5143: question-gate corpus section; not deployed to private Site v262.",
       "mirror_sha256": "75f9cc1dac6dfa067806ca04765060c274a8c641aecea44a1e40a1c794856af7",
       "site_sha256": "a5a9d7bc15415e62371ced8fe0143a46ae43dccf5b995163a4aff45e5b3b5a6e",
       "state": "inherited_repository_overlay"
@@ -3648,7 +3648,7 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Repository overlay from #5142: sensitive-question gate fixes (first-person distress, latitude/longitude comparison); not deployed to private Site v262.",
+      "difference": "Repository overlay from #5142 and #5143: sensitive-question gate fixes (first-person distress, latitude/longitude comparison; #5143 person-subject distress); not deployed to private Site v262.",
       "mirror_sha256": "c6d95758a3352ba304374ce472f4ee8daff4b6f591561bc856f4b87ea9edbc6f",
       "site_sha256": "9690f702c05b2a6331770efc44899a2890148ee1b2024fbc5117d8e04bd8c1f1",
       "state": "inherited_repository_overlay"
@@ -3709,7 +3709,7 @@
       "state": "identical"
     },
     "scripts/qwen-question-gate-corpus.mjs": {
-      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142; no Site deployment or data activation implied.",
+      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142 and extended in #5143; no Site deployment or data activation implied.",
       "mirror_sha256": "8aeab8cc689d4fb164f2e565c90bc72e8bcb9950add19e317e46d4b824524919",
       "state": "repository_only_overlay"
     },
@@ -7997,7 +7997,7 @@
       "public/data/subsurface/tile-170-2582.json.gz",
       "public/data/subsurface/tile-170-259.json.gz"
     ],
-    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. #5142 adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change."
+    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. #5142 adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change. #5143 narrows the distress rule to a person subject and allows a short place phrase, extending the corpus, in scripts/local-qwen-bridge.mjs, scripts/qwen-question-gate-corpus.mjs and README.md; no authoritative Site source change."
   },
   "recorded_at": "2026-10-14T01:58:58.584305+00:00",
   "repository_base": "3d66e83e2dbe034c0ac51e07d98372b50b70fe39",
