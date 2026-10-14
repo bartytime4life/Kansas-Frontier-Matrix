@@ -865,8 +865,8 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Repository overlay from #5142 and #5143: question-gate corpus section; not deployed to private Site v262.",
-      "mirror_sha256": "75f9cc1dac6dfa067806ca04765060c274a8c641aecea44a1e40a1c794856af7",
+      "difference": "Repository overlay from #5142 and #5143: question-gate corpus section; not deployed to private Site v262; the held-out gate change: held-out question set and the gate fixes it led to.",
+      "mirror_sha256": "7670a2d89ff214f8451e0963a277acceab79f3f2a09a993fffb00dc8c4210328",
       "site_sha256": "a5a9d7bc15415e62371ced8fe0143a46ae43dccf5b995163a4aff45e5b3b5a6e",
       "state": "inherited_repository_overlay"
     },
@@ -3648,8 +3648,8 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Repository overlay from #5142, #5143 and #5144: sensitive-question gate fixes (first-person distress, latitude/longitude comparison; #5143 person-subject distress; #5144 injury versus ambiguous states and open continuations); not deployed to private Site v262.",
-      "mirror_sha256": "9d877e5e6f71e15a2aacbfaa1c8ebcffcca8db4f94bf5df97bcbbe571b015846",
+      "difference": "Repository overlay from #5142, #5143 and #5144: sensitive-question gate fixes (first-person distress, latitude/longitude comparison; #5143 person-subject distress; #5144 injury versus ambiguous states and open continuations); not deployed to private Site v262; the held-out gate change: held-out question set and the gate fixes it led to.",
+      "mirror_sha256": "2dd5b95122733c4c31a507734caf10e8f8c13dcb3cd683a74c8b218fd3a2bf0b",
       "site_sha256": "9690f702c05b2a6331770efc44899a2890148ee1b2024fbc5117d8e04bd8c1f1",
       "state": "inherited_repository_overlay"
     },
@@ -3709,8 +3709,8 @@
       "state": "identical"
     },
     "scripts/qwen-question-gate-corpus.mjs": {
-      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142 and extended in #5143 and #5144; no Site deployment or data activation implied.",
-      "mirror_sha256": "9448a9008ffc72f6edceb4ca53bf8598bf1a5050f2a3132ba8e718ad444363e6",
+      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142 and extended in #5143 and #5144; no Site deployment or data activation implied; the held-out gate change: held-out question set and the gate fixes it led to.",
+      "mirror_sha256": "f71fc2d75b7cac81e6e629818ab1471f8dfab0a75157d3493a059e5d766b056e",
       "state": "repository_only_overlay"
     },
     "scripts/serve-local-worker.mjs": {
@@ -4614,8 +4614,8 @@
       "state": "identical"
     },
     "tests/qwen-question-gate-corpus.test.mjs": {
-      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142; no Site deployment or data activation implied.",
-      "mirror_sha256": "b2e139358b4120b551be546e9f9173765dbfcc1c5cbdcadfa947405e0692eded",
+      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142; no Site deployment or data activation implied; the held-out gate change: held-out question set and the gate fixes it led to.",
+      "mirror_sha256": "5e3bd275b20bed954bf1c9e8fe2c2686a4df33e5003db9fceb7b5620d3a6418c",
       "state": "repository_only_overlay"
     },
     "tests/qwen-real-envelope-size.test.mjs": {
@@ -4957,7 +4957,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "6ec13d45f93b084aa387cda3b4c3857292ad57cca98f01c049e1885d166eea78",
+  "inventory_sha256": "a8d7eeeb10dc7ce733b1630cc64cc737f818d09b8408d189794501fe8c5f9d4e",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
@@ -7997,11 +7997,11 @@
       "public/data/subsurface/tile-170-2582.json.gz",
       "public/data/subsurface/tile-170-259.json.gz"
     ],
-    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. #5142 adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change. #5143 narrows the distress rule to a person subject and allows a short place phrase, extending the corpus, in scripts/local-qwen-bridge.mjs, scripts/qwen-question-gate-corpus.mjs and README.md; no authoritative Site source change. #5144 separates injury states (any subject) from stuck/lost/missing (person subjects) and accepts any continuation after the state, extending the corpus, in scripts/local-qwen-bridge.mjs and scripts/qwen-question-gate-corpus.mjs; no authoritative Site source change."
+    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. #5142 adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change. #5143 narrows the distress rule to a person subject and allows a short place phrase, extending the corpus, in scripts/local-qwen-bridge.mjs, scripts/qwen-question-gate-corpus.mjs and README.md; no authoritative Site source change. #5144 separates injury states (any subject) from stuck/lost/missing (person subjects) and accepts any continuation after the state, extending the corpus, in scripts/local-qwen-bridge.mjs and scripts/qwen-question-gate-corpus.mjs; no authoritative Site source change. the held-out gate change: held-out question set and the gate fixes it led to in scripts/local-qwen-bridge.mjs, scripts/qwen-question-gate-corpus.mjs, tests/qwen-question-gate-corpus.test.mjs, README.md; no authoritative Site source change."
   },
   "recorded_at": "2026-10-14T01:58:58.584305+00:00",
   "repository_base": "3d66e83e2dbe034c0ac51e07d98372b50b70fe39",
-  "repository_reconciled_base": "bb5f9a72d562e7cae947932281102a7a544fd724",
+  "repository_reconciled_base": "e3a38d535b1e2947d9b76150acdf9276747c3146",
   "review": {
     "blocking_checks": [
       "repository_review",
