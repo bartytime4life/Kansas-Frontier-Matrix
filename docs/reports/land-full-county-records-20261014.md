@@ -72,8 +72,9 @@ The land bundle was imported through the existing live application.
 Owner-only access, storage bindings, recent performance work and saved source
 history remain preserved.
 
-The new append-only content receipt binds 865 comparison paths: 858 identical,
-five inherited repository security overlays and two repository-only tests.
+The new append-only content receipt binds 865 comparison paths: 857 identical,
+five inherited repository security overlays, one new recorded renderer-boundary
+safety correction and two repository-only tests.
 Canonical tool/document aliases and 258 previously withheld location carriers
 remain intact. Those pre-existing holds are outside this land-source request.
 The selector checks content parity only; receipt review and human acceptance
@@ -121,3 +122,16 @@ The original failed startup was attributable to source migration 0010 and is
 resolved by the hash-bound local replay. Hosted exact-head GitHub checks remain
 pending until the new review branch is pushed. No unrun source-only or broad
 browser/device checks are represented as passing.
+
+## Exact-head CI renderer correction
+
+Initial head `9939d57d662410a614270c4e0c5d08db1118c409` failed
+`acquisition-inventory`: the newly saved `connection-map.tsx` acquired raw
+MapLibre outside the established Site seam. The repository correction imports
+CSS and types from that existing seam and calls `loadMapLibre`. It introduces
+no alternate renderer dependency, protocol home or waiver. The new append-only
+seam receipt records this newly authored `repository_safety_overlay` separately
+from five inherited overlays, retains upstream hashes, and leaves review pending.
+The preceding committed receipt is not rewritten. The native saved source and
+its deployment state are unchanged; independent review must reconcile this
+repository correction before any hosted equivalence claim.

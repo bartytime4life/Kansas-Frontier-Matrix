@@ -1,12 +1,12 @@
 "use client";
-import "maplibre-gl/dist/maplibre-gl.css";
+import "./maplibre-seam.css";
 import {useEffect,useRef} from "react";
 import type {View,Receipt} from "./connections-types";
-import type {Map as MapLibreMap} from "maplibre-gl";
+import {loadMapLibre,type Map as MapLibreMap} from "./maplibre-seam";
 export default function ConnectionMap({view,receipt}:{view:View;receipt:Receipt}){
  const container=useRef<HTMLDivElement>(null),map=useRef<MapLibreMap|null>(null);
  useEffect(()=>{let disposed=false;const current=container.current;if(!current)return;
-  void import("maplibre-gl").then(ml=>{
+  void loadMapLibre().then(ml=>{
    if(disposed)return;
    const instance=new ml.Map({container:current,style:{version:8,sources:{},layers:[{id:"background",type:"background",paint:{"background-color":"#142338"}}]},center:[-97.34,38.5],zoom:5,attributionControl:{compact:true},maxZoom:16});
    map.current=instance;instance.addControl(new ml.NavigationControl(),"top-right");
