@@ -234,3 +234,15 @@ test('failed preparation dispatch releases the worker and keeps records withheld
  assert.equal(p.worker.terminated,true);assert.equal(p.worker.onmessage,null);assert.equal(p.messages.length,0);
  assert.equal(p.aquifer().props.records.length,0);assert.match(text(p.tree),/Background data loading is unavailable/);p.h.dispose();
 });
+
+test('area core/source controls stay usable with no records and historical years require an explicit present action',async()=>{
+ const p=await panelHarness();p.load([]);p.props.year=1833;let present=0;p.props.onPresent=()=>present++;p.render();
+ let tools=p.aquifer().props.recordTools,select=findNode(tools,n=>n.props?.['aria-label']==='Recorded sample sources');
+ assert.equal(select.props.value,'both');select.props.onChange({target:{value:'core'}});p.render();p.flushTimers();
+ assert.deepEqual([...p.messages.at(-1).sources],['kgs-core']);assert.equal(p.messages.at(-1).year,1833,'source selection never overrides time eligibility');
+ tools=p.aquifer().props.recordTools;button(tools,'Use present map year').props.onClick();assert.equal(present,1);
+ const input=findNode(tools,n=>n.props?.['aria-label']==='Find a recorded sample');input.props.onChange({target:{value:'123'}});p.load([]);tools=p.aquifer().props.recordTools;
+ findNode(tools,n=>n.type==='form').props.onSubmit({preventDefault(){}});assert.equal(p.messages.at(-1).kind,'search');
+ const point=[-100.6,38.4];p.worker.onmessage({data:{id:p.messages.at(-1).id,matches:[['core-123','',point,'one']]}});p.render();tools=p.aquifer().props.recordTools;
+ findNode(tools,n=>n.type==='button'&&text(n).includes('core-123')).props.onClick();p.render();assert.deepEqual([...p.aquifer().props.recordTarget.point],point);assert.equal(p.contexts.at(-1).recordCutoff,null);assert.equal(p.props.year,1833);p.h.dispose();
+});

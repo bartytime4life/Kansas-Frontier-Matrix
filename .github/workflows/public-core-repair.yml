@@ -1,0 +1,40 @@
+name: Public core repair candidate
+on:
+  pull_request:
+  push:
+    branches: [codex/fix-public-core-visibility-20261014]
+permissions:
+  contents: read
+jobs:
+  verify-core-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22.13.1'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx tsc --noEmit
+      - name: Core delivery, filtering, geometry and account boundaries
+        run: >-
+          node --test tests/node-compressed-assets.test.mjs
+          tests/subsurface-worker.test.mjs tests/cutaway-model.test.mjs
+          tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
+          tests/pc-ai.test.mjs tests/pc-ai-http.test.mjs
+      - name: Actual Node HTTP boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=5182 node server/start.mjs > "$RUNNER_TEMP/node-runtime.log" 2>&1 &
+          site_pid=$!
+          trap 'kill "$site_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
+            sleep 1
+          done
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
