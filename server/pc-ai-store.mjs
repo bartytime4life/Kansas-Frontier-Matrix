@@ -37,11 +37,12 @@ export class PcAiStore {
     const file = join(directory,'accounts-jobs.sqlite');
     try {
       const info = lstatSync(file);
-      if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.uid !== process.getuid()) fail('STORAGE_UNSAFE');
+      if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.uid !== process.getuid() || info.size>32*1024*1024) fail('STORAGE_UNSAFE');
     } catch(error) { if(error.code !== 'ENOENT') throw error; }
     this.clock=clock; this.key=Buffer.from(key,'base64url'); this.db=new DatabaseSync(file);
     try {
       chmodSync(file,0o600);
+      if(this.db.prepare('PRAGMA page_size').get().page_size!==4096)fail('STORAGE_PAGE_SIZE_UNQUALIFIED');
       this.db.exec('PRAGMA busy_timeout=1000; PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON; PRAGMA locking_mode=EXCLUSIVE; PRAGMA max_page_count=8192; BEGIN EXCLUSIVE; COMMIT;');
       this.db.exec(`CREATE TABLE IF NOT EXISTS control (id INTEGER PRIMARY KEY CHECK(id=1),schema_version INTEGER NOT NULL,key_digest TEXT NOT NULL,worker_at INTEGER NOT NULL DEFAULT 0,worker_ready INTEGER NOT NULL DEFAULT 0);
         CREATE TABLE IF NOT EXISTS accounts (id TEXT PRIMARY KEY,username TEXT UNIQUE NOT NULL,password TEXT,disabled INTEGER NOT NULL DEFAULT 0,invite_hash TEXT,invite_until INTEGER,created INTEGER NOT NULL);

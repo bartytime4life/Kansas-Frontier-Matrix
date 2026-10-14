@@ -148,3 +148,18 @@ test('worker rejects noncanonical hosts and mismatched model before inference',a
 test('bounded worker JSON rejects oversized upstream entities',async()=>{
   await assert.rejects(boundedJson(new Response('x'.repeat(65537))),/TOO_LARGE/);
 });
+test('invalid dates and oversized requests are rejected before retrieval',async()=>{
+  const f=await fixture();try{
+    const cookie=await f.signed('alice');await f.request('worker/heartbeat',health,f.worker);
+    assert.equal((await f.request('jobs',{...question,start:'2026-02-30'},null,cookie)).body.reasonCode,'INVALID_REQUEST');
+    assert.equal((await f.request('jobs',{...question,question:'x'.repeat(40000)},null,cookie)).body.reasonCode,'REQUEST_TOO_LARGE');
+    assert.equal((await f.request('worker/claim',{arbitraryUrl:'https://attacker.test'},f.worker)).response.status,400);
+  }finally{await f.close();}
+});
+test('expired invitation cannot establish a session',async()=>{
+  const f=await fixture();try{
+    const invited=await f.request('admin/invite',{username:'alice'},f.admin);f.advance(86400001);
+    const signed=await f.request('activate',{username:'alice',invitation:invited.body.invitation,password:'synthetic-test-password-123'});
+    assert.equal(signed.response.status,401);assert.equal(signed.response.headers.get('set-cookie'),null);
+  }finally{await f.close();}
+});
