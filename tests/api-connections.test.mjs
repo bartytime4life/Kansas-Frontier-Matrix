@@ -41,3 +41,32 @@ test("NCEI all six products retain native values and flags",async()=>{const p=PR
 test("capacity, pause and saved-byte readback govern the real capture path",async()=>{const saved=new Map();let released=0;const store={claim:async()=> "token",due:async p=>!saved.has(p.id),reserve:async p=>p.limitBytes+16384,save:async(p,r)=>saved.set(p.id,r),read:async id=>saved.get(id),failure:async()=>{},release:async()=>released++};const plan=await makePlan("usdm-statistics");const one=await captureOne(store,"usdm-statistics",{}, {env,fetcher:fetcher(plan)});assert.equal(one.cached,false);const two=await captureOne(store,"usdm-statistics",{}, {env,fetcher:()=>assert.fail("Cached data re-fetched")});assert.equal(two.cached,true);assert.equal(released,2);await assert.rejects(captureOne({...store,claim:async()=>null},"usdm-statistics",{}, {env}),/PIPELINE_PAUSED_OR_BUSY/);});
 
 test("provider-echoed credentials are redacted before private storage",async()=>{const plan=await makePlan("eia-electricity");const payload={response:{total:1,data:[{location:"KS",period:"2024-01",generation:"1", "generation-units":"million kilowatthours"}]},request:{params:{api_key:env.EIA_API_KEY}}};const result=await acquire(plan,{env,fetcher:()=>Response.json(payload,{headers:{etag:env.EIA_API_KEY}})});assert.equal(new TextDecoder().decode(result.bytes).includes(env.EIA_API_KEY),false);assert.equal(JSON.stringify(result.receipt).includes(env.EIA_API_KEY),false);assert.ok(result.receipt.entityHashes[0].credentialRedactions>=1);assert.notEqual(result.receipt.entityHashes[0].receivedSha256,result.receipt.entityHashes[0].sha256);assert.equal((await replay(result)).view.total,1);});
+
+const echoModes=[['nass-count','nass-quick-stats',{},0,'NASS_QUICK_STATS_KEY'],['nass-data','nass-quick-stats',{},1,'NASS_QUICK_STATS_KEY'],['census-acs','census-acs',{},0,'CENSUS_API_KEY'],['eia-generation','eia-electricity',{},0,'EIA_API_KEY'],['airnow','air-quality',{},0,'AIRNOW_API_KEY'],['epa-aqs','air-quality',{product:'aqs'},0,'EPA_AQS_KEY']];
+for(const [mode,id,query,target,key] of echoModes)for(const variant of ['header-parameters','escaped-json'])test(mode+' omits credentials from '+variant+' and stored replay',async()=>{
+ const plan=await makePlan(id,query,1704067200000),secret=env[key];let index=0;
+ const value=await acquire(plan,{env,fetcher:async()=>{
+  const active=index===target,r=plan.requests[index++];let v=payload(id,r,plan.query);
+  if(active&&variant==='escaped-json'){
+   if(Array.isArray(v)&&Array.isArray(v[0])){v[0].push('echo');for(const row of v.slice(1))row.push(secret);}
+   else if(Array.isArray(v))v[0].echo=secret;
+   else if(r.preflight)v.echo=secret;
+   else if(v.response)v.response.data[0].echo=secret;
+   else if(v.Data)v.Data[0].echo=secret;
+   else v.data[0].echo=secret;
+  }
+  let text=JSON.stringify(v);if(active&&variant==='escaped-json'){const escaped=[...secret].map((c,i)=>i%2?'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'):c).join('');text=text.replace(secret,escaped);}
+  return new Response(text,{headers:{'content-type':'application/json'+(active&&variant==='header-parameters'?'; echo='+secret:''),etag:secret,'last-modified':secret}});
+ }});
+ const replayed=await replay(value),bundle=JSON.parse(new TextDecoder().decode(value.bytes));
+ assert.equal(JSON.stringify(value.receipt).includes(secret),false);assert.equal(JSON.stringify(replayed.view).includes(secret),false);
+ for(const e of bundle.entities){assert.equal(JSON.stringify(JSON.parse(Buffer.from(e.entityBase64,'base64').toString('utf8'))).includes(secret),false);assert.equal(e.contentType,'application/json');assert.equal(e.etag,'');assert.equal(e.lastModified,'');}
+});
+test('malformed credentialed JSON is held before any private storage',async()=>{
+ let saved=false;const store={claim:async()=> 'fixture',due:async()=>true,reserve:async()=>5000000,save:async()=>{saved=true},failure:async()=>{},release:async()=>{}};
+ await assert.rejects(captureOne(store,'eia-electricity',{}, {env,fetcher:()=>new Response('{"bad":"\\\\u0073',{headers:{'content-type':'application/json'}})}),/PAYLOAD_REJECTED/);assert.equal(saved,false);
+});
+test('redacted JSON property collisions fail closed',async()=>{
+ const p=await makePlan('eia-electricity');const v={response:{total:0,data:[]},[env.EIA_API_KEY]:1,'[credential-redacted]':2};
+ await assert.rejects(acquire(p,{env,fetcher:()=>Response.json(v)}),/CREDENTIAL_REDACTION_AMBIGUOUS/);
+});

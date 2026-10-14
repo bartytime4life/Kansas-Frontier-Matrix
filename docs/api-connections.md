@@ -1,24 +1,11 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbooks/api-connections-20261014
-title: KFM additional API connections and dual-host intake
-type: runbook
-version: v1
-status: implementation candidate; credential, provider, storage, review and publication gates pending
-owners: ["@bartytime4life"]
-created: 2026-10-14
-updated: 2026-10-14
-policy_label: public
-owning_root: docs/
-responsibility: Operate and review bounded API intake on Sites and the separate GoDaddy Node composition
-truth_posture: CONFIRMED source and local validation; hosted activation NEEDS VERIFICATION
-[/KFM_META_BLOCK_V2] -->
+<!-- Packaging mirror of canonical docs/runbooks/api-connections.md. No additional doctrine, source, review or release authority. -->
 
 # API connections on both hosts
 
 The owner selected all 15 researched connections plus the previously implemented
 NOAA NCEI products, across the owner-private Sites Explorer and separate GoDaddy
 Node app q9r9beo47t. This change adds bounded backend acquisition and private
-frontend inspection, rather than claiming source admission or public data release.
+frontend inspection. Source admission and public data release remain separate reviews.
 
 Both applications provide /connections and /api/connections. The interface
 selects a provider, station/county/AOI, product and supported dates. It shows
@@ -50,11 +37,15 @@ and deployed hashes. These are packaging copies, never additional canonical
 connector, contract, source-registry or rights authorities. Regenerate them from
 the implementation roots and compare hashes; never fix an individual mirror.
 
-The standalone Sites source starts from same-project 902c1f5c60bb90ed215fc94fdeda6c1c0784834d,
-including its newer river-startup change after deployed v262. The Node copy
+The final standalone Sites candidate preserves same-project v265 source
+3807302d474db8ff9411f7290d8d1f609d826d90, including the land-records addition, its subsequent edit correction and
+prior river-startup change. The API patch was replayed without overlapping those
+new files. The frozen security review retains its earlier v263 base902c1f5.
+The Node copy
 preserves navigation/capture candidate 1c2dc18a1d7e84787da75764aeba7ba6e3c084b7 and
 the subsequent exact-host-proxy repair 2418fc31630e066142d485cd26ea216d26b3ac17
-(replayed locally as 78146b5). These histories are separate from the monorepo.
+(replayed locally as 78146b5), plus navigation acceptance checkpoint c8adcd9
+(replayed as 16b2f6a). These histories are separate from the monorepo.
 Independent Underground repair fa27044c remains preserved in its own checkout;
 it is not silently replaced or represented as included here.
 
@@ -103,8 +94,11 @@ Plan identity binds version, provider, exact normalized selection, requests and
 time bucket. The archive stores a reversible response bundle with per-entity
 digests, metadata and a whole-bundle digest. It preserves anonymous decoded HTTP
 entities unchanged. Some credential-based providers echo keys in their metadata:
-those exact credential tokens are redacted before storage, with received/stored
-digests and redaction counts. Such bundles are explicitly transformed, not
+credentialed JSON is validated first and decoded strings/property keys are
+scrubbed, including literal, URI-encoded and JSON-escaped echoes. Malformed
+credentialed JSON and redaction key collisions are held before storage. MIME
+parameters are omitted; keyed ETag/Last-Modified headers are omitted. Received/
+stored body digests and redaction counts preserve the explicit transform. Such bundles are explicitly transformed, not
 byte-identical original responses. Keys are never kept in plans, receipts,
 browser state, source or public artifacts.
 
@@ -112,7 +106,8 @@ Replay rebuilds the canonical request and checks the plan identity, stored
 lengths, whole-bundle and entity hashes, field structures and source scope.
 A successful fetch alone never produces a frontend review result: capture reads
 back the durable store, then replays the stored bytes. Invalid bounded responses
-remain private for correction and cannot supply a data view.
+from anonymous sources remain private for correction and cannot supply a data view.
+Credentialed malformed JSON is held without storing its unverified secret-bearing body.
 
 Node uses the existing MySQL ingestion store: verified TLS/hostname, owner-only
 GitHub identity, transactions, capacity reservations, fencing, chunked bytes and
@@ -176,6 +171,40 @@ endpoint is an additional ready-to-wire trigger; no cron, cloud automation or
 profile activation is claimed. Verify the published host's authorization envelope
 and trigger credentials before scheduling it. Preview workers remain disabled
 on the shared Node database.
+
+## Verified implementation evidence
+
+- All 16 profile builders, including six NCEI products, have bounded request,
+  capture/replay, identity-mutation and holds coverage: 71 adapter cases pass.
+- Six native-series cases pass for units, datums, sensor depths, suppression,
+  censoring, missing/trace values and source order.
+- Seven actual disposable D1/R2 integration cases pass for accounting, pause,
+  lease fencing, interrupted reservations, stored tamper denial, route access
+  and configured-profile limits. No production bindings are used.
+- Eleven existing Node host-boundary cases pass; native hosted MySQL, owner
+  OAuth and configured secrets remain separate acceptance work.
+- Two frozen Codex Security reviews cover all 34 Node / 37 Sites changed files.
+  Twelve concrete credential-copy cases per host reproduced with synthetic
+  values. Exact owner-only read controls establish no unauthorized recipient
+  or privilege delta, so they are retained as correctness evidence, not
+  reportable vulnerabilities. The final candidate corrects the gaps and adds
+  regressions; the earlier sealed snapshots do not certify the later heads.
+- Ten live bounded provider responses were captured and saved-byte replayed,
+  including header-only WQP and empty STAC queries. Empty coverage is explicit.
+- Browser verification checks all 16 selectors/holds and representative private
+  saved views for all ten captures through a clearly labeled loopback replay
+  harness. Native hosted auth/storage, broad mobile/keyboard/WebGL acceptance
+  and public/main-map activation are not established by that harness.
+- The adopted topology ratchet passes with zero invariants/new drift. Its single
+  scaffold waiver strictly contracts after materializing connectors/drought-monitor;
+  no waiver or expiry is expanded.
+
+The broader Node rendered suite is not a passing gate: 26 pass / 7 fail on both
+the final candidate and a separately built c8adcd9 navigation baseline. Five
+failures use the older Worker fetch harness against the Node composition; two
+assert removed download labels. Those failures are inherited and do not become
+passes because the new connection cases pass. The two navigation mobile cases
+pass, and native hosted/browser acceptance remains separate.
 
 ## Validation, promotion and rollback
 

@@ -4,9 +4,9 @@
   "files": [
     {
       "sourcePath": "packages/connectors-core/src/http-runtime.mjs",
-      "sourceSha256": "f7cff659d16d444b2428c0ad0906f22b93fbfbb7d8a8fb00824017e804393b7f",
+      "sourceSha256": "0b878c81619729dc85f1513facdaf13b00f98a52578c8bde8969066cba811386",
       "deploymentPath": "app/api-connections-runtime/http-runtime.mjs",
-      "deploymentSha256": "f7cff659d16d444b2428c0ad0906f22b93fbfbb7d8a8fb00824017e804393b7f"
+      "deploymentSha256": "0b878c81619729dc85f1513facdaf13b00f98a52578c8bde8969066cba811386"
     },
     {
       "sourcePath": "connectors/nass/quick-stats-api.mjs",
@@ -106,9 +106,9 @@
     },
     {
       "sourcePath": "pipelines/ingest/shared/api-connections.mjs",
-      "sourceSha256": "c859c2ddc2875b22a54424a00ee55df13d174779f98d1ff6cfe206085c917bd0",
+      "sourceSha256": "2f9f9c116a54eb901697d6c4c7071845636687123bee712b50f149897f7a379d",
       "deploymentPath": "app/api-connections-runtime/connections.mjs",
-      "deploymentSha256": "072b08dbc16b22b52a872d161ba07f6e65d60d1ccaa14729adbae3e3ef9c7144"
+      "deploymentSha256": "b5f598e05dfdd6f6a7bc7013c48df18db99b86857b80dd1a9d8ed066b8312730"
     }
   ]
 }
