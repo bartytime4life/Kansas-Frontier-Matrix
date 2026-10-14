@@ -21,6 +21,14 @@ related:
 
 # Connect kansasfrontiermatrix.com to GoDaddy web hosting
 
+> **Scope update — 2026-10-14:** The owner selected the existing GoDaddy Node.js
+> app `q9r9beo47t` to host the full Explorer. Its dashboard shows the published
+> Node composition at `f44ce0cf0d72c019252bb93efc4f138f671107de`. The cPanel/front-door
+> topology below records the earlier plan; it is not the current Node deployment
+> procedure and must not replace that app with monorepo `main`. The separate
+> [hosted capture runbook](godaddy-hosted-capture.md) covers the proposed scheduler
+> and its pending gates. This update performs no DNS or hosting change.
+
 This runbook connects the repository to GoDaddy so that:
 
 | Address | Serves | Hosted by |
