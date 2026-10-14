@@ -63,7 +63,8 @@
       "Disposable composed High Plains: 50 records, 28 columns, complete 2048x1718 surface and partial-coverage disclosures.",
       "Installed downloads route and existing saved cache budget remain available; browsing starts no transfer.",
       "Installed reviewed Earth Engine active endpoint returns 200 with original NOT_ADMITTED boundary.",
-      "Invited login visible but Awaiting owner setup; no authentication gate weakened."
+      "Invited login visible but Awaiting owner setup; no authentication gate weakened.",
+      "Installed Earth Engine shows one reviewed 2024 display period, connected local service and Google sign-in control; no new consent or download initiated."
     ],
     "build": "PASS",
     "focused_cases": 167,
@@ -72,6 +73,14 @@
     "hosted_equivalence": false,
     "installed_http_checks": 12,
     "installed_http_failures": 0,
+    "remaining_library_limit": {
+      "data_loss": false,
+      "files_inspected": 498621,
+      "limits_not_weakened": true,
+      "observed_state": "failed",
+      "reason_code": "LIBRARY_SCAN_LIMIT",
+      "source_matches_current_main": true
+    },
     "sqlite_integrity_failures": 0,
     "sqlite_integrity_ok": 8,
     "typescript": "PASS"
