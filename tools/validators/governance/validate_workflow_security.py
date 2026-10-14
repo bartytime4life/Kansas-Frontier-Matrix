@@ -1352,7 +1352,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--baseline-owner", default="@bartytime4life")
     parser.add_argument("--closure-ref", default="current-change:workflow-security-hardening")
     parser.add_argument("--generated-from-ref", default="worktree")
-    parser.add_argument("--expires-on", default="2026-11-10")
+    parser.add_argument("--expires-on", default="2027-05-10")
     return parser
 
 
