@@ -180,7 +180,9 @@ Hosting setup must supply DB_HOST/PORT/NAME/USER/PASSWORD, a verified database C
 in KFM_DB_CA_PEM with KFM_DB_TLS=verified and a DNS DB_HOST matching its certificate
 (IP-only endpoints stay unavailable rather than skip identity verification), identity-only OAuth client ID/secret,
 random base64url KFM_SESSION_KEY and separate KFM_CAPTURE_WORKER_TOKEN. Set
-KFM_PUBLIC_ORIGIN=https://kansasfrontiermatrix.com, KFM_RUNTIME_ROLE=published,
+KFM_PUBLIC_ORIGIN=https://kansasfrontiermatrix.com,
+VINEXT_TRUSTED_HOSTS=kansasfrontiermatrix.com (exact allowlist for the hosting TLS
+proxy; never a wildcard), KFM_RUNTIME_ROLE=published,
 KFM_INGEST_ENABLED=true and KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES=80000000000 only
 after capacity and configuration are confirmed. Shared secrets alone do not
 start any worker. Resume is an owner action; the SQL seed stays paused.

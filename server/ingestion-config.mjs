@@ -10,11 +10,12 @@ export function ingestionConfig(environment = process.env) {
   // mysql2's SNI identity check needs a DNS host; never silently skip it for an IP.
   const tls = environment.KFM_DB_TLS === "verified" && Boolean(environment.KFM_DB_CA_PEM) && Boolean(environment.DB_HOST) && isIP(environment.DB_HOST) === 0;
   const origin = environment.KFM_PUBLIC_ORIGIN === "https://kansasfrontiermatrix.com" ? environment.KFM_PUBLIC_ORIGIN : null;
-  const authentication = Boolean(origin && environment.KFM_GITHUB_CLIENT_ID && environment.KFM_GITHUB_CLIENT_SECRET && /^[A-Za-z0-9_-]{43,}$/.test(environment.KFM_SESSION_KEY ?? ""));
+  const proxy = environment.VINEXT_TRUSTED_HOSTS === "kansasfrontiermatrix.com";
+  const authentication = Boolean(origin && proxy && environment.KFM_GITHUB_CLIENT_ID && environment.KFM_GITHUB_CLIENT_SECRET && /^[A-Za-z0-9_-]{43,}$/.test(environment.KFM_SESSION_KEY ?? ""));
   const enabled = environment.KFM_INGEST_ENABLED === "true";
   // Shared preview/live DB: only the confirmed published app may run workers.
   const production = environment.KFM_RUNTIME_ROLE === "published";
   const capacityConfirmed = environment.KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES === String(ARCHIVE_LIMIT_BYTES);
-  return { database, tls, origin, authentication, enabled, production, capacityConfirmed,
+  return { database, tls, proxy, origin, authentication, enabled, production, capacityConfirmed,
     ready: database && tls && authentication && enabled && production && capacityConfirmed };
 }
