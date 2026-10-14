@@ -11,7 +11,7 @@ updated: 2026-10-14
 current_path: tests/maplibre/README.md
 owning_root: tests/
 responsibility: index executable MapLibre boundary, configuration, readiness, and held-runtime tests without creating release or publication authority
-truth_posture: CONFIRMED seven direct Python test modules, 103 source-defined tests, a closed and fixture-tested performance-envelope machine contract, a package-owned exact MapLibre GL JS 6.9.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
+truth_posture: CONFIRMED seven direct Python test modules, 105 source-defined tests, a closed and fixture-tested performance-envelope machine contract, a package-owned exact MapLibre GL JS 6.9.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -70,12 +70,12 @@ conformance, runtime readiness, release, deployment, promotion, or publication.
 
 ## Implemented inventory
 
-The seven test modules define 103 test functions or `unittest` methods in source.
+The seven test modules define 105 test functions or `unittest` methods in source.
 The count describes the checked-in source, not a hosted collection receipt.
 
 | Module | Source-defined tests | What it checks | Hosted binding |
 | --- | ---: | --- | --- |
-| [`test_assess_acquisition_inventory.py`](test_assess_acquisition_inventory.py) | 52 | Renderer imports, re-exports, globals, CDN assets, package homes, manifest errors, input budgets, symlink/path confinement, mutation races, and summary redaction | [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) runs the full module and current-repository scan |
+| [`test_assess_acquisition_inventory.py`](test_assess_acquisition_inventory.py) | 54 | Renderer imports including side-effect forms, re-exports, globals, CDN assets, package homes, manifest errors, input budgets, symlink/path confinement, mutation races, and summary redaction | [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) runs the full module and current-repository scan |
 | [`test_source_metadata.py`](test_source_metadata.py) | 9 | Local source epoch/license/digest projection, optional proof/manifest reference syntax, local manifest-digest equality, finite outcomes, and exact reason codes | [`maplibre-source-metadata.yml`](../../.github/workflows/maplibre-source-metadata.yml) runs the focused module, exact synthetic fixture outcomes, and authored syntax checks |
 | [`test_validate_v6_readiness.py`](test_validate_v6_readiness.py) | 23 | Exact-version ownership, Site consumer (`apps/site/source`) version match and single seam module under ADR-0006 §2.6, duplicate/floating dependencies, import boundaries including side-effect, type, re-export, resolve and subpath forms, probe posture, upstream tag identity, and declared-versus-computed outcomes | [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) runs the module, fixture polarity, and current-repository scan |
 | [`test_legacy_perf_harness_retirement.py`](test_legacy_perf_harness_retirement.py) | 3 | The removed harness and its builders stay removed, no root perf commands resurface, and current acquisition stays confined to the package seam | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
