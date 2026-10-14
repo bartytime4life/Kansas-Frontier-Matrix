@@ -24,9 +24,6 @@ import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
 import Link from "next/link";
-import { LocalMapArchiveLoader } from "./local-map-archive-loader";
-import { LocalAtlasControl } from "./local-atlas-control";
-import { localAtlasHit } from "./local-atlas-map";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { BlmPlssInspector } from "./blm-plss-inspector";
@@ -56,7 +53,8 @@ import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
 import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
-import { DataNotices, RenderQualityControl } from "./map-toolbar";
+import { LayerSourceNotices, RenderQualityControl } from "./map-toolbar";
+import { HostedSourceStatus } from "./hosted-source-status";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
@@ -646,7 +644,6 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   connections: "Sources",
   import: "Import",
   compare: "Compare",
-  localAtlas: "Local Atlas",
   measure: "Measure",
   export: "Export",
   diagnostics: "Diagnostics",
@@ -660,7 +657,6 @@ const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   connections: "Check the sources behind the current map.",
   import: "Preview a local KML or GeoJSON file in this browser.",
   compare: "Compare selected layers and times.",
-  localAtlas: "Explore climate, local features, and raster data on this PC.",
   measure: "Draw and measure on this map.",
   export: "Review what the map can safely export.",
   diagnostics: "Check map health and recovery options.",
@@ -1504,6 +1500,7 @@ export default function Home() {
   const [researchMissingSources, setResearchMissingSources] = useState<ResearchCoverage[]>([]);
   const [leftOpen, setLeftOpen] = useState(false);
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
+  const [sourceStatusScope, setSourceStatusScope] = useState<"selected" | "all">("selected");
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
@@ -1543,7 +1540,6 @@ export default function Home() {
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
   const [mapUtilityFocusRequest, setMapUtilityFocusRequest] = useState(0);
-  const [localAtlasPeek, setLocalAtlasPeek] = useState(false);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const composerRef = useRef<HTMLElement>(null);
   const mapGuideRef = useRef<HTMLElement>(null);
@@ -1571,7 +1567,7 @@ export default function Home() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   // First-visit quick start; device-local flag only, read after hydration.
-  useEffect(() => { if (!readExplorerGuideDismissed()) setGuideOpen(true); }, []);
+  useEffect(() => { const params = new URLSearchParams(window.location.search); if (!readExplorerGuideDismissed() && params.get("layers") !== "sources" && params.get("maptab") !== "localAtlas") setGuideOpen(true); }, []);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState<PublicWorkspaceId>("explore");
   const [repositoryView, setRepositoryView] = useState<RepositoryView>("updates");
@@ -2271,7 +2267,7 @@ export default function Home() {
       },
       {
         id: "sources",
-        label: "Bounded local sources",
+        label: "Released map sources",
         detail: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length} GeoJSON sources · ${maplibreProbe.idle ? "idle" : "working"} · ${maplibreProbe.tilesLoaded ? "tiles settled" : "tiles pending"}`,
         state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, checkFailed("SOURCE_CHECK_FAILED", "IDLE_CHECK_FAILED", "TILE_CHECK_FAILED") || startupFailed || sourceStateCounts.error > 0),
       },
@@ -2719,6 +2715,7 @@ export default function Home() {
       params.set("mapui", "open");
       params.set("maptab", mapUtilityView);
     }
+    if (sourceStatusOpen && leftOpen) params.set("layers", "sources");
     params.set("times", `${compareTimeA},${compareTimeB}`);
     if (selected) {
       params.set("f", selected.featureId);
@@ -2728,7 +2725,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4265,12 +4262,17 @@ export default function Home() {
     setGuideOpen(false);
     sourceStatusReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : mapContainerRef.current);
+    if (!returnElement?.closest(".layer-panel")) leftPanelReturnRef.current = returnElement ?? null;
+    setMapUtilityOpen(false);
+    setRightOpen(false);
+    setScenePanelOpen(false);
+    setLeftPanelMode("layers");
     setSourceStatusOpen(true);
-    setLeftOpen(false);
+    setLeftOpen(true);
     window.requestAnimationFrame(() => {
-      sourceStatusPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close source status"]')?.focus({ preventScroll: true });
+      sourceStatusPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Back to layers"]')?.focus({ preventScroll: true });
     });
-  }, []);
+  }, [setRightOpen]);
 
   const closeSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
     setSourceStatusOpen(false);
@@ -4285,7 +4287,6 @@ export default function Home() {
   }, []);
 
   const closeMapUtility = useCallback(() => {
-    setLocalAtlasPeek(false);
     setMapUtilityOpen(false);
     setMapQueryCandidates([]);
     const returnTarget = mapUtilityReturnRef.current;
@@ -4300,7 +4301,6 @@ export default function Home() {
     setPrimaryWorkspace("map");
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
-    setLocalAtlasPeek(false);
     setMapUtilityView(nextView);
     setMapUtilityOpen(true);
     setMapUtilityFocusRequest((request) => request + 1);
@@ -4331,22 +4331,6 @@ export default function Home() {
       if (focusFrame !== undefined) window.cancelAnimationFrame(focusFrame);
     };
   }, [primaryWorkspace, mapUtilityOpen, mapUtilityView, mapUtilityFocusRequest]);
-
-  useEffect(() => {
-    if (!isCompact || !mapUtilityOpen || mapUtilityView !== "localAtlas") setLocalAtlasPeek(false);
-    if (isCompact && mapUtilityOpen && mapUtilityView === "localAtlas") {
-      setTimelineOpen(false); setLeftOpen(false); setRightOpen(false);
-    }
-  }, [isCompact, mapUtilityOpen, mapUtilityView]);
-
-  const showLocalAtlasMap = useCallback(() => {
-    setLocalAtlasPeek(true);
-    window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true }));
-  }, []);
-  const restoreLocalAtlasControls = useCallback(() => {
-    setLocalAtlasPeek(false);
-    window.requestAnimationFrame(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>(".local-atlas-peek-toggle")?.focus({ preventScroll: true }));
-  }, []);
 
   const openAtlasPanel = useCallback((mode: LeftPanelMode, returnElement?: HTMLElement | null) => {
     leftPanelReturnRef.current = returnElement ?? null;
@@ -4904,9 +4888,11 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
+      const restoredSourceStatus = params.get("layers") === "sources" || restoredMapUtilityView === "localAtlas";
+      if (restoredSourceStatus) { setLeftPanelMode("layers"); setLeftOpen(true); setSourceStatusOpen(true); }
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -4918,7 +4904,7 @@ export default function Home() {
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
       if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
-      const restoredMapUtilityOpen = nextTemporalMode === "comparison" || params.get("mapui") === "open" && restoredMapUtilityView !== "display" && restoredMapUtilityView !== "places";
+      const restoredMapUtilityOpen = !restoredSourceStatus && (nextTemporalMode === "comparison" || params.get("mapui") === "open" && restoredMapUtilityView !== "display" && restoredMapUtilityView !== "places");
       setMapUtilityOpen(restoredMapUtilityOpen);
       if (params.get("mapui") === "open" && restoredMapUtilityView === "places") {
         setLeftPanelMode("places");
@@ -5235,7 +5221,7 @@ export default function Home() {
             map.setProjection({ type: projectionRef.current });
             map.resize();
           })) return;
-          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying local sources and interactions…` });
+          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying catalog layers and interactions…` });
         });
 
         const clearHoverCandidate = () => {
@@ -5290,14 +5276,6 @@ export default function Home() {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
-            clearHoverCandidate();
-            return;
-          }
-          // Local previews own their hover; clear any older official candidate.
-          if (localAtlasHit(map, event.point, renderedHits)) {
-            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
-            hoveredRef.current = null;
-            map.getCanvas().style.cursor = "pointer";
             clearHoverCandidate();
             return;
           }
@@ -5399,7 +5377,6 @@ export default function Home() {
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
           // Local previews own their selection; never inspect official features beneath them.
-          if (localAtlasHit(map, event.point, renderedHits)) return;
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           // The fixture control owns synthetic selection; never select provider
           // context underneath its schematic as evidence for that schematic.
@@ -5766,7 +5743,7 @@ export default function Home() {
               setRuntime((current) => sameValues(current, next) ? current : next);
               return;
             }
-            const next: RuntimeState = { kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` };
+            const next: RuntimeState = { kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} catalog layers · interactions proven` };
             setRuntime((current) => sameValues(current, next) ? current : next);
           });
         });
@@ -6886,7 +6863,7 @@ export default function Home() {
   }, [primaryWorkspace, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
 
   useEffect(() => {
-    if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
+    if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
@@ -6910,7 +6887,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;
@@ -6921,6 +6898,8 @@ export default function Home() {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || repositoryOpen) return;
+      // Header popovers own their Escape; keep the underlying Layers view open.
+      if ((event.target as HTMLElement | null)?.closest?.(".map-dock-map-menu")) return;
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;
       else if (sourceStatusOpen) closeSourceStatus();
       else if (qwenOpen) closeQwenCompanion();
@@ -8881,19 +8860,24 @@ export default function Home() {
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     });
   };
+  const chooseMapMenuRepresentation = (mode: "2d" | "terrain" | "globe") => {
+    setUndergroundOpen(false);
+    if (mapUtilityView === "compare") setMapUtilityOpen(false);
+    activateMapRepresentation(mode);
+  };
   const mapRepresentationControls = () => <>
-              <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
-              <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
-              <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
+              <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} data-active={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} onClick={() => chooseMapMenuRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
               {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
-              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("globe"); }}><b>Globe</b><span>◎</span></button>
-              <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} onClick={() => chooseMapMenuRepresentation("globe")}><b>Globe</b><span>◎</span></button>
+              <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => { if (primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare") closeMapUtility(); else { setUndergroundOpen(false); activateMapRepresentation("compare"); } }}><b>Compare</b><span>A/B</span></button>
   </>;
 
   return (
-    <div className="site-root" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
+    <div className="site-root">
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header className="topbar">
         <div className="brand-lockup">
@@ -8912,20 +8896,15 @@ export default function Home() {
             {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
           </div>}
         </div>
+          <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
           <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
-            <div className="map-dock-representations" role="group" aria-label="Map representation">
-              {mapRepresentationControls()}
-            </div>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
               <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
-              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => { setPrimaryWorkspace("map"); setBasemap(event.target.value as BasemapKey); }} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
-              <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
-              <button className="map-dock-action map-dock-wide-only" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "localAtlas"} onClick={(event) => openMapUtility("localAtlas", event.currentTarget)}><strong>Local Atlas</strong><b>PC</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
-                <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
+                <summary aria-label="Map views and controls">Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
                   <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { const button = (event.target as HTMLElement).closest("button"); if (button) closeHeaderOverflow(event.currentTarget, !button.hasAttribute("data-map-panel")); }}>
                     {mapRepresentationControls()}
@@ -8935,16 +8914,14 @@ export default function Home() {
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("layers", event.currentTarget); }}>Layers · {selectedMapLayerCount}</button>
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("places", event.currentTarget); }}>Places · {savedWorkspaces.length}</button>
                   </div>
-                  <button type="button" aria-label="Local Atlas: climate, local files, and data coverage" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("localAtlas", summary); }}><strong>Local Atlas</strong><small>Climate, local files, and data coverage on this PC</small></button>
-                  <button className="map-dock-compact-only" type="button" aria-label="Style and basemap" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
-                  <button className="map-dock-compact-only" type="button" aria-label="Map controls: coordinates, camera, and navigation" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
+                  <button type="button" aria-label="Style and basemap" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
+                  <button type="button" aria-label="Map controls: coordinates, camera, and navigation" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
                 </div>
               </details>
             </div>
           </nav>
         <div className="top-actions">
           <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
-          <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
           <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">
@@ -9367,13 +9344,67 @@ export default function Home() {
 
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <nav className="layer-source-switch" aria-label="Layer views">
-              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === id} data-active={layerCatalogView === id} onClick={() => { setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && layerCatalogView === id} data-active={!sourceStatusOpen && layerCatalogView === id} onClick={() => { setSourceStatusOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              <button type="button" aria-pressed={sourceStatusOpen} data-active={sourceStatusOpen} onClick={event => openSourceStatus(event.currentTarget)}>Source status{sourceIssues.length > 0 && <span>{sourceIssues.length}</span>}</button>
             </nav>
-            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
+            <label className="catalog-search" hidden={sourceStatusOpen}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
-          <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          {sourceStatusOpen && (leftPanelMode === "layers" || leftPanelMode === "live") && <aside ref={sourceStatusPanelRef} id="map-source-status" className="map-source-status layer-source-status" aria-label="Source status and data quality">
+            <header><h2>Source status</h2><button type="button" onClick={() => closeSourceStatus()} aria-label="Back to layers">← Layers</button></header>
+            <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
+            <nav className="source-status-scope" aria-label="Source status scope"><button type="button" aria-pressed={sourceStatusScope === "selected"} onClick={() => setSourceStatusScope("selected")}>On map · {visibleOfficialCount}</button><button type="button" aria-pressed={sourceStatusScope === "all"} onClick={() => setSourceStatusScope("all")}>All sources · {OFFICIAL_CONTEXT_SOURCES.length}</button></nav>
+            <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}>Connection details</button>
+            <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link></div>
+            <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
+            <LayerSourceNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
+            <HostedSourceStatus />
+            {OFFICIAL_CONTEXT_SOURCES.filter(source => sourceStatusScope === "all" || officialVisibility[source.id]).map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
+            <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
+          {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
+            <header>
+              <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
+              <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
+            </header>
+            <dl>
+              <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
+              <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
+              <div><dt>Carrier</dt><dd>{terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "Attached: " : "Selected: "}{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Mapzen Terrarium DEM"}{terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · overzoomed from z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</dd></div>
+              <div><dt>Evidence</dt><dd>Display context only</dd></div>
+            </dl>
+            <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
+            <div className="terrain-passport-actions">
+              <button type="button" aria-pressed={topographicOverlay} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "Hide height colors" : "Show height colors"}</button>
+              <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
+              <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
+            </div>
+            <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated {terrainElevationReading.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM</span></> : <span>{terrainElevationUnavailable ? "No DEM height available at pointer" : "Move over the map to read DEM elevation"}</span>}</output>
+          </aside>}
+          <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
+            <header>
+              <div><span>SELECTED LAYERS</span><strong>{visibleCount} domain · {visibleOfficialCount} sources · {selectedEarthEngineCount} snapshots</strong></div>
+              <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Manage</button>
+            </header>
+            <div className="map-legend-list">
+              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
+                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
+                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
+                  <span aria-hidden="true" />
+                </label>
+                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
+                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
+                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
+                </button>
+              </div>)}
+              {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
+            </div>
+            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
+            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+          </aside>
+          </aside>}
+
+          <div className="layer-catalog-body" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
@@ -9503,7 +9534,7 @@ export default function Home() {
                   </details>}
                   <button type="button" onClick={() => setWindArrowReloadToken(value => value + 1)} disabled={!officialVisibility[source.id] || windArrowState === "LOADING" || heldAtFrame}>Refresh wind forecast</button>
                 </div>}
-                <div className="official-context-actions"><button type="button" onClick={() => openSourceStatus(mapContainerRef.current)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={event => openSourceStatus(event.currentTarget)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
             })}</div>
@@ -9535,7 +9566,6 @@ export default function Home() {
             {officialWorkspace === "groundwater" && <section className="official-workspace-ledger" aria-label="Aquifers and groundwater guide"><h3>Beneath Kansas</h3><p>Start with an aquifer extent, then select one High Plains map to explore depth to water, saturated thickness, or water-table elevation. Each overlay has independent opacity. Click a region for its range, or a monitoring point for its KGS well record.</p><p>High Plains maps: <strong>2022–2024</strong>. Monitoring locations: <strong>2026</strong>. Snapshots checked October 4, 2026. Overlapping aquifers may occupy different depths. These maps do not calculate underground flow.</p><button type="button" onClick={() => { setOfficialContextVisible("kgs-aquifer-high-plains", true); mapRef.current?.fitBounds([[-102.06, 36.99], [-97.1, 40.01]], { padding: 70, duration: reducedMotion ? 0 : 700 }); }}>Explore the High Plains aquifer</button><a href="https://www.kgs.ku.edu/HighPlains/HPA_Atlas/index.html" target="_blank" rel="noreferrer">KGS High Plains Atlas ↗</a></section>}
             {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
             {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference; inspect identifiers at the map center from a layer’s Options. The separate MLRS oil-and-gas lease overlays show only authorized or closed Kansas cases with direct PLSS match scores 0–3. They omit generalized and unmapped cases and are not exact lease boundaries, ownership, drilling, or production. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed GLO overlays and KFM land releases remain pending.</p>}
-            {officialWorkspace === "transport" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Local road &amp; bridge map archive</button>}
             {officialWorkspace === "transport" && <p className="layer-journey-intro">Bridge age, historic designation, and recorded closure are separate filters. Historical roads are KDOT’s 1918 map, not proof of present abandonment. A verified statewide closed-road history and demolished-bridge inventory are not connected yet; no missing route is inferred closed.</p>}
             <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
             <div className="official-context-pulse" aria-label="Live source connection status">
@@ -9552,10 +9582,10 @@ export default function Home() {
               <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
             </section>
           </div>
-            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openMapUtility("connections", event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
+            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
 
           </div>
-          <details className="layer-panel-explore" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <details className="layer-panel-explore" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <summary>Explore <span>Other map tools</span></summary>
             <nav aria-label="Other map tools">
               <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
@@ -9569,55 +9599,6 @@ export default function Home() {
 
         <section className="map-stage" data-underground={undergroundOpen ? "true" : undefined} data-live-dock={liveDockVisible || glmFlashesEnabled} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0} aria-label="Kansas MapLibre Explorer">
 
-          {sourceStatusOpen && <aside ref={sourceStatusPanelRef} id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
-            <header><h2>Sources & data quality</h2><button type="button" onClick={() => closeSourceStatus()} aria-label="Close source status">×</button></header>
-            <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
-            <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}>Connection details</button>
-            <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
-            <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
-            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
-            <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
-          {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
-            <header>
-              <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
-              <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
-            </header>
-            <dl>
-              <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
-              <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
-              <div><dt>Carrier</dt><dd>{terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "Attached: " : "Selected: "}{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Mapzen Terrarium DEM"}{terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · overzoomed from z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</dd></div>
-              <div><dt>Evidence</dt><dd>Display context only</dd></div>
-            </dl>
-            <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
-            <div className="terrain-passport-actions">
-              <button type="button" aria-pressed={topographicOverlay} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "Hide height colors" : "Show height colors"}</button>
-              <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
-              <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
-            </div>
-            <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated {terrainElevationReading.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM</span></> : <span>{terrainElevationUnavailable ? "No DEM height available at pointer" : "Move over the map to read DEM elevation"}</span>}</output>
-          </aside>}
-          <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
-            <header>
-              <div><span>SELECTED LAYERS</span><strong>{visibleCount} domain · {visibleOfficialCount} sources · {selectedEarthEngineCount} snapshots</strong></div>
-              <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Manage</button>
-            </header>
-            <div className="map-legend-list">
-              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
-                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
-                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
-                  <span aria-hidden="true" />
-                </label>
-                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
-                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
-                </button>
-              </div>)}
-              {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
-            </div>
-            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
-          </aside>
-          </aside>}
           {instrumentOpen && !glmFlashesEnabled && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
             state={streamflowDisplayState}
@@ -9756,21 +9737,18 @@ export default function Home() {
             className="map-utility-panel"
             data-open={mapUtilityOpen}
             data-view={mapUtilityView}
-            data-peek={isCompact && mapUtilityView === "localAtlas" && localAtlasPeek || undefined}
             aria-hidden={!mapUtilityOpen}
             inert={!mapUtilityOpen}
-            aria-modal={isCompact && mapUtilityOpen && !(mapUtilityView === "localAtlas" && localAtlasPeek) || undefined}
-            role={isCompact && mapUtilityOpen && !(mapUtilityView === "localAtlas" && localAtlasPeek) ? "dialog" : undefined}
+            aria-modal={isCompact && mapUtilityOpen || undefined}
+            role={isCompact && mapUtilityOpen ? "dialog" : undefined}
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
               <div><p className="panel-kicker">MAP · {mapUtilityLabels[mapUtilityView].toUpperCase()}</p><h2 id="map-utility-title">{mapUtilityLabels[mapUtilityView]}</h2><span>{mapUtilityDescriptions[mapUtilityView]}</span></div>
-              {isCompact && mapUtilityView === "localAtlas" && <button className="local-atlas-peek-toggle" type="button" onClick={localAtlasPeek ? restoreLocalAtlasControls : showLocalAtlasMap} aria-expanded={!localAtlasPeek} aria-controls="local-atlas-controls">{localAtlasPeek ? "Show controls" : "View map"}</button>}
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label={`Close ${mapUtilityLabels[mapUtilityView]}`}>×</button>
             </header>
             <ExplorerControlsNavigation value={mapUtilityView} onChange={viewId => { setMapUtilityView(viewId); if (viewId === "report") setReportGeneratedAt(new Date().toISOString()); if (viewId === "export") setExportGeneratedAt(new Date().toISOString()); }} />
             <div className="map-utility-scroll">
-              {mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl map={mapRef.current} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} suspended={Boolean(measureMode) || undergroundOpen} compact={isCompact} collapsed={isCompact && localAtlasPeek} onViewMap={showLocalAtlasMap} onExpand={restoreLocalAtlasControls} reducedMotion={reducedMotion} onFlatMap={() => activateMapRepresentation("2d")} onArchive={() => setMapUtilityView("compare")} onPrivateView={() => { locationDerivedViewRef.current = true; setLocationCameraRedacted(true); }} />}
               {mapUtilityView === "report" && <section id="map-utility-view-report" role="region" aria-labelledby="map-utility-title" className="map-utility-section report-builder-section">
                 <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
 
@@ -10102,7 +10080,6 @@ export default function Home() {
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="region" aria-labelledby="map-utility-title" className="map-utility-section layer-compare-section">
                 <div className="map-utility-section-heading"><span>COMPARE</span><h3>Time + layer investigation</h3><p>Compare catalog availability across two times, then inspect two registry layers without flattening source role, release posture, or sensitivity into a single score.</p></div>
-                {mapUtilityOpen && <LocalMapArchiveLoader map={mapRef.current} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
                 <section className="road-year-study" aria-labelledby="road-year-study-title">
                   <header><div><span>HISTORICAL ROAD STUDY · LOCAL PREVIEW</span><h4 id="road-year-study-title">Candidate road linework by map edition</h4></div><strong>{roadStudyLayers.length}/{ROAD_STUDY_MAX_LAYERS} loaded</strong></header>
                   <p>Choose local GeoJSON linework for each map edition, then compare up to four editions with separate colors and opacity. The available derived files trace colored marks printed on maps; they are incomplete and approximately positioned. This preview does not detect or verify road changes. Missing years remain unknown.</p>
