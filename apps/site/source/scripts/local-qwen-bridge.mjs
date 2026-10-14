@@ -383,7 +383,10 @@ const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:okay|ok|fine|alright|good) (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|eat\\w*)\\b|\\b(?:drinking|swimming|wading|eating) (?:\\w+ ){0,4}(?:be |is |are )?(?:safe|okay|ok|fine|alright|dangerous|harmful)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
   "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|cattle|cows|horses|livestock|dogs|pets|animals|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
-  "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
+  "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue|911)\\b",
+  // Distress in the first person ("I'm trapped by flood water", "my son is hurt") is an emergency in
+  // other words; "how many people were injured in 1955" is history.
+  "\\b(?:i am|i m|im|we are|we re|someone is|somebody is|(?:my|our) \\w+ (?:is|are)) (?:\\w+ )?(?:trapped|stranded|stuck|drowning|injured|hurt|bleeding|lost|missing)\\b",
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
   "\\bexact (?:location|spot|address|site)\\b",
@@ -479,6 +482,8 @@ const PRECISE_TERM_ABOUT_SHAPES = [
   /^what (?:does|do) (?:the )?(?:\w+ ){0,3}(?:mean|stand for)$|^what is the meaning of\b/,
   /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
   /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
+  // "What is the difference between latitude and longitude": two terms compared, no value asked for.
+  new RegExp(`^what (?:is|s) the difference between (?:an? )?${PRECISE_TERM_WORDS}(?: and (?:an? )?${PRECISE_TERM_WORDS})?$`),
   new RegExp(`^define (?:an? )?${PRECISE_TERM_WORDS}$|^explain what (?:an? )?${PRECISE_TERM_WORDS} (?:is|are|means?)$`),
   WHY_POLICY,
 ];

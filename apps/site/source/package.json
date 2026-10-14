@@ -19,6 +19,7 @@
     "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",
     "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs",
     "eval:qwen-local": "node scripts/qwen-local-eval.mjs",
+    "eval:qwen-gate": "node scripts/qwen-question-gate-corpus.mjs",
     "validate:subsurface-public": "node scripts/validate-subsurface-public.mjs",
     "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client"
   },
