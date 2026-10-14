@@ -407,7 +407,7 @@ const INTERFACE_CUE = /\b(?:filter|layer|layers|map|legend|button|setting|settin
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
-const SENSITIVE_SITE = "(?:hibernating|bat caves?|village sites?|burials?|graves?|gravesites?|(?<!blue )mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
+const SENSITIVE_SITE = "(?:bat caves?|village sites?|burials?|graves?|gravesites?|(?<!blue )mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
   // "Would that be dangerous?", "could it be risky this weekend?"
@@ -435,6 +435,9 @@ const SENSITIVE_QUESTION = new RegExp([
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
   // Care and symptoms: "got bit by a rattlesnake, how far is the hospital", "cramps and diarrhea".
   "\\b(?:hospital|clinic|doctor|ambulance|poison control|bitten|bit by|snakebite|snake bite|overdose|symptoms?|diarrh\\w*|cramps|vomit\\w*|nause\\w*|fever|rash|giardia|asthma|hypotherm\\w*|frostbite|heat stroke|concussion)\\b",
+  // Caves that hold bats are roosts and hibernacula: "which gypsum caves have bats hibernating in
+  // them?" ("why are bats hibernating in winter?" names no cave).
+  "\\bcaves?\\b(?: \\w+){0,5} (?:have|has|with|hold|holds|where|shelter|shelters) (?:\\w+ ){0,2}bats?\\b|\\bbats?\\b(?: \\w+){0,3} (?:in|inside) (?:\\w+ ){0,3}caves?\\b",
   // Sheltering: "the basement or the culvert, which is better to ride it out".
   "\\b(?:ride (?:it|this|the storm) out|take cover|where (?:should|do|can) (?:i|we) (?:go|hide|take shelter))\\b",
   "\\bexact (?:location|spot|address|site)\\b",
@@ -502,7 +505,7 @@ const SITE_AGGREGATE_SHAPES = [
 // Definitions may carry ordinary modifiers ("what is a prairie-chicken lek", "what are burial mounds"),
 // but not inventory words ("the known nests", "all archaeological sites") or proper nouns.
 const DEFINITION_MODIFIERS = "(?:(?!(?:the|all|any|these|those|known|mapped|recorded|documented|surveyed|monitored|protected|withheld|local|nearby|our|your|their|its)\\b)\\w+ ){0,3}";
-const SITE_DEFINITION = new RegExp(`^(?:what is|what are|what s|whats) (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}(?:$| (?:my|our|the|it|they|someone|people|i|we)\\b)|^what (?:does|do) (?:the )?(?:word |term )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE} mean$|^define (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}$`);
+const SITE_DEFINITION = new RegExp(`^(?:what is|what are|what s|whats) (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}(?: (?:my|our) (?:\\w+ ){0,2}(?:teacher|professor|instructor|textbook|class) (?:keeps saying|said|says|mentioned|uses)(?: it| this| that)?)?$|^what (?:does|do) (?:the )?(?:word |term )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE} mean$|^define (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}$`);
 const SITE_ALLOWED_SHAPES = [
   // Policy and map presentation.
   // "Why not list …" and "why don't you show …" are commands, not policy questions.
@@ -681,9 +684,13 @@ const FIRST_PERSON = /\b(?:i|i m|im|i ve|ive|i d|me|my|mine|we|we re|we ve|us|ou
 // circumstances.
 const PERSONAL_ANCHOR = new RegExp(`\\b(?:house|home|farm|land|property|yard|backyard|garden|store|shop|business|place|lot|pasture|ranch|acreage|basement|street|block|neighbou?rhood|apartment|location|position|whereabouts|car|truck|vehicle|road|creek|river|lake|pond|standing|hurt|stranded|trapped|sick|injured|${DISTRESS_PERSON.slice(3, -1)})\\b`);
 
+// A place word that names a layer or a measured quantity ("the river layer", "lake levels", "road
+// data") is part of the map, not the asker's place.
+const MAPPED_PLACE_TERM = /\b(?:river|rivers|road|roads|lake|lakes|creek|creeks|pond|ponds|street|streets|land|farm|field|pasture|block) (?:layers?|levels?|data|dataset|gauges?|maps?|records?|network|lines?|polygons?|points?|features?|stations?|cover|use|names?)\b/g;
+
 function clauseAllowed(core) {
   if (!MAP_DATA.test(core) && !MAPPED_SUBJECT.test(core) && !QUESTION_SHAPE.test(core)) return false;
-  return !FIRST_PERSON.test(core) || (MAP_DATA.test(core) && !PERSONAL_ANCHOR.test(core));
+  return !FIRST_PERSON.test(core) || (MAP_DATA.test(core) && !PERSONAL_ANCHOR.test(core.replace(MAPPED_PLACE_TERM, " ")));
 }
 
 const stripFraming = (value) => INTERPRETATION_FRAMING.reduce((rest, framing) => rest.replace(framing, " "), value)
