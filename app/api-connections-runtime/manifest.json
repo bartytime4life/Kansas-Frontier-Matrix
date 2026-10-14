@@ -1,0 +1,114 @@
+{
+  "format": "kfm-api-mirror-v1",
+  "authority": "Deployment mirror only; connectors/ and pipelines/ own implementation. No source admission, rights, review or release.",
+  "files": [
+    {
+      "sourcePath": "packages/connectors-core/src/http-runtime.mjs",
+      "sourceSha256": "f7cff659d16d444b2428c0ad0906f22b93fbfbb7d8a8fb00824017e804393b7f",
+      "deploymentPath": "app/api-connections-runtime/http-runtime.mjs",
+      "deploymentSha256": "f7cff659d16d444b2428c0ad0906f22b93fbfbb7d8a8fb00824017e804393b7f"
+    },
+    {
+      "sourcePath": "connectors/nass/quick-stats-api.mjs",
+      "sourceSha256": "5f7ed42782cb6a0b4ae37d302a2b5e722381d5fda5aa91d172f41579996e4ebf",
+      "deploymentPath": "app/api-connections-runtime/provider-0.mjs",
+      "deploymentSha256": "b9aa848cd2646e710b345d92445d9635bfe76c52704402a418fe84dde4b8f714"
+    },
+    {
+      "sourcePath": "connectors/drought-monitor/statistics-api.mjs",
+      "sourceSha256": "72838a0f322709355410f91c8ba6c6ec44d61ace102c95bb3829096e0da7ea1c",
+      "deploymentPath": "app/api-connections-runtime/provider-1.mjs",
+      "deploymentSha256": "01d7a4dd851c94678e0687f20fba405780b8a510c0b3f82f9a914df6919d34ac"
+    },
+    {
+      "sourcePath": "connectors/kansas/dasc-imagery-api.mjs",
+      "sourceSha256": "22cc4c938d4d0fcf425e3a693cb1259a101ec6851e45204f060edacf8ff7418c",
+      "deploymentPath": "app/api-connections-runtime/provider-2.mjs",
+      "deploymentSha256": "70b5f5e89595386c7eda1b883e01948b772bb2e4db99a8d3d47e9271119eedf4"
+    },
+    {
+      "sourcePath": "connectors/usgs/nldi-transect-api.mjs",
+      "sourceSha256": "769e1c5e1c729dd44ff178bc8b2e497d065b6470b74d3b5f58c46a8f45e86271",
+      "deploymentPath": "app/api-connections-runtime/provider-3.mjs",
+      "deploymentSha256": "a85e33d3a530f19fd7bfcc0413f3fa3a67fa1e97735cdd3823c5661cf0578561"
+    },
+    {
+      "sourcePath": "connectors/microsoft/planetary-computer-api.mjs",
+      "sourceSha256": "ff407f1e17e690ccc4614259b9c4307d0a5b7fa93d8afd85c7c20920f0ffc986",
+      "deploymentPath": "app/api-connections-runtime/provider-4.mjs",
+      "deploymentSha256": "ec2de303ef7cbd5feb84ab9018d17d53a838e66b350b702eff64249514103531"
+    },
+    {
+      "sourcePath": "connectors/nrcs/soil-data-access-api.mjs",
+      "sourceSha256": "a014273947dbcafbcd940e2aab7f826d979384d4f4ecd3eb90763491808e7bad",
+      "deploymentPath": "app/api-connections-runtime/provider-5.mjs",
+      "deploymentSha256": "919c7b31259953177265fd743da5aeca7833915d200642d768c069eb31a95de5"
+    },
+    {
+      "sourcePath": "connectors/openstreetmap/overpass-api.mjs",
+      "sourceSha256": "d546aef4a073d7b7f634b0d7a00376077650f9a800590987aec0725ebd49585f",
+      "deploymentPath": "app/api-connections-runtime/provider-6.mjs",
+      "deploymentSha256": "9ef8432da8c1fa75de3228a3de1f49ef17b61205caf287f114555c3623f15a30"
+    },
+    {
+      "sourcePath": "connectors/census/acs-http-api.mjs",
+      "sourceSha256": "54fa87f4c66d825ebdc7e5edca83695f6e00e6663646939a6de955ab2c491c68",
+      "deploymentPath": "app/api-connections-runtime/provider-7.mjs",
+      "deploymentSha256": "d0f7b3202bcfb9d8bf5afe05f846fcee8dc6ac9ea9330838c46a0524eb5adfa8"
+    },
+    {
+      "sourcePath": "connectors/eia/open-data-api.mjs",
+      "sourceSha256": "5d0b0b047e3bf860a36cd996a4a2182af5705d61b386555acdc76a11583dbbd0",
+      "deploymentPath": "app/api-connections-runtime/provider-8.mjs",
+      "deploymentSha256": "d00ce1286498e18208f6997a585a7e3198212242ac67d61c6e4d1dc9e901df46"
+    },
+    {
+      "sourcePath": "connectors/noaa/ncei-hosted-api.mjs",
+      "sourceSha256": "ecb4e50f5eb934b087d3fddc8f1a5fe80bd803a53787cf43b58c6adf19fc7359",
+      "deploymentPath": "app/api-connections-runtime/provider-9.mjs",
+      "deploymentSha256": "66c87804e95af5a7f271856bcf27d8a224a1c10544fe4de754c05b5192a0eb99"
+    },
+    {
+      "sourcePath": "connectors/usgs/wqp-api.mjs",
+      "sourceSha256": "b65e881e62bfd3c8730e1bd09ae66294b402af0cf3c9c19fa1838d213e84f2bd",
+      "deploymentPath": "app/api-connections-runtime/provider-10.mjs",
+      "deploymentSha256": "df574e5c0ec1ebc0029a9eb6fab2ab44f7bd8ff6b95d385b3a31319a8a6d0ccc"
+    },
+    {
+      "sourcePath": "connectors/nrcs/scan-http-api.mjs",
+      "sourceSha256": "be600175773849da8561d04ee83ebae3ee8075635949a06aa702c98786161ca1",
+      "deploymentPath": "app/api-connections-runtime/provider-11.mjs",
+      "deploymentSha256": "7eadc829fc037c1d89ca8994603502da6218511d5d20ad5b1f24261cd9584e70"
+    },
+    {
+      "sourcePath": "connectors/epa/air-quality-api.mjs",
+      "sourceSha256": "b4c62a3edaa0098f61f87975c34d393e92a16ec0835adbf788c544c252b83c46",
+      "deploymentPath": "app/api-connections-runtime/provider-12.mjs",
+      "deploymentSha256": "a5d629f39479a1e68c65697dd4b89bb8e50f515af3f8b025c35f306b03d0227a"
+    },
+    {
+      "sourcePath": "connectors/loc/maps-api.mjs",
+      "sourceSha256": "fbd307af3a90a505f7e0ec1534f850f64dca99c931dd9ba793da37bbb1c6f6c9",
+      "deploymentPath": "app/api-connections-runtime/provider-13.mjs",
+      "deploymentSha256": "d2acdd450d8f78e5b877ae208369c77b369c847c2185b45893d9786bf8045e1c"
+    },
+    {
+      "sourcePath": "connectors/iem/asos-api.mjs",
+      "sourceSha256": "35db86bd7177949a3cf71b6aa1d5a113a1a9c02ae418754fcb5ff8fdb1f8b130",
+      "deploymentPath": "app/api-connections-runtime/provider-14.mjs",
+      "deploymentSha256": "0d6bfa11ea4821b3cc3ec671664b8c76260299e30209341e8003a063bf7be7d1"
+    },
+    {
+      "sourcePath": "connectors/kansas/kanplan-api.mjs",
+      "sourceSha256": "89f5bed960b0b570eadcdb094b145927899912f5119ae00e2d063372d0c64b32",
+      "deploymentPath": "app/api-connections-runtime/provider-15.mjs",
+      "deploymentSha256": "092448bf75a53573a9401699527c3829d88e4cfd7ee4453bbbed5c5d55384fad"
+    },
+    {
+      "sourcePath": "pipelines/ingest/shared/api-connections.mjs",
+      "sourceSha256": "c859c2ddc2875b22a54424a00ee55df13d174779f98d1ff6cfe206085c917bd0",
+      "deploymentPath": "app/api-connections-runtime/connections.mjs",
+      "deploymentSha256": "072b08dbc16b22b52a872d161ba07f6e65d60d1ccaa14729adbae3e3ef9c7144"
+    }
+  ]
+}
