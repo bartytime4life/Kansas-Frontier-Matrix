@@ -102,3 +102,26 @@ and review history. No deletion, data promotion, source activation, merge, publi
 publication or storage reset is authorized by this report. A separately reviewed
 released carrier and rights, sensitivity, provenance, policy, correction and
 rollback closure are still required before any map/API release.
+
+## CI completion checkpoint
+
+PR #5164 merged at main `e10944ee4b0b168d57dee7106dfeb817f586867c`,
+while its Site check had failed before dependency installation: the exhaustive
+smoke inventory omitted the three new land routes. The follow-up adds those
+route entries and sign-in, same-origin and release-denial assertions. All 108
+backend checks across 77 routes and three startup-isolation tests pass against
+disposable local storage. Required lint also exposed untyped boundary values
+and effect-triggered state resets in the new workspace; the follow-up narrows
+types, bounds coverage/mapping shape and moves result resets into user actions.
+Repeated selection now explicitly refreshes the same bundle. No lint or route
+checks are waived. Export enforces the same 100-object carrier ceiling as the
+Site and schema.
+
+The same private app is now v265, source
+`3807302d474db8ff9411f7290d8d1f609d826d90`, retaining audience revision 1,
+environment revision 6, submissions and all review/release holds. Its new
+append-only mirror receipt succeeds v264 without rewriting it. Full source
+and mirror suites remain 1,246 and 1,257 passing tests; required lint has zero
+errors and 73 warnings. Fresh follow-up GitHub CI and broad independent
+acceptance remain separate evidence. Roll back the repair to private v264
+while retaining original data and the previously merged integration.

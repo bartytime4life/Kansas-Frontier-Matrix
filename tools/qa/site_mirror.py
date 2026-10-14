@@ -8,7 +8,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-v264-land-workflow-20261014.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v265-land-workflow-ci-20261014.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
