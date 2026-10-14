@@ -481,6 +481,6 @@ The smallest dependency-ordered follow-ups are:
 | 2026-08-13 | accepted | Refreshed the append-only status ledger for topology-ratchet and ADR-inventory drift; accepted decision and deletion hold unchanged | [#2741](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2741) |
 | 2026-08-14 | accepted | Recorded monotonic topology-baseline convergence from 139 to 138 warnings; accepted decision and deletion hold unchanged | [#2769](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2769) |
 | 2026-09-13 | accepted | Reconciled current-main tombstone and 127-entry topology-baseline evidence; accepted decision, consumer-closure hold, and deletion hold unchanged | [#4534](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4534) |
-| 2026-10-14 | accepted | Recorded the owner-directed one-time topology-baseline expiry renewal from 2026-11-10 to 2027-05-10 with 93 waivers remaining; accepted decision, shrink-only rules, and deletion hold unchanged | PENDING |
+| 2026-10-14 | accepted | Recorded the owner-directed one-time topology-baseline expiry renewal from 2026-11-10 to 2027-05-10 with 93 waivers remaining; accepted decision, shrink-only rules, and deletion hold unchanged | [#5154](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5154) |
 
 [Back to top](#top)
