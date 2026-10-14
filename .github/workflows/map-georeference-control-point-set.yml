@@ -45,6 +45,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -61,7 +62,7 @@ jobs:
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-georeference-control-point-set-20260806.json
-          --repo-root .
+          --repo-root . --artifact-git-ref 19a43053b5af0aff45ce052c6e5bec2c57758615
       - name: Record trust boundary
         if: always()
         run: |

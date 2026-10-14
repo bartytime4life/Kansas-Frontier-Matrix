@@ -11,8 +11,8 @@
     "tools/validators/validate_window_ordering_lint_profile.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/window-ordering-lint-profile.yml": "sha256:1ce7bdac7180abd016d61f3e8019b775af5fcf2b6ab914242413de0cbcb4ddd8",
-    "contracts/validation/window_ordering_lint_profile.md": "sha256:3e6e23d118b484501d390a4c7fd1820e46d220c756460b5c24b5b82e39f5b817",
+    ".github/workflows/window-ordering-lint-profile.yml": "sha256:1f845692d9770483cb9dce43b6731513803ae49087dea3ef3e8d2bd44d4af5c0",
+    "contracts/validation/window_ordering_lint_profile.md": "sha256:c18e5590013186107054d716ec8a6769888137aadfe9b179bfb1a56c015169e1",
     "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "sha256:624f3485db5ef89de39a0ef11dfed8ac859b2d540aae836fce4526c843857543",
     "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "sha256:4a1ffb395f1bd73a394d517fa5b148e7e15dc8a0e2ddee86bd3f457f5dc874a5",
     "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "sha256:27dfddf65887f2be3eb9b2dfba97dc03bb1c48b10dbc70a1ef76a65c3c5c248a",
