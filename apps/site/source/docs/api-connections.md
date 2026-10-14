@@ -1,17 +1,4 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbooks/api-connections-20261014
-title: KFM additional API connections and dual-host intake
-type: runbook
-version: v1
-status: implementation candidate; credential, provider, storage, review and publication gates pending
-owners: ["@bartytime4life"]
-created: 2026-10-14
-updated: 2026-10-14
-policy_label: public
-owning_root: docs/
-responsibility: Operate and review bounded API intake on Sites and the separate GoDaddy Node composition
-truth_posture: CONFIRMED source and local validation; hosted activation NEEDS VERIFICATION
-[/KFM_META_BLOCK_V2] -->
+<!-- Packaging mirror of canonical docs/runbooks/api-connections.md. No additional doctrine, source, review or release authority. -->
 
 # API connections on both hosts
 
