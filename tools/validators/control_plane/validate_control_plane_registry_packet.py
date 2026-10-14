@@ -15,6 +15,7 @@ import json
 import math
 import subprocess
 import sys
+from contextvars import ContextVar
 from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path, PurePosixPath
@@ -42,6 +43,12 @@ MAX_REFERENCED_FILE_BYTES = 64 * 1024 * 1024
 MAX_SCHEMA_FINDINGS = 100
 MAX_NODES = 100_000
 GIT_TIMEOUT_SECONDS = 5
+# Registries cite the same governing documents thousands of times. Within one
+# validate_registry() call, each verified base commit and path names fixed bytes,
+# so they are read from git once; the cache never outlives that call.
+_PINNED_BLOB_CACHE: ContextVar[dict[tuple[str, str, str], bytes | str] | None] = ContextVar(
+    "_PINNED_BLOB_CACHE", default=None
+)
 SCOPE = "seven-registry-projection-shape-reference-and-integrity-only"
 REQUIRED_NON_EFFECTS = frozenset(
     {
@@ -278,18 +285,8 @@ def _pinned_ref(
     return base_ref
 
 
-def _read_pinned_blob(
-    value: Any,
-    *,
-    base_ref: str,
-    repo_root: Path,
-    field: str,
-    findings: list[Finding],
-) -> bytes | None:
-    relative = _canonical_path(value)
-    if relative is None:
-        findings.append(Finding("PATH_INVALID", field))
-        return None
+def _read_pinned_blob_uncached(relative: PurePosixPath, *, base_ref: str, repo_root: Path) -> bytes | str:
+    """Return the blob bytes, or the finding code that explains why they are unavailable."""
     object_name = f"{base_ref}:{relative.as_posix()}"
     try:
         tree_result = subprocess.run(
@@ -302,28 +299,22 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
-        return None
+        return "GIT_CHECK_UNAVAILABLE"
     records = [record for record in tree_result.stdout.split(b"\0") if record]
     if tree_result.returncode != 0 or not records:
-        findings.append(Finding("PINNED_PATH_NOT_FOUND", field))
-        return None
+        return "PINNED_PATH_NOT_FOUND"
     try:
         metadata, returned_path = records[0].split(b"\t", 1)
         mode, object_type, _object_id = metadata.split(b" ", 2)
         returned = returned_path.decode("utf-8")
     except (UnicodeError, ValueError, IndexError):
-        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
-        return None
+        return "PINNED_PATH_READ_ERROR"
     if len(records) != 1 or returned != relative.as_posix():
-        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
-        return None
+        return "PINNED_PATH_READ_ERROR"
     if object_type != b"blob":
-        findings.append(Finding("PATH_NOT_FILE", field))
-        return None
+        return "PATH_NOT_FILE"
     if mode not in {b"100644", b"100755"}:
-        findings.append(Finding("PATH_SYMLINK_DENIED", field))
-        return None
+        return "PATH_SYMLINK_DENIED"
     try:
         size_result = subprocess.run(
             ["git", "cat-file", "-s", object_name],
@@ -335,19 +326,15 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
-        return None
+        return "GIT_CHECK_UNAVAILABLE"
     if size_result.returncode != 0:
-        findings.append(Finding("PINNED_PATH_NOT_FOUND", field))
-        return None
+        return "PINNED_PATH_NOT_FOUND"
     try:
         size = int(size_result.stdout.decode("ascii").strip())
     except (UnicodeError, ValueError):
-        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
-        return None
+        return "PINNED_PATH_READ_ERROR"
     if size < 0 or size > MAX_REFERENCED_FILE_BYTES:
-        findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
-        return None
+        return "REFERENCED_FILE_TOO_LARGE"
     try:
         blob_result = subprocess.run(
             ["git", "cat-file", "blob", object_name],
@@ -359,12 +346,36 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
-        return None
+        return "GIT_CHECK_UNAVAILABLE"
     if blob_result.returncode != 0 or len(blob_result.stdout) != size:
-        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
-        return None
+        return "PINNED_PATH_READ_ERROR"
     return blob_result.stdout
+
+
+def _read_pinned_blob(
+    value: Any,
+    *,
+    base_ref: str,
+    repo_root: Path,
+    field: str,
+    findings: list[Finding],
+) -> bytes | None:
+    relative = _canonical_path(value)
+    if relative is None:
+        findings.append(Finding("PATH_INVALID", field))
+        return None
+    cache = _PINNED_BLOB_CACHE.get()
+    key = (str(repo_root), base_ref, relative.as_posix())
+    outcome = cache.get(key) if cache is not None else None
+    if outcome is None:
+        outcome = _read_pinned_blob_uncached(relative, base_ref=base_ref, repo_root=repo_root)
+        # A git failure may be transient, so only definite outcomes are reused.
+        if cache is not None and outcome != "GIT_CHECK_UNAVAILABLE":
+            cache[key] = outcome
+    if isinstance(outcome, str):
+        findings.append(Finding(outcome, field))
+        return None
+    return outcome
 
 
 def _check_reference(
@@ -603,15 +614,19 @@ def validate_registry(
     if candidate is None:
         return ValidationResult(tuple(sorted(set(findings))))
     findings.extend(_schema_findings(candidate))
-    findings.extend(
-        _semantic_findings(
-            candidate,
-            expected_registry_id=expected_registry_id,
-            repo_root=repo_root,
-            check_paths=check_paths,
-            check_git=check_git,
+    token = _PINNED_BLOB_CACHE.set({})
+    try:
+        findings.extend(
+            _semantic_findings(
+                candidate,
+                expected_registry_id=expected_registry_id,
+                repo_root=repo_root,
+                check_paths=check_paths,
+                check_git=check_git,
+            )
         )
-    )
+    finally:
+        _PINNED_BLOB_CACHE.reset(token)
     return ValidationResult(tuple(sorted(set(findings))))
 
 
