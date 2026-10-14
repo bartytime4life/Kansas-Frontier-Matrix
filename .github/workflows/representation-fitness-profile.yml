@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -67,7 +68,7 @@ jobs:
         run: python -m pytest tests/evidence/test_representation_fitness_assessment.py -q --strict-config --strict-markers
 
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-representation-fitness-profile-20260807.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-representation-fitness-profile-20260807.json --repo-root . --artifact-git-ref 28ad833dde3e0b4ce0a1f561e787bce6442f4279
 
       - name: Record trust boundary
         if: always()

@@ -11,8 +11,8 @@
     "tools/validators/correction/validate_correction_propagation_plan.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/correction-propagation-plan.yml": "sha256:89507707a56bdb7b95e5d3245e6192ce22e09cb787283128de674315291cda78",
-    "contracts/correction/correction_propagation_plan.md": "sha256:2ee51ea3c5ea3e688a798367acb55e02cc9756e597949d7debf51dbc0162a226",
+    ".github/workflows/correction-propagation-plan.yml": "sha256:f3090f646f56bb43d59417ac955f8e9a52ef047305cc2b4223d526a175cfc06b",
+    "contracts/correction/correction_propagation_plan.md": "sha256:5188f5d3ab431467288782d6c9c10cf0f69ec5f947ade792b9c4b7adfa2cf5ec",
     "docs/intake/exploratory/correction-propagation-plan-source-map.md": "sha256:91da87719d1dfc2528620590240c202febda8e6b950ff41d06b09b6bdfb514ed",
     "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "sha256:cbdd0a2aba38aace292aaf11835777c2cb13ea68dd200b119f4ecced838326d1",
     "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "sha256:ea25d856d5f3aa1021688104482bdd1616fb987318b23ee1293962cb60a385c0",
