@@ -222,6 +222,19 @@ class Cache:
         threading.Thread(target=work, daemon=True).start()
 
 
+# Keep the reviewed single-file installation standard-library-only.
+# Match tools.local_data.loopback_session's capability semantics.
+def session_matches(headers, token):
+    values = headers.get_all("X-KFM-Session", [])
+    return len(values) == 1 and secrets.compare_digest(values[0].encode("utf-8"), token.encode("utf-8"))
+
+
+def print_connection_links(token, service, origins):
+    print("Open a connection link in your browser (keep it private; renew after restart):", flush=True)
+    for origin in sorted(origins):
+        print(f"{origin}/#kfm-{service}={token}", flush=True)
+
+
 def overview():
     # Small Kansas overview only. Detailed aerial tiles are stored on demand, never statewide.
     urls = []
@@ -292,8 +305,8 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
     def do_GET(self):
         if not self.allowed(): return self.reply(403, b'{}')
+        if not session_matches(self.headers, self.server.cache.token): return self.reply(403, b'{}')
         if self.path == '/status': return self.reply(200, json.dumps(self.server.cache.status()).encode())
-        if not secrets.compare_digest(self.headers.get('X-KFM-Session', ''), self.server.cache.token): return self.reply(403, b'{}')
         try:
             u = urlsplit(self.path); q = parse_qs(u.query, strict_parsing=True)
             if u.path != '/resource' or set(q) != {'url'} or len(q['url']) != 1: raise ValueError('Unknown request')
@@ -301,7 +314,7 @@ class Handler(BaseHTTPRequestHandler):
             self.reply(200, data, mime, state)
         except Exception: self.reply(502, b'{"error":"Cache unavailable; use provider directly"}')
     def do_POST(self):
-        if not self.allowed() or not secrets.compare_digest(self.headers.get('X-KFM-Session', ''), self.server.cache.token): return self.reply(403, b'{}')
+        if not self.allowed() or not session_matches(self.headers, self.server.cache.token): return self.reply(403, b'{}')
         if self.headers.get('Transfer-Encoding') or self.headers.get('Content-Length', '0') != '0': return self.reply(400, b'{}')
         if self.path == '/overview': self.server.cache.start()
         elif self.path == '/cancel': self.server.cache.cancel.set()
@@ -314,4 +327,7 @@ if __name__ == '__main__':
     p.add_argument('--root', required=True)
     args = p.parse_args()
     os.umask(0o077)
-    Server(Cache(args.root)).serve_forever()
+    cache = Cache(args.root)
+    server = Server(cache)
+    print_connection_links(cache.token, "basemap", ORIGINS)
+    server.serve_forever()

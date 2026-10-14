@@ -1,3 +1,4 @@
+import type { WaterResponse } from "./governed-water";
 
 export type WaterBrowserState = "not-checked" | "checking" | "received" | "no-release" | "withheld" | "unavailable";
 
@@ -58,4 +59,3 @@ export function waterExportMatchesSelection(layers: WaterResponse, evidence: Wat
     && observations.every(observation => observation?.station_id === stationId)
     && waterEvidenceMatchesSelection(layers, evidence, stationId);
 }
-import type { WaterResponse } from "./governed-water";

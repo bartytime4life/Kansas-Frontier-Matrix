@@ -1,3 +1,4 @@
+import { companionSession } from "./local-companion-session";
 import { readBoundedJson } from "./bounded-json";
 
 /** Loopback intake desk served by tools/local_data/intake_service.py on the operator's computer. */
@@ -38,10 +39,10 @@ export function parseIntakeOverview(value: unknown): IntakeOverview | null {
     releasePlanBytes: value.release_plan_bytes, lastRunFinishedAt: finished, running: value.running_run !== null };
 }
 
-/** One bounded, credential-free read from the loopback desk; the deadline covers a stalled body too. */
+/** One bounded, owner-authorized read from the loopback desk; the deadline covers a stalled body too. */
 export async function intakeOverviewRequest(signal: AbortSignal) {
   const combined = AbortSignal.any([signal, AbortSignal.timeout(8_000)]);
-  const response = await fetch(`${INTAKE_DESK_ORIGIN}/api/overview`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error" });
+  const response = await fetch(`${INTAKE_DESK_ORIGIN}/api/overview`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error", headers: { "X-KFM-Session": companionSession("intake") } });
   const body = await readBoundedJson(response, 256_000, combined);
   combined.throwIfAborted();
   return response.ok ? parseIntakeOverview(body) : null;

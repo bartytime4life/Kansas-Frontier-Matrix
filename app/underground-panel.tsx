@@ -141,11 +141,11 @@ export default function UndergroundPanel(props: Props) {
       const w = startSubsurfaceWorker(); worker.current = w;
       w.onmessage = (event: MessageEvent<WorkerResult>) => {
         const r = event.data;
-        if (r.prepared && r.id === 0) { if (r.manifest) setManifest(r.manifest); return; }
+        if (r.prepared && r.id === 0) { if (r.manifest) setManifest(r.manifest); if (r.error) { setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setMatches([]); setCoverage(r.error); } return; }
         if (r.id !== serial.current) return;
         if (!r.matches && !r.error && expectedArea.current && (!r.bounds || r.bounds.some((value,index)=>value!==expectedArea.current![index]))) { setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage("Source response did not match the selected area; show the area again."); return; }
         setLoading(false); if (r.manifest) setManifest(r.manifest);
-        if (r.matches) { setMatches(r.matches); return; }
+        if (r.matches) { setMatches(r.matches); if (r.error) { setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage(r.error); } return; }
         setResponseKey(expectedQueryKey.current); setColumns(r.columns ?? []); setPartial(Boolean(r.partial)); setCoverage(r.error ?? r.coverage ?? "No available data.");
       };
       w.onerror = () => { worker.current=null;w.onmessage=null;w.terminate();setWorkerFailure("Source worker unavailable");setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage("Source loading failed. Close and reopen Underground to retry; no underground conditions are inferred."); };

@@ -66,7 +66,7 @@ test('Time reopens a retained open panel from Reports or Stories, while Map stil
 });
 test('map utilities and Compare reveal the map before opening the requested tool',()=>{
   const h=harness();execute('openMapUtility',h.scope)('navigate',null);
-  assert.equal(h.state.primary,'map');assert.equal(h.state.utility,true);assert.equal(h.state.view,'navigate');
+  assert.equal(h.state.primary,'map');assert.equal(h.state.utility,true);assert.equal(h.state.view,'scene');
   const compare=harness('stories');execute('activateMapRepresentation',compare.scope)('compare');
   assert.equal(compare.state.primary,'map');assert.deepEqual(compare.calls,['compare']);
 });

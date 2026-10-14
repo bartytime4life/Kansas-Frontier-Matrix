@@ -1,3 +1,4 @@
+import { companionSession } from "./local-companion-session";
 import { readBoundedJson } from "./bounded-json";
 import { PUBLIC_MAP_MAX_BYTES, publicMapCount, publicMapStamp, publicMapText } from "./public-map-catalog";
 
@@ -56,7 +57,7 @@ export async function publicMapRequest(path: PublicMapEndpoint, signal: AbortSig
   if (!endpoints.has(path) || payload !== undefined && (!sessionToken || !/^[-_A-Za-z0-9]{43}$/.test(sessionToken))) throw new Error("Connect to local map downloads first.");
   const combined = AbortSignal.any([signal, AbortSignal.timeout(path === "/catalog" ? 20_000 : 10_000)]);
   combined.throwIfAborted();
-  const response = await fetch(`http://127.0.0.1:8769/public-maps${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error",
+  const response = await fetch(`http://127.0.0.1:8769/public-maps${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error", headers: { "X-KFM-Session": companionSession("downloads") },
     ...(payload === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": sessionToken! }, body: JSON.stringify(payload) }) });
   const body = await readBoundedJson(response, path === "/catalog" ? PUBLIC_MAP_MAX_BYTES : path === "/status" ? 2_000_000 : 256_000, combined);
   combined.throwIfAborted();

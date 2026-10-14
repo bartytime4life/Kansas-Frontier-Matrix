@@ -561,7 +561,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /id="map-utility-panel"/);
   const controlNavigation = await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8");
   assert.match(source, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
-  for (const [key, title] of [["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
+  for (const [key, title] of [["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
     assert.ok(controlNavigation.includes(`["${key}", "${title}"]`), `Missing named control route: ${title}`);
   }
   assert.match(controlNavigation, /<summary>Advanced tools/);
@@ -1188,13 +1188,14 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
   assert.match(page, /className="map-dock-context sr-only"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
-  assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);
+  assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
+  assert.match(page, /aria-label="Underground recorded layers"/);
   assert.match(page, /aria-label="Underground Logs & sections" title="Underground Logs & sections"[\s\S]*?<b>Underground<\/b><span className="sr-only">Logs &amp; sections<\/span>/);
   for (const label of ["Underground", "2D", "Terrain 3D", "Globe", "Compare", "Time", "Layers", "Places"]) {
     assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   }
-  for (const label of ["Style &amp; basemap", "Map controls", "Kansas historic maps", "Source status", "Live controls", "Today’s baseline"]) {
+  for (const label of ["Appearance", "Measure", "Map controls", "Kansas historic maps", "Source status", "Live controls", "Today’s baseline"]) {
     assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   }
   assert.match(toolbar, /aria-label="Source recovery and original files"/);
@@ -1202,6 +1203,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /className="timeline-primary-actions"><Link href="\/daily-archive">Daily archive ↗<\/Link>/);
   assert.doesNotMatch(page, /className="map-dock-basemap map-dock-wide-only"/);
   assert.doesNotMatch(page, /className="map-dock-action map-dock-wide-only"/);
+  assert.match(page, /aria-label="More map navigation"/);
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
   assert.match(page, /mapUtilityView === "scene"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.doesNotMatch(page, /className="qwen-header-action"/);

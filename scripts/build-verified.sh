@@ -7,6 +7,8 @@ if [[ "${SITES_ENV_READY:-}" != "1" ]]; then
   exec bash "${script_dir}/sites-env.sh" -- "$0" "$@"
 fi
 
+node "${script_dir}/validate-subsurface-public.mjs"
+
 command -v timeout || {
   echo "build-verified.sh requires GNU timeout." >&2
   exit 69
@@ -24,3 +26,5 @@ timeout \
   --kill-after="${SITES_BUILD_KILL_AFTER:-10s}" \
   "${SITES_BUILD_TIMEOUT:-3m}" \
   "${vinext}" build
+
+node "${script_dir}/validate-subsurface-public.mjs" "${SITES_PROJECT_ROOT}/dist/client"
