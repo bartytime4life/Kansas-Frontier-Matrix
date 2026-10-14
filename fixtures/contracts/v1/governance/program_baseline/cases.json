@@ -1,27 +1,37 @@
 {
   "base": {
-    "schema_version": "1.0.0",
-    "profile": "kfm.program-baseline.m01.v1",
-    "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+    "schema_version": "2.0.0",
+    "profile": "kfm.program-baseline.m01.v2",
+    "baseline_id": "kfm-program-baseline-main-514b23676387",
     "repository": "bartytime4life/Kansas-Frontier-Matrix",
     "projection_status": "PROPOSED",
     "implementation_status": "PARTIAL",
     "authority_mode": "evidence_projection_only",
-    "observed_at": "2026-08-22T23:45:05Z",
+    "observed_at": "2026-10-14T06:32:06Z",
     "base": {
       "branch": "main",
-      "sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "sha": "514b2367638778a0a0b6e45a6451aea70c762909",
       "milestone_number": 2,
       "milestone_issue_number": 3365,
       "milestone_title": "M01 - Authority, Directory Rules & Program Baseline",
-      "open_pull_requests": []
+      "open_pull_requests": [
+        5153,
+        5154,
+        5155,
+        5156,
+        5157
+      ]
+    },
+    "supersedes": {
+      "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+      "base_sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
     },
     "placement": {
       "owner": "@bartytime4life",
       "responsibility_root": "control_plane/",
       "canonical_path": "control_plane/program_baseline.json",
       "adjacent_readme_path": "control_plane/README.md",
-      "base_path_status": "ABSENT",
+      "base_path_status": "PRESENT",
       "slice_status": "PARTIAL",
       "consumer_paths": [
         ".github/workflows/program-baseline.yml",
@@ -43,16 +53,28 @@
       },
       "adr_index": {
         "path": "docs/adr/INDEX.md",
-        "sha256": "sha256:27e5cb40b23964e63302c5c7eeef9f213e18c0d9ed58b1051b026ff2c99fbf91",
-        "accepted_ids": ["ADR-0029"],
-        "accepted_count": 1,
-        "proposed_count": 35,
-        "unassigned_scaffold_count": 12,
+        "sha256": "sha256:0861558e4a1ef1b91ba4a457132b100ee3614f15c0761625d2988f5dceb0f91e",
+        "accepted_ids": [
+          "ADR-0006",
+          "ADR-0007",
+          "ADR-0029",
+          "ADR-0038",
+          "ADR-0040",
+          "ADR-0044",
+          "ADR-0045",
+          "ADR-0046",
+          "ADR-0047",
+          "ADR-0048",
+          "ADR-0049"
+        ],
+        "accepted_count": 11,
+        "proposed_count": 38,
+        "unassigned_scaffold_count": 11,
         "implementation_status": "IMPLEMENTED"
       },
       "codeowners": {
         "path": ".github/CODEOWNERS",
-        "sha256": "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+        "sha256": "sha256:f21ebe9996da58a798247090cd478ec5388d6f74041c6091b30368b62ff2b0c6",
         "owner": "@bartytime4life",
         "implementation_status": "IMPLEMENTED"
       },
@@ -77,8 +99,8 @@
         "number": 2768,
         "state": "OPEN",
         "role": "program_tracker",
-        "updated_at": "2026-08-22T18:19:34Z",
-        "recorded_baseline_sha": "131b605163bfbca1880014a10d9f41cd00ff564f",
+        "updated_at": "2026-10-13T18:36:36Z",
+        "recorded_baseline_sha": "2d6808a9edc99c1850aca375afb5f0894772e723",
         "implementation_status": "PARTIAL",
         "stale_at_base": true,
         "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
@@ -87,8 +109,8 @@
         "number": 2874,
         "state": "OPEN",
         "role": "source_corpus_tracker",
-        "updated_at": "2026-08-16T05:20:20Z",
-        "recorded_baseline_sha": "8a83530686c6df4752021377daf564758018d39c",
+        "updated_at": "2026-09-16T21:50:05Z",
+        "recorded_baseline_sha": "fd03c91c88a06fc7d4e097775ec62ede6d3b498c",
         "implementation_status": "PARTIAL",
         "stale_at_base": true,
         "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
@@ -97,8 +119,8 @@
         "number": 3365,
         "state": "OPEN",
         "role": "milestone_checkpoint",
-        "updated_at": "2026-08-22T18:16:30Z",
-        "recorded_baseline_sha": "f86fcddb553217f7ffadafd80f20e95d635180b1",
+        "updated_at": "2026-10-13T18:22:56Z",
+        "recorded_baseline_sha": "2d6808a9edc99c1850aca375afb5f0894772e723",
         "implementation_status": "PARTIAL",
         "stale_at_base": true,
         "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
@@ -118,36 +140,44 @@
     "validation_observations": [
       {
         "id": "exact_main_hosted_checks",
-        "command": "GitHub Actions run search for exact main SHA",
-        "run_state": "NOT_RUN",
-        "outcome": "NOT_RUN",
+        "command": "gh api repos/bartytime4life/Kansas-Frontier-Matrix/commits/514b2367638778a0a0b6e45a6451aea70c762909/check-runs --paginate",
+        "run_state": "EXECUTED",
+        "outcome": "PASS",
         "failure_class": "NONE",
         "finding_count": 0,
-        "scope": "no_hosted_runs_observed_for_exact_merge_commit"
+        "scope": "one_hundred_seven_success_two_skipped_zero_failed_of_one_hundred_nine_check_runs"
       },
       {
         "id": "object_family_workflow_watch_tests",
-        "command": "python -m pytest tests/validators/test_validate_object_family_register.py",
+        "command": "python -m pytest tests/validators/test_validate_object_family_register.py -q --strict-config --strict-markers",
         "run_state": "EXECUTED",
-        "outcome": "FAIL",
+        "outcome": "PASS",
+        "failure_class": "NONE",
+        "finding_count": 0,
+        "scope": "sixteen_tests_and_two_hundred_seventy_six_subtests"
+      },
+      {
+        "id": "repository_governance_parity",
+        "command": "python tools/validators/directory_governance/validate_repository_governance_parity.py",
+        "run_state": "EXECUTED",
+        "outcome": "HOLD",
         "failure_class": "INHERITED",
-        "finding_count": 9,
-        "scope": "nine_declared_paths_missing_from_both_workflow_filters"
+        "finding_count": 0,
+        "scope": "profile_integrity_pass_conformance_hold_inherited_on_topology_lane"
       },
       {
         "id": "repository_topology",
         "command": "python tools/validators/directory_governance/validate_repository_topology.py --format json",
         "run_state": "EXECUTED",
-        "outcome": "FAIL",
-        "failure_class": "INHERITED",
-        "finding_count": 9,
-        "scope": "nine_unbaselined_findings_and_thirteen_stale_fingerprints"
+        "outcome": "PASS",
+        "failure_class": "NONE",
+        "finding_count": 0,
+        "scope": "zero_new_drift_ninety_three_baselined_warnings_zero_stale_fingerprints"
       }
     ],
     "unresolved_items": [
-      "exact_main_hosted_checks_not_run",
-      "object_family_workflow_watch_coverage_has_nine_failures",
-      "repository_topology_has_nine_unbaselined_findings"
+      "human_review_pending",
+      "repository_governance_parity_hold"
     ],
     "non_effects": [
       "does_not_accept_or_supersede_adrs",
@@ -161,7 +191,7 @@
     ],
     "correction": {
       "method": "same_path_forward_fix_or_reviewed_git_revert",
-      "rollback_target": "git:6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "rollback_target": "git:514b2367638778a0a0b6e45a6451aea70c762909",
       "external_correction": "append_corrective_issue_comment",
       "stale_triggers": [
         "accepted_adr_status_changes",
@@ -180,107 +210,325 @@
     },
     {
       "id": "01_self_authority",
-      "expected_codes": ["SCHEMA_INVALID"],
+      "expected_codes": [
+        "SCHEMA_INVALID"
+      ],
       "mutations": [
-        {"path": ["authority_mode"], "value": "self_authorizing"}
+        {
+          "path": [
+            "authority_mode"
+          ],
+          "value": "self_authorizing"
+        }
       ]
     },
     {
       "id": "02_duplicate_surface_id",
-      "expected_codes": ["TRACKED_SURFACE_IDS_DUPLICATE"],
+      "expected_codes": [
+        "TRACKED_SURFACE_IDS_DUPLICATE"
+      ],
       "mutations": [
         {
-          "path": ["tracked_surfaces"],
-          "value": [
-            {
-              "id": "root_registry_projection",
-              "path": "control_plane/root_registry.yaml",
-              "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
-              "implementation_status": "IMPLEMENTED",
-              "reason": "declared_root_projection_validates"
-            },
-            {
-              "id": "root_registry_projection",
-              "path": "control_plane/root_registry.yaml",
-              "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
-              "implementation_status": "IMPLEMENTED",
-              "reason": "declared_root_projection_validates"
-            }
-          ]
+          "path": [
+            "tracked_surfaces",
+            "-"
+          ],
+          "op": "append",
+          "value": {
+            "id": "root_registry_projection",
+            "path": "control_plane/root_registry.yaml",
+            "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+            "implementation_status": "IMPLEMENTED",
+            "reason": "declared_root_projection_validates"
+          }
         }
       ]
     },
     {
       "id": "03_unexecuted_pass",
-      "expected_codes": ["RUN_STATE_OUTCOME_MISMATCH"],
+      "expected_codes": [
+        "RUN_STATE_OUTCOME_MISMATCH"
+      ],
       "mutations": [
         {
-          "path": ["validation_observations"],
-          "value": [
-            {
-              "id": "exact_main_hosted_checks",
-              "command": "GitHub Actions run search for exact main SHA",
-              "run_state": "NOT_RUN",
-              "outcome": "NOT_RUN",
-              "failure_class": "NONE",
-              "finding_count": 0,
-              "scope": "no_hosted_runs_observed_for_exact_merge_commit"
-            },
-            {
-              "id": "object_family_workflow_watch_tests",
-              "command": "python -m pytest tests/validators/test_validate_object_family_register.py",
-              "run_state": "EXECUTED",
-              "outcome": "FAIL",
-              "failure_class": "INHERITED",
-              "finding_count": 9,
-              "scope": "nine_declared_paths_missing_from_both_workflow_filters"
-            },
-            {
-              "id": "repository_topology",
-              "command": "python tools/validators/directory_governance/validate_repository_topology.py --format json",
-              "run_state": "EXECUTED",
-              "outcome": "FAIL",
-              "failure_class": "INHERITED",
-              "finding_count": 9,
-              "scope": "nine_unbaselined_findings_and_thirteen_stale_fingerprints"
-            },
-            {
-              "id": "zz_unexecuted_pass",
-              "command": "synthetic command not executed",
-              "run_state": "NOT_RUN",
-              "outcome": "PASS",
-              "failure_class": "NONE",
-              "finding_count": 0,
-              "scope": "synthetic_negative_fixture"
-            }
-          ]
+          "path": [
+            "validation_observations",
+            "-"
+          ],
+          "op": "append",
+          "value": {
+            "id": "zz_unexecuted_pass",
+            "command": "synthetic command not executed",
+            "run_state": "NOT_RUN",
+            "outcome": "PASS",
+            "failure_class": "NONE",
+            "finding_count": 0,
+            "scope": "synthetic_negative_fixture"
+          }
         }
       ]
     },
     {
-      "id": "04_required_failure_count_changed",
-      "expected_codes": ["REQUIRED_OBSERVATION_MISMATCH"],
+      "id": "04_proposed_adr_count_not_derived",
+      "expected_codes": [
+        "PROPOSED_ADR_COUNT_MISMATCH"
+      ],
       "mutations": [
-        {"path": ["validation_observations", 2, "finding_count"], "value": 8}
+        {
+          "path": [
+            "authority_snapshot",
+            "adr_index",
+            "proposed_count"
+          ],
+          "value": 39
+        }
       ]
     },
     {
       "id": "05_missing_consumer_path",
-      "expected_codes": ["PATH_NOT_FOUND"],
+      "expected_codes": [
+        "PATH_NOT_FOUND"
+      ],
       "mutations": [
         {
-          "path": ["placement", "consumer_paths", 6],
+          "path": [
+            "placement",
+            "consumer_paths",
+            6
+          ],
           "value": "tools/validators/control_plane/missing_program_baseline_consumer.py"
         }
       ]
     },
     {
       "id": "06_rollback_target_mismatch",
-      "expected_codes": ["ROLLBACK_TARGET_MISMATCH"],
+      "expected_codes": [
+        "ROLLBACK_TARGET_MISMATCH"
+      ],
       "mutations": [
         {
-          "path": ["correction", "rollback_target"],
+          "path": [
+            "correction",
+            "rollback_target"
+          ],
           "value": "git:0000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": "07_accepted_adr_omitted",
+      "expected_codes": [
+        "ACCEPTED_ADR_SET_MISMATCH"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "authority_snapshot",
+            "adr_index",
+            "accepted_ids"
+          ],
+          "value": [
+            "ADR-0006",
+            "ADR-0007",
+            "ADR-0029",
+            "ADR-0038",
+            "ADR-0040",
+            "ADR-0044",
+            "ADR-0045",
+            "ADR-0046",
+            "ADR-0047",
+            "ADR-0048"
+          ]
+        },
+        {
+          "path": [
+            "authority_snapshot",
+            "adr_index",
+            "accepted_count"
+          ],
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": "08_snapshot_scaffold_count_retained",
+      "expected_codes": [
+        "ADR_SCAFFOLD_COUNT_MISMATCH"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "authority_snapshot",
+            "adr_index",
+            "unassigned_scaffold_count"
+          ],
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": "09_base_path_status_disagrees_with_tree",
+      "expected_codes": [
+        "BASE_PATH_STATUS_MISMATCH"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "placement",
+            "base_path_status"
+          ],
+          "value": "ABSENT"
+        }
+      ]
+    },
+    {
+      "id": "10_superseded_base_commit_unknown",
+      "expected_codes": [
+        "SUPERSEDED_BASE_COMMIT_NOT_FOUND"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "supersedes"
+          ],
+          "value": {
+            "baseline_id": "kfm-program-baseline-main-111111111111",
+            "base_sha": "1111111111111111111111111111111111111111"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11_supersedes_id_mismatch",
+      "expected_codes": [
+        "SUPERSEDES_ID_MISMATCH"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "supersedes",
+            "baseline_id"
+          ],
+          "value": "kfm-program-baseline-main-514b23676387"
+        }
+      ]
+    },
+    {
+      "id": "12_supersedes_own_base",
+      "expected_codes": [
+        "SUPERSEDES_SAME_BASE"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "supersedes"
+          ],
+          "value": {
+            "baseline_id": "kfm-program-baseline-main-514b23676387",
+            "base_sha": "514b2367638778a0a0b6e45a6451aea70c762909"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13_failure_without_unresolved_item",
+      "expected_codes": [
+        "REQUIRED_UNRESOLVED_ITEM_MISSING"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "validation_observations",
+            3,
+            "outcome"
+          ],
+          "value": "FAIL"
+        },
+        {
+          "path": [
+            "validation_observations",
+            3,
+            "failure_class"
+          ],
+          "value": "INHERITED"
+        },
+        {
+          "path": [
+            "validation_observations",
+            3,
+            "finding_count"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "14_unresolved_item_outlives_outcome",
+      "expected_codes": [
+        "UNRESOLVED_ITEM_STALE"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "unresolved_items"
+          ],
+          "value": [
+            "human_review_pending",
+            "repository_governance_parity_hold",
+            "repository_topology_fail"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "15_required_observation_missing",
+      "expected_codes": [
+        "REQUIRED_OBSERVATION_MISSING"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "validation_observations",
+            3,
+            "id"
+          ],
+          "value": "repository_topology_rerun"
+        }
+      ]
+    },
+    {
+      "id": "16_retired_v1_profile",
+      "expected_codes": [
+        "PROFILE_VERSION_UNSUPPORTED"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "schema_version"
+          ],
+          "value": "1.0.0"
+        },
+        {
+          "path": [
+            "profile"
+          ],
+          "value": "kfm.program-baseline.m01.v1"
+        }
+      ]
+    },
+    {
+      "id": "17_human_review_pending_missing",
+      "expected_codes": [
+        "REQUIRED_UNRESOLVED_ITEM_MISSING"
+      ],
+      "mutations": [
+        {
+          "path": [
+            "unresolved_items"
+          ],
+          "value": [
+            "repository_governance_parity_hold"
+          ]
         }
       ]
     }

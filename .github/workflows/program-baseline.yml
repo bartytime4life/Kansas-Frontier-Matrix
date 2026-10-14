@@ -85,8 +85,7 @@ jobs:
             echo "### M01 program baseline"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: pinned authority/ownership bytes, exact tracker and PR snapshot, Drive-lineage non-authority, classification vocabulary, fixture polarity, and generated-receipt integrity."
-            echo "- Preserved inherited failures: repository topology remains FAIL with nine unbaselined findings; object-family workflow-watch coverage remains FAIL for nine paths."
-            echo "- Base hosted state: no run was observed for the exact merge commit, recorded as NOT_RUN rather than PASS."
+            echo "- Scope: pinned authority/ownership bytes, ADR counts derived from the pinned index, base-path and supersedes lineage, exact tracker and PR snapshot, Drive-lineage non-authority, classification vocabulary, fixture polarity, and generated-receipt integrity."
+            echo "- Recorded outcomes: every non-PASS observation in control_plane/program_baseline.json must be carried as an unresolved item; FAIL, HOLD, and NOT_RUN are never rewritten as PASS."
             echo "- Boundary: this projection cannot create authority, accept an ADR, mutate an issue, activate a source, approve review, or release, deploy, promote, or publish."
           } >> "$GITHUB_STEP_SUMMARY"
