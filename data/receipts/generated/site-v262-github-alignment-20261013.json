@@ -865,7 +865,7 @@
       "state": "identical"
     },
     "README.md": {
-      "difference": "Repository overlay from the question-gate corpus change: question-gate corpus section; not deployed to private Site v262.",
+      "difference": "Repository overlay from #5142: question-gate corpus section; not deployed to private Site v262.",
       "mirror_sha256": "c6b47a852956177edbf09874085fc2df0acb9325d998da71d15ccce20294f749",
       "site_sha256": "a5a9d7bc15415e62371ced8fe0143a46ae43dccf5b995163a4aff45e5b3b5a6e",
       "state": "inherited_repository_overlay"
@@ -3477,7 +3477,7 @@
       "state": "identical"
     },
     "package.json": {
-      "difference": "Repository overlay from the question-gate corpus change: eval:qwen-gate script; not deployed to private Site v262.",
+      "difference": "Repository overlay from #5142: eval:qwen-gate script; not deployed to private Site v262.",
       "mirror_sha256": "4d53ef433c6e4b5ee5f5238a7992f71619066884c9e830d3e75b3f896646943f",
       "site_sha256": "baf5fdfe197c95fff478431997ca0214c45c603f0733947893f2c23a45d0ccd3",
       "state": "inherited_repository_overlay"
@@ -3648,7 +3648,7 @@
       "state": "identical"
     },
     "scripts/local-qwen-bridge.mjs": {
-      "difference": "Repository overlay from the question-gate corpus change: sensitive-question gate fixes (first-person distress, latitude/longitude comparison); not deployed to private Site v262.",
+      "difference": "Repository overlay from #5142: sensitive-question gate fixes (first-person distress, latitude/longitude comparison); not deployed to private Site v262.",
       "mirror_sha256": "25c7bba074406e72fc0e33434cc0d52e040446d50f2c10d155ab7cb48a40484a",
       "site_sha256": "9690f702c05b2a6331770efc44899a2890148ee1b2024fbc5117d8e04bd8c1f1",
       "state": "inherited_repository_overlay"
@@ -3709,7 +3709,7 @@
       "state": "identical"
     },
     "scripts/qwen-question-gate-corpus.mjs": {
-      "difference": "Repository-only local Qwen question-gate corpus and its test added in the question-gate corpus change; no Site deployment or data activation implied.",
+      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142; no Site deployment or data activation implied.",
       "mirror_sha256": "03952444945107cc292a55f7a26f3b2564feb559df2750d5245fbe3ce4dd2f48",
       "state": "repository_only_overlay"
     },
@@ -4614,7 +4614,7 @@
       "state": "identical"
     },
     "tests/qwen-question-gate-corpus.test.mjs": {
-      "difference": "Repository-only local Qwen question-gate corpus and its test added in the question-gate corpus change; no Site deployment or data activation implied.",
+      "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142; no Site deployment or data activation implied.",
       "mirror_sha256": "b2e139358b4120b551be546e9f9173765dbfcc1c5cbdcadfa947405e0692eded",
       "state": "repository_only_overlay"
     },
@@ -7997,7 +7997,7 @@
       "public/data/subsurface/tile-170-2582.json.gz",
       "public/data/subsurface/tile-170-259.json.gz"
     ],
-    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. the question-gate corpus change adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change."
+    "overlap": "Pinned main 3d66e83e2dbe034c0ac51e07d98372b50b70fe39 reconciled with v261 topics and almanacs. Two initial overlaps (page.tsx and layer-explorer.test.mjs) resolved by retaining topic behavior and the governed soil/storm-event/earthquake controls. The 109 repository additions/changes, canonical local-companion safeguards and static containment are incorporated. All prior receipts remain historical; no human acceptance is asserted. #5142 adds the labelled local Qwen question-gate corpus (two repository-only files), the eval:qwen-gate script, a README note and two gate fixes in scripts/local-qwen-bridge.mjs; no authoritative Site source change."
   },
   "recorded_at": "2026-10-14T01:58:58.584305+00:00",
   "repository_base": "3d66e83e2dbe034c0ac51e07d98372b50b70fe39",
