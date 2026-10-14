@@ -47,7 +47,9 @@
         "blm-mlrs",
         "kshs-land-sales",
         "sedgwick-deeds",
-        "johnson-deeds"
+        "johnson-deeds",
+        "shawnee-tax-sales",
+        "leavenworth-tax-sales"
       ]
     },
     "source_record_id": {
@@ -63,7 +65,8 @@
         "tract_book_entry",
         "land_tenure_case",
         "sale_notice",
-        "other_instrument"
+        "other_instrument",
+        "tax_foreclosure_sale"
       ]
     },
     "event_date": {
@@ -79,7 +82,8 @@
         "ISSUED",
         "PROPOSED",
         "CASE_ACTION",
-        "UNKNOWN"
+        "UNKNOWN",
+        "AUCTION_REPORTED"
       ]
     },
     "geometry_role": {
@@ -202,7 +206,8 @@
                 "nominal_consideration",
                 "recorded_principal",
                 "appraised_value",
-                "minimum_bid"
+                "minimum_bid",
+                "auction_purchase_price"
               ]
             },
             "currency": {

@@ -275,9 +275,102 @@ def test_source_descriptors_are_inactive_and_validate():
     from tools.validators._common.jsonschema_runner import load_validator
     from hashing import compute_spec_hash
     validator = load_validator(ROOT / "schemas/contracts/v1/source/source_descriptor.schema.json")
-    for source in ("blm-glo", "blm-mlrs", "kshs-land-sales", "sedgwick-deeds", "johnson-deeds"):
+    from people_dna_land.land_records import SOURCES
+    for source in SOURCES:
         descriptor = json.loads((ROOT / "data/registry/sources/people-dna-land" / (source + ".source.json")).read_text())
         assert not list(validator.iter_errors(descriptor))
         assert descriptor["spec_hash"] == compute_spec_hash({k: v for k, v in descriptor.items() if k != "spec_hash"})
         assert descriptor["lifecycle"]["registry_state"] == "proposed"
         assert descriptor["public_release"]["allowed"] is False
+
+
+def test_expanded_glo_page_scope_and_survey_exclusion_remain_explicit():
+    survey = """View Details
+Survey Details:
+Name(s):
+SYNTHETIC SURVEY
+Document Type:
+Original Survey
+Survey Title:
+SYNTHETIC ONLY
+Approved/Accepted Date:
+01-01-1884
+State:
+Kansas
+Survey Number:
+TEST
+Field Note:
+
+County:
+Reno
+Land Description:
+Meridian\tTownship\tRange\tBoundary
+6th PM\t0220S\t0100W\tNorth
+"""
+    raw = ("1-2 of 999 results\n" + CARD + survey + "1-2 of 999 results\n").encode()
+    m, _ = capture("blm-glo", raw, url="https://glo-entry-prod.blm.gov/ui/search?q=Kansas&page=1&pageSize=100", retrieved_at=NOW, format="glo-text")
+    c = normalize(raw, m)
+    assert len(c["records"]) == 1
+    assert c["coverage"]["excluded"] == [{"locator": "result-card:2", "reason": "SURVEY_NOT_LAND_INSTRUMENT"}]
+    assert c["coverage"]["complete"] is False
+    with pytest.raises(ValueError, match="GLO_SURVEY_FORMAT_DRIFT"):
+        bad = raw.replace(b"Original Survey", b"Unknown instrument")
+        m, _ = capture("blm-glo", bad, url=m["source_url"], retrieved_at=NOW, format="glo-text")
+        normalize(bad, m)
+
+
+@pytest.mark.parametrize("kind", ["State Volume", "Serial Patent"])
+def test_glo_accession_is_identity_and_patent_remains_index_only(kind):
+    raw = GLO.replace(b"Control Document Index (CDI)", b"Patent").replace(b"Document Type:\nPatent\n", ("Document Type:\n" + kind + "\nAccession #:\nSYNTHETIC-ACCESSION-1\nPage Count:\n1\n").encode())
+    r = bundle(raw)[2]["records"][0]
+    assert r["source_record_id"] == "glo-accession:SYNTHETIC-ACCESSION-1"
+    assert r["instrument_type"] == "patent" and r["amount"] is None
+    assert "COMPOSITE_IDENTITY" not in r["flags"]
+    assert r["sale_completion"] == "NOT_ESTABLISHED"
+
+
+def test_county_auction_requires_original_and_does_not_establish_title(tmp_path):
+    from connectors.kansas_county_deeds.land_records import capture as county_capture
+    row = {**ROW, "county": "Shawnee", "instrument_type": "tax_foreclosure_sale", "transaction_status": "AUCTION_REPORTED", "amount_kind": "auction_purchase_price"}
+    raw, mapping = csv_input([row])
+    url = "https://cdn.snco.gov/counselor/document/SYNTHETIC.pdf"
+    with pytest.raises(ValueError, match="AUCTION_ORIGINAL_DOCUMENT_REQUIRED"):
+        county_capture("shawnee-tax-sales", raw, url=url, retrieved_at=NOW)
+    m, objects = county_capture("shawnee-tax-sales", raw, url=url, retrieved_at=NOW, documents=[(url, b"%PDF-SYNTHETIC")])
+    c = normalize(raw, m, mapping=mapping)
+    stage(tmp_path, m, objects, c)
+    assert c["records"][0]["sale_completion"] == "NOT_ESTABLISHED"
+    for change in ({"county": "Sedgwick"}, {"transaction_status": "RECORDED"}, {"amount_kind": "sale_price"}):
+        with pytest.raises(ValueError): make_record({**row, **change}, "shawnee-tax-sales", NOW)
+
+
+def test_transfer_retains_originals_and_excludes_withdrawn_captures(tmp_path):
+    import base64
+    from people_dna_land.land_transfer import export_review
+    from people_dna_land.land_store import withdraw_capture
+    root = tmp_path / "store"
+    m, objects, c = bundle(); stage(root, m, objects, c)
+    destination = tmp_path / "review.json"
+    result = export_review(root, destination)
+    value = json.loads(destination.read_bytes())
+    from tools.validators._common.jsonschema_runner import load_validator
+    load_validator(ROOT / "schemas/contracts/v1/domains/people-dna-land/land_review_transfer.schema.json").validate(value)
+    assert result["authority"] == "PRIVATE_REVIEW_ONLY" and result["records"] == 1
+    assert base64.b64decode(value["objects"][m["payload_sha256"]]) == GLO
+    assert value["transfer_digest"] == digest(canonical({k: v for k, v in value.items() if k != "transfer_digest"}))
+    assert destination.stat().st_mode & 0o077 == 0
+    with pytest.raises(ValueError, match="ACTIVE_CAPTURE_REQUIRED"):
+        export_review(root, tmp_path / "bad.json", capture_ids=["sha256:" + "0" * 64])
+    withdraw_capture(root, m["capture_id"], "Synthetic intake withdrawn")
+    with pytest.raises(ValueError, match="ACTIVE_CAPTURE_REQUIRED"):
+        export_review(root, tmp_path / "withdrawn.json")
+    assert audit(root)["outcome"] == "PASS"
+
+
+def test_transfer_cannot_commit_person_bearing_bytes_under_git(tmp_path):
+    from people_dna_land.land_transfer import export_review
+    root = tmp_path / "store"
+    m, objects, c = bundle(); stage(root, m, objects, c)
+    target = tmp_path / "checkout"; (target / ".git").mkdir(parents=True); (target / ".git/HEAD").write_text("ref: refs/heads/main")
+    with pytest.raises(ValueError, match="TRANSFER_MUST_BE_OUTSIDE_GIT"):
+        export_review(root, target / "review.json")

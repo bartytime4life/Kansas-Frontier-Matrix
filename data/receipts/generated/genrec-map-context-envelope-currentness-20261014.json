@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-map-context-envelope-currentness-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-context-envelope.yml",
+    "contracts/ui/map_context_envelope.md",
+    "contracts/ui/map_context_envelope/README.md",
+    "fixtures/ui/map_context_envelope/README.md",
+    "fixtures/ui/map_context_envelope/base_geography.json",
+    "fixtures/ui/map_context_envelope/base_viewport.json",
+    "fixtures/ui/map_context_envelope/cases.json",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json",
+    "tests/validators/test_validate_map_context_envelope.py",
+    "tools/validators/ui/validate_map_context_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-context-envelope.yml": "sha256:3c27b4b5bb4aca282dec7567366d06909eec11e28ed468f6acdb40e726b4ce82",
+    "contracts/ui/map_context_envelope.md": "sha256:fcafa9198c88aea360465d74f1f979ba4eaff3180b7eef294e80ec0e1ec63d36",
+    "contracts/ui/map_context_envelope/README.md": "sha256:fb15b13d6fc977f9b123ce2082057d75821f02dbc2d1973b3b8d665834386955",
+    "fixtures/ui/map_context_envelope/README.md": "sha256:ebf3669f27367d64fb68342de9b75da6d530aa336d415c22f160d8ea41e8ab4d",
+    "fixtures/ui/map_context_envelope/base_geography.json": "sha256:986a15c70084d0ddc4e73f49f3839f50fd0bd0918e28de6131661d4e8a35302d",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "sha256:53db2439ff85e9a9cc9c586559e8835f10c1dc6208ef5f779a534814b66c6075",
+    "fixtures/ui/map_context_envelope/cases.json": "sha256:405d58b2f7c9744b42b2f866dec51ae4d66d4c72103ffc2dce0f1c482ecac441",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "sha256:1103abf8b330f0ea9eee9a8373cc9992663ba75fd54c05d473d3dcb8055e924d",
+    "tests/validators/test_validate_map_context_envelope.py": "sha256:3e8985eaafa386797b6504b28bf1a801b60f3459e6910a71dc66d0631280ff60",
+    "tools/validators/ui/validate_map_context_envelope.py": "sha256:d7e5dde8ba3de73c5c71d3856dc42125038e4c6ab7cfd32797b819802f7fd85e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "2026-10-14"
+  },
+  "prompt_or_contract": "sha256:66aeb1f884469bc48fe5d4273b913fcfa4ea505ab7ca5904a367d97625ff1fca",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:66aeb1f884469bc48fe5d4273b913fcfa4ea505ab7ca5904a367d97625ff1fca"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-map-context-envelope-20260806.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:.github/workflows/map-context-envelope.yml@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/ui/map_context_envelope.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/ui/map_context_envelope/README.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/ui/map_context_envelope/README.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/ui/map_context_envelope/base_geography.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/ui/map_context_envelope/base_viewport.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/ui/map_context_envelope/cases.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:tests/validators/test_validate_map_context_envelope.py@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:tools/validators/ui/validate_map_context_envelope.py@4fd54e4e695eebd2e2a31f0b309813a352989b16"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-context-envelope.yml": "CONFIRMED",
+    "contracts/ui/map_context_envelope.md": "PROPOSED",
+    "contracts/ui/map_context_envelope/README.md": "PROPOSED",
+    "fixtures/ui/map_context_envelope/README.md": "PROPOSED",
+    "fixtures/ui/map_context_envelope/base_geography.json": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "PROPOSED",
+    "tests/validators/test_validate_map_context_envelope.py": "CONFIRMED",
+    "tools/validators/ui/validate_map_context_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-map-context-envelope-20260806 is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "All 10 artifact paths are bound to their current bytes on main@4fd54e4e69; 10 differ from the original receipt because they were edited after it was written."
+    },
+    {
+      "gate": "authoring-claim",
+      "outcome": "SKIPPED",
+      "reason": "This is a currentness re-observation of existing artifacts. It makes no claim to have authored or changed them."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-map-context-envelope-20260806",
+      "evidence_ref": "repo:data/receipts/generated/genrec-map-context-envelope-20260806.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T07:10:00Z",
+  "emitter": "Claude Code (Claude Opus 5.5)",
+  "links": {
+    "pr_number": 5160,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Currentness successor to genrec-map-context-envelope-20260806. The original receipt no longer matched any single commit on main: 10 of its artifacts were edited after it was written. Its live-tree replay in .github/workflows/map-context-envelope.yml now validates this successor instead. The original stays unedited, per docs/doctrine/retention.md section 3 (receipts are written once and never mutated)."
+}

@@ -2,11 +2,11 @@
 doc_id: kfm://contract/domains/people-dna-land/land-instrument-candidate
 title: Land instrument candidate v1
 type: contract
-version: v1
+version: v1.1
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-14
 policy_label: public
 owning_root: contracts/
 responsibility: Human semantics for the closed private land-instrument candidate; machine validation is owned by the linked schema.
@@ -60,3 +60,36 @@ Operating home: [land intake runbook](../../../docs/runbooks/land-records-ingest
 - Capture withdrawal excludes its occurrences from ordinary private review
   queries and evidence resolution. Original records, objects and receipts
   remain immutable. A later import does not overwrite another version.
+# County auctions and private transfer extension
+
+Official county tax-foreclosure results are `tax_foreclosure_sale` candidates
+with `AUCTION_REPORTED` status. The printed amount is
+`auction_purchase_price`; confirmation, deed recording, current ownership and
+arm's-length sale completion remain `NOT_ESTABLISHED`. Grouped tracts retain one
+sale-unit identity and one group price. Never divide a group price among
+parcels without independently cited allocation evidence. The original county
+document is mandatory. Confidential sales-validation questionnaires remain
+excluded. Shawnee and Leavenworth are source-bound county adapters, not a
+statewide private-sale inventory or automatic source activation.
+
+BLM result-page sizes follow the observed 10/25/50/100 controls. Known survey
+cards remain in capture bytes with explicit exclusion locators. They are not
+land instruments. Patent metadata may retain the provider accession; CDI
+records preserve composite-identity and partial-description limitations.
+
+`land_review_transfer.schema.json` defines a private administrative carrier:
+canonical JSON containing active capture manifests, candidate batches,
+EvidenceBundle candidates and base64 original objects. Bounds are 20 captures,
+1,000 candidate occurrences and 10 MiB encoded bytes. Export replays the local
+ledger, excludes withdrawn captures and writes outside Git with restricted
+permissions. Every record and carrier stays pending and unreleased.
+
+The main Site verifies canonical shape, hashes, graph closure and source/role
+guards; this is integrity verification only. It does not trust a sender's
+normalization, source authenticity or authority declarations. Hosted
+normalization review remains pending. Existing authenticated owner/steward
+submission APIs retain bytes in quarantine and append review history. They
+cannot promote, activate or release data. Ordinary governed land clients
+receive a denial and zero records. A future release requires a separately
+reviewed carrier, rights/sensitivity/source admission, policy, correction and
+rollback closure; this extension supplies no release writer.

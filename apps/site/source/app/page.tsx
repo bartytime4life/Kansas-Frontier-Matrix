@@ -747,7 +747,7 @@ const QWEN_ABSTAIN_GUIDANCE: Record<string, string> = {
   CONTEXT_ONLY_INTERPRETATION: "No KFM record is selected, so there is no evidence-backed answer for this view.",
   EVIDENCE_NOT_SUPPORTIVE: "The selected record is not released, reviewed and linked to a public layer, so it cannot support an answer.",
   QUESTION_OUTSIDE_SELECTION_SCOPE: "The question goes beyond what the selected released record states.",
-  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, addresses, exact or personal locations, or the locations of sensitive sites are not interpreted by the local model. Use the official source directly.",
+  SENSITIVE_QUESTION_NOT_INTERPRETED: "The local model interprets only questions about the map: its layers, sources, data, definitions and history. It does not interpret questions about safety, emergencies, digging, legal or medical matters, addresses, or exact or personal locations, or the locations of sensitive sites. Use the official source directly, and in an emergency call 911.",
   OVER_PRECISE_OUTPUT: "The model's reply contained precise location detail, so it was withheld.",
   CITATION_REQUIRED: "The model did not cite the selected record's exact EvidenceRef, so no answer was shown.",
   MODEL_ABSTAINED: "The model judged that the selected record does not answer the question.",
@@ -6726,7 +6726,8 @@ export default function Home() {
       return;
     }
     const refresh = () => {
-      if (!document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+      // Restoration starts the selected query; do not race it with defaults.
+      if (explorerRestoredRef.current && !document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     };
     refresh();
     const timer = window.setInterval(refresh, 300_000);

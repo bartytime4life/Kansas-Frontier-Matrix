@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks/land-records-ingest
 title: Kansas land-record intake and private review
 type: runbook
-version: v1
+version: v1.1
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-14
 policy_label: public
 owning_root: docs/
 responsibility: Operating instructions for explicit land-instrument acquisition, quarantine intake, private review and rollback; no source admission or release authority.
@@ -29,7 +29,7 @@ prices, geocode legal descriptions or release person-bearing records.
 
 | Source | Supported intake | Authority and remaining limits |
 |---|---|---|
-| [BLM GLO](https://glorecords.blm.gov/s/) | Captured rendered Kansas result-card text; explicit mapped CSV | Federal instrument/index evidence. July 2026 portal replacement means old ASP.NET/SOAP instructions are not a verified bulk interface. The pilot is one page of CDI index entries, including patent and deed references; original patent images and unique document IDs are not acquired. |
+| [BLM GLO](https://glorecords.blm.gov/s/) | Captured rendered Kansas result-card text; explicit mapped CSV | Federal instrument/index evidence. July 2026 portal replacement means old ASP.NET/SOAP instructions are not a verified bulk interface. The expanded capture includes 294 instrument candidates across three 100-card keyword pages, spanning 1858–1951. Six survey cards remain excluded. Patent accessions are retained where supplied; original patent images are not acquired. |
 | [BLM MLRS public reports](https://reports.blm.gov/reports/MLRS) | Explicit lawfully exported CSV, mapped by the operator | Public reports retain Privacy Act redactions. Land-tenure cases and proposed sales are separate from completed conveyances and mineral leases. Actual MLRS export columns and live ingestion require source-specific verification; this pilot contains no MLRS rows. |
 | [Kansas State Archives](https://www.kansashistory.gov/p/land-records-at-the-state-archives/11083) | Explicit ledger/tract-book transcription CSV plus original image/document | Historical individual land transfers and railroad sales. Original bytes and row locators are attached; transcription remains pending independent review. Archive access does not settle redistribution rights. |
 | [Sedgwick Register of Deeds](https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/) | Lawful county CSV with explicit column map | Free in-person computers; online Laredo/Tapestry access uses subscriptions or per-search charges. No purchase, account creation, credentialed search or county download occurred. |
@@ -116,7 +116,7 @@ The default import allows **100 records and 2 MiB total input**, including
 attached documents. An explicit `--max-records` or `--max-bytes` can raise those
 limits up to **1,000 records and 10 MiB**. The whole import is refused if it
 exceeds its budget; it never silently truncates records. A captured GLO page
-must have 25-result page scope and consistent visible card/range counts. It
+must agree with the observed 10/25/50/100-result page scope and consistent visible card/range counts. It
 retains the upstream match count and whether extra legal-description rows were
 hidden. Keyword results are not a verified Kansas state-boundary query.
 
@@ -166,7 +166,8 @@ the existing `pipelines/domains/people-dna-land/land-ownership/` scaffold or mov
 that compatibility material. Existing legacy ownership schemas and proposed
 domain source views remain unchanged; these adapters bind to the new inactive
 canonical source profiles through the local keys `blm-glo`, `blm-mlrs`,
-`kshs-land-sales`, `sedgwick-deeds`, `johnson-deeds`.
+`kshs-land-sales`, `sedgwick-deeds`, `johnson-deeds`,
+`shawnee-tax-sales` and `leavenworth-tax-sales`.
 
 Source admission is pending, so original objects, capture manifests, normalized
 instrument candidates and EvidenceBundle candidates remain in
@@ -202,8 +203,10 @@ repairs the index. Preserve the whole store before operational recovery.
 The audit verifies indexed runs, not a claim that every orphan is indexed.
 
 To roll back the application, stop its process and revert the scoped code PR.
-Keep external captures/receipts intact. No system service, production D1/R2,
-DNS, hosting access, model binding or public release is changed. No timed
+Keep external captures/receipts intact. The main Site integration adds private quarantine submissions to its existing
+D1/R2 bindings; source synchronization performs no migration, reset or reseed.
+No system service, DNS, hosting audience, model binding or public data release
+is changed. No timed
 acquisition schedule is created; explicit imports are the current job runtime.
 
 ## Verification and next gates
@@ -215,10 +218,51 @@ python -m pytest -q tests/domains/people-dna-land/test_land_records.py
 ```
 
 The dedicated CI job runs the same source, integrity and runtime guards with
-the existing hash-locked dependency installer. The live pilot has 25 BLM
-Kansas index entries and one KSHS railroad-sale transcription; it does not
-prove county coverage, complete BLM history, completed modern sales or accepted
-transcription. Source admission, person/cultural sensitivity, rights,
+the existing hash-locked dependency installer. The retained expansion has 337 unique candidate versions: 294 BLM instrument
+entries, 42 Shawnee auction sale units from 2025–2026 and one KSHS railroad-sale
+transcription. The 2026 Shawnee capture has 26 sale units covering 108 tracts;
+their purchase prices reconcile to the printed $690,200 total. The 2025
+capture is only 16 selected page-one sale units. Coverage is partial, and
+auction reporting does not establish recording, court confirmation or title. Source admission, person/cultural sensitivity, rights,
 independent review, released EvidenceBundle/citation validation, correction,
 rollback and a separate exact-content release decision remain required before
 any ordinary public API/map publication.
+
+## Main KFM workspace and transfer
+
+Open `/data/land-records` on the existing owner-private Explorer. Data commons,
+Land topics and the map Data menu link to it. The application reuses existing
+sign-in, owner/steward authorization, submissions, review history and quarantine
+storage. It imports and checks a bounded evidence transfer, then filters and
+paginates individual candidate versions and resolves original documents. It
+does not call a workstation path or retain the local companion token.
+
+```sh
+python tools/local_data/land_records.py --root /absolute/private/land-store \
+  export-review --output /absolute/private/land-review.json
+```
+
+Export selects active captures and deterministically replays their originals.
+Repeated `--capture-id` flags select specific captures. The transfer remains
+private, pending and unreleased, with a 10 MiB encoded limit, 20 captures and
+1,000 candidate occurrences. Duplicate occurrences display once per record
+digest; changed versions stay distinct. The Site checks hashes and closure,
+while normalization, source authenticity, rights and sensitivity review remain
+pending. No original payload, exact party/parcel records or tokens belong in
+Git, static assets or deployment archives.
+
+Shawnee's [official prior-sale page](https://snco.gov/counselor/prior_tax_sales.php)
+links result PDFs with separate tax-liens, costs, purchaser/deed labels and
+purchase prices. Only the purchase-price column is transcribed; multi-tract
+sale prices are not allocated across parcels. `tax_foreclosure_sale` uses
+`AUCTION_REPORTED` and `auction_purchase_price`, with original documents
+mandatory. The inactive Leavenworth profile records a current TLS retrieval
+failure; no Leavenworth original or records are claimed. Sedgwick and Johnson
+remain lawful-export adapters without live acquisition.
+
+The existing submission review states track administrative disposition only.
+Restricted land bundles cannot be accepted merely by supplying a source URL.
+Ordinary `/api/governed/land-records/v1/[view]` clients always receive a denial
+and zero candidates. App rollback reverts the additive routes/navigation and
+redeploys the preceding same-Site version while retaining private submissions
+and receipts. The existing loopback runtime remains available independently.

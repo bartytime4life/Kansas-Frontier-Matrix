@@ -61,6 +61,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -78,7 +79,7 @@ jobs:
           tests/joins/test_cross_lane_*.py
           -q --strict-config --strict-markers
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json --repo-root . --artifact-git-ref d046a94a8b2d52181146727d0faf263122de7402
       - name: Record trust boundary
         if: always()
         run: |

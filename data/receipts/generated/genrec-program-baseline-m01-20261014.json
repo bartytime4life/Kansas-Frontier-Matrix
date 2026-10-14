@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-program-baseline-m01-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/program-baseline.yml",
+    "contracts/governance/program_baseline.md",
+    "control_plane/README.md",
+    "control_plane/program_baseline.json",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json",
+    "schemas/contracts/v1/governance/program_baseline.schema.json",
+    "tests/validators/test_validate_program_baseline.py",
+    "tools/validators/control_plane/validate_program_baseline.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/program-baseline.yml": "sha256:91153f532aef604f0f93c383610b53ba9deb53fb36659bf813883d751da4163f",
+    "contracts/governance/program_baseline.md": "sha256:986e5fac68cc03ac3729b85ece0ff7e659e80b3751e39bd2696345f12d4cb7de",
+    "control_plane/README.md": "sha256:b719c41117d937a4c14a1a41b408616077c3171eb46d5eda5af2e684c83885d2",
+    "control_plane/program_baseline.json": "sha256:476ad5cf89b1480eee3c36ff0bf15cf221c0144aca20d56d95baac1d80a59bd0",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json": "sha256:61dde67aa0774f1f9a1f8a718b89061e559b528382fcc194e8a1835726bfb4d6",
+    "schemas/contracts/v1/governance/program_baseline.schema.json": "sha256:c80550ce374646233441c1a7a2728545d94e4d3eafcc3d7a3e65d52ce957637d",
+    "tests/validators/test_validate_program_baseline.py": "sha256:bf35f1f63dc29c5804f502561650590a7870f50c7acafbe75ed598e7cace9780",
+    "tools/validators/control_plane/validate_program_baseline.py": "sha256:627e799e6c7b9fd77b19b70c452e6e494ac0a3f4e841b40aebc35bddafaf17c2"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "claude-opus-5-5"
+  },
+  "prompt_or_contract": "sha256:986e5fac68cc03ac3729b85ece0ff7e659e80b3751e39bd2696345f12d4cb7de",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub CLI read-only queries",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0861558e4a1ef1b91ba4a457132b100ee3614f15c0761625d2988f5dceb0f91e",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:f21ebe9996da58a798247090cd478ec5388d6f74041c6091b30368b62ff2b0c6"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2768",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3365",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commits/514b2367638778a0a0b6e45a6451aea70c762909/check-runs",
+      "repo:main@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:.github/CODEOWNERS@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/external_mirror_register.yaml@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/object_family_register.yaml@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/path_alias_register.yaml@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/program_baseline.json@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/repository_governance_parity.yaml@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:control_plane/root_registry.yaml@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:docs/adr/INDEX.md@514b2367638778a0a0b6e45a6451aea70c762909",
+      "repo:docs/adr/INDEX.md@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+      "repo:docs/doctrine/directory-rules.md@514b2367638778a0a0b6e45a6451aea70c762909"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/program-baseline.yml": "PROPOSED",
+    "contracts/governance/program_baseline.md": "PROPOSED",
+    "control_plane/README.md": "PROPOSED",
+    "control_plane/program_baseline.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/program_baseline/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/program_baseline.schema.json": "PROPOSED",
+    "tests/validators/test_validate_program_baseline.py": "PROPOSED",
+    "tools/validators/control_plane/validate_program_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "The exact main SHA, the ADR index (11 accepted, 38 proposed, 11 scaffolds derived from its tables), the Directory Rules digest, the CODEOWNERS route, root and alias projections, issues #2768/#2874/#3365, and the open-PR queue [5153, 5154, 5155, 5156, 5157] were read and pinned."
+    },
+    {
+      "gate": "program_baseline_profile",
+      "outcome": "PASS",
+      "reason": "Eighteen focused no-network tests, one positive and seventeen negative fixture cases with Git checks enabled, pinned-byte digest replay, derived ADR counts, base-path and supersedes lineage checks, and the canonical v2 instance passed."
+    },
+    {
+      "gate": "local_validation_observations",
+      "outcome": "PASS",
+      "reason": "Each listed command was run against the base tree. Topology passed with 0 new drift, 93 baselined warnings, and 0 stale fingerprints; object-family workflow-watch tests passed; repository-governance parity is recorded separately below."
+    },
+    {
+      "gate": "repository_governance_parity_conformance",
+      "outcome": "FAIL",
+      "reason": "The parity validator exited 0 with profile integrity PASS, but its conformance outcome is HOLD_INHERITED on the topology lane; the baseline records HOLD and carries repository_governance_parity_hold rather than reporting a pass."
+    },
+    {
+      "gate": "exact_main_hosted_checks",
+      "outcome": "PASS",
+      "reason": "Hosted check-runs for the exact base commit were recorded as PASS (one_hundred_seven_success_two_skipped_zero_failed_of_one_hundred_nine_check_runs)."
+    },
+    {
+      "gate": "drive_lineage_boundary",
+      "outcome": "SKIPPED",
+      "reason": "The three Drive lineage entries were carried forward from the 2026-08-22 baseline without re-observation; they remain advisory with repository_authority=false and mutated=false."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after a pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All eight authored or substantively modified artifacts are bound to their bytes at commit f09c07a527d4f45f520b3f84ebf23d3d4a248d5b; this receipt does not bind itself or the Makefile line that replays it."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-ADR-INDEX",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@514b2367638778a0a0b6e45a6451aea70c762909"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@514b2367638778a0a0b6e45a6451aea70c762909"
+    },
+    {
+      "id": "KFM-PRIOR-PROGRAM-BASELINE",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/program_baseline.json@514b2367638778a0a0b6e45a6451aea70c762909"
+    },
+    {
+      "id": "KFM-GITHUB-M01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
+    },
+    {
+      "id": "KFM-GITHUB-PROGRAM-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
+    },
+    {
+      "id": "KFM-GITHUB-SOURCE-CORPUS-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T06:32:46Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path forward fix of the M01 program baseline from main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e to main@514b2367638778a0a0b6e45a6451aea70c762909 under profile v2, which derives ADR counts, base-path status, and required unresolved items from evidence instead of snapshot constants. The 2026-08-22 receipt is kept unchanged. This receipt does not create authority, change issue state, accept an ADR, activate a source, approve policy or review, change repository settings, waive drift, mutate lifecycle state, release, deploy, promote, publish, or establish public-runtime behavior."
+}

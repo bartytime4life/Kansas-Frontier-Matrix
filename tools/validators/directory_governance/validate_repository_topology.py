@@ -44,6 +44,12 @@ RECOVERY_FINGERPRINTS = frozenset(
         "sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f",
     }
 )
+# One-time owner-directed expiry renewal (docs/intake/exploratory/repository-topology-baseline-renewal-20261014.md).
+# It admits exactly one later expiry: a trusted baseline expiring on RENEWAL_FROM_EXPIRES_ON
+# may move to RENEWAL_TO_EXPIRES_ON. Waiver entries keep the ordinary shrink-only rules. Once
+# the renewal lands the trusted expiry is RENEWAL_TO_EXPIRES_ON, so it can never apply again.
+RENEWAL_FROM_EXPIRES_ON = "2026-11-10"
+RENEWAL_TO_EXPIRES_ON = "2027-05-10"
 ADOPTED_SHA256 = "44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
 MAX_FILE_BYTES = 4 * 1024 * 1024
 MAX_SELECTED_BLOB_BYTES = 256 * 1024 * 1024
@@ -1334,9 +1340,13 @@ def validate_baseline_transition(
     for fingerprint in set(current_entries).intersection(trusted_entries):
         if current_entries[fingerprint] != trusted_entries[fingerprint]:
             raise TopologyError("baseline transition mutates a waiver entry")
-    if date.fromisoformat(str(current_data["expires_on"])) > date.fromisoformat(
-        str(trusted_data["expires_on"])
-    ):
+    current_expiry = date.fromisoformat(str(current_data["expires_on"]))
+    trusted_expiry = date.fromisoformat(str(trusted_data["expires_on"]))
+    renewal = (
+        trusted_expiry == date.fromisoformat(RENEWAL_FROM_EXPIRES_ON)
+        and current_expiry == date.fromisoformat(RENEWAL_TO_EXPIRES_ON)
+    )
+    if current_expiry > trusted_expiry and not renewal:
         raise TopologyError("baseline transition extends expiry")
     immutable = (
         "authority",
@@ -1483,7 +1493,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
     parser.add_argument("--format", choices=("json", "text"), default="json")
     parser.add_argument("--emit-baseline", action="store_true")
-    parser.add_argument("--expires-on", default="2026-11-10")
+    parser.add_argument("--expires-on", default=RENEWAL_TO_EXPIRES_ON)
     parser.add_argument(
         "--trusted-baseline-ref",
         default=os.environ.get("KFM_TRUSTED_BASE_REF"),

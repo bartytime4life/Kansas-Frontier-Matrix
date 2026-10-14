@@ -19,6 +19,9 @@ def main(argv=None):
     sub.add_parser("init")
     sub.add_parser("status")
     sub.add_parser("audit")
+    p = sub.add_parser("export-review")
+    p.add_argument("--output", type=Path, required=True, help="New private JSON file outside Git; original bytes included")
+    p.add_argument("--capture-id", action="append", default=[], help="Select active capture; default all within 20 captures / 1000 records / 10 MiB")
     p = sub.add_parser("withdraw-capture")
     p.add_argument("--capture-id", required=True)
     p.add_argument("--reason", required=True)
@@ -47,6 +50,9 @@ def main(argv=None):
         elif args.command == "audit":
             from people_dna_land.land_store import audit
             result = audit(args.root)
+        elif args.command == "export-review":
+            from people_dna_land.land_transfer import export_review
+            result = export_review(args.root, args.output.absolute(), capture_ids=args.capture_id)
         elif args.command == "withdraw-capture":
             from people_dna_land.land_store import withdraw_capture
             result = withdraw_capture(args.root, args.capture_id, args.reason)
