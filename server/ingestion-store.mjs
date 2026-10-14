@@ -104,6 +104,7 @@ export class MySqlIngestionStore {
     });
   }
   async release(token) { await this.database.execute("UPDATE kfm_ingest_control SET lease_token=NULL,lease_until=0,reserved_bytes=0 WHERE id=1 AND lease_token=?", [token]); }
+  async lastAttempt(sourceId) { const [rows]=await this.database.execute("SELECT checked_at FROM kfm_ingest_jobs WHERE source_id=?",[sourceId]);return rows[0]?.checked_at?Number(rows[0].checked_at):0; }
   async list() {
     const [rows] = await this.database.execute("SELECT receipt FROM kfm_ingest_captures ORDER BY slot DESC,capture_id LIMIT 50");
     return rows.map(row => JSON.parse(row.receipt));
