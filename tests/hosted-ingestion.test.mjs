@@ -5,7 +5,7 @@ import { ARCHIVE_LIMIT_BYTES, OWNER_GITHUB_ID, ingestionConfig } from "../server
 import { CAPTURE_SOURCES, captureRequest, fetchCapture } from "../server/ingestion-sources.mjs";
 import { runIngestion } from "../server/ingestion-runner.mjs";
 import { authenticateOwner, openFlow, ownerCallback, sameOrigin, sealFlow, workerAuthorized } from "../server/owner-auth.mjs";
-const environment = { DB_HOST: "fixture.invalid", DB_NAME: "fixture", DB_USER: "fixture", DB_PASSWORD: "fixture-only", KFM_DB_TLS: "verified", KFM_DB_CA_PEM: "fixture-ca", KFM_PUBLIC_ORIGIN: "https://kansasfrontiermatrix.com", KFM_GITHUB_CLIENT_ID: "fixture-client", KFM_GITHUB_CLIENT_SECRET: "fixture-only", KFM_SESSION_KEY: randomBytes(32).toString("base64url"), KFM_INGEST_ENABLED: "true", KFM_RUNTIME_ROLE: "published", KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: String(ARCHIVE_LIMIT_BYTES), KFM_CAPTURE_WORKER_TOKEN: randomBytes(32).toString("base64url") };
+const environment = { DB_HOST: "fixture.invalid", DB_NAME: "fixture", DB_USER: "fixture", DB_PASSWORD: "fixture-only", KFM_DB_TLS: "verified", KFM_DB_CA_PEM: "fixture-ca", KFM_PUBLIC_ORIGIN: "https://kansasfrontiermatrix.com", VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com", KFM_GITHUB_CLIENT_ID: "fixture-client", KFM_GITHUB_CLIENT_SECRET: "fixture-only", KFM_SESSION_KEY: randomBytes(32).toString("base64url"), KFM_INGEST_ENABLED: "true", KFM_RUNTIME_ROLE: "published", KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: String(ARCHIVE_LIMIT_BYTES), KFM_CAPTURE_WORKER_TOKEN: randomBytes(32).toString("base64url") };
 const fixture = { type: "FeatureCollection", features: [{ type: "Feature", id: "unchanged-id", geometry: { type: "Point", coordinates: [-98,38,3.5] }, properties: { value: null, unit_of_measure: "ft3/s", approval_status: "Provisional", time: "2026-10-14T01:00:00Z" } }] };
 const reply = (value = fixture) => new Response(JSON.stringify(value), { headers: { "Content-Type": "application/geo+json; charset=utf-8" } });
 test("archive readiness is deny-by-default and requires the exact chosen capacity", () => {
@@ -13,7 +13,18 @@ test("archive readiness is deny-by-default and requires the exact chosen capacit
   for (const key of ["DB_HOST","DB_PASSWORD","KFM_DB_CA_PEM","KFM_GITHUB_CLIENT_SECRET","KFM_INGEST_ENABLED","KFM_RUNTIME_ROLE","KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES"]) assert.equal(ingestionConfig({ ...environment, [key]: "" }).ready, false, key);
   assert.equal(ingestionConfig({ ...environment, KFM_PUBLIC_ORIGIN: "https://q9r9beo47t.preview.c38.airoapp.ai" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, DB_HOST: "10.0.0.1" }).ready, false);
+  assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "*" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: "80000000001" }).ready, false);
+});
+test("actual Node request conversion preserves approved proxy HTTPS and rejects forwarded-host poisoning",async()=>{
+  const previous=process.env.VINEXT_TRUSTED_HOSTS;
+  process.env.VINEXT_TRUSTED_HOSTS='kansasfrontiermatrix.com';
+  try {
+    const {nodeToWebRequest}=await import('vinext/server/prod-server');
+    const urls=['kansasfrontiermatrix.com','evil.example'].map(host=>nodeToWebRequest({method:'GET',url:'/api/owner/callback',headers:{host:'private-node.invalid','x-forwarded-host':host,'x-forwarded-proto':'https'}}).url);
+    assert.equal(urls[0],'https://kansasfrontiermatrix.com/api/owner/callback');
+    assert.equal(urls[1],'https://private-node.invalid/api/owner/callback');
+  } finally {if(previous===undefined)delete process.env.VINEXT_TRUSTED_HOSTS;else process.env.VINEXT_TRUSTED_HOSTS=previous;}
 });
 test("capture identity is stable within its bucket and rejects arbitrary sources or URLs", async () => {
   const at = Date.parse("2026-10-14T05:03:00Z");
