@@ -12,7 +12,7 @@
 .inspection-panel-switch .inspection-close { flex: 0 0 44px; font-size: 20px; }
 .inspection-panel-switch button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .explorer-shell[data-inspector] > .evidence-drawer[aria-hidden="true"] { display: none; }
-.explorer-shell[data-inspector] > .qwen-panel { min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.explorer-shell[data-inspector] > .qwen-panel { min-width: 0; min-height: 0; overflow: hidden; overscroll-behavior: contain; }
 .explorer-shell[data-inspector] > .qwen-panel .qwen-messages { flex: 1 0 auto; min-height: 120px; overflow: visible; }
 .explorer-shell[data-inspector] > .qwen-panel .qwen-quick-prompts { flex-wrap: wrap; overflow-x: visible; }
 .explorer-shell[data-inspector] > .qwen-panel .qwen-quick-label { flex-basis: 100%; white-space: normal; }
