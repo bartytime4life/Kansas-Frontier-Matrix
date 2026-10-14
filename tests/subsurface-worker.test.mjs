@@ -16,7 +16,7 @@ const sha=createHash('sha256').update(bytes).digest('hex');
 const manifest={version:1,sources:[],tiles:[{id:'one',bounds:[-95.2,38.8,-94.8,39.2],url:'/data/subsurface/tile-one.json.gz',sha256:sha}],counties:[]};
 function harness(fetcher) {
  const messages=[];const scope={postMessage:v=>messages.push(v),onmessage:null,location:{origin:"https://kfm-worker.invalid"}};
- const context=vm.createContext({self:scope,model,fetch:fetcher,Blob,Response,AbortController,DecompressionStream,crypto:webcrypto,console,URL,Uint8Array,Date,setTimeout,clearTimeout});
+ const context=vm.createContext({self:scope,model,fetch:fetcher,Blob,Response,AbortController,DecompressionStream,crypto:webcrypto,TextDecoder,console,URL,Uint8Array,Date,setTimeout,clearTimeout});
  vm.runInContext(code,context);
  return {messages,send:q=>scope.onmessage({origin:scope.location.origin,data:{id:1,kind:'probe',anchor:[-95,39],route:[],sources:['kgs-wwc5'],year:2026,...q}}),sendForeign:q=>scope.onmessage({origin:"https://foreign.invalid",data:{id:1,kind:'probe',anchor:[-95,39],route:[],sources:['kgs-wwc5'],year:2026,...q}})};
 }
@@ -89,7 +89,7 @@ test('opening Underground warms only the manifest; the exact area still controls
  h.send({id:0,kind:'prepare'});const prepared=await wait(h);assert.equal(prepared.prepared,true);assert.equal('columns' in prepared,false);
  assert.deepEqual(reads,['/data/subsurface/manifest.json']);
  h.send({id:1,kind:'area',bounds:[-95.2,38.8,-94.8,39.2]});const result=await wait(h,2);
- assert.deepEqual(reads,['/data/subsurface/manifest.json','/data/subsurface/tile-one.json.gz']);assert.equal(result.columns.length,3);assert.equal(result.rejected,1);
+ assert.deepEqual(reads,['/data/subsurface/manifest.json','/data/subsurface/tile-one.json.gz?sha256='+sha]);assert.equal(result.columns.length,3);assert.equal(result.rejected,1);
 });
 
 test('dense wells cannot crowd eligible cores out of the 50-record area budget',async()=>{
@@ -110,4 +110,30 @@ test('inventory search honors source choice and Kansas location without claiming
  h.send({kind:'search',search:'123',sources:['kgs-core'],year:1833});let r=await wait(h);assert.deepEqual(Array.from(r.matches,x=>x[0]),['core-123']);assert.equal('columns' in r,false);
  h.send({id:2,kind:'search',search:'123',sources:['kgs-wwc5']});r=await wait(h,2);assert.deepEqual(Array.from(r.matches,x=>x[0]),['well-123']);
  h.send({id:3,kind:'search',search:'123',sources:[]});r=await wait(h,3);assert.equal(r.matches.length,0);
+});
+
+test('content-addressed reads verify original gzip or exact transparently decoded entities',async()=>{
+ const raw=JSON.stringify([well('same')]),packed=gzipSync(raw),sha256=createHash('sha256').update(packed).digest('hex'),decodedSha256=createHash('sha256').update(raw).digest('hex');
+ const meta={...manifest,tiles:[{...manifest.tiles[0],sha256,decodedSha256}]};
+ for(const entity of [packed,raw]){
+  const reads=[],h=harness(async url=>{reads.push(url);return new Response(url.endsWith('manifest.json')?JSON.stringify(meta):entity);});
+  h.send({});const r=await wait(h);assert.equal(r.columns[0].record.id,'same');assert.equal(r.failures.length,0);assert.ok(reads[1].endsWith('?sha256='+sha256));
+ }
+ const altered=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(meta):JSON.stringify([well('changed')])));
+ altered.send({});const bad=await wait(altered);assert.equal(bad.columns.length,0);assert.match(bad.error,/SOURCE_DIGEST_MISMATCH/);
+ const noEntityDigest=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify({...meta,tiles:[{...meta.tiles[0],decodedSha256:undefined}]}):raw));
+ noEntityDigest.send({});assert.match((await wait(noEntityDigest)).error,/SOURCE_DIGEST_MISMATCH/);
+});
+test('delivery status is disclosed as a safe bounded code without response content',async()=>{
+ const h=harness(async url=>url.endsWith('manifest.json')?new Response(JSON.stringify(manifest)):new Response('private diagnostic body',{status:404}));
+ h.send({});const r=await wait(h);assert.match(r.error,/SOURCE_HTTP_404/);assert.doesNotMatch(JSON.stringify(r),/private diagnostic/);
+});
+
+test('decoded transport bodies over 5 MB retain the original 25 MB decoded ceiling; overflow cancels before parsing',async()=>{
+ const raw=JSON.stringify([well('large')])+' '.repeat(5_100_000),packed=gzipSync(raw);
+ const meta={...manifest,tiles:[{...manifest.tiles[0],sha256:createHash('sha256').update(packed).digest('hex'),decodedSha256:createHash('sha256').update(raw).digest('hex')}]};
+ const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(meta):raw));h.send({});assert.equal((await wait(h)).columns[0].record.id,'large');
+ let canceled=false,reads=0;const oversized=new ReadableStream({pull(controller){reads++;controller.enqueue(new Uint8Array(1_000_000));},cancel(){canceled=true;}});
+ const bad=harness(async url=>url.endsWith('manifest.json')?new Response(JSON.stringify(meta)):new Response(oversized));bad.send({});const r=await wait(bad);
+ assert.equal(canceled,true);assert.ok(reads<=27);assert.equal(r.columns.length,0);assert.match(r.error,/SOURCE_SIZE_LIMIT/);
 });

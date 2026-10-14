@@ -115,7 +115,7 @@ def write_gzip(path, data):
     raw = encode(data)
     compressed = gzip.compress(raw, compresslevel=9, mtime=0)
     path.write_bytes(compressed)
-    return {'sha256': digest(compressed), 'bytes': len(compressed), 'uncompressedBytes': len(raw)}
+    return {'sha256': digest(compressed), 'decodedSha256': digest(raw), 'bytes': len(compressed), 'uncompressedBytes': len(raw)}
 
 
 def validate_storage(input_dir, output_dir):
