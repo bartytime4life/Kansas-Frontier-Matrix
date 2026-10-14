@@ -88,6 +88,8 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "I'm stranded because of flooding.",
     "My uncle is trapped by flood water.",
     "Our coworkers are stranded on the highway.",
+    "I'm in a burning building and trapped.",
+    "I am in Sterling and stranded.",
   ]),
   ...abstain("legal-medical", [
     "Can I file a lawsuit against the county over flooding?",
@@ -123,6 +125,8 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "I'm stuck on how to read this layer.",
     "My download is stuck.",
     "My search results are missing.",
+    "My filter is stuck.",
+    "Our API is stuck.",
   ]),
   ...interpret("definition", [
     "What is a lek?",
