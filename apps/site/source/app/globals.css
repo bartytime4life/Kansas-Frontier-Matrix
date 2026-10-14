@@ -2616,7 +2616,7 @@ body { font-size: 14px; }
 .terrain-mode-source[data-state="loading"] { color: #f0d6a4; }
 .terrain-mode-source[data-state="error"] { color: #ffad9d; }
 
-.verified-representation-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.verified-representation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .renderer-capability-list { display: grid; gap: 7px; }
 .renderer-capability-list article { display: grid; grid-template-columns: 88px minmax(0, 1fr); align-items: center; gap: 2px 10px; border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; }
 .renderer-capability-list article > span { grid-row: 1 / span 2; color: var(--dim); font-size: 10px; font-weight: 900; letter-spacing: .08em; }
@@ -3662,9 +3662,9 @@ body { font-size: 14px; }
 @media (min-width: 1800px) {
   .map-dock-basemap.map-dock-wide-only { display: flex; }
   .map-dock-action.map-dock-wide-only { display: inline-flex; }
-  .map-dock-map-menu { display: none; }
+  .map-dock-map-menu { display: block; }
 }
-.map-dock-menu-representations,
+.map-dock-menu-representations { display: grid; }
 .map-dock-menu-quick { display: none; }
 .map-dock-menu-representations { grid-template-columns: 1fr 1fr; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 6px; }
 .map-dock-menu-representations > button,
