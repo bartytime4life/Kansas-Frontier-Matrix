@@ -108,7 +108,8 @@ time bucket. The archive stores a reversible response bundle with per-entity
 digests, metadata and a whole-bundle digest. It preserves anonymous decoded HTTP
 entities unchanged. Some credential-based providers echo keys in their metadata:
 credentialed JSON is validated first and decoded strings/property keys are
-scrubbed, including literal, URI-encoded and JSON-escaped echoes. Malformed
+scrubbed, including literal, mixed/full URI-encoded and JSON-escaped echoes. Percent hex
+digits accept either case; ordinary credential letters retain exact case. Malformed
 credentialed JSON and redaction key collisions are held before storage. MIME
 parameters are omitted; keyed ETag/Last-Modified headers are omitted. Received/
 stored body digests and redaction counts preserve the explicit transform. Such bundles are explicitly transformed, not
@@ -188,7 +189,7 @@ on the shared Node database.
 ## Verified implementation evidence
 
 - All 16 profile builders, including six NCEI products, have bounded request,
-  capture/replay, identity-mutation and holds coverage: 71 adapter cases pass.
+  capture/replay, identity-mutation and holds coverage: 75 adapter cases pass.
 - Six native-series cases pass for units, datums, sensor depths, suppression,
   censoring, missing/trace values and source order.
 - Seven actual disposable D1/R2 integration cases pass for accounting, pause,

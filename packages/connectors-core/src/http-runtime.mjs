@@ -98,7 +98,14 @@ export async function transport(request, env, fetcher, signal, limit) {
   let bytes=await readBounded(response,limit);const originalSha256=await hash(bytes);let redactions=0;
   // Some key-based providers echo credentials in response metadata. Never store
   // those secrets; record the received digest and explicit storage transform.
-  const scrub=text=>{for(const auth of request.auth??[]){const secret=env[auth.secret];for(const token of new Set([secret,encodeURIComponent(secret)])){if(text.includes(token)){const parts=text.split(token);redactions+=parts.length-1;text=parts.join("[credential-redacted]");}}}return text;};
+  // Match each ASCII credential character literally or percent-encoded. Only
+  // hex digits are case-insensitive; ordinary credential letters remain exact.
+  const credentialPatterns=(request.auth??[]).map(auth=>new RegExp([...env[auth.secret]].map(c=>{
+   const literal=c.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+   const hex=c.charCodeAt(0).toString(16).padStart(2,"0").replace(/[a-f]/g,h=>`[${h}${h.toUpperCase()}]`);
+   return `(?:${literal}|%${hex})`;
+  }).join(""),"g"));
+  const scrub=text=>{for(const pattern of credentialPatterns)text=text.replace(pattern,()=>{redactions++;return "[credential-redacted]";});return text;};
   if(request.auth?.length){
    // All current credentialed profiles are JSON. Parse before storage so escaped
    // keys/values cannot retain a secret. Malformed credentialed bodies fail closed.

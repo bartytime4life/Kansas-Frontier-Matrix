@@ -70,3 +70,15 @@ test('redacted JSON property collisions fail closed',async()=>{
  const p=await makePlan('eia-electricity');const v={response:{total:0,data:[]},[env.EIA_API_KEY]:1,'[credential-redacted]':2};
  await assert.rejects(acquire(p,{env,fetcher:()=>Response.json(v)}),/CREDENTIAL_REDACTION_AMBIGUOUS/);
 });
+for(const variant of ['lowercase-percent','mixed-percent','fully-percent','json-escaped-percent'])test('AQS email '+variant+' echoes are scrubbed from stored keys and values',async()=>{
+ const configured={...env,EPA_AQS_EMAIL:'Fixture+tag%ok@example.invalid'},email=configured.EPA_AQS_EMAIL;
+ const encoded=variant==='fully-percent'?[...email].map(c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join(''):variant==='mixed-percent'?[...email].map((c,i)=>i%2?'%'+c.charCodeAt(0).toString(16).padStart(2,'0'):c).join(''):encodeURIComponent(email).replace(/%[0-9A-F]{2}/g,s=>s.toLowerCase());
+ const plan=await makePlan('air-quality',{product:'aqs'});const data={Header:[{status:'Success'}],Data:[{state_code:'20',county_code:plan.query.county,arithmetic_mean:2.3,units_of_measure:'fixture',echo:encoded,caseControl:email.toLowerCase(),[encoded]:encoded}]};
+ let body=JSON.stringify(data);if(variant==='json-escaped-percent')body=body.replaceAll('%','\\u0025');
+ const saved=new Map(),store={claim:async()=> 'fixture',due:async()=>true,reserve:async()=>5000000,save:async(p,r)=>saved.set(p.id,r),read:async id=>saved.get(id),failure:async()=>{},release:async()=>{}};
+ const result=await captureOne(store,'air-quality',{product:'aqs'},{env:configured,fetcher:()=>new Response(body,{headers:{'content-type':'application/json'}})});
+ const replayed=await replay(saved.get(result.receipt.captureId)),row=replayed.view.rows[0];
+ assert.equal(row.echo,'[credential-redacted]');assert.equal(row['[credential-redacted]'],'[credential-redacted]');assert.equal(row.caseControl,email.toLowerCase());
+ const bundle=JSON.parse(new TextDecoder().decode(saved.get(result.receipt.captureId).bytes)),entity=JSON.parse(Buffer.from(bundle.entities[0].entityBase64,'base64').toString('utf8'));
+ assert.equal(entity.Data[0].echo,'[credential-redacted]');assert.equal(result.receipt.entityHashes[0].credentialRedactions,3);assert.equal(JSON.stringify(entity).includes(encoded),false);
+});
