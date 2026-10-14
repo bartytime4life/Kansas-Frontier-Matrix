@@ -53,6 +53,7 @@
       "count": 5,
       "wellCount": 5,
       "coreCount": 0,
+      "decodedSha256": "8ae62e72f5265d92a08a563935c84fe6739de5dfe767e41f2d7a93b7085d72ed",
       "sha256": "d471d5d7b0a38ad710414f44a9984d46bacb3bfc63cf85ba55c019e6881f54df",
       "bytes": 835,
       "uncompressedBytes": 4414
@@ -69,6 +70,7 @@
       "count": 259,
       "wellCount": 244,
       "coreCount": 15,
+      "decodedSha256": "293baf0b0b24d2e27f24a8c80834e0e80c378a0a7fca6acec6461cd4fcc93948",
       "sha256": "5a196bb1c858ceff90799973828423eb0864edc51b1262df677d2808f4d84ed3",
       "bytes": 17333,
       "uncompressedBytes": 198920
@@ -85,6 +87,7 @@
       "count": 104,
       "wellCount": 100,
       "coreCount": 4,
+      "decodedSha256": "f23a2333652d10559f275434431377b4be731fe6f87b5807beb02e4ed918b64f",
       "sha256": "9d6dddec88e83eedd808097173b6b07980d072c6332a3d671f27d1939d01c681",
       "bytes": 13809,
       "uncompressedBytes": 123830
@@ -101,6 +104,7 @@
       "count": 64,
       "wellCount": 59,
       "coreCount": 5,
+      "decodedSha256": "cf85cd93170ab9e3107063a47a9d65cc5ad00c0d76facd72d7ab55f35617be8d",
       "sha256": "0f821d1629c5e2c991cc167c032a438035fd1d1566d17b4fb59f3256b832408b",
       "bytes": 3798,
       "uncompressedBytes": 41218
@@ -117,6 +121,7 @@
       "count": 53,
       "wellCount": 49,
       "coreCount": 4,
+      "decodedSha256": "db506135bda7f40f4ffd90b215dbf091eb71e6a89a003f61f176c5473160135d",
       "sha256": "1bee32a319c25f29c925c9f75cf51363a476ebc7442728cb36271acbf0855bb2",
       "bytes": 6156,
       "uncompressedBytes": 52363
@@ -133,6 +138,7 @@
       "count": 115,
       "wellCount": 115,
       "coreCount": 0,
+      "decodedSha256": "20f81cc066721500a021fcf754e9a58090748d530263a8f0ffb418b6e1c66b24",
       "sha256": "14bf86e2ed81fb1983f53acd711993ed87d5bfa9e31c548c1673dd3613758636",
       "bytes": 9218,
       "uncompressedBytes": 93053
@@ -149,6 +155,7 @@
       "count": 64,
       "wellCount": 60,
       "coreCount": 4,
+      "decodedSha256": "3929e64baf8834a78247ccc2b3a14cf4feca5beb52bcd45a4f7727a524a59f06",
       "sha256": "b3bbfcd7b23109b11c1ed6671e6e276a5051f2c5dd8622af88bd22c225eb6929",
       "bytes": 6339,
       "uncompressedBytes": 57701
@@ -165,6 +172,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "74e26b7455adbf0e6a4418aecab1ff11b517b410bb1b5f7f418d5c606ccdc69b",
       "sha256": "c40cece8d3c3f7097124590d54a0742718c3be965be52ddbbc073e3390f36d92",
       "bytes": 408,
       "uncompressedBytes": 665
@@ -181,6 +189,7 @@
       "count": 22,
       "wellCount": 21,
       "coreCount": 1,
+      "decodedSha256": "83e611af77197cad3e8dd8fa5805bc262fdfc04d5fedda494f2602ad7974b670",
       "sha256": "00785dad49880a79ab13e228b625602952a82e046fd1d3b972dee92a2482474a",
       "bytes": 3411,
       "uncompressedBytes": 22349
@@ -197,6 +206,7 @@
       "count": 1489,
       "wellCount": 1347,
       "coreCount": 142,
+      "decodedSha256": "fccf707d38f1a23c8dde8b595a322988fc0483043cf1674cd21923096fe50f7d",
       "sha256": "845edc81426b5fc6407b7a9eb88b591a4b69e8196a5f51279d5417755b3db4a4",
       "bytes": 155389,
       "uncompressedBytes": 1654331
@@ -213,6 +223,7 @@
       "count": 1504,
       "wellCount": 1463,
       "coreCount": 41,
+      "decodedSha256": "e0de4819bbc60229d97f5a439cac3c0af96cf74dc84e8e04f83b255990053754",
       "sha256": "a0b46e9cbd80d29ad0572f26ccb0ba547d3ffcbec7a60557df8deade7c582291",
       "bytes": 182218,
       "uncompressedBytes": 1863534
@@ -229,6 +240,7 @@
       "count": 391,
       "wellCount": 368,
       "coreCount": 23,
+      "decodedSha256": "dc4535a4641dddb3fe08e9c4d05e9f0e1a602108083404218cb9c9677606163c",
       "sha256": "b16ab20351df6bc8f9fdad96e5acefb7727afab313df323046c7a1198bc9e6bf",
       "bytes": 34673,
       "uncompressedBytes": 359467
@@ -245,6 +257,7 @@
       "count": 939,
       "wellCount": 922,
       "coreCount": 17,
+      "decodedSha256": "be9b093d668b723737f8a92356499febf583a955cea28986d1b82e9842627ebe",
       "sha256": "c003847c7565955c06baee079beb9b06e1a62165102e4492f02a6e9e870c13af",
       "bytes": 83319,
       "uncompressedBytes": 894874
@@ -261,6 +274,7 @@
       "count": 1236,
       "wellCount": 1223,
       "coreCount": 13,
+      "decodedSha256": "872637b0663e0d77ec7ceb528b6f9c02f48c1d77dba6e518af1ed6e3306fb1e0",
       "sha256": "9ab2c1c43820a408a29dab8e316101f94b3feedbbeb0d3aaca66e868f1577762",
       "bytes": 109667,
       "uncompressedBytes": 1217406
@@ -277,6 +291,7 @@
       "count": 1081,
       "wellCount": 1066,
       "coreCount": 15,
+      "decodedSha256": "5e7f81078404563c0c6d7e25f181a1b0a09b2c34726bc02bad9f08533338f97c",
       "sha256": "b0a7845e4a74df0957d1a9eb5bf3c9b8c2aecb72474b46f7d0424d603f3744a4",
       "bytes": 80182,
       "uncompressedBytes": 912794
@@ -293,6 +308,7 @@
       "count": 14,
       "wellCount": 14,
       "coreCount": 0,
+      "decodedSha256": "b8d2c23a49ecdc7421e0eb1214208529befde9a549b7c69ca68d7d6d1c36dec7",
       "sha256": "ddfbfda0a110a2ae676aead36a1434eb6ed48f66be5bf362e74c3de29975db76",
       "bytes": 2345,
       "uncompressedBytes": 17091
@@ -309,6 +325,7 @@
       "count": 1087,
       "wellCount": 1070,
       "coreCount": 17,
+      "decodedSha256": "d296d2434df126b935ae1d363a0f8e37985e51180bded5be1bbe4bac34f66a61",
       "sha256": "3b70b7841963dbefb4b057e63b96e10152486b3580c7a87516062a6f13b67bbe",
       "bytes": 112370,
       "uncompressedBytes": 1239853
@@ -325,6 +342,7 @@
       "count": 612,
       "wellCount": 588,
       "coreCount": 24,
+      "decodedSha256": "950f1d0c0ff32019c18821202880e1e28ecef476c4afb79c45c4db07aa0c10a7",
       "sha256": "ad959e5c7139accf2fc6a3ed6bd7bca18a30d24eb0ac9d744db952324e746279",
       "bytes": 75528,
       "uncompressedBytes": 732660
@@ -341,6 +359,7 @@
       "count": 929,
       "wellCount": 886,
       "coreCount": 43,
+      "decodedSha256": "eb259e7cc6414fa28fb130d7153446ea71cde8d0d640d16083b27e4fbf1ba15b",
       "sha256": "38c1f0f68897bf78f851fb0511549110af7f896bc2c68f527d8480d76676813c",
       "bytes": 100328,
       "uncompressedBytes": 1102939
@@ -357,6 +376,7 @@
       "count": 914,
       "wellCount": 836,
       "coreCount": 78,
+      "decodedSha256": "fbb349403490b08678ababbee8af981186e9fedb44124beebe5b0922d8087534",
       "sha256": "97bad435945664b7baa685ed3fd1b3753996481882431c217928d07f6e62751b",
       "bytes": 100509,
       "uncompressedBytes": 1040351
@@ -373,6 +393,7 @@
       "count": 776,
       "wellCount": 765,
       "coreCount": 11,
+      "decodedSha256": "f0d1206aea42b1e19b307cf768b9d617117ba260cbfc379dcc9f50c462b03bf3",
       "sha256": "58c75fda92e5e14897cea1b745597761dcfecb9c7baaa338e4a3dacda0f6f594",
       "bytes": 92983,
       "uncompressedBytes": 880440
@@ -389,6 +410,7 @@
       "count": 698,
       "wellCount": 683,
       "coreCount": 15,
+      "decodedSha256": "ddf7ec52eaf6d273faef3587630e4524a1a0a784bd615022855cf0a51a3326d3",
       "sha256": "8330cc2881115506108f702c271354c92e65bb3a9e3f5cb87ad7ae228a122ac3",
       "bytes": 66919,
       "uncompressedBytes": 713589
@@ -405,6 +427,7 @@
       "count": 747,
       "wellCount": 702,
       "coreCount": 45,
+      "decodedSha256": "7dc5f884a4552264cdbe989b1611a03e6cb7202c9db640265458f595a4a50997",
       "sha256": "2f8a37869c763979fe84f6082eae82714641339bbf42bc03e1930be13833e7dd",
       "bytes": 112022,
       "uncompressedBytes": 1063893
@@ -421,6 +444,7 @@
       "count": 1503,
       "wellCount": 1471,
       "coreCount": 32,
+      "decodedSha256": "42d0f49a7a03201a67d57ec52a707054cfbbce336b237a37bed7715045f6dbf5",
       "sha256": "821430bb5a7502b3a558fd1937af4a76ec2a15dc9c446febe70f721bd142916a",
       "bytes": 209790,
       "uncompressedBytes": 2292758
@@ -437,6 +461,7 @@
       "count": 1574,
       "wellCount": 1522,
       "coreCount": 52,
+      "decodedSha256": "8f843c9a076facc4cb528bb223664438da4aba9a3e4493991ce34861a03b6e9f",
       "sha256": "878733cc28371bb514ccef98a7508c15ecdba22e7d2c1a14a34bc8a9a707cd0d",
       "bytes": 157821,
       "uncompressedBytes": 1714449
@@ -453,6 +478,7 @@
       "count": 785,
       "wellCount": 780,
       "coreCount": 5,
+      "decodedSha256": "756bbb5718442badeccb739addec4318fe4e7e8a4e5d418dfb2d701e49adcd17",
       "sha256": "b08c550a5829d16d33d7ec71426abde1bc38eb2aa98dbf66df6150cad022f778",
       "bytes": 65723,
       "uncompressedBytes": 727881
@@ -469,6 +495,7 @@
       "count": 1731,
       "wellCount": 1724,
       "coreCount": 7,
+      "decodedSha256": "18c685ca69932b5dfb6c11cffb31e1b126982b62f6bfabf8e70b6b732ac1b66e",
       "sha256": "fcbe894d327f7071abe69223632fc8e46a5adf673e786deea908932bd83bc439",
       "bytes": 159363,
       "uncompressedBytes": 1873334
@@ -485,6 +512,7 @@
       "count": 1445,
       "wellCount": 1423,
       "coreCount": 22,
+      "decodedSha256": "a3e9c43174e2832e75a94eafb5e6131fb694373c276af0d2231e6eedd43107c2",
       "sha256": "f6084cf3937faf39c73884f98551aef291620acbdf3bd716418d269b55b17532",
       "bytes": 110679,
       "uncompressedBytes": 1333358
@@ -501,6 +529,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "be3366c70a9832c579f4ea687a019dcab83301a4eedc38655f56d3cabe8a825f",
       "sha256": "49dc96468ac063ddd2b291ca219527e6fc31bee7f99c6299b410f84a6543e091",
       "bytes": 489,
       "uncompressedBytes": 939
@@ -517,6 +546,7 @@
       "count": 8,
       "wellCount": 8,
       "coreCount": 0,
+      "decodedSha256": "b2ce428edbe07fbebe9f764fa455d4c629fee194f38dba5833aacb57d6faae91",
       "sha256": "10a2dab6ff869b1aa1eef83b9689e5e3b396cada9aa04b49ae07a15d3a87ec2d",
       "bytes": 1005,
       "uncompressedBytes": 6357
@@ -533,6 +563,7 @@
       "count": 1802,
       "wellCount": 1754,
       "coreCount": 48,
+      "decodedSha256": "8cb11d88d6e37b6f4c571c9e8d27ee51ed30bbe7a6de289dd04c183315feaa52",
       "sha256": "1c71c8a109e470da8d059e6ec4e4a11ec9621d78268d8b05bddcc35478e298ac",
       "bytes": 152249,
       "uncompressedBytes": 1839882
@@ -549,6 +580,7 @@
       "count": 920,
       "wellCount": 872,
       "coreCount": 48,
+      "decodedSha256": "d3c7309a66137ea4f1fca3f7a766657b62bc905590c0b1fa81c41b9070b25da2",
       "sha256": "53b4de9070bd8c78a21677aa35f916f9704021a8c202b7d05d3c641e306569cb",
       "bytes": 115895,
       "uncompressedBytes": 1197664
@@ -565,6 +597,7 @@
       "count": 679,
       "wellCount": 574,
       "coreCount": 105,
+      "decodedSha256": "0601d626e24feb7e94d7dcb29225c3ae3e03799edcf2b0b79c72b0d9a3c610f3",
       "sha256": "1cbd5f73b118b617b6298f87fe402ee12ab5ab501f88b10558a61296f2041b94",
       "bytes": 71130,
       "uncompressedBytes": 788733
@@ -581,6 +614,7 @@
       "count": 640,
       "wellCount": 634,
       "coreCount": 6,
+      "decodedSha256": "6c7ca263dc16f984bfae520ed5c168683976d1181c0ca95ee75c0d75f3b3f4b8",
       "sha256": "1d3397c83d7a18859230d11ddb2b10907483619954d447f27bedf55aca435ce2",
       "bytes": 102724,
       "uncompressedBytes": 1011319
@@ -597,6 +631,7 @@
       "count": 837,
       "wellCount": 820,
       "coreCount": 17,
+      "decodedSha256": "1cc163d18c521fae0210f0408e9fdc672018d7435971193c8856a745b3a0f5cf",
       "sha256": "749cdeecc3628c8d92c4f3cb7f2184fd23a0a44416caf332a4b679fefffe2f38",
       "bytes": 155780,
       "uncompressedBytes": 1505010
@@ -613,6 +648,7 @@
       "count": 368,
       "wellCount": 360,
       "coreCount": 8,
+      "decodedSha256": "984cb42d1a08d51de103dd9691d738a0304aaec78487bf66bb5c17509cd98167",
       "sha256": "b528882657cb24d5816669983f77da1613e4e802953f207692c4cbeb202db008",
       "bytes": 61522,
       "uncompressedBytes": 627421
@@ -629,6 +665,7 @@
       "count": 1138,
       "wellCount": 1134,
       "coreCount": 4,
+      "decodedSha256": "e09b34c62c6c7eb888fbb1731de0029f93e83c88711d200801592f1fb87f4906",
       "sha256": "fb7332d6c00eb516cc04441a40b20c1d668e730716976bddbc643677750e487e",
       "bytes": 97547,
       "uncompressedBytes": 1151525
@@ -645,6 +682,7 @@
       "count": 255,
       "wellCount": 248,
       "coreCount": 7,
+      "decodedSha256": "148f390b8c9ad3d12e83ee6e2f0a7444b323cfb32363b2570be2dadff863007d",
       "sha256": "a6e217878cb564c25d5dc26a66841e9d676d99b03707d0881410708bdd58ff35",
       "bytes": 42826,
       "uncompressedBytes": 432599
@@ -661,6 +699,7 @@
       "count": 1069,
       "wellCount": 1069,
       "coreCount": 0,
+      "decodedSha256": "bfe1b4877379cbcb3576a6f5f41b16847fcd72b7fba41623b0ae7a5bef61a3b8",
       "sha256": "f124fafef54cba6fbcc042ca390b48b30cb125734daf94920383666f3fa8e77c",
       "bytes": 92368,
       "uncompressedBytes": 1107282
@@ -677,6 +716,7 @@
       "count": 1107,
       "wellCount": 1105,
       "coreCount": 2,
+      "decodedSha256": "c9ab16a05828a93088fc6cf4f673fb9cb675ed4635c937a7b4a9772edfeb4eb5",
       "sha256": "4ed8487f9eac940c2011fc081abf950236c1dbe103e311b8cf89024d1b41805e",
       "bytes": 175734,
       "uncompressedBytes": 1719645
@@ -693,6 +733,7 @@
       "count": 776,
       "wellCount": 773,
       "coreCount": 3,
+      "decodedSha256": "0e4c48534480db99c730e12e2c314daf66ab7c46164d40bf4c7a6c8752409750",
       "sha256": "dc1dc456613f2c5dffc1eabf80206a31a1bbd957cb825685aac3b543662e6e5f",
       "bytes": 100824,
       "uncompressedBytes": 1037179
@@ -709,6 +750,7 @@
       "count": 2159,
       "wellCount": 2124,
       "coreCount": 35,
+      "decodedSha256": "34ef99a0e28ecd7b8950947d272f78d2ca9d46e8cca362261db3fb64f67e6af9",
       "sha256": "d4a9897aa6bc291d0326c9b8454cb3b6579792d80d8d0207fe2d5ecc11889cce",
       "bytes": 210103,
       "uncompressedBytes": 2367149
@@ -725,6 +767,7 @@
       "count": 883,
       "wellCount": 871,
       "coreCount": 12,
+      "decodedSha256": "0e399a4b2a594204f7a6ff7d695b1968a0e13dcf26f745e3a4174ff5f1b47ee7",
       "sha256": "644ffa5d80862e9f3ba4fc4b31fee9e40e228998ee264fce0d560104354520fa",
       "bytes": 73004,
       "uncompressedBytes": 811146
@@ -741,6 +784,7 @@
       "count": 2665,
       "wellCount": 2656,
       "coreCount": 9,
+      "decodedSha256": "3fd765ef7da175d4b3cc8875522c2c0877278a4f5f85e3d879109ee269d2a63d",
       "sha256": "f72baafb1e03576d533e8150d1f78e34070e7653f1a3339500253f04e9f27b5b",
       "bytes": 216621,
       "uncompressedBytes": 2608127
@@ -757,6 +801,7 @@
       "count": 1653,
       "wellCount": 1641,
       "coreCount": 12,
+      "decodedSha256": "14d5e47d5cac97430de5bffcdac0d1f53197c81a0e281a7eb5db6b3a14c77702",
       "sha256": "f8b4bcfd542d98ff629ff712aec2e9d82d1fd18fe852d1aa10c952bb9ac327f1",
       "bytes": 124444,
       "uncompressedBytes": 1484295
@@ -773,6 +818,7 @@
       "count": 4,
       "wellCount": 4,
       "coreCount": 0,
+      "decodedSha256": "0f8a73f5964dedfd92efc00e4e30ba226501e4237661451337ee04f060b6bb5d",
       "sha256": "833533f99777790240e00fc842c32bc709168e4ade5109708a40d846813f4eb9",
       "bytes": 640,
       "uncompressedBytes": 2559
@@ -789,6 +835,7 @@
       "count": 2127,
       "wellCount": 2061,
       "coreCount": 66,
+      "decodedSha256": "fd232460a02fa699ffd7a112cb1e6c8579aeb107cbfa67322c94bc59d92377a3",
       "sha256": "999c0d689683f7bbf542dd9f843c2a130cf824f9626fd0e97833ec2fade8bf48",
       "bytes": 184945,
       "uncompressedBytes": 2057759
@@ -805,6 +852,7 @@
       "count": 700,
       "wellCount": 693,
       "coreCount": 7,
+      "decodedSha256": "ee5c32d15cd5d7d702de65e4c78fd8fda69f92c81041384580c7d5196c8c6c67",
       "sha256": "130621f1fb0427ac379dfd6e046253eda826300065f59f2297cb4a5882a2c503",
       "bytes": 76642,
       "uncompressedBytes": 776338
@@ -821,6 +869,7 @@
       "count": 1088,
       "wellCount": 1088,
       "coreCount": 0,
+      "decodedSha256": "382e2bf3eaf2127e23e0bdf6a1d09d0f9010a69a2d492d31da0ebb79d6caddc8",
       "sha256": "333d61f254cd71e416a715ee58b3eea8ab6cd8d073aaf4918123ef9bccfd22d8",
       "bytes": 103847,
       "uncompressedBytes": 1088382
@@ -837,6 +886,7 @@
       "count": 1065,
       "wellCount": 1065,
       "coreCount": 0,
+      "decodedSha256": "677bb49de8852172e4810a0adba4ab8d4bef9034ca471d59fe6382e160a3c375",
       "sha256": "47045a0faf7c688a63598ad81d23675a06f0f6910f5db6ddc8f965206dd375a8",
       "bytes": 80795,
       "uncompressedBytes": 983761
@@ -853,6 +903,7 @@
       "count": 1437,
       "wellCount": 1437,
       "coreCount": 0,
+      "decodedSha256": "4990c1f0a405d161cfea785c7d0323c7d5fa3336bc5b5a5ddd6031261723fa56",
       "sha256": "e513d7b3d742a306dcd516eff021c34b175120cb1a57cd982b383450f06008b1",
       "bytes": 97017,
       "uncompressedBytes": 1199736
@@ -869,6 +920,7 @@
       "count": 789,
       "wellCount": 769,
       "coreCount": 20,
+      "decodedSha256": "87416e8dcb2a26c431db81b0c0624c4b1204681ec7b1229a1db739783f0945f6",
       "sha256": "aa2af1aced39009edd308223d428fd9190f32a77d9d492fb9559bb6475f3b489",
       "bytes": 60918,
       "uncompressedBytes": 656815
@@ -885,6 +937,7 @@
       "count": 726,
       "wellCount": 694,
       "coreCount": 32,
+      "decodedSha256": "105bdcea13b5f620d0711769a8a4ce2275bf09a00d74db42ff1141f958030c93",
       "sha256": "cc0bb0071249cf89b3adf2aa6981f6af250d5f7f1d18326f6c69cd59adcfe49e",
       "bytes": 49090,
       "uncompressedBytes": 558906
@@ -901,6 +954,7 @@
       "count": 1980,
       "wellCount": 1967,
       "coreCount": 13,
+      "decodedSha256": "5a7afb1c5b3ca85328f34ddf4a5b43833ecff1ea08e3cdf55fe9fde8dd608476",
       "sha256": "def2cbf652506d4ae4901ea13607526005b1e384de31ba57cb9555391523f800",
       "bytes": 173787,
       "uncompressedBytes": 2007761
@@ -917,6 +971,7 @@
       "count": 1302,
       "wellCount": 1225,
       "coreCount": 77,
+      "decodedSha256": "1237bf40eae9bc95a31149420e99e09db52aa929f3c8d7633b1b113ac6dae5ed",
       "sha256": "71fce8b26f4e5706e8e5be7d1a60664dbc2abcfc952b30c5e8ab67f0c46dc4c4",
       "bytes": 120220,
       "uncompressedBytes": 1380705
@@ -933,6 +988,7 @@
       "count": 5,
       "wellCount": 4,
       "coreCount": 1,
+      "decodedSha256": "2f1528fb7293a520ba868690e8580c43ba7d98fdbfe41d42f439191422865a30",
       "sha256": "de21065347e5ca8ef7b2ced90fa345fccb5d30726384c8f2054400bc93d8a448",
       "bytes": 1233,
       "uncompressedBytes": 5523
@@ -949,6 +1005,7 @@
       "count": 1501,
       "wellCount": 1451,
       "coreCount": 50,
+      "decodedSha256": "37181f91efc8674edf9964b55ff75018a77b89d93d13a6240768775a38d8f404",
       "sha256": "d1f9379c90ef13ef84697d8cf3eb51a139e47d5666fa39b29ea079c47926a9f4",
       "bytes": 93495,
       "uncompressedBytes": 1155860
@@ -965,6 +1022,7 @@
       "count": 2897,
       "wellCount": 2881,
       "coreCount": 16,
+      "decodedSha256": "571fd5c2941695afd62b6853c7b2c1ce3b5db4e328dc1a331f8cda2ea860e6a2",
       "sha256": "b904d45aea38a8a4fa4a76ac42c5703ae2aa622cb63ae5e1b56d2d62ad7968f0",
       "bytes": 226487,
       "uncompressedBytes": 2593196
@@ -981,6 +1039,7 @@
       "count": 2311,
       "wellCount": 2229,
       "coreCount": 82,
+      "decodedSha256": "e8fea54eee574653cddf4991723465e3960940a4b958208c9b8a4e88f2560b64",
       "sha256": "bd435efd76df03b143ac729ce8987f682336aae6f2fd1ed80fd5de649fa8940a",
       "bytes": 162130,
       "uncompressedBytes": 1928851
@@ -997,6 +1056,7 @@
       "count": 1458,
       "wellCount": 1411,
       "coreCount": 47,
+      "decodedSha256": "f282cb540a0d7f053378763fac7ce00c8a27967310e87d57d3f47f184efe547b",
       "sha256": "fe4ab2fd4ff708eebda4e1fd8c0a407c3d5d08c6d3fc7160c2d7a97e8c8947a8",
       "bytes": 87390,
       "uncompressedBytes": 1088721
@@ -1013,6 +1073,7 @@
       "count": 1461,
       "wellCount": 1437,
       "coreCount": 24,
+      "decodedSha256": "ef10604d1e0c886c18a7498a2b773cf80d7ba0630e7783bf629d6a23258f5e14",
       "sha256": "092cd27c920dc503955ddd4277661e5077541025e9a46841ea69d5054718443c",
       "bytes": 102570,
       "uncompressedBytes": 1247574
@@ -1029,6 +1090,7 @@
       "count": 2057,
       "wellCount": 1963,
       "coreCount": 94,
+      "decodedSha256": "0669e4a94910fe72b7e803a331c09602dda6e701de03bd8b59c51e9e5621ab7e",
       "sha256": "58002db8db1b60800f07ae02309fd41273d9d5ce8dfb35c2af83d7258001cce0",
       "bytes": 154707,
       "uncompressedBytes": 1858828
@@ -1045,6 +1107,7 @@
       "count": 2,
       "wellCount": 2,
       "coreCount": 0,
+      "decodedSha256": "10ce212aeb14778bad498444db1dcfe1c893855f54b5f3f8497cd2a16e6bccd9",
       "sha256": "48b5cb069e1fe7b37ac9715c24a1c84ab6243aace9eb3a554a956ab068d387d7",
       "bytes": 596,
       "uncompressedBytes": 1557
@@ -1061,6 +1124,7 @@
       "count": 1324,
       "wellCount": 1282,
       "coreCount": 42,
+      "decodedSha256": "d63dd136bfbc520fab2519dc23936b00a1d7bccba2a7fcb6f637d91297d432df",
       "sha256": "4469a350c6e2fa14f671c7316e7870f6606f9648385226f9b1e7d2309d3570c3",
       "bytes": 84174,
       "uncompressedBytes": 1022658
@@ -1077,6 +1141,7 @@
       "count": 1564,
       "wellCount": 1544,
       "coreCount": 20,
+      "decodedSha256": "c4a751a2266ee236cdd66329fdb23aeb2edf118b8f64f77b78012ee5fac864cd",
       "sha256": "9a68054fd3cea5478a356a8cbfe437fd523216448cea787d87bedf51d6198595",
       "bytes": 100773,
       "uncompressedBytes": 1278703
@@ -1093,6 +1158,7 @@
       "count": 1474,
       "wellCount": 1470,
       "coreCount": 4,
+      "decodedSha256": "9263afceb046f21a6c1868670365fb636f0187cd6ac57543f198486064070cee",
       "sha256": "c7ed3866e4208cb8fd4f79ea7cc3b35ceb406c6cc3e24b2304b8c63f3c8d3600",
       "bytes": 85112,
       "uncompressedBytes": 1131819
@@ -1109,6 +1175,7 @@
       "count": 978,
       "wellCount": 968,
       "coreCount": 10,
+      "decodedSha256": "673f70be4db8a6c7b9cda21d93130c45fbbbfac634676c409a540289d0b0c3bf",
       "sha256": "cd67100b550b4937e371e93c29080a99e0f1b8c770b1e1b234ec0ad2ee72b871",
       "bytes": 58957,
       "uncompressedBytes": 766979
@@ -1125,6 +1192,7 @@
       "count": 2097,
       "wellCount": 2087,
       "coreCount": 10,
+      "decodedSha256": "551c3b2044ad2346b3ea2b704f06dcc477f0d969e609e4b05fa009029a85d301",
       "sha256": "00d7f5d1f681704ae952e3dad1fc4ef43fc5158199fdcd6ff779817a0c3bbf40",
       "bytes": 117951,
       "uncompressedBytes": 1624725
@@ -1141,6 +1209,7 @@
       "count": 696,
       "wellCount": 690,
       "coreCount": 6,
+      "decodedSha256": "b7eeb81dc0f31c518757d87f7e1e7c2474c6264536c5c513c52b9fdf25e408a4",
       "sha256": "1182c27a9ff132bc77646f1371c3911321a5d5515ac86db196e23f289989aef9",
       "bytes": 48949,
       "uncompressedBytes": 577161
@@ -1157,6 +1226,7 @@
       "count": 655,
       "wellCount": 645,
       "coreCount": 10,
+      "decodedSha256": "634bdc292f28a63e093ba2b4cfeab4b4a714e957e654cb2e2a3121cab1365c6a",
       "sha256": "800e3c983c54d579131d799a2d8a34e8d6424d74de8befaf4402bf1a04262b16",
       "bytes": 43149,
       "uncompressedBytes": 532217
@@ -1173,6 +1243,7 @@
       "count": 1916,
       "wellCount": 1903,
       "coreCount": 13,
+      "decodedSha256": "e49932c45c7ba0b46cfb10b0f1523950247278b92dc3c0ae710903f894d4a079",
       "sha256": "4d2d067486259da0f434903f98ea290506efa7c37ef79076a90f50ec1d833320",
       "bytes": 104144,
       "uncompressedBytes": 1390800
@@ -1189,6 +1260,7 @@
       "count": 739,
       "wellCount": 701,
       "coreCount": 38,
+      "decodedSha256": "a26f6512ea0ae4ec814669d50b76fafdf86a8b3b960216dc627a1570e82288da",
       "sha256": "065a80e59eeecb7e1167bc1ef8ab664562ab59775674221bf5ce2d97439930e0",
       "bytes": 48481,
       "uncompressedBytes": 576568
@@ -1205,6 +1277,7 @@
       "count": 553,
       "wellCount": 535,
       "coreCount": 18,
+      "decodedSha256": "c8278cc1bdea4a9d8f84e8dca1ee7c41d21bae1951ad0faa30a8b50215016895",
       "sha256": "f61f7e39c8572c98bdef2a5dfbacf36dd9d3115a2938acfe9a0d93f1bd31fed3",
       "bytes": 34205,
       "uncompressedBytes": 411417
@@ -1221,6 +1294,7 @@
       "count": 3964,
       "wellCount": 3953,
       "coreCount": 11,
+      "decodedSha256": "4e81d41812691145e8e016537c881aacf05d222038bec8d6758572ba89493edf",
       "sha256": "72657e6a4920a999d1f364535a0ed2b3dceb9a4c0b31d4635baa92b4da7218a2",
       "bytes": 208829,
       "uncompressedBytes": 2943744
@@ -1237,6 +1311,7 @@
       "count": 387,
       "wellCount": 355,
       "coreCount": 32,
+      "decodedSha256": "6940e9f92b7b9b76fe1b8370bcd481607770198db37f6a6fc54737a61990a187",
       "sha256": "33b510435ae83894657f7110111dac735d41ed160bfeaafaeb10d913530a2f81",
       "bytes": 26832,
       "uncompressedBytes": 315670
@@ -1253,6 +1328,7 @@
       "count": 643,
       "wellCount": 632,
       "coreCount": 11,
+      "decodedSha256": "873ef75ce41253016b9bb087e31d742c74a7e8aae1f12fb47a599b4a6cdf235a",
       "sha256": "6a64da279329a3e048003bfe69384eed0f32df94e1c1c12b5c1e04982812c22b",
       "bytes": 33761,
       "uncompressedBytes": 448846
@@ -1269,6 +1345,7 @@
       "count": 1689,
       "wellCount": 1639,
       "coreCount": 50,
+      "decodedSha256": "692edc23c42d06fcc102be872a356297e07adcfe55135c0535256d015a40c784",
       "sha256": "6aac0af951004a3abccbd966999239b8a409d954a8de31239a8a5e445d212ca1",
       "bytes": 89105,
       "uncompressedBytes": 1180375
@@ -1285,6 +1362,7 @@
       "count": 1644,
       "wellCount": 1623,
       "coreCount": 21,
+      "decodedSha256": "317563c89e3713a82b96df9ce948a32d5256d2774f7c99203588a211ab049ebc",
       "sha256": "f0dcbf4f29a42e84a28d7365fcd217dd244d7c4531f16318644386c75d6e3263",
       "bytes": 100645,
       "uncompressedBytes": 1270367
@@ -1301,6 +1379,7 @@
       "count": 9,
       "wellCount": 9,
       "coreCount": 0,
+      "decodedSha256": "a4696af756de1c0324ecf0b3e886f3dd58b26d84c633f57df8ed8fd8036932b3",
       "sha256": "a92386e6b615e0a366ea23d118e7d6628b51197cbe58bbc1bd5ef02cc578344b",
       "bytes": 1081,
       "uncompressedBytes": 6327
@@ -1317,6 +1396,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "64d0313311f6196618668a168a8ae0cee0bc5d39bdd534151f4535ef9237121b",
       "sha256": "10554c4edcd8fad3efcdb515064607c5bce7a3a2c276f1dd96c55075a0d384e5",
       "bytes": 410,
       "uncompressedBytes": 752
@@ -1333,6 +1413,7 @@
       "count": 1701,
       "wellCount": 1630,
       "coreCount": 71,
+      "decodedSha256": "19e014f4ca4ae2d26fa802405e3acde9262a028b091e228553b4821153c957e4",
       "sha256": "da873b317adfcd4e6ffe671cac02cedd003903f090049f987fd85bca08efac79",
       "bytes": 101872,
       "uncompressedBytes": 1301983
@@ -1349,6 +1430,7 @@
       "count": 1112,
       "wellCount": 1111,
       "coreCount": 1,
+      "decodedSha256": "971c2ac269a4e0a760df84ab08f0b9f0b484236344f5ec360b03a068e09ce445",
       "sha256": "b96296ec98ce212e0876344a18c68c823a8fa656becb7d850ca16edbf4dc0011",
       "bytes": 77726,
       "uncompressedBytes": 969243
@@ -1365,6 +1447,7 @@
       "count": 1802,
       "wellCount": 1789,
       "coreCount": 13,
+      "decodedSha256": "5d5502d3c3e8d068dad1c9d2de102f42e1a6bb51091268aa6736e9119ac0ed93",
       "sha256": "465232a6513f1710972addbf1012950dcb7b2df7a1c263f51287d536a9a2cbc1",
       "bytes": 103429,
       "uncompressedBytes": 1361605
@@ -1381,6 +1464,7 @@
       "count": 2388,
       "wellCount": 2360,
       "coreCount": 28,
+      "decodedSha256": "745e14e6e6d45861364c3990af6e9ed35c7c928720c149ba91c77a922711c47d",
       "sha256": "eaaf06fc240ebc98c6d56106c5012952dd9815f3ae4820a484ea86ed6745028e",
       "bytes": 145441,
       "uncompressedBytes": 1919285
@@ -1397,6 +1481,7 @@
       "count": 1664,
       "wellCount": 1634,
       "coreCount": 30,
+      "decodedSha256": "a194468a6e748d194f041603647c1d22b7746e51123bef1f96452c5509a42a93",
       "sha256": "c9820572f2126af0df9afd853b17c8cd254ddbc531491af6a1bf1171a8d135b5",
       "bytes": 101158,
       "uncompressedBytes": 1295472
@@ -1413,6 +1498,7 @@
       "count": 2273,
       "wellCount": 2266,
       "coreCount": 7,
+      "decodedSha256": "8229108708bb7e602beae26dbf5ceecdb481328fe5436d1b0d16ea8857e83acb",
       "sha256": "4f5c37990906878b458d41790f9e5f2547a2804259ffb2e00b302f6084aad565",
       "bytes": 126187,
       "uncompressedBytes": 1689771
@@ -1429,6 +1515,7 @@
       "count": 422,
       "wellCount": 420,
       "coreCount": 2,
+      "decodedSha256": "d64d33d7c18b3a9342387efd5b5c921c9022d24a6101ccbdf7309ffb1c2b6cc9",
       "sha256": "2afd153da137975c679f906f5d0107ce737e43a796a56f5706b520bf57cc59de",
       "bytes": 25013,
       "uncompressedBytes": 311549
@@ -1445,6 +1532,7 @@
       "count": 261,
       "wellCount": 260,
       "coreCount": 1,
+      "decodedSha256": "a9404dbc06ba37798458cd0778892688a70f3620bd7f49a1f3842d2830abe742",
       "sha256": "914a46b2dca165c4b85d9e9457c0c473873e9fef9c315866591ac95651b43194",
       "bytes": 16574,
       "uncompressedBytes": 191452
@@ -1461,6 +1549,7 @@
       "count": 2974,
       "wellCount": 2970,
       "coreCount": 4,
+      "decodedSha256": "51946defea977fc1260467a56b02cfa8b1b4f193c2afd69b3e684ac3989ba1e5",
       "sha256": "a7e1373f16c9c418ee208d9cb9f9644d14d730893c008e3724e05b1157a9c9c3",
       "bytes": 129129,
       "uncompressedBytes": 1970621
@@ -1477,6 +1566,7 @@
       "count": 837,
       "wellCount": 831,
       "coreCount": 6,
+      "decodedSha256": "ec7e772b6c46e42b79bfb9c0b938b399dd1d568d9dac766ab140c738993ebbe2",
       "sha256": "1b69f949ef533ba8c646eb5d9359e0b2a4c4585a03f851dcfcbdb76e685f9fd9",
       "bytes": 46473,
       "uncompressedBytes": 608359
@@ -1493,6 +1583,7 @@
       "count": 1958,
       "wellCount": 1938,
       "coreCount": 20,
+      "decodedSha256": "040d6ae2cc4c64fd9026fa6383780e6aeeda904387c1b201508e1d65ca8eefd9",
       "sha256": "e387061bffa435d36f0f76f5289fe2a5c98effb3f96f97fe1cdbfbeb4268c208",
       "bytes": 104171,
       "uncompressedBytes": 1420883
@@ -1509,6 +1600,7 @@
       "count": 2467,
       "wellCount": 2453,
       "coreCount": 14,
+      "decodedSha256": "ad13097fda7cc70a3bf7dfdaa9180f69d05f10ea90f2c07c2b45a4cbfd2e4562",
       "sha256": "e157d87846c10d66f18c90fe57c1ce5d581a7c2cd8c187b7b0c8156c13224dc1",
       "bytes": 119279,
       "uncompressedBytes": 1678781
@@ -1525,6 +1617,7 @@
       "count": 2673,
       "wellCount": 2443,
       "coreCount": 230,
+      "decodedSha256": "4c70637259b633cb500b229c467a1fb13f92de73bcedae4a3fc22c2eb3b0c749",
       "sha256": "2188f26f8ad1a10ed966ea7bed46b877ed1d30e21c8b12b60cb0eac51e7b7e1d",
       "bytes": 142778,
       "uncompressedBytes": 1893362
@@ -1541,6 +1634,7 @@
       "count": 921,
       "wellCount": 910,
       "coreCount": 11,
+      "decodedSha256": "c4e52982f1f71f816c922eb070610d612c3ee56f17f134da33607704400e338a",
       "sha256": "220a3d844f331556cc0c4938747ed6e5147645a6a9835068c0ebda3b183ba330",
       "bytes": 52737,
       "uncompressedBytes": 669361
@@ -1557,6 +1651,7 @@
       "count": 1076,
       "wellCount": 1070,
       "coreCount": 6,
+      "decodedSha256": "c987b493c498f450f80a0cbfbc6b16cd237b59a6fc15dfbac0ed23a3458bc5e2",
       "sha256": "4da64e8fb859c11d4ca48d34cdd9f61e3adb23e0d89c78995ad26b82b6dd2050",
       "bytes": 60421,
       "uncompressedBytes": 762697
@@ -1573,6 +1668,7 @@
       "count": 2,
       "wellCount": 2,
       "coreCount": 0,
+      "decodedSha256": "6018f404c171bfb2f5f42de74c99e85cb0f2511767692ef4b80002bcc4c1efff",
       "sha256": "8788dcff05b4580676baf0e59519a134f0c79860e7d9f93ca5e7ad002bab075b",
       "bytes": 539,
       "uncompressedBytes": 1404
@@ -1589,6 +1685,7 @@
       "count": 3,
       "wellCount": 3,
       "coreCount": 0,
+      "decodedSha256": "53ec5cf64fab987578727e241ae4e49870171b99a8c77e15e26724a2b8cc6833",
       "sha256": "1e2dc927914b84afdbb45b0536aca684f8590fd700a8670d28687634a9451c46",
       "bytes": 627,
       "uncompressedBytes": 2169
@@ -1605,6 +1702,7 @@
       "count": 2277,
       "wellCount": 2230,
       "coreCount": 47,
+      "decodedSha256": "f87c09f1a7064148d7dbc4e8bbad64f8311e6747b0182338db15a497c27739a4",
       "sha256": "e89e1b62c520211f39bf1f4392eb1e93e3c23fdc3e010e111aa2c470a3d936c8",
       "bytes": 128678,
       "uncompressedBytes": 1715459
@@ -1621,6 +1719,7 @@
       "count": 1060,
       "wellCount": 1054,
       "coreCount": 6,
+      "decodedSha256": "bfa7476d2930eb0c539a56eb17c6ace3902fad7574302131af38f0923915339b",
       "sha256": "51ef2031be6c69f6687ba73f9479319c506022cb3182a4d31b6aefd463d6ae93",
       "bytes": 72797,
       "uncompressedBytes": 914261
@@ -1637,6 +1736,7 @@
       "count": 1558,
       "wellCount": 1532,
       "coreCount": 26,
+      "decodedSha256": "67ecb719f75fbfcd3a53392233dc97d4354a9f70b3ae56390949f4ae786ba991",
       "sha256": "0c2b303dcc7ba93ffd1596b3dde5406c72922a8726310c5a79874b915051f74e",
       "bytes": 87343,
       "uncompressedBytes": 1162252
@@ -1653,6 +1753,7 @@
       "count": 1274,
       "wellCount": 1269,
       "coreCount": 5,
+      "decodedSha256": "1a875135fc2ddda6c2ee5768d5413df919c65c75ed0897eca80f09ff104f8922",
       "sha256": "0a8aae7a98ab396b7afe943bf39e902ae589a01a4be11df69d68da2578e27122",
       "bytes": 76588,
       "uncompressedBytes": 981107
@@ -1669,6 +1770,7 @@
       "count": 1651,
       "wellCount": 1644,
       "coreCount": 7,
+      "decodedSha256": "68b0053591ed01c4bdae587133e4a13ba40d7c28e664fa96208bf34f8979b5f9",
       "sha256": "17ded7e5c676b3483f2ef6fb65f01d3db50acb0ce2012d55379310aae29f8bc3",
       "bytes": 88700,
       "uncompressedBytes": 1180461
@@ -1685,6 +1787,7 @@
       "count": 1289,
       "wellCount": 1267,
       "coreCount": 22,
+      "decodedSha256": "1fe962ee3cb42140b80cce3596e9e4c90fd589273d1749ce8f8fc35fcc615650",
       "sha256": "a8c8ac534a26591cf0822200c018ec28aa8ba1d6f94497df9f449896bf2d29ea",
       "bytes": 66854,
       "uncompressedBytes": 911877
@@ -1701,6 +1804,7 @@
       "count": 1399,
       "wellCount": 1346,
       "coreCount": 53,
+      "decodedSha256": "1f4f3f6d6ea9378e4bd88a3bd0b2ce5e37e537bfd6fc41195725b39aa1ef8245",
       "sha256": "ae74f3e7d30571af3c3b941e660dce48e749b4e5445a2ac7affd7975e7fe5f96",
       "bytes": 68771,
       "uncompressedBytes": 946384
@@ -1717,6 +1821,7 @@
       "count": 2025,
       "wellCount": 2010,
       "coreCount": 15,
+      "decodedSha256": "1f2405fee80c72a00fadc38107b7cd73ecd70cca9dc2cdbe11c29587381f74e7",
       "sha256": "8235adb3d62152a85b55e2c4b4cd3ad3c7358ccb1f67ad23aa9c9802544650b1",
       "bytes": 98785,
       "uncompressedBytes": 1384929
@@ -1733,6 +1838,7 @@
       "count": 1341,
       "wellCount": 1258,
       "coreCount": 83,
+      "decodedSha256": "fbd52adf5ee2e7f7ddefce36f1a28dec77d1c02c60181c9ec6a3a07906f1d6dd",
       "sha256": "15df24a69dbfa80da8bc6676e03ae08d112dc25aefcace9ec10f6683c446c519",
       "bytes": 83508,
       "uncompressedBytes": 1025789
@@ -1749,6 +1855,7 @@
       "count": 2521,
       "wellCount": 2447,
       "coreCount": 74,
+      "decodedSha256": "09d29c219627c451787c85add61ca24a4566e9c28ac1e858618f6c29253d8786",
       "sha256": "6dd0279fb8edf7f45b6142c6b0477a5cc9b4ccb6fdf52c8fc65479b78c5d98df",
       "bytes": 142355,
       "uncompressedBytes": 1836535
@@ -1765,6 +1872,7 @@
       "count": 1057,
       "wellCount": 1043,
       "coreCount": 14,
+      "decodedSha256": "cbe5c37b40576d473dec2633fd13500f9135536830665eed350bf2c2a3528804",
       "sha256": "7c92244821e70bb166b322760f0ac22d37ec8a179cfc8e6bfc6fd0fe0f376f51",
       "bytes": 64034,
       "uncompressedBytes": 774737
@@ -1781,6 +1889,7 @@
       "count": 488,
       "wellCount": 487,
       "coreCount": 1,
+      "decodedSha256": "f130558f8638a98d1102c8f9b81c22f4f588dfec488a2ee4dcddbfec6acbd88c",
       "sha256": "a219fa5e27b865e05e540e0856ed07c0c024badf006db4905b949e345840ec93",
       "bytes": 28618,
       "uncompressedBytes": 336904
@@ -1797,6 +1906,7 @@
       "count": 17,
       "wellCount": 17,
       "coreCount": 0,
+      "decodedSha256": "b804e961668bbd3188a3d6483a2978065fcd0206e8f48d7cf1998cfba7c424c3",
       "sha256": "687d54c84e420538153aa15a78290cf65a5131886f8e5c579bd4f0bd63756b19",
       "bytes": 1229,
       "uncompressedBytes": 10202
@@ -1813,6 +1923,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "1ef0a653f0132e0f33f9a98af248a4a5178e39d73cae892a88fde6184581e177",
       "sha256": "b1798808910103e7e6b7c9d860af4fd467b52e443a0ebd3a7f5999c16e85f1e5",
       "bytes": 416,
       "uncompressedBytes": 732
@@ -1829,6 +1940,7 @@
       "count": 2261,
       "wellCount": 2216,
       "coreCount": 45,
+      "decodedSha256": "285a3719424005cb844d1d8bfc97a2ebcc2d652be386382ba1a865970f7b0dfe",
       "sha256": "d7b457fc1342feadd38a8b1e9308584b67f8d6f242edff7a98a6b9e2e4ad266f",
       "bytes": 113083,
       "uncompressedBytes": 1566086
@@ -1845,6 +1957,7 @@
       "count": 1669,
       "wellCount": 1661,
       "coreCount": 8,
+      "decodedSha256": "479878c1747950a3f952e8a66ed58db69545ef2fe52fbb9a98fafc5b60e27770",
       "sha256": "14f2f5a8b63f4304e4c634fc63d40da5a613c7389c1f59da94423c267736cc21",
       "bytes": 80772,
       "uncompressedBytes": 1170186
@@ -1861,6 +1974,7 @@
       "count": 2043,
       "wellCount": 2023,
       "coreCount": 20,
+      "decodedSha256": "4bdddc9fefd9370399e94ff46abb183f9a72fc24ef1d14928d3c0ca979c48ab6",
       "sha256": "c40415c9c0336273cb6dd7f7e41269243acf2460c8ac6c7bb2b743109c065456",
       "bytes": 106594,
       "uncompressedBytes": 1421439
@@ -1877,6 +1991,7 @@
       "count": 353,
       "wellCount": 351,
       "coreCount": 2,
+      "decodedSha256": "1a775db2ae6e98f7ce0655de594a005968c5714dfaefb0a66e9ac7e5d178017b",
       "sha256": "86e629d41e4a526ff2d995f6ef60caf963637220bb96bd7c92358d695e7a4910",
       "bytes": 17805,
       "uncompressedBytes": 247559
@@ -1893,6 +2008,7 @@
       "count": 814,
       "wellCount": 812,
       "coreCount": 2,
+      "decodedSha256": "f1f167225a78c434a2babc1365db9fdea4c32af118c4217d41539796a3c2756d",
       "sha256": "4b5761c1b3091814124ac8d9fd2a5c581b717308ddba50c622041f7ce282a9e1",
       "bytes": 38760,
       "uncompressedBytes": 577717
@@ -1909,6 +2025,7 @@
       "count": 1052,
       "wellCount": 1047,
       "coreCount": 5,
+      "decodedSha256": "5b825c13728acf811575134ab5c03fee74c159e5f520536cb80363b9cf53a32c",
       "sha256": "9439c6b7634ed1a3f60e4f1e005b10e08e8c60fdd6624cfd5c004ff0b9066aa4",
       "bytes": 48198,
       "uncompressedBytes": 736499
@@ -1925,6 +2042,7 @@
       "count": 585,
       "wellCount": 585,
       "coreCount": 0,
+      "decodedSha256": "2790827561b2f7ca206859e00aacf0a228d955b430ce900d35949e6ad710b907",
       "sha256": "757c6477bda7c36e9e639f715f7772aae78d962056c3b11ca6d6e4177e5786f1",
       "bytes": 28281,
       "uncompressedBytes": 439470
@@ -1941,6 +2059,7 @@
       "count": 273,
       "wellCount": 273,
       "coreCount": 0,
+      "decodedSha256": "38791f9e7ff63b6121f64e34d2a24e124f8903e2f84f20952d500b602abc1b5e",
       "sha256": "8aaffd93f6c9f847eb058bd3a23ff52724216eded14b4618e5c68b9b4ab79597",
       "bytes": 14177,
       "uncompressedBytes": 198593
@@ -1957,6 +2076,7 @@
       "count": 1947,
       "wellCount": 1947,
       "coreCount": 0,
+      "decodedSha256": "080bf4e6e82a693084f52e9eef19789ba98ac2a8995e47404ff5da4e1ae1ee6b",
       "sha256": "64ffd94d3dc6be0d72fb5632925f5d96d03156d73557645253338d6c2250ecc7",
       "bytes": 85500,
       "uncompressedBytes": 1482151
@@ -1973,6 +2093,7 @@
       "count": 1228,
       "wellCount": 1228,
       "coreCount": 0,
+      "decodedSha256": "f3b64968d6ea07f4f257440a2081db4e786e35e3d35c7f4cef20d74645a6a6c5",
       "sha256": "8a8e3c5061f9a7f0441c7a5b5745034b325b55dd872e666b3cf69850dc49e0fe",
       "bytes": 52009,
       "uncompressedBytes": 911892
@@ -1989,6 +2110,7 @@
       "count": 3551,
       "wellCount": 3550,
       "coreCount": 1,
+      "decodedSha256": "865ae6093ea90e8debee73c3732b6c1afc30d1c890a942fe6aa301d4f0d6933e",
       "sha256": "88f4459bb37316086b62372f5933ec1b7835cfaf7540a2ac0deb4d090711b895",
       "bytes": 197305,
       "uncompressedBytes": 2784263
@@ -2005,6 +2127,7 @@
       "count": 1375,
       "wellCount": 1372,
       "coreCount": 3,
+      "decodedSha256": "af5f81843ab26c279ca6eaee23dbd98e1ffb09e3cbef50afb5a424236d3e7488",
       "sha256": "489f5fd32afed6a2007a1fe49cfe4279fb491cffe4b4fc815facfac611227377",
       "bytes": 62758,
       "uncompressedBytes": 889703
@@ -2021,6 +2144,7 @@
       "count": 1260,
       "wellCount": 1257,
       "coreCount": 3,
+      "decodedSha256": "446b1cd6bc4887a35126a98e62f6eea0bd4c971179e57341e3a681594452d375",
       "sha256": "fc933bd4fa64369ae62aae675f847d5ef24590c6bd9bb40e22ebc42926729f16",
       "bytes": 46281,
       "uncompressedBytes": 787337
@@ -2037,6 +2161,7 @@
       "count": 1747,
       "wellCount": 1747,
       "coreCount": 0,
+      "decodedSha256": "cac1ae482b5b60c144d7a256f889066bf8be9a454e44676b4d5302e34e3a9601",
       "sha256": "72dcd7c853e848ebefe3ed420a36d09afe097c1db339d64bab09aac4bc0f1ce3",
       "bytes": 63365,
       "uncompressedBytes": 1030742
@@ -2053,6 +2178,7 @@
       "count": 2821,
       "wellCount": 2821,
       "coreCount": 0,
+      "decodedSha256": "86bc2491c10389db3ba4a03f76d0d46c37a7075161f4855f1bc3e8156f2f423c",
       "sha256": "fa7768e3b3bbfdcefa8b43e536e5559a0cba97481955ace06795e1cefaf78ef2",
       "bytes": 116790,
       "uncompressedBytes": 1883641
@@ -2069,6 +2195,7 @@
       "count": 1192,
       "wellCount": 1192,
       "coreCount": 0,
+      "decodedSha256": "bd62d3712896f014573e9ac0276a0608384d794911a2e816dafb2b050fef4354",
       "sha256": "a912f119fd51b75599843ed2bb312dd7ec3e72f184faebb7913c6e9c1c6eace9",
       "bytes": 70256,
       "uncompressedBytes": 947231
@@ -2085,6 +2212,7 @@
       "count": 2154,
       "wellCount": 2153,
       "coreCount": 1,
+      "decodedSha256": "45602f00e6207adcc4cc886e2405708ec0fb3e6921edea04ab9d8073b2d91809",
       "sha256": "f959b69aa15caa242bdd0d2ba46a03367c0371bb956c6e48df9776427adeab7f",
       "bytes": 115522,
       "uncompressedBytes": 1648352
@@ -2101,6 +2229,7 @@
       "count": 809,
       "wellCount": 809,
       "coreCount": 0,
+      "decodedSha256": "438918834be9cd754c3f1c6003609f3e3bdba1c72aeba7833cc174a7d6af5bbe",
       "sha256": "33750b971ab6e6f3f38ae9c27f49e4bce1f4f3d78ece1dbc3b7869cc8cd6c096",
       "bytes": 43890,
       "uncompressedBytes": 583380
@@ -2117,6 +2246,7 @@
       "count": 1120,
       "wellCount": 1109,
       "coreCount": 11,
+      "decodedSha256": "fe6d3d92cbb6f0b3f8e071db994bd9468b4a67b07a72a521907ae6ea3b225d96",
       "sha256": "d80e51b20d8a3522f8dd652172cf74450b506480a6e12ab77d5c7bc24e9ac7e7",
       "bytes": 67036,
       "uncompressedBytes": 837883
@@ -2133,6 +2263,7 @@
       "count": 2759,
       "wellCount": 2725,
       "coreCount": 34,
+      "decodedSha256": "d707b589e0ad171f7b6274da659e98b23759e071cd44f800cfeb5fae2e8170a8",
       "sha256": "87cd9783397ea5382d1a93df037a68363e2db7276188a408db5133ba1fabd2ec",
       "bytes": 206061,
       "uncompressedBytes": 2559688
@@ -2149,6 +2280,7 @@
       "count": 2760,
       "wellCount": 2745,
       "coreCount": 15,
+      "decodedSha256": "5a26e32a474ec6f66a2fb575314c1c576bc518a052a2c768f89f1c6ca1b6c48e",
       "sha256": "1f52362f7e22776da634a5a90b3a66abf6f6ed91d3555978cdfe57f4b4bc45fa",
       "bytes": 183756,
       "uncompressedBytes": 2267216
@@ -2165,6 +2297,7 @@
       "count": 504,
       "wellCount": 504,
       "coreCount": 0,
+      "decodedSha256": "92b7b43e535986783355dfc2cd62d0e207a571edbda932d235e23a99e4de6f54",
       "sha256": "6eb1a1a179abc4f9fdf9fd338d035e6ef4b9cdc9ca6d0590b92be38041dc9552",
       "bytes": 26208,
       "uncompressedBytes": 340491
@@ -2181,6 +2314,7 @@
       "count": 472,
       "wellCount": 471,
       "coreCount": 1,
+      "decodedSha256": "c26b36cd4d3ec6c8c2bde9db3779312118f32bdc34ab596a0acf95ca76dcadf6",
       "sha256": "0b4319f38116623d2c3c6f00005b644fd2625073ee12ff09efdcb8461de13516",
       "bytes": 30147,
       "uncompressedBytes": 346479
@@ -2197,6 +2331,7 @@
       "count": 1251,
       "wellCount": 1248,
       "coreCount": 3,
+      "decodedSha256": "6f3c0573543bf2d3b47eed7d2a1605297afac066d1968e0bcad57870563f2b3e",
       "sha256": "8bdefd4779e943ade51e4b3d3cac7848eb8367a73415ef72d9d692a6015014a6",
       "bytes": 73559,
       "uncompressedBytes": 957136
@@ -2213,6 +2348,7 @@
       "count": 1020,
       "wellCount": 1019,
       "coreCount": 1,
+      "decodedSha256": "7836236109cbecc4841fc4f96ba2aee47a1cbd03ba29e091b60dc3ccc062af86",
       "sha256": "65d49e3c327600166a0e80c585b1155ec0eb94e6e15384c7ceba68a68daca1cc",
       "bytes": 55085,
       "uncompressedBytes": 709593
@@ -2229,6 +2365,7 @@
       "count": 203,
       "wellCount": 203,
       "coreCount": 0,
+      "decodedSha256": "a4dee4d8e424acb0b622090be8da642f3f7aef00e792d1a5fc2597217e254233",
       "sha256": "0fe80f1a67c8fdb3b06016b3a9b98288098a2c01003e3aadeff41bd9c63eeed6",
       "bytes": 15057,
       "uncompressedBytes": 167659
@@ -2245,6 +2382,7 @@
       "count": 1980,
       "wellCount": 1980,
       "coreCount": 0,
+      "decodedSha256": "f11d25cd91e3afee4cbb1175c57448721bc784212b7738d840a798ee4bdc98ab",
       "sha256": "d34833669c8b64d429529fad5366cae395d1ddc35ba94137ede0b066cb132ebc",
       "bytes": 89880,
       "uncompressedBytes": 1415430
@@ -2261,6 +2399,7 @@
       "count": 2189,
       "wellCount": 2188,
       "coreCount": 1,
+      "decodedSha256": "82a5af843c632b7c07503040b831de84b6a5164e60d4e7432e6771389ef9eaa5",
       "sha256": "247d066a75eec972a87bce20f024d5e2f17d55a22521048f7e30484c7f86baac",
       "bytes": 105683,
       "uncompressedBytes": 1529254
@@ -2277,6 +2416,7 @@
       "count": 85,
       "wellCount": 85,
       "coreCount": 0,
+      "decodedSha256": "ea306c13f6df8e64fe706d578873b3585b65e1c72b06b4aa50f8add0493dd502",
       "sha256": "1d120cea755356d06bc6995d78a4fea7aff9f177847bce2715eb98f32c8d18e8",
       "bytes": 5681,
       "uncompressedBytes": 60440
@@ -2293,6 +2433,7 @@
       "count": 347,
       "wellCount": 346,
       "coreCount": 1,
+      "decodedSha256": "627557dd6e6311317ab3589b49fb1d40c7094ff5d1b59f6cb8b440b2d897a3f1",
       "sha256": "468990b1a7d462d6b8da9abc6b8ad7a52a665393f9abed594fba942959a6f9c6",
       "bytes": 19741,
       "uncompressedBytes": 249937
@@ -2309,6 +2450,7 @@
       "count": 434,
       "wellCount": 430,
       "coreCount": 4,
+      "decodedSha256": "8014340a47faa0507e89df463f4b78d3bb1b77e8b734f80834d2a5480d259976",
       "sha256": "f84e59401154b861a540fe7d97d01b73407a6b2dc056a0d3d8e161e0da41562d",
       "bytes": 27305,
       "uncompressedBytes": 322539
@@ -2325,6 +2467,7 @@
       "count": 1821,
       "wellCount": 1813,
       "coreCount": 8,
+      "decodedSha256": "9f85493a2cb920629b6c9a905b579253edcef5dbe7e99853118914933f0ad976",
       "sha256": "aa51ef1fefa2de3b361c4ac852536393f33a4123d90e78676db436d76542053f",
       "bytes": 127575,
       "uncompressedBytes": 1507486
@@ -2341,6 +2484,7 @@
       "count": 1779,
       "wellCount": 1773,
       "coreCount": 6,
+      "decodedSha256": "168af57107d4a2ae86ff950e7d231c46047339aae5c53563289fcacd70cd990b",
       "sha256": "13c7774a32eb48ce0432e0d25f75ec6960b927814ec84eea476a14edd23aa139",
       "bytes": 108054,
       "uncompressedBytes": 1347119
@@ -2357,6 +2501,7 @@
       "count": 22,
       "wellCount": 22,
       "coreCount": 0,
+      "decodedSha256": "8764c3b049028c3919dabb2db69e99e7408b7134702d8b4e35e6f21811056024",
       "sha256": "51bd03eef48a18f5d939acc85dea98956e085f0894d98c8c95bcb195116d376b",
       "bytes": 1545,
       "uncompressedBytes": 14039
@@ -2373,6 +2518,7 @@
       "count": 7,
       "wellCount": 7,
       "coreCount": 0,
+      "decodedSha256": "3f1e550e74a7f328a50a8bd2fad6deeeca0a8ac80c4bc9d01e4ca72db14fe62e",
       "sha256": "92af94b9d1e93f9efacd6a5e5462882e40b3dfce8e228c3965ec9ed2c48052bf",
       "bytes": 663,
       "uncompressedBytes": 3801
@@ -2389,6 +2535,7 @@
       "count": 145,
       "wellCount": 137,
       "coreCount": 8,
+      "decodedSha256": "9b4dafcacdcd062e57ed662e547303bbfda3ef940ea6d2d0a07e1e75588910b0",
       "sha256": "382aa132163f74c1f6841651aaf72febf90aaf05837f6d1f449ab28b5b2b00c0",
       "bytes": 8923,
       "uncompressedBytes": 101041
@@ -2405,6 +2552,7 @@
       "count": 2156,
       "wellCount": 2129,
       "coreCount": 27,
+      "decodedSha256": "112147e42aa2d620d86b4a4400d50f3743fd03326c1096e827493842d2aa9e44",
       "sha256": "2d2d3db14f40350e9d677b54c2b3d2599eae46a6264f6dcec64a47e95163b344",
       "bytes": 98205,
       "uncompressedBytes": 1468336
@@ -2421,6 +2569,7 @@
       "count": 1309,
       "wellCount": 1267,
       "coreCount": 42,
+      "decodedSha256": "35441da8a2ee1b8a41b38b3f5b6621e5dc54f22d86f8da11c68790b0659ac63f",
       "sha256": "d89ea255e392195d70e4ddf14c5d383510f013bf4d062491256e5bfae456bb7e",
       "bytes": 67801,
       "uncompressedBytes": 908961
@@ -2437,6 +2586,7 @@
       "count": 1701,
       "wellCount": 1666,
       "coreCount": 35,
+      "decodedSha256": "b83bd2583676241a3d2e7122ef877c0917db1d2b81d18398c2de1a7946c814d7",
       "sha256": "90537647d260e59e465439abccc5ce9f6819f18470d5c8ce107f41f8783aa6d2",
       "bytes": 85373,
       "uncompressedBytes": 1229766
@@ -2453,6 +2603,7 @@
       "count": 2112,
       "wellCount": 2109,
       "coreCount": 3,
+      "decodedSha256": "fda91840187640d64c94e53b37173e1c8d9b613ed7a9f9cc62741bab8193235b",
       "sha256": "f44f5a032cc1860a9e4d6eb6bc0b70708c6e3fdf6ef1ff2c98d617111598771c",
       "bytes": 105004,
       "uncompressedBytes": 1594564
@@ -2469,6 +2620,7 @@
       "count": 640,
       "wellCount": 640,
       "coreCount": 0,
+      "decodedSha256": "87eac689327b5148bf54130815189646fc5d8433697a3b8968e6b7963dfaabcd",
       "sha256": "d55bb16290625d2ffa831cf583612b530131017e308fb499f6f7165ae27b9c6e",
       "bytes": 32294,
       "uncompressedBytes": 507375
@@ -2485,6 +2637,7 @@
       "count": 1333,
       "wellCount": 1333,
       "coreCount": 0,
+      "decodedSha256": "8fd66bdb491e71f79ca97d917374e643a1d596cd6777f2f7fdcc97a3ef1684db",
       "sha256": "a804023e5b962226279b84cb4382377aa70f1de09f00d02247f7c3ae0a365dba",
       "bytes": 58656,
       "uncompressedBytes": 1018964
@@ -2501,6 +2654,7 @@
       "count": 560,
       "wellCount": 560,
       "coreCount": 0,
+      "decodedSha256": "8bd0233cb508702e1c7f652c52b18362f0397ed1bc7f393891dd292f4a0c175c",
       "sha256": "3ed913a43d40f7bbfa6e89c6e9a6187c641526555e48973467d270b9d8518f0f",
       "bytes": 28961,
       "uncompressedBytes": 444444
@@ -2517,6 +2671,7 @@
       "count": 1453,
       "wellCount": 1453,
       "coreCount": 0,
+      "decodedSha256": "71d49863bb71b3b7122d8a182371f07f892819c64317e64c3cdf2ac3e2608180",
       "sha256": "17a6cfddce473c2303ffb853ead02fac1d95cd66c191c88ea06c7645c273dad4",
       "bytes": 62434,
       "uncompressedBytes": 1039607
@@ -2533,6 +2688,7 @@
       "count": 1579,
       "wellCount": 1579,
       "coreCount": 0,
+      "decodedSha256": "381cf877213f51321322ae48bab4cf5612eac445a2b1517f59e48370c266ade0",
       "sha256": "8d160c89efdd5d2cc8f518f90867a8775d34bd9ecd4428beaff8329d488bbd84",
       "bytes": 66126,
       "uncompressedBytes": 1194173
@@ -2549,6 +2705,7 @@
       "count": 1287,
       "wellCount": 1287,
       "coreCount": 0,
+      "decodedSha256": "f71a407447999c2f8d9e0180808ecbf2b770571476f9b0e5a8f1e10ea18a2a0f",
       "sha256": "34265e7a3cd05bf0a99623f18e3140b3d2216430e4a69696aef354e0ab6db4a9",
       "bytes": 48959,
       "uncompressedBytes": 942756
@@ -2565,6 +2722,7 @@
       "count": 1537,
       "wellCount": 1537,
       "coreCount": 0,
+      "decodedSha256": "2fd7a76d8d12ae3a7df6b65ac7336197ca47d2cee5f80d12312dc72a1cda7ec2",
       "sha256": "3808290394f0cf0fe18cc3c5772c910994099362d656e432f8e81d40aa6df0a7",
       "bytes": 62562,
       "uncompressedBytes": 1051086
@@ -2581,6 +2739,7 @@
       "count": 2034,
       "wellCount": 2034,
       "coreCount": 0,
+      "decodedSha256": "ac5ad1e5d6b1fa7629b75821910f6bada1836fbadb28c57f70a2e14c1585f8df",
       "sha256": "613ff9ada66157308fcebe26f2ea3de11c77e0a32b4082c340b48b783beea551",
       "bytes": 75500,
       "uncompressedBytes": 1505915
@@ -2597,6 +2756,7 @@
       "count": 2856,
       "wellCount": 2855,
       "coreCount": 1,
+      "decodedSha256": "e2125d503dbb3809162983fcf6b66cbc7be878c3c3dd583598fc7c3ab9d17416",
       "sha256": "0dadfd3a2b1c465d8f0262f29ec44f8bf4b08b74b66d1d416dba50e410be781c",
       "bytes": 111040,
       "uncompressedBytes": 1805153
@@ -2613,6 +2773,7 @@
       "count": 1074,
       "wellCount": 1074,
       "coreCount": 0,
+      "decodedSha256": "5f329bad28d84cdb292488f141b092c18b3b778840cf3b8d1edb27f8a25bbe96",
       "sha256": "e56d24b9aa41612c427ec7e25c85154152fc7b202d3bc88875c942bdebbada95",
       "bytes": 44109,
       "uncompressedBytes": 703489
@@ -2629,6 +2790,7 @@
       "count": 2992,
       "wellCount": 2992,
       "coreCount": 0,
+      "decodedSha256": "de79cce69478675038a8ffa0dcba25a98dc1a7df755fd8ad72510fce3c24c138",
       "sha256": "9f57edadfbd80930e06f1595639a68c20f975dd8dfafca66c75cd95d56b35299",
       "bytes": 86957,
       "uncompressedBytes": 1956214
@@ -2645,6 +2807,7 @@
       "count": 1134,
       "wellCount": 1134,
       "coreCount": 0,
+      "decodedSha256": "ed4a70567e1f248952ba0cb45d0a6c223a2032f18f414ddffa38a1b4339c94b3",
       "sha256": "cf69695b0fbed10decd5c91e4258b763791aa3d98d139c59e0184f678f7e930f",
       "bytes": 37978,
       "uncompressedBytes": 645492
@@ -2661,6 +2824,7 @@
       "count": 795,
       "wellCount": 795,
       "coreCount": 0,
+      "decodedSha256": "0f4d7fa150949afcedb7326e4a76dc44a7b38386d3bb0b4014a93a276a711311",
       "sha256": "ff75d829d6e2af5e9b4b45e94a762cc9f57e104b5e9c196e55a7b2bd35b0a6ce",
       "bytes": 30026,
       "uncompressedBytes": 498207
@@ -2677,6 +2841,7 @@
       "count": 1555,
       "wellCount": 1555,
       "coreCount": 0,
+      "decodedSha256": "0b6c681db1f57e7ef8effd611aa8d51e224a02537868b32c2d1a5e20c2468020",
       "sha256": "dbe879765a61d4bceb6eb577e4c459a2a9858147a4c74b8b43c26ce140da932a",
       "bytes": 58944,
       "uncompressedBytes": 1029019
@@ -2693,6 +2858,7 @@
       "count": 2776,
       "wellCount": 2773,
       "coreCount": 3,
+      "decodedSha256": "1fcf8877caf4e5dd6b876e58fb4503a368fabeb7b3f48c7f0664e7bfd6a2e92e",
       "sha256": "fcfa7337294fcdb5a35767901cebf659217721b5daa8dbe6d6b09bdebc789361",
       "bytes": 98540,
       "uncompressedBytes": 1679007
@@ -2709,6 +2875,7 @@
       "count": 1195,
       "wellCount": 1195,
       "coreCount": 0,
+      "decodedSha256": "71744d263bd40afc67ea6f11be59c9e0f76fd99329f0ca1ea43b61a853317f32",
       "sha256": "10cab9923246af0727a359a7823c8f725309c6fe36b82c221887fdace92ddb62",
       "bytes": 55523,
       "uncompressedBytes": 842180
@@ -2725,6 +2892,7 @@
       "count": 2177,
       "wellCount": 2177,
       "coreCount": 0,
+      "decodedSha256": "0fb9aa7c79de74e68d07ebfcdff6ad1412047d36ac4fa93667db017870bde9be",
       "sha256": "c5435faf5740e8a209b9e59d25e2810b5d9d5de33e63593742ac144c29c848f3",
       "bytes": 108129,
       "uncompressedBytes": 1541850
@@ -2741,6 +2909,7 @@
       "count": 4467,
       "wellCount": 4467,
       "coreCount": 0,
+      "decodedSha256": "609b636c8c589b24dd5f754dfd78e6a3ceaa6f77635e8bedb61ba140dc42fc69",
       "sha256": "6a36ab14ace6078bbdfccfe4ab07ad6fe1ee1722e181104dfdb296517c02cb98",
       "bytes": 165333,
       "uncompressedBytes": 2618050
@@ -2757,6 +2926,7 @@
       "count": 1177,
       "wellCount": 1177,
       "coreCount": 0,
+      "decodedSha256": "e36eaafc9d5c4416bcbfb3307c1de22e3b4bf83bd4629ffcbafdd64f58c846e0",
       "sha256": "299140b6455349140e6ca4654b243fafe80a241c2df6c4553ddfd89723bad57d",
       "bytes": 40946,
       "uncompressedBytes": 653641
@@ -2773,6 +2943,7 @@
       "count": 922,
       "wellCount": 922,
       "coreCount": 0,
+      "decodedSha256": "2654db2a4f9f0c60f264e57db16f94be98cc3f5542c601b0796fcdb3337df61d",
       "sha256": "2a96632003f1d121199ac7cdbc147c667c98eee745a7e07babf4e6592e544589",
       "bytes": 35826,
       "uncompressedBytes": 536251
@@ -2789,6 +2960,7 @@
       "count": 1555,
       "wellCount": 1555,
       "coreCount": 0,
+      "decodedSha256": "3c6584a6f45a3dec5cf97836164dca6c4260f235e1a3962145b8cb0191b1c38e",
       "sha256": "107610ac62e256cbfb7a246a944dc3c20e27cb07da148a8d3651520bda467d48",
       "bytes": 58862,
       "uncompressedBytes": 939392
@@ -2805,6 +2977,7 @@
       "count": 1755,
       "wellCount": 1752,
       "coreCount": 3,
+      "decodedSha256": "3c09e7780c8695bb5c583c43da8dae2d6e074b2a785d99215e142e596728acb6",
       "sha256": "1789d9ae1a6b8d5c6862e1c785a3a3ef43c7bf158b0e79f1588fb04beb815430",
       "bytes": 64365,
       "uncompressedBytes": 1047509
@@ -2821,6 +2994,7 @@
       "count": 2595,
       "wellCount": 2595,
       "coreCount": 0,
+      "decodedSha256": "c8f9b1d4914c94bfebb35ac9d974a687fccd345d54d7fc25f8ad778848c0e2bf",
       "sha256": "c799f76c7edae5a0421796bf49d9e96ade7909049197c0ff93b5eef246f31f86",
       "bytes": 110620,
       "uncompressedBytes": 1563180
@@ -2837,6 +3011,7 @@
       "count": 938,
       "wellCount": 937,
       "coreCount": 1,
+      "decodedSha256": "285b32ee32c28185efe18488f37c35b39f6a744be01406cd1b4cafed2714841e",
       "sha256": "2e93b7ce5e388c7ce9f7a2cabfd7ec5652d1234053ae7fc2ed087b9673b6639c",
       "bytes": 42928,
       "uncompressedBytes": 587419
@@ -2853,6 +3028,7 @@
       "count": 2619,
       "wellCount": 2619,
       "coreCount": 0,
+      "decodedSha256": "5255b2f24234d896a728e89d39ca45acd6cd7f52213f765939e7a1bc1e224ce3",
       "sha256": "61f5fae542ff92a49afaaa9e3058607c945ea853e2b76f47ff19f320b67bceae",
       "bytes": 99877,
       "uncompressedBytes": 1823959
@@ -2869,6 +3045,7 @@
       "count": 303,
       "wellCount": 303,
       "coreCount": 0,
+      "decodedSha256": "324740d71636c51cd75b386749932a4f5a7ee665e80a51b96eda942b9da82a5b",
       "sha256": "3e8718397b481dfa55695efb41dd2aef6b4010cc2b9ec9867017b822ce09631d",
       "bytes": 14244,
       "uncompressedBytes": 214533
@@ -2885,6 +3062,7 @@
       "count": 2396,
       "wellCount": 2394,
       "coreCount": 2,
+      "decodedSha256": "4b2c0ec9115bd4a865629b90051daa99430ccbe203bf678a7bfae51f61e798fd",
       "sha256": "c081d7fcd40e874a96c8238e4daad8f98313eeba9b705ed3da6d299610209d06",
       "bytes": 87629,
       "uncompressedBytes": 1611524
@@ -2901,6 +3079,7 @@
       "count": 958,
       "wellCount": 957,
       "coreCount": 1,
+      "decodedSha256": "c96439724c60a991254cfebb566310385b7877e42c7777fea067eda0f0bab5d4",
       "sha256": "2f71d81b8d462e37ed5b7a45cbcafb73a0e7f84b850818f4f875137167cfd537",
       "bytes": 38010,
       "uncompressedBytes": 655300
@@ -2917,6 +3096,7 @@
       "count": 809,
       "wellCount": 806,
       "coreCount": 3,
+      "decodedSha256": "5beba4a2cb8f12eacd1f54224854e7afbe48dda5fc27d5417eecbcb23241ad75",
       "sha256": "b4d1251f226016e4fcb7454a309f3b39df4b4a74f97752438ddf86be8ffb9a19",
       "bytes": 46615,
       "uncompressedBytes": 632019
@@ -2933,6 +3113,7 @@
       "count": 3821,
       "wellCount": 3817,
       "coreCount": 4,
+      "decodedSha256": "e1b756254b1680ce2dc68107f7338c639191362d74e307ce3623b60b3f2d5516",
       "sha256": "07113e5b8ac868297a7227caa384f1838589a0771128cfdf3f851855ead1c04b",
       "bytes": 139791,
       "uncompressedBytes": 2410306
@@ -2949,6 +3130,7 @@
       "count": 1172,
       "wellCount": 1171,
       "coreCount": 1,
+      "decodedSha256": "4467e75c0e11d74b7352d26558467b9e03e71f4f72f7bab38d413c0df5977489",
       "sha256": "6f61f6b7e56ae7d5963a37153c46fa6948f44b3a7778e33544a0d159d3826f22",
       "bytes": 47999,
       "uncompressedBytes": 775910
@@ -2965,6 +3147,7 @@
       "count": 600,
       "wellCount": 600,
       "coreCount": 0,
+      "decodedSha256": "44fd72f35814f4ab438c98a6be90ba9dfa2c014bbcac057dff35a86176c4c429",
       "sha256": "565bfd403fe23f86a84a634f83df9b5a4c1dab866f3abeed17431af5ca268cad",
       "bytes": 25280,
       "uncompressedBytes": 366762
@@ -2981,6 +3164,7 @@
       "count": 215,
       "wellCount": 215,
       "coreCount": 0,
+      "decodedSha256": "54f0fb17b487718e5c8c65d1f8fe45e096e4413338686624a87fbdf00cfb9fa9",
       "sha256": "c95b3ab44eacdae94ec6cd20ea843bfaad4515a15ecb6d3e172be24af5df3184",
       "bytes": 10378,
       "uncompressedBytes": 144550
@@ -2997,6 +3181,7 @@
       "count": 472,
       "wellCount": 470,
       "coreCount": 2,
+      "decodedSha256": "f99e5dd358b29e7923e4865333c9c84e82bab46032b52eb0cc1d38b9bbd668fc",
       "sha256": "92f0784df53b5f7268ce86e0a94f13df6a5e3571f834086991240699ba3b6b78",
       "bytes": 25001,
       "uncompressedBytes": 344153
@@ -3013,6 +3198,7 @@
       "count": 2213,
       "wellCount": 2212,
       "coreCount": 1,
+      "decodedSha256": "9e54b89906ce925ae6fa04a22eebbb428d5918e04e638fa2114984f3baed3696",
       "sha256": "450d56a41804213900d3fd849de1dd14959f2fdb7d09d08b2a217aa5a1d9ac06",
       "bytes": 101689,
       "uncompressedBytes": 1593447
@@ -3029,6 +3215,7 @@
       "count": 1685,
       "wellCount": 1685,
       "coreCount": 0,
+      "decodedSha256": "4fc6439921c0ca64a434917ffaf3a277f61376a1b7a8ecdfe2ecbe7c44dcd1d9",
       "sha256": "3971463c50bb6e6f66c522fd3cad63dd24de55254baa7403254adb5650bed39e",
       "bytes": 72609,
       "uncompressedBytes": 1124829
@@ -3045,6 +3232,7 @@
       "count": 1673,
       "wellCount": 1671,
       "coreCount": 2,
+      "decodedSha256": "a76f3a9bd345cabfd5131b35da8a732bd72b401115148ec048f98f7ac03a7a61",
       "sha256": "77805c108c6fcce498301ff5e90c805a1e882494187752eaf0fc63c220b26963",
       "bytes": 76078,
       "uncompressedBytes": 1163956
@@ -3061,6 +3249,7 @@
       "count": 2387,
       "wellCount": 2387,
       "coreCount": 0,
+      "decodedSha256": "fd2268fb527269d69ca5be84f1e09dea748b7f367b77926312c4c2b679ebe450",
       "sha256": "c1902e551e373ba17b5df171e968a7cec96fc5523fc8fb56a95a4153ca4ef18a",
       "bytes": 95057,
       "uncompressedBytes": 1654653
@@ -3077,6 +3266,7 @@
       "count": 3175,
       "wellCount": 3174,
       "coreCount": 1,
+      "decodedSha256": "1719c25d4aea8551f050b2fcb1c99c5b676cf16d28aa06cbf64d7a775f593181",
       "sha256": "f705729d22e48f0fdd041be5d2ed68072bc4963f9ce9672fd4ec418db8f660bf",
       "bytes": 120615,
       "uncompressedBytes": 2219133
@@ -3093,6 +3283,7 @@
       "count": 565,
       "wellCount": 556,
       "coreCount": 9,
+      "decodedSha256": "10aaa8ff86dc7d0d601c8f6d00962499d70a02ae8f7497d9a8370138138f18a0",
       "sha256": "cd90e659a41e24d3947a9aafc64592e2e39f6a567cb1b53d39280c98e9bf4d0e",
       "bytes": 33398,
       "uncompressedBytes": 448295
@@ -3109,6 +3300,7 @@
       "count": 917,
       "wellCount": 916,
       "coreCount": 1,
+      "decodedSha256": "ef20669735748ad93be0937edbc3eaf70fd0bbe4177493b201faf4b3400181d4",
       "sha256": "3b095644842a63224d519a77c77c0076b48fc6d686dd0860b5f4f1acbec6254f",
       "bytes": 46364,
       "uncompressedBytes": 689919
@@ -3125,6 +3317,7 @@
       "count": 1696,
       "wellCount": 1688,
       "coreCount": 8,
+      "decodedSha256": "4bc4d331ad907a9481a80826175af5a648f00e8941a8e83e098266ad4c18b9b5",
       "sha256": "84d2ce978b9770d196a50b571e59fb5088328ba045ec0fd24658fe5a30b05b51",
       "bytes": 83579,
       "uncompressedBytes": 1146409
@@ -3141,6 +3334,7 @@
       "count": 3606,
       "wellCount": 3592,
       "coreCount": 14,
+      "decodedSha256": "3e17af557c41522969414daf6e1a3a8020bb57068dd855fd9948a468735ac960",
       "sha256": "5ab5fdb7fdf1963846003aca8c99e1af7dc55226d9db4fb47fcd6763c6377ab5",
       "bytes": 204356,
       "uncompressedBytes": 2732024
@@ -3157,6 +3351,7 @@
       "count": 697,
       "wellCount": 691,
       "coreCount": 6,
+      "decodedSha256": "7997711539905ba695d74c763b071f631dd4ed2d968a4eaf2373d0e2dbd7f672",
       "sha256": "e2327a5aed2b438aa7ee84eca68c9bfcdc72dbdcc38c96464f7d2c098db364d1",
       "bytes": 46091,
       "uncompressedBytes": 557334
@@ -3173,6 +3368,7 @@
       "count": 622,
       "wellCount": 618,
       "coreCount": 4,
+      "decodedSha256": "a0cc2417c11b92dc2e6eb205e54f154055c7d3e319c0dc85854851600aa9d0a9",
       "sha256": "90d5a8ec06eeba4e07ef0a32bb363a3f2911644a8056bbf578ba28d98da3c781",
       "bytes": 39110,
       "uncompressedBytes": 478262
@@ -3189,6 +3385,7 @@
       "count": 909,
       "wellCount": 904,
       "coreCount": 5,
+      "decodedSha256": "da718d4d17f3ddd1b22da72cd498bb999108f3f99394f555c4f2e5956e78cd0c",
       "sha256": "f3eb2d793505e3f3602b8647c2f42646787387e34a06336810b4c05f9f868a0b",
       "bytes": 51486,
       "uncompressedBytes": 683262
@@ -3205,6 +3402,7 @@
       "count": 274,
       "wellCount": 270,
       "coreCount": 4,
+      "decodedSha256": "149e89a79bd6dfc30ba5cfcf3c4b2fce3e347196fd32f1067805c92e1688b2d8",
       "sha256": "e8a31c65995e8b3d850341e486c535a586c7dfef8327eaf08cbe7a6402cd9193",
       "bytes": 18492,
       "uncompressedBytes": 229647
@@ -3221,6 +3419,7 @@
       "count": 922,
       "wellCount": 921,
       "coreCount": 1,
+      "decodedSha256": "4e378368d14fd554f2c2bf2b8e3d76daf6dcb044fd2f3056da1edb4a9e68e2da",
       "sha256": "a28a362ce015a4d9b4d25599303c310f20d8684cfadd5029b9a833ec432e33d0",
       "bytes": 59795,
       "uncompressedBytes": 727508
@@ -3237,6 +3436,7 @@
       "count": 526,
       "wellCount": 520,
       "coreCount": 6,
+      "decodedSha256": "5f4ebacad97a6f71192ec13514c2d1eb498293815360d184ac32cfb60f10c7fc",
       "sha256": "0d64fcd49b342ad25770871e99f302243a1e28f3b40775d3c4543ef16c719d7e",
       "bytes": 34143,
       "uncompressedBytes": 417391
@@ -3253,6 +3453,7 @@
       "count": 1818,
       "wellCount": 1816,
       "coreCount": 2,
+      "decodedSha256": "6cd9eadd5c8c4cb814170998aaababba45a2ed4b7a408871195dfdaf97529119",
       "sha256": "57d388ab3ec62b3854b612f059ac3f8497dcc3792d5031dd6acc1a61057a2094",
       "bytes": 130724,
       "uncompressedBytes": 1643948
@@ -3269,6 +3470,7 @@
       "count": 1981,
       "wellCount": 1967,
       "coreCount": 14,
+      "decodedSha256": "cbda76a5887de1a1d237f76283d3f5150f94d8e34f1c0e771a878ec82f07ac0f",
       "sha256": "a5b4f53b5efe70545c2187cbcb68252769f022a057a48b7f752e6035a7b7a801",
       "bytes": 141538,
       "uncompressedBytes": 1738537
@@ -3285,6 +3487,7 @@
       "count": 1693,
       "wellCount": 1682,
       "coreCount": 11,
+      "decodedSha256": "c86557637855fa242809fe0d6c4ff73aeed8a25fe3ac0be651367cc14ae7c319",
       "sha256": "2fe50a5485b00a88e3af3c733797c7ecf26510d80ad20e2e884b736f0e00f589",
       "bytes": 118783,
       "uncompressedBytes": 1426972
@@ -3301,6 +3504,7 @@
       "count": 4,
       "wellCount": 4,
       "coreCount": 0,
+      "decodedSha256": "867f7ac811454ce65d0bbfce3f4dfd2325b0df2700ac3b438af923f173da73b3",
       "sha256": "c26b4c6a77b268253a6db2f454285da6e336a2856817efbf8c3f98477e639c40",
       "bytes": 1202,
       "uncompressedBytes": 6189
@@ -3317,6 +3521,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "25aa49e5e16a85078d9e9bc95910f08b9cd6f4787d7ec228ff0240d9baf692bd",
       "sha256": "98ce5508500b65dc7102a7ae61550cd8a5574903e0cd8fb383f3c9aa89f0a89b",
       "bytes": 508,
       "uncompressedBytes": 1109
@@ -3333,6 +3538,7 @@
       "count": 894,
       "wellCount": 721,
       "coreCount": 173,
+      "decodedSha256": "37a4d696bf62c9272a0ede334dce7be93f09e514b8edb7d5dbdc475b0edfbec0",
       "sha256": "26dee752bd637da37c34def76bdfda579bc55d6ab07a9c376fd181423195c90c",
       "bytes": 47230,
       "uncompressedBytes": 626277
@@ -3349,6 +3555,7 @@
       "count": 3519,
       "wellCount": 3034,
       "coreCount": 485,
+      "decodedSha256": "634dc2e2a9618ecf302aa936a8cf87a29f9de55e8e679e04f999d4997c5d507c",
       "sha256": "1fc774d688db08ab0f336576b453b9e2407b188d8f349dc79149308125a7d874",
       "bytes": 151703,
       "uncompressedBytes": 2280873
@@ -3365,6 +3572,7 @@
       "count": 1264,
       "wellCount": 1219,
       "coreCount": 45,
+      "decodedSha256": "800fb95bf58932e4cd313fb34069264cdf50197648b346e6615bb026e6f18d93",
       "sha256": "e2d78871a083dda6f8c2def6b7c89317921d22de172c63dc92106784d8f8251a",
       "bytes": 89887,
       "uncompressedBytes": 1082803
@@ -3381,6 +3589,7 @@
       "count": 2349,
       "wellCount": 2311,
       "coreCount": 38,
+      "decodedSha256": "d7b8f8e7c3d9aca32f3a4d8b0f1ac02e532f5afb150ad8b5de9db7ffd1b96f38",
       "sha256": "9033cc8cc4e5b3cff0dfb0d64a55f1af8332d970e79697c565e35da26b09d5dd",
       "bytes": 176068,
       "uncompressedBytes": 2222286
@@ -3397,6 +3606,7 @@
       "count": 1407,
       "wellCount": 1388,
       "coreCount": 19,
+      "decodedSha256": "ab7e2ba3462a85ee5f3e83a5a6a998e27092eda52a9957cd04cfd5905ea90623",
       "sha256": "79c2d89a0904af13bae814dab77caadd1dd770d0ebf40871c1b0ab4c49fe57c3",
       "bytes": 94136,
       "uncompressedBytes": 1207479
@@ -3413,6 +3623,7 @@
       "count": 684,
       "wellCount": 673,
       "coreCount": 11,
+      "decodedSha256": "42124155cfd63eba9473fe73c8b9d4bf33af454b4799fb59016b9d9f908abd98",
       "sha256": "337bcc39367b3cee0592dcfca3f05119359f8938ccba881faf7bc43e678a14bb",
       "bytes": 50878,
       "uncompressedBytes": 650557
@@ -3429,6 +3640,7 @@
       "count": 2833,
       "wellCount": 2811,
       "coreCount": 22,
+      "decodedSha256": "9854a86c91b9980315222c3e19341d2a64b7d9af565f4e6c6a5884bbf20693a8",
       "sha256": "694645460c71a088d1d96b37af7e5f2812c05bdc4d363523f9f25a405c117746",
       "bytes": 159379,
       "uncompressedBytes": 2195462
@@ -3445,6 +3657,7 @@
       "count": 514,
       "wellCount": 509,
       "coreCount": 5,
+      "decodedSha256": "f059e6323453ea2b299c82fdabfebe0bc359a78c9fa809e593c8a66101321f72",
       "sha256": "c2ea108f7f45199f2fc3a00d6edd55c60de7e8068c5d90812fb4fb464248f377",
       "bytes": 51261,
       "uncompressedBytes": 623415
@@ -3461,6 +3674,7 @@
       "count": 1584,
       "wellCount": 1560,
       "coreCount": 24,
+      "decodedSha256": "17ddaca264052c77a4c06c45fbe5d02ab91872dc0c7c1250af8a8e9824ee4498",
       "sha256": "f7acba597b403f774379cd756c16efad90d2feccfaf526efc46729582a0402fc",
       "bytes": 100907,
       "uncompressedBytes": 1276068
@@ -3477,6 +3691,7 @@
       "count": 6,
       "wellCount": 6,
       "coreCount": 0,
+      "decodedSha256": "dbe6c4e6ff03a4fe93828a225058be7c85538711b45e9bebf1d7cde42f448d26",
       "sha256": "cbbd550060c31a678fe479184d54136ad3bc5272bad753a0149379946779d9c3",
       "bytes": 924,
       "uncompressedBytes": 4697
@@ -3493,6 +3708,7 @@
       "count": 351,
       "wellCount": 306,
       "coreCount": 45,
+      "decodedSha256": "02a3293ecf17ccd6d833b65250bc139621478b2baf5cce569225d43a39f45d7a",
       "sha256": "98a19bb70c57ba306329830e6e0812d93251d89df7b3d682a99242c70e669bc5",
       "bytes": 22035,
       "uncompressedBytes": 267369
@@ -3509,6 +3725,7 @@
       "count": 457,
       "wellCount": 341,
       "coreCount": 116,
+      "decodedSha256": "50c3173029830eacbd0e5039c375e829a6dd3ffb1e4563627e85c6a50ccccb93",
       "sha256": "58045d793e9d226eea61677acc6b5783c171e17487dc3cbaf591ade173cc56b5",
       "bytes": 22835,
       "uncompressedBytes": 305438
@@ -3525,6 +3742,7 @@
       "count": 1366,
       "wellCount": 1218,
       "coreCount": 148,
+      "decodedSha256": "e2f58e1f42b139df1fec91a4b555aaffc75e01e0cb257c02b7d5bb8123a0edf7",
       "sha256": "4b5d25127a07f70c327f317f1e322222ee1bba2eabf4898ca0b5d01a4c2a947e",
       "bytes": 68196,
       "uncompressedBytes": 905938
@@ -3541,6 +3759,7 @@
       "count": 1111,
       "wellCount": 1081,
       "coreCount": 30,
+      "decodedSha256": "cce8a1e7e73aa0fa83dd3cd7af23a2f3edc0d1a6c91665585111e29522675c31",
       "sha256": "887d8aa9e97c80a4d3e0913b377a45684d1eaaca9b2de0dc0e9aec19e2c7f6bb",
       "bytes": 78375,
       "uncompressedBytes": 1006021
@@ -3557,6 +3776,7 @@
       "count": 3049,
       "wellCount": 3004,
       "coreCount": 45,
+      "decodedSha256": "b47647d0a5341a147c1ce186bd4c75b0581978cb71c65ea138fc688190177c04",
       "sha256": "cad57de7db0217867702b9729eeec3a4ed9beeb1b49a270b301238a98d0f818f",
       "bytes": 204650,
       "uncompressedBytes": 2594206
@@ -3573,6 +3793,7 @@
       "count": 810,
       "wellCount": 778,
       "coreCount": 32,
+      "decodedSha256": "d07035f1d43fdcf1c13a5d3a584310354c8d92006e040932945771fa0f54e919",
       "sha256": "5158a1d3d43cb1b39c3089ae1505a97ee31d7c01a1d0ccffb085c64399d0050f",
       "bytes": 54342,
       "uncompressedBytes": 620721
@@ -3589,6 +3810,7 @@
       "count": 3,
       "wellCount": 3,
       "coreCount": 0,
+      "decodedSha256": "b24277b18d96143b45b844117d16d06fa7c1c0739b2cdf9ae15ebdb786a32d51",
       "sha256": "579ab658dac0d44a0f58e1cf922e86cb108332db371337ed4d5712c889cd5dae",
       "bytes": 843,
       "uncompressedBytes": 3664
@@ -3605,6 +3827,7 @@
       "count": 2918,
       "wellCount": 2722,
       "coreCount": 196,
+      "decodedSha256": "ad274bee3ca8cf6ff80aa76dcce9684b0ee4b36a7b0680978607acd3c4ae4e12",
       "sha256": "4e2a6454bc49318a951e40c351b3abdca7ac626c0593cdf1c25b278c3b1164b4",
       "bytes": 132855,
       "uncompressedBytes": 1931183
@@ -3621,6 +3844,7 @@
       "count": 815,
       "wellCount": 480,
       "coreCount": 335,
+      "decodedSha256": "54aa429b978cdb52fe551699d009bd07ef2f3201fa00b5eba2e38d9c7e7c3d12",
       "sha256": "120dbce9aac7c7915d7fd087c2d8537d9c4b50bb5f4e42ea31df9c65cdf09b25",
       "bytes": 35254,
       "uncompressedBytes": 536909
@@ -3637,6 +3861,7 @@
       "count": 1219,
       "wellCount": 837,
       "coreCount": 382,
+      "decodedSha256": "03d7735c81a49caaa2615a2464c8c3a4dfc1f81a8af53bd0bca776c36e20b448",
       "sha256": "8226c33955a15e561bfa68ed0a37cadea2dc37dea282f156179a3e64207362ca",
       "bytes": 60062,
       "uncompressedBytes": 873890
@@ -3653,6 +3878,7 @@
       "count": 1285,
       "wellCount": 1264,
       "coreCount": 21,
+      "decodedSha256": "689a73d7dae6fc97adb37fe6371d9bc9a72bc0b05eaa6749e415135da3d8bfe7",
       "sha256": "1fc07d9e852c0489ed1c195d333eaf3915f36f66f2399e97c3631a91e62fb1d5",
       "bytes": 79092,
       "uncompressedBytes": 986177
@@ -3669,6 +3895,7 @@
       "count": 1126,
       "wellCount": 1110,
       "coreCount": 16,
+      "decodedSha256": "63e2dc6f0c63bb505859e500aaecf10553c433eda587e4edecc301e0e1d21513",
       "sha256": "94025dbf21eb478cd164caadaa8e515f2e5f1a4d9e23533cde8d2e8cdf3e48b9",
       "bytes": 78085,
       "uncompressedBytes": 968830
@@ -3685,6 +3912,7 @@
       "count": 262,
       "wellCount": 258,
       "coreCount": 4,
+      "decodedSha256": "0eb53fba7e5adbc6c4d91eed96994df40caa58635b1075697e9b5a3db8f220f1",
       "sha256": "3bb526cafc4984af96915e4dc6288335ac0429932b5fa05a2b9d8c225c0dbe6d",
       "bytes": 23003,
       "uncompressedBytes": 269874
@@ -3701,6 +3929,7 @@
       "count": 3267,
       "wellCount": 3241,
       "coreCount": 26,
+      "decodedSha256": "191d2f29efa32558683e0d4545a1cd542871b75cce77f650a8ae397d5f4fcc03",
       "sha256": "a6ec660e3575299250c55d9648b78cbbe7bbf676b664def4ff1d7a1a49f80ebf",
       "bytes": 180688,
       "uncompressedBytes": 2334417
@@ -3717,6 +3946,7 @@
       "count": 543,
       "wellCount": 542,
       "coreCount": 1,
+      "decodedSha256": "a9c819607dd0fb153bde2a1d2bf3c672014900fb5946c8b48c9698da49f90658",
       "sha256": "7ce7407f61928d3dcf6a3d3b68b827b73a897ca0833fa40dab75c97191bcb6f4",
       "bytes": 34294,
       "uncompressedBytes": 433932
@@ -3733,6 +3963,7 @@
       "count": 1846,
       "wellCount": 1808,
       "coreCount": 38,
+      "decodedSha256": "8b82f4e029bc6c3315a21e9a699a0f07f257f1915e7566f3ad2c596ab7cf87c0",
       "sha256": "eb5dc81ccdccefe7fe0931a59204ca9fa7ad61abb520e066b5d5540264b948e9",
       "bytes": 150712,
       "uncompressedBytes": 1680192
@@ -3749,6 +3980,7 @@
       "count": 2,
       "wellCount": 2,
       "coreCount": 0,
+      "decodedSha256": "e520122d2ab5bd4e8c6a9fb9dca7a23b969c7c2b127522490ff6cd05d3274cc8",
       "sha256": "6cb7d85c095f6a9dee2dcde08e00fe538fd1ba0164411c9ea004dd4750c87244",
       "bytes": 669,
       "uncompressedBytes": 2510
@@ -3765,6 +3997,7 @@
       "count": 1148,
       "wellCount": 988,
       "coreCount": 160,
+      "decodedSha256": "28ffe78b026a09f32fcabe5a04976fd082bfacd1579e775aa276b855c95d9746",
       "sha256": "19182f9f255c91370e37ac470e452cf597360b3a1bd693175c4c3bf285671c16",
       "bytes": 48979,
       "uncompressedBytes": 716160
@@ -3781,6 +4014,7 @@
       "count": 1909,
       "wellCount": 1570,
       "coreCount": 339,
+      "decodedSha256": "fb16e4c035e040b4427b779dad3ac690d0d5af0175600e80ff354591a64121ce",
       "sha256": "71c2d152ec32ebbcb5a5e69bb827fb7539927e8d066b4835ce334948b0dc18a7",
       "bytes": 75787,
       "uncompressedBytes": 1152164
@@ -3797,6 +4031,7 @@
       "count": 531,
       "wellCount": 380,
       "coreCount": 151,
+      "decodedSha256": "ed5fa2bdb54a22b35d1f5bcdd21854a6913bf412e0a5b29084acf769b42eaabc",
       "sha256": "c1a5f0ee180b3a65c6744e0c57549411dc940c66eac703645058116cad8cc61b",
       "bytes": 27717,
       "uncompressedBytes": 363787
@@ -3813,6 +4048,7 @@
       "count": 1237,
       "wellCount": 1216,
       "coreCount": 21,
+      "decodedSha256": "791a0824dc858ada785c1f192e37005d442d662d8baeba4ea5069bcafb89ef18",
       "sha256": "98b7dcaa78ba89b160c2b66f369df73acf13b088b6fafc99c8477be9b39a7a5a",
       "bytes": 86468,
       "uncompressedBytes": 1014315
@@ -3829,6 +4065,7 @@
       "count": 935,
       "wellCount": 900,
       "coreCount": 35,
+      "decodedSha256": "de8b657f49fbab829d1252e81cc795678d2f1a5a268d0fea6c394f1027e669b5",
       "sha256": "61c4166238a619e89900d4bc5c0f5181e5a1ce293e3d14345394cc6502e7548b",
       "bytes": 63773,
       "uncompressedBytes": 755247
@@ -3845,6 +4082,7 @@
       "count": 402,
       "wellCount": 352,
       "coreCount": 50,
+      "decodedSha256": "67f4ee7056e990cac47a5e02d319ccf9621b8f46715b27fe990800a9fc3bd16e",
       "sha256": "8ea15b31d1b3d585263d5203bbfe082a8b623ae8f83c2656ca0a0af237c984d2",
       "bytes": 26200,
       "uncompressedBytes": 299906
@@ -3861,6 +4099,7 @@
       "count": 2909,
       "wellCount": 2828,
       "coreCount": 81,
+      "decodedSha256": "5b3942b17c66644c923a8aa658b501d93e86df6e1cb5178f2d6536cdcbd6ed6f",
       "sha256": "f9c0361332790cf744995f979e3a093cb2fe94d78b7a8ba07c0b001ee709bf18",
       "bytes": 172504,
       "uncompressedBytes": 2190175
@@ -3877,6 +4116,7 @@
       "count": 2262,
       "wellCount": 2216,
       "coreCount": 46,
+      "decodedSha256": "ebc2729f1361967e3805b72b7d82d6c4789bacc319cf48ad2c6544e958922927",
       "sha256": "8ab5125e79d291df812375a2f15e8d633d36663234057d70433c620173b0f88d",
       "bytes": 160673,
       "uncompressedBytes": 1982687
@@ -3893,6 +4133,7 @@
       "count": 1473,
       "wellCount": 1446,
       "coreCount": 27,
+      "decodedSha256": "63f1c672da94c43f43a26733bad82111b42bfdf35ce52a91b4be156fd9fff99a",
       "sha256": "4722be3435cd989a10c5ca7a4ec32d6b184aff6162963869f4c96211b2c9ceb6",
       "bytes": 95607,
       "uncompressedBytes": 1093336
@@ -3909,6 +4150,7 @@
       "count": 1,
       "wellCount": 1,
       "coreCount": 0,
+      "decodedSha256": "c56df3a561ca0de45d33d4c777a1f4ba362337987c2b09e5c80793fef641a4bd",
       "sha256": "e0622d0c4fe1f9082a080f2108084a99fa6d3159fca45dd99ccd5e130a662ed7",
       "bytes": 418,
       "uncompressedBytes": 826
@@ -3925,6 +4167,7 @@
       "count": 4,
       "wellCount": 4,
       "coreCount": 0,
+      "decodedSha256": "760cb7aee71ef73663b286ca9b1af877c616915f8ac8a5f368cc5086b005359e",
       "sha256": "e91c4727316029b31d65b78a5caf1b9676825d7e4141e55fff82f9f64a55bf03",
       "bytes": 549,
       "uncompressedBytes": 2318
@@ -3941,6 +4184,7 @@
       "count": 1095,
       "wellCount": 1052,
       "coreCount": 43,
+      "decodedSha256": "d47de69c51c42de429aaa1c934c5226cd41097bfcf54a781a4ffa1c178ca63b3",
       "sha256": "199381f5e7fd0e74faeaa578617d10f428d93dd9b474e77b87c1369158446427",
       "bytes": 60218,
       "uncompressedBytes": 755230
@@ -3957,6 +4201,7 @@
       "count": 548,
       "wellCount": 490,
       "coreCount": 58,
+      "decodedSha256": "69ed6defee250add6f3ccd05961b389dc5ec4822bbc1865e07af6ec36c55c27a",
       "sha256": "a1774c5654a68848e82a87f17e7dd2df7f39db79b0aff6c68327fcb91d1719e6",
       "bytes": 31809,
       "uncompressedBytes": 388261
@@ -3973,6 +4218,7 @@
       "count": 732,
       "wellCount": 654,
       "coreCount": 78,
+      "decodedSha256": "df57cb02044381c32c6ce98d3bf1199bbe137eb3dd2fb3f4c024d93a33b9a616",
       "sha256": "daf88611d9793fbf0367dc3970786904f91d3152c20ca6549284c9310dd24619",
       "bytes": 37614,
       "uncompressedBytes": 498914
@@ -3989,6 +4235,7 @@
       "count": 439,
       "wellCount": 406,
       "coreCount": 33,
+      "decodedSha256": "2702fa1d6d45b40750631a783b0fb420d231d6b24d5dda63af9b5bde8aa359c0",
       "sha256": "4545d5bc20d5bb2e5a4bd949f18d626b4b9bcda908c628c46a06c894b3289ae1",
       "bytes": 30315,
       "uncompressedBytes": 372888
@@ -4005,6 +4252,7 @@
       "count": 2047,
       "wellCount": 1936,
       "coreCount": 111,
+      "decodedSha256": "27ec6d498e6dcb58f221d3e461a5e3a3cb564363b5ab884ed14074c10a4d08e1",
       "sha256": "d22a4f3613d2dc946ed198fc1bcba12c386bcb4e45278482577cbff296f31371",
       "bytes": 108976,
       "uncompressedBytes": 1426215
@@ -4021,6 +4269,7 @@
       "count": 177,
       "wellCount": 166,
       "coreCount": 11,
+      "decodedSha256": "d674cf537996118c01393b282f2cb48762f6d8b2ccd2121f0405483c82acdbd5",
       "sha256": "cb4fea0aa6a33814b9f6acab6e8cf33643101db40e3c51de70e29894bc64f7fe",
       "bytes": 16423,
       "uncompressedBytes": 196579
@@ -4037,6 +4286,7 @@
       "count": 1818,
       "wellCount": 1750,
       "coreCount": 68,
+      "decodedSha256": "e5118e5db88546c850b97f6cda3983da198cbd4d3c19f21ad544dcb42a0bb4cc",
       "sha256": "576199e9aa5fe4ed0ec96035ca861c03c3a9d515147bc89e0d9fcb23edb2a6f9",
       "bytes": 96950,
       "uncompressedBytes": 1306401
@@ -4053,6 +4303,7 @@
       "count": 2051,
       "wellCount": 2028,
       "coreCount": 23,
+      "decodedSha256": "3acd3d73d82ee955cf60208c2a9430e63051aa31644eb5086dd1ad23eb6422f6",
       "sha256": "ceb82216e00a47a6e7154cf2f707fb42b4eb35d2e16cd8ef0e9b83e478d03d6a",
       "bytes": 146306,
       "uncompressedBytes": 1746728
@@ -4069,6 +4320,7 @@
       "count": 919,
       "wellCount": 916,
       "coreCount": 3,
+      "decodedSha256": "406a6ba083f1067f55d35ea125c1234a92e82483da0a428e32c604c1400e21a1",
       "sha256": "8e449233e302126e0c85d26359375822795529d15de8ef166bb2971ead3e1125",
       "bytes": 46918,
       "uncompressedBytes": 608866
@@ -4085,6 +4337,7 @@
       "count": 2815,
       "wellCount": 2795,
       "coreCount": 20,
+      "decodedSha256": "ba14dc4cff15ec995b14d652d7500fc0e64ed90eba58fe488f33648bf3945466",
       "sha256": "1ba2b5ef60ff56607785b1e154acf914544aa730069b7e78939e66e1a3cd7568",
       "bytes": 131949,
       "uncompressedBytes": 1814814
@@ -4101,6 +4354,7 @@
       "count": 584,
       "wellCount": 580,
       "coreCount": 4,
+      "decodedSha256": "81721c76ddf960d48ca883088f424a1f1af8250be550dd1b0d768616ed6e6e70",
       "sha256": "4da39aa06915871b3d848d91363a61eb29b9962a461a2f1c200fd4127e09e108",
       "bytes": 24621,
       "uncompressedBytes": 350001
@@ -4117,6 +4371,7 @@
       "count": 935,
       "wellCount": 929,
       "coreCount": 6,
+      "decodedSha256": "939bb2dbe45745e9f283fda758a230ad97bff8396f485c5454a6138b0a78e9e0",
       "sha256": "72ba9e46ba39972eb685002865faa15686977deb33706e1d0198c5f627d756b0",
       "bytes": 45213,
       "uncompressedBytes": 599710
@@ -4133,6 +4388,7 @@
       "count": 1600,
       "wellCount": 1600,
       "coreCount": 0,
+      "decodedSha256": "5629db591fdb2b5feca34a19f0bdc67d70d52cdfdbe6c9c7437913a71f68613b",
       "sha256": "b6617ce4b38155d2d190127cebedb579ac1a1e55cf5d3e8a784f204881197243",
       "bytes": 58990,
       "uncompressedBytes": 951287
@@ -4149,6 +4405,7 @@
       "count": 125,
       "wellCount": 125,
       "coreCount": 0,
+      "decodedSha256": "0675f1130c32efb0de221c26983f4f93daa47c2fa625670bbfd179e88d3c4714",
       "sha256": "6f96d5a9df37caed7798d68b5342d615a1a7ab280c612319c3b7296aade64748",
       "bytes": 7565,
       "uncompressedBytes": 88052
@@ -4185,6 +4442,7 @@
       "coordinates",
       "tileId"
     ],
+    "decodedSha256": "f45e5d0d49dedc2c481e6154bcf7f70ef5ad980550af897fcbd894031e6904e9",
     "sha256": "6fe9cfac8a836ee46d0214b40518f8442a21d6df063293dba4c0a23d5770e4e5",
     "bytes": 3550680,
     "uncompressedBytes": 20774037
