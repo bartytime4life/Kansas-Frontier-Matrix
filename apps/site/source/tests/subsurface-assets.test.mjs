@@ -62,7 +62,9 @@ test("direct Vite/build/start and both local serving branches include the asset 
  assert.match(readFileSync("vite.config.ts","utf8"),/execFileSync[\s\S]*validate-subsurface-public/);
  assert.match(readFileSync("scripts/build-verified.sh","utf8"),/validate-subsurface-public[\s\S]*vinext[\s\S]*validate-subsurface-public/);
  assert.match(readFileSync("scripts/serve-local-worker.mjs","utf8"),/validateSubsurfacePublic\(client\)/);
- const shell=readFileSync("../serve-local.sh","utf8");assert.ok(shell.indexOf("validate-subsurface-public.mjs dist/client")<shell.indexOf('exec node scripts/serve-local-worker'));
+ const repositoryRoot=process.env.KFM_WEATHER_REPOSITORY_ROOT;
+ if(repositoryRoot&&!path.isAbsolute(repositoryRoot))throw new Error("KFM_WEATHER_REPOSITORY_ROOT must be absolute");
+ const shell=readFileSync(repositoryRoot?path.join(repositoryRoot,"apps/site/serve-local.sh"):"../serve-local.sh","utf8");assert.ok(shell.indexOf("validate-subsurface-public.mjs dist/client")<shell.indexOf('exec node scripts/serve-local-worker'));
  assert.match(JSON.parse(readFileSync("package.json","utf8")).scripts.prestart,/validate:subsurface-public.*dist\/client/);
 });
 

@@ -127,3 +127,23 @@
   .layer-panel[data-panel-mode="layers"] .official-context-row input[type="range"] { min-height: 44px; }
   .layer-panel[data-panel-mode="layers"] .official-context-row .official-context-actions :is(button, a) { display: inline-flex; align-items: center; min-height: 44px; }
 }
+
+/* Shared subject navigation is a catalogue projection, independent of map owners. */
+.topic-select { display: block; min-width: 0; }
+.topic-select select { min-height: 44px; width: 100%; padding: 8px; color: #e6edf5; background: #1d2b3b; border: 1px solid #465568; border-radius: 6px; font: inherit; font-size: 12px; }
+.layer-topic-index { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 0 14px; }
+.layer-topic-index a, .layer-topic-index button { min-height: 44px; display: inline-flex; align-items: center; color: #a3d8df; font-size: 12px; }
+.layer-topic-index button { border: 0; background: transparent; cursor: pointer; }
+.topic-guide { margin: 0 14px 12px; padding: 12px; border: 1px solid #344151; border-radius: 9px; background: #192735; }
+.atlas-view-library .topic-guide { margin: 0; }
+.topic-guide header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.topic-guide h3 { margin: 8px 0; color: #e6edf5; font-size: 15px; }
+.topic-guide p { color: #b9c8d7; font-size: 12px; line-height: 1.5; margin: 8px 0; }
+.topic-guide header small { color: #dbbd7b; }
+.topic-guide ul { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; padding: 0; list-style: none; }
+.topic-guide li { padding: 4px 6px; border-radius: 4px; background: #263b4e; color: #cbdce9; font-size: 11px; }
+.topic-guide summary { min-height: 44px; padding: 12px 0; cursor: pointer; color: #d8bf88; font-size: 12px; }
+.topic-guide nav { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.topic-guide a, .topic-guide button { color: #a3d8df; font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; }
+.topic-guide button { border: 0; background: transparent; padding: 0; cursor: pointer; text-align: left; }
+.topic-select select:focus-visible, .topic-guide :focus-visible, .layer-topic-index :focus-visible { outline: 2px solid #e5c887; outline-offset: 3px; }

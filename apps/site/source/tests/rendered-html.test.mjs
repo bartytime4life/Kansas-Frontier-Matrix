@@ -58,7 +58,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /<nav[^>]+aria-label="Layer views"/);
   for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
   assert.match(html, /<select[^>]+aria-label="Layer topic"/);
-  for (const label of ["Water", "Terrain", "Weather &amp; hazards", "Places &amp; boundaries", "Land &amp; soil", "Roads &amp; rail", "Groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
+  for (const label of ["Engineering &amp; infrastructure", "Science &amp; observations", "Weather &amp; climate", "History &amp; cultural context", "Land ownership &amp; purpose", "People &amp; communities", "Water &amp; watersheds", "Aquifers &amp; groundwater", "Ecology &amp; land cover"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
   for (const label of ["Full archive → latest", "KDOT Kansas Bridges · historic designation", "KDOT Kansas Bridges · recorded closed", "KDOT Kansas historical roads · 1918", "BLM Kansas oil and gas leases · authorized", "BLM Kansas oil and gas leases · closed", "KDOT Kansas roads and highways", "KDOT Kansas active railroads", "KDOT Kansas abandoned railroads", "FEMA Kansas mapped flood hazard zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
@@ -1310,7 +1310,7 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="layer-task-links"/);
-  assert.match(page, /aria-label="Layer topic"/);
+  assert.match(page, /<TopicSelect label="Layer topic"/);
   assert.match(page, /openMapUtility\("scene", event.currentTarget\)/);
   const openMapSettings = page.slice(page.indexOf("const openMapSettings = useCallback"), page.indexOf("const openEarthEngineLayers = useCallback"));
   assert.doesNotMatch(openMapSettings, /setLayerCatalogView\("local"\)/);

@@ -46,7 +46,7 @@ export default function AboutPage() {
         <span className="mark" aria-hidden="true">KFM</span>
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>
-      <Link href="/">Open the map</Link>
+      <Link href="/topics">Explore by subject</Link><Link href="/">Open the map</Link>
     </nav>
 
     <main className="about-content">
@@ -79,6 +79,7 @@ export default function AboutPage() {
 
       <section className="about-section">
         <div className="about-section-heading"><span>REAL SOURCE CONTEXT</span><h2>Inspect mapped sources on their own terms.</h2></div>
+        <p><Link href="/almanacs">Open the almanac reference library →</Link> Explore both publications’ resources, a credited seasonal outlook map and a historical title page with their source and reuse limits.</p>
         <div className="about-capability-grid">
           <article><h3>Water + living systems</h3><p>USGS stream gauges, mapped hydrography, and watershed boundaries offer separate views of water. A gauge reading does not establish flow throughout a mapped river.</p></article>
           <article><h3>Fire, smoke + hazards</h3><p>NOAA smoke analyses and radar images carry provider times and coverage limits. They do not establish surface exposure or a fire perimeter.</p></article>

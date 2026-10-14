@@ -252,7 +252,8 @@ import { createTerrainDrawing } from "./terrain-drawing-runtime";
 import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
-import { imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { TopicSelect, TopicGuide } from "./topic-navigation";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
@@ -1522,6 +1523,7 @@ export default function Home() {
   const [layerQuery, setLayerQuery] = useState("");
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
+  const [atlasTopic, setAtlasTopic] = useState<LayerWorkspace>("all");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
   const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
@@ -1583,6 +1585,8 @@ export default function Home() {
   const [activeFunctionId, setActiveFunctionId] = useState("export");
   const [functionQuery, setFunctionQuery] = useState("");
   const [featureQuery, setFeatureQuery] = useState("");
+  const [featureTopic, setFeatureTopic] = useState<LayerWorkspace>("all");
+  const [functionTopic, setFunctionTopic] = useState<LayerWorkspace>("all");
   const [featureArea, setFeatureArea] = useState<FeatureArea | "ALL">("ALL");
   const [featureMaturity, setFeatureMaturity] = useState<FeatureMaturity | "ALL">("ALL");
   const [repositoryQuery, setRepositoryQuery] = useState("");
@@ -1849,17 +1853,17 @@ export default function Home() {
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
   const catalogEntries: LayerCatalogEntry[] = [
-    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: LAYER_WORKSPACES.filter(([topic]) => topic !== "all" && filterOfficialSources([source], topic, "").length > 0).map(([topic]) => topic) })),
-    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: ["terrain", "disaster"], selected: daylightEnabled },
-    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: ["water", "land"], selected: soilMapState.visible },
-    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
-    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
-    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: ["disaster"], selected: reviewedWeatherSelected },
-    { id: "reviewed-soil", title: "Reviewed soil moisture", keywords: "NOAA USCRN reference station soil temperature depth governed snapshot evidence", topics: ["land"], selected: reviewedSoilSelected },
-    { id: "reviewed-storm-events", title: "Reviewed storm event reports", keywords: "NOAA NCEI Storm Events hail wind tornado flood historical reports governed snapshot evidence", topics: ["disaster"], selected: reviewedStormEventsSelected },
-    { id: "reviewed-earthquakes", title: "Reviewed earthquakes", keywords: "USGS ComCat ANSS earthquake epicenter magnitude seismicity catalog governed snapshot evidence", topics: ["disaster"], selected: reviewedEarthquakesSelected },
+    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: officialSourceTopics(source.id) })),
+    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: specialtyLayerTopics("daylight"), selected: daylightEnabled },
+    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: specialtyLayerTopics("soil"), selected: soilMapState.visible },
+    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: specialtyLayerTopics("crop"), selected: cropSelected },
+    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: specialtyLayerTopics("reviewed-water"), selected: reviewedWaterSelected },
+    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: specialtyLayerTopics("reviewed-weather"), selected: reviewedWeatherSelected },
+    { id: "reviewed-soil", title: "Reviewed soil moisture", keywords: "NOAA USCRN reference station soil temperature depth governed snapshot evidence", topics: specialtyLayerTopics("reviewed-soil"), selected: reviewedSoilSelected },
+    { id: "reviewed-storm-events", title: "Reviewed storm event reports", keywords: "NOAA NCEI Storm Events hail wind tornado flood historical reports governed snapshot evidence", topics: specialtyLayerTopics("reviewed-storm-events"), selected: reviewedStormEventsSelected },
+    { id: "reviewed-earthquakes", title: "Reviewed earthquakes", keywords: "USGS ComCat ANSS earthquake epicenter magnitude seismicity catalog governed snapshot evidence", topics: specialtyLayerTopics("reviewed-earthquakes"), selected: reviewedEarthquakesSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
-    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
+    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
   const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
@@ -2054,15 +2058,10 @@ export default function Home() {
     ? SOURCE_CANDIDATES.find((candidate) => candidate.layerId === selected.layerId)
     : undefined, [selected]);
   const filteredAtlasViews = useMemo(() => {
-    const query = atlasViewQuery.trim().toLowerCase();
-    if (!query) return LIVING_ATLAS_VIEWS;
-    return LIVING_ATLAS_VIEWS.filter((view) => (
-      [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
-    ));
-  }, [atlasViewQuery]);
+    const terms = atlasViewQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return LIVING_ATLAS_VIEWS.filter(view => (atlasTopic === "all" || atlasViewTopics(view.id).includes(atlasTopic))
+      && terms.every(term => [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains, topicSearchText(atlasViewTopics(view.id))].join(" ").toLowerCase().includes(term)));
+  }, [atlasViewQuery, atlasTopic]);
   const activeViewProfileId = useMemo(() => MAP_VIEW_PROFILES.find((profile) => (
     profile.year === year
     && profile.basemap === basemap
@@ -2524,18 +2523,19 @@ export default function Home() {
   ) as Record<SourceAdmissionState, number>, []);
   const filteredFunctions = useMemo(() => {
     const query = functionQuery.trim().toLowerCase();
-    return functionsForGroup(functionGroup).filter((record) => !query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel}`.toLowerCase().includes(query));
-  }, [functionGroup, functionQuery]);
-  const activeFunction = FUNCTION_REGISTRY.find((record) => record.id === activeFunctionId && record.group === functionGroup) ?? filteredFunctions[0] ?? functionsForGroup(functionGroup)[0];
+    return functionsForGroup(functionGroup).filter((record) => (functionTopic === "all" || functionTopics(record.id).includes(functionTopic)) && (!query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel} ${topicSearchText(functionTopics(record.id))}`.toLowerCase().includes(query)));
+  }, [functionGroup, functionQuery, functionTopic]);
+  const activeFunction = filteredFunctions.find((record) => record.id === activeFunctionId) ?? filteredFunctions[0];
   const functionCounts = useMemo(() => Object.fromEntries(["ACTIVE", "BOUNDED", "DOCUMENTED", "GATED"].map((state) => [state, FUNCTION_REGISTRY.filter((record) => record.state === state).length])), []);
   const filteredFeatures = useMemo(() => {
     const query = featureQuery.trim().toLowerCase();
     return FEATURE_CATALOG.filter((feature) => {
+      if (featureTopic !== "all" && !featureTopics(feature.id).includes(featureTopic)) return false;
       if (featureArea !== "ALL" && feature.area !== featureArea) return false;
       if (featureMaturity !== "ALL" && feature.maturity !== featureMaturity) return false;
-      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")}`.toLowerCase().includes(query);
+      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")} ${topicSearchText(featureTopics(feature.id))}`.toLowerCase().includes(query);
     });
-  }, [featureArea, featureMaturity, featureQuery]);
+  }, [featureArea, featureMaturity, featureQuery, featureTopic]);
   const featureMaturityCounts = useMemo(() => Object.fromEntries(
     (["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const)
       .map((maturity) => [maturity, FEATURE_CATALOG.filter((feature) => feature.maturity === maturity).length]),
@@ -2701,6 +2701,8 @@ export default function Home() {
     if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
     if (streamflowArchiveDay) params.set("hydroDay", streamflowArchiveDay);
     if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
+    if (officialWorkspace !== "all") params.set("topic", officialWorkspace);
+    if (layerCatalogView !== "official") params.set("layerView", layerCatalogView === "local" ? "imagery" : "selected");
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -2737,7 +2739,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, officialWorkspace, layerCatalogView, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4703,6 +4705,11 @@ export default function Home() {
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
+      const restoredTopic = restoreTopic(params.get("topic"));
+      setOfficialWorkspace(restoredTopic);
+      setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
+      if (restoredTopic !== "all") { setLeftPanelMode("layers"); setLeftOpen(true); }
+
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
       daylightDayRef.current = restoredSolar.day;
       daylightThroughDayRef.current = restoredSolar.throughDay;
@@ -9119,10 +9126,11 @@ export default function Home() {
                 </nav>
                 <label><span className="sr-only">Search functions and interface boundaries</span><i aria-hidden="true">⌕</i><input type="search" value={functionQuery} onChange={(event) => setFunctionQuery(event.target.value)} placeholder="Search function, interface, gate, or maturity" /></label>
               </div>
+              <TopicSelect label="Function topic" value={functionTopic} onChange={setFunctionTopic} />
               <div className="function-workbench">
                 <div className="function-selector" aria-label="Available function records">
                   {filteredFunctions.map((record) => <button key={record.id} type="button" data-active={record.id === activeFunction?.id} data-state={record.state} aria-pressed={record.id === activeFunction?.id} onClick={() => setActiveFunctionId(record.id)}><span>{record.state}</span><strong>{record.title}</strong><small>{record.inventory} · {record.interface}</small></button>)}
-                  {filteredFunctions.length === 0 && <p>No function matches this search.</p>}
+                  {filteredFunctions.length === 0 && <p>No function matches this topic and search. Choose another topic or clear the search.</p>}
                 </div>
                 {activeFunction && <article className="function-detail" data-state={activeFunction.state}>
                   <header><span>{activeFunction.group.replaceAll("_", " ")}</span><strong>{activeFunction.state}</strong></header>
@@ -9221,15 +9229,16 @@ export default function Home() {
                   {(["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const).map((maturity) => <article key={maturity} data-state={maturity}><span>{featureMaturityLabel(maturity)}</span><strong>{featureMaturityCounts[maturity]}</strong></article>)}
                 </div>
                 <div className="feature-catalog-controls">
+                  <TopicSelect label="Repository feature topic" value={featureTopic} onChange={setFeatureTopic} />
                   <label><span className="sr-only">Search the repository feature catalog</span><i aria-hidden="true">⌕</i><input type="search" value={featureQuery} onChange={(event) => setFeatureQuery(event.target.value)} placeholder="Search feature, area, maturity, or source path" /></label>
                   <label><span className="sr-only">Filter repository features by area</span><select value={featureArea} onChange={(event) => setFeatureArea(event.target.value as FeatureArea | "ALL")}><option value="ALL">All areas</option>{FEATURE_AREAS.map((area) => <option key={area} value={area}>{area}</option>)}</select></label>
                   <label><span className="sr-only">Filter repository features by maturity</span><select value={featureMaturity} onChange={(event) => setFeatureMaturity(event.target.value as FeatureMaturity | "ALL")}><option value="ALL">All maturity states</option><option value="VERIFIED_SLICE">Verified slice</option><option value="FIXTURE_FIRST">Fixture first</option><option value="DOCUMENTED">Documented</option><option value="HOLD">Hold</option></select></label>
                   <span>{filteredFeatures.length} of {FEATURE_CATALOG.length}</span>
                 </div>
                 <div className="feature-radar-grid">
-                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
+                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area} · {featureTopics(feature.id).map(topic => topicDefinition(topic)?.title).join(" · ")}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
                 </div>
-                {filteredFeatures.length === 0 && <div className="repository-empty"><strong>No matching feature families</strong><p>Clear the search or choose another area or maturity state.</p></div>}
+                {filteredFeatures.length === 0 && <div className="repository-empty"><strong>No matching feature families</strong><p>Clear the search or choose another topic, area or maturity state.</p></div>}
               </section>
             </section>}
 
@@ -9264,7 +9273,7 @@ export default function Home() {
                     <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence} · official portal checked <time dateTime={source.checkedAt}>{source.checkedAt}</time></p>
                     <dl><div><dt>Source role</dt><dd>{source.sourceRole}</dd></div><div><dt>Candidate value</dt><dd>{source.value}</dd></div><div><dt>Cannot prove</dt><dd>{source.cannotProve}</dd></div><div><dt>Next gate</dt><dd>{source.nextGate}</dd></div></dl>
                     <div className="source-modes">{source.dataModes.map((mode) => <span key={mode}>{mode}</span>)}</div>
-                    <footer><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>{source.discoveryPath && <Link href={source.discoveryPath}>Explore datasets & recipes</Link>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
+                    <footer><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>{source.discoveryPath && <Link href={source.discoveryPath}>{source.discoveryLabel ?? "Explore datasets & recipes"}</Link>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
                   </article>)}
                 </div>
                 {filteredSourceCandidates.length === 0 && <div className="repository-empty"><strong>No matching source records</strong><p>Clear the search or choose another domain or admission state.</p></div>}
@@ -9303,18 +9312,20 @@ export default function Home() {
           <section className="atlas-view-library" hidden={leftPanelMode !== "views"} aria-labelledby="atlas-view-library-title">
             <div className="atlas-library-heading"><div><span className="panel-kicker">DEFAULT INVESTIGATIONS</span><h2 id="atlas-view-library-title">Choose a starting question</h2></div><small>{filteredAtlasViews.length} of {LIVING_ATLAS_VIEWS.length}</small></div>
             <label className="atlas-search-control"><span aria-hidden="true">⌕</span><span className="sr-only">Search Living Atlas views</span><input type="search" value={atlasViewQuery} onChange={(event) => setAtlasViewQuery(event.target.value)} placeholder="Search questions, domains, or time" /></label>
+            <TopicSelect label="Investigation topic" value={atlasTopic} onChange={setAtlasTopic} />
+            <TopicGuide value={atlasTopic} onTool={(view, element) => openMapUtility(view, element)} />
             <div className="atlas-view-list">
               {filteredAtlasViews.map((atlasView) => <article className="atlas-view-card" key={atlasView.id} data-status={atlasView.status} data-active={atlasView.profileId === activeViewProfileId}>
                 <header><span>{livingAtlasStatusLabel(atlasView.status)}</span><small>{atlasView.display}</small></header>
                 <h3>{atlasView.title}</h3>
                 <p className="atlas-view-question">{atlasView.question}</p>
                 <dl><div><dt>Scope</dt><dd>{atlasView.scope}</dd></div><div><dt>Time</dt><dd>{atlasView.time}</dd></div><div><dt>Source posture</dt><dd>{atlasView.sourcePosture}</dd></div></dl>
-                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasView.domains.map((domain) => <span key={domain}>{domain}</span>)}</div>
+                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasViewTopics(atlasView.id).map(topic => <span key={topic}>{topicDefinition(topic)?.title}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
                 <footer><span>{atlasView.report}</span><button type="button" onClick={() => applyLivingAtlasView(atlasView)}>Open on map</button></footer>
                 {atlasView.syntheticProof && <LivingWatersControl mapRef={mapRef} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} onInspect={() => { setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true); }} />}
               </article>)}
-              {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try a place, domain, time, or question.</p></div>}
+              {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try another topic, place, time, or question. Related tools remain available in the topic guide.</p><button type="button" onClick={() => { setAtlasTopic("all"); setAtlasViewQuery(""); }}>Reset investigation filters</button></div>}
             </div>
             <aside className="panel-boundary-note"><strong>Named view ≠ admitted data</strong><p>These views use provider-backed context. Open each source card to check its status, time, and limits.</p></aside>
           </section>
@@ -9355,7 +9366,9 @@ export default function Home() {
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
+          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
