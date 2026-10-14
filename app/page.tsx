@@ -39,6 +39,7 @@ import { parseRepositoryObservation, type RepositoryConnection } from "./reposit
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
+import AssistantWorkspace from "./assistant/workspace";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
@@ -193,25 +194,6 @@ import {
   type TemporalSweepMode,
   type TemporalSweepQuery,
 } from "./temporal-sweep";
-import {
-  buildCopyableQwenPrompt,
-  policyPreservingQwenSample,
-  type QwenMapContext,
-} from "./qwen-context";
-import {
-  parseQwenAskEnvelope,
-  qwenStateFromAsk,
-  qwenStateFromHealth,
-  qwenStateFromTransportFailure,
-  qwenStatusLabel,
-  QWEN_LOCAL_BROWSER_CONFIG,
-  QWEN_LOCAL_MODEL,
-  QWEN_LOCAL_OLLAMA_MIN_VERSION,
-  shouldUseLocalQwen,
-  type QwenAskEnvelope,
-  type QwenBridgeState,
-  type QwenInterpretation,
-} from "./qwen-availability";
 import {
   buildLocalImportPreview,
   IMPORT_PREVIEW_MAX_BYTES,
@@ -448,7 +430,6 @@ type MapQueryCandidate = Readonly<{
   sourceYear: number;
 }>;
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
-type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string; interpretation?: QwenInterpretation | null; requestId?: string | null }>;
 type HoverSummary = Readonly<{
   id: string;
   title: string;
@@ -719,79 +700,6 @@ const loadConfiguredMapLibre = async () => {
   return { mapLibre, version };
 };
 const WORKSPACE_STORAGE_KEY = "kfm-map-workspaces-v1";
-const QWEN_DIAGNOSTIC_PROMPTS = Object.freeze([
-  "What is visible in this map view?",
-  "Which sources here are observed and which are modeled?",
-  "What could I explore next with these layers?",
-  "Which evidence gate is missing for this map view?",
-]);
-const QWEN_SELECTION_PROMPTS = Object.freeze([
-  "Summarize the selected feature.",
-  "What does the selected feature support?",
-  "What is the evidence state for the selected feature?",
-]);
-const LOCAL_QWEN_BRIDGE = QWEN_LOCAL_BROWSER_CONFIG.bridgeOrigin;
-const LOCAL_QWEN_HEALTH_TIMEOUT_MS = QWEN_LOCAL_BROWSER_CONFIG.healthTimeoutMs;
-const LOCAL_QWEN_ASK_TIMEOUT_MS = QWEN_LOCAL_BROWSER_CONFIG.askTimeoutMs;
-const LOCAL_QWEN_REPLY_MAX_BYTES = QWEN_LOCAL_BROWSER_CONFIG.maxReplyBytes;
-
-const QWEN_ABSTAIN_GUIDANCE: Record<string, string> = {
-  CONTEXT_ONLY_INTERPRETATION: "No KFM record is selected, so there is no evidence-backed answer for this view.",
-  EVIDENCE_NOT_SUPPORTIVE: "The selected record is not released, reviewed and linked to a public layer, so it cannot support an answer.",
-  QUESTION_OUTSIDE_SELECTION_SCOPE: "The question goes beyond what the selected released record states.",
-  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, or exact locations are not interpreted by the local model. Use the official source directly.",
-  OVER_PRECISE_OUTPUT: "The model's reply contained precise location detail, so it was withheld.",
-  CITATION_REQUIRED: "The model did not cite the selected record's exact EvidenceRef, so no answer was shown.",
-  MODEL_ABSTAINED: "The model judged that the selected record does not answer the question.",
-};
-
-const qwenReplyFromEnvelope = (envelope: QwenAskEnvelope) => {
-  if (envelope.outcome === "ANSWER") return envelope.answer ?? "The local response was empty, so no answer was shown.";
-  if (envelope.outcome === "ABSTAIN") {
-    const reason = QWEN_ABSTAIN_GUIDANCE[envelope.reasonCode] ?? "The released map context does not support an answer to that question.";
-    return envelope.interpretation
-      ? `ABSTAIN · ${reason} The interpretation below is local model language drawn from the map context and KFM source metadata. It is not evidence.`
-      : `ABSTAIN · ${reason}`;
-  }
-  if (envelope.outcome === "DENY") {
-    return envelope.reasonCode === "POLICY_WITHHELD"
-      ? "DENY · The selected record is restricted or denied by policy, so Qwen was not given its details."
-      : "DENY · The local companion rejected this browser origin. Retry from the approved private Site or local preview.";
-  }
-  const guidance: Record<string, string> = {
-    BRIDGE_BUSY: "The local companion is handling another request. Wait a moment, then retry.",
-    EVIDENCE_RESOLUTION_ERROR: "The selected record has an evidence-resolution error. Qwen will not interpret it.",
-    INVALID_MODEL_RESPONSE: "Qwen returned an invalid response, so the companion withheld it.",
-    INVALID_OR_OVERSIZED_REQUEST: "The request exceeded the local companion's safe limit.",
-    INVALID_REQUEST_SHAPE: "The map context did not pass the local companion's validation.",
-    LOCAL_MODEL_UNAVAILABLE: "Ollama stopped, timed out, or failed while answering. Open Ollama and retry.",
-    MODEL_DIGEST_MISMATCH: `The installed model does not match the pinned ${QWEN_LOCAL_MODEL} digest. Re-run Setup before retrying.`,
-    MODEL_MISSING: `The pinned ${QWEN_LOCAL_MODEL} model is missing. Re-run Setup, then retry.`,
-    OLLAMA_RUNTIME_ERROR: "Ollama responded, but its local health or model inventory could not be validated. Check Ollama, then Retry.",
-    OLLAMA_VERSION_MISMATCH: `This Ollama release is older than the tested ${QWEN_LOCAL_OLLAMA_MIN_VERSION}. Update Ollama, then Retry.`,
-    OLLAMA_UNAVAILABLE: "Ollama is not available on this Mac. Open Ollama, then retry.",
-    REQUEST_TIMEOUT: "The local request exceeded its bounded deadline. Check Ollama, then retry.",
-    UNDECLARED_EVIDENCE_REFERENCE: "Qwen cited evidence that was not supplied by the map, so the companion withheld the answer.",
-  };
-  return `ERROR · ${guidance[envelope.reasonCode] ?? "The local companion could not return a governed answer."}`;
-};
-
-const qwenStateGuidance = (state: QwenBridgeState) => {
-  switch (state) {
-    case "checking": return "Checking the loopback companion and pinned model on this Mac…";
-    case "ready": return `${QWEN_LOCAL_MODEL} is ready locally; its pinned digest was verified.`;
-    case "answered": return "The last local response passed the finite outcome and evidence-reference checks.";
-    case "abstained": return "No evidence-backed answer. Any interpretation shown is model language from the map context and source metadata.";
-    case "busy": return "One local request is already running. Wait a moment, then Retry.";
-    case "timeout": return "The local request timed out without a hosted fallback. Check Ollama, then Retry.";
-    case "ollama-unavailable": return "The companion is running, but Ollama is not. Open Ollama, then Retry.";
-    case "model-missing": return `The companion cannot find the pinned ${QWEN_LOCAL_MODEL} model. Run Setup, then Retry.`;
-    case "denied": return "The local companion denied this origin or withheld restricted context.";
-    case "bridge-unavailable": return "The companion could not be reached. Start it and allow Local Network access if the browser asks.";
-    case "error": return "The local runtime or response failed governed validation. Use Setup, then Retry.";
-  }
-};
-
 const inspectGovernedRoute = (method: GovernedMethod, path: GovernedRoute) => {
   const registered = governedRoutes.has(path);
   const supported = registered && method === "GET";
@@ -1301,6 +1209,8 @@ export default function Home() {
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
   const sourceStatusReturnRef = useRef<HTMLElement | null>(null);
   const qwenPanelRef = useRef<HTMLElement>(null);
+  const [pcAccount, setPcAccount] = useState<string|null>(null);
+  const [pcAccountRequest, setPcAccountRequest] = useState(0);
   const qwenReturnRef = useRef<HTMLElement | null>(null);
   const drawerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const pendingViewRef = useRef<ViewState | null>(null);
@@ -1604,23 +1514,12 @@ export default function Home() {
   const [placeTourPlaying, setPlaceTourPlaying] = useState(false);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
-  const [qwenSetupOpen, setQwenSetupOpen] = useState(false);
-  const [qwenHealthRetryToken, setQwenHealthRetryToken] = useState(0);
-  const [qwenQuestion, setQwenQuestion] = useState("");
   const [cropSelected, setCropSelected] = useState(false);
   const [reviewedWaterSelected, setReviewedWaterSelected] = useState(false);
   const [reviewedWeatherSelected, setReviewedWeatherSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
-  const [qwenBusy, setQwenBusy] = useState(false);
-  const [qwenBridgeState, setQwenBridgeState] = useState<QwenBridgeState>("checking");
-  const [qwenMessages, setQwenMessages] = useState<readonly QwenMessage[]>([
-    {
-      role: "assistant",
-      content: "Ask Qwen about the current map view. The local bridge uses the selected map context and redacted connection health; model answers do not establish evidence or release authority.",
-    },
-  ]);
   const [toast, setToast] = useState("");
   const [isCompact, setIsCompact] = useState(false);
   const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
@@ -2318,93 +2217,6 @@ export default function Home() {
       .filter((row) => row.distanceMiles <= nearbyRadiusMiles)
       .sort((left, right) => left.distanceMiles - right.distanceMiles);
   }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
-  const qwenContext = useMemo<QwenMapContext>(() => ({
-    camera: {
-      center: locationCameraRedacted || locationDerivedViewRef.current
-        ? KANSAS_VIEW.center
-        : [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
-      locationRedacted: locationCameraRedacted || locationDerivedViewRef.current,
-      zoom: Number(view.zoom.toFixed(2)),
-      bearing: Number(view.bearing.toFixed(1)),
-      pitch: Number(view.pitch.toFixed(1)),
-      projection,
-      representation: mapRepresentationLabel,
-    },
-    basemap: { key: basemap, title: BASEMAPS[basemap].title, note: BASEMAPS[basemap].note },
-    time: { value: temporalQuery.frame, label: temporalScopeLabel, era: `${timelineEraLabel(temporalQuery.frame, buildYearCurrent)} · ${temporalMode.replaceAll("-", " ")}` },
-    visibleLayers: policyPreservingQwenSample(activeLayers, 14, (layer) => (
-      layer.releaseState === "RESTRICTED" || layer.publicStatus === "RESTRICTED"
-    )).map((layer) => ({
-      id: layer.id,
-      title: layer.title,
-      domain: layer.domain,
-      sourceType: layer.sourceType,
-      releaseState: layer.releaseState,
-      publicStatus: layer.publicStatus,
-      freshnessState: layer.freshnessState,
-      evidenceReference: layer.evidenceReference,
-    })),
-    officialSources: officialContextConnections.map((connection) => ({
-      id: connection.source.id,
-      title: connection.source.shortTitle,
-      selected: Boolean(connection.visible),
-      displayed: Boolean(connection.activeAtFrame),
-      state: connection.state,
-      featureCount: connection.featureCount ?? null,
-      retrievedAt: connection.retrievedAt ?? null,
-      evidenceRole: "EXTERNAL_CONTEXT_ONLY" as const,
-    })),
-    soilMoisture: soilMoistureContext,
-    telemetry: {
-      authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
-      renderer: {
-        state: runtime.kind,
-        styleLoaded: maplibreProbe.styleLoaded,
-        canvasReady: maplibreProbe.canvasReady,
-        tilesLoaded: maplibreProbe.tilesLoaded,
-        failedChecks: maplibreProbe.failedChecks,
-      },
-      registry: { total: LAYER_REGISTRY.length, ...sourceStateCounts },
-      radar: { state: noaaRadarDisplayState, frameTime: noaaRadarFrameTime, manifestFresh: noaaRadarManifestFresh },
-      streamflow: { state: streamflowState, frameTime: streamflowFrameTime },
-    },
-    selection: selected && !selectedTimeMismatch ? {
-      featureId: selected.featureId,
-      title: selected.properties.title,
-      layerId: selected.layerId,
-      layerTitle: selected.layer.title,
-      domain: selected.layer.domain,
-      evidenceState: selected.properties.evidenceState,
-      evidenceReference: selected.properties.citation,
-      reviewState: selected.properties.reviewState,
-      releaseState: selected.properties.releaseState,
-      sourceYear: selected.properties.year,
-      spatialScope: selected.properties.spatialScope,
-      summary: selected.properties.summary,
-    } : null,
-    nearbyContext: policyPreservingQwenSample(nearbyContext, 8, (row) => (
-      row.feature.properties.evidenceState === "RESTRICTED_ACCESS"
-      || row.feature.properties.evidenceState === "DENIED_BY_POLICY"
-    )).map((row) => ({
-      title: row.feature.properties.title,
-      layerTitle: row.layer.title,
-      distanceMiles: Number(row.distanceMiles.toFixed(1)),
-      evidenceState: row.feature.properties.evidenceState,
-    })),
-  }), [activeLayers, basemap, buildYearCurrent, locationCameraRedacted, mapRepresentationLabel, maplibreProbe.canvasReady, maplibreProbe.failedChecks, maplibreProbe.styleLoaded, maplibreProbe.tilesLoaded, nearbyContext, noaaRadarDisplayState, noaaRadarFrameTime, noaaRadarManifestFresh, officialContextConnections, projection, runtime.kind, selected, selectedTimeMismatch, soilMoistureContext, sourceStateCounts, streamflowFrameTime, streamflowState, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
-  const qwenHasAnswerableSelection = Boolean(qwenContext.selection
-    && ["ANSWER", "CORRECTED"].includes(qwenContext.selection.evidenceState)
-    && qwenContext.selection.releaseState === "RELEASED"
-    && qwenContext.selection.reviewState === "ACCEPTED"
-    && qwenContext.visibleLayers.some((layer) => layer.id === qwenContext.selection?.layerId
-      && layer.evidenceReference === qwenContext.selection?.evidenceReference
-      && layer.releaseState === "RELEASED"
-      && ["PUBLIC_SAFE", "GENERALIZED"].includes(layer.publicStatus)));
-  const qwenQuickPrompts = qwenHasAnswerableSelection ? QWEN_SELECTION_PROMPTS : QWEN_DIAGNOSTIC_PROMPTS;
-  const qwenCopyPrompt = useMemo(
-    () => buildCopyableQwenPrompt(qwenQuestion, qwenContext),
-    [qwenContext, qwenQuestion],
-  );
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
       isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
@@ -3878,7 +3690,14 @@ export default function Home() {
     window.setTimeout(() => {
       qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]')?.focus({ preventScroll: true });
     }, 0);
-  }, [dismissMapUtilityWithoutFocus, isCompact]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("kfm-chat") === "1") {
+      const timer = window.setTimeout(() => { setPcAccountRequest(value => value + 1); openQwenCompanion(null); }, 0);
+      return () => window.clearTimeout(timer);
+    }
+  }, [openQwenCompanion]);
 
   const openEvidencePanel = useCallback(() => {
     dismissMapUtilityWithoutFocus();
@@ -3887,42 +3706,10 @@ export default function Home() {
     window.setTimeout(() => rightPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Evidence Drawer"]')?.focus({ preventScroll: true }), 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setRightOpen]);
 
-  useEffect(() => {
-    if (!qwenOpen) return;
-    const controller = new AbortController();
-    let active = true;
-    const timer = window.setTimeout(() => controller.abort("QWEN_HEALTH_TIMEOUT"), LOCAL_QWEN_HEALTH_TIMEOUT_MS);
-    let responseReceived = false;
-    setQwenBridgeState("checking");
-    void (async () => {
-      try {
-        const response = await fetch(`${LOCAL_QWEN_BRIDGE}/health`, {
-          cache: "no-store",
-          credentials: "omit",
-          redirect: "error",
-          signal: controller.signal,
-        });
-        responseReceived = true;
-        const payload = await readBoundedJson(response, LOCAL_QWEN_REPLY_MAX_BYTES, controller.signal);
-        if (active) setQwenBridgeState(qwenStateFromHealth(payload));
-      } catch {
-        if (active) setQwenBridgeState(qwenStateFromTransportFailure(controller.signal.aborted, responseReceived));
-      } finally {
-        window.clearTimeout(timer);
-      }
-    })();
-    return () => {
-      active = false;
-      window.clearTimeout(timer);
-      controller.abort("QWEN_PANEL_CLOSED");
-    };
-  }, [qwenHealthRetryToken, qwenOpen]);
-
   const closeQwenCompanion = useCallback((returnElement?: HTMLElement | null) => {
     const returnTarget = returnElement ?? qwenReturnRef.current;
     qwenReturnRef.current = null;
     setQwenOpen(false);
-    setQwenSetupOpen(false);
     window.setTimeout(() => {
       if (returnTarget?.isConnected && returnTarget.getClientRects().length > 0) returnTarget.focus({ preventScroll: true });
       else mapContainerRef.current?.focus({ preventScroll: true });
@@ -3999,69 +3786,6 @@ export default function Home() {
       }
     };
   }, [closeQwenCompanion, isCompact, qwenOpen]);
-
-  const copyQwenPrompt = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(qwenCopyPrompt);
-      announce("Map-grounded Qwen prompt copied with no public effect");
-    } catch {
-      announce("Clipboard access was blocked; the Qwen prompt stayed in the browser");
-    }
-  }, [announce, qwenCopyPrompt]);
-
-  const askQwen = useCallback(async () => {
-    const question = qwenQuestion.trim().slice(0, 1200);
-    if (!question || qwenBusy) return;
-    if (!shouldUseLocalQwen(qwenBridgeState)) {
-      setQwenMessages((current) => [...current, {
-        role: "assistant" as const,
-        content: "Local-only Qwen is not ready. Use Setup or Retry; no hosted inference fallback was attempted.",
-      }].slice(-8));
-      return;
-    }
-    setQwenBusy(true);
-    setQwenMessages((current) => [...current, { role: "user" as const, content: question }].slice(-8));
-    setQwenQuestion("");
-    const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort("QWEN_ASK_TIMEOUT"), LOCAL_QWEN_ASK_TIMEOUT_MS);
-    let responseReceived = false;
-    try {
-      const response = await fetch(`${LOCAL_QWEN_BRIDGE}/ask`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ question, context: qwenContext }),
-        cache: "no-store",
-        credentials: "omit",
-        redirect: "error",
-        signal: controller.signal,
-      });
-      responseReceived = true;
-      const payload = await readBoundedJson(response, LOCAL_QWEN_REPLY_MAX_BYTES, controller.signal);
-      const envelope = parseQwenAskEnvelope(payload);
-      if (!envelope) throw new Error("INVALID_QWEN_ENVELOPE");
-      setQwenBridgeState(qwenStateFromAsk(payload));
-      setQwenMessages((current) => [...current, {
-        role: "assistant" as const,
-        content: qwenReplyFromEnvelope(envelope),
-        interpretation: envelope.interpretation,
-        requestId: envelope.requestId,
-      }].slice(-8));
-    } catch {
-      const timedOut = controller.signal.aborted;
-      setQwenBridgeState(qwenStateFromTransportFailure(timedOut, responseReceived));
-      setQwenMessages((current) => [...current, {
-        role: "assistant" as const,
-        content: timedOut
-          ? "ERROR · The local Qwen request timed out. No hosted fallback was attempted. Check Ollama, then Retry."
-          : responseReceived
-            ? "ERROR · The local companion returned a malformed or oversized response, so it was withheld. Use Setup, then Retry. No hosted fallback was attempted."
-            : "ERROR · The loopback companion could not be reached. Start it, allow Local Network access if prompted, then Retry. No hosted fallback was attempted.",
-      }].slice(-8));
-    } finally {
-      window.clearTimeout(timer);
-      setQwenBusy(false);
-    }
-  }, [qwenBridgeState, qwenBusy, qwenContext, qwenQuestion]);
 
   const stopSceneOrbit = useCallback((notify = true) => {
     const cancel = sceneOrbitCancelRef.current;
@@ -8883,7 +8607,7 @@ export default function Home() {
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
-          <a href="/assistant" className="steward-login-button">Log in</a>
+          <button type="button" className="steward-login-button" onClick={event => { setPcAccountRequest(value => value + 1); openQwenCompanion(event.currentTarget); }} aria-controls="qwen-map-panel">{pcAccount ? "Account" : "Log in"}</button>
         </div>
         <div className="global-search">
           <label>
@@ -10189,10 +9913,10 @@ export default function Home() {
         {runtime.kind !== "unsupported" && !undergroundOpen && !mapUtilityOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Ask about what you see</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
+              <div><span className="qwen-eyebrow">OLLAMA · YOUR PC</span><h2 id="qwen-panel-title">Chat with KFM</h2><p>Ask about this place and time. Answers require released evidence.</p></div>
             </header>
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
@@ -10200,49 +9924,8 @@ export default function Home() {
               <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
               <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
             </div>
-            <section className="qwen-runtime-status" aria-label="Local Qwen runtime status">
-              <div role="status" aria-live="polite">
-                <strong data-bridge-state={qwenBridgeState}>{qwenStatusLabel(qwenBridgeState)}</strong>
-                <p>{qwenStateGuidance(qwenBridgeState)}</p>
-              </div>
-              <div className="qwen-runtime-actions">
-                <button type="button" aria-expanded={qwenSetupOpen} aria-controls="qwen-setup-guidance" onClick={() => setQwenSetupOpen((value) => !value)}>Setup</button>
-                <button type="button" onClick={() => setQwenHealthRetryToken((value) => value + 1)} disabled={qwenBridgeState === "checking" || qwenBusy}>Retry</button>
-              </div>
-              {qwenSetupOpen && <div id="qwen-setup-guidance" className="qwen-setup-guidance">
-                <strong>Owner-local setup on this Mac</strong>
-                <ol>
-                  <li>Open the official Ollama app.</li>
-                  <li>From the reviewed Site source, run <code>./scripts/install-local-qwen-macos.sh</code>.</li>
-                  <li>Allow Local Network access if the browser asks, then choose Retry.</li>
-                </ol>
-                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_MIN_VERSION} or newer, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion and its KFM source-metadata pack; it does not enable hosted inference.</p>
-              </div>}
-            </section>
-            <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
-              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p>
-                {message.interpretation && <section className="qwen-interpretation" aria-label="Model interpretation, not evidence">
-                  <header>INTERPRETATION · NOT EVIDENCE</header>
-                  <p>{message.interpretation.summary}</p>
-                  {([["Seen in this view", message.interpretation.observations], ["Possible readings", message.interpretation.inferences], ["Needed before KFM could answer", message.interpretation.gaps]] as const)
-                    .filter(([, items]) => items.length > 0)
-                    .map(([heading, items]) => <div key={heading}><strong>{heading}</strong><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
-                  {message.interpretation.followUps.length > 0 && <div className="qwen-follow-ups"><strong>Ask next</strong>{message.interpretation.followUps.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt.slice(0, 1200))}>{prompt}</button>)}</div>}
-                  {message.requestId && <small>Receipt {message.requestId.slice(0, 8)}</small>}
-                </section>}
-              </article>)}
-              {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
-            </div>
-            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "View questions answered as interpretation, not evidence"}>
-              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "VIEW · INTERPRETATION, NOT EVIDENCE"}</span>
-              {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
-            </div>
-            <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
-              <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
-            </form>
-            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
-          </section>}
+            <AssistantWorkspace accountRequest={pcAccountRequest} onAccount={setPcAccount} place={selected ? String(selected.properties.title ?? "") : ""} />
+          </section>
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <InspectionPanelSwitch active="evidence" onEvidence={() => {}} onQwen={() => openQwenCompanion()} onClose={closeRightPanel} />

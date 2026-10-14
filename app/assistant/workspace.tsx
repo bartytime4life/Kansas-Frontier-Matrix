@@ -1,68 +1,56 @@
 'use client';
-import {useCallback,useEffect,useState} from 'react';
-import Link from 'next/link';
+import {useCallback,useEffect,useRef,useState} from 'react';
 import styles from './workspace.module.css';
 type Status={configured:boolean;online:boolean;ready:boolean;account:string|null;role?:string|null};
 type Result={outcome:string;reasonCode:string;answer:string|null;interpretation:string|null;truncated?:boolean;citations?:{evidenceRef:string;title:string;url:string}[]};
 type Job={id:string;state:string;deadline:number;result:Result|null};
+type Turn={question:string;job:Job};
+type Props={accountRequest?:number;onAccount?:(account:string|null)=>void;place?:string};
 async function api(path:string,body?:object,signal?:AbortSignal){
-  const response=await fetch('/api/pc-ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(8000)]):AbortSignal.timeout(8000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
-  const result=await response.json();if(!response.ok)throw new Error(result.reasonCode??'PC_AI_UNAVAILABLE');return result;
+ const response=await fetch('/api/pc-ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(8000)]):AbortSignal.timeout(8000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
+ const result=await response.json();if(!response.ok)throw new Error(result.reasonCode??'PC_AI_UNAVAILABLE');return result;
 }
-const guidance:Record<string,string>={PC_OFFLINE:'The owner’s PC is offline or its model is unavailable. Try again when it reconnects.',USER_BUSY:'You already have a question in progress.',QUEUE_FULL:'The research queue is full. Try again shortly.',USER_RATE_LIMIT:'You have reached the hourly question limit.',SIGN_IN_DENIED:'Sign-in failed. Check your account details or invitation.',SIGN_IN_RATE_LIMIT:'Too many sign-in attempts. Wait before trying again.',NO_RELEASED_EVIDENCE:'No eligible released evidence is available for this search. KFM has abstained.',RELEASE_CHANGED:'The evidence release changed or became unavailable. The answer has been withheld.',POLICY_WITHHELD:'This question is withheld by KFM’s policy controls.',PC_AI_NOT_CONFIGURED:'The PC assistant is awaiting owner configuration.',PC_AI_STORAGE_HOLD:'The private database is unavailable or held by another process.',INFERENCE_FAILED:'The PC could not complete this inference.',EVIDENCE_NOT_SUPPORTIVE:'The available evidence does not support an answer.'};
-export default function AssistantWorkspace(){
-  const [status,setStatus]=useState<Status|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[activate,setActivate]=useState(false),[invitation,setInvitation]=useState('');
-  const refresh=useCallback(async(signal?:AbortSignal)=>{try{setStatus(await api('status',undefined,signal));}catch{if(!signal?.aborted)setStatus(null);}},[]);
-  useEffect(()=>{const controller=new AbortController();queueMicrotask(()=>{if(!controller.signal.aborted)void refresh(controller.signal);});const timer=setInterval(()=>void refresh(controller.signal),5000);return()=>{clearInterval(timer);controller.abort();};},[refresh]);
-  useEffect(()=>{queueMicrotask(()=>{setJob(null);setInvitation('');setActivate(false);});},[status?.account,status?.role]);
-  const id=job?.id,state=job?.state;
-  useEffect(()=>{
-    if(!id||!['queued','running'].includes(state??''))return;
-    const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;
-    const poll=async()=>{try{const next:Job=await api('jobs/'+id,undefined,controller.signal);if(!controller.signal.aborted){setJob(next);setError('');if(['queued','running'].includes(next.state))timer=setTimeout(poll,2000);}}
-      catch{if(!controller.signal.aborted){setError('Connection interrupted. Your job remains subject to its deadline.');timer=setTimeout(poll,4000);}}};
-    void poll();return()=>{controller.abort();clearTimeout(timer);};
-  },[id,state]);
-  const signIn=async(event:React.FormEvent<HTMLFormElement>)=>{
-    event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');
-    try{await api('sign-in',{username:values.get('username'),password:values.get('password'),});form.reset();await refresh();}
-    catch(reason){setError(guidance[(reason as Error).message]??'Sign-in could not complete.');}finally{setBusy(false);}
-  };
-  const ask=async(event:React.FormEvent<HTMLFormElement>)=>{
-    event.preventDefault();const values=new FormData(event.currentTarget);setBusy(true);setError('');
-    try{const created=await api('jobs',{question:values.get('question'),term:values.get('term'),place:values.get('place'),start:values.get('start'),end:values.get('end')});setJob(await api('jobs/'+created.id));}
-    catch(reason){setError(guidance[(reason as Error).message]??'Research is unavailable. No fallback answer was generated.');}finally{setBusy(false);}
-  };
-  const manager=Boolean(status?.account&&['administrator','steward'].includes(status.role??''));
-  const invite=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');setInvitation('');try{const created=await api('admin/invite',{username:values.get('username'),role:values.get('role')});setInvitation(created.invitation);form.reset();}catch{setError('Invitation could not be created. Check your permissions and account details.');}finally{setBusy(false);}};
-  const statusText=!status?'Checking connection':!status.configured?'Awaiting owner setup':!status.online?'Owner’s PC offline':!status.ready?'PC connected; model unavailable':'PC ready';
-  return <main className={styles.page}>
-    <header><Link href='/'>← Back to the map</Link><p className={styles.eyebrow}>KANSAS FRONTIER MATRIX</p><h1>Ask KFM</h1><p>Research released records across places and time. Qwen runs on the owner’s PC; KFM supplies and checks the evidence.</p><p className={styles.status} role='status'>{statusText}</p></header>
-    {error&&<p role='alert' className={styles.notice}>{error}</p>}
-    {!status?.account?<section className={styles.card}><h2>Log in</h2><p>Sign in to open your permitted KFM functions. The map remains available without an account.</p>
-      <form onSubmit={signIn}><label>Username<input name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}' autoComplete='username'/></label>
-
-        <label>Password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='current-password'/></label>
-        <button disabled={busy||!status?.configured}>{busy?'Working…':'Sign in'}</button>
-      </form>
-    </section>:<section className={styles.card}><div className={styles.row}><h2>Research a question</h2><button className={styles.secondary} disabled={busy} onClick={async()=>{setBusy(true);try{await api('sign-out',{});setJob(null);setInvitation('');setActivate(false);await refresh();}catch{setError('Sign-out could not complete.');}finally{setBusy(false);}}}>Sign out {status.account}</button></div>
-      <form onSubmit={ask}><label>Your question<textarea name='question' rows={4} required maxLength={4096}/></label><label>Search terms<input name='term' required minLength={2} maxLength={120} placeholder='For example: river history'/></label>
-        <label>Place filter <span>(optional)</span><input name='place' maxLength={160} placeholder='A named place or county'/></label>
-        <div className={styles.row}><label>From <span>(optional)</span><input name='start' type='date'/></label><label>Through <span>(optional)</span><input name='end' type='date'/></label></div>
-        <p className={styles.detail}>Date filters exclude undated records. Questions are limited to released evidence; missing records, restricted questions, and unsupported claims produce a clear gap or denial.</p>
-        <button disabled={busy||!status.ready||['queued','running'].includes(job?.state??'')}>{busy?'Submitting…':'Ask KFM'}</button>
-      </form>
-    </section>}
-    {manager&&<section className={styles.card}><h2>Steward tools</h2><p>Signed in as {status?.role}. Invitations expire after 24 hours and can be used once.</p><form onSubmit={invite}><label>Account username<input name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}'/></label><label>Account role<select name='role'><option value='researcher'>Researcher</option>{status?.role==='administrator'&&<option value='steward'>Steward</option>}</select></label><button disabled={busy}>Create invitation</button></form>{invitation&&<p role='status'>Deliver this code privately: <code>{invitation}</code></p>}<button className={styles.secondary} onClick={()=>setActivate(value=>!value)}>Activate an invited account</button>{activate&&<form onSubmit={async event=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);try{await api('activate',{username:values.get('username'),password:values.get('password'),invitation:values.get('invitation')});form.reset();setInvitation('');setActivate(false);await refresh();}catch{setError('Activation failed.');}finally{setBusy(false);}}}><label>Username<input name='username' required autoComplete='username'/></label><label>Invitation code<input name='invitation' type='password' required autoComplete='off'/></label><label>Set password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='new-password'/></label><button disabled={busy}>Activate account and switch session</button></form>}</section>}
-    {status?.account&&job&&<section className={styles.card} aria-live='polite'><div className={styles.row}><h2>{job.result?.outcome??({'queued':'Queued','running':'PC is researching','expired':'Question expired','cancelled':'Question cancelled'}[job.state]??'Research status')}</h2>
-      {['queued','running'].includes(job.state)&&<button className={styles.secondary} disabled={busy} onClick={async()=>{setBusy(true);try{await api('jobs/'+job.id+'/cancel',{});setJob(await api('jobs/'+job.id));}catch{setError('Cancellation could not be confirmed.');}finally{setBusy(false);}}}>Cancel question</button>}</div>
-      {job.result?.answer&&<><h3>Supported facts</h3><p className={styles.answer}>{job.result.answer}</p></>}
-      {job.result?.interpretation&&<><h3>Model interpretation</h3><p className={styles.answer}>{job.result.interpretation}</p></>}
-      {job.result&&!job.result.answer&&<p>{guidance[job.result.reasonCode]??'KFM withheld an unsupported result.'}</p>}
-      {!!job.result?.citations?.length&&<><h3>Evidence</h3><ul>{job.result.citations.map((citation,index)=><li key={citation.evidenceRef+index}><Link href={citation.url}>{citation.title}</Link><small>{citation.evidenceRef}</small></li>)}</ul></>}
-      {job.result?.truncated&&<p className={styles.detail}>This bounded search may omit additional matching records.</p>}
-      {['queued','running'].includes(job.state)&&<p className={styles.detail}>One question runs at a time. Jobs expire within three minutes and are not automatically rerun.</p>}
-    </section>}
-    <footer className={styles.detail}>Generated interpretation does not change evidence, review, policy, or release state. Question and answer payloads expire after 24 hours; minimal job metadata expires after 30 days.</footer>
-  </main>;
+const guidance:Record<string,string>={PC_OFFLINE:'Your PC is offline or its model is unavailable.',USER_BUSY:'You already have a question in progress.',QUEUE_FULL:'The research queue is full. Try again shortly.',USER_RATE_LIMIT:'You have reached the hourly question limit.',SIGN_IN_DENIED:'Sign-in failed. Check your account details.',SIGN_IN_RATE_LIMIT:'Too many sign-in attempts. Wait before trying again.',NO_RELEASED_EVIDENCE:'I could not find eligible released evidence for this question. I cannot provide a supported answer yet.',RELEASE_CHANGED:'The evidence changed or became unavailable, so the answer was withheld.',POLICY_WITHHELD:'This question is withheld by KFM’s policy controls.',INFERENCE_FAILED:'The PC could not complete this question.',EVIDENCE_NOT_SUPPORTIVE:'The available evidence does not support an answer.'};
+const running=(job?:Job)=>Boolean(job&&['preparing','queued','running'].includes(job.state));
+function searchTerm(question:string){let term='';for(const char of question.trim()){if(new TextEncoder().encode(term+char).length>120)break;term+=char;}return term;}
+export default function AssistantWorkspace({accountRequest=0,onAccount,place=''}:Props){
+ const [status,setStatus]=useState<Status|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[accountOpen,setAccountOpen]=useState(false),[activate,setActivate]=useState(false),[invitation,setInvitation]=useState(''),[question,setQuestion]=useState('');
+ const loginRef=useRef<HTMLInputElement>(null),logRef=useRef<HTMLDivElement>(null),actorRef=useRef<string|null>(null);
+ const refresh=useCallback(async(signal?:AbortSignal)=>{try{const next:Status=await api('status',undefined,signal);if(signal?.aborted)return;setStatus(next);onAccount?.(next.account??null);}catch{if(!signal?.aborted){setStatus(null);onAccount?.(null);}}},[onAccount]);
+ useEffect(()=>{const controller=new AbortController();queueMicrotask(()=>{if(!controller.signal.aborted)void refresh(controller.signal);});const timer=setInterval(()=>void refresh(controller.signal),5000);return()=>{clearInterval(timer);controller.abort();};},[refresh]);
+ useEffect(()=>{const actor=status?.account?status.account+':'+status.role:null;if(actor===actorRef.current)return;actorRef.current=actor;queueMicrotask(()=>{setJob(null);setTurns([]);setInvitation('');setActivate(false);setError('');});},[status?.account,status?.role]);
+ useEffect(()=>{if(!accountRequest)return;queueMicrotask(()=>{setAccountOpen(true);});},[accountRequest]);
+ useEffect(()=>{if(accountOpen&&!status?.account)loginRef.current?.focus();},[accountOpen,status?.account]);
+ useEffect(()=>{logRef.current?.scrollTo({top:logRef.current.scrollHeight,behavior:'auto'});},[turns,job]);
+ const id=job?.id,state=job?.state;
+ useEffect(()=>{
+  if(!id||!['preparing','queued','running'].includes(state??''))return;
+  const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;
+  const poll=async()=>{try{const next:Job=await api('jobs/'+id,undefined,controller.signal);if(!controller.signal.aborted){setJob(next);setTurns(items=>items.map(item=>item.job.id===next.id?{...item,job:next}:item));setError('');if(running(next))timer=setTimeout(poll,2000);}}catch{if(!controller.signal.aborted){setError('Connection interrupted. The question remains subject to its deadline.');timer=setTimeout(poll,4000);}}};
+  void poll();return()=>{controller.abort();clearTimeout(timer);};
+ },[id,state]);
+ const signIn=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');try{await api('sign-in',{username:values.get('username'),password:values.get('password')});form.reset();setAccountOpen(false);await refresh();}catch(reason){setError(guidance[(reason as Error).message]??'Sign-in could not complete.');}finally{setBusy(false);}};
+ const ask=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form),prompt=question.trim();if(prompt.length<2)return;setBusy(true);setError('');try{const created=await api('jobs',{question:prompt,term:values.get('term')||searchTerm(prompt),place:values.get('place')||'',start:values.get('start')||'',end:values.get('end')||''});const next:Job=await api('jobs/'+created.id);setJob(next);setTurns(items=>[...items.slice(-9),{question:prompt,job:next}]);setQuestion('');}catch(reason){setError(guidance[(reason as Error).message]??'This question could not complete. No fallback answer was generated.');}finally{setBusy(false);}};
+ const manager=Boolean(status?.account&&['administrator','steward'].includes(status.role??''));
+ const invite=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');setInvitation('');try{const created=await api('admin/invite',{username:values.get('username'),role:values.get('role')});setInvitation(created.invitation);form.reset();}catch{setError('Invitation could not be created. Check your permissions and account details.');}finally{setBusy(false);}};
+ const statusText=!status?'Checking PC':!status.configured?'Awaiting owner setup':!status.online?'PC offline':!status.ready?'Model unavailable':'PC ready';
+ return <div className={styles.chat}>
+  <div className={styles.toolbar}><span role='status' className={styles.status}>{statusText}</span><button type='button' onClick={()=>setAccountOpen(value=>!value)}>{status?.account?'Account':'Log in'}</button></div>
+  {error&&<p role='alert' className={styles.notice}>{error}</p>}
+  {accountOpen&&<section className={styles.account} aria-label='Account controls'>
+   {!status?.account?<><h3>Log in</h3><form onSubmit={signIn}><label>Username<input ref={loginRef} name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}' autoComplete='username'/></label><label>Password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='current-password'/></label><button disabled={busy||!status?.configured}>Sign in</button></form></>:<><p>Signed in as <strong>{status.account}</strong> · {status.role}</p><button disabled={busy} onClick={async()=>{setBusy(true);try{await api('sign-out',{});setJob(null);setTurns([]);setInvitation('');setActivate(false);await refresh();}catch{setError('Sign-out could not complete.');}finally{setBusy(false);}}}>Sign out</button></>}
+   {manager&&<details><summary>Steward tools</summary><form onSubmit={invite}><label>Account username<input name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}'/></label><label>Account role<select name='role'><option value='researcher'>Researcher</option>{status?.role==='administrator'&&<option value='steward'>Steward</option>}</select></label><button disabled={busy}>Create invitation</button></form>{invitation&&<p>Deliver privately: <code>{invitation}</code></p>}<button type='button' onClick={()=>setActivate(value=>!value)}>Activate an invited account</button>{activate&&<form onSubmit={async event=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);try{await api('activate',{username:values.get('username'),password:values.get('password'),invitation:values.get('invitation')});form.reset();setInvitation('');setActivate(false);await refresh();}catch{setError('Activation failed.');}finally{setBusy(false);}}}><label>Username<input name='username' required autoComplete='username'/></label><label>Invitation code<input name='invitation' type='password' required autoComplete='off'/></label><label>Set password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='new-password'/></label><button disabled={busy}>Activate and switch account</button></form>}</details>}
+  </section>}
+  {!accountOpen&&<>
+  <div ref={logRef} className={styles.messages} role='log' aria-label='KFM chat conversation' aria-live='polite' tabIndex={0}>
+   <article className={styles.assistant}><small>KFM</small><p>Ask about Kansas places, time, and released evidence. I use Ollama on your PC and cite supported records.</p>{!status?.account&&<p>Log in from the top bar to send a message.</p>}</article>
+   {status?.account&&turns.map(turn=><div key={turn.job.id}><article className={styles.user}><small>YOU</small><p>{turn.question}</p></article><article className={styles.assistant}><small>KFM · {turn.job.result?.outcome??turn.job.state.toUpperCase()}</small>{turn.job.result?.answer&&<p>{turn.job.result.answer}</p>}{turn.job.result?.interpretation&&<><strong>Interpretation</strong><p>{turn.job.result.interpretation}</p></>}{turn.job.result&&!turn.job.result.answer&&<p>{guidance[turn.job.result.reasonCode]??'KFM withheld an unsupported result.'}</p>}{!turn.job.result&&<p>{running(turn.job)?'Your PC is working on this question…':turn.job.state==='cancelled'?'Question cancelled.':'The question ended without an answer.'}</p>}{!!turn.job.result?.citations?.length&&<ul>{turn.job.result.citations.map((citation,index)=><li key={citation.evidenceRef+index}><a href={citation.url}>{citation.title}</a></li>)}</ul>}{turn.job.result?.truncated&&<p>This bounded search may omit additional records.</p>}</article></div>)}
+  </div>
+  <form onSubmit={ask} className={styles.composer}>
+   <details><summary>Evidence search filters</summary><label>Search terms<input name='term' maxLength={120} placeholder='Defaults to your message'/></label><label>Place filter<input name='place' defaultValue={place} maxLength={160} placeholder='Named place or county'/></label><div className={styles.dates}><label>From<input name='start' type='date'/></label><label>Through<input name='end' type='date'/></label></div><small>Date filters exclude undated records.</small></details>
+   <label><span className={styles.srOnly}>Message KFM</span><textarea value={question} onChange={event=>setQuestion(event.target.value)} rows={3} maxLength={4096} placeholder='Message KFM…' disabled={!status?.account}/></label><div className={styles.actions}><small>Ollama on your PC · evidence checked</small>{running(job??undefined)?<button type='button' disabled={busy} onClick={async()=>{setBusy(true);try{await api('jobs/'+job!.id+'/cancel',{});const next=await api('jobs/'+job!.id);setJob(next);setTurns(items=>items.map(item=>item.job.id===next.id?{...item,job:next}:item));}catch{setError('Cancellation could not be confirmed.');}finally{setBusy(false);}}}>Cancel</button>:<button disabled={busy||!status?.account||!status.ready||question.trim().length<2}>{busy?'Sending…':'Send'}</button>}</div>
+  </form>
+  <footer className={styles.footer}>Interpretation never changes evidence or release state. Payloads expire after 24 hours. Chat stays in this browser tab.</footer>
+  </>}
+ </div>;
 }

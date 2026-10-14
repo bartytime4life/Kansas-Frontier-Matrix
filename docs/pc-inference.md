@@ -1,9 +1,8 @@
 # KFM PC inference — owner operating guide
 
-This GoDaddy composition adds invited-user research at `/assistant`, a private
+This GoDaddy composition adds invited-user research inside the main HUD’s Ask Qwen/Evidence drawer, a private
 account/job database, and an outbound PC worker. It introduces no paid service,
-new hosting plan, tunnel, DNS change, model download or source admission. The
-existing local companion and dormant `/api/qwen` route retain their behavior.
+new hosting plan, tunnel, DNS change, model download or source admission. The PC worker and dormant `/api/qwen` route retain their behavior. The HUD no longer calls the separate browser-loopback companion.
 
 ## Storage evidence and bounded qualification
 
@@ -193,3 +192,20 @@ Rollback sets `KFM_PC_ENABLED=false`, stops the PC worker and restores the
 previous accepted GoDaddy source. Preserve the private database, encryption key
 and disposable probe evidence. It does not remove Ollama, shared models, source
 data, original Sites or other applications. No destructive down migration exists.
+
+## HUD chat interaction
+
+The top Log in/Account button opens account controls inside the existing map
+inspection drawer, alongside Evidence and Ask Qwen. It does not navigate away
+from the map or create another browser window. `/assistant` is a compatibility
+redirect to `/?kfm-chat=1`. Questions use a regular message composer and bounded
+user/assistant bubbles. Evidence search filters are optional; the question is
+the default bounded search term. The map’s selection and time strip is visible
+context, not admitted evidence or an automatic release claim.
+
+Conversation state remains mounted when switching to Evidence and back, and
+is cleared when the account identity/role changes. Up to ten turns are held
+in tab memory only, with no localStorage persistence and no model-history
+injection. Every question is independently evidence-resolved by the existing
+server. Invitations and account activation remain hidden until an authorized
+administrator/steward opens Account; all existing server checks remain in force.
