@@ -4,9 +4,9 @@
   "files": [
     {
       "sourcePath": "packages/connectors-core/src/http-runtime.mjs",
-      "sourceSha256": "0b878c81619729dc85f1513facdaf13b00f98a52578c8bde8969066cba811386",
+      "sourceSha256": "03a111cbf6bfdbc189296339785d9c97683f237d8468702d69f1cd58cef55f35",
       "deploymentPath": "app/api-connections-runtime/http-runtime.mjs",
-      "deploymentSha256": "0b878c81619729dc85f1513facdaf13b00f98a52578c8bde8969066cba811386"
+      "deploymentSha256": "03a111cbf6bfdbc189296339785d9c97683f237d8468702d69f1cd58cef55f35"
     },
     {
       "sourcePath": "connectors/nass/quick-stats-api.mjs",
