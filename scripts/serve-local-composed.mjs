@@ -60,6 +60,7 @@ export async function serveComposed({nativeRoot,state,port=4173,reviewedImagery=
   if(!Number.isInteger(port)||port<1024||port>65535||reviewedImagery&&port!==4173)throw new Error('LOCAL_PORT_INVALID');
   const origin=`http://127.0.0.1:${port}`;
   const api=await createNativeApi(nativeRoot,state,port,reviewedImagery);
+  process.env.KFM_LOCAL_COMPOSED="1";
   let server;
   try {
     ({server}=await startProdServer({port,host:'127.0.0.1',outDir:resolve('dist')}));

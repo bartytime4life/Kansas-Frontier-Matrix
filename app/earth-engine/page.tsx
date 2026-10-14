@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import EarthEngineWorkspace from "./workspace";
+import LocalEarthEngineWorkspace from "./workspace-local";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Earth Engine discovery & recipes | Kansas Frontier Matrix",
@@ -7,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function EarthEnginePage() {
-  return <EarthEngineWorkspace />;
+  return process.env.KFM_LOCAL_COMPOSED === "1" ? <LocalEarthEngineWorkspace /> : <EarthEngineWorkspace />;
 }

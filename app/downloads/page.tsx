@@ -1,4 +1,4 @@
 import { redirect } from "next/navigation";
-
-/** Existing bookmarks use hosted sources; no PC download service is contacted. */
-export default function DownloadsPage() { redirect("/?layers=sources"); }
+import DownloadsWorkspace from "./workspace";
+export const dynamic = "force-dynamic";
+export default function DownloadsPage() { if(process.env.KFM_LOCAL_COMPOSED === "1") return <DownloadsWorkspace />; redirect("/?layers=sources"); }

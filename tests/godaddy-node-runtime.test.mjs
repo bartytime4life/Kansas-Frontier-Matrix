@@ -45,6 +45,7 @@ test("map assets are served by the Node production server", async () => {
 for (const path of ['/downloads','/earth-engine-downloads/setup']) {
   test('legacy PC workbench URL redirects to hosted source status: ' + path, async () => {
     const response=await fetch(origin+path,{redirect:'manual'});
+    if(localComposed){assert.equal(response.status,200);assert.match(await response.text(),/Local library|Download|Earth Engine/);return;}
     assert.ok([302,303,307,308].includes(response.status));
     const destination=new URL(response.headers.get('location'),origin);
     assert.equal(destination.origin,new URL(origin).origin);
