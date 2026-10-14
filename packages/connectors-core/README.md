@@ -1754,3 +1754,7 @@ response-size cap, HTTPS-only transport, no redirects and temporary response
 files. The USGS pilot supplies the exact provider and path profile; the shared
 transport does not choose sources or write lifecycle stores. Regression tests
 are in `tests/packages/connectors_core/test_bounded_curl.py`.
+
+## Portable HTTP runtime addition — 2026-10-14
+
+The bounded ESM primitives at `src/http-runtime.mjs` support the Sites/Node API intake described in [the dual-host runbook](../../docs/runbooks/api-connections.md). They coexist with existing Python consumers; the older scaffold snapshot above remains historical. Source-specific builders remain under `connectors/`, orchestration under `pipelines/ingest/shared/`, and generated application mirrors carry explicit source hashes. This addition grants no source admission, storage, policy or release authority.
