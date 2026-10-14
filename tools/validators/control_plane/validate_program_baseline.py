@@ -2,9 +2,16 @@
 """Validate the pinned M01 program baseline without network access.
 
 A pass proves bounded shape, ordering, issue/PR snapshot consistency, pinned
-repository-byte digests, explicit failure posture, and review-slice path closure.
-It does not create authority, approve review, mutate issues, waive drift, admit
-sources, or authorize release, deployment, promotion, or publication.
+repository-byte digests, ADR counts derived from the pinned index bytes,
+base-path and supersession lineage agreement with Git, explicit failure posture,
+and review-slice path closure. It does not create authority, approve review,
+mutate issues, waive drift, admit sources, or authorize release, deployment,
+promotion, or publication.
+
+Profile v2 carries no facts of one snapshot: every count, path status, and
+unresolved-item requirement is derived from the pinned tree or from the
+instance's own recorded observations. The retired v1 profile is rejected with
+one stable finding instead of being validated against v2 rules.
 """
 
 from __future__ import annotations
@@ -32,7 +39,24 @@ MAX_SCHEMA_FINDINGS = 100
 MAX_REFERENCED_FILE_BYTES = 64 * 1024 * 1024
 GIT_TIMEOUT_SECONDS = 5
 SCOPE = "m01-pinned-program-coordination-evidence-projection-only"
+RETIRED_PROFILES = frozenset({"kfm.program-baseline.m01.v1"})
 REQUIRED_ISSUES = {2768, 2874, 3365}
+REQUIRED_OBSERVATION_IDS = frozenset(
+    {
+        "exact_main_hosted_checks",
+        "object_family_workflow_watch_tests",
+        "repository_topology",
+    }
+)
+REQUIRED_UNRESOLVED_ITEMS = frozenset({"human_review_pending"})
+NON_PASS_OUTCOMES = ("FAIL", "HOLD", "NOT_RUN", "SKIPPED", "UNKNOWN")
+ADR_INDEX_TABLE_START = "<!-- ADR_INDEX_TABLE_START -->"
+ADR_INDEX_TABLE_END = "<!-- ADR_INDEX_TABLE_END -->"
+ADR_SCAFFOLD_TABLE_START = "<!-- ADR_SCAFFOLD_TABLE_START -->"
+ADR_SCAFFOLD_TABLE_END = "<!-- ADR_SCAFFOLD_TABLE_END -->"
+ADR_INDEX_HEADER = ["ID", "Record", "Effective status", "Source metadata", "Supersedes", "Superseded by"]
+ADR_SCAFFOLD_HEADER = ["File", "Classification", "Decision status"]
+ADR_EFFECTIVE_STATUSES = frozenset({"accepted", "proposed", "rejected", "superseded"})
 REQUIRED_NON_EFFECTS = frozenset(
     {
         "does_not_accept_or_supersede_adrs",
@@ -338,6 +362,169 @@ def _check_worktree_path(
         findings.append(Finding("PATH_READ_ERROR", field))
 
 
+@dataclass(frozen=True)
+class AdrIndexCounts:
+    accepted_ids: frozenset[str]
+    proposed_count: int
+    scaffold_count: int
+
+
+def _marked_table_rows(
+    lines: Sequence[str],
+    *,
+    start_marker: str,
+    end_marker: str,
+    header: Sequence[str],
+) -> list[list[str]] | None:
+    """Return data-row cells between exact marker lines, or None if malformed.
+
+    The rule mirrors ``tools/validators/validate_adr_index.py``: the first
+    marked line is the exact header, the second is the separator, and every
+    later non-table line is ignored.
+    """
+
+    try:
+        start = lines.index(start_marker)
+        end = lines.index(end_marker, start + 1)
+    except ValueError:
+        return None
+    marked = lines[start + 1 : end]
+    if len(marked) < 2 or _table_cells(marked[0]) != list(header):
+        return None
+    rows = []
+    for line in marked[2:]:
+        cells = _table_cells(line)
+        if not cells:
+            continue
+        if len(cells) != len(header):
+            return None
+        rows.append(cells)
+    return rows
+
+
+def _table_cells(line: str) -> list[str]:
+    stripped = line.strip()
+    if not stripped.startswith("|") or not stripped.endswith("|"):
+        return []
+    return [cell.strip() for cell in stripped.strip("|").split("|")]
+
+
+def adr_index_counts(index_bytes: bytes) -> AdrIndexCounts | None:
+    """Derive accepted IDs and proposed/scaffold counts from ADR index bytes.
+
+    Numbered rows are counted by their normalized ``Effective status`` cell;
+    every data row in the scaffold table is one unassigned scaffold. A missing
+    marker, wrong header, malformed row, unknown status, or repeated ID makes
+    the index unparseable rather than silently miscounted.
+    """
+
+    try:
+        lines = index_bytes.decode("utf-8").splitlines()
+    except UnicodeError:
+        return None
+    numbered = _marked_table_rows(
+        lines,
+        start_marker=ADR_INDEX_TABLE_START,
+        end_marker=ADR_INDEX_TABLE_END,
+        header=ADR_INDEX_HEADER,
+    )
+    scaffolds = _marked_table_rows(
+        lines,
+        start_marker=ADR_SCAFFOLD_TABLE_START,
+        end_marker=ADR_SCAFFOLD_TABLE_END,
+        header=ADR_SCAFFOLD_HEADER,
+    )
+    if numbered is None or scaffolds is None or not numbered:
+        return None
+    seen: set[str] = set()
+    accepted: set[str] = set()
+    proposed = 0
+    for cells in numbered:
+        adr_id = cells[0].replace("`", "").strip()
+        status = cells[2].replace("`", "").strip().lower()
+        if not re.fullmatch(r"ADR-[0-9]{4}", adr_id) or adr_id in seen:
+            return None
+        if status not in ADR_EFFECTIVE_STATUSES:
+            return None
+        seen.add(adr_id)
+        if status == "accepted":
+            accepted.add(adr_id)
+        elif status == "proposed":
+            proposed += 1
+    return AdrIndexCounts(frozenset(accepted), proposed, len(scaffolds))
+
+
+def _check_adr_index_counts(
+    adr_index: Mapping[str, Any],
+    index_bytes: bytes,
+    findings: list[Finding],
+) -> None:
+    derived = adr_index_counts(index_bytes)
+    field = "/authority_snapshot/adr_index"
+    if derived is None:
+        findings.append(Finding("ADR_INDEX_UNPARSEABLE", f"{field}/path"))
+        return
+    accepted_ids = _array(adr_index.get("accepted_ids"))
+    if set(accepted_ids) != derived.accepted_ids:
+        findings.append(Finding("ACCEPTED_ADR_SET_MISMATCH", f"{field}/accepted_ids"))
+    if adr_index.get("proposed_count") != derived.proposed_count:
+        findings.append(Finding("PROPOSED_ADR_COUNT_MISMATCH", f"{field}/proposed_count"))
+    if adr_index.get("unassigned_scaffold_count") != derived.scaffold_count:
+        findings.append(Finding("ADR_SCAFFOLD_COUNT_MISMATCH", f"{field}/unassigned_scaffold_count"))
+
+
+def _check_base_path_status(
+    repo_root: Path,
+    *,
+    base_sha: str,
+    canonical_path: Any,
+    status: Any,
+    findings: list[Finding],
+) -> None:
+    """Require ABSENT/PRESENT to agree with the canonical path in the base tree."""
+
+    if not isinstance(canonical_path, str):
+        return
+    listed = _git_run(repo_root, ["ls-tree", "-z", base_sha, "--", canonical_path])
+    if listed is None:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/placement/canonical_path"))
+        return
+    if listed.returncode != 0:
+        findings.append(Finding("BASE_PATH_CHECK_FAILED", "/placement/canonical_path"))
+        return
+    observed = "PRESENT" if listed.stdout else "ABSENT"
+    if status != observed:
+        findings.append(Finding("BASE_PATH_STATUS_MISMATCH", "/placement/base_path_status"))
+
+
+def _check_supersedes_ancestry(
+    repo_root: Path,
+    *,
+    superseded_sha: Any,
+    base_sha: str,
+    findings: list[Finding],
+) -> None:
+    """Require the superseded baseline commit to be a strict ancestor of base."""
+
+    if not isinstance(superseded_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", superseded_sha):
+        return
+    field = "/supersedes/base_sha"
+    commit = _git_run(repo_root, ["cat-file", "-e", f"{superseded_sha}^{{commit}}"])
+    if commit is None:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
+        return
+    if commit.returncode != 0:
+        findings.append(Finding("SUPERSEDED_BASE_COMMIT_NOT_FOUND", field))
+        return
+    ancestry = _git_run(repo_root, ["merge-base", "--is-ancestor", superseded_sha, base_sha])
+    if ancestry is None:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
+    elif ancestry.returncode == 1:
+        findings.append(Finding("SUPERSEDED_BASE_NOT_ANCESTOR", field))
+    elif ancestry.returncode != 0:
+        findings.append(Finding("SUPERSEDED_BASE_ANCESTRY_CHECK_FAILED", field))
+
+
 def _semantic_findings(
     candidate: Mapping[str, Any],
     *,
@@ -353,6 +540,14 @@ def _semantic_findings(
         "kfm-program-baseline-main-" + base_sha[:12]
     ):
         findings.append(Finding("BASELINE_ID_MISMATCH", "/baseline_id"))
+    supersedes = candidate.get("supersedes")
+    if isinstance(supersedes, dict):
+        superseded_sha = supersedes.get("base_sha")
+        if isinstance(superseded_sha, str):
+            if superseded_sha == base_sha:
+                findings.append(Finding("SUPERSEDES_SAME_BASE", "/supersedes/base_sha"))
+            if supersedes.get("baseline_id") != "kfm-program-baseline-main-" + superseded_sha[:12]:
+                findings.append(Finding("SUPERSEDES_ID_MISMATCH", "/supersedes/baseline_id"))
     open_prs = _array(base.get("open_pull_requests"))
     _check_sorted_unique(
         open_prs,
@@ -390,13 +585,6 @@ def _semantic_findings(
     )
     if adr_index.get("accepted_count") != len(accepted_ids):
         findings.append(Finding("ACCEPTED_ADR_COUNT_MISMATCH", "/authority_snapshot/adr_index/accepted_count"))
-    accepted_count = adr_index.get("accepted_count")
-    proposed_count = adr_index.get("proposed_count")
-    if isinstance(accepted_count, int) and isinstance(proposed_count, int):
-        if accepted_count + proposed_count != 36:
-            findings.append(Finding("NUMBERED_ADR_COUNT_MISMATCH", "/authority_snapshot/adr_index"))
-    if adr_index.get("unassigned_scaffold_count") != 12:
-        findings.append(Finding("ADR_SCAFFOLD_COUNT_MISMATCH", "/authority_snapshot/adr_index/unassigned_scaffold_count"))
     directory_rules = _mapping(authority.get("directory_rules"))
     if directory_rules.get("decision_ref") not in set(accepted_ids):
         findings.append(Finding("DIRECTORY_DECISION_NOT_ACCEPTED", "/authority_snapshot/directory_rules/decision_ref"))
@@ -472,23 +660,8 @@ def _semantic_findings(
         if outcome not in {"FAIL"} and isinstance(count, int) and count > 0:
             findings.append(Finding("FINDINGS_PRESENTED_AS_NONFAIL", f"{field}/outcome"))
 
-    required_observations = {
-        "exact_main_hosted_checks": ("NOT_RUN", "NONE", 0),
-        "object_family_workflow_watch_tests": ("FAIL", "INHERITED", 9),
-        "repository_topology": ("FAIL", "INHERITED", 9),
-    }
-    for observation_id, expected in required_observations.items():
-        observed = observation_by_id.get(observation_id)
-        if not isinstance(observed, dict):
-            findings.append(Finding("REQUIRED_OBSERVATION_MISSING", "/validation_observations"))
-            continue
-        actual = (
-            observed.get("outcome"),
-            observed.get("failure_class"),
-            observed.get("finding_count"),
-        )
-        if actual != expected:
-            findings.append(Finding("REQUIRED_OBSERVATION_MISMATCH", f"/validation_observations/{observation_ids.index(observation_id)}"))
+    if not REQUIRED_OBSERVATION_IDS.issubset(set(observation_ids)):
+        findings.append(Finding("REQUIRED_OBSERVATION_MISSING", "/validation_observations"))
 
     unresolved = _array(candidate.get("unresolved_items"))
     non_effects = _array(candidate.get("non_effects"))
@@ -506,12 +679,22 @@ def _semantic_findings(
     )
     if not REQUIRED_NON_EFFECTS.issubset(set(non_effects)):
         findings.append(Finding("REQUIRED_NON_EFFECT_MISSING", "/non_effects"))
-    required_unresolved = {
-        "exact_main_hosted_checks_not_run",
-        "object_family_workflow_watch_coverage_has_nine_failures",
-        "repository_topology_has_nine_unbaselined_findings",
-    }
-    if not required_unresolved.issubset(set(unresolved)):
+    # Every observation whose outcome is not PASS must be carried as the
+    # unresolved token "<observation id>_<outcome in lower case>", and such a
+    # token must not outlive the outcome it names.
+    unresolved_set = set(unresolved)
+    required_unresolved = set(REQUIRED_UNRESOLVED_ITEMS)
+    for observation_id, observation in observation_by_id.items():
+        if not isinstance(observation_id, str):
+            continue
+        outcome = observation.get("outcome")
+        if outcome in NON_PASS_OUTCOMES:
+            required_unresolved.add(f"{observation_id}_{outcome.lower()}")
+        for named_outcome in NON_PASS_OUTCOMES:
+            token = f"{observation_id}_{named_outcome.lower()}"
+            if token in unresolved_set and outcome != named_outcome:
+                findings.append(Finding("UNRESOLVED_ITEM_STALE", "/unresolved_items"))
+    if not required_unresolved.issubset(unresolved_set):
         findings.append(Finding("REQUIRED_UNRESOLVED_ITEM_MISSING", "/unresolved_items"))
 
     correction = _mapping(candidate.get("correction"))
@@ -575,15 +758,7 @@ def _semantic_findings(
             if root_bytes is not None and owner_bytes not in root_bytes:
                 findings.append(Finding("OWNER_NOT_IN_ROOT_REGISTRY", "/authority_snapshot/root_registry/owner"))
         if index_bytes is not None:
-            index_text = index_bytes.decode("utf-8", errors="replace")
-            for accepted_id in accepted_ids:
-                if not isinstance(accepted_id, str) or not re.search(
-                    rf"^\| `{re.escape(accepted_id)}` \|.*\| `accepted` \|",
-                    index_text,
-                    flags=re.MULTILINE,
-                ):
-                    findings.append(Finding("ACCEPTED_ADR_INDEX_BINDING_MISSING", "/authority_snapshot/adr_index/accepted_ids"))
-                    break
+            _check_adr_index_counts(adr_index, index_bytes, findings)
         if directory_bytes is not None and b"Directory Governance Standard" not in directory_bytes:
             findings.append(Finding("DIRECTORY_RULES_IDENTITY_MISSING", "/authority_snapshot/directory_rules/path"))
         _check_worktree_path(
@@ -606,15 +781,20 @@ def _semantic_findings(
             findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/base/sha"))
         elif commit.returncode != 0:
             findings.append(Finding("BASE_COMMIT_NOT_FOUND", "/base/sha"))
-        canonical_path = placement.get("canonical_path")
-        if isinstance(canonical_path, str):
-            old_path = _git_run(repo_root, ["ls-tree", "-z", base_sha, "--", canonical_path])
-            if old_path is None:
-                findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/placement/canonical_path"))
-            elif old_path.returncode != 0:
-                findings.append(Finding("BASE_PATH_CHECK_FAILED", "/placement/canonical_path"))
-            elif old_path.stdout:
-                findings.append(Finding("BASE_PATH_NOT_ABSENT", "/placement/base_path_status"))
+        _check_base_path_status(
+            repo_root,
+            base_sha=base_sha,
+            canonical_path=placement.get("canonical_path"),
+            status=placement.get("base_path_status"),
+            findings=findings,
+        )
+        if isinstance(supersedes, dict):
+            _check_supersedes_ancestry(
+                repo_root,
+                superseded_sha=supersedes.get("base_sha"),
+                base_sha=base_sha,
+                findings=findings,
+            )
 
     return findings
 
@@ -644,6 +824,9 @@ def validate_candidate(
     check_paths: bool = True,
     check_git: bool = True,
 ) -> ValidationResult:
+    profile = candidate.get("profile")
+    if isinstance(profile, str) and profile in RETIRED_PROFILES:
+        return ValidationResult((Finding("PROFILE_VERSION_UNSUPPORTED", "/profile"),))
     findings: list[Finding] = []
     findings.extend(_schema_findings(candidate))
     findings.extend(
@@ -741,7 +924,7 @@ def run_fixture_profile() -> int:
                 target.append(mutation.get("value"))
             else:
                 return 1
-        result = validate_candidate(candidate, check_paths=True, check_git=False)
+        result = validate_candidate(candidate, check_paths=True, check_git=True)
         display_path = FIXTURE_ROOT / f"{case_id}.json"
         print(_serialize(display_path, result))
         expected = sorted(item for item in expected if isinstance(item, str))

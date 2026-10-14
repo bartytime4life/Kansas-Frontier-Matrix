@@ -1,26 +1,36 @@
 {
-  "schema_version": "1.0.0",
-  "profile": "kfm.program-baseline.m01.v1",
-  "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+  "schema_version": "2.0.0",
+  "profile": "kfm.program-baseline.m01.v2",
+  "baseline_id": "kfm-program-baseline-main-514b23676387",
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
   "projection_status": "PROPOSED",
   "implementation_status": "PARTIAL",
   "authority_mode": "evidence_projection_only",
-  "observed_at": "2026-08-22T23:45:05Z",
+  "observed_at": "2026-10-14T06:32:06Z",
   "base": {
     "branch": "main",
-    "sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+    "sha": "514b2367638778a0a0b6e45a6451aea70c762909",
     "milestone_number": 2,
     "milestone_issue_number": 3365,
     "milestone_title": "M01 - Authority, Directory Rules & Program Baseline",
-    "open_pull_requests": []
+    "open_pull_requests": [
+      5153,
+      5154,
+      5155,
+      5156,
+      5157
+    ]
+  },
+  "supersedes": {
+    "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
+    "base_sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
   },
   "placement": {
     "owner": "@bartytime4life",
     "responsibility_root": "control_plane/",
     "canonical_path": "control_plane/program_baseline.json",
     "adjacent_readme_path": "control_plane/README.md",
-    "base_path_status": "ABSENT",
+    "base_path_status": "PRESENT",
     "slice_status": "PARTIAL",
     "consumer_paths": [
       ".github/workflows/program-baseline.yml",
@@ -42,20 +52,28 @@
     },
     "adr_index": {
       "path": "docs/adr/INDEX.md",
-      "sha256": "sha256:27e5cb40b23964e63302c5c7eeef9f213e18c0d9ed58b1051b026ff2c99fbf91",
+      "sha256": "sha256:0861558e4a1ef1b91ba4a457132b100ee3614f15c0761625d2988f5dceb0f91e",
       "accepted_ids": [
         "ADR-0006",
         "ADR-0007",
-        "ADR-0029"
+        "ADR-0029",
+        "ADR-0038",
+        "ADR-0040",
+        "ADR-0044",
+        "ADR-0045",
+        "ADR-0046",
+        "ADR-0047",
+        "ADR-0048",
+        "ADR-0049"
       ],
-      "accepted_count": 3,
-      "proposed_count": 33,
-      "unassigned_scaffold_count": 12,
+      "accepted_count": 11,
+      "proposed_count": 38,
+      "unassigned_scaffold_count": 11,
       "implementation_status": "IMPLEMENTED"
     },
     "codeowners": {
       "path": ".github/CODEOWNERS",
-      "sha256": "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256": "sha256:f21ebe9996da58a798247090cd478ec5388d6f74041c6091b30368b62ff2b0c6",
       "owner": "@bartytime4life",
       "implementation_status": "IMPLEMENTED"
     },
@@ -70,16 +88,23 @@
     {
       "id": "adjacent_control_plane_readme",
       "path": "control_plane/README.md",
-      "sha256": "sha256:1fcfc75b8d3ddd6a55aafc14905c1eb05bcd41dd1ec4861ee06afae132a2ea12",
+      "sha256": "sha256:ee1e9a7001244c5889dc108d248333b378b27858ea4e9166c8da334af813f31f",
       "implementation_status": "PARTIAL",
-      "reason": "snapshot_text_is_pinned_to_prior_milestone_base"
+      "reason": "dated_snapshot_and_validation_readback_precede_current_main"
+    },
+    {
+      "id": "external_mirror_projection",
+      "path": "control_plane/external_mirror_register.yaml",
+      "sha256": "sha256:3dc845f71afd87bd89a569bd3bed45881fe4974c091ed11a78a8a1e95a9f7ceb",
+      "implementation_status": "IMPLEMENTED",
+      "reason": "accepted_adr_0048_projection_read_by_topology_validator_and_parity_check_passes"
     },
     {
       "id": "historical_repository_control_state",
       "path": "control_plane/repository_control_state.yaml",
-      "sha256": "sha256:d2c733202183b1ec408ecb1935b7f6fbfb4896d1fd226a37499106dc3b1ed208",
-      "implementation_status": "PARTIAL",
-      "reason": "historical_control_observation_is_not_current_authority"
+      "sha256": "sha256:f7dacf497bb7ebde88e056793ab401e98a76f2f718154cdc6612d7d4170fbefa",
+      "implementation_status": "SUPERSEDED",
+      "reason": "projection_declares_superseded_status_and_is_not_current_authority"
     },
     {
       "id": "historical_trust_spine_baseline",
@@ -91,9 +116,9 @@
     {
       "id": "object_family_catalog",
       "path": "control_plane/object_family_register.yaml",
-      "sha256": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c",
+      "sha256": "sha256:405902fb35305f58cfa48a8db8fa1c136c17bb9817ca2d4d6bf30d4b1c8006b1",
       "implementation_status": "PARTIAL",
-      "reason": "catalog_has_all_nineteen_entries_but_workflow_watch_tests_fail"
+      "reason": "workflow_watch_tests_pass_but_ten_required_families_remain_conflicted"
     },
     {
       "id": "path_alias_projection",
@@ -101,6 +126,13 @@
       "sha256": "sha256:4721fd4c2df986dbc63b2174feec1863034d96326775ed000b4cfbf9fe57f5a2",
       "implementation_status": "IMPLEMENTED",
       "reason": "declared_alias_projection_validates"
+    },
+    {
+      "id": "repository_governance_parity_projection",
+      "path": "control_plane/repository_governance_parity.yaml",
+      "sha256": "sha256:f58bea6ea220bdb7716329d286d650424d1b0349bd11184a5a0af1c918846870",
+      "implementation_status": "PARTIAL",
+      "reason": "expected_topology_matches_observed_but_conformance_remains_hold_inherited"
     },
     {
       "id": "root_registry_projection",
@@ -115,8 +147,8 @@
       "number": 2768,
       "state": "OPEN",
       "role": "program_tracker",
-      "updated_at": "2026-08-22T18:19:34Z",
-      "recorded_baseline_sha": "131b605163bfbca1880014a10d9f41cd00ff564f",
+      "updated_at": "2026-10-13T18:36:36Z",
+      "recorded_baseline_sha": "2d6808a9edc99c1850aca375afb5f0894772e723",
       "implementation_status": "PARTIAL",
       "stale_at_base": true,
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
@@ -125,8 +157,8 @@
       "number": 2874,
       "state": "OPEN",
       "role": "source_corpus_tracker",
-      "updated_at": "2026-08-16T05:20:20Z",
-      "recorded_baseline_sha": "8a83530686c6df4752021377daf564758018d39c",
+      "updated_at": "2026-09-16T21:50:05Z",
+      "recorded_baseline_sha": "fd03c91c88a06fc7d4e097775ec62ede6d3b498c",
       "implementation_status": "PARTIAL",
       "stale_at_base": true,
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
@@ -135,8 +167,8 @@
       "number": 3365,
       "state": "OPEN",
       "role": "milestone_checkpoint",
-      "updated_at": "2026-08-22T18:16:30Z",
-      "recorded_baseline_sha": "f86fcddb553217f7ffadafd80f20e95d635180b1",
+      "updated_at": "2026-10-13T18:22:56Z",
+      "recorded_baseline_sha": "2d6808a9edc99c1850aca375afb5f0894772e723",
       "implementation_status": "PARTIAL",
       "stale_at_base": true,
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
@@ -179,7 +211,7 @@
       "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "thirty_six_numbered_records_and_twelve_scaffolds"
+      "scope": "forty_nine_numbered_records_and_eleven_scaffolds"
     },
     {
       "id": "adr_index_tests",
@@ -201,12 +233,21 @@
     },
     {
       "id": "exact_main_hosted_checks",
-      "command": "GitHub Actions run search for head_sha 6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
-      "run_state": "NOT_RUN",
-      "outcome": "NOT_RUN",
+      "command": "gh api repos/bartytime4life/Kansas-Frontier-Matrix/commits/514b2367638778a0a0b6e45a6451aea70c762909/check-runs --paginate",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "no_hosted_runs_observed_for_exact_merge_commit"
+      "scope": "one_hundred_seven_success_two_skipped_zero_failed_of_one_hundred_nine_check_runs"
+    },
+    {
+      "id": "external_site_mirror_parity",
+      "command": "python tools/qa/site_mirror.py --check",
+      "run_state": "EXECUTED",
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "content_parity_only_hosted_equivalence_and_human_acceptance_not_established"
     },
     {
       "id": "object_family_register",
@@ -221,10 +262,10 @@
       "id": "object_family_workflow_watch_tests",
       "command": "python -m pytest tests/validators/test_validate_object_family_register.py -q --strict-config --strict-markers",
       "run_state": "EXECUTED",
-      "outcome": "FAIL",
-      "failure_class": "INHERITED",
-      "finding_count": 9,
-      "scope": "nine_declared_paths_missing_from_both_workflow_filters"
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "sixteen_tests_and_two_hundred_seventy_six_subtests"
     },
     {
       "id": "path_alias_register",
@@ -236,13 +277,22 @@
       "scope": "declared_path_alias_projection"
     },
     {
+      "id": "repository_governance_parity",
+      "command": "python tools/validators/directory_governance/validate_repository_governance_parity.py",
+      "run_state": "EXECUTED",
+      "outcome": "HOLD",
+      "failure_class": "INHERITED",
+      "finding_count": 0,
+      "scope": "profile_integrity_pass_conformance_hold_inherited_on_topology_lane"
+    },
+    {
       "id": "repository_topology",
       "command": "python tools/validators/directory_governance/validate_repository_topology.py --format json",
       "run_state": "EXECUTED",
-      "outcome": "FAIL",
-      "failure_class": "INHERITED",
-      "finding_count": 9,
-      "scope": "nine_unbaselined_findings_and_thirteen_stale_fingerprints"
+      "outcome": "PASS",
+      "failure_class": "NONE",
+      "finding_count": 0,
+      "scope": "zero_new_drift_ninety_three_baselined_warnings_zero_stale_fingerprints"
     },
     {
       "id": "root_registry",
@@ -264,14 +314,19 @@
     }
   ],
   "unresolved_items": [
+    "adr_index_status_badge_understates_accepted_count",
     "control_plane_readme_snapshot_precedes_current_main",
-    "exact_main_hosted_checks_not_run",
+    "drive_lineage_not_reobserved_since_prior_baseline",
+    "five_required_control_plane_registers_remain_empty",
+    "hosted_apisec_and_dependency_review_check_runs_skipped",
     "human_review_pending",
-    "object_family_workflow_watch_coverage_has_nine_failures",
-    "repository_topology_has_nine_unbaselined_findings",
-    "six_required_control_plane_registers_remain_empty",
+    "main_advanced_past_base_before_observation_completed",
+    "object_family_register_has_ten_conflicted_required_families",
+    "repository_governance_parity_hold",
+    "repository_topology_baseline_waivers_expire_20261110",
     "tracker_2768_requires_current_delta",
-    "tracker_2874_requires_current_delta"
+    "tracker_2874_requires_current_delta",
+    "tracker_3365_requires_current_delta"
   ],
   "non_effects": [
     "does_not_accept_or_supersede_adrs",
@@ -287,7 +342,7 @@
   ],
   "correction": {
     "method": "same_path_forward_fix_or_reviewed_git_revert",
-    "rollback_target": "git:6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e",
+    "rollback_target": "git:514b2367638778a0a0b6e45a6451aea70c762909",
     "external_correction": "append_corrective_issue_comment",
     "stale_triggers": [
       "accepted_adr_status_changes",
@@ -295,6 +350,7 @@
       "base_branch_advances",
       "issue_state_or_body_changes",
       "open_pull_request_queue_changes",
+      "tracked_surface_digest_changes",
       "workflow_or_validator_outcome_changes"
     ],
     "receipt_history": "append_only"
