@@ -8,7 +8,6 @@ import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } from "../map-performance";
 import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import type { FeatureCollection } from "geojson";
-import { DataNotices } from "../map-toolbar";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
 import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
@@ -830,7 +829,7 @@ export default function EventObservatory() {
   };
 
   return <main className="event-workspace">
-    <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><nav className="event-source-actions"><DataNotices /><Link href="/data">Contribute data</Link><Link href="/stewards">Steward desk</Link><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></nav></header>
+    <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><nav className="event-source-actions"><Link href="/?layers=sources">Source status in Layers</Link><Link href="/data">Contribute data</Link><Link href="/stewards">Steward desk</Link><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></nav></header>
     <section className="event-calendar-sweep" id="archive-calendar" hidden={!calendarOpen} aria-labelledby="event-calendar-title">
       <div className="event-panel-heading"><strong>Calendar · 24 hours per day</strong><button type="button" onClick={() => setCalendarOpen(false)} aria-label="Close calendar">×</button></div>
       <label className="event-calendar-date">Jump to a date<input type="date" min={EVENT_EARLIEST_DAY} max={calendarToday} value={calendarAnchor} onChange={(event) => { if (eventDayHours(event.target.value).length) setCalendarAnchor(event.target.value); }} /></label>

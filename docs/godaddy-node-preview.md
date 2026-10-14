@@ -94,3 +94,137 @@ governed store boundaries and the private Sites deployment are unchanged.
 Placement reuses this standalone application's existing `app/`, `tests/` and
 `docs/` responsibilities under Directory Rules v2 and accepted ADR-0029; it
 creates no parallel data, schema or release authority.
+
+## Hosted navigation and source operations — October 14, 2026
+
+The owner requested removal of PC data and the top-bar Data & downloads control.
+Underground, 2D, Terrain 3D, Globe and Compare now share the Map menu on all screen
+sizes. Layer selection, source status, retry/hide, dates, quality and free source
+files remain in Layers. Source status is a view of that same panel, rather than
+a second floating workbench. Keyboard dismissal retains the original Layers
+return target. Existing PC-workbench URLs redirect to `/?layers=sources`; legacy
+Local Atlas map links restore that hosted source view. The original private
+Sites application and operator files on the owner's computer are unchanged.
+
+The GoDaddy composition uses its existing Node 22 runtime and fixed, bounded
+public provider handlers: source requests and downloadable envelopes carry
+source/observation/retrieval clocks, units, missingness and limitations. Map
+services retain their own provider-controlled coverage. These are hosted
+external-context adapters, not a durable KFM ingestion/release pipeline. No
+background archive is fabricated and no visitor is asked to connect to Intake
+Desk or the PC download operator. Earth Engine recipe discovery remains
+available; its hosted capture is explicitly unconfigured, with links to the
+original provider catalog and source status. Free map/report exports remain.
+
+The owner then selected scheduled capture, durable storage, owner-only GitHub
+sign-in and an 80 GB archive cap. This candidate adds a separate Node/MySQL
+capture adapter. `server/godaddy-env.ts` still deliberately leaves D1/R2 unbound;
+the new archive neither migrates nor exposes those governed stores. A green
+browser request does not provision services or release data. Captures remain
+paused until configuration, schema and owner activation are verified.
+
+Existing `app/`, `tests/` and `docs/` compatibility responsibilities are retained
+under Directory Rules v2 and accepted ADR-0029. The change creates no parallel
+data, policy, pipeline, registry or proof authority. It starts from the exact
+published f44ce0c composition; the independent merged Underground repair #5137
+on a0-godaddy-free-reports is neither replaced nor silently included. Revert
+this UI change, or republish f44ce0c after separate deployment authorization,
+without changing provider bytes, datasets, DNS, payments or the private Site.
+
+### Hosted capture implementation and activation
+
+`server/ingestion-sources.mjs` defines the first three fixed, versioned Kansas
+adapters: hourly USGS streamflow (24-hour bounded query, max 1,000 rows), hourly
+NWS active Kansas alerts, and six-hourly USGS earthquake catalog (rolling 30-day
+bounds, max 250 events). Requests have a 20-second timeout and an 8 MiB decoded
+entity limit. Redirects, arbitrary URLs and automatic paging are rejected.
+Original decoded HTTP entity bytes are stored unchanged in 512 KiB chunks,
+alongside SHA-256, source URL, request/retrieval/source clocks, original HTTP
+ETag/Last-Modified, row-cap/paging limitations and versioned receipts. Malformed
+JSON/structure remains privately quarantined for correction. No publisher or
+promotion API exists. All captures carry pending rights/sensitivity review,
+EXTERNAL_CONTEXT_ONLY and unreleased WORK/QUARANTINE state.
+
+`server/ingestion-store.mjs` uses the official mysql2 driver, certificate-verified
+TLS, prepared statements and an additive five-table migration. One transactional
+lease fences replicas and stale workers. Capacity is reserved before provider
+I/O; atomic capture/chunk/counter commits roll back together. Deterministic
+source/time-bucket keys, bounded retries/backoff and capture existence checks
+prevent duplicate successful capture. Latest buckets resume after downtime;
+missed historical observations are not fabricated. The archive stops at
+80,000,000,000 accounted bytes (entities, receipts and per-capture allowance);
+provider allocation, index/log/backup overhead and actual capacity need separate
+verification. No automatic deletion or retention purge is introduced.
+
+`server/owner-auth.mjs` binds only immutable GitHub user ID `203533328`, verified
+from the current authenticated connector on October 14. It uses empty-scope
+OAuth, encrypted five-minute state with PKCE, bounded provider responses and a
+four-hour opaque Secure/HttpOnly/SameSite session. Login replaces the single
+stored owner session; logout revokes it. GitHub bearer tokens are not persisted.
+Forged Sites headers and client role strings confer no access. Owner writes
+require exact Origin and session checks. The separate random capture-worker
+credential can trigger due sources only; it cannot read private captures,
+change controls, sign in, release or publish. Preview-origin requests cannot
+use it. Credentials must be entered directly in provider interfaces by the
+owner, outside source/chat/artifacts.
+
+There is no web-process timer: preview/live share storage and previews can sleep.
+The narrow main-based scheduler change installs a fixed-origin GitHub Actions
+cron, initially disabled, with no checkout or repository token permissions.
+Its environment must restrict credential access to protected main. The template
+in this candidate is documentation, not an activated schedule. GitHub cron may
+be delayed; its first stored receipt and subsequent scheduled run need separate
+acceptance. See the scheduler PR and its `docs/runbooks/godaddy-hosted-capture.md`.
+
+Hosting setup must supply DB_HOST/PORT/NAME/USER/PASSWORD, a verified database CA
+in KFM_DB_CA_PEM with KFM_DB_TLS=verified and a DNS DB_HOST matching its certificate
+(IP-only endpoints stay unavailable rather than skip identity verification), identity-only OAuth client ID/secret,
+random base64url KFM_SESSION_KEY and separate KFM_CAPTURE_WORKER_TOKEN. Set
+KFM_PUBLIC_ORIGIN=https://kansasfrontiermatrix.com, KFM_RUNTIME_ROLE=published,
+KFM_INGEST_ENABLED=true and KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES=80000000000 only
+after capacity and configuration are confirmed. Shared secrets alone do not
+start any worker. Resume is an owner action; the SQL seed stays paused.
+
+Review `npm run archive:migration` output first. After the shared database is
+backed up and the exact schema digest approved, run the same script with
+KFM_MIGRATION_SHA256 set to that digest and `--apply`. DDL is additive and
+idempotent, but MySQL DDL is not a transactional rollback; preserve partially
+created tables and repair/reapply rather than reset/drop. Pause capture and
+disable the scheduled trigger before returning the app to f44ce0c. Keep the
+archive and its receipts intact. The database guide was inspected this session;
+table introspection was unavailable while preview was unreachable, so schema,
+live DB connection, TLS CA and hosting capacity are still NEEDS VERIFICATION.
+
+Implementation validation uses a disposable MariaDB 11.8.6 compatibility server
+from official Ubuntu packages, not the live GoDaddy MySQL database. Transactions,
+fencing, budget edges, interrupted chunk rollback, corruption detection and
+owner-session revocation pass there. Exact GoDaddy MySQL/TLS compatibility,
+credential configuration, OAuth round-trip and scheduled capture remain pending.
+
+### Candidate acceptance evidence — October 14
+
+Build and TypeScript pass. Changed-area lint has no errors and 42 inherited
+warnings; the new capture/auth components have no lint warnings. Changed-area
+callback/history/capture tests and 12 actual Node HTTP checks pass. Three separate
+scheduler execution checks pass in draft PR #5146 at
+`d6337b6fead686ec6fbfab714c3daf51bb4ce68c` (base
+`e3a38d535b1e2947d9b76150acdf9276747c3146`).
+
+Browser acceptance confirms all five menu choices open, 2D exits Underground or
+Compare, the active-view badge follows the selected view, source status survives
+reload, and Escape in Map preserves the Layers source view and restores menu
+focus. The narrow-screen menu exposes all five views. Actual free county,
+report JSON and report HTML downloads succeed. All 105 county features,
+properties and geometry equal the previously published f44 county download;
+only its envelope retrieval timestamp changes. Report HTML contains no script
+and preserves the no-released-domain-records limitation.
+
+The initial local 14-layer flowing-water interrupted-pan sample measured 29.25
+FPS with other test maps open, and 39.25 FPS after those test maps were closed;
+both preserved the display-data signature. These results do not pass the 60 FPS
+target. The first native Chrome published-baseline sample ran at about 1.33 FPS
+with 1,000 ms browser frame intervals, consistent with background/occlusion
+throttling; a foreground comparison is still required. No performance pass or
+production acceptance is claimed for this candidate. Review artifacts are in
+`/tmp/kfm-hosted-source-review-20261014`; they are local verification receipts,
+not a governed release or durable application archive.
