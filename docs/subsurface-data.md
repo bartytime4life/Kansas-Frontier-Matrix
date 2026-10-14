@@ -81,6 +81,20 @@ water-right, contractor, and other identifying fields are excluded. Generic
 provider record identifiers label the map. Original geological log text remains
 in the projection; source pages may independently expose additional fields.
 
+The owner's 2026-10-13 clarification permits precise locations for verified
+public data. [KGS terms of use](https://www.kgs.ku.edu/General/copyright.html)
+permit free copying and redistribution with the required KGS citation and
+copyright notices retained. These terms do not establish positional accuracy.
+The existing view and geological CSV/SVG exports retain that citation. Private
+fields remain excluded. This public-provider context is distinct from source
+admission, verified evidence, and a governed release.
+
+The [Node delivery repair](public-core-repair-20261013.md) retains standalone
+compressed dataset URLs and bytes, fits valid deeper core ranges within the
+existing 12 km diagram ceiling, and distinguishes failed source delivery from
+an empty selection. It retains the 50-record/400-interval drawing limits and
+independent depth references.
+
 ### Horizontal and depth reference
 
 WWC5 uses explicit `NAD83_LONGITUDE` and `NAD83_LATITUDE`, never the older NAD27

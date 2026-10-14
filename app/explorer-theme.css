@@ -122,8 +122,9 @@ button:active:not(:disabled) { transform: translateY(1px); }
 .map-dock-menu-panel, .header-overflow-panel {
   border: 1px solid var(--line-strong);
   border-radius: var(--kfm-radius-m);
-  background: var(--kfm-glass);
-  backdrop-filter: var(--kfm-glass-blur);
+  /* Keep map labels and controls from showing through touch menus. */
+  background: linear-gradient(180deg, #0e1f31, #081421);
+  backdrop-filter: none;
   box-shadow: var(--kfm-shadow-2);
 }
 .header-overflow-menu > summary,
