@@ -107,6 +107,12 @@ updates:
       - "dependencies"
       - "javascript"
       - "needs-review"
+    # packages/maplibre stays on the exact maplibre-gl version the Site ships
+    # and the readiness classifier targets (6.9.0) until the #2906 probe
+    # packet runs. Move it by hand together with apps/site and
+    # tools/validators/maplibre/validate_v6_readiness.py.
+    ignore:
+      - dependency-name: "maplibre-gl"
     commit-message:
       prefix: "deps(node)"
       prefix-development: "deps(node-dev)"
