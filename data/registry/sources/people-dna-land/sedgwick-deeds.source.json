@@ -1,0 +1,131 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/sedgwick/register-of-deeds",
+  "descriptor_version": "0.1.0",
+  "title": "Sedgwick County recorded land instruments",
+  "description": "Inactive review candidate for the Kansas-first land-record intake. Official online access uses paid Laredo/Tapestry services; free in-person computers are available. No subscription, terms acceptance, credential use or county download performed. Import only lawfully obtained county exports. Exclude confidential SVQ records.",
+  "domain_scope": [
+    "people-dna-land"
+  ],
+  "source_type": "legal_record",
+  "source_role": "steward_review_source",
+  "authority_rank": "candidate_only",
+  "authority_notes": "Authority is limited to the cited instrument or index content; no present ownership, legal title, parcel boundary or sale completion inferred.",
+  "publisher": {
+    "name": "Sedgwick County Register of Deeds",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "Sedgwick County Register of Deeds",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "Official online access uses paid Laredo/Tapestry services; free in-person computers are available. No subscription, terms acceptance, credential use or county download performed. Import only lawfully obtained county exports. Exclude confidential SVQ records.",
+    "license_url": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/",
+    "terms_url": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/",
+    "attribution_required": true,
+    "attribution_text": "Source: Sedgwick County Register of Deeds; original instrument/index locator and capture date.",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "api_key_or_account_required": true,
+    "last_verified_at": "2026-10-14T03:11:52Z",
+    "verified_by": "Official-source availability research; not rights or steward approval",
+    "rights_notes": "Review pending. The official page is evidence of source access, not permission to redistribute person-bearing records."
+  },
+  "sensitivity_default": "unknown_review_required",
+  "sensitivity_notes": "Person-bearing land records default to private review. Do not infer that named parties are deceased from a document date. Exact parcel and cultural-location joins need independent review.",
+  "cadence": {
+    "update_cadence": "unknown",
+    "freshness_expectation": "Reverify access, source revision, rights and capture coverage before each explicit import.",
+    "staleness_policy": "review_required",
+    "known_update_window": "Not established",
+    "timezone": "America/Chicago"
+  },
+  "access": {
+    "access_method": "database_export",
+    "access_posture": "credentialed",
+    "endpoints": [
+      {
+        "label": "Sedgwick County recorded land instruments",
+        "uri": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/",
+        "purpose": "metadata",
+        "notes": "Official online access uses paid Laredo/Tapestry services; free in-person computers are available. No subscription, terms acceptance, credential use or county download performed. Import only lawfully obtained county exports. Exclude confidential SVQ records."
+      }
+    ],
+    "auth": {
+      "auth_required": true,
+      "auth_type": "unknown",
+      "secret_handling": "No account credentials or authenticated report URLs stored in the ingest manifest."
+    },
+    "format_targets": [
+      "mapped-csv"
+    ],
+    "rate_limit_notes": "Explicit selected export only; no bulk crawler or automatic refresh. Default 100 records and 2 MiB total input per import; hard ceilings 1000 records and 10 MiB."
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "{publisher}; {source_record_id}; {event_date}; {source_url}; retrieved {retrieved_at}; {capture_id}; {record_digest}.",
+    "citation_guidance": "Cite the index as an index. Retain original-document hashes and row/card locators. EvidenceBundle candidates are unreleased.",
+    "preferred_link": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/"
+  },
+  "source_head": {
+    "observed_at": "2026-10-14T03:11:52Z",
+    "method": "manual_review",
+    "content_identity": {
+      "source_head_uri": "https://www.sedgwickcounty.org/register-of-deeds/online-land-record-search/",
+      "not_applicable_reason": "No bulk dataset revision established; source-role research is not source admission. Exact pilot capture hashes remain in private intake receipts."
+    },
+    "source_head_notes": "Official online access uses paid Laredo/Tapestry services; free in-person computers are available. No subscription, terms acceptance, credential use or county download performed. Import only lawfully obtained county exports. Exclude confidential SVQ records."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "citation_support",
+      "historical_context",
+      "candidate_signal"
+    ],
+    "prohibited_claim_roles": [
+      "legal_status",
+      "not_for_title_truth",
+      "not_for_life_safety"
+    ],
+    "limitations": "Official online access uses paid Laredo/Tapestry services; free in-person computers are available. No subscription, terms acceptance, credential use or county download performed. Import only lawfully obtained county exports. Exclude confidential SVQ records.",
+    "confidence_posture": "candidate_only",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": true,
+    "release_conditions": [
+      "Source admission and rights review",
+      "Person/location/cultural sensitivity review and redaction receipts",
+      "Validated standard EvidenceBundle closure, review, correction and rollback",
+      "Separate exact-content release decision; no release writer in this intake"
+    ],
+    "deny_reason_if_not_allowed": "Private intake only; rights, source admission, sensitivity and release are pending."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "connector_ref": "connectors/kansas_county_deeds/land_records.py",
+    "activation_notes": "No automatic network source activation. Explicit lawful exports may be captured as private quarantine candidates; admission and release remain pending."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-10-14T03:11:52Z",
+    "updated_at": "2026-10-14T03:11:52Z"
+  },
+  "spec_hash": "sha256:3d9dad9396051aff9779eb70a56339bd4cdead0d176bd461274c3b1b5007943d"
+}
