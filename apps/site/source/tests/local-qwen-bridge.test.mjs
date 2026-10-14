@@ -743,7 +743,33 @@ test("addresses, other coordinate systems, sensitive sites and drinking-water sa
     "Which UTM zone covers Kansas?",
     "Why are coordinates withheld for this layer?",
     "How long is a 30 minute drive from the gauge?",
+  ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
+});
+
+test("questions outside the map's own scope abstain under the allowlist", () => {
+  // The gate interprets only questions recognisably about the map, its data or a mapped subject.
+  for (const question of [
     "Are there 3 rulings in district court?",
+    "Would you let a six-year-old fish off the spillway at Tuttle Creek?",
+    "What is a burial mound people should visit?",
+    "What are burial mounds someone can explore?",
+    "Which gypsum caves have bats hibernating in them?",
+    "Can my labs go in the lake?",
+    "figure out what county im standing in rn",
+    "bat caves in the gyp hills which one has the big hibernating colony",
+  ]) assert.equal(isSensitiveQwenQuestion(question), true, question);
+  for (const question of [
+    "What does the selected feature support?",
+    "Summarize Arkansas.",
+    "Reporter here: how did the 1993 flooding compare with 2019 along the Missouri River in Kansas?",
+    "My county filter is stuck on Douglas and won't clear. How do I reset it?",
+    "whats a lek lol my bio teacher keeps saying it",
+    "Why are bats hibernating in winter?",
+    "How does hibernating help bats survive winter?",
+    "Which Kansas species spend winter hibernating?",
+    "How do I filter the river layer?",
+    "Can I export the road layer?",
+    "How do I chart lake levels?",
   ]) assert.equal(isSensitiveQwenQuestion(question), false, question);
 });
 
