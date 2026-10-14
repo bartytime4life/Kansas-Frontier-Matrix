@@ -1,0 +1,29 @@
+# Reviewed scheduler template. Install under .github/workflows on the repository's
+# default branch in a separate narrow change; this standalone hosting branch is
+# not the default branch, so merely committing this file cannot activate cron.
+name: Hosted Kansas source capture
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: kfm-hosted-source-capture
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    environment: kfm-hosted-capture
+    steps:
+      - name: Trigger bounded capture at the approved published origin
+        env:
+          CAPTURE_TOKEN: ${{ secrets.KFM_CAPTURE_WORKER_TOKEN }}
+        run: |
+          set -eu
+          test -n "$CAPTURE_TOKEN"
+          # Secret goes to curl's stdin, never into the process command line or logs.
+          printf 'Authorization: Bearer %s\n' "$CAPTURE_TOKEN" | curl --header @- \
+            --silent --show-error --fail-with-body --max-time 150 --retry 0 \
+            --request POST --proto '=https' \
+            https://kansasfrontiermatrix.com/api/source-pipeline/run

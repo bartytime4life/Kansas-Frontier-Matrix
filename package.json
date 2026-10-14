@@ -6,6 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "archive:migration": "node scripts/migrate-hosted-ingestion.mjs",
     "install:ci": "npm ci",
     "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
     "predev": "npm run prepare:maplibre && npm run prepare:lightning",
@@ -44,7 +45,8 @@
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "vinext": "file:vendor/vinext-0.0.50-kfm.1.tgz",
-    "vite": "8.2.2"
+    "vite": "8.2.2",
+    "mysql2": "3.24.6"
   },
   "type": "module",
   "displayName": "Kansas Frontier Matrix",

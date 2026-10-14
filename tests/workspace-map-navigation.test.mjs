@@ -63,6 +63,15 @@ test('map utilities and Compare reveal the map before opening the requested tool
   const compare=harness('stories');execute('activateMapRepresentation',compare.scope)('compare');
   assert.equal(compare.state.primary,'map');assert.deepEqual(compare.calls,['compare']);
 });
+test('a base view chosen from Map closes Underground and Compare without replacing retained drafts',()=>{
+  for(const mode of ['2d','terrain','globe']) for(const utility of ['compare','navigate']) {
+    const h=harness('map');let underground=true; const choices=[];
+    Object.assign(h.scope,{mapUtilityView:utility,setUndergroundOpen:v=>underground=v,activateMapRepresentation:v=>choices.push(v)});
+    h.state.utility=true;const draft=h.state.draft;
+    execute('chooseMapMenuRepresentation',h.scope)(mode);
+    assert.equal(underground,false);assert.equal(h.state.utility,utility!=='compare');assert.deepEqual(choices,[mode]);assert.equal(h.state.draft,draft);
+  }
+});
 
 test('map utility focus waits through its opening paint, suppresses draft focus and cancels stale frames',()=>{
   let effect,dependencies;
@@ -88,6 +97,36 @@ test('map utility focus waits through its opening paint, suppresses draft focus 
 test('each utility action requests focus even when the same tool is already open',()=>{
   const h=harness('map');let requests=0;h.scope.setMapUtilityFocusRequest=update=>{requests=update(requests);};
   const open=execute('openMapUtility',h.scope),trigger={};
-  open('navigate',trigger);open('navigate',trigger);open('localAtlas',trigger);
-  assert.equal(requests,3);assert.equal(h.state.primary,'map');assert.equal(h.state.utility,true);assert.equal(h.state.view,'localAtlas');assert.equal(h.scope.mapUtilityReturnRef.current,trigger);
+  open('navigate',trigger);open('navigate',trigger);open('connections',trigger);
+  assert.equal(requests,3);assert.equal(h.state.primary,'map');assert.equal(h.state.utility,true);assert.equal(h.state.view,'connections');assert.equal(h.scope.mapUtilityReturnRef.current,trigger);
+});
+
+// The actual source-status handler owns a view inside Layers, not a floating PC workbench.
+test('source status opens Layers from retained workspaces and defers focus without discarding drafts',()=>{
+  for(const workspace of ['map','reports','stories']) {
+    const h=harness(workspace), trigger={closest:()=>null}, focused=[];
+    Object.assign(h.scope,{
+      setGuideOpen:()=>{}, setSourceStatusOpen:v=>{h.state.sources=v;},
+      sourceStatusReturnRef:{current:null}, mapContainerRef:{current:{}},
+      document:{activeElement:null}, HTMLElement:class {},
+      sourceStatusPanelRef:{current:{querySelector:()=>({focus:()=>focused.push(h.state.primary)})}},
+    });
+    h.scope.window.requestAnimationFrame=fn=>{h.scope.window.setTimeout(fn);return 1;};
+    const draft=h.state.draft, snapshot=h.state.snapshot;
+    execute('openSourceStatus',h.scope)(trigger);
+    assert.equal(h.state.primary,'map');assert.equal(h.state.left,true);
+    assert.equal(h.state.mode,'layers');assert.equal(h.state.sources,true);assert.equal(h.state.utility,false);
+    assert.equal(h.scope.leftPanelReturnRef.current,trigger);assert.deepEqual(focused,[]);
+    h.flush();assert.deepEqual(focused,['map']);
+    assert.equal(h.state.draft,draft);assert.equal(h.state.snapshot,snapshot);
+  }
+});
+
+test('opening source details from a layer keeps the outer Layers return target',()=>{
+  const h=harness('map'), outer={id:'layers-trigger'}, inner={closest:()=>({})};
+  Object.assign(h.scope,{setGuideOpen:()=>{},setSourceStatusOpen:()=>{},sourceStatusReturnRef:{current:null},sourceStatusPanelRef:{current:null},mapContainerRef:{current:{}},document:{activeElement:null},HTMLElement:class {}});
+  h.scope.leftPanelReturnRef.current=outer;h.scope.window.requestAnimationFrame=()=>1;
+  execute('openSourceStatus',h.scope)(inner);
+  assert.equal(h.scope.leftPanelReturnRef.current,outer);
+  assert.equal(h.scope.sourceStatusReturnRef.current,inner);
 });

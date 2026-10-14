@@ -3662,9 +3662,9 @@ body { font-size: 14px; }
 @media (min-width: 1800px) {
   .map-dock-basemap.map-dock-wide-only { display: flex; }
   .map-dock-action.map-dock-wide-only { display: inline-flex; }
-  .map-dock-map-menu { display: none; }
+  .map-dock-map-menu { display: block; }
 }
-.map-dock-menu-representations,
+.map-dock-menu-representations { display: grid; }
 .map-dock-menu-quick { display: none; }
 .map-dock-menu-representations { grid-template-columns: 1fr 1fr; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 6px; }
 .map-dock-menu-representations > button,
@@ -4647,3 +4647,33 @@ html body :is(button,input,select,textarea):disabled,html body :is(a,button,inpu
 html body :is(button,a,[role="button"],input[type="submit"])[aria-busy="true"]{cursor:progress}
 input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .download-center-entry{padding:16px;margin:14px 0;background:#16332d;border-left:3px solid #cbb582}.download-center-entry>small{color:#c2c9a5;font-size:9px;letter-spacing:1.3px}.download-center-entry h3{font-size:16px;line-height:1.35;margin:7px 0}.download-center-entry p{color:#c4d4c4;font-size:12px;line-height:1.6}.download-center-entry>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#c4e6c7;text-underline-offset:4px}
+
+/* The hosted Explorer keeps every representation in Map and source operations in Layers. */
+.map-dock-current-view { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gold-soft); font-size: 11px; }
+.map-source-status.layer-source-status { position: static; width: 100%; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.layer-source-status .source-issue-list article { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.layer-source-status .source-issue-list article > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.layer-source-status .source-file-archives { margin-bottom: 16px; }
+.layer-source-switch { flex-wrap: wrap; }
+.map-dock-action[data-attention="true"] { box-shadow: inset 0 -2px #efb67b; }
+@media (max-width: 640px) { .map-dock-current-view { display: none; } }
+
+.source-status-scope { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.source-status-scope button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold-soft); }
+.hosted-source-status { margin: 1rem 0; padding: 1rem; border: 1px solid rgba(177,204,218,.22); border-radius: 12px; background: rgba(12,30,42,.6); }
+.hosted-source-status header { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: space-between; }
+.hosted-source-status p { line-height: 1.5; color: #bdcdd6; font-size: .88rem; }
+.hosted-source-status dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .7rem; }
+.hosted-source-status dt { color: #adbec8; font-size: .78rem; }
+.hosted-source-status dd { margin: .2rem 0; overflow-wrap: anywhere; }
+.hosted-source-status ul { padding: 0; list-style: none; }
+.hosted-source-status li { display: flex; flex-direction: column; gap: .2rem; margin: .6rem 0; }
+.hosted-source-status li span { color: #bdcdd6; font-size: .8rem; }
+.hosted-source-status a { color: #e5c67a; display: inline-block; margin: .6rem; }
+.source-operations { max-width: 900px; margin: 0 auto; padding: clamp(1rem,4vw,3rem); color: #e1e9ed; }
+.source-operations > nav,.source-operation-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+.source-operations section { margin: 1.5rem 0; padding: 1rem; border: 1px solid #435969; border-radius: 12px; }
+.source-operations a { color: #e5c67a; }
+.source-operations p { line-height: 1.6; }
+.source-operations li { padding: 1rem 0; border-bottom: 1px solid #435969; }
+.source-operations li code { display: block; overflow-wrap: anywhere; margin: .5rem 0; }
