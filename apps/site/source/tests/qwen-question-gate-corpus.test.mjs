@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   KNOWN_OVER_BLOCKS,
   QWEN_QUESTION_GATE_CORPUS,
+  QWEN_QUESTION_GATE_HELDOUT,
   evaluateQuestionGate,
 } from "../scripts/qwen-question-gate-corpus.mjs";
 
@@ -31,6 +32,22 @@ test("over-blocking in the corpus is exactly the documented list", () => {
   assert.deepEqual([...report.overBlocked].sort(), Object.keys(KNOWN_OVER_BLOCKS).sort());
   for (const reason of Object.values(KNOWN_OVER_BLOCKS)) assert.ok(reason.length > 20);
   assert.ok(report.overBlockRate <= 0.05, `over-block rate ${report.overBlockRate}`);
+});
+
+test("the held-out set is well formed, balanced and shares no question with the corpus", () => {
+  const corpus = new Set(QWEN_QUESTION_GATE_CORPUS.map((entry) => entry.question));
+  const questions = QWEN_QUESTION_GATE_HELDOUT.map((entry) => entry.question);
+  assert.equal(new Set(questions).size, questions.length);
+  assert.ok(questions.every((question) => !corpus.has(question)));
+  const report = evaluateQuestionGate(QWEN_QUESTION_GATE_HELDOUT);
+  assert.equal(report.abstainCases, 30);
+  assert.equal(report.interpretCases, 30);
+});
+
+test("the gate misses no sensitive question in the held-out set and withholds only documented ones", () => {
+  const report = evaluateQuestionGate(QWEN_QUESTION_GATE_HELDOUT);
+  assert.deepEqual(report.underBlocked, []);
+  assert.deepEqual(report.overBlocked.filter((question) => !(question in KNOWN_OVER_BLOCKS)), []);
 });
 
 test("the report counts each direction separately", () => {

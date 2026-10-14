@@ -394,19 +394,42 @@ const DISTRESS_MIDDLE = `${DISTRESS_ADVERBS}${DISTRESS_PLACE}${DISTRESS_ADVERBS}
 const DISTRESS_NOT_MODIFIER = "(?! (?:a|an|the|this|that|these|those|some|any|my|our|data|information|records?|layers?|values?|fields?|files?|towns?|trails?|sites?|species|workers?|people|persons?|animals?|birds?|roads?|places?|links?|pages?|years?)\\b)";
 const DISTRESS = `\\b(?:${DISTRESS_ANY_SUBJECT} ${DISTRESS_MIDDLE}(?:trapped|stranded|drowning|injured|hurt|bleeding)`
   + `|${DISTRESS_PERSON_SUBJECT} ${DISTRESS_MIDDLE}(?:stuck(?! (?:on|with) (?:how|what|which|why|this|the|that)\\b)|lost|missing))\\b${DISTRESS_NOT_MODIFIER}`;
+// Evacuation guidance for now ("should we evacuate?", "is an evacuation order in effect now?") is an
+// emergency; the evacuation-zone layer and past evacuations ("were residents evacuated during the 2022
+// wildfire?") are not.
+const EVACUATION = /\bevacuat\w*/;
+const PRESENT_ADVICE = /\b(?:should|must|need|ought|can|could|will|shall|do) (?:i|we|you|they|people|residents)\b|\b(?:now|today|tonight|tomorrow|currently|right away)\b|\b(?:is|are) there (?:an? )?(?:\w+ )?evacuat/;
+// "What do we do?" is an emergency only beside a hazard and away from the interface: "the river is
+// rising, what do we do?" but not "our county filter won't clear; what should we do?".
+const WHAT_TO_DO = /\bwhat (?:do|should|can) (?:i|we) do\b/;
+const HAZARD_CUE = /\b(?:flood\w*|water|river|creek|stream|storm|tornado|fire|smoke|wildfire|ice|roof|road|trapped|stranded|swept|hurt|injured|bleeding|drown\w*)\b/;
+const INTERFACE_CUE = /\b(?:filter|layer|layers|map|legend|button|setting|settings|panel|download|upload|dataset|data|query|search|page|app|tab|slider|menu|screen)\b/;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
 const SENSITIVE_SITE = "(?:burials?|graves?|gravesites?|(?<!blue )mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
+  // "Would that be dangerous?", "could it be risky this weekend?"
+  `\\b(?:would|will|could|might) (?:\\w+ ){0,3}be (?:\\w+ )?${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous|risky)\\b${NOT_RELEASE_STATUS}`,
+  // "Can I still drive my pickup across it?", "should we camp on the sandbar?": the same advice as
+  // drinking or swimming, for other ways of entering the water or the weather.
+  // "Could you walk me through the layer" is a request for help, not a plan to walk anywhere.
+  "\\b(?:can|could|should|may) (?:i|we|people|(?:my|our|the) \\w+) (?:\\w+ ){0,2}(?:drive|cross|ford|walk(?! (?:me|us) through\\b)|hike|camp|kayak|canoe|boat|float|paddle|tube|wade)\\b",
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
   `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   // "Okay to drink", "would drinking this water be safe", "is swimming here fine".
   `\\b(?:okay|ok|fine|alright|good) (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|eat\\w*)\\b|\\b(?:drinking|swimming|wading|eating) (?:\\w+ ){0,4}(?:be |is |are )?(?:safe|okay|ok|fine|alright|dangerous|harmful)\\b${NOT_RELEASE_STATUS}`,
   "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
   "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|cattle|cows|horses|livestock|dogs|pets|animals|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
-  "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue|911)\\b",
+  // "Emergency spillway" and "emergency management" name things on the map, not an emergency.
+  "\\b(?:safety|emergency(?! (?:spillways?|management|managers?|operations|services|planning|plans?|broadcast)\\b)|shelter|rescue|911)\\b",
+  // An emergency told in the third person: "his truck got swept off the road", "someone just fell
+  // through the ice", "my dad still isn't back". The subject is a person or something of theirs;
+  // "which bridges got swept away in 1993" is history.
+  "\\b(?:i|we|he|she|they|someone|somebody|(?:my|our|his|her|their) \\w+)(?: \\w+){0,2} (?:got|gets|getting|been|being|just got|was just|were just|just) (?:swept|washed|carried) (?:away|off|downstream|into)\\b|\\bjust (?:fell|went|slipped) (?:through|into|under)\\b",
+  "\\b(?:still (?:isn t|is not|isnt|hasn t|has not|hasnt|not) (?:come |came )?(?:back|home|returned)|(?:hasn t|has not|hasnt|haven t|have not) (?:come|came) (?:back|home)|never came (?:back|home))\\b",
+
   DISTRESS,
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
@@ -459,7 +482,7 @@ const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|perc
 // is an enumeration, not a summary.
 const ENUMERATION_TAIL = /\b(?:can|could|would|will) you (?:\w+ )?(?:list|show|name|map|plot|identify|tell|give)\b|\b(?:please|then|now) (?:list|show|name|map|plot|identify|tell|give)\b|\b(?:list|name|enumerate|identify) (?:them|those|these|each|all|every)\b|\bwhich ones\b|\bwhere\b|\b(?:names?|named|identit\w*|locations?|each one|one by one|individually|itemi[sz]\w*)\b|\bbroken down by (?:name|site|location)\b/;
 const SITE_AGGREGATE_SHAPES = [
-  /^how many\b/,
+  /^(?:roughly |about |approximately |around |so )?how many\b/,
   new RegExp(`^(?:what|which) (?:is|are|was|were) the ${AGGREGATE_NOUN} of\\b`),
   new RegExp(`^${SITE_COMMAND_SOURCE} (?:me )?(?:the )?${AGGREGATE_NOUN} (?:of|by|per)\\b`),
   new RegExp(`\\b${SENSITIVE_SITE}\\b(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)$`),
@@ -494,13 +517,13 @@ function sensitiveSiteMentionAllowed(text, { properNoun = false } = {}) {
 
 // Coordinate and ZIP terms ask for a precise value unless the clause is about the term itself
 // ("what does UTM mean", "which UTM zone", "why are coordinates withheld").
-const PRECISE_TERM_WORDS = "(?:coordinates?|gps(?: coordinates?)?|lat long|latitude|longitude|lat lon\\w*|lat lng|latlon\\w*|latlng|utm(?: coordinates?)?|eastings?|northings?|zip(?: ?codes?)?|postal codes?)";
+const PRECISE_TERM_WORDS = "(?:coordinates?|gps(?: coordinates?)?|lat(?:itude)? long(?:itude)?|latitude|longitude|lat lon\\w*|lat lng|latlon\\w*|latlng|utm(?: coordinates?)?|eastings?|northings?|zip(?: ?codes?)?|postal codes?)";
 const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\w*|lat lng|latlon\w*|latlng|utm|eastings?|northings?|zip(?: ?codes?)?|postal codes?)\b(?! (?:files?|archives?|downloads?)\b)/;
 const PRECISE_TERM_ABOUT_SHAPES = [
   // A direct definition ("what are coordinates", "what is a ZIP code"), not "what are the coordinates".
   new RegExp(`^what (?:is|are) (?:an? )?${PRECISE_TERM_WORDS}$`),
   // A definition, not a value request that merely ends in "… what it means".
-  /^what (?:does|do) (?:the )?(?:\w+ ){0,3}(?:mean|stand for)$|^what is the meaning of\b/,
+  /^what (?:does|do) (?:the )?(?:\w+ ){0,5}(?:mean|stand for)$|^what is the meaning of\b/,
   /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
   /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
   // "What is the difference between latitude and longitude": two terms compared, no value asked for.
@@ -531,11 +554,22 @@ function siteClauseBlocked(clause, index, wholeAllowed, options) {
     && !SITE_METADATA_QUESTION.test(clause);
 }
 
-function preciseClauseBlocked(clause, index, wholeAbout) {
-  if (!PRECISE_TERM.test(clause)) return false;
-  if (SITE_COMMAND.test(clause)) return true;
-  if (preciseAbout(clause)) return false;
-  return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
+// A clause that continues a question about a term ("what does ZIP Code Tabulation Area mean? … how it
+// differs from a real ZIP code", "the difference between UTM and latitude/longitude") shares that
+// question's footing, unless it asks for something ("… I need the UTM of the well").
+const PRECISE_REQUEST = /\b(?:need|want|give|send|tell|show|list|export|provide|share|get|find|locate|look up)\b|\b(?:of|for) (?:the|this|that|my|our|each|every|a|an)\b/;
+
+function preciseBlocked(clauses, wholeAbout) {
+  let questionAbout = false;
+  return clauses.some((clause, index) => {
+    const startsQuestion = index === 0 || NEW_QUESTION.test(clause);
+    const about = preciseAbout(clause);
+    if (startsQuestion) questionAbout = about;
+    if (!PRECISE_TERM.test(clause)) return false;
+    if (SITE_COMMAND.test(clause)) return true;
+    if (about || (!startsQuestion && questionAbout && !PRECISE_REQUEST.test(clause))) return false;
+    return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
+  });
 }
 
 // A capitalised word after the first names a place ("Ellis County nests", "Cheyenne Bottoms roost")
@@ -598,6 +632,8 @@ const joinProperNames = (question) => typeof question === "string" ? question.re
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text) || ADDRESS_QUESTION.test(normalizeScopeText(joinProperNames(question)))) return true;
+  if (EVACUATION.test(text) && PRESENT_ADVICE.test(text)) return true;
+  if (WHAT_TO_DO.test(text) && HAZARD_CUE.test(text) && !INTERFACE_CUE.test(text)) return true;
   // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
   // records") does not excuse another mention ("ask visitors to drink this water").
   if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
@@ -617,7 +653,7 @@ export function isSensitiveQwenQuestion(question) {
     if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed, options))) return true;
   }
   const wholeAbout = judgedTogether && !SITE_COMMAND.test(text) && preciseAbout(text);
-  return clauses.some((clause, index) => preciseClauseBlocked(clause, index, wholeAbout));
+  return preciseBlocked(clauses, wholeAbout);
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
