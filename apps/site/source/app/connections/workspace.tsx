@@ -61,7 +61,7 @@ export default function ConnectionsWorkspace(){
      <details><summary>Provenance and integrity receipt</summary><pre>{JSON.stringify(result.receipt,null,2)}</pre></details>
     </section>:null}
    </section></div>
-   {catalog.owner?<section className="connection-history"><h2>Saved API captures</h2><p>Latest 50 API receipts. Each replay checks exact stored identity and hashes. Invalid captures can be downloaded for correction.</p>{receipts.length?<ul>{receipts.map(r=><li key={r.captureId}><strong>{catalog.sources.find(s=>s.id===r.sourceId)?.name??r.sourceId}</strong><span>{r.retrievedAt} · {r.validation}{r.partial?" · partial":""}</span><button disabled={busy||r.validation!=="structure-valid"} onClick={()=>void inspect(r)}>Replay capture</button><a href={"/api/connections?action=bundle&id="+r.captureId}>Stored bundle</a></li>)}</ul>:<p>No saved API captures verified.</p>}</section>:null}
+   {catalog.owner?<section className="connection-history"><h2>Saved API captures</h2><p>Recent API receipts from the host’s bounded history. Each replay checks exact stored identity and hashes. Invalid captures can be downloaded for correction.</p>{receipts.length?<ul>{receipts.map(r=><li key={r.captureId}><strong>{catalog.sources.find(s=>s.id===r.sourceId)?.name??r.sourceId}</strong><span>{r.retrievedAt} · {r.validation}{r.partial?" · partial":""}</span><button disabled={busy||r.validation!=="structure-valid"} onClick={()=>void inspect(r)}>Replay capture</button><a href={"/api/connections?action=bundle&id="+r.captureId}>Stored bundle</a></li>)}</ul>:<p>No saved API captures verified.</p>}</section>:null}
   </>}
  </main>;
 }

@@ -50,8 +50,8 @@ and deployed hashes. These are packaging copies, never additional canonical
 connector, contract, source-registry or rights authorities. Regenerate them from
 the implementation roots and compare hashes; never fix an individual mirror.
 
-The final standalone Sites candidate preserves same-project v264 source
-2ad58f0a6a82e2a99aca4f9bf1d3faae2b154246, including its land-records addition and
+The final standalone Sites candidate preserves same-project v265 source
+3807302d474db8ff9411f7290d8d1f609d826d90, including the land-records addition, its subsequent edit correction and
 prior river-startup change. The API patch was replayed without overlapping those
 new files. The frozen security review retains its earlier v263 base902c1f5.
 The Node copy
@@ -211,6 +211,13 @@ on the shared Node database.
 - The adopted topology ratchet passes with zero invariants/new drift. Its single
   scaffold waiver strictly contracts after materializing connectors/drought-monitor;
   no waiver or expiry is expanded.
+
+The broader Node rendered suite is not a passing gate: 26 pass / 7 fail on both
+the final candidate and a separately built c8adcd9 navigation baseline. Five
+failures use the older Worker fetch harness against the Node composition; two
+assert removed download labels. Those failures are inherited and do not become
+passes because the new connection cases pass. The two navigation mobile cases
+pass, and native hosted/browser acceptance remains separate.
 
 ## Validation, promotion and rollback
 

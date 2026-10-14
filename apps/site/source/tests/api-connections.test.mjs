@@ -70,4 +70,3 @@ test('redacted JSON property collisions fail closed',async()=>{
  const p=await makePlan('eia-electricity');const v={response:{total:0,data:[]},[env.EIA_API_KEY]:1,'[credential-redacted]':2};
  await assert.rejects(acquire(p,{env,fetcher:()=>Response.json(v)}),/CREDENTIAL_REDACTION_AMBIGUOUS/);
 });
-
