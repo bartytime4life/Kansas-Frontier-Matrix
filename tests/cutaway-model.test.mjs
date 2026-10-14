@@ -28,7 +28,7 @@ test('cutaway rendering excludes outside, invalid and over-ceiling records, and 
 test('cutaway retains existing 50-record/400-interval budgets and shallow envelope floor',()=>{
   const bounded={...volume,envelopes:[{deepMeters:100}]};
   const result=cutawayRecords(bounded,Array.from({length:51},(_,i)=>record(String(i),Array.from({length:10},(_,j)=>interval(j,j+1)))));
-  assert.equal(result.intervals.length,400);assert.equal(result.recordCount,40);assert.equal(result.clipped,true);assert.equal(result.limit,150);
+  assert.equal(result.intervals.length,400);assert.equal(result.recordCount,50);assert.equal(result.clipped,true);assert.equal(result.limit,150);
   const recordBudget=cutawayRecords(volume,Array.from({length:51},(_,i)=>record(String(i),[interval(0,1)])));
   assert.equal(recordBudget.recordCount,50);
 });
@@ -113,4 +113,11 @@ test('screen selection fills ring gaps, tolerates narrow columns, and excludes h
   ray.setFromCamera(new THREE.Vector2(point.x,point.y),camera);
   assert.equal(pickCutawaySource(ray,[ring]),undefined);
   assert.equal(pickCutawaySource(ray,[ring],{...screen,x}).object,ring);
+});
+
+test('one long well cannot exhaust intervals before a core at another location is plotted',()=>{
+ const long=record('long',Array.from({length:500},(_,i)=>interval(i,i+1))),core={...record('core',[interval(4094,4893)]),kind:'core'};
+ const before=JSON.stringify([long,core]);const result=cutawayRecords(volume,[long,core]);
+ assert.equal(result.intervals.length,400);assert.equal(result.recordCount,2);assert.equal(result.clipped,true);
+ assert.equal(result.intervals.find(i=>i.record.id==='core').interval,core.intervals[0]);assert.equal(result.deepest,4893*.3048);assert.equal(JSON.stringify([long,core]),before);
 });

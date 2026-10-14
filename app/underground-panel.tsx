@@ -15,7 +15,7 @@ const ThreeView = lazy(() => import("./subsurface-three"));
 export type SubsurfaceInspection = { record: Borehole; interval?: DepthInterval };
 type Props = {
   basemap?: string; onBasemap?: (key: "standard"|"imagery"|"kansas-aerial"|"topo") => void; onLayers?: () => void;
-  map: MapLibreMap | null; initialContext: SubsurfaceContext | null; year: number; redacted: boolean;
+  map: MapLibreMap | null; initialContext: SubsurfaceContext | null; year: number; redacted: boolean; onPresent?: () => void;
   onTerrain: () => void; onFlatMap: () => void; readElevation: (point: Position) => number | null;
   isDrawing: () => boolean; onDraw: () => void; readTransect: () => Position[];
   onContext: (context: SubsurfaceContext) => void; onInspect: (inspection: SubsurfaceInspection) => void;
@@ -81,6 +81,9 @@ export default function UndergroundPanel(props: Props) {
   const [height, setHeight] = useState(55);
   const [locatorSlot,setLocatorSlot] = useState<HTMLDivElement|null>(null);
   const initialKansasLocator = useRef(false);
+  const [searchStatus, setSearchStatus] = useState("");
+  const searchRequest = useRef<number | null>(null);
+  const [recordTarget, setRecordTarget] = useState<{ id: number; point: Position } | null>(null);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
   const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
   const [surveyError, setSurveyError] = useState("");
@@ -144,6 +147,12 @@ export default function UndergroundPanel(props: Props) {
         if (r.prepared && r.id === 0) { if (r.manifest) setManifest(r.manifest); if (r.error) { setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setMatches([]); setCoverage(r.error); } return; }
         if (r.id !== serial.current) return;
         if (!r.matches && !r.error && expectedArea.current && (!r.bounds || r.bounds.some((value,index)=>value!==expectedArea.current![index]))) { setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage("Source response did not match the selected area; show the area again."); return; }
+        if (r.id === searchRequest.current) {
+          searchRequest.current=null;
+          setSearchStatus(r.error ?? `${r.matches?.length ?? 0} matching inventory locations${r.matches?.length === 30 ? " · first 30 shown" : ""}.`);
+          setMatches(r.matches ?? []);
+          return;
+        }
         setLoading(false); if (r.manifest) setManifest(r.manifest);
         if (r.matches) { setMatches(r.matches); if (r.error) { setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage(r.error); } return; }
         setResponseKey(expectedQueryKey.current); setColumns(r.columns ?? []); setPartial(Boolean(r.partial)); setCoverage(r.error ?? r.coverage ?? "No available data.");
@@ -164,6 +173,9 @@ export default function UndergroundPanel(props: Props) {
   useEffect(() => {
     if (!worker.current) return;
     const id = ++serial.current;
+    searchRequest.current=null;
+    setSearchStatus("");
+    setMatches([]);
     expectedArea.current = areaMode ? appliedArea : null;
     expectedQueryKey.current = queryKey;
     // Explicit Show this area commits need no filter debounce. Consume the revision
@@ -276,6 +288,18 @@ export default function UndergroundPanel(props: Props) {
   const changedVersions = initialContext?.sourceVersions.some(old => manifest?.sources.some(current => current.id === old.id && current.sha256 !== old.sha256));
   const missing = initialContext?.recordIds.filter(id => !loading && !columns.some(c => c.record.id === id)) ?? [];
   const changeDepth = (index: 0 | 1, value: number) => { if (!Number.isFinite(value)) return; const next: [number, number] = [...range]; next[index] = value; if (next[0] >= 0 && next[1] > next[0] && next[1] <= 12000) { setRange(next); setDepth(Math.max(next[0], Math.min(next[1], depth))); } };
+  const recordTools = <div className={s.areaRecordSources}>
+    <label>Recorded samples <select aria-label="Recorded sample sources" value={sources.includes("kgs-core") && sources.includes("kgs-wwc5") ? "both" : sources.includes("kgs-core") ? "core" : sources.includes("kgs-wwc5") ? "well" : "none"} onChange={e => { setTimePlaying(false); setSources(e.target.value === "both" ? ["kgs-wwc5", "kgs-core"] : e.target.value === "core" ? ["kgs-core"] : e.target.value === "well" ? ["kgs-wwc5"] : []); }}>
+      <option value="both">Wells + cores</option><option value="core">Cores only</option><option value="well">Wells only</option>{sources.length === 0 && <option value="none">No sources selected</option>}
+    </select></label>
+    <details><summary>Find a well or core</summary>
+      <form onSubmit={e => { e.preventDefault(); if (loading || search.trim().length < 2) return; const id=++serial.current; searchRequest.current=id; setMatches([]); setSearchStatus("Searching the selected inventory…"); worker.current?.postMessage({ id, kind: "search", search, anchor, route, sources, year }); }}><input aria-label="Find a recorded sample" placeholder="KID, well ID or county" value={search} maxLength={100} onChange={e => setSearch(e.target.value)} /><button type="submit" disabled={loading || !sources.length}>Find</button></form>
+      {searchStatus && <p role="status">{searchStatus}</p>}
+      <p>Search the selected source inventory. A result is a location reference; its date and recorded intervals still control display eligibility.</p>
+      {matches.map(([id, county, point]) => <button type="button" key={id} onClick={() => { setSelectedId(id); setRecordTarget({ id: serial.current + 1, point }); setRecordCutoff(null); setTimePlaying(false); setMatches([]); }}>{id.startsWith("core-") ? "Show core" : "Show well"} · {id}{county ? ` · ${county}` : ""}</button>)}
+    </details>
+    {year < new Date().getUTCFullYear() && <p role="status">Map year {year} holds later and undated samples. A core inventory date is not its drilling date. {props.onPresent && <button type="button" onClick={props.onPresent}>Use present map year</button>}</p>}
+  </div>;
   const recordNavigation = <section className={`${s.timeControls} ${display === "aquifer" ? s.areaTime : ""}`} aria-label="Underground record timeline">
     <div><strong>Record time</strong><small>{recordCutoff === null ? "All loaded records" : `Through ${recordCutoff} · dated records`}</small></div>
     <button type="button" aria-pressed={timePlaying} disabled={!timePlaying && (reduceMotion || recordYears.length < 2 || loading)} onClick={() => { if (!timePlaying && (recordCutoff === null || recordCutoff === recordYears.at(-1))) setRecordCutoff(recordYears[0]); setTimePlaying(v => !v); }}>{timePlaying ? "Pause" : "Play"}</button>
@@ -330,7 +354,7 @@ export default function UndergroundPanel(props: Props) {
       </div>
       {matches.length > 0 && <details open><summary>First {matches.length} matching records · choose to inspect</summary><div className={s.cards}>{matches.map(([id, county, coordinates]) => <button className={s.card} type="button" key={id} onClick={() => { setAnchor(coordinates); setSelectedId(id); setPinned(true); setMatches([]); map?.easeTo({ center: coordinates, zoom: 13, duration: 0 }); }}>{id} · {county}</button>)}</div></details>}
       </details>}
-      <div hidden={display !== "aquifer"}><Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView basemap={props.basemap} onBasemap={props.onBasemap} onLayers={props.onLayers} resourcePanel={<ResourceView map={map} bounds={appliedArea} revision={areaRevision} active={display === "aquifer"} redacted={redacted} water={visibleRecords.filter(r=>r.sourceId==="kgs-wwc5")} onInspect={inspect} />} active={display === "aquifer"} map={map} records={visibleRecords} onArea={applyArea} recordsLoading={loading} recordStatus={coverage} partial={partial} recordNavigation={recordNavigation} recordsAvailable={loadedColumns.length} onResetRecords={()=>{setRecordCutoff(null);setSources(["kgs-wwc5","kgs-core"]);setTimePlaying(false);}} locator={{anchor,pinned}} onLocatorSlot={setLocatorSlot} onFlatMap={props.onFlatMap} onLocate={(point,retainView) => { setAnchor(point); setPinned(true); if(!retainView)map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} sliceEntry={<details className={s.areaRecordTools}><summary>Inspect an individual log</summary><div className={s.sliceEntry}>
+      <div hidden={display !== "aquifer"}><Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView basemap={props.basemap} onBasemap={props.onBasemap} onLayers={props.onLayers} resourcePanel={<ResourceView map={map} bounds={appliedArea} revision={areaRevision} active={display === "aquifer"} redacted={redacted} water={visibleRecords.filter(r=>r.sourceId==="kgs-wwc5")} onInspect={inspect} />} active={display === "aquifer"} map={map} records={visibleRecords} onArea={applyArea} recordsLoading={loading} recordStatus={coverage} partial={partial} recordNavigation={recordNavigation} recordsAvailable={loadedColumns.length} recordTools={recordTools} recordTarget={recordTarget} onResetRecords={()=>{setRecordCutoff(null);setSources(["kgs-wwc5","kgs-core"]);setTimePlaying(false);}} locator={{anchor,pinned}} onLocatorSlot={setLocatorSlot} onFlatMap={props.onFlatMap} onLocate={(point,retainView) => { setAnchor(point); setPinned(true); if(!retainView)map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} sliceEntry={<details className={s.areaRecordTools}><summary>Inspect an individual log</summary><div className={s.sliceEntry}>
         <span className={s.cutawayEyebrow}>SOURCE DETAIL</span>
         <label>Source record <select aria-label="Source record to slice" value={selected?.id ?? ""} disabled={!columns.length || loading} onChange={e => chooseRecord(e.target.value)}>{!columns.length && <option value="">No loaded records</option>}{columns.map(c => <option key={c.record.id} value={c.record.id}>{c.record.name}{c.record.kind === "core" ? " · inventory envelope" : ""}</option>)}</select></label>
         <button type="button" disabled={!sliceFit || loading} onClick={openSlice}>Open selected log <span aria-hidden="true">↗</span></button>

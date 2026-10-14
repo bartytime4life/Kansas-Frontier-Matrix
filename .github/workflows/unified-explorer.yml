@@ -28,7 +28,7 @@ jobs:
           tests/node-compressed-assets.test.mjs tests/map-controls-tidy.test.mjs
           tests/prepared-mobile-controls.test.mjs tests/scene-landscape-integration.test.mjs
           tests/scene-surface-integration.test.mjs tests/subsurface-worker.test.mjs
-          tests/cutaway-model.test.mjs tests/area-underlay.test.mjs
+          tests/cutaway-model.test.mjs tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
           tests/local-qwen-bridge.test.mjs tests/qwen-question-gate-corpus.test.mjs
           tests/water-motion-canvas.test.mjs tests/water-flow-motion.test.mjs
           tests/water-flow-sync.test.mjs tests/streamflow-startup* tests/scene-navigation*

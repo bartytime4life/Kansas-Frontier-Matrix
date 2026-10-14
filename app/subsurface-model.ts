@@ -128,6 +128,17 @@ export function areaColumns(records: Borehole[], bounds: AreaBounds): SectionRec
     .sort((a,b)=>a.distanceMeters-b.distanceMeters||a.record.id.localeCompare(b.record.id,"en")||a.record.sourceId.localeCompare(b.record.sourceId,"en"));
 }
 
+/** Keep both selected record kinds represented inside the existing display budget.
+ * The input stays ranked by proximity; no source record or interval is changed. */
+export function displayColumns(ranked: SectionRecord[], limit = 50): SectionRecord[] {
+  if (ranked.length <= limit) return ranked.slice();
+  const kinds = ["well", "core"] as const;
+  const selected = new Set<SectionRecord>();
+  for (const kind of kinds) for (const row of ranked.filter(row => row.record.kind === kind).slice(0, Math.floor(limit / kinds.length))) selected.add(row);
+  for (const row of ranked) { if (selected.size >= limit) break; selected.add(row); }
+  return ranked.filter(row => selected.has(row));
+}
+
 export function intervalIssues(intervals: DepthInterval[]): { gaps: [number, number][]; overlaps: [number, number][] } {
   const result = { gaps: [] as [number, number][], overlaps: [] as [number, number][] }; let end = 0;
   for (const i of [...intervals].sort((a, b) => a.top - b.top || a.bottom - b.bottom)) {

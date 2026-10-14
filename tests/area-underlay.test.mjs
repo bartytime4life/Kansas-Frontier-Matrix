@@ -125,9 +125,9 @@ test('a style-read exception preserves the apply intent and continues on map loa
  const map=locator(),h=await harness({map,actualSession:true});map.getPitch=()=>{throw new Error('style changing')};assert.doesNotThrow(()=>button(h.tree,'Show this area ↗').props.onClick());assert.equal(h.requests.length,0);await h.render();assert.match(text(h.tree),/Waiting for the map style/);
  map.getPitch=()=>0;map.emit('load');h.flush(80);await h.render();assert.equal(h.requests.length,1);assert.equal(h.renderers.length,1);h.h.dispose();
 });
-test('settled absence of both logs and aquifer uses compact recovery without empty camera or time chrome',async()=>{
+test('settled absence uses compact recovery without an empty camera and retains record-filter recovery',async()=>{
  const h=await harness({actualSession:true});await h.render({records:[],recordsAvailable:0});button(h.tree,'Show this area ↗').props.onClick();h.worker.onerror();await h.render();
- assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),undefined);assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No source columns are displayed/);h.h.dispose();
+ assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'));assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No source columns are displayed/);h.h.dispose();
 });
 
 
@@ -265,4 +265,15 @@ test('opening the cutaway prepares scene code once without allocating a renderer
  h.session.onSnapshot({volume,image:null});await h.render();assert.equal(h.renderers.length,1);
  assert.deepEqual(h.moduleLoads,['three','controls'],'the committed scene uses the already prepared modules');
  assert.match(text(h.tree),/2 plotted columns/);h.h.dispose();
+});
+
+test('empty records retain source/time controls, and a found core commits its exact selector area',async()=>{
+ const areas=[],map=locator(),h=await harness({map,actualSession:true,onArea:b=>areas.push(b)});
+ await h.render({records:[],recordsAvailable:0,recordTools:{type:'nav',props:{'aria-label':'Sample sources',children:'Cores only'}}});
+ button(h.tree,'Show this area ↗').props.onClick();await h.render();
+ assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),'zero eligible records must not hide recovery controls');
+ assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Sample sources'));assert.match(text(h.tree),/No source columns are displayed/);
+ const target={id:1,point:[-100.61469,38.425786]};await h.render({recordTarget:target});h.flush(80);await h.render();
+ assert.deepEqual([map.getCenter().lng,map.getCenter().lat],target.point);assert.equal(map.getZoom(),13);assert.deepEqual([...areas.at(-1)],map.extent);assert.equal(h.requests.length,2);
+ await h.render({recordTarget:target});assert.equal(h.requests.length,2,'rerender must not reacquire the area');h.h.dispose();
 });
