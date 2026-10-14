@@ -37,6 +37,14 @@ truth_posture: CONFIRMED for the dated Kansas monthly-normal capture and local r
 
 # NOAA/NWS Station Observations and Climate Products
 
+> **Implementation checkpoint (2026-10-14 UTC):**
+> [NCEI Access capture/replay](../../../runbooks/noaa-ncei-access.md) supports
+> fixed Kansas daily-summaries, GSOM/GSOY and 1991–2020 daily/monthly/annual
+> normal JSON profiles. Captures remain private quarantine, pending
+> product-specific source/rights/sensitivity and normalization review.
+> The admitted by-station pilot does not extend to these API captures.
+> A working request does not establish an approved source, active layer or release.
+
 > A **bundle product** spanning NOAA/NCEI/NWS station observations (COOP, ASOS, AWOS, historical archive), **climate normals** and **anomalies**, and **reanalysis** model fields (e.g., NARR). Three default `source_role`s — `observation`, `aggregate`, `modeled` — in one product slice. A 30-year climate normal is **not** "what the temperature is today"; a reanalysis grid is **not** an observation.
 
 ## Implemented 1991–2020 Kansas monthly-normal intake (2026-10-01)

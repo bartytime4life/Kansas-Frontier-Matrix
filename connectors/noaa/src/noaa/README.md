@@ -62,6 +62,13 @@ notes:
 
 # NOAA Connector Python Package Boundary
 
+`ncei_access.py` implements fixed, bounded NCEI Access Data Service profiles for
+Kansas daily weather, GSOM/GSOY and 1991–2020 daily/monthly/annual normals.
+Native bytes, quality flags, baseline and product roles survive private
+quarantine and replay. This supersedes the shell-only claims below for this
+adapter alone; it grants no admission or release. See the
+[NCEI Access runbook](../../../../docs/runbooks/noaa-ncei-access.md).
+
 `nwm.py` adds fixed NOAA NOMADS and reference-flowline capture primitives with
 complete-cycle selection and strict object/byte bounds. Model guidance remains
 separate from observations; the [NWM operator runbook](../../../../docs/runbooks/noaa-nwm-local-capture.md)

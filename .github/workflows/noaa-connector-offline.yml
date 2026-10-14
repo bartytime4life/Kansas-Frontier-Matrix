@@ -8,6 +8,9 @@ on:
       - 'connectors/noaa/src/noaa/storm_events.py'
       - 'connectors/noaa/src/noaa/uscrn_hourly.py'
       - 'connectors/noaa/src/noaa/nws_alerts.py'
+      - 'connectors/noaa/src/noaa/ncei_access.py'
+      - 'tools/local_data/noaa_ncei_access.py'
+      - 'tests/tools/test_ncei_access_operator.py'
       - 'connectors/noaa/tests/test_*.py'
       - 'packages/connectors-core/src/connectors_core/**'
       - '.github/workflows/noaa-connector-offline.yml'
@@ -20,6 +23,9 @@ on:
       - 'connectors/noaa/src/noaa/storm_events.py'
       - 'connectors/noaa/src/noaa/uscrn_hourly.py'
       - 'connectors/noaa/src/noaa/nws_alerts.py'
+      - 'connectors/noaa/src/noaa/ncei_access.py'
+      - 'tools/local_data/noaa_ncei_access.py'
+      - 'tests/tools/test_ncei_access_operator.py'
       - 'connectors/noaa/tests/test_*.py'
       - 'packages/connectors-core/src/connectors_core/**'
       - '.github/workflows/noaa-connector-offline.yml'
@@ -55,3 +61,5 @@ jobs:
         if: always()
         run: |
           echo 'Offline synthetic NOAA Storm Events, USCRN hourly02, and NWS alert parser, injected-transport retrieval-episode, and routing checks only; the checked-in descriptor (role/rights set 2026-09-28) releases RAW/QUARANTINE candidate routes with per-product roles (USCRN observed, Storm Events administrative, NWS alerts regulatory), still without any write or admission. KFM is not an alerting system. No NOAA fetch, source activation, lane-placement decision, finalization or narrative review, alert relay, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+      - name: NCEI Access private quarantine and replay (offline)
+        run: python -m unittest discover -s tests/tools -p 'test_ncei_access_operator.py' -v
