@@ -52,6 +52,21 @@ CONSUMER_SOURCE_DIRS = ("app", "worker")
 # ADR-0006 section 2.6: the Site's single seam module, matching SITE_SEAM_PATHS in
 # assess_acquisition_inventory.py.
 SITE_SEAM_MODULE = "apps/site/source/app/maplibre-seam.ts"
+# Module-specifier forms, following PATTERNS in assess_acquisition_inventory.py,
+# except that the static form also matches side-effect imports such as
+# `import "maplibre-gl/dist/maplibre-gl.css"`.
+SPECIFIER_PATTERNS = (
+    re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from)?\s*['\"]([^'\"]+)['\"]"),
+    re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(
+        r"(?:^|\n)\s*export(?:\s+type)?(?:\s*\*(?:\s+as\s+[A-Za-z_$][\w$]*)?"
+        r"|\s*\{[\s\S]{0,160}?\})"
+        r"\s*from\s*['\"]([^'\"]+)['\"]"
+    ),
+    re.compile(r"\bimport\s*\.\s*meta\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+    re.compile(r"\brequire\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
+)
 CASES_PATH = Path(__file__).resolve().parents[3] / "fixtures/maplibre/v6_readiness/cases.json"
 
 
@@ -146,11 +161,19 @@ def _source_files(root: Path) -> tuple[list[Path], bool]:
     return files, False
 
 
+def _acquires_maplibre(text: str) -> bool:
+    for pattern in SPECIFIER_PATTERNS:
+        for match in pattern.finditer(text):
+            specifier = match.group(1).lower()
+            if specifier == "maplibre-gl" or specifier.startswith("maplibre-gl/"):
+                return True
+    return False
+
+
 def _scan_sources(root: Path) -> tuple[list[str], list[str], bool]:
     internal: list[str] = []
     boundary: list[str] = []
     files, truncated = _source_files(root)
-    import_pattern = re.compile(r"(?:from\s+|import\s*\(|require\s*\()\s*['\"]maplibre-gl['\"]")
     internal_patterns = (
         re.compile(r"\bmap\s*\.\s*transform\b"),
         re.compile(r"\bmap\s*\[\s*['\"]transform['\"]\s*\]"),
@@ -165,7 +188,7 @@ def _scan_sources(root: Path) -> tuple[list[str], list[str], bool]:
         if any(pattern.search(text) for pattern in internal_patterns):
             internal.append(rel)
         if (
-            import_pattern.search(text)
+            _acquires_maplibre(text)
             and not rel.startswith("packages/maplibre/")
             and rel != SITE_SEAM_MODULE
         ):

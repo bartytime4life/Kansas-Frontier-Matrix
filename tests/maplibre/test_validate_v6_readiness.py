@@ -187,6 +187,34 @@ class MapLibreV69ReadinessTests(unittest.TestCase):
             result = scan_repository(root)
             self.assertIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
 
+    def test_side_effect_type_reexport_and_subpath_imports_are_hold(self) -> None:
+        for source in (
+            'import "maplibre-gl";\n',
+            'import "maplibre-gl/dist/maplibre-gl.css";\n',
+            'import type { Map } from "maplibre-gl";\n',
+            'export { Map } from "maplibre-gl";\n',
+            'export * from "maplibre-gl";\n',
+            'const worker = import.meta.resolve("maplibre-gl/dist/maplibre-gl-csp-worker.js");\n',
+            'const path = require.resolve("maplibre-gl");\n',
+            'const gl = require("MapLibre-GL");\n',
+        ):
+            with self.subTest(source=source), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                write_repo(root, source=source)
+                result = scan_repository(root)
+                self.assertEqual(result.outcome, Outcome.HOLD)
+                self.assertIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
+
+    def test_lookalike_package_names_are_not_acquisition(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(
+                root,
+                source='import { x } from "maplibre-gl-extra";\nimport "@kfm/maplibre";\n',
+            )
+            result = scan_repository(root)
+            self.assertNotIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
+
     def test_nested_seam_lookalike_is_hold(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
