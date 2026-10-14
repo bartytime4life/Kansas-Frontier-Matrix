@@ -225,8 +225,21 @@ The initial local 14-layer flowing-water interrupted-pan sample measured 29.25
 FPS with other test maps open, and 39.25 FPS after those test maps were closed;
 both preserved the display-data signature. These results do not pass the 60 FPS
 target. The first native Chrome published-baseline sample ran at about 1.33 FPS
-with 1,000 ms browser frame intervals, consistent with background/occlusion
-throttling; a foreground comparison is still required. No performance pass or
+with 1,000 ms browser frame intervals. After the owner foreground handoff, the
+published sample still measured 1.42 FPS (40 visible data features), while native
+Chrome on the local candidate measured 1.33 FPS (16 visible data features). The
+document reported visible, but these one-second frame intervals remain consistent
+with browser/window throttling. Their actual map canvases also differed:
+1280×576 pixels published versus 1066×420 local. These are not a comparable GPU
+acceptance pair; neither proves the 60 FPS target. No performance pass or
 production acceptance is claimed for this candidate. Review artifacts are in
 `/tmp/kfm-hosted-source-review-20261014`; they are local verification receipts,
 not a governed release or durable application archive.
+
+Broader test inspection exposed old Local Atlas/toolbar assertions, which now
+follow the intentional hosted navigation change. The legacy rendered-HTML suite
+also assumes a Cloudflare `worker.fetch` entry rather than this Node build (five
+incompatible cases); two report-label assertions fail on both the exact f44 base
+and this candidate. They are recorded separately, not reported as passing or as
+new capture/navigation failures. Actual Node HTTP checks pass against the rebuilt
+candidate. No full-suite pass is claimed.
