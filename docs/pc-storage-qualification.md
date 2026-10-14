@@ -1,7 +1,9 @@
 # PC inference storage qualification
 
-This isolated candidate starts from the exact hosted source
-`f44ce0cf0d72c019252bb93efc4f138f671107de`. It adds a preview-startup probe only.
+This isolated candidate initially started from hosted source
+`f44ce0cf0d72c019252bb93efc4f138f671107de`, then incorporated hosting branch
+`e972d5d780d1c75e5c839797c3689cc650e640bb` after it advanced during discovery.
+It adds a preview-startup probe only; inherited source operations remain distinct.
 GoDaddy app: `q9r9beo47t`. No publication, DNS, billing, private-source admission,
 accounts, worker credentials or inference activation is part of this probe.
 
