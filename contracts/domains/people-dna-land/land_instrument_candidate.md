@@ -1,3 +1,20 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://contract/domains/people-dna-land/land-instrument-candidate
+title: Land instrument candidate v1
+type: contract
+version: v1
+status: draft
+owners: ["@bartytime4life"]
+created: 2026-10-13
+updated: 2026-10-13
+policy_label: public
+owning_root: contracts/
+responsibility: Human semantics for the closed private land-instrument candidate; machine validation is owned by the linked schema.
+truth_posture: "CONFIRMED implemented candidate contract; review and release remain PENDING."
+related: [schemas/contracts/v1/domains/people-dna-land/land_instrument_candidate.schema.json, docs/runbooks/land-records-ingest.md]
+tags: [land-records, candidate, evidence, privacy]
+[/KFM_META_BLOCK_V2] -->
+
 # Land instrument candidate v1
 
 An unreleased instrument/index assertion with a source-local identity, dates,

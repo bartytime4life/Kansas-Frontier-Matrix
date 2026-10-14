@@ -10,7 +10,12 @@ updated: 2026-10-13
 policy_label: public
 owning_root: docs/
 responsibility: Operating instructions for explicit land-instrument acquisition, quarantine intake, private review and rollback; no source admission or release authority.
-truth_posture: Implemented intake; source admission, rights, sensitivity, independent review and publication remain pending.
+truth_posture: "CONFIRMED private intake implementation; source admission, rights, sensitivity, independent review and publication remain PENDING."
+related:
+  - contracts/domains/people-dna-land/land_instrument_candidate.md
+  - apps/land-records/README.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+tags: [land-records, private-intake, blm, archive, evidence, rollback]
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas land-record intake and private review

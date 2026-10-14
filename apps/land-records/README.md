@@ -1,3 +1,20 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/apps/land-records/readme
+title: Private land-record review runtime
+type: readme
+version: v1
+status: draft
+owners: ["@bartytime4life"]
+created: 2026-10-13
+updated: 2026-10-13
+policy_label: public
+owning_root: apps/
+responsibility: Orientation for the loopback administrative land-record review process; no source admission or release authority.
+truth_posture: "CONFIRMED local private runtime implementation; no hosted or public data release is established."
+related: [docs/runbooks/land-records-ingest.md]
+tags: [land-records, runtime, private-review]
+[/KFM_META_BLOCK_V2] -->
+
 # Private land-record review runtime
 
 Loopback administrative review of individual Kansas land-instrument candidates.
