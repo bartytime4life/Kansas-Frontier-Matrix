@@ -201,24 +201,34 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
     if (!map || !geometry) return false;
     const terrainOn = Boolean(map.getTerrain());
     if (!terrainOn) {
+      sampleQueue = []; sampleCursor = 0;
       if (terrainWasOn) {
         // Back to a flat map: drop every sampled height.
-        for (const vertex of geometry.vertices) for (const slot of vertex.slots) geometry.segments[slot] = 0;
+        let changed = false;
+        for (const vertex of geometry.vertices) for (const slot of vertex.slots) {
+          if (!Object.is(geometry.segments[slot], 0)) { geometry.segments[slot] = 0; changed = true; }
+        }
         terrainWasOn = false;
-        return true;
+        return changed;
       }
       return false;
     }
     if (!terrainWasOn) { terrainWasOn = true; queueTerrainSamples(); }
     if (sampleCursor >= sampleQueue.length) return false;
     const end = Math.min(sampleQueue.length, sampleCursor + SAMPLES_PER_FRAME);
+    let changed = false;
     for (; sampleCursor < end; sampleCursor += 1) {
       const vertex = geometry.vertices[sampleQueue[sampleCursor]];
       const sampled = map.queryTerrainElevation([vertex.lng, vertex.lat]);
       if (sampled === null || !Number.isFinite(sampled)) continue;
-      for (const slot of vertex.slots) geometry.segments[slot] = sampled;
+      // Compare the stored Float32 value, not the provider's Float64 value:
+      // rounding must not mark unchanged terrain dirty on every resample.
+      const height = Math.fround(sampled);
+      for (const slot of vertex.slots) {
+        if (!Object.is(geometry.segments[slot], height)) { geometry.segments[slot] = height; changed = true; }
+      }
     }
-    return true;
+    return changed;
   };
 
   const compile = (context: WebGL2RenderingContext, type: number, source: string) => {
@@ -304,7 +314,9 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
         context.bufferData(context.ARRAY_BUFFER, geometry.segments.subarray(0, geometry.count * FLOW_SEGMENT_FLOATS), context.DYNAMIC_DRAW);
         uploaded = true;
       }
-      if (changed) map.triggerRepaint();
+      // Sampling must finish even when a batch has no new heights. Repainting
+      // and uploading are separate: an unchanged batch needs no GPU transfer.
+      if (changed || sampleCursor < sampleQueue.length) map.triggerRepaint();
       const variant = input.shaderData?.variantName === "globe" ? "globe" : "mercator";
       if (unsupported.has(variant)) return;
       let program = programs.get(variant);
