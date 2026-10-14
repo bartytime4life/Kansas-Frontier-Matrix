@@ -54,6 +54,9 @@ export class PcAiStore {
       this.db.prepare('INSERT OR IGNORE INTO control(id,schema_version,key_digest) VALUES(1,1,?)').run(digest(this.key));
       const control=this.db.prepare('SELECT * FROM control WHERE id=1').get();
       if(control.schema_version!==1 || control.key_digest!==digest(this.key)) fail('STORAGE_IDENTITY_MISMATCH');
+      // Additive migration: existing accounts retain researcher permissions.
+      if(!this.db.prepare('PRAGMA table_info(accounts)').all().some(column=>column.name==='role'))
+        this.db.exec("ALTER TABLE accounts ADD COLUMN role TEXT NOT NULL DEFAULT 'researcher' CHECK(role IN ('researcher','steward','administrator'))");
       if(this.db.prepare('PRAGMA integrity_check').get().integrity_check!=='ok') fail('STORAGE_INTEGRITY_HOLD');
     } catch(error) { this.db.close(); throw error; }
   }
@@ -81,13 +84,14 @@ export class PcAiStore {
     this.db.prepare('DELETE FROM sessions WHERE expires<=?').run(now);
     this.db.prepare('DELETE FROM attempts WHERE at<=?').run(now-3600000);
   }
-  invite(username){
+  invite(username,role='researcher'){
+    if(!['researcher','steward','administrator'].includes(role))fail('INVALID_ROLE');
     if(typeof username!=='string'||!USERNAME.test(username)) fail('INVALID_USERNAME');
     return this.transaction(()=>{
       if(this.db.prepare('SELECT COUNT(*) AS n FROM accounts').get().n>=50) fail('ACCOUNT_LIMIT');
       if(this.db.prepare('SELECT 1 FROM accounts WHERE username=?').get(username)) fail('ACCOUNT_EXISTS');
       const invitation=token();
-      this.db.prepare('INSERT INTO accounts(id,username,invite_hash,invite_until,created) VALUES(?,?,?,?,?)').run(token(),username,digest(invitation),this.clock()+86400000,this.clock());
+      this.db.prepare('INSERT INTO accounts(id,username,invite_hash,invite_until,created,role) VALUES(?,?,?,?,?,?)').run(token(),username,digest(invitation),this.clock()+86400000,this.clock(),role);
       return {username,invitation,expiresInSeconds:86400};
     });
   }
@@ -109,7 +113,7 @@ export class PcAiStore {
   }
   account(session){
     if(typeof session!=='string' || !/^[A-Za-z0-9_-]{43}$/.test(session)) return null;
-    return this.db.prepare('SELECT a.id,a.username FROM sessions s JOIN accounts a ON a.id=s.account WHERE s.hash=? AND s.expires>? AND a.disabled=0').get(digest(session),this.clock())??null;
+    return this.db.prepare('SELECT a.id,a.username,a.role FROM sessions s JOIN accounts a ON a.id=s.account WHERE s.hash=? AND s.expires>? AND a.disabled=0').get(digest(session),this.clock())??null;
   }
   signOut(session){if(typeof session==='string')this.db.prepare('DELETE FROM sessions WHERE hash=?').run(digest(session));}
   revoke(username){

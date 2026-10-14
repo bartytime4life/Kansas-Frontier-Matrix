@@ -4677,3 +4677,5 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .source-operations p { line-height: 1.6; }
 .source-operations li { padding: 1rem 0; border-bottom: 1px solid #435969; }
 .source-operations li code { display: block; overflow-wrap: anywhere; margin: .5rem 0; }
+
+.steward-login-button{color:var(--text,#e8edf1);border:1px solid #506676;border-radius:6px;padding:8px 14px;text-decoration:none;white-space:nowrap}.steward-login-button:focus-visible{outline:3px solid #e3c883;outline-offset:3px}

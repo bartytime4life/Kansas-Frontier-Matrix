@@ -46,7 +46,14 @@ backup; a different key holds startup instead of reseeding or dropping data.
 Passwords use salted scrypt. Invitations are single-use, expire after 24 hours
 and are stored as SHA-256 hashes. Sessions are opaque, hashed in storage and
 expire after four hours; cookies are Secure, HttpOnly, SameSite=Strict and
-host-scoped. No public registration exists. Owner tools can invite/revoke;
+host-scoped. The top Log in button opens account access; logged-out visitors see
+no invitation or steward controls. Researcher accounts cannot invite, activate
+or revoke accounts. Server-stored administrator/steward roles gate these routes;
+client role headers and login payloads cannot assign permissions. Stewards can
+invite, activate and revoke researchers only; administrators may also manage
+stewards. The local owner capability can bootstrap an administrator. Existing
+accounts receive researcher permissions through an additive SQLite migration.
+No public registration exists. Owner tools can invite/revoke;
 revocation invalidates sessions and cancels jobs. The owner capability does not
 grant data publication authority. The worker credential can heartbeat, claim,
 check leases and return results only, and cannot invite, revoke or publish.
@@ -114,9 +121,28 @@ Create an invitation yourself:
 node scripts/pc-ai-owner.mjs invite /absolute/private/path/owner.secret.json username
 ```
 
-The invitation is saved beside your protected config. Deliver it privately
-yourself; no email/Slack service is involved. The recipient opens `/assistant`
-and sets their own password. `revoke` with the same arguments revokes access.
+The invitation is saved beside your protected config; no email/Slack service
+is involved. Invitations and activation controls appear only after an
+administrator or steward signs in. Activation requires both that authorized
+session (or the local owner capability) and the single-use invitation. The
+invited person must enter their own password directly during the supervised
+activation step. Activation switches the browser session to that account;
+sign out and sign back in as the administrator to manage more accounts.
+
+Bootstrap the first administrator using the local owner tool:
+
+```sh
+node scripts/pc-ai-owner.mjs invite /absolute/private/path/owner.secret.json owner administrator
+node scripts/pc-ai-owner.mjs activate /absolute/private/path/owner.secret.json /absolute/private/path/activation.secret.json
+```
+
+The owner must create the activation JSON privately with keys `username`,
+`invitation` and `password`, mode 0600, outside source/deployment assets. Do not
+send its contents to chat or commit it. The command prints no secrets and does
+not retain the returned session cookie. Then sign in through the top Log in
+button. Normal invitations default to researcher; the optional CLI role is
+owner-only. `revoke` with the same owner config and username revokes access.
+No accounts or privileges are provisioned by deploying this change.
 
 ## Evidence, limits and interfaces
 

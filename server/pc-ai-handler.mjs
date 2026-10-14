@@ -64,20 +64,32 @@ export function createPcAiHandler({store,origin,adminHash,workerHash,resolveEvid
       const path=new URL(request.url).pathname.replace(/^\/api\/pc-ai\//,'');
       const worker=path.startsWith('worker/'),admin=path.startsWith('admin/');
       if(request.method!=='GET'&&request.method!=='POST')return reply({reasonCode:'METHOD_DENIED'},405);
-      if(request.method==='POST'&&!worker&&!admin&&request.headers.get('origin')!==origin)return reply({reasonCode:'ORIGIN_DENIED'},403);
+      const actor=store.account(session(request));
+      const owner=authorized(request,adminHash);
+      const manager=actor&&['administrator','steward'].includes(actor.role);
+      if(request.method==='POST'&&!worker&&!((admin||path==='activate')&&owner)&&request.headers.get('origin')!==origin)return reply({reasonCode:'ORIGIN_DENIED'},403);
       if((worker||admin)&&request.headers.get('origin')&&request.headers.get('origin')!==origin)return reply({reasonCode:'ORIGIN_DENIED'},403);
-      if(worker&&!authorized(request,workerHash)||admin&&!authorized(request,adminHash))return reply({reasonCode:'ACCESS_DENIED'},401);
-      if(path==='status'&&request.method==='GET')return reply({configured:true,...store.availability(),model:QWEN_LOCAL_MODEL,account:store.account(session(request))?.username??null});
+      if(worker&&!authorized(request,workerHash)||admin&&!owner&&!manager)return reply({reasonCode:'ACCESS_DENIED'},actor?403:401);
+      if(path==='status'&&request.method==='GET')return reply({configured:true,...store.availability(),model:QWEN_LOCAL_MODEL,account:actor?.username??null,role:actor?.role??null});
       if(path==='admin/invite'&&request.method==='POST'){
-        const body=await json(request);if(!exactKeys(body,['username']))throw new Error('INVALID_REQUEST');
-        return reply(store.invite(body.username),201);
+        const body=await json(request);if(!exactKeys(body,['username','role']))throw new Error('INVALID_REQUEST');
+        const role=body.role??'researcher';
+        if(!owner&&role!=='researcher'&&actor.role!=='administrator')return reply({reasonCode:'ACCESS_DENIED'},403);
+        return reply(store.invite(body.username,role),201);
       }
       if(path==='admin/revoke'&&request.method==='POST'){
-        const body=await json(request);if(!exactKeys(body,['username']))throw new Error('INVALID_REQUEST');store.revoke(body.username);return reply({revoked:true});
+        const body=await json(request);if(!exactKeys(body,['username']))throw new Error('INVALID_REQUEST');const target=store.db.prepare('SELECT role FROM accounts WHERE username=?').get(body.username);
+        if(!owner&&actor.role==='steward'&&target&&target.role!=='researcher')return reply({reasonCode:'ACCESS_DENIED'},403);
+        store.revoke(body.username);return reply({revoked:true});
       }
+      if(path==='activate'&&!owner&&!manager)return reply({reasonCode:'ACCESS_DENIED'},actor?403:401);
       if(['sign-in','activate'].includes(path)&&request.method==='POST'){
         const body=await json(request);if(!exactKeys(body,path==='activate'?['username','password','invitation']:['username','password']))throw new Error('INVALID_REQUEST');
-        if(path==='activate'&&!text(body.invitation,43))throw new Error('INVALID_REQUEST');
+        if(path==='activate'){
+          if(!text(body.invitation,43))throw new Error('INVALID_REQUEST');
+          const target=store.db.prepare('SELECT role FROM accounts WHERE username=?').get(body.username);
+          if(!owner&&actor.role==='steward'&&target&&target.role!=='researcher')return reply({reasonCode:'ACCESS_DENIED'},403);
+        }
         const signed=store.authenticate(body.username,body.password,path==='activate'?body.invitation:null);
         return reply({username:signed.username},200,{'Set-Cookie':`__Host-kfm_pc_session=${signed.session}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=14400`});
       }
@@ -130,7 +142,7 @@ export function createPcAiHandler({store,origin,adminHash,workerHash,resolveEvid
       }
       return reply({reasonCode:'ROUTE_NOT_FOUND'},404);
     }catch(error){
-      const known=['SIGN_IN_DENIED','SIGN_IN_RATE_LIMIT','INVALID_REQUEST','JSON_REQUIRED','REQUEST_TOO_LARGE','BODY_TIMEOUT','PC_OFFLINE','USER_RATE_LIMIT','USER_BUSY','QUEUE_FULL','ACCOUNT_LIMIT','ACCOUNT_EXISTS','INVALID_USERNAME','LEASE_LOST','INVALID_MODEL_RESPONSE','UNSUPPORTED_CLAIM','EVIDENCE_WITHHELD'];
+      const known=['SIGN_IN_DENIED','SIGN_IN_RATE_LIMIT','INVALID_REQUEST','JSON_REQUIRED','REQUEST_TOO_LARGE','BODY_TIMEOUT','PC_OFFLINE','USER_RATE_LIMIT','USER_BUSY','QUEUE_FULL','ACCOUNT_LIMIT','ACCOUNT_EXISTS','INVALID_USERNAME','INVALID_ROLE','LEASE_LOST','INVALID_MODEL_RESPONSE','UNSUPPORTED_CLAIM','EVIDENCE_WITHHELD'];
       const code=known.includes(error.message)?error.message:'PC_AI_UNAVAILABLE';
       const status=['SIGN_IN_DENIED'].includes(code)?401:['SIGN_IN_RATE_LIMIT','USER_RATE_LIMIT','QUEUE_FULL'].includes(code)?429:['PC_OFFLINE','PC_AI_UNAVAILABLE'].includes(code)?503:400;
       return reply({reasonCode:code},status);

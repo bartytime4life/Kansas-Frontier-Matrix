@@ -25,7 +25,7 @@ async function fixture(){
   const signed=async(username)=>{
     const invited=await request('admin/invite',{username},admin);
     assert.equal(invited.response.status,201);
-    const sign=await request('activate',{username,invitation:invited.body.invitation,password:'synthetic-test-password-123'});
+    const sign=await request('activate',{username,invitation:invited.body.invitation,password:'synthetic-test-password-123'},admin);
     assert.equal(sign.response.status,200);
     return sign.response.headers.get('set-cookie').split(';')[0];
   };
@@ -36,10 +36,10 @@ test('invitation is one-use; password hashes and host cookies; sessions persist 
   const f=await fixture();try{
     const invite=await f.request('admin/invite',{username:'alice'},f.admin);
     const body={username:'alice',invitation:invite.body.invitation,password:'synthetic-test-password-123'};
-    const activated=await f.request('activate',body);
+    const activated=await f.request('activate',body,f.admin);
     const setCookie=activated.response.headers.get('set-cookie');
     assert.match(setCookie,/HttpOnly; Secure; SameSite=Strict/);
-    assert.equal((await f.request('activate',body)).response.status,401);
+    assert.equal((await f.request('activate',body,f.admin)).response.status,401);
     const cookie=setCookie.split(';')[0];
     assert.equal((await f.request('status',undefined,null,cookie)).body.account,'alice');
     f.store.close();f.store=new PcAiStore({root:f.root,role:'test',key:f.key});
@@ -159,7 +159,7 @@ test('invalid dates and oversized requests are rejected before retrieval',async(
 test('expired invitation cannot establish a session',async()=>{
   const f=await fixture();try{
     const invited=await f.request('admin/invite',{username:'alice'},f.admin);f.advance(86400001);
-    const signed=await f.request('activate',{username:'alice',invitation:invited.body.invitation,password:'synthetic-test-password-123'});
+    const signed=await f.request('activate',{username:'alice',invitation:invited.body.invitation,password:'synthetic-test-password-123'},f.admin);
     assert.equal(signed.response.status,401);assert.equal(signed.response.headers.get('set-cookie'),null);
   }finally{await f.close();}
 });
@@ -193,4 +193,36 @@ test('actual worker monitor aborts inference when the backend cancels its lease'
   const timeout=setTimeout(()=>stop.abort(),10000);
   try{await createWorker({origin,workerToken:token()},fetcher)(stop.signal);assert.equal(checked,true);assert.equal(aborted,true);}
   finally{clearTimeout(timeout);stop.abort();}
+});
+
+
+test('server role gates deny anonymous/researcher tools and constrain steward delegation',async()=>{
+  const f=await fixture();try{
+    const researcher=await f.signed('reader');
+    assert.equal((await f.request('admin/invite',{username:'blocked'},null,researcher)).response.status,403);
+    assert.equal((await f.request('activate',{username:'blocked',password:'synthetic-test-password-123',invitation:token()})).response.status,401);
+    assert.equal((await f.request('admin/invite',{username:'blocked',role:'administrator'},null,researcher)).response.status,403);
+    const signRole=async(username,role)=>{
+      const invited=await f.request('admin/invite',{username,role},f.admin);
+      const signed=await f.request('activate',{username,password:'synthetic-test-password-123',invitation:invited.body.invitation},f.admin);
+      return signed.response.headers.get('set-cookie').split(';')[0];
+    };
+    const steward=await signRole('steward','steward'),administrator=await signRole('owner','administrator');
+    assert.equal((await f.request('status',undefined,null,steward)).body.role,'steward');
+    assert.equal((await f.request('admin/invite',{username:'newreader'},null,steward)).response.status,201);
+    assert.equal((await f.request('admin/invite',{username:'newsteward',role:'steward'},null,steward)).response.status,403);
+    assert.equal((await f.request('admin/revoke',{username:'owner'},null,steward)).response.status,403);
+    assert.equal((await f.request('admin/invite',{username:'newsteward',role:'steward'},null,administrator)).response.status,201);
+    const privileged=await f.request('admin/invite',{username:'privileged',role:'administrator'},f.admin);
+    assert.equal((await f.request('activate',{username:'privileged',password:'synthetic-test-password-123',invitation:privileged.body.invitation},null,steward)).response.status,403);
+    assert.equal((await f.request('sign-in',{username:'reader',password:'synthetic-test-password-123',role:'administrator'})).response.status,400);
+    assert.equal((await f.request('admin/invite',{username:'csrf'},null,administrator,'https://attacker.test')).response.status,403);
+    const tokenValue=administrator.slice('__Host-kfm_pc_session='.length);
+    f.store.db.prepare("UPDATE accounts SET role='researcher' WHERE username='owner'").run();
+    assert.equal(f.store.account(tokenValue).role,'researcher');
+    assert.equal((await f.request('admin/invite',{username:'demoted'},null,administrator)).response.status,403);
+    assert.equal((await f.request('admin/invite',{username:'csrf'},null,administrator,'https://attacker.test')).response.status,403);
+    f.store.revoke('steward');
+    assert.equal((await f.request('admin/invite',{username:'revoked'},null,steward)).response.status,401);
+  }finally{await f.close();}
 });
