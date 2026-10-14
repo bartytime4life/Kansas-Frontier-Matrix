@@ -161,6 +161,15 @@ class ProgramBaselineValidatorTests(unittest.TestCase):
             "duplicate_id": SYNTHETIC_INDEX.replace("`ADR-0004`", "`ADR-0001`"),
             "wrong_header": SYNTHETIC_INDEX.replace("| ID | Record |", "| Id | Record |"),
             "missing_scaffold_table": SYNTHETIC_INDEX.replace("<!-- ADR_SCAFFOLD_TABLE_START -->", ""),
+            "missing_separator": SYNTHETIC_INDEX.replace(
+                "| ID | Record | Effective status | Source metadata | Supersedes | Superseded by |\n"
+                "| --- | --- | --- | --- | --- | --- |\n",
+                "| ID | Record | Effective status | Source metadata | Supersedes | Superseded by |\n",
+            ),
+            "short_separator": SYNTHETIC_INDEX.replace(
+                "| File | Classification | Decision status |\n| --- | --- | --- |",
+                "| File | Classification | Decision status |\n| --- | --- |",
+            ),
             "not_utf8": None,
         }
         for name, text in malformed.items():

@@ -380,7 +380,8 @@ def _marked_table_rows(
 
     The rule mirrors ``tools/validators/validate_adr_index.py``: the first
     marked line is the exact header, the second is the separator, and every
-    later non-table line is ignored.
+    later non-table line is ignored. Unlike that validator, the separator is
+    checked, so a missing separator cannot silently drop the first data row.
     """
 
     try:
@@ -390,6 +391,11 @@ def _marked_table_rows(
         return None
     marked = lines[start + 1 : end]
     if len(marked) < 2 or _table_cells(marked[0]) != list(header):
+        return None
+    separator = _table_cells(marked[1])
+    if len(separator) != len(header) or not all(
+        re.fullmatch(r":?-{3,}:?", cell) for cell in separator
+    ):
         return None
     rows = []
     for line in marked[2:]:
