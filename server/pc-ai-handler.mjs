@@ -42,7 +42,10 @@ export function createPcAiHandler({store,origin,adminHash,workerHash,resolveEvid
   const session=request=>(request.headers.get('cookie')??'').split(';').map(item=>item.trim()).find(item=>item.startsWith('__Host-kfm_pc_session='))?.slice('__Host-kfm_pc_session='.length)??null;
   const authorized=(request,hash)=>matchesToken((request.headers.get('authorization')??'').replace(/^Bearer /,''),hash);
   const currentPacket=async query=>{
-    const result=await resolveEvidence(query);
+    let timer;
+    const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('EVIDENCE_WITHHELD')),8000);});
+    let result;
+    try{result=await Promise.race([resolveEvidence(query),timeout]);}finally{clearTimeout(timer);}
     if(!result||!Array.isArray(result.evidence)||result.evidence.length>40||!/^sha256:[a-f0-9]{64}$/.test(result.releaseId??''))return null;
     for(const item of result.evidence){
       if(!exactKeys(item,['evidenceRef','text','status','title','url'])||!text(item.evidenceRef,240)||!text(item.text,800)||!text(item.title,200)||item.status!=='documented')throw new Error('EVIDENCE_WITHHELD');
@@ -107,11 +110,14 @@ export function createPcAiHandler({store,origin,adminHash,workerHash,resolveEvid
         const query={term:body.term,place:body.place??'',start:body.start??'',end:body.end??''};
         if(![query.place,query.start,query.end].every(value=>typeof value==='string')||query.place.length>160||![query.start,query.end].every(day)||query.start&&query.end&&query.start>query.end)throw new Error('INVALID_REQUEST');
         if(!store.availability().ready)throw new Error('PC_OFFLINE');
-        const sensitive=isSensitiveQwenQuestion(body.question)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(body.question);
-        const evidence=sensitive?null:await currentPacket(query);
-        const packet=evidence?{question:body.question,query,...evidence,evidenceDigest:packetDigest(evidence)}:null;
-        const id=store.enqueue(account.id,packet,evidence?null:envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE'));
-        return reply({id},202);
+        const id=store.enqueue(account.id,null,null,true);
+        try{
+          const sensitive=isSensitiveQwenQuestion(body.question)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(body.question);
+          const evidence=sensitive?null:await currentPacket(query);
+          const packet=evidence?{question:body.question,query,...evidence,evidenceDigest:packetDigest(evidence)}:null;
+          store.prepared(id,account.id,packet,evidence?null:envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE'));
+          return reply({id},202);
+        }catch(error){store.failPrepared(id,account.id);throw error;}
       }
       const match=/^jobs\/([A-Za-z0-9_-]{43})(\/cancel)?$/.exec(path);
       if(match){

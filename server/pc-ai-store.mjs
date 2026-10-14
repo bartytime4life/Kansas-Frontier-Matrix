@@ -75,7 +75,7 @@ export class PcAiStore {
   }
   cleanup(){
     const now=this.clock();
-    this.db.prepare("UPDATE jobs SET state='expired',payload=NULL,result=NULL,lease_hash=NULL WHERE state IN ('queued','running') AND (deadline<=? OR (state='running' AND lease_until<=?))").run(now,now);
+    this.db.prepare("UPDATE jobs SET state='expired',payload=NULL,result=NULL,lease_hash=NULL WHERE state IN ('preparing','queued','running') AND (deadline<=? OR (state='running' AND lease_until<=?))").run(now,now);
     this.db.prepare('UPDATE jobs SET payload=NULL,result=NULL WHERE created<=?').run(now-86400000);
     this.db.prepare('DELETE FROM jobs WHERE created<=?').run(now-30*86400000);
     this.db.prepare('DELETE FROM sessions WHERE expires<=?').run(now);
@@ -127,19 +127,24 @@ export class PcAiStore {
     const row=this.db.prepare('SELECT worker_at,worker_ready FROM control WHERE id=1').get();
     return {online:row.worker_at>0&&row.worker_at>this.clock()-15000,ready:row.worker_ready===1&&row.worker_at>this.clock()-15000};
   }
-  enqueue(account,packet,terminal=null){
+  enqueue(account,packet,terminal=null,preparing=false){
     return this.transaction(()=>{
       this.cleanup();
       if(!this.availability().ready)fail('PC_OFFLINE');
       const now=this.clock();
       if(this.db.prepare('SELECT COUNT(*) AS n FROM jobs WHERE account=? AND created>?').get(account,now-3600000).n>=10)fail('USER_RATE_LIMIT');
-      if(this.db.prepare("SELECT COUNT(*) AS n FROM jobs WHERE account=? AND state IN ('queued','running')").get(account).n>0)fail('USER_BUSY');
-      if(this.db.prepare("SELECT COUNT(*) AS n FROM jobs WHERE state IN ('queued','running')").get().n>=5)fail('QUEUE_FULL');
+      if(this.db.prepare("SELECT COUNT(*) AS n FROM jobs WHERE account=? AND state IN ('preparing','queued','running')").get(account).n>0)fail('USER_BUSY');
+      if(this.db.prepare("SELECT COUNT(*) AS n FROM jobs WHERE state IN ('preparing','queued','running')").get().n>=5)fail('QUEUE_FULL');
       const id=token();
-      this.db.prepare('INSERT INTO jobs(id,account,state,created,deadline,payload,result) VALUES(?,?,?,?,?,?,?)').run(id,account,terminal?'completed':'queued',now,now+180000,terminal?null:this.seal(packet),terminal?this.seal(terminal):null);
+      this.db.prepare('INSERT INTO jobs(id,account,state,created,deadline,payload,result) VALUES(?,?,?,?,?,?,?)').run(id,account,preparing?'preparing':terminal?'completed':'queued',now,now+180000,preparing||terminal?null:this.seal(packet),terminal?this.seal(terminal):null);
       return id;
     });
   }
+  prepared(id,account,packet,terminal=null){
+    const changed=this.db.prepare("UPDATE jobs SET state=?,payload=?,result=? WHERE id=? AND account=? AND state='preparing' AND deadline>?").run(terminal?'completed':'queued',terminal?null:this.seal(packet),terminal?this.seal(terminal):null,id,account,this.clock());
+    if(changed.changes!==1)fail('LEASE_LOST');
+  }
+  failPrepared(id,account){this.db.prepare("UPDATE jobs SET state='failed',payload=NULL,result=NULL WHERE id=? AND account=? AND state='preparing'").run(id,account);}
   read(id,account){
     this.cleanup();
     const row=this.db.prepare('SELECT * FROM jobs WHERE id=? AND account=?').get(id,account);
@@ -147,7 +152,7 @@ export class PcAiStore {
     return {id,state:row.state,created:row.created,deadline:row.deadline,packet:row.payload?this.open(row.payload):null,result:row.result?this.open(row.result):null};
   }
   cancel(id,account){
-    const change=this.db.prepare("UPDATE jobs SET state='cancelled',payload=NULL,result=NULL,lease_hash=NULL WHERE id=? AND account=? AND state IN ('queued','running')").run(id,account);
+    const change=this.db.prepare("UPDATE jobs SET state='cancelled',payload=NULL,result=NULL,lease_hash=NULL WHERE id=? AND account=? AND state IN ('preparing','queued','running')").run(id,account);
     return change.changes===1;
   }
   claim(){

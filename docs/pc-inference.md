@@ -142,6 +142,9 @@ may wait/run globally, one per user, ten submissions per user per hour, and 50
 invited accounts. Worker health expires after 15 seconds. Inference has a
 90-second limit, its lease 100 seconds, and a job's total deadline three minutes.
 Expired/cancelled jobs and stale/duplicate results are not automatically retried.
+Capacity is reserved before evidence work; preparing jobs cannot reach the
+worker. Evidence resolution is bounded to eight seconds, and failure releases
+the preparation slot without enqueueing inference.
 
 ## Acceptance and rollback
 

@@ -163,3 +163,17 @@ test('expired invitation cannot establish a session',async()=>{
     assert.equal(signed.response.status,401);assert.equal(signed.response.headers.get('set-cookie'),null);
   }finally{await f.close();}
 });
+test('capacity is reserved before async evidence work and preparing jobs cannot reach worker',async()=>{
+  const f=await fixture();try{
+    const cookie=await f.signed('alice');await f.request('worker/heartbeat',health,f.worker);
+    let release;
+    f.setEvidence(new Promise(resolve=>{release=resolve;}));
+    const first=f.request('jobs',question,null,cookie);
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(f.store.db.prepare("SELECT COUNT(*) AS n FROM jobs WHERE state='preparing'").get().n,1);
+    assert.equal((await f.request('jobs',question,null,cookie)).body.reasonCode,'USER_BUSY');
+    assert.equal((await f.request('worker/claim',{},f.worker)).body.job,null);
+    release(fixtureEvidence);
+    assert.equal((await first).response.status,202);
+  }finally{await f.close();}
+});
