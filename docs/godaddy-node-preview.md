@@ -250,14 +250,18 @@ The phone screenshot still shows published `f44ce0c`. GoDaddy preview now runs
 `bf45476486712501bc3d495214877cc5fb5f5f58`, which contains the merged #5157
 navigation/capture candidate and the separate private-storage probe. This repair
 starts at the current hosting source `f93a545446a23d4057661f09daf2359afac44a01`
-(merged #5159), retaining that probe unchanged. Other chats' unfinished PC/AI
-work is not edited or overwritten; a new preview change must be coordinated.
+(merged #5159), then rebased onto
+`0608b34004eee67793c4fe39627ff298d38aae77` after the separate PC-inference
+#5163 merged. Its PC research routes, worker, handler, store and private-storage
+probe are retained byte-for-byte. Other chats' unfinished PC/AI work is not
+edited or overwritten; a new preview change must be coordinated.
 
 Map and More previously closed on a focus-out event with a null destination.
 That can hide a command between touch pointer-down and click. They now dismiss
 on a real outside pointer or a known outside keyboard-focus target; inside taps
 and null focus hops keep the command available. Escape and focus return remain.
-Both menus use opaque backgrounds. Layers and Places explicitly leave the
+Both menus use opaque backgrounds in the later-loaded theme as well as base
+styles; the theme previously overrode the base repair with transparent glass. Layers and Places explicitly leave the
 retained Source status view, and Places counts all selected map layers rather
 than reporting only the empty governed-domain registry as "0 visible layers."
 A temporary phone-test Place was saved and deleted successfully. Saved-place
@@ -306,3 +310,23 @@ new hosted-preview acceptance and 60 FPS remain separate open checks. Build,
 types, changed-area lint, unit and HTTP results must be recorded at the final
 head; no new deployment, publication, capture activation, DNS or payment change
 is established by this source repair.
+
+Final application-source validation at
+`c0b5cd6834dc6ec6c946bc34489b663efe9e8c45` on the #5163 base: production build
+and TypeScript pass; changed-area ESLint has zero errors and the same 41
+inherited page warnings. All 93 focused tests pass (79 phone, comparison,
+cutaway, gzip and capture checks plus 14 preserved PC-inference checks), and
+12 actual Node HTTP checks pass. The prior restricted run could not create its
+temporary gzip-test listener; the successful run used local-network permission.
+No inherited or unrun full-suite result is relabeled passing.
+
+The final rebuilt browser shows an opaque menu with all five map commands,
+working outside-pointer/Escape dismissal, Layers returning to Browse after
+Sources, Places reporting five selected map layers, and Map controls opening
+Explore. A final real statewide free JSON download contains all 105 counties,
+exact dated population/housing totals, source URLs and non-release flags.
+Source-data files and the preserved PC-inference implementation are unchanged
+relative to the exact base. Screenshots and download evidence are local review
+artifacts; they establish neither physical Safari acceptance nor hosted
+publication. Rollback is the exact prior hosting revision; archive captures,
+DNS, payments and publication remain outside this repair.
