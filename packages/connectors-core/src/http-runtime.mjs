@@ -91,14 +91,30 @@ export async function transport(request, env, fetcher, signal, limit) {
   let response;
   try {response=await fetcher(endpoint.href,{method:request.method,headers,body:request.body,redirect:"manual",cache:"no-store",signal});} catch {fail(signal.aborted?"UPSTREAM_TIMEOUT":"UPSTREAM_UNAVAILABLE",502);}
   if(response.status!==200){await response.body?.cancel();fail(response.status===429?"PROVIDER_RATE_LIMIT":response.status===401||response.status===403?"PROVIDER_ACCESS_HELD":"UPSTREAM_UNAVAILABLE",502);}
-  const type=response.headers.get("content-type")??"";
-  if(request.format==="png"?!/^image\/png(?:;|$)/i.test(type):request.format==="csv"?!/^(?:text\/(?:csv|plain)|application\/octet-stream)(?:;|$)/i.test(type):!/^(?:application\/(?:geo\+)?json|text\/json)(?:;|$)/i.test(type)){await response.body?.cancel();fail("CONTENT_TYPE_REJECTED",502);}
+  const receivedType=response.headers.get("content-type")??"";
+  if(request.format==="png"?!/^image\/png(?:;|$)/i.test(receivedType):request.format==="csv"?!/^(?:text\/(?:csv|plain)|application\/octet-stream)(?:;|$)/i.test(receivedType):!/^(?:application\/(?:geo\+)?json|text\/json)(?:;|$)/i.test(receivedType)){await response.body?.cancel();fail("CONTENT_TYPE_REJECTED",502);}
+  // MIME parameters are unnecessary for replay and may echo query credentials.
+  const type=receivedType.split(";")[0].toLowerCase();
   let bytes=await readBounded(response,limit);const originalSha256=await hash(bytes);let redactions=0;
   // Some key-based providers echo credentials in response metadata. Never store
   // those secrets; record the received digest and explicit storage transform.
-  const scrub=text=>{for(const auth of request.auth??[]){const secret=env[auth.secret];for(const token of new Set([secret,encodeURIComponent(secret)])){if(text.includes(token)){text=text.split(token).join("[credential-redacted]");redactions++;}}}return text;};
-  if(request.auth?.length){const text=scrub(new TextDecoder("utf-8",{fatal:true}).decode(bytes));if(redactions)bytes=new TextEncoder().encode(text);}
+  const scrub=text=>{for(const auth of request.auth??[]){const secret=env[auth.secret];for(const token of new Set([secret,encodeURIComponent(secret)])){if(text.includes(token)){const parts=text.split(token);redactions+=parts.length-1;text=parts.join("[credential-redacted]");}}}return text;};
+  if(request.auth?.length){
+   // All current credentialed profiles are JSON. Parse before storage so escaped
+   // keys/values cannot retain a secret. Malformed credentialed bodies fail closed.
+   if(request.format!=="json")fail("CREDENTIAL_FORMAT_HELD",502);
+   const redact=value=>{
+    if(typeof value==="string")return scrub(value);
+    if(Array.isArray(value))return value.map(redact);
+    if(value&&typeof value==="object"){const entries=Object.entries(value).map(([key,item])=>[scrub(key),redact(item)]);if(new Set(entries.map(([key])=>key)).size!==entries.length)fail("CREDENTIAL_REDACTION_AMBIGUOUS",502);return Object.fromEntries(entries);}
+    return value;
+   };
+   const value=redact(jsonEntity(new TextDecoder("utf-8",{fatal:true}).decode(bytes)));
+   if(redactions)bytes=new TextEncoder().encode(JSON.stringify(value));
+  }
   if(bytes.length>limit)fail("RESPONSE_TOO_LARGE",502);
-  const etag=scrub((response.headers.get("etag")??"").slice(0,256)),modified=scrub((response.headers.get("last-modified")??"").slice(0,128));
+  // Untrusted validator headers are optional. Omit them for keyed requests;
+  // their arbitrary encodings are not needed for the source-body integrity proof.
+  const etag=request.auth?.length?"":(response.headers.get("etag")??"").slice(0,256),modified=request.auth?.length?"":(response.headers.get("last-modified")??"").slice(0,128);
   return {bytes,type,originalSha256,redactions,etag,modified};
 }
