@@ -9,7 +9,7 @@ import sys
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path[:0] = [str(ROOT / "packages/domains/people-dna-land/src"), str(ROOT)]
+sys.path[:0] = [str(ROOT / "packages/domains/people-dna-land/src"), str(ROOT / "packages/hashing/src"), str(ROOT)]
 from connectors.blm.src.blm.land_records import capture
 from people_dna_land.land_records import canonical, digest, make_record, normalize, public_projection
 from people_dna_land.land_store import audit, connection, evidence_for, initialize, list_records, stage, status
