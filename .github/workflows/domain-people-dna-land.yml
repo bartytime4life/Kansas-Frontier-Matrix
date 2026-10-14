@@ -1,7 +1,8 @@
 # KFM People/DNA/Land domain CI readiness workflow.
 # Status: retained EvidenceBundle/CatalogMatrix adapters, the domain-schema
 # validator, one bounded synthetic living-person screen, and two consent fixture
-# profiles are executable; broader validation, policy-runtime, proof, revocation
+# profiles and a bounded synthetic land-instrument intake are executable;
+# broader validation, policy-runtime, proof, revocation
 # execution, cleanup, and release producers remain held.
 #
 # Authority boundary:
@@ -87,6 +88,9 @@ jobs:
             "policy/domains/people-dna-land/README.md"
             "policy/consent/people-dna-land/README.md"
             "tests/domains/people-dna-land/README.md"
+            "tests/domains/people-dna-land/test_land_records.py"
+            "schemas/contracts/v1/domains/people-dna-land/land_instrument_candidate.schema.json"
+            "apps/land-records/server.py"
             "tests/domains/people-dna-land/consent/revocation/README.md"
             "tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py"
             "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py"
@@ -136,6 +140,7 @@ jobs:
                   "test_consent_revocation_propagation_assessment.py"
               ),
               Path("tests/domains/people-dna-land/test_people_dna_land_smoke.py"),
+              Path("tests/domains/people-dna-land/test_land_records.py"),
           }
           accepted_validators = {
               Path(
@@ -293,6 +298,18 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-exact-option-adapters"
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-living-person-screen"
 
+      - name: Run bounded private land-instrument intake guards
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/domains/people-dna-land/test_land_records.py
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-private-instrument-intake"
+          echo "WORKFLOW_HOLD: source admission, rights, sensitivity, title and public release remain unestablished"
+
       - name: Run bounded consent-safe genealogy-overlay validation
         shell: bash
         env:
@@ -347,6 +364,8 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-revocation-propagation-assessment`
 
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-private-instrument-intake`
+
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
           When green, this job has validated the retained domain schemas and
@@ -355,6 +374,10 @@ jobs:
           executed two frozen, synthetic, no-network consent fixture profiles: a
           consent-safe genealogy-overlay candidate and a consent-revocation
           propagation assessment. The structural adapter and screen regressions
+          are accompanied by synthetic land intake, financial-role, replay,
+          integrity, withdrawal and private runtime access guards. These tests
+          open no live source or private store and approve no land records.
+          The structural adapter and screen regressions
           reject every strict prefix of `--fixtures` before delegation and keep
           fixture mode mutually exclusive with explicit files. The consent
           profiles check active consent

@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/people-dna-land/land_instrument_candidate.schema.json",
+  "title": "Unreleased land-instrument candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "id",
+    "source_id",
+    "source_record_id",
+    "instrument_type",
+    "event_date",
+    "state",
+    "transaction_status",
+    "geometry_role",
+    "title_claim",
+    "sale_completion",
+    "rights_state",
+    "sensitivity_state",
+    "source_admission",
+    "review_state",
+    "release_state",
+    "record_digest",
+    "evidence_ref",
+    "recording_date",
+    "county",
+    "parties",
+    "legal_description",
+    "notes",
+    "acres",
+    "amount",
+    "geometry",
+    "flags"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.land-instrument-candidate/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^kfm:land:[a-f0-9]{64}$"
+    },
+    "source_id": {
+      "enum": [
+        "blm-glo",
+        "blm-mlrs",
+        "kshs-land-sales",
+        "sedgwick-deeds",
+        "johnson-deeds"
+      ]
+    },
+    "source_record_id": {
+      "type": "string"
+    },
+    "instrument_type": {
+      "enum": [
+        "patent",
+        "deed",
+        "warranty_deed",
+        "quitclaim_deed",
+        "railroad_sale",
+        "tract_book_entry",
+        "land_tenure_case",
+        "sale_notice",
+        "other_instrument"
+      ]
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "state": {
+      "const": "KS"
+    },
+    "transaction_status": {
+      "enum": [
+        "RECORDED",
+        "ISSUED",
+        "PROPOSED",
+        "CASE_ACTION",
+        "UNKNOWN"
+      ]
+    },
+    "geometry_role": {
+      "const": "UNLOCATED"
+    },
+    "title_claim": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "sale_completion": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "rights_state": {
+      "const": "PENDING"
+    },
+    "sensitivity_state": {
+      "const": "REVIEW_REQUIRED"
+    },
+    "source_admission": {
+      "const": "PENDING"
+    },
+    "review_state": {
+      "const": "PENDING"
+    },
+    "release_state": {
+      "const": "UNRELEASED"
+    },
+    "record_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "evidence_ref": {
+      "type": "string",
+      "pattern": "^kfm:evidence:land:[a-f0-9]{64}$"
+    },
+    "recording_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "county": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 64
+    },
+    "parties": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "label",
+          "living_status"
+        ],
+        "properties": {
+          "role": {
+            "enum": [
+              "grantor",
+              "grantee"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "living_status": {
+            "const": "UNKNOWN"
+          }
+        }
+      }
+    },
+    "legal_description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 8192
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 4096
+    },
+    "acres": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]+(?:\\.[0-9]{1,6})?$"
+    },
+    "amount": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "kind",
+            "currency"
+          ],
+          "properties": {
+            "value": {
+              "type": "string",
+              "pattern": "^[0-9]+(?:\\.[0-9]{1,6})?$"
+            },
+            "kind": {
+              "enum": [
+                "sale_price",
+                "consideration",
+                "nominal_consideration",
+                "recorded_principal",
+                "appraised_value",
+                "minimum_bid"
+              ]
+            },
+            "currency": {
+              "const": "USD"
+            }
+          }
+        }
+      ]
+    },
+    "geometry": {
+      "type": "null"
+    },
+    "flags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 16
+    }
+  }
+}

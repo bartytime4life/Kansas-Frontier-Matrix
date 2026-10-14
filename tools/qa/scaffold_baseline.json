@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 716,
+   "PLACEHOLDER_MARKER": 715,
    "STUB_MODULE": 167,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
    "connectors": 68,
    "contracts": 3,
-   "packages": 32,
+   "packages": 31,
    "pipelines": 76,
    "policy": 112,
    "schemas": 386,
@@ -17,8 +17,8 @@
    "tests": 176,
    "tools": 40
   },
-  "files": 717,
-  "total": 895
+  "files": 716,
+  "total": 894
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -108,7 +108,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/hazards/src/hazards/layers.py"},
   {"kind": "STUB_MODULE", "path": "packages/domains/hazards/src/hazards/layers.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/hydrology/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/people-dna-land/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/roads-rail-trade/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/settlements-infrastructure/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/soil/pyproject.toml"},
