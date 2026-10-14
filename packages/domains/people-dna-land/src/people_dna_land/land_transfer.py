@@ -43,6 +43,8 @@ def export_review(root, destination, *, capture_ids=()):
                              "evidence": [evidence_bundle(r, manifest, candidate, {k: len(v) for k, v in content.items()}) for r in candidate["records"]]})
     if not captures or wanted - {c["manifest"]["capture_id"] for c in captures}:
         raise ValueError("ACTIVE_CAPTURE_REQUIRED")
+    if len(objects) > 100:
+        raise ValueError("TRANSFER_OBJECT_LIMIT")
     if sum(len(c["candidate"]["records"]) for c in captures) > 1000:
         raise ValueError("TRANSFER_RECORD_LIMIT")
     value = {"profile": PROFILE, "created_at": stamp(), "authority": "PRIVATE_REVIEW_ONLY",

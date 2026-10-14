@@ -12,14 +12,19 @@ export const LAND_SOURCES: Record<string, { title: string; hosts: string[]; href
   "johnson-deeds": { title: "Johnson County · recorded instruments", hosts: ["www.jocogov.org", "ims.jocogov.org"], href: "https://www.jocogov.org/department/treasury-taxation-and-vehicles", limitation: "Lawful exports with source and rights review. Assessed values and parcel context do not establish purchase prices or title." },
 };
 export type LandRecord = { profile: string; id: string; source_id: string; source_record_id: string; instrument_type: string; event_date: string; recording_date: string | null; state: string; county: string | null; transaction_status: string; parties: { role: string; label: string; living_status: string }[]; legal_description: string | null; acres: string | null; amount: { value: string; kind: string; currency: string } | null; notes: string | null; geometry: null; geometry_role: string; title_claim: string; sale_completion: string; rights_state: string; sensitivity_state: string; source_admission: string; review_state: string; release_state: string; flags: string[]; record_digest: string; evidence_ref: string };
-type Json = any; // Untrusted shapes are closed and checked before narrowing.
-export type LandTransfer = { profile: string; created_at: string; authority: string; review_state: string; release_state: string; transfer_digest: string; captures: { manifest: Json; candidate: { records: LandRecord[]; [key: string]: Json }; evidence: Json[] }[]; objects: Record<string, string> };
+type Json = unknown;
+export type LandDocument = { source_url: string; sha256: string; bytes: number };
+export type LandCoverage = { scope: string; complete: boolean; reported_total: number | null; start?: number; end?: number; excluded?: { locator: string; reason: string }[] };
+export type LandManifest = { profile: string; source_id: string; source_url: string; retrieved_at: string; format: string; capture_method: string; payload_sha256: string; bytes: number; documents: LandDocument[]; total_bytes: number; source_admission: string; release_state: string; capture_id: string };
+export type LandCandidate = { profile: string; capture_id: string; source_id: string; records: LandRecord[]; locators: Record<string,string[]>; coverage: LandCoverage; mapping: Record<string,string> | null; review_state: string; release_state: string; candidate_id: string };
+export type LandEvidence = { profile: string; evidence_ref: string; record_digest: string; capture_id: string; candidate_id: string; source_url: string; retrieved_at: string; capture_method: string; members: { sha256: string; bytes: number }[]; locators: string[]; documents: LandDocument[]; review_state: string; release_state: string; bundle_digest: string; coverage?: LandCoverage };
+export type LandTransfer = { profile: string; created_at: string; authority: string; review_state: string; release_state: string; transfer_digest: string; captures: { manifest: LandManifest; candidate: LandCandidate; evidence: LandEvidence[] }[]; objects: Record<string,string> };
 const HASH = /^sha256:[a-f0-9]{64}$/;
 const kinds: Record<string, string[]> = { "blm-glo": ["patent", "deed", "warranty_deed", "quitclaim_deed", "other_instrument"], "blm-mlrs": ["land_tenure_case", "sale_notice"], "kshs-land-sales": ["railroad_sale", "tract_book_entry", "deed"], "sedgwick-deeds": ["deed", "warranty_deed", "quitclaim_deed"], "johnson-deeds": ["deed", "warranty_deed", "quitclaim_deed"], "shawnee-tax-sales": ["tax_foreclosure_sale"], "leavenworth-tax-sales": ["tax_foreclosure_sale"] };
 export function canonicalLand(value: Json): string {
-  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (value === null || typeof value !== "object") { const encoded=JSON.stringify(value); if (encoded===undefined) return fail(); return encoded; }
   if (Array.isArray(value)) return `[${value.map(canonicalLand).join(",")}]`;
-  return `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canonicalLand(value[k])}`).join(",")}}`;
+  return `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canonicalLand((value as Record<string,unknown>)[k])}`).join(",")}}`;
 }
 export async function landDigest(value: Json): Promise<string> {
   const bytes = value instanceof Uint8Array ? value : new TextEncoder().encode(canonicalLand(value));
@@ -33,12 +38,12 @@ function day(v: Json, nullable = false) { if (v === null && nullable) return; if
 function instant(v: Json) { if (typeof v !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(v) || !Number.isFinite(Date.parse(v)) || new Date(v).toISOString().slice(0,19)+"Z" !== v || Date.parse(v) > Date.now()+1000) fail(); }
 export function landSourceUrl(source: string, value: string) {
   str(value,2048); let url: URL; try { url = new URL(value); } catch { return fail(); }
-  if (!LAND_SOURCES[source] || url.protocol !== "https:" || !LAND_SOURCES[source].hosts.includes(url.hostname) || url.port || url.username || url.password || url.hash || /[\s\\]/.test(value)) fail();
+  if (typeof source!=="string" || !Object.hasOwn(LAND_SOURCES,source) || url.protocol !== "https:" || !LAND_SOURCES[source].hosts.includes(url.hostname) || url.port || url.username || url.password || url.hash || /[\s\\]/.test(value)) fail();
   let query: string; try { query = decodeURIComponent(url.search); } catch { return fail(); }
   if (/token|secret|password|session|authorization|signature|api.?key|siwc/i.test(query)) fail();
   return value;
 }
-async function selfHash(value: Json, field: string) { if (!HASH.test(value[field])) fail(); const { [field]: ignored, ...rest } = value; if (await landDigest(rest) !== ignored) fail(); }
+async function selfHash(value: object, field: string) { const item=value as Record<string,unknown>; const hash=item[field]; if (typeof hash!=="string"||!HASH.test(hash)) fail(); const rest=Object.fromEntries(Object.entries(item).filter(([key])=>key!==field)); if (await landDigest(rest)!==hash) fail(); }
 export function decodeLandObject(value: string): Uint8Array {
   if (typeof value !== "string" || value.length%4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value) || !value.length) fail();
   let binary: string; try { binary = atob(value); } catch { return fail(); }
@@ -47,7 +52,7 @@ export function decodeLandObject(value: string): Uint8Array {
 }
 export async function validateLandTransfer(bytes: Uint8Array): Promise<LandTransfer> {
   if (!bytes.length || bytes.length > LAND_LIMIT) fail();
-  let v: Json; let text: string;
+  let v: LandTransfer; let text: string;
   try { text = new TextDecoder("utf-8",{fatal:true}).decode(bytes); v = JSON.parse(text); } catch { return fail(); }
   // Reject duplicate JSON keys, alternate number forms and ambiguous encodings.
   if (canonicalLand(v) !== text!) fail();
@@ -72,6 +77,17 @@ export async function validateLandTransfer(bytes: Uint8Array): Promise<LandTrans
     closed(c,["profile","capture_id","source_id","records","locators","coverage","mapping","review_state","release_state","candidate_id"]);
     if(c.profile!=="kfm.land-records-batch/v1"||c.capture_id!==m.capture_id||c.source_id!==m.source_id||c.review_state!=="PENDING"||c.release_state!=="UNRELEASED"||!Array.isArray(c.records)||!c.records.length||!Array.isArray(capture.evidence)||capture.evidence.length!==c.records.length)fail();
     count+=c.records.length;if(count>1000)fail();await selfHash(c,"candidate_id");
+    if(m.format==="glo-text"){
+      closed(c.coverage,["scope","complete","reported_total","start","end",...(Object.hasOwn(c.coverage??{},"excluded")?["excluded"]:[])]);
+      const cov=c.coverage;
+      if(cov.scope!=="KEYWORD_RESULTS"||typeof cov.complete!=="boolean"||!Number.isSafeInteger(cov.start)||!Number.isSafeInteger(cov.end)||!Number.isSafeInteger(cov.reported_total)||cov.start!<1||cov.end!<cov.start!||cov.end!>cov.reported_total!||cov.end!-cov.start!>=100||c.mapping!==null)fail();
+      if(cov.excluded!==undefined){if(!Array.isArray(cov.excluded)||cov.excluded.length>100)fail();for(const x of cov.excluded){closed(x,["locator","reason"]);if(typeof x.locator!=="string"||!/^result-card:\d+$/.test(x.locator)||x.reason!=="SURVEY_NOT_LAND_INSTRUMENT")fail();}}
+    }else{
+      closed(c.coverage,["scope","complete","reported_total"]);
+      if(c.coverage.scope!=="EXPLICIT_EXPORT"||c.coverage.complete!==false||c.coverage.reported_total!==null||!c.mapping||typeof c.mapping!=="object"||Array.isArray(c.mapping))fail();
+      const fields=["source_record_id","instrument_type","event_date","recording_date","county","state","transaction_status","grantor","grantee","legal_description","acres","amount","amount_kind","currency","notes"];
+      if(["source_record_id","instrument_type","event_date","state","transaction_status"].some(k=>!Object.hasOwn(c.mapping!,k))||Object.keys(c.mapping).some(k=>!fields.includes(k))||new Set(Object.values(c.mapping)).size!==Object.keys(c.mapping).length)fail();for(const column of Object.values(c.mapping))str(column,2048);
+    }
     const digests=new Set<string>();
     for(let i=0;i<c.records.length;i++){
       const r=c.records[i];
