@@ -92,6 +92,8 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "My uncle is trapped by flood water.",
     "Our coworkers are stranded on the highway.",
     "I'm in a burning building and trapped.",
+    "Do we need to evacuate tonight?",
+    "The creek is over the road and rising, what do we do?",
     "I am in Sterling and stranded.",
   ]),
   ...abstain("legal-medical", [
@@ -129,6 +131,9 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "My download is stuck.",
     "My search results are missing.",
     "My filter is stuck.",
+    "Could you walk me through the geology layer?",
+    "Our county filter won't clear; what should we do?",
+    "What does the evacuation zone layer show?",
     "Our API is stuck.",
   ]),
   ...interpret("definition", [
@@ -162,6 +167,8 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "How many people drowned in the 1951 flood?",
     "I am mapping lost trails across the county.",
     "We are researching missing towns along the railroad.",
+    "Which bridges got swept away during the 1993 flood?",
+    "Were residents evacuated during the 2022 wildfire?",
   ]),
   ...interpret("environment", [
     "What species use the Flint Hills?",

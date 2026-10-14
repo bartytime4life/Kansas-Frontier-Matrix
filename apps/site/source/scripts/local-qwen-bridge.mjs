@@ -394,11 +394,16 @@ const DISTRESS_MIDDLE = `${DISTRESS_ADVERBS}${DISTRESS_PLACE}${DISTRESS_ADVERBS}
 const DISTRESS_NOT_MODIFIER = "(?! (?:a|an|the|this|that|these|those|some|any|my|our|data|information|records?|layers?|values?|fields?|files?|towns?|trails?|sites?|species|workers?|people|persons?|animals?|birds?|roads?|places?|links?|pages?|years?)\\b)";
 const DISTRESS = `\\b(?:${DISTRESS_ANY_SUBJECT} ${DISTRESS_MIDDLE}(?:trapped|stranded|drowning|injured|hurt|bleeding)`
   + `|${DISTRESS_PERSON_SUBJECT} ${DISTRESS_MIDDLE}(?:stuck(?! (?:on|with) (?:how|what|which|why|this|the|that)\\b)|lost|missing))\\b${DISTRESS_NOT_MODIFIER}`;
-// Evacuation is an emergency unless the question is about a past one ("were towns evacuated during
-// the 1993 floods") and asks nothing for now ("should we evacuate like in 1993?").
+// Evacuation guidance for now ("should we evacuate?", "is an evacuation order in effect now?") is an
+// emergency; the evacuation-zone layer and past evacuations ("were residents evacuated during the 2022
+// wildfire?") are not.
 const EVACUATION = /\bevacuat\w*/;
-const HISTORICAL_YEAR = /\b(?:1[6-9]\d\d|200\d|201\d)\b/;
-const PRESENT_ADVICE = /\b(?:should|must|need|ought|can|could|will|shall|do) (?:i|we|you|they|people|residents)\b|\b(?:now|today|tonight|tomorrow|currently|right away)\b/;
+const PRESENT_ADVICE = /\b(?:should|must|need|ought|can|could|will|shall|do) (?:i|we|you|they|people|residents)\b|\b(?:now|today|tonight|tomorrow|currently|right away)\b|\b(?:is|are) there (?:an? )?(?:\w+ )?evacuat/;
+// "What do we do?" is an emergency only beside a hazard and away from the interface: "the river is
+// rising, what do we do?" but not "our county filter won't clear; what should we do?".
+const WHAT_TO_DO = /\bwhat (?:do|should|can) (?:i|we) do\b/;
+const HAZARD_CUE = /\b(?:flood\w*|water|river|creek|stream|storm|tornado|fire|smoke|wildfire|ice|roof|road|trapped|stranded|swept|hurt|injured|bleeding|drown\w*)\b/;
+const INTERFACE_CUE = /\b(?:filter|layer|layers|map|legend|button|setting|settings|panel|download|upload|dataset|data|query|search|page|app|tab|slider|menu|screen)\b/;
 // "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
 const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
 const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
@@ -409,7 +414,8 @@ const SENSITIVE_QUESTION = new RegExp([
   `\\b(?:would|will|could|might) (?:\\w+ ){0,3}be (?:\\w+ )?${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous|risky)\\b${NOT_RELEASE_STATUS}`,
   // "Can I still drive my pickup across it?", "should we camp on the sandbar?": the same advice as
   // drinking or swimming, for other ways of entering the water or the weather.
-  "\\b(?:can|could|should|may) (?:i|we|you|people|(?:my|our|the) \\w+) (?:\\w+ ){0,2}(?:drive|cross|ford|walk|hike|camp|kayak|canoe|boat|float|paddle|tube|wade)\\b",
+  // "Could you walk me through the layer" is a request for help, not a plan to walk anywhere.
+  "\\b(?:can|could|should|may) (?:i|we|people|(?:my|our|the) \\w+) (?:\\w+ ){0,2}(?:drive|cross|ford|walk(?! (?:me|us) through\\b)|hike|camp|kayak|canoe|boat|float|paddle|tube|wade)\\b",
   // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
   `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
   // "Okay to drink", "would drinking this water be safe", "is swimming here fine".
@@ -419,10 +425,11 @@ const SENSITIVE_QUESTION = new RegExp([
   // "Emergency spillway" and "emergency management" name things on the map, not an emergency.
   "\\b(?:safety|emergency(?! (?:spillways?|management|managers?|operations|services|planning|plans?|broadcast)\\b)|shelter|rescue|911)\\b",
   // An emergency told in the third person: "his truck got swept off the road", "someone just fell
-  // through the ice", "my dad still isn't back", "what do we do".
-  "\\b(?:got|gets|getting|been|being|just got|was just) (?:swept|washed|carried) (?:away|off|downstream|into)\\b|\\bjust (?:fell|went|slipped) (?:through|into|under)\\b",
+  // through the ice", "my dad still isn't back". The subject is a person or something of theirs;
+  // "which bridges got swept away in 1993" is history.
+  "\\b(?:i|we|he|she|they|someone|somebody|(?:my|our|his|her|their) \\w+)(?: \\w+){0,2} (?:got|gets|getting|been|being|just got|was just|were just|just) (?:swept|washed|carried) (?:away|off|downstream|into)\\b|\\bjust (?:fell|went|slipped) (?:through|into|under)\\b",
   "\\b(?:still (?:isn t|is not|isnt|hasn t|has not|hasnt|not) (?:come |came )?(?:back|home|returned)|(?:hasn t|has not|hasnt|haven t|have not) (?:come|came) (?:back|home)|never came (?:back|home))\\b",
-  "\\bwhat (?:do|should|can) (?:i|we) do(?: now)?$",
+
   DISTRESS,
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
@@ -625,7 +632,8 @@ const joinProperNames = (question) => typeof question === "string" ? question.re
 export function isSensitiveQwenQuestion(question) {
   const text = normalizeScopeText(question);
   if (SENSITIVE_QUESTION.test(text) || ADDRESS_QUESTION.test(normalizeScopeText(joinProperNames(question)))) return true;
-  if (EVACUATION.test(text) && !(HISTORICAL_YEAR.test(text) && !PRESENT_ADVICE.test(text))) return true;
+  if (EVACUATION.test(text) && PRESENT_ADVICE.test(text)) return true;
+  if (WHAT_TO_DO.test(text) && HAZARD_CUE.test(text) && !INTERFACE_CUE.test(text)) return true;
   // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
   // records") does not excuse another mention ("ask visitors to drink this water").
   if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)

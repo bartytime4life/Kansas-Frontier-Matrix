@@ -3649,7 +3649,7 @@
     },
     "scripts/local-qwen-bridge.mjs": {
       "difference": "Repository overlay from #5142, #5143 and #5144: sensitive-question gate fixes (first-person distress, latitude/longitude comparison; #5143 person-subject distress; #5144 injury versus ambiguous states and open continuations); not deployed to private Site v262; #5145: held-out question set and the gate fixes it led to.",
-      "mirror_sha256": "2dd5b95122733c4c31a507734caf10e8f8c13dcb3cd683a74c8b218fd3a2bf0b",
+      "mirror_sha256": "ea1feaec1585fbbbf8ed02d793421a18058bc2a9e4957568f99ca9127c5ac11c",
       "site_sha256": "9690f702c05b2a6331770efc44899a2890148ee1b2024fbc5117d8e04bd8c1f1",
       "state": "inherited_repository_overlay"
     },
@@ -3710,7 +3710,7 @@
     },
     "scripts/qwen-question-gate-corpus.mjs": {
       "difference": "Repository-only local Qwen question-gate corpus and its test added in #5142 and extended in #5143 and #5144; no Site deployment or data activation implied; #5145: held-out question set and the gate fixes it led to.",
-      "mirror_sha256": "f71fc2d75b7cac81e6e629818ab1471f8dfab0a75157d3493a059e5d766b056e",
+      "mirror_sha256": "e812c65eeca879e044e9bebf3ec2994d1eaa186fb1a2f60fa10755ce709f9d3b",
       "state": "repository_only_overlay"
     },
     "scripts/serve-local-worker.mjs": {
@@ -4957,7 +4957,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "a8d7eeeb10dc7ce733b1630cc64cc737f818d09b8408d189794501fe8c5f9d4e",
+  "inventory_sha256": "c308d364e99d7a28e1e8c64e33818485effbd1ffe04c29990bc6125b5e19411c",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
