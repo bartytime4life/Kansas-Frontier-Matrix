@@ -12,6 +12,7 @@ name: watcher-gate-packet
       - "tools/validators/watchers/validate_watcher_gate_packet.py"
       - "tests/validators/watchers/test_validate_watcher_gate_packet.py"
       - "data/receipts/generated/genrec-watcher-gate-packet-20260805.json"
+      - "data/receipts/generated/genrec-watcher-gate-packet-currentness-20261014.json"
   push:
     branches: [main]
     paths:
@@ -23,6 +24,7 @@ name: watcher-gate-packet
       - "tools/validators/watchers/validate_watcher_gate_packet.py"
       - "tests/validators/watchers/test_validate_watcher_gate_packet.py"
       - "data/receipts/generated/genrec-watcher-gate-packet-20260805.json"
+      - "data/receipts/generated/genrec-watcher-gate-packet-currentness-20261014.json"
   workflow_dispatch:
 
 permissions:
@@ -73,7 +75,7 @@ jobs:
       - name: Verify generated authoring receipt integrity
         run: >-
           python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-watcher-gate-packet-20260805.json
+          data/receipts/generated/genrec-watcher-gate-packet-currentness-20261014.json
           --repo-root .
 
       - name: Record bounded trust result

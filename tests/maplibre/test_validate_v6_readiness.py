@@ -205,6 +205,37 @@ class MapLibreV69ReadinessTests(unittest.TestCase):
                 self.assertEqual(result.outcome, Outcome.HOLD)
                 self.assertIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
 
+    def test_imports_in_comments_strings_and_templates_are_not_acquisition(self) -> None:
+        for source in (
+            '/*\nimport { Map } from "maplibre-gl";\n*/\n',
+            '// const gl = require("maplibre-gl");\n',
+            "export const fixture = `\n"
+            'import "maplibre-gl";\n'
+            'export * from "maplibre-gl";\n'
+            "`;\n",
+            "export const call = 'require(\"maplibre-gl\")';\n",
+            "export const nested = `${\"import('maplibre-gl')\"}\nimport \"maplibre-gl\";\n`;\n",
+        ):
+            with self.subTest(source=source), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                write_repo(root, source=source)
+                result = scan_repository(root)
+                self.assertEqual(result.outcome, Outcome.READY)
+                self.assertNotIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
+
+    def test_imports_beside_literals_and_after_unterminated_literals_are_hold(self) -> None:
+        for source in (
+            'export const fixture = `import "maplibre-gl";`;\nimport "maplibre-gl";\n',
+            "const quote = /[\"'`]/; export const lazy = import(\"maplibre-gl\");\n",
+            'export const note = "unterminated;\nimport { Map } from "maplibre-gl";\n',
+        ):
+            with self.subTest(source=source), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                write_repo(root, source=source)
+                result = scan_repository(root)
+                self.assertEqual(result.outcome, Outcome.HOLD)
+                self.assertIn("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION", result.reasons)
+
     def test_lookalike_package_names_are_not_acquisition(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

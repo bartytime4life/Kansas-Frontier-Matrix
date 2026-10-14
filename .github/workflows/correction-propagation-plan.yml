@@ -23,6 +23,6 @@ jobs:
           python -m py_compile tools/validators/correction/validate_correction_propagation_plan.py tests/validators/test_validate_correction_propagation_plan.py
           python -m unittest tests.validators.test_validate_correction_propagation_plan -v
           python tools/validators/correction/validate_correction_propagation_plan.py --fixtures
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-correction-propagation-plan-20260808.json --repo-root .
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-correction-propagation-plan-currentness-20261014.json --repo-root .
       - if: always()
         run: echo "Fixture-only correction dependency inventory; no cache, alias, release, or publication mutation." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,104 @@
+{
+  "receipt_id": "genrec-correction-propagation-plan-currentness-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/correction-propagation-plan.yml",
+    "contracts/correction/correction_propagation_plan.md",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json",
+    "tests/validators/test_validate_correction_propagation_plan.py",
+    "tools/validators/correction/validate_correction_propagation_plan.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/correction-propagation-plan.yml": "sha256:777163fd108338cc51124b1b4e654505bde5b7e219138a7ceb58991e1603449e",
+    "contracts/correction/correction_propagation_plan.md": "sha256:5188f5d3ab431467288782d6c9c10cf0f69ec5f947ade792b9c4b7adfa2cf5ec",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "sha256:91da87719d1dfc2528620590240c202febda8e6b950ff41d06b09b6bdfb514ed",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "sha256:cbdd0a2aba38aace292aaf11835777c2cb13ea68dd200b119f4ecced838326d1",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "sha256:ea25d856d5f3aa1021688104482bdd1616fb987318b23ee1293962cb60a385c0",
+    "tests/validators/test_validate_correction_propagation_plan.py": "sha256:227cfaa66de36b573a4977e4b512848853bdb93e82c9c31781a64887aca1a666",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "sha256:98c16d1136e2e0db9784184b4da70a4f779a54010bb9bd37babfeab2035a3230"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "2026-10-14"
+  },
+  "prompt_or_contract": "sha256:c37837d986eac25816e4bce3823fd3249025fe2b1b4d6ecbbe6dcc7f6d080845",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c37837d986eac25816e4bce3823fd3249025fe2b1b4d6ecbbe6dcc7f6d080845"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-correction-propagation-plan-20260808.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:.github/workflows/correction-propagation-plan.yml@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/correction/correction_propagation_plan.md@4fd54e4e695eebd2e2a31f0b309813a352989b16"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/correction-propagation-plan.yml": "CONFIRMED",
+    "contracts/correction/correction_propagation_plan.md": "PROPOSED",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "PROPOSED",
+    "tests/validators/test_validate_correction_propagation_plan.py": "CONFIRMED",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-correction-propagation-plan-20260808 is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "All 7 artifact paths are bound to their current bytes on main@4fd54e4e69; 2 differ from the original receipt because they were edited after it was written."
+    },
+    {
+      "gate": "authoring-claim",
+      "outcome": "SKIPPED",
+      "reason": "This is a currentness re-observation of existing artifacts. It makes no claim to have authored or changed them."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-correction-propagation-plan-20260808",
+      "evidence_ref": "repo:data/receipts/generated/genrec-correction-propagation-plan-20260808.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T07:10:00Z",
+  "emitter": "Claude Code (Claude Opus 5.5)",
+  "links": {
+    "pr_number": 5160,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Currentness successor to genrec-correction-propagation-plan-20260808. The original receipt no longer matched any single commit on main: 2 of its artifacts were edited after it was written. Its live-tree replay in .github/workflows/correction-propagation-plan.yml now validates this successor instead. The original stays unedited, per docs/doctrine/retention.md section 3 (receipts are written once and never mutated)."
+}

@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-watcher-gate-packet-currentness-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/watcher-gate-packet.yml",
+    "contracts/watchers/watcher_gate_packet.md",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py",
+    "tools/validators/watchers/validate_watcher_gate_packet.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/watcher-gate-packet.yml": "sha256:0469c9993d0562b82fcd080905ccf79234f8415220a8f0c7ab41490ac9858022",
+    "contracts/watchers/watcher_gate_packet.md": "sha256:be719135c657d9a23ab507727630444df8c4fd61227fb91c70e78c6983044a50",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "sha256:7e6a8fad43dce714827e539d1f5134f8b075ca4d9e656357fb7e31a3afe47f76",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json": "sha256:553503463f2693a8ba92fcbf4311f56db5b135a80383fb187b84977b58dc2d11",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json": "sha256:bc3ae14944c9f6439b01033d6d13540acc85908c67c001c679c5cd62fdcedd2a",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json": "sha256:007f9af12a78d08d9df1cd893eb301122112b07da8ef4fc90e88b505a673d34c",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json": "sha256:9486fe2b5c1621ff4f33f8eb2b551a6e9c3c742eb3d12ed5793ef245a0084d58",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json": "sha256:9b033d55fca5ae9ee8fb1c279b2599e409fffded231c92100fb70115fd0c25aa",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json": "sha256:f80bb32f354881a560d47e5a41c04620b4f1e02c126b964c0296db7c4893d5af",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json": "sha256:738749452821afa3fac3ee75ab5bdc427f1f8795626dc1ad13d4bcff10cfc1e8",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json": "sha256:aaad11409759777b4e080c49e4370794129f3e56dd3d764722fd1355d26bab73",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json": "sha256:7eac000d40c1c765ba5f1b9abb10f8c3086a78b1436ed52afe05acc1971067a5",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json": "sha256:16d08046868036cfc843eff8c3a112b142d6714880cde8bd4798b5f0e3d52cc9",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json": "sha256:6bfe4c2d16a0ac88206505c3eefd4950e777786eff8e0dcf87651d2a60a4e4eb",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json": "sha256:8f64b2eb8741fc8783629014b9443a71f61c922788164e49056a168b7927969a",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json": "sha256:a357488ff3c6bc73042e47bd94127df9e3dd8333e6796f10e665a2dcf047d393",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py": "sha256:3561a008983958ec036a3bb2216c63ec77b0b8fba81d9d4cac98ce18567694cc",
+    "tools/validators/watchers/validate_watcher_gate_packet.py": "sha256:4ab2712e1d178d72cf994655d24cad0f0d73b1b4d9300734367fc374e5a8f009"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "2026-10-14"
+  },
+  "prompt_or_contract": "sha256:c133ed7d82fab257d3e6796d4e011a897a76cda936f8017af5b206fe17c9d72c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c133ed7d82fab257d3e6796d4e011a897a76cda936f8017af5b206fe17c9d72c"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-watcher-gate-packet-20260805.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:.github/workflows/watcher-gate-packet.yml@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/watchers/watcher_gate_packet.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/contracts/v1/watchers/watcher_gate_packet/README.md@4fd54e4e695eebd2e2a31f0b309813a352989b16"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/watcher-gate-packet.yml": "PROPOSED",
+    "contracts/watchers/watcher_gate_packet.md": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_governance_violation.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_noncanonical_reason_codes.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/expected_outputs_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_amber.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_deny.json": "PROPOSED",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/valid/valid_green.json": "PROPOSED",
+    "pipeline_specs/watchers/watcher_gate_profile.v1.json": "PROPOSED",
+    "schemas/contracts/v1/watchers/watcher_gate_packet.schema.json": "PROPOSED",
+    "schemas/contracts/v1/watchers/watcher_gate_profile.schema.json": "PROPOSED",
+    "tests/validators/watchers/test_validate_watcher_gate_packet.py": "PROPOSED",
+    "tools/validators/watchers/validate_watcher_gate_packet.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-watcher-gate-packet-20260805 is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "All 18 artifact paths are bound to their current bytes on main@4fd54e4e69; 3 differ from the original receipt because they were edited after it was written."
+    },
+    {
+      "gate": "authoring-claim",
+      "outcome": "SKIPPED",
+      "reason": "This is a currentness re-observation of existing artifacts. It makes no claim to have authored or changed them."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-watcher-gate-packet-20260805",
+      "evidence_ref": "repo:data/receipts/generated/genrec-watcher-gate-packet-20260805.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T07:10:00Z",
+  "emitter": "Claude Code (Claude Opus 5.5)",
+  "links": {
+    "pr_number": 5160,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Currentness successor to genrec-watcher-gate-packet-20260805. The original receipt no longer matched any single commit on main: 3 of its artifacts were edited after it was written. Its live-tree replay in .github/workflows/watcher-gate-packet.yml now validates this successor instead. The original stays unedited, per docs/doctrine/retention.md section 3 (receipts are written once and never mutated)."
+}
