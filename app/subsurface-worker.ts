@@ -1,4 +1,4 @@
-import { inKansas, nearbyColumns, areaColumns, validAreaBounds, validBorehole, validPosition, type AreaBounds, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
+import { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, validBorehole, validPosition, type AreaBounds, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
 
 type Query = { id: number; kind: "probe" | "search" | "area" | "prepare"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
 const scope = self as unknown as { onmessage: ((event: MessageEvent<Query>) => void) | null; postMessage: (message: unknown) => void };
@@ -35,7 +35,7 @@ async function run(q: Query, signal: AbortSignal) {
     const term = q.search?.trim().toLowerCase() ?? "";
     if (term.length < 2 || term.length > 100) return { matches: [], manifest };
     if (!locator && manifest.locator) locator = await readAsset(manifest.locator.url, signal, manifest.locator.sha256) as typeof locator;
-    return { manifest, matches: (locator ?? []).filter(r => r[0].toLowerCase().includes(term) || r[1].toLowerCase().includes(term)).slice(0, 30) };
+    return { manifest, matches: (locator ?? []).filter(r => validPosition(r[2]) && inKansas(r[2]) && q.sources.includes(r[0].startsWith("core-") ? "kgs-core" : "kgs-wwc5") && (r[0].toLowerCase().includes(term) || r[1].toLowerCase().includes(term))).slice(0, 30) };
   }
   const area = q.kind === "area";
   if (area && !validAreaBounds(q.bounds)) throw new Error("Choose a Kansas area no wider than one degree, then show that area.");
@@ -70,10 +70,10 @@ async function run(q: Query, signal: AbortSignal) {
     return true;
   });
   const ranked = area ? areaColumns(records, q.bounds!) : nearbyColumns(records, q.anchor, q.route);
-  return { manifest, ...(area ? {bounds:q.bounds} : {}), columns: ranked.slice(0, 50), total: ranked.length, failures, rejected, timeHeld,
+  return { manifest, ...(area ? {bounds:q.bounds} : {}), columns: displayColumns(ranked), total: ranked.length, failures, rejected, timeHeld,
     ...(selected.length > 0 && failures.length === selected.length ? {error:"Requested well/core files could not be loaded. This is a source-delivery failure, not evidence that no records exist."} : {}),
     partial: eligible.length > selected.length || failures.length > 0 || (area && ranked.length > 50),
-    coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect ${area ? "the selected map area" : "the 25 km search corridor"}. ${ranked.length} eligible records ${area ? "inside the area in loaded tiles" : "in loaded data"}; showing ${Math.min(50,ranked.length)} of up to 50.${area && ranked.length>50 ? " Record limit reached; zoom to a smaller area for more detail." : ""} ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
+    coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect ${area ? "the selected map area" : "the 25 km search corridor"}. ${ranked.length} eligible records ${area ? "inside the area in loaded tiles" : "in loaded data"}; showing ${Math.min(50,ranked.length)} of up to 50.${area && ranked.length>50 ? " Record limit reached; closest wells and cores are represented separately. Zoom to a smaller area or choose one source for more detail." : ""} ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
 }
 scope.onmessage = event => {
   const expectedOrigin = self.location.origin;

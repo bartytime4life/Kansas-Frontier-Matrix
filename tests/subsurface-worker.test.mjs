@@ -9,7 +9,7 @@ const compile = async name => ts.transpileModule(await readFile(new URL(`../app/
 const materialUrl=`data:text/javascript;base64,${Buffer.from(await compile('subsurface-materials')).toString('base64')}`;
 const moduleText=(await compile('subsurface-model')).replace('from "./subsurface-materials"', `from "${materialUrl}"`);
 const model=await import(`data:text/javascript;base64,${Buffer.from(moduleText).toString('base64')}`);
-const code=(await compile('subsurface-worker')).replace(/^import[^;]+;/m,'const { inKansas, nearbyColumns, areaColumns, validAreaBounds, validBorehole, validPosition } = model;');
+const code=(await compile('subsurface-worker')).replace(/^import[^;]+;/m,'const { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, validBorehole, validPosition } = model;');
 const well=(id,date='2000-01-01')=>({id,sourceId:'kgs-wwc5',kind:'well',name:id,coordinates:[-95,39],coordinateReference:'WGS84',locationMethod:'PLSS',sourceUrl:'https://www.kgs.ku.edu/',sourceTime:date,depthUnit:'ft',depthReference:'land-surface',totalDepth:100,intervals:[{top:0,bottom:10,description:'sand'}]});
 const bytes=gzipSync(JSON.stringify([well('a'),well('b','2026-01-01'),well('unknown','Unknown'),{...well('invalid'),coordinates:null}]));
 const sha=createHash('sha256').update(bytes).digest('hex');
@@ -90,4 +90,24 @@ test('opening Underground warms only the manifest; the exact area still controls
  assert.deepEqual(reads,['/data/subsurface/manifest.json']);
  h.send({id:1,kind:'area',bounds:[-95.2,38.8,-94.8,39.2]});const result=await wait(h,2);
  assert.deepEqual(reads,['/data/subsurface/manifest.json','/data/subsurface/tile-one.json.gz']);assert.equal(result.columns.length,3);assert.equal(result.rejected,1);
+});
+
+test('dense wells cannot crowd eligible cores out of the 50-record area budget',async()=>{
+ const core={...well('core-last'),sourceId:'kgs-core',kind:'core',coordinates:[-95.15,39],intervals:[{top:4094,bottom:4893,description:'inventory envelope'}]};
+ const rows=[...Array.from({length:70},(_,i)=>well(`well-${i}`)),core];
+ const data=gzipSync(JSON.stringify(rows)),meta={...manifest,tiles:[{...manifest.tiles[0],sha256:createHash('sha256').update(data).digest('hex')}]};
+ const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(meta):data));
+ h.send({kind:'area',bounds:[-95.2,38.8,-94.8,39.2],sources:['kgs-wwc5','kgs-core']});let r=await wait(h);
+ assert.equal(r.columns.length,50);assert.equal(r.total,71);assert.equal(r.partial,true);assert.ok(r.columns.some(c=>c.record.id===core.id));
+ assert.equal(r.columns.filter(c=>c.record.kind==='well').length,49);assert.match(r.coverage,/represented separately/);
+ h.send({id:2,kind:'area',bounds:[-95.2,38.8,-94.8,39.2],sources:['kgs-core']});r=await wait(h,2);assert.deepEqual(Array.from(r.columns,c=>c.record.id),['core-last']);
+ h.send({id:3,kind:'area',bounds:[-95.2,38.8,-94.8,39.2],sources:['kgs-core'],year:1833});r=await wait(h,3);assert.equal(r.columns.length,0);assert.equal(r.timeHeld,1);
+});
+test('inventory search honors source choice and Kansas location without claiming interval eligibility',async()=>{
+ const locations=[['core-123','',[-95,39],'one'],['well-123','KS',[-95,39],'one'],['core-123-outside','',[-90,39],'one']];
+ const data=gzipSync(JSON.stringify(locations)),meta={...manifest,locator:{url:'/data/subsurface/locator.json.gz',sha256:createHash('sha256').update(data).digest('hex')}};
+ const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(meta):data));
+ h.send({kind:'search',search:'123',sources:['kgs-core'],year:1833});let r=await wait(h);assert.deepEqual(Array.from(r.matches,x=>x[0]),['core-123']);assert.equal('columns' in r,false);
+ h.send({id:2,kind:'search',search:'123',sources:['kgs-wwc5']});r=await wait(h,2);assert.deepEqual(Array.from(r.matches,x=>x[0]),['well-123']);
+ h.send({id:3,kind:'search',search:'123',sources:[]});r=await wait(h,3);assert.equal(r.matches.length,0);
 });

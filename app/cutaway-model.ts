@@ -17,19 +17,25 @@ export function cutawayRecords(volume: AquiferVolume, records: Borehole[]) {
   const intervals: { record: Borehole; interval: DepthInterval; top: number; bottom: number }[] = [];
   const visible = new Set<string>();
   let clipped = false;
-  for (const record of selectedRecords) {
-    const [lon, lat] = record.coordinates;
-    if (lon < west || lon > east || lat < south || lat > north) continue;
-    for (const interval of record.intervals) {
-      const top = meters(interval.top, record.depthUnit), originalBottom = meters(interval.bottom, record.depthUnit);
-      if (!Number.isFinite(top) || !Number.isFinite(originalBottom) || top < 0 || originalBottom <= top) continue;
-      if (originalBottom > limit) clipped = true;
-      const bottom = Math.min(limit, originalBottom);
-      if (bottom <= top) continue;
+  const groups = selectedRecords.map(record => record.intervals.flatMap(interval => {
+    const top = meters(interval.top, record.depthUnit), originalBottom = meters(interval.bottom, record.depthUnit);
+    if (!Number.isFinite(top) || !Number.isFinite(originalBottom) || top < 0 || originalBottom <= top) return [];
+    if (originalBottom > limit) clipped = true;
+    const bottom = Math.min(limit, originalBottom);
+    return bottom > top ? [{ record, interval, top, bottom }] : [];
+  }));
+  // Take original intervals in rounds so one long well cannot consume the whole
+  // budget and hide other locations, including independently recorded cores.
+  for (let index = 0; groups.some(group => index < group.length); index++) {
+    for (const group of groups) {
+      const item = group[index];
+      if (!item) continue;
       if (intervals.length >= 400) { clipped = true; break; }
-      intervals.push({ record, interval, top, bottom }); visible.add(record.id);
+      intervals.push(item); visible.add(item.record.id);
     }
+    if (intervals.length >= 400) { clipped ||= groups.some(group => index + 1 < group.length); break; }
   }
+  clipped ||= groups.reduce((count, group) => count + group.length, 0) > intervals.length;
   return { intervals, recordCount: visible.size, limit, clipped,
     deepest: Math.max(1, ...volume.envelopes.map(e => e.deepMeters), ...intervals.map(i => i.bottom)) };
 }

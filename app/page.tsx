@@ -10222,7 +10222,7 @@ export default function Home() {
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>
 
-          {undergroundOpen && <UndergroundPanel entryFocusRequest={undergroundFocusRequest} basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
+          {undergroundOpen && <UndergroundPanel entryFocusRequest={undergroundFocusRequest} basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year} onPresent={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Present map year applied; sample inventory dates remain separate from drilling dates"); }}
             redacted={subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current}
             onTerrain={() => activateMapRepresentation("terrain")} onFlatMap={() => activateMapRepresentation("2d")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
             isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}
