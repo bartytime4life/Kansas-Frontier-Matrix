@@ -67,6 +67,27 @@ SPECIFIER_PATTERNS = (
     re.compile(r"\bimport\s*\.\s*meta\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     re.compile(r"\brequire\s*\.\s*resolve\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
 )
+# Lexer state mirrored from assess_acquisition_inventory.py so specifiers inside
+# comments, strings, and template literals are not read as imports.
+NODE_MODULE_SPECIFIER = r"(?:node:)?module"
+REGEX_PREFIX_KEYWORDS = frozenset(
+    {
+        "await",
+        "case",
+        "delete",
+        "do",
+        "else",
+        "in",
+        "instanceof",
+        "new",
+        "of",
+        "return",
+        "throw",
+        "typeof",
+        "void",
+        "yield",
+    }
+)
 CASES_PATH = Path(__file__).resolve().parents[3] / "fixtures/maplibre/v6_readiness/cases.json"
 
 
@@ -161,10 +182,182 @@ def _source_files(root: Path) -> tuple[list[Path], bool]:
     return files, False
 
 
+def _regex_literal_end(text: str, start: int) -> int | None:
+    """Return the end of a bounded JavaScript regex literal, or ``None``."""
+    index = start + 1
+    in_character_class = False
+    while index < len(text):
+        character = text[index]
+        if character in {"\r", "\n"}:
+            return None
+        if character == "\\":
+            index += 2
+            continue
+        if character == "[":
+            in_character_class = True
+        elif character == "]":
+            in_character_class = False
+        elif character == "/" and not in_character_class:
+            index += 1
+            while index < len(text) and text[index].isalpha():
+                index += 1
+            return index
+        index += 1
+    return None
+
+
+def _quoted_literal_end(text: str, start: int) -> int | None:
+    """Return the end of a single-line quoted literal opened at ``start``, or ``None``."""
+    quote = text[start]
+    index = start + 1
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 3 if text.startswith("\r\n", index + 1) else 2
+            continue
+        if character == quote:
+            return index + 1
+        if character in {"\r", "\n"}:
+            return None
+        index += 1
+    return None
+
+
+def _template_text_end(text: str, start: int) -> tuple[int, bool] | None:
+    """Return where template text from ``start`` stops and whether a backtick closed it."""
+    index = start
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 2
+            continue
+        if character == "`":
+            return index, True
+        if text.startswith("${", index):
+            return index, False
+        index += 1
+    return None
+
+
+def _mask_literals(text: str) -> str | None:
+    """Blank comments and string/template-literal contents, keeping delimiters and offsets.
+
+    Quote delimiters, regex literals, ``${...}`` template expressions, and line breaks
+    are preserved, so import forms match only in code while their specifiers are read
+    from the original text at the same offsets. Literals naming Node's ``module``
+    builtin stay visible for ``createRequire`` detection. Returns ``None`` when a
+    literal or template expression is unterminated, so callers fall back to their
+    previous scan text instead of trusting a confused lexer.
+    """
+    masked = list(text)
+
+    def blank(start: int, end: int) -> None:
+        for offset in range(start, end):
+            if masked[offset] not in {"\r", "\n"}:
+                masked[offset] = " "
+
+    # Brace depth of each open template ``${...}`` expression, innermost last.
+    template_depths: list[int] = []
+    regex_allowed = True
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character == "`" or (
+            character == "}" and template_depths and template_depths[-1] == 0
+        ):
+            if character == "}":
+                template_depths.pop()
+            stop = _template_text_end(text, index + 1)
+            if stop is None:
+                return None
+            end, closed = stop
+            blank(index + 1, end)
+            if closed:
+                index = end + 1
+                regex_allowed = False
+            else:
+                template_depths.append(0)
+                index = end + 2
+                regex_allowed = True
+            continue
+        if character in {"'", '"'}:
+            literal_end = _quoted_literal_end(text, index)
+            if literal_end is None:
+                return None
+            if not re.fullmatch(NODE_MODULE_SPECIFIER, text[index + 1 : literal_end - 1]):
+                blank(index + 1, literal_end - 1)
+            index = literal_end
+            regex_allowed = False
+            continue
+
+        end: int | None = None
+        if text.startswith("//", index):
+            newline = text.find("\n", index + 2)
+            end = len(text) if newline == -1 else newline
+        elif text.startswith("/*", index):
+            closing = text.find("*/", index + 2)
+            end = len(text) if closing == -1 else closing + 2
+        elif text.startswith("<!--", index):
+            closing = text.find("-->", index + 4)
+            end = len(text) if closing == -1 else closing + 3
+        if end is not None:
+            blank(index, end)
+            index = end
+            continue
+
+        if character == "/":
+            regex_end = _regex_literal_end(text, index) if regex_allowed else None
+            if regex_end is not None:
+                index = regex_end
+                regex_allowed = False
+                continue
+            index += 2 if text.startswith("/=", index) else 1
+            regex_allowed = True
+            continue
+        if character.isspace():
+            index += 1
+            continue
+        if character.isalpha() or character in {"_", "$"}:
+            token_end = index + 1
+            while token_end < len(text) and (
+                text[token_end].isalnum() or text[token_end] in {"_", "$"}
+            ):
+                token_end += 1
+            regex_allowed = text[index:token_end] in REGEX_PREFIX_KEYWORDS
+            index = token_end
+            continue
+        if character.isdigit():
+            token_end = index + 1
+            while token_end < len(text) and (
+                text[token_end].isalnum() or text[token_end] in {"_", "."}
+            ):
+                token_end += 1
+            regex_allowed = False
+            index = token_end
+            continue
+        if template_depths and character == "{":
+            template_depths[-1] += 1
+        elif template_depths and character == "}":
+            template_depths[-1] -= 1
+        # ``</`` is a JSX or markup closing tag far more often than ``a < /re/``.
+        if character in ")]}<":
+            regex_allowed = False
+        elif character not in {".", "~"}:
+            regex_allowed = True
+        index += 1
+    if template_depths:
+        return None
+    return "".join(masked)
+
+
 def _acquires_maplibre(text: str) -> bool:
+    # A confused lexer falls back to the raw text, which over-reports.
+    scan_text = _mask_literals(text)
+    if scan_text is None:
+        scan_text = text
     for pattern in SPECIFIER_PATTERNS:
-        for match in pattern.finditer(text):
-            specifier = match.group(1).lower()
+        for match in pattern.finditer(scan_text):
+            specifier = text[match.start(1) : match.end(1)].lower()
             if specifier == "maplibre-gl" or specifier.startswith("maplibre-gl/"):
                 return True
     return False

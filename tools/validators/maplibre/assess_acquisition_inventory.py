@@ -4,7 +4,9 @@
 This assessment is intentionally non-authoritative. It inventories bounded executable,
 package, test, example, runtime, and public-web roots for renderer acquisition mechanisms,
 including JavaScript and CSS imports, so ADR-0006/0007 can be enforced with structural
-evidence. Descriptor reads fail closed
+evidence. Import, require, and re-export forms match only in code: comments and
+string/template-literal contents are masked first (HTML exposes only script and style
+contents), and specifiers are read back from the original text. Descriptor reads fail closed
 when identity, size, modification time, or change time differs across a bounded read, or
 when a second bounded read has a different SHA-256 digest. Both verification passes count
 against an explicit aggregate physical-read budget. PASS means the scan completed
@@ -32,7 +34,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Sequence
 
-PROFILE = "kfm-maplibre-acquisition-inventory-v15"
+PROFILE = "kfm-maplibre-acquisition-inventory-v16"
 TEXT_SUFFIXES = frozenset(
     {".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".css"}
 )
@@ -132,6 +134,11 @@ CREATE_REQUIRE_NAMESPACE_IMPORT = re.compile(
 CREATE_REQUIRE_DESTRUCTURE = re.compile(
     rf"\b(?:const|let|var)\s*\{{(?P<bindings>[\s\S]{{0,240}}?)\}}\s*=\s*"
     rf"require\s*\(\s*['\"]{NODE_MODULE_SPECIFIER}['\"]\s*\)"
+)
+# Bounded HTML markup: comments, script/style open tags, and other tags. ``[^<>]*``
+# keeps each attempt from scanning past the next ``<``.
+HTML_MARKUP = re.compile(
+    r"<!--|<(?P<element>script|style)\b[^<>]*>|</?[A-Za-z!?][^<>]*>", re.I
 )
 REGEX_PREFIX_KEYWORDS = frozenset(
     {
@@ -306,8 +313,12 @@ def _create_require_factories(text: str) -> set[str]:
     return factories
 
 
-def _scan_create_require(text: str) -> list[tuple[str, str]]:
-    """Classify literal renderer acquisition through imported ``createRequire`` aliases."""
+def _scan_create_require(text: str, source: str) -> list[tuple[str, str]]:
+    """Classify literal renderer acquisition through imported ``createRequire`` aliases.
+
+    ``text`` is the masked scan text; specifiers are read from ``source`` at the same
+    offsets.
+    """
     factories = _create_require_factories(text)
     if not factories:
         return []
@@ -337,7 +348,7 @@ def _scan_create_require(text: str) -> list[tuple[str, str]]:
                 prefix + suffix + r"\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"
             )
             for match in pattern.finditer(text):
-                subject = _renderer_import_subject(match.group(1))
+                subject = _renderer_import_subject(source[match.start(1) : match.end(1)])
                 if subject:
                     findings.append((kind, subject))
     return findings
@@ -442,6 +453,182 @@ def _mask_comments(text: str) -> str:
                 masked[offset] = " "
         index = end
     return "".join(masked)
+
+
+def _quoted_literal_end(text: str, start: int) -> int | None:
+    """Return the end of a single-line quoted literal opened at ``start``, or ``None``."""
+    quote = text[start]
+    index = start + 1
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 3 if text.startswith("\r\n", index + 1) else 2
+            continue
+        if character == quote:
+            return index + 1
+        if character in {"\r", "\n"}:
+            return None
+        index += 1
+    return None
+
+
+def _template_text_end(text: str, start: int) -> tuple[int, bool] | None:
+    """Return where template text from ``start`` stops and whether a backtick closed it."""
+    index = start
+    while index < len(text):
+        character = text[index]
+        if character == "\\":
+            index += 2
+            continue
+        if character == "`":
+            return index, True
+        if text.startswith("${", index):
+            return index, False
+        index += 1
+    return None
+
+
+def _mask_literals(text: str) -> str | None:
+    """Blank comments and string/template-literal contents, keeping delimiters and offsets.
+
+    Quote delimiters, regex literals, ``${...}`` template expressions, and line breaks
+    are preserved, so import forms match only in code while their specifiers are read
+    from the original text at the same offsets. Literals naming Node's ``module``
+    builtin stay visible for ``createRequire`` detection. Returns ``None`` when a
+    literal or template expression is unterminated, so callers fall back to their
+    previous scan text instead of trusting a confused lexer.
+    """
+    masked = list(text)
+
+    def blank(start: int, end: int) -> None:
+        for offset in range(start, end):
+            if masked[offset] not in {"\r", "\n"}:
+                masked[offset] = " "
+
+    # Brace depth of each open template ``${...}`` expression, innermost last.
+    template_depths: list[int] = []
+    regex_allowed = True
+    index = 0
+    while index < len(text):
+        character = text[index]
+        if character == "`" or (
+            character == "}" and template_depths and template_depths[-1] == 0
+        ):
+            if character == "}":
+                template_depths.pop()
+            stop = _template_text_end(text, index + 1)
+            if stop is None:
+                return None
+            end, closed = stop
+            blank(index + 1, end)
+            if closed:
+                index = end + 1
+                regex_allowed = False
+            else:
+                template_depths.append(0)
+                index = end + 2
+                regex_allowed = True
+            continue
+        if character in {"'", '"'}:
+            literal_end = _quoted_literal_end(text, index)
+            if literal_end is None:
+                return None
+            if not re.fullmatch(NODE_MODULE_SPECIFIER, text[index + 1 : literal_end - 1]):
+                blank(index + 1, literal_end - 1)
+            index = literal_end
+            regex_allowed = False
+            continue
+
+        end: int | None = None
+        if text.startswith("//", index):
+            newline = text.find("\n", index + 2)
+            end = len(text) if newline == -1 else newline
+        elif text.startswith("/*", index):
+            closing = text.find("*/", index + 2)
+            end = len(text) if closing == -1 else closing + 2
+        elif text.startswith("<!--", index):
+            closing = text.find("-->", index + 4)
+            end = len(text) if closing == -1 else closing + 3
+        if end is not None:
+            blank(index, end)
+            index = end
+            continue
+
+        if character == "/":
+            regex_end = _regex_literal_end(text, index) if regex_allowed else None
+            if regex_end is not None:
+                index = regex_end
+                regex_allowed = False
+                continue
+            index += 2 if text.startswith("/=", index) else 1
+            regex_allowed = True
+            continue
+        if character.isspace():
+            index += 1
+            continue
+        if character.isalpha() or character in {"_", "$"}:
+            token_end = index + 1
+            while token_end < len(text) and (
+                text[token_end].isalnum() or text[token_end] in {"_", "$"}
+            ):
+                token_end += 1
+            regex_allowed = text[index:token_end] in REGEX_PREFIX_KEYWORDS
+            index = token_end
+            continue
+        if character.isdigit():
+            token_end = index + 1
+            while token_end < len(text) and (
+                text[token_end].isalnum() or text[token_end] in {"_", "."}
+            ):
+                token_end += 1
+            regex_allowed = False
+            index = token_end
+            continue
+        if template_depths and character == "{":
+            template_depths[-1] += 1
+        elif template_depths and character == "}":
+            template_depths[-1] -= 1
+        # ``</`` is a JSX or markup closing tag far more often than ``a < /re/``.
+        if character in ")]}<":
+            regex_allowed = False
+        elif character not in {".", "~"}:
+            regex_allowed = True
+        index += 1
+    if template_depths:
+        return None
+    return "".join(masked)
+
+
+def _mask_html_literals(text: str) -> str | None:
+    """Keep HTML tags and lexed ``<script>``/``<style>`` contents; blank document text.
+
+    Text nodes such as ``<pre>`` examples cannot import anything, so only element
+    contents a browser executes or applies reach the import patterns. Script and style
+    open tags are blanked so an inline first-line import starts its line. Returns
+    ``None`` when an element's contents cannot be lexed.
+    """
+    masked = [character if character in {"\r", "\n"} else " " for character in text]
+    index = 0
+    while True:
+        match = HTML_MARKUP.search(text, index)
+        if match is None:
+            return "".join(masked)
+        if match.group(0) == "<!--":
+            closing = text.find("-->", match.end())
+            index = len(text) if closing == -1 else closing + 3
+            continue
+        element = match.group("element")
+        if element is None:
+            masked[match.start() : match.end()] = list(match.group(0))
+            index = match.end()
+            continue
+        closing_tag = re.compile(rf"</{element}\b", re.I).search(text, match.end())
+        content_end = len(text) if closing_tag is None else closing_tag.start()
+        content = _mask_literals(text[match.end() : content_end])
+        if content is None:
+            return None
+        masked[match.end() : content_end] = list(content)
+        index = content_end if closing_tag is None else closing_tag.end()
 
 
 def _iter_files(root: Path) -> tuple[list[Path], bool]:
@@ -714,6 +901,15 @@ def _scan_text(root: Path, path: Path, budget: ScanBudget) -> list[Finding]:
     assert text is not None
     rel = path.relative_to(root).as_posix()
     scan_text = _mask_comments(text)
+    # Import forms match only in code; quoted fixtures and HTML text are data. A
+    # confused lexer falls back to the comment-masked text, which over-reports.
+    import_text = (
+        _mask_html_literals(text)
+        if path.suffix.lower() == ".html"
+        else _mask_literals(text)
+    )
+    if import_text is None:
+        import_text = scan_text
     findings: list[Finding] = []
     for kind in (
         "STATIC_IMPORT",
@@ -724,11 +920,11 @@ def _scan_text(root: Path, path: Path, budget: ScanBudget) -> list[Finding]:
         "REQUIRE_RESOLVE",
         "CSS_IMPORT",
     ):
-        for match in PATTERNS[kind].finditer(scan_text):
-            subject = _renderer_import_subject(match.group(1))
+        for match in PATTERNS[kind].finditer(import_text):
+            subject = _renderer_import_subject(text[match.start(1) : match.end(1)])
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
-    for kind, subject in _scan_create_require(scan_text):
+    for kind, subject in _scan_create_require(import_text, text):
         findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
     for kind in ("CDN_URL", "GLOBAL_RUNTIME"):
         for match in PATTERNS[kind].finditer(scan_text):

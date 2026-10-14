@@ -436,6 +436,194 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.outcome, MODULE.Outcome.PASS)
         self.assertEqual(result.findings, ())
 
+    def test_import_lines_inside_string_and_template_literals_are_not_acquisition(self) -> None:
+        for content in (
+            "const fixture = `\n"
+            'import "maplibre-gl";\n'
+            'import "maplibre-gl/dist/maplibre-gl.css";\n'
+            'import { Map } from "maplibre-gl";\n'
+            'export * from "maplibre-gl";\n'
+            "`;\n",
+            "const fixture = `\n"
+            'const gl = require("maplibre-gl");\n'
+            "const lazy = import('maplibre-gl/dist/maplibre-gl.js');\n"
+            'const path = require.resolve("maplibre-gl");\n'
+            "`;\n",
+            "const fixture = 'import(\"maplibre-gl\")';\n",
+            "const fixture = \"require('maplibre-gl/dist/maplibre-gl.js')\";\n",
+            "const fixture = \"say \\\"import('maplibre-gl')\\\" here\";\n",
+            "const fixture = 'it\\'s import.meta.resolve(\"maplibre-gl\")';\n",
+            "const fixture = `${\"import('maplibre-gl')\"}\n"
+            'import "maplibre-gl";\n'
+            "${`inner ${'require(\"maplibre-gl\")'}`}`;\n",
+            'const separator = "//";\n'
+            "const fixture = `\n"
+            'import { Map } from "maplibre-gl";\n'
+            "`;\n",
+            "const looksLikeRegex = \"/import('maplibre-gl')/\";\n",
+        ):
+            with self.subTest(content=content), self._root() as tmp:
+                root = Path(tmp)
+                self._write(root, "tests/site/import-fixtures.test.mjs", content)
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+                self.assertEqual(result.findings, ())
+
+    def test_active_acquisition_beside_literals_still_fails(self) -> None:
+        for content, kind in (
+            (
+                "const fixture = `import \"maplibre-gl\";`;\n"
+                'import "maplibre-gl";\n',
+                "STATIC_IMPORT",
+            ),
+            (
+                "const fixture = 'import { Map } from \"maplibre-gl\"';\n"
+                'import { Map } from "maplibre-gl";\n',
+                "STATIC_IMPORT",
+            ),
+            (
+                "const fixture = `\nexport * from \"x\";\n`;\n"
+                'export * from "maplibre-gl";\n',
+                "RE_EXPORT",
+            ),
+            (
+                "const label = `${'a'}`; const gl = require('maplibre-gl');\n",
+                "REQUIRE",
+            ),
+            (
+                'const separator = "//"; const gl = require("maplibre-gl");\n',
+                "REQUIRE",
+            ),
+            (
+                "const quote = /[\"'`]/; const lazy = import(\"maplibre-gl\");\n",
+                "DYNAMIC_IMPORT",
+            ),
+            (
+                'const view = `${await import("maplibre-gl")}`;\n',
+                "DYNAMIC_IMPORT",
+            ),
+            (
+                "const escaped = \"\\\"\"; const path = import.meta.resolve('maplibre-gl');\n",
+                "IMPORT_META_RESOLVE",
+            ),
+        ):
+            with self.subTest(content=content), self._root() as tmp:
+                root = Path(tmp)
+                self._write(root, "scripts/active-renderer.mjs", content)
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+                self.assertEqual(
+                    [(finding.kind, finding.subject) for finding in result.findings],
+                    [(kind, "maplibre-gl")],
+                )
+
+    def test_create_require_specifier_inside_string_is_not_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/create-require-fixture.mjs",
+                'import { createRequire } from "node:module";\n'
+                "const req = createRequire(import.meta.url);\n"
+                "const fixture = 'req(\"maplibre-gl\")';\n"
+                'const resolved = req.resolve("./local.js");\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_unterminated_literal_keeps_comment_masked_detection(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "scripts/confused.mjs",
+                'const note = "unterminated;\n'
+                "// retired: require('maplibre-gl');\n"
+                'import { Map } from "maplibre-gl";\n',
+            )
+            result = MODULE.scan(root)
+        # The fallback keeps the comment-masked scan, which over-reports the commented
+        # require because comment masking treats it as part of the open string.
+        self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+        self.assertEqual(
+            [(finding.kind, finding.subject) for finding in result.findings],
+            [("REQUIRE", "maplibre-gl"), ("STATIC_IMPORT", "maplibre-gl")],
+        )
+
+    def test_html_text_imports_are_not_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "public/docs.html",
+                "<pre>\n"
+                'import "maplibre-gl";\n'
+                'import { Map } from "maplibre-gl";\n'
+                "</pre>\n"
+                "<p>Don't call require(\"maplibre-gl\") or import('maplibre-gl') here.</p>\n"
+                "<script>\n"
+                'const example = `import "maplibre-gl";`;\n'
+                "</script>\n"
+                "<style>\n"
+                '.note::before { content: "@import"; }\n'
+                "</style>\n",
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+    def test_html_script_and_style_acquisition_still_fails(self) -> None:
+        for content, kind in (
+            (
+                "<p>It's an example page.</p>\n"
+                '<script type="module">\n'
+                'import { Map } from "maplibre-gl";\n'
+                "</script>\n",
+                "STATIC_IMPORT",
+            ),
+            (
+                '<script type="module">import "maplibre-gl";</script>\n',
+                "STATIC_IMPORT",
+            ),
+            (
+                "<SCRIPT>const gl = require('maplibre-gl');</SCRIPT>\n",
+                "REQUIRE",
+            ),
+            (
+                '<style>@import "maplibre-gl/dist/maplibre-gl.css";</style>\n',
+                "CSS_IMPORT",
+            ),
+        ):
+            with self.subTest(content=content), self._root() as tmp:
+                root = Path(tmp)
+                self._write(root, "public/demo.html", content)
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+                self.assertEqual(
+                    [(finding.kind, finding.subject) for finding in result.findings],
+                    [(kind, "maplibre-gl")],
+                )
+
+    def test_readiness_classifier_masks_literals_identically(self) -> None:
+        spec = importlib.util.spec_from_file_location(
+            "validate_v6_readiness_masking",
+            ROOT / "tools" / "validators" / "maplibre" / "validate_v6_readiness.py",
+        )
+        assert spec and spec.loader
+        readiness = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = readiness
+        spec.loader.exec_module(readiness)
+        for text in (
+            'import { Map } from "maplibre-gl";\n',
+            "const t = `a ${b + `c ${'d'}`} e`; // note\n/* block */ x = 1 / 2;\n",
+            'const r = /["\'`]/g; const s = "it\'s"; import { createRequire } from "node:module";\n',
+            "<Link href=\"/\">Open</Link> </div>\n",
+            'const s = "unterminated;\n',
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(readiness._mask_literals(text), MODULE._mask_literals(text))
+
     def test_governance_link_and_maplibre_css_class_are_not_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
@@ -910,7 +1098,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         payload = json.loads(completed.stdout)
         self.assertEqual(payload["outcome"], "HOLD")
-        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v15")
+        self.assertEqual(payload["profile"], "kfm-maplibre-acquisition-inventory-v16")
         self.assertEqual(payload["max_input_bytes"], MODULE.MAX_INPUT_BYTES)
         self.assertEqual(payload["max_total_input_bytes"], MODULE.MAX_TOTAL_INPUT_BYTES)
         self.assertEqual(
