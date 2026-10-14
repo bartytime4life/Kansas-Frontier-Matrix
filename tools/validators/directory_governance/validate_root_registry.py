@@ -60,6 +60,8 @@ CANONICAL_ROOTS = (
 )
 IGNORED_TOP_LEVEL_DIRS = {
     ".git", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".hypothesis", "__pycache__", ".venv", "venv",
+    # Gitignored install output of the root pnpm workspace (pnpm-workspace.yaml).
+    "node_modules", ".turbo",
 }
 
 

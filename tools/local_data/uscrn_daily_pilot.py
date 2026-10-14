@@ -14,7 +14,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes, digest_bytes
+from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
 from connectors.noaa.src.noaa.uscrn_daily_capture import Capture, capture, capture_keys, object_limit
 from pipelines.domains.soil.uscrn_daily_normalize import normalize_capture
 from pipelines.domains.soil.uscrn_daily_validate import validate_candidate

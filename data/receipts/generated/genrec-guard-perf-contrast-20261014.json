@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-guard-perf-contrast-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/public-site/src/styles.css",
+    "tests/validators/directory_governance/test_validate_root_registry.py",
+    "tests/validators/test_validate_control_plane_registry_packet.py",
+    "tools/local_data/uscrn_daily_pilot.py",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+    "tools/validators/directory_governance/validate_root_registry.py"
+  ],
+  "artifact_hashes": {
+    "apps/public-site/src/styles.css": "sha256:48ddc9d6b776ec397da61ef14ccb1bcc5a4109a7d04448406f56482cbcad3062",
+    "tests/validators/directory_governance/test_validate_root_registry.py": "sha256:594ec54fb5e1c457c6b85cdeffae121cb907071035dffe02dc1c84f5878ba559",
+    "tests/validators/test_validate_control_plane_registry_packet.py": "sha256:cd6dd5a7d7794194a0de1021ada06800ba59adc1aa6846d01c862479086736fa",
+    "tools/local_data/uscrn_daily_pilot.py": "sha256:09eb90a43410b175e6d76d20db41fc9c7941b7c0b7597ce5288757cd7279de0e",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py": "sha256:2bbd5e0116ae67605894b0f73e902a9872bfd060d34b29db7b57bda3108ed11d",
+    "tools/validators/directory_governance/validate_root_registry.py": "sha256:7080dffd42759f81d11b4c903af045b0007c5b054b8f179adf14ce46d0776ae4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c06381b23c906bb0388ab28fc632021d50f49c72",
+      "repo:docs/doctrine/ai-build-operating-contract.md@c06381b23c906bb0388ab28fc632021d50f49c72",
+      "repo:control_plane/root_registry.yaml@c06381b23c906bb0388ab28fc632021d50f49c72",
+      "repo:control_plane/verification_backlog.yaml@c06381b23c906bb0388ab28fc632021d50f49c72",
+      "repo:.github/workflows/godaddy-public-site.yml@c06381b23c906bb0388ab28fc632021d50f49c72"
+    ]
+  },
+  "truth_labels": {
+    "apps/public-site/src/styles.css": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_root_registry.py": "CONFIRMED",
+    "tests/validators/test_validate_control_plane_registry_packet.py": "CONFIRMED",
+    "tools/local_data/uscrn_daily_pilot.py": "CONFIRMED",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py": "CONFIRMED",
+    "tools/validators/directory_governance/validate_root_registry.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Python suite (CI-matched Python 3.11 and hash-locked CI lockfiles)",
+      "outcome": "PASS",
+      "reason": "8812 tests collected on the base; every failure or skip traced to the local environment (missing locked extras, shallow clone, no OPA binary) and passed once corrected. After the change: 5564 passed, 0 failed across tests/validators, tests/ci, tests/qa, tests/local_data, tests/policy and tests/governance."
+    },
+    {
+      "gate": "Validator orchestrator full profile and repository guardrails",
+      "outcome": "PASS",
+      "reason": "tools/validate_all.py --profile full: 29 of 29 PASS. make repository-guardrails and make repository-governance-parity exit 0 with a root node_modules/ present; before the change the parity target failed with LANE_OUTCOME_MISMATCH on /lanes/root-registry."
+    },
+    {
+      "gate": "Control-plane packet output and performance",
+      "outcome": "PASS",
+      "reason": "validate_control_plane_registry_packet.py output is byte-identical before and after; runtime 46.2 s to 7.2 s. Pinned-blob reads drop from 5989 (17974 git subprocesses) to 753 unique reads. A new test fails when the per-call cache is disabled and checks that cached negative outcomes are reported under each caller's field."
+    },
+    {
+      "gate": "Public site build, bundle check, security tests and accessibility",
+      "outcome": "PASS",
+      "reason": "build.mjs and check.mjs pass; security.test.mjs 9 of 9 with local Apache. axe-core WCAG 2.1 AA in Chromium: 0 violations on / and /404.html in light and dark at 1280 and 375 px (before: the live and active-context pills measured 4.35:1 and 4.05:1)."
+    },
+    {
+      "gate": "Explorer mirror parity",
+      "outcome": "PASS",
+      "reason": "No apps/site/source file changed; tools/qa/site_mirror.py --check still passes. Two Explorer contrast and landmark findings are reported for the upstream Site rather than edited here."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c06381b23c906bb0388ab28fc632021d50f49c72"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-14T22:32:07Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Root-registry guard ignores the gitignored root pnpm workspace install output (node_modules, .turbo) like other local tool caches. Control-plane packet validator reads each pinned blob once per validate_registry() call; transient git failures are not cached. Public-site --cottonwood and --river light tokens darkened to meet 4.5:1; dark tokens unchanged. Duplicate import name removed from tools/local_data/uscrn_daily_pilot.py. The disclosed living_person_redaction.rego duplicate (CONFLICTED / HOLD) and digest-pinned unformatted Rego files are left unchanged."
+}

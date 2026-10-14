@@ -7,10 +7,12 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import yaml
 from jsonschema import Draft202012Validator
 
+from tools.validators.control_plane import validate_control_plane_registry_packet as packet
 from tools.validators.control_plane.validate_control_plane_registry_packet import (
     FIXTURE_ROOT,
     REGISTRY_PATHS,
@@ -247,6 +249,40 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertNotIn(marker, result.stdout + result.stderr)
         self.assertIn("SCHEMA_INVALID", result.stdout)
+
+    def test_pinned_blob_reads_are_shared_only_within_one_validation(self) -> None:
+        base_ref = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True
+        ).stdout.strip()
+        real_run = subprocess.run
+        with mock.patch.object(packet.subprocess, "run", side_effect=real_run) as run:
+            token = packet._PINNED_BLOB_CACHE.set({})
+            try:
+                findings: list = []
+                reads = [
+                    packet._read_pinned_blob(
+                        path, base_ref=base_ref, repo_root=REPO_ROOT, field=field, findings=findings
+                    )
+                    for path, field in (
+                        ("README.md", "/a"),
+                        ("README.md", "/b"),
+                        ("missing-control-plane-path.md", "/c"),
+                        ("missing-control-plane-path.md", "/d"),
+                    )
+                ]
+            finally:
+                packet._PINNED_BLOB_CACHE.reset(token)
+        committed = real_run(
+            ["git", "show", f"{base_ref}:README.md"], cwd=REPO_ROOT, check=True, capture_output=True
+        ).stdout
+        self.assertEqual(committed, reads[0])
+        self.assertIs(reads[0], reads[1])
+        self.assertEqual([None, None], reads[2:])
+        # A cached negative outcome is still reported under each caller's field.
+        self.assertEqual(["/c", "/d"], [item.field for item in findings])
+        self.assertEqual({"PINNED_PATH_NOT_FOUND"}, {item.code for item in findings})
+        self.assertEqual(4, run.call_count)  # three reads for README.md, one for the missing path
+        self.assertIsNone(packet._PINNED_BLOB_CACHE.get())
 
     def test_document_registry_keeps_authority_conflict_explicit(self) -> None:
         candidate = yaml.safe_load(
