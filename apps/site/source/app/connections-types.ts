@@ -1,0 +1,7 @@
+export type Field={key:string;label:string;type:string;default:string;options?:string[];min?:number;max?:number};
+export type Source={id:string;name:string;kind:string;fields:Field[];configured:boolean;missing:string[];holds:string[];state:string;docs:string;rights?:string;limitation:string;limitBytes:number;releaseState:string;productStatuses?:Record<string,{configured:boolean;missing:string[];holds:string[]}>;productSecrets?:Record<string,string[]>;productConfirmations?:Record<string,string[]>};
+export type Receipt={captureId:string;sourceId:string;retrievedAt:string;byteLength:number;entityBytes:number;sha256:string;validation:string;partial:boolean;query:Record<string,string>;limitation:string;entityHashes:{url:string;sha256:string;byteLength:number;contentType:string}[]};
+export type Feature={type:"Feature";properties:Record<string,unknown>;geometry:{type:string;coordinates:unknown}|null};
+export type View={sourceId:string;query:Record<string,string>;rows:Record<string,unknown>[];features?:Feature[];raster?:{bbox:number[];width:number;height:number;vintage:string;acquiredAt:string|null};partial:boolean;total:number;retrievedAt:string;limitation:string;releaseState:string};
+export type Catalog={sources:Source[];owner:boolean;host:{state:string;configured:boolean;paused:boolean;host:string;usedBytes:number|null;limitBytes:number;missing?:string[]}};
+export type Result={view:View;receipt:Receipt;cached?:boolean};

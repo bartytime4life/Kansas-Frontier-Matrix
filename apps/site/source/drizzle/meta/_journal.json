@@ -71,6 +71,13 @@
       "when": 1791896400000,
       "tag": "0009_governed_earthquakes",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1791957600000,
+      "tag": "0010_api_connections",
+      "breakpoints": true
     }
   ]
 }

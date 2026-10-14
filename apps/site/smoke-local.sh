@@ -16,6 +16,7 @@ smoke_routes=(
   acquisition acquisition/terrain
   3dep-dem-tile airflow-tile blm-plss-records bridge-records
   crop-casma/availability crop-casma/preview crop-casma/tile
+  connections connections/run
   daily-archive data-submissions "data-submissions/[id]"
   land-records "land-records/[id]" "governed/land-records/v1/[view]"
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
@@ -219,6 +220,10 @@ expect GET /api/acquisition/terrain 401
 expect POST /api/acquisition/terrain 401
 expect GET /api/data-submissions 401
 expect GET /api/data-submissions/unknown 401
+expect GET /api/connections 200
+expect GET /api/connections?action=captures 401
+expect POST /api/connections 401
+expect POST /api/connections/run 401
 expect GET /api/land-records 401
 expect GET /api/land-records/unknown 401
 expect GET /api/earth-engine-context/catalog 401

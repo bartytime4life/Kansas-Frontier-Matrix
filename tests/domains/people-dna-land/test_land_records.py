@@ -374,3 +374,67 @@ def test_transfer_cannot_commit_person_bearing_bytes_under_git(tmp_path):
     target = tmp_path / "checkout"; (target / ".git").mkdir(parents=True); (target / ".git/HEAD").write_text("ref: refs/heads/main")
     with pytest.raises(ValueError, match="TRANSFER_MUST_BE_OUTSIDE_GIT"):
         export_review(root, target / "review.json")
+
+
+def shawnee_transcript():
+    return {"case_number": "SN-2020-CV-000001", "event_date": "2020-01-02", "expected_tracts": 3,
+            "totals": {"total_lien": "20.00", "court_costs": "4.00", "taxes": "16.00", "purchase_price": "12.00"},
+            "units": [{"unit_id": "GROUP1-2TRACTS", "purchaser": "SYNTHETIC BIDDER", "deed_name": "SYNTHETIC DEED NAME",
+                       "purchase_price": "12.00", "result": "PURCHASE_REPORTED", "pages": [1, 2],
+                       "parcels": [{"tract": str(i), "parcel_id": [str(i).zfill(16)], "total_lien": "10.00", "court_costs": "2.00", "taxes": "8.00"} for i in (1, 2)]},
+                      {"unit_id": "3", "purchaser": "Invalidated Sale", "deed_name": None, "purchase_price": None, "result": "INVALIDATED_SALE", "pages": [2],
+                       "parcels": [{"tract": "3", "parcel_id": ["0000000000000003"], "total_lien": None, "court_costs": None, "taxes": None}]}]}
+
+
+def test_complete_county_transcript_retains_all_columns_without_title_or_release(tmp_path):
+    from connectors.kansas_county_deeds.land_records import transcribe_shawnee, capture as county_capture
+    raw, mapping, summary = transcribe_shawnee(shawnee_transcript())
+    manifest, objects = county_capture("shawnee-tax-sales", raw, url="https://cdn.snco.gov/counselor/synthetic-results.pdf", retrieved_at=NOW,
+                                       documents=[("https://cdn.snco.gov/counselor/synthetic-results.pdf", b"SYNTHETIC ORIGINAL PDF")])
+    candidate = normalize(raw, manifest, mapping=mapping)
+    stage(tmp_path, manifest, objects, candidate)
+    assert summary["units"] == 2 and summary["tracts"] == 3
+    group, invalid = candidate["records"]
+    assert group["amount"]["value"] == "12.00" and len(group["parties"]) == 1
+    assert group["parties"][0]["label"] == "SYNTHETIC DEED NAME"
+    assert "Printed purchaser(s): SYNTHETIC BIDDER" in group["notes"]
+    assert "lien 10.00; costs 2.00; taxes 8.00 USD" in group["notes"]
+    assert "Tract 2: 0000000000000002" in group["legal_description"]
+    assert "no allocation" in group["notes"] and "source pages 1,2" in group["notes"]
+    assert invalid["amount"] is None and "INVALIDATED_SALE" in invalid["notes"]
+    assert all(r["title_claim"] == r["sale_completion"] == "NOT_ESTABLISHED" for r in candidate["records"])
+    assert public_projection(candidate)["records"] == []
+    assert audit(tmp_path)["outcome"] == "PASS"
+
+
+@pytest.mark.parametrize("mutation", ["total", "lien", "duplicate_tract", "duplicate_unit", "missing_parcel", "unknown_field", "invalidated_price", "boolean_page", "unbounded_notes"])
+def test_county_transcript_fails_closed_on_incomplete_or_conflicting_source_values(mutation):
+    from connectors.kansas_county_deeds.land_records import transcribe_shawnee
+    table = shawnee_transcript()
+    if mutation == "total": table["totals"]["purchase_price"] = "13.00"
+    elif mutation == "lien": table["units"][0]["parcels"][0]["taxes"] = "9.00"
+    elif mutation == "duplicate_tract": table["units"][0]["parcels"][1]["tract"] = "1"
+    elif mutation == "duplicate_unit": table["units"][1]["unit_id"] = table["units"][0]["unit_id"]
+    elif mutation == "missing_parcel": table["units"][0]["parcels"][0]["parcel_id"] = []
+    elif mutation == "unknown_field": table["units"][0]["approved"] = True
+    elif mutation == "invalidated_price": table["units"][1]["purchase_price"] = "0.00"
+    elif mutation == "boolean_page": table["units"][0]["pages"] = [True]
+    else: table["units"][0]["purchaser"] = "X" * 257
+    with pytest.raises(ValueError): transcribe_shawnee(table)
+
+
+def test_transcript_cli_is_immutable_work_before_explicit_ingestion(tmp_path, capsys):
+    spec = importlib.util.spec_from_file_location("land_cli", ROOT / "tools/local_data/land_records.py")
+    cli = importlib.util.module_from_spec(spec); spec.loader.exec_module(cli)
+    input_path = tmp_path / "transcript.json"; input_path.write_bytes(canonical(shawnee_transcript()))
+    root = tmp_path / "store"
+    argv = ["--root", str(root), "transcribe-shawnee", "--file", str(input_path)]
+    assert cli.main(argv) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert first["outcome"] == "TRANSCRIBED_NOT_IMPORTED" and status(root)["counts"]["versions"] == 0
+    assert Path(first["paths"]["transcript"]).read_bytes() == input_path.read_bytes()
+    assert cli.main(argv) == 0
+    assert json.loads(capsys.readouterr().out) == first
+    input_path.write_text('{"case_number":"A","case_number":"B"}')
+    assert cli.main(argv) == 1
+    assert json.loads(capsys.readouterr().out)["reason_code"] == "SHAWNEE_DUPLICATE_JSON_KEY"

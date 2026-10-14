@@ -2,7 +2,7 @@
 doc_id: kfm://contract/domains/people-dna-land/land-instrument-candidate
 title: Land instrument candidate v1
 type: contract
-version: v1.1
+version: v1.2
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-13
@@ -93,3 +93,18 @@ cannot promote, activate or release data. Ordinary governed land clients
 receive a denial and zero records. A future release requires a separately
 reviewed carrier, rights/sensitivity/source admission, policy, correction and
 rollback closure; this extension supplies no release writer.
+
+## Full-column county source assertions
+
+The Shawnee Exhibit B transcription preserves the printed purchaser separately
+from the printed Deed name. The latter maps to a `grantee` source assertion and
+is repeated with its exact source label in notes; it does not prove a recorded
+deed, confirmed sale or current ownership. The purchaser is retained under
+its source label in notes and is never inferred to be the grantee or grantor.
+Printed tract/parcel references are explicitly labeled as references in
+`legal_description`; no surveyed boundary or geocoded point is introduced.
+Notes retain lien, court-cost and tax amounts separately from the whole-unit
+`auction_purchase_price`. Combined financial rows are kept once. Invalidated
+source rows remain visible with `INVALIDATED_SALE` in notes and null price,
+not a fabricated zero or completed purchase. The machine shape and existing
+private review, title, completion and release states are unchanged.

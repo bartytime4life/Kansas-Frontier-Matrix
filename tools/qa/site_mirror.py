@@ -8,7 +8,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-v265-land-workflow-ci-20261014.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v267-land-full-records-seam-20261014.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
@@ -103,7 +103,7 @@ def reviewed_receipt():
         raise ValueError("MIRROR_RECEIPT_PROFILE_DRIFT")
     if receipt["counts"].get("missing", 0) or receipt["counts"].get("unexpected_difference", 0):
         raise ValueError("MIRROR_RECEIPT_INCOMPLETE")
-    allowed = {"identical", "inherited_repository_overlay", "merged_water_overlay", "repository_only_water_overlay",
+    allowed = {"identical", "inherited_repository_overlay", "repository_safety_overlay", "merged_water_overlay", "repository_only_water_overlay",
                "repository_only_overlay"}
     comparison = receipt["comparison"]
     if not comparison or any(entry.get("state") not in allowed for entry in comparison.values()):

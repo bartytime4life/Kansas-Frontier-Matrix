@@ -8,7 +8,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / "packages/domains/people-dna-land/src")]
-from people_dna_land.land_records import MAX_BYTES, SOURCES, canonical, instant, stamp
+from people_dna_land.land_records import MAX_BYTES, SOURCES, canonical, digest, instant, stamp
 from people_dna_land.land_store import initialize, list_records, read_file, status
 
 
@@ -19,6 +19,8 @@ def main(argv=None):
     sub.add_parser("init")
     sub.add_parser("status")
     sub.add_parser("audit")
+    p = sub.add_parser("transcribe-shawnee")
+    p.add_argument("--file", type=Path, required=True, help="Explicit full-column Shawnee Exhibit B JSON transcription")
     p = sub.add_parser("export-review")
     p.add_argument("--output", type=Path, required=True, help="New private JSON file outside Git; original bytes included")
     p.add_argument("--capture-id", action="append", default=[], help="Select active capture; default all within 20 captures / 1000 records / 10 MiB")
@@ -50,6 +52,24 @@ def main(argv=None):
         elif args.command == "audit":
             from people_dna_land.land_store import audit
             result = audit(args.root)
+        elif args.command == "transcribe-shawnee":
+            from connectors.kansas_county_deeds.land_records import transcribe_shawnee
+            from people_dna_land.land_store import immutable
+            transcript = read_file(args.file.absolute(), 2 * 1024 * 1024)
+            def unique_keys(pairs):
+                result = {}
+                for key, value in pairs:
+                    if key in result:
+                        raise ValueError("SHAWNEE_DUPLICATE_JSON_KEY")
+                    result[key] = value
+                return result
+            raw, mapping, summary = transcribe_shawnee(json.loads(transcript, object_pairs_hook=unique_keys))
+            initialize(args.root)
+            base = args.root / "data/work/people-dna-land/land-records/transcriptions" / digest(transcript)[7:]
+            paths = {"transcript": base.with_suffix(".json"), "csv": base.with_suffix(".csv"), "mapping": base.with_suffix(".mapping.json")}
+            for key, value in (("transcript", transcript), ("csv", raw), ("mapping", canonical(mapping))):
+                immutable(paths[key], value)
+            result = {"outcome": "TRANSCRIBED_NOT_IMPORTED", "authority": "CANDIDATE_ONLY", "paths": {k: str(v) for k, v in paths.items()}, "summary": summary}
         elif args.command == "export-review":
             from people_dna_land.land_transfer import export_review
             result = export_review(args.root, args.output.absolute(), capture_ids=args.capture_id)
