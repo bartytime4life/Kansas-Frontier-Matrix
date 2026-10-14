@@ -2,11 +2,11 @@
 doc_id: kfm://adr/ADR-0029
 title: Adopt Directory Governance Standard v2
 type: adr
-version: v1.4
+version: v1.5
 status: accepted
 owners: ["@bartytime4life"]
 created: 2026-07-26
-updated: 2026-09-13
+updated: 2026-10-14
 policy_label: public
 owning_root: "docs/"
 responsibility: "Record the accepted Directory Rules v2 decision and bounded post-adoption implementation status."
@@ -39,6 +39,7 @@ notes:
   - "v1.2 refreshes that non-normative status record against main@1384c5c06e5cb19bae4ac67be037559fa68edd21. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "v1.3 records a reviewed monotonic topology-baseline shrink from 139 to 138 finding groups against main@2879033718ea08e893c53a1e4d9f2b127f810407. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "v1.4 reconciles current-main implementation evidence at main@27202a0595ecdc6afd6f98b3aedaa236243e07b3: the legacy path is now a bounded read-only tombstone and the topology baseline contains 127 inherited finding groups. This post-adoption status refresh does not alter the accepted decision, adopted bytes, digest, canonical path, authority boundary, consumer-closure hold, or physical-deletion hold."
+  - "v1.5 records the owner-directed one-time renewal of the topology baseline expiry from 2026-11-10 to 2027-05-10 at main@514b2367638778a0a0b6e45a6451aea70c762909 (docs/intake/exploratory/repository-topology-baseline-renewal-20261014.md). The 93 waivers and the shrink-only rules are unchanged, and any further extension is still rejected. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "The five original governance projections remain byte-identical to the v1.1 review. A separate twenty-rule repository-topology ratchet, registry entry, Make target, and aggregate workflow are now present; hosted exact-head execution and required-check coupling remain separate evidence."
   - "The canonical ADR index now records ADR-0001 through ADR-0034 as one accepted and 33 proposed records. The docs/adr README and docs/registers/ADR_INDEX.md still summarize 29 proposed records; v1.2 records that drift without changing either source or any ADR status."
 [/KFM_META_BLOCK_V2] -->
@@ -50,15 +51,15 @@ notes:
 Accepted on 2026-07-26 by explicit project-owner ratification, this decision adopts the exact verified UTF-8 bytes of Directory Rules `2.0.0-draft.1` at `docs/doctrine/directory-rules.md`, makes that path the single writable human-readable Directory Rules authority, and starts a controlled compatibility migration for the restored legacy architecture copy. It does not ratify the premature deletion or authorize tombstoning, reference migration, or physical deletion.
 
 > [!NOTE]
-> **v1.4 post-adoption record.** This edition reconciles the separately delivered legacy-path tombstone and the reviewed 127-entry topology baseline. The accepted decision, pinned Directory Rules bytes and digest, authority boundary, consumer-closure and physical-deletion holds, and transparent single-owner bootstrap exception are unchanged.
+> **v1.5 post-adoption record.** This edition records the owner-directed one-time renewal of the topology baseline expiry from 2026-11-10 to 2027-05-10, with 93 inherited finding groups remaining. v1.4 reconciled the separately delivered legacy-path tombstone and the then 127-entry topology baseline. The accepted decision, pinned Directory Rules bytes and digest, authority boundary, consumer-closure and physical-deletion holds, and transparent single-owner bootstrap exception are unchanged.
 
 | Field | Value |
 |---|---|
 | **ID** | `ADR-0029` |
 | **Status** | `accepted` |
 | **Date** | 2026-07-26 |
-| **Record edition** | `v1.4` — append-only current-main implementation reconciliation; decision unchanged |
-| **Last status review** | 2026-09-13 against `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3` |
+| **Record edition** | `v1.5` — append-only record of the one-time topology-baseline expiry renewal; decision unchanged |
+| **Last status review** | 2026-10-14 against `main@514b2367638778a0a0b6e45a6451aea70c762909` for the topology baseline only; the full status review is 2026-09-13 against `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3` |
 | **Repository review route** | `@bartytime4life` via CODEOWNERS; sole verified named owner and review route |
 | **Decision authority** | `@bartytime4life` — explicit project-owner ratification recorded in issue #1531 and the ratification pull request |
 | **Acceptance evidence** | Explicit owner instruction; exact digest/blob re-verification; restoration of the prematurely deleted legacy body; synchronized source/index transition; transparent single-owner bootstrap exception |
@@ -358,7 +359,7 @@ Machine files project accepted doctrine; they do not accept it, authorize a migr
 - [x] Domain Lane Register projection, schema, validator, tests, and read-only workflow landed in PR #2164 as a bounded extension of responsibility-scope governance.
 - [x] Cross-Domain Seam Register contract, projection, schema, validator, tests, and read-only workflow landed in PR #2187 as a partial, hold-first Context Map.
 - [x] A bounded 20-rule repository-topology ratchet, focused tests, validator-registry entry, root Make targets, and aggregate workflow definition landed in PR #2626 and were hardened through PRs #2723 and #2725.
-- [ ] The active baseline carries 127 exact inherited finding groups. Baseline growth, mutation, deadline extension, and invariant waivers are denied; orderly remediation before 2026-11-10 remains open.
+- [ ] The active baseline carries 93 exact inherited finding groups. Baseline growth, mutation, deadline extension, and invariant waivers are denied, apart from the one owner-directed expiry renewal to 2027-05-10 ([renewal record](../intake/exploratory/repository-topology-baseline-renewal-20261014.md)); orderly remediation before 2027-05-10 remains open.
 - [ ] Hosted exact-head execution, strict required-check coupling, branch/ruleset significance, and complete aggregate current-main enforcement remain `NEEDS VERIFICATION` even though the commands and workflow definition are present.
 - [ ] None of these projections closes the Phase 1 tombstone or Phase 2 consumer/reference work.
 
@@ -399,7 +400,7 @@ The smallest dependency-ordered follow-ups are:
 
 1. verify exact-head validator/workflow results and strict required-check coupling without weakening inherited holds;
 2. reconcile the stale ADR landing-page and cross-register summary counts without changing any record status;
-3. reduce the 127 exact inherited topology finding groups without baseline growth, mutation, or deadline extension;
+3. reduce the 93 exact inherited topology finding groups without baseline growth, mutation, or deadline extension. One exception is recorded: on 2026-10-14 the owner renewed the expiry once, from 2026-11-10 to 2027-05-10, with 93 groups remaining ([renewal record](../intake/exploratory/repository-topology-baseline-renewal-20261014.md)); any further extension needs its own reviewed change;
 4. produce a current reference-and-fragment inventory for the legacy architecture path and retain compatibility mappings while closure remains open;
 5. keep physical deletion held until zero-writer, zero-consumer, link-closure, and retirement-receipt evidence exists;
 6. establish or explicitly defer independent post-bootstrap stewardship review.
@@ -440,7 +441,7 @@ The smallest dependency-ordered follow-ups are:
 - Which legacy section anchors require explicit compatibility mapping rather than direct replacement?
 - Which repository-native command, workflow set, and required-check projection constitute the complete current-main Directory Governance enforcement ratchet?
 - Which exact check names are strictly required on `main`, and what evidence proves that the ruleset is current rather than merely that workflow files exist?
-- What reviewed sequence will reduce all 127 inherited topology finding groups before 2026-11-10 without converting the baseline into permanent waiver authority?
+- What reviewed sequence will reduce all 93 inherited topology finding groups before 2027-05-10 without converting the baseline into permanent waiver authority?
 - When will the ADR landing page and cross-register summaries be reconciled to the canonical 4 accepted / 35 proposed numbered-record inventory without changing any source ADR status?
 - Should the full legacy body be retained indefinitely when external-consumer closure cannot be proven, even after all repository-internal references move?
 
@@ -480,5 +481,6 @@ The smallest dependency-ordered follow-ups are:
 | 2026-08-13 | accepted | Refreshed the append-only status ledger for topology-ratchet and ADR-inventory drift; accepted decision and deletion hold unchanged | [#2741](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2741) |
 | 2026-08-14 | accepted | Recorded monotonic topology-baseline convergence from 139 to 138 warnings; accepted decision and deletion hold unchanged | [#2769](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2769) |
 | 2026-09-13 | accepted | Reconciled current-main tombstone and 127-entry topology-baseline evidence; accepted decision, consumer-closure hold, and deletion hold unchanged | [#4534](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4534) |
+| 2026-10-14 | accepted | Recorded the owner-directed one-time topology-baseline expiry renewal from 2026-11-10 to 2027-05-10 with 93 waivers remaining; accepted decision, shrink-only rules, and deletion hold unchanged | [#5154](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5154) |
 
 [Back to top](#top)
