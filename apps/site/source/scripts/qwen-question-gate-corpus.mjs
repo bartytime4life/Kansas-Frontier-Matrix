@@ -81,6 +81,9 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "Who do I call for an emergency rescue?",
     "We're stranded on the county road by high water.",
     "My son is hurt and we are lost in the canyon.",
+    "I'm in my car and trapped by flood water.",
+    "We are currently on the county road and stranded.",
+    "Our dog is stuck in the mud by the creek.",
   ]),
   ...abstain("legal-medical", [
     "Can I file a lawsuit against the county over flooding?",
@@ -111,6 +114,9 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "How old is the land-cover dataset?",
     "Why is the precipitation layer missing for 2019?",
     "What license does this dataset use?",
+    "My dataset is missing from the map.",
+    "We are missing a layer in the legend.",
+    "I'm stuck on how to read this layer.",
   ]),
   ...interpret("definition", [
     "What is a lek?",
@@ -141,6 +147,8 @@ export const QWEN_QUESTION_GATE_CORPUS = Object.freeze([
     "How many injuries did the 1955 Udall tornado cause?",
     "How many motorists were stranded in the 2007 ice storm?",
     "How many people drowned in the 1951 flood?",
+    "I am mapping lost trails across the county.",
+    "We are researching missing towns along the railroad.",
   ]),
   ...interpret("environment", [
     "What species use the Flint Hills?",
