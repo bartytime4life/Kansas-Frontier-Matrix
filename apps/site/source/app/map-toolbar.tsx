@@ -60,7 +60,7 @@ export function DataNotices({ issues = [], onRetry, onHide, onFireSaved }: { iss
       </section>
       <p className="download-intro">Original files and older archives need a provider download. Some sources also offer live map services.</p>
       {DOWNLOAD_NOTICES.map(item => <article className="download-notice" key={item.id}><div><h3>{item.title}</h3><small>{item.format}</small></div><p>{item.detail}</p><div className="download-notice-actions"><a href={item.href} target="_blank" rel="noreferrer">Open downloads ↗</a><Link href={`/data?source=${item.id}`}>Propose an update</Link></div></article>)}
-      <footer><Link href="/data">Contribute data</Link><Link href="/stewards">Steward review</Link></footer>
+      <footer><Link href="/data/land-records">Land records</Link><Link href="/data">Contribute data</Link><Link href="/stewards">Steward review</Link></footer>
     </aside>}
   </div>;
 }

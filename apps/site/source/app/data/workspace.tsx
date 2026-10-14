@@ -53,7 +53,7 @@ export default function DataWorkspace({ mode, name, steward, initialSourceId = "
   };
   const rows = items.filter((item) => filter === "all" || item.status === filter);
   return <main className={styles.page}>
-    <header className={styles.header}><Link href="/" className={styles.brand}>KFM <span>Data commons</span></Link><nav aria-label="Data navigation"><Link href="/">Back to map</Link><Link href="/data" aria-current={mode === "submit" ? "page" : undefined}>Contribute data</Link>{steward && <Link href="/stewards" aria-current={mode === "review" ? "page" : undefined}>Steward desk</Link>}</nav><span className={styles.identity}>{name}</span></header>
+    <header className={styles.header}><Link href="/" className={styles.brand}>KFM <span>Data commons</span></Link><nav aria-label="Data navigation"><Link href="/">Back to map</Link><Link href="/data" aria-current={mode === "submit" ? "page" : undefined}>Contribute data</Link><Link href="/data/land-records">Land records</Link>{steward && <Link href="/stewards" aria-current={mode === "review" ? "page" : undefined}>Steward desk</Link>}</nav><span className={styles.identity}>{name}</span></header>
     <section className={styles.intro}><p className={styles.eyebrow}>{mode === "review" ? "STEWARDSHIP" : "GROW THE KANSAS RECORD"}</p><h1>{mode === "review" ? "Review proposed data" : "Bring your data to KFM"}</h1><p>{mode === "review" ? "Inspect each file, its source and reuse terms. Record a decision that the contributor can follow." : "Propose a new source, fill a historical gap, or send an update to an existing layer."}</p></section>
     {message && <div className={styles.notice} role="status">{message}</div>}
     <div className={styles.layout}>

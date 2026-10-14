@@ -17,7 +17,7 @@ def ingest(root, source, raw, *, url, retrieved_at, format="mapped-csv", mapping
         manifest, objects = capture_blm(source, raw, format=format, **options)
     elif source == "kshs-land-sales" and format == "mapped-csv":
         manifest, objects = capture_archive(raw, **options)
-    elif source in {"sedgwick-deeds", "johnson-deeds"} and format == "mapped-csv":
+    elif source in {"sedgwick-deeds", "johnson-deeds", "shawnee-tax-sales", "leavenworth-tax-sales"} and format == "mapped-csv":
         manifest, objects = capture_county(source, raw, **options)
     else:
         raise ValueError("SOURCE_FORMAT_NOT_SUPPORTED")

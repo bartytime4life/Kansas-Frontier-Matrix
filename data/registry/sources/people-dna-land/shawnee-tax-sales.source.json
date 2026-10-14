@@ -1,0 +1,131 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/shawnee/tax-sale-results",
+  "descriptor_version": "0.1.0",
+  "title": "Shawnee County reported tax-foreclosure sales",
+  "description": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution.",
+  "domain_scope": [
+    "people-dna-land"
+  ],
+  "source_type": "legal_record",
+  "source_role": "steward_review_source",
+  "authority_rank": "candidate_only",
+  "authority_notes": "Authority is limited to the cited instrument or index content; no present ownership, legal title, parcel boundary or sale completion inferred.",
+  "publisher": {
+    "name": "Shawnee County Counselor",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://snco.gov/counselor/prior_tax_sales.php"
+    }
+  },
+  "owner_or_steward": {
+    "name": "Shawnee County Counselor",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://snco.gov/counselor/prior_tax_sales.php"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution.",
+    "license_url": "https://snco.gov/counselor/prior_tax_sales.php",
+    "terms_url": "https://snco.gov/counselor/prior_tax_sales.php",
+    "attribution_required": true,
+    "attribution_text": "Source: Shawnee County Register of Deeds; original instrument/index locator and capture date.",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "api_key_or_account_required": false,
+    "last_verified_at": "2026-10-14T06:56:47Z",
+    "verified_by": "Official-source availability research; not rights or steward approval",
+    "rights_notes": "Review pending. The official page is evidence of source access, not permission to redistribute person-bearing records."
+  },
+  "sensitivity_default": "unknown_review_required",
+  "sensitivity_notes": "Person-bearing land records default to private review. Do not infer that named parties are deceased from a document date. Exact parcel and cultural-location joins need independent review.",
+  "cadence": {
+    "update_cadence": "unknown",
+    "freshness_expectation": "Reverify access, source revision, rights and capture coverage before each explicit import.",
+    "staleness_policy": "review_required",
+    "known_update_window": "Not established",
+    "timezone": "America/Chicago"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "Shawnee County recorded land instruments",
+        "uri": "https://snco.gov/counselor/prior_tax_sales.php",
+        "purpose": "metadata",
+        "notes": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution."
+      }
+    ],
+    "auth": {
+      "auth_required": false,
+      "auth_type": "none",
+      "secret_handling": "No account credentials or authenticated report URLs stored in the ingest manifest."
+    },
+    "format_targets": [
+      "mapped-csv"
+    ],
+    "rate_limit_notes": "Explicit selected export only; no bulk crawler or automatic refresh. Default 100 records and 2 MiB total input per import; hard ceilings 1000 records and 10 MiB."
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "{publisher}; {source_record_id}; {event_date}; {source_url}; retrieved {retrieved_at}; {capture_id}; {record_digest}.",
+    "citation_guidance": "Cite the index as an index. Retain original-document hashes and row/card locators. EvidenceBundle candidates are unreleased.",
+    "preferred_link": "https://snco.gov/counselor/prior_tax_sales.php"
+  },
+  "source_head": {
+    "observed_at": "2026-10-14T06:56:47Z",
+    "method": "manual_review",
+    "content_identity": {
+      "source_head_uri": "https://snco.gov/counselor/prior_tax_sales.php",
+      "not_applicable_reason": "No bulk dataset revision established; source-role research is not source admission. Exact pilot capture hashes remain in private intake receipts."
+    },
+    "source_head_notes": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "citation_support",
+      "historical_context",
+      "candidate_signal"
+    ],
+    "prohibited_claim_roles": [
+      "legal_status",
+      "not_for_title_truth",
+      "not_for_life_safety"
+    ],
+    "limitations": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution.",
+    "confidence_posture": "candidate_only",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": true,
+    "release_conditions": [
+      "Source admission and rights review",
+      "Person/location/cultural sensitivity review and redaction receipts",
+      "Validated standard EvidenceBundle closure, review, correction and rollback",
+      "Separate exact-content release decision; no release writer in this intake"
+    ],
+    "deny_reason_if_not_allowed": "Private intake only; rights, source admission, sensitivity and release are pending."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "connector_ref": "connectors/kansas_county_deeds/land_records.py",
+    "activation_notes": "No automatic network source activation. Explicit lawful exports may be captured as private quarantine candidates; admission and release remain pending."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-10-14T03:11:52Z",
+    "updated_at": "2026-10-14T03:11:52Z"
+  },
+  "spec_hash": "sha256:0eaf84ea63824988bc5851822759522810dc00ead5219ece2fbdf6c8e45e1142"
+}

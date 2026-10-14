@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/people-dna-land/land_review_transfer.schema.json",
+  "title": "Unreleased private land review transfer",
+  "description": "Shape only. Runtime must enforce canonical JSON, hashes, total bytes, graph closure, owner scope and pending states; no normalization or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "created_at",
+    "authority",
+    "review_state",
+    "release_state",
+    "captures",
+    "objects",
+    "transfer_digest"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.land-review-transfer/v1"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "authority": {
+      "const": "PRIVATE_REVIEW_ONLY"
+    },
+    "review_state": {
+      "const": "PENDING"
+    },
+    "release_state": {
+      "const": "UNRELEASED"
+    },
+    "captures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifest",
+          "candidate",
+          "evidence"
+        ],
+        "properties": {
+          "manifest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "profile",
+              "source_id",
+              "source_url",
+              "retrieved_at",
+              "format",
+              "capture_method",
+              "payload_sha256",
+              "bytes",
+              "documents",
+              "total_bytes",
+              "source_admission",
+              "release_state",
+              "capture_id"
+            ],
+            "properties": {
+              "profile": {
+                "const": "kfm.land-records-capture/v1"
+              },
+              "source_id": {
+                "enum": [
+                  "blm-glo",
+                  "blm-mlrs",
+                  "kshs-land-sales",
+                  "sedgwick-deeds",
+                  "johnson-deeds",
+                  "shawnee-tax-sales",
+                  "leavenworth-tax-sales"
+                ]
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048
+              },
+              "retrieved_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "format": {
+                "enum": [
+                  "glo-text",
+                  "mapped-csv"
+                ]
+              },
+              "capture_method": {
+                "enum": [
+                  "BROWSER_DOM_TEXT",
+                  "EXPLICIT_EXPORT_OR_TRANSCRIPTION"
+                ]
+              },
+              "payload_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10485760
+              },
+              "documents": {
+                "type": "array",
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "source_url",
+                    "sha256",
+                    "bytes"
+                  ],
+                  "properties": {
+                    "source_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "maxLength": 2048
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^sha256:[a-f0-9]{64}$"
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10485760
+                    }
+                  }
+                }
+              },
+              "total_bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10485760
+              },
+              "source_admission": {
+                "const": "PENDING"
+              },
+              "release_state": {
+                "const": "UNRELEASED"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              }
+            }
+          },
+          "candidate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "profile",
+              "capture_id",
+              "source_id",
+              "records",
+              "locators",
+              "coverage",
+              "mapping",
+              "review_state",
+              "release_state",
+              "candidate_id"
+            ],
+            "properties": {
+              "profile": {
+                "const": "kfm.land-records-batch/v1"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "source_id": {
+                "enum": [
+                  "blm-glo",
+                  "blm-mlrs",
+                  "kshs-land-sales",
+                  "sedgwick-deeds",
+                  "johnson-deeds",
+                  "shawnee-tax-sales",
+                  "leavenworth-tax-sales"
+                ]
+              },
+              "records": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1000,
+                "items": {
+                  "$ref": "land_instrument_candidate.schema.json"
+                }
+              },
+              "locators": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "additionalProperties": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1000,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(csv-row|result-card):[0-9]+$"
+                  }
+                }
+              },
+              "coverage": {
+                "type": "object"
+              },
+              "mapping": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "review_state": {
+                "const": "PENDING"
+              },
+              "release_state": {
+                "const": "UNRELEASED"
+              },
+              "candidate_id": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "profile",
+                "evidence_ref",
+                "record_digest",
+                "capture_id",
+                "candidate_id",
+                "source_url",
+                "retrieved_at",
+                "capture_method",
+                "members",
+                "locators",
+                "documents",
+                "review_state",
+                "release_state",
+                "bundle_digest"
+              ],
+              "properties": {
+                "profile": {
+                  "const": "kfm.land-evidence-bundle-candidate/v1"
+                },
+                "evidence_ref": {
+                  "type": "string",
+                  "pattern": "^kfm:evidence:land:[a-f0-9]{64}$"
+                },
+                "record_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "capture_id": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "candidate_id": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "source_url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "retrieved_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "capture_method": {
+                  "enum": [
+                    "BROWSER_DOM_TEXT",
+                    "EXPLICIT_EXPORT_OR_TRANSCRIPTION"
+                  ]
+                },
+                "members": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 11,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "sha256",
+                      "bytes"
+                    ],
+                    "properties": {
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^sha256:[a-f0-9]{64}$"
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 10485760
+                      }
+                    }
+                  }
+                },
+                "locators": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1000,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(csv-row|result-card):[0-9]+$"
+                  }
+                },
+                "documents": {
+                  "type": "array",
+                  "maxItems": 10,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "source_url",
+                      "sha256",
+                      "bytes"
+                    ],
+                    "properties": {
+                      "source_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "maxLength": 2048
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^sha256:[a-f0-9]{64}$"
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 10485760
+                      }
+                    }
+                  }
+                },
+                "review_state": {
+                  "const": "PENDING"
+                },
+                "release_state": {
+                  "const": "UNRELEASED"
+                },
+                "bundle_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 100,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "contentEncoding": "base64",
+        "maxLength": 13981016
+      }
+    },
+    "transfer_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

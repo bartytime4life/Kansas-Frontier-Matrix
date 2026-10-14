@@ -51,7 +51,9 @@ test("requested subjects have grouped subtopics, inspectable limits and real int
       }
     }
   }
-  assert.match(topics.topicDefinition("land").limitation, /Ownership evidence is not connected/);
+  assert.match(topics.topicDefinition("land").limitation, /signed-in private review workflow/);
+  assert.match(topics.topicDefinition("land").limitation, /Unreleased records and private parcel detail stay off the map/);
+  assert.ok(topics.topicDefinition("land").resources.some(r => r.href === "/data/land-records"));
   assert.match(topics.topicDefinition("people").limitation, /not individuals/);
   assert.match(topics.topicDefinition("ecology").limitation, /No species inventory/);
 });
