@@ -20,17 +20,26 @@ test('cutaway fit includes valid plotted log depths without an aquifer and keeps
   assert.equal(result.deepest,152.4);assert.equal(result.intervals[1].top,12.192);
   assert.equal(result.intervals[1].interval,original.intervals[1]);assert.equal(JSON.stringify(original),before);
 });
-test('cutaway rendering excludes outside, invalid and clipped-away records, and retains measured-unit references',()=>{
-  const result=cutawayRecords(volume,[record('outside',[interval(0,50)],[-101,39]),record('deep',[interval(2000,2500)]),record('mixed',[interval(-1,2),interval(4,1),interval(0,Infinity),interval(100,2000)])]);
-  assert.equal(result.recordCount,1);assert.equal(result.intervals.length,1);assert.equal(result.intervals[0].bottom,500);
-  assert.equal(result.intervals[0].interval.bottom,2000);assert.equal(result.clipped,true);
+test('cutaway rendering excludes outside, invalid and over-ceiling records, and retains measured-unit references',()=>{
+  const result=cutawayRecords(volume,[record('outside',[interval(0,50)],[-101,39]),record('deep',[interval(40000,41000)]),record('mixed',[interval(-1,2),interval(4,1),interval(0,Infinity),interval(100,40000)])]);
+  assert.equal(result.recordCount,1);assert.equal(result.intervals.length,1);assert.equal(result.intervals[0].bottom,12000);
+  assert.equal(result.intervals[0].interval.bottom,40000);assert.equal(result.clipped,true);
 });
-test('cutaway shares existing 50-record/400-interval and envelope-plus-50-m depth budgets',()=>{
+test('cutaway retains existing 50-record/400-interval budgets and shallow envelope floor',()=>{
   const bounded={...volume,envelopes:[{deepMeters:100}]};
   const result=cutawayRecords(bounded,Array.from({length:51},(_,i)=>record(String(i),Array.from({length:10},(_,j)=>interval(j,j+1)))));
-  assert.equal(result.intervals.length,400);assert.equal(result.recordCount,40);assert.equal(result.clipped,true);assert.equal(result.limit,150);
+  assert.equal(result.intervals.length,400);assert.equal(result.recordCount,50);assert.equal(result.clipped,true);assert.equal(result.limit,150);
   const recordBudget=cutawayRecords(volume,Array.from({length:51},(_,i)=>record(String(i),[interval(0,1)])));
   assert.equal(recordBudget.recordCount,50);
+});
+test('deep core inventory envelopes remain visible below a shallow aquifer without changing source depths',()=>{
+  const core={...record('synthetic-core',[interval(4094,4893,'inventory envelope')]),kind:'core'};
+  const before=JSON.stringify(core);
+  const result=cutawayRecords({...volume,envelopes:[{deepMeters:100}]},[core]);
+  assert.equal(result.recordCount,1);assert.equal(result.intervals.length,1);
+  assert.equal(result.intervals[0].top,4094*.3048);assert.equal(result.intervals[0].bottom,4893*.3048);
+  assert.equal(result.deepest,4893*.3048);assert.equal(result.limit,4893*.3048);assert.equal(result.clipped,false);
+  assert.equal(JSON.stringify(core),before);assert.equal(result.intervals[0].interval,core.intervals[0]);
 });
 test('projected corner fit retains every corner and readable depth label across presets and viewport sizes',()=>{
   for(const [screenWidth,screenHeight] of [[1158,462],[994,282],[343,264],[320,240]])
@@ -104,4 +113,11 @@ test('screen selection fills ring gaps, tolerates narrow columns, and excludes h
   ray.setFromCamera(new THREE.Vector2(point.x,point.y),camera);
   assert.equal(pickCutawaySource(ray,[ring]),undefined);
   assert.equal(pickCutawaySource(ray,[ring],{...screen,x}).object,ring);
+});
+
+test('one long well cannot exhaust intervals before a core at another location is plotted',()=>{
+ const long=record('long',Array.from({length:500},(_,i)=>interval(i,i+1))),core={...record('core',[interval(4094,4893)]),kind:'core'};
+ const before=JSON.stringify([long,core]);const result=cutawayRecords(volume,[long,core]);
+ assert.equal(result.intervals.length,400);assert.equal(result.recordCount,2);assert.equal(result.clipped,true);
+ assert.equal(result.intervals.find(i=>i.record.id==='core').interval,core.intervals[0]);assert.equal(result.deepest,4893*.3048);assert.equal(JSON.stringify([long,core]),before);
 });
