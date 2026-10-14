@@ -157,6 +157,7 @@ export type WaterFlowLayerOptions = Readonly<{
 export type WaterFlowLayer = CustomLayerInterface & {
   setGeometry(geometry: FlowGeometry | null): void;
   readonly segmentCount: number;
+  readonly terrainSamplingPending: boolean;
 };
 
 /** Terrain samples per frame; the rest keep their last height until reached. */
@@ -260,6 +261,7 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
     type: "custom",
     renderingMode: "3d",
     get segmentCount() { return geometry?.count ?? 0; },
+    get terrainSamplingPending() { return sampleCursor < sampleQueue.length; },
     setGeometry(next) {
       geometry = next;
       uploaded = false;

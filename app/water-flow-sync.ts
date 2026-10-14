@@ -94,6 +94,22 @@ const gaugeCues = (map: MapLibreMap, state: FlowState): GaugeCue[] => {
   });
 };
 
+/** Opt-in local frame-check identity; no fetch, mutation, or release decision. */
+export function waterFlowDiagnosticState(map: MapLibreMap) {
+  const state = states.get(map);
+  if (!state) return { status: OFF, segments: 0, samplingPending: false, cells: [], cues: [] };
+  return {
+    status: state.status,
+    segments: state.layer?.segmentCount ?? 0,
+    samplingPending: state.layer?.terrainSamplingPending ?? false,
+    cells: state.wanted.flatMap(key => {
+      const cell = state.cache.get(key);
+      return cell?.state === "ready" ? [{ key, reaches: cell.payload.reaches }] : [];
+    }),
+    cues: gaugeCues(map, state),
+  };
+}
+
 /** Rebuilds geometry when the ready cells or gauge readings changed. */
 const rebuild = (map: MapLibreMap, state: FlowState) => {
   const layer = layerOf(map);
