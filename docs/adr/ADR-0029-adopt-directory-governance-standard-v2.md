@@ -2,11 +2,11 @@
 doc_id: kfm://adr/ADR-0029
 title: Adopt Directory Governance Standard v2
 type: adr
-version: v1.4
+version: v1.5
 status: accepted
 owners: ["@bartytime4life"]
 created: 2026-07-26
-updated: 2026-09-13
+updated: 2026-10-14
 policy_label: public
 owning_root: "docs/"
 responsibility: "Record the accepted Directory Rules v2 decision and bounded post-adoption implementation status."
@@ -39,6 +39,7 @@ notes:
   - "v1.2 refreshes that non-normative status record against main@1384c5c06e5cb19bae4ac67be037559fa68edd21. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "v1.3 records a reviewed monotonic topology-baseline shrink from 139 to 138 finding groups against main@2879033718ea08e893c53a1e4d9f2b127f810407. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "v1.4 reconciles current-main implementation evidence at main@27202a0595ecdc6afd6f98b3aedaa236243e07b3: the legacy path is now a bounded read-only tombstone and the topology baseline contains 127 inherited finding groups. This post-adoption status refresh does not alter the accepted decision, adopted bytes, digest, canonical path, authority boundary, consumer-closure hold, or physical-deletion hold."
+  - "v1.5 records the owner-directed one-time renewal of the topology baseline expiry from 2026-11-10 to 2027-05-10 at main@514b2367638778a0a0b6e45a6451aea70c762909 (docs/intake/exploratory/repository-topology-baseline-renewal-20261014.md). The 93 waivers and the shrink-only rules are unchanged, and any further extension is still rejected. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "The five original governance projections remain byte-identical to the v1.1 review. A separate twenty-rule repository-topology ratchet, registry entry, Make target, and aggregate workflow are now present; hosted exact-head execution and required-check coupling remain separate evidence."
   - "The canonical ADR index now records ADR-0001 through ADR-0034 as one accepted and 33 proposed records. The docs/adr README and docs/registers/ADR_INDEX.md still summarize 29 proposed records; v1.2 records that drift without changing either source or any ADR status."
 [/KFM_META_BLOCK_V2] -->
@@ -399,7 +400,7 @@ The smallest dependency-ordered follow-ups are:
 
 1. verify exact-head validator/workflow results and strict required-check coupling without weakening inherited holds;
 2. reconcile the stale ADR landing-page and cross-register summary counts without changing any record status;
-3. reduce the 127 exact inherited topology finding groups without baseline growth, mutation, or deadline extension;
+3. reduce the 127 exact inherited topology finding groups without baseline growth, mutation, or deadline extension. One exception is recorded: on 2026-10-14 the owner renewed the expiry once, from 2026-11-10 to 2027-05-10, with 93 groups remaining ([renewal record](../intake/exploratory/repository-topology-baseline-renewal-20261014.md)); any further extension needs its own reviewed change;
 4. produce a current reference-and-fragment inventory for the legacy architecture path and retain compatibility mappings while closure remains open;
 5. keep physical deletion held until zero-writer, zero-consumer, link-closure, and retirement-receipt evidence exists;
 6. establish or explicitly defer independent post-bootstrap stewardship review.
@@ -480,5 +481,6 @@ The smallest dependency-ordered follow-ups are:
 | 2026-08-13 | accepted | Refreshed the append-only status ledger for topology-ratchet and ADR-inventory drift; accepted decision and deletion hold unchanged | [#2741](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2741) |
 | 2026-08-14 | accepted | Recorded monotonic topology-baseline convergence from 139 to 138 warnings; accepted decision and deletion hold unchanged | [#2769](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2769) |
 | 2026-09-13 | accepted | Reconciled current-main tombstone and 127-entry topology-baseline evidence; accepted decision, consumer-closure hold, and deletion hold unchanged | [#4534](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4534) |
+| 2026-10-14 | accepted | Recorded the owner-directed one-time topology-baseline expiry renewal from 2026-11-10 to 2027-05-10 with 93 waivers remaining; accepted decision, shrink-only rules, and deletion hold unchanged | PENDING |
 
 [Back to top](#top)
