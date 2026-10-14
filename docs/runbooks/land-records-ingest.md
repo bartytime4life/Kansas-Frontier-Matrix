@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks/land-records-ingest
 title: Kansas land-record intake and private review
 type: runbook
-version: v1.1
+version: v1.2
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-13
@@ -266,3 +266,50 @@ Ordinary `/api/governed/land-records/v1/[view]` clients always receive a denial
 and zero candidates. App rollback reverts the additive routes/navigation and
 redeploys the preceding same-Site version while retaining private submissions
 and receipts. The existing loopback runtime remains available independently.
+
+## Complete Shawnee Exhibit B transcription
+
+`transcribe-shawnee --file /absolute/operator-transcript.json` validates an
+explicit operator transcription before import. It retains the input JSON,
+mapped CSV and column map immutably in the existing private WORK lane. Its
+output says `TRANSCRIBED_NOT_IMPORTED`; it neither downloads nor parses PDFs,
+imports candidates, approves source admission, nor releases data. Import the
+returned CSV and mapping with the official original PDF using the existing
+`import` command. The operator transcription is WORK evidence; the PDF is the
+original document. No operator JSON is misrepresented as a downloaded PDF.
+
+The JSON has exactly `case_number`, `event_date`, `expected_tracts`, `totals`
+and `units`. Totals contain `total_lien`, `court_costs`, `taxes` and
+`purchase_price` as decimal strings with two places. Each unit contains
+`unit_id`, `purchaser`, `deed_name`, `parcels`, `purchase_price`, `result`
+and `pages`. Each parcel row contains `tract`, `parcel_id` (a list of printed
+16-digit IDs), `total_lien`, `court_costs` and `taxes`. A combined printed
+tract row uses a comma-separated tract string and its combined financial
+values once. Explicit source result values are `PURCHASE_REPORTED` and
+`INVALIDATED_SALE`; absent printed amounts are null, never invented zeros.
+
+Every tract must be unique; parcel counts, lien = costs + taxes, tract totals
+and all four printed document totals must reconcile. Purchaser and printed
+Deed labels remain distinct. The source's Deed label maps to the existing
+grantee assertion, with its exact label also retained in notes. This does not
+establish a recorded deed, current ownership or court confirmation. Parcel
+references are labeled as printed references, never surveyed geometry.
+Financial fields and purchaser labels appear in notes without redaction.
+Grouped purchase prices are retained once per sale unit and never allocated.
+Unknown fields, duplicate JSON keys, incomplete rows and over-budget content
+fail before any output; output is never silently truncated.
+
+The October 14 full-column checkpoint represents all five pages of the
+September 24, 2025 PDF: 73 units, including two invalidated rows, and 79 tracts.
+Its purchase prices total USD 996440.00. All seven pages of the June 10, 2026
+PDF contain 26 units and 108 tracts, totaling USD 690200.00. Both original PDFs
+are retained without redaction. In the combined main-app bundle, 99 county
+units plus 294 BLM candidates and one archive record yield 394 unique versions.
+The bundle is 4351222 encoded bytes; statewide coverage remains partial.
+
+Free access is an acquisition fact. [BLM's rights policy](https://www.blm.gov/info/notices/drctp-policy)
+says most of its content is in the public domain and identifies exceptions.
+It does not certify every source or clear person, cultural or location review.
+The existing private workspace displays retained source fields and originals;
+review gates do not redact those fields. Public-source status does not replace
+the independent source, rights, sensitivity and release checks.

@@ -2,7 +2,7 @@
   "object_type": "SourceDescriptor",
   "schema_version": "v1",
   "source_id": "kfm://source/shawnee/tax-sale-results",
-  "descriptor_version": "0.1.0",
+  "descriptor_version": "0.1.1",
   "title": "Shawnee County reported tax-foreclosure sales",
   "description": "Official County Counselor result PDFs report tax-foreclosure auction dates, case IDs, tracts, parcel references and purchase prices. Bundled tracts remain one sale; confirmation and recording are not inferred. Free retrieval does not approve person/location redistribution.",
   "domain_scope": [
@@ -34,7 +34,7 @@
     "license_url": "https://snco.gov/counselor/prior_tax_sales.php",
     "terms_url": "https://snco.gov/counselor/prior_tax_sales.php",
     "attribution_required": true,
-    "attribution_text": "Source: Shawnee County Register of Deeds; original instrument/index locator and capture date.",
+    "attribution_text": "Source: Shawnee County Counselor; official Exhibit B, case number, source page, printed tract/parcel references and capture date.",
     "redistribution_allowed": "unknown",
     "commercial_use_allowed": "unknown",
     "api_key_or_account_required": false,
@@ -125,7 +125,7 @@
   "lifecycle": {
     "registry_state": "proposed",
     "created_at": "2026-10-14T03:11:52Z",
-    "updated_at": "2026-10-14T03:11:52Z"
+    "updated_at": "2026-10-14T14:00:04Z"
   },
-  "spec_hash": "sha256:0eaf84ea63824988bc5851822759522810dc00ead5219ece2fbdf6c8e45e1142"
+  "spec_hash": "sha256:f4f61580fd1aa3dfab0a48cca2b892ef803ee8af58ccecc24e33bea159cc38c8"
 }

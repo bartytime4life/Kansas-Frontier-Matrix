@@ -1,5 +1,9 @@
 """The local smoke runner must not test an unrelated listener or a failed start."""
 import os
+import json
+import re
+import shutil
+import sqlite3
 from pathlib import Path
 import socket
 import subprocess
@@ -59,6 +63,50 @@ class SiteSmokeStartupTests(unittest.TestCase):
         self.assertIn("did not become ready", result.stderr)
         self.assertNotIn("wanted", result.stderr)
         self.assertNotIn("backend checks passed", result.stdout)
+
+
+class SiteMigrationPreflightTests(unittest.TestCase):
+    def preflight(self, mutate=None):
+        script = (ROOT / "apps/site/serve-local.sh").read_text()
+        code = re.search(r"additive_migrations=\"\$\(node -e '\n(.*?)\n}' \"\$migration_workspace\"\)\"", script, re.S).group(1) + "\n}"
+        with tempfile.TemporaryDirectory(prefix="kfm-migration-test-") as directory:
+            root = Path(directory)
+            shutil.copytree(ROOT / "apps/site/source/drizzle", root / "drizzle")
+            work = root / "replay"; work.mkdir()
+            if mutate: mutate(root)
+            result = subprocess.run(["node", "-e", code, str(work)], cwd=root, text=True, capture_output=True, timeout=10)
+            replay = (work / "0010_api_connections.sql").read_text() if (work / "0010_api_connections.sql").exists() else None
+            return result, replay
+
+    def test_verified_connection_replay_is_idempotent_without_changing_source(self):
+        original = (ROOT / "apps/site/source/drizzle/0010_api_connections.sql").read_bytes()
+        result, replay = self.preflight()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIsNotNone(replay)
+        with sqlite3.connect(":memory:") as db:
+            db.executescript("CREATE TABLE daily_archive_captures(id TEXT PRIMARY KEY);")
+            db.executescript(replay); db.executescript(replay)
+            self.assertEqual(db.execute("SELECT count(*) FROM api_connection_receipts").fetchone()[0], 0)
+        self.assertEqual((ROOT / "apps/site/source/drizzle/0010_api_connections.sql").read_bytes(), original)
+
+    def test_changed_published_connection_migration_is_refused(self):
+        def mutate(root):
+            path = root / "drizzle/0010_api_connections.sql"
+            path.write_text(path.read_text() + "\n-- Unverified source change\n")
+        result, replay = self.preflight(mutate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("0010_api_connections changed", result.stderr)
+        self.assertIsNone(replay)
+
+    def test_unknown_nonadditive_migration_remains_refused(self):
+        def mutate(root):
+            path = root / "drizzle/meta/_journal.json"; journal = json.loads(path.read_text())
+            journal["entries"].append({"idx": 11, "tag": "0011_synthetic_unsafe"})
+            path.write_text(json.dumps(journal))
+            (root / "drizzle/0011_synthetic_unsafe.sql").write_text("DROP TABLE api_connection_receipts;")
+        result, _ = self.preflight(mutate)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("is not additive", result.stderr)
 
 
 if __name__ == "__main__":
