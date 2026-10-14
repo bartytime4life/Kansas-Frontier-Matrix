@@ -65,7 +65,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-map-context-envelope-20260806.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-map-context-envelope-currentness-20261014.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

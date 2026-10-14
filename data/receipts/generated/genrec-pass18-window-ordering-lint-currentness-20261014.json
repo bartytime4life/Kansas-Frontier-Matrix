@@ -1,0 +1,104 @@
+{
+  "receipt_id": "genrec-pass18-window-ordering-lint-currentness-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/window-ordering-lint-profile.yml",
+    "contracts/validation/window_ordering_lint_profile.md",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json",
+    "tests/validators/test_validate_window_ordering_lint_profile.py",
+    "tools/validators/validate_window_ordering_lint_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/window-ordering-lint-profile.yml": "sha256:6c097ff6592a6122cabf19fc8461fa15649d49ff84de780d2563de07143f0a58",
+    "contracts/validation/window_ordering_lint_profile.md": "sha256:c18e5590013186107054d716ec8a6769888137aadfe9b179bfb1a56c015169e1",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "sha256:624f3485db5ef89de39a0ef11dfed8ac859b2d540aae836fce4526c843857543",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "sha256:4a1ffb395f1bd73a394d517fa5b148e7e15dc8a0e2ddee86bd3f457f5dc874a5",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "sha256:27dfddf65887f2be3eb9b2dfba97dc03bb1c48b10dbc70a1ef76a65c3c5c248a",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "sha256:b88b4a5288db086c5231ff7bd92493a9c2bd1a1855c40640d03f19649887c4f8",
+    "tools/validators/validate_window_ordering_lint_profile.py": "sha256:317c45a68fed8ad4a4b3d7503f18bfabc0937c5a0fac7e733d8845b24be06c7e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "2026-10-14"
+  },
+  "prompt_or_contract": "sha256:457397cb7a73c97a92c5e35602c097215d6299f0a2b0b1524f2e4d71e82e388e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:457397cb7a73c97a92c5e35602c097215d6299f0a2b0b1524f2e4d71e82e388e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-pass18-window-ordering-lint-20260811.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:.github/workflows/window-ordering-lint-profile.yml@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/validation/window_ordering_lint_profile.md@4fd54e4e695eebd2e2a31f0b309813a352989b16"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/window-ordering-lint-profile.yml": "CONFIRMED",
+    "contracts/validation/window_ordering_lint_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "PROPOSED",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "CONFIRMED",
+    "tools/validators/validate_window_ordering_lint_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-pass18-window-ordering-lint-20260811 is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "All 7 artifact paths are bound to their current bytes on main@4fd54e4e69; 2 differ from the original receipt because they were edited after it was written."
+    },
+    {
+      "gate": "authoring-claim",
+      "outcome": "SKIPPED",
+      "reason": "This is a currentness re-observation of existing artifacts. It makes no claim to have authored or changed them."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-pass18-window-ordering-lint-20260811",
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass18-window-ordering-lint-20260811.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T07:10:00Z",
+  "emitter": "Claude Code (Claude Opus 5.5)",
+  "links": {
+    "pr_number": 5160,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Currentness successor to genrec-pass18-window-ordering-lint-20260811. The original receipt no longer matched any single commit on main: 2 of its artifacts were edited after it was written. Its live-tree replay in .github/workflows/window-ordering-lint-profile.yml now validates this successor instead. The original stays unedited, per docs/doctrine/retention.md section 3 (receipts are written once and never mutated)."
+}
