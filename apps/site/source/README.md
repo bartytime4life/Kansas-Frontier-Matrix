@@ -901,7 +901,8 @@ what those terms mean pass, and PLSS section-scale description is allowed), or
 sensitive sites (burials, mounds, archaeological sites, nests, leks, dens,
 roosts) other than counts, county-level summaries, policy, map symbols or the
 layer's own metadata abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without
-calling the model, as does first-person distress ("I'm trapped by flood water"). This keyword
+calling the model, as does distress in the first person ("I'm in my car and trapped by flood
+water", "my son is hurt"). This keyword
 gate is a first line only; the output checks above still apply to everything the model returns.
 
 The gate is measured against a labelled set of questions written separately from its unit tests,
