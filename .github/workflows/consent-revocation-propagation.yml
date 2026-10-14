@@ -69,7 +69,7 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-20260811.json \
-            --repo-root .
+            --repo-root . --artifact-git-ref d669792014ed74b46eb8d3ebc6fe7208676ee12c
       - name: Record trust boundary
         if: always()
         run: |

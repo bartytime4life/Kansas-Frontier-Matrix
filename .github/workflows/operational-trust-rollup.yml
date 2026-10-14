@@ -65,7 +65,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass12-operational-trust-rollup-20260809.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass12-operational-trust-rollup-20260809.json --repo-root . --artifact-git-ref 60b5db7c530bd147230ecd672627d603ddc54517
       - name: Record trust boundary
         if: always()
         run: |

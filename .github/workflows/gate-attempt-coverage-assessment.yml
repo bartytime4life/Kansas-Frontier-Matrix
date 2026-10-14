@@ -80,7 +80,7 @@ jobs:
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-gate-attempt-coverage-20260828.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-gate-attempt-coverage-20260828.json --repo-root . --artifact-git-ref fc2fc2011e9165c11e69d5e135004ac9331b8d91
 
       - name: Record trust boundary
         if: always()

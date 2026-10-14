@@ -80,6 +80,7 @@ jobs:
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-publication-validator-compatibility-20260810.json
+          --repo-root . --artifact-git-ref 468e087d68ef52699d4ed9c4cb1195102392d846
 
       - name: Record trust boundary
         if: always()

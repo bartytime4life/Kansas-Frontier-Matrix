@@ -68,7 +68,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-three-d-visibility-assumption-disclosure-20260811.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-three-d-visibility-assumption-disclosure-20260811.json --repo-root . --artifact-git-ref f852a94aef561e7014ad6be3eb58392adc75fe68
       - name: Record authority boundary
         if: always()
         run: |

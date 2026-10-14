@@ -76,7 +76,7 @@ jobs:
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-source-ingestion-plan-20260805.json
-          --repo-root .
+          --repo-root . --artifact-git-ref 1dfb0b44a9314fa52e6636474bafe87ede7a903e
 
       - name: Record bounded trust result
         if: always()

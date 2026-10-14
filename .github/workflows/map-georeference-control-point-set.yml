@@ -61,7 +61,7 @@ jobs:
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-georeference-control-point-set-20260806.json
-          --repo-root .
+          --repo-root . --artifact-git-ref 19a43053b5af0aff45ce052c6e5bec2c57758615
       - name: Record trust boundary
         if: always()
         run: |

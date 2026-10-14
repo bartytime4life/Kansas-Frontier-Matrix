@@ -67,7 +67,7 @@ jobs:
         run: python -m pytest tests/evidence/test_representation_fitness_assessment.py -q --strict-config --strict-markers
 
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-representation-fitness-profile-20260807.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-representation-fitness-profile-20260807.json --repo-root . --artifact-git-ref 28ad833dde3e0b4ce0a1f561e787bce6442f4279
 
       - name: Record trust boundary
         if: always()

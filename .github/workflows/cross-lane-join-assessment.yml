@@ -78,7 +78,7 @@ jobs:
           tests/joins/test_cross_lane_*.py
           -q --strict-config --strict-markers
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json --repo-root . --artifact-git-ref d046a94a8b2d52181146727d0faf263122de7402
       - name: Record trust boundary
         if: always()
         run: |
