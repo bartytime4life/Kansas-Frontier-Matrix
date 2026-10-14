@@ -84,7 +84,10 @@ acceptance. Required settings:
 - `KFM_PC_ORIGIN=https://kansasfrontiermatrix.com` (exact preview origin for preview)
 - `KFM_PC_ADMIN_TOKEN_HASH`, `KFM_PC_WORKER_TOKEN_HASH`, `KFM_PC_DATA_KEY`
 
-Retain the existing exact `VINEXT_TRUSTED_HOSTS` hosting-proxy configuration.
+Retain the exact `VINEXT_TRUSTED_HOSTS` hosting-proxy configuration for the
+intended variant, never a wildcard. The actual trusted request origin must
+match `KFM_PC_ORIGIN` before any private database is opened. Misapplied/shared
+preview settings therefore cannot silently take ownership of the live store.
 Missing settings produce a visible disabled state with no account/store
 creation. Never reuse production secrets or accounts in preview. GoDaddy's
 preview is additionally protected by its own owner login, so an ordinary PC
