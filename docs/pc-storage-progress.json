@@ -1,0 +1,22 @@
+{
+  "profile": "kfm.pc-storage-qualification-progress/v1",
+  "date": "2026-10-14",
+  "app": "q9r9beo47t",
+  "probe_revision": "bf45476486712501bc3d495214877cc5fb5f5f58",
+  "provider_documentation": "Authenticated File Manager explicitly identifies /private as durable across deploys, excluded from source ZIPs, nonpublic, and suitable for SQLite",
+  "preview_build": "Healthy status and exact probe commit observed in dashboard",
+  "local_sqlite_tests": {"passed": 2, "scope": "cross-process lock, killed-writer rollback, integrity, sentinel re-open, private permissions, symlink refusal"},
+  "local_runtime_regressions": {"passed": 23, "scope": "candidate production build on dedicated loopback server; inherited source/auth and access boundaries"},
+  "ollama_inventory": "Version 0.35.1 and qwen3:8b 500a1f067a9f present; one synthetic inference returned a citation-validated ANSWER in 16996 ms; no download or upgrade",
+  "hosted_sqlite_receipt": "Observed successful cross-process writer lock, crash rollback and integrity ok on Node 22.23.3",
+  "hosted_restart_and_redeploy": "Observed prior sentinel at boot 3 after redeployment; explicit Preview restart advanced to boot 4 with the same successful checks",
+  "filesystem": "Ceph magic 0x00c36400; implementation limited to exclusive single-writer connection, DELETE journal and FULL synchronization",
+  "replica_storage_topology": "NEEDS_VERIFICATION",
+  "public_probe_paths": "Two HTTP 403 and one encoded-path HTTP 400; no SQLite bytes; front-door observation does not establish origin controls",
+  "blocker": "Hosted PC worker, live sign-in and released-evidence acceptance require owner credential configuration and exact-head publication acceptance; private preview is provider-login protected",
+  "accounts_and_queue": "IMPLEMENTED_LOCAL_VALIDATED_INACTIVE",
+  "paid_services_added": 0,
+  "publication": "No Publish to Live action; no DNS, original Sites, billing, model or host-service changes",
+  "pull_request": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5159",
+  "restore_preview_source": "a0-godaddy-source-status-c8adcd9"
+}

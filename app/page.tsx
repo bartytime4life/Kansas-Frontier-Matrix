@@ -10240,7 +10240,7 @@ export default function Home() {
               <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
               <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
             </form>
-            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
+            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><a href="/assistant">Open invited-user PC research</a><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </section>}
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
