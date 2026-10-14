@@ -5,6 +5,8 @@ import {
   KNOWN_OVER_BLOCKS,
   QWEN_QUESTION_GATE_CORPUS,
   QWEN_QUESTION_GATE_HELDOUT,
+  QWEN_QUESTION_GATE_HELDOUT_2,
+  QWEN_QUESTION_GATE_HELDOUT_3,
   evaluateQuestionGate,
 } from "../scripts/qwen-question-gate-corpus.mjs";
 
@@ -27,28 +29,34 @@ test("the gate misses no sensitive question in the corpus", () => {
   assert.deepEqual(evaluateQuestionGate().underBlocked, []);
 });
 
-test("over-blocking in the corpus is exactly the documented list", () => {
-  const report = evaluateQuestionGate();
-  assert.deepEqual([...report.overBlocked].sort(), Object.keys(KNOWN_OVER_BLOCKS).sort());
+test("over-blocking across all sets is exactly the documented list", () => {
+  const overBlocked = [QWEN_QUESTION_GATE_CORPUS, QWEN_QUESTION_GATE_HELDOUT, QWEN_QUESTION_GATE_HELDOUT_2,
+    QWEN_QUESTION_GATE_HELDOUT_3]
+    .flatMap((cases) => evaluateQuestionGate(cases).overBlocked);
+  // Every withheld ordinary question is documented, and every documented one still occurs.
+  assert.deepEqual([...overBlocked].sort(), Object.keys(KNOWN_OVER_BLOCKS).sort());
   for (const reason of Object.values(KNOWN_OVER_BLOCKS)) assert.ok(reason.length > 20);
-  assert.ok(report.overBlockRate <= 0.05, `over-block rate ${report.overBlockRate}`);
+  assert.ok(evaluateQuestionGate().overBlockRate <= 0.05);
 });
 
-test("the held-out set is well formed, balanced and shares no question with the corpus", () => {
-  const corpus = new Set(QWEN_QUESTION_GATE_CORPUS.map((entry) => entry.question));
-  const questions = QWEN_QUESTION_GATE_HELDOUT.map((entry) => entry.question);
-  assert.equal(new Set(questions).size, questions.length);
-  assert.ok(questions.every((question) => !corpus.has(question)));
-  const report = evaluateQuestionGate(QWEN_QUESTION_GATE_HELDOUT);
-  assert.equal(report.abstainCases, 30);
-  assert.equal(report.interpretCases, 30);
-});
+for (const [name, cases, size] of [["held-out", QWEN_QUESTION_GATE_HELDOUT, 30], ["second held-out", QWEN_QUESTION_GATE_HELDOUT_2, 40],
+  ["third held-out", QWEN_QUESTION_GATE_HELDOUT_3, 40]]) {
+  test(`the ${name} set is well formed, balanced and shares no question with the corpus`, () => {
+    const corpus = new Set(QWEN_QUESTION_GATE_CORPUS.map((entry) => entry.question));
+    const questions = cases.map((entry) => entry.question);
+    assert.equal(new Set(questions).size, questions.length);
+    assert.ok(questions.every((question) => !corpus.has(question)));
+    const report = evaluateQuestionGate(cases);
+    assert.equal(report.abstainCases, size);
+    assert.equal(report.interpretCases, size);
+  });
 
-test("the gate misses no sensitive question in the held-out set and withholds only documented ones", () => {
-  const report = evaluateQuestionGate(QWEN_QUESTION_GATE_HELDOUT);
-  assert.deepEqual(report.underBlocked, []);
-  assert.deepEqual(report.overBlocked.filter((question) => !(question in KNOWN_OVER_BLOCKS)), []);
-});
+  test(`the gate misses no sensitive question in the ${name} set and withholds only documented ones`, () => {
+    const report = evaluateQuestionGate(cases);
+    assert.deepEqual(report.underBlocked, []);
+    assert.deepEqual(report.overBlocked.filter((question) => !(question in KNOWN_OVER_BLOCKS)), []);
+  });
+}
 
 test("the report counts each direction separately", () => {
   const gate = (question) => question.startsWith("block");
