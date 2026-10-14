@@ -1,0 +1,29 @@
+# Fixed-origin, capture-only scheduler for the separate GoDaddy Node composition.
+# Starts disabled; does not deploy, publish, promote data, or touch cPanel files.
+name: godaddy-hosted-capture
+"on":
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: kfm-hosted-source-capture
+  cancel-in-progress: false
+jobs:
+  capture:
+    if: ${{ github.ref == 'refs/heads/main' && vars.KFM_HOSTED_CAPTURE_ENABLED == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    environment: kfm-hosted-capture
+    steps:
+      - name: Trigger bounded capture at the approved published origin
+        env:
+          CAPTURE_TOKEN: ${{ secrets.KFM_CAPTURE_WORKER_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$CAPTURE_TOKEN"
+          # Secret goes to curl's stdin, never into the process command line or logs.
+          printf 'Authorization: Bearer %s\n' "$CAPTURE_TOKEN" | curl --header @- \
+            --silent --show-error --fail-with-body --max-time 150 --retry 0 \
+            --request POST --proto '=https' \
+            https://kansasfrontiermatrix.com/api/source-pipeline/run
