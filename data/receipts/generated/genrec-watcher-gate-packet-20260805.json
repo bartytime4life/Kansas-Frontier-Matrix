@@ -22,9 +22,9 @@
     "tools/validators/watchers/validate_watcher_gate_packet.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/watcher-gate-packet.yml": "sha256:82040d41c3fe7c83c3cf348f0bffb3089573547bb59edfa9d97d3304c957ed4d",
-    "contracts/watchers/watcher_gate_packet.md": "sha256:be719135c657d9a23ab507727630444df8c4fd61227fb91c70e78c6983044a50",
-    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "sha256:7e6a8fad43dce714827e539d1f5134f8b075ca4d9e656357fb7e31a3afe47f76",
+    ".github/workflows/watcher-gate-packet.yml": "sha256:5b5b51246b429c0d528fd4a1db4fe2bcc3c97d0b77bf561dcd1f7bbd5308c372",
+    "contracts/watchers/watcher_gate_packet.md": "sha256:8bfc1241d912b117d88cd481971c6abf641154d9562fcf9dcdd1a7ba023cd307",
+    "fixtures/contracts/v1/watchers/watcher_gate_packet/README.md": "sha256:ed01d07e92c0742c31318b6cb5c6a01a5a558738654dabff999a5349895d449e",
     "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/expected_findings_manifest.json": "sha256:553503463f2693a8ba92fcbf4311f56db5b135a80383fb187b84977b58dc2d11",
     "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_decision_mismatch.json": "sha256:bc3ae14944c9f6439b01033d6d13540acc85908c67c001c679c5cd62fdcedd2a",
     "fixtures/contracts/v1/watchers/watcher_gate_packet/invalid/invalid_exit_code_mismatch.json": "sha256:007f9af12a78d08d9df1cd893eb301122112b07da8ef4fc90e88b505a673d34c",

@@ -70,7 +70,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-window-ordering-lint-20260811.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-window-ordering-lint-currentness-20261014.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
