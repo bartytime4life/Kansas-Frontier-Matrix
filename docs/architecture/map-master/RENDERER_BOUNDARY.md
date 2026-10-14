@@ -699,6 +699,14 @@ distinguishes regex literals from division before comment masking. This prevents
 contents from hiding active acquisition or exposing inert comment examples without
 treating a quoted CDN URL or active stylesheet import as inert.
 
+Import, `require`, re-export, and stylesheet `@import` forms are matched on a second
+view that also blanks string and template-literal contents (keeping delimiters,
+`${...}` expressions, and offsets) and, in HTML, everything outside tags and
+`<script>`/`<style>` contents. Specifiers are read back from the original text, so a
+quoted or `<pre>` example of an import is data, not acquisition. If that lexer meets
+an unterminated literal it falls back to the comment-masked view, which can only
+over-report. Profile `kfm-maplibre-acquisition-inventory-v16` carries this change.
+
 It treats only `packages/maplibre/**` as the accepted raw-renderer seam. Acquisition confined to that package yields structural `HOLD` while production runtime activation remains unresolved. Acquisition elsewhere produces `ACQUISITION_OUTSIDE_CANDIDATE_SEAM` and fails closed; parallel active package homes also fail closed. Documentation links, CSS class assertions, and package-local imports whose filenames contain `maplibre` are not renderer acquisition.
 
 After the Sites fail-closed repair, profile `kfm-maplibre-acquisition-inventory-v14`
