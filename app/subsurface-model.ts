@@ -12,9 +12,9 @@ export type Borehole = {
 export type DisplaySource = { id: string; title: string; url: string; retrievedAt: string; sourceTime: string; limitation: string; sha256: string };
 export type SubsurfaceManifest = {
   version: 1; capturedAt: string; sources: DisplaySource[];
-  tiles: { id: string; bounds: [number, number, number, number]; url: string; count: number; sha256: string }[];
+  tiles: { id: string; bounds: [number, number, number, number]; url: string; count: number; sha256: string; decodedSha256?: string }[];
   totals: Record<string, number>; counties: { name: string; coordinates: Position; count: number }[];
-  locator?: { url: string; sha256: string };
+  locator?: { url: string; sha256: string; decodedSha256?: string };
 };
 export type SubsurfaceContext = {
   version: 1; capturedAt: string; anchor: Position; pinned: boolean; transect: Position[];
