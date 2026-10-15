@@ -4,7 +4,10 @@ import test from "node:test";
 import ts from "typescript";
 
 const source = await readFile(new URL("../app/water-flow-context.ts", import.meta.url), "utf8");
-const javascript = ts.transpileModule(source, {
+const geometrySource = await readFile(new URL("../app/water-flow-motion.ts", import.meta.url), "utf8");
+const geometryJs = ts.transpileModule(geometrySource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+const geometryUrl = `data:text/javascript;base64,${Buffer.from(geometryJs).toString("base64")}`;
+const javascript = ts.transpileModule(source.replace('"./water-flow-motion"', JSON.stringify(geometryUrl)), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   fileName: "water-flow-context.ts",
 }).outputText;
@@ -39,4 +42,14 @@ test("observation cues distinguish zero, missing, rising, and relative loaded ra
   assert.equal(water.waterReadingCue({ ...base, value: 10, previousValue: 20 }, observations).kind, "falling");
   assert.equal(water.waterReadingCue({ ...base, value: 10, previousValue: null }, observations).kind, "uncompared");
   assert.equal(water.waterReadingCue(base, [{ value: null }]).rangePosition, null);
+});
+
+
+test("legacy bounded directions share the fixed flowline envelope without moving vertices", () => {
+  for (const coordinates of [
+    [[-102.24, 38], [-102.23, 38]], [[-98, 36.76], [-98, 36.77]], [[-98, 40.23], [-98, 40.24]],
+  ]) assert.deepEqual(water.boundedDirectionPaths({features:[channel(1,1,coordinates)]})[0].coordinates, coordinates);
+  for (const point of [[-102.26,38],[-94.39,38],[-98,36.74],[-98,40.26]]) {
+    assert.deepEqual(water.boundedDirectionPaths({features:[channel(1,1,[point,[-98,38]])]}),[]);
+  }
 });

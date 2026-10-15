@@ -31,7 +31,7 @@ jobs:
           tests/cutaway-model.test.mjs tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
           tests/local-qwen-bridge.test.mjs tests/qwen-question-gate-corpus.test.mjs
           tests/water-motion-canvas.test.mjs tests/water-flow-motion.test.mjs
-          tests/water-flow-sync.test.mjs tests/water-path-analysis.test.mjs tests/scene-studio.test.mjs tests/streamflow-startup* tests/scene-navigation*
+          tests/water-flow-sync.test.mjs tests/water-path-analysis.test.mjs tests/water-flow-context.test.mjs tests/water-direction-route.test.mjs tests/scene-studio.test.mjs tests/streamflow-startup* tests/scene-navigation*
       - name: Exercise real Node HTTP boundary
         shell: bash
         run: |
