@@ -9,16 +9,23 @@ created: 2026-05-20
 updated: 2026-05-20
 policy_label: public
 related:
-  - docs/sources/catalog/blm/README.md
-  - docs/sources/catalog/README.md
-  - docs/sources/catalog/blm/IDENTITY.md
-  - docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/_examples/stac-item-example.json
-  - docs/doctrine/directory-rules.md
+  - "docs/sources/catalog/blm/README.md"
+  - "docs/sources/catalog/README.md"
+  - "docs/sources/catalog/_examples/stac-item-example.json"
+  - "docs/doctrine/directory-rules.md"
 tags: [kfm, docs, sources, catalog, blm, glo, plss, cadastral, historical]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (KFM-P2-IDEA-0016, KFM-P2-PROG-0011) and Pass 10 (C4-01); descriptor fields intentionally not restated here."
+owning_root: docs/
+responsibility: "Human-readable BLM GLO Field Notes guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/sources/catalog/blm/IDENTITY.md"
+  - "docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

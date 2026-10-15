@@ -9,17 +9,13 @@ created: 2026-05-20
 updated: 2026-05-20
 policy_label: public
 related:
-  - docs/sources/catalog/ahgp/README.md
-  - docs/sources/catalog/ahgp/IDENTITY.md
-  - docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ahgp/NAMING.md
-  - docs/sources/catalog/ahgp/OPEN-QUESTIONS.md
-  - docs/sources/catalog/ahgp/cemetery-transcriptions.md
-  - docs/sources/catalog/ahgp/census-transcriptions.md
-  - docs/sources/catalog/README.md
-  - docs/doctrine/directory-rules.md
-  - docs/domains/people-dna-land/README.md
-  - docs/domains/settlements-infrastructure/README.md
+  - "docs/sources/catalog/ahgp/README.md"
+  - "docs/sources/catalog/ahgp/cemetery-transcriptions.md"
+  - "docs/sources/catalog/ahgp/census-transcriptions.md"
+  - "docs/sources/catalog/README.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/domains/people-dna-land/README.md"
+  - "docs/domains/settlements-infrastructure/README.md"
 tags: [kfm, docs, sources, catalog, ahgp, county-history, town-history, people-dna-land, settlements-infrastructure, anti-collapse]
 notes:
   - "v0.3 — presentation pass applied to a product overlay specialized for county and town histories."
@@ -28,6 +24,17 @@ notes:
   - "Not an activation document. SourceActivationDecision for SRC-AHGP remains gated on the family-level prerequisites list."
   - "Anti-collapse posture is CONFIRMED KFM doctrine: §24.1.2 Master Source-Role Anti-Collapse Register lists 'Administrative compilation cited as observation' as a DENY-publication failure mode in the People/Land, Settlements, and Roads domains."
   - "Source-role enum fit (`administrative`) is PROPOSED — see OPEN-AHGP-CTH-02 (private 19th-century publishers vs. agency-produced records, pending ADR-S-04)."
+owning_root: docs/
+responsibility: "Human-readable AHGP County and Town Histories guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/sources/catalog/ahgp/IDENTITY.md"
+  - "docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md"
+  - "docs/sources/catalog/ahgp/NAMING.md"
+  - "docs/sources/catalog/ahgp/OPEN-QUESTIONS.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # AHGP County and Town Histories
@@ -74,7 +81,7 @@ INFERRED: Within the AHGP record-class taxonomy, county and town histories are t
 
 ## Source authority
 
-See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
+See `data/registry/sources/ahgp/` (PROPOSED; target unavailable) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
 
 **Product-specific descriptor overlay (PROPOSED, anchored in §24.1.1–§24.1.3 doctrine and prior AHGP family work):**
 

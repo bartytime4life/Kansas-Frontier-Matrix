@@ -9,20 +9,30 @@ created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/trust-posture.md
-  - docs/doctrine/evidence-model.md
-  - docs/doctrine/source-roles.md
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/authority-ladder.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/truth-posture.md"
 tags: [kfm, doctrine, derived, projections, renderer, trust-membrane]
 notes:
   - Codifies "Derived artifacts are not sovereign truth" as a normative KFM doctrine.
   - Operationalizes ai-build-operating-contract.md §10.7 and the anti-pattern in §1.15.
   - Pinned to ai-build-operating-contract.md CONTRACT_VERSION = "3.0.0".
   - Owner team and doc_id UUID require verification against the repository.
+owning_root: docs/
+responsibility: "Human-readable Derived Stays Derived guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/doctrine/evidence-model.md"
+  - "docs/doctrine/source-roles.md"
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/trust-posture.md -> docs/doctrine/truth-posture.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Derived Stays Derived
@@ -212,7 +222,7 @@ When a contributor or AI assistant asks *"where does this fact actually live?"*,
 
 ## 8. Rebuild path
 
-Every derived artifact MUST be rebuildable. The flow below is the doctrinal shape; the canonical state machine is the release state machine in [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) (`NEEDS VERIFICATION` — exact path).
+Every derived artifact MUST be rebuildable. The flow below is the doctrinal shape; the canonical state machine is the release state machine in `docs/architecture/release-and-publication.md` (PROPOSED; target unavailable) (`NEEDS VERIFICATION` — exact path).
 
 ```mermaid
 flowchart TB
@@ -670,10 +680,10 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary documentation authority; parallel structure for the documentation plane. `[CONFIRMED sibling.]`
 - [`docs/doctrine/corrections-first-class.md`](./corrections-first-class.md) — How canonical sources change after publication; D-3 (subordinate) and D-4 (withdrawable) connect here. `[CONFIRMED sibling.]`
 - [`docs/doctrine/truth-posture.md`](./truth-posture.md) <sub>PROPOSED</sub> — Cite-or-abstain rule; the public-surface posture this doctrine implements.
-- [`docs/doctrine/evidence-model.md`](./evidence-model.md) <sub>PROPOSED</sub> — `EvidenceRef`, `EvidenceBundle`, and the citation closure rule that grounds D-1 (named canonical source).
+- `docs/doctrine/evidence-model.md` (PROPOSED; target unavailable) <sub>PROPOSED</sub> — `EvidenceRef`, `EvidenceBundle`, and the citation closure rule that grounds D-1 (named canonical source).
 - [`docs/sources/source-roles.md`](../sources/source-roles.md) <sub>PROPOSED</sub> — The data source-role taxonomy.
-- [`Master_MapLibre_Components-Functions-Features_v2_1_FULL.md`](../standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md) <sub>PROPOSED path</sub> — The renderer-is-not-truth quotation in §10 originates here.
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) <sub>PROPOSED path</sub> — The eleven-step release state machine that produces canonical sources before any derived artifact is built.
+- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` (PROPOSED; target unavailable) <sub>PROPOSED path</sub> — The renderer-is-not-truth quotation in §10 originates here.
+- `docs/architecture/release-and-publication.md` (PROPOSED; target unavailable) <sub>PROPOSED path</sub> — The eleven-step release state machine that produces canonical sources before any derived artifact is built.
 - `schemas/contracts/v1/receipts/run_receipt.schema.json` — `RunReceipt` machine schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/manifests/layer_manifest.schema.json` — `LayerManifest` machine schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/manifests/tile_artifact_manifest.schema.json` — `TileArtifactManifest` machine schema. `[PROPOSED path.]`

@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid-TBD>
+doc_id: kfm://doc/doctrine/time-aware
 title: Time-Awareness Doctrine
 type: standard
 version: v1.1
@@ -9,39 +9,19 @@ created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/evidence-first.md
-  - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/retention.md
-  - docs/doctrine/sensitivity.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/map-first.md
-  - docs/doctrine/trust-posture.md
-  - docs/standards/EDTF_PROFILE.md
-  - docs/standards/OWL_TIME_PROFILE.md
-  - docs/standards/CIDOC_CRM_TIME.md
-  - docs/standards/STAC_TEMPORAL.md
-  - docs/standards/ALLEN_RELATIONS.md
-  - docs/standards/PROV_O_TIME.md
-  - docs/policy/calendar_handling.md
-  - docs/policy/timezone_handling.md
-  - docs/runbooks/RB-TEMPORAL-RECONCILIATION.md
-  - schemas/contracts/v1/temporal_scope.schema.json
-  - schemas/contracts/v1/edtf_value.schema.json
-  - schemas/contracts/v1/time_uncertainty.schema.json
-  - schemas/contracts/v1/calendar_flag.schema.json
-  - schemas/contracts/v1/allen_relation.schema.json
-  - schemas/contracts/v1/coalescing_receipt.schema.json
-  - control_plane/time_uncertainty_vocabulary.yaml
-  - control_plane/calendar_vocabulary.yaml
-  - control_plane/naive_reason_vocabulary.yaml
-  - policy/temporal/
-  - tests/temporal/
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/doctrine/derived-stays-derived.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/retention.md"
+  - "docs/doctrine/sensitivity.md"
+  - "docs/doctrine/authority-ladder.md"
+  - "docs/doctrine/ai-as-assistant.md"
+  - "docs/doctrine/map-first.md"
+  - "docs/doctrine/truth-posture.md"
 tags: [kfm, doctrine, time, temporal, edtf, owl-time, allen, prov-o, bitemporal, calendar]
 notes:
   - Draft doctrine v1.1. Pinned to ai-build-operating-contract.md CONTRACT_VERSION = "3.0.0".
@@ -49,6 +29,37 @@ notes:
   - Distinguishes time-awareness (temporal modeling of WHAT happened WHEN) from freshness (whether a release is still current per policy-aware §10 / retention §5).
   - Internal field names on EvidenceBundle, EvidenceRef, and event nodes are PROPOSED at the schema level; the responsibilities are doctrinal.
   - Standards references (EDTF, OWL-Time, CIDOC-CRM E52, STAC, Allen, PROV-O) are CONFIRMED. Subset-of-EDTF accepted patterns are PROPOSED operational subset.
+previous_placeholder_doc_id: "kfm://doc/<uuid-TBD>"
+owning_root: docs/
+responsibility: "Human-readable Time-Awareness Doctrine guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/standards/EDTF_PROFILE.md"
+  - "docs/standards/OWL_TIME_PROFILE.md"
+  - "docs/standards/CIDOC_CRM_TIME.md"
+  - "docs/standards/STAC_TEMPORAL.md"
+  - "docs/standards/ALLEN_RELATIONS.md"
+  - "docs/standards/PROV_O_TIME.md"
+  - "docs/policy/calendar_handling.md"
+  - "docs/policy/timezone_handling.md"
+  - "docs/runbooks/RB-TEMPORAL-RECONCILIATION.md"
+  - "schemas/contracts/v1/temporal_scope.schema.json"
+  - "schemas/contracts/v1/edtf_value.schema.json"
+  - "schemas/contracts/v1/time_uncertainty.schema.json"
+  - "schemas/contracts/v1/calendar_flag.schema.json"
+  - "schemas/contracts/v1/allen_relation.schema.json"
+  - "schemas/contracts/v1/coalescing_receipt.schema.json"
+  - "control_plane/time_uncertainty_vocabulary.yaml"
+  - "control_plane/calendar_vocabulary.yaml"
+  - "control_plane/naive_reason_vocabulary.yaml"
+  - "policy/temporal/"
+  - "tests/temporal/"
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/trust-posture.md -> docs/doctrine/truth-posture.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Time-Awareness Doctrine
@@ -688,15 +699,15 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI cannot emit canonical date assertions; AI may draft date inferences from prose, a domain steward decides; `AIReceipt` + `GENERATED_RECEIPT.json` required. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — §7.1 names six time kinds at the public map UI surface; §6.1 of this doctrine names the underlying seven dimensions (six + transaction time). See [OQ-TA-07](#17-open-questions-register). `[CONFIRMED sibling.]`
 - [`docs/doctrine/truth-posture.md`](./truth-posture.md) — `BOUNDED`, `LINEAGE`, `CONFLICTED` authoring/runtime labels relevant to temporal uncertainty and superseded values. `[NEEDS VERIFICATION — exact filename.]`
-- [`docs/standards/EDTF_PROFILE.md`](../standards/EDTF_PROFILE.md) — KFM's accepted EDTF subset + parser choice. `[TODO — companion standards doc proposed by this doctrine.]`
-- [`docs/standards/OWL_TIME_PROFILE.md`](../standards/OWL_TIME_PROFILE.md) — OWL-Time emission profile. `[TODO.]`
-- [`docs/standards/CIDOC_CRM_TIME.md`](../standards/CIDOC_CRM_TIME.md) — CIDOC E52 Time-Span usage. `[TODO.]`
-- [`docs/standards/STAC_TEMPORAL.md`](../standards/STAC_TEMPORAL.md) — STAC `datetime` / `start_datetime` / `end_datetime` conventions. `[TODO.]`
-- [`docs/standards/ALLEN_RELATIONS.md`](../standards/ALLEN_RELATIONS.md) — Allen relation emission rules. `[TODO.]`
-- [`docs/standards/PROV_O_TIME.md`](../standards/PROV_O_TIME.md) — PROV-O property usage for transaction time. `[TODO.]`
-- [`docs/policy/calendar_handling.md`](../policy/calendar_handling.md) — Calendar conversion and display rules. `[TODO.]`
-- [`docs/policy/timezone_handling.md`](../policy/timezone_handling.md) — Timezone tagging and `naive_reason` rules. `[TODO.]`
-- [`docs/runbooks/RB-TEMPORAL-RECONCILIATION.md`](../runbooks/RB-TEMPORAL-RECONCILIATION.md) — Day-2 routine for reconciling multi-source temporal claims. `[TODO — new runbook proposed by this doctrine.]`
+- `docs/standards/EDTF_PROFILE.md` (PROPOSED; target unavailable) — KFM's accepted EDTF subset + parser choice. `[TODO — companion standards doc proposed by this doctrine.]`
+- `docs/standards/OWL_TIME_PROFILE.md` (PROPOSED; target unavailable) — OWL-Time emission profile. `[TODO.]`
+- `docs/standards/CIDOC_CRM_TIME.md` (PROPOSED; target unavailable) — CIDOC E52 Time-Span usage. `[TODO.]`
+- `docs/standards/STAC_TEMPORAL.md` (PROPOSED; target unavailable) — STAC `datetime` / `start_datetime` / `end_datetime` conventions. `[TODO.]`
+- `docs/standards/ALLEN_RELATIONS.md` (PROPOSED; target unavailable) — Allen relation emission rules. `[TODO.]`
+- `docs/standards/PROV_O_TIME.md` (PROPOSED; target unavailable) — PROV-O property usage for transaction time. `[TODO.]`
+- `docs/policy/calendar_handling.md` (PROPOSED; target unavailable) — Calendar conversion and display rules. `[TODO.]`
+- `docs/policy/timezone_handling.md` (PROPOSED; target unavailable) — Timezone tagging and `naive_reason` rules. `[TODO.]`
+- `docs/runbooks/RB-TEMPORAL-RECONCILIATION.md` (PROPOSED; target unavailable) — Day-2 routine for reconciling multi-source temporal claims. `[TODO — new runbook proposed by this doctrine.]`
 - `schemas/contracts/v1/temporal_scope.schema.json` — `TemporalScope` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/edtf_value.schema.json` — `EDTFValue` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/time_uncertainty.schema.json` — `TimeUncertainty` schema. `[PROPOSED path.]`
