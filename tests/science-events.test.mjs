@@ -67,3 +67,24 @@ test("Observatory exposes the responsive Science Lab, real tools and archive not
   assert.match(sources, /Science event visual grammar/);
   assert.match(intake, /SCIENCE_EVENTS\.map/);
 });
+
+
+test("science search uses honest summaries and keeps filters independent of source state", () => {
+  for (const event of science.SCIENCE_EVENTS) assert.ok(science.scienceEventSummary(event).length > 30, event.id);
+  assert.deepEqual(science.filterScienceEvents(science.SCIENCE_EVENTS, "all", "SNOW station").map(event => event.id), ["snow"]);
+  assert.deepEqual(science.filterScienceEvents(science.SCIENCE_EVENTS, "archives", "snow"), []);
+  assert.equal(science.filterScienceEvents(science.SCIENCE_EVENTS, "all", "unlisted-phenomenon").length, 0);
+  assert.match(science.scienceEventSummary(science.SCIENCE_EVENTS.find(event => event.id === "floods")), /does not map inundation/);
+  assert.equal(science.SCIENCE_SUPPORT_LABELS.connected, "MAP LAYER", "a configured route does not establish current source connectivity");
+  assert.deepEqual(science.filterScienceEvents(science.SCIENCE_EVENTS, "connected", "").map(event => event.id), science.SCIENCE_EVENTS.filter(event => event.trackId).map(event => event.id), "map layers include configured reference tracks without claiming current availability");
+});
+
+test("Explorer continuation keeps the exact event year without admitting unsupported layers", () => {
+  const road = new URL(science.scienceExplorerHref("roads", "1918-05-01T12:00:00Z"), "https://example.test");
+  assert.equal(road.pathname, "/"); assert.equal(road.searchParams.get("t"), "1918"); assert.equal(road.searchParams.get("ctx"), "kdot-roads");
+  assert.equal(road.searchParams.get("layerView"), "selected");
+  const terrain = new URL(science.scienceExplorerHref("elevation", "2026-10-15T12:00:00Z"), "https://example.test");
+  assert.equal(terrain.searchParams.get("scene"), "elevation-3d"); assert.equal(terrain.searchParams.get("ctx"), "usgs-3dep-hillshade");
+  for (const cursor of [null, "", "not-a-date", "1799-01-01T00:00:00Z", "2026-02-30T00:00:00Z", "2025-02-29T00:00:00Z", "2026-13-01T00:00:00Z"]) assert.equal(science.scienceExplorerHref("roads", cursor), null);
+  for (const id of ["tornadoes", "erosion", "private-parcels", "https://untrusted.test"]) assert.equal(science.scienceExplorerHref(id, "2026-10-15T12:00:00Z"), null);
+});

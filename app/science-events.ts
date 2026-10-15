@@ -23,12 +23,12 @@ export type ScienceEventSpec = Readonly<{
 }>;
 
 export const SCIENCE_SUPPORT_LABELS: Readonly<Record<ScienceSupport, string>> = Object.freeze({
-  connected: "CONNECTED",
-  mixed: "PARTLY CONNECTED",
-  download: "DOWNLOAD",
-  derived: "DERIVE",
+  connected: "MAP LAYER",
+  mixed: "RELATED CONTEXT",
+  download: "SOURCE ARCHIVE",
+  derived: "METHOD ONLY",
   reference: "REFERENCE",
-  steward: "STEWARD DATA",
+  steward: "REVIEWED INPUT NEEDED",
 });
 
 // This registry is a display contract, not a claim that every carrier is live.
@@ -206,4 +206,54 @@ export function scienceProbeGeoJSON(points: readonly ScienceCoordinate[]): Featu
   if (coordinates.length === 2) features.push({ type: "Feature", properties: { kind: "line" }, geometry: { type: "LineString", coordinates } });
   coordinates.forEach((coordinate, index) => features.push({ type: "Feature", properties: { kind: "vertex", sequence: index + 1 }, geometry: { type: "Point", coordinates: coordinate } }));
   return { type: "FeatureCollection", features };
+}
+
+
+/** Plain-language descriptions of the connected display, not capability promises. */
+const SCIENCE_SUMMARIES: Readonly<Record<string, string>> = {
+  tornadoes: "Find recorded tornado reports in the source archive. A reviewed damage-path layer is not connected here.",
+  floods: "Inspect station discharge alongside flood-event references. This view does not map inundation.",
+  history: "Find historical map editions. Their georeferencing, dates and reuse terms require separate review.",
+  erosion: "Review what is needed to compare two elevation surveys. No erosion or deposition surface is connected.",
+  elevation: "Open the Explorer terrain tools to examine relief and profiles as display context.",
+  cities: "Explore Census county context. Historical city boundaries and settlement histories need separate records.",
+  roads: "Open Kansas road context in the Explorer. The present basemap is not a historical road network.",
+  "trade-routes": "Find source maps for documented routes. No reviewed route layer is connected here.",
+  snow: "Inspect daily weather station records, which can include snowfall and snow depth. No continuous statewide snow field is supplied.",
+  ice: "Find source records for ice events. No continuous ice-thickness surface is connected.",
+  foliage: "View generalized plant-occurrence counts by year. These records do not measure greenness or vegetation cover.",
+  fauna: "Explore generalized animal-occurrence counts by year. These records do not trace animal movement.",
+  smoke: "View satellite-analyzed smoke footprints during supported source intervals.",
+  "water-levels": "Inspect station discharge samples and gaps. The connected values do not supply gauge stage or flood extent.",
+  earthquakes: "Inspect cataloged origin times, magnitude and depth. Missing records remain unknown.",
+  radar: "View listed radar mosaics at their actual validity times, with archive gaps kept visible.",
+  geology: "Inspect mapped surface geology and its unit legend. The event cursor does not change rock age.",
+  resources: "Compare mapped symbol counts by county and edition. Missing symbols are not proof of absent resources.",
+};
+export const scienceEventSummary = (event: ScienceEventSpec): string => SCIENCE_SUMMARIES[event.id] ?? event.title;
+export type ScienceFilter = "all" | "connected" | "archives" | "method";
+export function filterScienceEvents(events: readonly ScienceEventSpec[], filter: ScienceFilter, query: string) {
+  const words = query.slice(0, 200).trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  return events.filter(event => (filter === "all"
+    || filter === "connected" && Boolean(event.trackId)
+    || filter === "archives" && (event.support === "download" || event.support === "steward")
+    || filter === "method" && (event.support === "derived" || event.support === "reference"))
+    && words.every(word => `${event.title} ${scienceEventSummary(event)} ${event.sourceLabel}`.toLocaleLowerCase().includes(word)));
+}
+
+/** These two destinations use existing Explorer owners, with an explicit map year. */
+export function scienceExplorerHref(id: string, cursor: string | null): string | null {
+  if (!cursor || !/^\d{4}-\d{2}-\d{2}T/.test(cursor) || !Number.isFinite(Date.parse(cursor))) return null;
+  const day = cursor.slice(0, 10);
+  const dayTime = Date.parse(`${day}T00:00:00Z`);
+  if (!Number.isFinite(dayTime) || new Date(dayTime).toISOString().slice(0, 10) !== day) return null;
+  const year = new Date(cursor).getUTCFullYear();
+  if (year < 1800 || year > 9999) return null;
+  const params = new URLSearchParams({ t: String(year), layerView: "selected" });
+  if (id === "roads") params.set("ctx", "kdot-roads");
+  else if (id === "elevation") {
+    params.set("ctx", "usgs-3dep-hillshade");
+    params.set("scene", "elevation-3d"); params.set("mapui", "open"); params.set("maptab", "scene");
+  } else return null;
+  return `/?${params}`;
 }
