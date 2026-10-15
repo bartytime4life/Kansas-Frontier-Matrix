@@ -7,6 +7,8 @@ import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
 import { FrameCheck } from "./frame-check";
+import { MapStartersControl } from "./map-starters-control";
+import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
@@ -1320,6 +1322,7 @@ export default function Home() {
   const [visibility, setVisibility] = useState<Record<string, boolean>>(defaultVisibility);
   const [opacity, setOpacity] = useState<Record<string, number>>(defaultOpacity);
   const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
+  const [layerPreferencesReady, setLayerPreferencesReady] = useState(false);
   const [buildYearCurrent, setBuildYearCurrent] = useState(true);
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
   const [officialReadPhases, setOfficialReadPhases] = useState<Partial<Record<OfficialContextId, "queued" | "fetching">>>({});
@@ -2208,6 +2211,17 @@ export default function Home() {
     return [source.id, { selected: officialVisibility[source.id], held, state: officialStates[source.id],
       canDisplay: styleReady && !held && view.zoom >= sourceMinimumZoom(source) && officialOpacity[source.id] > 0 }];
   })) as Record<OfficialContextId, CatalogStatus>, [effectiveOfficialVisibility, officialOpacity, officialStates, officialVisibility, projection, styleReady, view.zoom]);
+  const starterAccess = useMemo<StarterAccessMap>(() => {
+    const requested = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, true])) as Record<OfficialContextId, boolean>;
+    const eligible = officialContextVisibilityForFrame(requested, temporalQuery.frame, buildYearCurrent);
+    return Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => {
+      const needsFlatMap = projection === "globe" && (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER");
+      return [source.id, { held: !eligible[source.id] || needsFlatMap, unavailable: officialStates[source.id] === "error",
+        guidance: !eligible[source.id] ? "Held at this map time; use the timeline to choose a supported time"
+          : needsFlatMap ? "Held in Globe; choose the flat map to use this source"
+          : view.zoom < sourceMinimumZoom(source) ? `Appears at zoom ${sourceMinimumZoom(source)}+` : undefined }];
+    }));
+  }, [buildYearCurrent, officialStates, projection, temporalQuery.frame, view.zoom]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -3694,6 +3708,19 @@ export default function Home() {
     }
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshSelectedStreamflow, runtimeOfficialVisibility]);
 
+  const applyStarterContext = (ids: readonly OfficialContextId[], title: string) => {
+    // Revalidate at the owning state boundary. No camera, time, opacity, release or specialist-owner writes.
+    const plan = starterPlan(ids, OFFICIAL_CONTEXT_SOURCES, starterAccess);
+    if (ids.length && !plan.selected.length) { announce("Starter sources are held or unavailable; current layers remain selected"); return; }
+    const changes = contextSelectionChanges(plan.selected, OFFICIAL_CONTEXT_SOURCES, officialVisibilityRef.current);
+    changes.forEach(change => setOfficialContextVisible(change.id, change.visible));
+    setOfficialSourceQuery("");
+    setOfficialWorkspace("all");
+    setOfficialCatalogFilter("all");
+    setLayerCatalogView("selected");
+    announce(`${title}; ${plan.selected.length} public context layers selected. Camera and source dates retained.`);
+  };
+
   const retryOfficialLayer = (id: OfficialContextId) => {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (id === "nws-forecast-wind") { setWindArrowReloadToken(value => value + 1); return; }
@@ -4778,8 +4805,9 @@ export default function Home() {
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
       const knownOfficialIds = new Set<OfficialContextId>(OFFICIAL_CONTEXT_SOURCES.map((source) => source.id));
-      const restoredOfficialIds = params.get("ctx")?.split(",").filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
-      const nextOfficialVisibility = params.has("ctx")
+      const preferredIds = preferredContextIds(params, readContextPreference(OFFICIAL_CONTEXT_SOURCES));
+      const restoredOfficialIds = preferredIds?.filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
+      const nextOfficialVisibility = preferredIds !== null
         ? Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, restoredOfficialIds.includes(source.id)])) as Record<OfficialContextId, boolean>
         : defaultOfficialVisibility;
       officialVisibilityRef.current = nextOfficialVisibility;
@@ -4984,6 +5012,7 @@ export default function Home() {
         setRightOpen(false);
       }
       explorerRestoredRef.current = true;
+      setLayerPreferencesReady(true);
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
 
   useEffect(() => {
@@ -9370,6 +9399,10 @@ export default function Home() {
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <MapStartersControl sources={OFFICIAL_CONTEXT_SOURCES} access={starterAccess} visibility={officialVisibility} selectionReady={layerPreferencesReady}
+            sourceStatus={id => officialVisibility[id] ? catalogDisplayStatus(officialCatalogStatuses[id])
+              : officialStates[id] === "idle" ? "Available to request · response not checked" : `Not selected · ${officialStates[id]}`}
+            onApply={applyStarterContext} />
           <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
           <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
           <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />

@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-purpose-map-starters-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/explorer-controls.css",
+    "apps/site/source/app/map-starters-control.tsx",
+    "apps/site/source/app/map-starters.ts",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/docs/topic-organization.md",
+    "apps/site/source/tests/map-starters.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/explorer-controls.css": "sha256:9e87cbcbdeced1c325331a07b648649e5f65d076ada0ffce0435aa5febd481a7",
+    "apps/site/source/app/map-starters-control.tsx": "sha256:ef3428da92ec30bcde52e4477d1f86f430ee2423d9839d8077433a1cc20504da",
+    "apps/site/source/app/map-starters.ts": "sha256:c7a51eae33f179f94b4c3cc1d5c64594425ce64833e613a1f55463cef6a3ea11",
+    "apps/site/source/app/page.tsx": "sha256:b2b73442699af7570fe32b0958de78329f76285376a84fe7915f3bb948a8ea61",
+    "apps/site/source/docs/topic-organization.md": "sha256:fdbd6eed2f361ae55a8182a20c601a465e7a384965ef20d41073e42994b8bc66",
+    "apps/site/source/tests/map-starters.test.mjs": "sha256:d011d04d417113a2f9513fb4b2f6897394d673d3a2a17952495e2a130fa7a919"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:apps/site/source/app/live-context.ts@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:apps/site/source/app/layer-workspaces.ts@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:apps/site/source/app/page.tsx@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:docs/doctrine/directory-rules.md@9620b21bca3a3da2fd49a5edda05d8a60a842c47"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/explorer-controls.css": "CONFIRMED",
+    "apps/site/source/app/map-starters-control.tsx": "CONFIRMED",
+    "apps/site/source/app/map-starters.ts": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/docs/topic-organization.md": "CONFIRMED",
+    "apps/site/source/tests/map-starters.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused starter tests",
+      "outcome": "PASS",
+      "reason": "node tests/map-starters.test.mjs: 9 pass, 0 fail. Real public allowlist, held/failed/private/unknown sources, actual page callbacks, unchanged reselection, reset/customization, bounded local storage, URL precedence, accessible native control interactions and storage failures."
+    },
+    {
+      "gate": "Adjacent changed-area regression",
+      "outcome": "PASS",
+      "reason": "Six test files pass: map-starters, layer-explorer, topic-organization, explorer-layer-history, mobile-compatibility and security-boundaries."
+    },
+    {
+      "gate": "Production build and TypeScript",
+      "outcome": "PASS",
+      "reason": "npm run build and tsc --noEmit --incremental false pass; source and built public assets pass existing subsurface containment. Existing installed Site dependencies reused; no fresh dependency installation/audit is claimed."
+    },
+    {
+      "gate": "Changed TypeScript lint",
+      "outcome": "PASS",
+      "reason": "New helpers/control have zero warnings/errors. page.tsx has zero errors and the same 42 warning messages as exact base."
+    },
+    {
+      "gate": "Full Node file run",
+      "outcome": "FAIL",
+      "reason": "Candidate: 198 test files, 189 pass, 9 fail; exact base: 197 files, 188 pass, same 9 fail. Seven direct failure diagnostics are listen EPERM on loopback; API connection storage and daily archive report pending promises. These are file-level counts, not total nested assertions. No full-suite pass is claimed."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Exact base and candidate both PASS: 0 new drift, 0 invariant failures, 93 identical baselined warnings."
+    },
+    {
+      "gate": "Native Site recorded mirror parity",
+      "outcome": "FAIL",
+      "reason": "Candidate MIRROR_REVIEW_REQUIRED; exact base passes content-only parity with review pending. UI candidate changes intentionally diverge from recorded native v268. Existing receipt/selector are preserved. Reconciliation and review are required before mirror acceptance; no hosted equivalence is claimed."
+    },
+    {
+      "gate": "Rendered browser, device WebGL and hosted acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No browser surfaces available through the supported connection; local preview fails with listen EPERM. Component harness is executable control evidence, not browser or assistive-technology acceptance."
+    },
+    {
+      "gate": "Human review and exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt emission; draft authoring only."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-repository-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9620b21bca3a3da2fd49a5edda05d8a60a842c47"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T05:03:37Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Six UI/document/test paths only, plus this provenance receipt in the existing data/receipts/generated lane. UI paths stay under apps/site/source; no atlas proposal becomes an available layer. UI implementation is confirmed at tested source; provider availability, native source synchronization, publication and rendered human acceptance remain unverified. Overlap recheck found PRs 5177 and 5178 targeting separate root-app composition branches; their toolbar/flow work does not overlap these monorepo paths, but future composition needs consumer reconciliation. Rollback reverts this bounded patch; optional local preference can be deleted with its checkbox. No deployment, audience/binding change, data migration, approval, source admission or release is authorized by this receipt."
+}
