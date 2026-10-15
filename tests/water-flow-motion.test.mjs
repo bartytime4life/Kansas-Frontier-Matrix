@@ -257,3 +257,15 @@ test("overview query is fixed, source-ranked and refuses unranked or mismatched 
    assert.equal((await GET(request("?cell=-98.25,36.75&detail=overview"))).status,503);
  } finally {globalThis.fetch=original;}
 });
+
+
+test("edge-cell server and client accept the same bounded provider coordinates", async () => {
+ const original=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({features:[reach("EDGE1",[[-102.24,36.76],[-102.23,36.77]],{streamorder:6}),reach("EDGE2",[[-100.2,40.23],[-100.1,40.24]],{streamorder:6})]});
+ try {
+  const response=await GET(request("?cell=-102.25,36.75&detail=overview"));assert.equal(response.status,200);
+  const payload=flow.parseFlowlinePayload(await response.json());assert.equal(payload.reaches.length,2);
+  assert.deepEqual(payload.reaches[0].coordinates,[[-102.24,36.76],[-102.23,36.77]],"no stretching or replacement geometry");
+  assert.throws(()=>flow.parseFlowlinePayload({...payload,reaches:[{...payload.reaches[0],coordinates:[[-102.3,36.76],[-102.23,36.77]]}]}));
+ } finally {globalThis.fetch=original;}
+});
