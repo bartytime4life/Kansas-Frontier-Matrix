@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-kfm-doc-components-followup-20261015-1a61defb02b4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/doctrine/derived-stays-derived.md",
+    "docs/doctrine/sensitivity.md",
+    "docs/doctrine/time-aware.md",
+    "docs/domains/agriculture/policy/README.md",
+    "docs/domains/agriculture/runbooks/README.md",
+    "docs/domains/agriculture/sublanes/cropland.md",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md",
+    "docs/focus-mode/counties/README.md",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md",
+    "docs/sources/catalog/ahgp/county-town-histories.md",
+    "docs/sources/catalog/blm/glo-field-notes.md",
+    "tools/qa/gap_scan_baseline.json"
+  ],
+  "artifact_hashes": {
+    "docs/doctrine/derived-stays-derived.md": "sha256:3b84458a371a6d67244e79279f2b949dc7b9fdfefb584868939f07ff320373cb",
+    "docs/doctrine/sensitivity.md": "sha256:e347808c184c3595d20b25ffab13cccaed2f3a62ed6caba559a11b9f9eeb5fda",
+    "docs/doctrine/time-aware.md": "sha256:9fa7aeb014d5f0862066104b3086c635b8bf535cada22fde40d4cf8510f51273",
+    "docs/domains/agriculture/policy/README.md": "sha256:ace54a7845ad908f027110f6b1f856829acedc4ea93ab2096e698cdb179c126e",
+    "docs/domains/agriculture/runbooks/README.md": "sha256:b59cc8b0bb73fe3014f4160086d09acaa1fb0f2e0838c7e176123a255d784d00",
+    "docs/domains/agriculture/sublanes/cropland.md": "sha256:ad94a6f6790cc6e1caa9af0b7e4e75f02a2ef608ba50a100a17fa1e50f734f47",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md": "sha256:0cf6811bf4a50b9e380523d2d50c669176c1b5495286fc435f8f405d6eb4a24d",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md": "sha256:e3a2127282c91a1d3b13992abd19106b6893d4eed6483edf04b49b09383cb063",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md": "sha256:6567a486bfc9ea823c30ce7fb135f3fb53e5564e413487c71ff8560752a64a35",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md": "sha256:75553439a99cedab3fe9a2fd8cfa8a9e9d1bdccf068b2ee0a6338d552928d01d",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md": "sha256:8619de9e9f6c09844531e61affae5e4aa697f83265338a557a3bec25ad9c9080",
+    "docs/focus-mode/counties/README.md": "sha256:61690bebfd184a40320bfe933e83adc8cfcfd9fc937bbb3cac949652e5b29cd4",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md": "sha256:8af03a17a4a102a3e859e2e684a39031f25b5ed45e42489da75f8ea3650fca12",
+    "docs/sources/catalog/ahgp/county-town-histories.md": "sha256:8cb0256a2c14d4e1764a9fc988a0fa009c0a43904029ad5f4a6f0fef0731b40d",
+    "docs/sources/catalog/blm/glo-field-notes.md": "sha256:bee172f3efa22eefab4b3f609385e0e94da0a88450a0e8025d62c25929b08f04",
+    "tools/qa/gap_scan_baseline.json": "sha256:cac70efd27eb7c4fabe30dbc4a90a45edcb64c128ca9c28c2ef733b7123903d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "repository validators",
+      "pytest"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@c2f3b6869a3e19ada9dc8a0935e5677c156bdce4",
+      "docs/doctrine/directory-rules.md@c2f3b6869a3e19ada9dc8a0935e5677c156bdce4",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c2f3b6869a3e19ada9dc8a0935e5677c156bdce4",
+      "CONTRIBUTING.md@c2f3b6869a3e19ada9dc8a0935e5677c156bdce4",
+      ".github/PULL_REQUEST_TEMPLATE.md@c2f3b6869a3e19ada9dc8a0935e5677c156bdce4"
+    ],
+    "evidence_refs": [
+      "git:c2f3b6869a3e19ada9dc8a0935e5677c156bdce4",
+      "git:1a61defb02b48724696d7643f56ab11028e600a6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5195"
+    ]
+  },
+  "truth_labels": {
+    "docs/doctrine/derived-stays-derived.md": "PROPOSED",
+    "docs/doctrine/sensitivity.md": "PROPOSED",
+    "docs/doctrine/time-aware.md": "PROPOSED",
+    "docs/domains/agriculture/policy/README.md": "PROPOSED",
+    "docs/domains/agriculture/runbooks/README.md": "PROPOSED",
+    "docs/domains/agriculture/sublanes/cropland.md": "PROPOSED",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md": "PROPOSED",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md": "PROPOSED",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md": "PROPOSED",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md": "PROPOSED",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md": "PROPOSED",
+    "docs/focus-mode/counties/README.md": "PROPOSED",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md": "PROPOSED",
+    "docs/sources/catalog/ahgp/county-town-histories.md": "PROPOSED",
+    "docs/sources/catalog/blm/glo-field-notes.md": "PROPOSED",
+    "tools/qa/gap_scan_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "links-scoped",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_LINK_CHECK_PASS\", \"counts\": null, \"finding_families\": {\"EXTERNAL_TARGET_UNVERIFIED\": 118}, \"current_failures\": []}"
+    },
+    {
+      "gate": "metadata-scoped",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_META_BLOCK_WARN\", \"counts\": {\"documents\": 15, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 0, \"metadata_blocks\": 15, \"missing_metadata_blocks\": 0, \"registered_documents\": 0, \"registry_add_candidates\": 0, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 15, \"warn_findings\": 7}, \"finding_families\": {\"META_BLOCK_UNSUPPORTED_NESTING\": 7}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "graph-scoped",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_GRAPH_WARN\", \"counts\": {\"changed_documents\": 0, \"documents\": 15, \"documents_with_doc_id\": 15, \"edges\": 31, \"external_targets_unverified\": 118, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 10, \"outside_scope_markdown_targets\": 1052, \"reachable_documents\": 1, \"registered_markdown_documents\": 0, \"unreachable_documents\": 14, \"warn_findings\": 24}, \"finding_families\": {\"DOC_ORPHANED\": 10, \"DOC_UNREACHABLE\": 14}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "freshness-scoped",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_STALE_SCAN_WARN\", \"counts\": {\"current_findings\": 21, \"documents\": 15, \"documents_with_metadata\": 15, \"documents_without_metadata\": 0, \"fail_findings\": 0, \"findings\": 21, \"historical_findings\": 0, \"info_findings\": 0, \"warn_findings\": 21, \"warnings_as_errors\": 0}, \"finding_families\": {\"OWNER_PLACEHOLDER_STALE\": 14, \"DELEGATE_TO_META_BLOCK\": 7}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "gap",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": null, \"counts\": {\"BROKEN_LOCAL_LINK\": 17, \"MARKDOWN_PLACEHOLDER\": 7, \"STRUCTURED_PARSE_ERROR\": 0, \"TEST_PACKAGE_SHADOW\": 0, \"UNRATCHETED_PLACEHOLDER\": 9}, \"finding_families\": {}, \"current_failures\": []}"
+    },
+    {
+      "gate": "scaffolds",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": null, \"counts\": null, \"finding_families\": {}, \"current_failures\": []}"
+    },
+    {
+      "gate": "topology",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"summary\": \"PASS: 14780 tracked paths; 0 invariant; 0 new drift; 93 baselined warnings; 0 stale baseline entries\"}"
+    },
+    {
+      "gate": "parity",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": null, \"counts\": null, \"finding_families\": {}, \"current_failures\": []} Profile integrity only; 93 inherited topology warnings remain HOLD_INHERITED, with no waiver or full conformance assertion."
+    },
+    {
+      "gate": "gap-tests",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"summary\": \".............                                                            [100%]\\n13 passed in 3.69s\"}"
+    },
+    {
+      "gate": "links-workflow",
+      "outcome": "PASS",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_LINK_CHECK_PASS\", \"checked_documents\": 15, \"checked_local_targets\": 953, \"external_targets_unverified\": 118, \"current_failures\": []}"
+    },
+    {
+      "gate": "metadata-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_META_BLOCK_WARN\", \"counts\": {\"documents\": 1863, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 504, \"metadata_blocks\": 1625, \"missing_metadata_blocks\": 233, \"registered_documents\": 0, \"registry_add_candidates\": 15, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 1126, \"warn_findings\": 1629}, \"finding_families\": {\"DATE_INVALID\": 19, \"DOC_ID_INVALID\": 30, \"DUPLICATE_DOC_ID\": 24, \"FIELD_VALUE_INVALID\": 135, \"META_BLOCK_DUPLICATE\": 4, \"META_BLOCK_MALFORMED\": 264, \"META_BLOCK_UNSUPPORTED_NESTING\": 7, \"REGISTRY_DUPLICATE_KEY\": 2, \"REGISTRY_ENTRY_INCOMPLETE\": 1, \"REGISTRY_ENTRY_MALFORMED\": 4, \"REGISTRY_ENTRY_MISSING\": 15, \"REQUIRED_FIELD_MISSING\": 1124}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "graph-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_GRAPH_WARN\", \"counts\": {\"changed_documents\": 15, \"documents\": 1863, \"documents_with_doc_id\": 1626, \"edges\": 26873, \"external_targets_unverified\": 7966, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 431, \"outside_scope_markdown_targets\": 46504, \"reachable_documents\": 1315, \"registered_markdown_documents\": 0, \"unreachable_documents\": 548, \"warn_findings\": 1000}, \"finding_families\": {\"DOC_ORPHANED\": 1, \"DOC_UNREACHABLE\": 2, \"DUPLICATE_DOC_ID\": 4, \"META_BLOCK_DUPLICATE_KEY\": 41, \"META_BLOCK_INVALID_KEY\": 54, \"META_BLOCK_UNSUPPORTED_NESTING\": 302, \"PATH_ESCAPE\": 1, \"REGISTRY_DUPLICATE_KEY\": 1, \"REGISTRY_ENTRY_INCOMPLETE\": 1, \"REGISTRY_UNSUPPORTED_ENTRY\": 1, \"RELATED_DOC_ID_MISSING\": 82, \"RELATED_TARGET_MISSING\": 509, \"FINDINGS_TRUNCATED\": 1}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "freshness-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Content head 1a61defb02b48724696d7643f56ab11028e600a6; {\"exit_code\": 0, \"outcome\": \"DOC_STALE_SCAN_WARN\", \"counts\": {\"current_findings\": 21, \"documents\": 1863, \"documents_with_metadata\": 1621, \"documents_without_metadata\": 242, \"fail_findings\": 0, \"findings\": 40, \"historical_findings\": 19, \"info_findings\": 0, \"warn_findings\": 40, \"warnings_as_errors\": 0}, \"finding_families\": {\"CREATED_DATE_INVALID\": 17, \"OWNER_PLACEHOLDER_STALE\": 14, \"REVIEW_DATE_INVALID\": 2, \"DELEGATE_TO_META_BLOCK\": 7}, \"current_failures\": []} Advisory QA executed with zero fail findings; warning-free acceptance is not claimed."
+    },
+    {
+      "gate": "scope-invariants",
+      "outcome": "PASS",
+      "reason": "All 15 full files compared with exact base. Owners, status, policy labels, versions and narrative updated dates unchanged. Body changes limited to the 39 known unavailable local links. Previous invalid placeholder identities and proposed unavailable metadata references retained; registry unchanged."
+    },
+    {
+      "gate": "hosted-ci-and-independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Not yet opened at receipt emission; both remain pending and separate from local validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Directory Rules v2 adopted by accepted ADR-0029",
+      "validated": true,
+      "evidence_ref": "git:c2f3b6869a3e19ada9dc8a0935e5677c156bdce4:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:1a61defb02b48724696d7643f56ab11028e600a6"
+    },
+    {
+      "id": "runbook-tracked-path-first-addition",
+      "validated": true,
+      "evidence_ref": "git:bb6cbad6b0edfddf470bfa8880ae351501c0b22a:docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-15T21:36:51.332539Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring receipt for a separate current-main follow-up to merged PR 5195. Binds all substantive artifact bytes and excludes itself to avoid circular integrity. Prior receipts remain immutable and replayable at their original Git trees. Missing files remain explicit proposals, not implementations. Original narrative dates, draft statuses and owner placeholders remain; metadata/navigation checking does not establish substantive freshness, adoption, stewardship, rights, source admission, approval, release or publication. The whole-document graph report is bounded to 1000 findings; its independent 15-document scope also has zero failures. The exact model revision and generation parameters are unavailable/null. Rollback is a focused Git revert; no source, runtime or release migration."
+}
