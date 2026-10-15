@@ -18,6 +18,42 @@ from tools.validators.ci_readiness import (
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = REPOSITORY_ROOT / "tools/validators/ci_readiness.py"
 
+HOLD_SOURCE = '''if __name__ == "__main__":
+    import sys
+    print("WORKFLOW_HOLD: tools/example.py is not implemented; no work was performed.", file=sys.stderr)
+    raise SystemExit(3)
+'''
+
+
+def test_exact_named_hold_is_unimplemented_without_executing_source() -> None:
+    classification = classify_validator_source(HOLD_SOURCE)
+    assert classification.placeholder is True
+    assert classification.detail == "explicit unimplemented HOLD"
+
+
+@pytest.mark.parametrize("source", [
+    HOLD_SOURCE.replace("SystemExit(3)", "SystemExit(0)"),
+    HOLD_SOURCE.replace("SystemExit(3)", "SystemExit(True)"),
+    HOLD_SOURCE.replace("file=sys.stderr", "file=sys.stdout"),
+    HOLD_SOURCE.replace("import sys", "import sys as other"),
+    HOLD_SOURCE.replace("import sys", "import sys, os"),
+    HOLD_SOURCE.replace('== "__main__"', '!= "__main__"'),
+    HOLD_SOURCE + "else:\n    print('unexpected import effect')\n",
+    HOLD_SOURCE + "print('unexpected module work')\n",
+    HOLD_SOURCE.replace("    raise SystemExit(3)", "    open('output', 'w')\n    raise SystemExit(3)"),
+    HOLD_SOURCE.replace("    raise SystemExit(3)", "    pass"),
+    HOLD_SOURCE.replace("WORKFLOW_HOLD:", "PASS:"),
+    HOLD_SOURCE.replace("tools/example.py", "tools/example.py\\nextra output"),
+    HOLD_SOURCE.replace("tools/example.py", "/tmp/example.py"),
+    HOLD_SOURCE.replace("tools/example.py", "tools/../example.py"),
+    HOLD_SOURCE.replace("tools/example.py", "tools/./example.py"),
+    HOLD_SOURCE.replace("tools/example.py", "tools//example.py"),
+    HOLD_SOURCE.replace("print(", "other_print("),
+    HOLD_SOURCE.replace("SystemExit(3)", "other_exit(3)"),
+])
+def test_hold_lookalikes_require_review_as_substantive_changes(source) -> None:
+    assert classify_validator_source(source).placeholder is False
+
 
 def _write(path: Path, content: str) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)

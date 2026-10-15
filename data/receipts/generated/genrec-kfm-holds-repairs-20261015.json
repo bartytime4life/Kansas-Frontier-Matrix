@@ -1,0 +1,211 @@
+{
+  "receipt_id": "genrec-kfm-holds-20261015-9a529b6eed34",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rollback-drill.yml",
+    "scripts/maintenance/README.md",
+    "scripts/maintenance/audit_published_aliases.py",
+    "tests/qa/test_scaffold_entrypoints.py",
+    "tests/validators/test_ci_readiness.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/scripts/README.md",
+    "tools/scripts/aggregate.py",
+    "tools/validators/README.md",
+    "tools/validators/ai/validate_evidence_before_model.py",
+    "tools/validators/ci_readiness.py",
+    "tools/validators/domains/atmosphere/validate_aod_raster.py",
+    "tools/validators/domains/atmosphere/validate_atmosphere_decision_envelope.py",
+    "tools/validators/domains/atmosphere/validate_forecast_context.py",
+    "tools/validators/domains/atmosphere/validate_parameter_units.py",
+    "tools/validators/domains/atmosphere/validate_smoke_context.py",
+    "tools/validators/domains/geology/validate_public_safe_geometry.py",
+    "tools/validators/evidence/validate_identity.py",
+    "tools/validators/genealogy/validate_consent_receipt.py",
+    "tools/validators/genealogy/validate_gedcom.py",
+    "tools/validators/hydro/check_crosswalk.py",
+    "tools/validators/hydro/check_huc12.py",
+    "tools/validators/hydro/emit_manifest.py",
+    "tools/validators/identity/jcs_spec_hash.py",
+    "tools/validators/validate_attestation_ref.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rollback-drill.yml": "sha256:646aa04b05c3e750055fc7fd25eda48825befb71be368b8a54082fa1861ce274",
+    "scripts/maintenance/README.md": "sha256:9f9172e93e78998827216002773fbc292539064f49e68e4504f2b5fdcbee646a",
+    "scripts/maintenance/audit_published_aliases.py": "sha256:8a11d45ba27060c7f9e59fdcad74045c79260cb2ab9bc1eb924e6497702360c2",
+    "tests/qa/test_scaffold_entrypoints.py": "sha256:aa0fac8968b55d82f38605b7ff44274f9213ab787ce1b0d255b52a0b3c9fc461",
+    "tests/validators/test_ci_readiness.py": "sha256:1e0cf6d12ac36823d570a5b4d6eab78bc2b9e87a62ff20e571ab0c7fd9ec2e45",
+    "tools/qa/scaffold_baseline.json": "sha256:3cc010a7dd1e1a80895131bf3fd24d05a9119643cd442ad1138447a152d26093",
+    "tools/scripts/README.md": "sha256:a47bed0051d876bee8b0ceb2613634cd5ba9b30e88c3317d94928215403f7b88",
+    "tools/scripts/aggregate.py": "sha256:76a5a2e8732d6e6193a24021ee18c0003901b75c18c81d634d7ad6e31ca7e86d",
+    "tools/validators/README.md": "sha256:ba278afa855e588767ef0002609687a9cb4cd55e9a998e2d6ece25989bd34347",
+    "tools/validators/ai/validate_evidence_before_model.py": "sha256:af483caf365e67670ef64f72dfa9245b9d12d68403518a35859c3a13b7a442f6",
+    "tools/validators/ci_readiness.py": "sha256:4df315f7e267426c44279c6cfd1e3c5996134937e35c57cd73f7dc56e77431cd",
+    "tools/validators/domains/atmosphere/validate_aod_raster.py": "sha256:14995f68815027d8bdb0bfc1b1fbf0df0050b62683379f68dabd6865727d0fd6",
+    "tools/validators/domains/atmosphere/validate_atmosphere_decision_envelope.py": "sha256:ddbc8c8f27cbdc585833ff1ca72ac158a4e2c23421166096fa4d0c7b9a37dcb6",
+    "tools/validators/domains/atmosphere/validate_forecast_context.py": "sha256:a1565accc2c3493011f213dabaa86643ae4e98d1795b54f26fd8b4de221d569a",
+    "tools/validators/domains/atmosphere/validate_parameter_units.py": "sha256:c1ee8f49d5ba29486dafc27b0f6a63ddc6163785063504e80ae236e27c330c6c",
+    "tools/validators/domains/atmosphere/validate_smoke_context.py": "sha256:1f54bf72fcb43ef630209ea98cf318fae8c4612447ccec65f618e3874913fc54",
+    "tools/validators/domains/geology/validate_public_safe_geometry.py": "sha256:2bd71aa2f57cadb043c6bc1fe6d1614de63a969ef0400eeb78c91aba6720dc21",
+    "tools/validators/evidence/validate_identity.py": "sha256:b80de55bdb439a6bb69d67c2c9ee99c139ca3d91a8c19e5a68a5cac6729e4d0b",
+    "tools/validators/genealogy/validate_consent_receipt.py": "sha256:d45a57edb0ac008f77dab256a3534643d8d161b5c50b4d9cc1fbbce651f206fc",
+    "tools/validators/genealogy/validate_gedcom.py": "sha256:c1a72f23746bc5904b1439c10a126330cafc09d26fa35417739fc2a9f6024516",
+    "tools/validators/hydro/check_crosswalk.py": "sha256:c877d998f1f70e3a753ba4c1b9854de76ad0a97d7a32032efd2c744981c5a1b3",
+    "tools/validators/hydro/check_huc12.py": "sha256:2d02e8e89360d081525568ba1b8c0876289b668d5808874910cee8c70b7f8d1f",
+    "tools/validators/hydro/emit_manifest.py": "sha256:3186233bc407d5567c70d1dab337a090ede6df41be06c05307937376e430a899",
+    "tools/validators/identity/jcs_spec_hash.py": "sha256:d3c0aad263b0cf2d1d8ebe5967fbcc4071208100a6c46c15770fb8a6e54ed3db",
+    "tools/validators/validate_attestation_ref.py": "sha256:b70e09a4d30d1dcd015271af464e92c34b5abec2cfcd4c556763d8e59f237697"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "pytest",
+      "repository validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/doctrine/directory-rules.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ade780f08564502541a36406458df34040f6c6d",
+      "CONTRIBUTING.md@3ade780f08564502541a36406458df34040f6c6d",
+      ".github/PULL_REQUEST_TEMPLATE.md@3ade780f08564502541a36406458df34040f6c6d"
+    ],
+    "evidence_refs": [
+      "git:3ade780f08564502541a36406458df34040f6c6d",
+      "git:9a529b6eed34d6e36eede43a8d73bdd6aec50ca3"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rollback-drill.yml": "CONFIRMED",
+    "scripts/maintenance/README.md": "PROPOSED",
+    "scripts/maintenance/audit_published_aliases.py": "CONFIRMED",
+    "tests/qa/test_scaffold_entrypoints.py": "CONFIRMED",
+    "tests/validators/test_ci_readiness.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/scripts/README.md": "PROPOSED",
+    "tools/scripts/aggregate.py": "CONFIRMED",
+    "tools/validators/README.md": "PROPOSED",
+    "tools/validators/ai/validate_evidence_before_model.py": "CONFIRMED",
+    "tools/validators/ci_readiness.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_aod_raster.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_atmosphere_decision_envelope.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_forecast_context.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_parameter_units.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_smoke_context.py": "CONFIRMED",
+    "tools/validators/domains/geology/validate_public_safe_geometry.py": "CONFIRMED",
+    "tools/validators/evidence/validate_identity.py": "CONFIRMED",
+    "tools/validators/genealogy/validate_consent_receipt.py": "CONFIRMED",
+    "tools/validators/genealogy/validate_gedcom.py": "CONFIRMED",
+    "tools/validators/hydro/check_crosswalk.py": "CONFIRMED",
+    "tools/validators/hydro/check_huc12.py": "CONFIRMED",
+    "tools/validators/hydro/emit_manifest.py": "CONFIRMED",
+    "tools/validators/identity/jcs_spec_hash.py": "CONFIRMED",
+    "tools/validators/validate_attestation_ref.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "tests",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3; ........................................................................ [ 60%]\n....................................................................................... [ 85%]\n....................................................                     [100%]\n355 passed, 57 subtests passed in 11.84s"
+    },
+    {
+      "gate": "gap",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3;   ]\n}\nBROKEN_LOCAL_LINK: 120 is below baseline 138; run `python tools/qa/gap_scan.py --write-baseline` to tighten it.\nMARKDOWN_PLACEHOLDER: 7 is below baseline 94; run `python tools/qa/gap_scan.py --write-baseline` to tighten it."
+    },
+    {
+      "gate": "scaffolds",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3;   \"resolved\": [],\n  \"schema_version\": \"kfm.scaffold-inventory/v1\",\n  \"total\": 877\n}"
+    },
+    {
+      "gate": "topology",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3; PASS: 14777 tracked paths; 0 invariant; 0 new drift; 93 baselined warnings; 0 stale baseline entries"
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3; PASS: 496 workflows; 0 invariant; 0 new drift; 0 baselined warnings; 0 stale baseline entries"
+    },
+    {
+      "gate": "domain-hydrology.yml",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3; Inventoried two dedicated Hydrology validator modules as substantive; their fixture suites remain owned by dedicated workflows.\nInventoried the exact Hydrology shorthand placeholder, PROPOSED schema, and deny-by-default policy scaffolds without executing them.\nWORKFLOW_CHECK_EXECUTED: hydrology-broader-readiness\nWORKFLOW_HOLD: broader executable Hydrology validation is not established"
+    },
+    {
+      "gate": "rollback-drill.yml",
+      "outcome": "PASS",
+      "reason": "Content head 9a529b6eed34d6e36eede43a8d73bdd6aec50ca3; CONFIRMED: the current-alias ADR remains source-draft/effective-proposed with alias execution held and the alias absent.\nWORKFLOW_SKIPPED_EXPLICIT: no published alias was resolved, mutated, or behaviorally verified.\nWORKFLOW_HOLD: no accepted alias mechanism, auditor interface, rollback receipt, or invalidation evidence exists.\nFile absence is readiness evidence only; it is not proof of rollback capability or authority."
+    },
+    {
+      "gate": "governance-parity-profile-integrity",
+      "outcome": "PASS",
+      "reason": "Profile integrity passes; 93 inherited topology warnings remain HOLD_INHERITED. This is not full conformance or a waiver."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "DOC_LINK_CHECK_PASS; base failures 0, candidate failures 0; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-metadata",
+      "outcome": "PASS",
+      "reason": "DOC_META_BLOCK_PASS; base failures 5, candidate failures 0; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "SKIPPED",
+      "reason": "DOC_GRAPH_WARN; base failures 0, candidate failures 0; introduced unique failures 0. Warning-state graph acceptance remains unclaimed."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "PR not yet opened at receipt emission; independent human review is pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Directory Rules v2 adopted by ADR-0029",
+      "validated": true,
+      "evidence_ref": "git:3ade780f08564502541a36406458df34040f6c6d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:9a529b6eed34d6e36eede43a8d73bdd6aec50ca3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-15T21:11:39.508131Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Per-PR authoring provenance covering every substantive changed artifact; this receipt excludes itself to avoid a circular digest. The original combined scan report remains on the preserved local repair branch and is not part of this PR. Model revision and generation parameters not exposed by the runtime are recorded as unavailable/null. Local validation concerns the pinned content head; hosted CI and independent human review remain separate. No approval, override, merge, source admission, activation, release, deployment, promotion or publication is asserted."
+}

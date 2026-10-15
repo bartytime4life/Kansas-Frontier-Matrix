@@ -483,9 +483,13 @@ jobs:
           auditor_path = Path("scripts/maintenance/audit_published_aliases.py")
           auditor = auditor_path.read_text(encoding="utf-8").strip()
           assert auditor == (
-              "# Audit data/published/<domain>/current aliases — greenfield placeholder"
+              "# Audit data/published/<domain>/current aliases — greenfield placeholder\n\n\n"
+              'if __name__ == "__main__":\n'
+              '    import sys\n'
+              "    print('WORKFLOW_HOLD: scripts/maintenance/audit_published_aliases.py is not implemented; no work was performed.', file=sys.stderr)\n"
+              '    raise SystemExit(3)'
           ), (
-              "published-alias auditor has changed; wire its accepted CLI, governed "
+              "published-alias auditor drifted from its explicit HOLD; review its CLI, governed "
               "pointer/profile, receipt evidence, negative cases, and no-write tests"
           )
 
@@ -594,7 +598,7 @@ jobs:
               f"alias ADR effective-status rows conflict: {effective_status_rows}"
           )
 
-          print("CONFIRMED: published-alias auditor remains a comment-only placeholder.")
+          print("CONFIRMED: published-alias auditor remains unimplemented with an explicit exit-3 HOLD.")
           print("CONFIRMED: no current/current.json/*.current.json alias exists under data/published.")
           print(f"CONFIRMED: {len(rollback_files)} rollback-lane guidance/placeholder files exist and no rollback payload or receipt is present.")
           print("CONFIRMED: the current-alias ADR remains source-draft/effective-proposed with alias execution held and the alias absent.")
@@ -610,7 +614,7 @@ jobs:
           {
             echo "### Published alias verification"
             echo
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the alias auditor remains comment-only, no current alias is present under data/published, and rollback data lanes contain guidance/placeholders rather than receipts."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** the alias auditor remains unimplemented with an explicit exit-3 HOLD, no current alias is present under data/published, and rollback data lanes contain guidance/placeholders rather than receipts."
             echo "- ADR-0015 remains source-draft/effective-proposed, with the alias absent and RollbackCard/alias execution held; file absence is not behavioral proof of rollback capability."
             echo "- Result: ${{ job.status }}. No alias was resolved or mutated, and no rollback receipt, invalidation, release transition, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"

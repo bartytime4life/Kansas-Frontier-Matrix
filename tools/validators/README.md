@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-readme
 title: tools/validators README
 type: README
-version: v0.7
+version: v0.8
 status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed; generated-receipt-validator-confirmed; review-record-candidate-validator-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
-created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-09-25
+created: 2026-02-21
+updated: 2026-10-15
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
@@ -65,6 +65,7 @@ related:
   - ../../tests/validators/test_validate_generated_receipt.py
   - ../../.github/workflows/dependency-scan.yml
 notes:
+  - "v0.8 documents exact named-HOLD guards. The created date records the earliest current-path Git addition, 250759595d9fcef5d8970ebb79f2972fcb102003 (2026-02-21), not the authorship date of later expanded prose."
   - "v0.7 indexes the bounded fixture-only ReviewRecord candidate validator and preserves live identity, authority, policy, governed-record, review, and release holds."
   - "v0.6 adds the bounded no-network GENERATED_RECEIPT duplicate-free finite-JSON, parser/schema-budget, cross-field, local-path, SHA-256-prefix, and optional declared-review-claim validator with focused tests and synthetic fixture wiring."
   - "v0.5 adds a standard-library E2E readiness validator and focused synthetic tests; it recognizes the implemented Explorer baseline while preserving the composed browser/API E2E hold."
@@ -116,7 +117,7 @@ A validator may check that evidence exists, policy was evaluated, release refere
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/README.md` | **CONFIRMED README** | This file replaces the previous two-line parent stub. |
-| `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; its focused suite currently passes 42 collected cases, and it does not execute discovered code. |
+| `tools/validators/ci_readiness.py` | **CONFIRMED bounded executable checker** | Deterministically classifies repeated test and validator roots as exact placeholders or fail-closed findings; focused tests cover exact named-HOLD guards and reject near matches, and it does not execute discovered code. |
 | `tools/validators/e2e_readiness.py` | **CONFIRMED bounded executable checker** | Statically reconciles the locked Explorer baseline, adjacent UI/API workflow markers, root holds, and exact five-file E2E placeholder inventory; it emits an explicit hold and never starts services or executes discovered application code. |
 | `tools/validators/dependencies/pnpm_audit_readiness.py` | **CONFIRMED bounded executable checker** | Validates the repository-local pnpm contract without network access and classifies structured audit output as `PASS`, `REGRESSION`, or `ERROR`; it does not decide dependency admission or release. |
 | `tools/validators/validate_generated_receipt.py` | **CONFIRMED bounded executable checker** | Validates duplicate-free finite JSON under parser/schema budgets, `GENERATED_RECEIPT` shape, exact artifact maps, canonical local paths, supported SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, plus an optional declared review/override claim. It does not authenticate those references or claims and cannot grant truth, policy, review, mutation, merge, release, or publication authority. |
@@ -137,7 +138,22 @@ A validator may check that evidence exists, policy was evaluated, release refere
 
 `ci_readiness.py` is a Python 3.9-compatible, standard-library-only, importable checker and CLI for readiness-hold workflows. It accepts one or more `--test-root` and `--validator-root` values, parses Python without importing or executing it, and exits zero only when every supplied root exists and is safe, at least one Python file exists across the test-root set and across the validator-root set, and every discovered Python file matches a recognized placeholder shape. README-only sibling roots are allowed when their category remains non-vacuous globally.
 
-Recognized test placeholders are comment/module-docstring-only modules and an optional module docstring followed by exactly `def test_placeholder(): assert True`. Recognized validator placeholders are comment/module-docstring-only modules and an optional module docstring followed by exactly `def main(): raise NotImplementedError`, optionally with one constant string message. Imports, decorators, arbitrary `pass`, extra definitions, substantive tests or validators, syntax errors, missing or unsafe roots, symlinks, unreadable paths, repository escapes, and a globally Python-empty test or validator category fail closed with sorted path-and-reason diagnostics. An individual README-only root is not an empty-root failure when another safe root in the same category supplies recognized Python placeholders.
+Recognized test placeholders are comment/module-docstring-only modules and an optional module docstring followed by exactly `def test_placeholder(): assert True`. Recognized validator placeholders are comment/module-docstring-only modules, an optional module docstring followed by exactly `def main(): raise NotImplementedError` (optionally with one constant string message), or the exact named-HOLD guard below. Other imports, decorators, arbitrary `pass`, extra definitions, substantive tests or validators, syntax errors, missing or unsafe roots, symlinks, unreadable paths, repository escapes, and a globally Python-empty test or validator category fail closed with sorted path-and-reason diagnostics. An individual README-only root is not an empty-root failure when another safe root in the same category supplies recognized Python placeholders.
+
+```python
+if __name__ == "__main__":
+    import sys
+    print("WORKFLOW_HOLD: tools/example.py is not implemented; no work was performed.", file=sys.stderr)
+    raise SystemExit(3)
+```
+
+The guard permits only a fixed repository-relative tool name in the message.
+AST comparison requires exactly this import, stderr print and exit status;
+extra statements, a success exit, another stream or an import-time branch fail
+classification. The tool remains unimplemented. Its direct CLI exits 3 for
+all arguments, including `--help`, without reading inputs or emitting artifacts.
+Importing it remains inert. The regression roster lives in
+[`tests/qa/test_scaffold_entrypoints.py`](../../tests/qa/test_scaffold_entrypoints.py).
 
 Both test and validator roots fail closed on unexpected regular files, including shell, JavaScript, TypeScript, policy, and data/schema sources. Their shared narrow allowlist is documentation named `README`, `LICENSE`, or `NOTICE`; `.md`, `.markdown`, `.rst`, or `.txt` documentation; `.gitkeep`; and whitespace-only extensionless sentinels. Findings use `unexpected_test_source` or `unexpected_validator_source` as appropriate. This classification does not decide whether a non-Python test or validator is correct—it prevents a Python-placeholder hold from silently masking one.
 
@@ -418,6 +434,7 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-10-15 | Added exact AST recognition of fixed stderr/exit-3 HOLD guards so unimplemented operator tools can fail explicitly without being treated as implemented validators; added adversarial classifier and CLI/import regression checks. | **CONFIRMED explicit holds; validator implementations remain absent** |
 | 2026-08-03 | Indexed the bounded fixture-only ReviewRecord candidate validator and its canonical identity, review-time issuance, supplied interval, empty approving-review obligations, explicit supersession-marker, and no-authority boundary. | **CONFIRMED bounded candidate validator** |
 | 2026-07-31 | Added the standard-library E2E readiness-hold checker, focused synthetic/current-tree tests, and workflow integration that recognizes the implemented Explorer baseline without claiming a composed suite. | **CONFIRMED bounded checker and explicit hold** |
 | 2026-07-29 | Added the standard-library placeholder-readiness checker, focused tests including unexpected test/validator-source denial, bounded behavior/authority documentation, and same-batch integration into eleven domain readiness workflows: ten root-scanning CLI calls and one Hydrology classifier import for its mixed-root inventory. | **CONFIRMED bounded checker and workflow integration** |
