@@ -8,6 +8,8 @@ import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
 import { FrameCheck } from "./frame-check";
+import { MapStartersControl } from "./map-starters-control";
+import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
@@ -1509,6 +1511,8 @@ export default function Home() {
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
+  const [starterPanelOpen, setStarterPanelOpen] = useState(true);
+  const [layerPreferencesReady, setLayerPreferencesReady] = useState(false);
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
@@ -2205,6 +2209,17 @@ export default function Home() {
     return [source.id, { selected: officialVisibility[source.id], held, state: officialStates[source.id],
       canDisplay: styleReady && !held && view.zoom >= sourceMinimumZoom(source) && officialOpacity[source.id] > 0 }];
   })) as Record<OfficialContextId, CatalogStatus>, [effectiveOfficialVisibility, officialOpacity, officialStates, officialVisibility, projection, styleReady, view.zoom]);
+  const starterAccess = useMemo<StarterAccessMap>(() => {
+    const requested = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, true])) as Record<OfficialContextId, boolean>;
+    const eligible = officialContextVisibilityForFrame(requested, temporalQuery.frame, buildYearCurrent);
+    return Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => {
+      const needsFlatMap = projection === "globe" && (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER");
+      return [source.id, { held: !eligible[source.id] || needsFlatMap, unavailable: officialStates[source.id] === "error",
+        guidance: !eligible[source.id] ? "Held at this map time; use the timeline to choose a supported time"
+          : needsFlatMap ? "Held in Globe; choose the flat map to use this source"
+          : view.zoom < sourceMinimumZoom(source) ? `Appears at zoom ${sourceMinimumZoom(source)}+` : undefined }];
+    }));
+  }, [buildYearCurrent, officialStates, projection, temporalQuery.frame, view.zoom]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -3703,6 +3718,19 @@ export default function Home() {
     }
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshSelectedStreamflow, runtimeOfficialVisibility]);
 
+  const applyStarterContext = (ids: readonly OfficialContextId[], title: string) => {
+    // Revalidate at the owning state boundary. No camera, time, opacity, release or specialist-owner writes.
+    const plan = starterPlan(ids, OFFICIAL_CONTEXT_SOURCES, starterAccess);
+    if (ids.length && !plan.selected.length) { announce("Starter sources are held or unavailable; current layers remain selected"); return; }
+    const changes = contextSelectionChanges(plan.selected, OFFICIAL_CONTEXT_SOURCES, officialVisibilityRef.current);
+    changes.forEach(change => setOfficialContextVisible(change.id, change.visible));
+    setOfficialSourceQuery("");
+    setOfficialWorkspace("all");
+    setOfficialCatalogFilter("all");
+    setLayerCatalogView("selected");
+    announce(`${title}; ${plan.selected.length} public context layers selected. Camera and source dates retained.`);
+  };
+
   const retryOfficialLayer = (id: OfficialContextId) => {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (id === "nws-forecast-wind") { setWindArrowReloadToken(value => value + 1); return; }
@@ -4380,6 +4408,7 @@ export default function Home() {
   const openEarthEngineLayers = useCallback(() => {
     setLayerQuery("");
     openAtlasPanel("layers");
+    setStarterPanelOpen(false);
     setLayerCatalogView("local");
     setPendingCatalogTarget("earth-engine-context-controls");
     announce("Opened installed Earth Engine layers");
@@ -4703,6 +4732,7 @@ export default function Home() {
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
       const restoredTopic = restoreTopic(params.get("topic"));
+      setStarterPanelOpen(!params.has("layerView") && restoredTopic === "all");
       setOfficialWorkspace(restoredTopic);
       setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
       if (restoredTopic !== "all") { setLeftPanelMode("layers"); setLeftOpen(true); }
@@ -4775,8 +4805,9 @@ export default function Home() {
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
       const knownOfficialIds = new Set<OfficialContextId>(OFFICIAL_CONTEXT_SOURCES.map((source) => source.id));
-      const restoredOfficialIds = params.get("ctx")?.split(",").filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
-      const nextOfficialVisibility = params.has("ctx")
+      const preferredIds = preferredContextIds(params, readContextPreference(OFFICIAL_CONTEXT_SOURCES));
+      const restoredOfficialIds = preferredIds?.filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
+      const nextOfficialVisibility = preferredIds !== null
         ? Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, restoredOfficialIds.includes(source.id)])) as Record<OfficialContextId, boolean>
         : defaultOfficialVisibility;
       officialVisibilityRef.current = nextOfficialVisibility;
@@ -4983,6 +5014,7 @@ export default function Home() {
         setRightOpen(false);
       }
       explorerRestoredRef.current = true;
+      setLayerPreferencesReady(true);
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
 
   useEffect(() => {
@@ -6962,6 +6994,7 @@ export default function Home() {
     if (item.kind === "source") {
       sourceSearchFocusPendingRef.current = true;
       openAtlasPanel("layers");
+      setStarterPanelOpen(false);
       setLayerCatalogView("official");
       setOfficialWorkspace("all");
       setOfficialCatalogFilter("all");
@@ -8886,7 +8919,7 @@ export default function Home() {
     if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
   };
   const runExplorerGuideAction = (action: ExplorerGuideAction) => {
-    if (action === "layers") openAtlasPanel("layers");
+    if (action === "layers") { setSourceStatusOpen(false); setStarterPanelOpen(true); openAtlasPanel("layers"); }
     else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
     else if (action === "underground") {
       if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
@@ -9336,7 +9369,7 @@ export default function Home() {
           {leftPanelMode !== "layers" && leftPanelMode !== "live" && <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>}
           {leftPanelMode !== "layers" && leftPanelMode !== "live" && <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
-            <button type="button" onClick={() => { setLayerCatalogView("official"); setLeftPanelMode("layers"); }}>Map layers <b>{selectedMapLayerCount}</b></button>
+            <button type="button" onClick={() => { setStarterPanelOpen(false); setLayerCatalogView("official"); setLeftPanelMode("layers"); }}>Map layers <b>{selectedMapLayerCount}</b></button>
             <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
           </nav>}
 
@@ -9390,10 +9423,11 @@ export default function Home() {
 
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <nav className="layer-source-switch" aria-label="Layer views">
-              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && layerCatalogView === id} data-active={!sourceStatusOpen && layerCatalogView === id} onClick={() => { setSourceStatusOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              <button type="button" aria-pressed={!sourceStatusOpen && starterPanelOpen} data-active={!sourceStatusOpen && starterPanelOpen} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(true); }}>Start here</button>
+              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-active={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-layer-view={id} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body:not([hidden])")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
               <button type="button" aria-pressed={sourceStatusOpen} data-active={sourceStatusOpen} onClick={event => openSourceStatus(event.currentTarget)}>Source status{sourceIssues.length > 0 && <span>{sourceIssues.length}</span>}</button>
             </nav>
-            <label className="catalog-search" hidden={sourceStatusOpen}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
+            <label className="catalog-search" hidden={sourceStatusOpen || starterPanelOpen}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
@@ -9450,7 +9484,17 @@ export default function Home() {
           </aside>
           </aside>}
 
-          <div className="layer-catalog-body" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <div className="layer-catalog-body starter-panel-body" hidden={!starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+            <MapStartersControl sources={OFFICIAL_CONTEXT_SOURCES} access={starterAccess} visibility={officialVisibility} selectionReady={layerPreferencesReady}
+              sourceStatus={id => officialVisibility[id] ? catalogDisplayStatus(officialCatalogStatuses[id])
+                : officialStates[id] === "idle" ? "Available to request · response not checked" : `Not selected · ${officialStates[id]}`}
+              onApply={applyStarterContext}
+              onRetry={retryOfficialLayer}
+              onUse2D={() => chooseSceneView("2d")}
+              onChooseTime={() => { setTimelineOpen(true); setLeftOpen(false); announce("Choose a supported map time; source dates stay separate"); }}
+              onBrowse={() => { setStarterPanelOpen(false); setLayerCatalogView("selected"); window.requestAnimationFrame(() => leftPanelRef.current?.querySelector<HTMLButtonElement>('[data-layer-view="selected"]')?.focus()); }} />
+          </div>
+          <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}

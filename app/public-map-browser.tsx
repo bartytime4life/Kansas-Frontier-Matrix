@@ -98,7 +98,7 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
         {!rows.length && <div className={s.empty}><strong>No matching maps</strong><p>Try fewer filters or a broader search. Only verified direct files are included.</p><button type="button" onClick={() => { setFilter(defaultFilter); setPage(0); }}>Reset search</button></div>}
         <nav className={s.pagination} aria-label="Public map catalog pages"><button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous</button><span>{currentPage + 1} / {pages}</span><button type="button" disabled={currentPage + 1 >= pages} onClick={() => setPage(currentPage + 1)}>Next</button></nav>
       </div>
-      <aside className={p.detail} aria-label={collection === "satellite" ? "Selected public dataset" : "Selected public map"}>
+      <section className={p.detail} aria-label={collection === "satellite" ? "Selected public dataset" : "Selected public map"}>
         {!selected ? <div className={p.selectionEmpty}><span className={p.detailMark} aria-hidden="true">↗</span><h3>{collection === "satellite" ? "Select a public dataset" : "Select a map"}</h3><p>See available files, preview source context, and choose what to keep on this computer.</p><small>Browsing never starts a download.</small></div> : <>
           <button type="button" className={s.textButton} onClick={() => choose(null)}>← Back to results</button><p className={s.eyebrow}>{selected.publisher} · {selected.mapYear ?? "Map year unknown"}{selected.scale ? ` · ${selected.scale}${selected.scaleUnit && !["ratio", "denominator"].includes(selected.scaleUnit) ? ` ${selected.scaleUnit}` : ""}` : ""}</p>
           <h3 ref={heading} tabIndex={-1}>{selected.title}</h3>
@@ -124,7 +124,7 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
             <div><dt>Scale</dt><dd>{selected.scale ?? "Not supplied"}{selected.scaleUnit && !["ratio", "denominator"].includes(selected.scaleUnit) ? ` ${selected.scaleUnit}` : ""}</dd></div><div><dt>Original map CRS</dt><dd>{selected.crs ?? "Not supplied by catalog"}</dd></div><div><dt>Spatial accuracy</dt><dd>{selected.spatialAccuracy ?? "Not supplied by catalog"}</dd></div><div><dt>Geometry meaning</dt><dd>{selected.geometryRole || "No geometry supplied"}</dd></div><div><dt>Reuse terms · {selected.rights.status}</dt><dd>{selected.rights.text}</dd></div>
           </dl><div className={p.actions}><a href={selected.metadataUrl} target="_blank" rel="noreferrer">Source record ↗</a>{selected.rights.url && <a href={selected.rights.url} target="_blank" rel="noreferrer">Source terms ↗</a>}</div><p>Map dates, digital release, retrieval time and mining dates have separate meanings. Stored originals require source review and verified georeferencing before map display.</p></details>
         </>}
-      </aside>
+      </section>
     </div>
   </section>;
 }
