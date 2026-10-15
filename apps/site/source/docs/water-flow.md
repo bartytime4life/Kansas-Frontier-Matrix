@@ -1,4 +1,4 @@
-# Flowing water — 2026-10-10
+# Flowing water — zoom-adaptive repository candidate
 
 A scene effect that animates rivers and streams in the direction the provider
 says they flow, draped on the terrain in Terrain 3D and drawn flat on 2D,
@@ -6,7 +6,7 @@ tilted and globe maps. Where a USGS stream gauge has a current reading, the
 reach it sits on is lit by that reading. It is **presentation only**: nothing
 is queryable, reported, exported or stored, and no evidence state, time or
 report value changes. Turn it on with **Flowing water** in the Scene panel, or
-choose the **Cinematic** or **Natural** look; it draws at zoom 10 and closer.
+choose the **Cinematic** or **Natural** look; it starts with a statewide river overview and adds nearby regional and local detail as you zoom in.
 
 <p align="center">
   <img src="images/water-flow-terrain-2026-10-10.jpg" alt="Terrain 3D at dusk over the Flint Hills: a luminous network of streams draped in the valleys, with ridges hiding the channels behind them. Two synthetic test gauges are labelled HARNESS." width="100%" />
@@ -42,7 +42,7 @@ direction-only motion. Both gauges and the network are test harness inputs.</sub
 
 | Source | Used for | Notes |
 |---|---|---|
-| [USGS 3DHP](https://www.usgs.gov/3d-hydrography-program), `usgs_3dhp_all/MapServer/50` | Reach geometry and downstream flag | Fetched through the new `GET /api/hydrology/flowlines?cell=west,south` route, one fixed 0.25° Kansas grid cell at a time, at most 400 reaches per cell, simplified to about 20 m (vertex order, and so direction, is kept). Private cache 1 hour. |
+| [USGS 3DHP](https://www.usgs.gov/3d-hydrography-program), `usgs_3dhp_all/MapServer/50` | Reach geometry and downstream flag | Fetched through the new `GET /api/hydrology/flowlines?cell=west,south` route, fixed Kansas overview (2°), regional (1°) or local (0.25°) cells, at most 400 reaches per cell. Uses provider `streamorder` for overview selection. Vertex order, and so direction, is kept. Private cache 1 hour. |
 | USGS Water Data API, continuous discharge (00060) | Gauge readings | Reuses the Site's existing `usgs-streamflow` official-context frame (value, relative magnitude, trend, reading state). No new request. |
 | Mapzen terrain DEM (existing) | Draping | Reach vertices sample the loaded terrain so rivers sit in their valleys; hills in front hide them. |
 
@@ -53,13 +53,16 @@ modelled discharge off ungauged reaches.
 ## How it works
 
 - **Route.** `app/api/hydrology/flowlines/route.ts` accepts exactly one
-  `cell` parameter on the 0.25° grid inside Kansas (anything else is a 400),
-  queries 3DHP with `flowdirection=1 AND featuretype IN (1,4,5,6)`, bounds the
-  response at 6 MB, rounds coordinates to 1e-5° and returns
-  `kfm-3dhp-flowlines-v1` with `evidenceRole: EXTERNAL_CONTEXT_ONLY`, a
+  `cell` parameter identifying one fixed Kansas grid cell (anything else is a 400),
+  queries 3DHP with `flowdirection=1 AND featuretype IN (1,4,5,6)` and the fixed
+  order threshold for that tier, bounds the response at 6 MB and 80,000 vertices,
+  rounds coordinates to 1e-5° and returns
+  `kfm-3dhp-flowlines-v2` with its exact request key with `evidenceRole: EXTERNAL_CONTEXT_ONLY`, a
   `truncated` flag and the limitation text. Provider failure is a 503.
-- **Cells.** At zoom 10+, the view requests up to 9 cells nearest the map
-  centre (within ±0.4° longitude and ±0.3° latitude). Results are kept in a
+- **Cells.** The view requests eight overview cells covering the full Kansas envelope;
+  from zoom 6.5 it adds up to nine nearest intersecting 1° regional cells, and
+  from zoom 8.5 adds up to nine local cells nearest the map centre
+  (within ±0.4° longitude and ±0.3° latitude). At most nine requests run at once. Results are kept in a
   per-map cache of 36 cells; a failed cell waits 60 s before retrying. Cell
   completions and gauge updates share one geometry update on the next display
   frame. A ready cell can appear while the others are still loading. Cancelled
@@ -68,8 +71,10 @@ modelled discharge off ungauged reaches.
   detaches the synchronizer's listeners.
 - **Geometry.** `app/water-flow-motion.ts` turns reaches into segments
   carrying distance along the reach (so streaks run continuously across
-  vertices), gauge intensity, a moving/still flag, a trend tint and a random
-  phase per reach.
+  vertices), gauge intensity, a moving/still flag, a trend tint a stable
+  phase per reach and a minimum display zoom derived from provider order.
+  Reaches are deduplicated by provider ID across grids; finer loaded geometry
+  wins, and higher provider order gets the fixed 60,000-segment budget first.
 - **Rendering.** `app/water-flow-layer.ts` is one MapLibre custom WebGL2
   layer (`scene-water-flow`) with depth testing against the terrain. Each
   segment is an instanced, screen-space ribbon shaded as a lit tube: bright
@@ -87,7 +92,7 @@ modelled discharge off ungauged reaches.
   heads).
 - **Status.** The Scene panel switch shows a live reading, for example
   "120 reaches with a USGS flow direction · 1 lit by a gauge reading", or
-  "Zoom to 10 or closer", "No mapped flow direction in view" and
+  "Zoom to 4 or closer", "No mapped flow direction in view" and
   "unavailable" when the provider cannot be reached.
 
 ## Boundaries and limits
@@ -95,8 +100,9 @@ modelled discharge off ungauged reaches.
 - Motion shows mapped channel direction. It is not water velocity, wet
   channel extent, depth or flood level. A dry channel with a direction flag
   still animates unless a gauge on it reads zero.
-- Ribbon width does not vary by stream size: the 3DHP fields this route reads
-  carry no stream order or drainage area.
+- Ribbon width is a bounded screen-space presentation choice, not measured
+  channel width or discharge. Provider order chooses visibility, not physical width.
+  Missing or invalid order stays local-only; it never becomes an overview river.
 - Each cell returns at most 400 reaches, ordered by `hydrosequence`
   descending as in the existing `api/hydrology/direction` route. A truncated
   cell is reported as "some areas incomplete" in the reading.
@@ -105,6 +111,8 @@ modelled discharge off ungauged reaches.
 - A gauge more than 250 m from any mapped reach styles nothing.
 
 ## Validation
+
+### Original 2026-10-10 results (historical)
 
 | Check | Result |
 |---|---|
@@ -176,6 +184,124 @@ directed reaches, one gauge cue and incomplete coverage, with no observed
 console errors. Browser-control calls were sometimes slow during startup;
 this is not a sustained responsiveness, mobile-device or hosted-browser pass.
 Publication and repository review are recorded separately in delivery receipts.
+
+
+## Zoom levels and source evidence — 2026-10-15 UTC
+
+**CONFIRMED:** the existing [USGS 3DHP layer 50 metadata](https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/50)
+exposes `streamorder`, `flowdirection`, provider identity and network fields.
+The earlier statement that this response provided no stream order described the
+old route's selected fields; it is not a current limitation of the service schema.
+The route now requests `streamorder` explicitly and independently checks it after
+provider filtering. These thresholds are **cartographic choices**, not a new
+hydrologic ranking, discharge estimate, wet-channel claim or activation decision.
+Live query results and actual Kansas coverage remain **NEEDS VERIFICATION**:
+the metadata was readable, but this session could not retrieve the live query.
+
+| Selection | Fetch begins | Smooth opacity ramp | Provider filter | Simplification offset in output degrees |
+|---|---:|---:|---|---:|
+| Statewide overview, eight 2° cells clipped to Kansas envelope | 4 | 4–5 | order 5+ | 0.001 (about 110 m north/south) |
+| Nearby regional, at most nine 1° cells | 6.5 | 7–8 | order 3+ | 0.0005 (about 55 m north/south) |
+| Nearby local, at most nine 0.25° cells | 8.5 | 9–10 for lower/unknown order | existing directed stream/connector filter | 0.0002 (about 22 m north/south) |
+
+Higher-order reaches remain visible as finer detail arrives. The GPU interpolates
+opacity at fractional zoom without rebuilding geometry; request/geometry updates
+remain tied to settled views and batched display frames. The half-pixel zoom lead
+allows prefetching but cannot hide arbitrary provider latency. The overview stays
+as a backing network while detail loads, fails or retires on zoom-out. Fine/coarse
+geometry can differ within the provider simplification tolerance; native visual
+acceptance is still required. No straight connectors bridge source gaps.
+
+At most 26 cells are wanted, nine requests are in flight, 36 cells are cached,
+and 60,000 segments are drawn (3,120,000 instance bytes at 13 float32 values per
+segment). Each response retains the 6 MB/400-reach/80,000-vertex bounds; a full
+400-record response is conservatively reported incomplete even without a provider
+transfer-limit flag. Ordering is not discharge. Sparse order values, omitted
+connectors, failed cells and truncation can leave gaps, which are not filled by
+inference. Regional/local detail is a nearest-cell selection, not full-view
+coverage. Gauge snapping/falloff, measured zero, stale/missing readings, attribution,
+reduced motion and Battery saver retain their existing rules. Conservative
+  per-reach bounding boxes avoid exact gauge snaps against distant overview
+  geometry; the final 250 m nearest-segment rule is unchanged. No new source,
+source registry, data store, approval, release or publication state is introduced.
+
+The API's v2 response adds the request identity and nullable order. The parser
+still accepts v1 local responses conservatively (unknown order/local visibility),
+and original `?cell=west,south` URLs still work. This is application-local display
+metadata, not a second canonical hydrology schema.
+
+### Earlier standalone work and repository boundary
+
+The final overlap check found standalone candidates
+`codex/statewide-water-effects-20261014@fc8d36a82349347712506bddea25b94499721842`
+and `codex/local-statewide-water-effects-20261014@2c8d7fd7136e3b65b2371b0fbf3b1cc077558c5f`.
+Their root-level `app/water-flow-motion.ts` already requests provider order and
+uses order 6/4 profiles; their synchronizer selects one tier at zoom boundaries.
+GitHub reports no common ancestor with this monorepo main. Another standalone
+branch, `codex/godaddy-water-flow-pacing@d9b456a87b0b0bf1482d121f2f808748c4b569dc`,
+still has the zoom-10 gate. No open PR was returned by the current PR collection.
+
+This main-based candidate preserves the repository's existing application lane
+and adds persistent backing geometry, per-reach opacity ramps, a bounded request
+queue and exact-snap screening. Its 5/3 thresholds and fixed-grid request-key
+format are explicit cartographic/API choices, not a claim of equivalence with
+the standalone candidates. Those branches are preserved. Reconciliation with
+any owner-private Site source is a separate review before synchronization;
+this candidate does not bulk-import, supersede or publish their source.
+
+### Candidate validation and limits
+
+The isolated baseline reproduces the exact GitHub main tree
+`d28785c8d6c5a9fa1ea965cbf0b9c0e59bc615ae` at
+`9620b21bca3a3da2fd49a5edda05d8a60a842c47`. These results describe repository
+implementation only, not the owner-private Site or GoDaddy delivery.
+
+- Focused geometry, route, scheduler, GPU-call, accessibility and scene checks:
+  **54 PASS**. The legacy nine-cell burst/gauge tests isolate local planning;
+  new integration cases exercise the actual three-grid planner, queue and zooms.
+- A deterministic 26-cell burst makes one geometry submission on the next display
+  frame, never exceeds nine in-flight requests, deduplicates shared provider IDs,
+  and keeps the overview across zoom-out/in without refetching cached detail.
+- The renderer-call regression makes one instance-buffer upload across 60 flat-map
+  fractional zoom frames; reduced motion holds the clock still. This proves
+  avoided upload work, **not browser FPS, actual shader compilation or GPU time**.
+- Production build, TypeScript and changed-source ESLint: **PASS**.
+- Full 197-file Site suite, executed one Node process per file with four-way
+  concurrency after building each tree: candidate **1,355 tests: 1,293 pass,
+  38 fail, 24 cancelled, 0 skipped**; exact base **1,347 tests: 1,285 pass,
+  38 fail, 24 cancelled, 0 skipped**. The nine nonpassing file outcomes and
+  per-file counts match exactly (`api-connections-storage`, `daily-archive`,
+  `earth-engine-context-worker`, `intake-worker`, `local-qwen-bridge`,
+  `local-worker-runtime`, `qwen-local-eval`, `subsurface-assets`,
+  `underground-resources`). Socket `listen EPERM` and pending event-loop failures
+  prevent a full-suite PASS in this sandbox. All eight added tests pass.
+- `make repository-topology`: **NOT PASS** because the default Python lacks
+  PyYAML and pytest. Its diagnostic subcommand reports 0 invariant violations,
+  0 new drift and 93 baselined warnings; that is not an aggregate check pass.
+- Desktop/mobile native rendering: **BLOCKED / NOT ACCEPTED**. No browser surface
+  was available; a local HTTP listener failed with `listen EPERM`. A direct Node
+  `vinext start` also cannot load the Cloudflare build's `cloudflare:` import;
+  it is not the supported local Worker launcher. No local store was attached.
+- Live stream-order queries, provider completeness, sustained 60 FPS, real mobile
+  hardware, terrain/globe seams and full keyboard/screen-reader acceptance remain
+  **NEEDS VERIFICATION**. Mock inputs exercise semantics; they do not activate or
+  certify a provider.
+
+Reproduce from `apps/site/source/` after the normal pinned dependency install:
+
+```sh
+npm run build
+node_modules/.bin/tsc --noEmit
+node_modules/.bin/eslint app/water-flow-motion.ts app/water-flow-sync.ts app/water-flow-layer.ts app/scene-effects.ts app/api/hydrology/flowlines/route.ts
+node --test tests/water-flow-motion.test.mjs tests/water-flow-sync.test.mjs tests/scene-studio.test.mjs tests/cinematic-scene-effects.test.mjs
+```
+
+This session used `--experimental-test-isolation=none` for the four focused files
+because the sandbox refused the normal runner's child communication sockets.
+Application docs and tests stay in their existing `apps/` responsibility lane,
+per Directory Rules v2 §5/§10 and accepted ADR-0029. No path or lifecycle migration
+is needed. Publication, deployment, source activation and independent review are
+separate holds.
 
 ## Rollback
 
