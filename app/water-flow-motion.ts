@@ -17,6 +17,8 @@ export const FLOWLINE_LIMITATION = "USGS 3DHP flowlines that carry the provider'
 export const FLOWLINE_CELL_DEGREES = 0.25;
 /** Grid cells covering Kansas (south-west corners). */
 export const FLOWLINE_EXTENT = Object.freeze({ west: -102.25, south: 36.75, east: -94.5, north: 40.25 });
+/** Shared bounded geometry envelope; retains the older eastern compatibility margin. */
+export const FLOW_COORDINATE_EXTENT = Object.freeze({ ...FLOWLINE_EXTENT, east: -94.4 });
 /** Flowlines are fetched and drawn only at and above this zoom. */
 export const FLOW_MIN_ZOOM = 4.5;
 export type FlowDetail = "overview" | "regional" | "local";
@@ -139,7 +141,7 @@ export function parseFlowlinePayload(value: unknown): FlowlineCellPayload {
       || (payload.detail !== undefined && payload.detail !== "local" && !(typeof reach.streamOrder === "number" && reach.streamOrder >= FLOW_PROFILES[payload.detail].minOrder))
       || !Array.isArray(reach.coordinates) || reach.coordinates.length < 2 || reach.coordinates.length > 10000
       || !reach.coordinates.every((point: unknown) => Array.isArray(point) && point.length === 2
-        && finiteInRange(point[0], -102.2, -94.4) && finiteInRange(point[1], 36.8, 40.2))) throw new Error("Flowline cell contains an invalid reach.");
+        && finiteInRange(point[0], FLOW_COORDINATE_EXTENT.west, FLOW_COORDINATE_EXTENT.east) && finiteInRange(point[1], FLOW_COORDINATE_EXTENT.south, FLOW_COORDINATE_EXTENT.north))) throw new Error("Flowline cell contains an invalid reach.");
     vertices += reach.coordinates.length;
     if (vertices > 80000) throw new Error("Flowline cell geometry limit exceeded.");
   }
