@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-explorer-a11y-reapply-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/history.module.css",
+    "apps/site/source/app/public-map-browser.tsx",
+    "data/receipts/generated/site-v268-explorer-a11y-overlay-20261015.json",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/history.module.css": "sha256:7f03367aaf2f257d544aa7ab398ef498558115057c0e2d91fa7340a048475d44",
+    "apps/site/source/app/public-map-browser.tsx": "sha256:3f39e8c78f59bd9706417ffaeef75a0ebe045579a2e073330d4aa8a512c1213f",
+    "data/receipts/generated/site-v268-explorer-a11y-overlay-20261015.json": "sha256:3c2be2c063ec3109d6ec3ceaefd0189bce07222eba0328386400bf11a157df2e",
+    "tools/qa/site_mirror.py": "sha256:dcaf74a1cda7c459dacd2f908c69be5fc7bf8b8a0e8ab5a7ef45efd6a8852aa6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/runbooks/water-pilot.md@0d84b5d7c15fbbdeb2af64990a90635a64a10069",
+      "repo:data/receipts/generated/site-v268-repository-overlays-20261015.json@0d84b5d7c15fbbdeb2af64990a90635a64a10069",
+      "repo:tools/qa/site_mirror.py@0d84b5d7c15fbbdeb2af64990a90635a64a10069",
+      "repo:data/receipts/generated/genrec-explorer-a11y-contrast-landmark-20261015.json@0d84b5d7c15fbbdeb2af64990a90635a64a10069",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5191",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5192"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/history.module.css": "CONFIRMED",
+    "apps/site/source/app/public-map-browser.tsx": "CONFIRMED",
+    "data/receipts/generated/site-v268-explorer-a11y-overlay-20261015.json": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Predecessor mirror receipt preserved",
+      "outcome": "PASS",
+      "reason": "site-v268-repository-overlays-20261015.json is byte-identical to main@0d84b5d7c1 and is named in the successor's predecessor_receipt."
+    },
+    {
+      "gate": "Runbook procedure",
+      "outcome": "PASS",
+      "reason": "docs/runbooks/water-pilot.md: both paths move from identical to inherited_repository_overlay with new mirror_sha256 and a difference note; upstream site_sha256 kept; counts (identical 845, inherited_repository_overlay 19) and inventory_sha256 recomputed; repository_reconciled_base advanced; reconciliation.overlap names #5191 and #5192; review unchanged."
+    },
+    {
+      "gate": "Content parity",
+      "outcome": "PASS",
+      "reason": "tools/qa/site_mirror.py --check PASS; --diagnose RECORDED_BYTES_MATCH with no changed, missing or unrecorded paths."
+    },
+    {
+      "gate": "Site file bytes",
+      "outcome": "PASS",
+      "reason": "Both Site files are byte-identical to 6f9d2e8319, the #5191 commit whose type-check, lint, 1362 node tests and axe-core WCAG 2.1 AA checks (0 violations on /downloads and /history/prentis-1909, light and dark, 1280 and 375 px) passed."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; the successor mirror receipt review stays PENDING."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0d84b5d7c15fbbdeb2af64990a90635a64a10069"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T20:12:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Re-applies the #5191 Explorer accessibility fixes (history reader small text #60735f to #56685a; selected-map panel aside to section), which #5192 reverted because the mirror receipt was missing, together with a successor Site mirror receipt and the site_mirror.py selector. The predecessor mirror receipt and the #5191 generated receipt are unchanged."
+}
