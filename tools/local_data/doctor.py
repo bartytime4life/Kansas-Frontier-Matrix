@@ -10,6 +10,8 @@ source admission, dependency compatibility, release, or publication readiness.
 from __future__ import annotations
 
 import argparse
+from importlib.machinery import PathFinder
+from importlib.util import find_spec
 import json
 import shutil
 import sys
@@ -39,6 +41,39 @@ OPTIONAL_TOOLS = (
     ("timeout", "Sites bounded build helpers"),
     ("flock", "Sites build locking"),
 )
+WATER_RUNTIME_MODULES = (
+    ("pytest", "pytest"),
+    ("jsonschema", "jsonschema"),
+    ("referencing", "referencing"),
+    ("rfc8785", "rfc8785"),
+    ("connectors_core", "connectors_core.captured_json"),
+    ("catalog", "catalog.core"),
+    ("evidence_resolver", "evidence_resolver.core"),
+    ("policy_runtime", "policy_runtime.core"),
+    ("release", "release.local_store"),
+    ("governed_api", "governed_api.main"),
+)
+
+
+def module_present(name: str) -> bool:
+    """Locate implementation modules without executing package initializers.
+
+    A root namespace such as the repository's catalog/ or release/ directory
+    does not establish that the separately installed Python package exists.
+    Discovery does not prove import compatibility or execute the module.
+    """
+    try:
+        parts = name.split(".")
+        spec = find_spec(parts[0])
+        for index in range(1, len(parts)):
+            if spec is None or spec.loader is None or spec.submodule_search_locations is None:
+                return False
+            spec = PathFinder.find_spec(
+                ".".join(parts[:index + 1]), spec.submodule_search_locations,
+            )
+        return spec is not None and spec.loader is not None
+    except (ImportError, KeyError, OSError, ValueError):
+        return False
 
 
 def inspect(
@@ -121,15 +156,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     report = inspect(args.repo_root)
     if args.water_runtime:
-        import importlib.util
         import os
         checks = []
-        for name in ("pytest", "jsonschema", "referencing", "rfc8785", "connectors_core", "catalog", "evidence_resolver", "policy_runtime", "release", "governed_api"):
-            try:
-                present = importlib.util.find_spec(name) is not None
-            except (ImportError, ValueError):
-                present = False
-            checks.append({"id": "dependency", "name": name, "status": "PASS" if present else "FAIL"})
+        for name, module in WATER_RUNTIME_MODULES:
+            present = module_present(module)
+            checks.append({"id": "dependency", "name": name, "module": module,
+                           "status": "PASS" if present else "FAIL"})
         configured = os.environ.get("KFM_RELEASE_STORE")
         state = "NOT_CONFIGURED"
         if configured:
@@ -139,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
                 state = "ACTIVE_METADATA_PRESENT_UNVERIFIED" if active else "NO_ACTIVE_PACKAGE"
             except Exception:
                 state = "UNAVAILABLE"
-        report["water_runtime"] = {"dependencies": checks, "release_store": state, "service_connectivity": "NOT_CHECKED", "evidence_readiness": "NOT_ESTABLISHED"}
+        report["water_runtime"] = {"dependencies": checks, "dependency_compatibility": "NOT_CHECKED", "release_store": state, "service_connectivity": "NOT_CHECKED", "evidence_readiness": "NOT_ESTABLISHED"}
         if any(c["status"] != "PASS" for c in checks) or state == "UNAVAILABLE":
             report["outcome"] = "FAIL"
     print(json.dumps(report, sort_keys=True, separators=(",", ":")))
