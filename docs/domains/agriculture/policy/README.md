@@ -433,7 +433,7 @@ A repository implementation of the agriculture policy lane conforms to this READ
 | **OQ-AG-POL-03** | Should the `AggregationReceipt` schema live at `schemas/contracts/v1/receipts/aggregation_receipt.schema.json` or `schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json`? Cross-domain receipt class home is itself ADR-class per `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas` §24.12 ADR-S-03. | Architecture steward | ADR-S-03 resolution. |
 | **OQ-AG-POL-04** | What is the canonical bin granularity for `AggregationReceipt` in agriculture (county-year? state-year? HUC8-quarter? ZIP code? other)? | Agriculture domain steward + Policy steward | Per-source review during source admission. |
 | **OQ-AG-POL-05** | Which agriculture source families require a steward-review gate at admission vs which clear by automated checks? (NASS routine vs FSA sensitive vs operator-supplied very sensitive.) | Source steward + Sensitivity reviewer | Per-source `SourceActivationDecision`. |
-| **OQ-AG-POL-06** | How does the `AggregationReceipt` interact with stale-state propagation when an underlying source family is corrected upstream? | Architecture steward + Correction reviewer | Reconcile with [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md). |
+| **OQ-AG-POL-06** | How does the `AggregationReceipt` interact with stale-state propagation when an underlying source family is corrected upstream? | Architecture steward + Correction reviewer | Reconcile with [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md). |
 | **OQ-AG-POL-07** | Should drought / pest stress indicator surfaces carry a doctrine-level "NOT AN ALERT" caveat in their `LayerManifest`, or is the doctrine-wide alert-authority anti-pattern sufficient? | Docs steward + AI surface steward | Surface decision; light ADR if doctrine surfacing is required. |
 
 [⬆ Back to top](#agriculture--policy)
@@ -484,7 +484,7 @@ Treat regulated-crop categories as a sensitivity dimension — file under `polic
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../../../doctrine/ai-as-assistant.md) — AI containment and finite outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](../../../doctrine/map-first.md) — Evidence Drawer and trust badges. `[CONFIRMED sibling.]`
 
@@ -586,7 +586,7 @@ Treat regulated-crop categories as a sensitivity dimension — file under `polic
 
 ### Related docs (compact)
 
-[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`policy-aware.md`](../../../doctrine/policy-aware.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`evidence-first.md`](../../../doctrine/evidence-first.md) · [`authority-ladder.md`](../../../doctrine/authority-ladder.md) · [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md)
+[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`policy-aware.md`](../../../doctrine/policy-aware.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`evidence-first.md`](../../../doctrine/evidence-first.md) · [`authority-ladder.md`](../../../doctrine/authority-ladder.md) · [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md)
 
 **Last updated:** 2026-05-26 · **Version:** v0.1 (draft) · **Status:** awaiting review · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 

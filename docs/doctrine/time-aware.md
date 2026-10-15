@@ -366,7 +366,7 @@ KFM is bitemporal:
 | `prov:atTime` | Point-in-time qualifier on derivations. |
 
 > [!IMPORTANT]
-> A correction to a valid-time value is a **new transaction-time event**, not a rewrite. KFM never silently overwrites historical assertions; superseding requires a `prov:invalidatedAtTime` on the prior assertion and a fresh `prov:generatedAtTime` on the new one. The full correction lifecycle is governed by [`corrections-are-first-class.md`](./corrections-are-first-class.md); the time-doctrine commitment is that **both timestamps survive** in the audit chain, never one overwriting the other. This interlocks with [`retention.md`](./retention.md) §3 append-only default.
+> A correction to a valid-time value is a **new transaction-time event**, not a rewrite. KFM never silently overwrites historical assertions; superseding requires a `prov:invalidatedAtTime` on the prior assertion and a fresh `prov:generatedAtTime` on the new one. The full correction lifecycle is governed by [`corrections-first-class.md`](./corrections-first-class.md); the time-doctrine commitment is that **both timestamps survive** in the audit chain, never one overwriting the other. This interlocks with [`retention.md`](./retention.md) §3 append-only default.
 
 ### 11.1 Temporal canonicalization and coalescing
 
@@ -504,7 +504,7 @@ In 2026-09, a researcher locates a previously unknown USGS bulletin with hourly-
 - **New bundle `eb-flood-1903-source-d`** emitted with `observed_time: 1903-06-02T18:00:00` and `valid_time: 1903-06-02T17:00:00/1903-06-02T19:00:00` (peak interval). `transaction_time: 2026-09-15T10:14:00-05:00`.
 - **`prov:invalidatedAtTime`** on the prior reconciled `observed_time` value at `2026-09-15T10:14:05-05:00`.
 - **`prov:generatedAtTime`** on the new reconciled value at `2026-09-15T10:14:05-05:00`.
-- **A `CorrectionNotice`** per [`corrections-are-first-class.md`](./corrections-are-first-class.md) records the change; the public surface shows the refined peak; the older `observed_time` interval is retained as `LINEAGE` per [`authority-ladder.md`](./authority-ladder.md).
+- **A `CorrectionNotice`** per [`corrections-first-class.md`](./corrections-first-class.md) records the change; the public surface shows the refined peak; the older `observed_time` interval is retained as `LINEAGE` per [`authority-ladder.md`](./authority-ladder.md).
 - **A `CoalescingReceipt`** per §11.1 documents that the older `1903-05-31/1903-06-04` event-frame is retained (still the bounding interval) while the peak instant `1903-06-02T18:00:00` is added as a narrower observation.
 
 </details>
@@ -680,14 +680,14 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`; the five-stage pipeline this doctrine's §5 elaborates with time-handling rules. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — `EvidenceBundle` and `EvidenceRef` are the primary time-bearing objects in §6.2. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Carriers (tile renders, dashboards, AI summaries) inherit temporal scope from their canonical sources; D-2 (rebuildable) anchors temporal-derivation reproducibility. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — Bitemporal correction (§11) routes through correction lifecycle; `prov:invalidatedAtTime` on prior + `prov:generatedAtTime` on new. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](./corrections-first-class.md) — Bitemporal correction (§11) routes through correction lifecycle; `prov:invalidatedAtTime` on prior + `prov:generatedAtTime` on new. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](./policy-aware.md) — Public-API temporal queries resolve through `RuntimeResponseEnvelope`; `BOUNDED` for uncertain temporal answers; freshness (§10) is a separate concern from time-awareness (see [§14](#14-time-awareness-vs-freshness)). `[CONFIRMED sibling.]`
 - [`docs/doctrine/retention.md`](./retention.md) — Append-only default (§3) underlies the "new transaction-time event, not a rewrite" rule in §11; receipt families (`CoalescingReceipt`) follow retention class R1. `[CONFIRMED sibling.]`
 - [`docs/doctrine/sensitivity.md`](./sensitivity.md) — Death dates of living-person records route through Privacy reviewer (S4 living-person row); date redactions emit `RedactionReceipt`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — `LINEAGE` truth-label retains superseded `observed_time` values per §11 worked example. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI cannot emit canonical date assertions; AI may draft date inferences from prose, a domain steward decides; `AIReceipt` + `GENERATED_RECEIPT.json` required. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — §7.1 names six time kinds at the public map UI surface; §6.1 of this doctrine names the underlying seven dimensions (six + transaction time). See [OQ-TA-07](#17-open-questions-register). `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — `BOUNDED`, `LINEAGE`, `CONFLICTED` authoring/runtime labels relevant to temporal uncertainty and superseded values. `[NEEDS VERIFICATION — exact filename.]`
+- [`docs/doctrine/truth-posture.md`](./truth-posture.md) — `BOUNDED`, `LINEAGE`, `CONFLICTED` authoring/runtime labels relevant to temporal uncertainty and superseded values. `[NEEDS VERIFICATION — exact filename.]`
 - [`docs/standards/EDTF_PROFILE.md`](../standards/EDTF_PROFILE.md) — KFM's accepted EDTF subset + parser choice. `[TODO — companion standards doc proposed by this doctrine.]`
 - [`docs/standards/OWL_TIME_PROFILE.md`](../standards/OWL_TIME_PROFILE.md) — OWL-Time emission profile. `[TODO.]`
 - [`docs/standards/CIDOC_CRM_TIME.md`](../standards/CIDOC_CRM_TIME.md) — CIDOC E52 Time-Span usage. `[TODO.]`

@@ -108,7 +108,7 @@ See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for
 
 ## Collection identity
 
-- PROPOSED Collection id: `kfm-ahgp-county-town-histories` (see [`IDENTITY.md`](./IDENTITY.md)).
+- PROPOSED Collection id: `kfm-ahgp-county-town-histories` (see [`IDENTITY.md`](../IDENTITY.md)).
 - PROPOSED namespace: `kfm:` *(see family-level OPEN-DSC-03)*.
 - PROPOSED asset roles (NEEDS VERIFICATION against `schemas/contracts/v1/source/`):
 
@@ -198,7 +198,7 @@ PROPOSED handling for this product:
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
 
 **Product-specific posture (PROPOSED, summary only — canonical rules live in policy):**
 
@@ -338,7 +338,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## Open questions
 
-Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md). County/town-history-specific items below MUST NOT renumber family-level questions.
+Shared source-catalog open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [`OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md). County/town-history-specific items below MUST NOT renumber those shared questions.
 
 <details>
 <summary><b>County/town-history-specific open questions (10)</b></summary>
@@ -365,10 +365,10 @@ Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [
 ## Related docs
 
 - [`docs/sources/catalog/ahgp/README.md`](./README.md) — AHGP family README (activation prerequisites live here).
-- [`docs/sources/catalog/ahgp/IDENTITY.md`](./IDENTITY.md) — Collection id patterns and namespace pins.
-- [`docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights/sensitivity map (canonical).
-- [`docs/sources/catalog/ahgp/NAMING.md`](./NAMING.md) — Naming conventions.
-- [`docs/sources/catalog/ahgp/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — Family-level open questions register.
+- [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection id patterns and namespace pins.
+- [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Shared rights/sensitivity documentation; executable rules remain in policy.
+- [`docs/sources/catalog/NAMING.md`](../NAMING.md) — Naming conventions.
+- [`docs/sources/catalog/OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) — Shared source-catalog open questions register.
 - [`docs/sources/catalog/ahgp/cemetery-transcriptions.md`](./cemetery-transcriptions.md) — Sibling product (cemetery surface, `aggregate`).
 - [`docs/sources/catalog/ahgp/census-transcriptions.md`](./census-transcriptions.md) — Sibling product (census surface, `aggregate`, 72-year-rule gate).
 - [`docs/sources/catalog/README.md`](../README.md) — Source catalog landing.

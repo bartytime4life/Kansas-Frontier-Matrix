@@ -505,7 +505,7 @@ At `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED), indexed fro
 - [`docs/doctrine/policy-aware.md`](../../../doctrine/policy-aware.md) — finite policy outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
 
 **Agriculture domain orientation**

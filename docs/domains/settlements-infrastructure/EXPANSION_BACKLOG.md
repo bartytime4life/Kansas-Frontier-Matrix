@@ -671,6 +671,6 @@ CONFIRMED from Atlas §24.5 (Master Sensitivity / Rights Tier Reference) and the
 
 ---
 
-**Related docs:** [Operating contract](../../../ai-build-operating-contract.md) · [Atlas Ch. 14 / §20.5 / §24.5 / §24.13 (PROPOSED link)](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) · [Encyclopedia §7.1 / §11 (PROPOSED link)](../../encyclopedia/README.md) · [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
+**Related docs:** [Operating contract](../../doctrine/ai-build-operating-contract.md) · [Atlas Ch. 14 / §20.5 / §24.5 / §24.13 (PROPOSED link)](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) · [Encyclopedia §7.1 / §11 (PROPOSED link)](../../encyclopedia/README.md) · [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
 
 **Last updated:** 2026-06-08  ·  `CONTRACT_VERSION = "3.0.0"`  ·  [⬆ back to top](#contents)

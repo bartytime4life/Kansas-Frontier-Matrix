@@ -555,7 +555,7 @@ Each item below is **checkable** but **not yet checked** strongly enough in this
 - [`../../runbooks/`](../../runbooks/) — Operational runbooks (Roads/Rail/Trade runbook not yet authored)
 - [`../../registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Verification backlog register *(NEEDS VERIFICATION)*
 - [`../../registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift register *(NEEDS VERIFICATION)*
-- [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — Operating contract, `CONTRACT_VERSION = "3.0.0"`
+- [`../../doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Operating contract, `CONTRACT_VERSION = "3.0.0"`
 - Atlas: `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas` Chapter 13 (Roads, Rail, and Trade Routes) — *(CONFIRMED doctrinal source)*
 - `release/README.md` — Release root README *(CONFIRMED layout per Directory Rules §9.2; per-domain presence NEEDS VERIFICATION)*
 - `schemas/contracts/v1/release/release_manifest.schema.json` — `ReleaseManifest` schema *(PROPOSED; NEEDS VERIFICATION; see Open Question #8)*

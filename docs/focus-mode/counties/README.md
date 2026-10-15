@@ -789,35 +789,35 @@ CI MUST call `python tools/validate_all.py`, which discovers and runs this valid
 
 ## 19. Focus-mode registry (in-flight drafts)
 
-**PROPOSED — draft build plans only.** The build plans below are `status: draft`, all dated 2026-05-21, and their existence in the live repository is `NEEDS_VERIFICATION`. None has yet produced a published `ReleaseManifest`. For the full 105-county universe (including all `not-started` rows and per-county sensitivity flags), see [`COUNTY_INDEX.md`](./COUNTY_INDEX.md).
+**Draft build plans only.** All 17 linked plan files are present under this existing county lane (verified 2026-10-15). File presence establishes neither implementation maturity nor a published `ReleaseManifest`; plan content, runtime behavior and release status require their own evidence. For the full 105-county universe (including all `not-started` rows and per-county sensitivity flags), see [`COUNTY_INDEX.md`](./COUNTY_INDEX.md).
 
 The **Ordinal** column reflects the **drafting order asserted by each plan's own narrative**, not a release order.
 
-| # | County | Scope | Build plan path (PROPOSED, canonical) | Distinguishing profile |
+| # | County | Scope | Existing draft build plan | Distinguishing profile |
 |---|---|---|---|---|
-| 1 | **Ellsworth** | county | [`docs/focus-modes/ellsworth-county/build-plan.md`](./ellsworth-county/build-plan.md) | First flagship proof slice; Smoky Hill River, Fort Harker, Kanopolis; settlement; environmental baseline |
-| 2 | **Riley** | county | [`docs/focus-modes/riley-county/build-plan.md`](./riley-county/build-plan.md) | Flint Hills ecology; Fort Riley; Konza Prairie; research-site sensitivity; rivers |
-| 3 | **Shawnee** | county | [`docs/focus-modes/shawnee-county/build-plan.md`](./shawnee-county/build-plan.md) | State government; civil-rights history; Topeka urban geography; archives |
-| 4 | **Ford** | county | [`docs/focus-modes/ford-county/build-plan.md`](./ford-county/build-plan.md) | Dodge City; Santa Fe Trail; Fort Dodge; Arkansas River; High Plains agriculture |
-| 5 | **Wyandotte** | county | [`docs/focus-modes/wyandotte-county/build-plan.md`](./wyandotte-county/build-plan.md) | Urban governance; river confluence; tribal/burial sensitivity; environmental justice; rail/industry |
-| 6 | **Sedgwick** | county | [`docs/focus-modes/sedgwick-county/build-plan.md`](./sedgwick-county/build-plan.md) | Wichita metro; aviation; Chisholm Trail; severe weather; public health; infrastructure |
-| 7 | **Douglas** | county | [`docs/focus-modes/douglas-county/build-plan.md`](./douglas-county/build-plan.md) | Free-State / Bleeding Kansas; KU; Haskell; rivers; archives; traumatic public memory |
-| 8 | **Leavenworth** | county | [`docs/focus-modes/leavenworth-county/build-plan.md`](./leavenworth-county/build-plan.md) | Fort Leavenworth; Missouri River; territorial politics; corrections; military education |
-| 9 | **Reno** | county | [`docs/focus-modes/reno-county/build-plan.md`](./reno-county/build-plan.md) | Hutchinson; salt mining; Cosmosphere; Arkansas lowlands; wetlands; State Fair |
-| 10 | **Johnson** | county | [`docs/focus-modes/johnson-county/build-plan.md`](./johnson-county/build-plan.md) | Suburban metro; archives; streamways; corporate campuses; property/privacy |
-| 11 | **Barton** | county | [`docs/focus-modes/barton-county/build-plan.md`](./barton-county/build-plan.md) | Great Bend; Cheyenne Bottoms; Central Flyway; Santa Fe Trail; wetlands; oil/wheat |
-| 12 | **Geary** | county | [`docs/focus-modes/geary-county/build-plan.md`](./geary-county/build-plan.md) | Junction City; Fort Riley community-facing; Milford Lake; river confluence; recreation |
-| 13 | **Finney** | county | [`docs/focus-modes/finney-county/build-plan.md`](./finney-county/build-plan.md) | Garden City; Ogallala Aquifer; irrigation; meatpacking; immigration/labor |
-| 14 | **Cherokee** | county | [`docs/focus-modes/cherokee-county/build-plan.md`](./cherokee-county/build-plan.md) | Galena / Baxter Springs; Tri-State lead-zinc mining; Route 66; Big Brutus; Spring River |
-| 15 | **Saline** | county | [`docs/focus-modes/saline-county/build-plan.md`](./saline-county/build-plan.md) | Salina hub; Smoky Hill / Saline River; floodplain; civic GIS; agriculture |
-| 16 | **Crawford** | county | [`docs/focus-modes/crawford-county/build-plan.md`](./crawford-county/build-plan.md) | Pittsburg; Tri-State coal field; mined-land ecology; floodplain updates; agriculture |
-| 17 | **Lyon** | county | [`docs/focus-modes/lyon-county/build-plan.md`](./lyon-county/build-plan.md) | Emporia; Flint Hills edge; Kansas Turnpike corridor |
+| 1 | **Ellsworth** | county | [`docs/focus-mode/counties/ellsworth_county/ellsworth_county_focus_mode_build_plan.md`](./ellsworth_county/ellsworth_county_focus_mode_build_plan.md) | First flagship proof slice; Smoky Hill River, Fort Harker, Kanopolis; settlement; environmental baseline |
+| 2 | **Riley** | county | [`docs/focus-mode/counties/riley_county/riley_county_focus_mode_build_plan.md`](./riley_county/riley_county_focus_mode_build_plan.md) | Flint Hills ecology; Fort Riley; Konza Prairie; research-site sensitivity; rivers |
+| 3 | **Shawnee** | county | [`docs/focus-mode/counties/shawnee_county/shawnee_county_focus_mode_build_plan.md`](./shawnee_county/shawnee_county_focus_mode_build_plan.md) | State government; civil-rights history; Topeka urban geography; archives |
+| 4 | **Ford** | county | [`docs/focus-mode/counties/ford_county/ford_county_focus_mode_build_plan.md`](./ford_county/ford_county_focus_mode_build_plan.md) | Dodge City; Santa Fe Trail; Fort Dodge; Arkansas River; High Plains agriculture |
+| 5 | **Wyandotte** | county | [`docs/focus-mode/counties/wyandotte_county/wyandotte_county_focus_mode_build_plan.md`](./wyandotte_county/wyandotte_county_focus_mode_build_plan.md) | Urban governance; river confluence; tribal/burial sensitivity; environmental justice; rail/industry |
+| 6 | **Sedgwick** | county | [`docs/focus-mode/counties/sedgwick_county/sedgwick_county_focus_mode_build_plan.md`](./sedgwick_county/sedgwick_county_focus_mode_build_plan.md) | Wichita metro; aviation; Chisholm Trail; severe weather; public health; infrastructure |
+| 7 | **Douglas** | county | [`docs/focus-mode/counties/douglas_county/douglas_county_focus_mode_build_plan.md`](./douglas_county/douglas_county_focus_mode_build_plan.md) | Free-State / Bleeding Kansas; KU; Haskell; rivers; archives; traumatic public memory |
+| 8 | **Leavenworth** | county | [`docs/focus-mode/counties/leavenworth_county/leavenworth_county_focus_mode_build_plan.md`](./leavenworth_county/leavenworth_county_focus_mode_build_plan.md) | Fort Leavenworth; Missouri River; territorial politics; corrections; military education |
+| 9 | **Reno** | county | [`docs/focus-mode/counties/reno_county/reno_county_focus_mode_build_plan.md`](./reno_county/reno_county_focus_mode_build_plan.md) | Hutchinson; salt mining; Cosmosphere; Arkansas lowlands; wetlands; State Fair |
+| 10 | **Johnson** | county | [`docs/focus-mode/counties/johnson_county/johnson_county_focus_mode_build_plan.md`](./johnson_county/johnson_county_focus_mode_build_plan.md) | Suburban metro; archives; streamways; corporate campuses; property/privacy |
+| 11 | **Barton** | county | [`docs/focus-mode/counties/barton_county/barton_county_focus_mode_build_plan.md`](./barton_county/barton_county_focus_mode_build_plan.md) | Great Bend; Cheyenne Bottoms; Central Flyway; Santa Fe Trail; wetlands; oil/wheat |
+| 12 | **Geary** | county | [`docs/focus-mode/counties/geary_county/geary_county_focus_mode_build_plan.md`](./geary_county/geary_county_focus_mode_build_plan.md) | Junction City; Fort Riley community-facing; Milford Lake; river confluence; recreation |
+| 13 | **Finney** | county | [`docs/focus-mode/counties/finney_county/finney_county_focus_mode_build_plan.md`](./finney_county/finney_county_focus_mode_build_plan.md) | Garden City; Ogallala Aquifer; irrigation; meatpacking; immigration/labor |
+| 14 | **Cherokee** | county | [`docs/focus-mode/counties/cherokee_county/cherokee_county_focus_mode_build_plan.md`](./cherokee_county/cherokee_county_focus_mode_build_plan.md) | Galena / Baxter Springs; Tri-State lead-zinc mining; Route 66; Big Brutus; Spring River |
+| 15 | **Saline** | county | [`docs/focus-mode/counties/saline_county/saline_county_focus_mode_build_plan.md`](./saline_county/saline_county_focus_mode_build_plan.md) | Salina hub; Smoky Hill / Saline River; floodplain; civic GIS; agriculture |
+| 16 | **Crawford** | county | [`docs/focus-mode/counties/crawford_county/crawford_county_focus_mode_build_plan.md`](./crawford_county/crawford_county_focus_mode_build_plan.md) | Pittsburg; Tri-State coal field; mined-land ecology; floodplain updates; agriculture |
+| 17 | **Lyon** | county | [`docs/focus-mode/counties/lyon_county/lyon_county_focus_mode_build_plan.md`](./lyon_county/lyon_county_focus_mode_build_plan.md) | Emporia; Flint Hills edge; Kansas Turnpike corridor |
 
 > [!NOTE]
-> The first eleven counties motivated the §6.7 placement contract in `directory-rules.md` v1.2; counties 12–17 are subsequent draft plans following the same template. Per-build-plan implementation maturity is `UNKNOWN` until the live repository is mounted. `COUNTY_INDEX.md` carries the larger ≥30-county set from `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C at `status: draft`, and all remaining Kansas counties (to 105) at `status: not-started`.
+> The first eleven counties motivated the §6.7 placement contract in `directory-rules.md` v1.2; counties 12–17 are subsequent draft plans following the same template. Per-build-plan implementation maturity remains `NEEDS VERIFICATION`; the link repair does not validate implementation. `COUNTY_INDEX.md` carries the larger ≥30-county set from `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` Appendix C at `status: draft`, and all remaining Kansas counties (to 105) at `status: not-started`.
 
 > [!WARNING]
-> **Link disposition.** Two draft build plans in the corpus (Crawford and Saline) historically referenced a divergent docs path `docs/focus_modes/counties/<area>/`. As of v0.3, all roster links point to the canonical `docs/focus-modes/<area>-county/build-plan.md`. Existing build-plan files that still carry the divergent path in their own `related:` blocks SHOULD be updated on their next revision; see [§21 OPEN-FM-09](#21-drift-register-and-open-items).
+> **Link disposition — 2026-10-15.** Roster links now resolve to existing `docs/focus-mode/counties/<area>_county/<area>_county_focus_mode_build_plan.md` files. This corrects navigation only; it does not adopt a new path authority, move plans, reconcile their internal metadata, or close [§21 OPEN-FM-09](#21-drift-register-and-open-items).
 
 [↑ Back to top](#top)
 
