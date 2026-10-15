@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-living-persons-geoprivacy-metadata-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/policy/living_persons_geoprivacy.md"
+  ],
+  "artifact_hashes": {
+    "docs/policy/living_persons_geoprivacy.md": "sha256:b34ad08965a8e4fc3d70ceb3c0ca927db588e1d0e0b64fb33075f11111a5d14f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-living-person-redaction-dedupe-20261015.json@9f338f70afa7c3de229ef5842183a3770d2cc5e7",
+      "repo:docs/policy/living_persons_geoprivacy.md@9f338f70afa7c3de229ef5842183a3770d2cc5e7",
+      "repo:tools/validators/docs/meta-block/meta_block_core.py@9f338f70afa7c3de229ef5842183a3770d2cc5e7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5184#discussion_r4279388986"
+    ]
+  },
+  "truth_labels": {
+    "docs/policy/living_persons_geoprivacy.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-living-person-redaction-dedupe-20261015 (merged in #5184) is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The one artifact path is bound to its bytes on this branch; it differs from the original receipt because this follow-up edited it."
+    },
+    {
+      "gate": "Diff-scoped documentation CI",
+      "outcome": "PASS",
+      "reason": "docs-meta-block and docs-stale-scan fail on the push range 42be066ab6...9f338f70af (main) and pass with this change: created now records the first commit that added the path (fa728424d5, 2026-05-20), and type keeps one token with the remaining descriptors in subtype. link-check and document-graph also pass."
+    },
+    {
+      "gate": "Review-finding reconciliation",
+      "outcome": "PASS",
+      "reason": "Status text no longer describes the resolved living_person_redaction.rego duplicate as open (truth_posture, HOLD note, conflicts list, routing row, gap table, non-effects line), per the review finding on #5184."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation; water-conformance is red on main since #5179 and #5182 and is not caused by this change."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-living-person-redaction-dedupe-20261015",
+      "evidence_ref": "repo:data/receipts/generated/genrec-living-person-redaction-dedupe-20261015.json@9f338f70afa7c3de229ef5842183a3770d2cc5e7",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T05:41:12Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-living-person-redaction-dedupe-20261015 for the #5184 follow-up. Edits only docs/policy/living_persons_geoprivacy.md; no policy file changes."
+}
