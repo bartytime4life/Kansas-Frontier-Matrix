@@ -1,13 +1,14 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-policy-living-persons-geoprivacy
 title: Living Persons Geoprivacy — Containment and Routing Crosswalk
-type: compatibility-document; routing-crosswalk; proposal-scaffold; noncanonical-doc-lane
+type: compatibility-document
+subtype: routing-crosswalk; proposal-scaffold; noncanonical-doc-lane
 version: v0.2-draft
 status: draft; repository-grounded; proposal-only; containment-crosswalk; noncanonical-under-directory-rules; no-policy-authority; no-personal-data; migration-hold; non-release; non-publication
 owners:
   - "@bartytime4life — verified CODEOWNERS fallback only"
 owner_status: "@bartytime4life is the confirmed repository review route. Independent People/DNA/Land, privacy, consent, rights, sensitivity, geoprivacy, security, policy, evidence, review, release, correction, rollback, and documentation stewardship remains NEEDS VERIFICATION."
-created: "NEEDS VERIFICATION — the scaffold predates this repository-reconciliation revision"
+created: 2026-05-20
 updated: 2026-10-15
 policy_label: repository-public
 current_path: docs/policy/living_persons_geoprivacy.md
@@ -114,6 +115,7 @@ notes:
   - "v0.2 replaces a short planned-path placeholder with a repository-grounded, proposal-only containment and routing crosswalk."
   - "This file remains subordinate to docs/policy/README.md and does not authorize substantive growth under docs/policy/."
   - "People/DNA/Land explanation remains under docs/domains/people-dna-land/; executable policy remains under policy/."
+  - "2026-10-15: created is the first git commit adding this path (fa728424d5); type keeps its first token and the remaining descriptors move to subtype."
   - "The identical living_person_redaction.rego bytes under policy/sensitivity/ and policy/domains/people-dna-land/ were a disclosed conflict that this document selected neither side of. On 2026-10-15 the repository owner kept policy/sensitivity/living_person_redaction.rego and retired the domain copy; the retained file remains a non-operative stub."
   - "Physical migration, compatibility, retirement, or deletion remains HOLD pending accepted disposition and consumer closure."
 [/KFM_META_BLOCK_V2] -->

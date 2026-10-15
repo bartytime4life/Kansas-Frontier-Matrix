@@ -8,7 +8,7 @@
     "tests/policy/test_rego_compile_census.py"
   ],
   "artifact_hashes": {
-    "docs/policy/living_persons_geoprivacy.md": "sha256:6932c6c64b0d82c286d9a8c954c76e115d153014c32c3445cb9a0b5461300dda",
+    "docs/policy/living_persons_geoprivacy.md": "sha256:8aaa44c14713b975eaac94e941d4f62e458d5c91c40c653bf93269ee5562e417",
     "policy/domains/people-dna-land/README.md": "sha256:68cddcc722facf71b088c6093899e22f132c43c57c574a7ae981c014185e4f3d",
     "tests/policy/README.md": "sha256:5d6a41ed006119b1779b62b871d2216f1b50bd9279a19cafb04d409aefe78c05",
     "tests/policy/test_rego_compile_census.py": "sha256:e201118ba0eec1cd0edbca425d7e695eee1f495d95863854a60c23ad5c7f5536"
@@ -63,6 +63,11 @@
       "gate": "Repository guardrails and focused tests",
       "outcome": "PASS",
       "reason": "make gap-scan, scaffold-inventory, repository-guardrails, repository-governance-parity, docs-critical-structure, boundary-guards and deny-suites exit 0; validate_all.py --profile full 29/29 PASS; 800 tests passed across tests/policy, tests/docs, tests/domains/people-dna-land, tests/qa, tests/validators/directory_governance, tests/governance and tests/ci; the domain workflow inventory script passes."
+    },
+    {
+      "gate": "Diff-scoped documentation CI",
+      "outcome": "PASS",
+      "reason": "docs-meta-block, docs-stale-scan, link-check and docs-document-graph pass locally against the PR base. Touching living_persons_geoprivacy.md surfaced two pre-existing metadata defects (created was not a date; type held four values); created now records the first commit date (fa728424d5, 2026-05-20) and the extra type descriptors moved to subtype."
     },
     {
       "gate": "Hosted CI on the pushed head",
