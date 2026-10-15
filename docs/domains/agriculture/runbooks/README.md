@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/domains/agriculture/runbooks
 title: Agriculture · Runbooks
 type: readme
 subtype: domain-aspect-index
@@ -13,21 +13,20 @@ created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/evidence-first.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/runbooks/agriculture/
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - docs/domains/agriculture/README.md
-  - docs/domains/agriculture/policy/README.md
-  - docs/domains/agriculture/architecture/README.md
-  - policy/domains/agriculture/
-  - control_plane/source_authority_register.yaml
-  - control_plane/verification_backlog.yaml
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/trust-membrane.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/runbooks/agriculture/"
+  - "docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md"
+  - "docs/domains/agriculture/README.md"
+  - "docs/domains/agriculture/policy/README.md"
+  - "policy/domains/agriculture/"
+  - "control_plane/source_authority_register.yaml"
+  - "control_plane/verification_backlog.yaml"
 tags: [kfm, docs-index, domain, agriculture, runbooks, operations, source-refresh, incident-response, correction, rollback, fail-closed]
 notes:
   - Docs **explain** how to operate; the canonical home for runbook files is `docs/runbooks/<domain>/` per Directory Rules §6.1.b (CONFIRMED by the fauna precedent). This README is a **domain-side index** that points to those runbooks from the `docs/domains/agriculture/` orientation surface.
@@ -36,6 +35,17 @@ notes:
   - Pinned to `CONTRACT_VERSION = "3.0.0"` per `ai-build-operating-contract.md` §0 / §37.
   - Incident response framework follows NIST SP 800-61 per atlas card KFM-P8-PROG-0014.
   - All concrete runbook paths under `docs/runbooks/agriculture/` are PROPOSED until verified against the live repository.
+previous_placeholder_doc_id: "kfm://doc/<TODO-uuid>"
+owning_root: docs/
+responsibility: "Human-readable Agriculture · Runbooks guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/domains/agriculture/architecture/README.md"
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Agriculture · Runbooks
@@ -272,18 +282,18 @@ This is the **agriculture runbook index**. Each row is a PROPOSED file under `do
 | Runbook (PROPOSED) | Purpose | Triggers | Receipts emitted |
 |---|---|---|---|
 | [`SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md) | Refresh one or more admitted ag source families on cadence. | Scheduled cadence reached; manual refresh requested. | `IntakeReceipt`, `SourceActivationDecision`, `TransformReceipt`, `RunReceipt`. |
-| [`AGGREGATION_RECEIPT_RUNBOOK.md`](../../../runbooks/agriculture/AGGREGATION_RECEIPT_RUNBOOK.md) | Generate or regenerate an `AggregationReceipt` for a published or candidate aggregate. | Bin/cell semantics change; aggregate revalidation; correction-driven regen. | `AggregationReceipt`, `RunReceipt`. |
-| [`VALIDATION_RUN_RUNBOOK.md`](../../../runbooks/agriculture/VALIDATION_RUN_RUNBOOK.md) | Run the agriculture validator suite (SSURGO lineage, crop progress aggregate-only, field-level NASS deny, vegetation index mask/time, etc.). | Pre-promotion; CI; investigation. | `ValidationReport`, `RunReceipt`. |
-| [`STEWARD_REVIEW_RUNBOOK.md`](../../../runbooks/agriculture/STEWARD_REVIEW_RUNBOOK.md) | Steward and sensitivity-reviewer workflow for sensitive ag lanes. | Sensitivity lane activation; private-join request; pre-release. | `ReviewRecord`, `PolicyDecision`. |
-| [`PUBLICATION_RUNBOOK.md`](../../../runbooks/agriculture/PUBLICATION_RUNBOOK.md) | Promote a release candidate to `PUBLISHED` for the agriculture lane. | Release candidate accepted; release authority signs off. | `PromotionDecision`, `ReleaseManifest`, `ProofPack`, `ReviewRecord`, `RollbackCard`. |
-| [`CORRECTION_RUNBOOK.md`](../../../runbooks/agriculture/CORRECTION_RUNBOOK.md) | Issue a `CorrectionNotice` for a published ag claim; identify and notify downstream derivatives. | Upstream source correction; internal error detected; reviewer-initiated. | `CorrectionNotice`, `RunReceipt`. |
+| `docs/runbooks/agriculture/AGGREGATION_RECEIPT_RUNBOOK.md` (PROPOSED; target unavailable) | Generate or regenerate an `AggregationReceipt` for a published or candidate aggregate. | Bin/cell semantics change; aggregate revalidation; correction-driven regen. | `AggregationReceipt`, `RunReceipt`. |
+| `docs/runbooks/agriculture/VALIDATION_RUN_RUNBOOK.md` (PROPOSED; target unavailable) | Run the agriculture validator suite (SSURGO lineage, crop progress aggregate-only, field-level NASS deny, vegetation index mask/time, etc.). | Pre-promotion; CI; investigation. | `ValidationReport`, `RunReceipt`. |
+| `docs/runbooks/agriculture/STEWARD_REVIEW_RUNBOOK.md` (PROPOSED; target unavailable) | Steward and sensitivity-reviewer workflow for sensitive ag lanes. | Sensitivity lane activation; private-join request; pre-release. | `ReviewRecord`, `PolicyDecision`. |
+| `docs/runbooks/agriculture/PUBLICATION_RUNBOOK.md` (PROPOSED; target unavailable) | Promote a release candidate to `PUBLISHED` for the agriculture lane. | Release candidate accepted; release authority signs off. | `PromotionDecision`, `ReleaseManifest`, `ProofPack`, `ReviewRecord`, `RollbackCard`. |
+| `docs/runbooks/agriculture/CORRECTION_RUNBOOK.md` (PROPOSED; target unavailable) | Issue a `CorrectionNotice` for a published ag claim; identify and notify downstream derivatives. | Upstream source correction; internal error detected; reviewer-initiated. | `CorrectionNotice`, `RunReceipt`. |
 | [`ROLLBACK_RUNBOOK.md`](../../../runbooks/agriculture/ROLLBACK_RUNBOOK.md) | Execute the `RollbackCard` for an ag release; restore prior state visibly. | Failed release; correction with rollback requirement; incident response. | `RollbackCard` execution record; `RunReceipt`. |
-| [`QUARANTINE_REMEDIATION_RUNBOOK.md`](../../../runbooks/agriculture/QUARANTINE_REMEDIATION_RUNBOOK.md) | Remediate quarantined ag material and re-present at the verification gate. | Quarantine triggered; rights / sensitivity / source-role resolved. | `QuarantineReceipt` close-out; re-entry to `WORK`. |
-| [`INCIDENT_RESPONSE_RUNBOOK.md`](../../../runbooks/agriculture/INCIDENT_RESPONSE_RUNBOOK.md) | NIST SP 800-61 path (Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-Incident Activity) adapted with KFM governance-ledger signals and IOC catalogs. `[CONFIRMED framework — KFM-P8-PROG-0014.]` | Suspected private-data leak; field-level-from-aggregate leak; alert-authority misuse; supply-chain anomaly. | Incident record; post-incident artifact; updated IOC entries. |
-| [`STALE_STATE_RUNBOOK.md`](../../../runbooks/agriculture/STALE_STATE_RUNBOOK.md) | Detect, surface, and propagate stale state for ag claims; produce `ABSTAIN freshness.window_lapsed` + UI `SOURCE_STALE`. | Cadence lapse; downstream stale-propagation event. | Stale-state markers; `RunReceipt`. |
-| [`CROSS_LANE_JOIN_REVIEW_RUNBOOK.md`](../../../runbooks/agriculture/CROSS_LANE_JOIN_REVIEW_RUNBOOK.md) | Steward review of cross-lane joins (Soil, Hydrology, Atmosphere, People/Land, Habitat). Person-parcel joins fail closed. | New cross-lane join proposal; cross-lane edge change. | `ReviewRecord`, `PolicyDecision`. |
-| [`SCHEMA_MIGRATION_RUNBOOK.md`](../../../runbooks/agriculture/SCHEMA_MIGRATION_RUNBOOK.md) | Migrate an agriculture schema to a new version under ADR. | Schema-home or schema-version change; ADR-S-04 source-role evolution. | ADR reference; migration receipt; `RunReceipt`. |
-| [`EVALUATOR_RUNBOOK.md`](../../../runbooks/agriculture/EVALUATOR_RUNBOOK.md) | Evaluator and threshold-owner surface per KFM-P19-FEAT-0008. Threshold ownership, reviewer checklist, no-network run, metric definitions, response steps. | Evaluator-policy failure; threshold breach. | `ValidationReport`, `RunReceipt`. |
+| `docs/runbooks/agriculture/QUARANTINE_REMEDIATION_RUNBOOK.md` (PROPOSED; target unavailable) | Remediate quarantined ag material and re-present at the verification gate. | Quarantine triggered; rights / sensitivity / source-role resolved. | `QuarantineReceipt` close-out; re-entry to `WORK`. |
+| `docs/runbooks/agriculture/INCIDENT_RESPONSE_RUNBOOK.md` (PROPOSED; target unavailable) | NIST SP 800-61 path (Preparation → Detection & Analysis → Containment, Eradication & Recovery → Post-Incident Activity) adapted with KFM governance-ledger signals and IOC catalogs. `[CONFIRMED framework — KFM-P8-PROG-0014.]` | Suspected private-data leak; field-level-from-aggregate leak; alert-authority misuse; supply-chain anomaly. | Incident record; post-incident artifact; updated IOC entries. |
+| `docs/runbooks/agriculture/STALE_STATE_RUNBOOK.md` (PROPOSED; target unavailable) | Detect, surface, and propagate stale state for ag claims; produce `ABSTAIN freshness.window_lapsed` + UI `SOURCE_STALE`. | Cadence lapse; downstream stale-propagation event. | Stale-state markers; `RunReceipt`. |
+| `docs/runbooks/agriculture/CROSS_LANE_JOIN_REVIEW_RUNBOOK.md` (PROPOSED; target unavailable) | Steward review of cross-lane joins (Soil, Hydrology, Atmosphere, People/Land, Habitat). Person-parcel joins fail closed. | New cross-lane join proposal; cross-lane edge change. | `ReviewRecord`, `PolicyDecision`. |
+| `docs/runbooks/agriculture/SCHEMA_MIGRATION_RUNBOOK.md` (PROPOSED; target unavailable) | Migrate an agriculture schema to a new version under ADR. | Schema-home or schema-version change; ADR-S-04 source-role evolution. | ADR reference; migration receipt; `RunReceipt`. |
+| `docs/runbooks/agriculture/EVALUATOR_RUNBOOK.md` (PROPOSED; target unavailable) | Evaluator and threshold-owner surface per KFM-P19-FEAT-0008. Threshold ownership, reviewer checklist, no-network run, metric definitions, response steps. | Evaluator-policy failure; threshold breach. | `ValidationReport`, `RunReceipt`. |
 
 > [!TIP]
 > **Author one runbook before you generalize the pattern.** The fauna lane authored `SOURCE_REFRESH_RUNBOOK.md` first and let other runbooks accumulate as the lane matured. For agriculture, candidates for first-authored runbooks are `SOURCE_REFRESH_RUNBOOK.md` (parallel to fauna) and `AGGREGATION_RECEIPT_RUNBOOK.md` (ag-specific load-bearing concern).
@@ -551,8 +561,8 @@ In the post-incident artifact slot of `INCIDENT_RESPONSE_RUNBOOK.md`. KFM treats
 
 - [`docs/domains/agriculture/README.md`](../README.md) — agriculture domain index. `[PROPOSED.]`
 - [`docs/domains/agriculture/policy/README.md`](../policy/README.md) — agriculture policy aspect. `[PROPOSED — companion to this doc.]`
-- [`docs/domains/agriculture/architecture/README.md`](../architecture/README.md) — agriculture architecture aspect. `[PROPOSED.]`
-- [`docs/domains/agriculture/sources/README.md`](../sources/README.md) — agriculture source ledger orientation. `[PROPOSED.]`
+- `docs/domains/agriculture/architecture/README.md` (PROPOSED; target unavailable) — agriculture architecture aspect. `[PROPOSED.]`
+- `docs/domains/agriculture/sources/README.md` (PROPOSED; target unavailable) — agriculture source ledger orientation. `[PROPOSED.]`
 
 **Canonical runbook home**
 

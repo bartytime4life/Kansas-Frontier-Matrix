@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/focus-modes-readme                                     # NEEDS_VERIFICATION until registered
+doc_id: kfm://doc/focus-modes-readme
 title: Focus Modes — County Focus Mode Control Plane and Index
 type: standard
 version: v0.3
@@ -11,21 +11,15 @@ created: 2026-05-21
 updated: 2026-05-23
 policy_label: public
 authority: restates directory-rules.md §6.7 (NEVER overrides it)
-supersedes:
-  - docs/focus-modes/README.md @ v0.2                                    # CONFIRMED prior version at canonical path
-  - docs/focus-mode/counties/README.md @ v0.1                            # PROPOSED divergence — retired; see §0 Reconciliation
+unverified_prior_version_claims:
+  - "docs/focus-modes/README.md @ v0.2"
+  - "docs/focus-mode/counties/README.md @ v0.1"
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md                                     # NEEDS_VERIFICATION
-  - docs/adr/ADR-0027-county-focus-mode-control-plane.md                 # PROPOSED — this control plane
-  - docs/adr/ADR-00NN-retire-focus-mode-counties-divergence.md           # PROPOSED — retires docs/focus-mode/counties/
-  - docs/focus-modes/COUNTY_INDEX.md
-  - docs/focus-modes/_template/county-build-plan.md
-  - contracts/focus_mode/focus_mode_payload.md
-  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json       # NEEDS_VERIFICATION (PROPOSED emission)
-  - tools/validators/validate_focus_mode_index.py
-  - tools/validators/validate_focus_mode_payload.py                      # PROPOSED follow-up
+  - "docs/doctrine/directory-rules.md"
+  - "docs/standards/PROV.md"
+  - "docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+  - "contracts/focus_mode/focus_mode_payload.md"
+  - "tools/validators/validate_focus_mode_index.py"
 tags:
   - kfm
   - focus-mode
@@ -42,6 +36,27 @@ notes:
   - Restates directory-rules.md §6.7 placement contract, casing convention, and first-PR sequence.
   - All cross-root paths are governed by directory-rules.md §6.7; this README is an orientation, not an override.
   - Existence of per-county build plans is PROPOSED until verified against the live repository.
+previous_placeholder_doc_id: "kfm://doc/focus-modes-readme                                     # NEEDS_VERIFICATION until registered"
+owning_root: docs/
+responsibility: "Human-readable Focus Modes — County Focus Mode Control Plane and Index guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/adr/ADR-0001-schema-home.md"
+  - "docs/adr/ADR-00NN-retire-focus-mode-counties-divergence.md"
+  - "docs/focus-modes/COUNTY_INDEX.md"
+  - "docs/focus-modes/_template/county-build-plan.md"
+  - "schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json"
+  - "tools/validators/validate_focus_mode_payload.py"
+related_reference_annotations:
+  - "docs/adr/ADR-0001-schema-home.md                                     # NEEDS_VERIFICATION"
+  - "docs/adr/ADR-0027-county-focus-mode-control-plane.md                 # PROPOSED — this control plane"
+  - "docs/adr/ADR-00NN-retire-focus-mode-counties-divergence.md           # PROPOSED — retires docs/focus-mode/counties/"
+  - "schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json       # NEEDS_VERIFICATION (PROPOSED emission)"
+  - "tools/validators/validate_focus_mode_payload.py                      # PROPOSED follow-up"
+prior_version_claims_status: "NEEDS VERIFICATION; retained as lineage claims, not verified supersession edges."
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid-pending>
+doc_id: kfm://doc/domains/habitat/preservation-matrix
 title: Habitat Preservation Matrix
 type: standard
 version: v1.1
@@ -10,15 +10,15 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md
 related:
-  - contracts/habitat/README.md            # PROPOSED home per Atlas §24.13 responsibility-root crosswalk
-  - schemas/contracts/v1/habitat/           # PROPOSED schema home per Atlas §24.13 + Directory Rules §11
-  - contracts/fauna/README.md               # PROPOSED home per Atlas §24.13
-  - docs/architecture/cross-lane-join-policy.md   # PROPOSED — ADR-S-14
-  - docs/standards/PROV.md
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - control_plane/policy_gate_register.yaml
-  - control_plane/release_state_register.yaml
-  - ai-build-operating-contract.md          # doctrine-adjacent: operating contract is canonical spine
+  - "contracts/habitat/README.md"
+  - "schemas/contracts/v1/habitat/"
+  - "contracts/fauna/README.md"
+  - "docs/architecture/cross-lane-join-policy.md"
+  - "docs/standards/PROV.md"
+  - "docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md"
+  - "control_plane/policy_gate_register.yaml"
+  - "control_plane/release_state_register.yaml"
+  - "docs/doctrine/ai-build-operating-contract.md"
 notes:
   - "Tier scheme T0-T4 is doctrine-PROPOSED pending ADR-S-05 (CONFIRMED as named backlog ADR; adoption not yet accepted)."
   - "All repo paths, route names, and schema homes are PROPOSED until mounted-repo verification."
@@ -26,6 +26,21 @@ notes:
   - "PATH DRIFT: prior version used docs/domains/habitat/ form. Atlas §24.13 + Directory Rules §11 place domain files as lane segments under responsibility roots (contracts/, schemas/, policy/), not as docs/domains/ folders. Conflict surfaced in §13.1; route to DRIFT_REGISTER + ADR-class naming decision."
   - "policy/sensitivity/habitat/ is NOT listed in the Atlas §24.13 crosswalk (only fauna/flora/infrastructure/archaeology/people carry policy/sensitivity/ roots). Habitat sensitivity may inherit through the joined lane's policy home; flagged in §12."
   - "CONTRACT_VERSION = \"3.0.0\""
+previous_placeholder_doc_id: "kfm://doc/<uuid-pending>"
+owning_root: docs/
+responsibility: "Human-readable Habitat Preservation Matrix guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+related_reference_annotations:
+  - "contracts/habitat/README.md            # PROPOSED home per Atlas §24.13 responsibility-root crosswalk"
+  - "schemas/contracts/v1/habitat/           # PROPOSED schema home per Atlas §24.13 + Directory Rules §11"
+  - "contracts/fauna/README.md               # PROPOSED home per Atlas §24.13"
+  - "docs/architecture/cross-lane-join-policy.md   # PROPOSED — ADR-S-14"
+  - "ai-build-operating-contract.md          # doctrine-adjacent: operating contract is canonical spine"
+related_path_corrections:
+  - "ai-build-operating-contract.md -> docs/doctrine/ai-build-operating-contract.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Habitat Preservation Matrix
