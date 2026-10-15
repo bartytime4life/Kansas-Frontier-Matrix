@@ -1,3 +1,4 @@
+import { FLOW_COORDINATE_EXTENT } from "./water-flow-motion";
 import type { StreamflowFrameProperties, StreamflowObservation } from "./streamflow";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 
@@ -34,7 +35,7 @@ export function boundedDirectionPaths(payload: unknown): DownstreamPath[] {
     if (typeof id !== "string" || !/^[A-Za-z0-9]{1,16}$/.test(id) || coordinates.length < 2 || coordinates.length > 300) continue;
     if (!coordinates.every((point) => Array.isArray(point) && point.length === 2
       && point.every((value) => typeof value === "number" && Number.isFinite(value))
-      && point[0] >= -102.2 && point[0] <= -94.4 && point[1] >= 36.8 && point[1] <= 40.2)) continue;
+      && point[0] >= FLOW_COORDINATE_EXTENT.west && point[0] <= FLOW_COORDINATE_EXTENT.east && point[1] >= FLOW_COORDINATE_EXTENT.south && point[1] <= FLOW_COORDINATE_EXTENT.north)) continue;
     paths.push({ id, coordinates: coordinates as [number, number][] });
     if (paths.length === 20) break;
   }
@@ -60,7 +61,7 @@ export function parseDownstreamGuide(value: unknown): DownstreamGuide {
         const [longitude, latitude] = point;
         return typeof longitude === "number" && Number.isFinite(longitude)
           && typeof latitude === "number" && Number.isFinite(latitude)
-          && longitude >= -102.2 && longitude <= -94.4 && latitude >= 36.8 && latitude <= 40.2;
+          && longitude >= FLOW_COORDINATE_EXTENT.west && longitude <= FLOW_COORDINATE_EXTENT.east && latitude >= FLOW_COORDINATE_EXTENT.south && latitude <= FLOW_COORDINATE_EXTENT.north;
       })) {
       throw new Error("Downstream guide contains an invalid path.");
     }
@@ -86,7 +87,7 @@ export function parseDownstreamGuide(value: unknown): DownstreamGuide {
       for (const sample of a.elevation.samples) {
         if (!finite(sample.distanceM) || sample.distanceM < previousDistance || sample.distanceM > a.lengthM + 1
           || !Array.isArray(sample.coordinate) || sample.coordinate.length !== 2 || !sample.coordinate.every(finite)
-          || sample.coordinate[0] < -102.2 || sample.coordinate[0] > -94.4 || sample.coordinate[1] < 36.8 || sample.coordinate[1] > 40.2
+          || sample.coordinate[0] < FLOW_COORDINATE_EXTENT.west || sample.coordinate[0] > FLOW_COORDINATE_EXTENT.east || sample.coordinate[1] < FLOW_COORDINATE_EXTENT.south || sample.coordinate[1] > FLOW_COORDINATE_EXTENT.north
           || !(sample.elevationM === null || finite(sample.elevationM) && sample.elevationM >= -100 && sample.elevationM <= 2000)
           || !(sample.datum === null || typeof sample.datum === "string" && sample.datum.length <= 180)
           || !(sample.resolutionM === null || finite(sample.resolutionM) && sample.resolutionM > 0)) throw new Error("Terrain profile contains an invalid sample.");

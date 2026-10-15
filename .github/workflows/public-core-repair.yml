@@ -29,7 +29,7 @@ jobs:
       - name: Zoom detail, source bounds and shared effects controls
         run: >-
           node --test tests/water-flow-motion.test.mjs tests/water-flow-sync.test.mjs
-          tests/water-path-analysis.test.mjs tests/scene-studio.test.mjs
+          tests/water-path-analysis.test.mjs tests/water-flow-context.test.mjs tests/water-direction-route.test.mjs tests/scene-studio.test.mjs
           tests/scene-surface-integration.test.mjs tests/cinematic-scene-effects.test.mjs
       - name: Actual Node HTTP boundary
         shell: bash
