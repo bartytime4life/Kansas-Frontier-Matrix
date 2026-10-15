@@ -4,8 +4,8 @@ import { createSettledMapCommit, uploadedGeoJSON } from "./map-performance";
 import { effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
 import { createWaterFlowLayer, WATER_FLOW_PALETTES, type WaterFlowLayer } from "./water-flow-layer";
 import {
-  buildFlowGeometry, flowCellsForView, flowlineCellKey, FLOW_MIN_ZOOM, gaugeCue, parseFlowlinePayload,
-  type FlowlineCellPayload, type FlowReach, type GaugeCue,
+  buildFlowGeometry, flowCellSelectionForView, flowDetailForZoom, flowRequestKey, parseFlowRequestKey, FLOW_PROFILES, FLOW_MIN_ZOOM, gaugeCue, parseFlowlinePayload,
+  type FlowDetail, type FlowlineCellPayload, type FlowReach, type GaugeCue,
 } from "./water-flow-motion";
 
 /**
@@ -27,6 +27,8 @@ export type WaterFlowStatus = Readonly<{
   truncatedCells: number;
   availableReaches: number;
   drawingLimited: boolean;
+  detail?: FlowDetail;
+  viewLimited?: boolean;
 }>;
 const OFF: WaterFlowStatus = Object.freeze({ state: "off", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0, availableReaches: 0, drawingLimited: false });
 
@@ -34,6 +36,8 @@ type CellState = { state: "loading"; controller: AbortController } | { state: "r
 type FlowState = {
   cache: Map<string, CellState>;
   wanted: string[];
+  detail: FlowDetail;
+  viewLimited: boolean;
   preset: SceneLightPreset;
   efficient: boolean;
   gaugeSourceId: string;
@@ -47,13 +51,19 @@ type FlowState = {
 const states = new WeakMap<object, FlowState>();
 const listeners = new Set<(status: WaterFlowStatus) => void>();
 
-let fetchCell = async (key: string, signal: AbortSignal): Promise<FlowlineCellPayload> => {
-  const response = await fetch(`/api/hydrology/flowlines?cell=${encodeURIComponent(key)}`, { signal, headers: { Accept: "application/json" } });
+const fetchDefault = async (key: string, signal: AbortSignal): Promise<FlowlineCellPayload> => {
+  const request = parseFlowRequestKey(key);
+  if (!request) throw new Error("Invalid flowline request.");
+  const suffix = request.detail === "local" ? "" : "&detail=" + request.detail;
+  const response = await fetch("/api/hydrology/flowlines?cell=" + encodeURIComponent(request.cell.map(v => v.toFixed(2)).join(",")) + suffix, { signal, headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Flowline cell unavailable.");
-  return parseFlowlinePayload(await response.json());
+  const payload = parseFlowlinePayload(await response.json());
+  if (flowRequestKey(payload.cell, payload.detail ?? "local") !== key) throw new Error("Flowline response identity mismatch.");
+  return payload;
 };
-/** Test seam: replaces how cells are fetched. */
-export const setWaterFlowFetcher = (fetcher: typeof fetchCell): void => { fetchCell = fetcher; };
+let fetchCell = fetchDefault;
+/** Test seam: replaces how cells are fetched; omission restores production transport. */
+export const setWaterFlowFetcher = (fetcher: typeof fetchCell = fetchDefault): void => { fetchCell = fetcher; };
 
 /** The Scene panel follows the most recently updated map. */
 export const subscribeWaterFlowStatus = (listener: (status: WaterFlowStatus) => void): (() => void) => {
@@ -119,8 +129,8 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
     return;
   }
   const ready = state.wanted.flatMap((key) => { const cell = state.cache.get(key); return cell?.state === "ready" ? [cell.payload] : []; });
-  const cues = gaugeCues(map, state);
-  const key = JSON.stringify([ready.map((payload) => flowlineCellKey(payload.cell)), cues]);
+  const cues = state.detail === "local" ? gaugeCues(map, state) : [];
+  const key = JSON.stringify([state.detail, ready.map((payload) => flowRequestKey(payload.cell, payload.detail ?? "local")), cues]);
   let metrics = state.status;
   if (key !== state.geometryKey) {
     state.geometryKey = key;
@@ -133,10 +143,10 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
   const failed = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "failed").length;
   const loading = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "loading").length;
   setStatus(state, {
-    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
+    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || state.viewLimited || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
     reaches: metrics.reaches, gaugedReaches: metrics.gaugedReaches,
     cells: ready.length, failedCells: failed, truncatedCells: ready.filter((payload) => payload.truncated).length,
-    availableReaches: metrics.availableReaches, drawingLimited: metrics.drawingLimited,
+    availableReaches: metrics.availableReaches, drawingLimited: metrics.drawingLimited, detail: state.detail, viewLimited: state.viewLimited,
   });
 };
 
@@ -166,9 +176,12 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
   const bounds = map.getBounds();
   const center = map.getCenter();
   const visible = waterFlowShouldShow(sceneEffectsFor(map).waterFlow, state.efficient, map.getZoom());
-  const wanted = visible
-    ? flowCellsForView({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() }, [center.lng, center.lat], map.getZoom()).map(flowlineCellKey)
-    : [];
+  const selection = visible
+    ? flowCellSelectionForView({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() }, [center.lng, center.lat], map.getZoom())
+    : { cells: [], limited: false };
+  state.detail = flowDetailForZoom(map.getZoom());
+  state.viewLimited = selection.limited;
+  const wanted = selection.cells.map(cell => flowRequestKey(cell, state.detail));
   state.wanted = wanted;
   // Cancel requests the view no longer needs.
   for (const [key, cell] of state.cache) {
@@ -229,7 +242,7 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
     return true;
   }
   if (!state) {
-    state = { cache: new Map(), wanted: [], preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, rebuildFrame: 0, layer: null };
+    state = { cache: new Map(), wanted: [], detail: "local", viewLimited: false, preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, rebuildFrame: 0, layer: null };
     states.set(map, state);
   }
   const current = state;
@@ -290,15 +303,16 @@ export function waterFlowReading(status: WaterFlowStatus): string | null {
   switch (status.state) {
     case "off": return null;
     case "zoom": return `Zoom to ${FLOW_MIN_ZOOM} or closer to see rivers flow`;
-    case "loading": return "Loading USGS 3DHP river directions…";
-    case "unavailable": return "USGS 3DHP river directions are unavailable right now";
+    case "loading": return (status.detail ? FLOW_PROFILES[status.detail].label + " · " : "") + "Loading USGS 3DHP river directions…" + (status.reaches ? " · " + status.reaches.toLocaleString("en-US") + " reaches already visible" : "");
+    case "unavailable": return (status.detail ? FLOW_PROFILES[status.detail].label + " · " : "") + "USGS 3DHP river directions are unavailable right now";
     default: {
+      const tier = status.detail ? FLOW_PROFILES[status.detail].label + " · " : "";
       const reaches = `${status.reaches.toLocaleString("en-US")} reach${status.reaches === 1 ? "" : "es"} with a USGS flow direction`;
       const gauged = status.gaugedReaches ? ` · ${status.gaugedReaches} lit by a gauge reading` : "";
       const partial = status.drawingLimited
         ? ` · drawing limit: ${status.availableReaches.toLocaleString("en-US")} loaded reaches; some geometry omitted`
         : status.state === "partial" ? " · some areas incomplete" : "";
-      return status.reaches ? `${reaches}${gauged}${partial}` : `No mapped flow direction in view${partial}`;
+      return status.reaches ? tier + `${reaches}${gauged}${partial}` : `No mapped flow direction in view${partial}`;
     }
   }
 }

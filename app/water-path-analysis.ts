@@ -1,7 +1,7 @@
 import type { DownstreamPath } from "./water-flow-context";
 
 export type Coordinate = readonly [number, number];
-export type WaterReach = DownstreamPath & { sequence: number | null; upstream?: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number };
+export type WaterReach = DownstreamPath & { sequence: number | null; upstream?: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number; streamOrder?: number | null };
 export type TerrainSample = { distanceM: number; coordinate: Coordinate; elevationM: number | null; datum: string | null; resolutionM: number | null };
 export type WaterPathAnalysis = {
   upstreamM?: number; downstreamM?: number; upstreamStop?: string; downstreamStop?: string;
@@ -35,7 +35,7 @@ export function parseWaterReaches(raw: unknown): WaterReach[] {
     if (g.coordinates.length < 2 || g.coordinates.length > 10000 || !g.coordinates.every(validCoordinate)) return [];
     vertices += g.coordinates.length; if (vertices > 80000) throw new Error("USGS flowline geometry limit exceeded.");
     ids.add(p.id3dhp);
-    return [{ id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), upstream: sequence(p.uphydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
+    return [{ ...(p.streamorder === undefined ? {} : { streamOrder: typeof p.streamorder === "number" && Number.isInteger(p.streamorder) && p.streamorder >= 1 && p.streamorder <= 20 ? p.streamorder : null }), id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), upstream: sequence(p.uphydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
   });
 }
 

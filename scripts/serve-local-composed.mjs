@@ -9,6 +9,8 @@ import { createHash } from 'node:crypto';
 import { startProdServer, nodeToWebRequest, sendWebResponse } from 'vinext/server/prod-server';
 
 export function nativeApiPath(pathname) {
+  // Only this reviewed stateless display adapter moves to the current Node build.
+  if (pathname === '/api/hydrology/flowlines') return false;
   return pathname.startsWith('/api/') && !/^\/api\/(?:pc-ai|owner|ingestion|source-operations|source-pipeline|pc-storage-probe|reports|capture-worker)(?:\/|$)/.test(pathname);
 }
 export function acceptedLocalRequest(request, origin) {

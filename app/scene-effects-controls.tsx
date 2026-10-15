@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { KANSAS_FLYOVER, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, type SceneEffectSettings, type SceneLight, type SceneLookPreset, type SceneView } from "./scene-effects";
 import { SCENE_RECIPES, compositionDefaults, matchingSceneRecipe, normalizedBearing, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
 
@@ -25,6 +25,7 @@ type ControlsProps = Readonly<{
   onCamera: (patch: Partial<SceneComposition>, reset?: boolean) => void;
   onChange: (next: SceneEffectSettings) => void;
   onFlyover: () => void;
+  hideEffects?: boolean;
   /** Live status lines that replace an effect's description while present. */
   readings?: Readonly<Partial<Record<keyof SceneEffectSettings, string | null>>>;
   terrain?: Readonly<{ scale: number; available: boolean; onScale: (scale: number) => void; onGroundView: () => void }>;
@@ -53,7 +54,7 @@ type ControlsProps = Readonly<{
 }>;
 
 /** An atlas cinematographer's studio. All controls share the real renderer state. */
-export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration, readings, terrain }: ControlsProps) {
+export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration, readings, terrain, hideEffects }: ControlsProps) {
   const id = useId();
   const mode = matchingLookPreset(settings);
   const recipe = matchingSceneRecipe({ ...presentation, settings });
@@ -171,14 +172,22 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <span aria-hidden="true">{flyoverActive ? "■" : "✈"}</span>{flyoverActive ? "Stop flyover" : "Fly over Kansas"}
       <small>{reducedMotion ? "Unavailable with reduced motion" : flyoverActive ? "Or drag, scroll or press a key" : "Six landscapes in Terrain 3D · about a minute"}</small>
     </button>
-    <details className="scene-studio-details"><summary>Effects &amp; rendering <span>{mode ? SCENE_LOOK_PRESETS[mode].label : "Custom"}</span></summary>
+    {!hideEffects && <details className="scene-studio-details"><summary>Effects &amp; rendering <span>{mode ? SCENE_LOOK_PRESETS[mode].label : "Custom"}</span></summary><SceneEffectSwitches settings={settings} efficient={efficient} reducedMotion={reducedMotion} cameraReady={cameraReady} view={view} readings={readings} onChange={onChange} /></details>}
+    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative. Flowing water moves only where USGS 3DHP maps a direction, at one display speed that is not water velocity; gauge readings light only their own reach.</p>
+  </section>;
+}
+
+/** Shared switches keep toolbar and Appearance on the same saved settings. */
+function SceneEffectSwitches({settings, efficient, reducedMotion, cameraReady, view, readings, onChange}: Pick<ControlsProps,"settings"|"efficient"|"reducedMotion"|"cameraReady"|"view"|"readings"|"onChange">) {
+  const id = useId(), mode = matchingLookPreset(settings);
+  return <div className="scene-effects-quick">
       <div className="scene-look-presets" role="group" aria-label="Scene effect mode">
         {(Object.keys(SCENE_LOOK_PRESETS) as SceneLookPreset[]).map((key) => <button key={key} type="button" aria-pressed={mode === key} onClick={() => onChange(SCENE_LOOK_PRESETS[key].settings)}>
           <strong>{SCENE_LOOK_PRESETS[key].label}</strong><small>{SCENE_LOOK_PRESETS[key].detail}</small>
         </button>)}
       </div>
       <div className="scene-effects-switches">
-        {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").map((option) => {
+        {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").sort((a, b) => Number(b.key === "waterFlow") - Number(a.key === "waterFlow")).map((option) => {
           const here = option.views.includes(view);
           const enabled = settings[option.key];
           const held = enabled && efficient && (option.key === "curtain" || option.key === "stars" || option.key === "waterFlow");
@@ -194,12 +203,10 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
           </label>;
         })}
       </div>
-    </details>
-    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative. Flowing water moves only where USGS 3DHP maps a direction, at one display speed that is not water velocity; gauge readings light only their own reach.</p>
-  </section>;
+  </div>;
 }
 
-type PanelProps = ControlsProps & Readonly<{ onRepresentation: (mode: SceneView) => void; onOpenChange?: (open: boolean) => void }>;
+type PanelProps = ControlsProps & Readonly<{ onRepresentation: (mode: SceneView) => void; onOpenChange?: (open: boolean) => void; toolbar?: boolean; rendering?: ReactNode }>;
 
 /** Floating Scene button on the map, available in every view. */
 export function ScenePanel(props: PanelProps) {
@@ -227,19 +234,20 @@ export function ScenePanel(props: PanelProps) {
   }, [open, props.surface?.mode, props.surface?.probeEnabled]);
   const recipe = matchingSceneRecipe({ ...props.presentation, settings: props.settings });
   const label = props.settings.sunSync ? "Following the sun" : recipe ? SCENE_RECIPES[recipe].label : "Custom";
-  return <div className="scene-panel" ref={root} data-open={open || undefined}
+  return <div className={props.toolbar ? "scene-panel scene-panel-toolbar" : "scene-panel"} ref={root} data-open={open || undefined}
     onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onDoubleClick={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()}>
-    <button ref={trigger} type="button" className="scene-panel-trigger" aria-expanded={open} aria-controls={`${id}-body`}
-      aria-label={`Scene look: ${label}. Open scene effects`} title="Scene studio" onClick={() => setOpen(!open)}>
-      <span aria-hidden="true">✦</span><small>Scene</small>
+    <button ref={trigger} type="button" className={props.toolbar ? "scene-panel-trigger map-dock-action" : "scene-panel-trigger"} aria-expanded={open} aria-controls={`${id}-body`}
+      aria-label={props.toolbar ? "Effects & rendering" : `Scene look: ${label}. Open scene effects`} title="Scene studio" onClick={() => setOpen(!open)}>
+      <span aria-hidden="true">✦</span>{props.toolbar ? <strong>Effects</strong> : <small>Scene</small>}
     </button>
-    {open && <div id={`${id}-body`} className="scene-panel-body" role="dialog" aria-label="Scene effects">
+    {open && <div id={`${id}-body`} className="scene-panel-body" role="dialog" aria-label={props.toolbar ? "Effects & rendering" : "Scene effects"}>
+      {props.toolbar ? <><header className="effects-menu-heading"><strong>Effects &amp; rendering</strong><small>Presentation settings · source values stay unchanged</small></header>{props.rendering}<SceneEffectSwitches {...props} /><details className="scene-studio-details"><summary>Light, land &amp; camera</summary><SceneEffectsControls {...props} hideEffects /></details></> : <>
       <div className="scene-panel-views" role="group" aria-label="Map view">
         {(["2d", "tilted", "terrain", "globe"] as const).map((mode) => <button key={mode} type="button" aria-pressed={props.view === mode} onClick={() => props.onRepresentation(mode)}>
           <span aria-hidden="true">{mode === "2d" ? "▭" : mode === "tilted" ? "⟋" : mode === "terrain" ? "⛰" : "◎"}</span>{SCENE_VIEW_LABELS[mode]}
         </button>)}
       </div>
-      <SceneEffectsControls {...props} />
+      <SceneEffectsControls {...props} /></>}
     </div>}
   </div>;
 }

@@ -32,7 +32,7 @@ export const WATER_FLOW_PALETTES: Readonly<Record<"night" | "dusk" | "clear", Wa
 /** Ribbon half-width in CSS pixels by zoom. */
 export function flowHalfWidth(zoom: number): number {
   if (!Number.isFinite(zoom)) return 1.6;
-  return Math.max(1.4, Math.min(6, 1.6 + (zoom - 10) * 0.6));
+  return zoom < 8 ? 2.1 : zoom < 10 ? 1.8 : Math.max(1.6, Math.min(6, 1.6 + (zoom - 10) * 0.6));
 }
 
 /** Display motion, in CSS pixels per second and between streaks; not water velocity. */
