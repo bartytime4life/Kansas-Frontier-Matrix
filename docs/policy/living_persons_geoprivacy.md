@@ -1,19 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-policy-living-persons-geoprivacy
 title: Living Persons Geoprivacy — Containment and Routing Crosswalk
-type: compatibility-document; routing-crosswalk; proposal-scaffold; noncanonical-doc-lane
+type: compatibility-document
+subtype: routing-crosswalk; proposal-scaffold; noncanonical-doc-lane
 version: v0.2-draft
 status: draft; repository-grounded; proposal-only; containment-crosswalk; noncanonical-under-directory-rules; no-policy-authority; no-personal-data; migration-hold; non-release; non-publication
 owners:
   - "@bartytime4life — verified CODEOWNERS fallback only"
 owner_status: "@bartytime4life is the confirmed repository review route. Independent People/DNA/Land, privacy, consent, rights, sensitivity, geoprivacy, security, policy, evidence, review, release, correction, rollback, and documentation stewardship remains NEEDS VERIFICATION."
-created: "NEEDS VERIFICATION — the scaffold predates this repository-reconciliation revision"
+created: 2026-05-20
 updated: 2026-10-15
 policy_label: repository-public
 current_path: docs/policy/living_persons_geoprivacy.md
 owning_root: docs/
 responsibility: "Contain and route human-readable living-person geoprivacy guidance while preventing this noncanonical documentation path from becoming identity or living-status authority, consent authority, executable policy source, protected-data storage, contract or schema authority, test authority, release authority, or publication authority."
-truth_posture: "CONFIRMED current path, parent containment contract, accepted Directory Rules placement, People/DNA/Land documentation and policy surfaces, duplicate proposed living-person redaction stubs, consent and geoprivacy routing READMEs, and bounded synthetic test evidence / LINEAGE and PROPOSED domain, sensitivity, consent, geoprivacy, transform, and release guidance / CONFLICTED policy placement, result polarity, package identity, consent segment, and living-person redaction homes / UNKNOWN accepted policy bundle, evaluator, authenticated living status, consent authority, operational public-safe transform, governed consumer enforcement, release integration, external consumers, and final path lifetime / NEEDS VERIFICATION independent stewardship, consumer closure, policy convergence, runtime binding, correction propagation, and required-check coupling"
+truth_posture: "CONFIRMED current path, parent containment contract, accepted Directory Rules placement, People/DNA/Land documentation and policy surfaces, one proposed living-person redaction stub under policy/sensitivity/ (its byte-identical domain duplicate was retired on 2026-10-15), consent and geoprivacy routing READMEs, and bounded synthetic test evidence / LINEAGE and PROPOSED domain, sensitivity, consent, geoprivacy, transform, and release guidance / CONFLICTED policy placement, result polarity, package identity, and consent segment / UNKNOWN accepted policy bundle, evaluator, authenticated living status, consent authority, operational public-safe transform, governed consumer enforcement, release integration, external consumers, and final path lifetime / NEEDS VERIFICATION independent stewardship, consumer closure, policy convergence, runtime binding, correction propagation, and required-check coupling"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -114,8 +115,9 @@ notes:
   - "v0.2 replaces a short planned-path placeholder with a repository-grounded, proposal-only containment and routing crosswalk."
   - "This file remains subordinate to docs/policy/README.md and does not authorize substantive growth under docs/policy/."
   - "People/DNA/Land explanation remains under docs/domains/people-dna-land/; executable policy remains under policy/."
+  - "2026-10-15: created is the first git commit adding this path (fa728424d5); type keeps its first token and the remaining descriptors move to subtype."
   - "The identical living_person_redaction.rego bytes under policy/sensitivity/ and policy/domains/people-dna-land/ were a disclosed conflict that this document selected neither side of. On 2026-10-15 the repository owner kept policy/sensitivity/living_person_redaction.rego and retired the domain copy; the retained file remains a non-operative stub."
-  - "Physical migration, compatibility, retirement, or deletion remains HOLD pending accepted disposition and consumer closure."
+  - "Physical migration, compatibility, retirement, or deletion of this document remains HOLD pending accepted disposition and consumer closure. The living-person redaction duplicate is no longer part of that hold."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -228,7 +230,7 @@ The file remains a **proposal scaffold** so the parent [`docs/policy/README.md`]
 
 ### Current conflicts and holds
 
-1. **Living-person redaction source is duplicated.** Two paths carry identical greenfield-stub bytes and no operative rule.
+1. **Living-person redaction source is a stub.** The duplicate was resolved on 2026-10-15: `policy/sensitivity/living_person_redaction.rego` is the single home, and it still carries no operative rule.
 2. **Policy result polarity is inconsistent.** Some scaffolds use `default allow := false`; others use `default deny := false` with no active denial rule.
 3. **Policy placement is unresolved.** Cross-domain geoprivacy, sensitivity, domain policy, and consent lanes overlap in responsibility without one accepted bundle and selector.
 4. **Consent segment placement is conflicted.** `people` and `people-dna-land` lanes coexist in current documentation and policy surfaces.
@@ -394,7 +396,7 @@ Route each responsibility to one primary owner. This file remains a pointer.
 | People/DNA/Land bounded-context explanation | [`docs/domains/people-dna-land/`](../domains/people-dna-land/README.md) | Link; do not redefine |
 | Privacy, threat, incident, logging, and exposure guidance | [`docs/security/`](../security/README.md) | Link; do not create security policy |
 | Geoprivacy policy-family routing | [`policy/geoprivacy/`](../../policy/geoprivacy/README.md) | Link; do not set thresholds or outcomes |
-| Sensitivity rule source | [`policy/sensitivity/`](../../policy/sensitivity/README.md) | Link; do not select duplicate living-person rules |
+| Sensitivity rule source | [`policy/sensitivity/`](../../policy/sensitivity/README.md) | Link; holds the single living-person redaction stub (owner decision 2026-10-15) |
 | People/DNA/Land domain admissibility | [`policy/domains/people-dna-land/`](../../policy/domains/people-dna-land/README.md) | Link; disclose mixed maturity |
 | Consent policy | Accepted consent lane under [`policy/`](../../policy/README.md) | Link to current people lane while placement remains conflicted |
 | Geoprivacy, consent, sensitivity, and decision meaning | [`contracts/`](../../contracts/README.md) | Reference; do not redefine |
@@ -465,12 +467,12 @@ The domain-policy README records a second bounded synthetic revocation-assessmen
 | Gap | Current result |
 |---|---|
 | Accepted living-person geoprivacy contract/profile | `UNKNOWN / HOLD` |
-| Canonical living-person redaction rule home | `CONFLICTED` |
+| Canonical living-person redaction rule home | `RESOLVED 2026-10-15`: `policy/sensitivity/living_person_redaction.rego` (stub only; evaluator-unbound) |
 | Accepted consent rule home and credential format | `CONFLICTED / UNKNOWN` |
 | Policy input schema enforcing living-person context | `NEEDS VERIFICATION`; current policy input schema is documented as permissive |
 | Geoprivacy policy-family normalization | `HOLD`; current PolicyDecision schema is documented without that family |
 | Active bundle, selector, evaluator, and governed consumer | `UNKNOWN` |
-| Native Rego tests for duplicate living-person stubs | Not established |
+| Native Rego tests for the living-person redaction stub | Not established |
 | Operational transform and RedactionReceipt emission | `UNKNOWN` |
 | Search/graph/tile/export/AI reconstruction tests | `NEEDS VERIFICATION` |
 | Authenticated reviewer capacity | `UNKNOWN / HOLD` |
@@ -577,7 +579,7 @@ This documentation update does not:
 - identify, merge, canonicalize, or geolocate a person;
 - establish consent, representative authority, rights, privacy compliance, residence, occupancy, relationship, ownership, title, parcel boundary, or DNA support;
 - create or modify executable policy, policy bundles, selectors, evaluators, obligations, or runtime routes;
-- select one duplicate living-person rule or consent path as canonical;
+- select a living-person rule or consent path as canonical (it records the owner's 2026-10-15 living-person redaction decision; it does not make it);
 - define transformation thresholds or approve a public-safe derivative;
 - create or modify contracts, schemas, fixtures, tests, validators, workflows, registries, receipts, proofs, review records, policy decisions, release records, corrections, withdrawals, or rollback cards;
 - store or expose personal, genomic, consent, parcel, source, or protected-location material;
