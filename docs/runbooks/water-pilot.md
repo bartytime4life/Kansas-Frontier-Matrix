@@ -682,8 +682,12 @@ The installer uses existing hash-locked test dependencies and installs local
 packages without dependency resolution. A source archive also needs those local
 package directories. Root pnpm and the Site's npm lockfile remain separate.
 The doctor distinguishes interpreter/package failures, missing release-store
-configuration and unestablished service/evidence readiness. It does not start
-services or fetch source data.
+configuration and unestablished service/evidence readiness. Package checks locate
+the required implementation modules, such as `catalog.core` and
+`release.local_store`; a repository directory or namespace alone cannot pass.
+Discovery does not execute package initializers or establish import/dependency
+compatibility (`dependency_compatibility: NOT_CHECKED`). The doctor does not
+start services or fetch source data.
 
 ## Bounded acquisition and replay
 
