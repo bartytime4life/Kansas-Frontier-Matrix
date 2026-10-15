@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-living-person-redaction-dedupe-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/policy/living_persons_geoprivacy.md",
+    "policy/domains/people-dna-land/README.md",
+    "tests/policy/README.md",
+    "tests/policy/test_rego_compile_census.py"
+  ],
+  "artifact_hashes": {
+    "docs/policy/living_persons_geoprivacy.md": "sha256:6932c6c64b0d82c286d9a8c954c76e115d153014c32c3445cb9a0b5461300dda",
+    "policy/domains/people-dna-land/README.md": "sha256:68cddcc722facf71b088c6093899e22f132c43c57c574a7ae981c014185e4f3d",
+    "tests/policy/README.md": "sha256:5d6a41ed006119b1779b62b871d2216f1b50bd9279a19cafb04d409aefe78c05",
+    "tests/policy/test_rego_compile_census.py": "sha256:e201118ba0eec1cd0edbca425d7e695eee1f495d95863854a60c23ad5c7f5536"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:policy/sensitivity/living_person_redaction.rego@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:policy/domains/people-dna-land/living_person_redaction.rego@9620b21bca3a3da2fd49a5edda05d8a60a842c47",
+      "repo:docs/policy/living_persons_geoprivacy.md@9620b21bca3a3da2fd49a5edda05d8a60a842c47"
+    ]
+  },
+  "truth_labels": {
+    "docs/policy/living_persons_geoprivacy.md": "CONFIRMED",
+    "policy/domains/people-dna-land/README.md": "CONFIRMED",
+    "tests/policy/README.md": "CONFIRMED",
+    "tests/policy/test_rego_compile_census.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Owner authority decision",
+      "outcome": "PASS",
+      "reason": "The repository owner directed on 2026-10-15 to keep the policy/sensitivity copy of living_person_redaction.rego."
+    },
+    {
+      "gate": "Byte identity of the retired copy",
+      "outcome": "PASS",
+      "reason": "Both copies were blob 32607517aeb919aeb253757beddc22a5508e9706, so no rule text is lost."
+    },
+    {
+      "gate": "Rego compile census and unit tests",
+      "outcome": "PASS",
+      "reason": "OPA v1.19.0 compiles all 177 tracked modules as one bundle with no tolerated error; opa test 6/6. The strict census fails when the duplicate is restored."
+    },
+    {
+      "gate": "Consumers and pins",
+      "outcome": "PASS",
+      "reason": "No workflow, tool, or test loads the retired path apart from the census test, which was updated. The geoprivacy receipt and ADR-0010 blob pins are historical evidence snapshots that no check verifies against current bytes."
+    },
+    {
+      "gate": "Repository guardrails and focused tests",
+      "outcome": "PASS",
+      "reason": "make gap-scan, scaffold-inventory, repository-guardrails, repository-governance-parity, docs-critical-structure, boundary-guards and deny-suites exit 0; validate_all.py --profile full 29/29 PASS; 800 tests passed across tests/policy, tests/docs, tests/domains/people-dna-land, tests/qa, tests/validators/directory_governance, tests/governance and tests/ci; the domain workflow inventory script passes."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9620b21bca3a3da2fd49a5edda05d8a60a842c47"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T05:24:14Z",
+  "emitter": "Claude Code repository-authoring session",
+  "notes": "Deleted policy/domains/people-dna-land/living_person_redaction.rego (byte-identical duplicate). Retained policy/sensitivity/living_person_redaction.rego unchanged; it remains a non-operative stub. ADR-0043's directory listing and the version-history rows are historical and left unchanged. The decision covers this file only; the broader policy/domains/<domain>/ versus policy/sensitivity/<domain>/ placement question in docs/registers/DRIFT_REGISTER.md stays open.",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  }
+}
