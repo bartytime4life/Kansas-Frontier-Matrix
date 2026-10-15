@@ -14,3 +14,8 @@ test('the native backend is API-only and retains its pre-existing authority wrap
  const src='if (badAuthority) return new Response("Denied", {status:403}); return worker.fetch(request, env, ctx);';
  const output=apiOnlyEntry(src);assert.ok(output.startsWith('if (badAuthority)'));assert.match(output,/pathname\.startsWith\("\/api\/"\)/);assert.match(output,/status: 404/);assert.throws(()=>apiOnlyEntry('changed entry'),/NATIVE_ENTRY_DRIFT/);
 });
+
+test('current flowline detail uses the checked Node adapter without moving other hydrology APIs',()=>{
+ assert.equal(nativeApiPath('/api/hydrology/flowlines'),false);
+ for(const path of ['/api/hydrology/direction','/api/hydrology/flowlines/private','/api/hydrology','/api/live-context'])assert.equal(nativeApiPath(path),true);
+});
