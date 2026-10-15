@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-kfm-navigation-20261015-d6ffbc1dc4de",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/doctrine/derived-stays-derived.md",
+    "docs/doctrine/sensitivity.md",
+    "docs/doctrine/time-aware.md",
+    "docs/domains/agriculture/policy/README.md",
+    "docs/domains/agriculture/runbooks/README.md",
+    "docs/domains/agriculture/sublanes/cropland.md",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md",
+    "docs/focus-mode/counties/README.md",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md",
+    "docs/sources/catalog/ahgp/county-town-histories.md",
+    "docs/sources/catalog/blm/glo-field-notes.md",
+    "tools/qa/gap_scan_baseline.json"
+  ],
+  "artifact_hashes": {
+    "docs/doctrine/derived-stays-derived.md": "sha256:66bd3613b010f104fe9534d2cac0f9aa016e610ea7140ed37dd05400af6f7a3c",
+    "docs/doctrine/sensitivity.md": "sha256:bf5649d9766161bdabf4e08cb53831b78fd6b5adc24d19422845c300ecb40c65",
+    "docs/doctrine/time-aware.md": "sha256:18b22c82f14b875adec8ccdf39fc8bc2fc5e0a9b74ecfb9cbd7235770f78760f",
+    "docs/domains/agriculture/policy/README.md": "sha256:82dc083eead99ae2f7c9f83f46569067599af31028647d54cce2814c9bd9d5e1",
+    "docs/domains/agriculture/runbooks/README.md": "sha256:bda6e5b30d7526783e962d7f55b588139207bb62200728dc11fecf017de12851",
+    "docs/domains/agriculture/sublanes/cropland.md": "sha256:f609b6c2280bc480f15f56695a1205da11b5f8f62a0703791c40ff03b7ec37a5",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md": "sha256:5a0430fbf92f953106732163ea0c392e91df5020c0a4a4cc544a50f3fb3cf2f5",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md": "sha256:17a9ee61fb4d2176f70bc4e4c22e5b8e9a8fe9bb690a3303b5dff0667bd87eb2",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md": "sha256:123e75c169dc932f1174c48ef398a0cfe4e3a385970522297116f049f775b4ae",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md": "sha256:25131ff7bdd78016e3933a135189f48fc9dc83c3f2878ebfc6472a3258fbcd54",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md": "sha256:6a52389a699c358fb27b191b457a0e5c1ce689aca55c0aebf7b0ba3560c23c59",
+    "docs/focus-mode/counties/README.md": "sha256:13bbc71dd6f54aacb70035583071d2faaab531ea4613bad032f27243224336a3",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md": "sha256:7b51955504ac5232b436bf5d8401d2c4d854a82bb8eab23daf8abf30d8e90b10",
+    "docs/sources/catalog/ahgp/county-town-histories.md": "sha256:c3fc314927b9b9b59cbdc46a9027eb70361ddb1e1a07da47984c44003f3f4d0b",
+    "docs/sources/catalog/blm/glo-field-notes.md": "sha256:0565edac4ade196729a88afef0e7b262d24f976ba734c5a6c36f61b872f9d84f",
+    "tools/qa/gap_scan_baseline.json": "sha256:75f9fe6ceca18f0b520b3831e03852de4445e8e14c14621893e1f0a0e2061c4a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "pytest",
+      "repository validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/doctrine/directory-rules.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ade780f08564502541a36406458df34040f6c6d",
+      "CONTRIBUTING.md@3ade780f08564502541a36406458df34040f6c6d",
+      ".github/PULL_REQUEST_TEMPLATE.md@3ade780f08564502541a36406458df34040f6c6d"
+    ],
+    "evidence_refs": [
+      "git:3ade780f08564502541a36406458df34040f6c6d",
+      "git:d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76"
+    ]
+  },
+  "truth_labels": {
+    "docs/doctrine/derived-stays-derived.md": "PROPOSED",
+    "docs/doctrine/sensitivity.md": "PROPOSED",
+    "docs/doctrine/time-aware.md": "PROPOSED",
+    "docs/domains/agriculture/policy/README.md": "PROPOSED",
+    "docs/domains/agriculture/runbooks/README.md": "PROPOSED",
+    "docs/domains/agriculture/sublanes/cropland.md": "PROPOSED",
+    "docs/domains/habitat/PRESERVATION_MATRIX.md": "PROPOSED",
+    "docs/domains/habitat/SENSITIVITY_POLICY.md": "PROPOSED",
+    "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md": "PROPOSED",
+    "docs/domains/roads-rail-trade/RELEASE_INDEX.md": "PROPOSED",
+    "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md": "PROPOSED",
+    "docs/focus-mode/counties/README.md": "PROPOSED",
+    "docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md": "PROPOSED",
+    "docs/sources/catalog/ahgp/county-town-histories.md": "PROPOSED",
+    "docs/sources/catalog/blm/glo-field-notes.md": "PROPOSED",
+    "tools/qa/gap_scan_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "tests",
+      "outcome": "PASS",
+      "reason": "Content head d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76; .............                                                            [100%]\n13 passed in 3.79s"
+    },
+    {
+      "gate": "gap",
+      "outcome": "PASS",
+      "reason": "Content head d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76;     }\n  ]\n}\nMARKDOWN_PLACEHOLDER: 7 is below baseline 94; run `python tools/qa/gap_scan.py --write-baseline` to tighten it."
+    },
+    {
+      "gate": "scaffolds",
+      "outcome": "PASS",
+      "reason": "Content head d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76;   \"resolved\": [],\n  \"schema_version\": \"kfm.scaffold-inventory/v1\",\n  \"total\": 894\n}"
+    },
+    {
+      "gate": "topology",
+      "outcome": "PASS",
+      "reason": "Content head d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76; PASS: 14776 tracked paths; 0 invariant; 0 new drift; 93 baselined warnings; 0 stale baseline entries"
+    },
+    {
+      "gate": "governance-parity-profile-integrity",
+      "outcome": "PASS",
+      "reason": "Profile integrity passes; 93 inherited topology warnings remain HOLD_INHERITED. This is not full conformance or a waiver."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "FAIL",
+      "reason": "DOC_LINK_CHECK_FAIL; base failures 103, candidate failures 39; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-metadata",
+      "outcome": "FAIL",
+      "reason": "DOC_META_BLOCK_FAIL; base failures 57, candidate failures 57; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "FAIL",
+      "reason": "DOC_GRAPH_FAIL; base failures 77, candidate failures 77; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "PR not yet opened at receipt emission; independent human review is pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Directory Rules v2 adopted by ADR-0029",
+      "validated": true,
+      "evidence_ref": "git:3ade780f08564502541a36406458df34040f6c6d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:d6ffbc1dc4de3d5661db4b27792b30acf2aa4a76"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-15T21:11:39.499722Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Per-PR authoring provenance covering every substantive changed artifact; this receipt excludes itself to avoid a circular digest. The original combined scan report remains on the preserved local repair branch and is not part of this PR. Model revision and generation parameters not exposed by the runtime are recorded as unavailable/null. Local validation concerns the pinned content head; hosted CI and independent human review remain separate. No approval, override, merge, source admission, activation, release, deployment, promotion or publication is asserted."
+}
