@@ -33,3 +33,17 @@ The local composition routes only the exact stateless /api/hydrology/flowlines p
 Candidate build/type, focused/full-suite results, installed browser observations and GitHub checks are recorded separately on its PR. Until those observations are appended, this document makes no executed browser or hosted acceptance claim. Hosting publication is separate and remains subject to the existing GoDaddy gateway/session issue.
 
 Rollback restores the privately preserved prior source/build in the same local installation. The existing scene-effect preference key remains compatible; switching Flowing water off stops its requests and animation. No stored source data requires rollback.
+
+
+### Reviewed boundary correction
+
+Automated review flagged that the fixed query envelope extended into narrow strips rejected by the old geometry validator. The shared server/client geometry envelope now covers the entire fixed-cell extent while retaining the older eastern compatibility margin. The new regression passes actual adapter output through the client validator for west/south/north edge coordinates, asserts the provider coordinates are unchanged and still rejects points beyond the bounded envelope. No clipping, stretching or invented connectors are introduced.
+
+
+### Executed candidate validation
+
+The reviewed boundary revision passes build/TypeScript, 73 focused public source/menu checks and 220 local composition checks. The public mixed-runtime suite reports 1,156 passes, 47 failures and one skip; the untouched 7ec6687 base reports 1,150 passes, the same 47 failure names and one skip. Those inherited failures remain unresolved, and this is not a full-suite green claim.
+
+Installed local browser observations before the boundary follow-up: 2,890 directed major-river reaches at the Kansas overview, 3,418 regional reaches and 2,311 local reaches (three gauge cues at local detail). All three displayed incomplete-coverage notices. Two captures of a fixed blue river region showed visual change during motion; the paused region was substantially still. This is no FPS, latency, hydraulic-velocity or device benchmark. The exact boundary fix still requires installed readback, recorded separately on the PR.
+
+The 390-pixel layout had no document overflow. Its Effects dialog stayed inside the viewport; keyboard focus reached the lower Light, land & camera action by scrolling its own panel. Escape returned focus to Effects. Battery saver paused water as intended. The temporary viewport and the original rendering/ambient/flow preferences were restored. Six external OpenFreeMap glyph 404 warnings used local glyph fallback; no app/shader error was captured. Full physical-device, reduced-motion emulation, long-session and hosted acceptance remain separate.
