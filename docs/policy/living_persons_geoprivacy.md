@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — verified CODEOWNERS fallback only"
 owner_status: "@bartytime4life is the confirmed repository review route. Independent People/DNA/Land, privacy, consent, rights, sensitivity, geoprivacy, security, policy, evidence, review, release, correction, rollback, and documentation stewardship remains NEEDS VERIFICATION."
 created: "NEEDS VERIFICATION — the scaffold predates this repository-reconciliation revision"
-updated: 2026-08-23
+updated: 2026-10-15
 policy_label: repository-public
 current_path: docs/policy/living_persons_geoprivacy.md
 owning_root: docs/
@@ -114,7 +114,7 @@ notes:
   - "v0.2 replaces a short planned-path placeholder with a repository-grounded, proposal-only containment and routing crosswalk."
   - "This file remains subordinate to docs/policy/README.md and does not authorize substantive growth under docs/policy/."
   - "People/DNA/Land explanation remains under docs/domains/people-dna-land/; executable policy remains under policy/."
-  - "The identical living_person_redaction.rego bytes under policy/sensitivity/ and policy/domains/people-dna-land/ remain a disclosed conflict; this document selects neither."
+  - "The identical living_person_redaction.rego bytes under policy/sensitivity/ and policy/domains/people-dna-land/ were a disclosed conflict that this document selected neither side of. On 2026-10-15 the repository owner kept policy/sensitivity/living_person_redaction.rego and retired the domain copy; the retained file remains a non-operative stub."
   - "Physical migration, compatibility, retirement, or deletion remains HOLD pending accepted disposition and consumer closure."
 [/KFM_META_BLOCK_V2] -->
 
@@ -218,7 +218,7 @@ The file remains a **proposal scaffold** so the parent [`docs/policy/README.md`]
 | [`policy/domains/people-dna-land/README.md`](../../policy/domains/people-dna-land/README.md) | Mixed-maturity domain-policy boundary; T4-baseline projection; two bounded synthetic profiles; evaluator unbound | Current inventory, fail-closed public-edge intent, and explicit implementation holds |
 | [`policy/consent/people/README.md`](../../policy/consent/people/README.md) | README-only people-consent boundary; placement conflicted; runtime absent | Consent is scoped, revocable, insufficient by itself, and must not be inferred from public availability |
 | `policy/domains/people-dna-land/living_person.rego` | Proposed generated scaffold with `default allow := false` and no operative rule | A proposed source file exists; it does not prove evaluation or protection |
-| `policy/sensitivity/living_person_redaction.rego` and `policy/domains/people-dna-land/living_person_redaction.rego` | **CONFLICTED:** identical blob `32607517…`; each is a greenfield stub with `default deny := false` and no operative rule | Duplicate proposed bytes exist; neither is selected or active |
+| `policy/sensitivity/living_person_redaction.rego` | **RESOLVED 2026-10-15:** owner kept this copy and retired the byte-identical `policy/domains/people-dna-land/` duplicate (blob `32607517…`); still a greenfield stub with `default deny := false` and no operative rule | One proposed source file exists; it is not active and does not prove evaluation or protection |
 | `policy/sensitivity/people-dna-land/` | Empty `consent/` and `living_person/` directories plus a proposed person–parcel deny scaffold | Path presence and proposal shape only |
 | [`SensitivityLabel`](../../contracts/policy/sensitivity_label.md) | Draft/proposed semantic contract paired with a proposed schema | Finite context labels exist; a label is not a policy decision or release |
 | [`RedactionReceipt`](../../contracts/shared/redaction_receipt.md) | Draft/proposed shared semantic contract; paired schema maturity remains bounded | A transform receipt may record protective work; it does not prove adequacy or authorize publication |
@@ -512,7 +512,7 @@ These documentation checks do not execute living-person policy or establish rele
 | Current item | Candidate responsibility | Current result | Evidence needed before action |
 |---|---|---|---|
 | This file | People/DNA/Land explanation; security/privacy guidance; standards profile | `PLACE` for same-path containment; `HOLD` for growth, move, or retirement | Complete consumers, one accepted documentation target or zero-successor decision, link/registry updates, review, and rollback |
-| Duplicate `living_person_redaction.rego` files | Sensitivity or domain-policy source | `CONFLICTED / HOLD` | Accepted authority decision, package/outcome normalization, consumer inventory, fixtures/tests, migration, deactivation, and rollback |
+| `policy/sensitivity/living_person_redaction.rego` | Sensitivity policy source (owner decision 2026-10-15; domain duplicate retired) | `PROPOSED / evaluator-unbound` | Accepted input/output contract, operative rules, native tests, bundle/selector, consumer binding, correction, and rollback |
 | `living_person.rego` | People/DNA/Land domain-policy source | `PROPOSED / evaluator-unbound` | Accepted input/output contract, operative rules, native tests, bundle/selector, consumer binding, correction, and rollback |
 | `policy/consent/people/` | People consent source | `CONFLICTED / README-only` | Placement decision, accepted consent semantics, schema, fixtures, tests, evaluator, revocation, and public-consumer enforcement |
 | `policy/sensitivity/people-dna-land/living_person/` | Empty candidate child | `HOLD` | One accepted owner and purpose; do not populate by symmetry |
