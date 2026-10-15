@@ -1,3 +1,4 @@
+import { FLOW_COORDINATE_EXTENT } from "./water-flow-motion";
 import type { DownstreamPath } from "./water-flow-context";
 
 export type Coordinate = readonly [number, number];
@@ -19,7 +20,7 @@ export function waterDistance(a: Coordinate, b: Coordinate) {
 export function waterPathLength(points: readonly Coordinate[]) {
   return points.slice(1).reduce((sum, p, i) => sum + waterDistance(points[i], p), 0);
 }
-const validCoordinate = (p: unknown): p is Coordinate => Array.isArray(p) && p.length === 2 && p.every(v => typeof v === "number" && Number.isFinite(v)) && p[0] >= -102.2 && p[0] <= -94.4 && p[1] >= 36.8 && p[1] <= 40.2;
+const validCoordinate = (p: unknown): p is Coordinate => Array.isArray(p) && p.length === 2 && p.every(v => typeof v === "number" && Number.isFinite(v)) && p[0] >= FLOW_COORDINATE_EXTENT.west && p[0] <= FLOW_COORDINATE_EXTENT.east && p[1] >= FLOW_COORDINATE_EXTENT.south && p[1] <= FLOW_COORDINATE_EXTENT.north;
 const sequence = (v: unknown) => typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? v : null;
 
 export function parseWaterReaches(raw: unknown): WaterReach[] {
