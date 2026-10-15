@@ -294,3 +294,25 @@ test("actual shared-link and saved-view restoration retain the full terrain scal
     assert.equal(actual, Math.min(3, scale));
   }
 });
+
+
+test("flow switch keeps keyboard semantics, live coverage and reduced-motion/Battery-saver explanations", async () => {
+  const {SceneEffectsControls}=await controlsModule();
+  const textOf=node=>Array.isArray(node)?node.map(textOf).join(""):typeof node==="string"||typeof node==="number"?String(node):node&&typeof node==="object"?textOf(node.props?.children):"";
+  for(const efficient of [false,true]) {
+    const changes=[];
+    const settings={...effects.DEFAULT_SCENE_EFFECTS,waterFlow:true};
+    const tree=SceneEffectsControls({settings,light:null,efficient,reducedMotion:true,flyoverActive:false,view:"2d",presentation:{atmosphere:"clear",azimuth:225},camera:{pitch:0,bearing:0,fieldOfView:44},cameraReady:true,onRecipe(){},onLight(){},onCamera(){},onChange:value=>changes.push(value),onFlyover(){},readings:{waterFlow:"21 reaches · statewide order 5+ overview · some areas incomplete"}});
+    const label=descendants(tree).find(node=>node.type==="label"&&descendants(node).some(child=>child.props?.["aria-label"]==="Flowing water"));
+    const nodes=descendants(label);
+    const input=nodes.find(node=>node.type==="input");
+    assert.equal(input.props.role,"switch");
+    assert.equal(input.props.checked,true);
+    const descriptionIds=input.props["aria-describedby"].split(" ");
+    assert.equal(descriptionIds.length,2);
+    for(const id of descriptionIds)assert.ok(nodes.some(node=>node.props.id===id));
+    assert.equal(nodes.find(node=>node.type==="small").props["aria-live"],"polite");
+    assert.match(textOf(label),efficient?/Paused while Battery saver is on/:/statewide order 5\+ overview.*motion paused/);
+    input.props.onChange();assert.equal(changes[0].waterFlow,false,"native checkbox callback toggles the effect");
+  }
+});
