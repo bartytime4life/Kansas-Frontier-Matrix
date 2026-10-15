@@ -337,7 +337,7 @@ This document is done enough to enter the repository when:
 - `policy/sensitivity/fauna/` — inherited sensitive-occurrence rules *(CONFIRMED home for Fauna; PROPOSED Habitat binding)*.
 - `policy/domains/habitat/` — Habitat-owned policy, if any *(PROPOSED — OQ-HAB-SP-01)*.
 - `schemas/contracts/v1/policy/policy_decision.schema.json` — `PolicyDecision` record schema *(CONFIRMED home / PROPOSED presence)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

@@ -103,7 +103,7 @@ This doctrine governs every artifact that KFM produces *from* an EvidenceBundle,
 | **Carrier** | A derived artifact whose job is to *carry* the canonical claim to a surface (tiles, exports, screenshots) rather than re-shape it. |
 | **Sovereign truth** | A claim that can be inspected as authoritative without further resolution. **Only canonical sources are sovereign in KFM.** |
 | **Rebuild** | The deterministic regeneration of a derived artifact from canonical sources, producing the same content hash (or a documented, intentional difference). |
-| **Withdrawal** | The removal of a derived artifact from public surfaces with audit retained, governed by [`corrections-are-first-class.md`](./corrections-are-first-class.md). |
+| **Withdrawal** | The removal of a derived artifact from public surfaces with audit retained, governed by [`corrections-first-class.md`](./corrections-first-class.md). |
 
 Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`) carry the meaning defined in [`lifecycle-law.md`](./lifecycle-law.md) and MUST NOT be paraphrased.
 
@@ -138,7 +138,7 @@ Every derived artifact in KFM satisfies all five invariants below. An artifact t
 | **D-1** | **Named canonical source** | Every derived artifact declares the canonical source it derives from. There is no "derived from itself" and no "derived from another derived artifact" without the original canonical source named. | `ERROR` if a derived artifact has no resolvable canonical source. |
 | **D-2** | **Rebuildable** | Every derived artifact can be regenerated from its canonical source by a documented, deterministic procedure. Rebuilds either reproduce the prior content hash or produce a documented intentional difference. | `DENY release.unrebuildable` if rebuild is not demonstrated before public release. |
 | **D-3** | **Subordinate** | If the derived artifact and the canonical source disagree, the canonical source wins. The derived artifact is regenerated or withdrawn. | `ERROR` if a derived artifact is patched in place to mask drift from its canonical source. |
-| **D-4** | **Withdrawable** | Every derived artifact has a `RollbackPlan` or withdrawal target. Public-facing derived artifacts can be removed from public surfaces with audit retained per [`corrections-are-first-class.md`](./corrections-are-first-class.md). | `DENY release.unreviewed` if a `ReleaseManifest` for a derived artifact lacks a rollback target. |
+| **D-4** | **Withdrawable** | Every derived artifact has a `RollbackPlan` or withdrawal target. Public-facing derived artifacts can be removed from public surfaces with audit retained per [`corrections-first-class.md`](./corrections-first-class.md). | `DENY release.unreviewed` if a `ReleaseManifest` for a derived artifact lacks a rollback target. |
 | **D-5** | **Auditable derivation** | The derivation procedure — tool, version, parameters, source hashes, output hashes — is captured in a `RunReceipt`. Anyone can trace any byte of the derived artifact back to canonical inputs. | `ERROR` if a derived artifact appears in public surfaces without a corresponding `RunReceipt`. |
 
 > [!NOTE]
@@ -668,10 +668,10 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](./directory-rules.md) — Placement law. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` and the publication state transition. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary documentation authority; parallel structure for the documentation plane. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — How canonical sources change after publication; D-3 (subordinate) and D-4 (withdrawable) connect here. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) <sub>PROPOSED</sub> — Cite-or-abstain rule; the public-surface posture this doctrine implements.
+- [`docs/doctrine/corrections-first-class.md`](./corrections-first-class.md) — How canonical sources change after publication; D-3 (subordinate) and D-4 (withdrawable) connect here. `[CONFIRMED sibling.]`
+- [`docs/doctrine/truth-posture.md`](./truth-posture.md) <sub>PROPOSED</sub> — Cite-or-abstain rule; the public-surface posture this doctrine implements.
 - [`docs/doctrine/evidence-model.md`](./evidence-model.md) <sub>PROPOSED</sub> — `EvidenceRef`, `EvidenceBundle`, and the citation closure rule that grounds D-1 (named canonical source).
-- [`docs/doctrine/source-roles.md`](./source-roles.md) <sub>PROPOSED</sub> — The data source-role taxonomy.
+- [`docs/sources/source-roles.md`](../sources/source-roles.md) <sub>PROPOSED</sub> — The data source-role taxonomy.
 - [`Master_MapLibre_Components-Functions-Features_v2_1_FULL.md`](../standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md) <sub>PROPOSED path</sub> — The renderer-is-not-truth quotation in §10 originates here.
 - [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) <sub>PROPOSED path</sub> — The eleven-step release state machine that produces canonical sources before any derived artifact is built.
 - `schemas/contracts/v1/receipts/run_receipt.schema.json` — `RunReceipt` machine schema. `[PROPOSED path.]`

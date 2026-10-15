@@ -258,7 +258,7 @@ This boundary statement is one of several People/DNA/Land doctrine surfaces. To 
 | Concern | Lives in |
 |---|---|
 | Identity rules, aggregates, DDD entity/value-object lens, domain invariants | [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) |
-| Retention, tombstone vs. erasure, consent lifecycle preservation | [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) |
+| Retention, tombstone vs. erasure, consent lifecycle preservation | [`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) |
 | What may be published, gates, release-index entry shape, rollback | [`RELEASE_INDEX.md`](RELEASE_INDEX.md) |
 | File inventory across responsibility roots; the segment-naming conflict | [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) |
 | Domain landing, source families, validators, separation of duties | [`README.md`](README.md) |
@@ -321,7 +321,7 @@ This document is done enough to enter the repository when:
 
 - [`README.md`](README.md) — domain landing *(authored prior session, v1.1)*
 - [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) — identity, aggregates, invariants *(v0.1)*
-- [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) — retention, tombstone, erasure *(v0.2)*
+- [`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — retention, tombstone, erasure *(v0.2)*
 - [`RELEASE_INDEX.md`](RELEASE_INDEX.md) — release gates and decisions *(v1.1)*
 - [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) — file inventory; OQ-PDL-SEG-01 source *(v0.2)*
 - `docs/doctrine/directory-rules.md` — §7 trust membrane, §12 Domain Placement Law

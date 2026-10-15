@@ -989,7 +989,7 @@ Reverting this Markdown file does not reverse any release, deployment, promotion
 - [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption decision.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — lifecycle and publication-transition doctrine.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public trust boundary and finite outcomes.
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) — correction doctrine lineage; verify proposed examples against current implementation.
+- [`docs/doctrine/corrections-first-class.md`](../../doctrine/corrections-first-class.md) — correction doctrine lineage; verify proposed examples against current implementation.
 - [`docs/architecture/publication/CORRECTION.md`](../../architecture/publication/CORRECTION.md) — publication correction architecture; older proposed paths must not override current bytes.
 
 ### Correction semantics and bounded proof

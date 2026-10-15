@@ -123,7 +123,7 @@ This README inherits from and MUST stay consistent with:
 - [`trust-membrane.md`](../../../doctrine/trust-membrane.md) — what each runbook step warrants.
 - [`policy-aware.md`](../../../doctrine/policy-aware.md) — finite policy outcomes consumed by runbooks.
 - [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — the `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` invariant.
-- [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow.
+- [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow.
 - [`evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain.
 
 ### 2.3 Downstream consumers
@@ -253,7 +253,7 @@ Twelve concerns are **load-bearing** enough to warrant their own runbook in the 
 | **Validation run** | Multiple ag validators (SSURGO lineage, soil-moisture QC, crop progress aggregate-only, vegetation index mask/time, field-level NASS deny). | Atlas §9.K. |
 | **Steward review** | Sensitive sub-lanes (private operator, person-parcel) require steward sign-off before any allow path. | Atlas §9.I, §24.7 separation-of-duties. |
 | **Publication** | Release-time `ReleaseManifest` + `ProofPack` + `ReviewRecord` + `RollbackCard` MUST all close. | [`trust-membrane.md`](../../../doctrine/trust-membrane.md) §6 publication gate. |
-| **Correction** | Ag claims feed Frontier Matrix cells; correction MUST cascade and emit `CorrectionNotice`. | [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md); Atlas §24.4.15. |
+| **Correction** | Ag claims feed Frontier Matrix cells; correction MUST cascade and emit `CorrectionNotice`. | [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md); Atlas §24.4.15. |
 | **Rollback** | Releases MUST have a resolvable rollback target before publish; rollback execution emits a `RollbackCard`. | `kfm_unified_doctrine_synthesis.md` §10. |
 | **Quarantine remediation** | Containment, not deletion; remediation re-presents at the verification gate from scratch. | [`trust-membrane.md`](../../../doctrine/trust-membrane.md) §8. |
 | **Incident response** | NIST SP 800-61 framework adapted with KFM signals from the governance ledger and IOC catalogs. | Atlas card KFM-P8-PROG-0014. `[CONFIRMED framework.]` |
@@ -544,7 +544,7 @@ In the post-incident artifact slot of `INCIDENT_RESPONSE_RUNBOOK.md`. KFM treats
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](../../../doctrine/policy-aware.md) — finite policy outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
 
 **Sibling domain-side indexes**
@@ -644,7 +644,7 @@ In the post-incident artifact slot of `INCIDENT_RESPONSE_RUNBOOK.md`. KFM treats
 
 ### Related docs (compact)
 
-[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) · [`docs/runbooks/agriculture/`](../../../runbooks/agriculture/) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/domains/agriculture/policy/README.md`](../policy/README.md)
+[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md) · [`docs/runbooks/agriculture/`](../../../runbooks/agriculture/) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/domains/agriculture/policy/README.md`](../policy/README.md)
 
 **Last updated:** 2026-05-26 · **Version:** v0.1 (draft) · **Status:** awaiting review · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 
