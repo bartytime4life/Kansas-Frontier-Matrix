@@ -29,7 +29,7 @@ test("flowline cells sit on the 0.25° Kansas grid", () => {
 
 test("the view asks for nearby cells only at river zoom, nearest first and capped", () => {
   const bounds = { west: -98.2, south: 37.6, east: -96.8, north: 38.4 };
-  assert.deepEqual(flow.flowCellsForView(bounds, [-97.5, 38], 9.5), [], "too far out");
+  assert.deepEqual(flow.flowCellsForView(bounds, [-97.5, 38], 4), [], "too far out");
   const cells = flow.flowCellsForView(bounds, [-97.5, 38], 11);
   assert.ok(cells.length > 0 && cells.length <= flow.MAX_FLOW_CELLS);
   const first = cells[0];
@@ -216,4 +216,44 @@ test("actual terrain callbacks avoid sorting in 2D and skip interrupted camera p
   assert.equal(sorts,1);assert.deepEqual([...ctx.sampleQueue],[0,1]);assert.equal(ctx.sampleCursor,0);
   assert.deepEqual(ctx.geometry.segments,new Float32Array([7,8]));
   ctx.dirty();ctx.cancel();await Promise.resolve();assert.equal(sorts,1,"disposal invalidates pending terrain work");
+});
+
+
+test("statewide detail covers all Kansas cells while adding smaller channels only at closer zooms", () => {
+  const bounds={west:-103,south:36,east:-94,north:41}, center=[-98.4,38.5];
+  const overview=flow.flowCellSelectionForView(bounds,center,6.9);
+  assert.equal(overview.cells.length,8);
+  assert.equal(overview.limited,false);
+  assert.ok(overview.cells.some(c=>c[0]===-102.25) && overview.cells.some(c=>c[0]===-96.25));
+  for (const [zoom,detail] of [[6.9,"overview"],[8,"regional"],[10,"local"]]) {
+    assert.equal(flow.flowDetailForZoom(zoom),detail);
+    const selection=flow.flowCellSelectionForView(bounds,center,zoom);
+    assert.ok(selection.cells.length<=flow.FLOW_PROFILES[detail].cells);
+    assert.equal(selection.limited,detail!=="overview");
+    for (const cell of selection.cells) assert.deepEqual(flow.parseFlowRequestKey(flow.flowRequestKey(cell,detail)),{cell,detail});
+  }
+  for (const key of ["unknown:-98.25,38.75","overview:-98.00,38.00","overview:-200.25,38.75","local:-98.1,38","local:overview:0,0"]) assert.equal(flow.parseFlowRequestKey(key),null);
+});
+
+test("overview query is fixed, source-ranked and refuses unranked or mismatched provider data", async () => {
+ const original=globalThis.fetch; let calls=0;
+ globalThis.fetch=async url=>{
+   calls++; const u=new URL(url);
+   assert.match(u.searchParams.get("where"),/flowdirection=1.*streamorder>=6/);
+   assert.equal(u.searchParams.get("geometry"),"-98.25,36.75,-96.25,38.75");
+   assert.equal(u.searchParams.get("maxAllowableOffset"),"0.001");
+   assert.equal(u.searchParams.get("resultRecordCount"),"400");
+   return new Response(JSON.stringify({type:"FeatureCollection",exceededTransferLimit:true,features:[{type:"Feature",properties:{id3dhp:"A1",flowdirection:1,featuretype:1,streamorder:6},geometry:{type:"LineString",coordinates:[[-98,38],[-97.9,38]]}}]}));
+ };
+ try {
+   const response=await GET(request("?cell=-98.25,36.75&detail=overview"));
+   assert.equal(response.status,200);
+   const payload=await response.json();assert.equal(payload.detail,"overview");assert.equal(payload.reaches[0].streamOrder,6);assert.equal(payload.truncated,true);
+   assert.deepEqual(flow.parseFlowlinePayload(payload),payload);
+   for(const order of [undefined,null,2,21]) assert.throws(()=>flow.parseFlowlinePayload({...payload,reaches:[{...payload.reaches[0],streamOrder:order}]}));
+   for (const suffix of ["?cell=-98.25,36.75&detail=unknown","?cell=-98.25,36.75&detail=overview&detail=local","?cell=-98.00,38.00&detail=overview","?cell=-98.25,36.75&detail=overview&url=https://example.com"]) assert.equal((await GET(request(suffix))).status,400);
+   assert.equal(calls,1);
+   globalThis.fetch=async()=>new Response(JSON.stringify({features:[{properties:{id3dhp:"B1",flowdirection:1,featuretype:1,streamorder:2},geometry:{type:"LineString",coordinates:[[-98,38],[-97.9,38]]}}]}));
+   assert.equal((await GET(request("?cell=-98.25,36.75&detail=overview"))).status,503);
+ } finally {globalThis.fetch=original;}
 });

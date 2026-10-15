@@ -65,7 +65,7 @@ export const SCENE_EFFECT_OPTIONS: readonly Readonly<{ key: SceneEffectKey; labe
   { key: "buildings", label: "Lit 3D buildings", detail: "Height-shaded provider buildings matched to the scene light", views: ["tilted", "terrain"] },
   { key: "sunSync", label: "Follow the real sun", detail: "Light and sky follow the sun over the map center", views: ["tilted", "terrain", "globe"] },
   { key: "stars", label: "Real night sky", detail: "Hipparcos stars where they are right now, the Milky Way and the Sun from orbit; above the horizon at night", views: ["tilted", "terrain", "globe"], motion: true },
-  { key: "waterFlow", label: "Flowing water", detail: "Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach. Zoom 10 or closer", views: ["2d", "tilted", "terrain", "globe"], network: true, motion: true },
+  { key: "waterFlow", label: "Flowing water", detail: "Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach. Major rivers statewide; tributaries and local channels appear as you zoom in", views: ["2d", "tilted", "terrain", "globe"], network: true, motion: true },
 ]);
 
 export function parseSceneEffects(raw: unknown): SceneEffectSettings {

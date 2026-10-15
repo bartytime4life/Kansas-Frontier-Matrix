@@ -244,7 +244,7 @@ test("flowing water stays off, waits for river zoom, and draws provider reaches 
   assert.equal(off.getLayer(flow.WATER_FLOW_LAYER_ID), undefined);
   assert.equal(flow.waterFlowStatus(off).state, "off");
 
-  const far = fakeMap({ zoom: 8 });
+  const far = fakeMap({ zoom: 4 });
   flow.syncWaterFlow(far, OPTIONS);
   assert.equal(far.getLayoutProperty(flow.WATER_FLOW_LAYER_ID, "visibility"), "none");
   assert.equal(flow.waterFlowStatus(far).state, "zoom");
@@ -331,10 +331,44 @@ test("switching off removes the layer and cancels requests in flight; a failure 
 test("the water layer shows only when on, at river zoom and outside Battery saver", async () => {
   const flow = await loadSync();
   assert.equal(flow.waterFlowShouldShow(true, false, 10), true);
-  assert.equal(flow.waterFlowShouldShow(true, false, 9.9), false);
+  assert.equal(flow.waterFlowShouldShow(true, false, 4), false);
   assert.equal(flow.waterFlowShouldShow(true, true, 12), false);
   assert.equal(flow.waterFlowShouldShow(false, false, 12), false);
   assert.equal(flow.waterFlowReading({ state: "off", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0 }), null);
-  assert.match(flow.waterFlowReading({ state: "zoom", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0 }), /Zoom to 10/);
+  assert.match(flow.waterFlowReading({ state: "zoom", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0 }), /Zoom to 4.5/);
   assert.match(flow.waterFlowReading({ state: "partial", reaches: 0, gaugedReaches: 0, cells: 1, failedCells: 1, truncatedCells: 0 }), /No mapped flow direction in view · some areas incomplete/);
+});
+
+test("statewide and local requests have separate identities, and generalized channels cannot borrow gauge values", async () => {
+ const flow=await loadSync(), requested=[];
+ const map=fakeMap({zoom:6.9,gauges:[{geometry:{type:"Point",coordinates:[-97.2,38.1]},properties:{value:12,readingState:"measured"}}]});
+ flow.setWaterFlowFetcher(async key=>{
+   requested.push(key); const parts=key.split(":"), detail=parts.length===1?"local":parts[0], cell=parts.at(-1).split(",").map(Number);
+   return {...payload(cell.join(","),[fixtureReach("A1",[[-97.2,38.1],[-97.19,38.1]])]),detail};
+ });
+ flow.syncWaterFlow(map,OPTIONS);await settle();await settle();
+ assert.ok(requested.length>0 && requested.every(k=>k.startsWith("overview:")));
+ assert.equal(flow.waterFlowStatus(map).gaugedReaches,0);
+ assert.equal(flow.waterFlowStatus(map).detail,"overview");
+ assert.match(flow.waterFlowReading(flow.waterFlowStatus(map)),/Major rivers/);
+ map.zoom=11;map.fire("moveend");await settle();await settle();
+ assert.ok(requested.some(k=>!k.includes(":")));
+ assert.equal(flow.waterFlowStatus(map).gaugedReaches,1);
+ assert.equal(flow.waterFlowStatus(map).detail,"local");
+ map.fx.waterFlow=false;flow.syncWaterFlow(map,OPTIONS);
+});
+
+test("a provider response for a different detail cell is rejected before geometry upload", async () => {
+ const flow=await loadSync(), original=globalThis.fetch;
+ flow.setWaterFlowFetcher();
+ globalThis.fetch=async url=>{
+   const q=new URL(url,"http://localhost").searchParams, cell=q.get("cell").split(",").map(Number);
+   return Response.json({...payload(cell.join(","),[{...fixtureReach("A1",[[-97.2,38.1],[-97.19,38.1]]),streamOrder:6}]),detail:"local"});
+ };
+ try {
+  const map=fakeMap({zoom:6.9});flow.syncWaterFlow(map,OPTIONS);await settle();await settle();
+  assert.equal(flow.waterFlowStatus(map).state,"unavailable");
+  assert.equal(map.getLayer(flow.WATER_FLOW_LAYER_ID).segmentCount,0);
+  map.fx.waterFlow=false;flow.syncWaterFlow(map,OPTIONS);
+ } finally {globalThis.fetch=original;}
 });

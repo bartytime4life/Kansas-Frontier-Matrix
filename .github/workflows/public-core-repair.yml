@@ -26,6 +26,11 @@ jobs:
           tests/subsurface-worker.test.mjs tests/cutaway-model.test.mjs
           tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
           tests/pc-ai.test.mjs tests/pc-ai-http.test.mjs
+      - name: Zoom detail, source bounds and shared effects controls
+        run: >-
+          node --test tests/water-flow-motion.test.mjs tests/water-flow-sync.test.mjs
+          tests/water-path-analysis.test.mjs tests/scene-studio.test.mjs
+          tests/scene-surface-integration.test.mjs tests/cinematic-scene-effects.test.mjs
       - name: Actual Node HTTP boundary
         shell: bash
         run: |

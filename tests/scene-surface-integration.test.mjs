@@ -198,20 +198,23 @@ test("map taps keep the active surface reading open without consuming events; ou
   }
 });
 
-test("Scene and evidence share a stacking context so the open sample can paint above the drawer", async () => {
+test("toolbar effects stays above the evidence drawer and preserves surface inspection access", async () => {
   const attribute = (node, name) => node.attributes.properties.find((item) => ts.isJsxAttribute(item) && item.name.getText(pageTree) === name)?.initializer;
   const closestElement = (node) => { let parent = node.parent; while (parent && !ts.isJsxElement(parent)) parent = parent.parent; return parent; };
   const scene = nodesMatching(pageTree, (node) => ts.isJsxSelfClosingElement(node) && node.tagName.getText(pageTree) === "ScenePanel")[0];
   const drawer = nodesMatching(pageTree, (node) => ts.isJsxOpeningElement(node) && attribute(node, "className")?.text === "evidence-drawer")[0];
-  const shell = closestElement(scene);
-  assert.equal(attribute(shell.openingElement, "className").text, "explorer-shell", "Scene must escape the map-stage stacking context");
-  assert.equal(closestElement(drawer.parent), shell, "both floating surfaces have the same stacking parent");
+  const toolbar = closestElement(scene);
+  assert.equal(attribute(toolbar.openingElement, "className").text, "map-dock-actions");
+  let header = toolbar;
+  while (header && header.openingElement.tagName.getText(pageTree) !== "header") header = closestElement(header);
+  assert.equal(attribute(header.openingElement, "className").text, "topbar", "one menu lives in the global map toolbar");
+  assert.equal(nodesMatching(pageTree, node => ts.isJsxSelfClosingElement(node) && node.tagName.getText(pageTree) === "ScenePanel").length, 1, "no floating duplicate");
+  assert.ok(scene.attributes.properties.some(item => ts.isJsxAttribute(item) && item.name.getText(pageTree) === "toolbar"));
   assert.equal(attribute(scene, "onOpenChange").expression.getText(pageTree), "setScenePanelOpen");
-  const sceneCss = await read("app/scene-effects.css"), globalCss = await read("app/globals.css");
-  const sceneZ = Number(sceneCss.match(/\.scene-panel\[data-open\]\s*\{[^}]*z-index:\s*(\d+)/)[1]);
-  // The final shared drawer rule overrides the earlier responsive declarations.
+  const globalCss = await read("app/globals.css");
+  const headerZ = Number(globalCss.match(/\.topbar\s*\{[^}]*z-index:\s*(\d+)/)[1]);
   const drawerZ = Number([...globalCss.matchAll(/\.layer-panel,\s*\.evidence-drawer\s*\{[^}]*z-index:\s*(\d+)/g)].at(-1)[1]);
-  assert.ok(sceneZ > drawerZ, "sample controls stay reachable after a legitimate evidence selection");
+  assert.ok(headerZ > drawerZ, "sample controls stay reachable after a legitimate evidence selection");
   for (const surfaceInspectionOpen of [false, true]) {
     const modal = evaluate(attribute(drawer, "aria-modal").expression, { isCompact: true, rightOpen: true, surfaceInspectionOpen });
     assert.equal(modal, surfaceInspectionOpen ? undefined : true, "covered evidence does not claim modal ownership over the visible sample");
