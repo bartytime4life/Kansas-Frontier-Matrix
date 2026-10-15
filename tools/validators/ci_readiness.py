@@ -160,8 +160,37 @@ def classify_test_source(source: str) -> SourceClassification:
     )
 
 
+def _is_exact_hold_placeholder(body: list[ast.stmt]) -> bool:
+    """Recognize only an inert import and the fixed stderr/HOLD-exit guard."""
+    if len(body) != 1 or not isinstance(body[0], ast.If) or len(body[0].body) != 3:
+        return False
+    statement = body[0].body[1]
+    if not (isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Call)
+            and len(statement.value.args) == 1
+            and isinstance(statement.value.args[0], ast.Constant)
+            and isinstance(statement.value.args[0].value, str)):
+        return False
+    message = statement.value.args[0].value
+    prefix, suffix = "WORKFLOW_HOLD: ", " is not implemented; no work was performed."
+    if not message.startswith(prefix) or not message.endswith(suffix):
+        return False
+    path = message[len(prefix):-len(suffix)]
+    allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./-"
+    if (not path or any(c not in allowed for c in path)
+            or any(part in {"", ".", ".."} for part in path.split("/"))):
+        return False
+    expected = ast.parse(
+        'if __name__ == "__main__":\n'
+        '    import sys\n'
+        f'    print({message!r}, file=sys.stderr)\n'
+        '    raise SystemExit(3)\n'
+    )
+    observed = ast.Module(body=body, type_ignores=[])
+    return ast.dump(observed) == ast.dump(expected)
+
+
 def classify_validator_source(source: str) -> SourceClassification:
-    """Recognize only comment/docstring-only modules or one exact main stub."""
+    """Recognize documentation-only modules, exact main stubs or named HOLDs."""
 
     try:
         tree = ast.parse(source)
@@ -172,10 +201,12 @@ def classify_validator_source(source: str) -> SourceClassification:
         return SourceClassification(True, "placeholder", "documentation-only module")
     if len(body) == 1 and _is_exact_validator_placeholder(body[0]):
         return SourceClassification(True, "placeholder", "exact validator placeholder")
+    if _is_exact_hold_placeholder(body):
+        return SourceClassification(True, "placeholder", "explicit unimplemented HOLD")
     return SourceClassification(
         False,
         "substantive_validator_module",
-        "expected only a module docstring/comments or exact main NotImplementedError stub",
+        "expected documentation-only source, exact main stub or exact HOLD guard",
     )
 
 
