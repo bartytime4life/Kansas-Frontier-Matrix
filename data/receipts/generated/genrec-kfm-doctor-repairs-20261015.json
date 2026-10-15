@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-kfm-doctor-20261015-efe9cebdc14e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/water-pilot.md",
+    "tests/local_data/test_doctor.py",
+    "tools/local_data/doctor.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/water-pilot.md": "sha256:1434b8a2fd1c3374de79e06f025fc06dcd15816541341e33e636aa60c3adfdf5",
+    "tests/local_data/test_doctor.py": "sha256:f6b9fe5ced633ea6ff0da777fb5761bd79eaa86a8d8dcfafd2946401d8e4c2ea",
+    "tools/local_data/doctor.py": "sha256:8e9a420f7ca83c4a93211025192de2008d89b6263a07c9be92a917091674489d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "pytest",
+      "repository validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/doctrine/directory-rules.md@3ade780f08564502541a36406458df34040f6c6d",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ade780f08564502541a36406458df34040f6c6d",
+      "CONTRIBUTING.md@3ade780f08564502541a36406458df34040f6c6d",
+      ".github/PULL_REQUEST_TEMPLATE.md@3ade780f08564502541a36406458df34040f6c6d"
+    ],
+    "evidence_refs": [
+      "git:3ade780f08564502541a36406458df34040f6c6d",
+      "git:efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/water-pilot.md": "PROPOSED",
+    "tests/local_data/test_doctor.py": "CONFIRMED",
+    "tools/local_data/doctor.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "tests",
+      "outcome": "PASS",
+      "reason": "Content head efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c; ............................ [ 53%]\n........................................................................ [ 71%]\n..............sss......................................................................................................    [100%]\n409 passed, 3 skipped, 305 subtests passed in 1.60s"
+    },
+    {
+      "gate": "gap",
+      "outcome": "PASS",
+      "reason": "Content head efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c;   ]\n}\nBROKEN_LOCAL_LINK: 120 is below baseline 138; run `python tools/qa/gap_scan.py --write-baseline` to tighten it.\nMARKDOWN_PLACEHOLDER: 7 is below baseline 94; run `python tools/qa/gap_scan.py --write-baseline` to tighten it."
+    },
+    {
+      "gate": "scaffolds",
+      "outcome": "PASS",
+      "reason": "Content head efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c;   \"resolved\": [],\n  \"schema_version\": \"kfm.scaffold-inventory/v1\",\n  \"total\": 894\n}"
+    },
+    {
+      "gate": "topology",
+      "outcome": "PASS",
+      "reason": "Content head efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c; PASS: 14776 tracked paths; 0 invariant; 0 new drift; 93 baselined warnings; 0 stale baseline entries"
+    },
+    {
+      "gate": "governance-parity-profile-integrity",
+      "outcome": "PASS",
+      "reason": "Profile integrity passes; 93 inherited topology warnings remain HOLD_INHERITED. This is not full conformance or a waiver."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "DOC_LINK_CHECK_PASS; base failures 0, candidate failures 0; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-metadata",
+      "outcome": "PASS",
+      "reason": "DOC_META_BLOCK_PASS; base failures 0, candidate failures 0; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "PASS",
+      "reason": "DOC_GRAPH_PASS; base failures 0, candidate failures 0; introduced unique failures 0. Compared with the exact pinned main base."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "PR not yet opened at receipt emission; independent human review is pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Directory Rules v2 adopted by ADR-0029",
+      "validated": true,
+      "evidence_ref": "git:3ade780f08564502541a36406458df34040f6c6d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:efe9cebdc14e11e5dc6d0c1e9987f3cd22cbec8c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-15T21:11:39.188297Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Per-PR authoring provenance covering every substantive changed artifact; this receipt excludes itself to avoid a circular digest. The original combined scan report remains on the preserved local repair branch and is not part of this PR. Model revision and generation parameters not exposed by the runtime are recorded as unavailable/null. Local validation concerns the pinned content head; hosted CI and independent human review remain separate. No approval, override, merge, source admission, activation, release, deployment, promotion or publication is asserted."
+}
