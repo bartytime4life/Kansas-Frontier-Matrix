@@ -157,17 +157,17 @@ test("real lighting updates replace curtain uniforms in place, including sun syn
   assert.equal(h.map.getLayoutProperty(), "none", "Battery saver remains authoritative");
 });
 
-async function controlsModule() {
+async function controlsModule(forceOpen = false) {
   const drawingUrl = toUrl(transpile(await read("app/terrain-drawing.ts")));
   const surfaceUrl = toUrl(transpile((await read("app/terrain-surface.ts")).replace('"./terrain-drawing"', JSON.stringify(drawingUrl))));
   // Element-tree tests execute the real component callbacks; only React's
   // render lifecycle hook is replaced to avoid bringing a DOM into Node tests.
-  const hooks = toUrl("let next = 0; export const useId = () => `studio-${++next}`; export const useState = () => [false, () => {}]; export const useEffect = () => {}; export const useRef = () => ({current:null});");
+  const hooks = toUrl(("let next = 0; export const useId = () => `studio-${++next}`; export const useState = () => [false, () => {}]; export const useEffect = () => {}; export const useRef = () => ({current:null});").replace("[false,", "[" + forceOpen + ","));
   const source = (await read("app/scene-effects-controls.tsx")).replace('"./terrain-surface"', JSON.stringify(surfaceUrl))
     .replace('"react"', JSON.stringify(hooks)).replace('"./scene-effects"', JSON.stringify(effectsUrl)).replace('"./scene-studio"', JSON.stringify(studioUrl));
   return import(toUrl(transpile(source).replace('"react/jsx-runtime"', JSON.stringify(pathToFileURL(require.resolve("react/jsx-runtime")).href))));
 }
-const descendants = (node) => !node || typeof node !== "object" ? [] : [node, ...[node.props?.children].flat(Infinity).flatMap(descendants)];
+const descendants = (node) => !node || typeof node !== "object" ? [] : typeof node.type === "function" ? descendants(node.type(node.props)) : [node, ...[node.props?.children].flat(Infinity).flatMap(descendants)];
 
 test("real controls dispatch recipe, light and camera changes; repeated panels have unique labels", async () => {
   const { SceneEffectsControls } = await controlsModule();
@@ -293,4 +293,22 @@ test("actual shared-link and saved-view restoration retain the full terrain scal
     const actual = new Function(...Object.keys(ctx), `return (${node.getText(tree)});`)(...Object.values(ctx));
     assert.equal(actual, Math.min(3, scale));
   }
+});
+
+
+test("toolbar effects exposes water immediately, reuses exact settings and retains advanced studio controls", async () => {
+ const {ScenePanel}=await controlsModule(true), changes=[];
+ const settings={...effects.DEFAULT_SCENE_EFFECTS,waterFlow:false,stars:true};
+ const props={settings,light:null,efficient:false,reducedMotion:false,flyoverActive:false,view:"2d",presentation:{atmosphere:"clear",azimuth:210},camera:{pitch:0,bearing:0,fieldOfView:36},cameraReady:true,
+ onRecipe(){},onLight(){},onCamera(){},onChange:v=>changes.push(v),onFlyover(){},onRepresentation(){},toolbar:true,
+ rendering:{type:"select",props:{"aria-label":"Rendering quality",children:[]}}};
+ const nodes=descendants(ScenePanel(props));
+ assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Effects & rendering" && n.type==="button"));
+ const dialog=nodes.find(n=>n.props?.role==="dialog");assert.equal(dialog.props["aria-label"],"Effects & rendering");
+ assert.equal(nodes.filter(n=>n.props?.role==="switch")[0].props["aria-label"],"Flowing water");
+ const water=nodes.find(n=>n.props?.["aria-label"]==="Flowing water");water.props.onChange();
+ assert.deepEqual(changes,[{...settings,waterFlow:true}]);
+ assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Rendering quality"));
+ assert.equal(nodes.filter(n=>n.props?.["aria-label"]==="Flowing water").length,1,"no duplicated effect switches in advanced studio");
+ assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Scene light direction"));
 });
