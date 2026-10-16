@@ -342,3 +342,10 @@ coverage of the explicit GoDaddy framing policy. The focused HTTP/authentication
 checks pass, including the new asynchronous-revocation regression case. CDN
 email obfuscation was observed live on Barta; no-transform preserves public
 contact HTML and prevents mutation of React-rendered contact text on KFM.
+
+Live read-only checks also confirmed the configured PC service answers status on
+the apex but correctly holds www with PC_AI_ORIGIN_HOLD. An exact www-to-apex 308
+redirect now canonicalizes navigation before browser sign-in, preserving path
+and query. This keeps authentication's exact origin requirement; it does not
+accept an additional origin or change DNS. Actual built HTTP tests cover root,
+query-bearing About and API status redirects.
