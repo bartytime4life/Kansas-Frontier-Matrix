@@ -8,6 +8,10 @@ jobs:
   compare-engines:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        candidate: [smollm2-360m-q4, qwen2.5-0.5b-q4, qwen3-0.6b-uint8]
     env:
       ONNXRUNTIME_NODE_INSTALL: skip
       ORT_DISABLE_TELEMETRY: '1'
@@ -20,27 +24,30 @@ jobs:
           node-version: '22.23.3'
       - run: npm ci
       - name: Bounded reference generation using pinned public model files
+        env:
+          KFM_REFERENCE_MODEL: ${{ matrix.candidate }}
         run: |
-          for KFM_REFERENCE_MODEL in smollm2-360m qwen2.5-0.5b; do
-            export KFM_REFERENCE_MODEL
-            node --input-type=module <<'JS'
+          node --input-type=module <<'JS'
           import {pipeline,env} from '@huggingface/transformers';
-          import {Tokenizer} from '@huggingface/tokenizers';
           import {readFile,readdir,lstat} from 'node:fs/promises';
           import {createReadStream} from 'node:fs';
           import {createHash} from 'node:crypto';
           import {join} from 'node:path';
           const choice=process.env.KFM_REFERENCE_MODEL;
-          const selected=choice==='smollm2-360m'
-            ?{id:'HuggingFaceTB/SmolLM2-360M-Instruct',revision:'a10cc1512eabd3dde888204e902eca88bddb4951'}
-            :{id:'onnx-community/Qwen2.5-0.5B-Instruct',revision:'cc5cc01a65cc3ff17bdb73a7de33d879f62599b0'};
+          const selected={
+            'smollm2-360m-q4':{id:'HuggingFaceTB/SmolLM2-360M-Instruct',revision:'a10cc1512eabd3dde888204e902eca88bddb4951',dtype:'q4'},
+            'qwen2.5-0.5b-q4':{id:'onnx-community/Qwen2.5-0.5B-Instruct',revision:'cc5cc01a65cc3ff17bdb73a7de33d879f62599b0',dtype:'q4'},
+            'qwen3-0.6b-uint8':{id:'onnx-community/Qwen3-0.6B-ONNX',revision:'a7b503b1c3f7e98e8f80b6d565f47807a5007d9c',dtype:'uint8'},
+          }[choice];
+          if(!selected)throw new Error('Unknown fixed candidate');
+          let seed=73471;Math.random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2**32;};
           env.cacheDir=join(process.env.RUNNER_TEMP,'kfm-reference-'+choice);
           let peakRssBytes=process.memoryUsage().rss;
           const monitor=setInterval(()=>{peakRssBytes=Math.max(peakRssBytes,process.memoryUsage().rss);if(peakRssBytes>3*1024**3){console.log('KFM_REFERENCE_STOP MEMORY_LIMIT');process.exit(1);}},100);
-          const timer=setTimeout(()=>{console.log('KFM_REFERENCE_STOP TIMEOUT');process.exit(1);},180000);
+          const timer=setTimeout(()=>{console.log('KFM_REFERENCE_STOP TIMEOUT');process.exit(1);},240000);
           let pipe;
           try {
-            pipe=await pipeline('text-generation',selected.id,{revision:selected.revision,dtype:'uint8',device:'cpu',session_options:{intraOpNumThreads:1,interOpNumThreads:1,graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}}});
+            pipe=await pipeline('text-generation',selected.id,{revision:selected.revision,dtype:selected.dtype,device:'cpu',session_options:{intraOpNumThreads:1,interOpNumThreads:1,graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}}});
             const system="You are a helpful assistant named KFM. Follow the user's instructions carefully and answer directly. Examples are hypothetical. Do not invent sources, private information or exact locations. You cannot use tools. Use plain, accessible language. Be brief.";
             const tasks=[
               ['greeting','Say hello in one short sentence.'],
@@ -56,8 +63,9 @@ jobs:
             for(const [id,question] of tasks){
               const messages=[{role:'system',content:system},...(id==='followup'&&story?[{role:'user',content:tasks[2][1]},{role:'assistant',content:story}]:[]),{role:'user',content:question}];
               const began=performance.now();
-              const result=await pipe(messages,{max_new_tokens:32,do_sample:false});
-              const text=result[0]?.generated_text?.at(-1)?.content??null;
+              const prompt=pipe.tokenizer.apply_chat_template(messages,{tokenize:false,add_generation_prompt:true,enable_thinking:false});
+              const result=await pipe(prompt,{max_new_tokens:64,return_full_text:false,do_sample:choice.startsWith('qwen3'),temperature:0.7,top_p:0.8,top_k:20});
+              const text=result[0]?.generated_text??null;
               if(id==='story')story=text;
               outputs.push({id,question,text,elapsedMs:Math.round(performance.now()-began)});
             }
@@ -65,13 +73,12 @@ jobs:
             const files=[];
             for(const relative of await readdir(env.cacheDir,{recursive:true})){
               const path=join(env.cacheDir,relative),info=await lstat(path);
-              if(!info.isFile()||!/(?:^|\/)(?:config.json|generation_config.json|tokenizer.json|tokenizer_config.json|model_uint8.onnx)$/.test(relative))continue;
+              if(!info.isFile()||!/(?:^|\/)(?:config.json|generation_config.json|tokenizer.json|tokenizer_config.json|special_tokens_map.json|model_(?:uint8|q4).onnx)$/.test(relative))continue;
               const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
               files.push({cacheRelativePath:relative,size:info.size,sha256:hash.digest('hex')});
             }
-            console.log('KFM_ENGINE_REFERENCE '+JSON.stringify({model:selected,backend:'onnxruntime-node / CI reference only',dtype:'uint8',outputs,peakRssBytes,files,scope:'Fixed synthetic prompts only; no KFM/user data, external inference provider, PC inference or public deployment.'}));
+            console.log('KFM_ENGINE_REFERENCE '+JSON.stringify({model:selected,backend:'onnxruntime-node / CI reference only',outputs,peakRssBytes,files,scope:'Fixed synthetic prompts only; no KFM/user data, external inference provider, PC inference or public deployment.'}));
           } finally {
             clearInterval(monitor);clearTimeout(timer);await pipe?.dispose();
           }
           JS
-          done
