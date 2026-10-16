@@ -1,5 +1,6 @@
 // Public chat owns only short-lived anonymous jobs; account/admin APIs stay separate.
 import {randomBytes,createHash} from 'node:crypto';
+import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {getHostedAiModel,HOSTED_MODEL} from './hosted-ai.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
@@ -23,7 +24,7 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
  const cookie=request=>(request.headers.get('cookie')??'').split(';').map(x=>x.trim()).find(x=>x.startsWith('__Host-kfm_ai_guest='))?.slice(20)??'';
  const cleanup=()=>{
   const now=clock();requests=requests.filter(t=>t>now-3600000);
-  for(const [key,value]of sessions)if(value.created<=now-3600000)sessions.delete(key);
+  for(const [key,value]of sessions){if(value.created<=now-3600000)sessions.delete(key);else value.history=(value.history??[]).filter(item=>item.at>now-900000);}
   for(const [key,job]of jobs){
    if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.packet=null;job.result=null;job.question='';job.query=null;}
    if(job.created<=now-900000){job.abort?.abort();jobs.delete(key);}
@@ -48,20 +49,24 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
    if(!model.ready){job.state='completed';job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;continue;}
    job.state='running';job.abort=new AbortController();const timer=setTimeout(()=>job.abort.abort(),Math.max(1,job.deadline-clock()));timer.unref?.();
    try{
-    if(!await fresh(job)){job.result=envelope('ABSTAIN','RELEASE_CHANGED');}
-    else{
-     const facts=job.packet.evidence.slice(0,4),selection=await model.select(job.question,facts.map(x=>x.text),job.abort.signal);
+    if(job.mode==='explore'){
+     const session=sessions.get(job.owner);
+     const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,history:(session?.history??[]).map(({question,reply})=>({question,reply}))},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
-     if(!await fresh(job))job.result=envelope('ABSTAIN','RELEASE_CHANGED');
-     else if(!Number.isInteger(selection)||selection<0||selection>facts.length)job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
-     else if(selection===0)job.result=envelope('ABSTAIN','EVIDENCE_NOT_SUPPORTIVE');
+     const output=discussion?.text;
+     if(!text(output,4096)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else{
-      const fact=facts[selection-1];
-      job.result={outcome:'ANSWER',reasonCode:'RELEASED_EVIDENCE_SELECTION',answer:fact.text,evidenceRefs:[fact.evidenceRef],interpretation:null,citations:[{evidenceRef:fact.evidenceRef,title:fact.title,url:fact.url}],releaseId:job.packet.releaseId,truncated:job.packet.truncated||job.packet.evidence.length>4};
+      job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
+      if(session)session.history=[...(session.history??[]),{question:job.question,reply:output,at:clock()}].slice(-2);
      }
+    }else if(!await fresh(job))job.result=envelope('ABSTAIN','RELEASE_CHANGED');
+    else{
+     // The small model failed semantic selection qualification. Show only the
+     // released reader's references; do not turn any model choice into an answer.
+     job.result={...envelope('ABSTAIN','EVIDENCE_MODEL_UNQUALIFIED'),citations:job.packet.evidence.slice(0,4).map(fact=>({evidenceRef:fact.evidenceRef,title:fact.title,url:fact.url})),truncated:job.packet.truncated||job.packet.evidence.length>4};
     }
    }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
-   finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(job.result?.outcome!=='ANSWER'){job.packet=null;job.query=null;}}
+   finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
   }}finally{draining=false;}
  };
  return async request=>{
@@ -74,26 +79,29 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
   try{
    if(path==='jobs'&&request.method==='POST'){
     const value=await body(request);
-    if(Object.keys(value).some(k=>!['question','term','place','start','end'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    if(Object.keys(value).some(k=>!['question','term','place','start','end','mode','style','depth'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    const mode=value.mode??'evidence',style=value.style??'plain',depth=value.depth??'brief';
+    if(!['explore','evidence'].includes(mode)||!['plain','technical'].includes(style)||!['brief','expanded'].includes(depth))throw new Error('INVALID_REQUEST');
     const query={term:value.term,place:value.place??'',start:value.start??'',end:value.end??''};
     if(typeof query.place!=='string'||query.place.length>160||!date(query.start)||!date(query.end)||query.start&&query.end&&query.start>query.end)throw new Error('INVALID_REQUEST');
     if(requests.length>=30)throw new Error('GLOBAL_RATE_LIMIT');
     if(!session){
      if(sessions.size>=100)throw new Error('QUEUE_FULL');
-     guest=token();session={created:clock(),requests:[]};sessions.set(digest(guest),session);
+     guest=token();session={created:clock(),requests:[],history:[]};sessions.set(digest(guest),session);
      extra={'Set-Cookie':'__Host-kfm_ai_guest='+guest+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600'};
     }
     session.requests=session.requests.filter(t=>t>clock()-3600000);
     if(session.requests.length>=10)throw new Error('USER_RATE_LIMIT');
     if([...jobs.values()].some(j=>j.owner===digest(guest)&&['preparing','queued','running'].includes(j.state)))throw new Error('USER_BUSY');
     if([...jobs.values()].filter(j=>['preparing','queued','running'].includes(j.state)).length>=3)throw new Error('QUEUE_FULL');
-    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,state:'preparing',created:now,deadline:now+90000,packet:null,result:null};
+    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+90000,packet:null,result:null};
     jobs.set(job.id,job);requests.push(now);session.requests.push(now);
     try{
      const sensitive=isSensitiveQwenQuestion(value.question)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(value.question);
-     const evidence=sensitive?null:await packet(query);
+     const evidence=sensitive||mode==='explore'?null:await packet(query);
      if(job.state!=='preparing'||clock()>=job.deadline){job.state='expired';return reply({id:job.id},202,extra);}
-     if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
+     if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
+     else if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
      else{job.packet=evidence;job.evidenceDigest=digest(evidence);job.state='queued';void drain();}
     }catch{job.state='completed';job.result=envelope('ABSTAIN','EVIDENCE_WITHHELD');}
     return reply({id:job.id},202,extra);
@@ -109,8 +117,8 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
     }
     if(!match[2]&&request.method==='GET'){
      let result=job.result;
-     if(result?.outcome==='ANSWER'){try{if(!await fresh(job))result=envelope('ABSTAIN','RELEASE_CHANGED');}catch{result=envelope('ABSTAIN','RELEASE_CHANGED');}}
-     return reply({id:job.id,state:job.state,deadline:job.deadline,result});
+     if(result?.outcome==='ANSWER'||result?.citations?.length){try{if(!await fresh(job))result=envelope('ABSTAIN','RELEASE_CHANGED');}catch{result=envelope('ABSTAIN','RELEASE_CHANGED');}}
+     return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result});
     }
    }
    return reply({reasonCode:'ROUTE_NOT_FOUND'},404);

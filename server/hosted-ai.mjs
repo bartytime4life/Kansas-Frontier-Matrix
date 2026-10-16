@@ -19,12 +19,14 @@ export class HostedAiModel{
     const pending=this.pending;this.pending=null;pending.cleanup();
     if(pending.signal?.aborted)pending.reject(error('MODEL_CANCELLED'));
     else if(message.error)pending.reject(error(['MODEL_CONTEXT_LIMIT','MODEL_CANCELLED'].includes(message.error)?message.error:'MODEL_UNAVAILABLE'));
-    else pending.resolve(message.selection);
+    else pending.resolve(pending.kind==='discuss'?{text:message.discussion,contextTrimmed:Boolean(message.contextTrimmed),outputLimited:Boolean(message.outputLimited)}:message.selection);
    }
   });
   this.worker.once('error',()=>this.stop('MODEL_UNAVAILABLE'));this.worker.once('exit',()=>this.stop('MODEL_UNAVAILABLE'));
  }
- select(question,facts,signal){
+ select(question,facts,signal){return this.call('select',{question,facts},signal);}
+ discuss(question,{style='plain',depth='brief',history=[]}={},signal){return this.call('discuss',{question,style,depth,history},signal);}
+ call(kind,payload,signal){
   if(!this.ready||this.stopped)return Promise.reject(error('MODEL_UNAVAILABLE'));
   if(this.pending)return Promise.reject(error('MODEL_BUSY'));
   if(signal?.aborted)return Promise.reject(error('MODEL_CANCELLED'));
@@ -32,8 +34,8 @@ export class HostedAiModel{
    const id=randomUUID(),cancel=new SharedArrayBuffer(4),abort=()=>Atomics.store(new Int32Array(cancel),0,1);
    const timer=setTimeout(()=>this.stop('MODEL_TIMEOUT'),HOSTED_LIMITS.inferenceMs);
    const cleanup=()=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);};
-   this.pending={id,resolve:resolveResult,reject,signal,cleanup};signal?.addEventListener('abort',abort,{once:true});
-   this.worker.postMessage({type:'select',id,question,facts,cancel});
+   this.pending={id,kind,resolve:resolveResult,reject,signal,cleanup};signal?.addEventListener('abort',abort,{once:true});
+   this.worker.postMessage({type:kind,id,...payload,cancel});
   });
  }
  stop(reason='MODEL_UNAVAILABLE'){

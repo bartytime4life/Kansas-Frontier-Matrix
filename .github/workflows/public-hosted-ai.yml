@@ -1,7 +1,7 @@
 name: Public hosted AI qualification
 on:
   push:
-    branches: [a0-public-hosted-ai-20261016]
+    branches: [a0-hosted-ai-answer-validation-20261016]
 permissions:
   contents: read
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - run: npm run build
       - run: npx tsc --noEmit
       - run: node --test tests/public-ai-http.test.mjs tests/pc-ai-http.test.mjs
-      - name: Private pinned-model installation and actual selector checks
+      - name: Private pinned-model installation and actual discussion checks
         run: |
           node --input-type=module <<'JS'
           import {qualifyEmbeddedAi} from './server/embedded-ai-probe.mjs';
@@ -33,5 +33,5 @@ jobs:
           if(installed.status!=='SYNTHETIC_INFERENCE_PASS')throw Error('INSTALL_UNQUALIFIED');
           const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP});
           console.log('KFM_PUBLIC_CHAT_RECEIPT '+JSON.stringify(receipt));
-          if(receipt.status!=='HOSTED_SELECTION_PASS')process.exitCode=1;
+          if(receipt.status!=='HOSTED_DISCUSSION_PASS')process.exitCode=1;
           JS
