@@ -2,7 +2,7 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.2
+version: v1.3
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
@@ -38,6 +38,28 @@ notes:
 > This ledger is a review aid. It records what the audit saw and how to close it. It does not approve, admit, release, or publish anything.
 
 ---
+
+## Bounded repair checkpoint — 2026-10-16 (P-04 and readiness drift)
+
+This checkpoint starts from `main@adb86db668` after PR #5212 merged. It takes
+the two remaining gap items that need no steward decision. PR #5213 owns
+`G-ENV-02`, so this pass leaves it alone.
+
+| Finding | Evidence and repair | Remaining boundary |
+|---|---|---|
+| `G-SCAF-02`: `runtime/model_adapters/OllamaAdapter.py` was a one-line greenfield placeholder | It is now a held seam. Importing it is inert, and constructing `OllamaAdapter` raises `OllamaAdapterHold` with reason code `OLLAMA_ADAPTER_NOT_ADMITTED`. `tests/runtime_proof/test_ollama_adapter_hold.py` proves the hold and the absence of I/O imports, and `focus-mock-test.yml` runs it. The runtime lane READMEs were updated to match. `UNRATCHETED_PLACEHOLDER` tightened from 9 to 8. | No provider binding, model admission, response envelope or receipt exists. ADR-0008, ADR-0019 and the `docs/architecture/governed-ai/` pages still describe the earlier one-line file at their pinned evidence snapshots; their conclusion that no provider is implemented remains true. |
+| `docs/readiness-lanes.md` contradicted `control_plane/readiness/lanes.json` | The page said `proof-slice` was a HOLD and that workflows inspected the old Makefile markers. The registry, Makefile and `policy-test.yml` / `hydrology-proof-slice.yml` show `proof-slice` IMPLEMENTED and runner-wired. The page now carries a posture table, and `tests/ci/test_readiness_lanes.py` fails when a lane status or HOLD reason in it differs from the registry. | `fixtures` and `catalog` remain HOLD. A local `policy` run still holds on `OPA_BINARY_UNAVAILABLE` (`G-POL-01`). |
+
+Still open from `G-SCAF-02`, with reasons:
+
+- The three `release/*.rego` files wait on `OQ-GAP-04`. The two geology files duplicate the ratcheted `policy/domains/geology/release/` scaffolds.
+- The two fauna `valid/*.geojson` slots wait on steward-defined range schemas, which are still empty.
+- `infra/compose/docker-compose.yml` is the input to `infra-compose-smoke.yml`, and its placeholder Dockerfile build is what that workflow checks.
+- The two `artifacts/` placeholders are tracked lane examples that `artifacts/qa/lint/README.md`, `artifacts/build/env/README.md` and the topology baseline describe.
+
+Rollback: revert the repair commit. That restores the one-line adapter file,
+the prior readiness page, and the gap baseline of 9. Keep the authoring
+receipt as history.
 
 ## Bounded repair checkpoint — 2026-10-16
 
@@ -265,5 +287,6 @@ Revert the commit that adds this ledger. That restores `tests/pipelines/__init__
 |---|---|---|
 | v1.0 | 2026-10-02 | First audit snapshot, five fixes, gap scan, and procedures P-01 to P-07. |
 | v1.1 | 2026-10-02 | `G-DOC-04a`: three source-catalog documents repaired; the remaining five `G-DOC-04` documents stay held behind doctrine decisions. Revert that commit to restore their prior bytes, the 339 gap-scan baseline, and the 115-warning topology baseline. |
+| v1.3 | 2026-10-16 | P-04 checkpoint: `OllamaAdapter.py` became a tested fail-closed hold (non-Markdown placeholder allowance 9 → 8), and `docs/readiness-lanes.md` was aligned with the lane registry under a parity test. |
 
 [Back to top](#top)

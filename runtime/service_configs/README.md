@@ -145,7 +145,7 @@ No path move or new authority root is introduced by this README. A future design
 | `configs/README.md` | Canonical configuration root | Shared defaults and templates belong there. |
 | `configs/local/README.md` plus `.gitignore` | Local children are ignored except the README | Workstation overrides are untracked and non-authoritative. |
 | `.env.example` | `KFM_MODEL_RUNTIME=mock`; loopback API and Ollama examples | Public example is mock-first and loopback-oriented; it is not activation proof. |
-| `runtime/model_adapters/OllamaAdapter.py` | One-line placeholder | Executable adapter behavior is not implemented by file presence. |
+| `runtime/model_adapters/OllamaAdapter.py` | Held seam (2026-10-16) | Construction raises `OllamaAdapterHold`; executable adapter behavior is not implemented. |
 | Runtime envelope contract/schema families | Present with draft/PROPOSED posture | Finite shapes exist as proposals; emission is unproved. |
 | `policy/runtime/README.md` | Greenfield stub | Runtime policy enforcement is unproved. |
 | Docs workflows | TODO echo stubs | Workflow presence is not substantive validation. |
