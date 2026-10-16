@@ -26,7 +26,7 @@ async function generate(prompt,maximum,cancel,sample=false){
  let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
   for(let step=0;step<maximum;step++){
-   if(generated.length&&performance.now()-generationBegan>=35000){generationLimited=true;break;}
+   if(generated.length&&performance.now()-generationBegan>=60000){generationLimited=true;break;}
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};
    const outputs=await session.run(feeds);for(const t of Object.values(outputs))owned.add(t);
@@ -118,3 +118,4 @@ try{
   finally{busy=false;}
  });
 }catch(error){parentPort.postMessage({type:'failed',reason:safe(error)});await session?.release();}
+

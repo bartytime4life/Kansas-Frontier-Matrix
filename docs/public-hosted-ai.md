@@ -1,10 +1,9 @@
 # Public hosted AI: discussion and released evidence
 
-Status: SmolLM2-360M q4 passes the four-task CI screen. Actual GoDaddy installation
-and synthetic inference passed at cb6c77e618f229e5faebf0b5f6dec9a6d9a1c1c2.
-Hosted conversation acceptance returned LIMITED; its exact reason is being
-read from the existing private synthetic receipt. Guest browser acceptance of
-the upgrade remains pending.
+Status: SmolLM2-360M q4 passes the four-task CI screen and actual GoDaddy v2
+conversation acceptance at 8096f439c85cfc3ceda997031e14734a61554a43. All four
+hosted replies completed without an output limit or memory-guard trip.
+Guest browser checks must also be recorded with each activation.
 Public publication is a separate owner decision.
 
 ## Model and execution
@@ -70,8 +69,8 @@ answers, cookies or credentials are logged. Questions/output are at most 4,096
 bytes; request body is at most 8 KiB with a five-second read deadline.
 Evidence lookup is eight seconds and each job expires after ninety seconds.
 
-Model load is at most ninety seconds; inference has a forty-five-second parent
-watchdog and thirty-five-second soft generation cutoff between tokens. Brief
+Model load is at most ninety seconds; inference has a seventy-five-second parent
+watchdog and sixty-second soft generation cutoff between tokens. Brief
 replies allow 48 tokens; expanded replies allow 64. Limit notices are shown.
 The worker JS heap is 256 MiB, with one WASM thread. Whole-process RSS is sampled
 every 100 ms; exceeding 2 GiB stops the worker without automatic retry. WASM
@@ -99,7 +98,23 @@ The integrated branch at 57df03d9b944e7f7df84a7b11bb403f32fd3101b also passed
 CI 38954903912: 49 targeted tests, production build, TypeScript, two built HTTP
 test suites, verified installation and the same four selected-profile checks.
 Actual hosted acceptance at cb6c77e returned LIMITED after explicit 0/1 flags
-isolated the test. This is a hosted hold, not a CI pass inferred as acceptance.
+isolated the test. The existing receipt's bounded report confirmed
+DISCUSSION_OUTPUT_UNQUALIFIED: greeting/rewrite/story passed in about 21/16/31
+seconds, and the follow-up hit its 35-second soft cutoff. Sampled memory stayed
+under the 2 GiB guard. This is a latency hold, not an observed memory failure.
+The v2 check uses the same model/decoding, allows a 60-second soft cutoff with
+a 75-second parent watchdog, and writes a fresh receipt rather than overwriting
+v1. The ninety-second job deadline, cancellation, queue and rate bounds remain.
+The earlier diagnostic head a2b3ced also passed all 50 targeted tests, build, types,
+two HTTP suites, the selected model screen and the existing core-repair checks.
+
+CI 38956673726 at 8096f439c85cfc3ceda997031e14734a61554a43 passed all 50
+targeted tests, production build, TypeScript, two built HTTP test suites and
+the v2 four-task model screen. GoDaddy Preview built that exact source Healthy
+and its fresh v2 receipt reported HOSTED_DISCUSSION_PASS with all four tasks
+qualified and complete. The 2 GiB guard remained in force. This confirms the
+bounded hosted screen, not general factual accuracy or unlimited provider
+capacity. Browser activation/acceptance is recorded in the follow-up PR.
 
 With KFM_HOSTED_AI_ACCEPTANCE=1 and guest chat explicitly 0, startup can report
 the already-created synthetic receipt as KFM_HOSTED_CHAT_CHECK instead of
@@ -123,6 +138,10 @@ it does not weaken the four requested tasks or input/output security gates.
 
 Use explicit 0/1 flag values: removed flags remained observable after a saved
 GoDaddy restart during testing. Do not rely on deleting a flag to disable it.
+When replacing an existing flag through GoDaddy's UI, delete and save it first,
+then add the same name with its new 0/1 value and save again. Deleting and
+re-adding the same name in one save removed the new value during this rollout.
+This procedure applies to these known non-secret flags, not account credentials.
 
 1. On the private Preview source, set KFM_HOSTED_AI=0,
    KFM_HOSTED_AI_ACCEPTANCE=0, KFM_HOSTED_AI_RESOURCE_PROBE=0 and
@@ -131,11 +150,14 @@ GoDaddy restart during testing. Do not rely on deleting a flag to disable it.
 2. Set KFM_EMBEDDED_AI_PROBE=0 and KFM_HOSTED_AI_ACCEPTANCE=1, keeping
    KFM_HOSTED_AI=0; restart and verify HOSTED_DISCUSSION_PASS. Four fixed
    synthetic tasks save a private receipt under
-   /private/kfm-hosted-smollm2-360m-q4-chat-20261016-concise-sampled-v1.
+   /private/kfm-hosted-smollm2-360m-q4-chat-20261016-v2-concise-sampled-v1.
    No fixture route or real KFM/user data is used. Acceptance stops its worker.
 3. Set KFM_HOSTED_AI_ACCEPTANCE=0, then KFM_HOSTED_AI=1 for ordinary guest chat.
-   Keep the other probe flags at 0. Verify logged-out discussion and follow-up
-   in the browser before public activation.
+   Keep the other probe flags at 0. After the final build finishes, restart
+   Preview explicitly before opening chat. A clean restart recovered a failed
+   first model startup after deployment during this rollout; automatic model
+   retries remain disabled. Verify logged-out discussion and follow-up in the
+   browser before public activation.
 
 KFM_HOSTED_AI_ORIGIN must be exactly https://kansasfrontiermatrix.com or the
 existing private preview origin https://q9r9beo47t.preview.c38.airoapp.ai.
@@ -144,10 +166,12 @@ Do not wildcard hosts, weaken the origin guard, or copy Publish account secrets
 into Preview. GoDaddy's owner protection for Preview remains in place; KFM chat
 needs no application account.
 
-This change is based on owner head e648e51e1dda3731c5f8d77cd1518507979b51c1
-and preserves its private resource diagnostic. Rollback sets all AI/probe flags
-to 0, restores that exact source and restarts Preview. The prior 135M weights
-remain available if the owner chooses to restore that model's guest setting.
+The CPU timing follow-up is based on owner head
+faa5b31c506e2fbb6a8d5b824281bc2127b8af69 (merged PR 5210) and preserves its
+private resource diagnostic. Rollback sets all AI/probe flags to 0, restores
+that exact source with the prior 35/45-second v1 limits and restarts Preview.
+Earlier source e648e51e1dda3731c5f8d77cd1518507979b51c1 and the prior 135M
+weights remain available if the owner chooses that model as a fallback.
 No database migration, subscription change or public activation is performed
 by qualification.
 
