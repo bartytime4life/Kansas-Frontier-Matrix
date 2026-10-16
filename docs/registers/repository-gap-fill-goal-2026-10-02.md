@@ -2,11 +2,11 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.1
+version: v1.2
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-16
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "State a measurable goal for closing repository gaps, record the gaps observed in a full-tree audit, define repeatable fill procedures, and point each gap at its existing machine projection or validator without creating source, policy, lifecycle, release, or publication authority."
@@ -38,6 +38,44 @@ notes:
 > This ledger is a review aid. It records what the audit saw and how to close it. It does not approve, admit, release, or publish anything.
 
 ---
+
+## Bounded repair checkpoint — 2026-10-16
+
+This checkpoint starts from `main@05b132b66b` after PRs #5194–#5197 merged.
+The earlier tables below retain their original snapshot dates and counts.
+Scope: the adopted Directory Rules and ADR-0029, contribution and installation
+guidance, this ledger, QA tooling, the remaining link findings, and selected
+Python contract, pipeline, domain, API, CI, runtime-proof, release and local-data
+tests. This is not an exhaustive review of every document or implementation.
+
+| Finding | Evidence and repair | Remaining boundary |
+|---|---|---|
+| Baseline update could accept regressions | Five new negative cases reproduced `--write-baseline` succeeding with a new parse error, test-package shadow, broken link, or either placeholder class. It now checks the existing baseline before writing and preserves its bytes on rejection. | Count-based QA remains a review aid; manual baseline edits require review. |
+| 17 dead inline Markdown links | The local census fell from 17 to 0. Unavailable proposed and retired paths are explicitly labeled; existing habitat draft guides are linked separately. | Missing proposals are not implemented by removing their dead hyperlinks. Historical application commands remain labeled historical. |
+| Placeholder allowance exceeded observed inventory | Markdown allowance tightened from 94 to 7; non-Markdown allowance remains 9. | Those 16 placeholders remain visible; this pass does not invent source, policy, or runtime behavior for them. |
+| Invalid metadata on touched documents | Two placeholder identities, missing responsibility fields, an unknown creation date, and missing relationship targets were repaired. The quarantine date records its first same-path Git addition at `026b5baa7c`, not an inferred original authoring date. | Draft status, unresolved owner assignments, pinned historical evidence and independent review remain separate. |
+
+Baseline validation under Python 3.11 with committed dependency locks passed
+1,904 tests plus 873 subtests (one skip) for schemas, contracts, pipelines,
+domains and QA; a separate API/CI/runtime-proof/release/local-data run passed
+751 tests plus 592 subtests (four skips). The release run requires the separate
+`geoparquet-pyarrow-25` lock; missing PyArrow under the smaller profile was an
+environment collection error, not a demonstrated code defect. These were
+baseline observations; the new baseline-update regressions and changed-document
+QA are validated separately in the authoring receipt.
+
+The scaffold census still contains 877 findings in 716 files. Its existing
+ratchet passes; this does not establish implemented capabilities or full
+repository correctness. Domain semantics, policy scaffolds, real source
+admission, independent stewardship, hosted behavior and release readiness need
+their own evidence and owning-root work. No source activation, model service,
+release, deployment or publication is performed by this repair.
+
+Placement: same-path documentation under `docs/`, repository QA code under
+`tools/`, executable regressions under `tests/`, and a new authoring receipt in
+the existing `data/receipts/generated/` family follow accepted ADR-0029 and
+Directory Rules §§7.2 and 10.1. Rollback is a focused revert of the repair and
+its reduced baseline together; retain the authoring receipt as history.
 
 ## 1. Definition of done
 

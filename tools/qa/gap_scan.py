@@ -22,6 +22,8 @@ Parse errors and shadowing packages are invariants: ``--check`` fails on any.
 Broken links and both placeholder classes are census counts: ``--check`` fails
 only when a count rises above ``gap_scan_baseline.json``. Lower counts pass and
 print a reminder to tighten the baseline with ``--write-baseline``.
+Baseline updates reject invariant findings and increased census counts before
+writing, so the update command cannot accept a regression.
 
 The scan is local, deterministic, and makes no network requests. Its output is a
 review aid; it grants no readiness, release, admission, or publication authority.
@@ -270,12 +272,20 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--check", action="store_true",
                       help="fail on invariant findings or census counts above the baseline")
     mode.add_argument("--write-baseline", action="store_true",
-                      help="rewrite tools/qa/gap_scan_baseline.json census counts")
+                      help="tighten census counts only if the existing check passes")
     parser.add_argument("--list", action="store_true", help="include every finding in output")
     args = parser.parse_args(argv)
     findings = scan()
     report = summarize(findings)
     if args.write_baseline:
+        status, messages = evaluate(report, load_baseline(BASELINE))
+        if status:
+            for message in messages:
+                print(message, file=sys.stderr)
+            print("baseline unchanged: fix regressions before tightening it.", file=sys.stderr)
+            report["findings"] = findings
+            print(json.dumps(report, indent=2, sort_keys=True))
+            return status
         census = {kind: report["counts"][kind] for kind in CENSUS_KINDS}
         BASELINE.write_text(json.dumps({"schema_version": SCHEMA_VERSION, "census": census},
                                        indent=2, sort_keys=True) + "\n", encoding="utf-8")

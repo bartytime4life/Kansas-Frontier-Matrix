@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-docs-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-10-16
 policy_label: repository-facing; qa-tooling
 owning_root: tools/
 responsibility: QA tooling boundary for coverage checks, link checks, drift scans, and reviewer summaries
@@ -120,6 +120,28 @@ A QA report is a review aid. It is not final acceptance by itself.
 | `ERROR` | Helper could not safely complete. |
 
 ---
+
+## Gap census baseline maintenance
+
+Use Python 3.11 or newer with the hash-locked `project-test` dependency profile:
+
+```bash
+python tools/qa/gap_scan.py --check --list
+python -m pytest -q tests/qa/test_gap_scan.py
+python tools/qa/gap_scan.py --write-baseline
+```
+
+`--write-baseline` first checks the existing baseline. Parse errors, test-package
+shadowing, or any increased census count return failure and preserve the existing
+baseline bytes. Only equal or lower census counts may be written. A missing or
+unreadable baseline is an error, not permission to create a new allowance.
+
+The link census covers inline Markdown file/directory targets outside the frozen
+`docs/archive/` lineage. It does not check anchors, HTML/reference links, external
+URLs, substantive correctness, or whether a linked component is implemented.
+Unavailable proposed and historical paths must stay explicit in prose; removing
+a dead hyperlink does not implement the missing component. Scaffold and review
+holds retain their separate inventories and authority boundaries.
 
 ## Validation
 

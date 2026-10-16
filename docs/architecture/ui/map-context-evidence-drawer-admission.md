@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, runtime, evidence, policy, release, accessibility, security, and validation stewardship"
 created: 2026-08-07
-updated: 2026-08-19
+updated: 2026-10-16
 policy_label: public; ui; runtime; evidence-drawer; renderer-neutral; public-safe; no-release; no-publication
 owning_root: docs/
 responsibility: "Explain the repository-present MapContextEnvelope-to-EvidenceDrawerPayload admission helper, its finite candidate behavior, proof limits, integration HOLD, and graduation requirements without becoming contract, schema, policy, evidence, review, release, or runtime authority."
@@ -42,7 +42,6 @@ related:
   - ../../../.github/workflows/map-context-evidence-drawer-admission.yml
   - ../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json
   - ../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json
-  - ../../../apps/explorer-web/src/adapters/GovernedClient.ts
 tags: [kfm, architecture, ui, map-context, evidence-drawer, anticorruption-layer, decision-envelope, finite-outcomes, no-network, fail-closed]
 notes:
   - "v2.0-draft replaces the proposal-era summary with a current repository-grounded architecture reference at the same path."
@@ -180,7 +179,7 @@ The helper is an **anticorruption adapter** between bounded models. It must not 
 ### Current HOLDs
 
 - No application or governed-API import of the helper was found in the current symbol search.
-- Explorer's current [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) is fixture-only and explicitly performs no network or lifecycle-store access.
+- The historical `apps/explorer-web/src/adapters/GovernedClient.ts` reference belongs to the retired Explorer Web app; the file is unavailable at `main@05b132b66b`. It cannot establish a current runtime integration.
 - Evidence-reference resolution, render policy, caller authentication, active release lookup, correction propagation, and deployed use remain unproved.
 - The `DecisionEnvelope` contract and paired schema remain proposed rather than accepted runtime authority.
 - The drawer's final semantic authority split between UI-facing projection and evidence-family material remains unresolved.
