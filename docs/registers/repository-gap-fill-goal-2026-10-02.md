@@ -2,7 +2,7 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.2
+version: v1.3
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
@@ -76,6 +76,49 @@ Placement: same-path documentation under `docs/`, repository QA code under
 the existing `data/receipts/generated/` family follow accepted ADR-0029 and
 Directory Rules §§7.2 and 10.1. Rollback is a focused revert of the repair and
 its reduced baseline together; retain the authoring receipt as history.
+
+## Full Python collection setup candidate — 2026-10-16
+
+**Base:** `main@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be`, including merged
+PR #5212. This follow-up addresses `G-ENV-02` and the collection portion of
+`DOD-08`; it does not claim full-suite execution or resolve `G-ENV-01`.
+
+Two fresh virtual environments reproduced the four documented collection
+errors after installing only `all-local-test` and `water-pilot`: three CLI
+modules lacked their CLI dependencies, and the PyArrow carrier module lacked
+PyArrow. CPython 3.12 collected 8,889 cases with those four errors, including
+the new setup regressions. The composed setup collected **8,909 tests with
+zero errors** in a separate fresh CPython 3.12 environment under the existing
+Python startup network guard and `PROJ_NETWORK=OFF`. This is an import and
+collection check, not a claim that 8,909 tests passed.
+
+The new `tools/ci/install_full_local_test.py` validates all committed inputs
+before the first install, delegates to the five existing fixed profiles and
+the separate CLI installer, stops on failure, then runs `pip check`.
+`--plan` validates inputs and prints commands without installing. Installation
+requires a virtual environment, Linux x86_64 and CPython 3.12: the experiment's
+PyArrow lock admits only its `cp312` wheel. An initial 3.11 install correctly
+stopped on that hash mismatch; no lock or experimental producer identity was
+broadened. Smaller component profiles retain their own supported runtimes.
+
+Local validation passed 57 installer tests plus 48 subtests. The larger CI,
+CLI, PyArrow-carrier and local-data slice passed 639 tests plus 481 subtests,
+with one explicit skip and one native NumPy/NetCDF compatibility warning.
+That warning remains visible and this checkpoint does not establish broad
+native-library ABI compatibility. The dependency workflow now runs a fresh
+3.12 install and guarded full-suite collection on relevant changes, while
+retaining the smaller-profile 3.11/3.12 checks. Hosted execution is separately
+verified at the PR head; no hosted result is claimed by this paragraph.
+
+Placement follows accepted ADR-0029 and Directory Rules §§7.2 and 10.1:
+dependency orchestration under `tools/ci/`, executable regressions under
+`tests/ci/`, workflow composition under `.github/workflows/`, human setup and
+gap guidance under existing `docs/` paths, and add-only authoring provenance
+under `data/receipts/generated/`. No new authority root is created. Rollback
+removes the helper, tests and collection job together and reverts their
+documentation; preserve authoring receipts as history. Installed packages are
+confined to the selected disposable environment; setup has no automatic
+rollback of a partially installed environment.
 
 ## 1. Definition of done
 

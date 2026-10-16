@@ -10,11 +10,18 @@ name: python-dependency-lock
       - "packages/connectors-core/pyproject.toml"
       - "packages/hashing/pyproject.toml"
       - "packages/schema-registry/pyproject.toml"
+      - "packages/**/pyproject.toml"
+      - "apps/governed-api/pyproject.toml"
       - "pyproject.toml"
       - "data/receipts/generated/genrec-scorecard-pinned-dependency-migration-20260812.json"
       - "tests/ci/test_install_python_ci.py"
+      - "tests/**/*.py"
       - "tests/validators/test_validate_generated_receipt.py"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/install_full_local_test.py"
+      - "tools/ci/install_kfm_cli.py"
+      - "tools/ci/python-cli.lock"
+      - "tools/ci/geoparquet-pyarrow-25.lock"
       - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
@@ -30,11 +37,18 @@ name: python-dependency-lock
       - "packages/connectors-core/pyproject.toml"
       - "packages/hashing/pyproject.toml"
       - "packages/schema-registry/pyproject.toml"
+      - "packages/**/pyproject.toml"
+      - "apps/governed-api/pyproject.toml"
       - "pyproject.toml"
       - "data/receipts/generated/genrec-scorecard-pinned-dependency-migration-20260812.json"
       - "tests/ci/test_install_python_ci.py"
+      - "tests/**/*.py"
       - "tests/validators/test_validate_generated_receipt.py"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/install_full_local_test.py"
+      - "tools/ci/install_kfm_cli.py"
+      - "tools/ci/python-cli.lock"
+      - "tools/ci/geoparquet-pyarrow-25.lock"
       - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
@@ -96,6 +110,7 @@ jobs:
       - name: Verify installer invariants and environment consistency
         run: |
           python -m unittest tests/ci/test_install_python_ci.py -v
+          python -m pytest -q tests/ci/test_install_full_local_test.py tests/ci/test_install_kfm_cli.py
           python -m pip check
           python -m py_compile tools/ci/install_python_ci.py
 
@@ -110,3 +125,41 @@ jobs:
             data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json \
             --repo-root . \
             --artifact-git-ref d0c4e9a5108c7b0d82372a43f785ae10eeed6895
+
+  collect-full-local:
+    name: collect full Python suite (Python 3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up the complete bundle's pinned interpreter
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            tools/ci/python-test.lock
+            tools/ci/python-cli.lock
+            tools/ci/python-geo.lock
+            tools/ci/python-nwm.lock
+            tools/ci/geoparquet-pyarrow-25.lock
+
+      - name: Install the full bundle in a fresh virtual environment
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/kfm-full-local-venv"
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/install_full_local_test.py
+
+      - name: Collect the Python suite without running its tests
+        env:
+          KFM_NO_NETWORK: "1"
+          PROJ_NETWORK: "OFF"
+          PYTHONPATH: tools/ci/kfm_no_network
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -m pytest \
+            --collect-only -q -p no:cacheprovider tests
