@@ -67,9 +67,24 @@ try{
  parentPort.postMessage({type:'ready'});
  let busy=false;
  parentPort.on('message',async message=>{
-  if(busy||message?.type!=='select'||typeof message.id!=='string')return;
+  if(busy||!['select','discuss'].includes(message?.type)||typeof message.id!=='string')return;
   busy=true;
   try{
+   if(message.type==='discuss'){
+    const {question,style,depth,history}=message;
+    if(typeof question!=='string'||Buffer.byteLength(question)>4096||!['plain','technical'].includes(style)||!['brief','expanded'].includes(depth)||!Array.isArray(history)||history.length>2||!(message.cancel instanceof SharedArrayBuffer)||message.cancel.byteLength!==4)fail('HOSTED_PACKET_INVALID');
+    const escape=value=>value.replaceAll('<|','< |');
+    if(history.some(item=>!item||typeof item.question!=='string'||typeof item.reply!=='string'||Buffer.byteLength(item.question)>4096||Buffer.byteLength(item.reply)>4096))fail('HOSTED_PACKET_INVALID');
+    const system='You are KFM, a helpful discussion assistant. Offer ideas, explanations and clearly hypothetical examples. Your discussion is unverified and is not evidence about Kansas. Do not invent citations, URLs, private information or exact locations. You have no tools or administrative powers. '+(style==='technical'?'Use technical language when useful. ':'Use plain, accessible language. ')+(depth==='brief'?'Be brief.':'Give a little more explanation.');
+    const retained=history.slice();let prompt,contextTrimmed=false;
+    const render=()=>'<|im_start|>system\n'+system+'<|im_end|>\n'+retained.map(item=>'<|im_start|>user\n'+escape(item.question)+'<|im_end|>\n<|im_start|>assistant\n'+escape(item.reply)+'<|im_end|>\n').join('')+'<|im_start|>user\n'+escape(question)+'<|im_end|>\n<|im_start|>assistant\n';
+    prompt=render();
+    while(tokenizer.encode(prompt).ids.length>512&&retained.length){retained.shift();contextTrimmed=true;prompt=render();}
+    const maximum=depth==='brief'?32:64;
+    const output=await generate(prompt,maximum,new Int32Array(message.cancel));
+    parentPort.postMessage({type:'result',id:message.id,discussion:output,contextTrimmed,outputLimited:tokenizer.encode(output).ids.length>=maximum});
+    return;
+   }
    const {question,facts}=message;
    if(typeof question!=='string'||Buffer.byteLength(question)>4096||!Array.isArray(facts)||!facts.length||facts.length>4||facts.some(x=>typeof x!=='string'||Buffer.byteLength(x)>800)||!(message.cancel instanceof SharedArrayBuffer)||message.cancel.byteLength!==4)fail('HOSTED_PACKET_INVALID');
    const clean=value=>value.replaceAll('<|','< |');

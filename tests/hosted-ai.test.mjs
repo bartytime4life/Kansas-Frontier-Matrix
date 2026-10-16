@@ -6,7 +6,7 @@ function worker(){const w=new EventEmitter();w.terminate=async()=>{w.terminated=
 test('guest inference uses one worker and propagates cancellation without accepting a late answer',async()=>{
  const w=worker(),model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:10})});
  try{
-  w.emit('message',{type:'ready'});await model.loaded;const controller=new AbortController(),result=model.select('question',['fact'],controller.signal);
+  w.emit('message',{type:'ready'});await model.loaded;const controller=new AbortController(),result=model.discuss('question',{style:'plain',depth:'brief',history:[]},controller.signal);
   await assert.rejects(model.select('other',['fact']),/MODEL_BUSY/);
   controller.abort();assert.equal(Atomics.load(new Int32Array(w.sent.cancel),0),1);
   w.emit('message',{type:'result',id:w.sent.id,selection:1});await assert.rejects(result,/MODEL_CANCELLED/);
