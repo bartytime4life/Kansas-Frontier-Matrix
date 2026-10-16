@@ -19,7 +19,7 @@ async function generate(prompt,maximum,cancel,sample=false){
  const owned=new Set(),past={};
  const tensor=(type,data,dims)=>{const t=new ort.Tensor(type,data,dims);owned.add(t);return t;};
  const i64=values=>tensor('int64',BigInt64Array.from(values.map(BigInt)),[1,values.length]);
- for(const name of session.inputNames.filter(name=>name.startsWith('past_key_values.')))past[name]=tensor('float32',new Float32Array(0),[1,3,0,64]);
+ for(const name of session.inputNames.filter(name=>name.startsWith('past_key_values.')))past[name]=tensor('float32',new Float32Array(0),[1,5,0,64]);
  let current=ids,pastLength=0;const generated=[];
  let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
@@ -59,11 +59,11 @@ try{
  const directory=resolve(workerData.modelDirectory);
  await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
  const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
- if(manifest.id!=='HuggingFaceTB/SmolLM2-135M-Instruct'||manifest.revision!=='12fd25f77366fa6b3b4b768ec3050bf629380bac')fail('HOSTED_MODEL_IDENTITY');
+ if(manifest.id!=='HuggingFaceTB/SmolLM2-360M-Instruct'||manifest.revision!=='a10cc1512eabd3dde888204e902eca88bddb4951')fail('HOSTED_MODEL_IDENTITY');
  const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_q4.onnx','special_tokens_map.json','tokenizer.json','tokenizer_config.json']);
  if(manifest.files.length!==allowed.size||new Set(manifest.files.map(x=>x.path)).size!==allowed.size)fail('HOSTED_MODEL_IDENTITY');
  for(const file of manifest.files){
-  if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>200000000)fail('HOSTED_MODEL_IDENTITY');
+  if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>400000000)fail('HOSTED_MODEL_IDENTITY');
   const path=join(directory,file.path),info=await privatePath(path);if(info.size!==file.size)fail('HOSTED_MODEL_INTEGRITY');
   const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
   if(hash.digest('hex')!==file.sha256)fail('HOSTED_MODEL_INTEGRITY');
@@ -71,9 +71,9 @@ try{
  ort=await import('onnxruntime-web');const {Tokenizer}=await import('@huggingface/tokenizers');
  ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
  const config=JSON.parse(await readFile(join(directory,'config.json'),'utf8'));
- if(config.hidden_size!==576||config.num_attention_heads!==9||config.num_key_value_heads!==3||config.num_hidden_layers!==30||config.eos_token_id!==2)fail('HOSTED_MODEL_CONFIG');
+ if(config.hidden_size!==960||config.num_attention_heads!==15||config.num_key_value_heads!==5||config.num_hidden_layers!==32||config.eos_token_id!==2)fail('HOSTED_MODEL_CONFIG');
  session=await ort.InferenceSession.create(join(directory,'onnx/model_q4.onnx'),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
- const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<30;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
+ const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<32;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
  if(session.inputNames.length!==expected.length||expected.some(name=>!session.inputNames.includes(name)))fail('HOSTED_MODEL_INPUTS');
  for(const meta of session.inputMetadata)if(!meta.isTensor||meta.type!==(meta.name.startsWith('past_key_values.')?'float32':'int64'))fail('HOSTED_MODEL_INPUTS');
  tokenizer=new Tokenizer(JSON.parse(await readFile(join(directory,'tokenizer.json'),'utf8')),JSON.parse(await readFile(join(directory,'tokenizer_config.json'),'utf8')));

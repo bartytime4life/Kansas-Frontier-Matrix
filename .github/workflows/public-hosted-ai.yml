@@ -1,7 +1,7 @@
 name: Public hosted AI qualification
 on:
   push:
-    branches: [a0-hosted-ai-conversation-quality-20261016, a0-hosted-ai-status-recovery-20261016]
+    branches: [a0-hosted-ai-360m-qualification-20261016]
 permissions:
   contents: read
 jobs:
@@ -19,25 +19,25 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci
-      - run: node --test tests/assistant-status.test.mjs tests/public-ai.test.mjs tests/hosted-ai.test.mjs tests/pc-ai.test.mjs tests/pc-ai-login-admission.test.mjs tests/inspection-panel.test.mjs
-      - run: npm run build
-      - run: npx tsc --noEmit
-      - run: node --test tests/public-ai-http.test.mjs tests/pc-ai-http.test.mjs
+      - run: node --test tests/embedded-ai-probe.test.mjs tests/hosted-ai.test.mjs
       - name: Private pinned-model installation and actual discussion checks
-        if: github.ref_name == 'a0-hosted-ai-conversation-quality-20261016'
         run: |
           node --input-type=module <<'JS'
           import {qualifyEmbeddedAi} from './server/embedded-ai-probe.mjs';
-          import {qualifyHostedChat} from './server/hosted-ai-acceptance.mjs';
           const installed=await qualifyEmbeddedAi({root:process.env.RUNNER_TEMP});
           console.log('KFM_INSTALL_RECEIPT '+JSON.stringify(installed));
           if(installed.status!=='SYNTHETIC_INFERENCE_PASS')throw Error('INSTALL_UNQUALIFIED');
+          JS
+      - name: Fresh-process greeting, rewriting, story and follow-up quality checks
+        run: |
+          node --input-type=module <<'JS'
+          import {qualifyHostedChat} from './server/hosted-ai-acceptance.mjs';
           const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP});
           console.log('KFM_PUBLIC_CHAT_RECEIPT '+JSON.stringify(receipt));
           if(receipt.status!=='HOSTED_DISCUSSION_PASS')process.exitCode=1;
           JS
       - name: Official native reference using the same pinned files (CI only)
-        if: always() && github.ref_name == 'a0-hosted-ai-conversation-quality-20261016'
+        if: 'false'
         continue-on-error: true
         run: |
           node --input-type=module <<'JS'

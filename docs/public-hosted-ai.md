@@ -1,11 +1,48 @@
 # Public hosted AI: flexible discussion and released evidence
 
-Status: Bounded hosted discussion CONFIRMED; UI status-recovery correction proposed.
+Status: This isolated candidate branch qualifies SmolLM2-360M; NOT ACTIVATED.
+The connected GoDaddy preview and public site are not changed by this branch.
+Historical 135M observations below describe that model only.
 Public publication remains a separate owner decision.
 The owner requested server-hosted free AI, chat without login, and adaptable
 conversation without compromising security.
 
 ## Confirmed engine and limitations
+
+## Isolated 360M candidate, 2026-10-16
+
+The owner rejected an external Cloudflare inference provider. This branch uses
+the existing single manifest for the official Apache-2.0 360M q4 model, revision
+a10cc1512eabd3dde888204e902eca88bddb4951. Its 387,943,246-byte ONNX file and six
+support files retain the sizes/hashes already pinned by the earlier native
+qualification. The hosted/probe workers validate its 960-dimensional hidden
+state, 15 attention heads, five KV heads, 32 layers and 64-dimensional head.
+The downloader's per-file size bound becomes 400 MB only for that exact pinned
+model. The 1,200 MiB process-RSS budget, one WASM thread, 256 MiB worker heap,
+512 input tokens, 18-second generation budget and 30-second watchdog remain.
+
+Candidate private paths are /private/kfm-embedded-smollm2-360m-wasm-20261016
+and /private/kfm-hosted-smollm2-360m-chat-20261016. These isolate experimental
+bytes/receipts from the existing 135M install and refuse overwrite. They are
+runtime qualification artifacts, not admitted evidence or new authority roots.
+The single tracked identity remains server/embedded-ai-model.json.
+
+CI first installs and checks synthetic inference, then uses a fresh process for
+four fixed tasks: a short greeting, a polite rewrite retaining supplied details,
+a fictional blue-marker scene and a red-paper-kite follow-up. Complete, bounded
+outputs and subject retention are required; raw synthetic replies remain in the
+receipt for inspection. This small suite cannot establish general correctness.
+Model evidence selection stays held. Real KFM/user data is never test input.
+
+Qualification CI is scoped to existing server code and its worker/resource tests.
+Production build/type/HTTP checks and actual GoDaddy resource/quality acceptance
+must be run before any later activation. No passing result is inferred here.
+Directory basis remains ADR-0029 and Directory Rules v2 §§10.1/10.4, using the
+standalone app's existing server/, tests/, docs/ and .github/workflows/ homes.
+No roots, routes, schemas, policy or released-evidence bindings are added.
+Rollback is to discard this unconnected branch and retain owner base b19e4cd38a11c0fee62fcb8c9417003f87198f5c.
+
+## Historical 135M observations
 
 GoDaddy preview at 96ec5ddd5c1ca619a04993c0a40efa69ea9db57b produced private receipt
 62e1f9c9-8082-414a-9402-0cd77c97f0e1 at 2026-10-16T16:23:48.310Z:

@@ -3,27 +3,36 @@ import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
-export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-wasm-20261016/model')})}={}){
- const directory=join(root,'kfm-hosted-smollm2-chat-20261016'),rootInfo=await lstat(root);
+export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-360m-wasm-20261016/model')})}={}){
+ const directory=join(root,'kfm-hosted-smollm2-360m-chat-20261016'),rootInfo=await lstat(root);
  if(!rootInfo.isDirectory()||rootInfo.isSymbolicLink())throw Error('ACCEPTANCE_ROOT_UNSAFE');
  try{await mkdir(directory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
  const info=await lstat(directory);if(!info.isDirectory()||info.isSymbolicLink()||info.uid!==process.getuid())throw Error('ACCEPTANCE_DIRECTORY_UNSAFE');
  await chmod(directory,0o700);if((await readdir(directory)).length)throw Error('ACCEPTANCE_ALREADY_ATTEMPTED');
- await writeFile(join(directory,'.attempt'),'kfm.hosted-chat/20261016/v3\n',{flag:'wx',mode:0o600});
- const began=performance.now(),runId=randomUUID(),sources={};let model,result;
+ await writeFile(join(directory,'.attempt'),'kfm.hosted-chat-360m/20261016/v1\n',{flag:'wx',mode:0o600});
+ const began=performance.now(),runId=randomUUID(),sources={},checks=[];let model,result;
  for(const path of ['server/hosted-ai.mjs','server/hosted-ai-worker.mjs','server/embedded-ai-model.json','server/public-ai-handler.mjs'])
   sources[path]=createHash('sha256').update(await readFile(resolve(path))).digest('hex');
  const valid=reply=>typeof reply?.text==='string'&&reply.text.trim().length>=10&&Buffer.byteLength(reply.text)<=4096&&!/https?:\/\/|www\.|\bkfm:/i.test(reply.text)&&!localQwenAnswerHasOverPreciseLocation(reply.text)&&!hasRepeatedPhrase(reply.text);
+ const complete=reply=>valid(reply)&&!reply.outputLimited&&/[.!?]["']?\s*$/.test(reply.text);
  try{
   model=modelFactory();await model.loaded;
-  const question='Suggest one short fictional story idea involving a blue marker.';
-  const first=await model.discuss(question,{style:'plain',depth:'brief',history:[]});
-  const followup=await model.discuss('In the next scene of this fictional story, the character discovers a red paper kite that flies in the wind. What happens?',{style:'plain',depth:'expanded',history:valid(first)?[{question,reply:first.text}]:[]});
-  const qualified=valid(first)&&valid(followup)&&/marker/i.test(first.text)&&/kite/i.test(followup.text)&&first.text.trim()!==followup.text.trim();
-  result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',syntheticDiscussion:valid(first)?first.text:null,syntheticFollowup:valid(followup)?followup.text:null,evidenceSelection:'HELD_UNQUALIFIED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
+  const run=async(id,question,qualifies,history=[])=>{
+   const started=performance.now();
+   const reply=await model.discuss(question,{style:'plain',depth:'brief',history});
+   checks.push({id,question,text:valid(reply)?reply.text:null,elapsedMs:Math.round(performance.now()-started),outputLimited:Boolean(reply.outputLimited),qualified:complete(reply)&&qualifies(reply.text)});
+   return reply;
+  };
+  await run('greeting','Say hello in one short sentence.',text=>/\bhello\b/i.test(text)&&text.length<=160&&!/cannot|can.t|don.t|unable|not able/i.test(text)&&(text.match(/[.!?](?:\s|$)/g)??[]).length===1);
+  await run('rewrite','Rewrite this as one polite sentence without adding information: "Send the map today."',text=>/\bmap\b/i.test(text)&&/\btoday\b/i.test(text)&&/please|could|would/i.test(text));
+  const question='Write one short sentence about a fictional child drawing with a blue marker.';
+  const first=await run('story',question,text=>/\bblue\b/i.test(text)&&/\bmarker\b/i.test(text)&&/\bchild\b|\bkid\b/i.test(text));
+  await run('followup','Continue that fictional story in one short sentence with the same child flying a red paper kite.',text=>/\bred\b/i.test(text)&&/\bpaper\b/i.test(text)&&/\bkite\b/i.test(text)&&/\bchild\b|\bkid\b/i.test(text),valid(first)?[{question,reply:first.text}]:[]);
+  const qualified=checks.length===4&&checks.every(check=>check.qualified);
+  result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
  finally{model?.stop();}
- const receipt={profile:'kfm.hosted-chat/20261016/v3',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Two fixed fictional discussion/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This qualifies bounded unverified discussion only. Model evidence-selection failed separately and remains disabled; no released-knowledge or general model-quality acceptance is claimed.'};
+ const receipt={profile:'kfm.hosted-chat-360m/20261016/v1',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,checks,evidenceSelection:'HELD_UNQUALIFIED',elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Four fixed greeting/rewriting/fiction/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is a small bounded quality screen, not general correctness or actual GoDaddy acceptance. Factual selection remains disabled; no released-knowledge acceptance is claimed.'};
  await writeFile(join(directory,'receipt-'+runId+'.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
  return receipt;
 }
