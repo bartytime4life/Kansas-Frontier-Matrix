@@ -3,8 +3,7 @@ import { parseKnowledgeRead } from './knowledge-read';
 
 export type PcResearchQuery = {term:string;place:string;start:string;end:string};
 /** Uses the existing governed reader; source capture and local files confer no authority. */
-export async function pcResearchEvidence(query:PcResearchQuery) {
-  const origin=process.env.KFM_PC_ORIGIN;
+export async function pcResearchEvidence(query:PcResearchQuery, origin=process.env.KFM_PC_ORIGIN) {
   if(!origin)return null;
   const response=await kansasKnowledgeRead(new Request(`${origin}/api/governed/v1/knowledge?${new URLSearchParams({term:query.term})}`));
   const result=parseKnowledgeRead(await response.json(),{kind:'search',term:query.term});

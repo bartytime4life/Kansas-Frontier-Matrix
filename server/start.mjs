@@ -16,3 +16,8 @@ if (process.env.KFM_EMBEDDED_AI_PROBE === "1") {
   const { startEmbeddedAiProbe } = await import("./embedded-ai-probe.mjs");
   void startEmbeddedAiProbe();
 }
+
+if (process.env.KFM_HOSTED_AI_ACCEPTANCE === "1") {
+  const { startHostedChatAcceptance } = await import("./hosted-ai-acceptance.mjs");
+  void startHostedChatAcceptance();
+}

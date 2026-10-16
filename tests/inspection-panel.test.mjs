@@ -33,7 +33,7 @@ test("inspection switches expose the active view and invoke their actual callbac
     const close = findNode(tree, n => n.props?.className === "inspection-close");
     close.props.onClick(); assert.equal(calls.at(-1), "close");
     assert.equal(close.props["aria-label"], active === "qwen" ? "Close Qwen companion" : "Close Evidence Drawer");
-    for (const [label, mode] of [["Evidence", "evidence"], ["Ask Qwen", "qwen"]]) {
+    for (const [label, mode] of [["Evidence", "evidence"], ["Chat with KFM", "qwen"]]) {
       const button = findNode(tree, n => n.type === "button" && n.props.children === label);
       assert.equal(button.props["aria-pressed"], active === mode);
       button.props.onClick(); assert.equal(calls.at(-1), mode);

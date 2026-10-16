@@ -9404,9 +9404,9 @@ export default function Home() {
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
           <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
-          <button className="qwen-map-launch" type="button" aria-label="Ask Qwen about this map view" title="Ask Qwen about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
+          <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
-            <span><strong>Ask Qwen</strong><small>About this map view</small></span>
+            <span><strong>Chat with KFM</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
@@ -9899,9 +9899,9 @@ export default function Home() {
           <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">OLLAMA · YOUR PC</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
+              <div><span className="qwen-eyebrow">HOSTED AI · SMOLLM2</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
-            <div className="qwen-context-strip" aria-label="Qwen context scope">
+            <div className="qwen-context-strip" aria-label="Map context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
               <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
