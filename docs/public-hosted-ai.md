@@ -2,7 +2,9 @@
 
 Status: SmolLM2-360M q4 passes the four-task CI screen. Actual GoDaddy installation
 and synthetic inference passed at cb6c77e618f229e5faebf0b5f6dec9a6d9a1c1c2.
-Hosted conversation acceptance and guest browser acceptance remain pending.
+Hosted conversation acceptance returned LIMITED; its exact reason is being
+read from the existing private synthetic receipt. Guest browser acceptance of
+the upgrade remains pending.
 Public publication is a separate owner decision.
 
 ## Model and execution
@@ -93,6 +95,19 @@ follow-up. All four replies completed, taking about 10–29 seconds each; sample
 discussion peak RSS was about 1.79 GiB. Eleven focused local tests also passed.
 This is a small screen, not general correctness or a performance guarantee.
 
+The integrated branch at 57df03d9b944e7f7df84a7b11bb403f32fd3101b also passed
+CI 38954903912: 49 targeted tests, production build, TypeScript, two built HTTP
+test suites, verified installation and the same four selected-profile checks.
+Actual hosted acceptance at cb6c77e returned LIMITED after explicit 0/1 flags
+isolated the test. This is a hosted hold, not a CI pass inferred as acceptance.
+
+With KFM_HOSTED_AI_ACCEPTANCE=1 and guest chat explicitly 0, startup can report
+the already-created synthetic receipt as KFM_HOSTED_CHAT_CHECK instead of
+rerunning or overwriting it. This reads one owner-only regular receipt file
+with O_NOFOLLOW and a 64 KiB bound. Only fixed status/reason codes, timings,
+RSS/limit numbers and per-task booleans are logged; prompt/reply text, source
+paths/hashes and account data are omitted. No new public route is added.
+
 The 135M model and 360M uint8 candidate had material instruction-following
 failures. The pinned 360M q4 reference improved rewrites and continuity but still
 invented a town name in a summary and missed some formatting instructions.
@@ -135,3 +150,4 @@ to 0, restores that exact source and restarts Preview. The prior 135M weights
 remain available if the owner chooses to restore that model's guest setting.
 No database migration, subscription change or public activation is performed
 by qualification.
+

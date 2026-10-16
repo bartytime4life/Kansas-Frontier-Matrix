@@ -1,8 +1,33 @@
-import {mkdir,lstat,chmod,readdir,writeFile,readFile} from 'node:fs/promises';
+import {mkdir,lstat,chmod,readdir,writeFile,readFile,open} from 'node:fs/promises';
+import {constants} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
+const number=value=>Number.isSafeInteger(value)&&value>=0?value:null;
+function receiptSummary(receipt){
+ if(receipt?.profile!=='kfm.hosted-chat-360m-q4/20261016/v1'||receipt.discussionProfile!=='concise-sampled-v1'||!['HOSTED_DISCUSSION_PASS','LIMITED'].includes(receipt.status))throw Error('ACCEPTANCE_RECEIPT_INVALID');
+ return {profile:receipt.profile,status:receipt.status,reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(receipt.reason??'')?receipt.reason:null,
+  elapsedMs:number(receipt.elapsedMs),peakRssBytes:number(receipt.peakRssBytes),
+  limits:Object.fromEntries(['loadMs','inferenceMs','maximumRssBytes'].map(key=>[key,number(receipt.limits?.[key])])),
+  checks:(receipt.checks??[]).filter(c=>['greeting','rewrite','story','followup'].includes(c.id)).slice(0,4).map(c=>({id:c.id,elapsedMs:number(c.elapsedMs),qualified:c.qualified===true,outputLimited:c.outputLimited===true})),
+  scope:'Existing fixed synthetic receipt only; no prompt/reply text, account data, credentials or model execution.'};
+}
+export async function readHostedChatReceipt({root='/private'}={}){
+ const directory=join(root,'kfm-hosted-smollm2-360m-q4-chat-20261016-concise-sampled-v1');
+ const info=await lstat(directory);
+ if(!info.isDirectory()||info.isSymbolicLink()||info.uid!==process.getuid()||(info.mode&0o077))throw Error('ACCEPTANCE_DIRECTORY_UNSAFE');
+ const names=(await readdir(directory)).filter(name=>/^receipt-[a-f0-9-]{36}\.json$/.test(name));
+ if(names.length!==1)throw Error('ACCEPTANCE_RECEIPT_UNAVAILABLE');
+ const file=await open(join(directory,names[0]),constants.O_RDONLY|constants.O_NOFOLLOW);
+ try{
+  const stat=await file.stat();
+  if(!stat.isFile()||stat.uid!==process.getuid()||(stat.mode&0o077)||stat.nlink!==1||stat.size<1||stat.size>65536)throw Error('ACCEPTANCE_RECEIPT_UNSAFE');
+  const bytes=Buffer.alloc(65537),{bytesRead}=await file.read(bytes,0,bytes.length,0);
+  if(bytesRead!==stat.size)throw Error('ACCEPTANCE_RECEIPT_UNSAFE');
+  return receiptSummary(JSON.parse(bytes.subarray(0,bytesRead).toString('utf8')));
+ }finally{await file.close();}
+}
 export async function qualifyHostedChat({root='/private',discussionProfile='concise-sampled-v1',modelFactory=()=>new HostedAiModel({discussionProfile,modelDirectory:join(root,'kfm-embedded-smollm2-360m-q4-wasm-20261016/model')})}={}){
  if(!['baseline','concise-sampled-v1','concise-greedy-v1'].includes(discussionProfile))throw Error('ACCEPTANCE_PROFILE_INVALID');
  const directory=join(root,'kfm-hosted-smollm2-360m-q4-chat-20261016-'+discussionProfile),rootInfo=await lstat(root);
@@ -41,6 +66,12 @@ export async function qualifyHostedChat({root='/private',discussionProfile='conc
 export async function startHostedChatAcceptance(){
  if(process.env.KFM_HOSTED_AI_ACCEPTANCE!=='1')return;
  if(process.env.KFM_HOSTED_AI==='1'){console.info('KFM hosted chat acceptance: requires public chat disabled.');return;}
- try{const receipt=await qualifyHostedChat();console.info('KFM hosted chat acceptance: '+receipt.status+'; private receipt saved.');}
- catch{console.info('KFM hosted chat acceptance: unavailable or already attempted.');}
+ try{const receipt=await qualifyHostedChat();console.info('KFM hosted chat acceptance: '+receipt.status+'; private receipt saved.');console.info('KFM_HOSTED_CHAT_CHECK '+JSON.stringify(receiptSummary(receipt)));}
+ catch(error){
+  if(error.message==='ACCEPTANCE_ALREADY_ATTEMPTED'){
+   try{console.info('KFM_HOSTED_CHAT_CHECK '+JSON.stringify(await readHostedChatReceipt()));return;}catch{}
+  }
+  console.info('KFM hosted chat acceptance: unavailable or already attempted.');
+ }
 }
+
