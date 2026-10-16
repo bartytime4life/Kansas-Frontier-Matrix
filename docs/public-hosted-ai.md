@@ -1,6 +1,7 @@
 # Public hosted AI: flexible discussion and released evidence
 
-Status: PROPOSED flexible anonymous chat; exact-head and hosted qualification pending.
+Status: Bounded hosted discussion CONFIRMED; UI status-recovery correction proposed.
+Public publication remains a separate owner decision.
 The owner requested server-hosted free AI, chat without login, and adaptable
 conversation without compromising security.
 
@@ -88,6 +89,10 @@ The receipt explicitly retains evidenceSelection=HELD_UNQUALIFIED.
 After exact-head and owner release acceptance, normal chat uses KFM_HOSTED_AI=1
 and KFM_HOSTED_AI_ORIGIN set to exactly https://kansasfrontiermatrix.com or
 https://q9r9beo47t.preview.c38.airoapp.ai for the existing owner-protected preview.
+For this HTTPS reverse-proxy deployment, also set VINEXT_TRUSTED_HOSTS to the
+exact origin hostname (without scheme/path). The framework otherwise constructs
+HTTP request URLs and the chat origin guard withholds requests. Do not use a
+wildcard, trust arbitrary forwarded hosts, or disable the origin guard.
 Remove acceptance and old embedded-probe flags first. These values are not
 credentials. Do not copy published account secrets into preview. GoDaddy's own
 preview login remains in place; no application login is required for chat.
@@ -112,8 +117,12 @@ three-token sequence. A prompt-derived seed makes the same bounded request
 reproducible. These settings are server-owned, not user-supplied. A server check
 withholds repeated four-word phrases appearing three times. Qualification also
 requires distinct synthetic replies referring to the requested marker and kite
-subjects. Exact-head and hosted results remain pending; factual selection stays
-held regardless of discussion quality.
+subjects. CI 38936438219 at exact head d1010b0 passed the bounded discussion and follow-up
+check. Actual GoDaddy receipt ee0270a6-04f3-43a7-bc02-d03122d07aa5,
+2026-10-16T17:04:45.846Z, also returned HOSTED_DISCUSSION_PASS: 43,195 ms total,
+sampled peak RSS 1,020,940,288 bytes. Its source hashes match d1010b0. Replies
+were short and incomplete. This qualifies bounded execution only; factual
+selection stays held regardless of discussion quality.
 
 CI 38936069523 confirmed identical official/manual tokenizer IDs and nonrepetitive
 fiction output after decoding changes. Its follow-up drifted to a bird and failed
@@ -125,3 +134,20 @@ steps, disclosed as output-limited, ahead of the 30-second parent watchdog. This
 bounds longer replies without making an ordinary output cap disable the worker.
 The private probe tests an unambiguous paper-kite follow-up with expanded output;
 its outcome must be reported as observed, not inferred from compilation.
+
+## Guest status recovery
+
+Guest chat readiness now settles independently of the separate account-status
+request. A failed or timed-out status check shows AI connection unavailable and
+retry guidance, rather than Checking hosted AI forever. An origin hold shows a
+bounded owner-setup message; arbitrary raw server errors are not rendered.
+Five-second status polling retries, clears the notice on recovery and preserves
+the unsent draft. No login, origin, evidence, policy or resource gate is relaxed.
+Component-harness tests cover delayed account status, failed chat status, draft
+retention, retry recovery and the origin-hold message. They do not prove hosted
+browser acceptance. On 2026-10-16 the existing preview reported SmolLM2 ready
+with no KFM account after its exact-host proxy setting was applied. The logged-out guest received a first discussion reply and a follow-up with
+Technical / More detail selected. Both were visibly labeled generated and
+unverified, with response-limit notices. The follow-up continued the lake/town
+scene but missed the requested kite; option acceptance is confirmed, stylistic
+or subject adherence is not. The 135M model's quality remains a material limit.
