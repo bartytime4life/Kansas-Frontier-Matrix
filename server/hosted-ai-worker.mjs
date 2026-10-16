@@ -63,7 +63,7 @@ try{
  await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
  const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
  if(manifest.id!=='HuggingFaceTB/SmolLM2-360M-Instruct'||manifest.revision!=='a10cc1512eabd3dde888204e902eca88bddb4951')fail('HOSTED_MODEL_IDENTITY');
- const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_uint8.onnx','special_tokens_map.json','tokenizer.json','tokenizer_config.json']);
+ const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_q4.onnx','special_tokens_map.json','tokenizer.json','tokenizer_config.json']);
  if(manifest.files.length!==allowed.size||new Set(manifest.files.map(x=>x.path)).size!==allowed.size)fail('HOSTED_MODEL_IDENTITY');
  for(const file of manifest.files){
   if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>400000000)fail('HOSTED_MODEL_IDENTITY');
@@ -75,7 +75,7 @@ try{
  ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
  const config=JSON.parse(await readFile(join(directory,'config.json'),'utf8'));
  if(config.hidden_size!==960||config.num_attention_heads!==15||config.num_key_value_heads!==5||config.num_hidden_layers!==32||config.eos_token_id!==2)fail('HOSTED_MODEL_CONFIG');
- session=await ort.InferenceSession.create(join(directory,'onnx/model_uint8.onnx'),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
+ session=await ort.InferenceSession.create(join(directory,'onnx/model_q4.onnx'),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
  const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<32;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
  if(session.inputNames.length!==expected.length||expected.some(name=>!session.inputNames.includes(name)))fail('HOSTED_MODEL_INPUTS');
  for(const meta of session.inputMetadata)if(!meta.isTensor||meta.type!==(meta.name.startsWith('past_key_values.')?'float32':'int64'))fail('HOSTED_MODEL_INPUTS');

@@ -264,3 +264,7 @@ All profiles retain the same pinned model, privacy/evidence/access controls and
 2 GiB diagnostic budget. The soft 18-second generation budget also applies to
 greedy generation. Each profile uses a separate process and receipt directory.
 The unchanged four-task screen is a limited comparison, not broad qualification.
+
+### Recheck 360M q4 under the isolated 2 GiB guard
+
+The pinned q4 reference engine improved the map rewrite and fictional story/follow-up compared with uint8. It still missed the requested greeting, added an unsupported town name in a summary, and expanded a friendly rewrite; it is not generally qualified. The q4 comparison used native ONNX only in CI, not on GoDaddy. This branch now tests the same q4 weights with the existing single-thread WebAssembly engine and unchanged quality checks under the isolated 2 GiB process RSS guard. Actual hosted capacity and model acceptance remain unverified. No public model activation or release is authorized by this experiment.

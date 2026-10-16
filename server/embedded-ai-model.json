@@ -19,9 +19,9 @@
       "sha256": "87b916edaaab66b3899b9d0dd0752727dff6666686da0504d89ae0a6e055a013"
     },
     {
-      "path": "onnx/model_uint8.onnx",
-      "size": 364564671,
-      "sha256": "57987a3a24dc34ad2cb5e7e566840ccaece095e35a24ae4fc5b3086c7ddd6918"
+      "path": "onnx/model_q4.onnx",
+      "size": 387943246,
+      "sha256": "a4ffda96e65beafc6f6cef0cbcf9fdc1cbdd79c230906bf3897d190547c7a596"
     },
     {
       "path": "special_tokens_map.json",

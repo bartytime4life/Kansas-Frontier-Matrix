@@ -34,7 +34,7 @@ async function privateDirectory(path) {
 
 async function installModel(directory, manifest) {
   if (manifest.id !== 'HuggingFaceTB/SmolLM2-360M-Instruct' || manifest.revision !== 'a10cc1512eabd3dde888204e902eca88bddb4951' || manifest.license !== 'apache-2.0') fail('MODEL_MANIFEST_INVALID');
-  const allowed = new Set(['README.md', 'config.json', 'generation_config.json', 'onnx/model_uint8.onnx', 'special_tokens_map.json', 'tokenizer.json', 'tokenizer_config.json']);
+  const allowed = new Set(['README.md', 'config.json', 'generation_config.json', 'onnx/model_q4.onnx', 'special_tokens_map.json', 'tokenizer.json', 'tokenizer_config.json']);
   if (!Array.isArray(manifest.files) || manifest.files.length !== allowed.size || new Set(manifest.files.map(x => x.path)).size !== allowed.size) fail('MODEL_MANIFEST_INVALID');
   for (const entry of manifest.files) {
     if (!allowed.has(entry.path) || !Number.isSafeInteger(entry.size) || entry.size <= 0 || entry.size > 400000000 || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail('MODEL_MANIFEST_INVALID');
@@ -74,7 +74,7 @@ try {
   const modelDirectory = await installModel(workerData.directory, manifest);
   const downloadMs = Math.round(performance.now() - downloadBegan);
   stage('MODEL_LOAD'); const loadBegan = performance.now();
-  const session = await ort.InferenceSession.create(join(modelDirectory, 'onnx/model_uint8.onnx'), {
+  const session = await ort.InferenceSession.create(join(modelDirectory, 'onnx/model_q4.onnx'), {
     executionProviders: ['wasm'], executionMode: 'sequential',
     graphOptimizationLevel: 'disabled', enableCpuMemArena: false, enableMemPattern: false,
     extra: { session: { disable_prepacking: '1' } },
@@ -128,7 +128,7 @@ try {
     const answer = tokenizer.decode(generated, { skip_special_tokens: true });
     if (typeof answer !== 'string' || answer.length > 256 || !/\bblue\b/i.test(answer) || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(answer)) fail('SYNTHETIC_RESPONSE_UNQUALIFIED');
     parentPort.postMessage({ type: 'result', result: { status: 'SYNTHETIC_INFERENCE_PASS',
-      model: { id: manifest.id, revision: manifest.revision, license: manifest.license, dtype: 'uint8' },
+      model: { id: manifest.id, revision: manifest.revision, license: manifest.license, dtype: 'q4' },
       runtime: 'onnxruntime-web@1.31.0-dev.20260914-8d85527a0 / @huggingface/tokenizers@0.2.0 / wasm single-threaded',
       syntheticAnswer: answer, downloadMs, loadMs, inferenceMs: Math.round(performance.now() - inferenceBegan),
       inferenceRssBytes: process.memoryUsage().rss, modelFilesVerified: true,
