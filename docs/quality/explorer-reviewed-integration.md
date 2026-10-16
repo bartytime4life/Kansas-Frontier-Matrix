@@ -1,17 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/explorer-reviewed-integration
 title: Reviewed Explorer stack integration
+type: historical-integration-report
 version: v0.1
 status: branch-only; integration-validation-required
 owners: ["@bartytime4life"]
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-10-16
 policy_label: public
 owning_root: docs/
 responsibility: Explain the exact reviewed stack composition, compiler-loader correction and validation boundaries without creating lifecycle authority.
+truth_posture: "Historical checkpoint; NEEDS VERIFICATION for current runtime behavior."
 [/KFM_META_BLOCK_V2] -->
 
 # Reviewed Explorer stack integration
+
+> Historical branch checkpoint. The two application trees and selector paths described below have since been retired and are unavailable at `main@05b132b66b`. The commands and results remain historical evidence; use [current installation guidance](../installation.md) for the supported checkout.
 
 This branch combines the preserved Library `8e4167852d9037cc308ee744501f2172a6ee44f9` and lint/TypeScript/Worker stack `bf1335ad7250dec6334f62ad86d1032f0df7ef61` with main `a9a53470e385350b795f6d978ad3e7a5811961c5`. Commit `d550c452382c626bc871d921199af5dea2fabaa7` has those three parents and preserves the exact reviewed source bytes. The original branches and historical receipts remain unchanged. Main's merged temporal repair and build-source-context guard remain present.
 
@@ -21,7 +25,7 @@ The owner supplied the continuation: "Make all the changes. I have reviewed it".
 
 The original Library test loaders required `devDependencies.typescript` to be a plain exact version. The reviewed toolchain uses `@typescript/native: npm:typescript@7.0.2` for the compiler and the `typescript` name for the classic TypeScript 6 API. Combining the reviewed inputs therefore caused both Library test files to stop before their assertions.
 
-The shared [test-only selector](../../apps/kansas-frontier-matrix-explorer/tests/declared-typescript.mjs) selects the declared CLI, verifies exact manifest/lock/installed identities and bin confinement, and refuses ambient/global fallback. Equivalent relative bin spellings are compared by their resolved package-confined file, not raw string equality. Strict file-list compilations execute in their temporary output directory so an invoking app directory cannot accidentally supply an unrelated tsconfig. No compiler options, production tsconfig, dependencies, locks, build-script policy, application state contracts or existing test assertions are weakened. [Seventeen focused resolver regressions](../../apps/kansas-frontier-matrix-explorer/tests/declared-typescript.test.mjs) cover exact plain/native declarations, missing or mismatched installations, lock mismatch, and escaping entrypoints. Resolver identity checks do not independently rehash installed tarball contents; the frozen installer remains the integrity boundary.
+The shared test-only selector (`apps/kansas-frontier-matrix-explorer/tests/declared-typescript.mjs`, historical; target unavailable) selects the declared CLI, verifies exact manifest/lock/installed identities and bin confinement, and refuses ambient/global fallback. Equivalent relative bin spellings are compared by their resolved package-confined file, not raw string equality. Strict file-list compilations execute in their temporary output directory so an invoking app directory cannot accidentally supply an unrelated tsconfig. No compiler options, production tsconfig, dependencies, locks, build-script policy, application state contracts or existing test assertions are weakened. Seventeen focused resolver regressions (`apps/kansas-frontier-matrix-explorer/tests/declared-typescript.test.mjs`, historical; target unavailable) cover exact plain/native declarations, missing or mismatched installations, lock mismatch, and escaping entrypoints. Resolver identity checks do not independently rehash installed tarball contents; the frozen installer remains the integrity boundary.
 
 The first selector correction at `9091952f...` still rejected the installed CLI because it compared the lock and installed bin strings literally. Run `34002156577` retained that failure while confirming the application/browser paths and native receipts. The follow-up normalizes relative paths to the same confined real file, retains mismatch and absolute/escaping-path rejection, and adds regression cases with independent fixture metadata. This corrects the new selector, not a permission to select an ambient compiler. Final exact-head execution is recorded separately; the failed run and earlier receipt stay historical.
 

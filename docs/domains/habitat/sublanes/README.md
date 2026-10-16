@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>                                   # placeholder — assign on intake
+doc_id: kfm://doc/habitat-sublanes-index
 title: Habitat Domain — Sublane Index
 type: standard
 version: v1
@@ -8,12 +8,15 @@ owners: <habitat-domain-steward>                          # placeholder — conf
 created: 2026-06-04
 updated: 2026-06-04
 policy_label: public
+owning_root: docs/
+responsibility: "Index proposed habitat documentation sublanes without defining objects or new responsibility roots."
+truth_posture: "PROPOSED guidance; unavailable candidate paths remain explicit proposals."
 related:
-  - ../README.md                                          # docs/domains/habitat/README.md (PROPOSED neighbor)
-  - ../../../doctrine/ai-build-operating-contract.md       # canonical operating contract
+  - ../README.md
+  - ../../../doctrine/ai-build-operating-contract.md
   - ../../../doctrine/directory-rules.md
-  - ../../../../schemas/contracts/v1/habitat/              # schema home (PROPOSED depth)
-  - ../../../../contracts/habitat/                         # meaning home (PROPOSED depth)
+  - ../../../../schemas/contracts/v1/habitat/
+  - ../../../../contracts/habitat/
 tags: [kfm, habitat, sublanes, index]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned."
@@ -134,16 +137,18 @@ The eleven Habitat-owned object families. Each row is a candidate sublane; statu
 
 | Sublane (PROPOSED folder) | Object family | What it governs | Doc status |
 |---|---|---|---|
-| [`habitat_patch/`](./habitat_patch/) | `HabitatPatch` | Delineated habitat units | PROPOSED — not yet authored |
+| `habitat_patch/` (PROPOSED; target unavailable) | `HabitatPatch` | Delineated habitat units | PROPOSED — not yet authored |
 | [`land_cover/`](./land_cover/) | `LandCoverObservation` | Per-source land cover (NLCD/CDL/LANDFIRE/GAP/NWI), advisory crosswalks | PROPOSED — sublane README in progress |
-| [`ecological_system/`](./ecological_system/) | `EcologicalSystem` | Ecological system classification | PROPOSED — not yet authored |
-| [`habitat_quality/`](./habitat_quality/) | `Habitat Quality Score` | Quality scoring (interpretive derivative) | PROPOSED — not yet authored |
-| [`suitability_model/`](./suitability_model/) | `SuitabilityModel` | Modeled suitability (never published as critical habitat) | PROPOSED — not yet authored |
-| [`connectivity/`](./connectivity/) | `ConnectivityEdge`, `Corridor` | Landscape connectivity and corridors | PROPOSED — not yet authored |
-| [`restoration_opportunity/`](./restoration_opportunity/) | `Restoration Opportunity` | Restoration opportunity surfaces | PROPOSED — not yet authored |
-| [`stewardship_zone/`](./stewardship_zone/) | `StewardshipZone` | Stewardship/management zones | PROPOSED — not yet authored |
-| [`model_run/`](./model_run/) | `Model Run Receipt` | Model-run provenance receipts | PROPOSED — not yet authored |
-| [`uncertainty/`](./uncertainty/) | `UncertaintySurface` | Uncertainty surfaces for derived products | PROPOSED — not yet authored |
+| `ecological_system/` (PROPOSED; target unavailable) | `EcologicalSystem` | Ecological system classification | PROPOSED — not yet authored |
+| `habitat_quality/` (PROPOSED; target unavailable) | `Habitat Quality Score` | Quality scoring (interpretive derivative) | PROPOSED — not yet authored |
+| `suitability_model/` (PROPOSED; target unavailable) | `SuitabilityModel` | Modeled suitability (never published as critical habitat) | PROPOSED — not yet authored |
+| `connectivity/` (PROPOSED; target unavailable) | `ConnectivityEdge`, `Corridor` | Landscape connectivity and corridors | PROPOSED — not yet authored |
+| `restoration_opportunity/` (PROPOSED; target unavailable) | `Restoration Opportunity` | Restoration opportunity surfaces | PROPOSED — not yet authored |
+| `stewardship_zone/` (PROPOSED; target unavailable) | `StewardshipZone` | Stewardship/management zones | PROPOSED — not yet authored |
+| `model_run/` (PROPOSED; target unavailable) | `Model Run Receipt` | Model-run provenance receipts | PROPOSED — not yet authored |
+| `uncertainty/` (PROPOSED; target unavailable) | `UncertaintySurface` | Uncertainty surfaces for derived products | PROPOSED — not yet authored |
+
+Existing draft guides cover [ecological systems](ecological_systems.md), [suitability](suitability.md), [connectivity](connectivity.md), and [restoration](restoration.md). These files do not establish the proposed folder structure or approved object semantics.
 
 > [!NOTE]
 > Each object's **identity rule** is the same PROPOSED deterministic basis: `source id + object role + temporal scope + normalized digest`. Across all of them, source/observed/valid/retrieval/release/correction times stay **distinct** where material. `[DOM-HAB] [DOM-HF] [ENCY]` *(temporal-distinctness CONFIRMED; identity basis PROPOSED.)*

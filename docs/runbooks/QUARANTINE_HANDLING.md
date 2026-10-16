@@ -5,18 +5,23 @@ type: standard
 version: v1
 status: draft
 owners: TODO — Docs steward + Source steward + Domain stewards (per affected lane)
-created: TODO-YYYY-MM-DD
-updated: TODO-YYYY-MM-DD
+created: 2026-05-08
+created_note: "First same-path Git addition at 026b5baa7c; original authoring date is unknown."
+updated: 2026-10-16
 policy_label: public
+owning_root: docs/
+responsibility: "Explain quarantine handling and its lifecycle and public-boundary constraints."
+truth_posture: "Draft guidance; implementation references remain proposed unless separately verified."
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/governed-api/README.md
+  - contracts/governance/
+  - schemas/contracts/v1/
+proposed_related:
   - docs/runbooks/governed_ai_VALIDATION.md
-  - contracts/governance/  # ReviewRecord, decision/correction families
-  - schemas/contracts/v1/  # QuarantineRecord home — PROPOSED, ADR pending
 tags: [kfm, runbook, lifecycle, governance, quarantine]
 notes:
   - "All concrete repo paths and schema home claims are PROPOSED until verified against the mounted repository."
@@ -429,7 +434,7 @@ Per Atlas §24.7 *(PROPOSED reference for ADR discussion; doctrine CONFIRMED for
 - [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — the only legitimate public surface. *PROPOSED path.*
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../sources/SOURCE_DESCRIPTOR_STANDARD.md) — admission and source identity. *PROPOSED path.*
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — file here when this runbook conflicts with mounted repo state. *PROPOSED path.*
-- [`docs/runbooks/governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) — Focus Mode evidence/citation/policy validation. *PROPOSED (named in Whole-UI report).*
+- `docs/runbooks/governed_ai_VALIDATION.md` (PROPOSED; target unavailable) — Focus Mode evidence/citation/policy validation. *PROPOSED (named in Whole-UI report).*
 - *Related future neighbors:* `RELEASE_ROLLBACK.md`, `CORRECTION_LIFECYCLE.md` *(PROPOSED, not yet present).*
 - *Schema home for `QuarantineRecord`:* `schemas/contracts/v1/...` — exact subdirectory **PROPOSED**, ADR-S-12 recommended.
 

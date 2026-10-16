@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/agriculture-sublanes-index
 title: Agriculture · Sublanes
 type: readme
 subtype: domain-aspect-index
@@ -12,6 +12,9 @@ owners: <TODO: Docs steward + Agriculture domain steward + Source steward + Sens
 created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Index proposed agriculture documentation sublanes without defining machine policy."
+truth_posture: "PROPOSED source vocabulary; repository path availability verified separately from implementation and authority."
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
@@ -23,11 +26,12 @@ related:
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
-  - docs/domains/agriculture/architecture/README.md
   - policy/sensitivity/agriculture/
   - policy/domains/agriculture/
   - schemas/contracts/v1/domains/agriculture/
   - contracts/domains/agriculture/
+proposed_related:
+  - docs/domains/agriculture/architecture/README.md
 tags: [kfm, docs-index, domain, agriculture, sublanes, decomposition, sensitivity, source-role, release-tier, fail-closed]
 notes:
   - The term **"sublane"** is PROPOSED documentation-organizing vocabulary, not (yet) ratified KFM doctrine. The CONFIRMED terms it composes with are *lane* (a domain is a "bounded responsibility lane" per Atlas §1.1), *sensitive lane*, *release lane*, *cross-lane relation*, *source role*, *sensitivity tier*, and *audience class*. See §2 and OQ-AG-SUB-01.
@@ -596,14 +600,14 @@ That is a strong signal either to revise the five-axis model (OQ-AG-SUB-03) or t
 - [`docs/domains/agriculture/README.md`](../README.md) — agriculture domain index. `[PROPOSED.]`
 - [`docs/domains/agriculture/policy/README.md`](../policy/README.md) — agriculture policy aspect. `[PROPOSED — companion.]`
 - [`docs/domains/agriculture/runbooks/README.md`](../runbooks/README.md) — agriculture runbooks aspect. `[PROPOSED — companion.]`
-- [`docs/domains/agriculture/architecture/README.md`](../architecture/README.md) — agriculture architecture aspect. `[PROPOSED.]`
-- [`docs/domains/agriculture/sources/README.md`](../sources/README.md) — agriculture source ledger orientation. `[PROPOSED.]`
+- `docs/domains/agriculture/architecture/README.md` (PROPOSED; target unavailable) — agriculture architecture aspect. `[PROPOSED.]`
+- `docs/domains/agriculture/sources/README.md` (PROPOSED; target unavailable) — agriculture source ledger orientation. `[PROPOSED.]`
 
 **Canonical sublane-aware artifacts (PROPOSED paths)**
 
 - [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/) — sensitivity sublanes.
-- [`policy/domains/agriculture/cross_lane/`](../../../../policy/domains/agriculture/cross_lane/) — cross-lane sublanes.
-- [`policy/release/agriculture/`](../../../../policy/release/agriculture/) — release-tier sublanes.
+- `policy/domains/agriculture/cross_lane/` (PROPOSED; target unavailable) — cross-lane sublanes.
+- `policy/release/agriculture/` (PROPOSED; target unavailable) — release-tier sublanes.
 - [`data/registry/sources/agriculture/`](../../../../data/registry/sources/agriculture/) — source-role on `SourceDescriptor`.
 - [`schemas/contracts/v1/domains/agriculture/`](../../../../schemas/contracts/v1/domains/agriculture/) — topical sublanes (machine schemas).
 - [`contracts/domains/agriculture/`](../../../../contracts/domains/agriculture/) — topical sublanes (object meaning).
