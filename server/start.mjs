@@ -10,3 +10,7 @@ const { server } = await startProdServer({ port, host: "0.0.0.0", outDir: resolv
 // Include static assets and framework-level errors that bypass route headers.
 // Later route responses can still replace these defaults with stricter policy.
 installPublicDelivery(server);
+// Explicit opt-in baseline only; no model downloads or public diagnostic route.
+const { startHostedOllamaProbe } = await import('./hosted-ollama-probe.mjs');
+void startHostedOllamaProbe();
+
