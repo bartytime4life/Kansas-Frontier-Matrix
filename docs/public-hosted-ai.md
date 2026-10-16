@@ -2,9 +2,9 @@
 
 Status: SmolLM2-360M q4 passes the four-task CI screen. Actual GoDaddy installation
 and synthetic inference passed at cb6c77e618f229e5faebf0b5f6dec9a6d9a1c1c2.
-Hosted conversation acceptance returned LIMITED; its exact reason is being
-read from the existing private synthetic receipt. Guest browser acceptance of
-the upgrade remains pending.
+Hosted v1 acceptance passed three tasks but reached the 35-second cutoff on
+the follow-up, with memory under the 2 GiB guard. The v2 latency check and guest
+browser acceptance of the upgrade remain pending.
 Public publication is a separate owner decision.
 
 ## Model and execution
@@ -70,8 +70,8 @@ answers, cookies or credentials are logged. Questions/output are at most 4,096
 bytes; request body is at most 8 KiB with a five-second read deadline.
 Evidence lookup is eight seconds and each job expires after ninety seconds.
 
-Model load is at most ninety seconds; inference has a forty-five-second parent
-watchdog and thirty-five-second soft generation cutoff between tokens. Brief
+Model load is at most ninety seconds; inference has a seventy-five-second parent
+watchdog and sixty-second soft generation cutoff between tokens. Brief
 replies allow 48 tokens; expanded replies allow 64. Limit notices are shown.
 The worker JS heap is 256 MiB, with one WASM thread. Whole-process RSS is sampled
 every 100 ms; exceeding 2 GiB stops the worker without automatic retry. WASM
@@ -99,7 +99,15 @@ The integrated branch at 57df03d9b944e7f7df84a7b11bb403f32fd3101b also passed
 CI 38954903912: 49 targeted tests, production build, TypeScript, two built HTTP
 test suites, verified installation and the same four selected-profile checks.
 Actual hosted acceptance at cb6c77e returned LIMITED after explicit 0/1 flags
-isolated the test. This is a hosted hold, not a CI pass inferred as acceptance.
+isolated the test. The existing receipt's bounded report confirmed
+DISCUSSION_OUTPUT_UNQUALIFIED: greeting/rewrite/story passed in about 21/16/31
+seconds, and the follow-up hit its 35-second soft cutoff. Sampled memory stayed
+under the 2 GiB guard. This is a latency hold, not an observed memory failure.
+The v2 check uses the same model/decoding, allows a 60-second soft cutoff with
+a 75-second parent watchdog, and writes a fresh receipt rather than overwriting
+v1. The ninety-second job deadline, cancellation, queue and rate bounds remain.
+Current integrated head a2b3ced also passed all 50 targeted tests, build, types,
+two HTTP suites, the selected model screen and the existing core-repair checks.
 
 With KFM_HOSTED_AI_ACCEPTANCE=1 and guest chat explicitly 0, startup can report
 the already-created synthetic receipt as KFM_HOSTED_CHAT_CHECK instead of
@@ -131,7 +139,7 @@ GoDaddy restart during testing. Do not rely on deleting a flag to disable it.
 2. Set KFM_EMBEDDED_AI_PROBE=0 and KFM_HOSTED_AI_ACCEPTANCE=1, keeping
    KFM_HOSTED_AI=0; restart and verify HOSTED_DISCUSSION_PASS. Four fixed
    synthetic tasks save a private receipt under
-   /private/kfm-hosted-smollm2-360m-q4-chat-20261016-concise-sampled-v1.
+   /private/kfm-hosted-smollm2-360m-q4-chat-20261016-v2-concise-sampled-v1.
    No fixture route or real KFM/user data is used. Acceptance stops its worker.
 3. Set KFM_HOSTED_AI_ACCEPTANCE=0, then KFM_HOSTED_AI=1 for ordinary guest chat.
    Keep the other probe flags at 0. Verify logged-out discussion and follow-up

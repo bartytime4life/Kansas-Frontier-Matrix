@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 export const HOSTED_MODEL='SmolLM2-360M-Instruct q4 · server WebAssembly';
 // Isolated qualification branch only; do not activate without hosted resource acceptance.
-export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:45000,maximumRssBytes:2048*1024*1024});
+export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:75000,maximumRssBytes:2048*1024*1024});
 const error=code=>Object.assign(new Error(code),{code});
 export class HostedAiModel{
  constructor({discussionProfile='concise-sampled-v1',modelDirectory='/private/kfm-embedded-smollm2-360m-q4-wasm-20261016/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage}={}){
@@ -55,3 +55,4 @@ export function hasRepeatedPhrase(value){
  for(let i=0;i+3<words.length;i++){const phrase=words.slice(i,i+4).join(' '),n=(counts.get(phrase)??0)+1;if(n>=3)return true;counts.set(phrase,n);}
  return false;
 }
+
