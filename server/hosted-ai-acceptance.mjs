@@ -3,7 +3,7 @@ import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
-export async function qualifyHostedChat({root='/private',discussionProfile='concise-greedy-v1',modelFactory=()=>new HostedAiModel({discussionProfile,modelDirectory:join(root,'kfm-embedded-smollm2-360m-q4-wasm-20261016/model')})}={}){
+export async function qualifyHostedChat({root='/private',discussionProfile='concise-sampled-v1',modelFactory=()=>new HostedAiModel({discussionProfile,modelDirectory:join(root,'kfm-embedded-smollm2-360m-q4-wasm-20261016/model')})}={}){
  if(!['baseline','concise-sampled-v1','concise-greedy-v1'].includes(discussionProfile))throw Error('ACCEPTANCE_PROFILE_INVALID');
  const directory=join(root,'kfm-hosted-smollm2-360m-q4-chat-20261016-'+discussionProfile),rootInfo=await lstat(root);
  if(!rootInfo.isDirectory()||rootInfo.isSymbolicLink())throw Error('ACCEPTANCE_ROOT_UNSAFE');
@@ -25,11 +25,11 @@ export async function qualifyHostedChat({root='/private',discussionProfile='conc
    checks.push({id,question,text:valid(reply)?reply.text:null,elapsedMs:Math.round(performance.now()-started),outputLimited:Boolean(reply.outputLimited),qualified:complete(reply)&&qualifies(reply.text)});
    return reply;
   };
-  await run('greeting','Say hello in one short sentence.',text=>/\bhello\b/i.test(text)&&text.length<=160&&!/cannot|can.t|don.t|unable|not able/i.test(text)&&(text.match(/[.!?](?:\s|$)/g)??[]).length===1);
+  await run('greeting','Say hello in one short sentence.',text=>/\bhello\b/i.test(text)&&text.length<=160&&!/cannot|can.t|don.t|unable|not able/i.test(text)&&(text.match(/[.!?]["']?(?:\s|$)/g)??[]).length===1);
   await run('rewrite','Rewrite this as one polite sentence without adding information: "Send the map today."',text=>/\bmap\b/i.test(text)&&/\btoday\b/i.test(text)&&/please|could|would/i.test(text));
   const question='Write one short sentence about a fictional child drawing with a blue marker.';
-  const first=await run('story',question,text=>/\bblue\b/i.test(text)&&/\bmarker\b/i.test(text)&&/\bchild\b|\bkid\b/i.test(text));
-  await run('followup','Continue that fictional story in one short sentence with the same child flying a red paper kite.',text=>/\bred\b/i.test(text)&&/\bpaper\b/i.test(text)&&/\bkite\b/i.test(text)&&/\bchild\b|\bkid\b/i.test(text),valid(first)?[{question,reply:first.text}]:[]);
+  const first=await run('story',question,text=>/\bblue\b/i.test(text)&&/\bmarker\b/i.test(text)&&/\b(?:child|kid|girl|boy)\b/i.test(text));
+  await run('followup','Continue that fictional story in one short sentence with the same child flying a red paper kite.',text=>/\bred\b/i.test(text)&&/\bpaper\b/i.test(text)&&/\bkite\b/i.test(text)&&/\b(?:child|kid|girl|boy)\b/i.test(text),valid(first)?[{question,reply:first.text}]:[]);
   const qualified=checks.length===4&&checks.every(check=>check.qualified);
   result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}

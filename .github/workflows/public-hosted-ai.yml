@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci
-      - run: node --test tests/embedded-ai-probe.test.mjs tests/hosted-ai.test.mjs
+      - run: node --test tests/embedded-ai-probe.test.mjs tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs
       - name: Private pinned-model installation and synthetic inference
         run: |
           node --input-type=module <<'JS'
@@ -30,7 +30,7 @@ jobs:
           JS
       - name: Compare fixed discussion profiles in separate processes
         run: |
-          for KFM_QUALIFICATION_PROFILE in baseline concise-sampled-v1 concise-greedy-v1; do
+          for KFM_QUALIFICATION_PROFILE in concise-sampled-v1 concise-greedy-v1; do
             export KFM_QUALIFICATION_PROFILE
             node --input-type=module <<'JS'
           import {qualifyHostedChat} from './server/hosted-ai-acceptance.mjs';

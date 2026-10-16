@@ -11,7 +11,7 @@ async function privatePath(path,directory=false){
  if(info.isSymbolicLink()||info.uid!==process.getuid()||(info.mode&0o077)||(directory?!info.isDirectory():!info.isFile()||info.nlink!==1))fail('HOSTED_MODEL_FILES_UNSAFE');
  return info;
 }
-const discussionProfile=workerData.discussionProfile??'concise-greedy-v1';
+const discussionProfile=workerData.discussionProfile??'concise-sampled-v1';
 const profiles=new Set(['baseline','concise-sampled-v1','concise-greedy-v1']);
 let session,tokenizer,ort,generationLimited=false;
 async function generate(prompt,maximum,cancel,sample=false){
@@ -26,7 +26,7 @@ async function generate(prompt,maximum,cancel,sample=false){
  let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
   for(let step=0;step<maximum;step++){
-   if(generated.length&&performance.now()-generationBegan>=18000){generationLimited=true;break;}
+   if(generated.length&&performance.now()-generationBegan>=35000){generationLimited=true;break;}
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};
    const outputs=await session.run(feeds);for(const t of Object.values(outputs))owned.add(t);
@@ -98,7 +98,7 @@ try{
     const render=()=>'<|im_start|>system\n'+system+'<|im_end|>\n'+retained.map(item=>'<|im_start|>user\n'+escape(item.question)+'<|im_end|>\n<|im_start|>assistant\n'+escape(item.reply)+'<|im_end|>\n').join('')+'<|im_start|>user\n'+escape(question)+'<|im_end|>\n<|im_start|>assistant\n';
     prompt=render();
     while(tokenizer.encode(prompt).ids.length>512&&retained.length){retained.shift();contextTrimmed=true;prompt=render();}
-    const maximum=depth==='brief'?32:64;
+    const maximum=depth==='brief'?48:64;
     const output=await generate(prompt,maximum,new Int32Array(message.cancel),discussionProfile!=='concise-greedy-v1');
     parentPort.postMessage({type:'result',id:message.id,discussion:output,contextTrimmed,outputLimited:generationLimited||tokenizer.encode(output).ids.length>=maximum});
     return;
