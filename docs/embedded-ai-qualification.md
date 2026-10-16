@@ -112,3 +112,17 @@ Sources checked this session:
 - https://github.com/huggingface/transformers.js/releases/tag/4.3.1
 - https://onnxruntime.ai/docs/get-started/with-javascript/node.html
 - https://github.com/microsoft/onnxruntime/blob/main/js/node/script/install-utils.js
+
+## Post-merge preview startup follow-up
+
+The owner merged both qualification PRs (#5203 and #5202). The resulting source
+`a0-crawler-guidance-20261015@5c6f287b2fbd9ecd070073c98796f04a1e3ad847`
+retains both probe modules but invokes neither from `server/start.mjs`.
+A separate preview candidate restores only the embedded probe behind the exact
+`KFM_EMBEDDED_AI_PROBE=1` startup condition. With the flag absent, normal startup
+does not import the AI probe. The previous Ollama probe remains uninvoked.
+No model, dependency, access, account, evidence or published-site behavior changes.
+Directory Rules basis remains the existing app-owned server/docs responsibilities
+above. Rollback for this follow-up removes the flag or returns preview to this
+post-merge base; preserve private receipts and attempts. Hosted inference remains
+NEEDS VERIFICATION until an actual private receipt is inspected.
