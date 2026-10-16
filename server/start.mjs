@@ -10,7 +10,3 @@ const { server } = await startProdServer({ port, host: "0.0.0.0", outDir: resolv
 // Include static assets and framework-level errors that bypass route headers.
 // Later route responses can still replace these defaults with stricter policy.
 installPublicDelivery(server);
-
-// Disabled unless explicitly enabled for one private preview qualification.
-const { startEmbeddedAiProbe } = await import('./embedded-ai-probe.mjs');
-void startEmbeddedAiProbe();
