@@ -151,3 +151,22 @@ Technical / More detail selected. Both were visibly labeled generated and
 unverified, with response-limit notices. The follow-up continued the lake/town
 scene but missed the requested kite; option acceptance is confirmed, stylistic
 or subject adherence is not. The 135M model's quality remains a material limit.
+
+## Private hosted memory observation
+
+KFM_HOSTED_AI_RESOURCE_PROBE=1 logs one startup record tagged KFM_HOSTED_RESOURCE_REPORT.
+It calls Node 22 constrainedMemory(), availableMemory() and memoryUsage().rss.
+It loads no model, allocates no test buffers, reads no secrets, scans no files
+and exposes no public route. Zero/missing/invalid/failed readings become null
+(UNKNOWN), never unlimited capacity. The record contains only time, runtime
+identity and three memory values, in existing owner-only application logs.
+Disabled startup performs no probe. A failed reading cannot interrupt startup.
+
+Disable chat and model-install/acceptance flags while measuring private preview
+baseline. Record the exact source, OS limit, available memory and RSS before
+selecting a model budget. These are observations, not provider guarantees or
+proof that free RAM is dedicated to one app. Leave room for normal traffic and
+shared/ancestor limits. Remove the flag after observation. This branch leaves
+the hosted 1,200 MiB guard unchanged. Rollback removes the flag and restores
+b19e4cd38a11c0fee62fcb8c9417003f87198f5c. The 360M/2 GiB experiment is separate.
+Reference: https://nodejs.org/docs/latest-v22.x/api/process.html#processconstrainedmemory

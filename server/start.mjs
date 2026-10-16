@@ -21,3 +21,9 @@ if (process.env.KFM_HOSTED_AI_ACCEPTANCE === "1") {
   const { startHostedChatAcceptance } = await import("./hosted-ai-acceptance.mjs");
   void startHostedChatAcceptance();
 }
+
+// Owner-only opt-in memory observation. No model is loaded by this check.
+if (process.env.KFM_HOSTED_AI_RESOURCE_PROBE === "1") {
+  const { reportHostedResources } = await import("./hosted-ai-resources.mjs");
+  reportHostedResources();
+}
