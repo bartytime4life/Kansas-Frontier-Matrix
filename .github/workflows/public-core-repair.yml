@@ -20,6 +20,11 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx tsc --noEmit
+      - name: Map menus, mobile controls and keyboard navigation
+        run: >-
+          node --test tests/explorer-menu-dismissal.test.mjs
+          tests/mobile-compatibility.test.mjs tests/workspace-map-navigation.test.mjs
+          tests/workspace-help-navigation.test.mjs
       - name: Core delivery, filtering, geometry and account boundaries
         run: >-
           node --test tests/node-compressed-assets.test.mjs
