@@ -1,10 +1,9 @@
 # Public hosted AI: discussion and released evidence
 
-Status: SmolLM2-360M q4 passes the four-task CI screen. Actual GoDaddy installation
-and synthetic inference passed at cb6c77e618f229e5faebf0b5f6dec9a6d9a1c1c2.
-Hosted v1 acceptance passed three tasks but reached the 35-second cutoff on
-the follow-up, with memory under the 2 GiB guard. The v2 latency check and guest
-browser acceptance of the upgrade remain pending.
+Status: SmolLM2-360M q4 passes the four-task CI screen and actual GoDaddy v2
+conversation acceptance at 8096f439c85cfc3ceda997031e14734a61554a43. All four
+hosted replies completed without an output limit or memory-guard trip.
+Guest browser checks must also be recorded with each activation.
 Public publication is a separate owner decision.
 
 ## Model and execution
@@ -106,8 +105,16 @@ under the 2 GiB guard. This is a latency hold, not an observed memory failure.
 The v2 check uses the same model/decoding, allows a 60-second soft cutoff with
 a 75-second parent watchdog, and writes a fresh receipt rather than overwriting
 v1. The ninety-second job deadline, cancellation, queue and rate bounds remain.
-Current integrated head a2b3ced also passed all 50 targeted tests, build, types,
+The earlier diagnostic head a2b3ced also passed all 50 targeted tests, build, types,
 two HTTP suites, the selected model screen and the existing core-repair checks.
+
+CI 38956673726 at 8096f439c85cfc3ceda997031e14734a61554a43 passed all 50
+targeted tests, production build, TypeScript, two built HTTP test suites and
+the v2 four-task model screen. GoDaddy Preview built that exact source Healthy
+and its fresh v2 receipt reported HOSTED_DISCUSSION_PASS with all four tasks
+qualified and complete. The 2 GiB guard remained in force. This confirms the
+bounded hosted screen, not general factual accuracy or unlimited provider
+capacity. Browser activation/acceptance is recorded in the follow-up PR.
 
 With KFM_HOSTED_AI_ACCEPTANCE=1 and guest chat explicitly 0, startup can report
 the already-created synthetic receipt as KFM_HOSTED_CHAT_CHECK instead of
@@ -152,10 +159,12 @@ Do not wildcard hosts, weaken the origin guard, or copy Publish account secrets
 into Preview. GoDaddy's owner protection for Preview remains in place; KFM chat
 needs no application account.
 
-This change is based on owner head e648e51e1dda3731c5f8d77cd1518507979b51c1
-and preserves its private resource diagnostic. Rollback sets all AI/probe flags
-to 0, restores that exact source and restarts Preview. The prior 135M weights
-remain available if the owner chooses to restore that model's guest setting.
+The CPU timing follow-up is based on owner head
+faa5b31c506e2fbb6a8d5b824281bc2127b8af69 (merged PR 5210) and preserves its
+private resource diagnostic. Rollback sets all AI/probe flags to 0, restores
+that exact source with the prior 35/45-second v1 limits and restarts Preview.
+Earlier source e648e51e1dda3731c5f8d77cd1518507979b51c1 and the prior 135M
+weights remain available if the owner chooses that model as a fallback.
 No database migration, subscription change or public activation is performed
 by qualification.
 
