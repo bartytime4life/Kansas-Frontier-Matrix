@@ -243,3 +243,37 @@ incompatible cases); two report-label assertions fail on both the exact f44 base
 and this candidate. They are recorded separately, not reported as passing or as
 new capture/navigation failures. Actual Node HTTP checks pass against the rebuilt
 candidate. No full-suite pass is claimed.
+
+## Public crawler discovery — October 15, 2026
+
+This bounded change starts from the published GoDaddy app `q9r9beo47t` at
+`2c6db1f77ba16cb7dfa494e84c58d5f927c3c00f`. The configured branch has newer
+unpublished work; updating it wholesale is outside this crawler-only package.
+
+`/robots.txt` permits ordinary public pages and assets while asking crawlers
+to avoid APIs, operational views, record views, and query-specific URLs.
+`/sitemap.xml` lists only the existing public homepage and About page on
+`https://kansasfrontiermatrix.com`. No source records, exact locations, private
+storage, authenticated routes, or data releases are added to the sitemap.
+The GoDaddy layout uses that verified domain for social metadata; the historical
+Sites identity snapshot and original Site's audience/bindings remain unchanged.
+
+Placement reuses this standalone composition's existing `app/` implementation
+root, `tests/`, and hosting documentation. `app/crawler-discovery.ts` owns the
+public text; the two route handlers provide the standard media types because
+the pinned Vinext static server treats TXT/XML files as octet-stream downloads.
+This follows the responsibility rule in the adopted Directory Rules v2
+(ADR-0029); it creates no new repository root, registry, policy, source, or release authority.
+
+Crawler instructions are advisory, not authentication, a safety certificate, or
+a vendor category decision. Existing server authorization and release controls
+remain authoritative. Verify live GET/HEAD media types, public-page metadata,
+and anonymous admin denial after deployment. Local checks do not prove GoDaddy
+publication or that a classifier has recrawled the site. Rollback is a revert
+and redeployment of this crawler change, with no data/storage migration.
+
+Validation: the production build, TypeScript, the changed canonical-metadata
+assertion, and all 14 actual Node HTTP checks pass. The HTTP checks cover crawler
+GET/HEAD responses, literal public metadata, anonymous operational denial, forged
+identity rejection, and existing free report/map downloads. This is changed-area
+validation, not a claim that the legacy full test suite passes.

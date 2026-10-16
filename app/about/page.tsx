@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
 import Link from "next/link";
 import { REPOSITORY_SNAPSHOT } from "../repository-updates";
 import { SITE_IDENTITY } from "../site-identity";
@@ -6,6 +7,7 @@ import { SITE_IDENTITY } from "../site-identity";
 export const metadata: Metadata = {
   title: "About · Kansas Frontier Matrix Explorer",
   description: "How to use the Kansas Frontier Matrix map, vector basemap context, Qwen companion, evidence states, and source boundaries.",
+  alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/about` },
 };
 
 const evidenceStates = [

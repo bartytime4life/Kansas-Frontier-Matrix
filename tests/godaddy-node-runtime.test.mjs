@@ -16,6 +16,29 @@ test("anonymous map is public", async () => {
   assert.equal(response.status, 200);
   assert.match(await response.text(), /Kansas Frontier Matrix/);
 });
+test("public crawler files are served with their text and XML media types", async () => {
+  for (const [path, mediaType, expected] of [
+    ["/robots.txt", "text/plain", "Sitemap: https://kansasfrontiermatrix.com/sitemap.xml"],
+    ["/sitemap.xml", "application/xml", "<loc>https://kansasfrontiermatrix.com/about</loc>"],
+  ]) {
+    const response = await fetch(origin + path);
+    assert.equal(response.status, 200);
+    assert.ok(response.headers.get("content-type").startsWith(mediaType));
+    assert.ok((await response.text()).includes(expected));
+    const head = await fetch(origin + path, { method: "HEAD" });
+    assert.equal(head.status, 200);
+    assert.equal(await head.text(), "");
+  }
+  const robots = await (await fetch(origin + "/robots.txt")).text();
+  assert.match(robots, /^Disallow: \/api\//m);
+  assert.match(robots, /^Disallow: \/source-operations/m);
+});
+test("public metadata identifies the GoDaddy domain without changing the Sites snapshot", async () => {
+  const home = await (await fetch(origin)).text();
+  assert.match(home, /https:\/\/kansasfrontiermatrix\.com\/og-guided\.png/);
+  const about = await (await fetch(origin + "/about")).text();
+  assert.match(about, /<link rel="canonical" href="https:\/\/kansasfrontiermatrix\.com\/about"/);
+});
 for (const path of [
   "/api/data-submissions",
   "/api/governed/water-admin/status",
