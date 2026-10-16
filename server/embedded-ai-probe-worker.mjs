@@ -33,11 +33,11 @@ async function privateDirectory(path) {
 }
 
 async function installModel(directory, manifest) {
-  if (manifest.id !== 'HuggingFaceTB/SmolLM2-135M-Instruct' || !/^[a-f0-9]{40}$/.test(manifest.revision) || manifest.license !== 'apache-2.0') fail('MODEL_MANIFEST_INVALID');
+  if (manifest.id !== 'HuggingFaceTB/SmolLM2-360M-Instruct' || manifest.revision !== 'a10cc1512eabd3dde888204e902eca88bddb4951' || manifest.license !== 'apache-2.0') fail('MODEL_MANIFEST_INVALID');
   const allowed = new Set(['README.md', 'config.json', 'generation_config.json', 'onnx/model_q4.onnx', 'special_tokens_map.json', 'tokenizer.json', 'tokenizer_config.json']);
   if (!Array.isArray(manifest.files) || manifest.files.length !== allowed.size || new Set(manifest.files.map(x => x.path)).size !== allowed.size) fail('MODEL_MANIFEST_INVALID');
   for (const entry of manifest.files) {
-    if (!allowed.has(entry.path) || !Number.isSafeInteger(entry.size) || entry.size <= 0 || entry.size > 200000000 || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail('MODEL_MANIFEST_INVALID');
+    if (!allowed.has(entry.path) || !Number.isSafeInteger(entry.size) || entry.size <= 0 || entry.size > 400000000 || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail('MODEL_MANIFEST_INVALID');
   }
   const modelDirectory = join(directory, 'model');
   await privateDirectory(modelDirectory); await privateDirectory(join(modelDirectory, 'onnx'));
@@ -85,7 +85,7 @@ try {
     const config = JSON.parse(await readFile(join(modelDirectory, 'config.json'), 'utf8'));
     const tc = JSON.parse(await readFile(join(modelDirectory, 'tokenizer_config.json'), 'utf8'));
     const tokenizer = new Tokenizer(JSON.parse(await readFile(join(modelDirectory, 'tokenizer.json'), 'utf8')), tc);
-    if (config.hidden_size !== 576 || config.num_attention_heads !== 9 || config.num_key_value_heads !== 3 || config.num_hidden_layers !== 30) fail('MODEL_CONFIG_UNSUPPORTED');
+    if (config.hidden_size !== 960 || config.num_attention_heads !== 15 || config.num_key_value_heads !== 5 || config.num_hidden_layers !== 32) fail('MODEL_CONFIG_UNSUPPORTED');
     const expectedInputs = ['input_ids', 'attention_mask', 'position_ids'];
     for (let layer = 0; layer < config.num_hidden_layers; layer++) {
       for (const kind of ['key', 'value']) expectedInputs.push('past_key_values.' + layer + '.' + kind);
@@ -101,7 +101,7 @@ try {
     const ids = tokenizer.encode(prompt).ids, generated = [];
     const i64 = values => new ort.Tensor('int64', BigInt64Array.from(values.map(BigInt)), [1, values.length]);
     for (const name of expectedInputs.filter(name => name.startsWith('past_key_values.'))) {
-      past[name] = new ort.Tensor('float32', new Float32Array(0), [1, 3, 0, 64]);
+      past[name] = new ort.Tensor('float32', new Float32Array(0), [1, 5, 0, 64]);
     }
     stage('INFERENCE'); const inferenceBegan = performance.now();
     let current = ids, pastLength = 0;

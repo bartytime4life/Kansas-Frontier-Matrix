@@ -1,17 +1,17 @@
 {
-  "id": "HuggingFaceTB/SmolLM2-135M-Instruct",
-  "revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "id": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "revision": "a10cc1512eabd3dde888204e902eca88bddb4951",
   "license": "apache-2.0",
   "files": [
     {
       "path": "README.md",
-      "size": 6772,
-      "sha256": "4f97533ad95b1b2fea15fbc075c01b94578ebdd7c8138888fa43fa3abd530dc4"
+      "size": 7304,
+      "sha256": "6b88794416ac9da8f254ebb0bec228967a2bdd0badf9a2853863928b25facd95"
     },
     {
       "path": "config.json",
-      "size": 861,
-      "sha256": "8eb740e8bbe4cff95ea7b4588d17a2432deb16e8075bc5828ff7ba9be94d982a"
+      "size": 846,
+      "sha256": "224f72354f10d617a359cc82ad15a3c96e866b9b2ffadb81997eeea9e88e22ee"
     },
     {
       "path": "generation_config.json",
@@ -20,8 +20,8 @@
     },
     {
       "path": "onnx/model_q4.onnx",
-      "size": 182068553,
-      "sha256": "933577110303a2964096d19b6f15d3b4639bef7f99481ac0b61d9f3ad72f392a"
+      "size": 387943246,
+      "sha256": "a4ffda96e65beafc6f6cef0cbcf9fdc1cbdd79c230906bf3897d190547c7a596"
     },
     {
       "path": "special_tokens_map.json",
