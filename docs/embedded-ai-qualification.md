@@ -20,7 +20,13 @@ A separate Linux x64 Node 22.23.3 CI experiment at
 returned `The sample marker is blue.` from a fixed synthetic sentence.
 Load time was 3,912 ms; generation was 626 ms; sampled final RSS was 948,060,160 bytes.
 Those are CI observations, not GoDaddy performance or app quota measurements.
-The final pinned, local-files-only probe is tested separately.
+The final pinned, local-files-only probe subsequently passed at
+`0e2ff851e718eb03399e0c991a10298a6e6f46c7`, CI run 38928256962.
+It returned the same synthetic answer in 904 ms, with 799 ms model load,
+3,950 ms download, 5,847 ms total, and sampled peak process RSS of
+1,007,284,224 bytes. npm ci, six negative-path tests, and the app production
+build passed in that run. The separate existing Public core repair candidate
+workflow also passed at the same head (run 38928326902).
 
 The primary publisher's Apache-2.0 model is
 `HuggingFaceTB/SmolLM2-360M-Instruct`, revision
@@ -31,6 +37,15 @@ Every required metadata/tokenizer/model file has a pinned size and SHA-256 in
 `server/embedded-ai-model.json`. The model card is retained beside the weights.
 npm package versions, URLs and integrity values are locked in the app's existing
 lockfile; CPU-only installation skips optional GPU binary downloads.
+
+The GoDaddy preview source was changed to the candidate; File Manager confirmed
+its runtime files under the existing app-owned server directory. The dashboard
+reported candidate commit `786b7bac9d97d8cd50bf1ef5f972956092101186` during
+its build. No embedded-test private directory or receipt was visible at the
+last inspection. The provider then required a fresh sign-in. **GoDaddy native
+load, model download, inference, final preview health and resource fit remain
+NEEDS VERIFICATION.** The earlier CI worker-start failure caused by inherited
+`--input-type=module` was corrected; it was not a GoDaddy denial.
 
 ## Preview-only execution
 
