@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-readiness-ollama-gap-fill-20261016-8daa3973ec16",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/focus-mock-test.yml",
+    "docs/readiness-lanes.md",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    "runtime/AI/README.md",
+    "runtime/adapters/README.md",
+    "runtime/local/README.md",
+    "runtime/model_adapters/OllamaAdapter.py",
+    "runtime/model_adapters/README.md",
+    "runtime/ollama/README.md",
+    "runtime/service_configs/README.md",
+    "tests/ci/test_readiness_lanes.py",
+    "tests/runtime_proof/README.md",
+    "tests/runtime_proof/test_ollama_adapter_hold.py",
+    "tools/qa/gap_scan_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/focus-mock-test.yml": "sha256:981aa5104e29b65031fc74a1341cdf3b7d959e08ba46a2cf79347507bf4e9b4d",
+    "docs/readiness-lanes.md": "sha256:06bb1e560278ba5964539cbae018d751b8274c40c4e228477fb9760df211e221",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:32a0b20d993118d58a720ab9bfc41cd2df628e0050fcefcca0d1e8d0a35ca584",
+    "runtime/AI/README.md": "sha256:deb2bee5396fd54a9653db6b69fb418f59ad26b5db99b7017f4462f977d6dad3",
+    "runtime/adapters/README.md": "sha256:30a9d5b74ce07de88f3586b12f1da0b69d92be6067077eb5abc520360d21d749",
+    "runtime/local/README.md": "sha256:8265d7927fe4646a3034e6213211de2199a2d737060e87176449a3df813f82a2",
+    "runtime/model_adapters/OllamaAdapter.py": "sha256:59e5ea4a5b3517488e155c1c821b8081457c5d244459c6b676afadd0cea611e7",
+    "runtime/model_adapters/README.md": "sha256:99400cd8ec87a538871c39cf4a20f685a835dd3690bcce48cfb5cbfed0ad63bf",
+    "runtime/ollama/README.md": "sha256:948888006a1944f3313da3310888e3770b93d49e88792a32bbee2e933f322262",
+    "runtime/service_configs/README.md": "sha256:0be00028946dad8be69474b8fcf52dbe09d1a54349b0a3c6d9835f053e90a089",
+    "tests/ci/test_readiness_lanes.py": "sha256:eb05f8a0631c6e5f1607cc95bbb58ea4f3447f1a8357a65bd8e5a9ddeb9e80e3",
+    "tests/runtime_proof/README.md": "sha256:11cf02caa64e4c1858f1b1d387cc1ef9d062972137705508144b76be011934e1",
+    "tests/runtime_proof/test_ollama_adapter_hold.py": "sha256:3d3e5e7cf15fbaf78293e9802c5ad1f36a6601909298e0ae9a92a319a3d42ba1",
+    "tools/qa/gap_scan_baseline.json": "sha256:0ac842de649b31cdc3af75a9696d0f9d39019b40d0efe3319183b733653225be"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude (Claude Code)",
+    "version": "Exact model revision is not recorded in repository artifacts"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "repository validators",
+      "pytest"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "docs/doctrine/directory-rules.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "CONTRIBUTING.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      ".github/PULL_REQUEST_TEMPLATE.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be"
+    ],
+    "evidence_refs": [
+      "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "git:8daa3973ec16faeba2753955acc155cedfb1c2cb"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/focus-mock-test.yml": "CONFIRMED",
+    "docs/readiness-lanes.md": "PROPOSED",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "PROPOSED",
+    "runtime/AI/README.md": "PROPOSED",
+    "runtime/adapters/README.md": "PROPOSED",
+    "runtime/local/README.md": "PROPOSED",
+    "runtime/model_adapters/OllamaAdapter.py": "CONFIRMED",
+    "runtime/model_adapters/README.md": "PROPOSED",
+    "runtime/ollama/README.md": "PROPOSED",
+    "runtime/service_configs/README.md": "PROPOSED",
+    "tests/ci/test_readiness_lanes.py": "CONFIRMED",
+    "tests/runtime_proof/README.md": "PROPOSED",
+    "tests/runtime_proof/test_ollama_adapter_hold.py": "CONFIRMED",
+    "tools/qa/gap_scan_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "links-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "check_links.py --git-diff base...HEAD: exit 0, no failures; external badge targets classified but not requested."
+    },
+    {
+      "gate": "metadata-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "check_meta_blocks.py --profile present: fail_findings=0; one REGISTRY_ENTRY_MISSING warning on the ledger and inherited historical warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "graph-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "check_document_graph.py: fail_findings=0, changed_documents=2; advisory warnings retained."
+    },
+    {
+      "gate": "gap-scan-ratchet",
+      "outcome": "PASS",
+      "reason": "gap_scan.py --check after --write-baseline: BROKEN_LOCAL_LINK 0, MARKDOWN_PLACEHOLDER 7, UNRATCHETED_PLACEHOLDER 8 (was 9), STRUCTURED_PARSE_ERROR 0, TEST_PACKAGE_SHADOW 0."
+    },
+    {
+      "gate": "scaffold-and-queue-ratchets",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory.py --check total 877 unchanged; completion_queue.py --check PASS (949 markers, 747 entries)."
+    },
+    {
+      "gate": "readiness-doc-parity-test",
+      "outcome": "PASS",
+      "reason": "tests/ci/test_readiness_lanes.py: 9 passed; the new parity test failed when proof-slice was relabelled HOLD in the page and passed after restore."
+    },
+    {
+      "gate": "ollama-hold-proof",
+      "outcome": "PASS",
+      "reason": "tests/runtime_proof/test_ollama_adapter_hold.py: 4 tests, 3 subtests pass under Python 3.11 unittest and 3.13 pytest."
+    },
+    {
+      "gate": "focused-suites",
+      "outcome": "PASS",
+      "reason": "Python 3.13: tests/qa tests/ci tests/runtime_proof tests/packages/envelopes 486 passed, 3 skipped. Python 3.11 with python-test.lock: gap-scan, readiness, runtime_proof, directory_governance and e2e-readiness 271 passed."
+    },
+    {
+      "gate": "hosted-ci-independent-review-runtime-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not performed at emission. Exact-head hosted CI, independent review, provider admission, release and deployment remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "gap-fill-procedure-p04",
+      "validated": true,
+      "evidence_ref": "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:docs/registers/repository-gap-fill-goal-2026-10-02.md"
+    },
+    {
+      "id": "readiness-lane-registry",
+      "validated": true,
+      "evidence_ref": "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:control_plane/readiness/lanes.json"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:8daa3973ec16faeba2753955acc155cedfb1c2cb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-16T23:05:35.762741Z",
+  "emitter": "Claude Code",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded gap-fill repair (P-04 G-SCAF-02 and readiness-lane documentation drift), not a corpus or implementation audit. Same-path changes in established runtime, docs, tests, tools and workflow roots; this add-only receipt joins the existing generated-receipt family. Binds content commit 8daa3973ec16faeba2753955acc155cedfb1c2cb and excludes itself to avoid circular hashes. OllamaAdapter.py is a fail-closed hold only: no provider binding, model admission, response envelope, receipt emission or policy decision. Remaining 8 non-Markdown and 7 Markdown placeholders stay visible with reasons in the ledger. No source activation, release, deployment or publication. Rollback is a focused revert of the content commit with its baseline; retain this receipt as history."
+}
