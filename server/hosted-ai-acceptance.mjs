@@ -1,7 +1,7 @@
 import {mkdir,lstat,chmod,readdir,writeFile,readFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
-import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL} from './hosted-ai.mjs';
+import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-wasm-20261016/model')})}={}){
  const directory=join(root,'kfm-hosted-smollm2-chat-20261016'),rootInfo=await lstat(root);
@@ -13,13 +13,13 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
  const began=performance.now(),runId=randomUUID(),sources={};let model,result;
  for(const path of ['server/hosted-ai.mjs','server/hosted-ai-worker.mjs','server/embedded-ai-model.json','server/public-ai-handler.mjs'])
   sources[path]=createHash('sha256').update(await readFile(resolve(path))).digest('hex');
- const valid=reply=>typeof reply?.text==='string'&&reply.text.trim().length>=10&&Buffer.byteLength(reply.text)<=4096&&!/https?:\/\/|www\.|\bkfm:/i.test(reply.text)&&!localQwenAnswerHasOverPreciseLocation(reply.text);
+ const valid=reply=>typeof reply?.text==='string'&&reply.text.trim().length>=10&&Buffer.byteLength(reply.text)<=4096&&!/https?:\/\/|www\.|\bkfm:/i.test(reply.text)&&!localQwenAnswerHasOverPreciseLocation(reply.text)&&!hasRepeatedPhrase(reply.text);
  try{
   model=modelFactory();await model.loaded;
   const question='Suggest one short fictional story idea involving a blue marker.';
   const first=await model.discuss(question,{style:'plain',depth:'brief',history:[]});
-  const followup=await model.discuss('Rewrite the idea as one short sentence.',{style:'plain',depth:'brief',history:valid(first)?[{question,reply:first.text}]:[]});
-  const qualified=valid(first)&&valid(followup);
+  const followup=await model.discuss('Now suggest a different fictional story idea involving a red kite.',{style:'plain',depth:'brief',history:valid(first)?[{question,reply:first.text}]:[]});
+  const qualified=valid(first)&&valid(followup)&&/marker/i.test(first.text)&&/kite/i.test(followup.text)&&first.text.trim()!==followup.text.trim();
   result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',syntheticDiscussion:valid(first)?first.text:null,syntheticFollowup:valid(followup)?followup.text:null,evidenceSelection:'HELD_UNQUALIFIED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
  finally{model?.stop();}

@@ -38,6 +38,7 @@ test('missing and sensitive evidence never invokes the model',async()=>{
  assert.equal((await f.settle(second.body.id,first.cookie)).body.result.outcome,'DENY');assert.equal(f.calls(),0);
 });
 test('discussion has no factual-answer authority; unsafe output is withheld and released references are rechecked',async()=>{
+ const loop=fixture(async()=>({text:'a symbol of the West a symbol of the West a symbol of the West'})),repeated=await loop.request('jobs',question);assert.equal((await loop.settle(repeated.body.id,repeated.cookie)).body.result.reasonCode,'MODEL_OUTPUT_UNQUALIFIED');
  const bad=fixture(async()=>({text:'See https://attacker.test'})),created=await bad.request('jobs',question);
  assert.equal((await bad.settle(created.body.id,created.cookie)).body.result.reasonCode,'MODEL_OUTPUT_UNQUALIFIED');
  const f=fixture(),search=await f.request('jobs',{...question,mode:'evidence'});

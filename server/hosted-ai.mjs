@@ -48,3 +48,9 @@ export class HostedAiModel{
 
 let shared;
 export function getHostedAiModel(){return shared??=new HostedAiModel();}
+
+export function hasRepeatedPhrase(value){
+ const words=value.toLowerCase().match(/[a-z0-9]+/g)??[],counts=new Map();
+ for(let i=0;i+3<words.length;i++){const phrase=words.slice(i,i+4).join(' '),n=(counts.get(phrase)??0)+1;if(n>=3)return true;counts.set(phrase,n);}
+ return false;
+}

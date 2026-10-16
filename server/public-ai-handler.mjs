@@ -2,7 +2,7 @@
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
-import {getHostedAiModel,HOSTED_MODEL} from './hosted-ai.mjs';
+import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
 const reply=(body,status=200,extra={})=>Response.json(body,{status,headers:{...headers,...extra}});
 const envelope=(outcome,reasonCode)=>({outcome,reasonCode,answer:null,evidenceRefs:[],interpretation:null});
@@ -54,7 +54,7 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
      const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,history:(session?.history??[]).map(({question,reply})=>({question,reply}))},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
-     if(!text(output,4096)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
+     if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else{
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(session.history??[]),{question:job.question,reply:output,at:clock()}].slice(-2);
