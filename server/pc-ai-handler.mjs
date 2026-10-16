@@ -90,7 +90,7 @@ export function createPcAiHandler({store,origin,adminHash,workerHash,resolveEvid
           const target=store.db.prepare('SELECT role FROM accounts WHERE username=?').get(body.username);
           if(!owner&&actor.role==='steward'&&target&&target.role!=='researcher')return reply({reasonCode:'ACCESS_DENIED'},403);
         }
-        const signed=store.authenticate(body.username,body.password,path==='activate'?body.invitation:null);
+        const signed=await store.authenticate(body.username,body.password,path==='activate'?body.invitation:null);
         return reply({username:signed.username},200,{'Set-Cookie':`__Host-kfm_pc_session=${signed.session}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=14400`});
       }
       if(path==='sign-out'&&request.method==='POST'){

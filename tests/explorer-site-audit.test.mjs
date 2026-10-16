@@ -78,14 +78,8 @@ test("unknown and withheld paths share one accessible 404", async () => {
   assert.match(theme, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.kfm-not-found-card \{ animation: none; \}/);
 });
 
-test("baseline headers cover the root and never forbid platform framing", async () => {
-  const config = await read("next.config.ts");
-  assert.match(config, /\{ source: "\/", headers \}, \{ source: "\/:path\*", headers \}/);
-  assert.match(config, /"X-Content-Type-Options", value: "nosniff"/);
-  assert.match(config, /"Referrer-Policy", value: "strict-origin-when-cross-origin"/);
-  assert.match(config, /geolocation=\(self\)/, "the locate control keeps working");
-  assert.doesNotMatch(config, /X-Frame-Options|frame-ancestors/);
-});
+// Browser headers and the explicit GoDaddy frame allowlist are exercised over
+// the actual built Node server in site-security-http.test.mjs.
 
 test("audit fixes keep landmarks, roles and in-text links valid", async () => {
   const page = await read("app/page.tsx");

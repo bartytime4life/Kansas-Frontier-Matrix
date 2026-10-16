@@ -8663,6 +8663,7 @@ export default function Home() {
           <button ref={repositoryButtonRef} className="status-header-action" type="button" onClick={() => { setRepositoryView("updates"); setRepositoryOpen(true); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" title="Check Site, data, and repository connections"><span aria-hidden="true">⌁</span><span>Status</span></button>
               <button className="share-action" type="button" onClick={(event) => { closeHeaderOverflow(event.currentTarget); void shareView(); }}>Share current view</button>
               <Link className="about-action" href="/about">About</Link>
+              <Link className="about-action" href="/privacy">Privacy</Link>
             </div>
           </details>
         </div>

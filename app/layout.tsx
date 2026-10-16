@@ -21,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Kansas Frontier Matrix Explorer",
       description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
       type: "website",
+      url: PUBLIC_SITE_ORIGIN,
       images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix map and source context" }],
     },
     twitter: {

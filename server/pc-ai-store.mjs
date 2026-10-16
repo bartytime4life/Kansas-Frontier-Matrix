@@ -1,5 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
-import { createHash, randomBytes, scryptSync, timingSafeEqual, createCipheriv, createDecipheriv } from 'node:crypto';
+import { createHash, randomBytes, randomInt, scrypt, timingSafeEqual, createCipheriv, createDecipheriv } from 'node:crypto';
+import { promisify } from 'node:util';
+import { setTimeout as delay } from 'node:timers/promises';
 import { mkdirSync, lstatSync, chmodSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -10,13 +12,31 @@ export function matchesToken(value, expected) {
   if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(value) || !/^[a-f0-9]{64}$/.test(expected ?? '')) return false;
   return timingSafeEqual(Buffer.from(digest(value),'hex'),Buffer.from(expected,'hex'));
 }
-const passwordHash = password => {
+const deriveKey = promisify(scrypt);
+// Unknown names cannot occupy the real-account hash slots. Both lanes and their
+// queues are bounded; hashing runs off the HTTP event loop. No proxy IP is trusted.
+function hashScheduler(derive) {
+  const lanes = { account: { active: 0, limit: 2, queued: 8, work: [] }, unknown: { active: 0, limit: 1, queued: 2, work: [] } };
+  return (kind, password, salt) => new Promise((resolve, reject) => {
+    const lane = lanes[kind];
+    if (lane.active >= lane.limit && lane.work.length >= lane.queued) return reject(new Error('SIGN_IN_DENIED'));
+    lane.work.push({ password, salt, resolve, reject });
+    const drain = () => {
+      while (lane.active < lane.limit && lane.work.length) {
+        const item = lane.work.shift(); lane.active++;
+        Promise.resolve().then(() => derive(item.password, item.salt, 32)).then(item.resolve, item.reject).finally(() => { lane.active--; drain(); });
+      }
+    };
+    drain();
+  });
+}
+const passwordHash = async (password, hash) => {
   const salt = randomBytes(16).toString('hex');
-  return `${salt}:${scryptSync(password,salt,32).toString('hex')}`;
+  return `${salt}:${(await hash('account', password, salt)).toString('hex')}`;
 };
-const passwordMatches = (password, encoded) => {
+const passwordMatches = async (password, encoded, hashPassword) => {
   const [salt, hash] = encoded.split(':');
-  return timingSafeEqual(scryptSync(password,salt,32),Buffer.from(hash,'hex'));
+  return timingSafeEqual(await hashPassword('account', password, salt),Buffer.from(hash,'hex'));
 };
 const safeDirectory = directory => {
   try { mkdirSync(directory,{mode:0o700}); } catch (error) { if(error.code !== 'EEXIST') throw error; }
@@ -28,7 +48,7 @@ const USERNAME = /^[a-z0-9][a-z0-9_-]{2,63}$/;
 
 /** One process owns a connection for its lifetime. Never use WAL on this shared volume. */
 export class PcAiStore {
-  constructor({root,role,key,clock=Date.now}) {
+  constructor({root,role,key,clock=Date.now,derive=deriveKey,failureDelay=250}) {
     if (!['preview','published','test'].includes(role) || !/^[A-Za-z0-9_-]{43}$/.test(key)) fail('STORAGE_CONFIG_INVALID');
     const rootInfo = lstatSync(root);
     if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) fail('STORAGE_UNSAFE');
@@ -40,6 +60,7 @@ export class PcAiStore {
       if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.uid !== process.getuid() || info.size>32*1024*1024) fail('STORAGE_UNSAFE');
     } catch(error) { if(error.code !== 'ENOENT') throw error; }
     this.clock=clock; this.key=Buffer.from(key,'base64url'); this.db=new DatabaseSync(file);
+    this.hashPassword=hashScheduler(derive); this.pendingSignIns=new Set(); this.failureDelay=failureDelay;
     try {
       chmodSync(file,0o600);
       if(this.db.prepare('PRAGMA page_size').get().page_size!==4096)fail('STORAGE_PAGE_SIZE_UNQUALIFIED');
@@ -95,21 +116,41 @@ export class PcAiStore {
       return {username,invitation,expiresInSeconds:86400};
     });
   }
-  authenticate(username,password,invitation=null){
+  async authenticate(username,password,invitation=null){
+    const started=performance.now(), failureTarget=this.failureDelay+(this.failureDelay?randomInt(51):0);
+    let success=false, pending=false;
+    try {
     if(typeof username!=='string' || !USERNAME.test(username) || typeof password!=='string' || password.length<14 || Buffer.byteLength(password)>128 || /[\x00-\x1f\x7f]/.test(password)) fail('SIGN_IN_DENIED');
     this.cleanup();
     const now=this.clock();
-    if(this.db.prepare('SELECT COUNT(*) AS n FROM attempts WHERE at>?').get(now-60000).n>=30 || this.db.prepare('SELECT COUNT(*) AS n FROM attempts WHERE username=? AND at>?').get(username,now-900000).n>=5) fail('SIGN_IN_RATE_LIMIT');
-    this.db.prepare('INSERT INTO attempts VALUES(?,?)').run(username,now);
     const account=this.db.prepare('SELECT * FROM accounts WHERE username=?').get(username);
-    if(!account || account.disabled) { scryptSync(password,'kfm-pc-dummy-salt',32); fail('SIGN_IN_DENIED'); }
+    const known=Boolean(account&&!account.disabled), bucket=known?username:'@unknown';
+    if(known&&this.pendingSignIns.has(username)) fail('SIGN_IN_DENIED');
+    this.transaction(()=>{
+      const limit=known?5:30, interval=known?900000:60000;
+      if(this.db.prepare('SELECT COUNT(*) AS n FROM attempts WHERE username=? AND at>?').get(bucket,now-interval).n>=limit) fail('SIGN_IN_DENIED');
+      this.db.prepare('INSERT INTO attempts VALUES(?,?)').run(bucket,now);
+    });
+    if(!known) { await this.hashPassword('unknown',password,'kfm-pc-dummy-salt'); fail('SIGN_IN_DENIED'); }
+    this.pendingSignIns.add(username);pending=true;
     if(invitation!==null){
       if(account.password || account.invite_until<=now || !matchesToken(invitation,account.invite_hash)) fail('SIGN_IN_DENIED');
-      this.db.prepare('UPDATE accounts SET password=?,invite_hash=NULL,invite_until=NULL WHERE id=?').run(passwordHash(password),account.id);
-    }else if(!account.password || !passwordMatches(password,account.password)) fail('SIGN_IN_DENIED');
+      const encoded=await passwordHash(password,this.hashPassword);
+      const changed=this.db.prepare('UPDATE accounts SET password=?,invite_hash=NULL,invite_until=NULL WHERE id=? AND password IS NULL AND invite_hash=? AND invite_until>? AND disabled=0').run(encoded,account.id,account.invite_hash,this.clock());
+      if(changed.changes!==1)fail('SIGN_IN_DENIED');
+    }else {
+      if(!account.password || !await passwordMatches(password,account.password,this.hashPassword)) fail('SIGN_IN_DENIED');
+      const fresh=this.db.prepare('SELECT password,disabled FROM accounts WHERE id=?').get(account.id);
+      if(!fresh||fresh.disabled||fresh.password!==account.password)fail('SIGN_IN_DENIED');
+    }
     const session=token();
-    this.db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(digest(session),account.id,now+14400000);
+    this.db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(digest(session),account.id,this.clock()+14400000);
+    success=true;
     return {session,username:account.username};
+    }finally{
+      if(pending)this.pendingSignIns.delete(username);
+      if(!success)await delay(Math.max(0,failureTarget-(performance.now()-started)));
+    }
   }
   account(session){
     if(typeof session!=='string' || !/^[A-Za-z0-9_-]{43}$/.test(session)) return null;

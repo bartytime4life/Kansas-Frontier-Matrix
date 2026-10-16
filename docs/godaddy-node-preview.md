@@ -277,3 +277,68 @@ assertion, and all 14 actual Node HTTP checks pass. The HTTP checks cover crawle
 GET/HEAD responses, literal public metadata, anonymous operational denial, forged
 identity rejection, and existing free report/map downloads. This is changed-area
 validation, not a claim that the legacy full test suite passes.
+
+## Browser policy, public contact and login admission — October 16, 2026
+
+This bounded repair starts from published crawler revision `2c10fd8`, preserving
+all unrelated development branches and the original Sites audience/bindings.
+The existing `server/`, `app/`, `tests/` and `docs/` homes own runtime, public UI,
+validation and behavior documentation under Directory Rules v2 / ADR-0029.
+There is no new data, policy, schema or release authority.
+
+Node startup and route configuration now share browser headers. The startup
+listener covers static assets and early framework errors; route-specific
+stricter headers can still replace defaults. CSP allows same-origin scripts,
+inline hydration/style and WebAssembly required by the current map runtime,
+HTTPS provider resources and same-origin/blob workers. It denies objects,
+restricts forms/base URLs and permits framing only by this origin and the
+verified GoDaddy dashboard parent. This is a compatible baseline, not a strict
+nonce-based script policy. HSTS has a one-day lifetime without preload or
+subdomain enrollment. The homepage uses a server Link canonical; About and the
+new Privacy page retain distinct HTML canonicals. The owner supplied
+Andy.barta.pro@gmail.com for public contact/privacy questions. Historical Sites
+identity remains preserved and is explicitly distinguished from this public
+GoDaddy composition. Privacy is included in the sitemap and map navigation.
+
+The scoped server review found that 30 anonymous attempts against nonexistent
+PC AI usernames could exhaust all accounts' shared login budget. Unknown-name
+dummy hashing now has its own 30/minute bucket; enabled accounts retain their
+five-attempt/15-minute budgets. Hashing is asynchronous, with two real-account
+slots/eight waiting requests and one unknown-name slot/two waiting requests.
+One real account can have only one pending verification. All ordinary failed
+credentials/admission denials return the same 401/SIGN_IN_DENIED response;
+production failures have a 250–300 ms minimum randomized response floor without
+extra hashing. This does not establish perfect timing indistinguishability.
+Concurrent revocation and invitation activation are rechecked after hashing.
+Existing password encodings, sessions, roles, evidence and storage remain intact.
+No client forwarding header is used as identity. A targeted attacker knowing a
+username can still consume that account's budget; distributed floods and host
+resource exhaustion remain provider/operational concerns. The new hash budget
+is 30 unknown hashes/minute plus at most 250 real-account hashes/15 minutes,
+with bounded concurrency, rather than the prior universal 30/minute lockout.
+
+Validation covers real built HTTP policy/canonical/privacy responses and
+protected-route denial, unknown-name flooding, independent accounts, bounded
+asynchronous hashing, original PC-role/session/job tests, type checks and the
+production build. Full suite and hosted/browser results must be recorded
+separately; passing these checks does not certify a vendor category or corporate
+network access. An npm audit identified the unpatched upstream braces recursion
+advisory GHSA-vfj7-8cjw-p6xm through build tooling; no unrelated framework
+downgrade or unreviewed dependency fork is included. No malicious live use is
+inferred from that advisory.
+
+Rollback is redeployment of the prior pinned revision; no data migration or
+credential rotation is introduced. Browser HSTS can persist for one day after
+its last receipt. Account attempt rows added under the reserved @unknown bucket
+expire through the existing cleanup path. No support ticket, vendor review
+submission, DNS change or broad firewall disable is part of this repair.
+
+Final local comparison: production build and TypeScript pass. The complete
+candidate suite reports 1,161 passing, 49 failing and one skipped test. All 49
+failure names reproduce on an isolated, freshly built worktree at the unchanged
+published `2c10fd8` baseline; no new failure names remain. The obsolete source-text
+assertion forbidding any framing restriction is replaced by real built HTTP
+coverage of the explicit GoDaddy framing policy. The focused HTTP/authentication
+checks pass, including the new asynchronous-revocation regression case. CDN
+email obfuscation was observed live on Barta; no-transform preserves public
+contact HTML and prevents mutation of React-rendered contact text on KFM.
