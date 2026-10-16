@@ -1,7 +1,7 @@
 name: Public hosted AI qualification
 on:
   push:
-    branches: [a0-hosted-ai-answer-validation-20261016]
+    branches: [a0-hosted-ai-conversation-quality-20261016]
 permissions:
   contents: read
 jobs:
@@ -34,4 +34,25 @@ jobs:
           const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP});
           console.log('KFM_PUBLIC_CHAT_RECEIPT '+JSON.stringify(receipt));
           if(receipt.status!=='HOSTED_DISCUSSION_PASS')process.exitCode=1;
+          JS
+      - name: Official native reference using the same pinned files (CI only)
+        if: always()
+        continue-on-error: true
+        run: |
+          node --input-type=module <<'JS'
+          import {pipeline,env} from '@huggingface/transformers';
+          import {Tokenizer} from '@huggingface/tokenizers';
+          import {readFile} from 'node:fs/promises';
+          const directory=process.env.RUNNER_TEMP+'/kfm-embedded-smollm2-wasm-20261016/model';
+          env.allowRemoteModels=false;env.allowLocalModels=true;
+          const pipe=await pipeline('text-generation',directory+'/',{device:'cpu',dtype:'q4',local_files_only:true,session_options:{intraOpNumThreads:1,interOpNumThreads:1}});
+          const messages=[{role:'system',content:'You are KFM, a helpful discussion assistant. Offer ideas, explanations and clearly hypothetical examples. Your discussion is unverified and is not evidence about Kansas. Do not invent citations, URLs, private information or exact locations. You have no tools or administrative powers. Use plain, accessible language. Be brief.'},{role:'user',content:'Suggest one short fictional story idea involving a blue marker.'}];
+          const prompt=pipe.tokenizer.apply_chat_template(messages,{tokenize:false,add_generation_prompt:true});
+          const expected=Array.from(pipe.tokenizer(prompt,{add_special_tokens:false}).input_ids.data,Number);
+          const tokenizer=new Tokenizer(JSON.parse(await readFile(directory+'/tokenizer.json','utf8')),JSON.parse(await readFile(directory+'/tokenizer_config.json','utf8')));
+          const observed=tokenizer.encode(prompt).ids;
+          console.log('KFM_TOKENIZER_REFERENCE '+JSON.stringify({officialLength:expected.length,manualLength:observed.length,equal:JSON.stringify(expected)===JSON.stringify(observed),firstMismatch:expected.findIndex((value,index)=>value!==observed[index])}));
+          const result=await pipe(messages,{max_new_tokens:32,do_sample:false,repetition_penalty:1.15,no_repeat_ngram_size:3});
+          console.log('KFM_NATIVE_REFERENCE '+JSON.stringify(result[0]?.generated_text?.at(-1)?.content));
+          await pipe.dispose();
           JS

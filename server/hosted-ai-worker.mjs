@@ -11,8 +11,9 @@ async function privatePath(path,directory=false){
  if(info.isSymbolicLink()||info.uid!==process.getuid()||(info.mode&0o077)||(directory?!info.isDirectory():!info.isFile()||info.nlink!==1))fail('HOSTED_MODEL_FILES_UNSAFE');
  return info;
 }
-let session,tokenizer,ort;
-async function generate(prompt,maximum,cancel){
+let session,tokenizer,ort,generationLimited=false;
+async function generate(prompt,maximum,cancel,sample=false){
+ generationLimited=false;const generationBegan=performance.now();
  const ids=tokenizer.encode(prompt).ids;
  if(ids.length>512)fail('MODEL_CONTEXT_LIMIT');
  const owned=new Set(),past={};
@@ -20,15 +21,29 @@ async function generate(prompt,maximum,cancel){
  const i64=values=>tensor('int64',BigInt64Array.from(values.map(BigInt)),[1,values.length]);
  for(const name of session.inputNames.filter(name=>name.startsWith('past_key_values.')))past[name]=tensor('float32',new Float32Array(0),[1,3,0,64]);
  let current=ids,pastLength=0;const generated=[];
+ let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
   for(let step=0;step<maximum;step++){
+   if(sample&&generated.length&&performance.now()-generationBegan>=18000){generationLimited=true;break;}
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};
    const outputs=await session.run(feeds);for(const t of Object.values(outputs))owned.add(t);
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const logits=outputs.logits;if(!logits||logits.type!=='float32'||logits.dims.at(-1)!==49152)fail('HOSTED_MODEL_LOGITS');
    const offset=logits.data.length-49152;let next=0;
-   for(let i=1;i<49152;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
+   if(sample){
+    const seen=new Set(generated);
+    for(const id of seen)logits.data[offset+id]=logits.data[offset+id]>=0?logits.data[offset+id]/1.15:logits.data[offset+id]*1.15;
+    if(generated.length>=2)for(let i=0;i+2<generated.length;i++)if(generated[i]===generated.at(-2)&&generated[i+1]===generated.at(-1))logits.data[offset+generated[i+2]]=-Infinity;
+    const candidates=[];
+    for(let id=0;id<49152;id++){
+     const score=logits.data[offset+id];if(!Number.isFinite(score)||candidates.length===40&&score<=candidates.at(-1).score)continue;
+     candidates.push({id,score});candidates.sort((a,b)=>b.score-a.score);if(candidates.length>40)candidates.pop();
+    }
+    if(!candidates.length)fail('HOSTED_MODEL_LOGITS');
+    const weights=candidates.map(item=>Math.exp((item.score-candidates[0].score)/0.7));let choice=random()*weights.reduce((a,b)=>a+b,0);next=candidates.at(-1).id;
+    for(let i=0;i<candidates.length;i++){choice-=weights[i];if(choice<=0){next=candidates[i].id;break;}}
+   }else for(let i=1;i<49152;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
    if(!Number.isFinite(logits.data[offset+next]))fail('HOSTED_MODEL_LOGITS');
    const retained=new Set();
    for(const name of Object.keys(past)){const value=outputs[name.replace('past_key_values.','present.')];if(!value)fail('HOSTED_MODEL_CACHE');past[name]=value;retained.add(value);}
@@ -81,8 +96,8 @@ try{
     prompt=render();
     while(tokenizer.encode(prompt).ids.length>512&&retained.length){retained.shift();contextTrimmed=true;prompt=render();}
     const maximum=depth==='brief'?32:64;
-    const output=await generate(prompt,maximum,new Int32Array(message.cancel));
-    parentPort.postMessage({type:'result',id:message.id,discussion:output,contextTrimmed,outputLimited:tokenizer.encode(output).ids.length>=maximum});
+    const output=await generate(prompt,maximum,new Int32Array(message.cancel),true);
+    parentPort.postMessage({type:'result',id:message.id,discussion:output,contextTrimmed,outputLimited:generationLimited||tokenizer.encode(output).ids.length>=maximum});
     return;
    }
    const {question,facts}=message;
