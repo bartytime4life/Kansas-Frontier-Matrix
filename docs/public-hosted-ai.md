@@ -43,7 +43,7 @@ admission control and renewed resource qualification.
 Requests are at most 8 KiB, questions 4 KiB, bodies five seconds, evidence
 resolution eight seconds, jobs ninety seconds, model selection thirty seconds,
 and model load ninety seconds. The model uses one WASM thread, a 256 MiB JS
-heap, 512 input tokens and eight generated selection tokens. Sampled whole-process
+heap, 512 input tokens and one generated selection token constrained to the available fact numbers or zero. Sampled whole-process
 RSS over 1,200 MiB stops the model without automatic retry. WASM memory lies
 outside the JS heap and may grow between samples. Provider quotas remain
 UNKNOWN; the observed hosted synthetic peak is not a hosting entitlement.
