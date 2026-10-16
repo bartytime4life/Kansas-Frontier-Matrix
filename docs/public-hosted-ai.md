@@ -1,6 +1,6 @@
 # Public hosted AI: flexible discussion and released evidence
 
-Status: This isolated candidate branch qualifies SmolLM2-360M; NOT ACTIVATED.
+Status: This isolated candidate branch qualifies SmolLM2-360M uint8; NOT ACTIVATED.
 The connected GoDaddy preview and public site are not changed by this branch.
 Historical 135M observations below describe that model only.
 Public publication remains a separate owner decision.
@@ -12,17 +12,18 @@ conversation without compromising security.
 ## Isolated 360M candidate, 2026-10-16
 
 The owner rejected an external Cloudflare inference provider. This branch uses
-the existing single manifest for the official Apache-2.0 360M q4 model, revision
-a10cc1512eabd3dde888204e902eca88bddb4951. Its 387,943,246-byte ONNX file and six
-support files retain the sizes/hashes already pinned by the earlier native
-qualification. The hosted/probe workers validate its 960-dimensional hidden
+the existing single manifest for the official Apache-2.0 360M uint8 model, revision
+a10cc1512eabd3dde888204e902eca88bddb4951. Its 364,564,671-byte onnx/model_uint8.onnx file has SHA-256
+57987a3a24dc34ad2cb5e7e566840ccaece095e35a24ae4fc5b3086c7ddd6918, verified
+from the publisher's LFS pointer. The six support files retain their pinned
+sizes/hashes from the earlier qualification. The hosted/probe workers validate its 960-dimensional hidden
 state, 15 attention heads, five KV heads, 32 layers and 64-dimensional head.
 The downloader's per-file size bound becomes 400 MB only for that exact pinned
 model. The 1,200 MiB process-RSS budget, one WASM thread, 256 MiB worker heap,
 512 input tokens, 18-second generation budget and 30-second watchdog remain.
 
-Candidate private paths are /private/kfm-embedded-smollm2-360m-wasm-20261016
-and /private/kfm-hosted-smollm2-360m-chat-20261016. These isolate experimental
+Candidate private paths are /private/kfm-embedded-smollm2-360m-uint8-wasm-20261016
+and /private/kfm-hosted-smollm2-360m-uint8-chat-20261016. These isolate experimental
 bytes/receipts from the existing 135M install and refuse overwrite. They are
 runtime qualification artifacts, not admitted evidence or new authority roots.
 The single tracked identity remains server/embedded-ai-model.json.
@@ -41,6 +42,16 @@ Directory basis remains ADR-0029 and Directory Rules v2 §§10.1/10.4, using the
 standalone app's existing server/, tests/, docs/ and .github/workflows/ homes.
 No roots, routes, schemas, policy or released-evidence bindings are added.
 Rollback is to discard this unconnected branch and retain owner base b19e4cd38a11c0fee62fcb8c9417003f87198f5c.
+
+The preceding q4 experiment at b93fce003cdd889fd6b202f4fac1430865695704 failed
+CI run 38947478454 during MODEL_LOAD: EMBEDDED_MEMORY_LIMIT, sampled peak
+1,679,233,024 bytes versus cap 1,258,291,200 bytes. Eight resource-control tests
+passed; all four quality checks were SKIPPED. This does not prove a GoDaddy
+provider quota or total model requirement, because the run stopped at the guard.
+The uint8 candidate follows ONNX Runtime Web's CPU guidance to prefer uint8
+quantized models; whether it actually reduces peak memory remains unverified.
+Sources: https://onnxruntime.ai/docs/tutorials/web/performance-diagnosis.html
+and https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct/raw/main/onnx/model_uint8.onnx
 
 ## Historical 135M observations
 

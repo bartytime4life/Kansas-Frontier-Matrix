@@ -3,13 +3,13 @@ import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
-export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-360m-wasm-20261016/model')})}={}){
- const directory=join(root,'kfm-hosted-smollm2-360m-chat-20261016'),rootInfo=await lstat(root);
+export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-360m-uint8-wasm-20261016/model')})}={}){
+ const directory=join(root,'kfm-hosted-smollm2-360m-uint8-chat-20261016'),rootInfo=await lstat(root);
  if(!rootInfo.isDirectory()||rootInfo.isSymbolicLink())throw Error('ACCEPTANCE_ROOT_UNSAFE');
  try{await mkdir(directory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
  const info=await lstat(directory);if(!info.isDirectory()||info.isSymbolicLink()||info.uid!==process.getuid())throw Error('ACCEPTANCE_DIRECTORY_UNSAFE');
  await chmod(directory,0o700);if((await readdir(directory)).length)throw Error('ACCEPTANCE_ALREADY_ATTEMPTED');
- await writeFile(join(directory,'.attempt'),'kfm.hosted-chat-360m/20261016/v1\n',{flag:'wx',mode:0o600});
+ await writeFile(join(directory,'.attempt'),'kfm.hosted-chat-360m-uint8/20261016/v1\n',{flag:'wx',mode:0o600});
  const began=performance.now(),runId=randomUUID(),sources={},checks=[];let model,result;
  for(const path of ['server/hosted-ai.mjs','server/hosted-ai-worker.mjs','server/embedded-ai-model.json','server/public-ai-handler.mjs'])
   sources[path]=createHash('sha256').update(await readFile(resolve(path))).digest('hex');
@@ -32,7 +32,7 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
   result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
  finally{model?.stop();}
- const receipt={profile:'kfm.hosted-chat-360m/20261016/v1',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,checks,evidenceSelection:'HELD_UNQUALIFIED',elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Four fixed greeting/rewriting/fiction/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is a small bounded quality screen, not general correctness or actual GoDaddy acceptance. Factual selection remains disabled; no released-knowledge acceptance is claimed.'};
+ const receipt={profile:'kfm.hosted-chat-360m-uint8/20261016/v1',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,checks,evidenceSelection:'HELD_UNQUALIFIED',elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Four fixed greeting/rewriting/fiction/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is a small bounded quality screen, not general correctness or actual GoDaddy acceptance. Factual selection remains disabled; no released-knowledge acceptance is claimed.'};
  await writeFile(join(directory,'receipt-'+runId+'.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
  return receipt;
 }
