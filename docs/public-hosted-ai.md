@@ -114,3 +114,14 @@ withholds repeated four-word phrases appearing three times. Qualification also
 requires distinct synthetic replies referring to the requested marker and kite
 subjects. Exact-head and hosted results remain pending; factual selection stays
 held regardless of discussion quality.
+
+CI 38936069523 confirmed identical official/manual tokenizer IDs and nonrepetitive
+fiction output after decoding changes. Its follow-up drifted to a bird and failed
+the requested-subject check. The official native-library reference was also
+limited; tokenizer mismatch is not supported by that evidence. This remains a
+model-quality limitation, distinct from passing build/API/security checks.
+Expanded discussion now has an 18-second soft generation budget between token
+steps, disclosed as output-limited, ahead of the 30-second parent watchdog. This
+bounds longer replies without making an ordinary output cap disable the worker.
+The private probe tests an unambiguous paper-kite follow-up with expanded output;
+its outcome must be reported as observed, not inferred from compilation.

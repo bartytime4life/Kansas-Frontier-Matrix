@@ -18,7 +18,7 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
   model=modelFactory();await model.loaded;
   const question='Suggest one short fictional story idea involving a blue marker.';
   const first=await model.discuss(question,{style:'plain',depth:'brief',history:[]});
-  const followup=await model.discuss('Now suggest a different fictional story idea involving a red kite.',{style:'plain',depth:'brief',history:valid(first)?[{question,reply:first.text}]:[]});
+  const followup=await model.discuss('In the next scene of this fictional story, the character discovers a red paper kite that flies in the wind. What happens?',{style:'plain',depth:'expanded',history:valid(first)?[{question,reply:first.text}]:[]});
   const qualified=valid(first)&&valid(followup)&&/marker/i.test(first.text)&&/kite/i.test(followup.text)&&first.text.trim()!==followup.text.trim();
   result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',syntheticDiscussion:valid(first)?first.text:null,syntheticFollowup:valid(followup)?followup.text:null,evidenceSelection:'HELD_UNQUALIFIED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
