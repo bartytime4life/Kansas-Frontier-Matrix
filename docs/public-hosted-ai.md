@@ -138,6 +138,10 @@ it does not weaken the four requested tasks or input/output security gates.
 
 Use explicit 0/1 flag values: removed flags remained observable after a saved
 GoDaddy restart during testing. Do not rely on deleting a flag to disable it.
+When replacing an existing flag through GoDaddy's UI, delete and save it first,
+then add the same name with its new 0/1 value and save again. Deleting and
+re-adding the same name in one save removed the new value during this rollout.
+This procedure applies to these known non-secret flags, not account credentials.
 
 1. On the private Preview source, set KFM_HOSTED_AI=0,
    KFM_HOSTED_AI_ACCEPTANCE=0, KFM_HOSTED_AI_RESOURCE_PROBE=0 and
@@ -149,8 +153,11 @@ GoDaddy restart during testing. Do not rely on deleting a flag to disable it.
    /private/kfm-hosted-smollm2-360m-q4-chat-20261016-v2-concise-sampled-v1.
    No fixture route or real KFM/user data is used. Acceptance stops its worker.
 3. Set KFM_HOSTED_AI_ACCEPTANCE=0, then KFM_HOSTED_AI=1 for ordinary guest chat.
-   Keep the other probe flags at 0. Verify logged-out discussion and follow-up
-   in the browser before public activation.
+   Keep the other probe flags at 0. After the final build finishes, restart
+   Preview explicitly before opening chat. A clean restart recovered a failed
+   first model startup after deployment during this rollout; automatic model
+   retries remain disabled. Verify logged-out discussion and follow-up in the
+   browser before public activation.
 
 KFM_HOSTED_AI_ORIGIN must be exactly https://kansasfrontiermatrix.com or the
 existing private preview origin https://q9r9beo47t.preview.c38.airoapp.ai.
