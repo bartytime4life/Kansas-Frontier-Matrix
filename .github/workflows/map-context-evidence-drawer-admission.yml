@@ -45,7 +45,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CURRENT_AUTHORING_RECEIPT: data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json
+  CURRENT_AUTHORING_RECEIPT: data/receipts/generated/genrec-map-context-evidence-drawer-admission-docs-guided-20261016.json
   KFM_NO_NETWORK: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
