@@ -1,6 +1,6 @@
 # Embedded server-side SmolLM2 qualification
 
-Status: **PROPOSED app integration; GoDaddy qualification pending**.
+Status: **PROPOSED app integration; native GoDaddy failure CONFIRMED; WASM qualification pending**.
 
 The owner authorized a free, non-trial alternative to Ollama on October 16, 2026.
 This candidate embeds Transformers.js 4.3.1 / ONNX Runtime Node 1.30.0 in the existing
@@ -126,3 +126,43 @@ Directory Rules basis remains the existing app-owned server/docs responsibilitie
 above. Rollback for this follow-up removes the flag or returns preview to this
 post-merge base; preserve private receipts and attempts. Hosted inference remains
 NEEDS VERIFICATION until an actual private receipt is inspected.
+
+## Single-threaded WebAssembly follow-up
+
+The actual private GoDaddy receipt `6e9df539-0946-482f-96e7-03f31c7b146b`
+observed `LIMITED / ERR_DLOPEN_FAILED` at `NATIVE_IMPORT` at
+2026-10-16T16:00:44.144Z, Node 22.23.3 linux x64, 376 ms, sampled RSS
+120,946,688 bytes. No model download occurred. The exact native-loader cause is
+UNKNOWN; CI success did not establish host compatibility. This supersedes the
+pending native-host status above; earlier measurements remain historical CI evidence.
+
+The current follow-up replaces the probe worker with ONNX Runtime Web's documented
+Node.js single-threaded WebAssembly backend and pure JavaScript tokenization.
+It imports neither Transformers.js nor onnxruntime-node. The locked versions are
+`onnxruntime-web@1.31.0-dev.20260914-8d85527a0` and
+`@huggingface/tokenizers@0.2.0`; existing transitive package bytes are reused.
+The smaller Apache-2.0 `HuggingFaceTB/SmolLM2-135M-Instruct` model is pinned at
+`12fd25f77366fa6b3b4b768ec3050bf629380bac`; its 182,068,553-byte q4 ONNX
+SHA-256 is `933577110303a2964096d19b6f15d3b4639bef7f99481ac0b61d9f3ad72f392a`.
+The single existing model manifest owns this candidate identity. Old identity and
+native result remain in git history and the retained private attempt.
+
+The CI-only prototype at `c8059a9acf9c2065d9b1998b496c10dfcc8b25fa`,
+run 38930813663, generated `The sample marker is blue.` in 2,080 ms after a
+684 ms load. Its final process RSS was 1,607,512,064 bytes, above the bounded
+hosted probe's 1,200 MiB safeguard. It is not resource qualification. The bounded
+follow-up streams verified downloads, loads from a file path without retaining an
+extra JavaScript model copy, disables CPU memory arena, memory pattern, graph
+optimization and prepacking. Its exact-head memory and inference check is pending.
+
+The new owner-only attempt directory is
+`/private/kfm-embedded-smollm2-wasm-20261016`; the native directory is retained
+untouched. The same flag, fixed prompt, token limit, 240-second timeout, sampled
+1,200 MiB safeguard, 256 MiB worker JS heap, no overwrite/retry and private receipt
+rules apply. WebAssembly memory also lies outside the JavaScript heap limit.
+No platform security settings change. Public chat and released-evidence integration
+remain unimplemented. Rollback returns preview to post-merge base
+`5c6f287b2fbd9ecd070073c98796f04a1e3ad847` with the preview flag removed.
+
+Primary sources: https://github.com/microsoft/onnxruntime/blob/main/js/web/README.md
+and https://github.com/huggingface/tokenizers.js/blob/main/README.md.
