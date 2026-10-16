@@ -101,3 +101,16 @@ audience/bindings and PC account role checks intact.
 Exact base is owner-merged d1725d8d45986363a74d69c9368899f733c78f62. Rollback
 removes KFM_HOSTED_AI and KFM_HOSTED_AI_ACCEPTANCE, restores that base with chat
 disabled, and retains private weights and receipts. No database migration occurs.
+
+## Conversation quality correction
+
+The first v3 CI receipt at 2e971479 passed the bounded-generation check but
+returned repetitive American-West text for both prompts. That is a runtime
+observation, not usable-conversation acceptance. Discussion decoding now uses
+fixed temperature 0.7/top-k 40 sampling, repetition penalty 1.15 and no repeated
+three-token sequence. A prompt-derived seed makes the same bounded request
+reproducible. These settings are server-owned, not user-supplied. A server check
+withholds repeated four-word phrases appearing three times. Qualification also
+requires distinct synthetic replies referring to the requested marker and kite
+subjects. Exact-head and hosted results remain pending; factual selection stays
+held regardless of discussion quality.
