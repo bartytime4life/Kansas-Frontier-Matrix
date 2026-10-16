@@ -253,3 +253,14 @@ Technical / More detail selected. Both were visibly labeled generated and
 unverified, with response-limit notices. The follow-up continued the lake/town
 scene but missed the requested kite; option acceptance is confirmed, stylistic
 or subject adherence is not. The 135M model's quality remains a material limit.
+
+## Fixed-profile comparison
+
+The 360M experiment now compares the original discussion prompt/sampling with a
+shorter instruction-following prompt using either temperature 0.2 sampling or
+greedy decoding. These are fixed server-owned profiles; browser input cannot
+select them. The default candidate is concise-greedy-v1, pending observed results.
+All profiles retain the same pinned model, privacy/evidence/access controls and
+2 GiB diagnostic budget. The soft 18-second generation budget also applies to
+greedy generation. Each profile uses a separate process and receipt directory.
+The unchanged four-task screen is a limited comparison, not broad qualification.

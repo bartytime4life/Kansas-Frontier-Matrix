@@ -28,11 +28,26 @@ jobs:
           console.log('KFM_INSTALL_RECEIPT '+JSON.stringify(installed));
           if(installed.status!=='SYNTHETIC_INFERENCE_PASS')throw Error('INSTALL_UNQUALIFIED');
           JS
-      - name: Fresh-process greeting, rewriting, story and follow-up quality checks
+      - name: Compare fixed discussion profiles in separate processes
         run: |
-          node --input-type=module <<'JS'
+          for KFM_QUALIFICATION_PROFILE in baseline concise-sampled-v1 concise-greedy-v1; do
+            export KFM_QUALIFICATION_PROFILE
+            node --input-type=module <<'JS'
           import {qualifyHostedChat} from './server/hosted-ai-acceptance.mjs';
-          const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP});
-          console.log('KFM_PUBLIC_CHAT_RECEIPT '+JSON.stringify(receipt));
-          if(receipt.status!=='HOSTED_DISCUSSION_PASS')process.exitCode=1;
+          import {writeFile} from 'node:fs/promises';
+          import {join} from 'node:path';
+          const discussionProfile=process.env.KFM_QUALIFICATION_PROFILE;
+          const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP,discussionProfile});
+          console.log('KFM_PROFILE_RECEIPT '+JSON.stringify(receipt));
+          await writeFile(join(process.env.RUNNER_TEMP,'quality-'+discussionProfile+'.json'),JSON.stringify(receipt),{flag:'wx',mode:0o600});
+          JS
+          done
+          node --input-type=module <<'JS'
+          import {readFile} from 'node:fs/promises';
+          import {join} from 'node:path';
+          const profiles=['concise-sampled-v1','concise-greedy-v1'];
+          const results=await Promise.all(profiles.map(async profile=>JSON.parse(await readFile(join(process.env.RUNNER_TEMP,'quality-'+profile+'.json'),'utf8'))));
+          const qualified=results.filter(r=>r.status==='HOSTED_DISCUSSION_PASS').map(r=>r.discussionProfile);
+          console.log('KFM_QUALIFIED_PROFILES '+JSON.stringify(qualified));
+          if(!qualified.length)process.exitCode=1;
           JS

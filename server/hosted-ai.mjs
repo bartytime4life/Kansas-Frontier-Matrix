@@ -6,9 +6,9 @@ export const HOSTED_MODEL='SmolLM2-360M-Instruct uint8 · server WebAssembly';
 export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:30000,maximumRssBytes:2048*1024*1024});
 const error=code=>Object.assign(new Error(code),{code});
 export class HostedAiModel{
- constructor({modelDirectory='/private/kfm-embedded-smollm2-360m-uint8-wasm-20261016/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage}={}){
+ constructor({discussionProfile='concise-greedy-v1',modelDirectory='/private/kfm-embedded-smollm2-360m-uint8-wasm-20261016/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage}={}){
   this.ready=false;this.online=true;this.reason='MODEL_LOADING';this.peakRssBytes=memoryUsage().rss;this.pending=null;this.stopped=false;
-  this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type=')),resourceLimits:{maxOldGenerationSizeMb:256}});
+  this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory,discussionProfile},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type=')),resourceLimits:{maxOldGenerationSizeMb:256}});
   this.loaded=new Promise((resolveReady,rejectReady)=>{this.resolveReady=resolveReady;this.rejectReady=rejectReady;});
   this.loaded.catch(()=>{});
   this.loadTimer=setTimeout(()=>this.stop('MODEL_LOAD_TIMEOUT'),HOSTED_LIMITS.loadMs);this.loadTimer.unref?.();

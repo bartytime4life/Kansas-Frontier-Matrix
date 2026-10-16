@@ -11,6 +11,8 @@ async function privatePath(path,directory=false){
  if(info.isSymbolicLink()||info.uid!==process.getuid()||(info.mode&0o077)||(directory?!info.isDirectory():!info.isFile()||info.nlink!==1))fail('HOSTED_MODEL_FILES_UNSAFE');
  return info;
 }
+const discussionProfile=workerData.discussionProfile??'concise-greedy-v1';
+const profiles=new Set(['baseline','concise-sampled-v1','concise-greedy-v1']);
 let session,tokenizer,ort,generationLimited=false;
 async function generate(prompt,maximum,cancel,sample=false){
  generationLimited=false;const generationBegan=performance.now();
@@ -24,7 +26,7 @@ async function generate(prompt,maximum,cancel,sample=false){
  let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
   for(let step=0;step<maximum;step++){
-   if(sample&&generated.length&&performance.now()-generationBegan>=18000){generationLimited=true;break;}
+   if(generated.length&&performance.now()-generationBegan>=18000){generationLimited=true;break;}
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};
    const outputs=await session.run(feeds);for(const t of Object.values(outputs))owned.add(t);
@@ -41,7 +43,7 @@ async function generate(prompt,maximum,cancel,sample=false){
      candidates.push({id,score});candidates.sort((a,b)=>b.score-a.score);if(candidates.length>40)candidates.pop();
     }
     if(!candidates.length)fail('HOSTED_MODEL_LOGITS');
-    const weights=candidates.map(item=>Math.exp((item.score-candidates[0].score)/0.7));let choice=random()*weights.reduce((a,b)=>a+b,0);next=candidates.at(-1).id;
+    const weights=candidates.map(item=>Math.exp((item.score-candidates[0].score)/(discussionProfile==='baseline'?0.7:0.2)));let choice=random()*weights.reduce((a,b)=>a+b,0);next=candidates.at(-1).id;
     for(let i=0;i<candidates.length;i++){choice-=weights[i];if(choice<=0){next=candidates[i].id;break;}}
    }else for(let i=1;i<49152;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
    if(!Number.isFinite(logits.data[offset+next]))fail('HOSTED_MODEL_LOGITS');
@@ -56,6 +58,7 @@ async function generate(prompt,maximum,cancel,sample=false){
 }
 const chat=(system,user)=>'<|im_start|>system\n'+system+'<|im_end|>\n<|im_start|>user\n'+user+'<|im_end|>\n<|im_start|>assistant\n';
 try{
+ if(!profiles.has(discussionProfile))fail('HOSTED_PROFILE_IDENTITY');
  const directory=resolve(workerData.modelDirectory);
  await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
  const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
@@ -90,13 +93,13 @@ try{
     if(typeof question!=='string'||Buffer.byteLength(question)>4096||!['plain','technical'].includes(style)||!['brief','expanded'].includes(depth)||!Array.isArray(history)||history.length>2||!(message.cancel instanceof SharedArrayBuffer)||message.cancel.byteLength!==4)fail('HOSTED_PACKET_INVALID');
     const escape=value=>value.replaceAll('<|','< |');
     if(history.some(item=>!item||typeof item.question!=='string'||typeof item.reply!=='string'||Buffer.byteLength(item.question)>4096||Buffer.byteLength(item.reply)>4096))fail('HOSTED_PACKET_INVALID');
-    const system='You are KFM, a helpful discussion assistant. Offer ideas, explanations and clearly hypothetical examples. Your discussion is unverified and is not evidence about Kansas. Do not invent citations, URLs, private information or exact locations. You have no tools or administrative powers. '+(style==='technical'?'Use technical language when useful. ':'Use plain, accessible language. ')+(depth==='brief'?'Be brief.':'Give a little more explanation.');
+    const system=(discussionProfile==='baseline'?'You are KFM, a helpful discussion assistant. Offer ideas, explanations and clearly hypothetical examples. Your discussion is unverified and is not evidence about Kansas. Do not invent citations, URLs, private information or exact locations. You have no tools or administrative powers. ':'You are a helpful assistant named KFM. Follow the user\'s instructions carefully and answer directly. Examples are hypothetical. Do not invent sources, private information or exact locations. You cannot use tools. ')+(style==='technical'?'Use technical language when useful. ':'Use plain, accessible language. ')+(depth==='brief'?'Be brief.':'Give a little more explanation.');
     const retained=history.slice();let prompt,contextTrimmed=false;
     const render=()=>'<|im_start|>system\n'+system+'<|im_end|>\n'+retained.map(item=>'<|im_start|>user\n'+escape(item.question)+'<|im_end|>\n<|im_start|>assistant\n'+escape(item.reply)+'<|im_end|>\n').join('')+'<|im_start|>user\n'+escape(question)+'<|im_end|>\n<|im_start|>assistant\n';
     prompt=render();
     while(tokenizer.encode(prompt).ids.length>512&&retained.length){retained.shift();contextTrimmed=true;prompt=render();}
     const maximum=depth==='brief'?32:64;
-    const output=await generate(prompt,maximum,new Int32Array(message.cancel),true);
+    const output=await generate(prompt,maximum,new Int32Array(message.cancel),discussionProfile!=='concise-greedy-v1');
     parentPort.postMessage({type:'result',id:message.id,discussion:output,contextTrimmed,outputLimited:generationLimited||tokenizer.encode(output).ids.length>=maximum});
     return;
    }

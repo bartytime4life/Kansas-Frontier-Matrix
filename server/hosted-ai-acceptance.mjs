@@ -3,8 +3,9 @@ import {join,resolve} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {HostedAiModel,HOSTED_LIMITS,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
-export async function qualifyHostedChat({root='/private',modelFactory=()=>new HostedAiModel({modelDirectory:join(root,'kfm-embedded-smollm2-360m-uint8-wasm-20261016/model')})}={}){
- const directory=join(root,'kfm-hosted-smollm2-360m-uint8-chat-20261016'),rootInfo=await lstat(root);
+export async function qualifyHostedChat({root='/private',discussionProfile='concise-greedy-v1',modelFactory=()=>new HostedAiModel({discussionProfile,modelDirectory:join(root,'kfm-embedded-smollm2-360m-uint8-wasm-20261016/model')})}={}){
+ if(!['baseline','concise-sampled-v1','concise-greedy-v1'].includes(discussionProfile))throw Error('ACCEPTANCE_PROFILE_INVALID');
+ const directory=join(root,'kfm-hosted-smollm2-360m-uint8-chat-20261016-'+discussionProfile),rootInfo=await lstat(root);
  if(!rootInfo.isDirectory()||rootInfo.isSymbolicLink())throw Error('ACCEPTANCE_ROOT_UNSAFE');
  try{await mkdir(directory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
  const info=await lstat(directory);if(!info.isDirectory()||info.isSymbolicLink()||info.uid!==process.getuid())throw Error('ACCEPTANCE_DIRECTORY_UNSAFE');
@@ -33,7 +34,7 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
   result={status:qualified?'HOSTED_DISCUSSION_PASS':'LIMITED',...(qualified?{}:{reason:'DISCUSSION_OUTPUT_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
  finally{model?.stop();}
- const receipt={profile:'kfm.hosted-chat-360m-uint8/20261016/v1',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,checks,evidenceSelection:'HELD_UNQUALIFIED',elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Four fixed greeting/rewriting/fiction/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is a small bounded quality screen, not general correctness or actual GoDaddy acceptance. Factual selection remains disabled; no released-knowledge acceptance is claimed.'};
+ const receipt={profile:'kfm.hosted-chat-360m-uint8/20261016/v1',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,discussionProfile,...result,checks,evidenceSelection:'HELD_UNQUALIFIED',elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Four fixed greeting/rewriting/fiction/follow-up checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is a small bounded quality screen, not general correctness or actual GoDaddy acceptance. Factual selection remains disabled; no released-knowledge acceptance is claimed.'};
  await writeFile(join(directory,'receipt-'+runId+'.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
  return receipt;
 }
