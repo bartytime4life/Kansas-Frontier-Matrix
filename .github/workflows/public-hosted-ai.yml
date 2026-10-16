@@ -1,7 +1,7 @@
 name: Public hosted AI qualification
 on:
   push:
-    branches: [a0-public-hosted-ai-20261016]
+    branches: [a0-hosted-ai-answer-validation-20261016]
 permissions:
   contents: read
 jobs:

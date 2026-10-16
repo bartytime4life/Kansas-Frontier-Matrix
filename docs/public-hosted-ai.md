@@ -43,7 +43,7 @@ admission control and renewed resource qualification.
 Requests are at most 8 KiB, questions 4 KiB, bodies five seconds, evidence
 resolution eight seconds, jobs ninety seconds, model selection thirty seconds,
 and model load ninety seconds. The model uses one WASM thread, a 256 MiB JS
-heap, 512 input tokens and one generated selection token constrained to the available fact numbers or zero. Sampled whole-process
+heap, 512 input tokens and up to 32 generated tokens. Only a complete supplied fact matching the output after whitespace normalization can be selected; other text is withheld. Sampled whole-process
 RSS over 1,200 MiB stops the model without automatic retry. WASM memory lies
 outside the JS heap and may grow between samples. Provider quotas remain
 UNKNOWN; the observed hosted synthetic peak is not a hosting entitlement.
@@ -96,3 +96,21 @@ receipt. No public publication or general model-quality claim is made.
 Rollback removes KFM_HOSTED_AI and KFM_HOSTED_AI_ACCEPTANCE, restores the exact
 owner-merged base above and retains all private model files and receipts.
 Anonymous state is disposable memory; no private database migration occurs.
+
+## Output-validation correction after owner merge
+
+The owner merged #5205 at d1725d8d45986363a74d69c9368899f733c78f62.
+Its exact-head constrained-number test at f3cd651 failed: CI 38933835051
+selected fact 1 for both a supported marker-color question and an unsupported
+train-year question. Build, TypeScript, account/API and built HTTP checks passed;
+they did not establish model selection quality. That selector must not be activated.
+
+This follow-up removes forced-number decoding. It asks the small model to copy a
+complete supporting sentence, then accepts only a complete supplied-fact match
+with whitespace normalization. Unknown or other output becomes abstention through
+the server-owned response path. No generated text or invented citation is emitted.
+Qualification now requires two supported questions selecting distinct facts and
+an unsupported question producing no selected fact (0 or null), as the actual
+public handler requires. This tests withholding rather than requiring the model
+to obey a particular abstention spelling. Exact-head and GoDaddy checks are pending.
+Rollback restores d1725d8 with public chat disabled; keep prior receipts.
