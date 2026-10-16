@@ -15,3 +15,24 @@ export const browserHeaders = Object.freeze({
 export function applyBrowserHeaders(_request, response) {
   for (const [name, value] of Object.entries(browserHeaders)) response.setHeader(name, value);
 }
+
+export function installPublicDelivery(server) {
+  const handlers=server.listeners('request');
+  server.removeAllListeners('request');
+  server.on('request',(request,response)=>{
+    applyBrowserHeaders(request,response);
+    const host=String(request.headers.host??'').toLowerCase();
+    const forwarded=String(request.headers['x-forwarded-host']??'').split(',')[0].trim().toLowerCase();
+    // These headers can select only a fixed public redirect. They confer no
+    // trusted request origin, account identity or authorization capability.
+    if([host,forwarded].some(value=>value==='www.kansasfrontiermatrix.com'||value==='www.kansasfrontiermatrix.com:443')){
+      const target=request.url??'/';
+      if(!target.startsWith('/')||target.startsWith('//')||/[\\\r\n]/.test(target)){
+        response.writeHead(400);response.end('Bad Request');request.resume();return;
+      }
+      response.writeHead(308,{Location:'https://kansasfrontiermatrix.com'+target});
+      response.end();request.resume();return;
+    }
+    for(const handler of handlers)handler.call(server,request,response);
+  });
+}

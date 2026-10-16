@@ -1,13 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { get } from 'node:http';
 import { startProdServer } from 'vinext/server/prod-server';
-import { applyBrowserHeaders } from '../server/browser-headers.mjs';
+import { installPublicDelivery } from '../server/browser-headers.mjs';
 
 test('built Node responses carry browser policy, correct canonicals and public privacy',async(t)=>{
   const {server,port}=await startProdServer({port:0,host:'127.0.0.1',outDir:'dist'});
-  server.prependListener('request',applyBrowserHeaders);
+  installPublicDelivery(server);
   t.after(()=>new Promise(resolve=>{server.closeAllConnections();server.close(resolve);}));
   const origin=`http://127.0.0.1:${port}`;
+  const withHost=(path,host)=>new Promise((resolve,reject)=>{
+    get(origin+path,{headers:{Host:host}},response=>{response.resume();response.on('end',()=>resolve({status:response.statusCode,location:response.headers.location}));}).on('error',reject);
+  });
+  for (const path of ['/', '/about?view=guide', '/api/pc-ai/status']) {
+    const response=await withHost(path,'www.kansasfrontiermatrix.com');
+    assert.equal(response.status,308,path);
+    assert.equal(response.location,'https://kansasfrontiermatrix.com'+path,path);
+  }
+  const lookalike=await withHost('/','wwwXkansasfrontiermatrixXcom');
+  assert.notEqual(lookalike.status,308);
   for(const path of ['/','/about','/privacy','/robots.txt','/sitemap.xml','/favicon.svg','/missing-page-check','/%ZZ','/api/data-submissions']){
     const response=await fetch(origin+path);
     assert.equal(response.headers.get('strict-transport-security'),'max-age=86400',path);
