@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-09-25
+updated: 2026-10-16
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 owning_root: tools/
 responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
@@ -18,7 +18,6 @@ truth_posture: cite-or-abstain
 tags: [kfm, tools, ci, github-actions, qa, reviewer-summary, validation-summary, workflows, NEEDS_VERIFICATION]
 related:
   - ../README.md
-  - ../../.github/README.md
   - ../../tests/README.md
   - ../../tools/validators/
   - ../../tools/qa/
@@ -27,6 +26,8 @@ related:
   - ../../contracts/
   - ../../release/
   - ../../artifacts/qa/
+proposed_related:
+  - ../../.github/README.md
 notes:
   - "This README replaces blank placeholder content at tools/ci/README.md."
   - "tools/README.md lists tools/ci/ as PROPOSED for CI helpers such as render_ui_validation_summary.py."
@@ -120,6 +121,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 | Family | Purpose | Status |
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
+| `install_full_local_test` | Compose the existing fixed installers for repository-wide Python collection in a Linux x86_64 CPython 3.12 virtual environment; `--plan` validates inputs without installing. | Implemented with focused positive/negative tests; collection and hosted execution remain separately verifiable. |
 | `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
 | `kfm_no_network/sitecustomize.py` | Fail closed on named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide, non-Python, or non-named API isolation. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
@@ -137,6 +139,8 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 tools/ci/
 |-- README.md
 |-- install_python_ci.py
+|-- install_full_local_test.py
+|-- install_kfm_cli.py
 |-- kfm_no_network/
 |   |-- README.md
 |   `-- sitecustomize.py
@@ -152,6 +156,16 @@ tools/ci/
 ```
 
 The dependency-bootstrap entries are tracked and verified. The `.PROPOSED` entries remain schematic.
+
+For the complete collection bundle, see
+[repository-wide Python test setup](../../docs/installation.md#repository-wide-python-test-setup).
+`install_full_local_test.py` validates all inputs before the first install and
+preserves each existing installer's hash and local-package checks. It requires
+a virtual environment and the common supported interpreter/platform of all
+included profiles, including the experiment's exact `cp312` PyArrow pin. It
+does not change committed requirements or lock hashes, or run the test suite.
+Its regressions live in
+[`tests/ci/test_install_full_local_test.py`](../../tests/ci/test_install_full_local_test.py).
 
 ---
 

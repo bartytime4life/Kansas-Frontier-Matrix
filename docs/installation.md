@@ -6,7 +6,7 @@ version: v1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-10-09
+updated: 2026-10-16
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
@@ -101,6 +101,36 @@ make validate
 The installer selects the committed, SHA-256 hash locked test profile and installs the local metadata-only root distribution. It may contact the package index. `make validate` runs the current repository validator and schema/contract test baseline; use the target README and focused checks for the area you change. The root wheel does not contain the Site, an importable KFM SDK, datasets, or a deployed service.
 
 On Ubuntu 24.04, `scripts/dev/bootstrap.sh --check --json` inspects the Python, Node, pnpm, and Git prerequisites without installing. Its default apply mode also installs root dependencies and tries to register pre-commit hooks. The root test extra does not declare `pre-commit`, so use `--no-hooks` unless a compatible `pre-commit` executable is already in `.venv`. The helper's Python install uses the version ranges in `pyproject.toml`; use the hash locked command above when reproducibility matters. See [bootstrap details](../scripts/dev/BOOTSTRAP.md).
+
+## Repository-wide Python test setup
+
+For repository-wide Python collection, create and activate a **new** virtual
+environment using CPython 3.12 on Linux x86_64, then run from the repository root:
+
+```bash
+python tools/ci/install_full_local_test.py --plan
+python tools/ci/install_full_local_test.py
+python -m pytest --collect-only -q -p no:cacheprovider tests
+```
+
+`--plan` validates the committed inputs and prints the fixed commands without
+installing anything. The default command requires a virtual environment, checks
+every lock and local package before installation, delegates to the existing
+`all-local-test`, `water-pilot`, `geo-transforms`, `nwm-netcdf` and
+`geoparquet-pyarrow-25` profiles and the separate CLI installer, then runs
+`pip check`. A failed step stops setup; discard the disposable environment or
+resolve the failure before retrying. Installation may contact the package index.
+
+The complete bundle targets CPython 3.12 because the experimental PyArrow profile
+pins a `cp312` wheel and producer identity. Its hash is not relaxed for Python
+3.11. Smaller component profiles retain their own supported interpreters. This
+does not change the root distribution's Python requirement, install the Site's
+JavaScript dependencies, fetch source datasets, or start services.
+
+The `python-dependency-lock` workflow installs this bundle into a fresh 3.12
+virtual environment and collects `tests/` under the existing bounded Python
+network guard. Collection proves that tests can be imported; executing them,
+browser acceptance, native-process isolation and release remain separate checks.
 
 ## Shared JavaScript workspace
 
