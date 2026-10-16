@@ -69,7 +69,7 @@ No prompts, answers, cookies or credentials are logged or sent to an AI provider
 The private acceptance check is opt-in with KFM_HOSTED_AI_ACCEPTANCE=1. Keep
 KFM_HOSTED_AI absent during this check to avoid concurrent model copies. It
 retains one new owner-only receipt/attempt directory
-/private/kfm-hosted-smollm2-chat-20261016 and checks two fixed synthetic selections.
+/private/kfm-hosted-smollm2-chat-20261016 and checks three fixed synthetic selection/withholding cases.
 It reads existing pinned weights, stops after checking and refuses overwrites.
 Synthetic fixtures are not exposed by a public route or inserted into a reader.
 

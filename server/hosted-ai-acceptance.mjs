@@ -17,7 +17,8 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
   const positive=await model.select('What color is the sample marker?',['The sample marker is blue.','The garden gate is red.']);
   const secondPositive=await model.select('What color is the garden gate?',['The sample marker is blue.','The garden gate is red.']);
   const unsupported=await model.select('In what year was the train built?',['The sample marker is blue.','The garden gate is red.']);
-  result={status:positive===1&&secondPositive===2&&(unsupported===0||unsupported===null)?'HOSTED_SELECTION_PASS':'LIMITED',positiveSelection:positive,secondPositiveSelection:secondPositive,unsupportedSelection:unsupported,...(positive===1&&unsupported===0?{}:{reason:'MODEL_SELECTION_UNQUALIFIED'})};
+  const qualified=positive===1&&secondPositive===2&&(unsupported===0||unsupported===null);
+  result={status:qualified?'HOSTED_SELECTION_PASS':'LIMITED',positiveSelection:positive,secondPositiveSelection:secondPositive,unsupportedSelection:unsupported,...(qualified?{}:{reason:'MODEL_SELECTION_UNQUALIFIED'})};
  }catch(error){result={status:'LIMITED',reason:/^[A-Z][A-Z0-9_]{0,63}$/.test(error.code??'')?error.code:'MODEL_UNAVAILABLE'};}
  finally{model?.stop();}
  const receipt={profile:'kfm.hosted-chat/20261016/v2',runId,observedAt:new Date().toISOString(),node:process.versions.node,platform:process.platform,arch:process.arch,model:HOSTED_MODEL,...result,elapsedMs:Math.round(performance.now()-began),peakRssBytes:model?.peakRssBytes??null,limits:HOSTED_LIMITS,sources,scope:'Three fixed synthetic selection/withholding checks; no real KFM/user data, public fixture route, account access, network inference or paid API.',interpretation:'This is bounded runtime/selection evidence, not general model-quality acceptance or a released-knowledge answer.'};
