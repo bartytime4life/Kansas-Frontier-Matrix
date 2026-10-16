@@ -1,6 +1,6 @@
 # Smaller Ollama model on the existing GoDaddy app
 
-Status: **PROPOSED installation / NOT INSTALLED / HOSTED QUALIFICATION PENDING**.
+Status: **HOSTED BASELINE LIMITED / INSTALLATION BLOCKED / NOT INSTALLED**.
 Owner constraints recorded October 16, 2026: keep inference off the owner's PC,
 use Ollama with a smaller model, and add no hosting subscription, paid API,
 commercial trial, or paid fallback.
@@ -8,6 +8,39 @@ commercial trial, or paid fallback.
 This first change measures the existing GoDaddy runtime before downloading or
 starting a model. It does not replace the accepted PC integration, create an
 account, process a question, admit evidence, or change published source.
+
+## Observed GoDaddy preview result
+
+**CONFIRMED October 16, 2026:** the probe ran in app `q9r9beo47t` preview on
+Node.js 22.23.3, Linux x64. The authenticated Preview logs reported
+`BASELINE_LIMITED`; the private receipt was inspected and downloaded through
+the provider File Manager. Its run ID is
+`d85e2b43-275d-428a-9f06-0614340ca477`, observed at
+`2026-10-16T15:31:36.529Z`. The candidate source was
+`066ba0938f76c5cdbece522da4e25527d5eb0c64`.
+
+| Check | Actual hosted result |
+| --- | --- |
+| Node subprocess with fixed marker | PASS |
+| Execute fixed private program | UNAVAILABLE: EACCES |
+| Bind/request an ephemeral private loopback port | UNAVAILABLE: EACCES |
+| Mounted cgroup v2 app RAM/CPU values | UNKNOWN: unavailable |
+| Ollama installation / model execution | NOT ATTEMPTED |
+
+This blocks the proposed private Ollama daemon setup in the observed runtime.
+It does not establish a SmolLM2 quality or performance result, prove an exact
+provider policy cause, or establish that every GoDaddy product has the same
+restrictions. A smaller model does not change these denied runtime operations.
+Do not change bind addresses, use a public port, relocate executables to evade
+the denial, or weaken isolation. Reopening this path requires provider-supported
+native execution and private daemon communication on the existing plan, plus
+verified app resource allocations. No additional paid plan is authorized.
+
+The earlier dashboard sync attempt reported an overlapping import and an
+upload failure, but the later Preview logs and private receipt prove the probe
+itself executed. They do not prove a clean production build, general preview
+health, native Ollama compatibility, or live acceptance. Preserve the private
+receipt; do not publish the full runtime resource observations as app quotas.
 
 ## Current evidence and candidate models
 
