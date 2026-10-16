@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+      ONNXRUNTIME_NODE_INSTALL: skip
       ORT_DISABLE_TELEMETRY: '1'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -19,5 +19,13 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci
-      - name: Native CPU load and synthetic model test
-        run: node tests/embedded-ai-qualification.mjs
+      - run: node --test tests/embedded-ai-probe.test.mjs
+      - run: npm run build
+      - name: Pinned private-files CPU inference
+        run: |
+          node --input-type=module <<'JS'
+          import {qualifyEmbeddedAi} from './server/embedded-ai-probe.mjs';
+          const receipt=await qualifyEmbeddedAi({root:process.env.RUNNER_TEMP});
+          console.log('KFM_EMBEDDED_RECEIPT '+JSON.stringify(receipt));
+          if(receipt.status!=='SYNTHETIC_INFERENCE_PASS') process.exitCode=1;
+          JS

@@ -1,0 +1,99 @@
+# Embedded server-side SmolLM2 qualification
+
+Status: **PROPOSED app integration; GoDaddy qualification pending**.
+
+The owner authorized a free, non-trial alternative to Ollama on October 16, 2026.
+This candidate embeds Transformers.js 4.3.1 / ONNX Runtime Node 1.30.0 in the existing
+GoDaddy Node app. Inference occurs in a Node worker thread on the hosting server.
+There is no Ollama daemon, executable subprocess, extra listening port, browser
+model execution, paid inference API, new subscription, or commercial trial.
+
+## Scope and observed evidence
+
+The previous Ollama preview receipt denied private execution and loopback binding
+with EACCES. This candidate uses the library's documented server-side API and
+normal npm native addon loading; it does not change provider isolation or relocate
+an Ollama executable. Whether GoDaddy admits this library is still unverified.
+
+A separate Linux x64 Node 22.23.3 CI experiment at
+`1879540a78ed207d006b2201d47b277efeb53979` successfully loaded CPU inference and
+returned `The sample marker is blue.` from a fixed synthetic sentence.
+Load time was 3,912 ms; generation was 626 ms; sampled final RSS was 948,060,160 bytes.
+Those are CI observations, not GoDaddy performance or app quota measurements.
+The final pinned, local-files-only probe is tested separately.
+
+The primary publisher's Apache-2.0 model is
+`HuggingFaceTB/SmolLM2-360M-Instruct`, revision
+`a10cc1512eabd3dde888204e902eca88bddb4951`.
+The q4 ONNX file is 387,943,246 bytes, SHA-256
+`a4ffda96e65beafc6f6cef0cbcf9fdc1cbdd79c230906bf3897d190547c7a596`.
+Every required metadata/tokenizer/model file has a pinned size and SHA-256 in
+`server/embedded-ai-model.json`. The model card is retained beside the weights.
+npm package versions, URLs and integrity values are locked in the app's existing
+lockfile; CPU-only installation skips optional GPU binary downloads.
+
+## Preview-only execution
+
+Only `KFM_EMBEDDED_AI_PROBE=1` enables the one-shot startup check. It starts after
+the web server and contains failure without making map startup depend on inference.
+No public diagnostic or model route is added and no user question is processed.
+
+The private directory `/private/kfm-embedded-smollm2-20261016` is owner-only, with
+an exclusive attempt marker and no automatic retries, overwrite or cleanup.
+Downloads use HTTPS only, fixed publisher paths/revision, bounded redirects within
+the publisher's domains, exact byte limits, incremental SHA-256 verification and
+0600 files. No credentials are sent. The runtime downloads only model artifacts;
+prompts are never sent to Hugging Face or an inference provider. After installation,
+remote model loading is disabled and all weights are loaded from private files.
+
+One worker, one CPU inference thread, at most 16 generated tokens and a fixed
+synthetic prompt are used. Parent monitoring requests termination after 240 seconds
+or when sampled process RSS exceeds 1,200 MiB. The worker's JS heap is capped at
+256 MiB. **These are application safeguards, not a hard native-memory or provider
+quota guarantee:** native memory can grow between samples, and termination during
+a native call depends on worker/runtime behavior. Existing GoDaddy effective
+RAM/CPU/private-storage quotas remain unknown. The test is preview-only.
+
+The receipt records model identity, exact source-file hashes, observation time,
+sampled peak process RSS, stage, timings and finite failure/success. It contains
+only the synthetic output and no accounts, jobs, environment dumps, KFM evidence,
+private location or user prompts. Read it in authenticated GoDaddy File Manager.
+
+## Evidence, integration and release gates
+
+`SYNTHETIC_INFERENCE_PASS` proves only that the test model response ran in that
+observed environment. It is not a public chat deployment, citation-quality
+acceptance, admission of data, or a released-evidence answer.
+
+The current account-backed PC queue and UI are preserved during qualification.
+Do not label this model as Qwen or fake a PC worker heartbeat. A later admitted
+embedded profile must retain login, same-origin controls, sensitivity/rights
+checks, released-evidence resolution, cancellation, supported-citation validation,
+release rechecks, and finite ANSWER/ABSTAIN/DENY/ERROR outcomes. The existing missing
+released-knowledge binding remains a separate limitation. Model language cannot
+supply that missing authority.
+
+## Placement, validation and rollback
+
+Directory Rules v2 §§10.1/10.4 and accepted ADR-0029 support these existing
+standalone app `server/`, `tests/`, `docs/`, app-manifest and CI responsibilities.
+No new canonical schema, policy, evidence or release home is introduced.
+This scope leaves the original Sites app and published GoDaddy source unchanged.
+
+Local negative-path tests use injected workers and do not prove native inference.
+CI native inference and actual GoDaddy inference must be reported independently.
+The qualification workflow is restricted to the candidate branch with read-only
+repository permissions. Its earlier dependency-resolution/model-identity step
+does not imply deployment approval.
+
+Rollback removes the preview flag and restores the prior source branch
+`a0-crawler-guidance-20261015` at
+`e298f023d50878fc954e2037094236b2c15ebffc`.
+Retain private attempts/receipts; no data migration or destructive cleanup is needed.
+
+Sources checked this session:
+- https://huggingface.co/docs/transformers.js/tutorials/node
+- https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct
+- https://github.com/huggingface/transformers.js/releases/tag/4.3.1
+- https://onnxruntime.ai/docs/get-started/with-javascript/node.html
+- https://github.com/microsoft/onnxruntime/blob/main/js/node/script/install-utils.js
