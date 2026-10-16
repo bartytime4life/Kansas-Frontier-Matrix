@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_IDENTITY } from "./site-identity";
+import { PUBLIC_SITE_ORIGIN } from "./crawler-discovery";
 import { PersistentSelectMenus } from "./persistent-select-menus";
 import "./globals.css";
 import "./map-layers.css";
@@ -8,8 +8,9 @@ import "./local-atlas.css";
 import "./scene-effects.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  // Canonical metadata is deployment identity, never caller-controlled routing input.
-  const metadataBase = new URL(SITE_IDENTITY.canonicalUrl);
+  // This separate GoDaddy composition uses its verified public domain. Keep the
+  // preserved Sites identity snapshot unchanged; never derive identity from Host.
+  const metadataBase = new URL(PUBLIC_SITE_ORIGIN);
   const socialImage = new URL("/og-guided.png", metadataBase).toString();
 
   return {

@@ -349,7 +349,7 @@ test("uses the existing social card with canonical registered-origin metadata", 
   const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
 
   assert.doesNotMatch(layout, /x-forwarded-host/);
-  assert.match(layout, /SITE_IDENTITY\.canonicalUrl/);
+  assert.match(layout, /new URL\(PUBLIC_SITE_ORIGIN\)/);
   assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
   assert.match(layout, /real MapLibre Kansas vector context/);
   assert.ok(socialCard.byteLength > 100_000);
