@@ -1,7 +1,7 @@
 name: Embedded AI qualification
 on:
   push:
-    branches: [a0-node-smollm2-20261016]
+    branches: [a0-embedded-ai-preview-followup-20261016]
 permissions:
   contents: read
 jobs:
@@ -21,7 +21,7 @@ jobs:
       - run: npm ci
       - run: node --test tests/embedded-ai-probe.test.mjs
       - run: npm run build
-      - name: Pinned private-files CPU inference
+      - name: Pinned private-files WASM inference
         run: |
           node --input-type=module <<'JS'
           import {qualifyEmbeddedAi} from './server/embedded-ai-probe.mjs';

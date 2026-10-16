@@ -26,7 +26,7 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
         if (peakRssBytes > maximumRssBytes) finish({ status: 'LIMITED', reason: 'EMBEDDED_MEMORY_LIMIT' });
       }, 100);
       worker.on('message', value => {
-        if (value?.type === 'stage' && ['NATIVE_IMPORT', 'NATIVE_READY', 'DOWNLOAD', 'MODEL_LOAD', 'INFERENCE'].includes(value.stage)) stage = value.stage;
+        if (value?.type === 'stage' && ['WASM_IMPORT', 'WASM_READY', 'DOWNLOAD', 'MODEL_LOAD', 'INFERENCE'].includes(value.stage)) stage = value.stage;
         if (value?.type === 'result' && value.result && JSON.stringify(value.result).length <= 8192) {
           peakRssBytes = Math.max(peakRssBytes, memoryUsage().rss);
           if (peakRssBytes > maximumRssBytes) finish({ status: 'LIMITED', reason: 'EMBEDDED_MEMORY_LIMIT' });
@@ -43,12 +43,12 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
 }
 
 export async function qualifyEmbeddedAi({ root = '/private', workerFactory = path => new Worker(path, {
-  workerData: { directory: join(resolve(root), 'kfm-embedded-smollm2-20261016') },
+  workerData: { directory: join(resolve(root), 'kfm-embedded-smollm2-wasm-20261016') },
   // --input-type applies to stdin/eval entrypoints, never to a worker file.
   execArgv: process.execArgv.filter(flag => !flag.startsWith('--input-type=')),
   resourceLimits: { maxOldGenerationSizeMb: 256 },
 }) } = {}) {
-  const directory = join(resolve(root), 'kfm-embedded-smollm2-20261016');
+  const directory = join(resolve(root), 'kfm-embedded-smollm2-wasm-20261016');
   const rootInfo = await lstat(root);
   if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw failure('EMBEDDED_ROOT_UNSAFE');
   try { await mkdir(directory, { mode: 0o700 }); } catch (error) { if (error.code !== 'EEXIST') throw error; }
@@ -56,7 +56,7 @@ export async function qualifyEmbeddedAi({ root = '/private', workerFactory = pat
   if (!info.isDirectory() || info.isSymbolicLink() || info.uid !== process.getuid()) throw failure('EMBEDDED_DIRECTORY_UNSAFE');
   await chmod(directory, 0o700);
   if ((await readdir(directory)).length) throw failure('EMBEDDED_ALREADY_ATTEMPTED');
-  await writeFile(join(directory, '.attempt'), 'kfm.embedded-smollm2/20261016/v1\n', { flag: 'wx', mode: 0o600 });
+  await writeFile(join(directory, '.attempt'), 'kfm.embedded-smollm2-wasm/20261016/v1\n', { flag: 'wx', mode: 0o600 });
   const runId = randomUUID(), began = performance.now();
   const workerPath = resolve('server/embedded-ai-probe-worker.mjs');
   const sources = {};
@@ -66,11 +66,11 @@ export async function qualifyEmbeddedAi({ root = '/private', workerFactory = pat
   let result;
   try { result = await watchEmbeddedWorker(workerFactory(workerPath)); }
   catch (error) { result = { status: 'LIMITED', reason: reason(error) }; }
-  const receipt = { profile: 'kfm.embedded-smollm2/20261016/v1', runId, observedAt: new Date().toISOString(),
+  const receipt = { profile: 'kfm.embedded-smollm2-wasm/20261016/v1', runId, observedAt: new Date().toISOString(),
     node: process.versions.node, platform: process.platform, arch: process.arch,
     ...result, elapsedMs: Math.round(performance.now() - began), limits: EMBEDDED_PROBE_LIMITS, sources,
     scope: 'One fixed synthetic prompt in a Node worker thread. No KFM/user data, public endpoint, paid API, PC inference, daemon, subprocess, or extra listening port.',
-    interpretation: 'A working runtime is not a released-evidence answer or acceptance of model quality. RSS is sampled process-wide, not an enforced provider quota; native memory may grow between samples.',
+    interpretation: 'A working runtime is not a released-evidence answer or acceptance of model quality. RSS is sampled process-wide, not an enforced provider quota; runtime memory may grow between samples.',
   };
   await writeFile(join(directory, `receipt-${runId}.json`), JSON.stringify(receipt, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
   return receipt;
