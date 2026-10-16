@@ -44,6 +44,8 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
 
 export async function qualifyEmbeddedAi({ root = '/private', workerFactory = path => new Worker(path, {
   workerData: { directory: join(resolve(root), 'kfm-embedded-smollm2-20261016') },
+  // --input-type applies to stdin/eval entrypoints, never to a worker file.
+  execArgv: process.execArgv.filter(flag => !flag.startsWith('--input-type=')),
   resourceLimits: { maxOldGenerationSizeMb: 256 },
 }) } = {}) {
   const directory = join(resolve(root), 'kfm-embedded-smollm2-20261016');
