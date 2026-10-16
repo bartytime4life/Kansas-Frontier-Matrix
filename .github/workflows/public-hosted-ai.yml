@@ -1,13 +1,13 @@
-name: Public hosted AI qualification
+name: Hosted AI engine reference
 on:
   push:
-    branches: [a0-hosted-ai-conversation-quality-20261016, a0-hosted-ai-status-recovery-20261016]
+    branches: [a0-hosted-ai-engine-reference-20261016]
 permissions:
   contents: read
 jobs:
-  qualify-public-chat:
+  compare-engines:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     env:
       ONNXRUNTIME_NODE_INSTALL: skip
       ORT_DISABLE_TELEMETRY: '1'
@@ -19,41 +19,59 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci
-      - run: node --test tests/assistant-status.test.mjs tests/public-ai.test.mjs tests/hosted-ai.test.mjs tests/pc-ai.test.mjs tests/pc-ai-login-admission.test.mjs tests/inspection-panel.test.mjs
-      - run: npm run build
-      - run: npx tsc --noEmit
-      - run: node --test tests/public-ai-http.test.mjs tests/pc-ai-http.test.mjs
-      - name: Private pinned-model installation and actual discussion checks
-        if: github.ref_name == 'a0-hosted-ai-conversation-quality-20261016'
+      - name: Bounded reference generation using pinned public model files
         run: |
-          node --input-type=module <<'JS'
-          import {qualifyEmbeddedAi} from './server/embedded-ai-probe.mjs';
-          import {qualifyHostedChat} from './server/hosted-ai-acceptance.mjs';
-          const installed=await qualifyEmbeddedAi({root:process.env.RUNNER_TEMP});
-          console.log('KFM_INSTALL_RECEIPT '+JSON.stringify(installed));
-          if(installed.status!=='SYNTHETIC_INFERENCE_PASS')throw Error('INSTALL_UNQUALIFIED');
-          const receipt=await qualifyHostedChat({root:process.env.RUNNER_TEMP});
-          console.log('KFM_PUBLIC_CHAT_RECEIPT '+JSON.stringify(receipt));
-          if(receipt.status!=='HOSTED_DISCUSSION_PASS')process.exitCode=1;
-          JS
-      - name: Official native reference using the same pinned files (CI only)
-        if: always() && github.ref_name == 'a0-hosted-ai-conversation-quality-20261016'
-        continue-on-error: true
-        run: |
-          node --input-type=module <<'JS'
+          for KFM_REFERENCE_MODEL in smollm2-360m qwen2.5-0.5b; do
+            export KFM_REFERENCE_MODEL
+            node --input-type=module <<'JS'
           import {pipeline,env} from '@huggingface/transformers';
           import {Tokenizer} from '@huggingface/tokenizers';
-          import {readFile} from 'node:fs/promises';
-          const directory=process.env.RUNNER_TEMP+'/kfm-embedded-smollm2-wasm-20261016/model';
-          env.allowRemoteModels=false;env.allowLocalModels=true;
-          const pipe=await pipeline('text-generation',directory+'/',{device:'cpu',dtype:'q4',local_files_only:true,session_options:{intraOpNumThreads:1,interOpNumThreads:1}});
-          const messages=[{role:'system',content:'You are KFM, a helpful discussion assistant. Offer ideas, explanations and clearly hypothetical examples. Your discussion is unverified and is not evidence about Kansas. Do not invent citations, URLs, private information or exact locations. You have no tools or administrative powers. Use plain, accessible language. Be brief.'},{role:'user',content:'Suggest one short fictional story idea involving a blue marker.'}];
-          const prompt=pipe.tokenizer.apply_chat_template(messages,{tokenize:false,add_generation_prompt:true});
-          const expected=Array.from(pipe.tokenizer(prompt,{add_special_tokens:false}).input_ids.data,Number);
-          const tokenizer=new Tokenizer(JSON.parse(await readFile(directory+'/tokenizer.json','utf8')),JSON.parse(await readFile(directory+'/tokenizer_config.json','utf8')));
-          const observed=tokenizer.encode(prompt).ids;
-          console.log('KFM_TOKENIZER_REFERENCE '+JSON.stringify({officialLength:expected.length,manualLength:observed.length,equal:JSON.stringify(expected)===JSON.stringify(observed),firstMismatch:expected.findIndex((value,index)=>value!==observed[index])}));
-          const result=await pipe(messages,{max_new_tokens:32,do_sample:false,repetition_penalty:1.15,no_repeat_ngram_size:3});
-          console.log('KFM_NATIVE_REFERENCE '+JSON.stringify(result[0]?.generated_text?.at(-1)?.content));
-          await pipe.dispose();
+          import {readFile,readdir,lstat} from 'node:fs/promises';
+          import {createReadStream} from 'node:fs';
+          import {createHash} from 'node:crypto';
+          import {join} from 'node:path';
+          const choice=process.env.KFM_REFERENCE_MODEL;
+          const selected=choice==='smollm2-360m'
+            ?{id:'HuggingFaceTB/SmolLM2-360M-Instruct',revision:'a10cc1512eabd3dde888204e902eca88bddb4951'}
+            :{id:'onnx-community/Qwen2.5-0.5B-Instruct',revision:'cc5cc01a65cc3ff17bdb73a7de33d879f62599b0'};
+          env.cacheDir=join(process.env.RUNNER_TEMP,'kfm-reference-'+choice);
+          let peakRssBytes=process.memoryUsage().rss;
+          const monitor=setInterval(()=>{peakRssBytes=Math.max(peakRssBytes,process.memoryUsage().rss);if(peakRssBytes>3*1024**3){console.log('KFM_REFERENCE_STOP MEMORY_LIMIT');process.exit(1);}},100);
+          const timer=setTimeout(()=>{console.log('KFM_REFERENCE_STOP TIMEOUT');process.exit(1);},180000);
+          let pipe;
+          try {
+            pipe=await pipeline('text-generation',selected.id,{revision:selected.revision,dtype:'uint8',device:'cpu',session_options:{intraOpNumThreads:1,interOpNumThreads:1,graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}}});
+            const system="You are a helpful assistant named KFM. Follow the user's instructions carefully and answer directly. Examples are hypothetical. Do not invent sources, private information or exact locations. You cannot use tools. Use plain, accessible language. Be brief.";
+            const tasks=[
+              ['greeting','Say hello in one short sentence.'],
+              ['rewrite','Rewrite this as one polite sentence without adding information: "Send the map today."'],
+              ['story','Write one short sentence about a fictional child drawing with a blue marker.'],
+              ['followup','Continue that fictional story in one short sentence with the same child flying a red paper kite.'],
+              ['friendly','Rewrite this as a friendly request: "Give me the report now."'],
+              ['copy','Answer with exactly these two words: green lantern.'],
+              ['supplied','Synthetic note: Mira carries a green notebook. What does Mira carry? Answer in one short sentence.'],
+              ['summary','Summarize in one sentence: "A fictional town repaired its bridge in May. Rain delayed the reopening until June."'],
+            ];
+            const outputs=[];let story;
+            for(const [id,question] of tasks){
+              const messages=[{role:'system',content:system},...(id==='followup'&&story?[{role:'user',content:tasks[2][1]},{role:'assistant',content:story}]:[]),{role:'user',content:question}];
+              const began=performance.now();
+              const result=await pipe(messages,{max_new_tokens:32,do_sample:false});
+              const text=result[0]?.generated_text?.at(-1)?.content??null;
+              if(id==='story')story=text;
+              outputs.push({id,question,text,elapsedMs:Math.round(performance.now()-began)});
+            }
+            await pipe.dispose();pipe=null;
+            const files=[];
+            for(const relative of await readdir(env.cacheDir,{recursive:true})){
+              const path=join(env.cacheDir,relative),info=await lstat(path);
+              if(!info.isFile()||!/(?:^|\/)(?:config.json|generation_config.json|tokenizer.json|tokenizer_config.json|model_uint8.onnx)$/.test(relative))continue;
+              const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
+              files.push({cacheRelativePath:relative,size:info.size,sha256:hash.digest('hex')});
+            }
+            console.log('KFM_ENGINE_REFERENCE '+JSON.stringify({model:selected,backend:'onnxruntime-node / CI reference only',dtype:'uint8',outputs,peakRssBytes,files,scope:'Fixed synthetic prompts only; no KFM/user data, external inference provider, PC inference or public deployment.'}));
+          } finally {
+            clearInterval(monitor);clearTimeout(timer);await pipe?.dispose();
+          }
           JS
+          done
