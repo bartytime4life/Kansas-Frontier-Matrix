@@ -4,7 +4,8 @@ import { mkdir, lstat, chmod, readdir, writeFile, readFile } from 'node:fs/promi
 import { resolve, join } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 
-export const EMBEDDED_PROBE_LIMITS = Object.freeze({ timeoutMs: 240000, maximumRssBytes: 1200 * 1024 * 1024 });
+// Isolated qualification branch only. This is not a verified GoDaddy quota.
+export const EMBEDDED_PROBE_LIMITS = Object.freeze({ timeoutMs: 240000, maximumRssBytes: 2048 * 1024 * 1024 });
 const reason = error => /^[A-Z][A-Z0-9_]{0,63}$/.test(error?.code ?? '') ? error.code : 'EMBEDDED_TEST_FAILED';
 const failure = code => Object.assign(new Error(code), { code });
 

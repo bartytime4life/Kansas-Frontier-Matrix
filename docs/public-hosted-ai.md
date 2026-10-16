@@ -19,7 +19,8 @@ from the publisher's LFS pointer. The six support files retain their pinned
 sizes/hashes from the earlier qualification. The hosted/probe workers validate its 960-dimensional hidden
 state, 15 attention heads, five KV heads, 32 layers and 64-dimensional head.
 The downloader's per-file size bound becomes 400 MB only for that exact pinned
-model. The 1,200 MiB process-RSS budget, one WASM thread, 256 MiB worker heap,
+model. This unconnected branch uses a 2,048 MiB process-RSS diagnostic budget.
+The connected hosted app retains the 1,200 MiB guard. One WASM thread, 256 MiB worker heap,
 512 input tokens, 18-second generation budget and 30-second watchdog remain.
 
 Candidate private paths are /private/kfm-embedded-smollm2-360m-uint8-wasm-20261016
@@ -48,8 +49,19 @@ CI run 38947478454 during MODEL_LOAD: EMBEDDED_MEMORY_LIMIT, sampled peak
 1,679,233,024 bytes versus cap 1,258,291,200 bytes. Eight resource-control tests
 passed; all four quality checks were SKIPPED. This does not prove a GoDaddy
 provider quota or total model requirement, because the run stopped at the guard.
+The uint8 candidate at 00b1b5ad28cf0c8979b11070ff5a35f2d487a8c2 also hit the
+1,200 MiB guard during MODEL_LOAD in CI run 38947799372. Sampled peak was
+1,316,384,768 bytes, with eight resource-control tests passing and quality checks
+SKIPPED. Both are stopping-point measurements, not full requirements or GoDaddy
+quota evidence. The next diagnostic keeps the uint8 weights and raises only
+this unconnected candidate branch's cap to 2 GiB. This is safe for the bounded
+CI experiment, not authorization or proof of safety for GoDaddy activation.
+No hosted configuration, subscription or connected branch is changed.
+The GoDaddy dashboard confirms Plus Launch and 2/25 app slots on 2026-10-16,
+but its General/Change plan views do not expose the Node app's RAM allocation.
+No assumption of 4 GB per Node app is made from cPanel plan advertising.
 The uint8 candidate follows ONNX Runtime Web's CPU guidance to prefer uint8
-quantized models; whether it actually reduces peak memory remains unverified.
+quantized models; complete peak memory, speed and quality remain unverified.
 Sources: https://onnxruntime.ai/docs/tutorials/web/performance-diagnosis.html
 and https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct/raw/main/onnx/model_uint8.onnx
 
