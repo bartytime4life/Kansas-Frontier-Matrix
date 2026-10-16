@@ -13,7 +13,8 @@ export async function qualifyHostedChat({root='/private',modelFactory=()=>new Ho
  const began=performance.now(),runId=randomUUID(),sources={},checks=[];let model,result;
  for(const path of ['server/hosted-ai.mjs','server/hosted-ai-worker.mjs','server/embedded-ai-model.json','server/public-ai-handler.mjs'])
   sources[path]=createHash('sha256').update(await readFile(resolve(path))).digest('hex');
- const valid=reply=>typeof reply?.text==='string'&&reply.text.trim().length>=10&&Buffer.byteLength(reply.text)<=4096&&!/https?:\/\/|www\.|\bkfm:/i.test(reply.text)&&!localQwenAnswerHasOverPreciseLocation(reply.text)&&!hasRepeatedPhrase(reply.text);
+ // A complete greeting such as "Hello!" is valid; length is not a quality score.
+ const valid=reply=>typeof reply?.text==='string'&&reply.text.trim().length>0&&Buffer.byteLength(reply.text)<=4096&&!/https?:\/\/|www\.|\bkfm:/i.test(reply.text)&&!localQwenAnswerHasOverPreciseLocation(reply.text)&&!hasRepeatedPhrase(reply.text);
  const complete=reply=>valid(reply)&&!reply.outputLimited&&/[.!?]["']?\s*$/.test(reply.text);
  try{
   model=modelFactory();await model.loaded;

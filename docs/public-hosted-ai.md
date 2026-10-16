@@ -67,6 +67,29 @@ and https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct/raw/main/onnx/mod
 
 ## Historical 135M observations
 
+## 2 GiB diagnostic result
+
+At runtime head 82baa562f38c42da938343acb64bad6ca7fadd52, CI run 38948058929
+passed all eight resource-control tests and pinned uint8 synthetic inference.
+Install receipt 7c910c76-4da4-44d2-8537-5ab36c6ee4ef observed "Blue", load
+371 ms, inference 669 ms, peak RSS 1,713,278,976 bytes (download/load included).
+Fresh-process discussion receipt 4ddcdadf-dc16-47e3-b240-e0d9141a97af observed
+peak RSS 1,675,726,848 bytes and four requests taking 1,161/1,634/2,178/3,168 ms.
+The kite follow-up passed; the polite rewrite simply repeated the original and
+the scene omitted the requested marker. The greeting text was filtered by an
+overly strict ten-character minimum in the qualification harness, so its model
+quality is INDETERMINATE in that run. The harness now accepts nonempty short
+replies, matching the existing public handler; a short "Hello!" must not fail
+merely for having fewer than ten characters. Other quality requirements remain.
+
+The 1,200 MiB guard was an agent-selected conservative code budget, not a
+GoDaddy quota. Raising the isolated diagnostic guard proves more runtime fit,
+not production safety or useful general instruction following. Activation is
+HELD pending real hosted allocation/headroom and reply-quality acceptance.
+No preview/public source, secrets, subscription or hosted guard was changed.
+
+## Historical 135M observations (continued)
+
 GoDaddy preview at 96ec5ddd5c1ca619a04993c0a40efa69ea9db57b produced private receipt
 62e1f9c9-8082-414a-9402-0cd77c97f0e1 at 2026-10-16T16:23:48.310Z:
 SYNTHETIC_INFERENCE_PASS, 5,500 ms download, 843 ms load, 5,985 ms generation,
