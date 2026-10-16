@@ -49,6 +49,7 @@ export default function AboutPage() {
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>
       <Link href="/">Open the map</Link>
+      <Link href="/privacy">Privacy + contact</Link>
     </nav>
 
     <main className="about-content">
@@ -104,6 +105,7 @@ export default function AboutPage() {
 
       <section className="about-section">
         <div className="about-section-heading"><span>PROJECT CONTEXT</span><h2>Repository evidence and site behavior remain distinguishable.</h2></div>
+        <p>This public GoDaddy-hosted composition is available at <a href={PUBLIC_SITE_ORIGIN}>{PUBLIC_SITE_ORIGIN}</a>. The Sites identity below is a preserved historical reference for a separate deployment. For project or correction questions, email <a href="mailto:Andy.barta.pro@gmail.com">Andy.barta.pro@gmail.com</a>.</p>
         <div className="about-boundary">
           <article><h3>Repository checkpoint</h3><ul><li>{REPOSITORY_SNAPSHOT.repository}</li><li>Inspected main@{REPOSITORY_SNAPSHOT.shortCommit}</li><li>{REPOSITORY_SNAPSHOT.inspectedAt}</li><li>Architecture, functions, feature maturity, and transition records are read-only context in this Site.</li></ul></article>
           <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Separately labeled provider-backed source layers; no synthetic KFM domain registry</li><li>Optional Mapzen or USGS 3DEP DEM terrain display; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>

@@ -20,5 +20,6 @@ export const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${PUBLIC_SITE_ORIGIN}/</loc></url>
   <url><loc>${PUBLIC_SITE_ORIGIN}/about</loc></url>
+  <url><loc>${PUBLIC_SITE_ORIGIN}/privacy</loc></url>
 </urlset>
 `;
