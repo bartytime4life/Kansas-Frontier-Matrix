@@ -123,7 +123,7 @@ This README does not:
 | Provider-neutral adapter implementation | [`runtime/model_adapters/`](../model_adapters/) | Canonical runtime adapter lane |
 | Legacy adapter discovery | [`runtime/adapters/`](../adapters/) | Compatibility and migration only |
 | Deterministic mock runtime | [`runtime/mock/`](../mock/) and the bounded [`MockAdapter`](../model_adapters/MockAdapter.py) | Keep no-network proofs distinct from provider integration |
-| Local Ollama binding | [`runtime/ollama/`](../ollama/) and [`OllamaAdapter.py`](../model_adapters/OllamaAdapter.py) | Local provider seam; current adapter file is a placeholder |
+| Local Ollama binding | [`runtime/ollama/`](../ollama/) and [`OllamaAdapter.py`](../model_adapters/OllamaAdapter.py) | Local provider seam; current adapter file is a held seam that refuses construction |
 | Envelope implementation helpers | [`runtime/envelopes/`](../envelopes/) and [`packages/envelopes/`](../../packages/envelopes/) | Implement accepted shapes; do not redefine meaning |
 | Semantic meaning | [`contracts/runtime/`](../../contracts/runtime/) and other accepted contract families | Contracts own meaning |
 | Machine-checkable shape | [`schemas/contracts/v1/runtime/`](../../schemas/contracts/v1/runtime/) | Schemas own shape |
@@ -162,7 +162,7 @@ governed-AI transaction.
 | Surface | Confirmed bounded evidence | Limit |
 |---|---|---|
 | `MockAdapter` | Deterministic, no-I/O selection of isolated synthetic envelopes for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` | Does not interpret requests, invoke a model, resolve evidence, evaluate policy, validate citations, or emit receipts |
-| `OllamaAdapter.py` | Tracked local-provider seam | One-line placeholder; no provider is admitted or invoked |
+| `OllamaAdapter.py` | Tracked local-provider seam | Held: construction raises `OllamaAdapterHold` (`OLLAMA_ADAPTER_NOT_ADMITTED`); no provider is admitted or invoked |
 | Governed API route registry | Registers `/bootstrap`, `/layers`, and `/evidence` | No AI or Focus route is registered |
 | Governed API stubs | Fail-closed `ABSTAIN / NOT_IMPLEMENTED` and safe `ERROR` envelope builders | Not an AI orchestration path |
 | `RuntimeResponseEnvelope` | Proposed closed schema, helpers, fixtures, validators, and bounded tests | Shape and candidate-building proof only |

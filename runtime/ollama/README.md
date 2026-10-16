@@ -10,7 +10,7 @@ created: NEEDS VERIFICATION — greenfield stub was replaced by v0.1 on 2026-07-
 updated: 2026-10-06
 current_path: runtime/ollama/README.md
 canonical_adapter_lane: runtime/model_adapters/
-truth_posture: CONFIRMED target README, runtime responsibility root, canonical Ollama runtime lane, canonical provider-neutral adapter lane, one-line OllamaAdapter placeholder, loopback Ollama environment example with mock as the repository default, proposed Ollama ADR and integration architecture, finite contract/schema families, and an owner-observed/test-pinned Site companion profile for Ollama 0.35.1 plus qwen3:8b on one Mac / PROPOSED ADR-0008 acceptance, ADR-0019 acceptance, canonical Ollama integration sequencing, model admission, and provider-neutral adapter implementation / UNKNOWN general governed-environment deployment, accepted model rights or registry status, receipt persistence, canonical policy integration, public release state, and portability beyond the recorded owner Mac / NEEDS VERIFICATION real logout/reboot auto-start, full uninstall rollback, canonical security approval, CODEOWNERS enforcement, and correction propagation
+truth_posture: CONFIRMED target README, runtime responsibility root, canonical Ollama runtime lane, canonical provider-neutral adapter lane, held fail-closed OllamaAdapter seam (updated 2026-10-16; previously a one-line placeholder), loopback Ollama environment example with mock as the repository default, proposed Ollama ADR and integration architecture, finite contract/schema families, and an owner-observed/test-pinned Site companion profile for Ollama 0.35.1 plus qwen3:8b on one Mac / PROPOSED ADR-0008 acceptance, ADR-0019 acceptance, canonical Ollama integration sequencing, model admission, and provider-neutral adapter implementation / UNKNOWN general governed-environment deployment, accepted model rights or registry status, receipt persistence, canonical policy integration, public release state, and portability beyond the recorded owner Mac / NEEDS VERIFICATION real logout/reboot auto-start, full uninstall rollback, canonical security approval, CODEOWNERS enforcement, and correction propagation
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
@@ -49,7 +49,7 @@ tags: [kfm, runtime, ollama, local-model, canonical-lane, model-adapters, govern
 notes:
   - "v1.1 applies the v3.1 repository-documentation implementation prompt and preserves the prior README's useful local-runtime guardrails."
   - "runtime/ollama is the confirmed provider-specific local runtime lane; provider-neutral adapter meaning remains under runtime/model_adapters."
-  - "runtime/model_adapters/OllamaAdapter.py is confirmed as a one-line greenfield placeholder, not an executable adapter."
+  - "runtime/model_adapters/OllamaAdapter.py is a held fail-closed seam since 2026-10-16: importing it is inert and constructing OllamaAdapter raises OllamaAdapterHold (OLLAMA_ADAPTER_NOT_ADMITTED). It is not an executable adapter."
   - ".env.example selects mock by default and documents a loopback Ollama host; configuration presence does not activate Ollama."
   - "ADR-0008 and the Ollama integration architecture are draft/proposed and do not prove runtime deployment."
   - "The owner-local Site companion record is operational evidence for one Mac, not governing approval of Ollama, qwen3:8b, the proposed ADRs, or the provider-neutral runtime lane."
@@ -88,7 +88,7 @@ notes:
 | `runtime/` | **CONFIRMED canonical root** | Owns local runtime wiring, provider-neutral adapters, provider-specific local runtimes, mocks, service configuration notes, and envelope helpers. |
 | `runtime/ollama/` | **CONFIRMED canonical Ollama lane** | Directory Rules assign Ollama-specific local runtime wiring here. |
 | `runtime/model_adapters/` | **CONFIRMED canonical adapter lane** | Owns provider-neutral adapter cards, handoffs, and mode-independent boundaries. |
-| `runtime/model_adapters/OllamaAdapter.py` | **CONFIRMED one-line greenfield placeholder** | File presence does not prove an importable adapter, network client, model invocation, finite outcomes, tests, receipts, or policy enforcement. |
+| `runtime/model_adapters/OllamaAdapter.py` | **CONFIRMED held fail-closed seam** (2026-10-16) | Importing is inert; constructing `OllamaAdapter` raises `OllamaAdapterHold` with `OLLAMA_ADAPTER_NOT_ADMITTED`, proved by `tests/runtime_proof/test_ollama_adapter_hold.py`. There is no network client, model invocation, finite-outcome response, receipt, or policy enforcement. |
 | `.env.example` | **CONFIRMED public template** | Sets `KFM_MODEL_RUNTIME=mock` and documents `OLLAMA_HOST=http://127.0.0.1:11434`; this is a safe-looking example, not activation or deployment proof. |
 | `Makefile` governed-API verification | **CONFIRMED advisory check** | A grep checks for direct `maplibre`, `cesium`, or `ollama` imports under the governed API, but `|| true` means the grep is not fail-closed enforcement. |
 | ADR-0008 | **CONFIRMED present; status proposed/draft** | Restates that Ollama and local AI runtimes remain subordinate to the governed API. It is not accepted implementation proof. |
@@ -101,7 +101,7 @@ notes:
 | General Ollama daemon, models, versions, adapter code, service configs, receipts, logs, deployment | **UNKNOWN outside the owner-local record below** | One observed Mac does not establish repository-wide admission, portability, policy integration, receipts, or release maturity. |
 
 > [!WARNING]
-> The prior README said no Ollama adapter file was confirmed. Current repository evidence confirms `runtime/model_adapters/OllamaAdapter.py`, but its entire content is a one-line greenfield placeholder. The correct maturity statement is therefore **CONFIRMED placeholder; executable implementation UNKNOWN**, not "file absent" and not "adapter implemented."
+> The prior README said no Ollama adapter file was confirmed. Current repository evidence confirms `runtime/model_adapters/OllamaAdapter.py`. Since 2026-10-16 it is a held fail-closed seam that refuses construction with `OLLAMA_ADAPTER_NOT_ADMITTED`. The correct maturity statement is therefore **CONFIRMED held seam; executable implementation absent**, not "file absent" and not "adapter implemented."
 
 **Document authority:** provider-specific local-runtime lane guidance and index only. Directory Rules, accepted ADRs, canonical contracts, schemas, policy, EvidenceBundles, validators, tests, implementation code, receipts, runtime envelopes, security reviews, release records, correction records, and steward decisions outrank this README.
 
@@ -185,7 +185,7 @@ runtime/
 ├── model_adapters/            # canonical provider-neutral adapter lane
 │   ├── README.md
 │   ├── AdapterContract.md     # descriptive note; not canonical contract authority
-│   ├── OllamaAdapter.py       # confirmed one-line placeholder
+│   ├── OllamaAdapter.py       # held fail-closed seam; no live binding
 │   └── mock/                  # mock-only model-adapter child lane
 ├── mock/                      # broader deterministic mock-runtime lane
 ├── local/                     # general local runtime wiring
@@ -211,7 +211,7 @@ release/                       # release, correction, withdrawal, and rollback a
 | Is `runtime/ollama/` the correct Ollama-specific lane? | **CONFIRMED by Directory Rules.** |
 | Is `runtime/model_adapters/` the provider-neutral adapter lane? | **CONFIRMED.** |
 | Should the provider-neutral Ollama adapter implementation live under `runtime/ollama/`? | **No by default.** Provider-neutral interface and adapter-card meaning remain under `runtime/model_adapters/`; provider-specific daemon/config/runtime notes belong here. |
-| Does `OllamaAdapter.py` prove implementation? | **No.** It is a one-line placeholder. |
+| Does `OllamaAdapter.py` prove implementation? | **No.** It is a held seam that refuses construction with a named reason code. |
 | Does `.env.example` activate Ollama? | **No.** It selects `mock` and provides a loopback example. |
 | Does this README authorize a public endpoint? | **No.** Direct public model traffic remains denied. |
 | Does this update create a new authority root or require a root ADR? | **No.** |
@@ -304,7 +304,7 @@ The current repository exposes a mixed documentation-and-scaffold state.
 | Path or surface | Verified content | Maturity consequence |
 |---|---|---|
 | `runtime/ollama/README.md` | Existing v0.1 local-runtime guardrail | Documentation surface exists. |
-| `runtime/model_adapters/OllamaAdapter.py` | One comment line: local model runtime, subordinate, greenfield placeholder | **Scaffold only.** No executable adapter is established. |
+| `runtime/model_adapters/OllamaAdapter.py` | Held seam (2026-10-16): inert import; constructor raises `OllamaAdapterHold` (`OLLAMA_ADAPTER_NOT_ADMITTED`) | **Fail-closed hold only.** No executable adapter is established. |
 | `.env.example` | `KFM_MODEL_RUNTIME=mock`; `OLLAMA_HOST=http://127.0.0.1:11434` | Safe-looking local example; default mode is mock. No live runtime proof. |
 | `Makefile` | Governed-API verification includes grep for direct `ollama` imports | Boundary intent is visible, but `|| true` prevents fail-closed enforcement. |
 | `docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md` | Proposed ADR; local runtimes behind governed API, finite outcomes, no direct public path | Strong design evidence; acceptance and implementation remain unverified. |
@@ -1185,7 +1185,7 @@ observed. Site rollback separately redeploys the retained private v160 baseline.
 | `docs/doctrine/directory-rules.md` | `runtime/` responsibility root and Ollama/model-adapter/mock/envelope/service-config separation | Doctrine; does not prove runtime execution. |
 | `runtime/README.md` | Runtime root remains subordinate to evidence, policy, and release | Documentation authority only. |
 | `runtime/model_adapters/README.md` | Canonical provider-neutral adapter lane, finite outcomes, admission and testing posture | Does not prove executable adapters. |
-| `runtime/model_adapters/OllamaAdapter.py` | An Ollama adapter path exists | Content proves only a one-line greenfield placeholder. |
+| `runtime/model_adapters/OllamaAdapter.py` | An Ollama adapter path exists and fails closed | Content proves only a held seam that raises `OLLAMA_ADAPTER_NOT_ADMITTED`; no binding. |
 | `.env.example` | Mock default and loopback Ollama host example | Template only; no activation, security review, or daemon proof. |
 | `Makefile` | Governed-API smoke/verification and boundary-guard commands exist | Ollama import grep is advisory because it uses `|| true`. |
 | ADR-0008 | Proposed no-direct-public-runtime and governed-API subordination decision | Proposed/draft; acceptance and enforcement need verification. |
