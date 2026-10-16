@@ -7,8 +7,6 @@ Public publication remains a separate owner decision.
 The owner requested server-hosted free AI, chat without login, and adaptable
 conversation without compromising security.
 
-## Confirmed engine and limitations
-
 ## Isolated 360M candidate, 2026-10-16
 
 The owner rejected an external Cloudflare inference provider. This branch uses
@@ -65,8 +63,6 @@ quantized models; complete peak memory, speed and quality remain unverified.
 Sources: https://onnxruntime.ai/docs/tutorials/web/performance-diagnosis.html
 and https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct/raw/main/onnx/model_uint8.onnx
 
-## Historical 135M observations
-
 ## 2 GiB diagnostic result
 
 At runtime head 82baa562f38c42da938343acb64bad6ca7fadd52, CI run 38948058929
@@ -88,7 +84,30 @@ not production safety or useful general instruction following. Activation is
 HELD pending real hosted allocation/headroom and reply-quality acceptance.
 No preview/public source, secrets, subscription or hosted guard was changed.
 
-## Historical 135M observations (continued)
+## Final bounded result and remaining hold
+
+Exact runtime head 7f297800e146b66936f7765a04f15c1b82691ab4, CI run
+38948362035: eight resource-control tests PASS; pinned synthetic inference PASS;
+small discussion screen LIMITED, two of four checks PASS. Greeting was "Hello."
+and the child/kite follow-up retained its required subjects. The rewrite still
+copied the imperative unchanged; the blue-marker scene still omitted the marker.
+Synthetic install receipt 4684f441-3cab-475b-bc35-309b3da30164 peaked at
+1,715,609,600 bytes; discussion receipt 64c45d21-d942-404b-bb63-e8e3472164a0
+peaked at 1,700,966,400 bytes with request times 1,995/2,786/3,712/5,448 ms.
+No generation was output-limited. The overall CI result is failure because the
+quality screen rejected two tasks, not because installation or unit tests failed.
+
+The model can execute within the isolated 2 GiB diagnostic budget. Production
+safety, host allocation, normal website concurrency and general quality remain
+unqualified. This branch is an experiment, not a release candidate to activate.
+A proposed next hosted diagnostic would record process.constrainedMemory() and
+process.availableMemory() in an owner-only receipt before any larger model load.
+Node 22 documents constrainedMemory=0 as unknown/unconstrained; it must be
+reported UNKNOWN rather than interpreted as unlimited hosting allocation.
+That diagnostic is PROPOSED and has not run on GoDaddy.
+Reference: https://nodejs.org/docs/latest-v22.x/api/process.html#processconstrainedmemory
+
+## Historical 135M observations
 
 GoDaddy preview at 96ec5ddd5c1ca619a04993c0a40efa69ea9db57b produced private receipt
 62e1f9c9-8082-414a-9402-0cd77c97f0e1 at 2026-10-16T16:23:48.310Z:
