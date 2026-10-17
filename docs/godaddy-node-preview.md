@@ -349,3 +349,31 @@ redirect now canonicalizes navigation before browser sign-in, preserving path
 and query. This keeps authentication's exact origin requirement; it does not
 accept an additional origin or change DNS. Actual built HTTP tests cover root,
 query-bearing About and API status redirects.
+# Verified-local publication reconciliation — 2026-10-17
+
+The owner requested a preview check and conditional publication of the verified
+local improvements. The starting live GoDaddy revision is `4b3cc837e9c131e5eb214427e0a55646fc76e52a`.
+The candidate preserves its successor hosted AI/login work through `04dd130`,
+including server-resolved selected-record context, then reconciles the reviewed
+public navigation branch `0887e47` with the installed local composition `cd10ee6`.
+
+Starter previews, explicit layer selection, retained source/time limits and the
+Science lab search are carried from the compatible public navigation commits.
+The one CSS conflict keeps both the hosted phone-login rules and Science lab
+styles. The local water terrain-upload optimization and its regression test are
+copied exactly; unchanged Float32 heights avoid redundant GPU buffer uploads,
+while every vertex, sample and draw remains eligible. Synthetic upload counts
+are not an FPS, real-GPU or hosted latency measurement.
+
+The Node server, authentication, account/job stores, model configuration, shipped
+subsurface assets, provider geometry, numeric values and independent 2048/4096
+controls are preserved. Local diagnostic exports and native Worker-only data or
+runtime overlays are not imported. Original private Sites history and the
+separate Public Staging Site remain outside this GoDaddy publication.
+
+Validation, security review, hosted preview and publication are separate gates.
+This source note records candidate composition, not completion of those gates.
+The current task's verification report records their final outcomes. Roll back
+application source using the retained GoDaddy revision without resetting stored
+accounts, model files or data; account/state rollback is not needed here.
+

@@ -31,7 +31,7 @@ export function writeExplorerGuideDismissed(dismissed: boolean): void {
 }
 
 const STEPS: ReadonlyArray<{ action: ExplorerGuideAction; glyph: string; title: string; body: string }> = [
-  { action: "layers", glyph: "≡", title: "Turn on layers", body: "Gauges, radar, geology, roads and more — each with its own source and clock." },
+  { action: "layers", glyph: "≡", title: "Start with a purpose", body: "Choose a small layer set for land, learning, science or planning, then customize your map." },
   { action: "time", glyph: "◷", title: "Travel through time", body: "Sweep the atlas year from 1800 to today, or step through dated archives." },
   { action: "underground", glyph: "⛏", title: "Look underground", body: "Frame an area and orbit recorded well and core columns in 3D." },
   { action: "qwen", glyph: "Q", title: "Ask about this view", body: "Get a bounded explanation of what is on screen — never a substitute for evidence." },

@@ -10,7 +10,7 @@ import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import type { FeatureCollection } from "geojson";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
-import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
+import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, filterScienceEvents, scienceEventSummary, scienceExplorerHref, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
   EVENT_BOUNDS,
   EVENT_EARLIEST_DAY,
@@ -126,6 +126,7 @@ export default function EventObservatory() {
   const [layersOpen, setLayersOpen] = useState(false), [detailsOpen, setDetailsOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false), [chartsOpen, setChartsOpen] = useState(false), [scienceOpen, setScienceOpen] = useState(false);
   const [scienceFilter, setScienceFilter] = useState<"all" | "connected" | "archives" | "method">("all");
+  const [scienceQuery, setScienceQuery] = useState("");
   const [scienceProbeActive, setScienceProbeActive] = useState(false), [scienceProbePoints, setScienceProbePoints] = useState<readonly [number, number][]>([]);
   const [resourceEdition, setResourceEdition] = useState("1984"), [resourceData, setResourceData] = useState<GeoJSON.FeatureCollection | null>(null), [resourceMessage, setResourceMessage] = useState("Not loaded");
   const [calendarAnchor, setCalendarAnchor] = useState(currentUtcDay);
@@ -209,10 +210,7 @@ export default function EventObservatory() {
   const calendarHours = useMemo(() => eventDayHours(selectedCalendarDay), [selectedCalendarDay]);
   const calendarToday = useMemo(() => new Date(calendarNow).toISOString().slice(0, 10), [calendarNow]);
   const probeMeasurement = useMemo(() => scienceMeasurement(scienceProbePoints), [scienceProbePoints]);
-  const visibleScienceEvents = useMemo(() => SCIENCE_EVENTS.filter((event) => scienceFilter === "all"
-    || scienceFilter === "connected" && (event.support === "connected" || event.support === "mixed")
-    || scienceFilter === "archives" && (event.support === "download" || event.support === "steward")
-    || scienceFilter === "method" && (event.support === "derived" || event.support === "reference")), [scienceFilter]);
+  const visibleScienceEvents = useMemo(() => filterScienceEvents(SCIENCE_EVENTS, scienceFilter, scienceQuery), [scienceFilter, scienceQuery]);
 
   const hideEventLayers = useCallback((all = true) => {
     const map = mapRef.current;
@@ -894,14 +892,18 @@ export default function EventObservatory() {
         <p className="event-science-intro">Every phenomenon has a symbol, temporal rule, measurable quantity, source path and limitation. Connected records can be opened now; archives, steward inputs and derived products stay visible without being fabricated.</p>
         <section className="event-science-tools" aria-labelledby="science-tools-title"><header><span>TOOLS</span><strong id="science-tools-title">Measure and compare</strong></header><div><button type="button" onClick={beginScienceProbe}><b>↔ Distance + bearing</b><small>Two map points · miles and km</small></button><button type="button" disabled={!manifest} onClick={() => { setChartsOpen(true); setScienceOpen(false); }}><b>≋ Compare timeline support</b><small>{manifest ? "Open exact intervals and gaps" : "Load an interval first"}</small></button><Link href="/?scene=elevation-3d&mapui=open&maptab=scene"><b>△ Elevation + 3D profile</b><small>Physical 1× relief and transect</small></Link><Link href="/data"><b>＋ Propose science data</b><small>Dates, units, rights and files</small></Link></div></section>
         <section className="event-science-clock" aria-label="Science timeline rules"><span><b>{timestamp(committed)}</b><small>shared event cursor</small></span><span><b>Ticks</b><small>instant events</small></span><span><b>Bands</b><small>supported intervals</small></span><span><b>Pins</b><small>daily / annual / edition context</small></span></section>
-        <div className="event-science-filters" role="group" aria-label="Filter science phenomena"><button type="button" aria-pressed={scienceFilter === "all"} onClick={() => setScienceFilter("all")}>All {SCIENCE_EVENTS.length}</button><button type="button" aria-pressed={scienceFilter === "connected"} onClick={() => setScienceFilter("connected")}>Connected</button><button type="button" aria-pressed={scienceFilter === "archives"} onClick={() => setScienceFilter("archives")}>Archives</button><button type="button" aria-pressed={scienceFilter === "method"} onClick={() => setScienceFilter("method")}>Methods</button></div>
+        <label className="event-science-search">Find a phenomenon<input type="search" maxLength={200} value={scienceQuery} onChange={event => setScienceQuery(event.target.value)} placeholder="Snow, rivers, geology, source…" /></label>
+        <p className="event-small" role="status">{visibleScienceEvents.length} of {SCIENCE_EVENTS.length} topics · availability below is source-specific</p>
+        <div className="event-science-filters" role="group" aria-label="Filter science phenomena"><button type="button" aria-pressed={scienceFilter === "all"} onClick={() => setScienceFilter("all")}>All {SCIENCE_EVENTS.length}</button><button type="button" aria-pressed={scienceFilter === "connected"} onClick={() => setScienceFilter("connected")}>Map layers</button><button type="button" aria-pressed={scienceFilter === "archives"} onClick={() => setScienceFilter("archives")}>Archives</button><button type="button" aria-pressed={scienceFilter === "method"} onClick={() => setScienceFilter("method")}>Methods</button></div>
         <div className="event-science-catalog">{visibleScienceEvents.map((event) => <article className="event-science-card" key={event.id} data-support={event.support}>
           <header><i data-geometry={event.geometry} style={{ "--science-color": event.color } as React.CSSProperties} aria-hidden="true"><span>{event.glyph}</span></i><div><h3>{event.title}</h3><span>{SCIENCE_SUPPORT_LABELS[event.support]}</span></div><time data-clock={event.clockKind}>{event.clockKind}</time></header>
-          <p>{event.representation}</p>
-          <dl><div><dt>Timeline</dt><dd>{event.clock}</dd></div><div><dt>Measure</dt><dd>{event.measurement}</dd></div></dl>
-          <details><summary>Scientific limit</summary><p>{event.limitation}</p></details>
-          <footer>{event.trackId && <button type="button" data-active={visible[event.trackId]} onClick={() => openScienceTrack(event.trackId!)}>{visible[event.trackId] ? "Inspect related layer" : "Show related layer"}</button>}<a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a><Link href={`/data?source=${event.id}`}>Propose data</Link></footer>
+          <p>{scienceEventSummary(event)}</p>
+          <p className="event-science-support">{event.trackId ? <><strong>{TRACKS.find(track => track.id === event.trackId)?.name}</strong><span>{trackStatus(event.trackId)}</span></> : "No map layer connected in this workbench."}</p>
+          <dl><div><dt>Timeline</dt><dd>{event.clock}</dd></div><div><dt>Measures &amp; requirements</dt><dd>{event.measurement}</dd></div></dl>
+          <details><summary>Scientific limits &amp; method</summary><p>{event.limitation}</p><p><b>{event.trackId ? "Display method" : "Proposed display method"}:</b> {event.representation}</p></details>
+          <footer>{event.trackId && <button type="button" data-active={visible[event.trackId]} onClick={() => openScienceTrack(event.trackId!)}>{visible[event.trackId] ? "Inspect " : "Show "}{TRACKS.find(track => track.id === event.trackId)?.name ?? "related context"}</button>}{scienceExplorerHref(event.id, committed) && <Link href={scienceExplorerHref(event.id, committed)!}>Open Explorer · map year {new Date(committed!).getUTCFullYear()}</Link>}<a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a><Link href={`/data?source=${event.id}`}>Propose data</Link></footer>
         </article>)}</div>
+        {visibleScienceEvents.length === 0 && <div className="event-science-empty"><strong>No matching topics</strong><p>Try a shorter search or another filter. Your map layers and event time are unchanged.</p><button type="button" onClick={() => { setScienceQuery(""); setScienceFilter("all"); }}>Reset topic search</button></div>}
         <footer className="event-science-boundary"><strong>Absence stays visible.</strong><span>Download-only, unqueried and unsupported time remain gaps—not zeros, demos or simulated events.</span><Link href="/observatory/sources">Methods & coverage →</Link></footer>
       </aside>}
       <aside className="event-inspector" hidden={!detailsOpen}><div className="event-panel-heading"><strong>Sources & quality</strong><button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close sources">×</button></div><select aria-label="Inspect a source" value={selectedTrack} onChange={(event) => setSelectedTrack(event.target.value as TrackId)}>{TRACKS.map((track) => <option key={track.id} value={track.id}>{track.name}</option>)}</select><span className="event-kicker">LAYER PASSPORT</span><h2>{chosen.name}</h2><p>{chosen.detail}</p><dl><div><dt>Clock</dt><dd>{chosen.axis}</dd></div><div><dt>Current support</dt><dd>{trackStatus(chosen.id)}</dd></div><div><dt>Archive query</dt><dd>{manifest ? `${timestamp(manifest.start)} → ${timestamp(manifest.end)} (end excluded)` : "Not loaded"}</dd></div><div><dt>Retrieved</dt><dd>{manifest ? timestamp(manifest.retrievedAt) : "Not yet"}</dd></div></dl><a href={chosen.source} target="_blank" rel="noreferrer">Inspect source & method ↗</a>
