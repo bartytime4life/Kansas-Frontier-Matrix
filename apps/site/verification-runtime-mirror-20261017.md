@@ -33,6 +33,42 @@ The final overlap search found [PR #5222](https://github.com/bartytime4life/Kans
 
 The local full Node run uses a canonical temporary directory to satisfy filesystem checks on macOS. Temporary HTTP stores and synthetic fixtures are separate from operator storage. No existing D1/R2 data, credentials, browser state, audience, storage binding, API policy, application layout or deployed source was modified. The original checkouts and unrelated document changes remain untouched.
 
+## Post-merge reconciliation — October 17, 2026
+
+The owner requested reconciliation and conditional merge after checks pass. A
+fresh readback found both original PRs already merged: #5222 at
+`da5bc7b0ae14a9383efec17f9c9dfb0e9c4039eb`, then #5223 head
+`17d198550f1bd9e2b63f9325fc9073ce18533dcf` at
+`1f92e4ff2340cca4115a2d20ffbf3233aaf2694b`. The earlier overlap paragraph describes
+an old #5222 head; its final `02db0d2` head already covered 874 files and passed
+100 checks with four skipped. Both historical receipts remain intact.
+
+The later #5223 changes removed `RECEIPT` from the checker. Water-conformance and
+full Python collection then failed because `TOOL.RECEIPT` was absent; topology
+also lost the receipt used to resolve upstream-backed names. The launcher import
+was already restored correctly. The forward repair restores only the selector
+to `site-v268-current-main-runtime-reconciliation-20261017.json`, which includes
+#5223's containment test and binds all 874 current paths. The checker now matches
+its original #5223 artifact digest `7d27db66…` again. No new mirror receipt or
+baseline change is required because application bytes are unchanged.
+
+Local Python 3.12 validation passed all 339 water-conformance tests and regenerated
+eight synthetic fixtures in isolated output. The restored checker passes
+`CONTENT_PARITY_ONLY`, confirms 258 withheld paths absent, and retains pending
+review, human acceptance false and hosted equivalence false. Topology must be
+checked against the staged index; a run before staging still sees the deleted
+selector and correctly fails. The subsequent staged check passed all four
+components with zero invariants/new drift and 93 unchanged baselined warnings.
+Final exact-head CI and merged-main CI remain
+separate gates recorded in the follow-up PR.
+
+The installed Node composition and its preserved API capsule already contain the
+correct launcher bytes (`6f7eb010…`). They are separate from this Worker mirror;
+do not replace their application tree, data or bindings to achieve byte parity.
+The original hosted Explorer was intentionally removed by the owner. Existing
+Public Staging and GoDaddy publication are separate and are not republished by
+this repository repair. Other working copies and private stores are preserved.
+
 ## Placement and rollback
 
 The launcher and adjacent regression remain in `apps/site/source`; repository parity selection remains in `tools/qa`, with its tests in `tests/qa`. The dated manifest and generated provenance receipt remain under `data/receipts/generated`. This record follows the existing `apps/site/verification-*.md` lane. Directory Rules v2 and accepted ADR-0029 retain these established ownership boundaries.
