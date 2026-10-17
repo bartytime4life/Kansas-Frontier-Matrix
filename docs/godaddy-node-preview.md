@@ -1,5 +1,28 @@
 # GoDaddy Node preview candidate
 
+## Browser asset staging — 2026-10-17
+
+The final preview initially returned404 for the advertised browser hydration
+module despite a healthy application status. Reload and preview restart did not
+repair it. The emitted file existed in the verified local build, while the
+host's durable public/assets directory was empty. The build now stages the
+exact dist/client/assets browser files into that existing public directory.
+This tests the host's public-file delivery path; hosted recovery still requires
+browser readback and is not inferred from the diagnosis.
+
+Prebuild first retains a prior compiled build when present; only an absent
+prior build may be skipped. Postbuild requires the new emitted assets. The
+staging script accepts bounded hashed browser filenames, rejects symlinks
+and unexpected files, skips source maps, and verifies byte-identical existing
+files. New files use an atomic no-clobber link; conflicting immutable bytes hold
+the build. Older assets and unrelated files are retained for open tabs. There
+is no deletion, data import, account change or source-value/geometry transform.
+Generated assets are ignored in Git; the script and tests are authoritative.
+Each build is bounded to4096 entries,64MiB per file and256MiB in total. A limit
+or conflict needs operator review; it never silently prunes existing material.
+Tests verify deterministic reruns, prior-version retention, tamper/symlink
+denials, and every HTML-advertised module's actual HTTP response/staged digest.
+
 ## Selected-record accuracy repair — 2026-10-17
 
 Hosted preview acceptance found the small model claiming that the 2026 map

@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {join} from 'node:path';
 
 // Run against the production build, not a source-text or mocked auth check.
 const origin = process.env.KFM_NODE_TEST_ORIGIN ?? "http://127.0.0.1:5182";
@@ -15,6 +18,19 @@ test("anonymous map is public", async () => {
   const response = await fetch(origin, { redirect: "manual" });
   assert.equal(response.status, 200);
   assert.match(await response.text(), /Kansas Frontier Matrix/);
+});
+test('every advertised browser module is served and staged with its exact build bytes',async()=>{
+ const home=await (await fetch(origin)).text();
+ const paths=[...new Set([...home.matchAll(/<link\b[^>]*>/g)].filter(match=>/rel="modulepreload"/.test(match[0])).map(match=>/href="([^"]+)"/.exec(match[0])?.[1]).filter(Boolean))];
+ assert.ok(paths.length>0);
+ for(const path of paths){
+  assert.match(path,/^\/assets\/[A-Za-z0-9_.-]+\.js$/);
+  const response=await fetch(origin+path);assert.equal(response.status,200,path);assert.match(response.headers.get('content-type'),/javascript/,path);
+  const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+  const expected=await readFile(join('dist/client',path));
+  assert.equal(sha(Buffer.from(await response.arrayBuffer())),sha(expected),path);
+  assert.equal(sha(await readFile(join('public',path))),sha(expected),'staged '+path);
+ }
 });
 test("hosted AI endpoint is present without requiring the owner's PC", async () => {
   const response = await fetch(origin + "/api/ai/status");
