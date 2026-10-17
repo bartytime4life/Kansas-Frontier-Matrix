@@ -142,5 +142,9 @@ test("rendered topic index binds counts to current inventories and opens valid t
     const params = new URLSearchParams(anchor.props.href.slice(2));
     assert.notEqual(topics.restoreTopic(params.get("topic")), "all");
   }
+  for (const anchor of nodes(tree, node => typeof node.props?.href === "string" && node.props.href.startsWith("/"))) {
+    const url = new URL(anchor.props.href, "https://example.test");
+    await access(`app${url.pathname === "/" ? "" : url.pathname}/page.tsx`);
+  }
   h.dispose();
 });

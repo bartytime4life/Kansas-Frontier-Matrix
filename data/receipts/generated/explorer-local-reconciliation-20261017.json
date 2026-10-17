@@ -1,0 +1,124 @@
+{
+  "receipt_id": "explorer-local-reconciliation-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/globals.css",
+    "apps/site/source/docs/explorer-local-port-20261017.md",
+    "apps/site/source/docs/water-flow.md",
+    "apps/site/source/tests/topic-organization.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/globals.css": "sha256:014f53f540897beab5e577eecd6af7728597a951781904798543699b55b862d3",
+    "apps/site/source/docs/explorer-local-port-20261017.md": "sha256:58d325c9dca987b8f6cbb492e2711a17774c6711b8a1abad22159a51b6cdc10d",
+    "apps/site/source/docs/water-flow.md": "sha256:5ba4ea2381720b5263230c7d68e04b24f2c46961f90ec7640f23c0ecd5251bc8",
+    "apps/site/source/tests/topic-organization.test.mjs": "sha256:7aa6c04df6bbbec68ad0db9a4ff3ff277c55320644235db2041c9becc3804ee2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "session-version-unreported"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository comparison",
+      "bounded local edits",
+      "build and regression checks",
+      "GitHub draft delivery"
+    ],
+    "base_revision": "2578192eccc3de36c0f92aee0e1f1e6d66ca93bd"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github-main:2578192eccc3de36c0f92aee0e1f1e6d66ca93bd",
+      "github-merged-pr-5088:acb2266bc8fe9ae05ff1d6eb51caae929d22a6b3",
+      "local-verified-port:20261017",
+      "sites-staging-v6:3149017bf3711c219f947a8e874d37c9d8a49987",
+      "sites-explorer-v252:190d16acb2f866cb9c2eb108dbd204ca30465269"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/globals.css": "PROPOSED",
+    "apps/site/source/docs/explorer-local-port-20261017.md": "PROPOSED",
+    "apps/site/source/docs/water-flow.md": "PROPOSED",
+    "apps/site/source/tests/topic-organization.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "TypeScript",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit --incremental false on integrated candidate."
+    },
+    {
+      "gate": "Production build",
+      "outcome": "PASS",
+      "reason": "Existing asset preparation and build-verified.sh, including subsurface containment validation; temporary macOS timeout adapter."
+    },
+    {
+      "gate": "Focused regression and lint",
+      "outcome": "PASS",
+      "reason": "Eight mobile/topic tests pass; targeted ESLint passes."
+    },
+    {
+      "gate": "Full Node suite",
+      "outcome": "FAIL",
+      "reason": "1364 tests: 1360 passed, 2 failed, 2 Linux-only skips. The local Worker STARTUP_FAILED matches merged PR #5088 job 117302445791; macOS basemap cache fixture rejected the symlinked system temporary directory. The sandboxed first attempt was stopped and rerun with synthetic loopback permission."
+    },
+    {
+      "gate": "macOS fixture rerun",
+      "outcome": "PASS",
+      "reason": "TMPDIR=/private/tmp node --test tests/basemap-cache.test.mjs: all six tests pass, including nine Python operator tests. Resolves the environment-only symlink failure; inherited Worker startup failure remains."
+    },
+    {
+      "gate": "Inherited hosted CI",
+      "outcome": "FAIL",
+      "reason": "Merged PR #5088 head acb2266: site startup job 117302445791; missing site_mirror.RECEIPT job 117302445650; topology path-grammar uppercase drift job 117302446266. These affected files are unchanged by this patch. Current follow-up CI must be assessed separately."
+    },
+    {
+      "gate": "Markdown and diff",
+      "outcome": "PASS",
+      "reason": "Both documents have one H1, balanced fences, final newlines and resolving relative links. Scoped git diff --check passes."
+    },
+    {
+      "gate": "Preservation",
+      "outcome": "PASS",
+      "reason": "Compared all 42 selected local paths with main. Retained all newer main functionality and original local edits; only four artifact paths change. No runtime, data, identity, dependency, access, migration or Site operation."
+    },
+    {
+      "gate": "Live providers and hosted browser",
+      "outcome": "SKIPPED",
+      "reason": "Source-only task; historical version 252 deployment evidence remains separately attributed. No live provider or Qwen-model invocation and no deployment."
+    },
+    {
+      "gate": "Repository-wide baseline",
+      "outcome": "SKIPPED",
+      "reason": "Full make validate/pre-commit not repeated for the bounded CSS/test/docs change; inherited remote failures remain explicitly recorded rather than baselined away."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "GitHub main 2578192eccc3de36c0f92aee0e1f1e6d66ca93bd; PR #5088 merged at 2026-10-17T04:06:43Z."
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-17T04:14:49.970854+00:00",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up draft authorized after PR #5088 was already merged. Thirty-three selected files already match main; remaining differences preserve newer main work. Four artifacts add mobile sheet positioning, topic-link coverage and provenance. Original local checkout remains intact. Historical version 252 evidence is not current deployment evidence. Human review pending. No Site save/deploy or production D1/R2 mutation."
+}

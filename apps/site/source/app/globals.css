@@ -3994,6 +3994,9 @@ body { font-size: 14px; }
     -webkit-overflow-scrolling: touch;
   }
   .data-notices-panel { z-index: 170; }
+  /* A filtered header contains fixed descendants. Release that containing
+     block while Data is open so the mobile sheet anchors to the viewport. */
+  .topbar:has(.data-notices-panel) { -webkit-backdrop-filter: none; backdrop-filter: none; }
   .terrain-quick-panel { z-index: 175; }
   .data-notices-panel header button, .terrain-quick-panel header button, .terrain-quick-panel button { min-height: 44px; }
   .data-notices-panel a, .data-notices-panel p, .terrain-quick-panel label, .terrain-quick-panel p { font-size: 16px; }
