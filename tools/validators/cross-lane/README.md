@@ -440,7 +440,7 @@ Repository workflows inspected for this documentation change:
 | `docs-build` | `pull_request`/`push`; GitHub-hosted runner; TODO echo jobs |
 | `link-check` | `pull_request`/`push`; GitHub-hosted runner; TODO echo job |
 | `docs-control-plane` | `pull_request`/`push`; GitHub-hosted runner; TODO echo jobs |
-| `validator-suite` | Runs the five-entry schema aggregate and an EvidenceBundle fail-closed canary; does not validate this bridge |
+| `validator-suite` | Runs the nine-validator schema aggregate (`make schemas`) and an EvidenceBundle fail-closed canary; does not validate this bridge |
 
 Workflow existence or a green status does not prove bridge correctness, canonical naming acceptance, or runtime enforcement.
 

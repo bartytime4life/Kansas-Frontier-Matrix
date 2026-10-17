@@ -50,7 +50,7 @@ notes:
   - "Accepted ADR-0029 adopts the exact docs/doctrine/directory-rules.md bytes as the sole writable human Directory Rules authority; §16 defines the ROOT_FULL profile used here."
   - "The repository configures schemas/contracts/v1/ as a machine-shape validation surface, while ADR-0001 and ADR-0002 remain proposed rather than accepted."
   - "At the evidence snapshot, contracts/ has 47 direct entries (45 directories and two Markdown files) and 818 tracked files recursively."
-  - "The full validator profile contains ten validators; the historical run_all.py path is a compatibility entrypoint to that profile, not a six-validator authority surface."
+  - "The full validator profile contains 29 validators; the historical run_all.py path is a compatibility entrypoint that runs a nine-validator legacy core from that profile, not an authority surface."
   - "The object-family register contains six bounded runtime-family entries and remains PROPOSED, partial, and navigational only."
   - "contracts/OBJECT_MAP.md is an evidence-limited maintainer crosswalk, not a generated or complete object-family registry."
 [/KFM_META_BLOCK_V2] -->

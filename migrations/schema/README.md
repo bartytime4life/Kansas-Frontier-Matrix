@@ -17,7 +17,7 @@ truth_posture: >
   CONFIRMED same-path target; canonical migrations responsibility root; documented schema and rollback lanes; Directory Rules assignment
   of schema migrations to migrations/schema/; mandatory paired recovery posture; current CODEOWNERS routing; schemas/ as the
   machine-shape responsibility root; contracts/ as the semantic-meaning root; configured schemas/contracts/v1 validation surface;
-  Draft 2020-12 and unique-$id checks; six fixture-backed validator families; schema and contract tests; proposed ADR-0001 and
+  Draft 2020-12 and unique-$id checks; nine fixture-backed validator families; schema and contract tests; proposed ADR-0001 and
   ADR-0002 status; and empty object-family and deprecation registers / PROPOSED schema-migration classification, minimum packet,
   compatibility matrix, adoption ledger, deprecation protocol, validation evidence model, coordinated rollout, recovery, and
   definition-of-done contracts / UNKNOWN exhaustive schema inventory, concrete schema migration payloads, generated clients,
@@ -413,7 +413,7 @@ The inspected `schema-validation` workflow currently:
 2. meta-validates every `*.schema.json`;
 3. requires canonical v1 schemas to declare Draft 2020-12;
 4. requires nonempty, unique `$id` values in the v1 tree;
-5. requires six configured validators with nonempty valid and invalid fixture lanes;
+5. requires nine configured validators with nonempty valid and invalid fixture lanes;
 6. runs the aggregate schema validators;
 7. runs `tests/schemas` and `tests/contracts`;
 8. emits process output and a job summary, not a structured validation report, receipt, proof, policy decision, or release decision.

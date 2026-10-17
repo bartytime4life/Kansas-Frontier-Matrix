@@ -447,7 +447,7 @@ The current [`schema-validation` workflow](../../.github/workflows/schema-valida
 | --- | --- | --- |
 | Trigger | Pull requests, pushes to `main`, and dispatch; `schemas/**` changes are in scope | Triggering on this README does not consume it as a fixture or executable test. |
 | Inventory | Parses JSON under `schemas/`; meta-validates `*.schema.json`; checks canonical v1 Draft 2020-12 and unique `$id` values | This compatibility lane currently contributes no JSON. |
-| Fixture preflight | Pins eight fixture-backed compatibility validators and requires nonempty valid/invalid lanes with reviewed rejection expectations | Those payloads live under `fixtures/`, not `schemas/tests/`. |
+| Fixture preflight | Pins nine fixture-backed compatibility validators and requires nonempty valid/invalid lanes with reviewed rejection expectations | Those payloads live under `fixtures/`, not `schemas/tests/`. |
 | Aggregate validation | Runs `make schemas`, which runs the compatibility runner's nine-validator legacy core through the registry-driven orchestrator | The current full profile contains 29 validators, including workflow-security and repository-topology guardrails. |
 | Executable tests | Runs `python -m pytest -q tests/schemas tests/contracts` | Assertions live under `tests/`. |
 | Output | Process output and job summary only | No governed ValidationReport, receipt, proof, policy decision, release object, or published artifact is emitted. |

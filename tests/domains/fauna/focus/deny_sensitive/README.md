@@ -453,7 +453,7 @@ A future live tier may exist only when separately named, explicitly triggered, e
 | Surface | Observed behavior | Deny-sensitive coverage |
 |---|---|---|
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Contract/schema shape only; not this lane. |
-| `make schemas` | Runs five JSON Schema validators including `DecisionEnvelope`. | No dedicated `PolicyDecision` validator; no policy semantics. |
+| `make schemas` | Runs the nine-validator legacy core, including `DecisionEnvelope`. | No dedicated `PolicyDecision` validator; no policy semantics. |
 | `make policy` | Echoes `TODO: opa test policy/ -v`. | No OPA test execution. |
 | `make deny-test` | Runs the app-owned five-test route, method, manifest, internal-store-literal, and forbidden-import guard module as one local aggregate. | Bounded generic structural proof; no Fauna sensitivity or Focus policy evaluation. |
 | `make governed-api-smoke` | Runs current governed-API tests. | Scaffold routes only; no Focus route. |

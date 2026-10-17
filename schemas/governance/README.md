@@ -476,11 +476,11 @@ The current [`schema-validation.yml`](../../.github/workflows/schema-validation.
 - parses every JSON file under `schemas/`;
 - meta-schema checks every `*.schema.json` file under `schemas/`, including the two root scaffolds;
 - separately requires every canonical `schemas/contracts/v1/**/*.schema.json` file to declare Draft 2020-12 and a unique `$id`;
-- requires non-empty valid and invalid lanes plus rejection expectations for eight configured aggregate object validators;
-- runs the ten-entry full validator profile through `make schemas`; and
+- requires non-empty valid and invalid lanes plus rejection expectations for nine configured aggregate object validators;
+- runs the nine-validator legacy core from the full validator profile through `make schemas`; and
 - runs `tests/schemas` and `tests/contracts` only if the aggregate step succeeds.
 
-The eight configured object validators target source, evidence, data/layer, and runtime families—not either root governance scaffold. The full profile adds workflow-security and repository-topology guardrails. Workflow success would therefore prove broad configured checks, not operational overlay or consent behavior.
+The nine configured object validators target source, evidence, data/layer/dataset-version, and runtime families—not either root governance scaffold. The full profile also registers other validators, including workflow-security and repository-topology guardrails, that `make schemas` does not run. Workflow success would therefore prove broad configured checks, not operational overlay or consent behavior.
 
 ### Most recent observed unchanged-tree evidence
 

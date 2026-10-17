@@ -69,7 +69,7 @@ implementation_facts:
   general_validation_report_schema: proposed greenfield placeholder requiring only id and allowing additional properties
   general_validation_report_validator: confirmed bounded no-network schema-shape checker with duplicate-key and non-finite JSON rejection
   general_validation_report_fixture_root: confirmed minimal valid and invalid lanes
-  general_validation_report_registry_binding: absent from the canonical 24-entry registry
+  general_validation_report_registry_binding: absent from the canonical 29-entry registry
   worker_integrity_launch_readiness_family: confirmed executable fixture-only validation family outside this worker and outside the canonical registry
   worker_integrity_launch_authority: explicitly false; review remains required
 related:
@@ -248,7 +248,7 @@ This README does not:
 | The paired general schema is complete. | It requires only `id`, permits extra properties, and labels itself a greenfield placeholder. | **DENIED** |
 | The schema-declared generic report validator and fixture root exist. | Both paths are present. Seven focused tests cover the proposed schema minimum, fixture polarity, duplicate keys, non-object roots, non-finite numbers, and no-network CLI replay. | **CONFIRMED BOUNDED** |
 | The shared Validate pipeline or CLI implements worker behavior. | Both entrypoints are one-comment placeholders. | **DENIED** |
-| The generic report validator is registered in the canonical orchestrator. | Its ID is absent from the 24-entry registry, even though its validator, fixtures, and tests exist. | **DENIED** |
+| The generic report validator is registered in the canonical orchestrator. | Its ID is absent from the 29-entry registry, even though its validator, fixtures, and tests exist. | **DENIED** |
 | A worker-integrity launch-readiness family exists. | Contract, schema, fixtures, validator, eight tests, and focused workflow exist; the family is proposed, inactive, review-required, and explicitly denies launch authority. | **CONFIRMED OUTSIDE THIS WORKER** |
 | Existing tools, workflows, pipelines, or domain validators are bound to this worker. | No binding is established by this lane, its parents, or the bounded adjacent evidence reviewed here. | **NOT VERIFIED** |
 | A queue, schedule, deployment, service identity, secret, runtime config, worker-local test, or operational dashboard is bound here. | No such binding is present in this lane. | **NOT VERIFIED** |
@@ -785,7 +785,7 @@ Those facts support the tool. They do not establish a production worker API, rem
 The canonical registry does not include every executable validator in the repository. In particular, the generic ValidationReport validator and the WorkerIntegrityLaunchReadinessCandidate validator remain separately wired surfaces.
 
 > [!WARNING]
-> `full` means complete coverage of the 24-entry registry. It is not a claim that every validator or invariant in the repository is registered.
+> `full` means complete coverage of the 29-entry registry. It is not a claim that every validator or invariant in the repository is registered.
 
 ### 7.2 Why the worker cannot import the tool
 
@@ -828,7 +828,7 @@ The declared fixture root and validator path are present at the pinned tree. The
 - validates the current Draft 2020-12 schema;
 - has one minimal valid fixture and one missing-`id` invalid fixture;
 - has seven focused tests covering schema validity, polarity, duplicate keys, non-object roots, non-finite numbers, and CLI replay; and
-- is not an ID in the canonical 24-entry orchestrator registry.
+- is not an ID in the canonical 29-entry orchestrator registry.
 
 Therefore:
 
@@ -913,7 +913,7 @@ The repository also contains a separate [`WorkerIntegrityLaunchReadinessCandidat
 
 It deterministically composes a synthetic worker identity, a declared RuntimeVerificationProof outcome, and browser capability declarations. Its validator can return `PASS`, `ABSTAIN`, `DENY`, or `ERROR`, but even `PASS` serializes review-required state while `worker_launch_authorized` remains false. It does not read worker bytes, resolve proofs, alter headers, start a worker, evaluate policy, deploy, release, or publish.
 
-This family is not a binding for `validate_worker`, is not registered in the canonical 24-entry orchestrator, and cannot be used to upgrade this lane's placeholder maturity.
+This family is not a binding for `validate_worker`, is not registered in the canonical 29-entry orchestrator, and cannot be used to upgrade this lane's placeholder maturity.
 
 ### 7.10 Current topology
 
@@ -2373,7 +2373,7 @@ Configuration must use non-secret values or secret references. It must not embed
 
 `apps/workers/src/validate_worker/` is a **confirmed placeholder lane**, not an operational validation service.
 
-KFM's canonical repository validator orchestrator is real, tested, and currently registers 24 bounded validators, but it lives under `tools/` and is not a production app dependency. The generic ValidationReport validator and minimal fixtures now exist and fail closed on ambiguous JSON, yet they enforce only the permissive proposed schema and are not registered in that orchestrator. The separate WorkerIntegrityLaunchReadinessCandidate family is executable and fixture-backed, but remains proposed, inactive, review-required, and explicitly non-authorizing. The shared Validate pipeline and CLI entrypoints remain comment-only placeholders.
+KFM's canonical repository validator orchestrator is real, tested, and currently registers 29 bounded validators, but it lives under `tools/` and is not a production app dependency. The generic ValidationReport validator and minimal fixtures now exist and fail closed on ambiguous JSON, yet they enforce only the permissive proposed schema and are not registered in that orchestrator. The separate WorkerIntegrityLaunchReadinessCandidate family is executable and fixture-backed, but remains proposed, inactive, review-required, and explicitly non-authorizing. The shared Validate pipeline and CLI entrypoints remain comment-only placeholders.
 
 A future Validate Worker may become a thin, authenticated, least-privilege coordinator over admitted package and pipeline interfaces. It must preserve native finite outcomes, keep reports and receipts distinct, fail closed on unresolved evidence/policy/rights/sensitivity, and stop before review, lifecycle, worker launch, release, deployment, promotion, or publication authority.
 

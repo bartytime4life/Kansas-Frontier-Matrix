@@ -404,7 +404,7 @@ make validate
 | `--profile changed-area` | Selects validators whose registered path globs match supplied changed paths. | Coverage depends on maintained globs; no match is `ABSTAIN` by default; `--require-match` makes it `FAIL`/exit `1` for gates. |
 | `--profile release-dry-run` | Runs EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, and IngestReceipt validators. | Fixture validation only; not a release dry run, release decision, or publication. |
 | `--profile full` | Runs all 29 registered validators and aggregates every selected result. | Registered surface only; not complete schema-tree coverage. |
-| `make schemas` | Runs `python tools/validators/_common/run_all.py`, which delegates to the full orchestrator profile. | Compatibility command; same bounded registered surface. |
+| `make schemas` | Runs `python tools/validators/_common/run_all.py`, which runs the nine-validator legacy core selected from the full orchestrator profile. | Compatibility command; a subset of the registered surface, not equivalent to `--profile full`. |
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Collected schema/contract tests only. |
 | `make validate` | Runs `make schemas` and `make test`. | Not a full repository, policy, release, or publication gate. |
 
