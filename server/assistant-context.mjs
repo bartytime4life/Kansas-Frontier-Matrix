@@ -36,7 +36,7 @@ export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>n
  return async context=>{
   if(!validAssistantContext(context))fail('INVALID_CONTEXT');
   const surface=assistantSurface(context.surface??'map');
-  const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'Map year '+context.frame+'; view '+context.view+'. ':'Page '+surface?.title+'. ')
+  const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'Map display year '+context.frame+' (not a collection or drilling date); view '+context.view+'. ':'Page '+surface?.title+'. ')
    +(context.filters?'Display filters '+JSON.stringify(context.filters)+'. ':'')
    +(context.comparison?'Comparison frames '+context.comparison.frameA+' and '+context.comparison.frameB+'; matching observations are not established. ':'');
   const layerNames=layers(context.layers).slice(0,8).join(', ');
@@ -76,10 +76,22 @@ export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>n
   if(!source)fail('CONTEXT_UNAVAILABLE');
   const detail=interval?{top:interval.top,bottom:interval.bottom,unit:r.depthUnit,description:String(interval.description).slice(0,500),interpreted:String(interval.interpreted??'').slice(0,120)}:{totalDepth:r.totalDepth,unit:r.depthUnit,intervalCount:r.intervals.length};
   const prompt=frame+'Public KGS source context, NOT admitted evidence. Record '+r.id+'; '+source.title+'; record time '+r.sourceTime+'; archive edition '+source.sourceTime+'. '+JSON.stringify(detail)+'. '+(r.kind==='core'?'Core inventory range does not prove recovery or continuous rock.':'Original logged description; interpreted codes are interpretations. Unknown gaps remain unknown; no continuous geology.');
+  // A small generative model is not qualified to turn inventory dates/ranges
+  // into claims about collection, recovery or surrounding geology. Return a
+  // deterministic source summary instead of generating a factual explanation.
+  const depth=value=>Number.isFinite(value)&&value>=0?String(value):'not supplied';
+  const description=value=>typeof value==='string'?value.replace(/[\x00-\x1f\x7f]/g,' ').slice(0,500):'not supplied';
+  const sourceSummary=[
+   'Source: '+description(source.title)+'. Record: '+r.id+'.',
+   'Map display year: '+context.frame+'. Source record time: '+description(r.sourceTime)+'. Archive edition: '+description(source.sourceTime)+'. These dates do not establish a collection or drilling date.',
+   interval?'Selected recorded interval: '+depth(interval.top)+'–'+depth(interval.bottom)+' '+r.depthUnit+'. Original source description: '+description(interval.description)+'.'+(interval.interpreted?' KGS interpretation: '+description(interval.interpreted)+'.':''):'Recorded '+(r.kind==='core'?'inventory':'log')+' depth: '+depth(r.totalDepth)+' '+r.depthUnit+'. Source intervals: '+r.intervals.length+'.',
+   r.kind==='core'?'Collection/drilling date and recovery are not established by this inventory context. An archived range does not prove continuous rock or surrounding geology.':'A log describes its recorded location. Unknown gaps and surrounding geology remain unknown.',
+   'Source context only, not admitted evidence. Unsupported questions are withheld; this summary does not establish engineering suitability, resource extent or permissions.'
+  ].join(' ');
   const references=[];
   for(const url of [r.sourceUrl,source.url]){
    try{const parsed=new URL(url);if(parsed.protocol==='https:'&&!parsed.username&&!parsed.password&&(parsed.hostname==='kgs.ku.edu'||parsed.hostname.endsWith('.kgs.ku.edu'))&&!references.some(ref=>ref.url===parsed.href))references.push({label:references.length?'Source archive · '+source.sourceTime:source.title,url:parsed.href,role:'SOURCE_CONTEXT'});}catch{/* An absent/unsafe source link is never invented. */}
   }
-  return {key:JSON.stringify(context)+':'+tile.sha256,prompt,label:r.id,boundary:'KGS public source context; not admitted evidence',references};
+  return {key:JSON.stringify(context)+':'+tile.sha256,prompt,sourceSummary,label:r.id,boundary:'KGS public source context; not admitted evidence',references};
  };
 }

@@ -1,5 +1,34 @@
 # GoDaddy Node preview candidate
 
+## Selected-record accuracy repair — 2026-10-17
+
+Hosted preview acceptance found the small model claiming that the 2026 map
+display year was a core collection date and inventing its storage duration.
+Subsurface questions now return a deterministic summary of the server-resolved,
+digest-checked source record and its selected interval. Map display year,
+source record time and archive edition remain separate; none establishes a
+core collection/drilling date or recovery. Unsupported questions receive the
+source limits rather than generated factual prose. The result stays ABSTAIN,
+with null answer/interpretation and no EvidenceRefs; `sourceSummary` is an
+optional presentation field, not evidence or source admission. The UI labels it
+Source context. General discussion and released-evidence search remain separate.
+The model, accounts, public source assets, geometry and detail controls do not
+change. Rollback is the prior application revision; no store migration applies.
+Regression coverage executes the real resolver/handler with a model fake that
+would invent those dates, checks that inference is never called, and verifies
+source-summary UI labeling, selector validation, source changes and denial.
+
+The owner's follow-up request increases the old 48/64-token, 60-second reply
+budget to 160 tokens/120 seconds for Brief and 384 tokens/240 seconds for More
+detail, which is now the UI default. The worker has a 255-second hard deadline;
+discussion jobs expire at 270 seconds. Cancellation, one inference at a time,
+2 GiB sampled RSS containment, 512-token input context, 3 pending jobs,
+30 process-wide requests/hour, 10 guest requests/hour and 15-minute retention
+remain. These are bounded capacity increases, not a guarantee of complete or
+correct model answers. A limited reply offers Continue reply only while its
+selection context is unchanged. Completed discussions and source summaries
+include a safe next-step question without inventing additional facts or tools.
+
 This is a separate runtime composition of Explorer v259, source
 `441c3e29581ffb0293d8e643e5c37eed50319032`. It does not alter the
 preserved Sites deployment, its audience, storage, or source-data values.

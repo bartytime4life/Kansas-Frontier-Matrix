@@ -3,7 +3,9 @@ import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 export const HOSTED_MODEL='SmolLM2-360M-Instruct q4 · server WebAssembly';
 // Isolated qualification branch only; do not activate without hosted resource acceptance.
-export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:75000,maximumRssBytes:2048*1024*1024});
+export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:255000,maximumRssBytes:2048*1024*1024});
+export const HOSTED_REPLY_LIMITS=Object.freeze({brief:Object.freeze({tokens:160,milliseconds:120000}),expanded:Object.freeze({tokens:384,milliseconds:240000})});
+export const PUBLIC_AI_JOB_MS=270000;
 const error=code=>Object.assign(new Error(code),{code});
 export class HostedAiModel{
  constructor({discussionProfile='concise-sampled-v1',modelDirectory='/private/kfm-embedded-smollm2-360m-q4-wasm-20261016/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage}={}){

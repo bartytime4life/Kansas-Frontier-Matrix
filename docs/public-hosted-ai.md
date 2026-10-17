@@ -82,11 +82,17 @@ Guest capability expires after one hour. Questions, replies and context expire
 after fifteen minutes; cleanup runs every thirty seconds. No visitor prompts,
 answers, cookies or credentials are logged. Questions/output are at most 4,096
 bytes; request body is at most 8 KiB with a five-second read deadline.
-Evidence lookup is eight seconds and each job expires after ninety seconds.
+Evidence lookup is eight seconds. Evidence jobs expire after ninety seconds;
+discussion jobs expire after 270 seconds.
 
-Model load is at most ninety seconds; inference has a seventy-five-second parent
-watchdog and sixty-second soft generation cutoff between tokens. Brief
-replies allow 48 tokens; expanded replies allow 64. Limit notices are shown.
+Model load is at most ninety seconds; inference has a 255-second parent
+watchdog. Brief replies allow 160 tokens and 120 seconds; More detail replies
+allow 384 tokens and 240 seconds between-token generation time. More detail is
+the UI default. Limit notices and same-context continuation are shown. Completed
+replies include a safe next-step question. Selected subsurface questions return
+a deterministic server source summary with explicit unknowns, without factual
+model generation or evidence promotion. These budgets cannot guarantee a
+complete or correct model reply; the 512-token input-context limit remains.
 The worker JS heap is 256 MiB, with one WASM thread. Whole-process RSS is sampled
 every 100 ms; exceeding 2 GiB stops the worker without automatic retry. WASM
 memory is outside the JS heap and may grow between samples. The guard is an

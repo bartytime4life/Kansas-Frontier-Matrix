@@ -21,9 +21,28 @@ test('guest readiness does not wait for the separate account request',async()=>{
  const {h,render}=await workspace(url=>url.includes('/api/pc-ai/')?new Promise(()=>{}):Promise.resolve(ready()));
  try{
   let tree=render();assert.equal(text(status(tree)),'SmolLM2 ready');
+  assert.equal(findNode(tree,node=>node.type==='select'&&node.props.name==='depth').props.defaultValue,'expanded');
   message(tree).props.onChange({target:{value:'Suggest a fictional story.'}});
   tree=render();assert.equal(send(tree).props.disabled,false);
   assert.equal(findNode(tree,node=>node.type==='section'&&node.props['aria-label']==='Account controls'),undefined);
+ }finally{h.dispose();}
+});
+
+test('a limited reply offers continuation only while its source context is unchanged',async()=>{
+ const focus={context:{version:1,frame:2026,view:'2D',layers:[],selection:null},title:'Map view',detail:'Display context'};
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.includes('/api/pc-ai/'))return Response.json({configured:false,account:null});
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'synthetic-job'});
+  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',answer:null,interpretation:'Synthetic partial reply.',outputLimited:true,followUpQuestion:'Would you like a practical example?'}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain map context.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();const next=findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply');assert.equal(next.props.disabled,false);next.props.onClick();
+  tree=render();assert.match(message(tree).props.value,/Finish the explanation/);assert.match(text(tree),/Would you like a practical example\?/);
+  tree=render({focus:{...focus,context:{...focus.context,frame:2025}}});
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.disabled,true);
  }finally{h.dispose();}
 });
 
@@ -98,13 +117,14 @@ test('a submitted question carries the current selected interval without account
   if(url.includes('/api/pc-ai/'))return Response.json({configured:false,account:null});
   if(url.endsWith('/status'))return ready();
   if(options.method==='POST'){sent=JSON.parse(options.body);return Response.json({id:'synthetic-job'});}
-  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic only'}});
+  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'SOURCE_CONTEXT_ONLY',answer:null,interpretation:null,sourceSummary:'Synthetic source: collection date not established.'}});
  },{focus});
  try{
   let tree=render();message(tree).props.onChange({target:{value:'Explain this selected interval.'}});tree=render();
   await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   assert.deepEqual(JSON.parse(JSON.stringify(sent.context)),focus.context);assert.equal(sent.question,'Explain this selected interval.');
   assert.equal(Object.hasOwn(sent,'password'),false);assert.equal(Object.hasOwn(sent,'role'),false);
+  tree=render();await settle();tree=render();assert.match(text(tree),/SOURCE CONTEXT/);assert.match(text(tree),/Source summary · not admitted evidence/);assert.match(text(tree),/collection date not established/);assert.doesNotMatch(text(tree),/Generated discussion · unverified/);
  }finally{h.dispose();}
 });
 

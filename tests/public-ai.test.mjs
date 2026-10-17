@@ -18,6 +18,7 @@ test('chat works without account login and isolates guest job capabilities',asyn
  const f=fixture();const status=await f.request('status');assert.equal(status.body.requiresLogin,false);
  const first=await f.request('jobs',question);assert.equal(first.response.status,202);assert.match(first.response.headers.get('set-cookie'),/HttpOnly; Secure; SameSite=Strict/);
  const answer=await f.settle(first.body.id,first.cookie);assert.equal(answer.body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(answer.body.result.answer,null);assert.equal(answer.body.result.interpretation,'A synthetic discussion idea.');assert.deepEqual(answer.body.result.evidenceRefs,[]);
+ assert.match(answer.body.result.followUpQuestion,/practical example.*map layers\?/);
  const second=await f.request('jobs',question);assert.equal((await f.request('jobs/'+first.body.id,undefined,second.cookie)).response.status,404);
  assert.equal((await f.request('jobs/'+first.body.id+'/cancel',{},second.cookie)).response.status,404);
  assert.equal((await f.request('jobs/'+first.body.id)).response.status,401);
@@ -61,6 +62,15 @@ test('cancellation aborts active inference and never commits a late result',asyn
  assert.equal((await f.request('jobs/'+created.body.id+'/cancel',{},created.cookie)).body.cancelled,true);
  release({text:'Late synthetic answer.'});await new Promise(resolve=>setImmediate(resolve));
  const result=await f.request('jobs/'+created.body.id,undefined,created.cookie);assert.equal(result.body.state,'cancelled');assert.equal(result.body.result,null);
+});
+test('longer discussion can pass the old deadline but still expires, aborts and rejects a late reply',async()=>{
+ let release,signal;const f=fixture(async(q,options,s)=>{signal=s;return new Promise(resolve=>{release=resolve;});});
+ const created=await f.request('jobs',{...question,depth:'expanded'});
+ f.advance(90001);assert.equal((await f.request('jobs/'+created.body.id,undefined,created.cookie)).body.state,'running');
+ f.advance(180000);const expired=await f.request('jobs/'+created.body.id,undefined,created.cookie);
+ assert.equal(expired.body.state,'expired');assert.equal(expired.body.result,null);assert.equal(signal.aborted,true);
+ release({text:'Late response must not appear.'});await new Promise(resolve=>setImmediate(resolve));
+ assert.equal((await f.request('jobs/'+created.body.id,undefined,created.cookie)).body.result,null);
 });
 test('per-browser and process-wide budgets survive cookie resets; jobs expire',async()=>{
  const f=fixture();f.setEvidence(null);let cookie,first;
