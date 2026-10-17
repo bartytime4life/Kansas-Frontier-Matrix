@@ -1,4 +1,5 @@
 "use client";
+import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -61,7 +62,7 @@ import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
 import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
-import { DataNotices, RenderQualityControl } from "./map-toolbar";
+import { DataNotices, LayerSourceNotices, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
@@ -645,7 +646,7 @@ const drawerViewLabels: Record<DrawerView, string> = {
 };
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
-  navigate: "Appearance",
+  navigate: "Explore",
   inspect: "Inspect",
   scene: "Appearance",
   history: "Kansas historic maps",
@@ -660,7 +661,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
 const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   report: "Build a report from the current map, time, layers, and selection.",
   inspect: "Find a feature and inspect its evidence context.",
-  navigate: "Adjust the map appearance. Legacy navigation links open this panel.",
+  navigate: "Coordinates, camera, and navigation.",
   scene: "Choose a surface or underground view, then adjust its appearance.",
   history: "Find dated USGS sheet editions near this map view.",
   connections: "Check the sources behind the current map.",
@@ -1511,6 +1512,7 @@ export default function Home() {
   const [researchMissingSources, setResearchMissingSources] = useState<ResearchCoverage[]>([]);
   const [leftOpen, setLeftOpen] = useState(false);
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
+  const [sourceStatusScope, setSourceStatusScope] = useState<"selected" | "all">("selected");
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
@@ -3901,6 +3903,7 @@ export default function Home() {
     setHelpOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) {
+      setSourceStatusOpen(false);
       setLeftOpen(false);
       setRightOpen(false);
       setTimelineOpen(false);
@@ -3913,7 +3916,7 @@ export default function Home() {
   const openEvidencePanel = useCallback(() => {
     dismissMapUtilityWithoutFocus();
     setRightOpen(true);
-    if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
+    if (isCompact) { setSourceStatusOpen(false); setLeftOpen(false); setTimelineOpen(false); }
     window.setTimeout(() => rightPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Evidence Drawer"]')?.focus({ preventScroll: true }), 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setRightOpen]);
 
@@ -4269,6 +4272,7 @@ export default function Home() {
   }, []);
 
   const closeLeftPanel = useCallback(() => {
+    setSourceStatusOpen(false);
     setLeftOpen(false);
     setCurrentWorkspace("explore");
     const returnTarget = leftPanelReturnRef.current;
@@ -4292,12 +4296,18 @@ export default function Home() {
     setGuideOpen(false);
     sourceStatusReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : mapContainerRef.current);
+    if (!returnElement?.closest(".layer-panel")) leftPanelReturnRef.current = returnElement ?? null;
+    setMapUtilityOpen(false);
+    setRightOpen(false);
+    setQwenOpen(false);
+    setScenePanelOpen(false);
+    setLeftPanelMode("layers");
     setSourceStatusOpen(true);
-    setLeftOpen(false);
+    setLeftOpen(true);
     window.requestAnimationFrame(() => {
-      sourceStatusPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close source status"]')?.focus({ preventScroll: true });
+      sourceStatusPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Back to layers"]')?.focus({ preventScroll: true });
     });
-  }, []);
+  }, [setRightOpen, setQwenOpen]);
 
   const closeSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
     setSourceStatusOpen(false);
@@ -4328,7 +4338,7 @@ export default function Home() {
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
     setLocalAtlasPeek(false);
-    setMapUtilityView(nextView === "navigate" ? "scene" : nextView);
+    setMapUtilityView(nextView);
     setMapUtilityOpen(true);
     setMapUtilityFocusRequest((request) => request + 1);
     setCurrentWorkspace("explore");
@@ -4384,6 +4394,8 @@ export default function Home() {
     }, 0);
     setMapContextOpen(false);
     setCurrentWorkspace("knowledge");
+    setSourceStatusOpen(false);
+    setScenePanelOpen(false);
     setLeftPanelMode(mode);
     setLeftOpen(true);
     setRightOpen(false);
@@ -4939,7 +4951,7 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
+        : restoredMapUtilityView === "navigate" || restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -6915,6 +6927,8 @@ export default function Home() {
     if (!returningToScene) items[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.stopPropagation();
+        if (leftOpen && sourceStatusOpen) { closeSourceStatus(); return; }
         if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
         return;
       }
@@ -6928,7 +6942,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, sourceStatusOpen, closeSourceStatus, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;
@@ -8907,21 +8921,44 @@ export default function Home() {
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     });
   };
+  const chooseMapMenuRepresentation = (mode: "2d" | "terrain" | "globe") => {
+    setUndergroundOpen(false);
+    if (mapUtilityView === "compare") setMapUtilityOpen(false);
+    activateMapRepresentation(mode);
+  };
+  const changeScenePanelOpen = useCallback((open: boolean) => {
+    setScenePanelOpen(open);
+    if (!open) return;
+    setPrimaryWorkspace("map");
+    setGuideOpen(false);
+    dismissMapUtilityWithoutFocus();
+    if (isCompact) {
+      setSourceStatusOpen(false);
+      setLeftOpen(false);
+      setRightOpen(false);
+      setQwenOpen(false);
+    }
+  }, [dismissMapUtilityWithoutFocus, isCompact, setRightOpen, setQwenOpen]);
+  const explorerHeaderRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (explorerHeaderRef.current) return installExplorerMenuDismissal(explorerHeaderRef.current);
+  }, []);
+
   const mapRepresentationControls = () => <>
-              <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
-              <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
-              <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
+              <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} data-active={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} onClick={() => chooseMapMenuRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
               {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
-              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("globe"); }}><b>Globe</b><span>◎</span></button>
-              <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+              <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} onClick={() => chooseMapMenuRepresentation("globe")}><b>Globe</b><span>◎</span></button>
+              <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => { if (primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare") closeMapUtility(); else { setUndergroundOpen(false); activateMapRepresentation("compare"); } }}><b>Compare</b><span>A/B</span></button>
   </>;
 
   return (
     <div className="site-root" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
-      <header className="topbar">
+      <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
@@ -8938,15 +8975,17 @@ export default function Home() {
             {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
           </div>}
         </div>
+          <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
           <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
               <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
-              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar open={scenePanelOpen} rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={changeScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
               <button className="map-dock-action map-dock-wide-only" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "localAtlas"} onClick={(event) => openMapUtility("localAtlas", event.currentTarget)}><strong>Local Atlas</strong><b>PC</b></button>
-              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
-                <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
+              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+                <summary aria-label="Map views and controls">Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
                   <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { const button = (event.target as HTMLElement).closest("button"); if (button) closeHeaderOverflow(event.currentTarget, !button.hasAttribute("data-map-panel")); }}>
                     {mapRepresentationControls()}
@@ -8958,6 +8997,7 @@ export default function Home() {
                   </div>
                   <button type="button" aria-label="Local Atlas: climate, local files, and data coverage" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("localAtlas", summary); }}><strong>Local Atlas</strong><small>Climate, local files, and data coverage on this PC</small></button>
                   <button type="button" aria-label="Map appearance and underground" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("scene", summary); }}><strong>Appearance</strong><small>Basemap, terrain, globe &amp; underground</small></button>
+                  <button type="button" aria-label="Map controls: coordinates, camera, and navigation" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
                   <button type="button" aria-label="Map measurements and coordinates" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("measure", summary); }}><strong>Measure</strong><small>Draw, coordinates &amp; analysis area</small></button>
                 </div>
               </details>
@@ -8965,8 +9005,7 @@ export default function Home() {
           </nav>
         <div className="top-actions">
           <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
-          <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
-          <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+          <details className="header-overflow-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">
               <div className="header-overflow-workspaces" role="group" aria-label="Primary Explorer actions">
@@ -9392,13 +9431,68 @@ export default function Home() {
 
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <nav className="layer-source-switch" aria-label="Layer views">
-              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === id} data-active={layerCatalogView === id} onClick={() => { setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && layerCatalogView === id} data-active={!sourceStatusOpen && layerCatalogView === id} onClick={() => { setSourceStatusOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              <button type="button" aria-pressed={sourceStatusOpen} data-active={sourceStatusOpen} onClick={event => openSourceStatus(event.currentTarget)}>Source status{sourceIssues.length > 0 && <span>{sourceIssues.length}</span>}</button>
             </nav>
-            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
+            <label className="catalog-search" hidden={sourceStatusOpen}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
-          <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          {sourceStatusOpen && (leftPanelMode === "layers" || leftPanelMode === "live") && <aside ref={sourceStatusPanelRef} id="map-source-status" className="map-source-status layer-source-status" aria-label="Source status and data quality">
+            <header><h2>Source status</h2><button type="button" onClick={() => closeSourceStatus()} aria-label="Back to layers">← Layers</button></header>
+            <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
+            <nav className="source-status-scope" aria-label="Source status scope"><button type="button" aria-pressed={sourceStatusScope === "selected"} onClick={() => setSourceStatusScope("selected")}>On map · {visibleOfficialCount}</button><button type="button" aria-pressed={sourceStatusScope === "all"} onClick={() => setSourceStatusScope("all")}>All sources · {OFFICIAL_CONTEXT_SOURCES.length}</button></nav>
+            <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}>Connection details</button>
+            <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
+            <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
+            <LayerSourceNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
+          <DataNotices embedded onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
+            {OFFICIAL_CONTEXT_SOURCES.filter(source => sourceStatusScope === "all" || officialVisibility[source.id]).map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
+            <Link href="/connections">API connections &amp; verified replay ↗</Link><Link href="/observatory/sources">Historical coverage & sources ↗</Link>
+          {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
+            <header>
+              <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
+              <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
+            </header>
+            <dl>
+              <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
+              <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
+              <div><dt>Carrier</dt><dd>{terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "Attached: " : "Selected: "}{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Mapzen Terrarium DEM"}{terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · overzoomed from z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</dd></div>
+              <div><dt>Evidence</dt><dd>Display context only</dd></div>
+            </dl>
+            <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
+            <div className="terrain-passport-actions">
+              <button type="button" aria-pressed={topographicOverlay} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "Hide height colors" : "Show height colors"}</button>
+              <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
+              <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
+            </div>
+            <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated {terrainElevationReading.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM</span></> : <span>{terrainElevationUnavailable ? "No DEM height available at pointer" : "Move over the map to read DEM elevation"}</span>}</output>
+          </aside>}
+
+          <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
+            <header>
+              <div><span>SELECTED LAYERS</span><strong>{visibleCount} domain · {visibleOfficialCount} sources · {selectedEarthEngineCount} snapshots</strong></div>
+              <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Manage</button>
+            </header>
+            <div className="map-legend-list">
+              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
+                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
+                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
+                  <span aria-hidden="true" />
+                </label>
+                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
+                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
+                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
+                </button>
+              </div>)}
+              {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
+            </div>
+            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
+            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+          </aside>
+          </aside>}
+
+          <div className="layer-catalog-body" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <MapStartersControl sources={OFFICIAL_CONTEXT_SOURCES} access={starterAccess} visibility={officialVisibility} selectionReady={layerPreferencesReady}
             sourceStatus={id => officialVisibility[id] ? catalogDisplayStatus(officialCatalogStatuses[id])
               : officialStates[id] === "idle" ? "Available to request · response not checked" : `Not selected · ${officialStates[id]}`}
@@ -9534,7 +9628,7 @@ export default function Home() {
                   </details>}
                   <button type="button" onClick={() => setWindArrowReloadToken(value => value + 1)} disabled={!officialVisibility[source.id] || windArrowState === "LOADING" || heldAtFrame}>Refresh wind forecast</button>
                 </div>}
-                <div className="official-context-actions"><button type="button" onClick={() => openSourceStatus(mapContainerRef.current)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={event => openSourceStatus(event.currentTarget)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
             })}</div>
@@ -9586,72 +9680,25 @@ export default function Home() {
               <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
             </section>
           </div>
-            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openMapUtility("connections", event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
+            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
 
           </div>
-          <details className="layer-panel-explore" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <details className="layer-panel-explore" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <summary>Explore <span>Other map tools</span></summary>
             <nav aria-label="Other map tools">
               <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
               <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
               <Link href="/observatory">Event Observatory</Link>
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("history"); }}>Kansas historic maps</button>
-              <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("scene"); }}>Map controls</button>
+              <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("navigate"); }}>Map controls</button>
             </nav>
           </details>
         </aside>
 
         <section className="map-stage" data-underground={undergroundOpen ? "true" : undefined} data-live-dock={liveDockVisible || glmFlashesEnabled} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0} aria-label="Kansas MapLibre Explorer">
 
-          {sourceStatusOpen && <aside ref={sourceStatusPanelRef} id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
-            <header><h2>Sources & data quality</h2><button type="button" onClick={() => closeSourceStatus()} aria-label="Close source status">×</button></header>
-            <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
-            <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}>Connection details</button>
-            <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
-            <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
-            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
-            <Link href="/connections">API connections &amp; verified replay ↗</Link><Link href="/observatory/sources">Historical coverage & sources ↗</Link>
-          {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
-            <header>
-              <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
-              <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
-            </header>
-            <dl>
-              <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
-              <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
-              <div><dt>Carrier</dt><dd>{terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "Attached: " : "Selected: "}{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Mapzen Terrarium DEM"}{terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · overzoomed from z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</dd></div>
-              <div><dt>Evidence</dt><dd>Display context only</dd></div>
-            </dl>
-            <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
-            <div className="terrain-passport-actions">
-              <button type="button" aria-pressed={topographicOverlay} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "Hide height colors" : "Show height colors"}</button>
-              <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
-              <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
-            </div>
-            <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated {terrainElevationReading.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM</span></> : <span>{terrainElevationUnavailable ? "No DEM height available at pointer" : "Move over the map to read DEM elevation"}</span>}</output>
-          </aside>}
-          <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
-            <header>
-              <div><span>SELECTED LAYERS</span><strong>{visibleCount} domain · {visibleOfficialCount} sources · {selectedEarthEngineCount} snapshots</strong></div>
-              <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Manage</button>
-            </header>
-            <div className="map-legend-list">
-              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
-                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
-                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
-                  <span aria-hidden="true" />
-                </label>
-                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
-                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
-                </button>
-              </div>)}
-              {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
-            </div>
-            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
-          </aside>
-          </aside>}
+
+
           {instrumentOpen && !glmFlashesEnabled && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
             state={streamflowDisplayState}
@@ -9749,9 +9796,9 @@ export default function Home() {
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
           <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
-          <button className="qwen-map-launch" type="button" aria-label="Ask Qwen about this map view" title="Ask Qwen about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
+          <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM · local Qwen" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
-            <span><strong>Ask Qwen</strong><small>About this map view</small></span>
+            <span><strong>Chat with KFM</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
@@ -9877,6 +9924,53 @@ export default function Home() {
               </section>}
 
 
+
+              {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
+                <div className="map-utility-section-heading"><span>EXPLORE KANSAS</span><h3>Find your next view</h3><p>Move around the map, return to a place, or try a different perspective.</p></div>
+                <div className="map-utility-actions map-navigation-actions">
+                  <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
+                  <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
+                  <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })}>Zoom in</button>
+                  <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })}>Zoom out</button>
+                  <button type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })}>Reset north</button>
+                  <button type="button" onClick={fitKansasView}>Fit Kansas</button>
+                  <button type="button" onClick={toggleFullscreen}>Fullscreen</button>
+                  <button type="button" onClick={locateUser}>Use my location</button>
+                  <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
+                </div>
+                <details className="explorer-secondary"><summary>Coordinates, gestures &amp; analysis area</summary><div className="explorer-secondary-body">
+                <dl className="map-camera-facts">
+                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
+                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
+                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
+                  <div><dt>Projection</dt><dd>{projection}</dd></div>
+                </dl>
+                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
+                  <header><div><span>MAPLIBRE VIEWPORT ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
+                  {analysisArea
+                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
+                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
+                  <footer>Released KFM domain registry is empty · viewport geometry is context, not evidence</footer>
+                </section>
+                <div className="map-control-group box-drag-control"><header><strong>Shift-drag action</strong><span>MapLibre box selection</span></header><div className="map-segmented-control"><button type="button" aria-pressed={boxDragMode === "zoom"} onClick={() => { boxDragModeRef.current = "zoom"; setBoxDragMode("zoom"); announce("Shift-drag now zooms to the drawn box"); }}>Zoom to box</button><button type="button" aria-pressed={boxDragMode === "report-area"} onClick={() => { boxDragModeRef.current = "report-area"; setBoxDragMode("report-area"); announce("Shift-drag now locks a browser-local report area"); }}>Capture report area</button></div><p className="map-control-note">Hold Shift and drag on the map. Capture mode converts the box to the locked report scope; it does not select evidence or edit source data.</p></div>
+                <form className="map-coordinate-form" onSubmit={goToCoordinates}>
+                  <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
+                  <div>
+                    <label><span>Latitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.south} max={SUPPORTED_CONTEXT_BOUNDS.north} step="0.00001" value={coordinateLatitude} onChange={(event) => { setCoordinateLatitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
+                    <label><span>Longitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.west} max={SUPPORTED_CONTEXT_BOUNDS.east} step="0.00001" value={coordinateLongitude} onChange={(event) => { setCoordinateLongitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
+                    <button type="submit">Go to point</button>
+                  </div>
+                  {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
+                </form>
+                <div className="map-orientation-controls">
+                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
+                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
+                </div>
+                <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
+                <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
+                <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
+                </div></details>
+              </section>}
 
               {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
 
@@ -10132,38 +10226,7 @@ export default function Home() {
                 <article className="map-measure-status" aria-live="polite"><span>{measurementGeometryMode?.toUpperCase() ?? "NO MEASUREMENT"}</span><strong>{measurement}</strong><small>{measureMode ? "Click the map to add points." : measurementGeometryMode ? "Finished geometry remains on the map until cleared." : "Select distance or area to begin."}</small></article>
                 <div className="map-utility-actions"><button type="button" onClick={undoMeasurementPoint} disabled={!measurementGeometryMode}>Undo point</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement} disabled={!measurementGeometryMode}>Clear</button></div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Screen measurement — not survey, cadastral, legal, or evidence.</strong><p>Results are approximate, browser-local, and excluded from context receipts and public-safe exports.</p></aside>
-                <details className="explorer-secondary"><summary>Coordinates, gestures &amp; analysis area</summary><div className="explorer-secondary-body">
-                <dl className="map-camera-facts">
-                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
-                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
-                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
-                  <div><dt>Projection</dt><dd>{projection}</dd></div>
-                </dl>
-                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
-                  <header><div><span>MAPLIBRE VIEWPORT ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
-                  {analysisArea
-                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
-                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
-                  <footer>Released KFM domain registry is empty · viewport geometry is context, not evidence</footer>
-                </section>
-                <div className="map-control-group box-drag-control"><header><strong>Shift-drag action</strong><span>MapLibre box selection</span></header><div className="map-segmented-control"><button type="button" aria-pressed={boxDragMode === "zoom"} onClick={() => { boxDragModeRef.current = "zoom"; setBoxDragMode("zoom"); announce("Shift-drag now zooms to the drawn box"); }}>Zoom to box</button><button type="button" aria-pressed={boxDragMode === "report-area"} onClick={() => { boxDragModeRef.current = "report-area"; setBoxDragMode("report-area"); announce("Shift-drag now locks a browser-local report area"); }}>Capture report area</button></div><p className="map-control-note">Hold Shift and drag on the map. Capture mode converts the box to the locked report scope; it does not select evidence or edit source data.</p></div>
-                <form className="map-coordinate-form" onSubmit={goToCoordinates}>
-                  <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
-                  <div>
-                    <label><span>Latitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.south} max={SUPPORTED_CONTEXT_BOUNDS.north} step="0.00001" value={coordinateLatitude} onChange={(event) => { setCoordinateLatitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
-                    <label><span>Longitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.west} max={SUPPORTED_CONTEXT_BOUNDS.east} step="0.00001" value={coordinateLongitude} onChange={(event) => { setCoordinateLongitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
-                    <button type="submit">Go to point</button>
-                  </div>
-                  {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
-                </form>
-                <div className="map-orientation-controls">
-                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
-                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
-                </div>
-                <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
-                <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
-                <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
-                </div></details>
+
               </section>}
 
               {mapUtilityView === "export" && <section id="map-utility-view-export" role="region" aria-labelledby="map-utility-title" className="map-utility-section export-review-section">
@@ -10240,14 +10303,11 @@ export default function Home() {
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {selectedMapLayerCount} map layers selected. Check Map layers for visibility and source status. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
         </section>
 
-        {/* Share the shell stacking context with evidence, preserving map hit testing. */}
-        {runtime.kind !== "unsupported" && !undergroundOpen && !mapUtilityOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
-
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
           {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Ask about what you see</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
+              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Chat with KFM</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
             </header>
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>

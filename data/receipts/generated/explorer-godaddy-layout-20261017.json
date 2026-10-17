@@ -1,0 +1,183 @@
+{
+  "receipt_id": "explorer-godaddy-layout-followup-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/explorer-controls-navigation.tsx",
+    "apps/site/source/app/explorer-controls.css",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/inspection-panel.tsx",
+    "apps/site/source/app/map-toolbar.tsx",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/scene-effects-controls.tsx",
+    "apps/site/source/app/scene-effects.css",
+    "apps/site/source/tests/component-harness.mjs",
+    "apps/site/source/tests/explorer-interface-refresh.test.mjs",
+    "apps/site/source/tests/inspection-panel.test.mjs",
+    "apps/site/source/tests/layer-explorer.test.mjs",
+    "apps/site/source/tests/scene-studio.test.mjs",
+    "apps/site/source/tests/scene-surface-integration.test.mjs",
+    "apps/site/source/tests/workspace-help-navigation.test.mjs",
+    "apps/site/source/tests/workspace-map-navigation.test.mjs",
+    "apps/site/source/app/explorer-menu-dismissal.ts",
+    "apps/site/source/tests/explorer-menu-dismissal.test.mjs",
+    "apps/site/source/tests/godaddy-layout-port.test.mjs",
+    "apps/site/verification-godaddy-layout-20261017.md",
+    "apps/site/source/tests/globe-context.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/explorer-controls-navigation.tsx": "sha256:09c3159aefc148b96e97b5bd8438a7715ab1440cb922132d6c8c4b7b34f2777c",
+    "apps/site/source/app/explorer-controls.css": "sha256:2116238cb8dcbe187b70bbc9b6404a0599f4f1cef911e5ab43e87d80652072b9",
+    "apps/site/source/app/globals.css": "sha256:a0e0c9921f96a109913face29b44b889303816e48684f16d12b6e4fab135f5eb",
+    "apps/site/source/app/inspection-panel.tsx": "sha256:ecad47f7ae7a6978f69d7df77b0beb6306e3697b1689bde60c2a87965c3ee46d",
+    "apps/site/source/app/map-toolbar.tsx": "sha256:4403f85cd8933f23bcbe2a35abe594f8a4af0bef8abd517b9081a4ec1046d48f",
+    "apps/site/source/app/page.tsx": "sha256:2cb961ab19c8d09b657dcfbe42652d68736e2daa43f7fa62ee70f5d5c2001d36",
+    "apps/site/source/app/scene-effects-controls.tsx": "sha256:7a9340ff0652f40ce902914fba957bb1ac08d249f95d79da93a8c11c172e61d3",
+    "apps/site/source/app/scene-effects.css": "sha256:6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
+    "apps/site/source/tests/component-harness.mjs": "sha256:337b5317185a724a1e157f03967c4f912a9b900cb33e9dea895f684580b30ed6",
+    "apps/site/source/tests/explorer-interface-refresh.test.mjs": "sha256:f4d8d54f2011025ff5cca171068863ef3088604e850a062aeaa75218c2173292",
+    "apps/site/source/tests/inspection-panel.test.mjs": "sha256:b1d2e2efe0c9247513f8bd4003a9e472f24ff3dbbad85e95ddeaaf7d18fad7f0",
+    "apps/site/source/tests/layer-explorer.test.mjs": "sha256:fe68fb55fb51c83689816f1b6d27ccbc2d4cab0d2d719a77f85e0273d4239472",
+    "apps/site/source/tests/scene-studio.test.mjs": "sha256:af9ad95b9cc52921e37e0ae67f75d60eaeea3d0f328892d8b8e89a79cf1de0f7",
+    "apps/site/source/tests/scene-surface-integration.test.mjs": "sha256:b1aa0d42a55a41abaec40b46f7b5efc800200664131f3c660d0e9cfa75418eeb",
+    "apps/site/source/tests/workspace-help-navigation.test.mjs": "sha256:265d7c78407554396008f774920568e660bb2c76ee438caeab96eee185931fb1",
+    "apps/site/source/tests/workspace-map-navigation.test.mjs": "sha256:18f84acbb7c361ae2a084f83728415934453e4829da8b0f757246b4d3a6a54ad",
+    "apps/site/source/app/explorer-menu-dismissal.ts": "sha256:3f17c9c025ee61205938100eb9391f1594f31d1505397c2cba1189fbd545949c",
+    "apps/site/source/tests/explorer-menu-dismissal.test.mjs": "sha256:a4c2db1457b4d1fc36191e3c420cef82c7f527d9b141cb02bcd18cad9ff5c303",
+    "apps/site/source/tests/godaddy-layout-port.test.mjs": "sha256:282525bab673d47ae308deed79c62a16be6724edf55757d0f4b8f5ee9009d2b7",
+    "apps/site/verification-godaddy-layout-20261017.md": "sha256:660409195172f87fd1e9595537f1b5bfbe1c27998159c5e3e8e880f87151b1cc",
+    "apps/site/source/tests/globe-context.test.mjs": "sha256:ed98c4acd6fc16b20f09d327c45e9e73181a98b0152f91227173cb064bc7cbe5",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:0fcc42c8620528f412cb672891ad923abf651f30e72a1a523876339a5996b779"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:2c3cee35fc4a641a21b5e5b37bed43b466a65cb919779e71321679c5be162bc5",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "browser",
+      "read-only source/deployment inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@2b22ed1115ebfdac98d497b1db95129453b4a2a1",
+      "GoDaddy source@4b3cc837e9c131e5eb214427e0a55646fc76e52a",
+      "apps/site/verification-godaddy-layout-20261017.md",
+      "CI assertion follow-up main@2786e399a3bd66af01d4239f1db291c2d0e0d283"
+    ],
+    "evidence_hashes": [
+      "sha256:ae163a2730673eb3cb5898309ee55d36d2502dd7bd8234cf5398d2246b79758f",
+      "sha256:da60ada4ddba81f12784a88120a47630eb788cdff997f879ed084afdc8420ae5",
+      "sha256:4fe2faceaea29141bce5024834ccde68baf8a5a6f45f15971fa7fb154cb1fbc6",
+      "sha256:11c08cf40e0e8b93a9a0e5c4ee2480ea13c55a54acce7b405660acf06e3d90b1",
+      "sha256:a1f34bbad8a4fd3bd75bfb5b7ab0a01f1776a65ba6ee3e8df3e1be9bb557c29e",
+      "sha256:b9de2b882250ee0c579a5d2f72553399b39ecffce0e3857c1681b855e1e75f7f"
+    ],
+    "attached_docs": [
+      "apps/site/source/AGENTS.md",
+      "apps/site/source/docs/SITE_PRESERVATION.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/explorer-controls-navigation.tsx": "PROPOSED",
+    "apps/site/source/app/explorer-controls.css": "PROPOSED",
+    "apps/site/source/app/globals.css": "PROPOSED",
+    "apps/site/source/app/inspection-panel.tsx": "PROPOSED",
+    "apps/site/source/app/map-toolbar.tsx": "PROPOSED",
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects-controls.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects.css": "PROPOSED",
+    "apps/site/source/tests/component-harness.mjs": "PROPOSED",
+    "apps/site/source/tests/explorer-interface-refresh.test.mjs": "PROPOSED",
+    "apps/site/source/tests/inspection-panel.test.mjs": "PROPOSED",
+    "apps/site/source/tests/layer-explorer.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-studio.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-surface-integration.test.mjs": "PROPOSED",
+    "apps/site/source/tests/workspace-help-navigation.test.mjs": "PROPOSED",
+    "apps/site/source/tests/workspace-map-navigation.test.mjs": "PROPOSED",
+    "apps/site/source/app/explorer-menu-dismissal.ts": "PROPOSED",
+    "apps/site/source/tests/explorer-menu-dismissal.test.mjs": "PROPOSED",
+    "apps/site/source/tests/godaddy-layout-port.test.mjs": "PROPOSED",
+    "apps/site/verification-godaddy-layout-20261017.md": "CONFIRMED",
+    "apps/site/source/tests/globe-context.test.mjs": "PROPOSED",
+    "apps/site/source/tests/rendered-html.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "TypeScript",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "production build and static containment",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "targeted regression tests",
+      "outcome": "PASS",
+      "reason": "85 passed, zero failures; includes archive authorization and local-only Qwen contracts."
+    },
+    {
+      "gate": "rendered desktop and phone QA",
+      "outcome": "PASS",
+      "reason": "Matched live/local captures and interactive controls checked; design-qa.md records accepted differences and limits."
+    },
+    {
+      "gate": "preservation",
+      "outcome": "PASS",
+      "reason": "14793 tracked-file baseline hashes checked; only 16 intended existing UI/test files changed; unrelated files and backend/config/data preserved."
+    },
+    {
+      "gate": "actual local Qwen inference",
+      "outcome": "SKIPPED",
+      "reason": "Local bridge unreachable; setup/start not part of the layout port."
+    },
+    {
+      "gate": "deployment",
+      "outcome": "SKIPPED",
+      "reason": "User prohibited deployment of either site."
+    },
+    {
+      "gate": "follow-up branch lint and TypeScript",
+      "outcome": "PASS",
+      "reason": "Whole-Site lint and tsc passed on copied bytes from current main."
+    },
+    {
+      "gate": "draft PR exact-head CI",
+      "outcome": "FAIL",
+      "reason": "Initial PR run built successfully; two obsolete layout assertions corrected and passed locally. Runtime STARTUP_FAILED and mirror MIRROR_REVIEW_REQUIRED also fail on main; final rerun is recorded in the follow-up draft PR."
+    },
+    {
+      "gate": "CI layout assertion repair",
+      "outcome": "PASS",
+      "reason": "Both failing layout assertions pass; complete Globe, layout-control and menu-dismissal suites pass locally. Application source unchanged."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "live-deployment-record",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5215"
+    },
+    {
+      "id": "standalone-source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4b3cc837e9c131e5eb214427e0a55646fc76e52a"
+    },
+    {
+      "id": "local-port-validation",
+      "validated": true,
+      "evidence_ref": "apps/site/verification-godaddy-layout-20261017.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T05:05:26.512805+00:00",
+  "emitter": "Codex /root",
+  "notes": "Isolated follow-up branch from main 2b22ed1115ebfdac98d497b1db95129453b4a2a1. Original verified UI bytes and unrelated working-tree changes preserved. User authorizes commit, push, draft PR and CI checks only. No deployment, runtime/data migration or hosted-AI port. Human review remains pending. PR #5220 merged externally during CI inspection; assertion-only follow-up starts from main 2786e399a3bd66af01d4239f1db291c2d0e0d283 with application bytes unchanged."
+}

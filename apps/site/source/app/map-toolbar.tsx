@@ -20,7 +20,7 @@ export const DOWNLOAD_NOTICES = [
   { id: "historical-networks", title: "Historical cities, roads & trade routes", format: "Map editions / shapefiles", detail: "Use dated USGS/Library of Congress map editions for historical interpretation; use TIGER/Line only as a labeled modern or vintage reference.", href: "https://ngmdb.usgs.gov/topoview/" },
 ] as const;
 export type SourceIssue = { id: OfficialContextId; title: string; detail?: string; downloadHref?: string };
-export function DataNotices({ issues = [], onRetry, onHide, onFireSaved }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void; onFireSaved?: (day: string) => void }) {
+export function DataNotices({ issues = [], onRetry, onHide, onFireSaved, embedded = false }: { embedded?: boolean; issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void; onFireSaved?: (day: string) => void }) {
   const [open, setOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null);
   const [radarDay, setRadarDay] = useState(currentUtcDay), [fireDay, setFireDay] = useState(currentUtcDay);
   const [fireBusy, setFireBusy] = useState(false), [fireStatus, setFireStatus] = useState("");
@@ -45,13 +45,13 @@ export function DataNotices({ issues = [], onRetry, onHide, onFireSaved }: { iss
     document.addEventListener("pointerdown", outside); root.current?.addEventListener("keydown", escape);
     const node = root.current; return () => { document.removeEventListener("pointerdown", outside); node?.removeEventListener("keydown", escape); };
   }, [open]);
-  return <div className="data-notices" ref={root}>
+  return <div className={embedded ? "data-notices data-notices-inline" : "data-notices"} ref={root}>
     <button className="data-notices-trigger" ref={trigger} type="button" aria-label="Open data and download notices" aria-expanded={open} aria-controls="data-notices-panel" onClick={() => setOpen(!open)} data-attention={issues.length > 0}><span aria-hidden="true">↓</span><span>Data & downloads</span><b aria-label={`${issues.length} source issues; ${DOWNLOAD_NOTICES.length} download collections`}>{issues.length || DOWNLOAD_NOTICES.length}</b></button>
     <span className="sr-only" role="status">{issues.length > 0 ? `${issues.length} selected source${issues.length === 1 ? " needs" : "s need"} attention. Open Data and downloads for recovery options.` : ""}</span>
     {open && <aside id="data-notices-panel" className="data-notices-panel" aria-label="Data downloads and source notifications">
       <header><div><small>SOURCE NOTICES</small><h2>Data & downloads</h2></div><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Close data notifications">×</button></header>
       <section className="download-center-entry"><small>ON THIS COMPUTER</small><h3>Library &amp; background downloads</h3><p>Inspect stored collections, active jobs and reviewed map periods in one place.</p><Link href="/downloads">Open library &amp; downloads →</Link></section>
-      {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>{issue.detail ?? "Some data or tiles could not load. Other layers remain available."}</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={issue.downloadHref ?? SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
+      <LayerSourceNotices issues={issues} onRetry={onRetry} onHide={onHide} />
       <section className="map-downloads" aria-label="Map-ready downloads">
         <h3>Save dated map context</h3>
         <p>The selected data goes to a private directory in this browser, which the map reads when you check the same UTC day. It is separate from the PC’s KFM_DATA_ROOT and from KFM evidence.</p>
@@ -63,6 +63,12 @@ export function DataNotices({ issues = [], onRetry, onHide, onFireSaved }: { iss
       <footer><Link href="/data/land-records">Land records</Link><Link href="/data">Contribute data</Link><Link href="/stewards">Steward review</Link></footer>
     </aside>}
   </div>;
+}
+
+export function LayerSourceNotices({ issues = [], onRetry, onHide }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void }) {
+  return <>
+      {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>{issue.detail ?? "Some data or tiles could not load. Other layers remain available."}</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={issue.downloadHref ?? SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
+  </>;
 }
 
 export function RenderQualityControl({ value, onChange }: { value: RenderQuality; onChange: (value: RenderQuality) => void }) {

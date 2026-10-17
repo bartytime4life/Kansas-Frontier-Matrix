@@ -57,7 +57,7 @@ test("specialty owners are mounted once in persistent hidden wrappers; official 
   assert.match(page, /hidden=\{!listedOfficialSources\.some\(item => item\.id === source\.id\)\}/);
 });
 
-test("Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {
+test("Explore, Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {
   const h = await componentHarness("app/explorer-controls-navigation.tsx", {}), changes = [];
   for (const [id, title] of [...h.exports.EXPLORER_CONTROL_SECTIONS, ...h.exports.ADVANCED_CONTROL_SECTIONS]) {
     const tree = h.render(h.exports.ExplorerControlsNavigation, { value: id, onChange: next => changes.push(next) });
@@ -72,8 +72,8 @@ test("Appearance and Measure are primary; every advanced view invokes the existi
       assert.equal(focusedSummary, true, "closing the disclosure returns keyboard focus to a visible control");
     }
   }
-  assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["scene", "measure"]);
-  assert.equal(new Set(changes).size, 11, "all retained control views remain reachable without an Explore panel");
+  assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["navigate", "scene", "measure"]);
+  assert.equal(new Set(changes).size, 12, "all retained control views and Explore remain reachable");
   h.dispose();
 });
 test("focus boundaries ignore closed disclosure contents even when the browser retains their layout boxes", () => {

@@ -198,20 +198,22 @@ test("map taps keep the active surface reading open without consuming events; ou
   }
 });
 
-test("Scene and evidence share a stacking context so the open sample can paint above the drawer", async () => {
+test("header Effects stays above evidence and preserves controlled surface sampling", async () => {
   const attribute = (node, name) => node.attributes.properties.find((item) => ts.isJsxAttribute(item) && item.name.getText(pageTree) === name)?.initializer;
   const closestElement = (node) => { let parent = node.parent; while (parent && !ts.isJsxElement(parent)) parent = parent.parent; return parent; };
   const scene = nodesMatching(pageTree, (node) => ts.isJsxSelfClosingElement(node) && node.tagName.getText(pageTree) === "ScenePanel")[0];
   const drawer = nodesMatching(pageTree, (node) => ts.isJsxOpeningElement(node) && attribute(node, "className")?.text === "evidence-drawer")[0];
-  const shell = closestElement(scene);
-  assert.equal(attribute(shell.openingElement, "className").text, "explorer-shell", "Scene must escape the map-stage stacking context");
-  assert.equal(closestElement(drawer.parent), shell, "both floating surfaces have the same stacking parent");
-  assert.equal(attribute(scene, "onOpenChange").expression.getText(pageTree), "setScenePanelOpen");
-  const sceneCss = await read("app/scene-effects.css"), globalCss = await read("app/globals.css");
-  const sceneZ = Number(sceneCss.match(/\.scene-panel\[data-open\]\s*\{[^}]*z-index:\s*(\d+)/)[1]);
-  // The final shared drawer rule overrides the earlier responsive declarations.
+  let header = scene.parent;
+  while (header && !(ts.isJsxElement(header) && header.openingElement.tagName.getText(pageTree) === "header")) header = header.parent;
+  assert.ok(header, "Effects belongs to the global header, outside the map stacking context");
+  assert.equal(attribute(header.openingElement, "className").text, "topbar");
+  assert.equal(attribute(scene, "open").expression.getText(pageTree), "scenePanelOpen");
+  assert.equal(attribute(scene, "onOpenChange").expression.getText(pageTree), "changeScenePanelOpen");
+  assert.equal(attribute(closestElement(drawer.parent).openingElement, "className").text, "explorer-shell");
+  const globalCss = await read("app/globals.css");
+  const headerZ = Number([...globalCss.matchAll(/\.topbar\s*\{[^}]*z-index:\s*(\d+)/g)].at(-1)[1]);
   const drawerZ = Number([...globalCss.matchAll(/\.layer-panel,\s*\.evidence-drawer\s*\{[^}]*z-index:\s*(\d+)/g)].at(-1)[1]);
-  assert.ok(sceneZ > drawerZ, "sample controls stay reachable after a legitimate evidence selection");
+  assert.ok(headerZ > drawerZ, "sample controls stay reachable above evidence");
   for (const surfaceInspectionOpen of [false, true]) {
     const modal = evaluate(attribute(drawer, "aria-modal").expression, { isCompact: true, rightOpen: true, surfaceInspectionOpen });
     assert.equal(modal, surfaceInspectionOpen ? undefined : true, "covered evidence does not claim modal ownership over the visible sample");
@@ -235,7 +237,8 @@ test("compact evidence autofocus waits for active surface inspection and preserv
       let prevented = false;
       listeners.get("keydown")({ key: "Tab", shiftKey: false, preventDefault() { prevented = true; } });
       assert.equal(prevented, true); assert.equal(focus.at(-1), "first", "drawer tab wrapping resumes after Scene closes");
-      listeners.get("keydown")({ key: "Escape" }); assert.deepEqual(closed, [true]);
+      let stopped = false;
+      listeners.get("keydown")({ key: "Escape", stopPropagation() { stopped = true; } }); assert.deepEqual(closed, [true]); assert.equal(stopped, true);
       cleanup(); assert.equal(listeners.size, 0);
     }
   }
