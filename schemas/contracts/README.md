@@ -589,19 +589,19 @@ The current [schema-validation workflow](../../.github/workflows/schema-validati
 | JSON inventory | Parses JSON under `schemas/`. | JSON parse proves syntax only. |
 | Schema metadata | Meta-validates every `*.schema.json`. | Meta-validity does not prove semantic pairing or consumer compatibility. |
 | Canonical v1 check | Requires v1 schema files to declare Draft 2020-12 and unique `$id` values. | This is configured behavior, not acceptance of ADR-0001. |
-| Fixture preflight | Pins eight fixture-backed compatibility validators and requires reviewed valid/invalid lanes. | Fixture inventory is not the full validator registry. |
+| Fixture preflight | Pins nine fixture-backed compatibility validators and requires reviewed valid/invalid lanes. | Fixture inventory is not the full validator registry. |
 | Aggregate schemas | Runs `make schemas`. | The compatibility runner delegates to registry-defined validation. |
 | Executable tests | Runs `python -m pytest -q tests/schemas tests/contracts`. | Assertions live under `tests/`, not this tree. |
 | Output | Process logs and job summary. | No governed report, receipt, proof, release object, or publication is emitted. |
 
 ### Full validator profile
 
-The current [validator registry](../../tools/validators/validator_registry.json) defines ten full-profile validators:
+The current [validator registry](../../tools/validators/validator_registry.json) defines 29 full-profile validators:
 
-- eight fixture-backed object-family validators; and
-- two repository guardrails: workflow security and repository topology.
+- 23 that replay their own fixture or case lanes (`--fixtures` or `--cases`), including the nine-validator legacy compatibility core; and
+- 6 that check repository state directly, including the workflow-security and repository-topology guardrails.
 
-The [validator-suite workflow](../../.github/workflows/validator-suite.yml) exercises the full profile and fail-closed guardrail behavior. Do not describe the eight fixture-backed validators as the complete full profile.
+The [validator-suite workflow](../../.github/workflows/validator-suite.yml) exercises the full profile and fail-closed guardrail behavior. Do not describe the nine-validator compatibility core as the complete full profile.
 
 Workflow source proves configured intent. Only the exact-head workflow conclusion proves that a particular revision ran. A green conclusion remains bounded validation evidence; a red conclusion requires log-level classification as head-specific, inherited, flaky, blocked, or cancelled before any claim is made.
 

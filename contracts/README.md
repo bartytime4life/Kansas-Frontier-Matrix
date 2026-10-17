@@ -62,7 +62,7 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Authority: canonical semantic meaning](https://img.shields.io/badge/authority-canonical%20semantic%20meaning-1f6feb?style=flat-square)](#authority-level)
 [![Schema-home ADR: proposed](https://img.shields.io/badge/schema--home%20ADR-proposed-d4a72c?style=flat-square)](#adrs)
-[![Validation: full profile = 10](https://img.shields.io/badge/full%20profile-10%20validators-8250df?style=flat-square)](#validation)
+[![Validation: full profile = 29](https://img.shields.io/badge/full%20profile-29%20validators-8250df?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > **One-line purpose.** `contracts/` owns KFM's human-readable object meaning: vocabulary, field intent, invariants, exclusions, compatibility semantics, and the promises that schemas, policy, validators, applications, and release processes must preserve.
@@ -178,7 +178,7 @@ Implementation snapshot: `main@6c78cfd3ef8ccc9608800c132e7da2222c812e57`, inspec
 | `make test` | **CONFIRMED narrow aggregate** | Runs `pytest tests/schemas tests/contracts -q`; it is not a complete semantic-contract suite |
 | Contract-backed schema fixture test | **CONFIRMED** in `tests/schemas/test_common_contracts.py` | Exercises selected schema families and valid/invalid fixtures; does not prove prose semantics |
 | Direct `tests/contracts/` evidence | **CONFIRMED**: two direct `test_*.py` modules plus a bounded manifest lane | Direct executable coverage exists; complete semantic-contract coverage is not established |
-| Full validator profile | **CONFIRMED bounded**: ten registered validators, invoked by the compatibility aggregate through the full orchestrator | Configuration and execution scope are implementation evidence, not doctrine or semantic authority |
+| Full validator profile | **CONFIRMED bounded**: 29 registered validators; the compatibility aggregate runs only its nine-validator legacy core from that profile | Configuration and execution scope are implementation evidence, not doctrine or semantic authority |
 | Machine object-family register | **CONFIRMED**: six runtime-family entries; status `PROPOSED`, authority `navigational_index_only`, completeness `partial` | The register is a bounded projection, not complete object-family authority or proof of runtime, release, or publication |
 | Contract inventory and consumer coverage | **UNKNOWN / incomplete** | No complete contract-to-schema-to-policy-to-consumer registry or coverage artifact was verified |
 | Required reviews and branch protection | **NEEDS VERIFICATION** | CODEOWNERS routing does not prove required review or separation of duties |
@@ -191,7 +191,7 @@ Implementation snapshot: `main@6c78cfd3ef8ccc9608800c132e7da2222c812e57`, inspec
 - Accepted ADR-0029 and the canonical doctrine path replace the obsolete open-conflict and legacy §15 claims; Directory Rules v2 §16 supplies the current `ROOT_FULL` profile.
 - The direct-child map and recursive count are pinned to the implementation snapshot without upgrading descendant maturity.
 - `schemas/contracts/v1/` is described as the **configured** v1 machine-shape surface while ADR-0001 remains proposed; the root-level meaning/shape/admissibility split is separately mandatory through adopted Directory Rules v2.
-- `make test`, `make validate`, the three-family fixture-manifest step and subsequent test aggregate, the ten-validator full profile, and the common contract-schema fixture test are distinguished by actual scope.
+- `make test`, `make validate`, the three-family fixture-manifest step and subsequent test aggregate, the 29-validator full profile, and the common contract-schema fixture test are distinguished by actual scope.
 - Direct `tests/contracts/` modules are acknowledged without claiming complete prose-semantic coverage.
 - `OBJECT_MAP.md` remains evidence-limited, and the six-entry machine object-family register remains partial, proposed, and navigational only.
 - CODEOWNERS routing is separated from stewardship, approval, branch protection, and release authority.
@@ -431,11 +431,11 @@ Validation is layered. Machine-shape validation can support a contract; it canno
 
 | Surface | Command or behavior | What it proves | What it does not prove |
 |---|---|---|---|
-| Validator-registry integrity | `make validator-registry-check` | The bounded registry parses, names existing scripts, and has a valid ten-validator `full` profile for the checked revision | That any validator ran or any contract is semantically correct |
+| Validator-registry integrity | `make validator-registry-check` | The bounded registry parses, names existing scripts, and has a valid 29-validator `full` profile for the checked revision | That any validator ran or any contract is semantically correct |
 | Root test aggregate | `make test` | Runs `pytest tests/schemas tests/contracts -q` for the checked revision | Complete contract inventory, semantic equivalence, policy behavior, or release readiness |
-| Root validation aggregate | `make validate` | Runs `make schemas test`; `schemas` invokes the historical compatibility entrypoint, which delegates to the ten-validator `full` profile, and `test` runs the selected schema/contract tests | Full repository validation, complete semantic coverage, policy admission, or release readiness |
+| Root validation aggregate | `make validate` | Runs `make schemas test`; `schemas` invokes the historical compatibility entrypoint, which runs the nine-validator legacy core selected from the `full` profile, and `test` runs the selected schema/contract tests | Full repository validation, complete semantic coverage, policy admission, or release readiness |
 | Canonical validator entrypoint | `python tools/validate_all.py --profile full` | Runs the exact registry-defined full profile for the checked revision | Doctrine, semantic authority, source truth, policy approval, or lifecycle state |
-| Compatibility entrypoint | `python tools/validators/_common/run_all.py` | Delegates to the same full orchestrator profile while preserving the historical path and fixture-runner inventory surface | A separate six-validator aggregate or independent authority |
+| Compatibility entrypoint | `python tools/validators/_common/run_all.py` | Runs the nine-validator legacy core through the full orchestrator while preserving the historical path and fixture-runner inventory surface | The complete `full` profile or independent authority |
 | Contract/schema workflow | `.github/workflows/contracts-validate.yml` | Runs the three-family fixture-manifest validator and then `make test` | Current pass rate, branch-protection coupling, all-family coverage, or complete semantic equivalence |
 | Contract fixture manifest | `python tools/validators/validate_contract_fixture_manifest.py tests/contracts/manifests/contract_fixture_families.v1.json --format text` | Declared schema/fixture paths, nonempty valid/invalid lanes, and expected JSON Schema polarity for three families | Markdown semantics, policy, evidence closure, review, release, or publication |
 | Common contract-schema fixture test | `python -m pytest tests/schemas/test_common_contracts.py -q` | Valid/invalid fixture behavior for discovered schemas in selected families | Contract Markdown meaning or every schema family |

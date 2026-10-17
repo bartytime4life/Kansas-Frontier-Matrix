@@ -200,7 +200,7 @@ This lane must never treat:
 | Semantic contract root | `contracts/` documented as semantic-meaning authority | **CONFIRMED — repository guidance** |
 | JSON Schema dialect check | Canonical v1 schemas must declare Draft 2020-12 | **CONFIRMED — workflow definition** |
 | Canonical `$id` checks | v1 schemas require nonempty, unique `$id` values | **CONFIRMED — workflow definition** |
-| Configured validator families | Six aggregate fixture-backed families are required | **CONFIRMED — bounded coverage** |
+| Configured validator families | Nine aggregate fixture-backed families are required | **CONFIRMED — bounded coverage** |
 | Schema/contract tests | Workflow runs `tests/schemas` and `tests/contracts` | **CONFIRMED — command-bearing definition** |
 | Structured validation report or adoption receipt | Workflow emits process output and job summary only | **NOT ESTABLISHED** |
 | ADR-0001 | Present with status `proposed` | **CONFIRMED — not accepted** |

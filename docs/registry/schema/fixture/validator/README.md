@@ -106,9 +106,9 @@ operating-system-wide or dependency-install egress prevention.
 
 The current
 [`validator_registry.json`](../../../../../tools/validators/validator_registry.json)
-contains 24 registered validators across `focused`, `changed-area`,
+contains 29 registered validators across `focused`, `changed-area`,
 `release-dry-run`, and `full` profiles. None of those entries references the
-schema-registry package at the pinned base.
+schema-registry package.
 
 Therefore:
 

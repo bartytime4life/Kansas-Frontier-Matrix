@@ -215,7 +215,7 @@ The placement question remains unresolved. Both inspected artifacts agree that d
 | `PolicyDecision` schema | Fielded proposed schema with finite outcome and policy-family enums; valid/invalid fixtures exist and generic schema tests discover the family. | `CONFIRMED` shape / proposed status |
 | Dedicated `PolicyDecision` validator | Schema declares `tools/validators/validate_policy_decision.py`, but that exact file is absent. | `CONFIRMED` missing at tested path |
 | `DecisionEnvelope` schema | Fielded proposed schema with finite outcome and policy-family enums, reasons, obligations, evidence refs, and closed properties. | `CONFIRMED` shape / proposed status |
-| `DecisionEnvelope` validator | Executable JSON Schema wrapper exists and is included in the shared five-validator aggregate. | `CONFIRMED` shape validator |
+| `DecisionEnvelope` validator | Executable JSON Schema wrapper exists and is included in the nine-validator legacy aggregate core. | `CONFIRMED` shape validator |
 | Decision/policy fixtures | Minimal valid and missing-required-field invalid cases exist for both families. | `CONFIRMED` narrow shape coverage |
 | Generic schema harness | `tests/schemas/test_common_contracts.py` discovers policy/runtime schema fixture families. | `CONFIRMED` executable harness |
 | Governed API routes | Current registry contains bootstrap, layers, and evidence only; no Focus route is registered. | `CONFIRMED` |

@@ -1341,7 +1341,7 @@ Confirmed repository behavior includes:
 
 - a working validator-local registry builder;
 - a JSON Schema runner;
-- a five-validator shared runner;
+- a nine-validator shared runner;
 - a `make schemas` target;
 - a `schema-validation` workflow;
 - a generic contract fixture test harness for selected families.
@@ -1695,7 +1695,7 @@ Open items must not be upgraded by README edits alone.
 | Typed outcomes | Prior docs name outcomes; code raises/returns registry | Caller incompatibility | Ratify API before use. |
 | Hashes/canonicalization | Prior docs imply support; governance absent | False integrity guarantees | Delegate/ADR. |
 | Tests | Generic schema tests exist; package tests absent | Package behavior unproved | Add parity and package tests. |
-| CI | Workflow exercises five validators | Green check overread | Document exact coverage. |
+| CI | Workflow exercises nine aggregate validators | Green check overread | Document exact coverage. |
 | Consumers | Broad callers named; no package imports found | Premature framework | Start with current resolver migration only. |
 
 When docs, code, schemas, contracts, ADRs, registers, tests, or runtime evidence disagree:

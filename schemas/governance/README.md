@@ -324,7 +324,7 @@ The other 53 matching directories use different layouts such as `cases.json`, di
 
 - `tests/validators/governance/` contains 42 direct `test_*.py` modules.
 - [`validate_review_record.py`](../../tools/validators/validate_review_record.py) is a 498-line fixture-only promotion-Gate-G projection validator at the pinned blob, not the short stub described by v0.2.
-- The aggregate [`validator_registry.json`](../../tools/validators/validator_registry.json) full profile selects eight fixture-backed object validators plus `workflow-security` and `repository-topology`; none of the eight object validators targets the two root scaffolds.
+- The aggregate [`validator_registry.json`](../../tools/validators/validator_registry.json) full profile registers 29 validators (23 fixture- or case-backed, plus 6 repository-state checks including `workflow-security` and `repository-topology`); none of them targets the two root scaffolds.
 - The root `overlay_pointer` and `consent_receipt` names have no matching governance fixture family and no dedicated exact-path validator or test surfaced in the bounded scan.
 
 These counts show repository activity, not complete coverage. A coverage manifest mapping every schema to contract, fixture polarity, validator, test, producer, consumer, and maturity record remains **NEEDS VERIFICATION**.
