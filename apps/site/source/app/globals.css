@@ -4650,3 +4650,36 @@ html body :is(button,input,select,textarea):disabled,html body :is(a,button,inpu
 html body :is(button,a,[role="button"],input[type="submit"])[aria-busy="true"]{cursor:progress}
 input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .download-center-entry{padding:16px;margin:14px 0;background:#16332d;border-left:3px solid #cbb582}.download-center-entry>small{color:#c2c9a5;font-size:9px;letter-spacing:1.3px}.download-center-entry h3{font-size:16px;line-height:1.35;margin:7px 0}.download-center-entry p{color:#c4d4c4;font-size:12px;line-height:1.6}.download-center-entry>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#c4e6c7;text-underline-offset:4px}
+
+/* Map representations and source recovery use the same controls as the public Explorer. */
+.map-dock-current-view { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gold-soft); font-size: 11px; }
+.map-source-status.layer-source-status { position: static; width: 100%; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.layer-source-status .source-issue-list article { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.layer-source-status .source-issue-list article > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.layer-source-status .source-file-archives { margin-bottom: 16px; }
+.layer-source-switch { flex-wrap: wrap; }
+.map-dock-action[data-attention="true"] { box-shadow: inset 0 -2px #efb67b; }
+@media (max-width: 640px) { .map-dock-current-view { display: none; } }
+
+.source-status-scope { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.source-status-scope button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold-soft); }
+
+/* Private downloads stay in the source drawer without a second overlay. */
+.layer-source-status .data-notices-inline { margin-block: 12px; }
+.layer-source-status .data-notices-inline .data-notices-panel { position: static; inset: auto; width: 100%; max-width: none; max-height: none; padding: 12px; overflow: visible; box-shadow: none; }
+.layer-source-status .data-notices-inline .data-notices-trigger { width: 100%; justify-content: space-between; }
+.layer-source-status .data-notices-inline .data-notices-trigger > span { display: inline; }
+.layer-source-status .data-notices-inline .data-notices-trigger > span[aria-hidden] { display: none; }
+.layer-source-status .data-notices-inline .data-notices-trigger::before { content: none; }
+.qwen-panel .qwen-panel-heading, .qwen-panel .qwen-context-strip { flex-shrink: 0; }
+.qwen-panel .qwen-panel-heading { padding: 10px 16px; }
+.qwen-panel .qwen-panel-heading h2 { font-size: 18px; margin: 4px 0 0; }
+.qwen-panel .qwen-context-strip small { font-size: 9px; white-space: nowrap; }
+.qwen-panel .qwen-context-strip span { padding: 6px 10px; }
+@media (max-width: 720px) {
+  .topbar:has(.scene-panel-toolbar[data-open]) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (max-width: 500px) {
+  .map-chrome-dock, .top-actions { min-width: 0; }
+  .map-dock-menu-panel { max-height: calc(100dvh - var(--topbar) - env(safe-area-inset-bottom, 0px) - 18px); }
+}

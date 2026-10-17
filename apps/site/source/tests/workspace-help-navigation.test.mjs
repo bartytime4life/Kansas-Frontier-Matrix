@@ -30,10 +30,11 @@ test('the retained guide stays unmounted and cannot autofocus in Reports or Stor
   }
 });
 test('source status reveals the map before frame focus and retains the supplied return target',()=>{
-  const state={primary:'reports',guide:true,status:false},frames=[],focus=[],returnTarget={},sourceStatusReturnRef={current:null};
-  const scope={setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.guide=v,setSourceStatusOpen:v=>state.status=v,setLeftOpen:()=>{},sourceStatusReturnRef,sourceStatusPanelRef:{current:{querySelector:()=>({focus:()=>focus.push(state.primary)})}},window:{requestAnimationFrame:fn=>frames.push(fn)}};
+  const state={primary:'reports',guide:true,status:false},frames=[],focus=[],returnTarget={closest:()=>null},sourceStatusReturnRef={current:null};
+  const scope={setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.guide=v,setSourceStatusOpen:v=>state.status=v,setLeftOpen:v=>state.left=v,setLeftPanelMode:v=>state.mode=v,setMapUtilityOpen:v=>state.utility=v,setRightOpen:v=>state.evidence=v,setQwenOpen:v=>state.qwen=v,setScenePanelOpen:v=>state.effects=v,leftPanelReturnRef:{current:null},sourceStatusReturnRef,sourceStatusPanelRef:{current:{querySelector:()=>({focus:()=>focus.push(state.primary)})}},window:{requestAnimationFrame:fn=>frames.push(fn)}};
   evaluate(callbacks.get('openSourceStatus'),scope)(returnTarget);
   assert.equal(state.primary,'map');assert.equal(state.guide,false);assert.equal(state.status,true);assert.equal(sourceStatusReturnRef.current,returnTarget);
+  assert.equal(state.left,true);assert.equal(state.mode,'layers');assert.equal(state.utility,false);assert.equal(state.qwen,false);assert.equal(state.effects,false);
   assert.deepEqual(focus,[]);frames[0]();assert.deepEqual(focus,['map']);
 });
 
