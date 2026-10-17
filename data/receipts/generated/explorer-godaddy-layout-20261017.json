@@ -21,7 +21,9 @@
     "apps/site/source/app/explorer-menu-dismissal.ts",
     "apps/site/source/tests/explorer-menu-dismissal.test.mjs",
     "apps/site/source/tests/godaddy-layout-port.test.mjs",
-    "apps/site/verification-godaddy-layout-20261017.md"
+    "apps/site/verification-godaddy-layout-20261017.md",
+    "apps/site/source/tests/globe-context.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs"
   ],
   "artifact_hashes": {
     "apps/site/source/app/explorer-controls-navigation.tsx": "sha256:09c3159aefc148b96e97b5bd8438a7715ab1440cb922132d6c8c4b7b34f2777c",
@@ -43,7 +45,9 @@
     "apps/site/source/app/explorer-menu-dismissal.ts": "sha256:3f17c9c025ee61205938100eb9391f1594f31d1505397c2cba1189fbd545949c",
     "apps/site/source/tests/explorer-menu-dismissal.test.mjs": "sha256:a4c2db1457b4d1fc36191e3c420cef82c7f527d9b141cb02bcd18cad9ff5c303",
     "apps/site/source/tests/godaddy-layout-port.test.mjs": "sha256:282525bab673d47ae308deed79c62a16be6724edf55757d0f4b8f5ee9009d2b7",
-    "apps/site/verification-godaddy-layout-20261017.md": "sha256:823bc260259d6730d9a7956d9a19df33c1fb7b4df09322c7f8ec70709c73c31f"
+    "apps/site/verification-godaddy-layout-20261017.md": "sha256:660409195172f87fd1e9595537f1b5bfbe1c27998159c5e3e8e880f87151b1cc",
+    "apps/site/source/tests/globe-context.test.mjs": "sha256:ed98c4acd6fc16b20f09d327c45e9e73181a98b0152f91227173cb064bc7cbe5",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:0fcc42c8620528f412cb672891ad923abf651f30e72a1a523876339a5996b779"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -62,7 +66,8 @@
     "evidence_refs": [
       "main@2b22ed1115ebfdac98d497b1db95129453b4a2a1",
       "GoDaddy source@4b3cc837e9c131e5eb214427e0a55646fc76e52a",
-      "apps/site/verification-godaddy-layout-20261017.md"
+      "apps/site/verification-godaddy-layout-20261017.md",
+      "CI assertion follow-up main@2786e399a3bd66af01d4239f1db291c2d0e0d283"
     ],
     "evidence_hashes": [
       "sha256:ae163a2730673eb3cb5898309ee55d36d2502dd7bd8234cf5398d2246b79758f",
@@ -97,7 +102,9 @@
     "apps/site/source/app/explorer-menu-dismissal.ts": "PROPOSED",
     "apps/site/source/tests/explorer-menu-dismissal.test.mjs": "PROPOSED",
     "apps/site/source/tests/godaddy-layout-port.test.mjs": "PROPOSED",
-    "apps/site/verification-godaddy-layout-20261017.md": "CONFIRMED"
+    "apps/site/verification-godaddy-layout-20261017.md": "CONFIRMED",
+    "apps/site/source/tests/globe-context.test.mjs": "PROPOSED",
+    "apps/site/source/tests/rendered-html.test.mjs": "PROPOSED"
   },
   "validation_gates": [
     {
@@ -140,8 +147,13 @@
     },
     {
       "gate": "draft PR exact-head CI",
-      "outcome": "SKIPPED",
-      "reason": "Pending initial commit and PR creation; current PR checks are authoritative."
+      "outcome": "FAIL",
+      "reason": "Initial PR run built successfully; two obsolete layout assertions corrected and passed locally. Runtime STARTUP_FAILED and mirror MIRROR_REVIEW_REQUIRED also fail on main; final rerun is recorded in the follow-up draft PR."
+    },
+    {
+      "gate": "CI layout assertion repair",
+      "outcome": "PASS",
+      "reason": "Both failing layout assertions pass; complete Globe, layout-control and menu-dismissal suites pass locally. Application source unchanged."
     }
   ],
   "policy_decisions": [],
@@ -167,5 +179,5 @@
   },
   "created_at": "2026-10-17T05:05:26.512805+00:00",
   "emitter": "Codex /root",
-  "notes": "Isolated follow-up branch from main 2b22ed1115ebfdac98d497b1db95129453b4a2a1. Original verified UI bytes and unrelated working-tree changes preserved. User authorizes commit, push, draft PR and CI checks only. No deployment, runtime/data migration or hosted-AI port. Human review remains pending."
+  "notes": "Isolated follow-up branch from main 2b22ed1115ebfdac98d497b1db95129453b4a2a1. Original verified UI bytes and unrelated working-tree changes preserved. User authorizes commit, push, draft PR and CI checks only. No deployment, runtime/data migration or hosted-AI port. Human review remains pending. PR #5220 merged externally during CI inspection; assertion-only follow-up starts from main 2786e399a3bd66af01d4239f1db291c2d0e0d283 with application bytes unchanged."
 }

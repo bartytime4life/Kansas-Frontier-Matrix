@@ -37,6 +37,16 @@ Intentional differences from the public site: owner-private workflows and local 
 
 Actual local Qwen inference was NOT RUN: the companion was unreachable and the UI reported that limitation. Private released snapshots were not available in the disposable local database. No hosted archive writes, production D1/R2 reads or mutations, location permission request, model installation or deployment was performed.
 
+## Draft PR CI follow-up
+
+PR #5220 was merged externally while CI was being checked. The assertion-only follow-up starts from current main `2786e399a3bd66af01d4239f1db291c2d0e0d283`; its application tree matches the verified port. The original checkout and unrelated document edits remain untouched.
+
+[PR #5220's initial Explorer run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39005174265/job/117316050561) passed lint, TypeScript and the production build, then reported 1,370 passing tests and three failures. Two source assertions still required the old inline Globe callback and a header without its new dismissal ref. Those assertions now verify the shared representation selector (including closing Underground/Compare) and the single header regardless of attribute order. Both corrected assertions pass locally. The verified application bytes remain unchanged.
+
+The remaining local-runtime test failed with `STARTUP_FAILED` in the [preceding main run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39002317013/job/117307652690) at `012536c15a394a4db5b24584e151a331c94a6764` too: 1,363 passed, one failed. That revision and this PR's main base have byte-identical Site source. Runtime code/configuration and its authorization checks are outside this layout fix and remain intact. The backend smoke step was skipped after the test failure; no smoke pass is claimed.
+
+The separate `water-conformance` check fails with `MIRROR_REVIEW_REQUIRED` on [the initial PR](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39005174223/job/117316050401) and its [exact main base](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39004937915/job/117315364743). Both passed 338 Python tests before that gate. This port does not change the mirror review receipt or weaken the gate. The follow-up PR's current checks and description record the final rerun; this dated record identifies the initial failures and their attribution.
+
 ## Retained visual evidence
 
 The task retains the following browser captures outside the source/deployment tree. Hashes bind the inspected files; these captures are local evidence, not publicly hosted assets. Full QA, interaction notes and logs remain with the task.
