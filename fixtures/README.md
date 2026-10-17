@@ -342,16 +342,17 @@ python -m unittest discover \
 git diff --check
 ```
 
-The current `full` validator profile in [`validator_registry.json`](../tools/validators/validator_registry.json) contains eight fixture-backed entries:
+The current `full` validator profile in [`validator_registry.json`](../tools/validators/validator_registry.json) contains 29 entries: 23 replay their own fixture or case lanes (`--fixtures` or `--cases`), and 6 check repository state directly. The historical `make schemas` compatibility lane ([`run_all.py`](../tools/validators/_common/run_all.py)) runs a nine-validator legacy core from that profile:
 
 1. `source-descriptor`
 2. `evidence-ref`
 3. `evidence-bundle`
 4. `layer-manifest`
-5. `runtime-response-envelope`
-6. `decision-envelope`
-7. `run-receipt`
-8. `ingest-receipt`
+5. `dataset-version`
+6. `runtime-response-envelope`
+7. `decision-envelope`
+8. `run-receipt`
+9. `ingest-receipt`
 
 [`validator-suite.yml`](../.github/workflows/validator-suite.yml) exercises the aggregate inventory, shared schema runner, generated-receipt integrity checks, a material-change profile, and an expected EvidenceBundle rejection. Its successful conclusion is bounded validation evidence; it does not create policy, review, proof, release, or publication authority.
 

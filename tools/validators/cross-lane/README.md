@@ -440,7 +440,7 @@ Repository workflows inspected for this documentation change:
 | `docs-build` | `pull_request`/`push`; GitHub-hosted runner; TODO echo jobs |
 | `link-check` | `pull_request`/`push`; GitHub-hosted runner; TODO echo job |
 | `docs-control-plane` | `pull_request`/`push`; GitHub-hosted runner; TODO echo jobs |
-| `validator-suite` | Runs the five-entry schema aggregate and an EvidenceBundle fail-closed canary; does not validate this bridge |
+| `validator-suite` | Runs the nine-validator schema aggregate (`make schemas`) and an EvidenceBundle fail-closed canary; does not validate this bridge |
 
 Workflow existence or a green status does not prove bridge correctness, canonical naming acceptance, or runtime enforcement.
 
@@ -536,7 +536,7 @@ Unresolved items remain `NEEDS VERIFICATION` or `UNKNOWN`; they are not implemen
 | `joins/README.md` | CONFIRMED README | Pair-specific routing boundary | Pair executables or complete inventory |
 | Bounded direct-lane search | CONFIRMED search result | README surfaced as direct lane content | Exhaustive historical or generated absence |
 | Representative missing executable/test/workflow paths | CONFIRMED at tested paths | Direct implementation not established there | Absence under every possible path |
-| Shared aggregate | CONFIRMED code | Five registered top-level validators; bridge absent | No other invocation |
+| Shared aggregate | CONFIRMED code | 29 registered validators, nine in the legacy aggregate core; bridge absent | No other invocation |
 | Relevant workflow files | CONFIRMED definitions | Trigger and step posture for inspected workflows | All repository workflow safety |
 | Inbound-reference search | CONFIRMED search-limited | Path has meaningful documentation dependencies | Exhaustive dependency graph |
 | Drift register | CONFIRMED file | Existing repository drift process and naming-drift precedent | Entry specific to this bridge |

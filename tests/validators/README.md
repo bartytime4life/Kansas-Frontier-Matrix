@@ -231,7 +231,7 @@ bounded historical surface.
 | `make validator-list` | List profiles and validator IDs. |
 | `make validator-focused` | Run the four-entry focused profile. |
 | `make validator-release-profile` | Run the 13-entry release-dry-run profile. |
-| `make validator-full` or `make validators` | Run all 26 registered validators. |
+| `make validator-full` or `make validators` | Run every registered validator. |
 | `make validator-changed-area CHANGED_PATH_FILE=<file>` | Select validators from a newline-delimited path list. |
 | `make schemas` | Run the nine-entry compatibility schema-fixture aggregate. |
 | `make test` | Run `tests/schemas` and `tests/contracts`; it does not collect this lane. |

@@ -447,12 +447,12 @@ The current [`schema-validation` workflow](../../.github/workflows/schema-valida
 | --- | --- | --- |
 | Trigger | Pull requests, pushes to `main`, and dispatch; `schemas/**` changes are in scope | Triggering on this README does not consume it as a fixture or executable test. |
 | Inventory | Parses JSON under `schemas/`; meta-validates `*.schema.json`; checks canonical v1 Draft 2020-12 and unique `$id` values | This compatibility lane currently contributes no JSON. |
-| Fixture preflight | Pins eight fixture-backed compatibility validators and requires nonempty valid/invalid lanes with reviewed rejection expectations | Those payloads live under `fixtures/`, not `schemas/tests/`. |
-| Aggregate validation | Runs `make schemas`, which delegates through the compatibility runner to the registry-driven `full` profile | The current full profile contains ten validators, including workflow-security and repository-topology guardrails. |
+| Fixture preflight | Pins nine fixture-backed compatibility validators and requires nonempty valid/invalid lanes with reviewed rejection expectations | Those payloads live under `fixtures/`, not `schemas/tests/`. |
+| Aggregate validation | Runs `make schemas`, which runs the compatibility runner's nine-validator legacy core through the registry-driven orchestrator | The current full profile contains 29 validators, including workflow-security and repository-topology guardrails. |
 | Executable tests | Runs `python -m pytest -q tests/schemas tests/contracts` | Assertions live under `tests/`. |
 | Output | Process output and job summary only | No governed ValidationReport, receipt, proof, policy decision, release object, or published artifact is emitted. |
 
-The historical `RUNNER_VALIDATORS` export intentionally includes only full-profile validators carrying `--fixtures`; the current full registry contains additional repository guardrails. Do not confuse the eight fixture-backed inventory with the complete ten-validator profile.
+The historical `RUNNER_VALIDATORS` export is the explicit nine-validator legacy core; the current full registry also contains other fixture- and case-backed validators and repository guardrails. Do not confuse the nine-validator legacy core with the complete 29-validator profile.
 
 Workflow source proves configured intent. Only the exact-head run conclusion proves that a particular revision executed successfully, and even a green run remains bounded validation evidence rather than semantic, policy, evidence, review, release, or publication authority.
 

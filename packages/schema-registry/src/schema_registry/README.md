@@ -15,7 +15,7 @@ truth_posture: >
   placeholder, parent package/source READMEs v1, packages responsibility-root doctrine, schemas root
   machine-shape authority, mixed-maturity schemas/contracts/v1 index, proposed ADR-0001 schema-home
   decision, working local schema registry implementation under tools/validators/_common/local_resolver.py,
-  JSON Schema runner integration, five-validator run_all wiring, Makefile schemas target, schema-validation
+  JSON Schema runner integration, nine-validator run_all wiring, Makefile schemas target, schema-validation
   workflow, generic contract fixture harness, root jsonschema dependency, absent SCHEMA_REGISTRY_INDEX.md,
   and bounded absence of functional namespace modules, public exports, repository consumers,
   package-local tests, package-specific CI, accepted alias/version/status registry contract,
@@ -479,14 +479,18 @@ The current `build_registry(repo_root)` implementation:
 - builds the local registry;
 - constructs `Draft202012Validator(schema, registry=registry)`.
 
-`run_all.py` currently invokes five top-level validators with `--fixtures`:
+`run_all.py` currently invokes its nine-validator legacy core with `--fixtures`, selected from the registry's `full` profile:
 
 ```text
 validate_source_descriptor.py
+validate_evidence_ref.py
 validate_evidence_bundle.py
+data/validate_layer_manifest.py
+data/validate_dataset_version.py
 validate_runtime_response_envelope.py
 validate_decision_envelope.py
 validate_run_receipt.py
+validate_ingest_receipt.py
 ```
 
 The `Makefile` target:
@@ -1341,7 +1345,7 @@ Confirmed repository behavior includes:
 
 - a working validator-local registry builder;
 - a JSON Schema runner;
-- a five-validator shared runner;
+- a nine-validator shared runner;
 - a `make schemas` target;
 - a `schema-validation` workflow;
 - a generic contract fixture test harness for selected families.
@@ -1407,7 +1411,7 @@ Do not use production-sensitive records.
 
 ### Existing CI interpretation
 
-The `schema-validation` workflow runs `make schemas`, which runs five top-level validators through the shared runner. It does not prove:
+The `schema-validation` workflow runs `make schemas`, which runs nine top-level validators through the shared runner. It does not prove:
 
 - every schema file is meta-valid;
 - every family has fixtures;
@@ -1695,7 +1699,7 @@ Open items must not be upgraded by README edits alone.
 | Typed outcomes | Prior docs name outcomes; code raises/returns registry | Caller incompatibility | Ratify API before use. |
 | Hashes/canonicalization | Prior docs imply support; governance absent | False integrity guarantees | Delegate/ADR. |
 | Tests | Generic schema tests exist; package tests absent | Package behavior unproved | Add parity and package tests. |
-| CI | Workflow exercises five validators | Green check overread | Document exact coverage. |
+| CI | Workflow exercises nine aggregate validators | Green check overread | Document exact coverage. |
 | Consumers | Broad callers named; no package imports found | Premature framework | Start with current resolver migration only. |
 
 When docs, code, schemas, contracts, ADRs, registers, tests, or runtime evidence disagree:
@@ -1780,7 +1784,7 @@ When docs, code, schemas, contracts, ADRs, registers, tests, or runtime evidence
 | Missing `SCHEMA_REGISTRY_INDEX.md` | **CONFIRMED at checked path** | Human registry index not present. | Absence of all registry-like data elsewhere. |
 | `local_resolver.py` | **CONFIRMED code** | Current local `$id` registry and duplicate behavior. | Package implementation or admission policy. |
 | `jsonschema_runner.py` | **CONFIRMED code** | Integration with Draft 2020-12 validator. | Package API. |
-| `run_all.py` | **CONFIRMED code** | Five wired top-level validators. | Exhaustive schema coverage. |
+| `run_all.py` | **CONFIRMED code** | Nine wired top-level validators. | Exhaustive schema coverage. |
 | `Makefile` | **CONFIRMED** | `make schemas` execution path. | Full registry/test maturity. |
 | Schema-validation workflow | **CONFIRMED** | CI invokes root install and `make schemas`. | Package-specific CI or full schema admission. |
 | Common schema test | **CONFIRMED code** | Selected-family fixture validation. | Every family/registry behavior. |

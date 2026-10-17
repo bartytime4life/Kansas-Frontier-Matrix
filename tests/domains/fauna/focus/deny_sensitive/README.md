@@ -215,7 +215,7 @@ The placement question remains unresolved. Both inspected artifacts agree that d
 | `PolicyDecision` schema | Fielded proposed schema with finite outcome and policy-family enums; valid/invalid fixtures exist and generic schema tests discover the family. | `CONFIRMED` shape / proposed status |
 | Dedicated `PolicyDecision` validator | Schema declares `tools/validators/validate_policy_decision.py`, but that exact file is absent. | `CONFIRMED` missing at tested path |
 | `DecisionEnvelope` schema | Fielded proposed schema with finite outcome and policy-family enums, reasons, obligations, evidence refs, and closed properties. | `CONFIRMED` shape / proposed status |
-| `DecisionEnvelope` validator | Executable JSON Schema wrapper exists and is included in the shared five-validator aggregate. | `CONFIRMED` shape validator |
+| `DecisionEnvelope` validator | Executable JSON Schema wrapper exists and is included in the nine-validator legacy aggregate core. | `CONFIRMED` shape validator |
 | Decision/policy fixtures | Minimal valid and missing-required-field invalid cases exist for both families. | `CONFIRMED` narrow shape coverage |
 | Generic schema harness | `tests/schemas/test_common_contracts.py` discovers policy/runtime schema fixture families. | `CONFIRMED` executable harness |
 | Governed API routes | Current registry contains bootstrap, layers, and evidence only; no Focus route is registered. | `CONFIRMED` |
@@ -453,7 +453,7 @@ A future live tier may exist only when separately named, explicitly triggered, e
 | Surface | Observed behavior | Deny-sensitive coverage |
 |---|---|---|
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Contract/schema shape only; not this lane. |
-| `make schemas` | Runs five JSON Schema validators including `DecisionEnvelope`. | No dedicated `PolicyDecision` validator; no policy semantics. |
+| `make schemas` | Runs the nine-validator legacy core, including `DecisionEnvelope`. | No dedicated `PolicyDecision` validator; no policy semantics. |
 | `make policy` | Echoes `TODO: opa test policy/ -v`. | No OPA test execution. |
 | `make deny-test` | Runs the app-owned five-test route, method, manifest, internal-store-literal, and forbidden-import guard module as one local aggregate. | Bounded generic structural proof; no Fauna sensitivity or Focus policy evaluation. |
 | `make governed-api-smoke` | Runs current governed-API tests. | Scaffold routes only; no Focus route. |

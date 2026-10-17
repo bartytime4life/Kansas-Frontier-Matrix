@@ -324,7 +324,7 @@ The other 53 matching directories use different layouts such as `cases.json`, di
 
 - `tests/validators/governance/` contains 42 direct `test_*.py` modules.
 - [`validate_review_record.py`](../../tools/validators/validate_review_record.py) is a 498-line fixture-only promotion-Gate-G projection validator at the pinned blob, not the short stub described by v0.2.
-- The aggregate [`validator_registry.json`](../../tools/validators/validator_registry.json) full profile selects eight fixture-backed object validators plus `workflow-security` and `repository-topology`; none of the eight object validators targets the two root scaffolds.
+- The aggregate [`validator_registry.json`](../../tools/validators/validator_registry.json) full profile registers 29 validators (23 fixture- or case-backed, plus 6 repository-state checks including `workflow-security` and `repository-topology`); none of them targets the two root scaffolds.
 - The root `overlay_pointer` and `consent_receipt` names have no matching governance fixture family and no dedicated exact-path validator or test surfaced in the bounded scan.
 
 These counts show repository activity, not complete coverage. A coverage manifest mapping every schema to contract, fixture polarity, validator, test, producer, consumer, and maturity record remains **NEEDS VERIFICATION**.
@@ -476,11 +476,11 @@ The current [`schema-validation.yml`](../../.github/workflows/schema-validation.
 - parses every JSON file under `schemas/`;
 - meta-schema checks every `*.schema.json` file under `schemas/`, including the two root scaffolds;
 - separately requires every canonical `schemas/contracts/v1/**/*.schema.json` file to declare Draft 2020-12 and a unique `$id`;
-- requires non-empty valid and invalid lanes plus rejection expectations for eight configured aggregate object validators;
-- runs the ten-entry full validator profile through `make schemas`; and
+- requires non-empty valid and invalid lanes plus rejection expectations for nine configured aggregate object validators;
+- runs the nine-validator legacy core from the full validator profile through `make schemas`; and
 - runs `tests/schemas` and `tests/contracts` only if the aggregate step succeeds.
 
-The eight configured object validators target source, evidence, data/layer, and runtime families—not either root governance scaffold. The full profile adds workflow-security and repository-topology guardrails. Workflow success would therefore prove broad configured checks, not operational overlay or consent behavior.
+The nine configured object validators target source, evidence, data/layer/dataset-version, and runtime families—not either root governance scaffold. The full profile also registers other validators, including workflow-security and repository-topology guardrails, that `make schemas` does not run. Workflow success would therefore prove broad configured checks, not operational overlay or consent behavior.
 
 ### Most recent observed unchanged-tree evidence
 

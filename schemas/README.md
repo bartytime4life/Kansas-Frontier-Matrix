@@ -178,11 +178,11 @@ Public clients use governed APIs and released artifacts. They do not treat schem
 |---|---:|---|
 | `schemas/README.md` | **CONFIRMED v0.5 baseline** | Stable path, H1, document ID, purpose, anchors, no-loss ledger, and compatibility warnings are preserved in v0.6. |
 | Accepted Directory Rules | **CONFIRMED through ADR-0029** | The exact v2 bytes at `docs/doctrine/directory-rules.md` are adopted despite their retained pre-adoption label. Placement remains responsibility-rooted and no-parallel-authority. |
-| `schemas/contracts/v1/` | **CONFIRMED configured v1 validation surface** | Current schema CI meta-validates the tree, requires Draft 2020-12 and unique canonical `$id` values, and wires eight fixture-backed validators through the full profile. This does not accept ADR-0001. |
+| `schemas/contracts/v1/` | **CONFIRMED configured v1 validation surface** | Current schema CI meta-validates the tree, requires Draft 2020-12 and unique canonical `$id` values, and checks nine configured aggregate fixture families; the full profile registers 29 validators. This does not accept ADR-0001. |
 | ADR-0001 | **CONFIRMED present; status `proposed`** | `schemas/contracts/v1/` is current configured direction, not an accepted subroot decision. |
 | ADR-0002 | **CONFIRMED present; effective status `proposed`** | Current roots partially implement the split, but the decision is not accepted by documentation alone. |
 | `tools/validate_all.py` | **CONFIRMED canonical thin entrypoint** | Delegates to the registry-driven orchestrator; it does not own validator semantics or release authority. |
-| `tools/validators/validator_registry.json` | **CONFIRMED bounded validator registry** | Registers eight validators and four profiles. It does not enumerate every schema or prove complete validation coverage. |
+| `tools/validators/validator_registry.json` | **CONFIRMED bounded validator registry** | Registers 29 validators and four profiles. It does not enumerate every schema or prove complete validation coverage. |
 | `tools/validators/validate_all.py` | **CONFIRMED deterministic orchestrator** | Validates registry safety, selects validators, runs all selected entries, and emits a deterministic JSON result unless timing is requested. |
 | `tools/validators/_common/run_all.py` | **CONFIRMED compatibility entrypoint** | Exports the historical `RUNNER_VALIDATORS` surface and delegates `make schemas` to the full orchestrator profile. |
 | `schemas/atmosphere/` | **CONFIRMED compatibility/migration index** | New schemas are frozen there; Air/Atmosphere path, filename, `$id`, and ownership drift remain unresolved. |
@@ -403,8 +403,8 @@ make validate
 | `--profile focused` | Runs SourceDescriptor, EvidenceRef, EvidenceBundle, and RuntimeResponseEnvelope validators. | Focused bounded surface. |
 | `--profile changed-area` | Selects validators whose registered path globs match supplied changed paths. | Coverage depends on maintained globs; no match is `ABSTAIN` by default; `--require-match` makes it `FAIL`/exit `1` for gates. |
 | `--profile release-dry-run` | Runs EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, and IngestReceipt validators. | Fixture validation only; not a release dry run, release decision, or publication. |
-| `--profile full` | Runs all eight registered validators and aggregates every selected result. | Registered surface only; not complete schema-tree coverage. |
-| `make schemas` | Runs `python tools/validators/_common/run_all.py`, which delegates to the full orchestrator profile. | Compatibility command; same bounded registered surface. |
+| `--profile full` | Runs all 29 registered validators and aggregates every selected result. | Registered surface only; not complete schema-tree coverage. |
+| `make schemas` | Runs `python tools/validators/_common/run_all.py`, which runs the nine-validator legacy core selected from the full orchestrator profile. | Compatibility command; a subset of the registered surface, not equivalent to `--profile full`. |
 | `make test` | Runs `python -m pytest tests/schemas tests/contracts -q`. | Collected schema/contract tests only. |
 | `make validate` | Runs `make schemas` and `make test`. | Not a full repository, policy, release, or publication gate. |
 
@@ -661,7 +661,7 @@ This is a **bounded direct-child view**, not a complete recursive inventory or c
 
 ### Current documentation reconciliation
 
-v0.5 described a seven-entry, stop-on-first-nonzero aggregate. Current repository evidence supersedes that operational description: `run_all.py` is now a compatibility shim over the registry-driven orchestrator, the full profile contains eight validators including LayerManifest, and all selected validators run before the aggregate outcome is computed. This README corrects only the documentation; it does not alter those behavior surfaces.
+v0.5 described a seven-entry, stop-on-first-nonzero aggregate. Current repository evidence supersedes that operational description: `run_all.py` is now a compatibility shim over the registry-driven orchestrator, the full profile contains 29 validators including LayerManifest, and all selected validators run before the aggregate outcome is computed. This README corrects only the documentation; it does not alter those behavior surfaces.
 
 [Back to top](#top)
 
@@ -809,7 +809,7 @@ The registry is an execution-selection contract for the orchestrator. It does no
 | `focused` | SourceDescriptor, EvidenceRef, EvidenceBundle, RuntimeResponseEnvelope | Fast shared trust-shape checks | Not all registered validators. |
 | `changed-area` | Dynamic matches from changed repository paths and registered globs | Risk-proportionate validation | Coverage is only as complete as the globs; no match is `ABSTAIN` by default; `--require-match` is the fail-closed gate mode. |
 | `release-dry-run` | EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, IngestReceipt | Release-adjacent fixture checks | Does not assemble, approve, sign, release, roll back, or publish. |
-| `full` | All eight validators in registry order | Aggregate compatibility path | Registered surface only; not the full schema tree. |
+| `full` | All 29 validators in registry order | Aggregate compatibility path | Registered surface only; not the full schema tree. |
 
 ### Full-profile inventory
 

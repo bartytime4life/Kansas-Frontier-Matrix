@@ -112,7 +112,7 @@ The active [`control_plane/root_registry.yaml`](../control_plane/root_registry.y
 | `tools/README.md` | **CONFIRMED existing / draft documentation** | This v0.5 update is same-path and does not change root authority. |
 | [`tools/validate_all.py`](validate_all.py) | **CONFIRMED implemented thin entrypoint** | It imports and returns the orchestrator's `main()` result. |
 | [`tools/validators/validate_all.py`](validators/validate_all.py) | **CONFIRMED implemented orchestrator** | It validates a bounded registry, selects validators, executes them no-network, and emits deterministic JSON unless timing is requested. |
-| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Twenty-five validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
+| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Twenty-nine validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
 | [`_common/run_all.py`](validators/_common/run_all.py) | **CONFIRMED compatibility entrypoint** | It preserves the historical aggregate fixture runner while delegating to the full orchestrator profile. |
 | Root direct-child inventory | **CONFIRMED at the pinned base** | Nineteen directories, this README, and the root validator entrypoint are present. |
 | Tool-family implementation maturity | **MIXED** | Some lanes are executable and fixture-tested; others remain documentation-only, proposed, compatibility-bound, or insufficiently reviewed. |
