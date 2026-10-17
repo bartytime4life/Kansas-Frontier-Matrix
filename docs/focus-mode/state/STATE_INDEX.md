@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/focus-modes-state-index
 title: Kansas State-Scale Focus Composition Planning Index
-type: index; focus-mode; geographic-state; composition-scope; compatibility-lane
+type: index
 version: v1.1
 status: draft; repository-grounded; proposed-identity; no-geographic-lane; validation-hold; non-release; non-publication
 owner: "@bartytime4life via CODEOWNERS; state-scope, Focus Mode, domain-profile, sensitivity, evidence, review, release, correction, and rollback authority NEEDS VERIFICATION"
