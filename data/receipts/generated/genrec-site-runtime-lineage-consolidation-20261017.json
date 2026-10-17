@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-site-runtime-lineage-consolidation-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/verification-runtime-mirror-20261017.md",
+    "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/verification-runtime-mirror-20261017.md": "sha256:086b0c8d99ca98690305f856447a9cd8ee04b0ccf1e750504b8b6f76b04ae456",
+    "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json": "sha256:3884614e0fcd8f9f4086b3e550c7e3ec4cc90918818a4b4d3dbc07ee95b25450",
+    "tests/qa/test_site_mirror.py": "sha256:ef0f0ed7a3a68af7b8557f9de15838456ddc4148e2922f8f1fd419d18db70446",
+    "tools/qa/site_mirror.py": "sha256:670f6dca8c0ba7c399b27dd50ff8067ed85ff0a13e263213b7ef3a80fb1752a8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:85252fd3533872328c529ae24f419a807233fbcecd4d17573290d493817516ee",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "local regression tests",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@12bfe5e9da7b46e06379c574d6db194d940e40ff",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5222",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5223",
+      "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json",
+      "data/receipts/generated/site-v268-explorer-local-port-overlay-20261017.json"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/verification-runtime-mirror-20261017.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "mirror regressions",
+      "outcome": "PASS",
+      "reason": "40 passed on Python 3.12, including corrected lineage, historical hash preservation and existing negative mirror tests."
+    },
+    {
+      "gate": "recorded content parity",
+      "outcome": "PASS",
+      "reason": "874 current files, 46 overlays, 258 withheld paths absent. CONTENT_PARITY_ONLY; review remains pending and hosted equivalence false."
+    },
+    {
+      "gate": "broader local water tests",
+      "outcome": "FAIL",
+      "reason": "338 passed, two failed at loopback socket creation with PermissionError in this sandbox. Checkout source package directories were added to import paths after initial collection errors."
+    },
+    {
+      "gate": "local Node containment test",
+      "outcome": "FAIL",
+      "reason": "Filtered test cannot import without generated dist/server/wrangler.json; direct probe is blocked by spawnSync EPERM. Neither ran to successful assertions."
+    },
+    {
+      "gate": "exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch/PR creation. Final candidate checks are authoritative; earlier head checks are not inherited."
+    },
+    {
+      "gate": "human review and merge authorization",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no approval or owner merge authorization is inferred from generation or tests."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "actual-parent-selector",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/da5bc7b0ae14a9383efec17f9c9dfb0e9c4039eb/tools/qa/site_mirror.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T15:54:54.703591+00:00",
+  "emitter": "Codex /root",
+  "notes": "Forward-only correction because both original PRs have already merged. Historical receipts are unchanged. No runtime, Site, data, source activation, release, publication or settings change."
+}
