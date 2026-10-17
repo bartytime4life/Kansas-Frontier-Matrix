@@ -135,3 +135,24 @@ memory/concurrency and model-quality acceptance remain required on the host.
    pages, anonymous status and protected operations after rollback.
 
 Prepared source and review evidence do not mean merged, deployed or published.
+
+## Catalog context recheck correction · 2026-10-17
+
+Acceptance review against standalone branch base
+`d54eda47df212496da88a7e97f82e1ad74831732` reproduced a gap: a server-resolved
+catalog selection without a release ID, source-summary field or source link
+skipped the freshness check. Correcting or denying that record could leave its
+earlier generated discussion visible. All resolved contexts now undergo the
+same bounded resolver/fingerprint check before inference and on result reads.
+A failed check permanently withholds that job's interpretation. No model,
+resource limit, identity, data store or publication authority changes.
+
+The regression uses the actual catalog context resolver. It checks an updated
+record after completion, monotonic withholding after the record is restored,
+and denial between resolution and inference without calling the model. It
+failed on the unchanged base with `UNVERIFIED_AI_DISCUSSION` instead of
+`RELEASE_CHANGED`, then passed with the correction. Placement stays in existing
+`server/`, `tests/` and `docs/` responsibilities under Directory Rules and
+accepted ADR-0029; no new root or parallel evidence home is created. Rollback
+is a reviewed revert and application redeployment; no store restoration or
+migration is required.

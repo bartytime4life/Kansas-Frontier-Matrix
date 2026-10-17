@@ -55,7 +55,9 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
    return value;
   }finally{clearTimeout(timer);}
  };
- const freshContext=async job=>{if(!job.context?.releaseId&&!job.context?.references?.length&&!job.context?.sourceSummary)return true;try{return contextFingerprint(await readContext(job.contextSelector))===job.contextFingerprint;}catch{return false;}};
+ // A resolved catalog record can change or be denied without having a link or
+ // release ID. Recheck every resolved context, not just citation-bearing ones.
+ const freshContext=async job=>{if(!job.context)return true;try{return contextFingerprint(await readContext(job.contextSelector))===job.contextFingerprint;}catch{return false;}};
  const fresh=async job=>{const value=await packet(job.query);return Boolean(value&&digest(value)===job.evidenceDigest);};
  const evidenceResult=async job=>{
   if(!await fresh(job))return envelope('ABSTAIN','RELEASE_CHANGED');
