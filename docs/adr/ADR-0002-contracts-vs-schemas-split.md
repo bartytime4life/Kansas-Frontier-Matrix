@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0002-contracts-vs-schemas-split
 title: "ADR-0002 — Contracts vs Schemas Split"
 type: adr
 adr_id: ADR-0002
-version: v1.4
+version: v1.5
 status: draft
 owners:
   - Architecture steward
@@ -14,7 +14,7 @@ reviewers_required:
   - QA/Validator steward
   - "at least one affected subsystem owner"
 created: 2026-05-10
-updated: 2026-09-12
+updated: 2026-10-17
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -85,9 +85,10 @@ related:
 tags: [kfm, adr, governance, contracts, schemas, policy, fixtures, tests, validators, directory-rules, division-of-labor, no-parallel-authority]
 notes:
   - "v1.4 refreshes the same-path ADR against main@57802dff665fce4fb23af379bb5e7d866dddefe3 and tree 583e6b847177f66bf63727965e383dae936b24cc; it does not accept ADR-0002 or change runtime behavior."
+  - "v1.5 narrowly refreshes only the validator-registry count against main@2578192eccc3de36c0f92aee0e1f1e6d66ca93bd (registry blob fc3770c28eb99ccfac4fc9eb1a10400fb5e23650): the full profile now names 29 validators. The evidence_snapshot pins and all other evidence remain as recorded for v1.4."
   - "ADR-0002 numbering and target path remain confirmed by docs/adr/INDEX.md; source metadata remains draft and the effective decision status remains proposed."
   - "Accepted ADR-0029 governs top-level responsibility placement; ADR-0002 remains proposed for stricter cross-surface coupling, readiness, and no-parallel-authority rules."
-  - "The current validator registry full profile names 28 validators. The schema-validation workflow maintains nine configured aggregate fixture families; its historical make schemas lane invokes only that explicit nine-validator core."
+  - "The current validator registry full profile names 29 validators. The schema-validation workflow maintains nine configured aggregate fixture families; its historical make schemas lane invokes only that explicit nine-validator core."
   - "The proposed object-family register names 19 families: 16 required milestone families and 3 earlier runtime families. It remains partial, navigational, non-self-authorizing, and records 11 required candidate conflicts."
   - "Two projected families name emitter paths, while 17 emitter states remain NOT_INSPECTED; the register does not prove deployed consumer or runtime binding."
   - "The readiness rule remains applicability-aware: every required surface must exist, while any not-applicable surface needs an explicit reviewed rationale rather than silent omission."
@@ -169,7 +170,7 @@ The repository has moved beyond a doctrine-only state. The following repository 
 - [`fixtures/README.md`](../../fixtures/README.md) and [`tests/fixtures/README.md`](../../tests/fixtures/README.md) document a two-home fixture split: cross-cutting reusable fixtures under `fixtures/`, test-local fixtures under `tests/fixtures/`. The latter still records a placement conflict rather than resolving it by prose.
 - [`tests/README.md`](../../tests/README.md) defines `tests/` as the canonical enforceability root while warning that no complete repository-wide test suite is established.
 - [`tools/validators/README.md`](../../tools/validators/README.md) defines reusable validators as fail-closed checkers, not schema, policy, evidence, release, or truth authority.
-- [`validator_registry.json`](../../tools/validators/validator_registry.json) names **28** validators in its `full` profile. The nine configured aggregate fixture families are a bounded subset; the profile also includes catalog, governance, pipeline, documentation, workflow-security, and repository-topology lanes.
+- [`validator_registry.json`](../../tools/validators/validator_registry.json) names **29** validators in its `full` profile. The nine configured aggregate fixture families are a bounded subset; the profile also includes catalog, governance, pipeline, documentation, workflow-security, and repository-topology lanes.
 - [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) coordinates **nine** configured machine-schema/fixture families, validates registry integrity and a selected `DatasetVersion` entry, retains the explicit nine-validator `make schemas` compatibility lane, validates the MapLibre performance-envelope contract, and runs schema/contract tests. It emits no ValidationReport, receipt, proof, policy decision, or release decision.
 - [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) names **19** families: 16 required milestone trust-object families and 3 earlier runtime families. It is `PROPOSED`, partial, navigational only, and non-self-authorizing; 11 required families have unresolved candidate conflicts. Two entries name an emitter path, while 17 emitter states are `NOT_INSPECTED`, so neither deployed runtime consumers nor complete emitter binding is established.
 - [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) remains `PROPOSED` with no entries, so compatibility retirement is not closed by that register.
@@ -397,7 +398,7 @@ The current schema-validation workflow confirms bounded coupling for **nine conf
 | `RunReceipt` | `schemas/contracts/v1/runtime/run_receipt.schema.json` | `fixtures/contracts/v1/runtime/run_receipt/` | `tools/validators/validate_run_receipt.py` |
 | `IngestReceipt` | `schemas/contracts/v1/source/ingest_receipt.schema.json` | `fixtures/contracts/v1/source/ingest_receipt/` | `tools/validators/validate_ingest_receipt.py` |
 
-The canonical registry's `full` profile names **28** validators. Its [historical aggregate wrapper](../../tools/validators/_common/run_all.py) deliberately invokes only the explicit nine-validator core used by `make schemas`; it is not an alias for the full profile. [`python tools/validate_all.py --profile full`](../../tools/validate_all.py) and `make validator-full` are the direct all-profile routes. The workflow separately validates registry integrity, executes the selected `DatasetVersion` profile entry, and checks the MapLibre performance-envelope fixture lane.
+The canonical registry's `full` profile names **29** validators. Its [historical aggregate wrapper](../../tools/validators/_common/run_all.py) deliberately invokes only the explicit nine-validator core used by `make schemas`; it is not an alias for the full profile. [`python tools/validate_all.py --profile full`](../../tools/validate_all.py) and `make validator-full` are the direct all-profile routes. The workflow separately validates registry integrity, executes the selected `DatasetVersion` profile entry, and checks the MapLibre performance-envelope fixture lane.
 
 This workflow definition proves only the configured machine-shape, fixture-polarity, registry-selection, and named compatibility checks for a tested revision. It does **not** prove complete semantic-contract crosswalks, policy evaluation, EvidenceBundle closure for every claim, structured ValidationReport emission, release readiness, or publication.
 
@@ -465,7 +466,7 @@ No runtime, schema, policy, fixture, validator, workflow, lifecycle, release, or
 | Policy root | Singular `policy/` exists and documents admissibility responsibilities. | Current policy evaluator and production enforcement are not established by this ADR. |
 | Fixture split | Root `fixtures/` is cross-cutting; `tests/fixtures/` is test-local and explicitly placement-conflicted. | Complete inventory and duplication analysis remain open. |
 | Tests | Mixed-maturity enforceability root; no canonical full-suite command is established. | Passing bounded tests do not prove release or production parity. |
-| Validators | The canonical registry exposes a **28-validator** `full` profile; its explicit nine-validator legacy aggregate core is a bounded subset. | Registry membership does not prove semantic, policy, release, or production readiness. |
+| Validators | The canonical registry exposes a **29-validator** `full` profile; its explicit nine-validator legacy aggregate core is a bounded subset. | Registry membership does not prove semantic, policy, release, or production readiness. |
 | Schema workflow | Parses schema JSON, checks Draft 2020-12 and unique canonical `$id`, requires nine nonempty positive/negative fixture lanes, validates the registry and selected DatasetVersion entry, runs the nine-validator `make schemas` compatibility lane, validates the MapLibre performance envelope, and runs schema/contract tests. | Emits job output/summary only; no receipt, proof, PolicyDecision, ReleaseManifest, or publication. |
 | Object-family register | `object_family_register.yaml` names 19 families (16 required + 3 earlier runtime); 11 required families remain conflicted. Two entries name emitters; 17 emitter states are `NOT_INSPECTED`. | Register is `PROPOSED`, partial, navigational only, and not a complete readiness crosswalk. |
 | Deprecation register | `control_plane/deprecation_register.yaml` exists with `entries: []`. | Compatibility sunset and replacement mapping are not recorded there. |
@@ -517,7 +518,7 @@ make validate
 make repository-guardrails
 ```
 
-`make schemas` and `make validate` retain the historical nine-validator aggregate compatibility lane; neither is an alias for the 28-validator `full` profile. Use `make validator-full` or `python tools/validate_all.py --profile full` when the full registry is the declared target. A guardrail or aggregate failure must be investigated and classified against the exact base; it must not be bypassed to manufacture a green result.
+`make schemas` and `make validate` retain the historical nine-validator aggregate compatibility lane; neither is an alias for the 29-validator `full` profile. Use `make validator-full` or `python tools/validate_all.py --profile full` when the full registry is the declared target. A guardrail or aggregate failure must be investigated and classified against the exact base; it must not be bypassed to manufacture a green result.
 
 These commands validate only their declared scope. They do not accept ADR-0002, evaluate all policy, establish complete object-family readiness, authorize release, or publish data.
 
@@ -626,7 +627,7 @@ Track unresolved items in [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_
 | [`fixtures/README.md`](../../fixtures/README.md) and [`tests/fixtures/README.md`](../../tests/fixtures/README.md) | **CONFIRMED repository evidence** | Shared-versus-test-local fixture split | Complete fixture inventory, consumer coverage, or no duplication |
 | [`tests/README.md`](../../tests/README.md) | **CONFIRMED repository evidence** | Canonical enforceability root, bounded test surfaces, no full-suite claim | Production parity, release, or public safety |
 | [`tools/validators/README.md`](../../tools/validators/README.md) | **CONFIRMED repository evidence** | Validator authority boundary and fail-closed posture | Complete executable inventory or structured report emission |
-| [`validator_registry.json`](../../tools/validators/validator_registry.json) | **CONFIRMED machine registry** | 28-validator full profile; the nine configured aggregate fixture families are a bounded subset | Object-family meaning, policy, readiness, or release |
+| [`validator_registry.json`](../../tools/validators/validator_registry.json) | **CONFIRMED machine registry** | 29-validator full profile; the nine configured aggregate fixture families are a bounded subset | Object-family meaning, policy, readiness, or release |
 | [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | **CONFIRMED command-bearing workflow definition** | Nine configured schema/fixture families, registry/selected DatasetVersion checks, a nine-validator compatibility lane, MapLibre performance-envelope checks, and schema/contract tests | Current run success, policy approval, proof, release, or publication |
 | [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) | **CONFIRMED proposed partial projection** | 19-family crosswalk (16 required + 3 earlier runtime), 11 required candidate conflicts, and incomplete emitter/consumer binding | Accepted or complete object-family readiness coverage |
 | [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | **CONFIRMED present; empty** | Intended deprecation mapping home | Compatibility retirement or sunset evidence |
@@ -686,6 +687,19 @@ Track unresolved items in [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_
 | Decision effect | Proposed | Unchanged: this refresh accepts no ADR, migration, source, release, deployment, promotion, or publication |
 
 </details>
+
+<details>
+<summary><strong>Appendix D — v1.4 to v1.5 registry-count refresh</strong></summary>
+
+| Area | v1.4 snapshot | v1.5 refresh |
+| --- | --- | --- |
+| Evidence base | `main@57802dff665fce4fb23af379bb5e7d866dddefe3` | Unchanged for all evidence except the validator registry, re-read at `main@2578192eccc3de36c0f92aee0e1f1e6d66ca93bd` (registry blob `fc3770c28eb99ccfac4fc9eb1a10400fb5e23650`) |
+| Validator profile | 28-validator full profile | 29-validator full profile; the nine-validator `make schemas` compatibility core is unchanged |
+| Rollback | — | Restore exact v1.4 blob `65edd5a13cd5568fe244555c310528469af2bea1` |
+| Decision effect | Proposed | Unchanged: this refresh accepts no ADR, migration, source, release, deployment, promotion, or publication |
+
+</details>
+
 
 ---
 
